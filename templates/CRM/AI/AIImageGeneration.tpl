@@ -66,6 +66,12 @@ window.AIImageGeneration = {
     "errorDnsError": "{/literal}{ts}Network configuration problem, please check network connection{/ts}{literal}",
     "errorGenerationFailed": "{/literal}{ts}Image generation failed, please try again later{/ts}{literal}",
     "errorDefaultMessage": "{/literal}{ts}An error occurred during image generation, please try again later{/ts}{literal}",
+    "errorContentViolation": "{/literal}{ts}Your input contains inappropriate content, please modify your description and try again{/ts}{literal}",
+    "errorPromptInjection": "{/literal}{ts}Input format issue detected, please check your content and try again{/ts}{literal}",
+    "errorProcessingError": "{/literal}{ts}System processing error occurred, please try again later{/ts}{literal}",
+    "errorAPIError": "{/literal}{ts}Image generation service temporarily unavailable, please try again later{/ts}{literal}",
+    "errorValidationError": "{/literal}{ts}Input content format is incorrect, please check and try again{/ts}{literal}",
+    "errorUnknownError": "{/literal}{ts}An unknown error occurred, please try again later{/ts}{literal}",
     "editPromptTooltip": "{/literal}{ts}Edit prompt: Describe the image you want to generate{/ts}{literal}",
     "generateImagesUsingAI": "{/literal}{ts}Generate images using AI{/ts}{literal}",
     "lightboxImageInfo": "{/literal}{ts}Image Information{/ts}{literal}",
@@ -233,7 +239,7 @@ window.AIImageGeneration = {
                       <div class="style-label">{ts}Japanese Simple Illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Picture book illustration" title="{ts}An art style that emphasizes storytelling and emotional expression. It features diverse colors and lines, capable of presenting unique visual narratives ranging from playful to mature, and classic to innovative{/ts}" data-tooltip data-tooltip-placement="s">
-                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-ss-01.webp" alt=""></div>
+                      <div class="style-preview"><img src="{$config->resourceBase}packages/AIImageGeneration/images/style-presets/thumbs/neticrm-aigenimg-style-preset-thumb-pbi-01.webp" alt=""></div>
                       <div class="style-label">{ts}Picture book illustration{/ts}</div>
                     </div>
                     <div class="style-option" data-style="Watercolor Painting" title="{ts}Mimics the blending and bleeding effects of watercolor paints, resulting in transparent colors and fluid brushstrokes to create fresh, soft, and artistic visuals{/ts}" data-tooltip data-tooltip-placement="s">

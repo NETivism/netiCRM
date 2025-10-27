@@ -49,8 +49,8 @@
       // Initialize empty state visibility
       this.initEmptyState();
 
-      // Initialize floating actions state based on current image
-      this.updateFloatingActionsBasedOnImage();
+      // Initialize visual state based on current content
+      this.initializeVisualState();
 
       // Initialize sample image loading mechanism
       this.initSampleImageLoading();
@@ -359,7 +359,8 @@
               ? window.AIImageGeneration.translation.generateFailed
               : 'Image generation failed';
             self.errorManager.show({
-              message: response.message || defaultMessage
+              message: response.message || defaultMessage,
+              error_code: response.error_code
             });
           }
         },
@@ -377,10 +378,13 @@
             : 'Image generation failed';
 
           // Try to parse JSON response
+          let errorCode = null;
           if (xhr.responseJSON && xhr.responseJSON.message) {
             errorMessage = xhr.responseJSON.message;
+            errorCode = xhr.responseJSON.error_code;
           } else if (status === 'timeout') {
             errorMessage = 'timeout'; // Will be converted to friendly message
+            errorCode = 'TIMEOUT_ERROR'; // Set specific error code for timeout
           } else {
             // Other cases keep generic error message, handled by HTTP status code
             errorMessage = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -388,10 +392,11 @@
               : 'Image generation failed';
           }
 
-          // Use error manager with HTTP status code
+          // Use error manager with HTTP status code and error_code
           self.errorManager.show({
             message: errorMessage,
-            httpStatus: xhr.status
+            httpStatus: xhr.status,
+            error_code: errorCode
           });
 
           console.error('Image generation error:', status, error, xhr.responseText);
@@ -426,11 +431,8 @@
         console.log('Image generation completed without result');
       }
 
-      // Update floating actions based on actual image state
-      // Wait a moment for displayGeneratedImage to complete
-      setTimeout(() => {
-        this.updateFloatingActionsBasedOnImage();
-      }, 100);
+      // Visual state will be handled by displayGeneratedImage() method
+      // No need for manual floating actions update here
 
       // Trigger custom event with full response data
       $(this.config.container).trigger('generationComplete', [imageUrl, responseData]);
@@ -508,9 +510,9 @@
             $imageContainer.prepend($link);
           }
 
-          // Update floating actions state after image is successfully loaded
+          // Update visual state to SUCCESS after image is successfully loaded
           setTimeout(() => {
-            self.updateFloatingActionsBasedOnImage();
+            self.visualStateManager.setState(self.visualStateManager.STATES.SUCCESS);
           }, 50);
         };
 
@@ -560,9 +562,9 @@
           this.restoreLoadingOverlay($imageContainer);
         }
 
-        // Update floating actions state when resetting to empty state
+        // Update visual state to EMPTY when resetting
         setTimeout(() => {
-          NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
         }, 50);
       }
     },
@@ -1011,45 +1013,25 @@
 
       // Show loading overlay with staged progress
       show: function() {
+        // Update loading info text before setting state
         const $container = $(NetiAIImageGeneration.config.container);
-        const $overlay = $container.find('.loading-overlay');
-        const $image = $container.find('.image-placeholder img');
         const $loadingInfo = $container.find('.loading-info');
-        const $emptyState = $container.find('.empty-state-content');
-
-        // Hide existing image and empty state content, show loading overlay
-        $image.hide();
-        $emptyState.hide();
-        $overlay.show();
-
-        // Restore loading elements that may have been hidden by errorManager
-        const $loadingElements = $overlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress');
-        $loadingElements.show();
-
-        // Hide error state if it was showing
-        const $errorState = $overlay.find('.error-state');
-        $errorState.hide();
-
-        // Show and update loading info with translation
         const loadingInfoText = window.AIImageGeneration && window.AIImageGeneration.translation
           ? window.AIImageGeneration.translation.loadingInfo
           : 'Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we\'re working hard to finish your artwork!';
 
         $loadingInfo.find('.loading-info-text').text(loadingInfoText);
-        $loadingInfo.show();
 
-        // Hide floating actions during loading
-        NetiAIImageGeneration.setFloatingActionsState('hidden');
+        // Use visual state manager to handle UI changes
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.LOADING);
 
-        // Reset state
+        // Reset and start loading progression
         this.currentStage = 0;
         this.isActive = true;
         this.clearTimers();
 
-        // Initialize timer
+        // Initialize timer and stage progression
         this.startTimer();
-
-        // Start stage progression
         this.nextStage();
 
         console.log('Loading state manager: Started');
@@ -1057,29 +1039,17 @@
 
       // Hide loading overlay
       hide: function() {
-        const $container = $(NetiAIImageGeneration.config.container);
-        const $overlay = $container.find('.loading-overlay');
-        const $image = $container.find('.image-placeholder img');
-        const $loadingInfo = $container.find('.loading-info');
-        const $emptyState = $container.find('.empty-state-content');
-
-        // Clear all timers
+        // Clear all timers and reset loading state
         this.clearTimers();
         this.stopTimer();
         this.isActive = false;
-
-        // Reset loading state to initial values
         this.resetLoadingState();
 
-        // Hide loading overlay and loading info
-        $overlay.hide();
-        $loadingInfo.hide();
-
-        // Show appropriate content based on whether we have a generated image
-        if (NetiAIImageGeneration.hasGeneratedImage()) {
-          $image.show();
+        // Determine next state based on whether we have an actual image
+        if (NetiAIImageGeneration.hasActualImage()) {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
         } else {
-          $emptyState.show();
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
         }
 
         console.log('Loading state manager: Stopped');
@@ -1691,8 +1661,11 @@
       }
     },
 
-    // Update floating actions based on current image state
+    // Update floating actions based on current image state (legacy method)
     updateFloatingActionsBasedOnImage: function() {
+      // Legacy method - now delegates to visual state manager
+      console.log('updateFloatingActionsBasedOnImage: This is a legacy method. Consider using visualStateManager.setState() directly.');
+      
       if (this.hasGeneratedImage()) {
         this.setFloatingActionsState('enabled');
       } else {
@@ -1702,27 +1675,8 @@
 
     // Check if current image exists and is a real generated image
     hasGeneratedImage: function() {
-      const $imageContainer = $(this.config.container).find('.image-placeholder');
-      const $generatedImage = $imageContainer.find('.ai-generated-image');
-      const $sampleImage = $imageContainer.find('.ai-sample-image');
-
-      // Check for AI generated images first
-      if ($generatedImage.length > 0) {
-        const src = $generatedImage.attr('src');
-        if (src && !this.isPlaceholderImage(src)) {
-          return true;
-        }
-      }
-
-      // Also check for sample images - they should enable floating actions
-      if ($sampleImage.length > 0) {
-        const src = $sampleImage.attr('src');
-        if (src && !this.isPlaceholderImage(src)) {
-          return true;
-        }
-      }
-
-      return false;
+      // Simplified: check if we're in SUCCESS state
+      return this.visualStateManager.isState(this.visualStateManager.STATES.SUCCESS);
     },
 
     // Helper method to check if an image URL is a placeholder
@@ -1730,6 +1684,246 @@
       return src.includes('thumb-00.png') ||
              src.includes('placeholder') ||
              src.endsWith('thumb-00.png');
+    },
+
+    // Visual State Manager - Unified state management for all UI components
+    visualStateManager: {
+      // Visual state constants
+      STATES: {
+        EMPTY: 'empty',           // Initial empty state
+        LOADING: 'loading',       // Image generation in progress
+        SAMPLE_LOADING: 'sample_loading', // Sample image loading in progress
+        SUCCESS: 'success',       // Has image (generated or sample)
+        ERROR: 'error',           // Generation error
+        SAMPLE_ERROR: 'sample_error' // Sample loading error
+      },
+
+      currentState: 'empty',
+
+      // Set visual state and apply corresponding UI rules
+      setState: function(newState) {
+        // Prevent race conditions with state changes
+        if (this._stateChangeInProgress) {
+          console.warn('State change already in progress, queuing:', newState);
+          this._pendingState = newState;
+          return;
+        }
+        
+        if (this.currentState === newState) {
+          console.log(`Visual state: ${newState} (no change)`);
+          return;
+        }
+        
+        this._stateChangeInProgress = true;
+        
+        // Optional trace logging for debugging
+        if (console.trace && window.location.search.includes('debug=1')) {
+          console.trace(`Visual state change requested: ${this.currentState} → ${newState}`);
+        }
+        
+        console.log(`Visual state: ${this.currentState} → ${newState}`);
+        const previousState = this.currentState;
+        this.currentState = newState;
+        
+        try {
+          this.applyStateRules(newState, previousState);
+        } finally {
+          this._stateChangeInProgress = false;
+          
+          // Handle pending state changes
+          if (this._pendingState) {
+            const pending = this._pendingState;
+            this._pendingState = null;
+            // Use setTimeout to avoid recursion issues
+            setTimeout(() => this.setState(pending), 0);
+          }
+        }
+      },
+
+      // Apply UI rules based on current state
+      applyStateRules: function(state, previousState) {
+        const $container = $(NetiAIImageGeneration.config.container);
+        
+        // First hide all components to ensure clean state
+        this.hideAllComponents($container);
+        
+        // Then show components based on current state
+        switch(state) {
+          case this.STATES.EMPTY:
+            this.showEmptyState($container);
+            break;
+          case this.STATES.LOADING:
+            this.showLoadingState($container);
+            break;
+          case this.STATES.SAMPLE_LOADING:
+            this.showSampleLoadingState($container);
+            break;
+          case this.STATES.SUCCESS:
+            this.showSuccessState($container);
+            break;
+          case this.STATES.ERROR:
+            this.showErrorState($container);
+            break;
+          case this.STATES.SAMPLE_ERROR:
+            this.showSampleErrorState($container);
+            break;
+          default:
+            console.warn('Unknown visual state:', state);
+            this.showEmptyState($container);
+        }
+      },
+
+      // Hide all visual components
+      hideAllComponents: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        
+        // Hide state-specific content
+        $imageContainer.find('.empty-state-content').hide();
+        $imageContainer.find('.sample-error-state').hide();
+        $imageContainer.find('.loading-overlay').hide();
+        $imageContainer.find('.ai-image-link').hide();
+        
+        // Hide other components
+        $container.find('.floating-actions').hide();
+        $container.find('.loading-info').hide();
+      },
+
+      // Show empty state components
+      showEmptyState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        $imageContainer.find('.empty-state-content').show();
+        
+        console.log('Visual state applied: EMPTY');
+      },
+
+      // Show loading state components
+      showLoadingState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        const $loadingInfo = $container.find('.loading-info');
+        
+        // Show loading overlay and info, hide error state
+        $loadingOverlay.show();
+        $loadingOverlay.find('.error-state').hide();
+        $loadingInfo.show();
+        
+        // Ensure loading elements are visible
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress');
+        $loadingElements.show();
+        
+        console.log('Visual state applied: LOADING');
+      },
+
+      // Show sample loading state components
+      showSampleLoadingState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        const $loadingInfo = $container.find('.loading-info');
+        
+        // Show loading overlay
+        $loadingOverlay.show();
+        $loadingOverlay.find('.error-state').hide();
+        
+        // Set sample loading specific message
+        const $loadingMessage = $loadingOverlay.find('.loading-message');
+        const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.loadingSampleImage
+          : 'Loading sample image...';
+        $loadingMessage.text(loadingText);
+        
+        // Hide loading info area (sample loading doesn't need it)
+        $loadingInfo.hide();
+        
+        // Show loading elements (spinner and message only)
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message');
+        $loadingElements.show();
+        
+        // Hide progress elements (sample loading doesn't need progress indication)
+        const $progressElements = $loadingOverlay.find('.loading-timer, .loading-progress');
+        $progressElements.hide();
+        
+        console.log('Visual state applied: SAMPLE_LOADING');
+      },
+
+      // Show success state components (has image)
+      showSuccessState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $aiImageLink = $imageContainer.find('.ai-image-link');
+        const $floatingActions = $container.find('.floating-actions');
+        
+        // Show image and floating actions
+        $aiImageLink.show();
+        $floatingActions.show();
+        
+        // Enable floating action buttons
+        const $floatingBtns = $floatingActions.find(NetiAIImageGeneration.config.selectors.floatingBtn);
+        $floatingBtns.prop('disabled', false).removeClass(NetiAIImageGeneration.config.classes.disabled);
+        
+        console.log('Visual state applied: SUCCESS');
+      },
+
+      // Show error state components
+      showErrorState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        
+        // Show loading overlay with error state
+        $loadingOverlay.show();
+        $loadingOverlay.find('.error-state').show();
+        
+        // Ensure loading elements are hidden
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress, .loading-info');
+        $loadingElements.hide();
+        
+        console.log('Visual state applied: ERROR');
+      },
+
+      // Show sample error state components
+      showSampleErrorState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        $imageContainer.find('.sample-error-state').show();
+        
+        console.log('Visual state applied: SAMPLE_ERROR');
+      },
+
+      // Get current state
+      getState: function() {
+        return this.currentState;
+      },
+
+      // Check if current state matches
+      isState: function(state) {
+        return this.currentState === state;
+      },
+
+      // Check if current state is one of the given states
+      isOneOfStates: function(states) {
+        return states.includes(this.currentState);
+      }
+    },
+
+    // Check if there's an actual image (for determining state after error hide)
+    hasActualImage: function() {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $aiImageLink = $imageContainer.find('.ai-image-link');
+      
+      if ($aiImageLink.length > 0) {
+        const $img = $aiImageLink.find('img');
+        const src = $img.attr('src');
+        return src && !this.isPlaceholderImage(src);
+      }
+      
+      return false;
+    },
+
+    // Initialize visual state on page load
+    initializeVisualState: function() {
+      // Determine initial state based on existing content
+      if (this.hasActualImage()) {
+        this.visualStateManager.setState(this.visualStateManager.STATES.SUCCESS);
+      } else {
+        this.visualStateManager.setState(this.visualStateManager.STATES.EMPTY);
+      }
     },
 
     // Sample image loading functionality
@@ -1796,43 +1990,18 @@
 
     // Show sample loading error state
     showSampleError: function() {
-      const $container = $(this.config.container);
-      const $emptyState = $container.find('.empty-state-content');
-      const $sampleError = $container.find('.sample-error-state');
-      const $aiImageLink = $container.find('.ai-image-link');
-
-      // Always show error when get-sample request fails
-      // Hide other states and show error
-      $emptyState.hide();
-      $aiImageLink.hide(); // Hide entire ai-image-link if exists
-      $sampleError.fadeIn(300);
-
-      // Hide floating actions when showing error state
-      this.setFloatingActionsState('hidden');
-
+      // Use visual state manager to handle sample error state
+      NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SAMPLE_ERROR);
       console.log('Sample loading error state shown');
     },
 
     // Hide sample loading error state
     hideSampleError: function() {
-      const $container = $(this.config.container);
-      const $sampleError = $container.find('.sample-error-state');
-      const $aiImageLink = $container.find('.ai-image-link');
-      const $emptyState = $container.find('.empty-state-content');
-      
-      $sampleError.fadeOut(300);
-      
-      // Determine what state to restore based on existing content
-      if ($aiImageLink.length > 0 && $aiImageLink.find('img').attr('src')) {
-        // Restore image state if there's a valid image
-        $aiImageLink.show();
-        this.setFloatingActionsState('visible');
-        console.log('Restored to image state');
+      // Determine next state based on whether we have an actual image
+      if (NetiAIImageGeneration.hasActualImage()) {
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
       } else {
-        // Restore empty state if no valid image
-        $emptyState.show();
-        this.setFloatingActionsState('hidden');
-        console.log('Restored to empty state');
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
       }
       
       console.log('Sample loading error state hidden');
@@ -1840,19 +2009,8 @@
 
     // Reset to empty state (hide both error and loading states)
     resetToEmptyState: function() {
-      const $container = $(this.config.container);
-      const $emptyState = $container.find('.empty-state-content');
-      const $sampleError = $container.find('.sample-error-state');
-      const $aiImageLink = $container.find('.ai-image-link');
-
-      // Hide error and image, show empty state
-      $sampleError.hide();
-      $aiImageLink.hide(); // Hide entire ai-image-link, not just img
-      $emptyState.fadeIn(300);
-
-      // Hide floating actions when in empty state
-      this.setFloatingActionsState('hidden');
-
+      // Use visual state manager to handle reset to empty state
+      NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
       console.log('Reset to empty state');
     },
 
@@ -2057,21 +2215,18 @@
         timeout: 10000,
 
         success: function(response) {
-          // Hide loading state
-          self.hideSampleImageLoading();
-
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully');
             self.applySampleToInterface(response.data);
+            // applySampleToInterface will set the SUCCESS state
           } else {
             console.warn('Sample image API returned unexpected format:', response);
+            // Set appropriate error state for API format issues
+            self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
           }
         },
 
         error: function(xhr, status, error) {
-          // Hide loading state on error
-          self.hideSampleImageLoading();
-
           console.warn('Failed to load sample image:', {
             status: status,
             error: error,
@@ -2079,8 +2234,8 @@
             httpStatus: xhr.status
           });
           
-          // Show sample error state instead of silently failing
-          self.showSampleError();
+          // Directly set sample error state
+          self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
         }
       });
     },
@@ -2120,40 +2275,16 @@
 
     // Show loading state for sample image
     showSampleImageLoading: function() {
-      const $container = $(this.config.container);
-      const $imageContainer = $container.find('.image-placeholder');
-      const $loadingOverlay = $imageContainer.find('.loading-overlay');
-      const $loadingMessage = $loadingOverlay.find('.loading-message');
-      const $emptyState = $imageContainer.find('.empty-state-content');
-
-      // Hide empty state if visible
-      $emptyState.hide();
-
-      // Set loading message for sample image
-      const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
-        ? window.AIImageGeneration.translation.loadingSampleImage
-        : 'Loading sample image...';
-      $loadingMessage.text(loadingText);
-
-      // Show loading overlay with fade in
-      $loadingOverlay.addClass('sample-loading').fadeIn(300);
-
-      console.log('Sample image loading state shown');
+      // Use state manager to set sample loading state
+      this.visualStateManager.setState(this.visualStateManager.STATES.SAMPLE_LOADING);
+      console.log('Sample image loading state set via state manager');
     },
 
-    // Hide loading state for sample image
+    // Hide loading state for sample image (legacy method - state will be managed by AJAX callbacks)
     hideSampleImageLoading: function() {
-      const $container = $(this.config.container);
-      const $imageContainer = $container.find('.image-placeholder');
-      const $loadingOverlay = $imageContainer.find('.loading-overlay');
-
-      // Hide loading overlay with fade out
-      $loadingOverlay.removeClass('sample-loading').fadeOut(300, function() {
-        // Reset loading message
-        $(this).find('.loading-message').text('');
-      });
-
-      console.log('Sample image loading state hidden');
+      // This method is kept for backward compatibility but the actual state
+      // management is now handled by AJAX success/error callbacks directly
+      console.log('hideSampleImageLoading: State will be handled by AJAX callbacks');
     },
 
     // Update sample image display
@@ -2209,9 +2340,9 @@
           $imageContainer.prepend($link);
         }
 
-        // Update floating actions state after sample image is loaded
+        // Update visual state to SUCCESS after sample image is loaded
         setTimeout(() => {
-          this.updateFloatingActionsBasedOnImage();
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
         }, 50);
 
         console.log('Sample image updated successfully:', imageUrl);
@@ -2701,23 +2832,22 @@
         timeout: 20000,
 
         success: function(response) {
-          // Hide loading state
-          self.hideSampleImageLoading();
-
           if (response.status === 1 && response.data) {
             console.log('Sample image loaded successfully with ratio:', ratio);
             self.applySampleToInterface(response.data);
+            // applySampleToInterface will set the SUCCESS state
+          } else {
+            console.warn('Sample image API returned unexpected format for ratio:', ratio, response);
+            // Set appropriate error state for API format issues
+            self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
           }
         },
 
         error: function(xhr, status, error) {
-          // Hide loading state on error
-          self.hideSampleImageLoading();
-
           console.warn('Failed to load sample image with ratio:', ratio, error);
           
-          // Show sample error state instead of silently failing
-          self.showSampleError();
+          // Directly set sample error state
+          self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
         }
       });
     },
@@ -2727,58 +2857,44 @@
 
       // Show error state
       show: function(errorData) {
-        const $container = $(NetiAIImageGeneration.config.container);
-        const $loadingOverlay = $container.find('.loading-overlay');
-        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress, .loading-info');
-        const $errorState = $loadingOverlay.find('.error-state');
-
-        // Hide loading elements
-        $loadingElements.hide();
-
-        // Update error message
+        // Update error message content first
         this.updateErrorMessage(errorData);
 
-        // Show error state
-        $errorState.show();
-
-        // Ensure loading-overlay remains visible
-        $loadingOverlay.show();
-
-        // Hide floating actions
-        NetiAIImageGeneration.setFloatingActionsState('hidden');
+        // Use visual state manager to handle all UI changes
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.ERROR);
       },
 
       // Hide error state
       hide: function() {
-        const $container = $(NetiAIImageGeneration.config.container);
-        const $loadingOverlay = $container.find('.loading-overlay');
-        const $errorState = $loadingOverlay.find('.error-state');
-
-        // Hide error state and loading overlay
-        $errorState.hide();
-        $loadingOverlay.hide();
-
-        // Restore floating actions state
-        setTimeout(() => {
-          NetiAIImageGeneration.updateFloatingActionsBasedOnImage();
-        }, 100);
+        // Determine next state based on whether we have an actual image
+        if (NetiAIImageGeneration.hasActualImage()) {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
+        } else {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
+        }
       },
 
       // Reset error state without hiding loading overlay (for regeneration)
       reset: function() {
-        const $container = $(NetiAIImageGeneration.config.container);
-        const $loadingOverlay = $container.find('.loading-overlay');
-        const $errorState = $loadingOverlay.find('.error-state');
-
-        // Hide error state only
-        $errorState.hide();
+        // For regeneration, we want to go back to loading state
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.LOADING);
       },
 
       // Update error message content
       updateErrorMessage: function(errorData) {
         const $container = $(NetiAIImageGeneration.config.container);
+        
+        // Check if error_code exists, prioritize AI-specific friendly messages
+        if (errorData.error_code) {
+          const aiErrorMessage = this.getAIErrorMessage(errorData.error_code);
+          if (aiErrorMessage) {
+            $container.find('.error-reason').text(aiErrorMessage);
+            return;
+          }
+        }
+        
+        // Fallback to original error handling logic
         const friendlyMessage = this.getFriendlyErrorMessage(errorData.message, errorData.httpStatus);
-
         $container.find('.error-reason').text(friendlyMessage);
       },
 
@@ -2847,6 +2963,28 @@
 
         // 5. Default error message
         return getTranslation('errorDefaultMessage') || 'An error occurred during image generation, please try again later';
+      },
+
+      // Handle AI-specific error codes with friendly messages
+      getAIErrorMessage: function(errorCode) {
+        // Get translation helper function
+        const getTranslation = (key) => {
+          return window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation[key]
+            : null;
+        };
+
+        const aiErrorMappings = {
+          'CONTENT_VIOLATION': getTranslation('errorContentViolation') || 'Your input contains inappropriate content, please modify your description and try again',
+          'PROMPT_INJECTION': getTranslation('errorPromptInjection') || 'Input format issue detected, please check your content and try again',
+          'PROCESSING_ERROR': getTranslation('errorProcessingError') || 'System processing error occurred, please try again later',
+          'API_ERROR': getTranslation('errorAPIError') || 'Image generation service temporarily unavailable, please try again later',
+          'VALIDATION_ERROR': getTranslation('errorValidationError') || 'Input content format is incorrect, please check and try again',
+          'TIMEOUT_ERROR': getTranslation('errorTimeoutError') || 'Connection timeout, please check your network connection and try again',
+          'UNKNOWN_ERROR': getTranslation('errorUnknownError') || 'An unknown error occurred, please try again later'
+        };
+        
+        return aiErrorMappings[errorCode] || null;
       }
     },
 

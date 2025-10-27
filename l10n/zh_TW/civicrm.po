@@ -51330,3 +51330,30 @@ msgstr "圖片無法載入。"
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "The content could not be loaded."
 msgstr "內容無法載入。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Your input contains inappropriate content, please modify your description "
+"and try again"
+msgstr "您的輸入包含不當內容，請修改描述後再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Input format issue detected, please check your content and try again"
+msgstr "偵測到輸入格式問題，請檢查您的內容後再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "System processing error occurred, please try again later"
+msgstr "發生系統處理錯誤，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Image generation service temporarily unavailable, please try again later"
+msgstr "圖片生成服務暫時無法使用，請稍後再試"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Input content format is incorrect, please check and try again"
+msgstr "輸入內容格式不正確，請檢查後再試一次"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "An unknown error occurred, please try again later"
+msgstr "發生未知錯誤，請稍後再試"
