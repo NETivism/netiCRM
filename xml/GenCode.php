@@ -6,8 +6,39 @@ if (PHP_SAPI !== 'cli') {
 ini_set('include_path', '.' . PATH_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR . '..');
 ini_set('memory_limit', '512M');
 
+// Detect Drupal version by checking directory structure
+// Use same pattern detection as civicrm.config.php
+if (php_sapi_name() == 'cli' && !empty($_SERVER['PWD'])) {
+  $sfile = $_SERVER['PWD'] . '/' . $_SERVER['SCRIPT_FILENAME'];
+}
+else {
+  $sfile = $_SERVER['SCRIPT_FILENAME'];
+}
+
+$drupalBasePath = '';
+// drupal 6-7: sites/[site]/modules/civicrm/
+if (preg_match('@(.*)(sites/([^/]+)/modules/civicrm)/.*$@', $sfile, $matches)) {
+  $drupalBasePath = rtrim($matches[1], '/');
+}
+// drupal 9+: /modules/civicrm/
+elseif (preg_match('@(.*)(/modules/civicrm)/.*$@', $sfile, $matches)) {
+  $drupalBasePath = rtrim($matches[1], '/');
+}
+
+// Detect version by checking Drupal structure
+// Drupal 10+: has core/CHANGELOG.txt
+// Drupal 7: has CHANGELOG.txt in base path
+$drupalMajorVersion = '7'; // Default to 7
+
+if ($drupalBasePath && file_exists($drupalBasePath . '/core') && file_exists($drupalBasePath . '/core/CHANGELOG.txt')) {
+  $drupalMajorVersion = '10';
+}
+elseif ($drupalBasePath && file_exists($drupalBasePath . '/CHANGELOG.txt')) {
+  $drupalMajorVersion = '7';
+}
+
 define('CIVICRM_UF', 'Drupal');
-define('VERSION', '7.100'); // specified Drupal Version
+define('VERSION', $drupalMajorVersion . '.100'); // Dynamically set based on Drupal structure
 
 require_once '../civicrm.config.php';
 CRM_Core_Config::singleton();
