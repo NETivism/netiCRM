@@ -384,6 +384,7 @@
             errorCode = xhr.responseJSON.error_code;
           } else if (status === 'timeout') {
             errorMessage = 'timeout'; // Will be converted to friendly message
+            errorCode = 'TIMEOUT_ERROR'; // Set specific error code for timeout
           } else {
             // Other cases keep generic error message, handled by HTTP status code
             errorMessage = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -2979,6 +2980,7 @@
           'PROCESSING_ERROR': getTranslation('errorProcessingError') || 'System processing error occurred, please try again later',
           'API_ERROR': getTranslation('errorAPIError') || 'Image generation service temporarily unavailable, please try again later',
           'VALIDATION_ERROR': getTranslation('errorValidationError') || 'Input content format is incorrect, please check and try again',
+          'TIMEOUT_ERROR': getTranslation('errorTimeoutError') || 'Connection timeout, please check your network connection and try again',
           'UNKNOWN_ERROR': getTranslation('errorUnknownError') || 'An unknown error occurred, please try again later'
         };
         
