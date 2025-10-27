@@ -50662,3 +50662,27 @@ msgstr ""
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "The content could not be loaded."
 msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Your input contains inappropriate content, please modify your description and try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Input format issue detected, please check your content and try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "System processing error occurred, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Image generation service temporarily unavailable, please try again later"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Input content format is incorrect, please check and try again"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "An unknown error occurred, please try again later"
+msgstr ""
