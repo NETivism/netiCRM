@@ -480,9 +480,12 @@ class CRM_AI_Page_AJAX {
         ]);
       } catch (Exception $e) {
         // Handle image generation errors only
+        // Parse error code and preserve original technical message
+        $errorCode = self::parseErrorCode($e->getMessage());
         self::responseError([
           'status' => 0,
           'message' => 'Image generation failed: ' . $e->getMessage(),
+          'error_code' => $errorCode
         ]);
         return; // Ensure we don't continue after error response
       }
@@ -509,9 +512,13 @@ class CRM_AI_Page_AJAX {
         ]);
       } else {
         // Handle generation failure
+        // Parse error code and preserve original technical message
+        $errorMessage = $generateResult['error'] ?? 'Unknown error occurred during image generation';
+        $errorCode = self::parseErrorCode($errorMessage);
         self::responseError([
           'status' => 0,
-          'message' => 'Image generation failed: ' . ($generateResult['error'] ?? 'Unknown error occurred during image generation'),
+          'message' => 'Image generation failed: ' . $errorMessage,
+          'error_code' => $errorCode
         ]);
       }
     }
@@ -896,5 +903,31 @@ class CRM_AI_Page_AJAX {
     }
     
     return true;
+  }
+
+  /**
+   * Extract error code from exception message
+   * 
+   * @param string $errorMessage Original error message
+   * @return string Error code
+   */
+  private static function parseErrorCode($errorMessage) {
+    // Pattern to extract error codes from AITransPrompt exceptions
+    $pattern = '/Prompt translation failed - ([A-Z_]+):/';
+    
+    if (preg_match($pattern, $errorMessage, $matches)) {
+      return $matches[1]; // Returns: 'CONTENT_VIOLATION', 'PROMPT_INJECTION', etc.
+    }
+    
+    // Check for other common error patterns
+    if (strpos($errorMessage, 'Image generation failed') !== false) {
+      return 'API_ERROR';
+    }
+    
+    if (strpos($errorMessage, 'validation') !== false || strpos($errorMessage, 'invalid') !== false) {
+      return 'VALIDATION_ERROR';
+    }
+    
+    return 'UNKNOWN_ERROR';
   }
 }
