@@ -78,6 +78,8 @@
                     </td>
                   </tr>
                   {/section}
+                  {include file="CRM/common/chosen.tpl" selector="select[id^=product_" select_width="200"}
+
                 </tbody>
               </table>
               <div class="add-remove-link" style="margin-top: 10px;">
@@ -253,7 +255,6 @@ function initializeProductRows() {
     var productSelect = cj('select[name="product[' + i + ']"]');
     if (productSelect.length && productSelect.val()) {
       maxVisibleRow = i;
-      // 如果不是第一列且該列有值，則顯示該列
       if (i > 2) {
         cj('tr#productField_' + i).show();
       }
