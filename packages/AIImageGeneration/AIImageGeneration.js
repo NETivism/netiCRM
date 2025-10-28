@@ -58,6 +58,9 @@
       // Initialize tooltip based on existing content
       this.initPromptTooltip();
 
+      // Initialize prompt UI based on current style selection
+      this.initPromptStyleSettings();
+
       // Initialize file upload field integration
       this.initFileUploadIntegration();
 
@@ -206,6 +209,9 @@
 
       // Update button text with translated label
       $container.find(this.config.selectors.styleText).text(styleLabel);
+
+      // Update prompt UI based on style selection
+      this.updatePromptBasedOnStyle(style);
 
       // Close dropdown
       $container.removeClass(this.config.classes.active);
@@ -2456,10 +2462,20 @@
       // Remove existing tooltip if any
       $promptContainer.find('.sample-prompt-tooltip').remove();
 
-      // Get translated text
-      const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
-        ? window.AIImageGeneration.translation.editPromptTooltip
-        : 'Edit prompt: Describe the image you want to generate';
+      // Check if custom style is selected
+      const isCustomStyle = this.isCustomStyleSelected();
+      
+      // Get appropriate translated text based on style
+      let tooltipText;
+      if (isCustomStyle) {
+        tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltipCustomStyle
+          ? window.AIImageGeneration.translation.editPromptTooltipCustomStyle
+          : 'Describe the image and explicitly state your desired art style';
+      } else {
+        tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
+          ? window.AIImageGeneration.translation.editPromptTooltip
+          : 'Describe the image you want to generate';
+      }
 
       // Create tooltip element
       const $tooltip = $('<div class="sample-prompt-tooltip">' + tooltipText + '</div>');
@@ -2479,6 +2495,66 @@
       const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
       if ($textarea.length > 0) {
         this.updatePromptTooltip($textarea);
+      }
+    },
+
+    // Check if custom style is currently selected
+    isCustomStyleSelected: function() {
+      const $selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      if ($selectedStyleOption.length > 0) {
+        const selectedStyle = $selectedStyleOption.data('style');
+        return selectedStyle === 'Custom Style';
+      }
+      return false;
+    },
+
+    // Update prompt UI (tooltip and placeholder) based on style selection
+    updatePromptBasedOnStyle: function(style) {
+      const isCustomStyle = (style === 'Custom Style');
+      
+      // Update placeholder
+      this.updatePromptPlaceholder(isCustomStyle);
+      
+      // Update tooltip if it exists
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length > 0) {
+        this.updatePromptTooltip($textarea);
+      }
+
+      // Auto focus textarea when custom style is selected
+      if (isCustomStyle && $textarea.length > 0) {
+        // Use setTimeout to ensure UI updates are completed first
+        setTimeout(function() {
+          $textarea.focus();
+        }, 100);
+      }
+    },
+
+    // Update prompt textarea placeholder based on style
+    updatePromptPlaceholder: function(isCustomStyle) {
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length === 0) return;
+
+      let placeholderText;
+      if (isCustomStyle) {
+        placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderCustomStyle
+          ? window.AIImageGeneration.translation.promptPlaceholderCustomStyle
+          : 'You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, Cyberpunk, 3D Animation, etc.) directly in this prompt field, along with your image description';
+      } else {
+        placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderDefault
+          ? window.AIImageGeneration.translation.promptPlaceholderDefault
+          : 'Describe the image you want to generate...';
+      }
+
+      $textarea.attr('placeholder', placeholderText);
+    },
+
+    // Initialize prompt UI settings based on current style selection
+    initPromptStyleSettings: function() {
+      const $selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      if ($selectedStyleOption.length > 0) {
+        const selectedStyle = $selectedStyleOption.data('style');
+        this.updatePromptBasedOnStyle(selectedStyle);
       }
     },
 
