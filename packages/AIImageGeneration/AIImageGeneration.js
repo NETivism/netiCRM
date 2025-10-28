@@ -1433,9 +1433,8 @@
 
       switch(action) {
         case 'regenerate':
-          // Close lightbox and trigger regeneration
-          $.magnificPopup.close();
-          this.generateImage();
+          // Close lightbox and trigger regeneration with original image settings
+          this.regenerateFromLightbox();
           break;
         case 'copy':
           this.copyImageFromLightbox();
@@ -1513,6 +1512,73 @@
 
       const imageUrl = $currentItem.src;
       this.downloadImageByUrl(imageUrl);
+    },
+
+    // Regenerate image from lightbox with original settings
+    regenerateFromLightbox: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem || !$currentItem.el) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.lightboxActionFailed
+          : 'Action failed, please try again';
+        this.showLightboxMessage(message, 'error');
+        return;
+      }
+
+      // Get original image metadata from lightbox trigger element
+      const $trigger = $($currentItem.el);
+      const originalPrompt = $trigger.data('prompt') || '';
+      const originalStyle = $trigger.data('style') || 'Simple Illustration';
+      const originalRatio = $trigger.data('ratio') || '4:3';
+
+      console.log('Regenerating image with original settings:', {
+        prompt: originalPrompt,
+        style: originalStyle,
+        ratio: originalRatio
+      });
+
+      // Close lightbox first
+      $.magnificPopup.close();
+
+      // Apply original settings to UI
+      // Set prompt text
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      $textarea.val(originalPrompt);
+
+      // Set style using existing API
+      if (this.publicAPI && this.publicAPI.setStyle) {
+        this.publicAPI.setStyle(originalStyle);
+      } else {
+        // Fallback: directly select style option
+        const $styleOptions = $(this.config.container).find(this.config.selectors.styleOptions);
+        $styleOptions.removeClass(this.config.classes.selected);
+        const $targetStyleOption = $styleOptions.filter(`[data-style="${originalStyle}"]`);
+        if ($targetStyleOption.length > 0) {
+          $targetStyleOption.addClass(this.config.classes.selected);
+          const styleLabel = $targetStyleOption.find('.style-label').text() || originalStyle;
+          $(this.config.container).find('#styleText').text(styleLabel);
+        }
+      }
+
+      // Set ratio using existing API
+      if (this.publicAPI && this.publicAPI.setRatio) {
+        this.publicAPI.setRatio(originalRatio);
+      } else {
+        // Fallback: directly select ratio option
+        const $ratioItems = $(this.config.container).find(this.config.selectors.dropdownItems);
+        $ratioItems.removeClass(this.config.classes.selected);
+        const $targetRatioItem = $ratioItems.filter(`[data-ratio="${originalRatio}"]`);
+        if ($targetRatioItem.length > 0) {
+          $targetRatioItem.addClass(this.config.classes.selected);
+          $(this.config.container).find('#ratioText').text(originalRatio);
+        }
+      }
+
+      // Trigger auto-resize for textarea if content changed
+      this.autoResizeTextarea($textarea);
+
+      // Generate image with original settings
+      this.generateImage();
     },
 
     // Copy image by URL
