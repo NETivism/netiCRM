@@ -323,6 +323,7 @@
 
 .netiaiig-container .prompt-textarea {
   width: 100%;
+  min-height: 65px;
   padding: 24px 16px 16px;
   border: 0;
   border-radius: 12px;
@@ -1514,7 +1515,7 @@
   left: 12px;
   border: 1px solid #536DFE;
   color: #536DFE;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1524,6 +1525,9 @@
   transition: all 0.2s ease;
   pointer-events: none;
   background: #fff;
+}
+html[lang="zh-hant"] .netiaiig-container .sample-prompt-tooltip {
+  font-size: 14px;
 }
 
 /* AI Generate Link for file upload fields */
