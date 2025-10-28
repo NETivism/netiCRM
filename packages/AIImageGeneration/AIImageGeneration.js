@@ -2520,6 +2520,14 @@
       if ($textarea.length > 0) {
         this.updatePromptTooltip($textarea);
       }
+
+      // Auto focus textarea when custom style is selected
+      if (isCustomStyle && $textarea.length > 0) {
+        // Use setTimeout to ensure UI updates are completed first
+        setTimeout(function() {
+          $textarea.focus();
+        }, 100);
+      }
     },
 
     // Update prompt textarea placeholder based on style
