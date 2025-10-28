@@ -76,7 +76,7 @@
   width: 32px;
   height: 32px;
   border: 3px solid #e5e7eb;
-  border-top: 3px solid #3b82f6;
+  border-top: 3px solid #536DFE;
   border-radius: 50%;
   animation: historySpinner 1s linear infinite;
   margin-bottom: 12px;
@@ -144,14 +144,14 @@
 }
 
 .netiaiig-container .history-item:hover {
-  border-color: #3b82f6;
+  border-color: #536DFE;
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
 .netiaiig-container .history-item:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #536DFE;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
