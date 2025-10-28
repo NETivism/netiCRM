@@ -1360,6 +1360,7 @@
 }
 
 .netiaiig-container .ai-image-link:hover {
+  cursor: zoom-in;
   transform: scale(1.02);
   opacity: 0.9;
 }
