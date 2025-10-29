@@ -421,11 +421,22 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
 
     echo "Generating civicrm-version file\n";
     $git_tag = `git describe --tags`;
-    list($git_tag, $subver) = explode('-', $git_tag);
+    $git_tag = trim($git_tag);
     $git_revision = `git rev-parse --short HEAD`;
     $git_revision = trim($git_revision);
+
+    // Check if we're exactly on a tag (no -count-hash suffix)
+    if (strpos($git_tag, '-') !== false) {
+      // Not on a tag, format as: tag+commits
+      list($git_tag, $subver) = explode('-', $git_tag);
+      $version_string = $git_tag . '+' . $subver;
+    } else {
+      // Exactly on a tag, use tag name as-is
+      $version_string = $git_tag;
+    }
+
     $this->smarty->assign('git_revision', $git_revision);
-    $this->smarty->assign('git_tag', $git_tag.'+'.$subver);
+    $this->smarty->assign('git_tag', $version_string);
     file_put_contents($this->phpCodePath . "civicrm-version.txt", $this->smarty->fetch('civicrm_version.tpl'));
   }
 
