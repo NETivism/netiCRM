@@ -2535,7 +2535,7 @@
       if (isCustomStyle) {
         placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderCustomStyle
           ? window.AIImageGeneration.translation.promptPlaceholderCustomStyle
-          : 'You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, Cyberpunk, 3D Animation, etc.) directly in this prompt field, along with your image description';
+          : 'You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, 3D Claymation, etc.) directly in this prompt field, along with your image description';
       } else {
         placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderDefault
           ? window.AIImageGeneration.translation.promptPlaceholderDefault
