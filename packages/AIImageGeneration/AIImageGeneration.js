@@ -64,7 +64,6 @@
       // Initialize file upload field integration
       this.initFileUploadIntegration();
 
-      console.log('AI Image Generation component initialized');
     },
 
     // Initialize empty state visibility
@@ -216,7 +215,6 @@
       // Close dropdown
       $container.removeClass(this.config.classes.active);
 
-      console.log('Selected style:', style);
 
       // Trigger custom event
       $(this.config.container).trigger('styleChanged', [style]);
@@ -237,7 +235,6 @@
       // Close dropdown
       $container.removeClass(this.config.classes.active);
 
-      console.log('Selected ratio:', ratio);
 
       // Trigger custom event
       $(this.config.container).trigger('ratioChanged', [ratio]);
@@ -275,7 +272,6 @@
       } else if ($button.find('.zmdi-download').length || title.includes('Download')) {
         this.downloadImage();
       } else {
-        console.log('Unknown floating action:', title);
       }
     },
 
@@ -332,7 +328,6 @@
       // Show staged loading overlay in image area
       this.loadingManager.show();
 
-      console.log('Generating image with data:', requestData);
 
       // Trigger custom event
       $(this.config.container).trigger('imageGeneration', [requestData]);
@@ -429,12 +424,7 @@
       if (imageUrl) {
         this.displayGeneratedImage(imageUrl);
 
-        console.log('Image generation completed successfully:', {
-          imageUrl: imageUrl,
-          responseData: responseData
-        });
       } else {
-        console.log('Image generation completed without result');
       }
 
       // Visual state will be handled by displayGeneratedImage() method
@@ -449,7 +439,6 @@
       const $imageContainer = $(this.config.container).find('.image-placeholder');
 
       if (imageUrl) {
-        console.log('Displaying image:', imageUrl);
 
         // Hide empty state content and show image
         $imageContainer.find('.empty-state-content').hide();
@@ -475,7 +464,6 @@
         // Set up load handler before setting src
         const self = this; // Store reference to NetiAIImageGeneration instance
         img.onload = function() {
-          console.log('Image loaded successfully - displaying now');
           const altText = window.AIImageGeneration && window.AIImageGeneration.translation
             ? window.AIImageGeneration.translation.aiGeneratedImage
             : 'AI Generated Image';
@@ -543,7 +531,6 @@
         }, 10000);
 
         // Start loading
-        console.log('Starting image load...');
         img.src = imageUrl;
 
       } else {
@@ -596,7 +583,6 @@
       `;
 
       $container.append(loadingOverlayHtml);
-      console.log('Loading overlay structure restored');
     },
 
     // Copy image to clipboard
@@ -622,7 +608,6 @@
       }
       const imageUrl = $image.attr('src');
 
-      console.log('Copying image to clipboard:', imageUrl);
 
       // Check if clipboard API is supported
       if (!navigator.clipboard || !navigator.clipboard.write) {
@@ -669,7 +654,6 @@
                 ? window.AIImageGeneration.translation.imageCopied
                 : 'Image copied to clipboard';
               self.showSuccess(message);
-              console.log('Image copied to clipboard successfully');
             }).catch(function(error) {
               console.error('Failed to copy image to clipboard:', error);
               const message = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -717,7 +701,6 @@
       }
       const imageUrl = $image.attr('src');
 
-      console.log('Downloading image:', imageUrl);
 
       // Extract file extension from URL or default to webp
       const getFileExtension = (url) => {
@@ -735,7 +718,6 @@
       link.download = fileName;
       link.click();
 
-      console.log('Downloading as:', fileName);
       const message = window.AIImageGeneration && window.AIImageGeneration.translation
         ? window.AIImageGeneration.translation.downloadStarted
         : 'Image download started';
@@ -762,7 +744,6 @@
       if (!element.value) {
         element.style.height = minHeight + 'px';
         element.style.overflowY = 'hidden';
-        console.log('Auto-resize: Empty content, set to min height:', minHeight + 'px');
         return;
       }
 
@@ -785,7 +766,6 @@
         element.style.overflowY = 'hidden';
       }
 
-      console.log('Auto-resize: content length:', element.value.length, 'scrollHeight:', scrollHeight, 'newHeight:', newHeight);
     },
 
     // Calculate min height based on computed styles
@@ -831,27 +811,21 @@
         }
       }, 0);
 
-      console.log('Auto-resize textarea initialized with min height:', element._minHeight + 'px');
     },
 
     // Initialize visibility observer - listening to tab click events (the root cause)
     initVisibilityObserver: function() {
-      console.log('🔍 Starting initVisibilityObserver...');
-      console.log('📝 Found root cause: #nme-aiimagegeneration is controlled by sidePanel tab system');
 
       const self = this;
 
       // Method 1: Listen to tab click events (most reliable)
       $(document).on('click', '.nme-setting-panels-tabs a', function() {
         const targetId = $(this).data('target-id');
-        console.log('🗁 Tab clicked, target ID:', targetId);
 
         if (targetId === 'nme-aiimagegeneration') {
-          console.log('✅ AI Image Generation tab clicked! Scheduling textarea height refresh...');
 
           // Wait for DOM to update after tab switch
           setTimeout(() => {
-            console.log('⚡ Executing onContainerVisible() after tab switch...');
             self.onContainerVisible();
           }, 100);
         }
@@ -861,7 +835,6 @@
       const checkInitialState = () => {
         const currentContainer = document.querySelector('#nme-aiimagegeneration');
         if (currentContainer && currentContainer.classList.contains('is-active')) {
-          console.log('⚡ INITIAL STATE: AI tab is already active! Triggering height refresh...');
           setTimeout(() => {
             self.onContainerVisible();
           }, 100);
@@ -876,17 +849,11 @@
         setTimeout(checkInitialState, 1000);
       }
 
-      console.log('✅ Tab click event listener initialized');
-      console.log('🛠️ Simple and reliable solution based on actual tab switching mechanism');
     },
 
     // Handle container becoming visible with enhanced debugging
     onContainerVisible: function() {
-      console.log('🚀 onContainerVisible() called!');
-
       const $textarea = $(this.config.selectors.promptTextarea);
-      console.log('🔍 Textarea selector:', this.config.selectors.promptTextarea);
-      console.log('🔍 Textarea found:', $textarea.length > 0);
 
       if ($textarea.length === 0) {
         console.error('❌ Textarea not found with selector:', this.config.selectors.promptTextarea);
@@ -894,50 +861,27 @@
       }
 
       const element = $textarea[0];
-      console.log('📏 Textarea dimensions:', {
-        offsetWidth: element.offsetWidth,
-        offsetHeight: element.offsetHeight,
-        scrollHeight: element.scrollHeight,
-        value: element.value,
-        valueLength: element.value ? element.value.length : 0
-      });
 
       // Check if container is actually visible now
       if (element.offsetHeight === 0) {
-        console.log('⚠️ Container still not visible (offsetHeight = 0), skipping height recalculation');
         return;
       }
 
-      console.log('✅ Container is visible! Proceeding with height recalculation...');
 
       // Recalculate min height since previous calculation was done when hidden
-      console.log('🔄 Recalculating min height...');
       const oldMinHeight = element._minHeight;
       this.calculateMinHeight($textarea);
       const newMinHeight = element._minHeight;
 
-      console.log('📐 Min height calculation:', {
-        oldMinHeight: oldMinHeight,
-        newMinHeight: newMinHeight,
-        changed: oldMinHeight !== newMinHeight
-      });
 
       // Reset and recalculate height
-      console.log('🔄 Resetting textarea height...');
       element.style.height = element._minHeight + 'px';
 
       if (element.value) {
-        console.log('📝 Textarea has content, calling autoResizeTextarea...');
         this.autoResizeTextarea($textarea);
       } else {
-        console.log('📝 Textarea is empty, keeping min height');
       }
 
-      console.log('✅ Textarea height refresh completed!', {
-        finalHeight: element.style.height,
-        finalScrollHeight: element.scrollHeight,
-        minHeight: element._minHeight
-      });
     },
 
     // Loading state manager for staged progress display
@@ -1040,7 +984,6 @@
         this.startTimer();
         this.nextStage();
 
-        console.log('Loading state manager: Started');
       },
 
       // Hide loading overlay
@@ -1058,7 +1001,6 @@
           NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
         }
 
-        console.log('Loading state manager: Stopped');
       },
 
       // Progress to next stage
@@ -1072,7 +1014,6 @@
         this.updateMessage(message);
         this.updateProgress(stage.progress);
 
-        console.log('Loading stage:', this.currentStage + 1, '-', stage.message);
 
         // Set timer for next stage if not the last stage and has duration
         if (this.currentStage < this.stages.length - 1 && stage.duration > 0) {
@@ -1175,7 +1116,6 @@
         // Reset internal state
         this.currentStage = 0;
 
-        console.log('Loading state reset to initial values');
       }
     },
 
@@ -1210,7 +1150,6 @@
       if (typeof $.magnificPopup !== 'undefined') {
         // Initialize lightbox for AI generated images using standard method
         this.setupImageLightbox();
-        console.log('Image lightbox initialized');
       } else {
         console.warn('Magnific Popup not available - lightbox functionality disabled');
       }
@@ -1370,7 +1309,6 @@
       // Show/hide panels based on screen size
       this.adjustLightboxLayout();
 
-      console.log('Lightbox metadata initialized:', { prompt, style, ratio });
     },
 
     // Adjust lightbox layout based on screen size
@@ -1417,7 +1355,6 @@
         self.adjustLightboxLayout();
       });
 
-      console.log('Lightbox events bound');
     },
 
     // Unbind lightbox event handlers
@@ -1428,14 +1365,12 @@
       // Clear any pending panel messages when closing lightbox
       this.panelMessage.hide();
 
-      console.log('Lightbox events unbound');
     },
 
     // Handle lightbox action buttons
     handleLightboxAction: function($button) {
       const action = this.getLightboxActionType($button);
 
-      console.log('Lightbox action triggered:', action);
 
       switch(action) {
         case 'regenerate':
@@ -1455,7 +1390,6 @@
 
     // Show message in lightbox context with intelligent routing
     showLightboxMessage: function(message, type = 'success') {
-      console.log('Lightbox message:', { message, type });
 
       // Check if lightbox is currently open
       const isLightboxOpen = $.magnificPopup.instance && $.magnificPopup.instance.isOpen;
@@ -1537,11 +1471,6 @@
       const originalStyle = $trigger.data('style') || 'Simple Illustration';
       const originalRatio = $trigger.data('ratio') || '4:3';
 
-      console.log('Regenerating image with original settings:', {
-        prompt: originalPrompt,
-        style: originalStyle,
-        ratio: originalRatio
-      });
 
       // Close lightbox first
       $.magnificPopup.close();
@@ -1670,7 +1599,6 @@
       link.download = fileName;
       link.click();
 
-      console.log('Downloading as:', fileName);
       const message = window.AIImageGeneration && window.AIImageGeneration.translation
         ? window.AIImageGeneration.translation.downloadStarted
         : 'Image download started';
@@ -1679,7 +1607,6 @@
 
     // Show success message
     showSuccess: function(message) {
-      console.log('Success:', message);
 
       // Show floating message notification
       this.floatingMessage.showSuccess(message);
@@ -1718,14 +1645,12 @@
           $floatingBtns.prop('disabled', true).addClass(this.config.classes.disabled);
           // Also hide any existing floating messages
           this.floatingMessage.hide();
-          console.log('Floating actions: Hidden (no image or loading)');
           break;
 
         case 'enabled':
           // Show floating actions and enable all buttons (has real image)
           $floatingActions.show();
           $floatingBtns.prop('disabled', false).removeClass(this.config.classes.disabled);
-          console.log('Floating actions: Visible and enabled (has image)');
           break;
 
         default:
@@ -1736,7 +1661,6 @@
     // Update floating actions based on current image state (legacy method)
     updateFloatingActionsBasedOnImage: function() {
       // Legacy method - now delegates to visual state manager
-      console.log('updateFloatingActionsBasedOnImage: This is a legacy method. Consider using visualStateManager.setState() directly.');
 
       if (this.hasGeneratedImage()) {
         this.setFloatingActionsState('enabled');
@@ -1782,7 +1706,6 @@
         }
 
         if (this.currentState === newState) {
-          console.log(`Visual state: ${newState} (no change)`);
           return;
         }
 
@@ -1793,7 +1716,6 @@
           console.trace(`Visual state change requested: ${this.currentState} → ${newState}`);
         }
 
-        console.log(`Visual state: ${this.currentState} → ${newState}`);
         const previousState = this.currentState;
         this.currentState = newState;
 
@@ -1865,7 +1787,6 @@
         const $imageContainer = $container.find('.image-placeholder');
         $imageContainer.find('.empty-state-content').show();
 
-        console.log('Visual state applied: EMPTY');
       },
 
       // Show loading state components
@@ -1883,7 +1804,6 @@
         const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress');
         $loadingElements.show();
 
-        console.log('Visual state applied: LOADING');
       },
 
       // Show sample loading state components
@@ -1914,7 +1834,6 @@
         const $progressElements = $loadingOverlay.find('.loading-timer, .loading-progress');
         $progressElements.hide();
 
-        console.log('Visual state applied: SAMPLE_LOADING');
       },
 
       // Show success state components (has image)
@@ -1931,7 +1850,6 @@
         const $floatingBtns = $floatingActions.find(NetiAIImageGeneration.config.selectors.floatingBtn);
         $floatingBtns.prop('disabled', false).removeClass(NetiAIImageGeneration.config.classes.disabled);
 
-        console.log('Visual state applied: SUCCESS');
       },
 
       // Show error state components
@@ -1947,7 +1865,6 @@
         const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress, .loading-info');
         $loadingElements.hide();
 
-        console.log('Visual state applied: ERROR');
       },
 
       // Show sample error state components
@@ -1955,7 +1872,6 @@
         const $imageContainer = $container.find('.image-placeholder');
         $imageContainer.find('.sample-error-state').show();
 
-        console.log('Visual state applied: SAMPLE_ERROR');
       },
 
       // Get current state
@@ -2007,16 +1923,11 @@
         const targetId = $(this).data('target-id');
 
         if (targetId === 'nme-aiimagegeneration') {
-          console.log('AI Image Generation panel activated - checking for sample image load');
 
           // Wait for DOM to update after tab switch
           setTimeout(() => {
             // Debug context checking
-            console.log('🔍 Checking trigger context:', self._aiLinkTriggerContext);
-            console.log('🔍 Context exists:', !!self._aiLinkTriggerContext);
             if (self._aiLinkTriggerContext) {
-              console.log('🔍 Context source:', self._aiLinkTriggerContext.source);
-              console.log('🔍 Context valid:', self._isContextValid());
             }
 
             // Check if there's a trigger context
@@ -2025,12 +1936,10 @@
                 self._isContextValid()) {
 
               // Execute context-specific loading
-              console.log('✅ Loading sample image with context:', self._aiLinkTriggerContext);
               self._loadSampleImageWithContext();
 
             } else {
               // Execute default loading logic
-              console.log('❌ No valid context found - using default loading logic');
               self.checkAndLoadSampleImage();
             }
 
@@ -2044,7 +1953,6 @@
       const checkInitialState = () => {
         const currentPanel = document.querySelector('.nme-aiimagegeneration.nme-setting-panel');
         if (currentPanel && currentPanel.classList.contains('is-active')) {
-          console.log('AI panel is already active on load - checking for sample image');
           setTimeout(() => {
             self.checkAndLoadSampleImage();
           }, 100);
@@ -2064,7 +1972,6 @@
     showSampleError: function() {
       // Use visual state manager to handle sample error state
       NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SAMPLE_ERROR);
-      console.log('Sample loading error state shown');
     },
 
     // Hide sample loading error state
@@ -2076,14 +1983,12 @@
         NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
       }
 
-      console.log('Sample loading error state hidden');
     },
 
     // Reset to empty state (hide both error and loading states)
     resetToEmptyState: function() {
       // Use visual state manager to handle reset to empty state
       NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
-      console.log('Reset to empty state');
     },
 
     // Clear sample error state when user performs other actions
@@ -2093,7 +1998,6 @@
 
       // If sample error is currently showing, hide it
       if ($sampleError.is(':visible')) {
-        console.log('Clearing sample error state due to user action');
         this.hideSampleError();
       }
     },
@@ -2102,10 +2006,8 @@
     checkAndLoadSampleImage: function() {
       // Only load if no existing image is present
       if (!this.hasExistingImage()) {
-        console.log('No existing image found - loading sample image');
         this.loadSampleImage();
       } else {
-        console.log('Existing image found - skipping sample image load');
       }
     },
 
@@ -2143,7 +2045,6 @@
       const emptyStateHidden = $emptyState.length > 0 && !$emptyState.is(':visible');
 
       if (!hasVisibleImage && !emptyStateHidden) {
-        console.log('🔍 hasUserGeneratedImage: No image found');
         return false; // No image at all
       }
 
@@ -2152,16 +2053,9 @@
       const hasGeneratedClass = $image.hasClass('ai-generated-image');
       const hasSampleClass = $image.hasClass('ai-sample-image');
 
-      console.log('🔍 hasUserGeneratedImage: Image classes check', {
-        hasGeneratedClass: hasGeneratedClass,
-        hasSampleClass: hasSampleClass,
-        imageClasses: $image.attr('class'),
-        src: $image.attr('src')
-      });
 
       // It's a user-generated image if it has ai-generated-image but not ai-sample-image
       const isUserGenerated = hasGeneratedClass && !hasSampleClass;
-      console.log('🔍 hasUserGeneratedImage result:', isUserGenerated);
 
       return isUserGenerated;
     },
@@ -2176,8 +2070,6 @@
 
         const resourceBase = Drupal.settings.civicrm.resourceBase;
         const correctedUrl = resourceBase + imagePath;
-        console.log('Using Drupal.settings.civicrm.resourceBase:', resourceBase);
-        console.log('Corrected URL:', correctedUrl);
         return correctedUrl;
       }
 
@@ -2188,7 +2080,6 @@
           '/packages/AIImageGeneration/',
           '/sites/all/modules/civicrm/packages/AIImageGeneration/'
         );
-        console.log('Manual path correction applied:', correctedUrl);
         return correctedUrl;
       }
 
@@ -2196,7 +2087,6 @@
       if (imagePath) {
         const baseUrl = window.location.origin;
         const correctedUrl = baseUrl + '/sites/all/modules/civicrm/' + imagePath;
-        console.log('Constructed URL from image_path:', correctedUrl);
         return correctedUrl;
       }
 
@@ -2224,7 +2114,6 @@
 
       // Check if we have a direct mapping
       if (localeMap[normalizedLocale]) {
-        console.log('Locale converted from', locale, 'to', localeMap[normalizedLocale]);
         return localeMap[normalizedLocale];
       }
 
@@ -2232,18 +2121,15 @@
       if (locale.includes('-')) {
         const parts = locale.split('-');
         const converted = parts[0] + '_' + parts[1].toUpperCase();
-        console.log('Locale converted from', locale, 'to', converted);
         return converted;
       }
 
       // Default fallback
-      console.log('Using locale as-is:', locale);
       return locale;
     },
 
     // Handle sample retry button click
     handleSampleRetry: function() {
-      console.log('Sample retry button clicked');
 
       // Hide error state and show loading
       this.hideSampleError();
@@ -2267,7 +2153,6 @@
       const locale = this.getUILocale();
       const ratio = this.getCurrentRatio();
 
-      console.log('Loading sample image for locale:', locale, 'ratio:', ratio);
 
       // Show loading state
       this.showSampleImageLoading();
@@ -2284,7 +2169,6 @@
 
         success: function(response) {
           if (response.status === 1 && response.data) {
-            console.log('Sample image loaded successfully');
             self.applySampleToInterface(response.data);
             // applySampleToInterface will set the SUCCESS state
           } else {
@@ -2335,7 +2219,6 @@
           this.updateRatioSelector(sampleData.ratio);
         }
 
-        console.log('Sample data applied to interface successfully');
       } catch (error) {
         console.error('Error applying sample data to interface:', error);
       }
@@ -2345,14 +2228,12 @@
     showSampleImageLoading: function() {
       // Use state manager to set sample loading state
       this.visualStateManager.setState(this.visualStateManager.STATES.SAMPLE_LOADING);
-      console.log('Sample image loading state set via state manager');
     },
 
     // Hide loading state for sample image (legacy method - state will be managed by AJAX callbacks)
     hideSampleImageLoading: function() {
       // This method is kept for backward compatibility but the actual state
       // management is now handled by AJAX success/error callbacks directly
-      console.log('hideSampleImageLoading: State will be handled by AJAX callbacks');
     },
 
     // Update sample image display
@@ -2376,12 +2257,6 @@
         const styleText = (sampleData && sampleData.style) || $(this.config.container).find(this.config.selectors.styleText).text() || '';
         const ratioText = (sampleData && sampleData.ratio) || $(this.config.container).find(this.config.selectors.ratioText).text() || '';
 
-        console.log('Sample image metadata:', {
-          promptText: promptText,
-          styleText: styleText,
-          ratioText: ratioText,
-          sampleData: sampleData
-        });
 
         // Create anchor tag to wrap the image for lightbox functionality with metadata
         const $link = $('<a>').attr({
@@ -2413,7 +2288,6 @@
           NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
         }, 50);
 
-        console.log('Sample image updated successfully:', imageUrl);
       } else {
         console.error('No image element found in container');
       }
@@ -2571,7 +2445,6 @@
         if ($uploadField.length > 0) {
           const ratio = uploadFieldConfigs[fieldName];
           self.addAIGenerateLink($uploadField, ratio);
-          console.log('Added AI generate link for field:', fieldName, 'with ratio:', ratio);
         }
       });
     },
@@ -2600,7 +2473,6 @@
       $aiLink.on('click', function(e) {
         e.preventDefault();
         const selectedRatio = $(this).data('ratio');
-        console.log('AI generate link clicked with ratio:', selectedRatio);
 
         // Check if nsp-container exists and get its current state
         const $nspContainer = $('.nsp-container');
@@ -2610,7 +2482,6 @@
         }
 
         const isContainerOpen = $nspContainer.hasClass('is-opened');
-        console.log('nsp-container current state - is opened:', isContainerOpen);
 
         // Function to switch to AI Image Generation panel
         const switchToAIPanel = function() {
@@ -2622,18 +2493,15 @@
             forceLoadSample: true,  // Use forceLoadSample instead of forceLoad
             timestamp: Date.now()
           };
-          console.log('Set trigger context:', NetiAIImageGeneration._aiLinkTriggerContext);
 
           const $aiTabLink = $('.nme-setting-panels-tabs a[data-target-id="nme-aiimagegeneration"]');
           if ($aiTabLink.length > 0) {
-            console.log('Switching to AI Image Generation panel');
             $aiTabLink.trigger('click');
 
             // Update ratio after panel switch
             setTimeout(() => {
               if (window.NetiAIImageGeneration && window.NetiAIImageGeneration.setRatio) {
                 window.NetiAIImageGeneration.setRatio(selectedRatio);
-                console.log('Set ratio to:', selectedRatio);
               }
             }, 200);
           } else {
@@ -2643,14 +2511,12 @@
 
         if (!isContainerOpen) {
           // Container is closed - first switch panel, then open container
-          console.log('Container is closed - switching panel first, then opening container');
           switchToAIPanel();
 
           // Wait for panel switch to complete, then open container
           setTimeout(() => {
             const $trigger = $('.nsp-trigger');
             if ($trigger.length > 0) {
-              console.log('Opening nsp-container');
               $trigger.trigger('click');
             } else {
               console.warn('nsp-trigger not found');
@@ -2658,7 +2524,6 @@
           }, 300);
         } else {
           // Container is already open - just switch panel
-          console.log('Container is already open - switching to AI panel directly');
           switchToAIPanel();
         }
       });
@@ -2685,7 +2550,6 @@
             fadeOutTime: 100
           });
           $link.addClass('tooltip-initialized');
-          console.log('PowerTip initialized for AI generate link');
         }
       } else {
         console.warn('PowerTip not available or invalid link element');
@@ -2802,7 +2666,6 @@
       const context = this._aiLinkTriggerContext;
       const locale = this.getUILocale();
 
-      console.log('Loading sample image with context:', context);
 
       // Use ratio information from context to load sample image
       // Pass both forceLoad and forceLoadSample for compatibility
@@ -2817,7 +2680,6 @@
     // Clear trigger context
     _clearTriggerContext: function() {
       this._aiLinkTriggerContext = null;
-      console.log('Trigger context cleared');
     },
 
     // Show replace confirmation dialog
@@ -2852,15 +2714,13 @@
         enableEscapeKey: true,
         callbacks: {
           open: function() {
-            console.log('Replace confirmation modal opened with ratio:', ratio);
             // Focus on cancel button by default to prevent accidental confirmation
             setTimeout(() => {
               $('.popup-modal-dismiss').focus();
             }, 100);
           },
           close: function() {
-            console.log('Replace confirmation modal closed');
-            // Clean up dialog context when modal is closed by any means
+                  // Clean up dialog context when modal is closed by any means
             self._dialogContext = null;
           }
         }
@@ -2875,7 +2735,6 @@
       // Clear dialog context
       this._dialogContext = null;
 
-      console.log('Replace confirmation modal closed');
     },
 
     // Get translation text with fallback
@@ -2898,7 +2757,6 @@
 
     // Handle confirm replace action
     handleConfirmReplace: function() {
-      console.log('User confirmed replacement');
 
       // Get stored dialog context
       if (!this._dialogContext) {
@@ -2913,7 +2771,6 @@
       this.hideReplaceConfirmDialog();
 
       // Proceed with loading sample image
-      console.log('Proceeding with sample image loading:', context);
       this._loadSampleImageWithRatio(
         context.locale,
         context.ratio,
@@ -2924,7 +2781,6 @@
 
     // Handle cancel replace action
     handleCancelReplace: function() {
-      console.log('User cancelled replacement');
 
       // Context cleanup is handled in the close callback
       // This method is mainly for logging purposes
@@ -2937,24 +2793,19 @@
       // Determine loading conditions based on force options
       if (forceLoad) {
         // forceLoad: Can overwrite any image (existing behavior)
-        console.log('Force loading sample image (can overwrite any image)');
       } else if (forceLoadSample) {
         // forceLoadSample: Can only overwrite sample images, not user-generated images
         if (this.hasUserGeneratedImage()) {
-          console.log('User-generated image found - showing confirmation dialog');
           this.showReplaceConfirmDialog(locale, ratio);
           return;
         }
-        console.log('Force loading sample image (can overwrite sample images only)');
       } else {
         // Default: Only load if no existing image
         if (this.hasExistingImage()) {
-          console.log('Existing image found and no force option - skipping');
           return;
         }
       }
 
-      console.log('Loading sample image with ratio:', ratio);
 
       // Show loading state
       this.showSampleImageLoading();
@@ -2971,7 +2822,6 @@
 
         success: function(response) {
           if (response.status === 1 && response.data) {
-            console.log('Sample image loaded successfully with ratio:', ratio);
             self.applySampleToInterface(response.data);
             // applySampleToInterface will set the SUCCESS state
           } else {
@@ -3165,7 +3015,6 @@
           this.hide();
         }, 5000);
 
-        console.log('Floating message shown:', { message, type });
       },
 
       // Hide floating message
@@ -3176,7 +3025,6 @@
         this.clearTimer();
         $floatingMessage.stop(true, true).fadeOut(200);
 
-        console.log('Floating message hidden');
       },
 
       // Clear hide timer
@@ -3239,7 +3087,6 @@
           this.hide();
         }, 3500);
 
-        console.log('Panel message shown:', { message, type });
       },
 
       // Hide panel message
@@ -3251,7 +3098,6 @@
         // Hide with slideUp animation
         $panelMessage.stop(true, true).slideUp(300);
 
-        console.log('Panel message hidden');
       },
 
       // Clear hide timer
