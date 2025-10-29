@@ -1737,7 +1737,7 @@
     updateFloatingActionsBasedOnImage: function() {
       // Legacy method - now delegates to visual state manager
       console.log('updateFloatingActionsBasedOnImage: This is a legacy method. Consider using visualStateManager.setState() directly.');
-      
+
       if (this.hasGeneratedImage()) {
         this.setFloatingActionsState('enabled');
       } else {
@@ -1780,28 +1780,28 @@
           this._pendingState = newState;
           return;
         }
-        
+
         if (this.currentState === newState) {
           console.log(`Visual state: ${newState} (no change)`);
           return;
         }
-        
+
         this._stateChangeInProgress = true;
-        
+
         // Optional trace logging for debugging
         if (console.trace && window.location.search.includes('debug=1')) {
           console.trace(`Visual state change requested: ${this.currentState} → ${newState}`);
         }
-        
+
         console.log(`Visual state: ${this.currentState} → ${newState}`);
         const previousState = this.currentState;
         this.currentState = newState;
-        
+
         try {
           this.applyStateRules(newState, previousState);
         } finally {
           this._stateChangeInProgress = false;
-          
+
           // Handle pending state changes
           if (this._pendingState) {
             const pending = this._pendingState;
@@ -1815,10 +1815,10 @@
       // Apply UI rules based on current state
       applyStateRules: function(state, previousState) {
         const $container = $(NetiAIImageGeneration.config.container);
-        
+
         // First hide all components to ensure clean state
         this.hideAllComponents($container);
-        
+
         // Then show components based on current state
         switch(state) {
           case this.STATES.EMPTY:
@@ -1848,13 +1848,13 @@
       // Hide all visual components
       hideAllComponents: function($container) {
         const $imageContainer = $container.find('.image-placeholder');
-        
+
         // Hide state-specific content
         $imageContainer.find('.empty-state-content').hide();
         $imageContainer.find('.sample-error-state').hide();
         $imageContainer.find('.loading-overlay').hide();
         $imageContainer.find('.ai-image-link').hide();
-        
+
         // Hide other components
         $container.find('.floating-actions').hide();
         $container.find('.loading-info').hide();
@@ -1864,7 +1864,7 @@
       showEmptyState: function($container) {
         const $imageContainer = $container.find('.image-placeholder');
         $imageContainer.find('.empty-state-content').show();
-        
+
         console.log('Visual state applied: EMPTY');
       },
 
@@ -1873,16 +1873,16 @@
         const $imageContainer = $container.find('.image-placeholder');
         const $loadingOverlay = $imageContainer.find('.loading-overlay');
         const $loadingInfo = $container.find('.loading-info');
-        
+
         // Show loading overlay and info, hide error state
         $loadingOverlay.show();
         $loadingOverlay.find('.error-state').hide();
         $loadingInfo.show();
-        
+
         // Ensure loading elements are visible
         const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress');
         $loadingElements.show();
-        
+
         console.log('Visual state applied: LOADING');
       },
 
@@ -1891,29 +1891,29 @@
         const $imageContainer = $container.find('.image-placeholder');
         const $loadingOverlay = $imageContainer.find('.loading-overlay');
         const $loadingInfo = $container.find('.loading-info');
-        
+
         // Show loading overlay
         $loadingOverlay.show();
         $loadingOverlay.find('.error-state').hide();
-        
+
         // Set sample loading specific message
         const $loadingMessage = $loadingOverlay.find('.loading-message');
         const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
           ? window.AIImageGeneration.translation.loadingSampleImage
           : 'Loading sample image...';
         $loadingMessage.text(loadingText);
-        
+
         // Hide loading info area (sample loading doesn't need it)
         $loadingInfo.hide();
-        
+
         // Show loading elements (spinner and message only)
         const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message');
         $loadingElements.show();
-        
+
         // Hide progress elements (sample loading doesn't need progress indication)
         const $progressElements = $loadingOverlay.find('.loading-timer, .loading-progress');
         $progressElements.hide();
-        
+
         console.log('Visual state applied: SAMPLE_LOADING');
       },
 
@@ -1922,15 +1922,15 @@
         const $imageContainer = $container.find('.image-placeholder');
         const $aiImageLink = $imageContainer.find('.ai-image-link');
         const $floatingActions = $container.find('.floating-actions');
-        
+
         // Show image and floating actions
         $aiImageLink.show();
         $floatingActions.show();
-        
+
         // Enable floating action buttons
         const $floatingBtns = $floatingActions.find(NetiAIImageGeneration.config.selectors.floatingBtn);
         $floatingBtns.prop('disabled', false).removeClass(NetiAIImageGeneration.config.classes.disabled);
-        
+
         console.log('Visual state applied: SUCCESS');
       },
 
@@ -1938,15 +1938,15 @@
       showErrorState: function($container) {
         const $imageContainer = $container.find('.image-placeholder');
         const $loadingOverlay = $imageContainer.find('.loading-overlay');
-        
+
         // Show loading overlay with error state
         $loadingOverlay.show();
         $loadingOverlay.find('.error-state').show();
-        
+
         // Ensure loading elements are hidden
         const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress, .loading-info');
         $loadingElements.hide();
-        
+
         console.log('Visual state applied: ERROR');
       },
 
@@ -1954,7 +1954,7 @@
       showSampleErrorState: function($container) {
         const $imageContainer = $container.find('.image-placeholder');
         $imageContainer.find('.sample-error-state').show();
-        
+
         console.log('Visual state applied: SAMPLE_ERROR');
       },
 
@@ -1978,13 +1978,13 @@
     hasActualImage: function() {
       const $imageContainer = $(this.config.container).find('.image-placeholder');
       const $aiImageLink = $imageContainer.find('.ai-image-link');
-      
+
       if ($aiImageLink.length > 0) {
         const $img = $aiImageLink.find('img');
         const src = $img.attr('src');
         return src && !this.isPlaceholderImage(src);
       }
-      
+
       return false;
     },
 
@@ -2075,7 +2075,7 @@
       } else {
         NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
       }
-      
+
       console.log('Sample loading error state hidden');
     },
 
@@ -2090,7 +2090,7 @@
     clearSampleErrorIfNeeded: function() {
       const $container = $(this.config.container);
       const $sampleError = $container.find('.sample-error-state');
-      
+
       // If sample error is currently showing, hide it
       if ($sampleError.is(':visible')) {
         console.log('Clearing sample error state due to user action');
@@ -2216,12 +2216,8 @@
       // Convert locale format to what API expects
       // Common conversions for CiviCRM/Drupal locales
       const localeMap = {
+        'en': 'en_US',
         'zh-hant': 'zh_TW',
-        'zh-hans': 'zh_CN',
-        'zh-tw': 'zh_TW',
-        'zh-cn': 'zh_CN',
-        'en-us': 'en_US',
-        'en-gb': 'en_GB'
       };
 
       const normalizedLocale = locale.toLowerCase();
@@ -2248,10 +2244,10 @@
     // Handle sample retry button click
     handleSampleRetry: function() {
       console.log('Sample retry button clicked');
-      
+
       // Hide error state and show loading
       this.hideSampleError();
-      
+
       // Retry loading sample image
       this.loadSampleImage();
     },
@@ -2305,7 +2301,7 @@
             responseText: xhr.responseText,
             httpStatus: xhr.status
           });
-          
+
           // Directly set sample error state
           self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
         }
@@ -2317,7 +2313,7 @@
       try {
         // Clear any existing sample error state since we got valid data
         this.clearSampleErrorIfNeeded();
-        
+
         // Update image if provided
         if (sampleData.image_url || sampleData.image_path) {
           const correctedImageUrl = this.getCorrectedImageUrl(sampleData.image_url, sampleData.image_path);
@@ -2464,7 +2460,7 @@
 
       // Check if custom style is selected
       const isCustomStyle = this.isCustomStyleSelected();
-      
+
       // Get appropriate translated text based on style
       let tooltipText;
       if (isCustomStyle) {
@@ -2511,10 +2507,10 @@
     // Update prompt UI (tooltip and placeholder) based on style selection
     updatePromptBasedOnStyle: function(style) {
       const isCustomStyle = (style === 'Custom Style');
-      
+
       // Update placeholder
       this.updatePromptPlaceholder(isCustomStyle);
-      
+
       // Update tooltip if it exists
       const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
       if ($textarea.length > 0) {
@@ -2678,7 +2674,7 @@
     initializeLinkTooltip: function($link) {
       // Use same tooltip system as existing tooltips
       var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
-      
+
       if (jq && $link.length > 0) {
         // Check if already initialized to avoid double initialization
         if (!$link.hasClass('tooltip-initialized')) {
@@ -2827,7 +2823,7 @@
     // Show replace confirmation dialog
     showReplaceConfirmDialog: function(locale, ratio) {
       const $modal = $('#netiaiig-confirm-replace-modal');
-      
+
       if ($modal.length === 0) {
         console.warn('Confirm modal element not found');
         return;
@@ -2875,7 +2871,7 @@
     hideReplaceConfirmDialog: function() {
       // Close modal using Magnific Popup
       $.magnificPopup.close();
-      
+
       // Clear dialog context
       this._dialogContext = null;
 
@@ -2884,26 +2880,26 @@
 
     // Get translation text with fallback
     getTranslation: function(key) {
-      if (window.AIImageGeneration && 
-          window.AIImageGeneration.translation && 
+      if (window.AIImageGeneration &&
+          window.AIImageGeneration.translation &&
           window.AIImageGeneration.translation[key]) {
         return window.AIImageGeneration.translation[key];
       }
-      
+
       // Fallback translations
       const fallbacks = {
         'confirmDialogMainText': 'You clicked "Generate images using AI". The system will load a sample image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area.',
         'confirmDialogQuestion': 'Do you want to replace the current image with the sample image?',
         'confirmDialogReminder': 'All images you generate are saved in "Generation History" and can be retrieved at any time even if replaced.'
       };
-      
+
       return fallbacks[key] || key;
     },
 
     // Handle confirm replace action
     handleConfirmReplace: function() {
       console.log('User confirmed replacement');
-      
+
       // Get stored dialog context
       if (!this._dialogContext) {
         console.warn('No dialog context found for replacement');
@@ -2912,15 +2908,15 @@
       }
 
       const context = this._dialogContext;
-      
+
       // Hide dialog first
       this.hideReplaceConfirmDialog();
-      
+
       // Proceed with loading sample image
       console.log('Proceeding with sample image loading:', context);
       this._loadSampleImageWithRatio(
-        context.locale, 
-        context.ratio, 
+        context.locale,
+        context.ratio,
         true, // forceLoad = true to overwrite user image
         false
       );
@@ -2929,7 +2925,7 @@
     // Handle cancel replace action
     handleCancelReplace: function() {
       console.log('User cancelled replacement');
-      
+
       // Context cleanup is handled in the close callback
       // This method is mainly for logging purposes
     },
@@ -2987,7 +2983,7 @@
 
         error: function(xhr, status, error) {
           console.warn('Failed to load sample image with ratio:', ratio, error);
-          
+
           // Directly set sample error state
           self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
         }
@@ -3025,7 +3021,7 @@
       // Update error message content
       updateErrorMessage: function(errorData) {
         const $container = $(NetiAIImageGeneration.config.container);
-        
+
         // Check if error_code exists, prioritize AI-specific friendly messages
         if (errorData.error_code) {
           const aiErrorMessage = this.getAIErrorMessage(errorData.error_code);
@@ -3034,7 +3030,7 @@
             return;
           }
         }
-        
+
         // Fallback to original error handling logic
         const friendlyMessage = this.getFriendlyErrorMessage(errorData.message, errorData.httpStatus);
         $container.find('.error-reason').text(friendlyMessage);
@@ -3125,7 +3121,7 @@
           'TIMEOUT_ERROR': getTranslation('errorTimeoutError') || 'Connection timeout, please check your network connection and try again',
           'UNKNOWN_ERROR': getTranslation('errorUnknownError') || 'An unknown error occurred, please try again later'
         };
-        
+
         return aiErrorMappings[errorCode] || null;
       }
     },

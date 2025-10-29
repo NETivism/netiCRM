@@ -560,7 +560,7 @@ class CRM_AI_Page_AJAX {
       $locale = $jsondata['locale'];
 
       // Validate locale format
-      if (!in_array($locale, ['en', 'en_US', 'zh_TW'])) {
+      if (!in_array($locale, ['en_US', 'zh_TW'])) {
         self::responseError([
           'status' => 0,
           'message' => 'Invalid locale format.',
