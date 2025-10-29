@@ -131,6 +131,7 @@ window.nmEditor = {
 						<li><a title="{ts}Add Blocks{/ts}" href="#nme-add-block" data-target-id="nme-add-block" data-tooltip>{ts}Blocks{/ts}</a></li>
 						<li><a title="{ts}Global Settings{/ts}" href="#nme-global-setting" data-target-id="nme-global-setting" data-tooltip>{ts}Settings{/ts}</a></li>
 						{if $config->nextEnabled}<li><a title="{ts}AI Copywriter{/ts}" href="#nme-aicompletion" data-target-id="nme-aicompletion" data-tooltip>{ts}AI Copywriter{/ts}</a></li>{/if}
+						{if $config->nextEnabled}<li><a title="{ts}AI Image Generator{/ts}" href="#nme-aiimagegeneration" data-target-id="nme-aiimagegeneration" data-tooltip>{ts}AI Image Generator{/ts}</a></li>{/if}
 					</ul>
 				</div>
 				<div class="nme-setting-panels-content" id="nme-setting-panels-content">
@@ -256,6 +257,16 @@ window.nmEditor = {
 							<div class="nme-setting-panel-content">
                 {capture assign=component_locale}{ts}Mailing{/ts}{/capture}
                 {include file="CRM/AI/AICompletion.tpl" component=$component_locale}
+							</div>
+						</div>
+					</div>
+          {/if}
+          {if $config->nextEnabled}
+					<div id="nme-aiimagegeneration" class="nme-aiimagegeneration nme-setting-panel">
+						<div class="nme-setting-panel-inner">
+							<h3 class="nme-setting-panel-title">{ts}AI Image Generator{/ts}</h3>
+							<div class="nme-setting-panel-content">
+                {include file="CRM/AI/AIImageGeneration.tpl"}
 							</div>
 						</div>
 					</div>
