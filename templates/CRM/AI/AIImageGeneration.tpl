@@ -75,7 +75,7 @@ window.AIImageGeneration = {
     "editPromptTooltip": "{/literal}{ts}Describe the image you want to generate{/ts}{literal}",
     "editPromptTooltipCustomStyle": "{/literal}{ts}Describe the image and explicitly state your desired art style{/ts}{literal}",
     "promptPlaceholderDefault": "{/literal}{ts}Describe the image you want to generate...{/ts}{literal}",
-    "promptPlaceholderCustomStyle": "{/literal}{ts}You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, Cyberpunk, 3D Animation, etc.) directly in this prompt field, along with your image description{/ts}{literal}",
+    "promptPlaceholderCustomStyle": "{/literal}{ts}You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, 3D Claymation, etc.) directly in this prompt field, along with your image description{/ts}{literal}",
     "generateImagesUsingAI": "{/literal}{ts}Generate images using AI{/ts}{literal}",
     "lightboxImageInfo": "{/literal}{ts}Image Information{/ts}{literal}",
     "lightboxPrompt": "{/literal}{ts}Prompt{/ts}{literal}",
