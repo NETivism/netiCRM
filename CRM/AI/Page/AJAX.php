@@ -471,7 +471,7 @@ class CRM_AI_Page_AJAX {
       // Wrap only the image generation logic, not the response output
       $imageGenerator = new CRM_AI_BAO_AIGenImage();
       $generateResult = null;
-      
+
       try {
         $generateResult = $imageGenerator->generate([
           'text' => $text,
@@ -558,9 +558,9 @@ class CRM_AI_Page_AJAX {
       }
 
       $locale = $jsondata['locale'];
-      
+
       // Validate locale format
-      if (!in_array($locale, ['zh_TW', 'en_US'])) {
+      if (!in_array($locale, ['en', 'en_US', 'zh_TW'])) {
         self::responseError([
           'status' => 0,
           'message' => 'Invalid locale format.',
@@ -571,7 +571,7 @@ class CRM_AI_Page_AJAX {
       global $civicrm_root;
       $civicrm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
       $dataPath = $civicrm_root . "/packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
-      
+
       if (!file_exists($dataPath)) {
         self::responseError([
           'status' => 0,
@@ -592,7 +592,7 @@ class CRM_AI_Page_AJAX {
       // Filter prompts based on optional parameters
       $prompts = $promptsData['prompts'];
       $filteredPrompts = self::filterPrompts($prompts, $jsondata);
-      
+
       if (empty($filteredPrompts)) {
         http_response_code(404);
         header('Content-Type: application/json; charset=utf-8');
@@ -602,7 +602,7 @@ class CRM_AI_Page_AJAX {
         ]);
         CRM_Utils_System::civiExit();
       }
-      
+
       // Get random prompt item from filtered results
       $randomIndex = array_rand($filteredPrompts);
       $randomPrompt = $filteredPrompts[$randomIndex];
@@ -678,7 +678,7 @@ class CRM_AI_Page_AJAX {
       // Database operations with error handling
       $total = 0;
       $images = [];
-      
+
       try {
         // Get total count for pagination
         $countQuery = "
@@ -698,7 +698,7 @@ class CRM_AI_Page_AJAX {
 
         // Get image history data
         $query = "
-          SELECT 
+          SELECT
             img.id,
             img.original_prompt,
             img.translated_prompt,
@@ -730,7 +730,7 @@ class CRM_AI_Page_AJAX {
 
         while ($dao->fetch()) {
           $imageUrl = !empty($dao->image_path) ? $baseUrl . '/' . $publicPath . '/' . $dao->image_path : '';
-          
+
           $images[] = [
             'id' => (int)$dao->id,
             'original_prompt' => $dao->original_prompt ?: '',
@@ -802,7 +802,7 @@ class CRM_AI_Page_AJAX {
    */
   private static function filterPrompts($prompts, $filters) {
     $filteredPrompts = $prompts;
-    
+
     // Filter by style if provided
     if (isset($filters['style']) && !empty($filters['style'])) {
       $style = $filters['style'];
@@ -810,7 +810,7 @@ class CRM_AI_Page_AJAX {
         return isset($prompt['style']) && $prompt['style'] === $style;
       });
     }
-    
+
     // Filter by ratio if provided
     if (isset($filters['ratio']) && !empty($filters['ratio'])) {
       $ratio = $filters['ratio'];
@@ -818,7 +818,7 @@ class CRM_AI_Page_AJAX {
         return isset($prompt['ratio']) && $prompt['ratio'] === $ratio;
       });
     }
-    
+
     // Re-index array to ensure array_rand works correctly
     return array_values($filteredPrompts);
   }
@@ -878,20 +878,20 @@ class CRM_AI_Page_AJAX {
     if (empty($requiredFields)) {
       $requiredFields = array_keys($allowedInput);
     }
-    
+
     // Check required fields exist
     foreach ($requiredFields as $field) {
       if (!isset($jsondata[$field])) {
         return false;
       }
     }
-    
+
     // Check type validation for all provided fields
     foreach ($jsondata as $key => $value) {
       if (!isset($allowedInput[$key])) {
         return false; // Unknown field
       }
-      
+
       $expectedType = $allowedInput[$key];
       if ($expectedType === 'integer' || $expectedType === 'double') {
         if (!is_numeric($value)) {
@@ -901,33 +901,33 @@ class CRM_AI_Page_AJAX {
         return false;
       }
     }
-    
+
     return true;
   }
 
   /**
    * Extract error code from exception message
-   * 
+   *
    * @param string $errorMessage Original error message
    * @return string Error code
    */
   private static function parseErrorCode($errorMessage) {
     // Pattern to extract error codes from AITransPrompt exceptions
     $pattern = '/Prompt translation failed - ([A-Z_]+):/';
-    
+
     if (preg_match($pattern, $errorMessage, $matches)) {
       return $matches[1]; // Returns: 'CONTENT_VIOLATION', 'PROMPT_INJECTION', etc.
     }
-    
+
     // Check for other common error patterns
     if (strpos($errorMessage, 'Image generation failed') !== false) {
       return 'API_ERROR';
     }
-    
+
     if (strpos($errorMessage, 'validation') !== false || strpos($errorMessage, 'invalid') !== false) {
       return 'VALIDATION_ERROR';
     }
-    
+
     return 'UNKNOWN_ERROR';
   }
 }

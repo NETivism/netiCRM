@@ -156,14 +156,14 @@
  */
 /*
  * Modified Bootstrap 3.3.7 Grid System for Drupal compatibility
- * 
+ *
  * ISSUE: The original Bootstrap 3 grid classes conflict with Bootstrap 5
  * used in Drupal 10, causing layout issues.
- * 
+ *
  * FIX: Added 'body.html' selector prefix to all grid classes.
  * This ensures these styles only apply to Drupal 7 sites (where body has 'html' class)
  * and won't affect Drupal 10 sites.
- * 
+ *
  * This maintains backward compatibility with existing Drupal 7 sites
  * while preventing conflicts in Drupal 10 environments.
  */
@@ -850,7 +850,7 @@ body.html .row:after {
 ** Size input fields in crm-container by class. Classes are assigned by the
 ** module in relation to the data object max size.
 **
-** Because crm form fields border-sizing is border-box (element width 
+** Because crm form fields border-sizing is border-box (element width
 ** contain padding), so add one more em to each class to avoid inside text be cut off.
 */
 .crm-container .two {width: 3em;}
@@ -1859,8 +1859,8 @@ div.block-civicrm li, .crm-container ul li, .crm-container ul.treeview li {
 }
 
 .crm-container table,
-.crm-container table p, 
-.crm-container table ul, 
+.crm-container table p,
+.crm-container table ul,
 .crm-container table ol {
   font-size: .875rem;
 }
@@ -3575,7 +3575,7 @@ div.helpicon::before {
   color: #fff;
   background: #757575;
 }
-div.helpicon:hover::before, 
+div.helpicon:hover::before,
 div.helpicon:focus::before {
   color: #fff;
   background: #3f51b5;
@@ -4125,11 +4125,11 @@ table.crm-info-panel .label  {
     font-weight:normal;
 }
 
-.crm-container .disabled { 
+.crm-container .disabled {
   text-decoration:line-through;
 }
-.crm-container tr.disabled { 
-  background-color: #CCCCCC; 
+.crm-container tr.disabled {
+  background-color: #CCCCCC;
 }
     #mainTabContainer li.disabled {
         text-decoration: none;
@@ -4752,7 +4752,7 @@ ul.ui-sortable {
   margin: 0;
 }
 .ui-sortable li {
-  list-style-type: none; 
+  list-style-type: none;
   cursor: move;
 }
 .ui-sortable span.zmdi{
@@ -4794,24 +4794,24 @@ ul.ui-sortable {
     border: none;
     font-weight: normal;
 }
-.crm-container .status table, 
-.crm-container .message table, 
-.crm-container .messages table, 
+.crm-container .status table,
+.crm-container .message table,
+.crm-container .messages table,
 .crm-container-snippet .messages table {
     margin: 15px 0;
     width: auto;
     color: #000;
     font-size: .9375rem;
 }
-.crm-container .status table a, 
-.crm-container .message table a, 
-.crm-container .messages table a, 
+.crm-container .status table a,
+.crm-container .message table a,
+.crm-container .messages table a,
 .crm-container-snippet .messages table a {
     color: #304ffe;
 }
-.crm-container .status table td, 
-.crm-container .message table td, 
-.crm-container .messages table td, 
+.crm-container .status table td,
+.crm-container .message table td,
+.crm-container .messages table td,
 .crm-container-snippet .messages table td {
   padding: 6px 10px;
   border-bottom: 1px solid #bdbdbd;
@@ -5156,14 +5156,14 @@ ul.ui-sortable {
 }
 
 /* form elements */
-.crm-container input[type="text"], 
-.crm-container input[type="number"], 
-.crm-container textarea, 
+.crm-container input[type="text"],
+.crm-container input[type="number"],
+.crm-container textarea,
 .crm-container select,
-.crm-container input.form-autocomplete, 
-.crm-container input.form-text, 
-.crm-container input.form-number, 
-.crm-container textarea.form-textarea, 
+.crm-container input.form-autocomplete,
+.crm-container input.form-text,
+.crm-container input.form-number,
+.crm-container textarea.form-textarea,
 .crm-container select.form-select {
   padding: 5px;
   max-width: 100%;
@@ -5669,8 +5669,8 @@ tbody.scrollContent tr.alternateRow {
   color:#a7a7a7;
 }
 
-.crm-container a.sorting { 
-  color:#A7A7A7; 
+.crm-container a.sorting {
+  color:#A7A7A7;
   position: relative;
   padding-right: 1.2em;
 }
@@ -5685,8 +5685,8 @@ tbody.scrollContent tr.alternateRow {
   top: 0;
 }
 .crm-container a.sorting_desc,
-.crm-container a.sorting_asc { 
-  color:#000; 
+.crm-container a.sorting_asc {
+  color:#000;
 }
 .crm-container a.sorting_asc {
   position: relative;
@@ -6213,7 +6213,7 @@ tbody.scrollContent tr.alternateRow {
   background-color: #E8EAF6;
 }
 .crm-container .event_summary-section .action-link {
-  float: right; 
+  float: right;
 }
 .crm-container .crm-event-info-form-block .register_link-section a.crm-register-button {
   padding: 15px 30px;
@@ -7144,7 +7144,7 @@ input.crm-form-textfield,
   .crm-container-md .crm-form-elem.dateplugin input.dateplugin {
     width: 100%;
   }
-  .crm-container .crm-section .label, 
+  .crm-container .crm-section .label,
   .crm-section .label {
     float: none;
     width: 100%;
@@ -7156,7 +7156,7 @@ input.crm-form-textfield,
   .crm-container .crm-section-big .label > label {
     font-size: 1.5rem;
   }
-  .crm-container .crm-section .content, 
+  .crm-container .crm-section .content,
   .crm-section .content {
     margin-left: 0;
   }
@@ -8230,12 +8230,12 @@ html[lang="en"] .new-personal-campaign-link-wrap {
   padding: 12px 16px;
   background: #f8f9fa;
   border-radius: 0;
-  border-left: 4px solid #17a2b8;
+  border-left: 4px solid #8C9EFF;
 }
 
 .neticrm-mfp-modal .reminder-icon {
   flex-shrink: 0;
-  color: #17a2b8;
+  color: #8C9EFF;
   font-size: 20px;
   margin: 0;
   line-height: 1;
@@ -8285,12 +8285,13 @@ html[lang="en"] .new-personal-campaign-link-wrap {
 }
 
 .neticrm-mfp-modal .btn-primary {
-  background: #007bff;
+  background: #3f51b5;
   color: white;
 }
 
-.neticrm-mfp-modal .btn-primary:hover {
-  background: #0056b3;
+.neticrm-mfp-modal .btn-primary:hover,
+.neticrm-mfp-modal .btn-primary:focus {
+  background: #5C6BC0;
   color: white;
 }
 
@@ -8315,11 +8316,11 @@ html[lang="en"] .new-personal-campaign-link-wrap {
     padding: 20px;
     max-width: none;
   }
-  
+
   .neticrm-mfp-modal .confirm-modal-actions {
     flex-direction: column;
   }
-  
+
   .neticrm-mfp-modal .btn {
     width: 100%;
   }

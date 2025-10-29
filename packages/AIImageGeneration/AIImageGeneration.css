@@ -2,6 +2,7 @@
 
 .nme-setting-panel.nme-aiimagegeneration {
   background: #fff;
+  height: auto;
 }
 
 /**
@@ -201,7 +202,7 @@
 
 .netiaiig-container .floating-btn:focus {
   background: rgba(255, 255, 255, 1);
-  outline: 2px solid #007aff;
+  outline: 2px solid #536DFE;
   outline-offset: 2px;
 }
 
@@ -317,12 +318,13 @@
 }
 
 .netiaiig-container .prompt-container:focus-within {
-  border-color: #007aff;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  border-color: #536DFE;
+  box-shadow: 0 0 0 3px rgba(83,109,254, 0.1);
 }
 
 .netiaiig-container .prompt-textarea {
   width: 100%;
+  min-height: 65px;
   padding: 24px 16px 16px;
   border: 0;
   border-radius: 12px;
@@ -385,7 +387,7 @@
 }
 
 .netiaiig-container .embedded-btn:focus {
-  outline: 2px solid #007aff;
+  outline: 2px solid #536DFE;
   outline-offset: 2px;
 }
 
@@ -451,12 +453,12 @@
 }
 
 .netiaiig-container .dropdown-item.selected {
-  background-color: #007aff;
+  background-color: #536DFE;
   color: white;
 }
 
 .netiaiig-container .dropdown-item:focus {
-  outline: 2px solid #007aff;
+  outline: 2px solid #536DFE;
   outline-offset: -2px;
 }
 
@@ -511,7 +513,7 @@
 }
 
 .netiaiig-container .style-option:focus {
-  outline: 2px solid #007aff;
+  outline: 2px solid #536DFE;
   outline-offset: 2px;
 }
 
@@ -526,8 +528,8 @@
 }
 
 .netiaiig-container .style-option.selected .style-preview {
-  border-color: #007aff;
-  box-shadow: 0 0 20px rgba(0, 122, 255, 0.4);
+  border-color: #536DFE;
+  box-shadow: 0 0 20px rgba(83,109,254, 0.4);
 }
 
 .netiaiig-container .style-preview.custom-style {
@@ -552,7 +554,7 @@
 .netiaiig-container .generate-btn {
   width: 100%;
   padding: 16px;
-  background: linear-gradient(135deg, #007aff 0%, #2196F3 100%);
+  background: linear-gradient(135deg, #3f51b5 0%, #5C6BC0 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -561,19 +563,19 @@
   cursor: pointer;
   transition: all 0.2s ease;
   margin: 0;
-  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(63,81,181, 0.2);
 }
 
 .netiaiig-container .generate-btn:hover,
 .netiaiig-container .generate-btn:active {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #007aff 0%, #03A9F4 100%);
-  box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+  background: linear-gradient(135deg, #3f51b5 0%, #7986CB 100%);
+  box-shadow: 0 4px 16px rgba(63,81,181, 0.3);
 }
 
 .netiaiig-container .generate-btn:focus {
-  background: linear-gradient(135deg, #007aff 0%, #03A9F4 100%);
-  outline: 3px solid rgba(0, 122, 255, 0.5);
+  background: linear-gradient(135deg, #3f51b5 0%, #7986CB 100%);
+  outline: 3px solid rgba(63,81,181, 0.5);
   outline-offset: 2px;
 }
 
@@ -624,7 +626,7 @@
 }
 
 .netiaiig-container .history-item:focus {
-  outline: 2px solid #007aff;
+  outline: 2px solid #536DFE;
   outline-offset: 2px;
 }
 
@@ -833,7 +835,7 @@
 
 /* Focus indicators for keyboard navigation */
 .netiaiig-container *:focus {
-  outline: 2px solid #007aff;
+  outline: 2px solid #536DFE;
   outline-offset: 2px;
 }
 
@@ -1299,7 +1301,7 @@
   width: 48px;
   height: 48px;
   border: 4px solid #e5e5e7;
-  border-top: 4px solid #007aff;
+  border-top: 4px solid #536DFE;
   border-radius: 50%;
   animation: spin 1.2s linear infinite;
   margin-bottom: 16px;
@@ -1319,7 +1321,7 @@
 .netiaiig-container .loading-timer {
   display: none !important;
   font-size: 14px;
-  color: #007aff;
+  color: #536DFE;
   text-align: center;
   min-width: 60px;
   margin: 12px;
@@ -1342,7 +1344,7 @@
 
 .netiaiig-container .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #007aff, #00d4ff);
+  background: linear-gradient(90deg, #536DFE, #cea3ff);
   border-radius: 2px;
   transition: width 0.6s ease;
   width: 0%;
@@ -1362,6 +1364,7 @@
 .netiaiig-container .ai-image-link:hover {
   transform: scale(1.02);
   opacity: 0.9;
+  cursor: zoom-in;
 }
 
 /* Error state styles */
@@ -1458,7 +1461,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background-color: #007aff;
+  background-color: #3f51b5;
   color: white;
   border: none;
   border-radius: 6px;
@@ -1470,17 +1473,13 @@
   min-height: 32px;
 }
 
-.netiaiig-container .sample-retry-btn:hover {
-  background-color: #0056b3;
-  transform: scale(1.02);
-}
-
+.netiaiig-container .sample-retry-btn:hover,
 .netiaiig-container .sample-retry-btn:active {
-  transform: scale(0.98);
+  background-color: #3949AB;
 }
-
 .netiaiig-container .sample-retry-btn:focus {
-  outline: 2px solid #007aff;
+  background-color: #3949AB;
+  outline: 2px solid #5C6BC0;
   outline-offset: 2px;
 }
 
@@ -1515,9 +1514,9 @@
   position: absolute;
   top: -12px;
   left: 12px;
-  border: 1px solid #007aff;
-  color: #007aff;
-  font-size: 14px;
+  border: 1px solid #536DFE;
+  color: #536DFE;
+  font-size: 12px;
   font-weight: 500;
   padding: 4px 8px;
   border-radius: 4px;
@@ -1527,6 +1526,9 @@
   transition: all 0.2s ease;
   pointer-events: none;
   background: #fff;
+}
+html[lang="zh-hant"] .netiaiig-container .sample-prompt-tooltip {
+  font-size: 14px;
 }
 
 /* AI Generate Link for file upload fields */

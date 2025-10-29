@@ -58,6 +58,9 @@
       // Initialize tooltip based on existing content
       this.initPromptTooltip();
 
+      // Initialize prompt UI based on current style selection
+      this.initPromptStyleSettings();
+
       // Initialize file upload field integration
       this.initFileUploadIntegration();
 
@@ -206,6 +209,9 @@
 
       // Update button text with translated label
       $container.find(this.config.selectors.styleText).text(styleLabel);
+
+      // Update prompt UI based on style selection
+      this.updatePromptBasedOnStyle(style);
 
       // Close dropdown
       $container.removeClass(this.config.classes.active);
@@ -1433,9 +1439,8 @@
 
       switch(action) {
         case 'regenerate':
-          // Close lightbox and trigger regeneration
-          $.magnificPopup.close();
-          this.generateImage();
+          // Close lightbox and trigger regeneration with original image settings
+          this.regenerateFromLightbox();
           break;
         case 'copy':
           this.copyImageFromLightbox();
@@ -1513,6 +1518,73 @@
 
       const imageUrl = $currentItem.src;
       this.downloadImageByUrl(imageUrl);
+    },
+
+    // Regenerate image from lightbox with original settings
+    regenerateFromLightbox: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem || !$currentItem.el) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.lightboxActionFailed
+          : 'Action failed, please try again';
+        this.showLightboxMessage(message, 'error');
+        return;
+      }
+
+      // Get original image metadata from lightbox trigger element
+      const $trigger = $($currentItem.el);
+      const originalPrompt = $trigger.data('prompt') || '';
+      const originalStyle = $trigger.data('style') || 'Simple Illustration';
+      const originalRatio = $trigger.data('ratio') || '4:3';
+
+      console.log('Regenerating image with original settings:', {
+        prompt: originalPrompt,
+        style: originalStyle,
+        ratio: originalRatio
+      });
+
+      // Close lightbox first
+      $.magnificPopup.close();
+
+      // Apply original settings to UI
+      // Set prompt text
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      $textarea.val(originalPrompt);
+
+      // Set style using existing API
+      if (this.publicAPI && this.publicAPI.setStyle) {
+        this.publicAPI.setStyle(originalStyle);
+      } else {
+        // Fallback: directly select style option
+        const $styleOptions = $(this.config.container).find(this.config.selectors.styleOptions);
+        $styleOptions.removeClass(this.config.classes.selected);
+        const $targetStyleOption = $styleOptions.filter(`[data-style="${originalStyle}"]`);
+        if ($targetStyleOption.length > 0) {
+          $targetStyleOption.addClass(this.config.classes.selected);
+          const styleLabel = $targetStyleOption.find('.style-label').text() || originalStyle;
+          $(this.config.container).find('#styleText').text(styleLabel);
+        }
+      }
+
+      // Set ratio using existing API
+      if (this.publicAPI && this.publicAPI.setRatio) {
+        this.publicAPI.setRatio(originalRatio);
+      } else {
+        // Fallback: directly select ratio option
+        const $ratioItems = $(this.config.container).find(this.config.selectors.dropdownItems);
+        $ratioItems.removeClass(this.config.classes.selected);
+        const $targetRatioItem = $ratioItems.filter(`[data-ratio="${originalRatio}"]`);
+        if ($targetRatioItem.length > 0) {
+          $targetRatioItem.addClass(this.config.classes.selected);
+          $(this.config.container).find('#ratioText').text(originalRatio);
+        }
+      }
+
+      // Trigger auto-resize for textarea if content changed
+      this.autoResizeTextarea($textarea);
+
+      // Generate image with original settings
+      this.generateImage();
     },
 
     // Copy image by URL
@@ -2390,10 +2462,20 @@
       // Remove existing tooltip if any
       $promptContainer.find('.sample-prompt-tooltip').remove();
 
-      // Get translated text
-      const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
-        ? window.AIImageGeneration.translation.editPromptTooltip
-        : 'Edit prompt: Describe the image you want to generate';
+      // Check if custom style is selected
+      const isCustomStyle = this.isCustomStyleSelected();
+      
+      // Get appropriate translated text based on style
+      let tooltipText;
+      if (isCustomStyle) {
+        tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltipCustomStyle
+          ? window.AIImageGeneration.translation.editPromptTooltipCustomStyle
+          : 'Describe the image and explicitly state your desired art style';
+      } else {
+        tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
+          ? window.AIImageGeneration.translation.editPromptTooltip
+          : 'Describe the image you want to generate';
+      }
 
       // Create tooltip element
       const $tooltip = $('<div class="sample-prompt-tooltip">' + tooltipText + '</div>');
@@ -2413,6 +2495,66 @@
       const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
       if ($textarea.length > 0) {
         this.updatePromptTooltip($textarea);
+      }
+    },
+
+    // Check if custom style is currently selected
+    isCustomStyleSelected: function() {
+      const $selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      if ($selectedStyleOption.length > 0) {
+        const selectedStyle = $selectedStyleOption.data('style');
+        return selectedStyle === 'Custom Style';
+      }
+      return false;
+    },
+
+    // Update prompt UI (tooltip and placeholder) based on style selection
+    updatePromptBasedOnStyle: function(style) {
+      const isCustomStyle = (style === 'Custom Style');
+      
+      // Update placeholder
+      this.updatePromptPlaceholder(isCustomStyle);
+      
+      // Update tooltip if it exists
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length > 0) {
+        this.updatePromptTooltip($textarea);
+      }
+
+      // Auto focus textarea when custom style is selected
+      if (isCustomStyle && $textarea.length > 0) {
+        // Use setTimeout to ensure UI updates are completed first
+        setTimeout(function() {
+          $textarea.focus();
+        }, 100);
+      }
+    },
+
+    // Update prompt textarea placeholder based on style
+    updatePromptPlaceholder: function(isCustomStyle) {
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length === 0) return;
+
+      let placeholderText;
+      if (isCustomStyle) {
+        placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderCustomStyle
+          ? window.AIImageGeneration.translation.promptPlaceholderCustomStyle
+          : 'You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, Cyberpunk, 3D Animation, etc.) directly in this prompt field, along with your image description';
+      } else {
+        placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderDefault
+          ? window.AIImageGeneration.translation.promptPlaceholderDefault
+          : 'Describe the image you want to generate...';
+      }
+
+      $textarea.attr('placeholder', placeholderText);
+    },
+
+    // Initialize prompt UI settings based on current style selection
+    initPromptStyleSettings: function() {
+      const $selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      if ($selectedStyleOption.length > 0) {
+        const selectedStyle = $selectedStyleOption.data('style');
+        this.updatePromptBasedOnStyle(selectedStyle);
       }
     },
 
