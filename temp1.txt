@@ -1,0 +1,53 @@
+commit 466fe7a6be527f1efe06d795ecc4216e272d4a62
+Author: chiachin <chiachin@netivism.com.tw>
+Date:   Wed Feb 5 12:35:38 2025 +0800
+
+    Refs #42307, Add type check for payment class instance.
+
+diff --git a/CRM/Contribute/Page/ContributionRecur.php b/CRM/Contribute/Page/ContributionRecur.php
+index 2c7128224..7568ce897 100644
+--- a/CRM/Contribute/Page/ContributionRecur.php
++++ b/CRM/Contribute/Page/ContributionRecur.php
+@@ -201,24 +201,24 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
+       $contributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
+       $paymentClass = CRM_Contribute_BAO_Contribution::getPaymentClass($contributionId);
+ 
+-      if ((method_exists($paymentClass, 'doRecurTransact') || method_exists($paymentClass, 'doRecurUpdate')) && CRM_Core_Permission::check('edit contributions')) {
+-        $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
+-        $controllerTransact->setEmbedded(TRUE);
+-        $controllerTransact->set('recurId', $recur->id);
+-        $controllerTransact->set('contributionId', $contributionId);
+-        $controllerTransact->set('contactId', $recur->contact_id);
+-        $controllerTransact->process();
+-        $controllerTransact->run();
+-      }
+-
+-      if (method_exists($paymentClass, 'getRecordDetail')) {
+-        $recordDetail = $paymentClass::getRecordDetail($contributionId);
+-        $this->assign('record_detail', $recordDetail);
+-      }
+-
+-      // Get payment processor
+-      if (!empty($paymentClass) && !empty($paymentClass::$_hideFields)) {
+-        $this->assign('hide_fields', $paymentClass::$_hideFields);
++      if (is_object($paymentClass)) {
++        if ((method_exists($paymentClass, 'doRecurTransact') || method_exists($paymentClass, 'doRecurUpdate')) && CRM_Core_Permission::check('edit contributions')) {
++          $controllerTransact = new CRM_Core_Controller_Simple('CRM_Contribute_Form_MakingTransaction', NULL, CRM_Core_Action::NONE);
++          $controllerTransact->setEmbedded(TRUE);
++          $controllerTransact->set('recurId', $recur->id);
++          $controllerTransact->set('contributionId', $contributionId);
++          $controllerTransact->set('contactId', $recur->contact_id);
++          $controllerTransact->process();
++          $controllerTransact->run();
++        }
++        if (method_exists($paymentClass, 'getRecordDetail')) {
++          $recordDetail = $paymentClass::getRecordDetail($contributionId);
++          $this->assign('record_detail', $recordDetail);
++        }
++        // Get payment processor
++        if (!empty($paymentClass) && !empty($paymentClass::$_hideFields)) {
++          $this->assign('hide_fields', $paymentClass::$_hideFields);
++        }
+       }
+ 
+       // show 'edit' button depends on permission.

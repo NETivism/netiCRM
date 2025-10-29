@@ -1,0 +1,658 @@
+diff --git a/drupal b/drupal
+index 25789f44d..d04be70ae 160000
+--- a/drupal
++++ b/drupal
+@@ -1 +1 @@
+-Subproject commit 25789f44dddc9f3e0e82d59a73053857d1dcd94e
++Subproject commit d04be70ae6385a14c3448089259cf355c48ba03d-dirty
+diff --git a/neticrm b/neticrm
+index 53ca26aaf..27dc0fadc 160000
+--- a/neticrm
++++ b/neticrm
+@@ -1 +1 @@
+-Subproject commit 53ca26aaff4202d83d433355ad0ae4b6fa6a0c81
++Subproject commit 27dc0fadccde1129fbee4505a8bbe3493b5400e1-dirty
+diff --git a/packages/ckeditor/extraplugins/clipboard_image/plugin.js b/packages/ckeditor/extraplugins/clipboard_image/plugin.js
+index 768b575e9..406c97598 100644
+--- a/packages/ckeditor/extraplugins/clipboard_image/plugin.js
++++ b/packages/ckeditor/extraplugins/clipboard_image/plugin.js
+@@ -1,188 +1,172 @@
+ /**
+  * @file
+- * Enhanced CKEditor clipboard image processing plugin with proper filename handling
++ * Enhanced CKEditor clipboard image processing plugin with improved reliability
+  */
+ 
+ // Register the plugin
+ CKEDITOR.plugins.add('clipboard_image', {
+   init: function(editor) {
+-    // Log initialization
+     console.log('CKEditor Clipboard Image plugin initialized');
+ 
+-    // Use paste event as primary handler with improved error handling
++    // Enhanced paste event handler with multiple fallback strategies
+     editor.on('paste', function(event) {
+       console.log('CKEditor Clipboard Image: paste event triggered');
++      console.log('CKEditor Clipboard Image: event object structure:', {
++        hasData: !!event.data,
++        hasDataTransfer: !!(event.data && event.data.dataTransfer),
++        hasNativeEvent: !!(event.data && event.data.$)
++      });
+ 
+-      // Method 1: Try to get clipboardData safely from multiple sources
++      // Strategy 1: Try to get native clipboard data from multiple sources
+       var clipboardData = null;
+       var nativeEvent = null;
+ 
+       try {
+-        // Try to get native event from different possible sources
++        // Enhanced native event detection
+         if (event.data && event.data.$) {
+-          nativeEvent = event.data.$.originalEvent || event.data.$;
++          nativeEvent = event.data.$.originalEvent || event.data.$.clipboardData || event.data.$;
++          console.log('CKEditor Clipboard Image: Found native event via event.data.$');
+         }
+ 
+-        if (nativeEvent && nativeEvent.clipboardData) {
+-          clipboardData = nativeEvent.clipboardData;
+-        } else if (window.clipboardData) {
+-          // Fallback for IE
+-          clipboardData = window.clipboardData;
++        // Try multiple paths to get clipboardData
++        if (nativeEvent) {
++          clipboardData = nativeEvent.clipboardData || nativeEvent.originalEvent?.clipboardData;
+         }
+-      } catch (e) {
+-        console.log('CKEditor Clipboard Image: Failed to get clipboardData from event.data.$', e);
+-      }
+ 
+-      // Method 2: Try to use CKEditor's dataTransfer if available
+-      if (!clipboardData && event.data && event.data.dataTransfer) {
+-        console.log('CKEditor Clipboard Image: Using CKEditor dataTransfer');
+-        // CKEditor provides its own dataTransfer wrapper
+-        var dataTransfer = event.data.dataTransfer;
++        // Fallback to global clipboardData (IE)
++        if (!clipboardData && window.clipboardData) {
++          clipboardData = window.clipboardData;
++          console.log('CKEditor Clipboard Image: Using window.clipboardData (IE fallback)');
++        }
+ 
+-        // Check if dataTransfer has file information
+-        try {
+-          var fileCount = dataTransfer.getFilesCount ? dataTransfer.getFilesCount() : 0;
+-          if (fileCount > 0) {
+-            var file = dataTransfer.getFile(0);
+-            if (file && file.type && file.type.match(/^image\//)) {
+-              console.log('CKEditor Clipboard Image: Found image file via CKEditor dataTransfer', file.type);
+-              processImageFile(file, editor, 'drop'); // Mark as drop event
+-              event.stop();
+-              return;
+-            }
++        if (clipboardData) {
++          console.log('CKEditor Clipboard Image: Strategy 1 - Found clipboardData');
++          if (processClipboardData(clipboardData, editor)) {
++            event.stop();
++            return;
+           }
+-        } catch (e) {
+-          console.log('CKEditor Clipboard Image: Error accessing CKEditor dataTransfer files', e);
+         }
++      } catch (e) {
++        console.log('CKEditor Clipboard Image: Strategy 1 failed:', e);
+       }
+ 
+-      // Method 3: Process clipboard data if found
+-      if (clipboardData) {
+-        console.log('CKEditor Clipboard Image: Found clipboardData, examining contents');
++      // Strategy 2: CKEditor dataTransfer with enhanced error handling
++      if (event.data && event.data.dataTransfer) {
++        console.log('CKEditor Clipboard Image: Strategy 2 - Using CKEditor dataTransfer');
+ 
+-        // Check available data types
+-        if (clipboardData.types) {
+-          console.log('CKEditor Clipboard Image: Available data types', clipboardData.types);
+-        }
++        var dataTransfer = event.data.dataTransfer;
++        console.log('CKEditor Clipboard Image: dataTransfer methods available:', {
++          hasGetFilesCount: typeof dataTransfer.getFilesCount === 'function',
++          hasGetFile: typeof dataTransfer.getFile === 'function'
++        });
+ 
+-        // Try items API (Chrome, Safari, Firefox support)
+-        if (clipboardData.items && clipboardData.items.length) {
+-          console.log('CKEditor Clipboard Image: Using items API');
++        try {
++          var fileCount = 0;
+ 
+-          var imageFound = false;
+-          for (var i = 0; i < clipboardData.items.length; i++) {
+-            var item = clipboardData.items[i];
+-            console.log('CKEditor Clipboard Image: Checking item', item.kind, item.type);
++          // Enhanced file count detection
++          if (typeof dataTransfer.getFilesCount === 'function') {
++            fileCount = dataTransfer.getFilesCount();
++          } else if (dataTransfer._.filesList && dataTransfer._.filesList.length) {
++            fileCount = dataTransfer._.filesList.length;
++          }
+ 
+-            if (item.kind === 'file' && item.type.match(/^image\//)) {
++          console.log('CKEditor Clipboard Image: File count detected:', fileCount);
++
++          if (fileCount > 0) {
++            for (var i = 0; i < fileCount; i++) {
+               try {
+-                var file = item.getAsFile();
+-                if (file) {
+-                  console.log('CKEditor Clipboard Image: Got image file from items', file.name || 'unnamed', file.type, file.size + ' bytes');
+-                  processImageFile(file, editor, 'paste'); // Mark as paste event
+-                  imageFound = true;
++                var file = dataTransfer.getFile(i);
++                console.log('CKEditor Clipboard Image: File', i, ':', {
++                  exists: !!file,
++                  type: file ? file.type : 'N/A',
++                  size: file ? file.size : 'N/A'
++                });
++
++                if (file && file.type && file.type.match(/^image\//)) {
++                  console.log('CKEditor Clipboard Image: Found image file via CKEditor dataTransfer', file.type);
++                  processImageFile(file, editor, 'drop');
+                   event.stop();
+-                  break;
++                  return;
+                 }
+-              } catch (e) {
+-                console.log('CKEditor Clipboard Image: Error getting file from item', e);
++              } catch (fileError) {
++                console.log('CKEditor Clipboard Image: Error getting file', i, ':', fileError);
+               }
+             }
+           }
+-
+-          if (imageFound) {
+-            return;
+-          }
++        } catch (e) {
++          console.log('CKEditor Clipboard Image: Strategy 2 error:', e);
+         }
++      }
+ 
+-        // Try files API
+-        if (clipboardData.files && clipboardData.files.length) {
+-          console.log('CKEditor Clipboard Image: Using files API, file count:', clipboardData.files.length);
+-
+-          var file = clipboardData.files[0];
+-          if (file && file.type && file.type.match(/^image\//)) {
+-            console.log('CKEditor Clipboard Image: Got image file from files', file.name || 'unnamed', file.type, file.size + ' bytes');
+-            processImageFile(file, editor, 'paste'); // Mark as paste event
+-            event.stop();
+-            return;
+-          }
+-        }
++      // Strategy 3: Check for HTML content with images
++      try {
++        if (event.data && event.data.dataValue) {
++          var htmlContent = event.data.dataValue;
++          console.log('CKEditor Clipboard Image: Strategy 3 - Checking HTML content');
+ 
+-        // Try HTML content with image tags
+-        try {
+-          var html = clipboardData.getData('text/html');
+-          if (html && html.indexOf('<img') >= 0) {
+-            console.log('CKEditor Clipboard Image: Found image tag in HTML');
++          if (htmlContent && htmlContent.indexOf('<img') >= 0) {
++            console.log('CKEditor Clipboard Image: Found image tag in HTML content');
+ 
+             var tempDiv = document.createElement('div');
+-            tempDiv.innerHTML = html;
++            tempDiv.innerHTML = htmlContent;
+             var imgElements = tempDiv.getElementsByTagName('img');
+ 
+             if (imgElements.length > 0) {
+               var imgSrc = imgElements[0].src;
+-              console.log('CKEditor Clipboard Image: Extracted image URL', imgSrc.substring(0, 100) + '...');
++              console.log('CKEditor Clipboard Image: Extracted image URL prefix:', imgSrc.substring(0, 50) + '...');
+ 
+               if (imgSrc.indexOf('data:image/') === 0) {
+                 console.log('CKEditor Clipboard Image: Found base64 encoded image');
+-                loadImageFromDataUrl(imgSrc, editor, null, 'paste'); // Mark as paste event
++                loadImageFromDataUrl(imgSrc, editor, null, 'paste');
+                 event.stop();
+                 return;
+-              } else if (imgSrc.indexOf('http') === 0) {
+-                console.log('CKEditor Clipboard Image: Found web image URL');
+-                // Optional: handle web images
+               }
+             }
+           }
+-        } catch (e) {
+-          console.log('CKEditor Clipboard Image: Unable to extract image from HTML', e);
+         }
++      } catch (e) {
++        console.log('CKEditor Clipboard Image: Strategy 3 error:', e);
+       }
+ 
+-      console.log('CKEditor Clipboard Image: No processable image found');
++      console.log('CKEditor Clipboard Image: All strategies failed - No processable image found');
+     });
+ 
+-    // Enhanced drag and drop handling
++    // Enhanced contentDom event for additional paste handling
+     editor.on('contentDom', function() {
+       var editable = editor.editable();
+ 
+       if (editable && editable.attachListener) {
+-        // Handle paste events
++        // Native paste event as ultimate fallback
+         editable.attachListener(editable, 'paste', function(evt) {
+-          console.log('CKEditor Clipboard Image: editable paste event triggered');
++          console.log('CKEditor Clipboard Image: Native paste event triggered as fallback');
+ 
+-          try {
+-            var nativeEvent = evt.data.$;
+-            if (nativeEvent && nativeEvent.clipboardData && nativeEvent.clipboardData.items) {
+-              var items = nativeEvent.clipboardData.items;
+-              for (var i = 0; i < items.length; i++) {
+-                if (items[i].type.indexOf('image/') === 0) {
+-                  var file = items[i].getAsFile();
+-                  if (file) {
+-                    console.log('CKEditor Clipboard Image: contentDom method found image', file.type);
+-                    processImageFile(file, editor, 'paste');
+-                    evt.data.preventDefault();
+-                    break;
+-                  }
+-                }
++          setTimeout(function() {
++            try {
++              var nativeEvent = evt.data.$;
++              if (nativeEvent && nativeEvent.clipboardData) {
++                console.log('CKEditor Clipboard Image: Processing via native paste event');
++                processClipboardData(nativeEvent.clipboardData, editor);
+               }
++            } catch (e) {
++              console.log('CKEditor Clipboard Image: Native paste fallback error:', e);
+             }
+-          } catch (e) {
+-            console.log('CKEditor Clipboard Image: Error in contentDom paste handler', e);
+-          }
++          }, 10); // Small delay to ensure CKEditor processing is complete
+         });
+ 
+-        // Handle drop events to capture real filenames
++        // Enhanced drop handling
+         editable.attachListener(editable, 'drop', function(evt) {
+-          console.log('CKEditor Clipboard Image: drop event triggered');
++          console.log('CKEditor Clipboard Image: Drop event triggered');
+ 
+           try {
+             var nativeEvent = evt.data.$;
+             if (nativeEvent && nativeEvent.dataTransfer && nativeEvent.dataTransfer.files) {
+               var files = nativeEvent.dataTransfer.files;
++              console.log('CKEditor Clipboard Image: Drop files count:', files.length);
++
+               for (var i = 0; i < files.length; i++) {
+                 var file = files[i];
+                 if (file.type && file.type.indexOf('image/') === 0) {
+-                  console.log('CKEditor Clipboard Image: drop method found image file', file.name, file.type);
++                  console.log('CKEditor Clipboard Image: Processing dropped image:', file.name, file.type);
+                   processImageFile(file, editor, 'drop');
+                   evt.data.preventDefault();
+                   break;
+@@ -190,12 +174,90 @@ CKEDITOR.plugins.add('clipboard_image', {
+               }
+             }
+           } catch (e) {
+-            console.log('CKEditor Clipboard Image: Error in drop handler', e);
++            console.log('CKEditor Clipboard Image: Drop handler error:', e);
+           }
+         });
+       }
+     });
+ 
++    /**
++     * Enhanced clipboard data processing function
++     * @param {DataTransfer} clipboardData - The clipboard data object
++     * @param {Object} editor - CKEditor instance
++     * @returns {boolean} - True if image was processed successfully
++     */
++    function processClipboardData(clipboardData, editor) {
++      console.log('CKEditor Clipboard Image: Processing clipboard data');
++      console.log('CKEditor Clipboard Image: Available data types:', clipboardData.types ? Array.from(clipboardData.types) : 'N/A');
++
++      // Method A: Try items API (modern browsers)
++      if (clipboardData.items && clipboardData.items.length) {
++        console.log('CKEditor Clipboard Image: Using items API, item count:', clipboardData.items.length);
++
++        for (var i = 0; i < clipboardData.items.length; i++) {
++          var item = clipboardData.items[i];
++          console.log('CKEditor Clipboard Image: Item', i, ':', {
++            kind: item.kind,
++            type: item.type
++          });
++
++          if (item.kind === 'file' && item.type.match(/^image\//)) {
++            try {
++              var file = item.getAsFile();
++              if (file) {
++                console.log('CKEditor Clipboard Image: Got image file from items API:', file.type, file.size + ' bytes');
++                processImageFile(file, editor, 'paste');
++                return true;
++              }
++            } catch (e) {
++              console.log('CKEditor Clipboard Image: Error getting file from item:', e);
++            }
++          }
++        }
++      }
++
++      // Method B: Try files API
++      if (clipboardData.files && clipboardData.files.length) {
++        console.log('CKEditor Clipboard Image: Using files API, file count:', clipboardData.files.length);
++
++        for (var i = 0; i < clipboardData.files.length; i++) {
++          var file = clipboardData.files[i];
++          if (file && file.type && file.type.match(/^image\//)) {
++            console.log('CKEditor Clipboard Image: Got image file from files API:', file.type, file.size + ' bytes');
++            processImageFile(file, editor, 'paste');
++            return true;
++          }
++        }
++      }
++
++      // Method C: Try HTML content
++      try {
++        var html = clipboardData.getData('text/html');
++        if (html && html.indexOf('<img') >= 0) {
++          console.log('CKEditor Clipboard Image: Found image in HTML data');
++
++          var tempDiv = document.createElement('div');
++          tempDiv.innerHTML = html;
++          var imgElements = tempDiv.getElementsByTagName('img');
++
++          if (imgElements.length > 0) {
++            var imgSrc = imgElements[0].src;
++            console.log('CKEditor Clipboard Image: Extracted image URL from HTML');
++
++            if (imgSrc.indexOf('data:image/') === 0) {
++              console.log('CKEditor Clipboard Image: Processing base64 image from HTML');
++              loadImageFromDataUrl(imgSrc, editor, null, 'paste');
++              return true;
++            }
++          }
++        }
++      } catch (e) {
++        console.log('CKEditor Clipboard Image: Error processing HTML data:', e);
++      }
++
++      return false;
++    }
++
+     /**
+      * Validate image format against whitelist
+      * @param {string} mimeType - The MIME type to validate
+@@ -228,12 +290,12 @@ CKEDITOR.plugins.add('clipboard_image', {
+         originalName = file.name.trim();
+         console.log('CKEditor Clipboard Image: Found original filename:', originalName);
+       } else {
+-        console.log('CKEditor Clipboard Image: No original filename available (typical for clipboard paste)');
++        console.log('CKEditor Clipboard Image: No original filename available');
+       }
+ 
+       // Generate appropriate suggested name based on source
+       var fileExtension = 'jpg'; // Default
+-      if (file.type) {
++      if (file && file.type) {
+         switch (file.type.toLowerCase()) {
+           case 'image/png':
+             fileExtension = 'png';
+@@ -250,10 +312,8 @@ CKEDITOR.plugins.add('clipboard_image', {
+       }
+ 
+       if (source === 'drop' && originalName) {
+-        // For dropped files, use original name if available
+         suggestedName = originalName;
+       } else {
+-        // For pasted images or dropped files without names, generate descriptive name
+         var now = new Date();
+         var dateStr = now.getFullYear() + '-' +
+           String(now.getMonth() + 1).padStart(2, '0') + '-' +
+@@ -339,10 +399,8 @@ CKEDITOR.plugins.add('clipboard_image', {
+      * @param {File} originalFile - Original file object (optional)
+      */
+     function loadImageFromDataUrl(dataUrl, editor, originalMimeType, source, originalFile) {
+-      // Extract MIME type from data URL if not provided
+       var mimeType = originalMimeType || extractMimeTypeFromDataUrl(dataUrl);
+ 
+-      // Validate image format
+       if (!isValidImageFormat(mimeType)) {
+         console.warn('CKEditor Clipboard Image: Unsupported image format', mimeType);
+         alert('不支援的圖片格式：' + mimeType + '\n支援的格式：JPEG, PNG, GIF');
+@@ -375,7 +433,6 @@ CKEDITOR.plugins.add('clipboard_image', {
+       var width = originalWidth;
+       var height = originalHeight;
+ 
+-      // Scale down proportionally if needed
+       if (width > maxWidth) {
+         height = Math.round(height * (maxWidth / width));
+         width = maxWidth;
+@@ -399,20 +456,17 @@ CKEDITOR.plugins.add('clipboard_image', {
+      */
+     function resizeAndProcessImage(img, editor, originalMimeType, source, originalFile) {
+       try {
+-        // Create canvas element
+         var canvas = document.createElement('canvas');
+         var ctx = canvas.getContext('2d');
+ 
+-        // Get settings with defaults
++        // Default settings
+         var maxWidth = 800;
+         var maxHeight = 600;
+         var quality = 0.7;
+-        var uploadToServer = true; // Default to upload mode
+-
+-        // Use original format to maintain image characteristics
++        var uploadToServer = true;
+         var outputFormat = originalMimeType || 'image/jpeg';
+ 
+-        // Try to get settings from Drupal if available
++        // Try to get settings from Drupal
+         try {
+           if (typeof Drupal !== 'undefined' && Drupal.settings && Drupal.settings.clipboard_image) {
+             if (Drupal.settings.clipboard_image.maxWidth) {
+@@ -441,24 +495,18 @@ CKEDITOR.plugins.add('clipboard_image', {
+           source: source
+         });
+ 
+-        // Calculate resized dimensions
+         var newSize = calculateNewSize(img.width, img.height, maxWidth, maxHeight);
+-
+-        // Set canvas dimensions
+         canvas.width = newSize.width;
+         canvas.height = newSize.height;
+ 
+-        // For PNG, ensure transparency is preserved
+         if (outputFormat === 'image/png') {
+           ctx.clearRect(0, 0, canvas.width, canvas.height);
+         }
+ 
+-        // Draw resized image on canvas
+         ctx.drawImage(img, 0, 0, newSize.width, newSize.height);
+ 
+         console.log('CKEditor Clipboard Image: Canvas processing complete, converting to blob with format:', outputFormat);
+ 
+-        // Convert canvas to Blob with original format
+         canvas.toBlob(function(blob) {
+           if (!blob) {
+             console.error('CKEditor Clipboard Image: Failed to create blob from canvas');
+@@ -467,11 +515,9 @@ CKEDITOR.plugins.add('clipboard_image', {
+ 
+           console.log('CKEditor Clipboard Image: Blob created successfully', blob.size + ' bytes, type:', blob.type);
+ 
+-          // Generate filenames
+           var fileNames = generateFileNames(originalFile, source);
+           console.log('CKEditor Clipboard Image: Generated filenames:', fileNames);
+ 
+-          // Check upload mode
+           if (uploadToServer) {
+             console.log('CKEditor Clipboard Image: Upload mode enabled, sending blob to server');
+             uploadBlobToServer(blob, editor, fileNames);
+@@ -487,18 +533,16 @@ CKEDITOR.plugins.add('clipboard_image', {
+     }
+ 
+     /**
+-     * Insert blob as inline image using object URL with proper title attribute
++     * Insert blob as inline image using object URL
+      * @param {Blob} blob - The processed image blob
+      * @param {Object} editor - CKEditor instance
+      * @param {Object} fileNames - Object containing filename information
+      */
+     function insertBlobAsInlineImage(blob, editor, fileNames) {
+       try {
+-        // Create object URL directly from blob
+         var objectUrl = URL.createObjectURL(blob);
+-
+-        // Create title attribute with original and temp filename
+         var titleAttr = '';
++
+         if (fileNames.originalName) {
+           titleAttr = fileNames.originalName + '|' + fileNames.tempName;
+         } else {
+@@ -507,7 +551,7 @@ CKEDITOR.plugins.add('clipboard_image', {
+ 
+         console.log('CKEditor Clipboard Image: Inserting image with title:', titleAttr);
+         editor.insertHtml('<img src="' + objectUrl + '" alt="Pasted image" title="' + titleAttr + '" />');
+-        console.log('CKEditor Clipboard Image: Image successfully inserted into editor with blob URL and title');
++        console.log('CKEditor Clipboard Image: Image successfully inserted into editor');
+ 
+       } catch (e) {
+         console.error('CKEditor Clipboard Image: Exception in insertBlobAsInlineImage', e);
+@@ -523,19 +567,14 @@ CKEDITOR.plugins.add('clipboard_image', {
+     function uploadBlobToServer(blob, editor, fileNames) {
+       console.log('CKEditor Clipboard Image: Starting server upload with blob');
+ 
+-      // Create FormData for efficient blob upload
+       var formData = new FormData();
+-
+-      // Use temp name for server-side processing, but send original name for reference
+       formData.append('image', blob, fileNames.tempName);
+       formData.append('original_filename', fileNames.originalName || '');
+       formData.append('suggested_filename', fileNames.suggestedName);
+       formData.append('timestamp', new Date().getTime());
+ 
+-      // Determine the correct upload URL
+       var uploadUrl = '/civicrm/ajax/editor/image-upload';
+ 
+-      // Try to get base URL from Drupal if available
+       try {
+         if (typeof Drupal !== 'undefined' && Drupal.settings && Drupal.settings.basePath) {
+           uploadUrl = Drupal.settings.basePath + 'civicrm/ajax/editor/image-upload';
+@@ -545,9 +584,8 @@ CKEDITOR.plugins.add('clipboard_image', {
+       }
+ 
+       console.log('CKEditor Clipboard Image: Uploading blob to', uploadUrl);
+-      console.log('CKEditor Clipboard Image: File information:', fileNames);
+ 
+-      // Try fetch API first (more modern and reliable)
++      // Use fetch API with enhanced error handling
+       if (typeof fetch !== 'undefined') {
+         console.log('CKEditor Clipboard Image: Using fetch API for blob upload');
+ 
+@@ -565,37 +603,30 @@ CKEDITOR.plugins.add('clipboard_image', {
+           if (data.status === 1) {
+             console.log('CKEditor Clipboard Image: Server upload successful');
+ 
+-            // Use server-provided title_attribute only if provided
+             var titleAttr = data.title_attribute || '';
+             var imgHtml = '';
+ 
+-            // Create img tag with or without title attribute
+             if (titleAttr) {
+               imgHtml = '<img src="' + (data.url || URL.createObjectURL(blob)) + '" alt="CKEditor clipboard image" title="' + titleAttr + '" />';
+-              console.log('CKEditor Clipboard Image: Using server-provided title attribute:', titleAttr);
+             } else {
+               imgHtml = '<img src="' + (data.url || URL.createObjectURL(blob)) + '" alt="CKEditor clipboard image" />';
+-              console.log('CKEditor Clipboard Image: No title attribute provided by server');
+             }
+ 
+-            // Insert the image
+             editor.insertHtml(imgHtml);
+             console.log('CKEditor Clipboard Image: Image inserted successfully');
+           } else {
+             console.error('CKEditor Clipboard Image: Server upload failed', data);
+-            // Fallback to inline insertion
+             insertBlobAsInlineImage(blob, editor, fileNames);
+           }
+         })
+         .catch(function(error) {
+           console.error('CKEditor Clipboard Image: Fetch error:', error);
+-          // Fallback to inline insertion
+           insertBlobAsInlineImage(blob, editor, fileNames);
+         });
+ 
+       } else {
+-        // Fallback to XMLHttpRequest for blob upload
+-        console.log('CKEditor Clipboard Image: Using XMLHttpRequest for blob upload (fetch not available)');
++        // XMLHttpRequest fallback
++        console.log('CKEditor Clipboard Image: Using XMLHttpRequest fallback');
+ 
+         var xhr = new XMLHttpRequest();
+ 
+@@ -610,30 +641,23 @@ CKEDITOR.plugins.add('clipboard_image', {
+               if (xhr.status === 200 && response.status === 1) {
+                 console.log('CKEditor Clipboard Image: Server upload successful', response);
+ 
+-                // Use server-provided title_attribute only if provided
+                 var titleAttr = response.title_attribute || '';
+                 var imgHtml = '';
+ 
+-                // Create img tag with or without title attribute
+                 if (titleAttr) {
+                   imgHtml = '<img src="' + (response.url || URL.createObjectURL(blob)) + '" alt="CKEditor clipboard image" title="' + titleAttr + '" />';
+-                  console.log('CKEditor Clipboard Image: Using server-provided title attribute:', titleAttr);
+                 } else {
+                   imgHtml = '<img src="' + (response.url || URL.createObjectURL(blob)) + '" alt="CKEditor clipboard image" />';
+-                  console.log('CKEditor Clipboard Image: No title attribute provided by server');
+                 }
+ 
+-                // Insert the image
+                 editor.insertHtml(imgHtml);
+                 console.log('CKEditor Clipboard Image: Image inserted successfully');
+               } else {
+                 console.error('CKEditor Clipboard Image: Server upload failed', response);
+-                // Fallback to inline insertion
+                 insertBlobAsInlineImage(blob, editor, fileNames);
+               }
+             } catch (e) {
+               console.error('CKEditor Clipboard Image: Error parsing server response', e);
+-              // Fallback to inline insertion
+               insertBlobAsInlineImage(blob, editor, fileNames);
+             }
+           }
+@@ -641,27 +665,20 @@ CKEDITOR.plugins.add('clipboard_image', {
+ 
+         xhr.onerror = function() {
+           console.error('CKEditor Clipboard Image: XHR network error');
+-          // Fallback to inline insertion
+           insertBlobAsInlineImage(blob, editor, fileNames);
+         };
+ 
+         xhr.ontimeout = function() {
+           console.error('CKEditor Clipboard Image: XHR timeout');
+-          // Fallback to inline insertion
+           insertBlobAsInlineImage(blob, editor, fileNames);
+         };
+ 
+         try {
+           xhr.open('POST', uploadUrl, true);
+-          xhr.timeout = 30000; // 30 second timeout
+-
+-          console.log('CKEditor Clipboard Image: About to send XHR request with blob');
++          xhr.timeout = 30000;
+           xhr.send(formData);
+-          console.log('CKEditor Clipboard Image: XHR request sent');
+-
+         } catch (e) {
+           console.error('CKEditor Clipboard Image: Exception sending XHR request', e);
+-          // Fallback to inline insertion
+           insertBlobAsInlineImage(blob, editor, fileNames);
+         }
+       }
