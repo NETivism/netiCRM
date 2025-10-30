@@ -76,54 +76,6 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
   }
 
   /**
-   * Get generation history
-   *
-   * @param int $contactId Contact ID (currently not implemented in schema)
-   * @param array $params Query parameters
-   * @return array Generation records
-   */
-  public static function getHistory($contactId, $params = []) {
-    $limit = CRM_Utils_Array::value('limit', $params, 20);
-    $offset = CRM_Utils_Array::value('offset', $params, 0);
-    $statusId = CRM_Utils_Array::value('status_id', $params);
-
-    // Note: contact_id field is not yet implemented in schema
-    // For now, we'll return all records regardless of contact_id
-    $whereClause = "1=1";
-    $queryParams = [];
-    $paramIndex = 1;
-
-    if ($statusId) {
-      $whereClause .= " AND status_id = %{$paramIndex}";
-      $queryParams[$paramIndex] = [$statusId, 'Integer'];
-      $paramIndex++;
-    }
-
-    $offsetParamIndex = $paramIndex;
-    $limitParamIndex = $paramIndex + 1;
-
-    $sql = "
-      SELECT *
-      FROM civicrm_aiimagegeneration
-      WHERE {$whereClause}
-      ORDER BY created_date DESC
-      LIMIT %{$offsetParamIndex}, %{$limitParamIndex}
-    ";
-
-    $queryParams[$offsetParamIndex] = [$offset, 'Integer'];
-    $queryParams[$limitParamIndex] = [$limit, 'Integer'];
-
-    $dao = CRM_Core_DAO::executeQuery($sql, $queryParams);
-
-    $results = [];
-    while ($dao->fetch()) {
-      $results[] = $dao->toArray();
-    }
-
-    return $results;
-  }
-
-  /**
    * Update generation status
    *
    * @param int $id Record ID
@@ -170,7 +122,7 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
     $params = ['id' => $id];
     $defaults = [];
     $result = self::retrieve($params, $defaults);
-    
+
     return $result ? $defaults : NULL;
   }
 
@@ -207,18 +159,18 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
     }
 
     $sql = "
-      SELECT 
+      SELECT
         COUNT(*) as total_generations,
         SUM(CASE WHEN status_id = " . self::STATUS_SUCCESS . " THEN 1 ELSE 0 END) as successful_generations,
         SUM(CASE WHEN status_id = " . self::STATUS_FAILED . " THEN 1 ELSE 0 END) as failed_generations,
         SUM(CASE WHEN status_id = " . self::STATUS_PENDING . " THEN 1 ELSE 0 END) as pending_generations,
         SUM(CASE WHEN status_id = " . self::STATUS_PROCESSING . " THEN 1 ELSE 0 END) as processing_generations
-      FROM civicrm_aiimagegeneration 
+      FROM civicrm_aiimagegeneration
       WHERE {$whereClause}
     ";
 
     $dao = CRM_Core_DAO::executeQuery($sql, $queryParams);
-    
+
     $stats = [];
     if ($dao->fetch()) {
       $stats = [
@@ -227,8 +179,8 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
         'failed' => $dao->failed_generations,
         'pending' => $dao->pending_generations,
         'processing' => $dao->processing_generations,
-        'success_rate' => $dao->total_generations > 0 
-          ? round(($dao->successful_generations / $dao->total_generations) * 100, 2) 
+        'success_rate' => $dao->total_generations > 0
+          ? round(($dao->successful_generations / $dao->total_generations) * 100, 2)
           : 0
       ];
     }
@@ -244,16 +196,16 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
    */
   public static function cleanupFailedRecords($days = 30) {
     $cutoffDate = date('Y-m-d H:i:s', strtotime("-{$days} days"));
-    
+
     $sql = "
-      DELETE FROM civicrm_aiimagegeneration 
-      WHERE status_id = " . self::STATUS_FAILED . " 
+      DELETE FROM civicrm_aiimagegeneration
+      WHERE status_id = " . self::STATUS_FAILED . "
       AND created_date < %1
     ";
-    
+
     $queryParams = [1 => [$cutoffDate, 'String']];
     $dao = CRM_Core_DAO::executeQuery($sql, $queryParams);
-    
+
     return $dao->affectedRows();
   }
 }

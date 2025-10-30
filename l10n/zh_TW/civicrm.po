@@ -51372,3 +51372,11 @@ msgid ""
 "style (e.g., Pixel Art, 3D Claymation, etc.) directly in this prompt field, "
 "along with your image description"
 msgstr "您現在選擇的是自訂風格，請在這個提示詞欄位中明確填寫您想要的風格（例如：3D黏土動畫），並與要生成圖片的描述寫在一起 "
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "AI Text"
+msgstr "AI文案"
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "AI Image"
+msgstr "AI圖片"

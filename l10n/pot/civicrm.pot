@@ -50698,3 +50698,11 @@ msgstr ""
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, 3D Claymation, etc.) directly in this prompt field, along with your image description"
 msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "AI Text"
+msgstr ""
+
+#: templates/CRM/common/mailingEditor.tpl
+msgid "AI Image"
+msgstr ""
