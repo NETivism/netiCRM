@@ -892,6 +892,7 @@ LIMIT 0, 100
     $dao->fetch();
     $resultNote = "Syncing recurring $recurId ";
     $changeStatus = FALSE;
+    $isExpired = FALSE;
     $goPayment = $donePayment = FALSE;
     $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1 AND is_test = %2";
     $paramsContribution = [
@@ -978,6 +979,7 @@ LIMIT 0, 100
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
+      $isExpired = TRUE;
     }
 
     if ( $changeStatus ) {
@@ -987,6 +989,9 @@ LIMIT 0, 100
       $recurParams = [];
       $recurParams['id'] = $dao->recur_id;
       $recurParams['contribution_status_id'] = 1;
+      if ($isExpired) {
+        $recurParams['contribution_status_id'] = 6;
+      }
       $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
       CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
@@ -1228,7 +1233,7 @@ LIMIT 0, 100
       if ($dao->id) {
         $params = [
           'id' => $dao->id,
-          'contribution_status_id' => 1,
+          'contribution_status_id' => 6,
           'message' => ts("Card expiry date is due."),
         ];
         CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
