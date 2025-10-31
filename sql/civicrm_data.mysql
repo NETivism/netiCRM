@@ -4379,10 +4379,10 @@ INSERT INTO civicrm_domain (name, version, loc_block_id) VALUES (@domainName, '2
 SELECT @domainID := id FROM civicrm_domain where name = 'Default Domain Name';
 
 -- Sample location types
-INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( '首頁', 'Home', 'HOME', 'Place of residence', 0, 1, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active, is_default ) VALUES( 'Home', 'Home', 'HOME', 'Place of residence', 0, 1, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Work', 'Work', 'WORK', 'Work location', 0, 1 );
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Main', 'Main', NULL, 'Main office location', 0, 1 );
-INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( '其他', 'Other', NULL, 'Other location', 0, 1 );
+INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Other', 'Other', NULL, 'Other location', 0, 1 );
 -- the following location must stay with the untranslated Billing name, CRM-2064
 INSERT INTO civicrm_location_type( label, name, vcard_name, description, is_reserved, is_active ) VALUES( 'Billing', 'Billing', NULL, 'Billing Address location', 1, 1 );
 
@@ -4420,7 +4420,7 @@ VALUES
     ('Mailing Header','Header','Descriptive Title for this Header','','',1,1),
     ('Mailing Footer','Footer','Descriptive Title for this Footer.','<a href=\"{action.optOutUrl}\">Unsubscribe</a>  <br/> {domain.address}','to unsubscribe: {action.optOutUrl}\n{domain.address}',1,1),
     ('Subscribe Message','Subscribe','Subscription Confirmation Request','You have a pending subscription to the {subscribe.group} mailing list. To confirm this subscription, reply to this email or click <a href=\"{subscribe.url}\">here</a>.','You have a pending subscription to the {subscribe.group} mailing list. To confirm this subscription, reply to this email or click on this link: {subscribe.url}',1,1),
-    ('歡迎訊息','Welcome','Your Subscription has been Activated','Welcome. Your subscription to the {welcome.group} mailing list has been activated.','Welcome. Your subscription to the {welcome.group} mailing list has been activated.',1,1),
+    ('Welcome Message','Welcome','Your Subscription has been Activated','Welcome. Your subscription to the {welcome.group} mailing list has been activated.','Welcome. Your subscription to the {welcome.group} mailing list has been activated.',1,1),
     ('Unsubscribe Message','Unsubscribe','Un-subscribe Confirmation','You have been un-subscribed from the following groups: {unsubscribe.group}. You can re-subscribe by mailing {action.resubscribe} or clicking <a href=\"{action.resubscribeUrl}\">here</a>.','You have been un-subscribed from the following groups: {unsubscribe.group}. You can re-subscribe by mailing {action.resubscribe} or clicking %3',1,1),
     ('Resubscribe Message','Resubscribe','Re-subscribe Confirmation','You have been re-subscribed to the following groups: {resubscribe.group}. You can un-subscribe by mailing {action.unsubscribe} or clicking <a href=\"{action.unsubscribeUrl}\">here</a>.','You have been re-subscribed to the following groups: {resubscribe.group}. You can un-subscribe by mailing {action.unsubscribe} or clicking {action.unsubscribeUrl}',1,1),
     ('Opt-out Message','OptOut','Opt-out Confirmation','Your email address has been removed from {domain.name} mailing lists.','Your email address has been removed from {domain.name} mailing lists.',1,1),
@@ -4477,7 +4477,7 @@ VALUES
    ('recur_frequency_units'         , 'Recurring Frequency Units'          , 0, 1), 
    ('phone_type'                    , 'Phone Type'                         , 0, 1),
    ('custom_data_type'              , 'Custom Data Type'                   , 0, 1),  
-   ('visibility'                    , '可見性'                         , 0, 1),
+   ('visibility'                    , 'Visibility'                         , 0, 1),
    ('mail_protocol'                 , 'Mail Protocol'                      , 0, 1),
    ('priority'                      , 'Priority'                           , 0, 1),
    ('redaction_rule'                , 'Redaction Rule'                     , 0, 1),	
@@ -4576,14 +4576,14 @@ INSERT INTO
    `civicrm_option_value` (`option_group_id`, `label`, `value`, `name`, `grouping`, `filter`, `is_default`, `weight`, `description`, `is_optgroup`, `is_reserved`, `is_active`, `component_id`, `visibility_id`) 
 VALUES
    (@option_group_id_pcm, 'Phone', 1, NULL, NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_pcm, '電子郵件', 2, NULL, NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_pcm, 'Email', 2, NULL, NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_pcm, 'Postal Mail', 3, NULL, NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
-   (@option_group_id_pcm, '簡訊', 4, NULL, NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_pcm, 'SMS', 4, NULL, NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_pcm, 'Fax', 5, NULL, NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
  
    (@option_group_id_act, 'Meeting',                            1, 'Meeting', NULL, 0, NULL, 1, NULL,                       				                                                0, 1, 1, NULL, NULL),
    (@option_group_id_act, 'Phone Call',                         2, 'Phone Call',          NULL, 0, NULL, 2, NULL,                                                          				0, 1, 1, NULL, NULL),
-   (@option_group_id_act, '電子郵件',                              3, 'Email',               NULL, 1, NULL, 3, 'Email sent.',                                                          0, 1, 1, NULL, NULL),
+   (@option_group_id_act, 'Email',                              3, 'Email',               NULL, 1, NULL, 3, 'Email sent.',                                                          0, 1, 1, NULL, NULL),
    (@option_group_id_act, 'Text Message (SMS)',                 4, 'SMS',                 NULL, 1, NULL, 4, 'Text message (SMS) sent.',                                             0, 1, 1, NULL, NULL),
    (@option_group_id_act, 'Event Registration',                 5, 'Event Registration',  NULL, 1, NULL, 5, 'Online or offline event registration.',                                0, 1, 1, @eventCompId, NULL),
    (@option_group_id_act, 'Contribution',                       6, 'Contribution',        NULL, 1, NULL, 6, 'Online or offline contribution.',                                      0, 1, 1, @contributeCompId, NULL),
@@ -4710,7 +4710,7 @@ VALUES
   (@option_group_id_etype, 'Exhibition', 2, 'Exhibition',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, 'Fundraiser', 3, 'Fundraiser',  NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, 'Meeting',    4, 'Meeting',     NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_etype, '效能',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_etype, 'Performance',5, 'Performance', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_etype, 'Workshop',   6, 'Workshop',    NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
 
 -- note that these are not ts'ed since they are used for logic in most cases and not display
@@ -4719,7 +4719,7 @@ VALUES
   (@option_group_id_cvOpt, 'Relationships',   2, 'rel', NULL, 0, NULL,  2,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, 'Groups'       ,   3, 'group', NULL, 0, NULL,  3,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, 'Notes'        ,   4, 'note', NULL, 0, NULL,  4,  NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_cvOpt, '標籤 (Tags)'         ,   5, 'tag', NULL, 0, NULL,  5,  NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_cvOpt, 'Tags'         ,   5, 'tag', NULL, 0, NULL,  5,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, 'Change Log'   ,   6, 'log', NULL, 0, NULL,  6,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, 'Contributions',   7, 'CiviContribute', NULL, 0, NULL,  7,  NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_cvOpt, 'Memberships'  ,   8, 'CiviMember', NULL, 0, NULL,  8,  NULL, 0, 0, 1, NULL, NULL),
@@ -4734,7 +4734,7 @@ VALUES
   (@option_group_id_ceOpt, 'Notes'                    ,   4, 'Notes', NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, 'Demographics'             ,   5, 'Demographics', NULL, 0, NULL, 5, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, 'Tags and Groups'          ,   6, 'TagsAndGroups', NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_ceOpt, '電子郵件'                    ,   7, 'Email', NULL, 1, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_ceOpt, 'Email'                    ,   7, 'Email', NULL, 1, NULL, 7, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, 'Phone'                    ,   8, 'Phone', NULL, 1, NULL, 8, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, 'Instant Messenger'        ,   9, 'IM', NULL, 1, NULL, 9, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_ceOpt, 'Website'                  ,   11, 'Website', NULL, 1, NULL, 11, NULL, 0, 0, 1, NULL, NULL),
@@ -4754,7 +4754,7 @@ VALUES
   (@option_group_id_asOpt, 'Pledges'                 ,  15, 'CiviPledge', NULL, 0, NULL, 17, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, 'Contact Type'            ,  16, 'contactType', NULL, 0, NULL, 18, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, 'Groups'                  ,  17, 'groups', NULL, 0, NULL, 19, NULL, 0, 0, 1, NULL, NULL),
-  (@option_group_id_asOpt, '標籤 (Tags)'                    ,  18, 'tags', NULL, 0, NULL, 20, NULL, 0, 0, 1, NULL, NULL),
+  (@option_group_id_asOpt, 'Tags'                    ,  18, 'tags', NULL, 0, NULL, 20, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_asOpt, 'CiviMail'                ,  19, 'CiviMail', NULL, 0, NULL, 21, NULL, 0, 0, 1, NULL, NULL),
 
   (@option_group_id_udOpt, 'Groups'                     , 1, 'Groups', NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
@@ -4983,7 +4983,7 @@ VALUES
    (@option_group_id_accTp, 'Expense', 4, 'Expense',  NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
 
 -- website type
-   (@option_group_id_website, '首頁',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_website, 'Home',     1, 'Home',     NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Work',     2, 'Work',     NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Facebook', 3, 'Facebook', NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_website, 'Twitter',  4, 'Twitter',  NULL, 0, NULL, 4, NULL, 0, 0, 1, NULL, NULL),
@@ -4991,7 +4991,7 @@ VALUES
    (@option_group_id_website, 'Main',     6, 'Main',     NULL, 0, NULL, 6, NULL, 0, 0, 1, NULL, NULL),
 
 -- Tag used for
-   (@option_group_id_tuf, '聯絡',   'civicrm_contact',  'Contacts',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
+   (@option_group_id_tuf, 'Contact',   'civicrm_contact',  'Contacts',    NULL, 0, NULL, 1, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_tuf, 'Activity', 'civicrm_activity', 'Activities',  NULL, 0, NULL, 2, NULL, 0, 0, 1, NULL, NULL),
    (@option_group_id_tuf, 'Case',      'civicrm_case',     'Cases',       NULL, 0, NULL, 3, NULL, 0, 0, 1, NULL, NULL),
 
@@ -5003,7 +5003,7 @@ VALUES
   (@option_group_id_eventBadge , 'With Logo'    , 3, 'CRM_Event_Badge_Logo', NULL, 0, 0, 3, 'You can set your own background image',  0, 1, 1, NULL, NULL ),
 
 -- note privacy levels
-  (@option_group_id_notePrivacy, '無'           , 0, '',  NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_notePrivacy, 'None'           , 0, '',  NULL, 0, 1, 1, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_notePrivacy, 'Author Only'    , 1, '',  NULL, 0, 0, 2, NULL, 0, 1, 1, NULL, NULL),
 
 -- Compaign Types
@@ -5071,7 +5071,7 @@ VALUES
 INSERT INTO `civicrm_option_group`
   (`name`, `label`, `description`, `is_reserved`, `is_active`)
 VALUES
-  ('languages', '語言', 'List of Languages', 0, 1);
+  ('languages', 'Languages', 'List of Languages', 0, 1);
   
 SELECT @option_group_id_languages      := max(id) from civicrm_option_group where name = 'languages';
 
@@ -5321,10 +5321,10 @@ INSERT INTO `civicrm_payment_processor_type`
  (name, title, description, is_active, is_default, user_name_label, password_label, signature_label, subject_label, class_name, url_site_default, url_api_default, url_recur_default, url_button_default, url_site_test_default, url_api_test_default, url_recur_test_default, url_button_test_default, billing_mode, is_recur )
 VALUES 
  ('PayPal_Standard',    'PayPal - Website Payments Standard', NULL,0,0,'Merchant Account Email',NULL,NULL,NULL,'Payment_PayPalImpl','https://www.paypal.com/',NULL,'https://www.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,'https://www.sandbox.paypal.com/',NULL,4,1),
- ('PayPal',             'PayPal - Website Payments Pro',      NULL,0,0,'User Name','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
- ('PayPal_Express',     'PayPal - Express',       NULL,0,0,'User Name','密碼','簽名檔',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
+ ('PayPal',             'PayPal - Website Payments Pro',      NULL,0,0,'User Name','Password','Signature',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/','https://www.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/','https://www.sandbox.paypal.com/','https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',3, 1 ),
+ ('PayPal_Express',     'PayPal - Express',       NULL,0,0,'User Name','Password','Signature',NULL,'Payment_PayPalImpl','https://www.paypal.com/','https://api-3t.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif','https://www.sandbox.paypal.com/','https://api-3t.sandbox.paypal.com/',NULL,'https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif',2,NULL),
  ('Google_Checkout',    'Google Checkout',        NULL,0,0,'Merchant ID','Key',NULL,NULL,'Payment_Google','https://checkout.google.com/',NULL,NULL,'https://checkout.google.com/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US','https://sandbox.google.com/checkout/',NULL,NULL,'https://sandbox.google.com/checkout/buttons/checkout.gif?merchant_id=YOURMERCHANTIDHERE&w=160&h=43&style=white&variant=text&loc=en_US',4,NULL),
- ('Moneris',            'Moneris',                NULL,0,0,'User Name','密碼','Store ID',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
+ ('Moneris',            'Moneris',                NULL,0,0,'User Name','Password','Store ID',NULL,'Payment_Moneris','https://www3.moneris.com/',NULL,NULL,NULL,'https://esqa.moneris.com/',NULL,NULL,NULL,1,1),
  ('AuthNet_AIM',        'Authorize.Net - AIM',    NULL,0,0,'API Login','Payment Key','MD5 Hash',NULL,'Payment_AuthorizeNet','https://secure.authorize.net/gateway/transact.dll',NULL,'https://api.authorize.net/xml/v1/request.api',NULL,'https://test.authorize.net/gateway/transact.dll',NULL,'https://apitest.authorize.net/xml/v1/request.api',NULL,1,NULL),
  ('PayJunction',        'PayJunction',            NULL,0,0,'User Name','Password',NULL,NULL,'Payment_PayJunction','https://payjunction.com/quick_link',NULL,NULL,NULL,'https://www.payjunctionlabs.com/quick_link',NULL,NULL,NULL,1,1),
  ('eWAY',               'eWAY (Single Currency)', NULL,0,0,'Customer ID',NULL,NULL,NULL,'Payment_eWAY','https://www.eway.com.au/gateway_cvn/xmlpayment.asp',NULL,NULL,NULL,'https://www.eway.com.au/gateway_cvn/xmltest/testpage.asp',NULL,NULL,NULL,1,0),
@@ -5335,7 +5335,7 @@ VALUES
  ('Realex',             'Realex Payment',         NULL,0,0,'Merchant ID', 'Password', NULL, 'Account', 'Payment_Realex', 'https://epage.payandshop.com/epage.cgi', NULL, NULL, NULL, 'https://epage.payandshop.com/epage-remote.cgi', NULL, NULL, NULL, 1, 0 ),
  ('PayflowPro',         'PayflowPro',             NULL,0,0,'Vendor ID', 'Password', 'Partner (merchant)', 'User', 'Payment_PayflowPro', 'https://Payflowpro.paypal.com', NULL, NULL, NULL, 'https://pilot-Payflowpro.paypal.com', NULL, NULL, NULL, 1, 0 ),
  ('FirstData',          'FirstData (aka linkpoint)', 'FirstData (aka linkpoint)', 0, 0, 'Store name', 'certificate path', NULL, NULL, 'Payment_FirstData', 'https://secure.linkpt.net', NULL, NULL, NULL, 'https://staging.linkpt.net', NULL, NULL, NULL, 1, NULL),
- ('Mobile', 'Mobile Payment', NULL, 1, 0, 'Merchant ID', 'Payment Processor Provider', '帳號', '密碼',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
+ ('Mobile', 'Mobile Payment', NULL, 1, 0, 'Merchant ID', 'Payment Processor Provider', 'Account', 'Password',  'Payment_Mobile', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  4, NULL), 
  ('TapPay', 'TapPay Payment', NULL, 1, 0, 'Merchant ID', 'Partner Key', 'App ID', 'App Key',  'Payment_TapPay', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  8, 1),  
  ('TaiwanACH', 'Taiwan ACH Payment', NULL, 1, 0, 'Bank Account Number', 'Sic Code', 'Bank Identification Number', 'Post Delegate Institution Code',  'Payment_TaiwanACH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,  1, 0),
  ('ALLPAY', 'AllPay Credit Card', NULL, 1, 0, 'Merchant ID', 'HashKey', 'HashIV', '', 'Payment_ALLPAY', 'https://payment.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment.ecpay.com.tw/Cashier/QueryTradeInfo', 'https://payment.ecpay.com.tw/Cashier/QueryCreditCardPeriodInfo', NULL, 'https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut', 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo', 'https://payment-stage.ecpay.com.tw/Cashier/QueryCreditCardPeriodInfo', NULL, 4, 1),
@@ -5695,7 +5695,7 @@ INSERT INTO civicrm_uf_field
 	   (24, 7, 			 'postal_code', 		  1, 		   0, 			6, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   'Postal Code',  				'Contact', 	   NULL,  NULL),
 	   (25, 7, 			 'email', 				  1, 		   0, 			7, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   'Primary Email',  				'Contact', 	   NULL,  NULL),
 	   (26, 7, 			 'group', 				  1, 		   0, 			8, 	  	'User and User Admin Only',  0, 		  0, 			 NULL, 			   'Groups',  					'Contact', 	   NULL,  NULL),
-	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   '標籤 (Tags)', 						'Contact', 	   NULL,  NULL),
+	   (27, 7, 			 'tag', 				  1, 		   0, 			9, 	  	'User and User Admin Only',  0, 	      0, 		     NULL, 			   'Tags', 						'Contact', 	   NULL,  NULL),
 	   (28  ,7  	    ,'gender'  				 ,1  	      ,0  			,10  	,'User and User Admin Only' ,0  		 ,0  			,NULL,  			 'Gender'  						,'Individual' ,NULL,  NULL),
 	   (29 	,7 		    ,'birth_date' 			 ,1  	      ,0 			,11 	,'User and User Admin Only' ,0 		 	 ,0 			,NULL, 			  'Date of Birth' 			    ,'Individual' ,NULL,  NULL),
 	   (30,  8,           'street_address',        1,           0,           1,      'User and User Admin Only',  0,           0,             1,                'Street Address', 		'Contact',     NULL,  NULL),
@@ -16736,12 +16736,12 @@ INSERT INTO `civicrm_dashboard`
 INSERT INTO civicrm_navigation
  ( domain_id, label, name, url, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES
- ( @domainID, '首頁', 'Home', 'civicrm/dashboard&reset=1', NULL, '', NULL, 1, NULL, 0);
+ ( @domainID, 'Homepage', 'Home', 'civicrm/dashboard&reset=1', NULL, '', NULL, 1, NULL, 0);
  
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES
-    (  @domainID, NULL, '搜尋',  'Search...',    NULL, '',  NULL, '1', NULL, 1 );
+    (  @domainID, NULL, 'Search',  'Search...',    NULL, '',  NULL, '1', NULL, 1 );
 
 SET @searchlastID:=LAST_INSERT_ID();
     
@@ -16810,7 +16810,7 @@ SET @contributionlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, 'civicrm/contribute&reset=1',                              '儀表板',              'Dashboard',              'access CiviContribute', '', @contributionlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/contribute&reset=1',                              'Dashboard',              'Dashboard',              'access CiviContribute', '', @contributionlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/contribute/add&reset=1&action=add&context=standalone', 'New Contribution',  'New Contribution',       'access CiviContribute,edit contributions', 'AND', @contributionlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/contribute/search&reset=1',                       'Find Contributions',     'Find Contributions',     'access CiviContribute', '', @contributionlastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/contribute/import&reset=1',                       'Import Contributions',   'Import Contributions',   'access CiviContribute,edit contributions', 'AND', @contributionlastID, '1', '1',  4 );
@@ -16824,7 +16824,7 @@ SET @pledgelastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/pledge&reset=1',                                  '儀表板',                  'Dashboard',                 'access CiviPledge',  '',  @pledgelastID,       '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/pledge&reset=1',                                  'Dashboard',                  'Dashboard',                 'access CiviPledge',  '',  @pledgelastID,       '1', NULL, 1 ), 
     ( @domainID, 'civicrm/pledge/add&reset=1&action=add&context=standalone', 'New Pledge',                'New Pledge',                'access CiviPledge,edit pledges',  'AND',  @pledgelastID,       '1', NULL, 2 ),
     ( @domainID, 'civicrm/pledge/search&reset=1',                           'Find Pledges',               'Find Pledges',              'access CiviPledge',  '',  @pledgelastID,       '1', NULL, 3 ), 
     ( @domainID, 'civicrm/admin/contribute/add&reset=1&action=add',             'New Contribution Page',      'New Contribution Page',     'access CiviContribute,administer CiviCRM', 'AND',  @contributionlastID, '1', NULL, 6 ), 
@@ -16843,7 +16843,7 @@ SET @eventlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/event&reset=1',                                   '儀表板',          'CiviEvent Dashboard',  'access CiviEvent', '',    @eventlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/event&reset=1',                                   'Dashboard',          'CiviEvent Dashboard',  'access CiviEvent', '',    @eventlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/participant/add&reset=1&action=add&context=standalone', 'Register Event Participant', 'Register Event Participant', 'access CiviEvent,edit event participants', 'AND', @eventlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/event/search&reset=1',                            'Find Participants',  'Find Participants',    'access CiviEvent', '',    @eventlastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/event/import&reset=1',                            'Import Participants','Import Participants',  'access CiviEvent,edit event participants', 'AND',    @eventlastID, '1', '1',  4 ), 
@@ -16879,7 +16879,7 @@ SET @memberlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/member&reset=1',                              '儀表板',           'Dashboard',       'access CiviMember', '', @memberlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/member&reset=1',                              'Dashboard',           'Dashboard',       'access CiviMember', '', @memberlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/member/add&reset=1&action=add&context=standalone', 'New Membership', 'New Membership',  'access CiviMember,edit memberships', 'AND', @memberlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/member/search&reset=1',                       'Find Members',        'Find Members',    'access CiviMember', '', @memberlastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/member/import&reset=1',                       'Import Memberships',      'Import Members',  'access CiviMember,edit memberships', 'AND', @memberlastID, '1', NULL, 4 );
@@ -16887,7 +16887,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, '其他', 'Other', 'access CiviGrant,administer CiviCase,access my cases and activities,access all cases and activities,administer CiviCampaign,manage campaign,reserve campaign contacts,release campaign contacts,interview campaign contacts,gotv campaign contacts', 'OR', NULL, '1', NULL, 9 );
+    ( @domainID, NULL, 'Other', 'Other', 'access CiviGrant,administer CiviCase,access my cases and activities,access all cases and activities,administer CiviCampaign,manage campaign,reserve campaign contacts,release campaign contacts,interview campaign contacts,gotv campaign contacts', 'OR', NULL, '1', NULL, 9 );
     
 SET @otherlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
@@ -16899,7 +16899,7 @@ SET @caselastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/case&reset=1',        '儀表板', 'Dashboard', 'access my cases and activities,access all cases and activities', 'OR',       @caselastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/case&reset=1',        'Dashboard', 'Dashboard', 'access my cases and activities,access all cases and activities', 'OR',       @caselastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/case/add&reset=1&action=add&atype=13&context=standalone', 'New Case', 'New Case', 'add contacts,access all cases and activities', 'AND', @caselastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/case/search&reset=1', 'Find Cases', 'Find Cases', 'access my cases and activities,access all cases and activities', 'OR',     @caselastID, '1', 1, 3 );
     
@@ -16912,7 +16912,7 @@ SET @grantlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES        
-    ( @domainID, 'civicrm/grant&reset=1',           '儀表板', 'Dashboard', 'access CiviGrant', '',       @grantlastID, '1', NULL, 1 ), 
+    ( @domainID, 'civicrm/grant&reset=1',           'Dashboard', 'Dashboard', 'access CiviGrant', '',       @grantlastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/grant/add&reset=1&action=add&context=standalone', 'New Grant', 'New Grant', 'access CiviGrant,edit grants', 'AND', @grantlastID, '1', NULL, 2 ), 
     ( @domainID, 'civicrm/grant/search&reset=1',    'Find Grants', 'Find Grants', 'access CiviGrant', '',   @grantlastID, '1', 1, 3 );
 
@@ -16926,7 +16926,7 @@ SET @campaignlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES    
-    ( @domainID, 'civicrm/campaign&reset=1',        '儀表板', 'Dashboard', 'manage campaign,administer CiviCampaign', 'OR', @campaignlastID, '1', NULL, 1 );
+    ( @domainID, 'civicrm/campaign&reset=1',        'Dashboard', 'Dashboard', 'manage campaign,administer CiviCampaign', 'OR', @campaignlastID, '1', NULL, 1 );
 SET @campaigndashboardlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
@@ -16974,7 +16974,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, '設置', 'Configure', 'administer CiviCRM', '', @adminlastID, '1', NULL, 3 );
+    ( @domainID, NULL, 'Configure', 'Configure', 'administer CiviCRM', '', @adminlastID, '1', NULL, 3 );
 
 SET @configurelastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
@@ -16993,7 +16993,7 @@ INSERT INTO civicrm_navigation
 VALUES    
     ( @domainID, 'civicrm/admin/setting/component&reset=1',             'Enable CiviCRM Components', 'Enable Components', 'administer CiviCRM', '',   @globalSettinglastID, '1', NULL, 1 ), 
     ( @domainID, 'civicrm/admin/setting/preferences/display&reset=1',   'Site Preferences (screen and form configuration)', 'Site Preferences', 'administer CiviCRM', '', @globalSettinglastID, '1', NULL, 2 ), 
-    ( @domainID, 'civicrm/admin/setting/path&reset=1',                  '目錄',        'Directories',      'administer CiviCRM', '',        @globalSettinglastID, '1', NULL, 3 ), 
+    ( @domainID, 'civicrm/admin/setting/path&reset=1',                  'Directories',        'Directories',      'administer CiviCRM', '',        @globalSettinglastID, '1', NULL, 3 ), 
     ( @domainID, 'civicrm/admin/setting/url&reset=1',                   'Resource URLs',      'Resource URLs',    'administer CiviCRM', '',      @globalSettinglastID, '1', NULL, 4 ), 
     ( @domainID, 'civicrm/admin/setting/smtp&reset=1',                  'Outbound Email (SMTP/Sendmail)', 'Outbound Email', 'administer CiviCRM', '', @globalSettinglastID, '1', NULL, 5 ), 
     ( @domainID, 'civicrm/admin/setting/mapping&reset=1',               'Mapping and Geocoding', 'Mapping and Geocoding',   'administer CiviCRM', '', @globalSettinglastID, '1', NULL, 6 ), 
@@ -17172,7 +17172,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, '說明', 'Help', NULL, '',  NULL, '1', NULL, 11);
+    ( @domainID, NULL, 'Help', 'Help', NULL, '',  NULL, '1', NULL, 11);
 
 SET @adminHelplastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation
@@ -17185,7 +17185,7 @@ VALUES
 INSERT INTO civicrm_navigation
     ( domain_id, url, label, name, permission, permission_operator, parent_id, is_active, has_separator, weight )
 VALUES     
-    ( @domainID, NULL, '報告', 'Reports', 'access CiviReport', '',  NULL, '1', NULL, 8 );
+    ( @domainID, NULL, 'Reports', 'Reports', 'access CiviReport', '',  NULL, '1', NULL, 8 );
 
 SET @reportlastID:=LAST_INSERT_ID();
 INSERT INTO civicrm_navigation

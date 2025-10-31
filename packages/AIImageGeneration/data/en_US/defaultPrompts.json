@@ -1,25 +1,979 @@
 {
   "version": "1.0",
-  "locale": "zh_TW",
-  "lastUpdated": "2025-10-18",
+  "locale": "en_US",
+  "lastUpdated": "2025-10-31",
   "prompts": [
     {
-      "text": "Children doing their homework in an after-school tutoring class",
-      "style": "Simple Illustration",
+      "text": "Children doing homework in an after-school tutoring class.",
+      "style": "Hand-Drawn Illustration",
       "ratio": "4:3",
-      "filename": "neticrm_aigenimg_20251016_001123_b0c5706b.webp"
+      "filename": "neticrm_aigenimg_20251016_001400_33ab097f.webp"
     },
     {
-      "text": "Rural schoolchildren happily receiving new stationery",
+      "text": "Schoolchildren in remote areas happily receive new stationery.",
       "style": "Japanese Simple Illustration",
       "ratio": "4:3",
       "filename": "neticrm_aigenimg_20251016_001516_8c3916c9.webp"
     },
     {
-      "text": "Rural schoolchildren happily receiving new stationery",
-      "style": "Storybook Style",
+      "text": "Schoolchildren in remote areas happily receive new stationery.",
+      "style": "Picture book illustration",
       "ratio": "4:3",
       "filename": "neticrm_aigenimg_20251016_001556_a9f56e29.webp"
+    },
+    {
+      "text": "A volunteer teacher is telling a story to children.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002038_8e42f0d4.webp"
+    },
+    {
+      "text": "A child is focused on reading a book.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002116_263d690e.webp"
+    },
+    {
+      "text": "A child is focused on reading a book.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002232_b7886c0c.webp"
+    },
+    {
+      "text": "Children are running happily on the grass.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002631_1aeac77e.webp"
+    },
+    {
+      "text": "A social worker gently hugs a child.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003138_c8a55aec.webp"
+    },
+    {
+      "text": "Children share a piece of bread together.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003414_dcf46c44.webp"
+    },
+    {
+      "text": "Children share a piece of bread together.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003453_8a2f03b6.webp"
+    },
+    {
+      "text": "Children share a piece of bread together.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003612_0e863bd5.webp"
+    },
+    {
+      "text": "Children learn around a globe.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005144_b162fe9a.webp"
+    },
+    {
+      "text": "A teenager looks up at the sky in a daze.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005221_a5101ec8.webp"
+    },
+    {
+      "text": "A teenager looks up at the sky in a daze.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005418_e8c2172b.webp"
+    },
+    {
+      "text": "Collect used books to help children read.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005615_adc28eea.webp"
+    },
+    {
+      "text": "Collect used books to help children read.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005655_dbbacd0d.webp"
+    },
+    {
+      "text": "Collect used books to help children read.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005815_f8710855.webp"
+    },
+    {
+      "text": "A child happily puts on new shoes.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010052_068c0d2f.webp"
+    },
+    {
+      "text": "The back of a teacher teaching in front of a blackboard.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010326_03830509.webp"
+    },
+    {
+      "text": "A volunteer plants a small sapling on a mountain.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010524_d84194d5.webp"
+    },
+    {
+      "text": "A volunteer plants a small sapling on a mountain.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010645_ef75ea06.webp"
+    },
+    {
+      "text": "A volunteer plants a small sapling on a mountain.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010725_c20d8839.webp"
+    },
+    {
+      "text": "A volunteer plants a small sapling on a mountain.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010804_79c2ca3f.webp"
+    },
+    {
+      "text": "A group of people are picking up trash on the beach.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010843_6a770c33.webp"
+    },
+    {
+      "text": "A group of people are picking up trash on the beach.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010922_5cca0046.webp"
+    },
+    {
+      "text": "A group of people are picking up trash on the beach.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011000_27999148.webp"
+    },
+    {
+      "text": "A group of people are picking up trash on the beach.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011040_80886637.webp"
+    },
+    {
+      "text": "A group of people are picking up trash on the beach.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011118_967af61e.webp"
+    },
+    {
+      "text": "A sea turtle with a plastic ring around its neck.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011355_48497ba0.webp"
+    },
+    {
+      "text": "Melting glaciers and a lonely polar bear.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011517_7dd562f5.webp"
+    },
+    {
+      "text": "Melting glaciers and a lonely polar bear.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011636_344fb8a4.webp"
+    },
+    {
+      "text": "Melting glaciers and a lonely polar bear.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011717_dff729ee.webp"
+    },
+    {
+      "text": "Factory chimneys are emitting black smoke.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011911_1194ed80.webp"
+    },
+    {
+      "text": "Factory chimneys are emitting black smoke.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011951_42cb0d3c.webp"
+    },
+    {
+      "text": "Factory chimneys are emitting black smoke.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012031_d2ac73e3.webp"
+    },
+    {
+      "text": "The dry, cracked land is barren.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012147_b85b514c.webp"
+    },
+    {
+      "text": "The dry, cracked land is barren.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012351_73880007.webp"
+    },
+    {
+      "text": "Volunteers are sorting recyclables.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012508_923958b8.webp"
+    },
+    {
+      "text": "Volunteers are sorting recyclables.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012709_b0c7ee55.webp"
+    },
+    {
+      "text": "A veterinarian carefully treats an injured stray dog.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012826_e0f5ec8b.webp"
+    },
+    {
+      "text": "A veterinarian carefully treats an injured stray dog.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012903_1f43f717.webp"
+    },
+    {
+      "text": "A veterinarian carefully treats an injured stray dog.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013105_0b0627e9.webp"
+    },
+    {
+      "text": "Many cats in the shelter are waiting for adoption.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013221_027fd62f.webp"
+    },
+    {
+      "text": "Many cats in the shelter are waiting for adoption.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013300_2e425a4f.webp"
+    },
+    {
+      "text": "A volunteer is feeding a stray cat.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013537_c55ccdc3.webp"
+    },
+    {
+      "text": "A volunteer is feeding a stray cat.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013737_1c23aeff.webp"
+    },
+    {
+      "text": "A family happily adopts a puppy.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013816_e5795d92.webp"
+    },
+    {
+      "text": "A family happily adopts a puppy.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013933_ec13321a.webp"
+    },
+    {
+      "text": "The recovered dog wags its tail happily.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_014817_59e7f956.webp"
+    },
+    {
+      "text": "The recovered dog wags its tail happily.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_015019_2c949baa.webp"
+    },
+    {
+      "text": "Wild animals are freed and run towards the forest.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_015256_006cfb8b.webp"
+    },
+    {
+      "text": "A hand gently strokes the texture of a tree.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_015737_ec1f0b0f.webp"
+    },
+    {
+      "text": "A doctor sees patients in a remote area.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020250_ae390da7.webp"
+    },
+    {
+      "text": "A researcher looks intently into a microscope.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020453_8ecfe112.webp"
+    },
+    {
+      "text": "A researcher looks intently into a microscope.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020620_d90aaa45.webp"
+    },
+    {
+      "text": "A researcher looks intently into a microscope.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020741_1b1f8dcb.webp"
+    },
+    {
+      "text": "A patient smiles while looking out the window.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020820_85bbcc38.webp"
+    },
+    {
+      "text": "A patient smiles while looking out the window.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021056_aaeeaa49.webp"
+    },
+    {
+      "text": "A psychologist is listening to a case.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021139_6051505f.webp"
+    },
+    {
+      "text": "A rehabilitation therapist helps a patient learn to walk again.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021455_5a04ce69.webp"
+    },
+    {
+      "text": "A group of people wearing masks are queuing.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021853_1bca4ed8.webp"
+    },
+    {
+      "text": "The confused and helpless expression of an elderly person with dementia.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022442_944e40a0.webp"
+    },
+    {
+      "text": "The confused and helpless expression of an elderly person with dementia.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022524_32925a7c.webp"
+    },
+    {
+      "text": "The confused and helpless expression of an elderly person with dementia.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022641_e69e8aa1.webp"
+    },
+    {
+      "text": "A stethoscope in the shape of a heart.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022953_73bd7922.webp"
+    },
+    {
+      "text": "A volunteer pushes an elderly person in a wheelchair to enjoy the sun.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023109_352426a0.webp"
+    },
+    {
+      "text": "A volunteer pushes an elderly person in a wheelchair to enjoy the sun.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023147_f954a5cc.webp"
+    },
+    {
+      "text": "A volunteer pushes an elderly person in a wheelchair to enjoy the sun.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023229_739021a3.webp"
+    },
+    {
+      "text": "A young person helps an elderly person cross the road.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023751_c1bf3b88.webp"
+    },
+    {
+      "text": "A volunteer teaches an elderly person how to use a smartphone.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023910_1c8c8f0c.webp"
+    },
+    {
+      "text": "A volunteer teaches an elderly person how to use a smartphone.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023951_532919ca.webp"
+    },
+    {
+      "text": "A volunteer teaches an elderly person how to use a smartphone.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024031_3ca0c93a.webp"
+    },
+    {
+      "text": "The back of an elderly person living alone eating a meal.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024147_2ff8c62b.webp"
+    },
+    {
+      "text": "The back of an elderly person living alone eating a meal.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024227_cc90eba3.webp"
+    },
+    {
+      "text": "The back of an elderly person living alone eating a meal.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024423_23b88eb3.webp"
+    },
+    {
+      "text": "A volunteer delivers a meal to the home of an elderly person living alone.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024858_ad211f82.webp"
+    },
+    {
+      "text": "A volunteer delivers a meal to the home of an elderly person living alone.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025100_670f6fc4.webp"
+    },
+    {
+      "text": "Athletes with disabilities compete on the field.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025219_29fc9513.webp"
+    },
+    {
+      "text": "Athletes with disabilities compete on the field.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025338_fd80590b.webp"
+    },
+    {
+      "text": "A guide dog leads a visually impaired person forward.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025456_712bac2d.webp"
+    },
+    {
+      "text": "A guide dog leads a visually impaired person forward.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025653_f03339e9.webp"
+    },
+    {
+      "text": "A hearing-impaired person is communicating with sign language.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025808_4a6c85a6.webp"
+    },
+    {
+      "text": "A hearing-impaired person is communicating with sign language.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025927_aa99ecb3.webp"
+    },
+    {
+      "text": "Volunteers distribute hot food to the homeless.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030521_728fd77c.webp"
+    },
+    {
+      "text": "Rescue team members search for survivors in the rubble.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030800_070b2175.webp"
+    },
+    {
+      "text": "Rescue team members search for survivors in the rubble.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030839_71ac6565.webp"
+    },
+    {
+      "text": "Rescue team members search for survivors in the rubble.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030927_2be95498.webp"
+    },
+    {
+      "text": "Rescue team members search for survivors in the rubble.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031011_537ee066.webp"
+    },
+    {
+      "text": "Rescue team members search for survivors in the rubble.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031048_2f690ac7.webp"
+    },
+    {
+      "text": "People work together to rebuild their homes after a disaster.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031205_6d5af882.webp"
+    },
+    {
+      "text": "People work together to rebuild their homes after a disaster.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031244_a46858ad.webp"
+    },
+    {
+      "text": "People work together to rebuild their homes after a disaster.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031322_4e91c356.webp"
+    },
+    {
+      "text": "A family receives an emergency supply kit.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031523_ecf4e991.webp"
+    },
+    {
+      "text": "A family receives an emergency supply kit.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031722_aa236d1e.webp"
+    },
+    {
+      "text": "A depressed person sits alone in the dark.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_032739_484da4a4.webp"
+    },
+    {
+      "text": "A depressed person sits alone in the dark.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_032817_6cb7606c.webp"
+    },
+    {
+      "text": "A seedling grows out of the dry, cracked earth.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034033_da1fb808.webp"
+    },
+    {
+      "text": "A seedling grows out of the dry, cracked earth.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034111_04ac2185.webp"
+    },
+    {
+      "text": "A seedling grows out of the dry, cracked earth.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034151_039ce1c4.webp"
+    },
+    {
+      "text": "A seedling grows out of the dry, cracked earth.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034229_5f6a3980.webp"
+    },
+    {
+      "text": "A seedling grows out of the dry, cracked earth.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034306_dc359e52.webp"
+    },
+    {
+      "text": "Many hands stacked together symbolize unity.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_035051_362998bb.webp"
+    },
+    {
+      "text": "Many paper cranes fly to the sky to pray for blessings.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_040828_2d061063.webp"
+    },
+    {
+      "text": "Many paper cranes fly to the sky to pray for blessings.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_041101_b8f342f8.webp"
+    },
+    {
+      "text": "People of different skin colors stand together and smile.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_041334_7e3c56d5.webp"
+    },
+    {
+      "text": "People of different skin colors stand together and smile.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_041412_c8ec9254.webp"
+    },
+    {
+      "text": "A pair of hands holds a glowing heart.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042233_7a7e677c.webp"
+    },
+    {
+      "text": "A pair of hands holds a glowing heart.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042311_682c765a.webp"
+    },
+    {
+      "text": "A pair of hands holds a glowing heart.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042349_792d5fd8.webp"
+    },
+    {
+      "text": "Clean water flows from a clean faucet.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042542_249ae63c.webp"
+    },
+    {
+      "text": "Volunteers sweep the community park together.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042739_d170985a.webp"
+    },
+    {
+      "text": "Many people are wearing bibs in a charity run.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043052_190972d7.webp"
+    },
+    {
+      "text": "Many people are wearing bibs in a charity run.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043327_9c5a8c42.webp"
+    },
+    {
+      "text": "A donor receives a certificate of appreciation.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043443_1b4c8416.webp"
+    },
+    {
+      "text": "A donor receives a certificate of appreciation.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043525_7e90646e.webp"
+    },
+    {
+      "text": "Volunteers work together to move collected materials.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043720_44ca29fa.webp"
+    },
+    {
+      "text": "Volunteers work together to move collected materials.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043955_3f4965b7.webp"
+    },
+    {
+      "text": "Staff at a tele-fundraising center.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044112_4b7969d6.webp"
+    },
+    {
+      "text": "Staff at a tele-fundraising center.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044309_6e8f1f1e.webp"
+    },
+    {
+      "text": "Community residents plant a flower bed together.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044347_049343b7.webp"
+    },
+    {
+      "text": "Community residents plant a flower bed together.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044426_9ed6f4aa.webp"
+    },
+    {
+      "text": "Community residents plant a flower bed together.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044628_2ae34f38.webp"
+    },
+    {
+      "text": "A bustling scene at a charity bazaar.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044744_14bc2b81.webp"
+    },
+    {
+      "text": "A bustling scene at a charity bazaar.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044824_04ad7559.webp"
+    },
+    {
+      "text": "International volunteers play with local children.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_045645_3ccada9a.webp"
+    },
+    {
+      "text": "International volunteers play with local children.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_045802_79ece23f.webp"
+    },
+    {
+      "text": "A farmer smiles while holding his own vegetables.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051029_018b2ca9.webp"
+    },
+    {
+      "text": "A farmer smiles while holding his own vegetables.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051108_c81ba753.webp"
+    },
+    {
+      "text": "A farmer smiles while holding his own vegetables.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051225_d98d6be0.webp"
+    },
+    {
+      "text": "A farmer smiles while holding his own vegetables.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051303_65547cdb.webp"
+    },
+    {
+      "text": "Oppose war, with a flower in the barrel of a gun.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051340_9c853907.webp"
+    },
+    {
+      "text": "A food bank shelf full of food.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051651_8e1e1123.webp"
+    },
+    {
+      "text": "A food bank shelf full of food.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051729_b45a5407.webp"
+    },
+    {
+      "text": "A single mother holds her child.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052046_004b3851.webp"
+    },
+    {
+      "text": "A single mother holds her child.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052204_0ad52626.webp"
+    },
+    {
+      "text": "The back of a search and rescue worker in a raincoat.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052436_09166acf.webp"
+    },
+    {
+      "text": "The back of a search and rescue worker in a raincoat.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052559_c14a6e72.webp"
+    },
+    {
+      "text": "Epidemic prevention personnel are disinfecting the streets.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052637_3319f1d1.webp"
+    },
+    {
+      "text": "Epidemic prevention personnel are disinfecting the streets.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052915_6a230f9e.webp"
+    },
+    {
+      "text": "A scene of providing legal advice services.",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052955_5f2adfeb.webp"
+    },
+    {
+      "text": "Light a bright lamp.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_054210_8dd005bd.webp"
+    },
+    {
+      "text": "The recipient's face shows a grateful smile.",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_054404_75219806.webp"
+    },
+    {
+      "text": "The recipient's face shows a grateful smile.",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_054442_5ef6751e.webp"
+    },
+    {
+      "text": "People of different skin colors smile and march with a six-color rainbow flag.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251029_231819_2dc2f773.webp"
+    },
+    {
+      "text": "A farmer smiles while holding his own vegetables.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_010731_558ff38a.webp"
+    },
+    {
+      "text": "Solar panels installed on a community roof.",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_010930_2b21aa53.webp"
+    },
+    {
+      "text": "Volunteers lead children to paint murals on a community wall.",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_011502_d40d7eba.webp"
+    },
+    {
+      "text": "People hold signs and participate in a peace march.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012128_39db7515.webp"
+    },
+    {
+      "text": "A successfully restored coral reef.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012404_d2cd0470.webp"
+    },
+    {
+      "text": "A doctor is caring for an injured pangolin.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012743_72c9531c.webp"
+    },
+    {
+      "text": "A lighthouse illuminates the direction at night.",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_013411_837673f6.webp"
+    },
+    {
+      "text": "A mobile medical vehicle drives into a remote village.",
+      "style": "Picture book illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_034527_5aae7c8e.webp"
+    },
+    {
+      "text": "A bird of prey flies over the mountain mist.",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041201_c3fd001e.webp"
+    },
+    {
+      "text": "A group of people are picking up trash on the beach.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041446_b01c310c.webp"
+    },
+    {
+      "text": "In a dark room, a window lets in light.",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_180751_51dff995.webp"
+    },
+    {
+      "text": "A dove of peace flies with an olive branch.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_182014_0b8c3ec2.webp "
+    },
+    {
+      "text": "A poster with a simple design is on the wall, with the words 'Stop the stigma of mental illness'.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_184804_a99914c4.webp"
+    },
+    {
+      "text": "People march with a six-color rainbow flag.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_204024_69580fd3.webp"
+    },
+    {
+      "text": "Two men smile and walk hand in hand on the street.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_204421_abcf3a6a.webp"
+    },
+    {
+      "text": "Two women smile and walk hand in hand on the street.",
+      "style": "Japanese Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_210504_d652d347.webp"
+    },
+    {
+      "text": "A social worker gently hugs a child.",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041546_3fc650f8.webp"
+    },
+    {
+      "text": "In a dark room, a window lets in light.",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_040938_f906625b.webp"
     }
   ]
 }
