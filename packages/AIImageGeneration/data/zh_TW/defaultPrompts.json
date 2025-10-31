@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "locale": "zh_TW",
-  "lastUpdated": "2025-10-23",
+  "lastUpdated": "2025-10-31",
   "prompts": [
     {
       "text": "孩子們在課後輔導班寫作業。",
@@ -862,10 +862,118 @@
       "filename": "neticrm_aigenimg_20251016_054442_5ef6751e.webp"
     },
     {
-      "text": "棉花糖雲，柔和的漸層色，粉紫色和金色的暮光，閃閃發光的星星",
+      "text": "不同膚色的人微笑拿著六色彩虹旗遊行。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251029_231819_2dc2f773.webp"
+    },
+    {
+      "text": "一位農夫拿著自己種的蔬菜微笑。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_010731_558ff38a.webp"
+    },
+    {
+      "text": "社區屋頂上設置的太陽能板。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_010930_2b21aa53.webp"
+    },
+    {
+      "text": "志工帶領孩子們在社區牆上畫壁畫。",
       "style": "Watercolor Painting",
       "ratio": "9:16",
-      "filename": "neticrm_aigenimg_20251018_191831_52ec2d20.webp"
+      "filename": "neticrm_aigenimg_20251029_011502_d40d7eba.webp"
+    },
+    {
+      "text": "人們舉著標語參加和平遊行。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012128_39db7515.webp"
+    },
+    {
+      "text": "一片被復育成功的珊瑚礁。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012404_d2cd0470.webp"
+    },
+    {
+      "text": "醫生正在照顧受傷的穿山甲。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012743_72c9531c.webp"
+    },
+    {
+      "text": "一個燈塔在夜晚中照亮方向。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_013411_837673f6.webp"
+    },
+    {
+      "text": "行動醫療車開進偏遠村落。",
+      "style": "Picture book illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_034527_5aae7c8e.webp"
+    },
+    {
+      "text": "一隻猛禽飛過山嵐。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041201_c3fd001e.webp"
+    },
+    {
+      "text": "一群人正在海灘上撿拾垃圾。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041446_b01c310c.webp"
+    },
+    {
+      "text": "黑暗的房間裡，一扇窗透進光。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_180751_51dff995.webp"
+    },
+    {
+      "text": "和平鴿啣著橄欖枝飛翔。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_182014_0b8c3ec2.webp "
+    },
+    {
+      "text": "牆上貼著簡約設計感的海報，海報上有「反對精神疾病污名化」文字。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_184804_a99914c4.webp"
+    },
+    {
+      "text": "人們拿著六色彩虹旗遊行。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_204024_69580fd3.webp"
+    },
+    {
+      "text": "兩個男人微笑著牽著手走在街上。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_204421_abcf3a6a.webp"
+    },
+    {
+      "text": "兩個女人微笑著牽著手走在街上。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_210504_d652d347.webp"
+    },
+    {
+      "text": "社工溫柔地擁抱一個孩子。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041546_3fc650f8.webp"
+    },
+    {
+      "text": "黑暗的房間裡，一扇窗透進光。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_040938_f906625b.webp"
     }
   ]
 }
