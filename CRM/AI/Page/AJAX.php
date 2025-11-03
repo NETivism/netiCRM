@@ -24,6 +24,8 @@ class CRM_AI_Page_AJAX {
         'role' => 'string',
         'content' => 'string',
         'sourceUrlPath' => 'string',
+        'sourceUrl' => 'string',
+        'sourceUrlQuery' => 'string',
       ];
       $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
       if (!$checkFormatResult) {
