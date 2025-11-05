@@ -1365,7 +1365,6 @@ LIMIT 0, 100
             $params = [
               'id' => $dao->contribution_recur_id,
               'auto_renew' => 2,
-              'contribution_status_id' => 5,
               'message' => ts("Expiry date updated from %1 to %2", [
                 1 => $dao->expiry_date,
                 2 => $expiryDate
@@ -1374,11 +1373,6 @@ LIMIT 0, 100
             CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
             $noteTitle = ts('TapPay Payment').': '.ts('Card Expiry Date').' '.ts('updated');
             CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $noteTitle, ts("From").': '.$dao->expiry_date);
-
-            // Add status note
-            $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
-            $statusNote = ts('Card expiry date has been updated.').' '.ts("Auto renews status");
-            CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $statusNoteTitle, $statusNote);
             break;
           }
         }
