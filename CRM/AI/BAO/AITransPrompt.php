@@ -63,9 +63,6 @@ class CRM_AI_BAO_AITransPrompt {
       return false;
     }
 
-    // Language detection (for future use if needed)
-    // $language = $this->detectLanguage($text);
-
     // Build user prompt with input text and options
     $userPrompt = $this->buildUserPrompt($text, $options);
 
@@ -128,25 +125,6 @@ class CRM_AI_BAO_AITransPrompt {
         'message' => 'Translation failed: ' . $e->getMessage()
       ];
     }
-  }
-
-  /**
-   * Detect language of input text using regex pattern
-   *
-   * @param string $text Input text to analyze
-   *
-   * @return string 'english' if text is English, 'non-english' otherwise
-   */
-  public function detectLanguage($text) {
-    // Use regex pattern to detect if text contains only English characters
-    // Pattern matches: letters, numbers, spaces, and punctuation
-    $englishPattern = '/^[a-zA-Z0-9\s\p{P}]+$/u';
-
-    if (preg_match($englishPattern, $text)) {
-      return 'english';
-    }
-
-    return 'non-english';
   }
 
   /**
