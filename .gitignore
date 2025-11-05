@@ -9,3 +9,5 @@ vendor
 tests/casperjs/picture
 **/node_modules
 .php-cs-fixer.cache
+/tests/playwright/tests/files/sites.csv
+/tests/playwright/tests/files/check_site_result.txt

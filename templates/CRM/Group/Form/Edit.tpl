@@ -213,10 +213,12 @@ cj(function($){
 	    <a href="{$crmURL}">&raquo; {ts}Contacts in this Group{/ts}</a>
 	    {if $group.saved_search_id} 
 	        <br />
-		{if $group.mapping_id}
-		    <a href="{crmURL p="civicrm/contact/search/builder" q="reset=1&force=1&ssID=`$group.saved_search_id`"}">&raquo; {ts}Edit Smart Group Criteria{/ts}</a>
-		{else} 
-		    <a href="{crmURL p="civicrm/contact/search/advanced" q="reset=1&force=1&ssID=`$group.saved_search_id`"}">&raquo; {ts}Edit Smart Group Criteria{/ts}</a>
+		{if !$group.custom_search_class}
+		    {if $group.mapping_id}
+			<a href="{crmURL p="civicrm/contact/search/builder" q="reset=1&force=1&ssID=`$group.saved_search_id`"}">&raquo; {ts}Edit Smart Group Criteria{/ts}</a>
+		    {else}
+			<a href="{crmURL p="civicrm/contact/search/advanced" q="reset=1&force=1&ssID=`$group.saved_search_id`"}">&raquo; {ts}Edit Smart Group Criteria{/ts}</a>
+		    {/if}
 		{/if}
 		
 	    {/if}

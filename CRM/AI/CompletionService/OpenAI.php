@@ -8,6 +8,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
   CONST MODEL_LIST = [
     'gpt-3.5-turbo',
+    'gpt-4o',
   ];
 
   /**
@@ -91,6 +92,24 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
     else {
       $this->_maxTokens = $maxTokens;
     }
+  }
+
+  /**
+   * Get current model name
+   *
+   * @return string
+   */
+  public function getModel() {
+    return $this->_model;
+  }
+
+  /**
+   * Get current max tokens
+   *
+   * @return int|null
+   */
+  public function getMaxTokens() {
+    return $this->_maxTokens;
   }
 
   /**

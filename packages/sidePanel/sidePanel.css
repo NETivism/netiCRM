@@ -172,6 +172,8 @@ a.btn:hover {
   padding-bottom: 60px;
   height: calc(100vh - 66px - 64px);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, .5) transparent;
 }
 .civicrm-menu-enabled .nsp-container .nsp-content {
   height: calc(100vh - 30px - 66px - 64px);
@@ -188,7 +190,9 @@ a.btn:hover {
   width: 100%;
   background: #ddd;
 }
-
+.nsp-container .nsp-content > .inner {
+  height: 100%;
+}
 .nsp-container[data-type="iframe"] .nsp-content {
   padding-bottom: 20px;
   height: 100% !important;
@@ -209,4 +213,73 @@ a.btn:hover {
 .nsp-container .tip-item.is-active,
 .nsp-container .tip-items.is-active {
   display: block;
+}
+
+/* Tabs navigation styles */
+ul.nme-setting-panels-tabs {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.nme-setting-panels-tabs li {
+  flex: 1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul.nme-setting-panels-tabs li::before {
+  display: none;
+}
+
+ul.nme-setting-panels-tabs li a {
+  display: block;
+  padding: 5px;
+  text-align: center;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-bottom: 0;
+  background: #fff;
+}
+
+ul.nme-setting-panels-tabs li a:hover {
+  text-decoration: none;
+  color: #fff;
+  background: #555;
+}
+
+ul.nme-setting-panels-tabs li a.is-active {
+  color: #fff;
+  background: #3F51B5;
+  border-color: #3F51B5;
+}
+
+/* Tabs panel styles */
+.nme-setting-panel {
+  display: none;
+  height: 100%;
+}
+
+.nme-setting-panel.is-active {
+  display: block;
+}
+
+/* Responsive design for fullscreen mode */
+.nsp-container.is-fullscreen ul.nme-setting-panels-tabs li {
+  flex: 0 1 auto;
+}
+
+.nsp-container.is-fullscreen ul.nme-setting-panels-tabs li a {
+  border-radius: 0;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 30px;
+}
+
+/* Special style for panels with AI completion */
+.nsp-container[data-tab-active-id*="aicompletion"] .nsp-footer,
+.nsp-container[data-tab-active-id*="aiimagegeneration"] .nsp-footer {
+  display: none;
 }

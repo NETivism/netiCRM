@@ -403,6 +403,11 @@ class CRM_Core_Permission {
         'administer dedupe rules' => ts('administer dedupe rules'),
         'merge duplicate contacts' => ts('merge duplicate contacts'),
         'view all notes' => ts('view all notes'),
+        'API create' => ts('API create'),
+        'API update' => ts('API update'),
+        'API delete' => ts('API delete'),
+        'API search' => ts('API search'),
+        'MCP query' => ts('MCP query'),
       ];
 
       if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE) {

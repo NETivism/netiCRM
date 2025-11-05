@@ -1,0 +1,3139 @@
+/**
+ * AI Image Generation Component JavaScript
+ * Handles user interactions and component functionality
+ */
+(function($) {
+  'use strict';
+
+  // Component namespace
+  const NetiAIImageGeneration = {
+    // Configuration
+    config: {
+      container: '.netiaiig-container',
+      selectors: {
+        styleDropdown: '#styleDropdown',
+        ratioDropdown: '#ratioDropdown',
+        styleText: '#styleText',
+        ratioText: '#ratioText',
+        generateBtn: '.generate-btn',
+        floatingBtn: '.floating-btn',
+        historyItem: '.history-item',
+        promptTextarea: '.prompt-textarea',
+        styleOptions: '.style-option',
+        dropdownItems: '.dropdown-item',
+        floatingMessage: '.floating-message',
+        floatingMessageIcon: '.floating-message-icon',
+        floatingMessageText: '.floating-message-text'
+      },
+      classes: {
+        active: 'active',
+        selected: 'selected',
+        loading: 'loading',
+        disabled: 'disabled'
+      }
+    },
+
+    // State management for tooltip timers
+    tooltipTimers: {},
+
+    // Context marking for trigger source tracking
+    _aiLinkTriggerContext: null,
+
+    // Initialize component
+    init: function() {
+      this.bindEvents();
+      this.initAutoResizeTextarea();
+      this.initVisibilityObserver();
+      this.initImageLightbox();
+
+      // Initialize empty state visibility
+      this.initEmptyState();
+
+      // Initialize visual state based on current content
+      this.initializeVisualState();
+
+      // Initialize sample image loading mechanism
+      this.initSampleImageLoading();
+
+      // Initialize tooltip based on existing content
+      this.initPromptTooltip();
+
+      // Initialize prompt UI based on current style selection
+      this.initPromptStyleSettings();
+
+      // Initialize file upload field integration
+      this.initFileUploadIntegration();
+
+    },
+
+    // Initialize empty state visibility
+    initEmptyState: function() {
+      const $container = $(this.config.container);
+      const $emptyState = $container.find('.empty-state-content');
+      const $image = $container.find('.image-placeholder img');
+
+      // Show empty state and hide placeholder image on initial load
+      if (!this.hasGeneratedImage()) {
+        $emptyState.show();
+        $image.hide();
+      } else {
+        $emptyState.hide();
+        $image.show();
+      }
+    },
+
+    // Bind all events
+    bindEvents: function() {
+      const self = this;
+
+      // Style dropdown functionality
+      $(document).on('click', `${self.config.selectors.styleDropdown} .dropdown-toggle`, function(e) {
+        e.stopPropagation();
+        self.toggleDropdown($(this).closest('.netiaiig-dropdown'));
+      });
+
+      // Ratio dropdown functionality
+      $(document).on('click', `${self.config.selectors.ratioDropdown} .dropdown-toggle`, function(e) {
+        e.stopPropagation();
+        self.toggleDropdown($(this).closest('.netiaiig-dropdown'));
+      });
+
+      // Style option selection
+      $(document).on('click', self.config.selectors.styleOptions, function() {
+        self.selectStyleOption($(this));
+      });
+
+      // Ratio item selection
+      $(document).on('click', `${self.config.selectors.ratioDropdown} ${self.config.selectors.dropdownItems}`, function() {
+        self.selectRatioOption($(this));
+      });
+
+      // Generate button
+      $(document).on('click', self.config.selectors.generateBtn, function(e) {
+        e.preventDefault();
+        self.generateImage();
+      });
+
+      // Floating action buttons
+      $(document).on('click', self.config.selectors.floatingBtn, function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleFloatingAction($(this));
+      });
+
+      // Sample retry button
+      $(document).on('click', '.sample-retry-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleSampleRetry();
+      });
+
+      // Note: History items now use lightbox directly via AIImageGeneration-History.js
+      // No need for custom click handlers as Magnific Popup handles the lightbox functionality
+
+      // Close dropdowns when clicking outside
+      $(document).on('click', function() {
+        self.closeAllDropdowns();
+      });
+
+      // Prevent dropdown close when clicking inside
+      $(document).on('click', '.dropdown-menu, .style-dropdown-menu', function(e) {
+        e.stopPropagation();
+      });
+
+      // Keyboard navigation support
+      $(document).on('keydown', '.dropdown-toggle', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          $(this).click();
+        }
+      });
+
+      // Textarea auto-resize event binding (following reference file logic)
+      $(document).on('input', self.config.selectors.promptTextarea, function() {
+        self.autoResizeTextarea($(this));
+
+        // Update tooltip based on content
+        self.updatePromptTooltip($(this));
+      });
+
+      // Also listen for change event (for paste operations)
+      $(document).on('change', self.config.selectors.promptTextarea, function() {
+        self.updatePromptTooltip($(this));
+      });
+
+      // Confirm modal events (Magnific Popup)
+      $(document).on('click', '.confirm-replace-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleConfirmReplace();
+      });
+
+      // Initialize Magnific Popup for modal dismiss functionality
+      // This ensures popup-modal-dismiss works correctly
+      $(document).on('click', '.popup-modal-dismiss', function(e) {
+        e.preventDefault();
+        $.magnificPopup.close();
+        self.handleCancelReplace();
+      });
+    },
+
+    // Toggle dropdown state
+    toggleDropdown: function($dropdown) {
+      const isActive = $dropdown.hasClass(this.config.classes.active);
+
+      // Close all dropdowns first
+      this.closeAllDropdowns();
+
+      // Toggle current dropdown
+      if (!isActive) {
+        $dropdown.addClass(this.config.classes.active);
+      }
+    },
+
+    // Close all dropdowns
+    closeAllDropdowns: function() {
+      $(this.config.container).find('.netiaiig-dropdown').removeClass(this.config.classes.active);
+    },
+
+    // Select style option
+    selectStyleOption: function($option) {
+      const style = $option.data('style');
+      const styleLabel = $option.find('.style-label').text() || style; // Use translated text or fallback to data-style
+      const $container = $option.closest('.netiaiig-dropdown');
+
+      // Update selected state
+      $option.siblings().removeClass(this.config.classes.selected);
+      $option.addClass(this.config.classes.selected);
+
+      // Update button text with translated label
+      $container.find(this.config.selectors.styleText).text(styleLabel);
+
+      // Update prompt UI based on style selection
+      this.updatePromptBasedOnStyle(style);
+
+      // Close dropdown
+      $container.removeClass(this.config.classes.active);
+
+
+      // Trigger custom event
+      $(this.config.container).trigger('styleChanged', [style]);
+    },
+
+    // Select ratio option
+    selectRatioOption: function($option) {
+      const ratio = $option.data('ratio');
+      const $container = $option.closest('.netiaiig-dropdown');
+
+      // Update selected state
+      $option.siblings().removeClass(this.config.classes.selected);
+      $option.addClass(this.config.classes.selected);
+
+      // Update button text
+      $container.find(this.config.selectors.ratioText).text(ratio);
+
+      // Close dropdown
+      $container.removeClass(this.config.classes.active);
+
+
+      // Trigger custom event
+      $(this.config.container).trigger('ratioChanged', [ratio]);
+    },
+
+
+    // Handle floating action buttons
+    handleFloatingAction: function($button) {
+      // Check if button is disabled (both HTML attribute and CSS class)
+      if ($button.prop('disabled') || $button.hasClass(this.config.classes.disabled)) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.functionNotAvailable
+          : 'Function temporarily unavailable, please generate an image first';
+        this.showError(message);
+        return;
+      }
+
+      // Double check if we have a valid image
+      if (!this.hasGeneratedImage()) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.pleaseGenerateFirst
+          : 'Please generate an image first';
+        this.showError(message);
+        return;
+      }
+
+      // Get action from title attribute or data-tooltip for backwards compatibility
+      const title = $button.attr('title') || $button.attr('data-tooltip');
+
+      // Determine action based on icon class or title
+      if ($button.find('.zmdi-refresh').length || title.includes('Regenerate')) {
+        this.generateImage();
+      } else if ($button.find('.zmdi-collection-plus').length || title.includes('Copy')) {
+        this.copyImage();
+      } else if ($button.find('.zmdi-download').length || title.includes('Download')) {
+        this.downloadImage();
+      } else {
+      }
+    },
+
+    // Generate image functionality
+    generateImage: function() {
+      const $btn = $(this.config.container).find(this.config.selectors.generateBtn);
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      const prompt = $textarea.val().trim();
+
+      // Clear sample error state when starting new generation
+      this.clearSampleErrorIfNeeded();
+
+      // Input validation
+      if (!prompt) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.pleaseEnterDescription
+          : 'Please enter image description';
+        this.showError(message);
+        return;
+      }
+
+      if (prompt.length > 1000) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.descriptionTooLong
+          : 'Description text exceeds 1000 character limit';
+        this.showError(message);
+        return;
+      }
+
+      // Hide any existing error state when starting new generation
+      this.errorManager.reset();
+
+      // Get current settings
+      // Get style from selected option's data-style attribute (original English value for API)
+      const selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      const style = selectedStyleOption.length > 0 ? selectedStyleOption.data('style') : 'Simple Illustration';
+      const ratio = $(this.config.container).find(this.config.selectors.ratioText).text();
+
+      // Prepare request data
+      const requestData = {
+        text: prompt,
+        style: style,
+        ratio: ratio,
+        sourceUrlPath: window.location.pathname
+      };
+
+      // Set button loading state
+      $btn.prop('disabled', true)
+          .addClass(this.config.classes.loading)
+          .text(window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.generating
+            : 'Generating image...');
+
+      // Show staged loading overlay in image area
+      this.loadingManager.show();
+
+
+      // Trigger custom event
+      $(this.config.container).trigger('imageGeneration', [requestData]);
+
+      // Make API call
+      const self = this;
+      $.ajax({
+        url: '/civicrm/ai/images/generate',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
+        timeout: 120000, // 60 seconds timeout
+
+        success: function(response) {
+          // Stop loading manager
+          self.loadingManager.hide();
+
+          // Check response status
+          if (response.status === 1 && response.data) {
+            // Success: show image
+            self.onGenerationComplete(response.data.image_url, response.data);
+            const message = window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.generateSuccess
+              : 'Image generated successfully!';
+            self.showSuccess(message);
+          } else {
+            // Failure: show error message
+            self.onGenerationComplete();
+            const defaultMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.generateFailed
+              : 'Image generation failed';
+            self.errorManager.show({
+              message: response.message || defaultMessage,
+              error_code: response.error_code
+            });
+          }
+        },
+
+        error: function(xhr, status, error) {
+          // Stop loading manager
+          self.loadingManager.hide();
+
+          // Reset generate button
+          self.onGenerationComplete();
+
+          // Handle HTTP errors
+          let errorMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.generateFailed
+            : 'Image generation failed';
+
+          // Try to parse JSON response
+          let errorCode = null;
+          if (xhr.responseJSON && xhr.responseJSON.message) {
+            errorMessage = xhr.responseJSON.message;
+            errorCode = xhr.responseJSON.error_code;
+          } else if (status === 'timeout') {
+            errorMessage = 'timeout'; // Will be converted to friendly message
+            errorCode = 'TIMEOUT_ERROR'; // Set specific error code for timeout
+          } else {
+            // Other cases keep generic error message, handled by HTTP status code
+            errorMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.generateFailed
+              : 'Image generation failed';
+          }
+
+          // Use error manager with HTTP status code and error_code
+          self.errorManager.show({
+            message: errorMessage,
+            httpStatus: xhr.status,
+            error_code: errorCode
+          });
+
+          console.error('Image generation error:', status, error, xhr.responseText);
+        }
+      });
+    },
+
+    // Handle generation completion
+    onGenerationComplete: function(imageUrl = null, responseData = null) {
+      const $btn = $(this.config.container).find(this.config.selectors.generateBtn);
+
+      // Clear sample error state when image generation completes successfully
+      if (imageUrl) {
+        this.clearSampleErrorIfNeeded();
+      }
+
+      // Reset button state
+      $btn.prop('disabled', false)
+          .removeClass(this.config.classes.loading)
+          .text(window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.generateButton
+            : 'Generate Image');
+
+      if (imageUrl) {
+        this.displayGeneratedImage(imageUrl);
+
+      } else {
+      }
+
+      // Visual state will be handled by displayGeneratedImage() method
+      // No need for manual floating actions update here
+
+      // Trigger custom event with full response data
+      $(this.config.container).trigger('generationComplete', [imageUrl, responseData]);
+    },
+
+    // Display generated image
+    displayGeneratedImage: function(imageUrl) {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+
+      if (imageUrl) {
+
+        // Hide empty state content and show image
+        $imageContainer.find('.empty-state-content').hide();
+
+        // Find existing image and loading overlay, preserve structure
+        let $existingImg = $imageContainer.find('img');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+
+        // Ensure loading overlay structure exists
+        if ($loadingOverlay.length === 0) {
+          this.restoreLoadingOverlay($imageContainer);
+        }
+
+        // Hide existing image during loading
+        if ($existingImg.length > 0) {
+          $existingImg.hide();
+        }
+
+        // Create new image element
+        const img = new Image();
+        const $img = $(img);
+
+        // Set up load handler before setting src
+        const self = this; // Store reference to NetiAIImageGeneration instance
+        img.onload = function() {
+          const altText = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.aiGeneratedImage
+            : 'AI Generated Image';
+          $img.attr('alt', altText);
+
+          // Add specific class for AI generated images
+          $img.addClass('ai-generated-image');
+
+          // Get current form data for lightbox metadata using correct context
+          const currentPrompt = $(self.config.container).find(self.config.selectors.promptTextarea).val() || '';
+          // Get original style value from selected option for data attribute (used by regenerate)
+          const selectedStyleOption = $(self.config.container).find(self.config.selectors.styleOptions + '.selected');
+          const currentStyle = selectedStyleOption.length > 0 ? selectedStyleOption.data('style') : 'Simple Illustration';
+          const currentRatio = $(self.config.container).find(self.config.selectors.ratioText).text() || '';
+
+          // Create anchor tag to wrap the image for lightbox functionality with metadata
+          const $link = $('<a>').attr({
+            'href': imageUrl,
+            'class': 'ai-image-link',
+            'data-prompt': currentPrompt,
+            'data-style': currentStyle,
+            'data-ratio': currentRatio
+          }).append($img);
+
+          // Remove old image and its link wrapper if exists
+          const $existingLink = $imageContainer.find('.ai-image-link');
+          if ($existingLink.length > 0) {
+            $existingLink.remove();
+          } else {
+            $existingImg.remove();
+          }
+
+          // Insert new link before loading-overlay to maintain structure
+          const $overlay = $imageContainer.find('.loading-overlay');
+          if ($overlay.length > 0) {
+            $overlay.before($link);
+          } else {
+            $imageContainer.prepend($link);
+          }
+
+          // Update visual state to SUCCESS after image is successfully loaded
+          setTimeout(() => {
+            self.visualStateManager.setState(self.visualStateManager.STATES.SUCCESS);
+          }, 50);
+        };
+
+        // Set up error handler
+        img.onerror = function() {
+          console.error('Image failed to load:', imageUrl);
+          // Show existing image if error occurs
+          if ($existingImg.length > 0) {
+            $existingImg.show();
+          }
+        };
+
+        // Add timeout protection (10 seconds)
+        setTimeout(function() {
+          if (!img.complete || img.naturalWidth === 0) {
+            console.error('Image loading failed or timed out');
+            // Show existing image on timeout
+            if ($existingImg.length > 0) {
+              $existingImg.show();
+            }
+          }
+        }, 10000);
+
+        // Start loading
+        img.src = imageUrl;
+
+      } else {
+        // Reset to empty state, show empty state content
+        const $existingImg = $imageContainer.find('img');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        const $emptyStateContent = $imageContainer.find('.empty-state-content');
+
+        // Show empty state content
+        $emptyStateContent.show();
+
+        // Hide existing image
+        if ($existingImg.length > 0) {
+          $existingImg.hide().attr('src', '../images/thumb-00.png').attr('alt', '');
+        }
+
+        // Remove any generated image links
+        $imageContainer.find('.ai-image-link').remove();
+
+        // Ensure loading overlay structure exists
+        if ($loadingOverlay.length === 0) {
+          this.restoreLoadingOverlay($imageContainer);
+        }
+
+        // Update visual state to EMPTY when resetting
+        setTimeout(() => {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
+        }, 50);
+      }
+    },
+
+    // Restore loading overlay structure when missing
+    restoreLoadingOverlay: function($container) {
+      // Get translation for "seconds"
+      const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation
+        ? window.AIImageGeneration.translation.seconds
+        : 'seconds';
+
+      const loadingOverlayHtml = `
+        <div class="loading-overlay" style="display: none;">
+          <div class="loading-spinner"></div>
+          <div class="loading-message">` + (window.AIImageGeneration && window.AIImageGeneration.translation ? window.AIImageGeneration.translation.submittingRequest : 'Submitting request...') + `</div>
+          <div class="loading-timer">00.00 ${secondsLabel}</div>
+          <div class="loading-progress">
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      $container.append(loadingOverlayHtml);
+    },
+
+    // Copy image to clipboard
+    copyImage: function() {
+      if (!this.hasGeneratedImage()) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.noImageToCopy
+          : 'No image available to copy';
+        this.showError(message);
+        return;
+      }
+
+      // Clear any existing tooltip timer to handle repeated clicks
+      if (this.tooltipTimers.copyButton) {
+        clearTimeout(this.tooltipTimers.copyButton);
+        delete this.tooltipTimers.copyButton;
+      }
+
+      // Try to find generated image first, then sample image
+      let $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+      if ($image.length === 0) {
+        $image = $(this.config.container).find('.image-placeholder .ai-sample-image');
+      }
+      const imageUrl = $image.attr('src');
+
+
+      // Check if clipboard API is supported
+      if (!navigator.clipboard || !navigator.clipboard.write) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.browserNotSupported
+          : 'Your browser does not support image copying feature';
+        this.showError(message);
+        return;
+      }
+
+      const self = this;
+
+      // Create a new image element to load the image data
+      const img = new Image();
+      img.crossOrigin = 'anonymous'; // Handle CORS if needed
+
+      img.onload = function() {
+        try {
+          // Create canvas to convert image to blob
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+
+          // Draw image to canvas
+          ctx.drawImage(img, 0, 0);
+
+          // Convert canvas to blob
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageProcessFailed
+                : 'Image processing failed';
+              self.showError(message);
+              return;
+            }
+
+            // Create clipboard item and copy to clipboard
+            const clipboardItem = new ClipboardItem({ [blob.type]: blob });
+
+            navigator.clipboard.write([clipboardItem]).then(function() {
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageCopied
+                : 'Image copied to clipboard';
+              self.showSuccess(message);
+            }).catch(function(error) {
+              console.error('Failed to copy image to clipboard:', error);
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.copyFailed
+                : 'Failed to copy image, please try again';
+              self.showError(message);
+            });
+          }, 'image/png');
+
+        } catch (error) {
+          console.error('Error processing image for clipboard:', error);
+          const message = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.imageProcessError
+            : 'Error occurred during image processing';
+          self.showLightboxMessage(message, 'error');
+        }
+      };
+
+      img.onerror = function() {
+        console.error('Failed to load image for copying');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.imageLoadFailed
+          : 'Failed to load image, please try again';
+        self.showLightboxMessage(message, 'error');
+      };
+
+      // Load the image
+      img.src = imageUrl;
+    },
+
+    // Download generated image
+    downloadImage: function() {
+      if (!this.hasGeneratedImage()) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.noImageToDownload
+          : 'No image available to download';
+        this.showError(message);
+        return;
+      }
+
+      // Try to find generated image first, then sample image
+      let $image = $(this.config.container).find('.image-placeholder .ai-generated-image');
+      if ($image.length === 0) {
+        $image = $(this.config.container).find('.image-placeholder .ai-sample-image');
+      }
+      const imageUrl = $image.attr('src');
+
+
+      // Extract file extension from URL or default to webp
+      const getFileExtension = (url) => {
+        const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+        return match ? match[1] : 'webp';
+      };
+
+      const fileExtension = getFileExtension(imageUrl);
+      const timestamp = Date.now();
+      const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
+
+      // Create download link
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = fileName;
+      link.click();
+
+      const message = window.AIImageGeneration && window.AIImageGeneration.translation
+        ? window.AIImageGeneration.translation.downloadStarted
+        : 'Image download started';
+      this.showLightboxMessage(message, 'success');
+    },
+
+    // Note: loadHistoryImage function removed as history items now use lightbox directly
+
+    // Auto-resize textarea using logic from reference file
+    autoResizeTextarea: function($textarea) {
+      if (!$textarea || !$textarea.length) return;
+
+      const element = $textarea[0];
+
+      // Get the stored min height or calculate it
+      if (!element._minHeight) {
+        this.calculateMinHeight($textarea);
+      }
+
+      const minHeight = element._minHeight;
+      const maxHeight = 400;
+
+      // If content is empty, directly set to min height
+      if (!element.value) {
+        element.style.height = minHeight + 'px';
+        element.style.overflowY = 'hidden';
+        return;
+      }
+
+      // Reset height to min height to get accurate scrollHeight (following reference file logic)
+      element.style.height = minHeight + 'px';
+
+      // Get required height based on content
+      const scrollHeight = element.scrollHeight;
+
+      // Calculate final height within constraints
+      const newHeight = Math.min(Math.max(scrollHeight, minHeight), maxHeight);
+
+      // Apply new height
+      element.style.height = newHeight + 'px';
+
+      // Handle overflow for content exceeding max height
+      if (scrollHeight > maxHeight) {
+        element.style.overflowY = 'auto';
+      } else {
+        element.style.overflowY = 'hidden';
+      }
+
+    },
+
+    // Calculate min height based on computed styles
+    calculateMinHeight: function($textarea) {
+      const element = $textarea[0];
+      const styles = window.getComputedStyle(element);
+
+      const lineHeight = parseInt(styles.lineHeight);
+      const paddingTop = parseInt(styles.paddingTop) || 0;
+      const paddingBottom = parseInt(styles.paddingBottom) || 0;
+      const borderTop = parseInt(styles.borderTopWidth) || 0;
+      const borderBottom = parseInt(styles.borderBottomWidth) || 0;
+
+      // Store calculated min height on element
+      element._minHeight = lineHeight + paddingTop + paddingBottom + borderTop + borderBottom;
+    },
+
+    // Initialize auto-resize for prompt textarea
+    initAutoResizeTextarea: function() {
+      const $textarea = $(this.config.selectors.promptTextarea);
+
+      if ($textarea.length === 0) return;
+
+      const element = $textarea[0];
+
+      // Set basic styles (must be set before calculating min height)
+      element.style.boxSizing = 'border-box';
+      element.style.maxHeight = '400px';
+      element.style.overflow = 'hidden';
+      element.style.resize = 'none';
+
+      // Calculate and store min height
+      this.calculateMinHeight($textarea);
+
+      // Set initial height to min height
+      element.style.height = element._minHeight + 'px';
+
+      // Initial adjustment for existing content (following reference file logic)
+      const self = this;
+      setTimeout(() => {
+        if (element.value) {
+          self.autoResizeTextarea($textarea);
+        }
+      }, 0);
+
+    },
+
+    // Initialize visibility observer - listening to tab click events (the root cause)
+    initVisibilityObserver: function() {
+
+      const self = this;
+
+      // Method 1: Listen to tab click events (most reliable)
+      $(document).on('click', '.nme-setting-panels-tabs a', function() {
+        const targetId = $(this).data('target-id');
+
+        if (targetId === 'nme-aiimagegeneration') {
+
+          // Wait for DOM to update after tab switch
+          setTimeout(() => {
+            self.onContainerVisible();
+          }, 100);
+        }
+      });
+
+      // Method 2: Check initial state if tab is already active
+      const checkInitialState = () => {
+        const currentContainer = document.querySelector('#nme-aiimagegeneration');
+        if (currentContainer && currentContainer.classList.contains('is-active')) {
+          setTimeout(() => {
+            self.onContainerVisible();
+          }, 100);
+          return true;
+        }
+        return false;
+      };
+
+      // Check initial state with multiple attempts
+      if (!checkInitialState()) {
+        setTimeout(checkInitialState, 500);
+        setTimeout(checkInitialState, 1000);
+      }
+
+    },
+
+    // Handle container becoming visible with enhanced debugging
+    onContainerVisible: function() {
+      const $textarea = $(this.config.selectors.promptTextarea);
+
+      if ($textarea.length === 0) {
+        console.error('❌ Textarea not found with selector:', this.config.selectors.promptTextarea);
+        return;
+      }
+
+      const element = $textarea[0];
+
+      // Check if container is actually visible now
+      if (element.offsetHeight === 0) {
+        return;
+      }
+
+
+      // Recalculate min height since previous calculation was done when hidden
+      const oldMinHeight = element._minHeight;
+      this.calculateMinHeight($textarea);
+      const newMinHeight = element._minHeight;
+
+
+      // Reset and recalculate height
+      element.style.height = element._minHeight + 'px';
+
+      if (element.value) {
+        this.autoResizeTextarea($textarea);
+      } else {
+      }
+
+    },
+
+    // Loading state manager for staged progress display
+    loadingManager: {
+      // Stage configuration with time intervals and messages
+      stages: [
+        {
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage1
+              : 'Preparing your image...';
+          },
+          duration: 5000,
+          progress: 5
+        },
+        {
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage2
+              : 'Analyzing and adjusting your prompt to help generate a better image...';
+          },
+          duration: 5000,
+          progress: 15
+        },
+        {
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage3
+              : 'Starting the composition...';
+          },
+          duration: 8000,
+          progress: 35
+        },
+        {
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage4
+              : 'The image is taking shape...';
+          },
+          duration: 10000,
+          progress: 55
+        },
+        {
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage5
+              : 'Refining the details...';
+          },
+          duration: 11000,
+          progress: 75
+        },
+        {
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage6
+              : 'Finalizing the image...';
+          },
+          duration: 21000,
+          progress: 90
+        },
+        {
+          message: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.stage7
+              : 'The system is a bit busy. We\'re speeding things up - please hold on...';
+          },
+          duration: 0,
+          progress: 95
+        }
+      ],
+
+      currentStage: 0,
+      timers: [],
+      isActive: false,
+
+      // Timer related properties
+      startTime: null,
+      timerInterval: null,
+
+      // Show loading overlay with staged progress
+      show: function() {
+        // Update loading info text before setting state
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $loadingInfo = $container.find('.loading-info');
+        const loadingInfoText = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.loadingInfo
+          : 'Your image is being generated and usually takes about 40–45 seconds to complete. Feel free to do something else — we\'re working hard to finish your artwork!';
+
+        $loadingInfo.find('.loading-info-text').text(loadingInfoText);
+
+        // Use visual state manager to handle UI changes
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.LOADING);
+
+        // Reset and start loading progression
+        this.currentStage = 0;
+        this.isActive = true;
+        this.clearTimers();
+
+        // Initialize timer and stage progression
+        this.startTimer();
+        this.nextStage();
+
+      },
+
+      // Hide loading overlay
+      hide: function() {
+        // Clear all timers and reset loading state
+        this.clearTimers();
+        this.stopTimer();
+        this.isActive = false;
+        this.resetLoadingState();
+
+        // Determine next state based on whether we have an actual image
+        if (NetiAIImageGeneration.hasActualImage()) {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
+        } else {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
+        }
+
+      },
+
+      // Progress to next stage
+      nextStage: function() {
+        if (!this.isActive || this.currentStage >= this.stages.length) {
+          return;
+        }
+
+        const stage = this.stages[this.currentStage];
+        const message = typeof stage.message === 'function' ? stage.message() : stage.message;
+        this.updateMessage(message);
+        this.updateProgress(stage.progress);
+
+
+        // Set timer for next stage if not the last stage and has duration
+        if (this.currentStage < this.stages.length - 1 && stage.duration > 0) {
+          const timer = setTimeout(() => {
+            if (this.isActive) {
+              this.currentStage++;
+              this.nextStage();
+            }
+          }, stage.duration);
+
+          this.timers.push(timer);
+        }
+
+        // Note: currentStage is incremented in setTimeout callback, not here
+      },
+
+      // Update loading message
+      updateMessage: function(message) {
+        const $container = $(NetiAIImageGeneration.config.container);
+        $container.find('.loading-message').text(message);
+      },
+
+      // Update progress bar
+      updateProgress: function(progress) {
+        const $container = $(NetiAIImageGeneration.config.container);
+        $container.find('.progress-fill').css('width', progress + '%');
+      },
+
+      // Clear all timers
+      clearTimers: function() {
+        this.timers.forEach(timer => clearTimeout(timer));
+        this.timers = [];
+      },
+
+      // Start the timer display
+      startTimer: function() {
+        this.startTime = Date.now();
+        this.updateTimer();
+
+        // Update timer every 10ms for millisecond precision
+        this.timerInterval = setInterval(() => {
+          if (this.isActive) {
+            this.updateTimer();
+          }
+        }, 10);
+      },
+
+      // Stop the timer
+      stopTimer: function() {
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+        }
+        this.startTime = null;
+      },
+
+      // Update timer display
+      updateTimer: function() {
+        if (!this.startTime || !this.isActive) return;
+
+        const elapsed = Date.now() - this.startTime;
+        const seconds = Math.floor(elapsed / 1000);
+        const milliseconds = Math.floor((elapsed % 1000) / 10); // Display centiseconds (00-99)
+
+        // Format as SS.MM (seconds.centiseconds)
+        const formattedTime = `${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+
+        // Get translation for "seconds"
+        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.seconds
+          : 'seconds';
+
+        const displayText = `${formattedTime} ${secondsLabel}`;
+
+        const $container = $(NetiAIImageGeneration.config.container);
+        $container.find('.loading-timer').text(displayText);
+      },
+
+      // Reset loading state to initial values
+      resetLoadingState: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+
+        // Get translation for "seconds"
+        const secondsLabel = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.seconds
+          : 'seconds';
+
+        // Reset progress bar to 0%
+        $container.find('.progress-fill').css('width', '0%');
+
+        // Reset message to initial state
+        const initialMessage = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.submittingRequest
+          : 'Submitting request...';
+        $container.find('.loading-message').text(initialMessage);
+
+        // Reset timer to initial state
+        $container.find('.loading-timer').text(`00.00 ${secondsLabel}`);
+
+        // Reset internal state
+        this.currentStage = 0;
+
+      }
+    },
+
+    // Initialize tooltips using powerTip (same as sidePanel)
+    initializeTooltips: function() {
+      // Use same tooltip system as sidePanel
+      var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
+
+      if (jq) {
+        if ($(this.config.container).find('[data-tooltip]').length) {
+          $(this.config.container).find('[data-tooltip]:not(.tooltip-initialized)').each(function() {
+            let options = {};
+
+            if ($(this).is('[data-tooltip-placement]')) {
+              options.placement = $(this).data('tooltip-placement');
+            }
+
+            if ($(this).is('[data-tooltip-fadeouttime]')) {
+              options.fadeOutTime = $(this).data('tooltip-fadeouttime');
+            }
+
+            jq(this).powerTip(options);
+            $(this).addClass('tooltip-initialized');
+          });
+        }
+      }
+    },
+
+    // Initialize image lightbox using Magnific Popup
+    initImageLightbox: function() {
+      // Check if Magnific Popup is available
+      if (typeof $.magnificPopup !== 'undefined') {
+        // Initialize lightbox for AI generated images using standard method
+        this.setupImageLightbox();
+      } else {
+        console.warn('Magnific Popup not available - lightbox functionality disabled');
+      }
+    },
+
+    // Setup enhanced image lightbox with metadata and actions
+    setupImageLightbox: function() {
+      const self = this;
+
+      // Get translations for lightbox
+      const getTranslation = (key, fallback) => {
+        return window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation[key] || fallback
+          : fallback;
+      };
+
+      // Initialize enhanced Magnific Popup for AI image links
+      $(document).magnificPopup({
+        delegate: '.ai-image-link',
+        type: 'image',
+        image: {
+          markup: `<div class="mfp-figure enhanced-lightbox">
+            <div class="mfp-close"></div>
+
+            <!-- Main content wrapper: Image + Info panel -->
+            <div class="mfp-content-wrapper">
+              <!-- Image display area -->
+              <div class="mfp-img-holder">
+                <div class="mfp-img"></div>
+              </div>
+
+              <!-- Right info panel (desktop) -->
+              <div class="mfp-info-panel desktop-panel">
+                <div class="panel-header">
+                  <h3>${getTranslation('lightboxImageInfo', 'Image Information')}</h3>
+                </div>
+                <div class="panel-content">
+                  <div class="meta-item">
+                    <label>${getTranslation('lightboxPrompt', 'Prompt')}</label>
+                    <div class="prompt-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>${getTranslation('lightboxStyle', 'Image Style')}</label>
+                    <div class="style-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>${getTranslation('lightboxRatio', 'Image Aspect Ratio')}</label>
+                    <div class="ratio-text"></div>
+                  </div>
+                </div>
+                <div class="panel-actions">
+                  <!-- Panel message area for desktop lightbox -->
+                  <div class="floating-message panel-message" style="display: none;" role="alert" aria-live="polite">
+                    <div class="floating-message-content">
+                      <i class="floating-message-icon"></i>
+                      <span class="floating-message-text"></span>
+                    </div>
+                  </div>
+
+                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate Image')}">
+                    <i class="zmdi zmdi-refresh"></i>
+                    <span>${getTranslation('lightboxRegenerate', 'Regenerate Image')}</span>
+                  </button>
+                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy Image')}">
+                    <i class="zmdi zmdi-collection-plus"></i>
+                    <span>${getTranslation('lightboxCopy', 'Copy Image')}</span>
+                  </button>
+                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download Image')}">
+                    <i class="zmdi zmdi-download"></i>
+                    <span>${getTranslation('lightboxDownload', 'Download Image')}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating info card (mobile) -->
+            <div class="mfp-floating-info mobile-panel" style="display: none;">
+              <div class="floating-toggle">
+                <button class="info-toggle-btn">
+                  <i class="zmdi zmdi-info"></i>
+                </button>
+              </div>
+              <div class="floating-content" style="display: none;">
+                <div class="floating-meta">
+                  <div class="meta-item">
+                    <label>${getTranslation('lightboxPrompt', 'Prompt')}</label>
+                    <div class="prompt-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>${getTranslation('lightboxStyle', 'Image Style')}</label>
+                    <div class="style-text"></div>
+                  </div>
+                  <div class="meta-item">
+                    <label>${getTranslation('lightboxRatio', 'Image Aspect Ratio')}</label>
+                    <div class="ratio-text"></div>
+                  </div>
+                </div>
+                <div class="floating-actions">
+                  <button class="lightbox-btn regenerate-btn" title="${getTranslation('lightboxRegenerate', 'Regenerate Image')}">
+                    <i class="zmdi zmdi-refresh"></i>
+                  </button>
+                  <button class="lightbox-btn copy-btn" title="${getTranslation('lightboxCopy', 'Copy Image')}">
+                    <i class="zmdi zmdi-collection-plus"></i>
+                  </button>
+                  <button class="lightbox-btn download-btn" title="${getTranslation('lightboxDownload', 'Download Image')}">
+                    <i class="zmdi zmdi-download"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="mfp-preloader"></div>
+          </div>`,
+          titleSrc: function() {
+            return window.AIImageGeneration && window.AIImageGeneration.translation
+              ? window.AIImageGeneration.translation.lightboxTitle
+              : 'AI Generated Image';
+          }
+        },
+        closeOnContentClick: false, // Disable to prevent conflict with info panel
+        mainClass: 'mfp-neticrm-aigenimg-infobox enhanced-ai-lightbox',
+        callbacks: {
+          open: function() {
+            self.initLightboxMetadata();
+            self.bindLightboxEvents();
+          },
+          close: function() {
+            self.unbindLightboxEvents();
+          }
+        }
+      });
+    },
+
+    // Initialize lightbox metadata display
+    initLightboxMetadata: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem || !$currentItem.el) return;
+
+      const $trigger = $($currentItem.el);
+      const prompt = $trigger.data('prompt') || '';
+      const style = $trigger.data('style') || '';
+      const ratio = $trigger.data('ratio') || '';
+
+      // Update desktop panel metadata
+      $('.mfp-info-panel .prompt-text').text(prompt);
+      // Find translated style text for display
+      const $styleOption = $(this.config.container).find(`${this.config.selectors.styleOptions}[data-style="${style}"]`);
+      const styleDisplayText = $styleOption.length > 0 ? $styleOption.find('.style-label').text() || style : style;
+      $('.mfp-info-panel .style-text').text(styleDisplayText);
+      $('.mfp-info-panel .ratio-text').text(ratio);
+
+      // Update mobile panel metadata
+      $('.mfp-floating-info .prompt-text').text(prompt);
+      $('.mfp-floating-info .style-text').text(styleDisplayText);
+      $('.mfp-floating-info .ratio-text').text(ratio);
+
+      // Show/hide panels based on screen size
+      this.adjustLightboxLayout();
+
+    },
+
+    // Adjust lightbox layout based on screen size
+    adjustLightboxLayout: function() {
+      const isMobile = window.innerWidth < 768;
+
+      if (isMobile) {
+        $('.desktop-panel').hide();
+        $('.mobile-panel').show();
+      } else {
+        $('.desktop-panel').show();
+        $('.mobile-panel').hide();
+      }
+    },
+
+    // Bind lightbox event handlers
+    bindLightboxEvents: function() {
+      const self = this;
+
+      // Desktop panel actions
+      $(document).on('click.lightbox', '.desktop-panel .lightbox-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleLightboxAction($(this));
+      });
+
+      // Mobile panel toggle
+      $(document).on('click.lightbox', '.info-toggle-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const $content = $('.floating-content');
+        $content.slideToggle(200);
+      });
+
+      // Mobile panel actions
+      $(document).on('click.lightbox', '.mobile-panel .lightbox-btn', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.handleLightboxAction($(this));
+      });
+
+      // Handle window resize
+      $(window).on('resize.lightbox', function() {
+        self.adjustLightboxLayout();
+      });
+
+    },
+
+    // Unbind lightbox event handlers
+    unbindLightboxEvents: function() {
+      $(document).off('.lightbox');
+      $(window).off('resize.lightbox');
+
+      // Clear any pending panel messages when closing lightbox
+      this.panelMessage.hide();
+
+    },
+
+    // Handle lightbox action buttons
+    handleLightboxAction: function($button) {
+      const action = this.getLightboxActionType($button);
+
+
+      switch(action) {
+        case 'regenerate':
+          // Close lightbox and trigger regeneration with original image settings
+          this.regenerateFromLightbox();
+          break;
+        case 'copy':
+          this.copyImageFromLightbox();
+          break;
+        case 'download':
+          this.downloadImageFromLightbox();
+          break;
+        default:
+          console.warn('Unknown lightbox action:', action);
+      }
+    },
+
+    // Show message in lightbox context with intelligent routing
+    showLightboxMessage: function(message, type = 'success') {
+
+      // Check if lightbox is currently open
+      const isLightboxOpen = $.magnificPopup.instance && $.magnificPopup.instance.isOpen;
+
+      if (isLightboxOpen) {
+        // Use dedicated panel message system for lightbox panel-actions
+        if (type === 'success') {
+          this.panelMessage.showSuccess(message);
+        } else {
+          this.panelMessage.showError(message);
+        }
+      } else {
+        // Use regular floating message system if lightbox is not open
+        // This maintains compatibility with float-actions buttons
+        if (type === 'success') {
+          this.floatingMessage.showSuccess(message);
+        } else {
+          this.floatingMessage.showError(message);
+        }
+      }
+    },
+
+    // Get lightbox action type from button
+    getLightboxActionType: function($button) {
+      if ($button.hasClass('regenerate-btn')) {
+        return 'regenerate';
+      } else if ($button.hasClass('copy-btn')) {
+        return 'copy';
+      } else if ($button.hasClass('download-btn')) {
+        return 'download';
+      }
+      return 'unknown';
+    },
+
+    // Copy image from lightbox
+    copyImageFromLightbox: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.lightboxActionFailed
+          : 'Action failed, please try again';
+        this.showLightboxMessage(message, 'error');
+        return;
+      }
+
+      const imageUrl = $currentItem.src;
+      this.copyImageByUrl(imageUrl);
+    },
+
+    // Download image from lightbox
+    downloadImageFromLightbox: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.lightboxActionFailed
+          : 'Action failed, please try again';
+        this.showLightboxMessage(message, 'error');
+        return;
+      }
+
+      const imageUrl = $currentItem.src;
+      this.downloadImageByUrl(imageUrl);
+    },
+
+    // Regenerate image from lightbox with original settings
+    regenerateFromLightbox: function() {
+      const $currentItem = $.magnificPopup.instance.currItem;
+      if (!$currentItem || !$currentItem.el) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.lightboxActionFailed
+          : 'Action failed, please try again';
+        this.showLightboxMessage(message, 'error');
+        return;
+      }
+
+      // Get original image metadata from lightbox trigger element
+      const $trigger = $($currentItem.el);
+      const originalPrompt = $trigger.data('prompt') || '';
+      const originalStyle = $trigger.data('style') || 'Simple Illustration';
+      const originalRatio = $trigger.data('ratio') || '4:3';
+
+
+      // Close lightbox first
+      $.magnificPopup.close();
+
+      // Apply original settings to UI
+      // Set prompt text
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      $textarea.val(originalPrompt);
+
+      // Set style using existing API
+      if (this.publicAPI && this.publicAPI.setStyle) {
+        this.publicAPI.setStyle(originalStyle);
+      } else {
+        // Fallback: directly select style option
+        const $styleOptions = $(this.config.container).find(this.config.selectors.styleOptions);
+        $styleOptions.removeClass(this.config.classes.selected);
+        const $targetStyleOption = $styleOptions.filter(`[data-style="${originalStyle}"]`);
+        if ($targetStyleOption.length > 0) {
+          $targetStyleOption.addClass(this.config.classes.selected);
+          const styleLabel = $targetStyleOption.find('.style-label').text() || originalStyle;
+          $(this.config.container).find('#styleText').text(styleLabel);
+        }
+      }
+
+      // Set ratio using existing API
+      if (this.publicAPI && this.publicAPI.setRatio) {
+        this.publicAPI.setRatio(originalRatio);
+      } else {
+        // Fallback: directly select ratio option
+        const $ratioItems = $(this.config.container).find(this.config.selectors.dropdownItems);
+        $ratioItems.removeClass(this.config.classes.selected);
+        const $targetRatioItem = $ratioItems.filter(`[data-ratio="${originalRatio}"]`);
+        if ($targetRatioItem.length > 0) {
+          $targetRatioItem.addClass(this.config.classes.selected);
+          $(this.config.container).find('#ratioText').text(originalRatio);
+        }
+      }
+
+      // Trigger auto-resize for textarea if content changed
+      this.autoResizeTextarea($textarea);
+
+      // Generate image with original settings
+      this.generateImage();
+    },
+
+    // Copy image by URL
+    copyImageByUrl: function(imageUrl) {
+      if (!navigator.clipboard || !navigator.clipboard.write) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.browserNotSupported
+          : 'Your browser does not support image copying feature';
+        this.showError(message);
+        return;
+      }
+
+      const self = this;
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+
+      img.onload = function() {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+
+          canvas.width = img.naturalWidth;
+          canvas.height = img.naturalHeight;
+          ctx.drawImage(img, 0, 0);
+
+          canvas.toBlob(function(blob) {
+            if (!blob) {
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageProcessFailed
+                : 'Image processing failed';
+              self.showError(message);
+              return;
+            }
+
+            const clipboardItem = new ClipboardItem({ [blob.type]: blob });
+            navigator.clipboard.write([clipboardItem]).then(function() {
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.imageCopied
+                : 'Image copied to clipboard';
+              self.showLightboxMessage(message, 'success');
+            }).catch(function(error) {
+              console.error('Failed to copy image to clipboard:', error);
+              const message = window.AIImageGeneration && window.AIImageGeneration.translation
+                ? window.AIImageGeneration.translation.copyFailed
+                : 'Failed to copy image, please try again';
+              self.showLightboxMessage(message, 'error');
+            });
+          }, 'image/png');
+
+        } catch (error) {
+          console.error('Error processing image for clipboard:', error);
+          const message = window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation.imageProcessError
+            : 'Error occurred during image processing';
+          self.showLightboxMessage(message, 'error');
+        }
+      };
+
+      img.onerror = function() {
+        console.error('Failed to load image for copying');
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.imageLoadFailed
+          : 'Failed to load image, please try again';
+        self.showLightboxMessage(message, 'error');
+      };
+
+      img.src = imageUrl;
+    },
+
+    // Download image by URL
+    downloadImageByUrl: function(imageUrl) {
+      const getFileExtension = (url) => {
+        const match = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+        return match ? match[1] : 'webp';
+      };
+
+      const fileExtension = getFileExtension(imageUrl);
+      const timestamp = Date.now();
+      const fileName = `ai-generated-image-${timestamp}.${fileExtension}`;
+
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = fileName;
+      link.click();
+
+      const message = window.AIImageGeneration && window.AIImageGeneration.translation
+        ? window.AIImageGeneration.translation.downloadStarted
+        : 'Image download started';
+      this.showLightboxMessage(message, 'success');
+    },
+
+    // Show success message
+    showSuccess: function(message) {
+
+      // Show floating message notification
+      this.floatingMessage.showSuccess(message);
+
+      // Trigger custom success event
+      $(this.config.container).trigger('aiImageSuccess', [message]);
+    },
+
+    // Show error message
+    showError: function(message) {
+      console.error('Error:', message);
+
+      // Show floating message notification
+      this.floatingMessage.showError(message);
+
+      // Trigger custom error event
+      $(this.config.container).trigger('aiImageError', [message]);
+    },
+
+    // Update floating buttons state (legacy method, use updateFloatingActionsBasedOnImage instead)
+    updateFloatingButtonsState: function() {
+      // Legacy method - now uses image detection
+      this.updateFloatingActionsBasedOnImage();
+    },
+
+    // Set floating actions state based on image availability
+    setFloatingActionsState: function(state) {
+      const $floatingActions = $(this.config.container).find('.floating-actions');
+      const $floatingBtns = $floatingActions.find(this.config.selectors.floatingBtn);
+      const $floatingMessage = $floatingActions.find(this.config.selectors.floatingMessage);
+
+      switch(state) {
+        case 'hidden':
+          // Hide entire floating actions container (loading or no image)
+          $floatingActions.hide();
+          $floatingBtns.prop('disabled', true).addClass(this.config.classes.disabled);
+          // Also hide any existing floating messages
+          this.floatingMessage.hide();
+          break;
+
+        case 'enabled':
+          // Show floating actions and enable all buttons (has real image)
+          $floatingActions.show();
+          $floatingBtns.prop('disabled', false).removeClass(this.config.classes.disabled);
+          break;
+
+        default:
+          console.warn('Invalid floating actions state:', state, 'Valid states: hidden, enabled');
+      }
+    },
+
+    // Update floating actions based on current image state (legacy method)
+    updateFloatingActionsBasedOnImage: function() {
+      // Legacy method - now delegates to visual state manager
+
+      if (this.hasGeneratedImage()) {
+        this.setFloatingActionsState('enabled');
+      } else {
+        this.setFloatingActionsState('hidden');
+      }
+    },
+
+    // Check if current image exists and is a real generated image
+    hasGeneratedImage: function() {
+      // Simplified: check if we're in SUCCESS state
+      return this.visualStateManager.isState(this.visualStateManager.STATES.SUCCESS);
+    },
+
+    // Helper method to check if an image URL is a placeholder
+    isPlaceholderImage: function(src) {
+      return src.includes('thumb-00.png') ||
+             src.includes('placeholder') ||
+             src.endsWith('thumb-00.png');
+    },
+
+    // Visual State Manager - Unified state management for all UI components
+    visualStateManager: {
+      // Visual state constants
+      STATES: {
+        EMPTY: 'empty',           // Initial empty state
+        LOADING: 'loading',       // Image generation in progress
+        SAMPLE_LOADING: 'sample_loading', // Sample image loading in progress
+        SUCCESS: 'success',       // Has image (generated or sample)
+        ERROR: 'error',           // Generation error
+        SAMPLE_ERROR: 'sample_error' // Sample loading error
+      },
+
+      currentState: 'empty',
+
+      // Set visual state and apply corresponding UI rules
+      setState: function(newState) {
+        // Prevent race conditions with state changes
+        if (this._stateChangeInProgress) {
+          console.warn('State change already in progress, queuing:', newState);
+          this._pendingState = newState;
+          return;
+        }
+
+        if (this.currentState === newState) {
+          return;
+        }
+
+        this._stateChangeInProgress = true;
+
+        // Optional trace logging for debugging
+        if (console.trace && window.location.search.includes('debug=1')) {
+          console.trace(`Visual state change requested: ${this.currentState} → ${newState}`);
+        }
+
+        const previousState = this.currentState;
+        this.currentState = newState;
+
+        try {
+          this.applyStateRules(newState, previousState);
+        } finally {
+          this._stateChangeInProgress = false;
+
+          // Handle pending state changes
+          if (this._pendingState) {
+            const pending = this._pendingState;
+            this._pendingState = null;
+            // Use setTimeout to avoid recursion issues
+            setTimeout(() => this.setState(pending), 0);
+          }
+        }
+      },
+
+      // Apply UI rules based on current state
+      applyStateRules: function(state, previousState) {
+        const $container = $(NetiAIImageGeneration.config.container);
+
+        // First hide all components to ensure clean state
+        this.hideAllComponents($container);
+
+        // Then show components based on current state
+        switch(state) {
+          case this.STATES.EMPTY:
+            this.showEmptyState($container);
+            break;
+          case this.STATES.LOADING:
+            this.showLoadingState($container);
+            break;
+          case this.STATES.SAMPLE_LOADING:
+            this.showSampleLoadingState($container);
+            break;
+          case this.STATES.SUCCESS:
+            this.showSuccessState($container);
+            break;
+          case this.STATES.ERROR:
+            this.showErrorState($container);
+            break;
+          case this.STATES.SAMPLE_ERROR:
+            this.showSampleErrorState($container);
+            break;
+          default:
+            console.warn('Unknown visual state:', state);
+            this.showEmptyState($container);
+        }
+      },
+
+      // Hide all visual components
+      hideAllComponents: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+
+        // Hide state-specific content
+        $imageContainer.find('.empty-state-content').hide();
+        $imageContainer.find('.sample-error-state').hide();
+        $imageContainer.find('.loading-overlay').hide();
+        $imageContainer.find('.ai-image-link').hide();
+
+        // Hide other components
+        $container.find('.floating-actions').hide();
+        $container.find('.loading-info').hide();
+      },
+
+      // Show empty state components
+      showEmptyState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        $imageContainer.find('.empty-state-content').show();
+
+      },
+
+      // Show loading state components
+      showLoadingState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        const $loadingInfo = $container.find('.loading-info');
+
+        // Show loading overlay and info, hide error state
+        $loadingOverlay.show();
+        $loadingOverlay.find('.error-state').hide();
+        $loadingInfo.show();
+
+        // Ensure loading elements are visible
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress');
+        $loadingElements.show();
+
+      },
+
+      // Show sample loading state components
+      showSampleLoadingState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+        const $loadingInfo = $container.find('.loading-info');
+
+        // Show loading overlay
+        $loadingOverlay.show();
+        $loadingOverlay.find('.error-state').hide();
+
+        // Set sample loading specific message
+        const $loadingMessage = $loadingOverlay.find('.loading-message');
+        const loadingText = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.loadingSampleImage
+          : 'Loading sample image...';
+        $loadingMessage.text(loadingText);
+
+        // Hide loading info area (sample loading doesn't need it)
+        $loadingInfo.hide();
+
+        // Show loading elements (spinner and message only)
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message');
+        $loadingElements.show();
+
+        // Hide progress elements (sample loading doesn't need progress indication)
+        const $progressElements = $loadingOverlay.find('.loading-timer, .loading-progress');
+        $progressElements.hide();
+
+      },
+
+      // Show success state components (has image)
+      showSuccessState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $aiImageLink = $imageContainer.find('.ai-image-link');
+        const $floatingActions = $container.find('.floating-actions');
+
+        // Show image and floating actions
+        $aiImageLink.show();
+        $floatingActions.show();
+
+        // Enable floating action buttons
+        const $floatingBtns = $floatingActions.find(NetiAIImageGeneration.config.selectors.floatingBtn);
+        $floatingBtns.prop('disabled', false).removeClass(NetiAIImageGeneration.config.classes.disabled);
+
+      },
+
+      // Show error state components
+      showErrorState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        const $loadingOverlay = $imageContainer.find('.loading-overlay');
+
+        // Show loading overlay with error state
+        $loadingOverlay.show();
+        $loadingOverlay.find('.error-state').show();
+
+        // Ensure loading elements are hidden
+        const $loadingElements = $loadingOverlay.find('.loading-spinner, .loading-message, .loading-timer, .loading-progress, .loading-info');
+        $loadingElements.hide();
+
+      },
+
+      // Show sample error state components
+      showSampleErrorState: function($container) {
+        const $imageContainer = $container.find('.image-placeholder');
+        $imageContainer.find('.sample-error-state').show();
+
+      },
+
+      // Get current state
+      getState: function() {
+        return this.currentState;
+      },
+
+      // Check if current state matches
+      isState: function(state) {
+        return this.currentState === state;
+      },
+
+      // Check if current state is one of the given states
+      isOneOfStates: function(states) {
+        return states.includes(this.currentState);
+      }
+    },
+
+    // Check if there's an actual image (for determining state after error hide)
+    hasActualImage: function() {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $aiImageLink = $imageContainer.find('.ai-image-link');
+
+      if ($aiImageLink.length > 0) {
+        const $img = $aiImageLink.find('img');
+        const src = $img.attr('src');
+        return src && !this.isPlaceholderImage(src);
+      }
+
+      return false;
+    },
+
+    // Initialize visual state on page load
+    initializeVisualState: function() {
+      // Determine initial state based on existing content
+      if (this.hasActualImage()) {
+        this.visualStateManager.setState(this.visualStateManager.STATES.SUCCESS);
+      } else {
+        this.visualStateManager.setState(this.visualStateManager.STATES.EMPTY);
+      }
+    },
+
+    // Sample image loading functionality
+    initSampleImageLoading: function() {
+      const self = this;
+
+      // Listen to panel activation events
+      $(document).on('click', '.nme-setting-panels-tabs a', function() {
+        const targetId = $(this).data('target-id');
+
+        if (targetId === 'nme-aiimagegeneration') {
+
+          // Wait for DOM to update after tab switch
+          setTimeout(() => {
+            // Debug context checking
+            if (self._aiLinkTriggerContext) {
+            }
+
+            // Check if there's a trigger context
+            if (self._aiLinkTriggerContext &&
+                self._aiLinkTriggerContext.source === 'ai-link' &&
+                self._isContextValid()) {
+
+              // Execute context-specific loading
+              self._loadSampleImageWithContext();
+
+            } else {
+              // Execute default loading logic
+              self.checkAndLoadSampleImage();
+            }
+
+            // Clear trigger context
+            self._clearTriggerContext();
+          }, 100);
+        }
+      });
+
+      // Check initial state if panel is already active
+      const checkInitialState = () => {
+        const currentPanel = document.querySelector('.nme-aiimagegeneration.nme-setting-panel');
+        if (currentPanel && currentPanel.classList.contains('is-active')) {
+          setTimeout(() => {
+            self.checkAndLoadSampleImage();
+          }, 100);
+          return true;
+        }
+        return false;
+      };
+
+      // Check initial state with multiple attempts
+      if (!checkInitialState()) {
+        setTimeout(checkInitialState, 500);
+        setTimeout(checkInitialState, 1000);
+      }
+    },
+
+    // Show sample loading error state
+    showSampleError: function() {
+      // Use visual state manager to handle sample error state
+      NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SAMPLE_ERROR);
+    },
+
+    // Hide sample loading error state
+    hideSampleError: function() {
+      // Determine next state based on whether we have an actual image
+      if (NetiAIImageGeneration.hasActualImage()) {
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
+      } else {
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
+      }
+
+    },
+
+    // Reset to empty state (hide both error and loading states)
+    resetToEmptyState: function() {
+      // Use visual state manager to handle reset to empty state
+      NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
+    },
+
+    // Clear sample error state when user performs other actions
+    clearSampleErrorIfNeeded: function() {
+      const $container = $(this.config.container);
+      const $sampleError = $container.find('.sample-error-state');
+
+      // If sample error is currently showing, hide it
+      if ($sampleError.is(':visible')) {
+        this.hideSampleError();
+      }
+    },
+
+    // Check if sample image should be loaded and load it
+    checkAndLoadSampleImage: function() {
+      // Only load if no existing image is present
+      if (!this.hasExistingImage()) {
+        this.loadSampleImage();
+      } else {
+      }
+    },
+
+    // Check if there's already an image displayed
+    hasExistingImage: function() {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $image = $imageContainer.find('img');
+      const $emptyState = $imageContainer.find('.empty-state-content');
+
+      // Check if we have a visible image that's not the default placeholder
+      const hasVisibleImage = $image.length > 0 &&
+                             $image.is(':visible') &&
+                             $image.attr('src') &&
+                             !$image.attr('src').includes('thumb-00.png');
+
+      // Check if empty state is hidden (indicating an image is displayed)
+      const emptyStateHidden = $emptyState.length > 0 && !$emptyState.is(':visible');
+
+      return hasVisibleImage || emptyStateHidden;
+    },
+
+    // Check if there's a user-generated image that cannot be overwritten
+    hasUserGeneratedImage: function() {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $image = $imageContainer.find('img');
+      const $emptyState = $imageContainer.find('.empty-state-content');
+
+      // Check if we have a visible image that's not the default placeholder
+      const hasVisibleImage = $image.length > 0 &&
+                             $image.is(':visible') &&
+                             $image.attr('src') &&
+                             !$image.attr('src').includes('thumb-00.png');
+
+      // Check if empty state is hidden (indicating an image is displayed)
+      const emptyStateHidden = $emptyState.length > 0 && !$emptyState.is(':visible');
+
+      if (!hasVisibleImage && !emptyStateHidden) {
+        return false; // No image at all
+      }
+
+      // If there's an image, check if it's a user-generated image (not a sample)
+      // User-generated images have 'ai-generated-image' class but NOT 'ai-sample-image' class
+      const hasGeneratedClass = $image.hasClass('ai-generated-image');
+      const hasSampleClass = $image.hasClass('ai-sample-image');
+
+
+      // It's a user-generated image if it has ai-generated-image but not ai-sample-image
+      const isUserGenerated = hasGeneratedClass && !hasSampleClass;
+
+      return isUserGenerated;
+    },
+
+    // Get corrected image URL using CiviCRM resource base path
+    getCorrectedImageUrl: function(imageUrl, imagePath) {
+      // Try to use CiviCRM resource base path first
+      if (typeof Drupal !== 'undefined' &&
+          Drupal.settings &&
+          Drupal.settings.civicrm &&
+          Drupal.settings.civicrm.resourceBase) {
+
+        const resourceBase = Drupal.settings.civicrm.resourceBase;
+        const correctedUrl = resourceBase + imagePath;
+        return correctedUrl;
+      }
+
+      // Fallback: manual path correction
+      if (imageUrl && imageUrl.includes('/packages/AIImageGeneration/')) {
+        // Insert the missing path part
+        const correctedUrl = imageUrl.replace(
+          '/packages/AIImageGeneration/',
+          '/sites/all/modules/civicrm/packages/AIImageGeneration/'
+        );
+        return correctedUrl;
+      }
+
+      // If we have image_path, try to construct URL from current domain
+      if (imagePath) {
+        const baseUrl = window.location.origin;
+        const correctedUrl = baseUrl + '/sites/all/modules/civicrm/' + imagePath;
+        return correctedUrl;
+      }
+
+      // Last resort: return original image_url
+      console.warn('Could not correct image URL, using original:', imageUrl);
+      return imageUrl;
+    },
+
+    // Get current UI locale
+    getUILocale: function() {
+      // Try to get locale from various sources
+      let locale = $('html').attr('lang') ||
+                   window.navigator.language ||
+                   window.navigator.userLanguage ||
+                   'en';
+
+      // Convert locale format to what API expects
+      // Common conversions for CiviCRM/Drupal locales
+      const localeMap = {
+        'en': 'en_US',
+        'zh-hant': 'zh_TW',
+      };
+
+      const normalizedLocale = locale.toLowerCase();
+
+      // Check if we have a direct mapping
+      if (localeMap[normalizedLocale]) {
+        return localeMap[normalizedLocale];
+      }
+
+      // Convert dash format to underscore format (zh-hant -> zh_TW)
+      if (locale.includes('-')) {
+        const parts = locale.split('-');
+        const converted = parts[0] + '_' + parts[1].toUpperCase();
+        return converted;
+      }
+
+      // Default fallback
+      return locale;
+    },
+
+    // Handle sample retry button click
+    handleSampleRetry: function() {
+
+      // Hide error state and show loading
+      this.hideSampleError();
+
+      // Retry loading sample image
+      this.loadSampleImage();
+    },
+
+    // Get current selected ratio from UI
+    getCurrentRatio: function() {
+      const ratioText = $(this.config.container).find(this.config.selectors.ratioText).text();
+      const defaultRatio = '4:3';
+
+      // Return current ratio or default if empty
+      return ratioText && ratioText.trim() !== '' ? ratioText.trim() : defaultRatio;
+    },
+
+    // Load sample image from API
+    loadSampleImage: function() {
+      const self = this;
+      const locale = this.getUILocale();
+      const ratio = this.getCurrentRatio();
+
+
+      // Show loading state
+      this.showSampleImageLoading();
+
+      $.ajax({
+        url: '/civicrm/ai/images/get-sample',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          locale: locale,
+          ratio: ratio
+        }),
+        timeout: 10000,
+
+        success: function(response) {
+          if (response.status === 1 && response.data) {
+            self.applySampleToInterface(response.data);
+            // applySampleToInterface will set the SUCCESS state
+          } else {
+            console.warn('Sample image API returned unexpected format:', response);
+            // Set appropriate error state for API format issues
+            self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
+          }
+        },
+
+        error: function(xhr, status, error) {
+          console.warn('Failed to load sample image:', {
+            status: status,
+            error: error,
+            responseText: xhr.responseText,
+            httpStatus: xhr.status
+          });
+
+          // Directly set sample error state
+          self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
+        }
+      });
+    },
+
+    // Apply sample data to interface
+    applySampleToInterface: function(sampleData) {
+      try {
+        // Clear any existing sample error state since we got valid data
+        this.clearSampleErrorIfNeeded();
+
+        // Update image if provided
+        if (sampleData.image_url || sampleData.image_path) {
+          const correctedImageUrl = this.getCorrectedImageUrl(sampleData.image_url, sampleData.image_path);
+          this.updateSampleImage(correctedImageUrl, sampleData.filename, sampleData);
+        }
+
+        // Update prompt text if provided
+        if (sampleData.text) {
+          this.updatePromptText(sampleData.text);
+        }
+
+        // Update style selector if provided
+        if (sampleData.style) {
+          this.updateStyleSelector(sampleData.style);
+        }
+
+        // Update ratio selector if provided
+        if (sampleData.ratio) {
+          this.updateRatioSelector(sampleData.ratio);
+        }
+
+      } catch (error) {
+        console.error('Error applying sample data to interface:', error);
+      }
+    },
+
+    // Show loading state for sample image
+    showSampleImageLoading: function() {
+      // Use state manager to set sample loading state
+      this.visualStateManager.setState(this.visualStateManager.STATES.SAMPLE_LOADING);
+    },
+
+    // Hide loading state for sample image (legacy method - state will be managed by AJAX callbacks)
+    hideSampleImageLoading: function() {
+      // This method is kept for backward compatibility but the actual state
+      // management is now handled by AJAX success/error callbacks directly
+    },
+
+    // Update sample image display
+    updateSampleImage: function(imageUrl, filename, sampleData) {
+      const $imageContainer = $(this.config.container).find('.image-placeholder');
+      const $existingImage = $imageContainer.find('img');
+      const $emptyState = $imageContainer.find('.empty-state-content');
+
+      if ($existingImage.length > 0) {
+        // Hide empty state
+        $emptyState.hide();
+
+        // Create new image element with correct classes
+        const $img = $('<img>').attr({
+          'src': imageUrl,
+          'alt': 'AI Generated Image'
+        }).addClass('ai-generated-image ai-sample-image');
+
+        // Get metadata from sample data or fallback to form data
+        const promptText = (sampleData && sampleData.text) || $(this.config.container).find(this.config.selectors.promptTextarea).val() || '';
+        const styleText = (sampleData && sampleData.style) || $(this.config.container).find(this.config.selectors.styleText).text() || '';
+        const ratioText = (sampleData && sampleData.ratio) || $(this.config.container).find(this.config.selectors.ratioText).text() || '';
+
+
+        // Create anchor tag to wrap the image for lightbox functionality with metadata
+        const $link = $('<a>').attr({
+          'href': imageUrl,
+          'class': 'ai-image-link',
+          'data-prompt': promptText,
+          'data-style': styleText,
+          'data-ratio': ratioText
+        }).append($img);
+
+        // Remove old image and its link wrapper if exists
+        const $existingLink = $imageContainer.find('.ai-image-link');
+        if ($existingLink.length > 0) {
+          $existingLink.remove();
+        } else {
+          $existingImage.remove();
+        }
+
+        // Insert new link before loading-overlay to maintain structure
+        const $overlay = $imageContainer.find('.loading-overlay');
+        if ($overlay.length > 0) {
+          $overlay.before($link);
+        } else {
+          $imageContainer.prepend($link);
+        }
+
+        // Update visual state to SUCCESS after sample image is loaded
+        setTimeout(() => {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
+        }, 50);
+
+      } else {
+        console.error('No image element found in container');
+      }
+    },
+
+    // Update prompt text with auto-resize
+    updatePromptText: function(text) {
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+
+      if ($textarea.length > 0) {
+        $textarea.val(text);
+
+        // Update tooltip based on content
+        this.updatePromptTooltip($textarea);
+
+        // Trigger auto-resize
+        setTimeout(() => {
+          this.autoResizeTextarea($textarea);
+        }, 10);
+
+      }
+    },
+
+    // Update tooltip based on textarea content
+    updatePromptTooltip: function($textarea) {
+      const $promptContainer = $textarea.closest('.prompt-container');
+      const textContent = $textarea.val().trim();
+
+      if (textContent.length > 0) {
+        // Has content - show tooltip
+        $promptContainer.addClass('with-sample-prompt');
+        this.addPromptTooltip($promptContainer);
+      } else {
+        // No content - hide tooltip
+        $promptContainer.removeClass('with-sample-prompt');
+        this.removePromptTooltip($promptContainer);
+      }
+    },
+
+    // Add HTML tooltip element for prompt
+    addPromptTooltip: function($promptContainer) {
+      // Remove existing tooltip if any
+      $promptContainer.find('.sample-prompt-tooltip').remove();
+
+      // Check if custom style is selected
+      const isCustomStyle = this.isCustomStyleSelected();
+
+      // Get appropriate translated text based on style
+      let tooltipText;
+      if (isCustomStyle) {
+        tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltipCustomStyle
+          ? window.AIImageGeneration.translation.editPromptTooltipCustomStyle
+          : 'Describe the image and explicitly state your desired art style';
+      } else {
+        tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.editPromptTooltip
+          ? window.AIImageGeneration.translation.editPromptTooltip
+          : 'Describe the image you want to generate';
+      }
+
+      // Create tooltip element
+      const $tooltip = $('<div class="sample-prompt-tooltip">' + tooltipText + '</div>');
+
+      // Add to container
+      $promptContainer.append($tooltip);
+    },
+
+    // Remove prompt tooltip
+    removePromptTooltip: function($promptContainer) {
+      // Remove HTML tooltip element
+      $promptContainer.find('.sample-prompt-tooltip').remove();
+    },
+
+    // Initialize tooltip based on existing content
+    initPromptTooltip: function() {
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length > 0) {
+        this.updatePromptTooltip($textarea);
+      }
+    },
+
+    // Check if custom style is currently selected
+    isCustomStyleSelected: function() {
+      const $selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      if ($selectedStyleOption.length > 0) {
+        const selectedStyle = $selectedStyleOption.data('style');
+        return selectedStyle === 'Custom Style';
+      }
+      return false;
+    },
+
+    // Update prompt UI (tooltip and placeholder) based on style selection
+    updatePromptBasedOnStyle: function(style) {
+      const isCustomStyle = (style === 'Custom Style');
+
+      // Update placeholder
+      this.updatePromptPlaceholder(isCustomStyle);
+
+      // Update tooltip if it exists
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length > 0) {
+        this.updatePromptTooltip($textarea);
+      }
+
+      // Auto focus textarea when custom style is selected
+      if (isCustomStyle && $textarea.length > 0) {
+        // Use setTimeout to ensure UI updates are completed first
+        setTimeout(function() {
+          $textarea.focus();
+        }, 100);
+      }
+    },
+
+    // Update prompt textarea placeholder based on style
+    updatePromptPlaceholder: function(isCustomStyle) {
+      const $textarea = $(this.config.container).find(this.config.selectors.promptTextarea);
+      if ($textarea.length === 0) return;
+
+      let placeholderText;
+      if (isCustomStyle) {
+        placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderCustomStyle
+          ? window.AIImageGeneration.translation.promptPlaceholderCustomStyle
+          : 'You have selected Custom Style. Please explicitly describe your desired style (e.g., Pixel Art, 3D Claymation, etc.) directly in this prompt field, along with your image description';
+      } else {
+        placeholderText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.promptPlaceholderDefault
+          ? window.AIImageGeneration.translation.promptPlaceholderDefault
+          : 'Describe the image you want to generate...';
+      }
+
+      $textarea.attr('placeholder', placeholderText);
+    },
+
+    // Initialize prompt UI settings based on current style selection
+    initPromptStyleSettings: function() {
+      const $selectedStyleOption = $(this.config.container).find(this.config.selectors.styleOptions + '.selected');
+      if ($selectedStyleOption.length > 0) {
+        const selectedStyle = $selectedStyleOption.data('style');
+        this.updatePromptBasedOnStyle(selectedStyle);
+      }
+    },
+
+    // Initialize file upload field integration
+    initFileUploadIntegration: function() {
+      const self = this;
+
+      // Configuration for file upload fields and their ratios
+      const uploadFieldConfigs = {
+        'uploadBackgroundImage': '4:3',
+        'uploadMobileBackgroundImage': '9:16'
+      };
+
+      // Check each upload field
+      Object.keys(uploadFieldConfigs).forEach(fieldName => {
+        const $uploadField = $('.crm-container input[type="file"][name="' + fieldName + '"]');
+
+        if ($uploadField.length > 0) {
+          const ratio = uploadFieldConfigs[fieldName];
+          self.addAIGenerateLink($uploadField, ratio);
+        }
+      });
+    },
+
+    // Add AI generate link after file upload field
+    addAIGenerateLink: function($uploadField, ratio) {
+      // Check if link already exists to avoid duplicates
+      if ($uploadField.next('.generate-ai-sample-image').length > 0) {
+        return;
+      }
+
+      // Get translated text
+      const linkText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.generateImagesUsingAI
+        ? window.AIImageGeneration.translation.generateImagesUsingAI
+        : 'Generate images using AI';
+
+      // Get translated tooltip text
+      const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.generateAILinkTooltip
+        ? window.AIImageGeneration.translation.generateAILinkTooltip
+        : 'Click to open AI image generator, please download and upload the image manually after generation';
+
+      // Create AI generate link with tooltip
+      const $aiLink = $('<a href="#" class="generate-ai-sample-image" data-ratio="' + ratio + '" title="' + tooltipText + '">' + linkText + '</a>');
+
+      // Add click event handler
+      $aiLink.on('click', function(e) {
+        e.preventDefault();
+        const selectedRatio = $(this).data('ratio');
+
+        // Check if nsp-container exists and get its current state
+        const $nspContainer = $('.nsp-container');
+        if ($nspContainer.length === 0) {
+          console.warn('nsp-container not found');
+          return;
+        }
+
+        const isContainerOpen = $nspContainer.hasClass('is-opened');
+
+        // Function to switch to AI Image Generation panel
+        const switchToAIPanel = function() {
+          // Set trigger context before switching panel
+          NetiAIImageGeneration._aiLinkTriggerContext = {
+            source: 'ai-link',
+            ratio: selectedRatio,
+            forceLoad: false,
+            forceLoadSample: true,  // Use forceLoadSample instead of forceLoad
+            timestamp: Date.now()
+          };
+
+          const $aiTabLink = $('.nme-setting-panels-tabs a[data-target-id="nme-aiimagegeneration"]');
+          if ($aiTabLink.length > 0) {
+            $aiTabLink.trigger('click');
+
+            // Update ratio after panel switch
+            setTimeout(() => {
+              if (window.NetiAIImageGeneration && window.NetiAIImageGeneration.setRatio) {
+                window.NetiAIImageGeneration.setRatio(selectedRatio);
+              }
+            }, 200);
+          } else {
+            console.warn('AI Image Generation tab link not found');
+          }
+        };
+
+        if (!isContainerOpen) {
+          // Container is closed - first switch panel, then open container
+          switchToAIPanel();
+
+          // Wait for panel switch to complete, then open container
+          setTimeout(() => {
+            const $trigger = $('.nsp-trigger');
+            if ($trigger.length > 0) {
+              $trigger.trigger('click');
+            } else {
+              console.warn('nsp-trigger not found');
+            }
+          }, 300);
+        } else {
+          // Container is already open - just switch panel
+          switchToAIPanel();
+        }
+      });
+
+      // Insert after the upload field
+      $uploadField.after($aiLink);
+
+      // Initialize PowerTip for the new link
+      this.initializeLinkTooltip($aiLink);
+    },
+
+    // Initialize PowerTip for dynamically created AI generate link
+    initializeLinkTooltip: function($link) {
+      // Use same tooltip system as existing tooltips
+      var jq = $.fn.powerTip ? $ : jQuery.fn.powerTip ? jQuery : null;
+
+      if (jq && $link.length > 0) {
+        // Check if already initialized to avoid double initialization
+        if (!$link.hasClass('tooltip-initialized')) {
+          // Initialize PowerTip with default options
+          jq($link).powerTip({
+            placement: 's',  // Show tooltip below the link
+            fadeInTime: 200,
+            fadeOutTime: 100
+          });
+          $link.addClass('tooltip-initialized');
+        }
+      } else {
+        console.warn('PowerTip not available or invalid link element');
+      }
+    },
+
+    // Update style selector
+    updateStyleSelector: function(style) {
+      const $styleOptions = $(this.config.container).find(this.config.selectors.styleOptions);
+      const $styleText = $(this.config.container).find(this.config.selectors.styleText);
+
+      // Remove current selection
+      $styleOptions.removeClass(this.config.classes.selected);
+
+      // Find and select target option
+      const $targetOption = $styleOptions.filter(`[data-style="${style}"]`);
+      if ($targetOption.length > 0) {
+        $targetOption.addClass(this.config.classes.selected);
+        // Use translated text from style-label or fallback to data-style
+        const styleLabel = $targetOption.find('.style-label').text() || style;
+        $styleText.text(styleLabel);
+      }
+    },
+
+    // Update ratio selector
+    updateRatioSelector: function(ratio) {
+      const $ratioItems = $(this.config.container).find(`${this.config.selectors.ratioDropdown} ${this.config.selectors.dropdownItems}`);
+      const $ratioText = $(this.config.container).find(this.config.selectors.ratioText);
+
+      // Remove current selection
+      $ratioItems.removeClass(this.config.classes.selected);
+
+      // Find and select target item
+      const $targetItem = $ratioItems.filter(`[data-ratio="${ratio}"]`);
+      if ($targetItem.length > 0) {
+        $targetItem.addClass(this.config.classes.selected);
+        $ratioText.text(ratio);
+      }
+    },
+
+    // Public API methods
+    api: {
+      // Set prompt text with auto-resize
+      setPrompt: function(text) {
+        const $textarea = $(NetiAIImageGeneration.config.container)
+          .find(NetiAIImageGeneration.config.selectors.promptTextarea);
+
+        $textarea.val(text);
+
+        // Trigger auto-resize after setting text
+        requestAnimationFrame(function() {
+          NetiAIImageGeneration.autoResizeTextarea($textarea);
+        });
+      },
+
+      // Get current prompt
+      getPrompt: function() {
+        return $(NetiAIImageGeneration.config.container)
+          .find(NetiAIImageGeneration.config.selectors.promptTextarea)
+          .val();
+      },
+
+      // Set style
+      setStyle: function(style) {
+        const $option = $(NetiAIImageGeneration.config.container)
+          .find(`[data-style="${style}"]`);
+        if ($option.length > 0) {
+          NetiAIImageGeneration.selectStyleOption($option);
+        }
+      },
+
+      // Set ratio
+      setRatio: function(ratio) {
+        const $option = $(NetiAIImageGeneration.config.container)
+          .find(`[data-ratio="${ratio}"]`);
+        if ($option.length > 0) {
+          NetiAIImageGeneration.selectRatioOption($option);
+        }
+      },
+
+      // Trigger generation
+      generate: function() {
+        NetiAIImageGeneration.generateImage();
+      },
+
+      // Refresh textarea height (useful when container becomes visible)
+      refreshTextareaHeight: function() {
+        NetiAIImageGeneration.onContainerVisible();
+      },
+
+      // Loading state management
+      showLoading: function() {
+        NetiAIImageGeneration.loadingManager.show();
+      },
+
+      hideLoading: function() {
+        NetiAIImageGeneration.loadingManager.hide();
+      }
+    },
+
+    // Context validation method
+    _isContextValid: function() {
+      if (!this._aiLinkTriggerContext) return false;
+
+      // Check timestamp to avoid expired context (5 seconds timeout)
+      const now = Date.now();
+      const timeDiff = now - this._aiLinkTriggerContext.timestamp;
+
+      return timeDiff < 5000; // Valid within 5 seconds
+    },
+
+    // Context-based loading method
+    _loadSampleImageWithContext: function() {
+      const context = this._aiLinkTriggerContext;
+      const locale = this.getUILocale();
+
+
+      // Use ratio information from context to load sample image
+      // Pass both forceLoad and forceLoadSample for compatibility
+      this._loadSampleImageWithRatio(
+        locale,
+        context.ratio,
+        context.forceLoad || false,
+        context.forceLoadSample || false
+      );
+    },
+
+    // Clear trigger context
+    _clearTriggerContext: function() {
+      this._aiLinkTriggerContext = null;
+    },
+
+    // Show replace confirmation dialog
+    showReplaceConfirmDialog: function(locale, ratio) {
+      const $modal = $('#netiaiig-confirm-replace-modal');
+
+      if ($modal.length === 0) {
+        console.warn('Confirm modal element not found');
+        return;
+      }
+
+      // Store dialog context for later use
+      this._dialogContext = {
+        locale: locale,
+        ratio: ratio
+      };
+
+      // Update ratio placeholder in modal text
+      // Only update the span element, don't replace the entire text
+      $modal.find('.confirm-ratio-placeholder').text(ratio);
+
+      // Open modal using Magnific Popup
+      const self = this;
+      $.magnificPopup.open({
+        items: {
+          src: '#netiaiig-confirm-replace-modal',
+          type: 'inline'
+        },
+        modal: false,
+        closeOnBgClick: false,
+        showCloseBtn: false,
+        enableEscapeKey: true,
+        callbacks: {
+          open: function() {
+            // Focus on cancel button by default to prevent accidental confirmation
+            setTimeout(() => {
+              $('.popup-modal-dismiss').focus();
+            }, 100);
+          },
+          close: function() {
+                  // Clean up dialog context when modal is closed by any means
+            self._dialogContext = null;
+          }
+        }
+      });
+    },
+
+    // Hide replace confirmation dialog
+    hideReplaceConfirmDialog: function() {
+      // Close modal using Magnific Popup
+      $.magnificPopup.close();
+
+      // Clear dialog context
+      this._dialogContext = null;
+
+    },
+
+    // Get translation text with fallback
+    getTranslation: function(key) {
+      if (window.AIImageGeneration &&
+          window.AIImageGeneration.translation &&
+          window.AIImageGeneration.translation[key]) {
+        return window.AIImageGeneration.translation[key];
+      }
+
+      // Fallback translations
+      const fallbacks = {
+        'confirmDialogMainText': 'You clicked "Generate images using AI". The system will load a sample image suitable for this field (ratio: {ratio}), but there is an AI image you personally created in the current generation area.',
+        'confirmDialogQuestion': 'Do you want to replace the current image with the sample image?',
+        'confirmDialogReminder': 'All images you generate are saved in "Generation History" and can be retrieved at any time even if replaced.'
+      };
+
+      return fallbacks[key] || key;
+    },
+
+    // Handle confirm replace action
+    handleConfirmReplace: function() {
+
+      // Get stored dialog context
+      if (!this._dialogContext) {
+        console.warn('No dialog context found for replacement');
+        this.hideReplaceConfirmDialog();
+        return;
+      }
+
+      const context = this._dialogContext;
+
+      // Hide dialog first
+      this.hideReplaceConfirmDialog();
+
+      // Proceed with loading sample image
+      this._loadSampleImageWithRatio(
+        context.locale,
+        context.ratio,
+        true, // forceLoad = true to overwrite user image
+        false
+      );
+    },
+
+    // Handle cancel replace action
+    handleCancelReplace: function() {
+
+      // Context cleanup is handled in the close callback
+      // This method is mainly for logging purposes
+    },
+
+    // Extended loadSampleImage method with ratio support
+    _loadSampleImageWithRatio: function(locale, ratio, forceLoad = false, forceLoadSample = false) {
+      const self = this;
+
+      // Determine loading conditions based on force options
+      if (forceLoad) {
+        // forceLoad: Can overwrite any image (existing behavior)
+      } else if (forceLoadSample) {
+        // forceLoadSample: Can only overwrite sample images, not user-generated images
+        if (this.hasUserGeneratedImage()) {
+          this.showReplaceConfirmDialog(locale, ratio);
+          return;
+        }
+      } else {
+        // Default: Only load if no existing image
+        if (this.hasExistingImage()) {
+          return;
+        }
+      }
+
+
+      // Show loading state
+      this.showSampleImageLoading();
+
+      $.ajax({
+        url: '/civicrm/ai/images/get-sample',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          locale: locale,
+          ratio: ratio  // Add ratio parameter
+        }),
+        timeout: 20000,
+
+        success: function(response) {
+          if (response.status === 1 && response.data) {
+            self.applySampleToInterface(response.data);
+            // applySampleToInterface will set the SUCCESS state
+          } else {
+            console.warn('Sample image API returned unexpected format for ratio:', ratio, response);
+            // Set appropriate error state for API format issues
+            self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
+          }
+        },
+
+        error: function(xhr, status, error) {
+          console.warn('Failed to load sample image with ratio:', ratio, error);
+
+          // Directly set sample error state
+          self.visualStateManager.setState(self.visualStateManager.STATES.SAMPLE_ERROR);
+        }
+      });
+    },
+
+    // Error state manager
+    errorManager: {
+
+      // Show error state
+      show: function(errorData) {
+        // Update error message content first
+        this.updateErrorMessage(errorData);
+
+        // Use visual state manager to handle all UI changes
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.ERROR);
+      },
+
+      // Hide error state
+      hide: function() {
+        // Determine next state based on whether we have an actual image
+        if (NetiAIImageGeneration.hasActualImage()) {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.SUCCESS);
+        } else {
+          NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.EMPTY);
+        }
+      },
+
+      // Reset error state without hiding loading overlay (for regeneration)
+      reset: function() {
+        // For regeneration, we want to go back to loading state
+        NetiAIImageGeneration.visualStateManager.setState(NetiAIImageGeneration.visualStateManager.STATES.LOADING);
+      },
+
+      // Update error message content
+      updateErrorMessage: function(errorData) {
+        const $container = $(NetiAIImageGeneration.config.container);
+
+        // Check if error_code exists, prioritize AI-specific friendly messages
+        if (errorData.error_code) {
+          const aiErrorMessage = this.getAIErrorMessage(errorData.error_code);
+          if (aiErrorMessage) {
+            $container.find('.error-reason').text(aiErrorMessage);
+            return;
+          }
+        }
+
+        // Fallback to original error handling logic
+        const friendlyMessage = this.getFriendlyErrorMessage(errorData.message, errorData.httpStatus);
+        $container.find('.error-reason').text(friendlyMessage);
+      },
+
+      // Convert various errors to user-friendly messages
+      getFriendlyErrorMessage: function(technicalMessage, httpStatus) {
+        // Get translation helper function
+        const getTranslation = (key) => {
+          return window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation[key]
+            : null;
+        };
+
+        // JSON response error mappings
+        const jsonErrorMappings = {
+          'The request is not a valid JSON format.': getTranslation('errorInvalidJson') || 'Request format error, please refresh the page and try again',
+          'The request does not match the expected format.': getTranslation('errorInvalidFormat') || 'Request parameter error, please check input content',
+          'Content exceeds the maximum character limit.': getTranslation('errorContentTooLong') || 'Description text is too long, please shorten to within 1000 characters',
+          'No corresponding component was found.': getTranslation('errorNoComponent') || 'Page permission error, please refresh the page',
+          'Invalid request method or missing data.': getTranslation('errorInvalidMethod') || 'System error, please refresh the page and try again'
+        };
+
+        // HTTP status code mappings
+        const httpStatusMappings = {
+          400: getTranslation('errorBadRequest') || 'Request parameter error, please check input content',
+          401: getTranslation('errorUnauthorized') || 'Login expired, please login again',
+          403: getTranslation('errorForbidden') || 'Insufficient permissions, please contact administrator',
+          404: getTranslation('errorNotFound') || 'Service temporarily unavailable, please try again later',
+          408: getTranslation('errorTimeout') || 'Request timeout, please check network connection',
+          429: getTranslation('errorTooManyRequests') || 'Usage frequency too high, please try again later',
+          500: getTranslation('errorServerError') || 'Server temporarily error, please try again later',
+          502: getTranslation('errorBadGateway') || 'Service temporarily unavailable, please try again later',
+          503: getTranslation('errorServiceUnavailable') || 'Service temporarily under maintenance, please try again later',
+          504: getTranslation('errorGatewayTimeout') || 'Connection timeout, please check network connection'
+        };
+
+        // Network connection error mappings
+        const networkErrorMappings = {
+          'network error': getTranslation('errorNetworkError') || 'Network connection interrupted, please check network status',
+          'timeout': getTranslation('errorConnectionTimeout') || 'Connection timeout, please refresh the page and try again',
+          'connection refused': getTranslation('errorConnectionRefused') || 'Unable to connect to server, please try again later',
+          'dns error': getTranslation('errorDnsError') || 'Network configuration problem, please check network connection'
+        };
+
+        // 1. Priority check JSON response error messages
+        if (jsonErrorMappings[technicalMessage]) {
+          return jsonErrorMappings[technicalMessage];
+        }
+
+        // 2. Check for Image generation failed type
+        if (technicalMessage.includes('Image generation failed')) {
+          return getTranslation('errorGenerationFailed') || 'Image generation failed, please try again later';
+        }
+
+        // 3. Check HTTP status code
+        if (httpStatus && httpStatusMappings[httpStatus]) {
+          return httpStatusMappings[httpStatus];
+        }
+
+        // 4. Check network connection errors (fuzzy match)
+        const lowerMessage = technicalMessage.toLowerCase();
+        for (const [key, message] of Object.entries(networkErrorMappings)) {
+          if (lowerMessage.includes(key)) {
+            return message;
+          }
+        }
+
+        // 5. Default error message
+        return getTranslation('errorDefaultMessage') || 'An error occurred during image generation, please try again later';
+      },
+
+      // Handle AI-specific error codes with friendly messages
+      getAIErrorMessage: function(errorCode) {
+        // Get translation helper function
+        const getTranslation = (key) => {
+          return window.AIImageGeneration && window.AIImageGeneration.translation
+            ? window.AIImageGeneration.translation[key]
+            : null;
+        };
+
+        const aiErrorMappings = {
+          'CONTENT_VIOLATION': getTranslation('errorContentViolation') || 'Your input contains inappropriate content, please modify your description and try again',
+          'PROMPT_INJECTION': getTranslation('errorPromptInjection') || 'Input format issue detected, please check your content and try again',
+          'PROCESSING_ERROR': getTranslation('errorProcessingError') || 'System processing error occurred, please try again later',
+          'API_ERROR': getTranslation('errorAPIError') || 'Image generation service temporarily unavailable, please try again later',
+          'VALIDATION_ERROR': getTranslation('errorValidationError') || 'Input content format is incorrect, please check and try again',
+          'TIMEOUT_ERROR': getTranslation('errorTimeoutError') || 'Connection timeout, please check your network connection and try again',
+          'UNKNOWN_ERROR': getTranslation('errorUnknownError') || 'An unknown error occurred, please try again later'
+        };
+
+        return aiErrorMappings[errorCode] || null;
+      }
+    },
+
+    // Floating message manager for action button notifications
+    floatingMessage: {
+      hideTimer: null,
+
+      // Show floating message with auto-hide
+      show: function(message, type = 'success') {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $floatingMessage = $container.find(NetiAIImageGeneration.config.selectors.floatingMessage);
+        const $messageIcon = $container.find(NetiAIImageGeneration.config.selectors.floatingMessageIcon);
+        const $messageText = $container.find(NetiAIImageGeneration.config.selectors.floatingMessageText);
+
+        if ($floatingMessage.length === 0) {
+          console.warn('Floating message element not found');
+          return;
+        }
+
+        // Clear any existing timer
+        this.clearTimer();
+
+        // Set message content
+        $messageText.text(message);
+
+        // Set icon based on type
+        if (type === 'success') {
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-check-circle');
+          $floatingMessage.removeClass('error').addClass('success');
+        } else if (type === 'error') {
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-close-circle');
+          $floatingMessage.removeClass('success').addClass('error');
+        }
+
+        // Show message with animation
+        $floatingMessage.stop(true, true).fadeIn(200);
+
+        // Auto-hide after 5 seconds
+        this.hideTimer = setTimeout(() => {
+          this.hide();
+        }, 5000);
+
+      },
+
+      // Hide floating message
+      hide: function() {
+        const $container = $(NetiAIImageGeneration.config.container);
+        const $floatingMessage = $container.find(NetiAIImageGeneration.config.selectors.floatingMessage);
+
+        this.clearTimer();
+        $floatingMessage.stop(true, true).fadeOut(200);
+
+      },
+
+      // Clear hide timer
+      clearTimer: function() {
+        if (this.hideTimer) {
+          clearTimeout(this.hideTimer);
+          this.hideTimer = null;
+        }
+      },
+
+      // Show success message
+      showSuccess: function(message) {
+        this.show(message, 'success');
+      },
+
+      // Show error message
+      showError: function(message) {
+        this.show(message, 'error');
+      }
+    },
+
+    // Panel message manager for lightbox panel-actions notifications
+    panelMessage: {
+      hideTimer: null,
+
+      // Show panel message near action buttons using same styling as floating messages
+      show: function(message, type = 'success') {
+        // Find panel message element in lightbox (uses same classes as floating-message)
+        const $panelMessage = $('.panel-message');
+
+        if ($panelMessage.length === 0) {
+          console.warn('Panel message element not found');
+          return;
+        }
+
+        // Clear any existing timer
+        this.clearTimer();
+
+        // Update panel message content using same selectors as floating message
+        const $messageIcon = $panelMessage.find('.floating-message-icon');
+        const $messageText = $panelMessage.find('.floating-message-text');
+
+        // Set message content
+        $messageText.text(message);
+
+        // Set icon and styling based on type (same as floatingMessage)
+        if (type === 'success') {
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-check-circle');
+          $panelMessage.removeClass('error').addClass('success');
+        } else if (type === 'error') {
+          $messageIcon.removeClass().addClass('floating-message-icon zmdi zmdi-close-circle');
+          $panelMessage.removeClass('success').addClass('error');
+        }
+
+        // Show message with slideDown animation
+        $panelMessage.stop(true, true).slideDown(300);
+
+        // Auto-hide after 3.5 seconds
+        this.hideTimer = setTimeout(() => {
+          this.hide();
+        }, 3500);
+
+      },
+
+      // Hide panel message
+      hide: function() {
+        const $panelMessage = $('.panel-message');
+
+        this.clearTimer();
+
+        // Hide with slideUp animation
+        $panelMessage.stop(true, true).slideUp(300);
+
+      },
+
+      // Clear hide timer
+      clearTimer: function() {
+        if (this.hideTimer) {
+          clearTimeout(this.hideTimer);
+          this.hideTimer = null;
+        }
+      },
+
+      // Show success message
+      showSuccess: function(message) {
+        this.show(message, 'success');
+      },
+
+      // Show error message
+      showError: function(message) {
+        this.show(message, 'error');
+      }
+    }
+  };
+
+  // Initialize when document is ready
+  $(document).ready(function() {
+    // Check if component container exists
+    if ($(NetiAIImageGeneration.config.container).length > 0) {
+      NetiAIImageGeneration.init();
+    }
+  });
+
+  // Cleanup events when page unloads
+  $(window).on('beforeunload', function() {
+    $(document).off('click', '.nme-setting-panels-tabs a');
+  });
+
+  // Expose API to global scope
+  window.NetiAIImageGeneration = NetiAIImageGeneration.api;
+
+})(jQuery);

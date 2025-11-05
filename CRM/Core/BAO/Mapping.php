@@ -644,9 +644,11 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         $blockCount = $blkCnt + 1;
       }
       for ($x = 1; $x < $blockCount; $x++) {
-        $colCnt = count($mappingName[$x]);
-        if ($colCnt >= $columnCount[$x]) {
-          $columnCount[$x] = $colCnt;
+        if (isset($mappingName[$x])) {
+          $colCnt = count($mappingName[$x]);
+          if ($colCnt >= $columnCount[$x]) {
+            $columnCount[$x] = $colCnt;
+          }
         }
       }
     }

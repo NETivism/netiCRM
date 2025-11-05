@@ -223,7 +223,9 @@
             </td></tr>
             {/if}
             <tr class="crm-contribution-form-block-contribution_status_id"><td class="label">{$form.contribution_status_id.label}</td><td>{$form.contribution_status_id.html}
-            {if $contribution_status_id eq 2}{if $is_pay_later }: {ts}Pay Later{/ts} {else}: {ts}Incomplete Transaction{/ts}{/if}{/if}</td></tr>
+            {if $contribution_status_id eq 2}{if $is_pay_later }: {ts}Pay Later{/ts} {else}: {ts}Incomplete Transaction{/ts}{/if}{/if}
+              <div class="description"></div>
+            </td></tr>
             {* Cancellation fields are hidden unless contribution status is set to Cancelled *}
             <tr id="cancelInfo" class="crm-contribution-form-block-cancelInfo"> 
                 <td>&nbsp;</td> 
@@ -471,6 +473,7 @@ cj(document).ready(function(){
    else{
      cj('#receipt-option').hide();
    }
+   let havePremium = {/literal}{if $havePremium}1{else}0{/if}{literal};
    
    // Define dialog behavior.
   cj("#dialog-confirm-receipt").dialog({
@@ -502,6 +505,20 @@ cj(document).ready(function(){
       if (!([{/literal}{$deductible_type_ids}{literal}].includes(contributionTypeId))){
         notifySpan.append('<span class="font-red">{/literal}{ts}This contribution type is not deductible. Are you sure you want to generate receipt date and receipt ID?{/ts}{literal}</span>');
       }
+    }
+  });
+
+  // Track initial contribution status value
+  let initialStatusId = parseInt(cj("#contribution_status_id").val());
+  
+  cj("#contribution_status_id").change(function(){
+    let currentStatusId = parseInt(cj(this).val());
+    let statusSpan = cj('#contribution_status_id').closest('.crm-form-select').next('.description');
+    statusSpan.find('span.font-red.restock-warning').remove();
+    
+    // Check if status changed from 2 (Pending) to 3 (Cancelled)
+    if (havePremium && initialStatusId === 2 && (currentStatusId === 3 || currentStatusId === 4)) {
+      statusSpan.append('<span class="font-red restock-warning">{/literal}{ts}Premium inventory linked to this donation will be restocked when saved as cancelled or failed status{/ts}{literal}</span>');
     }
   });
 

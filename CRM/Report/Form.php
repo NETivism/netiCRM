@@ -54,6 +54,8 @@ class CRM_Report_Form extends CRM_Core_Form {
   public $_from;
   public $_groupBy;
   public $_orderBy;
+  public $_select = NULL;
+  public $_having = NULL;
 
   protected $_charts;
 
@@ -186,9 +188,7 @@ class CRM_Report_Form extends CRM_Core_Form {
   protected $_csvSupported = TRUE;
   protected $_add2groupSupported = TRUE;
   protected $_groups = NULL;
-  protected $_having = NULL;
   protected $_rowsFound = NULL;
-  protected $_select = NULL;
   protected $_rollup = NULL;
   protected $_limit = NULL;
 

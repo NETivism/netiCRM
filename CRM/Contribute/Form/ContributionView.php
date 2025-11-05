@@ -155,12 +155,34 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     if ($premiumId) {
+      if (!empty($dao->combination_id)) {
+        // For combination
+        $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+        $combinationDAO->id = $dao->combination_id;
+        if ($combinationDAO->find(TRUE)) {
+          $this->assign('is_combination', TRUE);
+          $this->assign('combination_name', $combinationDAO->combination_name);
+          $this->assign('combination_id', $dao->combination_id);
+          // Get combination products
+          $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
+          $combinationContent = [];
+          foreach ($combinationProducts as $product) {
+            $combinationContent[] = $product['name'] . ' x' . $product['quantity'];
+          }
+          $this->assign('combination_content', implode(', ', $combinationContent));
+          if (!empty($values['contribution_page_id'])) {
+            $editUrl = CRM_Utils_System::url('civicrm/admin/contribute/premium',"action=update&id={$values['contribution_page_id']}&reset=1");
+            $this->assign('combination_edit_url', $editUrl);
+          }
+        }
+      } else {
+        // This is an individual product
+        $productDAO = new CRM_Contribute_DAO_Product();
+        $productDAO->id = $productID;
+        $productDAO->find(TRUE);
 
-      $productDAO = new CRM_Contribute_DAO_Product();
-      $productDAO->id = $productID;
-      $productDAO->find(TRUE);
-
-      $this->assign('premium', $productDAO->name);
+        $this->assign('premium', $productDAO->name);
+      }
       $this->assign('option', $dao->product_option);
       $this->assign('fulfilled', $dao->fulfilled_date);
     }

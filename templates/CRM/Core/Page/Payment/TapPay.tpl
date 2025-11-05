@@ -1,3 +1,4 @@
+{*Direct Pay - TapPay Fields*}
 <style>{literal}
 .tp-wrapper {
   max-width: 480px;
@@ -35,6 +36,25 @@
 .tp-field.card-ccv{
   width: 80px;
 }
+.tp-field.fcardholder {
+  width: 100%;
+  padding: 0;
+  height: 50px;
+}
+.fcardholder > input {
+  border: none !important;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  box-sizing: border-box;
+  padding-block: 0;
+  padding-inline: 0;
+  padding: 5px;
+}
+.fcardholder > input.invalid {
+  color: red;
+}
 .tp-field .overlay {
   position: absolute;
   width: 100%;
@@ -64,7 +84,27 @@
   right: 10px;
   top: 30%;
 }
+.tp-wrapper > .wrapper-name {
+  width: 40%;
+}
+.tp-wrapper > .wrapper-email {
+  width: 55%;
+}
 {/literal}</style>
+<div class="tp-wrapper">
+  <div class="wrapper-name">
+    <label class="tp-label">{ts}Cardholder Name{/ts}</label>
+    <div class="tp-field fcardholder fname">
+      <input type="text" name="cardholder_name" id="cardholder-name" placeholder="* {ts}Same on your credit card.{/ts}" required>
+    </div>
+  </div>
+  <div class="wrapper-email">
+    <label class="tp-label">{ts}Cardholder Email{/ts}</label>
+    <div class="tp-field fcardholder femail">
+      <input type="email" name="cardholder_email" id="cardholder-email" placeholder="* {ts}Email will verified by credit card issuer.{/ts}" value="{$cardholder_email}" required>
+    </div>
+  </div>
+</div>
 <div class="tp-wrapper">
   <label class="tp-label">{ts}Credit Card Number{/ts}</label>
   <div>
@@ -90,7 +130,7 @@
   </div>
   {/if}
 </div>
-<script src="https://js.tappaysdk.com/sdk/tpdirect/v5.17.0"></script>
+<script src="https://js.tappaysdk.com/sdk/tpdirect/v5.20.0"></script>
 <script>{literal}
 cj(document).ready(function($){
   var appID = '{/literal}{$payment_processor.signature}{literal}';
@@ -186,8 +226,47 @@ cj(document).ready(function($){
   });
 
 
+  function isValidEmail(email) {
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  function isValidName(name) {
+    var nameRegex = /^[0-9a-zA-Z,.\'\s]+$/;
+    return nameRegex.test(name);
+  }
+
+  function checkRequiredFields() {
+    var cardholderName = $("#cardholder-name").val().trim();
+    var cardholderEmail = $("#cardholder-email").val().trim();
+    var $emailInput = $("#cardholder-email");
+    var $nameInput = $("#cardholder-name");
+    
+    var nameValid = cardholderName.length > 0 && isValidName(cardholderName);
+    var emailValid = cardholderEmail.length > 0 && isValidEmail(cardholderEmail);
+    
+    if (cardholderName.length > 0 && !isValidName(cardholderName)) {
+      $nameInput.addClass('invalid').removeClass('valid');
+    } else if (cardholderName.length > 0) {
+      $nameInput.addClass('valid').removeClass('invalid');
+    } else {
+      $nameInput.removeClass('valid invalid');
+    }
+    
+    if (cardholderEmail.length > 0 && !isValidEmail(cardholderEmail)) {
+      $emailInput.addClass('invalid').removeClass('valid');
+    } else if (cardholderEmail.length > 0) {
+      $emailInput.addClass('valid').removeClass('invalid');
+    } else {
+      $emailInput.removeClass('valid invalid');
+    }
+    
+    return nameValid && emailValid;
+  }
+
   TPDirect.card.onUpdate(function (update) {
-    if (update.canGetPrime && !lock) {
+    var fieldsValid = checkRequiredFields();
+    if (update.canGetPrime && !lock && fieldsValid) {
       $button.prop("disabled", false);
       $backButton.prop("disabled", 1);
     }
@@ -204,6 +283,19 @@ cj(document).ready(function($){
     }
     else {
       $("#card-type-img").prop("src", src + 'card.svg');
+    }
+  });
+
+  $("#cardholder-name, #cardholder-email").on('input', function() {
+    var fieldsValid = checkRequiredFields();
+    var tappayStatus = TPDirect.card.getTappayFieldsStatus();
+    if (tappayStatus.canGetPrime && !lock && fieldsValid) {
+      $button.prop("disabled", false);
+      $backButton.prop("disabled", 1);
+    }
+    else {
+      $button.prop("disabled", 1);
+      $backButton.prop("disabled", false);
     }
   });
 	$("#Confirm").bind("keypress", function (e) {

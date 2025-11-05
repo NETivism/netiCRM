@@ -71,7 +71,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // now, retrieve full object by validateData, or false fallback
-    if ( ! $this->validateData( $input, $ids, $objects ) ) {
+    if ( ! $this->validateData( $input, $ids, $objects, FALSE ) ) {
       return false;
     }
 
