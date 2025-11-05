@@ -226,7 +226,7 @@ window.AIImageGeneration = {
             {* Embedded control buttons *}
             <div class="embedded-controls">
               <div class="netiaiig-dropdown" id="styleDropdown">
-                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Style{/ts}" data-tooltip data-tooltip-placement="s">
+                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Style{/ts}" data-tooltip data-tooltip-placement="n">
                   <i class="zmdi zmdi-flower-alt"></i>
                   <span id="styleText">{ts}Simple Illustration{/ts}</span>
                   <i class="zmdi zmdi-chevron-down"></i>
@@ -262,7 +262,7 @@ window.AIImageGeneration = {
               </div>
 
               <div class="netiaiig-dropdown" id="ratioDropdown">
-                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Aspect Ratio{/ts}" data-tooltip data-tooltip-placement="s">
+                <button type="button" class="embedded-btn dropdown-toggle" title="{ts}Select Aspect Ratio{/ts}" data-tooltip data-tooltip-placement="n">
                   <i class="zmdi zmdi-aspect-ratio-alt"></i>
                   <span id="ratioText">4:3</span>
                   <i class="zmdi zmdi-chevron-down"></i>
