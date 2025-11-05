@@ -1309,6 +1309,25 @@
       // Show/hide panels based on screen size
       this.adjustLightboxLayout();
 
+      // Update button states based on current generation status
+      this.updateLightboxButtonStates();
+
+    },
+
+    // Update lightbox button states based on current generation status
+    updateLightboxButtonStates: function() {
+      const isGenerating = this.isCurrentlyGenerating();
+      
+      // Find all regenerate buttons in lightbox (both desktop and mobile)
+      const $regenerateBtns = $('.regenerate-btn');
+      
+      if (isGenerating) {
+        // Disable regenerate buttons when generating
+        $regenerateBtns.prop('disabled', true).addClass(this.config.classes.disabled);
+      } else {
+        // Enable regenerate buttons when not generating
+        $regenerateBtns.prop('disabled', false).removeClass(this.config.classes.disabled);
+      }
     },
 
     // Adjust lightbox layout based on screen size
@@ -1456,6 +1475,15 @@
 
     // Regenerate image from lightbox with original settings
     regenerateFromLightbox: function() {
+      // Check if currently generating image
+      if (this.isCurrentlyGenerating()) {
+        const message = window.AIImageGeneration && window.AIImageGeneration.translation
+          ? window.AIImageGeneration.translation.generating
+          : 'Generating image...';
+        this.showLightboxMessage(message, 'error');
+        return;
+      }
+
       const $currentItem = $.magnificPopup.instance.currItem;
       if (!$currentItem || !$currentItem.el) {
         const message = window.AIImageGeneration && window.AIImageGeneration.translation
@@ -1675,6 +1703,13 @@
       return this.visualStateManager.isState(this.visualStateManager.STATES.SUCCESS);
     },
 
+    // Check if currently generating image
+    isCurrentlyGenerating: function() {
+      // Check if we're in LOADING state or SAMPLE_LOADING state
+      return this.visualStateManager.isState(this.visualStateManager.STATES.LOADING) ||
+             this.visualStateManager.isState(this.visualStateManager.STATES.SAMPLE_LOADING);
+    },
+
     // Helper method to check if an image URL is a placeholder
     isPlaceholderImage: function(src) {
       return src.includes('thumb-00.png') ||
@@ -1723,6 +1758,11 @@
           this.applyStateRules(newState, previousState);
         } finally {
           this._stateChangeInProgress = false;
+
+          // Update lightbox button states if lightbox is open
+          if ($.magnificPopup.instance && $.magnificPopup.instance.isOpen) {
+            NetiAIImageGeneration.updateLightboxButtonStates();
+          }
 
           // Handle pending state changes
           if (this._pendingState) {
