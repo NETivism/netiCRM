@@ -2100,41 +2100,6 @@
       return isUserGenerated;
     },
 
-    // Get corrected image URL using CiviCRM resource base path
-    getCorrectedImageUrl: function(imageUrl, imagePath) {
-      // Try to use CiviCRM resource base path first
-      if (typeof Drupal !== 'undefined' &&
-          Drupal.settings &&
-          Drupal.settings.civicrm &&
-          Drupal.settings.civicrm.resourceBase) {
-
-        const resourceBase = Drupal.settings.civicrm.resourceBase;
-        const correctedUrl = resourceBase + imagePath;
-        return correctedUrl;
-      }
-
-      // Fallback: manual path correction
-      if (imageUrl && imageUrl.includes('/packages/AIImageGeneration/')) {
-        // Insert the missing path part
-        const correctedUrl = imageUrl.replace(
-          '/packages/AIImageGeneration/',
-          '/sites/all/modules/civicrm/packages/AIImageGeneration/'
-        );
-        return correctedUrl;
-      }
-
-      // If we have image_path, try to construct URL from current domain
-      if (imagePath) {
-        const baseUrl = window.location.origin;
-        const correctedUrl = baseUrl + '/sites/all/modules/civicrm/' + imagePath;
-        return correctedUrl;
-      }
-
-      // Last resort: return original image_url
-      console.warn('Could not correct image URL, using original:', imageUrl);
-      return imageUrl;
-    },
-
     // Get current UI locale
     getUILocale: function() {
       // Try to get locale from various sources
@@ -2240,8 +2205,7 @@
 
         // Update image if provided
         if (sampleData.image_url || sampleData.image_path) {
-          const correctedImageUrl = this.getCorrectedImageUrl(sampleData.image_url, sampleData.image_path);
-          this.updateSampleImage(correctedImageUrl, sampleData.filename, sampleData);
+          this.updateSampleImage(sampleData.image_url, sampleData.filename, sampleData);
         }
 
         // Update prompt text if provided

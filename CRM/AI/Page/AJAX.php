@@ -611,9 +611,10 @@ class CRM_AI_Page_AJAX {
       $randomPrompt = $filteredPrompts[$randomIndex];
 
       // Create image URL
-      $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+      $config = CRM_Core_Config::singleton();
+      $baseUrl = $config->userFrameworkResourceURL;
       $imagePath = "packages/AIImageGeneration/images/samples/{$randomPrompt['filename']}";
-      $imageUrl = $baseUrl . '/' . $imagePath;
+      $imageUrl = $baseUrl . $imagePath;
 
       self::responseSucess([
         'status' => 1,
