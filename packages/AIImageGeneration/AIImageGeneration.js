@@ -2240,8 +2240,7 @@
 
         // Update image if provided
         if (sampleData.image_url || sampleData.image_path) {
-          const correctedImageUrl = this.getCorrectedImageUrl(sampleData.image_url, sampleData.image_path);
-          this.updateSampleImage(correctedImageUrl, sampleData.filename, sampleData);
+          this.updateSampleImage(sampleData.image_url, sampleData.filename, sampleData);
         }
 
         // Update prompt text if provided

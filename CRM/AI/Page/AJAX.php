@@ -495,9 +495,10 @@ class CRM_AI_Page_AJAX {
 
       if ($generateResult && $generateResult['success']) {
         // Create full URL for response
-        $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+        $config = CRM_Core_Config::singleton();
+        $baseUrl = $config->userFrameworkResourceURL;
         $publicPath = CRM_Utils_System::cmsDir('public');
-        $imageUrl = $baseUrl . '/' . $publicPath . '/' . $generateResult['image_path'];
+        $imageUrl = $baseUrl . $publicPath . '/' . $generateResult['image_path'];
 
         // Call responseSucess without try-catch, let civiExit exception propagate to Drupal
         self::responseSucess([
@@ -611,9 +612,10 @@ class CRM_AI_Page_AJAX {
       $randomPrompt = $filteredPrompts[$randomIndex];
 
       // Create image URL
-      $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+      $config = CRM_Core_Config::singleton();
+      $baseUrl = $config->userFrameworkResourceURL;
       $imagePath = "packages/AIImageGeneration/images/samples/{$randomPrompt['filename']}";
-      $imageUrl = $baseUrl . '/' . $imagePath;
+      $imageUrl = $baseUrl . $imagePath;
 
       self::responseSucess([
         'status' => 1,
@@ -728,11 +730,12 @@ class CRM_AI_Page_AJAX {
         ];
 
         $dao = CRM_Core_DAO::executeQuery($query, $params);
-        $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+        $config = CRM_Core_Config::singleton();
+        $baseUrl = $config->userFrameworkResourceURL;
         $publicPath = CRM_Utils_System::cmsDir('public');
 
         while ($dao->fetch()) {
-          $imageUrl = !empty($dao->image_path) ? $baseUrl . '/' . $publicPath . '/' . $dao->image_path : '';
+          $imageUrl = !empty($dao->image_path) ? $baseUrl . $publicPath . '/' . $dao->image_path : '';
 
           $images[] = [
             'id' => (int)$dao->id,
