@@ -1362,6 +1362,52 @@ LIMIT 0, 100
               1 => [$expiryDate, 'String'],
               2 => [$token, 'String'],
             ]);
+
+            // Get current recur status, end_date, and installments
+            $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
+            $recurDAO->id = $dao->contribution_recur_id;
+            $recurDAO->find(TRUE);
+            $currentStatusId = $recurDAO->contribution_status_id;
+
+            $canUpdateStatus = TRUE;
+            if ($currentStatusId == 1) {
+              // Check if end_date has passed
+              if (!empty($recurDAO->end_date) && time() > strtotime($recurDAO->end_date)) {
+                $canUpdateStatus = FALSE;
+              }
+              // Check if installments are full
+              elseif (!empty($recurDAO->installments)) {
+                $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1";
+                $successCount = CRM_Core_DAO::singleValueQuery($sqlContribution, [1 => [$dao->contribution_recur_id, 'Integer']]);
+                if ($successCount >= $recurDAO->installments) {
+                  $canUpdateStatus = FALSE;
+                }
+              }
+              // Check if status was manually set to Completed
+              if ($canUpdateStatus) {
+                $logSQL = "
+                  SELECT modified_id, data
+                  FROM civicrm_log
+                  WHERE entity_table = 'civicrm_contribution_recur'
+                    AND entity_id = %1
+                  ORDER BY id DESC
+                ";
+                $logDAO = CRM_Core_DAO::executeQuery($logSQL, [1 => [$dao->contribution_recur_id, 'Integer']]);
+
+                while ($logDAO->fetch()) {
+                  $logData = unserialize($logDAO->data);
+                  if (is_array($logData) && !empty($logData['after']['contribution_status_id'])) {
+                    if ($logData['after']['contribution_status_id'] == 1) {
+                      if (!empty($logDAO->modified_id)) {
+                        $canUpdateStatus = FALSE;
+                      }
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+
             $params = [
               'id' => $dao->contribution_recur_id,
               'auto_renew' => 2,
@@ -1370,9 +1416,21 @@ LIMIT 0, 100
                 2 => $expiryDate
               ]),
             ];
+
+            if ($canUpdateStatus) {
+              $params['contribution_status_id'] = 5;
+            }
+
             CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
             $noteTitle = ts('TapPay Payment').': '.ts('Card Expiry Date').' '.ts('updated');
             CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $noteTitle, ts("From").': '.$dao->expiry_date);
+
+            // Add status note only if status was changed
+            if ($canUpdateStatus) {
+              $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
+              $statusNote = ts('Card expiry date has been updated.').' '.ts("Auto renews status");
+              CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $statusNoteTitle, $statusNote);
+            }
             break;
           }
         }
