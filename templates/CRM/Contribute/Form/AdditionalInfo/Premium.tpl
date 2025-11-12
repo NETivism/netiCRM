@@ -45,7 +45,7 @@
     </table>
     {else}
      {* Display editable premium selection *}
-    {if $action eq 2}
+    {if $action eq 2 && $has_stock_management}
     <div class="crm-section">
       <div class="messages info">
         <div class="icon inform-icon"></div>
@@ -103,7 +103,7 @@
 
           cj(document).ready(function($){
       {/literal}
-          {if $action eq 2}
+          {if $action eq 2 && $has_stock_management}
       {literal}
             var product_name_selects = document.querySelectorAll("select[name^='product_name']");
             product_name_selects.forEach(function(select) {

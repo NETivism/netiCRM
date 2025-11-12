@@ -48,7 +48,7 @@
    <table  class="form-layout-compressed">
      <tr class="crm-acl-form-block-group_id">
          <td class="label">{$form.group_id.label}</td>
-         <td>{$form.group_id.html}<br />
+         <td>{$form.deny.html}{$form.group_id.html}<br />
          <span class="description">{ts}Select a specific group of contacts, OR apply this permission to ALL groups.{/ts}</span>
          </td>
      </tr>

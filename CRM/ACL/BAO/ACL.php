@@ -709,7 +709,7 @@ SELECT count( a.id )
       $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
 
       $query = "
-SELECT   a.operation, a.object_id
+SELECT   a.operation, a.object_id, a.deny
   FROM   civicrm_acl_cache c, civicrm_acl a
  WHERE   c.acl_id       =  a.id
    AND   a.is_active    =  1
@@ -720,26 +720,40 @@ ORDER BY a.object_id
 
       $dao = &CRM_Core_DAO::executeQuery($query);
 
-      // do an or of all the where clauses u see
-      $ids = [];
+      // Separate allow (deny=0) and deny (deny=1) IDs
+      $allowIds = [];
+      $denyIds = [];
+      $hasFullAccess = FALSE;
+
       while ($dao->fetch()) {
         // make sure operation matches the type TODO
         if (self::matchType($type, $dao->operation)) {
           if (!$dao->object_id) {
-            $ids = [];
+            // Full access granted, no restrictions
+            $hasFullAccess = TRUE;
+            $allowIds = [];
+            $denyIds = [];
             $whereClause = ' ( 1 ) ';
             break;
           }
-          $ids[] = $dao->object_id;
+
+          // Separate IDs based on deny flag
+          if ($dao->deny) {
+            $denyIds[] = $dao->object_id;
+          }
+          else {
+            $allowIds[] = $dao->object_id;
+          }
         }
       }
 
-      if (!empty($ids)) {
-        $ids = CRM_Utils_Array::implode(',', $ids);
+      // Process allow groups (deny=0) - use IN condition
+      if (!$hasFullAccess && !empty($allowIds)) {
+        $allowIdsStr = CRM_Utils_Array::implode(',', $allowIds);
         $query = "
 SELECT g.*
   FROM civicrm_group g
- WHERE g.id IN ( $ids )
+ WHERE g.id IN ( $allowIdsStr )
 ";
         $dao = &CRM_Core_DAO::executeQuery($query);
         while ($dao->fetch()) {
@@ -766,6 +780,51 @@ SELECT g.*
           ) {
 
             CRM_Contact_BAO_GroupContactCache::load($dao);
+          }
+        }
+      }
+
+      // Process deny groups (deny=1) - use NOT condition
+      if (!$hasFullAccess && !empty($denyIds)) {
+        $denyIdsStr = CRM_Utils_Array::implode(',', $denyIds);
+        $query = "
+SELECT g.*
+  FROM civicrm_group g
+ WHERE g.id IN ( $denyIdsStr )
+";
+        $dao = &CRM_Core_DAO::executeQuery($query);
+        $denyClauses = [];
+        while ($dao->fetch()) {
+          // currently operation is restrcited to VIEW/EDIT
+          if ($dao->where_clause) {
+            $denyClauses[] = $dao->where_clause;
+            if ($dao->select_tables) {
+              $tables = array_merge($tables,
+                unserialize($dao->select_tables)
+              );
+            }
+            if ($dao->where_tables) {
+              $whereTables = array_merge($whereTables,
+                unserialize($dao->where_tables)
+              );
+            }
+          }
+
+          if (($dao->saved_search_id ||
+              $dao->children ||
+              $dao->parents
+            ) &&
+            $dao->cache_date == NULL
+          ) {
+
+            CRM_Contact_BAO_GroupContactCache::load($dao);
+          }
+        }
+
+        // Add NOT conditions for deny clauses
+        if (!empty($denyClauses)) {
+          foreach ($denyClauses as $denyClause) {
+            $clauses[] = ' NOT ( ' . $denyClause . ' ) ';
           }
         }
       }
@@ -810,7 +869,7 @@ SELECT g.*
       $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
 
       $query = "
-SELECT   a.operation, a.object_id
+SELECT   a.operation, a.object_id, a.deny
   FROM   civicrm_acl_cache c, civicrm_acl a
  WHERE   c.acl_id       =  a.id
    AND   a.is_active    =  1
@@ -820,23 +879,58 @@ ORDER BY a.object_id
 ";
       $params = [1 => [$tableName, 'String']];
       $dao = &CRM_Core_DAO::executeQuery($query, $params);
-      $is_visited = [];
+      $denyIds = [];
+      $hasDenyRule = FALSE;
+      $hasAllowRule = FALSE;
+
       while ($dao->fetch()) {
         if ($dao->object_id) {
           if (self::matchType($type, $dao->operation)) {
-            $ids = self::searchChildrenGroup($dao->object_id, $ids);
+            // Separate allow and deny IDs
+            if ($dao->deny) {
+              // For deny=1, collect IDs to exclude (including children)
+              $hasDenyRule = TRUE;
+              $denyIds = self::searchChildrenGroup($dao->object_id, $denyIds);
+            }
+            else {
+              // For deny=0, add IDs to allow list (including children)
+              $hasAllowRule = TRUE;
+              $ids = self::searchChildrenGroup($dao->object_id, $ids);
+            }
           }
         }
         else {
           // this user has got the permission for all objects of this type
           // check if the type matches
           if (self::matchType($type, $dao->operation)) {
-            foreach ($allGroups as $id => $dontCare) {
-              $ids[] = $id;
+            if ($dao->deny) {
+              // deny=1 with no object_id means deny all - clear everything
+              $ids = [];
+              $hasDenyRule = FALSE;
+              break;
+            }
+            else {
+              // deny=0 with no object_id means allow all
+              $hasAllowRule = TRUE;
+              foreach ($allGroups as $id => $dontCare) {
+                $ids[] = $id;
+              }
+              break;
             }
           }
-          break;
         }
+      }
+
+      // If there are deny rules but no allow rules, start with all groups
+      if ($hasDenyRule && !$hasAllowRule && !empty($allGroups)) {
+        foreach ($allGroups as $id => $dontCare) {
+          $ids[] = $id;
+        }
+      }
+
+      // Remove denied IDs from the allowed IDs
+      if (!empty($denyIds)) {
+      $ids = array_diff($ids, $denyIds);
       }
     }
 

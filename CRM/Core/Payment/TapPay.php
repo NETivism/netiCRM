@@ -178,6 +178,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $cardholderEmail = $this->_paymentForm->_params['email-5'];
       }
       $this->_paymentForm->assign('cardholder_email', $cardholderEmail);
+      $enable3D = 0;
+      if (!empty($this->_paymentProcessor['url_site'])) {
+        $enable3D = 1;
+      }
+      $this->_paymentForm->assign('enable3d', $enable3D);
 
       // get template and render some element
       require_once 'CRM/Core/Smarty/resources/String.php';
