@@ -49,30 +49,46 @@ class CRM_Contribute_Form_AdditionalInfo {
     $isCombination = FALSE;
     $combinationName = '';
     $combinationContent = '';
+    $hasStockManagement = FALSE;
 
     if (!empty($form->_premiumID)) {
       $dao = new CRM_Contribute_DAO_ContributionProduct();
       $dao->id = $form->_premiumID;
-      if ($dao->find(TRUE) && !empty($dao->combination_id)) {
-        $isCombination = TRUE;
-        // Get combination details
-        $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
-        $combinationDAO->id = $dao->combination_id;
-        if ($combinationDAO->find(TRUE)) {
-          $combinationName = $combinationDAO->combination_name;
-          // Get combination products
-          $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
-          $combinationContentArray = [];
-          foreach ($combinationProducts as $product) {
-            $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
+      if ($dao->find(TRUE)) {
+        if (!empty($dao->combination_id)) {
+          $isCombination = TRUE;
+          // Get combination details
+          $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+          $combinationDAO->id = $dao->combination_id;
+          if ($combinationDAO->find(TRUE)) {
+            $combinationName = $combinationDAO->combination_name;
+            // Get combination products
+            $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
+            $combinationContentArray = [];
+            foreach ($combinationProducts as $product) {
+              $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
+              // Check if any product in combination has stock management enabled
+              if (!empty($product['stock_status']) && $product['stock_status'] == 1) {
+                $hasStockManagement = TRUE;
+              }
+            }
+            $combinationContent = implode(', ', $combinationContentArray);
           }
-          $combinationContent = implode(', ', $combinationContentArray);
+        }
+        else if (!empty($dao->product_id)) {
+          // Check if single product has stock management enabled
+          $productDAO = new CRM_Contribute_DAO_Product();
+          $productDAO->id = $dao->product_id;
+          if ($productDAO->find(TRUE) && !empty($productDAO->stock_status) && $productDAO->stock_status == 1) {
+            $hasStockManagement = TRUE;
+          }
         }
       }
     }
     $form->assign('is_combination_premium', $isCombination);
     $form->assign('combination_name', $combinationName);
     $form->assign('combination_content', $combinationContent);
+    $form->assign('has_stock_management', $hasStockManagement);
 
     $contributionId = $form->get('id');
     if (!empty($contributionId)) {
