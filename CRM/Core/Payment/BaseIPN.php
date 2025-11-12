@@ -205,13 +205,11 @@ class CRM_Core_Payment_BaseIPN {
       if (!$objects['contribution']->contribution_page_id) {
         if (!CRM_Utils_Array::value('pledge_payment', $ids)) {
           // return if we are just doing an optional validation
-          if (!$required) {
-            return TRUE;
+          if ($required) {
+            CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: {$objects['contribution']->id}");
+            echo "Failure: Could not find contribution page for contribution record: {$objects['contribution']->id}<p>";
+            return FALSE;
           }
-
-          CRM_Core_Error::debug_log_message("Could not find contribution page for contribution record: {$objects['contribution']->id}");
-          echo "Failure: Could not find contribution page for contribution record: {$objects['contribution']->id}<p>";
-          return FALSE;
         }
       }
     }
@@ -306,6 +304,16 @@ class CRM_Core_Payment_BaseIPN {
       $participant->status_id = 4;
       $participant->save();
     }
+    // it's contribution, maybe have premium
+    else {
+      try{
+        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Transaction failed or batch action');
+      }
+      catch (Exception $e) {
+        $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
+        CRM_Core_Error::debug_log_message($errorMessage);
+      }
+    }
 
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('failed', $objects);
@@ -381,6 +389,17 @@ class CRM_Core_Payment_BaseIPN {
       $participant->status_id = 4;
       $participant->save();
     }
+    // it's contribution, maybe have premium
+    else {
+      try{
+        CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Transaction failed or batch action');
+      }
+      catch (Exception $e) {
+        $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
+        CRM_Core_Error::debug_log_message($errorMessage);
+      }
+    }
+
 
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('cancelled', $objects);

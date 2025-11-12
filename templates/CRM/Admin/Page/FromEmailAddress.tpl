@@ -28,6 +28,7 @@
       </th>
       <th>{ts 1=SPF}%1 Verified{/ts}?</th>
       <th>{ts 1=DKIM}%1 Verified{/ts}?</th>
+      <th>{ts}Note{/ts}</th>
       <th class="hiddenElement"></th>
       <th></th>
       </tr>
@@ -54,9 +55,10 @@
             {ts}No{/ts}
           {/if}
         </td>
-        <td class="crm-admin-from_email_address-email">{if $row.filter & 1} {ts}Yes{/ts} {else} {ts}No{/ts} <i class="zmdi zmdi-alert-triangle warning"></i>{/if}</td>
-        <td class="crm-admin-from_email_address-dkim">{if $row.filter & 2} {ts}Yes{/ts} {else} {ts}No{/ts} <i class="zmdi zmdi-alert-triangle warning"></i>{/if}</td>
-        <td class="crm-admin-from_email_address-spf">{if $row.filter & 4} {ts}Yes{/ts} {else} {ts}No{/ts} <i class="zmdi zmdi-alert-triangle warning"></i>{/if}</td>
+        <td class="crm-admin-from_email_address-email">{if $row.filter & 1} {ts}Yes{/ts} <i class="zmdi zmdi-check"></i> {else} {ts}No{/ts} <i class="zmdi zmdi-alert-triangle warning"></i>{/if}</td>
+        <td class="crm-admin-from_email_address-spf">{if $row.filter & 2} {ts}Yes{/ts} <i class="zmdi zmdi-check"></i> {else} {ts}No{/ts} <i class="zmdi zmdi-alert-triangle warning"></i>{/if}</td>
+        <td class="crm-admin-from_email_address-dkim">{if $row.filter & 4} {ts}Yes{/ts} <i class="zmdi zmdi-check"></i> {else} {ts}No{/ts} <i class="zmdi zmdi-alert-triangle warning"></i>{/if}</td>
+        <td class="crm-admin-from_email_address-note">{$row.grouping}</td>
         <td>{$row.action|replace:'xx':$row.id}</td>
         <td class="order hiddenElement">{$row.weight}</td>
       </tr>

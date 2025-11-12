@@ -421,11 +421,21 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       if (CRM_REQUEST_TIME - CRM_Contact_BAO_GroupContactCache::SMARTGROUP_CACHE_TIMEOUT_MINIMAL > strtotime($cacheDate)) {
         $groupValues['refresh_button'] = TRUE;
       }
-      $this->set('gid', $this->_groupID);
-      $this->assign_by_ref('group', $groupValues);
 
       // also set ssID if this is a saved search
       $ssID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $this->_groupID, 'saved_search_id');
+      // Check if this is a custom search smart group and add custom search info
+      if ($ssID) {
+        $formValues = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch', $ssID, 'form_values');
+        if ($formValues) {
+          $formValuesArray = unserialize($formValues);
+          if (!empty($formValuesArray['customSearchClass'])) {
+            $groupValues['custom_search_class'] = $formValuesArray['customSearchClass'];
+          }
+        }
+      }
+      $this->set('gid', $this->_groupID);
+      $this->assign_by_ref('group', $groupValues);
       $this->assign('ssID', $ssID);
 
       //get the saved search mapping id

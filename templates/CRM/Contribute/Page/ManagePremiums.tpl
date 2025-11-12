@@ -47,20 +47,30 @@
         <table id="options" class="display">
           <thead>
            <tr>
+            <th>#</th>
             <th id="sortable">{ts}Name{/ts}</th>
             <th>{ts}SKU{/ts}</th>
             <th>{ts}Market Value{/ts}</th>
             <th>{ts}Min Contribution{/ts}</th>
+            <th>{ts}Stock Status{/ts}</th>
+            <th>{ts}Total Stock{/ts}</th>
+            <th>{ts}Sent Quantity{/ts}</th>
+            <th>{ts}Remaining{/ts}</th>
             <th>{ts}Active?{/ts}</th>
             <th></th>
            </tr>
           </thead>
         {foreach from=$rows item=row}
 	      <tr id="row_{$row.id}"class="{cycle values="odd-row,even-row"} {$row.class}{if NOT $row.is_active} disabled{/if}">        
+          <td class="crm-contribution-form-block-id">{$row.id}</td>
 	        <td class="crm-contribution-form-block-name">{$row.name}</td>	
 	        <td class="crm-contribution-form-block-sku">{$row.sku}</td>
                 <td class="crm-contribution-form-block-price">{$row.price }</td>
 	        <td class="crm-contribution-form-block-min_contribution">{$row.min_contribution}</td>
+	        <td class="crm-contribution-form-block-stock_status">{if $row.stock_status eq 1}{ts}Enabled{/ts}{else}{ts}Disabled{/ts}{/if}</td>
+	        <td class="crm-contribution-form-block-stock_qty">{$row.stock_qty|default:0}</td>
+	        <td class="crm-contribution-form-block-send_qty">{$row.send_qty|default:0}</td>
+	        <td class="crm-contribution-form-block-remaining_stock">{$row.remaining_stock|default:0}</td>
 	        <td id="row_{$row.id}_status" >{if $row.is_active eq 1} {ts}Yes{/ts} {else} {ts}No{/ts} {/if}</td>
 	        <td id={$row.id}>{$row.action|replace:'xx':$row.id}</td>
           </tr>

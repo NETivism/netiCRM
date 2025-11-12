@@ -22,6 +22,14 @@
 
 	/**
 	 * ============================
+	 * Tabs constants
+	 * ============================
+	 */
+  const TABS_SELECTOR = ".nme-setting-panels-tabs",
+        TAB_PANEL_SELECTOR = ".nme-setting-panel";
+
+	/**
+	 * ============================
 	 * Private variables
 	 * ============================
 	 */
@@ -48,6 +56,9 @@
     _nspContentSelector,
     _nspHeaderSelector,
     _nspFooterSelector,
+    _nspContentId,
+    _nspHeaderId,
+    _nspFooterId,
     _nspContent,
     _nspHeader,
     _nspFooter,
@@ -62,7 +73,12 @@
 		_header = "." + NSP_HEADER,
 		_footer = "." + NSP_FOOTER,
 		_trigger = "." + NSP_TRIGGER,
-    _inner = "." + INNER_CLASS;
+    _inner = "." + INNER_CLASS,
+    
+  /**
+   * Tabs variables
+   */
+    _tabsEnabled = false;
 
 	/**
 	 * ============================
@@ -160,15 +176,15 @@
       $(_container).attr("data-type", _nspType);
 
 			if ($(_content).length == 0) {
-				$(_container).find("." + NSP_INNER).append("<div class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
+				$(_container).find("." + NSP_INNER).append("<div id='" + _nspContentId + "' class='" + NSP_CONTENT + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
 
 			if ($(_header).length == 0 && _nspHeaderSelector) {
-				$(_container).find("." + NSP_INNER).prepend("<div class='" + NSP_HEADER + "'><div class='" + INNER_CLASS + "'></div></div>");
+				$(_container).find("." + NSP_INNER).prepend("<div id='" + _nspHeaderId + "' class='" + NSP_HEADER + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
 
 			if ($(_footer).length == 0 && _nspFooterSelector) {
-				$(_container).find("." + NSP_INNER).append("<div class='" + NSP_FOOTER + "'><div class='" + INNER_CLASS + "'></div></div>");
+				$(_container).find("." + NSP_INNER).append("<div id='" + _nspFooterId + "' class='" + NSP_FOOTER + "'><div class='" + INNER_CLASS + "'></div></div>");
 			}
 
       switch (_nspType) {
@@ -201,6 +217,8 @@
       $(_container).find(_content).find(_inner).html(_nspContent);
       $(_container).find(_header).find(_inner).html(_nspHeader);
       $(_container).find(_footer).find(_inner).html(_nspFooter);
+      
+      _initTabs();
 
       $(_container).on("click", _trigger, function(event) {
         event.preventDefault();
@@ -342,6 +360,46 @@
     }
   };
 
+  /**
+   * Tabs initialization
+   */
+  var _initTabs = function() {
+    if ($(_nspHeaderSelector).find(TABS_SELECTOR).length > 0) {
+      _tabsEnabled = true;
+      _bindTabsEvents();
+    }
+  };
+
+  /**
+   * Bind tabs events
+   */
+  var _bindTabsEvents = function() {
+    $(_nspHeaderSelector + " " + TABS_SELECTOR + " a").on("click", function(event) {
+      event.preventDefault();
+      var $thisTabLink = $(this),
+          $thisTab = $thisTabLink.parent("li"),
+          $tabContainer = $thisTab.parent("ul"),
+          $tabItems = $tabContainer.children("li"),
+          $tabLinks = $tabItems.children("a"),
+          targetContents = $tabContainer.data("target-contents"),
+          $targetContents = $("." + targetContents),
+          targetID = $thisTabLink.data("target-id"),
+          $targetTabContent = $("#" + targetID);
+
+      // Remove all active states
+      $tabLinks.removeClass(ACTIVE_CLASS);
+      $targetContents.removeClass(ACTIVE_CLASS);
+      
+      // Set new active states
+      $thisTabLink.addClass(ACTIVE_CLASS);
+      $targetTabContent.addClass(ACTIVE_CLASS);
+      
+      // Update container attribute
+      $(_container).attr('data-tab-active-id', targetID);
+      _debug("Tab switched to: " + targetID, "tabs");
+    });
+  };
+
 	/**
 	 * Debug
 	 */
@@ -481,6 +539,9 @@
       }
 
       _container = selector;
+      _nspContentId = _nspContentSelector.slice(1);
+      _nspHeaderId = _nspHeaderSelector.slice(1);
+      _nspFooterId = _nspFooterSelector.slice(1);
       _checkNspInstance();
 
       return _nsp;

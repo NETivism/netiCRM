@@ -1,0 +1,979 @@
+{
+  "version": "1.0",
+  "locale": "zh_TW",
+  "lastUpdated": "2025-10-31",
+  "prompts": [
+    {
+      "text": "孩子們在課後輔導班寫作業。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001400_33ab097f.webp"
+    },
+    {
+      "text": "偏鄉學童開心地收到新文具。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001516_8c3916c9.webp"
+    },
+    {
+      "text": "偏鄉學童開心地收到新文具。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_001556_a9f56e29.webp"
+    },
+    {
+      "text": "志工老師正在說故事給孩子聽。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002038_8e42f0d4.webp"
+    },
+    {
+      "text": "一個孩子專注地看著書本。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002116_263d690e.webp"
+    },
+    {
+      "text": "一個孩子專注地看著書本。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002232_b7886c0c.webp"
+    },
+    {
+      "text": "小朋友們在草地上快樂地奔跑。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_002631_1aeac77e.webp"
+    },
+    {
+      "text": "社工溫柔地擁抱一個孩子。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003138_c8a55aec.webp"
+    },
+    {
+      "text": "孩子們一起分享一塊麵包。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003414_dcf46c44.webp"
+    },
+    {
+      "text": "孩子們一起分享一塊麵包。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003453_8a2f03b6.webp"
+    },
+    {
+      "text": "孩子們一起分享一塊麵包。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_003612_0e863bd5.webp"
+    },
+    {
+      "text": "孩子們圍著地球儀學習。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005144_b162fe9a.webp"
+    },
+    {
+      "text": "一個青少年迷惘地望著天空。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005221_a5101ec8.webp"
+    },
+    {
+      "text": "一個青少年迷惘地望著天空。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005418_e8c2172b.webp"
+    },
+    {
+      "text": "募集舊書，幫助孩子閱讀。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005615_adc28eea.webp"
+    },
+    {
+      "text": "募集舊書，幫助孩子閱讀。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005655_dbbacd0d.webp"
+    },
+    {
+      "text": "募集舊書，幫助孩子閱讀。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_005815_f8710855.webp"
+    },
+    {
+      "text": "一個孩子高興地穿上新鞋。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010052_068c0d2f.webp"
+    },
+    {
+      "text": "老師在黑板前教書的背影。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010326_03830509.webp"
+    },
+    {
+      "text": "志工在山上種下一棵小樹苗。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010524_d84194d5.webp"
+    },
+    {
+      "text": "志工在山上種下一棵小樹苗。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010645_ef75ea06.webp"
+    },
+    {
+      "text": "志工在山上種下一棵小樹苗。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010725_c20d8839.webp"
+    },
+    {
+      "text": "志工在山上種下一棵小樹苗。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010804_79c2ca3f.webp"
+    },
+    {
+      "text": "一群人正在海灘上撿拾垃圾。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010843_6a770c33.webp"
+    },
+    {
+      "text": "一群人正在海灘上撿拾垃圾。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_010922_5cca0046.webp"
+    },
+    {
+      "text": "一群人正在海灘上撿拾垃圾。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011000_27999148.webp"
+    },
+    {
+      "text": "一群人正在海灘上撿拾垃圾。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011040_80886637.webp"
+    },
+    {
+      "text": "一群人正在海灘上撿拾垃圾。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011118_967af61e.webp"
+    },
+    {
+      "text": "一隻被塑膠環套住脖子的海龜。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011355_48497ba0.webp"
+    },
+    {
+      "text": "融化的冰川和一隻孤單的北極熊。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011517_7dd562f5.webp"
+    },
+    {
+      "text": "融化的冰川和一隻孤單的北極熊。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011636_344fb8a4.webp"
+    },
+    {
+      "text": "融化的冰川和一隻孤單的北極熊。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011717_dff729ee.webp"
+    },
+    {
+      "text": "工廠的煙囪正排放著黑煙。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011911_1194ed80.webp"
+    },
+    {
+      "text": "工廠的煙囪正排放著黑煙。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_011951_42cb0d3c.webp"
+    },
+    {
+      "text": "工廠的煙囪正排放著黑煙。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012031_d2ac73e3.webp"
+    },
+    {
+      "text": "乾旱龜裂的土地寸草不生。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012147_b85b514c.webp"
+    },
+    {
+      "text": "乾旱龜裂的土地寸草不生。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012351_73880007.webp"
+    },
+    {
+      "text": "志工正在做資源回收分類。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012508_923958b8.webp"
+    },
+    {
+      "text": "志工正在做資源回收分類。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012709_b0c7ee55.webp"
+    },
+    {
+      "text": "獸醫細心治療受傷的流浪狗。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012826_e0f5ec8b.webp"
+    },
+    {
+      "text": "獸醫細心治療受傷的流浪狗。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_012903_1f43f717.webp"
+    },
+    {
+      "text": "獸醫細心治療受傷的流浪狗。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013105_0b0627e9.webp"
+    },
+    {
+      "text": "收容所裡許多貓咪等待領養。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013221_027fd62f.webp"
+    },
+    {
+      "text": "收容所裡許多貓咪等待領養。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013300_2e425a4f.webp"
+    },
+    {
+      "text": "志工正在餵食一隻流浪貓。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013537_c55ccdc3.webp"
+    },
+    {
+      "text": "志工正在餵食一隻流浪貓。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013737_1c23aeff.webp"
+    },
+    {
+      "text": "一家人快樂地領養一隻小狗。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013816_e5795d92.webp"
+    },
+    {
+      "text": "一家人快樂地領養一隻小狗。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_013933_ec13321a.webp"
+    },
+    {
+      "text": "復原後的狗狗開心地搖著尾巴。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_014817_59e7f956.webp"
+    },
+    {
+      "text": "復原後的狗狗開心地搖著尾巴。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_015019_2c949baa.webp"
+    },
+    {
+      "text": "野生動物重獲自由奔向森林。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_015256_006cfb8b.webp"
+    },
+    {
+      "text": "一隻手輕輕地撫摸樹木的紋路。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_015737_ec1f0b0f.webp"
+    },
+    {
+      "text": "醫生在偏鄉為居民看診。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020250_ae390da7.webp"
+    },
+    {
+      "text": "研究人員專注地看著顯微鏡。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020453_8ecfe112.webp"
+    },
+    {
+      "text": "研究人員專注地看著顯微鏡。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020620_d90aaa45.webp"
+    },
+    {
+      "text": "研究人員專注地看著顯微鏡。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020741_1b1f8dcb.webp"
+    },
+    {
+      "text": "一位病人看著窗外露出微笑。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_020820_85bbcc38.webp"
+    },
+    {
+      "text": "一位病人看著窗外露出微笑。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021056_aaeeaa49.webp"
+    },
+    {
+      "text": "心理諮商師正在傾聽個案。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021139_6051505f.webp"
+    },
+    {
+      "text": "復健師協助患者重新學習走路。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021455_5a04ce69.webp"
+    },
+    {
+      "text": "一群人戴著口罩在排隊。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_021853_1bca4ed8.webp"
+    },
+    {
+      "text": "失智症長輩困惑無助的表情。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022442_944e40a0.webp"
+    },
+    {
+      "text": "失智症長輩困惑無助的表情。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022524_32925a7c.webp"
+    },
+    {
+      "text": "失智症長輩困惑無助的表情。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022641_e69e8aa1.webp"
+    },
+    {
+      "text": "一個聽診器圍成愛心的形狀。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_022953_73bd7922.webp"
+    },
+    {
+      "text": "志工推著輪椅陪長者曬太陽。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023109_352426a0.webp"
+    },
+    {
+      "text": "志工推著輪椅陪長者曬太陽。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023147_f954a5cc.webp"
+    },
+    {
+      "text": "志工推著輪椅陪長者曬太陽。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023229_739021a3.webp"
+    },
+    {
+      "text": "一位年輕人攙扶長輩過馬路。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023751_c1bf3b88.webp"
+    },
+    {
+      "text": "志工在教長輩如何使用智慧手機。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023910_1c8c8f0c.webp"
+    },
+    {
+      "text": "志工在教長輩如何使用智慧手機。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_023951_532919ca.webp"
+    },
+    {
+      "text": "志工在教長輩如何使用智慧手機。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024031_3ca0c93a.webp"
+    },
+    {
+      "text": "獨居長者孤單吃飯的背影。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024147_2ff8c62b.webp"
+    },
+    {
+      "text": "獨居長者孤單吃飯的背影。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024227_cc90eba3.webp"
+    },
+    {
+      "text": "獨居長者孤單吃飯的背影。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024423_23b88eb3.webp"
+    },
+    {
+      "text": "志工送餐到獨居長輩家中。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_024858_ad211f82.webp"
+    },
+    {
+      "text": "志工送餐到獨居長輩家中。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025100_670f6fc4.webp"
+    },
+    {
+      "text": "身心障礙運動員在賽場上奮鬥。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025219_29fc9513.webp"
+    },
+    {
+      "text": "身心障礙運動員在賽場上奮鬥。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025338_fd80590b.webp"
+    },
+    {
+      "text": "導盲犬引導視障者前行。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025456_712bac2d.webp"
+    },
+    {
+      "text": "導盲犬引導視障者前行。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025653_f03339e9.webp"
+    },
+    {
+      "text": "一位聽障人士正在用手語溝通。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025808_4a6c85a6.webp"
+    },
+    {
+      "text": "一位聽障人士正在用手語溝通。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_025927_aa99ecb3.webp"
+    },
+    {
+      "text": "志工發放熱食給無家可歸的人。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030521_728fd77c.webp"
+    },
+    {
+      "text": "救援隊員在瓦礫堆中搜救。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030800_070b2175.webp"
+    },
+    {
+      "text": "救援隊員在瓦礫堆中搜救。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030839_71ac6565.webp"
+    },
+    {
+      "text": "救援隊員在瓦礫堆中搜救。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_030927_2be95498.webp"
+    },
+    {
+      "text": "救援隊員在瓦礫堆中搜救。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031011_537ee066.webp"
+    },
+    {
+      "text": "救援隊員在瓦礫堆中搜救。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031048_2f690ac7.webp"
+    },
+    {
+      "text": "災後人們協力重建家園。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031205_6d5af882.webp"
+    },
+    {
+      "text": "災後人們協力重建家園。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031244_a46858ad.webp"
+    },
+    {
+      "text": "災後人們協力重建家園。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031322_4e91c356.webp"
+    },
+    {
+      "text": "一個家庭收到緊急物資包。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031523_ecf4e991.webp"
+    },
+    {
+      "text": "一個家庭收到緊急物資包。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_031722_aa236d1e.webp"
+    },
+    {
+      "text": "一個憂鬱的人獨自坐在黑暗中。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_032739_484da4a4.webp"
+    },
+    {
+      "text": "一個憂鬱的人獨自坐在黑暗中。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_032817_6cb7606c.webp"
+    },
+    {
+      "text": "幼苗從乾裂的土地中長出來。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034033_da1fb808.webp"
+    },
+    {
+      "text": "幼苗從乾裂的土地中長出來。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034111_04ac2185.webp"
+    },
+    {
+      "text": "幼苗從乾裂的土地中長出來。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034151_039ce1c4.webp"
+    },
+    {
+      "text": "幼苗從乾裂的土地中長出來。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034229_5f6a3980.webp"
+    },
+    {
+      "text": "幼苗從乾裂的土地中長出來。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_034306_dc359e52.webp"
+    },
+    {
+      "text": "許多雙手疊在一起象徵團結。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_035051_362998bb.webp"
+    },
+    {
+      "text": "許多紙鶴飛向天空祈福。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_040828_2d061063.webp"
+    },
+    {
+      "text": "許多紙鶴飛向天空祈福。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_041101_b8f342f8.webp"
+    },
+    {
+      "text": "不同膚色的人們站在一起微笑。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_041334_7e3c56d5.webp"
+    },
+    {
+      "text": "不同膚色的人們站在一起微笑。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_041412_c8ec9254.webp"
+    },
+    {
+      "text": "一雙手捧著一顆發光的愛心。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042233_7a7e677c.webp"
+    },
+    {
+      "text": "一雙手捧著一顆發光的愛心。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042311_682c765a.webp"
+    },
+    {
+      "text": "一雙手捧著一顆發光的愛心。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042349_792d5fd8.webp"
+    },
+    {
+      "text": "一個乾淨的水龍頭流出清水。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042542_249ae63c.webp"
+    },
+    {
+      "text": "志工們一起為社區公園掃地。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_042739_d170985a.webp"
+    },
+    {
+      "text": "許多人穿著號碼布在慈善路跑。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043052_190972d7.webp"
+    },
+    {
+      "text": "許多人穿著號碼布在慈善路跑。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043327_9c5a8c42.webp"
+    },
+    {
+      "text": "一位捐款人收到一張感謝狀。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043443_1b4c8416.webp"
+    },
+    {
+      "text": "一位捐款人收到一張感謝狀。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043525_7e90646e.webp"
+    },
+    {
+      "text": "志工協力搬運募集來的物資。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043720_44ca29fa.webp"
+    },
+    {
+      "text": "志工協力搬運募集來的物資。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_043955_3f4965b7.webp"
+    },
+    {
+      "text": "電話募款中心的工作人員。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044112_4b7969d6.webp"
+    },
+    {
+      "text": "電話募款中心的工作人員。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044309_6e8f1f1e.webp"
+    },
+    {
+      "text": "社區居民一起種植花圃。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044347_049343b7.webp"
+    },
+    {
+      "text": "社區居民一起種植花圃。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044426_9ed6f4aa.webp"
+    },
+    {
+      "text": "社區居民一起種植花圃。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044628_2ae34f38.webp"
+    },
+    {
+      "text": "義賣市集熱鬧的場景。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044744_14bc2b81.webp"
+    },
+    {
+      "text": "義賣市集熱鬧的場景。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_044824_04ad7559.webp"
+    },
+    {
+      "text": "國際志工和當地孩子玩耍。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_045645_3ccada9a.webp"
+    },
+    {
+      "text": "國際志工和當地孩子玩耍。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_045802_79ece23f.webp"
+    },
+    {
+      "text": "一位農夫拿著自己種的蔬菜微笑。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051029_018b2ca9.webp"
+    },
+    {
+      "text": "一位農夫拿著自己種的蔬菜微笑。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051108_c81ba753.webp"
+    },
+    {
+      "text": "一位農夫拿著自己種的蔬菜微笑。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051225_d98d6be0.webp"
+    },
+    {
+      "text": "一位農夫拿著自己種的蔬菜微笑。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051303_65547cdb.webp"
+    },
+    {
+      "text": "反對戰爭，槍口上插著一朵花。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051340_9c853907.webp"
+    },
+    {
+      "text": "一個充滿食物的食物銀行貨架。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051651_8e1e1123.webp"
+    },
+    {
+      "text": "一個充滿食物的食物銀行貨架。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_051729_b45a5407.webp"
+    },
+    {
+      "text": "一位單親媽媽抱著她的孩子。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052046_004b3851.webp"
+    },
+    {
+      "text": "一位單親媽媽抱著她的孩子。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052204_0ad52626.webp"
+    },
+    {
+      "text": "穿著雨衣的搜救人員的背影。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052436_09166acf.webp"
+    },
+    {
+      "text": "穿著雨衣的搜救人員的背影。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052559_c14a6e72.webp"
+    },
+    {
+      "text": "防疫人員正在消毒街道。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052637_3319f1d1.webp"
+    },
+    {
+      "text": "防疫人員正在消毒街道。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052915_6a230f9e.webp"
+    },
+    {
+      "text": "提供法律諮詢服務的場景。",
+      "style": "Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_052955_5f2adfeb.webp"
+    },
+    {
+      "text": "點亮一盞光明的燈。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_054210_8dd005bd.webp"
+    },
+    {
+      "text": "受助者臉上露出感激的笑容。",
+      "style": "Picture book illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_054404_75219806.webp"
+    },
+    {
+      "text": "受助者臉上露出感激的笑容。",
+      "style": "Watercolor Painting",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251016_054442_5ef6751e.webp"
+    },
+    {
+      "text": "不同膚色的人微笑拿著六色彩虹旗遊行。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "4:3",
+      "filename": "neticrm_aigenimg_20251029_231819_2dc2f773.webp"
+    },
+    {
+      "text": "一位農夫拿著自己種的蔬菜微笑。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_010731_558ff38a.webp"
+    },
+    {
+      "text": "社區屋頂上設置的太陽能板。",
+      "style": "Hand-Drawn Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_010930_2b21aa53.webp"
+    },
+    {
+      "text": "志工帶領孩子們在社區牆上畫壁畫。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_011502_d40d7eba.webp"
+    },
+    {
+      "text": "人們舉著標語參加和平遊行。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012128_39db7515.webp"
+    },
+    {
+      "text": "一片被復育成功的珊瑚礁。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012404_d2cd0470.webp"
+    },
+    {
+      "text": "醫生正在照顧受傷的穿山甲。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_012743_72c9531c.webp"
+    },
+    {
+      "text": "一個燈塔在夜晚中照亮方向。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_013411_837673f6.webp"
+    },
+    {
+      "text": "行動醫療車開進偏遠村落。",
+      "style": "Picture book illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_034527_5aae7c8e.webp"
+    },
+    {
+      "text": "一隻猛禽飛過山嵐。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041201_c3fd001e.webp"
+    },
+    {
+      "text": "一群人正在海灘上撿拾垃圾。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041446_b01c310c.webp"
+    },
+    {
+      "text": "黑暗的房間裡，一扇窗透進光。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_180751_51dff995.webp"
+    },
+    {
+      "text": "和平鴿啣著橄欖枝飛翔。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_182014_0b8c3ec2.webp "
+    },
+    {
+      "text": "牆上貼著簡約設計感的海報，海報上有「反對精神疾病污名化」文字。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_184804_a99914c4.webp"
+    },
+    {
+      "text": "人們拿著六色彩虹旗遊行。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_204024_69580fd3.webp"
+    },
+    {
+      "text": "兩個男人微笑著牽著手走在街上。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_204421_abcf3a6a.webp"
+    },
+    {
+      "text": "兩個女人微笑著牽著手走在街上。",
+      "style": "Japanese Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_210504_d652d347.webp"
+    },
+    {
+      "text": "社工溫柔地擁抱一個孩子。",
+      "style": "Simple Illustration",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_041546_3fc650f8.webp"
+    },
+    {
+      "text": "黑暗的房間裡，一扇窗透進光。",
+      "style": "Watercolor Painting",
+      "ratio": "9:16",
+      "filename": "neticrm_aigenimg_20251029_040938_f906625b.webp"
+    }
+  ]
+}

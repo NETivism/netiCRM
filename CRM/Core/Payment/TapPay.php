@@ -169,6 +169,16 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $this->_paymentForm->assign('class_name', $className);
       $this->_paymentForm->assign('qfKey', $qfKey);
 
+      // event or contribution form have diff params
+      $cardholderEmail = '';
+      if (isset($this->_paymentForm->_params[0]) && !empty($this->_paymentForm->_params[0]['email-5'])) {
+        $cardholderEmail = $this->_paymentForm->_params[0]['email-5'];
+      }
+      else if(!empty($this->_paymentForm->_params['email-5'])){
+        $cardholderEmail = $this->_paymentForm->_params['email-5'];
+      }
+      $this->_paymentForm->assign('cardholder_email', $cardholderEmail);
+
       // get template and render some element
       require_once 'CRM/Core/Smarty/resources/String.php';
       civicrm_smarty_register_string_resource();
@@ -185,6 +195,24 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $currentPath = CRM_Utils_System::currentPath();
     $params['prime'] = CRM_Utils_Type::escape($_POST['prime'], 'String');
     $params['mode'] = $this->_mode;
+
+    // Retrieve and validate cardholder information
+    $cardholderName = CRM_Utils_Request::retrieve('cardholder_name', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
+    $cardholderEmail = CRM_Utils_Request::retrieve('cardholder_email', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'POST');
+
+    if (!empty($cardholderName)) {
+      // Validate name contains only [0-9a-zA-Z,.']
+      if (preg_match('/^[0-9a-zA-Z,.\'\s]+$/', $cardholderName)) {
+        $params['cardholder_name'] = trim($cardholderName);
+      }
+    }
+
+    if (!empty($cardholderEmail)) {
+      // Validate email format using CRM_Utils_Rule::email
+      if (CRM_Utils_Rule::email($cardholderEmail)) {
+        $params['cardholder_email'] = trim($cardholderEmail);
+      }
+    }
     if (!empty($params['isPayByBindCard'])) {
       $paymentResult = self::payByBindCard($params);
     }
@@ -242,9 +270,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'order_number' => $contribution['trxn_id'],
         'details' => mb_substr($details, 0, 98), // item name
         'cardholder'=> [
-          'phone_number'=> '', #required #TODO
+          'phone_number'=> '', #required
           'name' => '', #required but use empty
-          'email' => '', #required but use empty
+          'name_en' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '',
+          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '',
           'zip_code' => '',    //optional
           'address' => '',     //optional
           'national_id' => '', //optional
@@ -557,7 +586,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'cardholder'=> [
           'phone_number'=> '', #required #TODO
           'name' => '', #required but use empty
-          'email' => '', #required but use empty
+          'name_en' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '',
+          'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '',
           'zip_code' => '',    //optional
           'address' => '',     //optional
           'national_id' => '', //optional
@@ -1335,7 +1365,6 @@ LIMIT 0, 100
             $params = [
               'id' => $dao->contribution_recur_id,
               'auto_renew' => 2,
-              'contribution_status_id' => 5,
               'message' => ts("Expiry date updated from %1 to %2", [
                 1 => $dao->expiry_date,
                 2 => $expiryDate
@@ -1344,11 +1373,6 @@ LIMIT 0, 100
             CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
             $noteTitle = ts('TapPay Payment').': '.ts('Card Expiry Date').' '.ts('updated');
             CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $noteTitle, ts("From").': '.$dao->expiry_date);
-
-            // Add status note
-            $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
-            $statusNote = ts('Card expiry date has been updated.').' '.ts("Auto renews status");
-            CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $statusNoteTitle, $statusNote);
             break;
           }
         }

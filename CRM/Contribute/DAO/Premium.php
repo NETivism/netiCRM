@@ -136,6 +136,12 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
    * @var string
    */
   public $premiums_nothanks_text;
+  /**
+   * Enable premiums combination feature for this page.
+   *
+   * @var boolean
+   */
+  public $premiums_combination;
    /**
    * class constructor
    *
@@ -233,6 +239,11 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO
            'maxlength' => 128,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
+        'premiums_combination' => [
+          'name' => 'premiums_combination',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Premiums Combination') ,
+                  ] ,
       ];
     }
     return self::$_fields;

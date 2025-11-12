@@ -5,7 +5,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   const EXPIRE_DAY = 7;
   const MAX_EXPIRE_DAY = 180;
   const RESPONSE_TYPE = 'JSON';
-  const MPG_VERSION = '1.2';
+  const MPG_VERSION = '2.3';
   const AGREEMENT_VERSION = '1.5';
   const RECUR_VERSION = '1.0';
   const QUERY_VERSION = '1.1';
@@ -293,6 +293,20 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       CRM_Core_Error::fatal(ts('Component is invalid'));
     }
     $is_test = $this->_mode == 'test' ? 1 : 0;
+
+
+    // special case for mobile payment, update payment_processor_id when needed
+    if (!empty($params['contributionID']) && !empty($this->_paymentProcessor['id'])) {
+      $existingContribution = new CRM_Contribute_DAO_Contribution();
+      $existingContribution->id = $params['contributionID'];
+      if ($existingContribution->find(TRUE)) {
+        if ($existingContribution->payment_processor_id != $this->_paymentProcessor['id']) {
+          $existingContribution->payment_processor_id = $this->_paymentProcessor['id'];
+          $existingContribution->save();
+        }
+      }
+    }
+
     if (isset($this->_paymentForm) && get_class($this->_paymentForm) == 'CRM_Contribute_Form_Payment_Main') {
       if (empty($params['email-5'])) {
         // Retrieve email of billing type or primary.
@@ -319,13 +333,11 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
     $instrumentId = $params['civicrm_instrument_id'];
     $options = [1 => [ $instrumentId, 'Integer']];
-    $instrumentName = CRM_Core_DAO::singleValueQuery("SELECT v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
+    $instrument = CRM_Core_DAO::executeQuery("SELECT v.label, v.name FROM civicrm_option_value v INNER JOIN civicrm_option_group g ON v.option_group_id = g.id WHERE g.name = 'payment_instrument' AND v.is_active = 1 AND v.value = %1;", $options);
+    $instrument->fetch();
+    $instrumentName = $instrument->name;
     $spgatewayInstruments = self::instruments('code');
     $instrumentCode = $spgatewayInstruments[$instrumentName];
-    if (empty($instrumentCode)) {
-      // For google pay
-      $instrumentCode = $instrumentName;
-    }
     $formKey = $component == 'event' ? 'CRM_Event_Controller_Registration_'.$params['qfKey'] : 'CRM_Contribute_Controller_Contribution_'.$params['qfKey'];
 
     // The first, we insert every contribution into record. After this, we'll use update for the record.
@@ -515,7 +527,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
     }
     elseif(!$vars['is_recur']){
-      $args = [
+      $tradeInfo = [
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'RespondType' => self::RESPONSE_TYPE,
         'TimeStamp' => time(),
@@ -527,55 +539,73 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         'ItemDesc' => $itemDescription,
         'MerchantOrderNo' => $vars['trxn_id'],
       ];
+
+      switch($instrumentCode){
+        case 'ATM':
+          $tradeInfo['VACC'] = 1;
+          $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
+          $tradeInfo['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          $tradeInfo['CustomerURL'] = $thankyouURL;
+          break;
+        case 'BARCODE':
+          $tradeInfo['BARCODE'] = 1;
+          $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
+          $tradeInfo['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          $tradeInfo['CustomerURL'] = $thankyouURL;
+          break;
+        case 'CVS':
+          $tradeInfo['CVS'] = 1;
+          if($instrumentCode == 'CVS' && !empty($values['expiration_day'])) {
+            $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
+            $tradeInfo['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          }
+          $tradeInfo['CustomerURL'] = $thankyouURL;
+          break;
+        case 'WebATM':
+          $tradeInfo['WEBATM'] = 1;
+          $tradeInfo['ReturnURL'] = $thankyouURL;
+          break;
+        case 'Credit':
+          $tradeInfo['CREDIT'] = 1;
+          $tradeInfo['ReturnURL'] = $thankyouURL;
+          break;
+        case 'GooglePay':
+          $tradeInfo['ANDROIDPAY'] = 1;
+          $tradeInfo['ReturnURL'] = $thankyouURL;
+          break;
+        case 'ApplePayFront':
+          $tradeInfo['APPLEPAY'] = 1;
+          $tradeInfo['ReturnURL'] = $thankyouURL;
+          break;
+      }
+
+      if($tsLocale == CRM_Core_Config::SYSTEM_LANG){
+        $tradeInfo['LangType'] = 'en';
+      }
+      // Use hook_civicrm_alterPaymentProcessorParams
+      $mode = $this->_paymentProcessor['is_test'] ? 'test' : 'live';
+      $paymentClass = CRM_Core_Payment::singleton($mode, $this->_paymentProcessor, CRM_Core_DAO::$_nullObject);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $vars, $tradeInfo);
+
+      // Encrypt Request for 2.3
+      CRM_Core_Error::debug_var('spgateway_agreement_args', $tradeInfo);
+      $tradeInfoStr = http_build_query($tradeInfo, '', '&');
+      $tradeInfoEncrypted  = CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($tradeInfoStr, $this->_paymentProcessor);
+      $tradeSha = CRM_Core_Payment_SPGATEWAYAPI::tradeSha($tradeInfoEncrypted, $this->_paymentProcessor);
+
+      // Create final args
+      $args = [
+        'MerchantID' => $this->_paymentProcessor['user_name'],
+        'TradeInfo' => $tradeInfoEncrypted,
+        'TradeSha' => $tradeSha,
+        'Version' => self::MPG_VERSION,
+      ];
       if ($this->_paymentProcessor['is_test']) {
         $args['#url'] = self::TEST_DOMAIN.self::URL_SITE;
       }
       else {
         $args['#url'] = self::REAL_DOMAIN.self::URL_SITE;
       }
-
-      switch($instrumentCode){
-        case 'ATM':
-          $args['VACC'] = 1;
-          $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
-          $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
-          $args['CustomerURL'] = $thankyouURL;
-          break;
-        case 'BARCODE':
-          $args['BARCODE'] = 1;
-          $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
-          $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
-          $args['CustomerURL'] = $thankyouURL;
-          break;
-        case 'CVS':
-          $args['CVS'] = 1;
-          if($instrumentCode == 'CVS' && !empty($values['expiration_day'])) {
-            $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
-            $args['ExpireDate'] = date('Ymd',strtotime("+$day day"));
-          }
-          $args['CustomerURL'] = $thankyouURL;
-          break;
-        case 'WebATM':
-          $args['WEBATM'] = 1;
-          $args['ReturnURL'] = $thankyouURL;
-          break;
-        case 'Credit':
-          $args['CREDIT'] = 1;
-          $args['ReturnURL'] = $thankyouURL;
-          break;
-        case 'GooglePay':
-          $args['ANDROIDPAY'] = 1;
-          $args['ReturnURL'] = $thankyouURL;
-          break;
-      }
-
-      if($tsLocale == CRM_Core_Config::SYSTEM_LANG){
-        $args['LangType'] = 'en';
-      }
-      // Use hook_civicrm_alterPaymentProcessorParams
-      $mode = $this->_paymentProcessor['is_test'] ? 'test' : 'live';
-      $paymentClass = CRM_Core_Payment::singleton($mode, $this->_paymentProcessor, CRM_Core_DAO::$_nullObject);
-      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $vars, $args);
     }
     else{
       $data = [
@@ -1203,9 +1233,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     else{
       // validate some post
-      if (!empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result']) ||
-        (!empty($post['Version']) && $post['Version'] === self::AGREEMENT_VERSION && !empty($post['TradeInfo']))
-      ) {
+      if (!empty($post['TradeInfo']) || !empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result'])) {
         $ipn = new CRM_Core_Payment_SPGATEWAYIPN($post, $get);
         $result = $ipn->main($instrument);
         if(is_string($result) && $print){
@@ -1236,6 +1264,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       'Web ATM' => ['label' => ts('Web ATM'), 'desc' => '', 'code' => 'WebATM'],
       'Convenient Store' => ['label' => ts('Convenient Store Barcode'), 'desc'=>'', 'code' => 'BARCODE'],
       'Convenient Store (Code)' => ['label'=> ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'],
+      'GooglePay' => ['label'=> ts('Google Pay'),'desc' => '', 'code' => 'GooglePay'],
+      'ApplePayFront' => ['label'=> ts('Apple Pay'),'desc' => '', 'code' => 'ApplePayFront'],
     ];
     if($type == 'form_name'){
       foreach($i as $name => $data){
@@ -2123,8 +2153,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       ];
       // Allow further manipulation of the arguments via custom hooks ..
       $paymentClass = self::singleton($mode, $paymentProcessor, CRM_Core_DAO::$_nullObject);
-      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $prepareParams);
+      CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $params, $prepareParams);
       $postData = http_build_query($prepareParams, '', '&');
+      CRM_Core_Error::debug_var('spgateway_agreement_args_payByToken', $postData);
       $postData_ = CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt($postData, $paymentProcessor);
       $data = [
         'MerchantID_' => $paymentProcessor['user_name'],
@@ -2138,6 +2169,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       if (!empty($tradeResult) && is_object($tradeResult) && isset($tradeResult->Status)) {
         // save token_value on each payment anyway
         $tradeResult->Result->TokenValue = $spgateway->token_value;
+        $tradeResult->Result->TokenLife = $spgateway->token_life;
         // call IPN
         $ids = CRM_Contribute_BAO_Contribution::buildIds($c->id);
         $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
@@ -2154,7 +2186,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         ];
         $ipnResult = self::doIPN(['spgateway', 'ipn', 'Credit'], $ipnPost, $ipnGet, FALSE);
         if (!empty($ipnResult)) {
-          $response = ['status' => $tradeResult->status, 'msg' => $tradeResult->msg];
+          $response = ['status' => $tradeResult->Status, 'msg' => $tradeResult->Message];
         }
         else {
           if ($tradeResult->Status === 'SUCCESS') {

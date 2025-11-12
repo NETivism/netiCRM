@@ -107,6 +107,7 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_deductible'] = CRM_Utils_Array::value('is_deductible', $params, FALSE);
+    $params['stock_status'] = CRM_Utils_Array::value('stock_status', $params, FALSE);
 
     // action is taken depending upon the mode
     $premium = new CRM_Contribute_DAO_Product();

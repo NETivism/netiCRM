@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>PremiumsCombination</class>
+  <comment>Table for storing premiums combination configurations</comment>
+  <name>civicrm_premiums_combination</name>
+  <add>4.0</add>
+  <log>true</log>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+      <name>id</name>
+      <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>premiums_id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>Foreign key to civicrm_premiums table</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+      <name>premiums_id</name>
+      <table>civicrm_premiums</table>
+      <key>id</key>
+      <add>4.0</add>
+      <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <field>
+      <name>combination_name</name>
+      <type>varchar</type>
+      <length>255</length>
+      <required>true</required>
+      <comment>Name of the premium combination</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>description</name>
+      <title>Description</title>
+      <type>text</type>
+      <localizable>true</localizable>
+      <comment>Optional description of the product/premium.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>sku</name>
+      <title>SKU</title>
+      <type>varchar</type>
+      <length>50</length>
+      <export>true</export>
+      <comment>Optional product sku or code.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>min_contribution</name>
+      <type>decimal</type>
+      <precision>20</precision>
+      <scale>2</scale>
+      <required>true</required>
+      <comment>Minimum non-recurring contribution amount required for this combination</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>min_contribution_recur</name>
+      <type>decimal</type>
+      <precision>20</precision>
+      <scale>2</scale>
+      <comment>Minimum recurring contribution amount threshold for this combination</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>currency</name>
+      <type>varchar</type>
+      <length>3</length>
+      <default>NULL</default>
+      <comment>3 character string, value from config setting or input via user.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>is_active</name>
+      <type>boolean</type>
+      <default>1</default>
+      <comment>Whether this combination is active</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>weight</name>
+      <type>int unsigned</type>
+      <default>0</default>
+      <comment>Order for displaying combinations</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>calculate_mode</name>
+      <type>varchar</type>
+      <length>32</length>
+      <default>NULL</default>
+      <comment>Calculate by accumulate or by min-amount of contribution</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>installments</name>
+      <type>int</type>
+      <default>0</default>
+      <comment>Num of installments when calculate mode is accumulate.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>image</name>
+      <title>Image</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Full or relative URL to uploaded image - fullsize.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>thumbnail</name>
+      <title>Thumbnail</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>Full or relative URL to image thumbnail.</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>created_date</name>
+      <type>timestamp</type>
+      <required>true</required>
+      <default>CURRENT_TIMESTAMP</default>
+      <comment>When was this combination created</comment>
+      <add>4.0</add>
+  </field>
+  <field>
+      <name>modified_date</name>
+      <type>timestamp</type>
+      <required>true</required>
+      <default>CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</default>
+      <comment>When was this combination last modified</comment>
+      <add>4.0</add>
+  </field>
+</table>

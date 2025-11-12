@@ -2,7 +2,7 @@
 CALLEDPATH=`dirname $0`
 CIVICRMPATH=`cd $CALLEDPATH/../../ && pwd`
 LANGUAGE='zh_TW'
-MAJOR_VERSION='8.1'
+MAJOR_VERSION='8.2'
 
 neticrm_merge(){
   TAG=`git tag | grep "^$MAJOR_VERSION" | awk -F "." '{print $3}' | sort -nr | head -n 1`
@@ -71,13 +71,20 @@ else
 
   # commit civicrm-version.txt to latest tag
   git_tag=$(git describe --tags)
-  IFS='-' read -ra parts <<< "$git_tag"
-  git_tag="${parts[0]}+${parts[1]}"
   git_revision=$(git rev-parse --short HEAD)
   git_revision=$(echo $git_revision | tr -d '[:space:]')
+
+  # Check if we're exactly on a tag (no -count-hash suffix)
+  if [[ "$git_tag" == *"-"* ]]; then
+    # Not on a tag, format as: tag+commits
+    IFS='-' read -ra parts <<< "$git_tag"
+    git_tag="${parts[0]}+${parts[1]}"
+  fi
+  # Otherwise use the tag name as-is
+
   cd $CIVICRMPATH
   echo "${git_tag} (${git_revision})" > civicrm-version.txt
-  git commit civicrm-version.txt -m "Update to lastest version tag of git"
+  git commit civicrm-version.txt -m "Update to latest version tag of git"
   echo -e "\nDone!"
   cd $CIVICRMPATH && git status --porcelain
   echo -e "You can use command below for release this:\n  git push --tags\n"

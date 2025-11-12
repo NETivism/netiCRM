@@ -256,6 +256,90 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   }
 
   /**
+   * Verify SPF and DKIM for verified emails
+   *
+   * @return array Array with results containing verification data
+   */
+  public static function verifyEmailDomains() {
+    $fromEmailIds = CRM_Core_OptionGroup::values('from_email_address', FALSE, FALSE, FALSE, NULL, 'id');
+
+    $validEmail = self::getVerifiedEmail(self::VALID_EMAIL);
+    $validDKIM = self::getVerifiedEmail(self::VALID_EMAIL | self::VALID_DKIM);
+    $validSPF = self::getVerifiedEmail(self::VALID_EMAIL | self::VALID_SPF);
+    $validALL = self::getVerifiedEmail(self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM);
+    $emails = $validEmail + $validDKIM + $validSPF + $validALL;
+    $checked = [];
+    $results = [];
+
+    $enableDMARC = FALSE;
+    foreach($emails as $val => $email) {
+      if (!CRM_Utils_Array::arrayKeyExists($val, $fromEmailIds)) {
+        continue;
+      }
+      if ($val === 'default') {
+        continue;
+      }
+      $id = $fromEmailIds[$val];
+      $domain = preg_replace('/^[^@]+@/', '', $email);
+
+      if (!isset($checked[$domain])) {
+        $spfResult = CRM_Utils_Mail::checkSPF($email);
+        $dkimResult = CRM_Utils_Mail::checkDKIM($email);
+
+        $checked[$domain] = [
+          'spf' => $spfResult === TRUE,
+          'dkim' => $dkimResult === TRUE
+        ];
+        if ($checked[$domain]['spf'] && $checked[$domain]['dkim'] && !$enableDMARC) {
+          $enableDMARC = TRUE;
+        }
+      }
+
+      $results[$domain][$id] = [
+        'email' => $email,
+        'spf' => $checked[$domain]['spf'],
+        'dkim' => $checked[$domain]['dkim']
+      ];
+
+      // Update verification status based on SPF/DKIM results
+      $emailData = self::loadEmailAddress($id);
+      if (!empty($emailData)) {
+        $currentFilter = !empty($emailData['filter']) ? $emailData['filter'] : 0;
+
+        // Set filter based on verification results
+        $newFilter = self::VALID_EMAIL; // Always keep email as valid
+        if ($checked[$domain]['spf']) {
+          $newFilter = $newFilter | self::VALID_SPF;
+        }
+        if ($checked[$domain]['dkim']) {
+          $newFilter = $newFilter | self::VALID_DKIM;
+        }
+
+        // Only update if filter has changed
+        if ($currentFilter !== $newFilter) {
+          $emailData['filter'] = $newFilter;
+
+          // Add last validation timestamp to grouping field
+          $lastValidation = ts('Last validation') . ':' . date('Y-m-d H:i:s');
+          $emailData['grouping'] = $lastValidation;
+
+          self::saveEmailAddress(CRM_Core_Action::UPDATE, $id, $emailData);
+        }
+      }
+    }
+
+    // try to enable DMARC when verify passed (sender = from addr)
+    if ($enableDMARC) {
+      $params = array(
+        'enableDMARC' => 1,
+      );
+      CRM_Core_BAO_ConfigSetting::add($params);
+    }
+
+    return $results;
+  }
+
+  /**
    * Migrate from email address from event / contribution page
    *
    * @param string $fromName

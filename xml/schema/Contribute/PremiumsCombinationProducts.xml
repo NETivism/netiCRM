@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/Contribute</base>
+  <class>PremiumsCombinationProducts</class>
+  <comment>Table for storing products associated with premium combinations</comment>
+  <name>civicrm_premiums_combination_products</name>
+  <add>4.0</add>
+  <log>true</log>
+  <field>
+      <name>id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <add>4.0</add>
+  </field>
+  <primaryKey>
+      <name>id</name>
+      <autoincrement>true</autoincrement>
+  </primaryKey>
+  <field>
+      <name>combination_id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>Foreign key to civicrm_premiums_combination table</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+      <name>combination_id</name>
+      <table>civicrm_premiums_combination</table>
+      <key>id</key>
+      <add>4.0</add>
+      <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <field>
+      <name>product_id</name>
+      <type>int unsigned</type>
+      <required>true</required>
+      <comment>Foreign key to civicrm_product table</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+      <name>product_id</name>
+      <table>civicrm_product</table>
+      <key>id</key>
+      <add>4.0</add>
+      <onDelete>CASCADE</onDelete>
+  </foreignKey>
+  <field>
+      <name>quantity</name>
+      <type>int unsigned</type>
+      <default>1</default>
+      <comment>Quantity of this product in the combination</comment>
+      <add>4.0</add>
+  </field>
+</table>

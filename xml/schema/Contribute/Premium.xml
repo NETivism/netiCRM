@@ -89,4 +89,11 @@
       <comment>No thank you text for premium page display.</comment>
       <add>4.0</add>
   </field>
+  <field>
+      <name>premiums_combination</name>
+      <type>boolean</type>
+      <default>0</default>
+      <comment>Enable premiums combination feature for this page.</comment>
+      <add>4.0</add>
+  </field>
 </table>
