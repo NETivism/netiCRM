@@ -91,6 +91,7 @@
   width: 55%;
 }
 {/literal}</style>
+{if $enable3d}
 <div class="tp-wrapper">
   <div class="wrapper-name">
     <label class="tp-label">{ts}Cardholder Name{/ts}</label>
@@ -105,6 +106,7 @@
     </div>
   </div>
 </div>
+{/if}
 <div class="tp-wrapper">
   <label class="tp-label">{ts}Credit Card Number{/ts}</label>
   <div>
@@ -139,6 +141,7 @@ cj(document).ready(function($){
   var className = '{/literal}{$class_name}{literal}';
   var $button = $("input[name={/literal}{$button_name}{literal}]");
   var $backButton = $("input[name={/literal}{$back_button_name}{literal}]");
+  var enable3d = {/literal}{$enable3d}{literal};
   $button.prop("disabled", 1);
   //var redirect = '{/literal}{$redirect}{literal}';
   //var failRedirect = '{/literal}{$fail_redirect}{literal}';
@@ -265,7 +268,10 @@ cj(document).ready(function($){
   }
 
   TPDirect.card.onUpdate(function (update) {
-    var fieldsValid = checkRequiredFields();
+    let fieldsValid = true;
+    if (enable3d) {
+      fieldsValid = checkRequiredFields();
+    }
     if (update.canGetPrime && !lock && fieldsValid) {
       $button.prop("disabled", false);
       $backButton.prop("disabled", 1);
