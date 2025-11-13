@@ -89,6 +89,10 @@
 
   <civicrm_premiums_product />
 
+  <civicrm_premiums_combination />
+
+  <civicrm_premiums_combination_products />
+
   <civicrm_coupon />
 
   <civicrm_coupon_entity />
@@ -144,6 +148,8 @@
   <civicrm_entity_batch />
 
   <civicrm_aicompletion />
+
+  <civicrm_aiimagegeneration />
 
   <civicrm_cache />
 

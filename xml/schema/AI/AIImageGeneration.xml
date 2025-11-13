@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+
+<table>
+  <base>CRM/AI</base>
+  <class>AIImageGeneration</class>
+  <name>civicrm_aiimagegeneration</name>
+  <comment>AI Image Generation log table.</comment>
+  <add>4.0</add>
+  <log>false</log>
+  <field>
+    <name>id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>AIImageGeneration ID</comment>
+    <add>4.0</add>
+  </field>
+  <primaryKey>
+    <name>id</name>
+    <autoincrement>true</autoincrement>
+  </primaryKey>
+
+  <field>
+    <name>aicompletion_id</name>
+    <type>int unsigned</type>
+    <comment>FK to civicrm_aicompletion</comment>
+    <add>4.0</add>
+  </field>
+  <foreignKey>
+       <name>aicompletion_id</name>
+       <table>civicrm_aicompletion</table>
+       <key>id</key>
+       <add>4.0</add>
+       <onDelete>SET NULL</onDelete>
+  </foreignKey>
+
+  <field>
+    <name>original_prompt</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>Original user input prompt</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>translated_prompt</name>
+    <type>text</type>
+    <required>true</required>
+    <comment>Translated and optimized prompt</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>image_style</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>Selected image style</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>image_ratio</name>
+    <type>varchar</type>
+    <length>20</length>
+    <required>true</required>
+    <comment>Image aspect ratio (e.g., 16:9, 1:1)</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>image_path</name>
+    <type>varchar</type>
+    <length>255</length>
+    <required>true</required>
+    <comment>Generated image file path</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>created_date</name>
+    <type>datetime</type>
+    <required>true</required>
+    <comment>Image generation date</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>status_id</name>
+    <type>int unsigned</type>
+    <required>true</required>
+    <comment>1=success, 2=pending, 3=failed</comment>
+    <add>4.0</add>
+  </field>
+
+  <field>
+    <name>error_message</name>
+    <type>text</type>
+    <comment>Error message if generation failed</comment>
+    <add>4.0</add>
+  </field>
+</table>

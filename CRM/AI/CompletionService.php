@@ -26,6 +26,20 @@ abstract class CRM_AI_CompletionService {
   abstract public function setMaxTokens($maxTokens);
 
   /**
+   * Abstract function for getting the current model name
+   *
+   * @return string the current model name
+   */
+  abstract public function getModel();
+
+  /**
+   * Abstract function for getting the current max tokens
+   *
+   * @return int|null the current max tokens
+   */
+  abstract public function getMaxTokens();
+
+  /**
    * Sending request using service API
    *
    * Error handling should using try - catch when doing request

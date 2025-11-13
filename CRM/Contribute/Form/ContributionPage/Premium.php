@@ -69,8 +69,10 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
    * @return void
    * @access public
    */
+
   public function buildQuickForm() {
     $this->addElement('checkbox', 'premiums_active', ts('Premiums Section Enabled?'));
+    $this->addElement('checkbox', 'premiums_combination', ts('Enable Gift Combination Feature'));
 
     $this->addElement('text', 'premiums_intro_title', ts('Title'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Premium', 'premiums_intro_title'));
 
@@ -87,6 +89,8 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
     $this->addElement('checkbox', 'premiums_display_min_contribution', ts('Display Minimum Contribution Amount?'));
 
     $showForm = TRUE;
+    $activePremiums = FALSE;
+    $enablePremiumsCombination = FALSE;
 
     if ($this->_single) {
       if ($this->_id) {
@@ -95,10 +99,19 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
         $daoPremium->entity_table = 'civicrm_contribution_page';
         if ($daoPremium->find(TRUE)) {
           $showForm = FALSE;
+          if ($daoPremium->premiums_combination == 1) {
+            $enablePremiumsCombination = TRUE;
+          }
+          if ($daoPremium->premiums_active == 1) {
+            $activePremiums = TRUE;
+          }
         }
       }
     }
     $this->assign('showForm', $showForm);
+    $this->assign('enablePremiumsCombination', $enablePremiumsCombination);
+    $this->assign('activePremiums', $activePremiums);
+
 
     parent::buildQuickForm();
   }
@@ -125,6 +138,7 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
     }
 
     $params['premiums_active'] = CRM_Utils_Array::value('premiums_active', $params, FALSE);
+    $params['premiums_combination'] = CRM_Utils_Array::value('premiums_combination', $params, FALSE);
     $params['premiums_display_min_contribution'] = CRM_Utils_Array::value('premiums_display_min_contribution', $params, FALSE);
     $params['entity_table'] = 'civicrm_contribution_page';
     $params['entity_id'] = $this->_id;

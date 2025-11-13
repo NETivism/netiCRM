@@ -523,6 +523,7 @@ WHERE  contribution_id = {$this->_id}
         ]);
         $this->assign('membershipId', $this->_membershipId);
       }
+      $this->set('originalValues', $this->_values);
     }
 
     // when custom data is included in this page
@@ -804,11 +805,13 @@ WHERE  contribution_id = {$this->_id}
 
     if ($dao->find(TRUE)) {
       $paneNames[ts('Premium Information')] = 'Premium';
+      $this->assign('havePremium', true);
     }
     else if (!empty($this->_id)) {
       $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $this->_id, 'product_id', 'contribution_id' );
       if (!empty($selectedProductId)) {
         $paneNames[ts('Premium Information')] = 'Premium';
+        $this->assign('havePremium', true);
       }
     }
 
@@ -1285,6 +1288,7 @@ WHERE  contribution_id = {$this->_id}
 
     // get the submitted form values.
     $submittedValues = $this->controller->exportValues($this->_name);
+    $originalValues = $this->get('originalValues');
 
     // process price set and get total amount and line items.
     $lineItem = [];
@@ -1543,6 +1547,16 @@ WHERE  contribution_id = {$this->_id}
       //process premium
       if ($contribution->id && isset($params['product_name'][0])) {
         CRM_Contribute_Form_AdditionalInfo::processPremium($params, $contribution->id, NULL, $this->_options);
+        // pending contribution to restock
+        if ($config->premiumIRManualCancel && ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4) ) {
+          try{
+            CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Manually restock by user');
+          }
+          catch (Exception $e) {
+            $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
+            CRM_Core_Error::debug_log_message($errorMessage);
+          }
+        }
       }
 
       //update pledge payment status.
@@ -1716,10 +1730,21 @@ WHERE  contribution_id = {$this->_id}
       }
 
       //process premium
-      if ($contribution->id && isset($formValues['product_name'][0])) {
+      if ($contribution->id && (isset($formValues['product_name'][0]) || $this->_premiumID)) {
         CRM_Contribute_Form_AdditionalInfo::processPremium($formValues, $contribution->id,
           $this->_premiumID, $this->_options
         );
+      }
+      if ($config->premiumIRManualCancel &&
+        ($originalValues['contribution_status_id'] == 1 || $originalValues['contribution_status_id'] == 2) &&
+        ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4)) {
+        try{
+          CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Manually restock by user');
+        }
+        catch (Exception $e) {
+          $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
+          CRM_Core_Error::debug_log_message($errorMessage);
+        }
       }
 
       //send receipt mail.

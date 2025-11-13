@@ -211,6 +211,7 @@ ORDER BY entity_id
 
       switch ($acl[$dao->id]['object_table']) {
         case 'civicrm_saved_search':
+          $acl[$dao->id]['deny'] = $dao->deny;
           $acl[$dao->id]['object'] = $group[$acl[$dao->id]['object_id']];
           $acl[$dao->id]['object_name'] = ts('Group');
           break;

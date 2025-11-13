@@ -24,6 +24,8 @@ class CRM_AI_Page_AJAX {
         'role' => 'string',
         'content' => 'string',
         'sourceUrlPath' => 'string',
+        'sourceUrl' => 'string',
+        'sourceUrlQuery' => 'string',
       ];
       $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
       if (!$checkFormatResult) {
@@ -404,6 +406,427 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  public static function generateImage() {
+    $maxlength = 1000;
+
+    // Only handle POST requests for direct image generation
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+
+      if ($jsondata === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ]);
+      }
+
+      $allowedInput = [
+        'text' => 'string',
+        'style' => 'string',
+        'ratio' => 'string',
+        'sourceUrlPath' => 'string',
+      ];
+
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput);
+      if (!$checkFormatResult) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ]);
+      }
+
+      $text = $jsondata['text'];
+      if (mb_strlen($text) > $maxlength) {
+        self::responseError([
+          'status' => 0,
+          'message' => "Content exceeds the maximum character limit.",
+        ]);
+      }
+
+      // URL whitelist check (follow chat() pattern)
+      $url = $jsondata['sourceUrlPath'];
+      $allowPatterns = [
+        'CiviContribute' => ['civicrm/admin/contribute/add', 'civicrm/admin/contribute/setting'],
+        'CiviEvent' => ['civicrm/event/add', 'civicrm/event/manage/eventInfo'],
+        'CiviMail' => ['civicrm/mailing/send'],
+        'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity', 'civicrm/contact/search'],
+      ];
+
+      $component = '';
+      foreach ($allowPatterns as $comp => $allowedUrls) {
+        foreach ($allowedUrls as $allowedUrl) {
+          if (strstr($url, $allowedUrl)) {
+            $component = $comp;
+            break 2;
+          }
+        }
+      }
+
+      if (empty($component)) {
+        self::responseError([
+          'status' => 0,
+          'message' => "No corresponding component was found.",
+        ]);
+      }
+
+      // Use complete AIGenImage workflow with database integration
+      // Wrap only the image generation logic, not the response output
+      $imageGenerator = new CRM_AI_BAO_AIGenImage();
+      $generateResult = null;
+
+      try {
+        $generateResult = $imageGenerator->generate([
+          'text' => $text,
+          'style' => $jsondata['style'] ?? '',
+          'ratio' => $jsondata['ratio'] ?? '1:1'
+        ]);
+      } catch (Exception $e) {
+        // Handle image generation errors only
+        // Parse error code and preserve original technical message
+        $errorCode = self::parseErrorCode($e->getMessage());
+        self::responseError([
+          'status' => 0,
+          'message' => 'Image generation failed: ' . $e->getMessage(),
+          'error_code' => $errorCode
+        ]);
+        return; // Ensure we don't continue after error response
+      }
+
+      if ($generateResult && $generateResult['success']) {
+        // Create full URL for response
+        $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+        $publicPath = CRM_Utils_System::cmsDir('public');
+        $imageUrl = $baseUrl . '/' . $publicPath . '/' . $generateResult['image_path'];
+
+        // Call responseSucess without try-catch, let civiExit exception propagate to Drupal
+        self::responseSucess([
+          'status' => 1,
+          'message' => 'Image generated successfully.',
+          'data' => [
+            'image_path' => $generateResult['image_path'],
+            'image_url' => $imageUrl,
+            'translated_prompt' => $generateResult['translated_prompt'] ?? '',
+            'original_prompt' => $generateResult['original_prompt'] ?? '',
+            'image_style' => $generateResult['image_style'] ?? '',
+            'image_ratio' => $generateResult['image_ratio'] ?? '1:1',
+            'advanced' => $generateResult['advanced'] ?? []
+          ],
+        ]);
+      } else {
+        // Handle generation failure
+        // Parse error code and preserve original technical message
+        $errorMessage = $generateResult['error'] ?? 'Unknown error occurred during image generation';
+        $errorCode = self::parseErrorCode($errorMessage);
+        self::responseError([
+          'status' => 0,
+          'message' => 'Image generation failed: ' . $errorMessage,
+          'error_code' => $errorCode
+        ]);
+      }
+    }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
+  }
+
+  public static function getSampleImage() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+
+      if ($jsondata === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ]);
+      }
+
+      $allowedInput = [
+        'locale' => 'string',
+        'style' => 'string',
+        'ratio' => 'string',
+      ];
+
+      $requiredFields = ['locale'];
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput, $requiredFields);
+      if (!$checkFormatResult) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ]);
+      }
+
+      $locale = $jsondata['locale'];
+
+      // Validate locale format
+      if (!in_array($locale, ['en_US', 'zh_TW'])) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Invalid locale format.',
+        ]);
+      }
+
+      // Load sample prompts data using CiviCRM root path
+      global $civicrm_root;
+      $civicrm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
+      $dataPath = $civicrm_root . "/packages/AIImageGeneration/data/{$locale}/defaultPrompts.json";
+
+      if (!file_exists($dataPath)) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Sample prompts data not found for the specified locale.',
+        ]);
+      }
+
+      $jsonContent = file_get_contents($dataPath);
+      $promptsData = json_decode($jsonContent, true);
+
+      if ($promptsData === NULL || !isset($promptsData['prompts']) || empty($promptsData['prompts'])) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Invalid or empty sample prompts data.',
+        ]);
+      }
+
+      // Filter prompts based on optional parameters
+      $prompts = $promptsData['prompts'];
+      $filteredPrompts = self::filterPrompts($prompts, $jsondata);
+
+      if (empty($filteredPrompts)) {
+        http_response_code(404);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+          'status' => 0,
+          'message' => 'No matching sample images found.',
+        ]);
+        CRM_Utils_System::civiExit();
+      }
+
+      // Get random prompt item from filtered results
+      $randomIndex = array_rand($filteredPrompts);
+      $randomPrompt = $filteredPrompts[$randomIndex];
+
+      // Create image URL
+      $config = CRM_Core_Config::singleton();
+      $baseUrl = $config->userFrameworkResourceURL;
+      $imagePath = "packages/AIImageGeneration/images/samples/{$randomPrompt['filename']}";
+      $imageUrl = $baseUrl . $imagePath;
+
+      self::responseSucess([
+        'status' => 1,
+        'message' => 'Sample image retrieved successfully.',
+        'data' => [
+          'text' => $randomPrompt['text'],
+          'style' => $randomPrompt['style'],
+          'ratio' => $randomPrompt['ratio'],
+          'filename' => $randomPrompt['filename'],
+          'image_url' => $imageUrl,
+          'image_path' => $imagePath,
+        ],
+      ]);
+    }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
+  }
+
+  public static function getImageHistory() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
+      $jsonString = file_get_contents('php://input');
+      $jsondata = json_decode($jsonString, true);
+
+      if ($jsondata === NULL) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request is not a valid JSON format.',
+        ]);
+      }
+
+      $allowedInput = [
+        'page' => 'integer',
+        'per_page' => 'integer',
+      ];
+
+      $checkFormatResult = self::validateJsonData($jsondata, $allowedInput, []);
+      if (!$checkFormatResult) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'The request does not match the expected format.',
+        ]);
+      }
+
+      // Get current user ID
+      $session = CRM_Core_Session::singleton();
+      $currentContactId = $session->get('userID');
+
+      // Verify permission: only current user can view their own records
+      if (empty($currentContactId)) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'User not authenticated.',
+        ]);
+      }
+
+      // Input validation with defaults
+      $page = max(1, (int)CRM_Utils_Array::value('page', $jsondata, 1));
+      $perPage = min(50, max(1, (int)CRM_Utils_Array::value('per_page', $jsondata, 10)));
+      $offset = ($page - 1) * $perPage;
+
+      // Database operations with error handling
+      $total = 0;
+      $images = [];
+
+      try {
+        // Get total count for pagination
+        $countQuery = "
+          SELECT COUNT(img.id) as total
+          FROM civicrm_aiimagegeneration img
+          LEFT JOIN civicrm_aicompletion comp ON img.aicompletion_id = comp.id
+          WHERE comp.contact_id = %1
+            AND img.status_id = %2
+        ";
+        $countParams = [
+          1 => [$currentContactId, 'Integer'],
+          2 => [CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS, 'Integer'],
+        ];
+        $totalResult = CRM_Core_DAO::executeQuery($countQuery, $countParams);
+        $totalResult->fetch();
+        $total = (int)$totalResult->total;
+
+        // Get image history data
+        $query = "
+          SELECT
+            img.id,
+            img.original_prompt,
+            img.translated_prompt,
+            img.image_style,
+            img.image_ratio,
+            img.image_path,
+            img.created_date,
+            img.status_id,
+            comp.contact_id,
+            comp.tone_style,
+            comp.ai_role
+          FROM civicrm_aiimagegeneration img
+          LEFT JOIN civicrm_aicompletion comp ON img.aicompletion_id = comp.id
+          WHERE comp.contact_id = %1
+            AND img.status_id = %2
+          ORDER BY img.created_date DESC
+          LIMIT %3 OFFSET %4
+        ";
+        $params = [
+          1 => [$currentContactId, 'Integer'],
+          2 => [CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS, 'Integer'],
+          3 => [$perPage, 'Integer'],
+          4 => [$offset, 'Integer'],
+        ];
+
+        $dao = CRM_Core_DAO::executeQuery($query, $params);
+        $baseUrl = rtrim(CIVICRM_UF_BASEURL, '/');
+        $publicPath = CRM_Utils_System::cmsDir('public');
+
+        while ($dao->fetch()) {
+          $imageUrl = !empty($dao->image_path) ? $baseUrl . '/' . $publicPath . '/' . $dao->image_path : '';
+
+          $images[] = [
+            'id' => (int)$dao->id,
+            'original_prompt' => $dao->original_prompt ?: '',
+            'translated_prompt' => $dao->translated_prompt ?: '',
+            'image_style' => $dao->image_style ?: '',
+            'image_ratio' => $dao->image_ratio ?: '',
+            'image_path' => $dao->image_path ?: '',
+            'image_url' => $imageUrl,
+            'created_date' => $dao->created_date ?: '',
+            'status_id' => (int)$dao->status_id,
+          ];
+        }
+      } catch (Exception $e) {
+        self::responseError([
+          'status' => 0,
+          'message' => 'Database error occurred while retrieving image history.',
+        ]);
+        return;
+      }
+
+      // Calculate pagination info
+      $totalPages = $total > 0 ? (int)ceil($total / $perPage) : 0;
+
+      // Send response outside of try-catch block
+      if (empty($images)) {
+        self::responseSucess([
+          'status' => 1,
+          'message' => 'No image generation history found.',
+          'data' => [
+            'images' => [],
+            'pagination' => [
+              'total' => $total,
+              'current_page' => $page,
+              'per_page' => $perPage,
+              'total_pages' => $totalPages,
+            ],
+          ],
+        ]);
+      } else {
+        self::responseSucess([
+          'status' => 1,
+          'message' => 'Image history retrieved successfully.',
+          'data' => [
+            'images' => $images,
+            'pagination' => [
+              'total' => $total,
+              'current_page' => $page,
+              'per_page' => $perPage,
+              'total_pages' => $totalPages,
+            ],
+          ],
+        ]);
+      }
+    }
+
+    // If we reach here, it means the request method is not POST or content-type is not JSON
+    self::responseError([
+      'status' => 0,
+      'message' => 'Invalid request method or missing data.',
+    ]);
+  }
+
+  /**
+   * Filter prompts based on style and ratio parameters
+   *
+   * @param array $prompts Array of prompt items
+   * @param array $filters Filter parameters from request
+   * @return array Filtered prompt items
+   */
+  private static function filterPrompts($prompts, $filters) {
+    $filteredPrompts = $prompts;
+
+    // Filter by style if provided
+    if (isset($filters['style']) && !empty($filters['style'])) {
+      $style = $filters['style'];
+      $filteredPrompts = array_filter($filteredPrompts, function($prompt) use ($style) {
+        return isset($prompt['style']) && $prompt['style'] === $style;
+      });
+    }
+
+    // Filter by ratio if provided
+    if (isset($filters['ratio']) && !empty($filters['ratio'])) {
+      $ratio = $filters['ratio'];
+      $filteredPrompts = array_filter($filteredPrompts, function($prompt) use ($ratio) {
+        return isset($prompt['ratio']) && $prompt['ratio'] === $ratio;
+      });
+    }
+
+    // Re-index array to ensure array_rand works correctly
+    return array_values($filteredPrompts);
+  }
+
   /**
    * This function handles the response in case of an error.
    *
@@ -454,19 +877,61 @@ class CRM_AI_Page_AJAX {
    *                            and the values are the types that these inputs should have.
    * @return bool Returns true if all inputs exist and are of the correct type; otherwise returns false.
    */
-  public static function validateJsonData($jsondata, $allowedInput) {
-    foreach ($allowedInput as $key => $type) {
-      if (!isset($jsondata[$key])) {
-        return false;
-      }
-      if ($type === 'integer' || $type === 'double') {
-        if (!is_numeric($jsondata[$key])) {
-          return false;
-        }
-      } else if (gettype($jsondata[$key]) != $type) {
+  public static function validateJsonData($jsondata, $allowedInput, $requiredFields = []) {
+    // If no required fields specified, all fields are required (backward compatibility)
+    if (empty($requiredFields)) {
+      $requiredFields = array_keys($allowedInput);
+    }
+
+    // Check required fields exist
+    foreach ($requiredFields as $field) {
+      if (!isset($jsondata[$field])) {
         return false;
       }
     }
+
+    // Check type validation for all provided fields
+    foreach ($jsondata as $key => $value) {
+      if (!isset($allowedInput[$key])) {
+        return false; // Unknown field
+      }
+
+      $expectedType = $allowedInput[$key];
+      if ($expectedType === 'integer' || $expectedType === 'double') {
+        if (!is_numeric($value)) {
+          return false;
+        }
+      } else if (gettype($value) != $expectedType) {
+        return false;
+      }
+    }
+
     return true;
+  }
+
+  /**
+   * Extract error code from exception message
+   *
+   * @param string $errorMessage Original error message
+   * @return string Error code
+   */
+  private static function parseErrorCode($errorMessage) {
+    // Pattern to extract error codes from AITransPrompt exceptions
+    $pattern = '/Prompt translation failed - ([A-Z_]+):/';
+
+    if (preg_match($pattern, $errorMessage, $matches)) {
+      return $matches[1]; // Returns: 'CONTENT_VIOLATION', 'PROMPT_INJECTION', etc.
+    }
+
+    // Check for other common error patterns
+    if (strpos($errorMessage, 'Image generation failed') !== false) {
+      return 'API_ERROR';
+    }
+
+    if (strpos($errorMessage, 'validation') !== false || strpos($errorMessage, 'invalid') !== false) {
+      return 'VALIDATION_ERROR';
+    }
+
+    return 'UNKNOWN_ERROR';
   }
 }

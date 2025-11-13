@@ -221,6 +221,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->_preventMultipleSubmission = TRUE;
     $this->set('params', $this->_params);
     $this->assign('contribution_type_id', $this->_values['contribution_type_id']);
+    $this->addFormRule(['CRM_Contribute_Form_Contribution_Confirm', 'formRule'], $this);
   }
 
   /**
@@ -438,6 +439,72 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $session->set('user_contribution_prepopulate', $params);
       }
     }
+  }
+
+  /**
+   * form rule
+   *
+   * @param array $fields  the input form values
+   * @param array $files   the uploaded files if any
+   * @param array $form the form object
+   *
+   * @return true if no errors, else array of errors
+   * @access public
+   * @static
+   */
+  static function formRule($fields, $files, $self) {
+    $errors = array();
+
+    if (!empty($self->_params['selectProduct'])) {
+      $fields['selectProduct'] = $self->_params['selectProduct'];
+    }
+    if (isset($fields['selectProduct']) && $fields['selectProduct'] != 'no_thanks' ) {
+      $premiumTitle = $self->_values['premiums_intro_title'];
+      // Check stock status for selected product
+      $premiumDAO = new CRM_Contribute_DAO_Premium();
+      $premiumDAO->entity_table = 'civicrm_contribution_page';
+      $premiumDAO->entity_id = $self->_values['id'];
+      $premiumDAO->find(TRUE);
+
+      if ($premiumDAO->premiums_combination == 1) {
+        $daoClassName = 'CRM_Contribute_DAO_PremiumsCombination';
+      } else {
+        $daoClassName = 'CRM_Contribute_DAO_Product';
+      }
+      $premiumItemDAO = new $daoClassName();
+      $premiumItemDAO->id = $fields['selectProduct'];
+
+      if ($premiumItemDAO->find(TRUE)) {
+        if ($premiumDAO->premiums_combination == 1) {
+          // For combination products, check each product in the combination
+          $combinationProductsDAO = new CRM_Contribute_DAO_PremiumsCombinationProducts();
+          $combinationProductsDAO->combination_id = $fields['selectProduct'];
+          $combinationProductsDAO->find();
+          while ($combinationProductsDAO->fetch()) {
+            $product = new CRM_Contribute_DAO_Product();
+            $product->id = $combinationProductsDAO->product_id;
+            if ($product->find(TRUE) && $product->stock_status > 0) {
+              $remainQty = $product->stock_qty - $product->send_qty;
+              $requiredQty = $combinationProductsDAO->quantity;
+              if ($remainQty < $requiredQty) {
+                $errors['qfKey'] = CRM_Utils_String::xssFilter($premiumItemDAO->combination_name).'-'.ts('This gift is currently out of stock.');
+                break;
+              }
+            }
+          }
+        } else {
+          // For single products, check stock status
+          if ($premiumItemDAO->stock_status > 0) {
+            $remainQty = $premiumItemDAO->stock_qty - $premiumItemDAO->send_qty;
+            if ($remainQty <= 0) {
+              $errors['qfKey'] = CRM_Utils_String::xssFilter($premiumItemDAO->name).'-'.ts('This gift is currently out of stock.');
+            }
+          }
+        }
+      }
+    }
+
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**
@@ -727,97 +794,15 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   public function postProcessPremium($premiumParams, $contribution) {
     // assigning Premium information to receipt tpl
     $selectProduct = CRM_Utils_Array::value('selectProduct', $premiumParams);
-    if ($selectProduct &&
-      $selectProduct != 'no_thanks'
-    ) {
-      $startDate = $endDate = "";
+    $premiumType = CRM_Utils_Array::value('premium_type', $premiumParams, 'product');
+    if ($selectProduct && $selectProduct != 'no_thanks') {
       $this->assign('selectPremium', TRUE);
 
-      $productDAO = new CRM_Contribute_DAO_Product();
-      $productDAO->id = $selectProduct;
-      $productDAO->find(TRUE);
-      $this->assign('product_name', $productDAO->name);
-      $this->assign('price', $productDAO->price);
-      $this->assign('sku', $productDAO->sku);
-      $this->assign('option', CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams));
-
-      $periodType = $productDAO->period_type;
-
-      if ($periodType) {
-        $fixed_period_start_day = $productDAO->fixed_period_start_day;
-        $duration_unit = $productDAO->duration_unit;
-        $duration_interval = $productDAO->duration_interval;
-        if ($periodType == 'rolling') {
-          $startDate = date('Y-m-d');
-        }
-        elseif ($periodType == 'fixed') {
-          if ($fixed_period_start_day) {
-            $date = explode('-', date('Y-m-d'));
-            $month = substr($fixed_period_start_day, 0, strlen($fixed_period_start_day) - 2);
-            $day = substr($fixed_period_start_day, -2) . "<br>";
-            $year = $date[0];
-            $startDate = $year . '-' . $month . '-' . $day;
-          }
-          else {
-            $startDate = date('Y-m-d');
-          }
-        }
-
-        $date = explode('-', $startDate);
-        $year = $date[0];
-        $month = $date[1];
-        $day = $date[2];
-
-        switch ($duration_unit) {
-          case 'year':
-            $year = $year + $duration_interval;
-            break;
-
-          case 'month':
-            $month = $month + $duration_interval;
-            break;
-
-          case 'day':
-            $day = $day + $duration_interval;
-            break;
-
-          case 'week':
-            $day = $day + ($duration_interval * 7);
-        }
-        $endDate = date('Y-m-d H:i:s', mktime($hour, $minute, $second, $month, $day, $year));
-        $this->assign('start_date', $startDate);
-        $this->assign('end_date', $endDate);
+      if ($premiumType == 'combination') {
+        $this->processPremiumCombination($selectProduct, $contribution, $premiumParams);
+      } else {
+        $this->processSingleProduct($selectProduct, $contribution, $premiumParams);
       }
-
-
-      $dao = new CRM_Contribute_DAO_Premium();
-      $dao->entity_table = 'civicrm_contribution_page';
-      $dao->entity_id = $this->_id;
-      $dao->find(TRUE);
-      $this->assign('contact_phone', $dao->premiums_contact_phone);
-      $this->assign('contact_email', $dao->premiums_contact_email);
-
-      //create Premium record
-
-      $params = [
-        'product_id' => $premiumParams['selectProduct'],
-        'contribution_id' => $contribution->id,
-        'product_option' => CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams),
-        'quantity' => 1,
-        'start_date' => CRM_Utils_Date::customFormat($startDate, '%Y%m%d'),
-        'end_date' => CRM_Utils_Date::customFormat($endDate, '%Y%m%d'),
-      ];
-
-      //Fixed For CRM-3901
-
-      $daoContrProd = new CRM_Contribute_DAO_ContributionProduct();
-      $daoContrProd->contribution_id = $contribution->id;
-      if ($daoContrProd->find(TRUE)) {
-        $params['id'] = $daoContrProd->id;
-      }
-
-
-      CRM_Contribute_BAO_Contribution::addPremium($params);
     }
     elseif ($selectProduct == 'no_thanks') {
       //Fixed For CRM-3901
@@ -828,6 +813,133 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $daoContrProd->delete();
       }
     }
+  }
+
+  /**
+   * Process premium combination
+   */
+  private function processPremiumCombination($combinationId, $contribution, $premiumParams) {
+    // Get combination information for receipt
+    $combination = new CRM_Contribute_DAO_PremiumsCombination();
+    $combination->id = $combinationId;
+    $combination->find(TRUE);
+    $this->assign('combination_name', $combination->combination_name);
+    $this->setPremiumReceiptInfo();
+    // Get products in the combination
+    $products = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationId);
+    foreach ($products as $product) {
+      $params = [
+        'product_id' => $product['product_id'],
+        'contribution_id' => $contribution->id,
+        'quantity' => $product['quantity'],
+        'combination_id' => $combinationId,
+        'product_option' => '',
+        'preview' => $this->_action & CRM_Core_Action::PREVIEW ? TRUE : FALSE,
+      ];
+      $existingRecord = new CRM_Contribute_DAO_ContributionProduct();
+      $existingRecord->contribution_id = $contribution->id;
+      $existingRecord->product_id = $product['product_id'];
+      if ($existingRecord->find(TRUE)) {
+        $params['id'] = $existingRecord->id;
+      }
+      CRM_Contribute_BAO_Contribution::addPremium($params);
+    }
+  }
+
+  /**
+   * Process single product
+   */
+  private function processSingleProduct($selectProduct, $contribution, $premiumParams) {
+    $startDate = $endDate = "";
+    $productDAO = new CRM_Contribute_DAO_Product();
+    $productDAO->id = $selectProduct;
+    $productDAO->find(TRUE);
+    $this->assign('product_name', $productDAO->name);
+    $this->assign('price', $productDAO->price);
+    $this->assign('sku', $productDAO->sku);
+    $this->assign('option', CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams));
+
+    $periodType = $productDAO->period_type;
+
+    if ($periodType) {
+      $fixed_period_start_day = $productDAO->fixed_period_start_day;
+      $duration_unit = $productDAO->duration_unit;
+      $duration_interval = $productDAO->duration_interval;
+      if ($periodType == 'rolling') {
+        $startDate = date('Y-m-d');
+      }
+      elseif ($periodType == 'fixed') {
+        if ($fixed_period_start_day) {
+          $date = explode('-', date('Y-m-d'));
+          $month = substr($fixed_period_start_day, 0, strlen($fixed_period_start_day) - 2);
+          $day = substr($fixed_period_start_day, -2) . "<br>";
+          $year = $date[0];
+          $startDate = $year . '-' . $month . '-' . $day;
+        }
+        else {
+          $startDate = date('Y-m-d');
+        }
+      }
+
+      $date = explode('-', $startDate);
+      $year = $date[0];
+      $month = $date[1];
+      $day = $date[2];
+
+      switch ($duration_unit) {
+        case 'year':
+          $year = $year + $duration_interval;
+          break;
+
+        case 'month':
+          $month = $month + $duration_interval;
+          break;
+
+        case 'day':
+          $day = $day + $duration_interval;
+          break;
+
+        case 'week':
+          $day = $day + ($duration_interval * 7);
+      }
+      $endDate = date('Y-m-d H:i:s', mktime(0, 0, 0, $month, $day, $year));
+      $this->assign('start_date', $startDate);
+      $this->assign('end_date', $endDate);
+    }
+
+    $this->setPremiumReceiptInfo();
+
+    // Create Premium record
+    $params = [
+      'product_id' => $premiumParams['selectProduct'],
+      'contribution_id' => $contribution->id,
+      'product_option' => CRM_Utils_Array::value('options_' . $premiumParams['selectProduct'], $premiumParams),
+      'quantity' => 1,
+      'start_date' => CRM_Utils_Date::customFormat($startDate, '%Y%m%d'),
+      'end_date' => CRM_Utils_Date::customFormat($endDate, '%Y%m%d'),
+      'preview' => $this->_action & CRM_Core_Action::PREVIEW ? TRUE : FALSE,
+    ];
+
+    // Fixed For CRM-3901
+    $daoContrProd = new CRM_Contribute_DAO_ContributionProduct();
+    $daoContrProd->contribution_id = $contribution->id;
+    if ($daoContrProd->find(TRUE)) {
+      $params['id'] = $daoContrProd->id;
+    }
+
+    CRM_Contribute_BAO_Contribution::addPremium($params);
+  }
+
+  /**
+   * Set common premium receipt information
+   */
+  private function setPremiumReceiptInfo() {
+    $dao = new CRM_Contribute_DAO_Premium();
+    $dao->entity_table = 'civicrm_contribution_page';
+    $dao->entity_id = $this->_id;
+    $dao->find(TRUE);
+    $this->assign('contact_phone', $dao->premiums_contact_phone);
+    $this->assign('contact_email', $dao->premiums_contact_email);
   }
 
   /**

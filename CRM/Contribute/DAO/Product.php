@@ -203,6 +203,36 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
    * @var int
    */
   public $frequency_interval;
+  /**
+   * Stock management status for this product.
+   *
+   * @var boolean
+   */
+  public $stock_status;
+  /**
+   * Available stock quantity for this product.
+   *
+   * @var int
+   */
+  public $stock_qty;
+  /**
+   * Number of products already sent or delivered.
+   *
+   * @var int
+   */
+  public $send_qty;
+  /**
+   * When was the product was created.
+   *
+   * @var datetime
+   */
+  public $created_date;
+  /**
+   * When was the product was created or modified or deleted.
+   *
+   * @var datetime
+   */
+  public $modified_date;
    /**
    * class constructor
    *
@@ -359,6 +389,36 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Frequency Interval') ,
                   ] ,
+        'stock_status' => [
+          'name' => 'stock_status',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Stock Status') ,
+                  'default' => '',
+          ] ,
+        'stock_qty' => [
+          'name' => 'stock_qty',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Stock Quantity') ,
+                  ] ,
+        'send_qty' => [
+          'name' => 'send_qty',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Sent Quantity') ,
+                  ] ,
+        'product_created_date' => [
+          'name' => 'created_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Product Created Date') ,
+          'required' => false,
+                  'default' => 'URRENT_TIMESTAM',
+          ] ,
+        'product_modified_date' => [
+          'name' => 'modified_date',
+          'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
+          'title' => ts('Product Modified Date') ,
+          'required' => false,
+                  'default' => 'URRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAM',
+          ] ,
       ];
     }
     return self::$_fields;
@@ -441,7 +501,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
                                                                                                                                                                                                         'period_type',
                                       'duration_unit',
                                       'frequency_unit',
-                            ];
+                                                                                        ];
     return $enums;
   }
   /**
@@ -473,7 +533,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
                   'week' => ts('week'),
                   'year' => ts('year'),
                 ],
-                              ];
+                                                                                          ];
     }
     return $translations[$field][$value];
   }

@@ -221,6 +221,16 @@ return array(
     'class' => 'CRM_Contribute_DAO_PremiumsProduct',
     'table' => 'civicrm_premiums_product',
   ) ,
+  'CRM_Contribute_DAO_PremiumsCombination' => array(
+    'name' => 'PremiumsCombination',
+    'class' => 'CRM_Contribute_DAO_PremiumsCombination',
+    'table' => 'civicrm_premiums_combination',
+  ) ,
+  'CRM_Contribute_DAO_PremiumsCombinationProducts' => array(
+    'name' => 'PremiumsCombinationProducts',
+    'class' => 'CRM_Contribute_DAO_PremiumsCombinationProducts',
+    'table' => 'civicrm_premiums_combination_products',
+  ) ,
   'CRM_Coupon_DAO_Coupon' => array(
     'name' => 'Coupon',
     'class' => 'CRM_Coupon_DAO_Coupon',
@@ -360,6 +370,11 @@ return array(
     'name' => 'AICompletion',
     'class' => 'CRM_AI_DAO_AICompletion',
     'table' => 'civicrm_aicompletion',
+  ) ,
+  'CRM_AI_DAO_AIImageGeneration' => array(
+    'name' => 'AIImageGeneration',
+    'class' => 'CRM_AI_DAO_AIImageGeneration',
+    'table' => 'civicrm_aiimagegeneration',
   ) ,
   'CRM_Core_DAO_Cache' => array(
     'name' => 'Cache',

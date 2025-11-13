@@ -472,6 +472,48 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   ];
 
   /**
+   * Days for premium inventory restock processing for credit card payments
+   *
+   * @var int
+   */
+  public $premiumIRCreditCardDays = 1;
+
+  /**
+   * Days for premium inventory restock processing for non-credit card payments
+   *
+   * @var int
+   */
+  public $premiumIRNonCreditCardDays = 3;
+
+  /**
+   * Days for premium inventory restock processing for convenience store payments
+   *
+   * @var int
+   */
+  public $premiumIRConvenienceStoreDays = 3;
+
+  /**
+   * Contribution statuses to check for premium inventory restock processing
+   *
+   * @var array
+   */
+  public $premiumIRCheckStatuses = ['Pending'];
+
+  /**
+   * Status change behavior for premium inventory restock processing
+   *
+   * @var string
+   */
+  public $premiumIRStatusChange = 'maintain';
+
+  /**
+   * Enable manual cancellation for premium inventory restock processing
+   *
+   * @var int
+   */
+  public $premiumIRManualCancel = 1;
+
+  /**
    * Provide addressSequence
    *
    * @param

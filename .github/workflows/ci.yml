@@ -80,8 +80,8 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js"
       - name: Frontend - Group Editing - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js"
-      - name: Frontend - Add Membership Type - Playwright
-        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
+      - name: Frontend - Check Membership Type - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js"
       - name: Frontend - Import Records - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
       - name: Frontend - Event Normal Registration - Playwright
@@ -189,8 +189,8 @@ jobs:
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js"
       - name: Frontend - Group Editing - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js"
-      - name: Frontend - Add Membership Type - Playwright
-        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
+      - name: Frontend - Check Membership - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js"
       - name: Frontend - Import Records - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/sites/all/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
       - name: Frontend - Event Normal Registration - Playwright
@@ -300,8 +300,8 @@ jobs:
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/advanced_search.spec.js"
       - name: Frontend - Group Editing - Playwright
         run: docker exec neticrm-ci  bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_group.spec.js"
-      - name: Frontend - Add Membership Type - Playwright
-        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/add_membership_type.spec.js"
+      - name: Frontend - Check Membership - Playwright
+        run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/check_membership.spec.js"
       - name: Frontend - Import Records - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/import.spec.js"
       - name: Frontend - Event Normal Registration - Playwright
@@ -322,8 +322,6 @@ jobs:
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/contribution_booster.spec.js"
       - name: Frontend - Report Page Checking - Playwright
         run: docker exec neticrm-ci bash -c "cd \$DRUPAL_ROOT/modules/civicrm/tests/playwright/ && npx playwright test tests/report_check.spec.js"
-
-
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -354,7 +352,7 @@ jobs:
           secure: false
           ignore_cert: true
           convert_markdown: true
-          subject: "[${{github.repository}}] Run failed: ${{github.workflow}} - ${{github.ref_name}} (${{steps.vars.outputs.sha_short}})"
+          subject: '[${{github.repository}}] Run failed: ${{github.workflow}} - ${{github.ref_name}} (${{steps.vars.outputs.sha_short}})'
           body: |
             Executed by: ${{github.actor}}
             Job name: ${{github.job}}

@@ -49,7 +49,6 @@ button.form-submit-primary,
   max-width: 1100px;
 }
 .nsp-container .nsp-content {
-  overflow: visible;
   height: var(--nsp-content-height);
 }
 .civicrm-menu-enabled .nsp-container .nsp-content {
@@ -63,6 +62,9 @@ button.form-submit-primary,
 .is-civicrm-user.civicrm-menu-enabled .nsp-container .nsp-content {
   --nsp-content-height: calc(100vh - 30px - 60px - 66px);
   height: var(--nsp-content-height);
+}
+.nsp-container .nme-aicompletion {
+  background: #f2f2f2;
 }
 .netiaic-chat .msg-tools .handle-btn {
   color: #fff !important;

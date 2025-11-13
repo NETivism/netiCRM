@@ -186,6 +186,10 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     $this->add('select', 'custom_group_id', ts('Custom Data'), $customGroup);
     $this->add('select', 'uf_group_id', ts('Profile'), $ufGroup);
     $this->add('select', 'event_id', ts('Event'), $event);
+    $this->add('select', 'deny', ts('Deny'), [
+      '0' => ts('Include'),
+      '1' => ts('Exclude'),
+    ]);
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
@@ -282,7 +286,7 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     else {
       $params = $this->controller->exportValues($this->_name);
       $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
-      $params['deny'] = 0;
+      //$params['deny'] = 0;
       $params['entity_table'] = 'civicrm_acl_role';
 
       // Figure out which type of object we're permissioning on and set object_table and object_id.

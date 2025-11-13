@@ -128,7 +128,11 @@ class CRM_Utils_Mail {
     $headers['Reply-To'] = CRM_Utils_Array::value('replyTo', $params, $from);
 
     if (isset($config->enableDMARC) && !empty($config->enableDMARC)) {
-      $headers['Sender'] = self::pluckEmailFromHeader($params['from']);
+      $validatedEmails = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail();
+      $fromEmail = self::pluckEmailFromHeader($params['from']);
+      if (in_array($fromEmail, $validatedEmails)) {
+        $headers['Sender'] = $fromEmail;
+      }
     }
     else {
       $headers['Sender'] = CRM_Utils_Array::value('returnPath', $params);

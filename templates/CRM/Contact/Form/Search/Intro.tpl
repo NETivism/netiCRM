@@ -34,12 +34,14 @@
       {/if}
 
       {if $ssID}
-        {if $ssMappingID}
-          {capture assign=editSmartGroupURL}{crmURL p="civicrm/contact/search/builder" q="reset=1&force=1&ssID=`$ssID`"}{/capture}
-        {else}
-          {capture assign=editSmartGroupURL}{crmURL p="civicrm/contact/search/advanced" q="reset=1&force=1&ssID=`$ssID`"}{/capture}
-        {/if} 
-        <a href="{$editSmartGroupURL}" class="button"><span><div class="zmdi zmdi-edit"></div> {ts 1=$group.title}Edit Smart Group Search Criteria for %1{/ts}</span></a>
+        {if !$group.custom_search_class}
+          {if $ssMappingID}
+            {capture assign=editSmartGroupURL}{crmURL p="civicrm/contact/search/builder" q="reset=1&force=1&ssID=`$ssID`"}{/capture}
+          {else}
+            {capture assign=editSmartGroupURL}{crmURL p="civicrm/contact/search/advanced" q="reset=1&force=1&ssID=`$ssID`"}{/capture}
+          {/if}
+          <a href="{$editSmartGroupURL}" class="button"><span><div class="zmdi zmdi-edit"></div> {ts 1=$group.title}Edit Smart Group Search Criteria for %1{/ts}</span></a>
+        {/if}
 
         {if $group.cache_date && $group.refresh_button}
           {capture assign=groupCacheDate}{ts}Cache Date{/ts}: {$group.cache_date|crmDate}{/capture}

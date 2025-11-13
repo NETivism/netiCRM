@@ -92,6 +92,7 @@ spf-lib               MIT            https://github.com/mlocati/spf-lib
 PHP-SPF-Check         MIT            https://github.com/Mika56/PHP-SPF-Check
 secure-spreasheet     MIT            https://github.com/nick322/secure-spreadsheet
 DataTables            MIT            https://github.com/DataTables/DataTablesSrc
+phpmyadmin/sql-parser GPL 2.0        https://github.com/phpmyadmin/sql-parser
 
 Limited Licesne
 ===============
