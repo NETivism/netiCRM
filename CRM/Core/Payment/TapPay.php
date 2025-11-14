@@ -1417,7 +1417,7 @@ LIMIT 0, 100
             $currentStatusId = $recurDAO->contribution_status_id;
 
             $canUpdateStatus = TRUE;
-            if ($currentStatusId == 1) {
+            if ($currentStatusId == 6) {
               // Check if end_date has passed
               if (!empty($recurDAO->end_date) && time() > strtotime($recurDAO->end_date)) {
                 $canUpdateStatus = FALSE;
@@ -1444,7 +1444,7 @@ LIMIT 0, 100
                 while ($logDAO->fetch()) {
                   $logData = unserialize($logDAO->data);
                   if (is_array($logData) && !empty($logData['after']['contribution_status_id'])) {
-                    if ($logData['after']['contribution_status_id'] == 1) {
+                    if ($logData['after']['contribution_status_id'] == 6) {
                       if (!empty($logDAO->modified_id)) {
                         $canUpdateStatus = FALSE;
                       }
