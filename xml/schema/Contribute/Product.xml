@@ -182,7 +182,7 @@
       <name>stock_status</name>
       <title>Stock Status</title>
       <type>boolean</type>
-      <default>1</default>
+      <default>0</default>
       <comment>Stock management status for this product.</comment>
       <add>4.0</add>
   </field>
