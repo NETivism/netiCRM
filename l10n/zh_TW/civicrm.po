@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1810,7 +1810,7 @@ msgstr "佔據參加者名額？"
 #: templates/CRM/Member/Page/MembershipType.tpl
 #: templates/CRM/Member/Page/Tab.tpl templates/CRM/UF/Page/Field.tpl
 msgid "Visibility"
-msgstr "公開"
+msgstr "可見性"
 
 #: CRM/Admin/Form/Options.php CRM/Report/Form/Register.php
 msgid "Selected %1 type has not been deleted."
@@ -16377,7 +16377,7 @@ msgstr "已儲存群組「%1」。"
 
 #: CRM/Group/Form/Search.php
 msgid "- any visibility -"
-msgstr "- 任何 -"
+msgstr "- 任何可見性 -"
 
 #: CRM/Group/Form/Search.php templates/CRM/Admin/Form/WordReplacements.tpl
 #: templates/CRM/Contact/Form/Relationship.tpl
@@ -32778,7 +32778,7 @@ msgstr "以群組類別過濾搜尋。"
 
 #: templates/CRM/Group/Form/Search.tpl
 msgid "Filter search by visibility."
-msgstr "以公開呈現與否過濾搜尋。"
+msgstr "以可見性過濾搜尋。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -32795,7 +32795,7 @@ msgid ""
 "themselves up for certain groups by setting the group visibility to 'Public "
 "Pages' (use the <strong>Settings</strong> link), and including the "
 "<strong>Groups</strong> element in your CiviCRM Profile."
-msgstr "您可從任何搜尋結果新增聯絡人到群組（或從個別聯絡人）從任何搜尋結果新增聯絡人至某個群組。您亦可設定群組為公開（使用<strong>設定</strong>連結），讓聯絡人自己參加某些群組。"
+msgstr "您可從任何搜尋結果新增聯絡人到群組（或從個別聯絡人）從任何搜尋結果新增聯絡人至某個群組。您亦可設定群組可見性為公開（使用<strong>設定</strong>連結），讓聯絡人自己參加某些群組。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -32813,7 +32813,7 @@ msgstr "具有<strong>權限控制</strong>的聯絡人群組，應被指派為�
 msgid ""
 "Use <strong>Find Groups</strong> to search by group name, type and "
 "visibility."
-msgstr "在<strong>搜尋群組</strong>中填入群組名稱、群組類型和顯示狀態，以進行群組搜尋。"
+msgstr "在<strong>搜尋群組</strong>中填入群組名稱、群組類型和可見性狀態，以進行群組搜尋。"
 
 #: templates/CRM/Group/Page/Group.hlp
 msgid ""
@@ -35268,7 +35268,7 @@ msgid ""
 "Select 'Admin' visibility for these Price Fields. They will only be included"
 " when staff or volunteers are registering participants from the back-office "
 "'Register Event Participants' screen."
-msgstr "若選擇「公開」，價格表會顯示在活動資訊頁與線上報名表單。對於某些活動，您可給內部員工特別的價格或折扣（透過在價格欄位輸入負數值）。若選擇「Admin」，價格表將只會出現在給職員或志工使用的報名頁面。"
+msgstr "若可見性選擇「公開」，價格表會顯示在活動資訊頁與線上報名表單。對於某些活動，您可給內部員工特別的價格或折扣（透過在價格欄位輸入負數值）。若選擇「Admin」，價格表將只會出現在給職員或志工使用的報名頁面。"
 
 #: templates/CRM/Price/Page/Field.tpl
 msgid ""
@@ -44502,7 +44502,7 @@ msgid "Online Publication"
 msgstr "公開發表"
 
 msgid "Mailing Visibility"
-msgstr "電子報顯示選項"
+msgstr "電子報可見性選項"
 
 msgid ""
 "Choose <strong>public pages</strong> if you want the content of this mailing"
@@ -50726,13 +50726,13 @@ msgstr "信用卡交易的庫存回補天數（1-3 天）。預設：1 天。"
 msgid ""
 "Non-credit card inventory replenishment days after payment deadline (1-7 "
 "days). Default: 3 days."
-msgstr "非信用卡交易在付款截止日後的庫存回補天數（1-7 天）。預設：3 天。"
+msgstr "非信用卡交易在繳款截止日後的庫存回補天數（1-7 天）。預設：3 天。"
 
 #: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
 msgid ""
 "Convenience store barcode inventory replenishment days after payment "
 "deadline (3-7 days). Default: 3 days."
-msgstr "超商條碼繳費在付款截止日後的庫存回補天數（3-7 天）。預設：3 天。"
+msgstr "超商條碼繳費在繳款截止日後的庫存回補天數（3-7 天）。預設：3 天。"
 
 #: templates/CRM/Admin/Form/Setting/PremiumsSetting.tpl
 msgid ""
@@ -50775,7 +50775,7 @@ msgstr "注意：庫存是針對整個感謝禮設定的。若需針對不同禮
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "Stock Status"
-msgstr "庫存狀態"
+msgstr "庫存管理"
 
 #: templates/CRM/Contribute/Page/ManagePremiums.tpl
 msgid "Total Stock"
@@ -51380,3 +51380,7 @@ msgstr "AI文案"
 #: templates/CRM/common/mailingEditor.tpl
 msgid "AI Image"
 msgstr "AI圖片"
+
+#: xml/templates/civicrm_data.sql.tpl
+msgid "Languages"
+msgstr "語言"

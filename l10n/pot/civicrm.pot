@@ -50706,3 +50706,7 @@ msgstr ""
 #: templates/CRM/common/mailingEditor.tpl
 msgid "AI Image"
 msgstr ""
+
+#: xml/templates/civicrm_data.sql.tpl
+msgid "Languages"
+msgstr ""
