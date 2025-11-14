@@ -929,6 +929,30 @@ LIMIT 0, 100
     $changeStatus = FALSE;
     $isExpired = FALSE;
     $goPayment = $donePayment = FALSE;
+    $activeTokenOverride = FALSE;
+
+    // Check if recurring status is expired, then verify token status
+    if ($dao->recur_status_id == 6) {
+      $tappay = new CRM_Contribute_DAO_TapPay();
+      $tappay->contribution_recur_id = $recurId;
+      $tappay->orderBy("expiry_date DESC");
+      if ($tappay->find(TRUE)) {
+        // Call cardMetadata API to check token_status
+        $metadataResult = self::cardMetadata($dao->contribution_id);
+        if ($metadataResult && $metadataResult->status == 0 && !empty($metadataResult->card_info)) {
+          $tokenStatus = $metadataResult->card_info->token_status;
+          if ($tokenStatus == 'ACTIVE') {
+            $resultNote .= "Token status is ACTIVE, attempting payment for expired recurring (ignore expiry_date check). ";
+            $goPayment = TRUE;
+            $isExpired = FALSE;
+            $activeTokenOverride = TRUE;
+          }
+          else {
+            $resultNote .= "Token status is $tokenStatus, skip payment. ";
+          }
+        }
+      }
+    }
     $sqlContribution = "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1 AND is_test = %2";
     $paramsContribution = [
       1 => [$dao->recur_id, 'Positive'],
@@ -966,8 +990,8 @@ LIMIT 0, 100
     $tappay->find(TRUE);
     $expiry_date = $tappay->expiry_date;
     if ($goPayment) {
-      // Check if Credit card over date.
-      if ($time <= strtotime($expiry_date)) {
+      // Check if Credit card over date, unless it's expired recurring with active token
+      if ($activeTokenOverride || $time <= strtotime($expiry_date)) {
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
         self::payByToken($dao->recur_id);
@@ -1010,7 +1034,7 @@ LIMIT 0, 100
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
-    elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date)) {
+    elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date) && !$activeTokenOverride) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
@@ -1030,6 +1054,13 @@ LIMIT 0, 100
       $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
       CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
+    }
+
+    // Add note when payment succeeded for expired recurring with active token
+    if ($activeTokenOverride && $donePayment) {
+      $noteTitle = ts('TapPay Payment').': '.ts('Payment processed for expired recurring');
+      $noteBody = ts('Recurring status was expired and card expiry date has passed, but payment authorization (token status) is ACTIVE. Payment was processed successfully.');
+      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $noteTitle, $noteBody);
     }
 
     CRM_Core_Error::debug_log_message($resultNote);
