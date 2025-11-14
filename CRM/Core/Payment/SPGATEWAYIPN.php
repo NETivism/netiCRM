@@ -52,6 +52,16 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
 
       CRM_Core_Payment_SPGATEWAYAPI::writeRecord($ids['contribution'], $this->_post, $ids['contributionRecur'] ?? $ids['contributionRecur']);
       $input = CRM_Core_Payment_SPGATEWAYAPI::dataDecode($this->_post);
+      // calc already times for further condition
+
+      if (!empty($ids['contributionRecur'])) {
+        $input['alreadyTimes'] = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", [
+          1 => [$ids['contributionRecur'], 'Integer']
+        ]);
+        $input['successTimes'] = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", [
+          1 => [$ids['contributionRecur'], 'Integer']
+        ]);
+      }
     }
     // common credit card
     elseif(empty($ids['contributionRecur']) && (!empty($this->_post['JSONData']) || !empty($this->_post['TradeInfo']))){

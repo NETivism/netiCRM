@@ -557,7 +557,7 @@ GROUP BY c.currency";
       'entity_id' => $params->id,
       'data' => serialize($data),
       'modified_id' => $contactId,
-      'modified_date' => date('YmdHis'),
+      'modified_date' => date('YmdHis', CRM_REQUEST_TIME),
     ];
     if (!empty($logId)) {
       $logParams['id'] = $logId;
@@ -577,7 +577,7 @@ GROUP BY c.currency";
       'note'          => $body,
       'entity_id'     => $recurringId,
       'contact_id'    => $userId,
-      'modified_date' => date('YmdHis'),
+      'modified_date' => date('YmdHis', CRM_REQUEST_TIME),
     ];
     $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
   }
