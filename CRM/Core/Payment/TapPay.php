@@ -1060,6 +1060,12 @@ LIMIT 0, 100
     if ($activeTokenOverride && $donePayment) {
       $noteTitle = ts('TapPay Payment').': '.ts('Payment processed for expired recurring');
       $noteBody = ts('Recurring status was expired and card expiry date has passed, but payment authorization (token status) is ACTIVE. Payment was processed successfully.');
+      $recurParams = [
+        'id' => $dao->recur_id,
+        'contribution_status_id' => $dao->recur_status_id,
+        'message' => $noteBody,
+      ];
+      CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
       CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $noteTitle, $noteBody);
     }
 
