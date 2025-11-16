@@ -57,7 +57,7 @@
         	    <thead>
                     <tr>
                     <th id="sortable">{ts}ID{/ts}</th>
-            	      <th>{ts}Tag{/ts}</th>
+                    <th id="link">{ts}Tag{/ts}</th>
             	      <th id="nosort">{ts}Description{/ts}</th>
             	      <th>{ts}Parent ID{/ts}</th>
             		    <th>{ts}Used For{/ts}</th>
