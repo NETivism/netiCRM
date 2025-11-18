@@ -386,7 +386,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     $nonCreditCardDays = $config->premiumIRNonCreditCardDays ?? 3;
     $convenienceStoreDays = $config->premiumIRConvenienceStoreDays ?? 3;
     $checkStatuses = $config->premiumIRCheckStatuses ?? [2]; // Pending
-    $statusChange = $config->premiumIRStatusChange ?? 3; // Cancelled
+    $statusChangeStyle = $config->premiumIRStatusChange ?? 'maintain'; // maintain or cancelled
 
     // Get contributions that need to be processed for restocking
     $contributionsToRestock = self::getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $convenienceStoreDays, $checkStatuses);
@@ -399,17 +399,20 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     
     foreach ($contributionsToRestock as $contribution) {
       try {
-        // Update contribution status
-        $sql = "UPDATE civicrm_contribution SET contribution_status_id = %1 WHERE id = %2";
-        $params = [
-          1 => [$statusChange, 'Integer'],
-          2 => [$contribution['id'], 'Integer']
-        ];
-        CRM_Core_DAO::executeQuery($sql, $params);
-        
+        // Update contribution status only if statusChangeStyle is 'cancelled'
+        if ($statusChangeStyle === 'cancelled') {
+          $sql = "UPDATE civicrm_contribution SET contribution_status_id = %1 WHERE id = %2";
+          $params = [
+            1 => [3, 'Integer'], // 3 = Cancelled status
+            2 => [$contribution['id'], 'Integer']
+          ];
+          CRM_Core_DAO::executeQuery($sql, $params);
+        }
+        // If statusChangeStyle is 'maintain', we skip status update
+
         // Restock the premium products
         self::restockPremiumInventory($contribution['id'], $contribution['reason']);
-        
+
         $restockedContributions[] = $contribution['id'];
       } catch (Exception $e) {
         $errorMessage = "Failed to restock contribution ID {$contribution['id']}: " . $e->getMessage();
