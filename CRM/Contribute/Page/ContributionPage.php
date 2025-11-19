@@ -489,6 +489,7 @@ WHERE       cp.contribution_page_id = {$id}";
   SELECT  id
     FROM  civicrm_contribution_page
    WHERE  $whereClause
+   ORDER BY is_active DESC, id ASC
    LIMIT  $offset, $rowCount";
     $contribPage = CRM_Core_DAO::executeQuery($query, $params, TRUE, 'CRM_Contribute_DAO_ContributionPage');
     $contribPageIds = [];

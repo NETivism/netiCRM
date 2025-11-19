@@ -393,8 +393,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO
           'name' => 'stock_status',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Stock Status') ,
-                  'default' => '',
-          ] ,
+                  ] ,
         'stock_qty' => [
           'name' => 'stock_qty',
           'type' => CRM_Utils_Type::T_INT,

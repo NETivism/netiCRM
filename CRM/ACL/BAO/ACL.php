@@ -44,6 +44,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
   static $_operation = NULL;
 
   static $_fieldKeys = NULL;
+  static $_groupCache = [];
   static function entityTable() {
     if (!self::$_entityTable) {
       self::$_entityTable = [
@@ -847,11 +848,83 @@ SELECT g.*
 
   public static function group($type,
     $contactID = NULL,
+    $tableName = 'civicrm_uf_group',
+    $allGroups = NULL,
+    $includedGroups = NULL
+  ) {
+    $acls = &CRM_ACL_BAO_Cache::build($contactID);
+
+    if (!empty($includedGroups) &&
+      is_array($includedGroups)
+    ) {
+      $ids = $includedGroups;
+    }
+    else {
+      $ids = [];
+    }
+
+    if (!empty($acls)) {
+      $aclKeys = array_keys($acls);
+      $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
+
+      $query = "
+SELECT   a.operation, a.object_id
+  FROM   civicrm_acl_cache c, civicrm_acl a
+ WHERE   c.acl_id       =  a.id
+   AND   a.is_active    =  1
+   AND   a.object_table = %1
+   AND   a.id        IN ( $aclKeys )
+ORDER BY a.object_id
+";
+      $params = [1 => [$tableName, 'String']];
+      $dao = &CRM_Core_DAO::executeQuery($query, $params);
+      $is_visited = [];
+      while ($dao->fetch()) {
+        if ($dao->object_id) {
+          if (self::matchType($type, $dao->operation)) {
+            $ids = self::searchChildrenGroup($dao->object_id, $ids);
+          }
+        }
+        else {
+          // this user has got the permission for all objects of this type
+          // check if the type matches
+          if (self::matchType($type, $dao->operation)) {
+            foreach ($allGroups as $id => $dontCare) {
+              $ids[] = $id;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    CRM_Utils_Hook::aclGroup($type, $contactID, $tableName, $allGroups, $ids);
+
+    return $ids;
+  }
+
+  public static function groupSavedSearch($type,
+    $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
     $includedGroups = NULL
   ) {
 
+    // Generate cache key based on function parameters
+    $cacheKey = md5(serialize([
+      'type' => $type,
+      'contactID' => $contactID,
+      'tableName' => $tableName,
+      'allGroups' => !empty($allGroups) ? array_keys($allGroups) : NULL,
+      'includedGroups' => $includedGroups,
+      'hasAdminPermission' => CRM_Core_Permission::check('administer CiviCRM'),
+      'hasAccessPermission' => CRM_Core_Permission::check('access CiviCRM'),
+    ]));
+
+    // Check if result exists in cache
+    if (isset(self::$_groupCache[$cacheKey])) {
+      return self::$_groupCache[$cacheKey];
+    }
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
 
@@ -869,7 +942,7 @@ SELECT g.*
       $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
 
       $query = "
-SELECT   a.operation, a.object_id, a.deny
+SELECT   a.operation, a.object_id, a.deny, a.entity_id
   FROM   civicrm_acl_cache c, civicrm_acl a
  WHERE   c.acl_id       =  a.id
    AND   a.is_active    =  1
@@ -879,63 +952,134 @@ ORDER BY a.object_id
 ";
       $params = [1 => [$tableName, 'String']];
       $dao = &CRM_Core_DAO::executeQuery($query, $params);
-      $denyIds = [];
-      $hasDenyRule = FALSE;
-      $hasAllowRule = FALSE;
 
+      // Get ACL roles and their priority order
+      $aclRoles = CRM_Core_OptionGroup::values('acl_role');
+
+      // Group rules by entity_id
+      $rulesByEntity = [];
       while ($dao->fetch()) {
-        if ($dao->object_id) {
-          if (self::matchType($type, $dao->operation)) {
-            // Separate allow and deny IDs
-            if ($dao->deny) {
-              // For deny=1, collect IDs to exclude (including children)
-              $hasDenyRule = TRUE;
-              $denyIds = self::searchChildrenGroup($dao->object_id, $denyIds);
-            }
-            else {
-              // For deny=0, add IDs to allow list (including children)
-              $hasAllowRule = TRUE;
-              $ids = self::searchChildrenGroup($dao->object_id, $ids);
+        if (!isset($rulesByEntity[$dao->entity_id])) {
+          $rulesByEntity[$dao->entity_id] = [];
+        }
+        $rulesByEntity[$dao->entity_id][] = [
+          'operation' => $dao->operation,
+          'object_id' => $dao->object_id,
+          'deny' => $dao->deny,
+        ];
+      }
+
+      // Track group status by priority: groupId => ['allowed' => true/false, 'priority' => X]
+      // Lower priority number = higher priority
+      $groupStatus = [];
+      $currentPriority = 0;
+
+      // Process rules by entity_id priority (order in $aclRoles)
+      foreach ($aclRoles as $roleId => $roleValue) {
+        if (!isset($rulesByEntity[$roleId])) {
+          $currentPriority++;
+          continue;
+        }
+
+        foreach ($rulesByEntity[$roleId] as $rule) {
+          if ($rule['object_id']) {
+            if (self::matchType($type, $rule['operation'])) {
+              // Get all related group IDs (including children)
+              $groupIds = self::searchChildrenGroup($rule['object_id'], []);
+
+              foreach ($groupIds as $groupId) {
+                // Only process if not already processed by higher priority rule
+                if (!isset($groupStatus[$groupId])) {
+                  $groupStatus[$groupId] = [
+                    'allowed' => !$rule['deny'],
+                    'priority' => $currentPriority,
+                  ];
+                }
+              }
             }
           }
+          else {
+            // object_id is null - applies to all groups
+            if (self::matchType($type, $rule['operation'])) {
+              if (!empty($allGroups)) {
+                foreach ($allGroups as $id => $groupValue) {
+                  if (!isset($groupStatus[$id])) {
+                    $groupStatus[$id] = [
+                      'allowed' => !$rule['deny'],
+                      'priority' => $currentPriority,
+                    ];
+                  }
+                }
+              }
+              // Break after processing a wildcard rule for this entity
+              break;
+            }
+          }
+        }
+
+        $currentPriority++;
+      }
+
+      // Separate into allowed and denied groups based on priority
+      $allowedGroups = [];
+      $deniedGroups = [];
+      foreach ($groupStatus as $groupId => $status) {
+        if ($status['allowed']) {
+          $allowedGroups[] = $groupId;
         }
         else {
-          // this user has got the permission for all objects of this type
-          // check if the type matches
-          if (self::matchType($type, $dao->operation)) {
-            if ($dao->deny) {
-              // deny=1 with no object_id means deny all - clear everything
-              $ids = [];
-              $hasDenyRule = FALSE;
-              break;
-            }
-            else {
-              // deny=0 with no object_id means allow all
-              $hasAllowRule = TRUE;
-              foreach ($allGroups as $id => $dontCare) {
-                $ids[] = $id;
-              }
-              break;
-            }
-          }
+          $deniedGroups[] = $groupId;
         }
       }
 
-      // If there are deny rules but no allow rules, start with all groups
-      if ($hasDenyRule && !$hasAllowRule && !empty($allGroups)) {
-        foreach ($allGroups as $id => $dontCare) {
-          $ids[] = $id;
-        }
+      // Final result: start with allGroups (if provided), add allowedGroups, remove deniedGroups
+      if (!empty($allGroups)) {
+        $ids = array_keys($allGroups);
+      }
+      else {
+        $ids = [];
       }
 
-      // Remove denied IDs from the allowed IDs
-      if (!empty($denyIds)) {
-      $ids = array_diff($ids, $denyIds);
+      // Add allowed groups
+      if (!empty($allowedGroups)) {
+        $ids = array_merge($ids, $allowedGroups);
+      }
+
+      // Remove denied groups
+      if (!empty($deniedGroups)) {
+        $ids = array_diff($ids, $deniedGroups);
+      }
+
+      // Remove duplicates and reindex
+      $ids = array_values(array_unique($ids));
+    }
+
+    // Hide groups which controlled by ACL
+    if (!CRM_Core_Permission::check('administer CiviCRM')) {
+      $aclER = CRM_ACL_DAO_EntityRole::getTableName();
+      $query = "
+        SELECT DISTINCT entity_id
+        FROM $aclER
+        WHERE entity_table = 'civicrm_group'
+          AND is_active = 1
+      ";
+      $dao = CRM_Core_DAO::executeQuery($query);
+      $restrictedGroups = [];
+      while ($dao->fetch()) {
+        $restrictedGroups[] = $dao->entity_id;
+      }
+
+      // Remove restricted groups from ids
+      if (!empty($restrictedGroups)) {
+        $ids = array_diff($ids, $restrictedGroups);
+        $ids = array_values($ids); // Reindex
       }
     }
 
-
     CRM_Utils_Hook::aclGroup($type, $contactID, $tableName, $allGroups, $ids);
+
+    // Store result in cache before returning
+    self::$_groupCache[$cacheKey] = $ids;
 
     return $ids;
   }

@@ -453,6 +453,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $this->_batch->modified_date = date('YmdHis');
     $this->_batch->status_id = $completeStatus;
     $this->saveBatch();
+    if (isset($this->_batch->data['download']) && file_exists($this->_batch->data['download']['file'])) {
+      // some times the batch exec is not web owner
+      // but when download, the file should be readable by web owner
+      CRM_Utils_File::chmod($this->_batch->data['download']['file'], 0664);
+    }
 
     // notify author of this batch by email
     if (!empty($this->_batch->created_id)) {
