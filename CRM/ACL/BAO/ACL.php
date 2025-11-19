@@ -848,6 +848,63 @@ SELECT g.*
 
   public static function group($type,
     $contactID = NULL,
+    $tableName = 'civicrm_uf_group',
+    $allGroups = NULL,
+    $includedGroups = NULL
+  ) {
+    $acls = &CRM_ACL_BAO_Cache::build($contactID);
+
+    if (!empty($includedGroups) &&
+      is_array($includedGroups)
+    ) {
+      $ids = $includedGroups;
+    }
+    else {
+      $ids = [];
+    }
+
+    if (!empty($acls)) {
+      $aclKeys = array_keys($acls);
+      $aclKeys = CRM_Utils_Array::implode(',', $aclKeys);
+
+      $query = "
+SELECT   a.operation, a.object_id
+  FROM   civicrm_acl_cache c, civicrm_acl a
+ WHERE   c.acl_id       =  a.id
+   AND   a.is_active    =  1
+   AND   a.object_table = %1
+   AND   a.id        IN ( $aclKeys )
+ORDER BY a.object_id
+";
+      $params = [1 => [$tableName, 'String']];
+      $dao = &CRM_Core_DAO::executeQuery($query, $params);
+      $is_visited = [];
+      while ($dao->fetch()) {
+        if ($dao->object_id) {
+          if (self::matchType($type, $dao->operation)) {
+            $ids = self::searchChildrenGroup($dao->object_id, $ids);
+          }
+        }
+        else {
+          // this user has got the permission for all objects of this type
+          // check if the type matches
+          if (self::matchType($type, $dao->operation)) {
+            foreach ($allGroups as $id => $dontCare) {
+              $ids[] = $id;
+            }
+          }
+          break;
+        }
+      }
+    }
+
+    CRM_Utils_Hook::aclGroup($type, $contactID, $tableName, $allGroups, $ids);
+
+    return $ids;
+  }
+
+  public static function groupSavedSearch($type,
+    $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
     $includedGroups = NULL

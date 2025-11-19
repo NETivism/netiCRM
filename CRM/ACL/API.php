@@ -150,8 +150,12 @@ class CRM_ACL_API {
       $contactID = 0;
     }
 
-
-    return CRM_ACL_BAO_ACL::group($type, $contactID, $tableName, $allGroups, $includedGroups);
+    if ($tableName == 'civicrm_saved_search') {
+      return CRM_ACL_BAO_ACL::groupSavedSearch($type, $contactID, $tableName, $allGroups, $includedGroups);
+    }
+    else {
+      return CRM_ACL_BAO_ACL::group($type, $contactID, $tableName, $allGroups, $includedGroups);
+    }
   }
 
   /**
