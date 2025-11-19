@@ -63,7 +63,7 @@
                 <div class="rfm-3d-sidebar-left rfm-3d-sidebar">
                   {foreach from=$lowRfmSegments item=segment}
                     <div class="segment-item" data-segment="{$segment.numeric_id}">
-                      <a href="{crmURL p='civicrm/contact/search/custom' q="reset=`$urlParams.reset`&csid=`$urlParams.csid`&force=`$urlParams.force`&date=`$urlParams.date`&recurring=`$urlParams.recurring`&rv=`$urlParams.rv`&fv=`$urlParams.fv`&mv=`$urlParams.mv`&segment=`$segment.id`"}" class="segment-link">
+                      <a href="{crmURL p='civicrm/contact/search/custom' q="reset=`$urlParams.reset`&csid=`$urlParams.csid`&force=`$urlParams.force`&date=`$urlParams.date`&recurring=`$urlParams.recurring`&rv=`$urlParams.rv`&fv=`$urlParams.fv`&mv=`$urlParams.mv`&ct=`$urlParams.ct`&segment=`$segment.id`"}" class="segment-link">
                         <div class="segment-text">
                           <div class="segment-color"></div>
                           <div class="segment-name">{$segment.name}</div>
@@ -221,7 +221,7 @@
                 <div class="rfm-3d-sidebar-right rfm-3d-sidebar">
                   {foreach from=$highRfmSegments item=segment}
                     <div class="segment-item" data-segment="{$segment.numeric_id}">
-                      <a href="{crmURL p='civicrm/contact/search/custom' q="reset=`$urlParams.reset`&csid=`$urlParams.csid`&force=`$urlParams.force`&date=`$urlParams.date`&recurring=`$urlParams.recurring`&rv=`$urlParams.rv`&fv=`$urlParams.fv`&mv=`$urlParams.mv`&segment=`$segment.id`"}" class="segment-link">
+                      <a href="{crmURL p='civicrm/contact/search/custom' q="reset=`$urlParams.reset`&csid=`$urlParams.csid`&force=`$urlParams.force`&date=`$urlParams.date`&recurring=`$urlParams.recurring`&rv=`$urlParams.rv`&fv=`$urlParams.fv`&mv=`$urlParams.mv`&ct=`$urlParams.ct`&segment=`$segment.id`"}" class="segment-link">
                         <div class="segment-text">
                           <div class="segment-color"></div>
                           <div class="segment-name">{$segment.name}</div>

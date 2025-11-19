@@ -386,6 +386,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     if (isset($this->_recurringStatus[$recurring])) {
       $qill[1]['recurring'] = ts('Recurring Contribution').': '.$this->_recurringStatus[$recurring];
     }
+    $qill[1]['rfm_value'] = ts('RFM Thresholds').' - '.ts('Recency:').$this->_formValues['rfm_r_value'].' / '.ts('Frequency:').$this->_formValues['rfm_f_value'].' / '.ts('Monetary:').$this->_formValues['rfm_m_value'];
 
     return $qill;
   }
