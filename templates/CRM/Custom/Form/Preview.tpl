@@ -108,3 +108,12 @@
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 
+<script type="text/javascript">
+{literal}
+    cj(document).ready(function() {
+       cj('select[id^="custom_"]').not('[multiple]').each(function() {
+         cj(this).select2();
+       });
+    });
+{/literal}
+</script>
