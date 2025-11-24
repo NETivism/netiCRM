@@ -58,9 +58,8 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
         $input['AlreadyTimes'] = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", [
           1 => [$ids['contributionRecur'], 'Integer']
         ]);
-        $input['SuccessTimes'] = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", [
-          1 => [$ids['contributionRecur'], 'Integer']
-        ]);
+        // for simulate normal ipn, the agreement should minus already times by 1
+        $input['AlreadyTimes']--;
       }
     }
     // common credit card
