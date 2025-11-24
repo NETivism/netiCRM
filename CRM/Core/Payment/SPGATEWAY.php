@@ -2170,6 +2170,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         // save token_value on each payment anyway
         $tradeResult->Result->TokenValue = $spgateway->token_value;
         $tradeResult->Result->TokenLife = $spgateway->token_life;
+        // simulate already exists using OrderNo for ipn
+        $tradeResult->Result->OrderNo = $c->trxn_id;
         // call IPN
         $ids = CRM_Contribute_BAO_Contribution::buildIds($c->id);
         $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, TRUE);
