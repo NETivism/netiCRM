@@ -13,6 +13,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
   public static $_editableFields = ['amount', 'installments', 'end_date', 'cycle_day', 'contribution_status_id', 'note_title', 'note_body'];
 
+ // Expired Status cannot be selected when editing a contribution.
+  public static $_excludedStatuses = [6];
+
   public static $_hideFields = ['invoice_id', 'trxn_id'];
 
   public static $_cardType = [
@@ -800,7 +803,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         // Failed
         $ipn->failed($objects, $transaction, $note);
       }
-      self::addNote($note, $objects['contribution']);
+      self::addNoteToLog($note, $objects['contribution']);
     }
 
   }
@@ -871,7 +874,7 @@ ON
 WHERE
   $cycleDayFilter AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
-AND r.contribution_status_id = 5
+AND r.contribution_status_id in (5,7)
 AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
 GROUP BY r.id
@@ -949,7 +952,9 @@ LIMIT 0, 100
             $activeTokenOverride = TRUE;
           }
           else {
-            $resultNote .= "Token status is $tokenStatus, skip payment. ";
+            $resultNote = "Token status is $tokenStatus, skip payment. ";
+            CRM_Core_Error::debug_log_message($resultNote);
+            return $resultNote;
           }
         }
       }
@@ -991,7 +996,7 @@ LIMIT 0, 100
     $tappay->find(TRUE);
     $currentExpiryDate = $tappay->expiry_date;
     if ($goPayment) {
-      if (($newExpiryDate >= $currentExpiryDate) && $activeTokenOverride) {
+      if ((strtotime($newExpiryDate) >= strtotime($currentExpiryDate)) && $activeTokenOverride) {
         $isProgress = TRUE;
       }
       // Check if Credit card over date, unless it's expired recurring with active token
@@ -1062,25 +1067,24 @@ LIMIT 0, 100
     }
     elseif ($activeTokenOverride && $donePayment) {
       // Add note when payment succeeded for expired recurring with active token
-      $noteTitle = ts('TapPay Payment').': '.ts('Payment processed for expired recurring');
-      $noteBody = ts('Recurring status was expired and card expiry date has passed, but payment authorization (token status) is ACTIVE. Payment was processed successfully.');
-      $recurParams = [
-        'id' => $dao->recur_id,
-        'contribution_status_id' => $dao->recur_status_id,
-        'message' => $noteBody,
-      ];
-      CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
-      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $noteTitle, $noteBody);
+      $sqlContribution = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1 ORDER BY id DESC";
+      $latestContributionId = CRM_Core_DAO::singleValueQuery($sqlContribution, [1 => [$dao->recur_id, 'Integer']]);
+      $contribution = new CRM_Contribute_DAO_Contribution();
+      $contribution->id = $latestContributionId;
+      $contribution->find(TRUE);
+      $note = ts('Recurring status was expired and card expiry date has passed, but payment authorization (token status) is ACTIVE. Payment was processed successfully.');
+      self::addNote($note, $contribution);
 
       if ($isProgress) {
         $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
-        $statusNote = ts('Automatically resumed to “In Progress” based on the updated card expiry date.');
+        $note .= ts('Automatically resumed to “In Progress” based on the updated card expiry date.');
         $recurParams = [
-          'id' => $dao->recur_id,
-          'contribution_status_id' => 5,
-          'message' => $statusNote,
-        ];
-        CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
+        'id' => $dao->recur_id,
+        'contribution_status_id' => 5,
+        'message' => $note,
+      ];
+        CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $note);
       }
     }
 
@@ -1262,7 +1266,7 @@ LIMIT 0, 100
 
     if (!empty($resultNote)) {
       // CRM_Core_Error::debug_log_message($resultNote);
-      self::addNote($resultNote, $contribution);
+      self::addNoteToLog($resultNote, $contribution);
     }
     return $resultNote;
   }
@@ -1782,9 +1786,35 @@ LIMIT 0, 100
     return $sync_url;
   }
 
-  static function addNote($note, &$contribution){
-
+  /**
+   * Function to add note into CRM log
+   */
+  static function addNoteToLog($note, &$contribution){
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
     CRM_Core_Error::debug_log_message( $note );
+  }
+
+  /**
+   * Function to add note into contribution
+   */
+  static function addNote($note, &$contribution){
+    $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
+    $noteExists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
+    if(count($noteExists)){
+      $noteId = [ 'id' => reset(array_keys($noteExists)) ];
+      $note = $note . reset($noteExists);
+    }
+    else{
+      $noteId = NULL;
+    }
+
+    $noteParams = [
+      'entity_table'  => 'civicrm_contribution',
+      'note'          => $note,
+      'entity_id'     => $contribution->id,
+      'contact_id'    => $contribution->contact_id,
+      'modified_date' => date('Ymd')
+    ];
+    CRM_Core_BAO_Note::add($noteParams, $noteId);
   }
 }
