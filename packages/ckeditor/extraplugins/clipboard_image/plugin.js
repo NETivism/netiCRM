@@ -268,7 +268,8 @@ CKEDITOR.plugins.add('clipboard_image', {
         'image/jpeg',
         'image/jpg',
         'image/png',
-        'image/gif'
+        'image/gif',
+        'image/webp'
       ];
 
       return allowedFormats.indexOf(mimeType.toLowerCase()) !== -1;
