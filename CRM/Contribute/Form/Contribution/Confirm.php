@@ -902,6 +902,10 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         case 'week':
           $day = $day + ($duration_interval * 7);
       }
+      $month = (int)$month;
+      $day = (int)$day;
+      $year = (int)$year;
+
       $endDate = date('Y-m-d H:i:s', mktime(0, 0, 0, $month, $day, $year));
       $this->assign('start_date', $startDate);
       $this->assign('end_date', $endDate);
