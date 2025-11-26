@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2025\n"
+"Last-Translator: Seal Shen, 2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50829,7 +50829,7 @@ msgstr "您確定要將此筆捐款連結至"
 
 #: templates/CRM/Core/Page/Payment/TapPay.tpl
 msgid "Cardholder Name"
-msgstr "卡片持有人姓名"
+msgstr "卡片持有人姓名（英文）"
 
 #: templates/CRM/Core/Page/Payment/TapPay.tpl
 msgid "Same on your credit card."
