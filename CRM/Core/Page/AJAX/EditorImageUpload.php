@@ -76,7 +76,8 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
       'image/jpeg',
       'image/jpg',
       'image/png',
-      'image/gif'
+      'image/gif',
+      'image/webp'
     ];
 
     if (!in_array($fileInfo['mime_type'], $allowedMimeTypes)) {
@@ -218,7 +219,8 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
       'image/jpeg' => 'jpg',
       'image/jpg' => 'jpg',
       'image/png' => 'png',
-      'image/gif' => 'gif'
+      'image/gif' => 'gif',
+      'image/webp'
     ];
 
     return $extensions[$mimeType] ?? 'jpg';

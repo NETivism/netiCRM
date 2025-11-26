@@ -244,6 +244,14 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       else if( $name == 'contribution_status_id') {
         $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
         $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'contribution_status_id');
+        // Only exclude status if it's not the current status
+        if (!empty($paymentClass::$_excludedStatuses)) {
+          foreach ($paymentClass::$_excludedStatuses as $excludedStatusId) {
+            if ($excludedStatusId != $statusId) {
+              unset($statuses[$excludedStatusId]);
+            }
+          }
+        }
         $ele = $this->add('select', 'contribution_status_id', $label, $statuses, FALSE, [
           'data-origin-status' => $statusId,
         ]);

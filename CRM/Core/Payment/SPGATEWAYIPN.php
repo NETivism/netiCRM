@@ -55,12 +55,11 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       // calc already times for further condition
 
       if (!empty($ids['contributionRecur'])) {
-        $input['alreadyTimes'] = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", [
+        $input['AlreadyTimes'] = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1", [
           1 => [$ids['contributionRecur'], 'Integer']
         ]);
-        $input['successTimes'] = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", [
-          1 => [$ids['contributionRecur'], 'Integer']
-        ]);
+        // for simulate normal ipn, the agreement should minus already times by 1
+        $input['AlreadyTimes']--;
       }
     }
     // common credit card
@@ -362,7 +361,8 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
         // is first time
         if($input['Status'] == 'SUCCESS'){
           $params['id'] = $recur->id;
-          $params['start_date'] = date('YmdHis', strtotime($input['AuthTime']));
+          $recurStartTimestamp = !empty($input['PayTime']) ? $input['PayTime'] : $input['AuthTime'];
+          $params['start_date'] = date('YmdHis', strtotime($recurStartTimestamp));
           $params['contribution_status_id'] = 5; // from pending to processing
           $params['modified_date'] = date('YmdHis');
           $params['trxn_id'] = $input['PeriodNo'];
