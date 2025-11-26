@@ -1796,6 +1796,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @return void
    */
   public static function doExecuteAllRecur($time = NULL) {
+    if (!defined('CIVICRM_SPGATEWAY_ENABLE_AGREEMENT') || !CIVICRM_SPGATEWAY_ENABLE_AGREEMENT) {
+      return;
+    }
     $paymentProcessorDAO = new CRM_Core_DAO_PaymentProcessor();
     $paymentProcessorDAO->payment_processor_type = 'SPGATEWAY';
     $paymentProcessorDAO->is_active = 1;
@@ -1872,7 +1875,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
     AND r.contribution_status_id = 5
     AND r.frequency_unit = 'month'
-    AND p.payment_processor_type = 'SPGateway'
+    AND p.payment_processor_type = 'SPGATEWAY'
     AND COALESCE(p.url_api, '') != ''
     GROUP BY r.id
     ORDER BY r.id
@@ -1913,6 +1916,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @return string
    */
   public static function doCheckRecur($recurId, $time = NULL) {
+    if (!defined('CIVICRM_SPGATEWAY_ENABLE_AGREEMENT') || !CIVICRM_SPGATEWAY_ENABLE_AGREEMENT) {
+      return;
+    }
     CRM_Core_Error::debug_log_message("SPGateway synchronize execute: ".$recurId);
     if (empty($time)) {
       $time = time();
@@ -2045,6 +2051,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @return array
    */
   public static function payByToken($recurringId = NULL, $referContributionId = NULL, $sendMail = TRUE) {
+    if (!defined('CIVICRM_SPGATEWAY_ENABLE_AGREEMENT') || !CIVICRM_SPGATEWAY_ENABLE_AGREEMENT) {
+      return;
+    }
     $response = [];
     if(empty($recurringId)){
       $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
