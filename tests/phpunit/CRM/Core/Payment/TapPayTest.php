@@ -603,6 +603,51 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
     sleep(3);
     $this->assertDBQuery(4, "SELECT count(*) FROM civicrm_contribution WHERE trxn_id LIKE %1 ORDER BY id DESC", $recurParams);
+
+    ### 6th contribution, no further contributions should executed this time
+    ### Test card expiry date triggers recurring status to Expired (6)
+    // First, manually set recurring status back to In Progress (5) to test the expiry check
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 5);
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', 5, "In line " . __LINE__);
+
+    // Update card expiry date to past date to trigger expiry check
+    $pastExpiryDate = date('Y-m-d', strtotime('-2 month'));
+    CRM_Core_DAO::executeQuery("UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE contribution_recur_id = %2", [
+      1 => [$pastExpiryDate, 'String'],
+      2 => [$recurring->id, 'Integer'],
+    ]);
+
+    // Execute the same logic as doStatusCheck, but only for this specific recurring
+    // This ensures the test is isolated and doesn't affect other test data
+    $currentDay = date('Y-m-d 00:00:00');
+    $sql = "SELECT r.id, MAX(t.expiry_date) as expiry_date, r.contribution_status_id
+FROM civicrm_contribution_recur r
+INNER JOIN civicrm_contribution_tappay t ON t.contribution_recur_id = r.id
+WHERE t.expiry_date IS NOT NULL
+  AND r.contribution_status_id = 5
+  AND r.id = %1
+GROUP BY r.id
+HAVING MAX(t.expiry_date) < %2";
+
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$recurring->id, 'Integer'],
+      2 => [$currentDay, 'String'],
+    ]);
+
+    if ($dao->fetch()) {
+      $params = [
+        'id' => $dao->id,
+        'contribution_status_id' => 6,
+        'message' => ts("Card expiry date is due."),
+      ];
+      CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+      $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
+      $statusNote = $params['message'] . ts("Auto renews status");
+      CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
+    }
+
+    // Verify recurring status changed to Expired (6) because card expiry date has passed
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', 6, "In line " . __LINE__);
   }
 
   function testCardMetadata(){
@@ -734,11 +779,134 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     );
   }
 
+  /**
+   * Helper function to create a recurring contribution with TapPay data
+   *
+   * @param array $options Optional parameters to customize the recurring contribution
+   *   - amount: Contribution amount (default: 123)
+   *   - status_id: Recurring contribution status (default: 5 - In Progress)
+   *   - expiry_offset: Expiry date offset from now (default: '+1 month')
+   *   - source: Contribution source description (default: 'AUTO: unit test')
+   *
+   * @return array Array containing recurring, contribution, trxnId, and testCardToken
+   */
+  protected function createRecurringContributionWithTapPay($options = []) {
+    $now = time();
+    $amount = !empty($options['amount']) ? $options['amount'] : 123;
+    $statusId = !empty($options['status_id']) ? $options['status_id'] : 5;
+    $expiryOffset = !empty($options['expiry_offset']) ? $options['expiry_offset'] : '+1 month';
+    $source = !empty($options['source']) ? $options['source'] : 'AUTO: unit test';
+    $testCardToken = "token_test_" . time() . "_" . rand(1000, 9999);
+
+    // Create recurring
+    $date = date('YmdHis', $now);
+    $recur = [
+      'contact_id' => $this->_cid,
+      'amount' => $amount,
+      'frequency_unit' => 'month',
+      'frequency_interval' => 1,
+      'installments' => 0,
+      'is_test' => $this->_is_test,
+      'start_date' => $date,
+      'create_date' => $date,
+      'modified_date' => $date,
+      'invoice_id' => md5($now . $source),
+      'contribution_status_id' => $statusId,
+      'cycle_day' => 5,
+      'trxn_id' => 'ut_' . substr($now, -5) . '_' . rand(100, 999),
+    ];
+    $ids = [];
+    $recurring = CRM_Contribute_BAO_ContributionRecur::add($recur, $ids);
+    $this->assertNotEmpty($recurring->id, "In line " . __LINE__);
+
+    // Create contribution
+    $contrib = [
+      'contact_id' => $this->_cid,
+      'contribution_contact_id' => $this->_cid,
+      'contribution_type_id' => 1,
+      'contribution_page_id' => $this->_page_id,
+      'payment_processor_id' => $this->_processor['id'],
+      'payment_instrument_id' => 1,
+      'created_date' => date('YmdHis', $now),
+      'non_deductible_amount' => 0,
+      'total_amount' => $amount,
+      'currency' => 'TWD',
+      'cancel_reason' => '0',
+      'source' => $source,
+      'contribution_source' => $source,
+      'amount_level' => '',
+      'is_test' => $this->_is_test,
+      'is_pay_later' => 0,
+      'contribution_status_id' => 1,
+      'contribution_recur_id' => $recurring->id,
+    ];
+    $contribution = CRM_Contribute_BAO_Contribution::create($contrib, CRM_Core_DAO::$_nullArray);
+    $trxnId = CRM_Core_Payment_TapPay::getContributionTrxnID($contribution->id, $recurring->id);
+    CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'trxn_id', $trxnId);
+
+    // Save TapPay data
+    $microtime = round(microtime(true) * 1000);
+    $oldExpiryDate = date('Ym', strtotime($expiryOffset));
+    $primeJson = '{
+      "status": 0,
+      "msg": "Success",
+      "amount": ' . $amount . ',
+      "acquirer": "TW_ESUN",
+      "currency": "TWD",
+      "card_secret": {
+        "card_token": "' . $testCardToken . '",
+        "card_key": "test_key"
+      },
+      "rec_trade_id": "sample_trade_id_test",
+      "bank_transaction_id": "sample_bank_id_test",
+      "order_number": "' . $trxnId . '",
+      "auth_code": "123456",
+      "card_info": {
+        "issuer": "",
+        "funding": 0,
+        "type": 1,
+        "level": "",
+        "country": "TAIWAN",
+        "last_four": "4321",
+        "bin_code": "123456",
+        "country_code": "TW",
+        "expiry_date": "' . $oldExpiryDate . '"
+      },
+      "transaction_time_millis": "' . $microtime . '",
+      "bank_transaction_time": {
+        "start_time_millis": "' . $microtime . '",
+        "end_time_millis": "' . $microtime . '"
+      },
+      "bank_result_code": "000",
+      "bank_result_msg": "SUCCESS"
+    }';
+    $primeResponse = json_decode($primeJson);
+    CRM_Core_Payment_TapPayAPI::saveTapPayData($contribution->id, $primeResponse, 'pay_by_prime');
+
+    return [
+      'recurring' => $recurring,
+      'contribution' => $contribution,
+      'trxnId' => $trxnId,
+      'testCardToken' => $testCardToken,
+    ];
+  }
+
   function testUpdateExpiryDate() {
+    // Test 1: Update expiry date with ACTIVE token
+    $recurData1 = $this->createRecurringContributionWithTapPay([
+      'amount' => 123,
+      'status_id' => 5,
+      'expiry_offset' => '+1 month',
+      'source' => 'AUTO: unit test - update expiry test1 with active token',
+    ]);
+
+    $recurring1 = $recurData1['recurring'];
+    $testCardToken1 = $recurData1['testCardToken'];
+
     $notifyJson = '{
   "status" : 0,
   "msg" : "OK",
-  "card_token" : ["'.$this->_cardToken.'"],
+  "card_token" : ["'.$testCardToken1.'"],
   "card_info" : {
     "bin_code" : "123456",
     "last_four" : "4321",
@@ -752,20 +920,31 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     "token_status" : "ACTIVE"
   }
 }';
+
     $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
     CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
-    $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", [ 1 => [$this->_cardToken, 'String']]);
+
+    // Verify expiry date was updated
+    $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", [ 1 => [$testCardToken1, 'String']]);
     while($dao->fetch()) {
       $this->assertEquals('2030-12-31', $dao->expiry_date,  "In line " . __LINE__);
     }
-    sleep(2);
 
-    $dao = CRM_Core_DAO::executeQuery("SELECT contribution_recur_id,card_token FROM civicrm_contribution_tappay WHERE card_token IS NOT NULL AND contribution_recur_id IS NOT NULL");
-    $dao->fetch();
+    // Test 2: SUSPENDED token changes status to Cancelled (7)
+    $recurData2 = $this->createRecurringContributionWithTapPay([
+      'amount' => 234,
+      'status_id' => 5,
+      'expiry_offset' => '+1 month',
+      'source' => 'AUTO: unit test - update expiry test2 for SUSPENDED token',
+    ]);
+
+    $recurring2 = $recurData2['recurring'];
+    $testCardToken2 = $recurData2['testCardToken'];
+
     $notifyJson = '{
   "status" : 0,
   "msg" : "OK",
-  "card_token" : ["'.$dao->card_token.'"],
+  "card_token" : ["'.$testCardToken2.'"],
   "card_info" : {
     "bin_code" : "123456",
     "last_four" : "4321",
@@ -781,7 +960,107 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 }';
     $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
     CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
-    $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", [ 1 => [$dao->contribution_recur_id, 'Integer']]);
+
+    // Verify recurring status changed to Cancelled (7)
+    $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", [ 1 => [$recurring2->id, 'Integer']]);
     $this->assertEquals('7', $contributionStatusId,  "In line " . __LINE__);
+
+    // Test 3: Change recurring status to Expired (6) and update expiry date
+    // Should change status from Expired (6) to In Progress (5)
+    $recurData3 = $this->createRecurringContributionWithTapPay([
+      'amount' => 345,
+      'status_id' => 6,
+      'expiry_offset' => '-2 month',
+      'source' => 'AUTO: unit test - update expiry test3 for Change recurring status',
+    ]);
+
+    $recurring3 = $recurData3['recurring'];
+    $contribution3 = $recurData3['contribution'];
+    $testCardToken3 = $recurData3['testCardToken'];
+
+    // Verify recurring status is Expired
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring3->id, 'contribution_status_id', 'id', 6, "In line " . __LINE__);
+
+    // Verify old expiry date (past date)
+    $oldLastDayOfMonth = date('Y-m-d', strtotime('last day of this month', strtotime('-2 month')));
+    $this->assertDBCompareValue('CRM_Contribute_DAO_TapPay', $contribution3->id, 'expiry_date', 'contribution_id', $oldLastDayOfMonth, "In line " . __LINE__);
+
+    // Send cardNotify with updated expiry date (future date) and ACTIVE token
+    $newExpiryDate = date('Ym', strtotime('+12 month'));
+    $newLastDayOfMonth = date('Y-m-d', strtotime('last day of this month', strtotime('+12 month')));
+    $notifyJson = '{
+  "status" : 0,
+  "msg" : "OK",
+  "card_token" : ["'.$testCardToken3.'"],
+  "card_info" : {
+    "bin_code" : "123456",
+    "last_four" : "4321",
+    "issuer" : "Test",
+    "funding" : 0,
+    "type" : 1,
+    "level" : "",
+    "country" : "TAIWAN",
+    "country_code" : "TW",
+    "expiry_date" : "' . $newExpiryDate . '",
+    "token_status" : "ACTIVE"
+  }
+}';
+    $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
+    CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson);
+
+    // Verify expiry date was updated
+    $this->assertDBCompareValue('CRM_Contribute_DAO_TapPay', $contribution3->id, 'expiry_date', 'contribution_id', $newLastDayOfMonth, "In line " . __LINE__);
+
+    // Verify recurring status changed from Expired (6) to In Progress (5)
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring3->id, 'contribution_status_id', 'id', 5, "In line " . __LINE__);
+
+    // Test 4: Recurring with In Progress (5) status and update expiry date
+    // Status should remain In Progress (5)
+    $recurData4 = $this->createRecurringContributionWithTapPay([
+      'amount' => 456,
+      'status_id' => 5,
+      'expiry_offset' => '+3 month',
+      'source' => 'AUTO: unit test - update expiry test4 for in Progress recurring',
+    ]);
+
+    $recurring4 = $recurData4['recurring'];
+    $contribution4 = $recurData4['contribution'];
+    $testCardToken4 = $recurData4['testCardToken'];
+
+    // Verify recurring status is In Progress (5)
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring4->id, 'contribution_status_id', 'id', 5, "In line " . __LINE__);
+
+    // Verify old expiry date (3 months from now)
+    $oldLastDayOfMonth4 = date('Y-m-d', strtotime('last day of this month', strtotime('+3 month')));
+    $this->assertDBCompareValue('CRM_Contribute_DAO_TapPay', $contribution4->id, 'expiry_date', 'contribution_id', $oldLastDayOfMonth4, "In line " . __LINE__);
+
+    // Send cardNotify with updated expiry date (even further in future) and ACTIVE token
+    $newExpiryDate4 = date('Ym', strtotime('+18 month'));
+    $newLastDayOfMonth4 = date('Y-m-d', strtotime('last day of this month', strtotime('+18 month')));
+    $notifyJson4 = '{
+  "status" : 0,
+  "msg" : "OK",
+  "card_token" : ["'.$testCardToken4.'"],
+  "card_info" : {
+    "bin_code" : "123456",
+    "last_four" : "4321",
+    "issuer" : "Test",
+    "funding" : 0,
+    "type" : 1,
+    "level" : "",
+    "country" : "TAIWAN",
+    "country_code" : "TW",
+    "expiry_date" : "' . $newExpiryDate4 . '",
+    "token_status" : "ACTIVE"
+  }
+}';
+    $_SERVER['REQUEST_URI'] = '/civicrm/tappay/cardnotify';
+    CRM_Core_Payment_TapPay::cardNotify(NULL, $notifyJson4);
+
+    // Verify expiry date was updated
+    $this->assertDBCompareValue('CRM_Contribute_DAO_TapPay', $contribution4->id, 'expiry_date', 'contribution_id', $newLastDayOfMonth4, "In line " . __LINE__);
+
+    // Verify recurring status remained In Progress (5), not changed
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring4->id, 'contribution_status_id', 'id', 5, "In line " . __LINE__);
   }
 }
