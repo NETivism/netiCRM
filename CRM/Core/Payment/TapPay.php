@@ -1077,14 +1077,13 @@ LIMIT 0, 100
 
       if ($isProgress) {
         $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
-        $note .= ts('Automatically resumed to “In Progress” based on the updated card expiry date.');
+        $statusNote .= ts('Automatically resumed to In Progress based on the updated card expiry date.');
         $recurParams = [
-        'id' => $dao->recur_id,
-        'contribution_status_id' => 5,
-        'message' => $note,
-      ];
+          'id' => $dao->recur_id,
+          'contribution_status_id' => 5
+        ];
         CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
-        CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $note);
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
       }
     }
 
