@@ -50710,3 +50710,7 @@ msgstr ""
 #: xml/templates/civicrm_data.sql.tpl
 msgid "Languages"
 msgstr ""
+
+#: CRM/Core/Payment/TapPay.php
+msgid "Recurring status was expired and card expiry date has passed, but payment authorization (token status) is ACTIVE. Payment was processed successfully."
+msgstr ""
