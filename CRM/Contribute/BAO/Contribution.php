@@ -2723,7 +2723,7 @@ WHERE c.id = $id";
       $config = CRM_Core_Config::singleton();
       $receipt_logo = $config->receiptLogo;
       if ($receipt_logo && !(substr($receipt_logo, 0, 7) == 'http://' || substr($receipt_logo, 0, 8) == 'https://')) {
-        $receipt_logo = $config->imageUploadDir . $receipt_logo;
+        $receipt_logo = $config->imageUploadURL . $receipt_logo;
       }
       $tplParams = [
         'contact_id' => $contribution->contact_id,
