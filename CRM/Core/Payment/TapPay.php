@@ -1047,8 +1047,6 @@ LIMIT 0, 100
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
-    //$new_expiry_date 2025-11-30
-    //time 2025/11/27 01:58
     elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date) && !$activeTokenOverride) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
