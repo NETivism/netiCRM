@@ -997,6 +997,7 @@ LIMIT 0, 100
     $tappay->orderBy("expiry_date DESC");
     $tappay->find(TRUE);
     $currentExpiryDate = $tappay->expiry_date;
+
     if ($goPayment) {
       if ((strtotime($newExpiryDate) >= strtotime($currentExpiryDate)) && $activeTokenOverride) {
         $isProgress = TRUE;
@@ -1034,6 +1035,7 @@ LIMIT 0, 100
       $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", [1 => date('Y/m',strtotime($new_expiry_date))]);
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
+      $isExpired = TRUE;
     }
     elseif (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
       $statusNote = ts("End date is due.");
@@ -1045,6 +1047,8 @@ LIMIT 0, 100
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
+    //$new_expiry_date 2025-11-30
+    //time 2025/11/27 01:58
     elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date) && !$activeTokenOverride) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
