@@ -972,6 +972,7 @@ LIMIT 0, 100
         $reason = 'by end_date not due ...';
       }
       else {
+        $goPayment = FALSE;
         $resultNote .= "Payment doesn't be executed cause the end_date was dued.";
       }
     }
@@ -981,6 +982,7 @@ LIMIT 0, 100
         $reason = 'by installments not full ...';
       }
       else {
+        $goPayment = FALSE;
         $resultNote .= "Payment doesn't be executed cause the installments was full.";
       }
     }
@@ -1067,7 +1069,7 @@ LIMIT 0, 100
     }
     elseif ($activeTokenOverride && $donePayment) {
       // Add note when payment succeeded for expired recurring with active token
-      $sqlContribution = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1 ORDER BY id DESC";
+      $sqlContribution = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY id DESC";
       $latestContributionId = CRM_Core_DAO::singleValueQuery($sqlContribution, [1 => [$dao->recur_id, 'Integer']]);
       $contribution = new CRM_Contribute_DAO_Contribution();
       $contribution->id = $latestContributionId;
