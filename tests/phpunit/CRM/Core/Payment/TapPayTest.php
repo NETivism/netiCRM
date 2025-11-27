@@ -593,7 +593,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals($this->_cardToken, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
 
-    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', $expectedValue = 1, "In line " . __LINE__);
+    $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', $expectedValue = 6, "In line " . __LINE__);
 
     ### 5th contribution, no further contributions should executed this time
     $now = strtotime(date('Y-m-05', strtotime('+4 month', $basemonth))) + 65000; // later of that 5th of month
