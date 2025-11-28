@@ -874,7 +874,7 @@ ON
 WHERE
   $cycleDayFilter AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
-AND r.contribution_status_id in (5,7)
+AND r.contribution_status_id in (5,6)
 AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
 GROUP BY r.id
