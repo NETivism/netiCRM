@@ -1999,39 +1999,45 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $spgateway->orderBy("expiry_date DESC");
     $spgateway->find(TRUE);
     $new_expiry_date = $spgateway->expiry_date;
+    $changeStatusId = NULL;
     if ($donePayment && $dao->frequency_unit == 'month' && !empty($dao->end_date) && date('Ym', $time) == date('Ym', strtotime($dao->end_date))) {
       $statusNote = ts("This is lastest contribution of this recurring (end date is %1).", [1 => date('Y-m-d', strtotime($dao->end_date))]);
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
+      $changeStatusId = 1;
     }
     elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($new_expiry_date) && date('Ym', $time) == date('Ym', strtotime($new_expiry_date))) {
       $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", [1 => date('Y/m',strtotime($new_expiry_date))]);
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
+      $changeStatusId = 1;
     }
     elseif (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
       $statusNote = ts("End date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
+      $changeStatusId = 1;
     }
     elseif (!empty($dao->installments) && $successCount >= $dao->installments) {
       $statusNote = ts("Installments is full.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
+      $changeStatusId = 1;
     }
     elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date)) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
+      $changeStatusId = 6;
     }
 
     if ( $changeStatus ) {
-      $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
+      $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus($changeStatusId)]);
       $statusNote .= ' '.ts("Auto renews status");
       $resultNote .= "\n".$statusNoteTitle;
       $recurParams = [];
       $recurParams['id'] = $dao->recur_id;
-      $recurParams['contribution_status_id'] = 1;
+      $recurParams['contribution_status_id'] = $changeStatusId;
       $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
       CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
