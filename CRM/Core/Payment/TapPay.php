@@ -874,7 +874,7 @@ ON
 WHERE
   $cycleDayFilter AND
   (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
-AND r.contribution_status_id in (5,7)
+AND r.contribution_status_id in (5,6)
 AND r.frequency_unit = 'month'
 AND p.payment_processor_type = 'TapPay'
 GROUP BY r.id
@@ -1047,8 +1047,6 @@ LIMIT 0, 100
       $resultNote .= "\n".$statusNote;
       $changeStatus = TRUE;
     }
-    //$new_expiry_date 2025-11-30
-    //time 2025/11/27 01:58
     elseif (!empty($new_expiry_date) && $time > strtotime($new_expiry_date) && !$activeTokenOverride) {
       $statusNote = ts("Card expiry date is due.");
       $resultNote .= "\n".$statusNote;

@@ -215,10 +215,15 @@
     let spgateway_processor_options_live = {/literal}{if $spgateway_processor_options_live}{$spgateway_processor_options_live}{else}{ldelim} {rdelim}{/if};{literal}
     let spgateway_processor_options_test = {/literal}{if $spgateway_processor_options_test}{$spgateway_processor_options_test}{else}{ldelim} {rdelim}{/if};{literal}
 
-    function addApiCheckbox($element, label) {
+    function addApiCheckbox($element, label, enableLock) {
       if (!$element.length) {
         console.error('Element not found');
         return;
+      }
+
+      // Default to true if not specified
+      if (typeof enableLock === 'undefined') {
+        enableLock = true;
       }
 
       const elementClass = $element[0].className || 'default-class';
@@ -234,10 +239,14 @@
       // Determine if this checkbox should be disabled
       const isTestElement = (elementClass.indexOf('-test_') !== -1);
       let shouldBeDisabled = false;
-      if (isTestElement && having_contribution_test) {
-        shouldBeDisabled = true;
-      } else if (!isTestElement && having_contribution) {
-        shouldBeDisabled = true;
+
+      // Only apply lock logic if enableLock is true
+      if (enableLock) {
+        if (isTestElement && having_contribution_test) {
+          shouldBeDisabled = true;
+        } else if (!isTestElement && having_contribution) {
+          shouldBeDisabled = true;
+        }
       }
 
       const $checkbox = $('<input>')
@@ -298,7 +307,7 @@
     $('fieldset [class^="crm-paymentProcessor-"][class$="url_recur"]').each(function(i, element) {
       const $subject = $(this).closest('table').find('[class^="crm-paymentProcessor-"][class$=subject]');
       $subject.hide();
-      addApiCheckbox($(this), '{/literal}{ts}Enable Neweb Recurring API{/ts}{literal}');
+      addApiCheckbox($(this), '{/literal}{ts}Enable Neweb Recurring API{/ts}{literal}', false);
     });
     function createUrlSiteSelect($urlSiteElement) {
       const $originalInput = $urlSiteElement.find('input').first();
