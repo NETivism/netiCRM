@@ -2010,7 +2010,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", [1 => date('Y/m',strtotime($new_expiry_date))]);
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
-      $changeStatusId = 1;
+      $changeStatusId = 6;
     }
     elseif (!empty($dao->end_date) && $time > strtotime($dao->end_date)) {
       $statusNote = ts("End date is due.");
