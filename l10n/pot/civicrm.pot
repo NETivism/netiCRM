@@ -50718,3 +50718,7 @@ msgstr ""
 #: CRM/Core/Payment/TapPay.php
 msgid "Automatically resumed to In Progress based on the updated card expiry date."
 msgstr ""
+
+#: CRM/Contribute/BAO/Contribution.php
+msgid "Premium Combination Content"
+msgstr ""

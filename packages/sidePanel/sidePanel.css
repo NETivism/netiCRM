@@ -4,6 +4,9 @@
   --nsp-width: 320px;
   --admin-sidebar-width: 230px;
   --sidepanel-button-size: 44px;
+  --civicrm-menu-height: 25px;
+  --drupal-toolbar-height: 40px;
+  --drupal-horizontal-toolbar-open-height: calc(var(--drupal-toolbar-height) + 45px);
 }
 .nsp-is-fullscreen {
   --nsp-width: calc(100% - var(--admin-sidebar-width) - var(--sidepanel-button-size));
@@ -159,6 +162,19 @@ a.btn:hover {
 .civicrm-menu-enabled.admin-menu.simplemenu-enabled .nsp-container .nsp-inner {
   padding-top: 90px;
 }
+/* fix side panel layout for Drupal 10+ toolbar */
+.user-logged-in.civicrm-menu-enabled .nsp-container .nsp-inner {
+  padding-top: var(--civicrm-menu-height);
+}
+.user-logged-in.civicrm-menu-enabled.toolbar-horizontal .nsp-container .nsp-inner,
+.user-logged-in.civicrm-menu-enabled.toolbar-vertical .nsp-container .nsp-inner,
+.user-logged-in.civicrm-menu-enabled.toolbar-tray-open .nsp-container .nsp-inner {
+  padding-top: calc(var(--civicrm-menu-height) + var(--drupal-toolbar-height));
+}
+.user-logged-in.civicrm-menu-enabled.toolbar-horizontal.toolbar-tray-open .nsp-container .nsp-inner {
+  padding-top: calc(var(--civicrm-menu-height) + var(--drupal-horizontal-toolbar-open-height));
+}
+
 .nsp-container .nsp-header,
 .nsp-container .nsp-content,
 .nsp-container .nsp-footer {

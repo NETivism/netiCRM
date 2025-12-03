@@ -855,6 +855,52 @@ class CRM_Export_BAO_Export {
           elseif ($field == 'pledge_next_pay_amount') {
             $row[$field] = $dao->pledge_next_pay_amount + $dao->pledge_outstanding_amount;
           }
+          elseif ($field == 'product_name') {
+            // Check if this contribution has a combination premium
+            $hasCombination = FALSE;
+            if (!empty($dao->contribution_id)) {
+              $contributionProductDAO = new CRM_Contribute_DAO_ContributionProduct();
+              $contributionProductDAO->contribution_id = $dao->contribution_id;
+              if ($contributionProductDAO->find(TRUE) && !empty($contributionProductDAO->combination_id)) {
+                $hasCombination = TRUE;
+              }
+            }
+            // If has combination, set product_name to empty
+            if ($hasCombination) {
+              $row[$field] = '';
+            }
+            elseif (property_exists($dao, $field)) {
+              $row[$field] = $dao->$field;
+            }
+            else {
+              $row[$field] = '';
+            }
+          }
+          elseif ($field == 'premium_combination_name' || $field == 'premium_combination_content') {
+            // Special case for premium combination fields
+            $row[$field] = '';
+            if (!empty($dao->contribution_id)) {
+              $contributionProductDAO = new CRM_Contribute_DAO_ContributionProduct();
+              $contributionProductDAO->contribution_id = $dao->contribution_id;
+              if ($contributionProductDAO->find(TRUE) && !empty($contributionProductDAO->combination_id)) {
+                $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+                $combinationDAO->id = $contributionProductDAO->combination_id;
+                if ($combinationDAO->find(TRUE)) {
+                  if ($field == 'premium_combination_name') {
+                    $row[$field] = $combinationDAO->combination_name;
+                  }
+                  else {
+                    $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($contributionProductDAO->combination_id);
+                    $combinationContentArray = [];
+                    foreach ($combinationProducts as $product) {
+                      $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
+                    }
+                    $row[$field] = implode(', ', $combinationContentArray);
+                  }
+                }
+              }
+            }
+          }
           elseif (is_array($value) && $field == 'location') {
             // fix header for location type case
             foreach ($value as $ltype => $val) {

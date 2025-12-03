@@ -205,13 +205,13 @@ function reloadWindow( tempId ) {
     <div class="nme-setting-panels-header" id="nme-setting-panels-header">
       <div class="inner">
         <ul data-target-contents="nme-setting-panel" class="nme-setting-panels-tabs">
-          <li><a href="#nme-aicompletion" class="is-active" data-target-id="nme-aicompletion">{ts}AI Copywriter{/ts}</a></li>
-          <li><a href="#nme-aiimagegeneration" data-target-id="nme-aiimagegeneration">{ts}AI Image Generator{/ts}</a></li>
+          <li><a href="#nme-aicompletion" data-target-id="nme-aicompletion">{ts}AI Copywriter{/ts}</a></li>
+          <li><a href="#nme-aiimagegeneration" class="is-active" data-target-id="nme-aiimagegeneration">{ts}AI Image Generator{/ts}</a></li>
         </ul>
       </div>
     </div>
     <div class="nme-ai-panels-content" id="nme-setting-panels-content">
-      <div id="nme-aicompletion" class="nme-aicompletion nme-setting-panel is-active">
+      <div id="nme-aicompletion" class="nme-aicompletion nme-setting-panel">
         <div class="nme-setting-panel-inner">
           <h3 class="nme-setting-panel-title">{ts}AI Copywriter{/ts}</h3>
           <div class="nme-setting-panel-content">
@@ -219,7 +219,7 @@ function reloadWindow( tempId ) {
           </div>
         </div>
       </div>
-      <div id="nme-aiimagegeneration" class="nme-aiimagegeneration nme-setting-panel">
+      <div id="nme-aiimagegeneration" class="nme-aiimagegeneration nme-setting-panel is-active">
         <div class="nme-setting-panel-inner">
           <h3 class="nme-setting-panel-title">{ts}AI Image Generator{/ts}</h3>
           <div class="nme-setting-panel-content">

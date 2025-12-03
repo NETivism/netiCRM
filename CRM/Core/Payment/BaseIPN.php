@@ -914,17 +914,44 @@ class CRM_Core_Payment_BaseIPN {
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contribution->id;
     if ($dao->find(TRUE)) {
-      $premiumId = $dao->product_id;
       $template->assign('option', $dao->product_option);
-
-
-      $productDAO = new CRM_Contribute_DAO_Product();
-      $productDAO->id = $premiumId;
-      $productDAO->find(TRUE);
       $template->assign('selectPremium', TRUE);
-      $template->assign('product_name', $productDAO->name);
-      $template->assign('price', $productDAO->price);
-      $template->assign('sku', $productDAO->sku);
+
+      // Check if this is a combination premium
+      if (!empty($dao->combination_id)) {
+        $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+        $combinationDAO->id = $dao->combination_id;
+        if ($combinationDAO->find(TRUE)) {
+          $combinationName = $combinationDAO->combination_name;
+          $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
+          $combinationContentArray = [];
+          $totalPrice = 0;
+          $skuArray = [];
+          foreach ($combinationProducts as $product) {
+            $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
+            if (!empty($product['price'])) {
+              $totalPrice += $product['price'] * $product['quantity'];
+            }
+            if (!empty($product['sku'])) {
+              $skuArray[] = $product['sku'];
+            }
+          }
+          $combinationContent = implode(', ', $combinationContentArray);
+          $template->assign('product_name', $combinationName . ': ' . $combinationContent);
+          $template->assign('price', $totalPrice);
+          $template->assign('sku', implode(', ', $skuArray));
+        }
+      }
+      else if (!empty($dao->product_id)) {
+        // Single product premium
+        $premiumId = $dao->product_id;
+        $productDAO = new CRM_Contribute_DAO_Product();
+        $productDAO->id = $premiumId;
+        $productDAO->find(TRUE);
+        $template->assign('product_name', $productDAO->name);
+        $template->assign('price', $productDAO->price);
+        $template->assign('sku', $productDAO->sku);
+      }
     }
 
     // add the new contribution values
