@@ -292,13 +292,17 @@ UNION
       ) = CRM_Contact_BAO_Relationship::create($relationshipParams, $cid);
 
 
-      // In case we change employer, clean prveovious employer related records.
-      $previousEmployerID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'employer_id');
-      if ($previousEmployerID &&
-        $previousEmployerID != $organizationId
-      ) {
-        self::clearCurrentEmployer($contactID, $previousEmployerID);
-      }
+      // Don't delete previous employer relationships and inherited memberships.
+      // This allows contacts to have multiple employer relationships
+      // and prevents accidental deletion of memberships when updating employer info.
+
+      // In case we change employer, clean previous employer related records.
+      // $previousEmployerID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'employer_id');
+      // if ($previousEmployerID &&
+      //   $previousEmployerID != $organizationId
+      // ) {
+      //   self::clearCurrentEmployer($contactID, $previousEmployerID);
+      // }
 
       // set current employer
       self::setCurrentEmployer([$contactID => $organizationId]);

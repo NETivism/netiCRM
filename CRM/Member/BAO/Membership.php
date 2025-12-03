@@ -581,6 +581,12 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
 
     // add activity to "Membership Renewal"
     $userID = CRM_Core_Session::singleton()->get('userID');
+
+    // If no userID use the membership contact as the activity source
+    if (empty($userID)) {
+      $userID = $assigneeId;
+    }
+
     $subject = ts('Deleted Member(s): %1', [1 => $id]);
     if (!empty($relatedContributions)) {
       $membership->contributions = $relatedContributions;
