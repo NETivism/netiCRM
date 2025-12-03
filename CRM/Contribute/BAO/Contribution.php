@@ -596,8 +596,21 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
           'data_type' => CRM_Utils_Type::T_INT,
         ]];
 
+      $premiumCombination = [
+        'premium_combination_name' => [
+          'title' => ts('Premium Combination Name'),
+          'name' => 'premium_combination_name',
+          'data_type' => CRM_Utils_Type::T_STRING,
+        ],
+        'premium_combination_content' => [
+          'title' => ts('Premium Combination Content'),
+          'name' => 'premium_combination_content',
+          'data_type' => CRM_Utils_Type::T_TEXT,
+        ]
+      ];
+
       $fields = array_merge($impFields, $typeField, $contributionStatus, $optionField, $expFieldProduct,
-        $expFieldsContrib, $contributionNote, $contributionRecurId, $achField, $trackField, 
+        $expFieldsContrib, $contributionNote, $contributionRecurId, $achField, $trackField, $premiumCombination,
         CRM_Core_BAO_CustomField::getFieldsForImport('Contribution')
       );
 
