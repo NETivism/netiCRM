@@ -453,7 +453,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @static
    */
   static function formRule($fields, $files, $self) {
-    $errors = array();
+    $errors = [];
 
     if (!empty($self->_params['selectProduct'])) {
       $fields['selectProduct'] = $self->_params['selectProduct'];
@@ -825,9 +825,22 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $combination->find(TRUE);
     $this->assign('combination_name', $combination->combination_name);
     $this->setPremiumReceiptInfo();
+
     // Get products in the combination
     $products = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationId);
+
+    // Build combined product information for email receipt
+    $combinationContentArray = [];
+    $totalPrice = 0;
+    $skuArray = [];
     foreach ($products as $product) {
+      $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
+      if (!empty($product['price'])) {
+        $totalPrice += $product['price'] * $product['quantity'];
+      }
+      if (!empty($product['sku'])) {
+        $skuArray[] = $product['sku'];
+      }
       $params = [
         'product_id' => $product['product_id'],
         'contribution_id' => $contribution->id,
@@ -844,6 +857,12 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       }
       CRM_Contribute_BAO_Contribution::addPremium($params);
     }
+
+    // Assign combined information for email template
+    $combinationContent = implode(', ', $combinationContentArray);
+    $this->assign('product_name', $combination->combination_name . ': ' . $combinationContent);
+    $this->assign('price', $totalPrice);
+    $this->assign('sku', implode(', ', $skuArray));
   }
 
   /**
