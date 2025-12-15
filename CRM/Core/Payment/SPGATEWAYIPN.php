@@ -388,14 +388,23 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       }
       $failedReason = $responseMsg. ' ('.ts('Error Code:'). $responseCode.')';
       $note .= $failedReason;
-      if ($input['PayTime']) {
-        $objects['contribution']->cancel_date = $input['PayTime'];
+      if (!empty($input['PayTime'])) {
+        $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['PayTime']));
       }
-      elseif ($input['CreateTime']) {
-        $objects['contribution']->cancel_date = $input['CreateTime'];
+      elseif (!empty($input['CreateTime'])) {
+        $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['CreateTime']));
       }
-      elseif ($input['AuthDate']) {
-        $objects['contribution']->cancel_date = $input['AuthDate'];
+      elseif (!empty($input['AuthDate'])) {
+        if (!empty($input['AuthTime']) && preg_match('/^[0-9]{8}$/', $input['AuthDate']) && preg_match('/^[0-9]{6}$/', $input['AuthTime'])) {
+          // Special case: AuthDate is Ymd (8 digits) and AuthTime is His (6 digits)
+          $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['AuthDate'].$input['AuthTime']));
+        }
+        else {
+          $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['AuthDate']));
+        }
+      }
+      elseif (!empty($input['AuthTime'])) {
+        $objects['contribution']->cancel_date = date('YmdHis', strtotime($input['AuthTime']));
       }
       $transaction = new CRM_Core_Transaction();
       $this->failed($objects, $transaction, $failedReason);
