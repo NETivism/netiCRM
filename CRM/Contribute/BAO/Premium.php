@@ -454,7 +454,18 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @static
    */
   static function getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $convenienceStoreDays, $checkStatuses) {
-    $statusList = implode(',', array_map('intval', $checkStatuses));
+    // Get all contribution statuses and map names to IDs
+    $allStatuses = CRM_Contribute_PseudoConstant::contributionStatus('', 'name');
+    $statusNameToId = array_flip($allStatuses);
+
+    // Map status names to IDs
+    $statusIds = [];
+    foreach ($checkStatuses as $statusName) {
+      if (isset($statusNameToId[$statusName])) {
+        $statusIds[] = $statusNameToId[$statusName];
+      }
+    }
+    $statusList = implode(',', array_map('intval', $statusIds));
     
     // Get payment instrument IDs based on names
     $creditCardInstruments = self::getPaymentInstrumentIdsByNames(['Credit Card', 'Web ATM', 'LinePay']);
@@ -470,83 +481,84 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     // Credit card transactions (immediate)
     if (!empty($creditCardIds)) {
       $creditCardSql = "
-        SELECT c.id, c.payment_instrument_id, c.receive_date, c.expiry_date, c.contribution_status_id
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date
         FROM civicrm_contribution c
-        INNER JOIN civicrm_entity_financial_trxn eft ON eft.entity_table = 'civicrm_contribution' AND eft.entity_id = c.id
+        INNER JOIN civicrm_contribution_product cp ON cp.contribution_id = c.id
         WHERE c.contribution_status_id IN ({$statusList})
+          AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$creditCardIds})
-          AND DATEDIFF(NOW(), c.receive_date) > %1
-          AND c.id IN (
-            SELECT cp.contribution_id FROM civicrm_contribution_premium cp WHERE cp.contribution_id = c.id
-          )
+          AND DATEDIFF(NOW(), c.created_date) > %1
+          AND cp.restock = 0
       ";
       
       $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer']]);
       while ($dao->fetch()) {
-        $results[] = [
-          'id' => $dao->id,
-          'payment_instrument_id' => $dao->payment_instrument_id,
-          'receive_date' => $dao->receive_date,
-          'expiry_date' => $dao->expiry_date,
-          'contribution_status_id' => $dao->contribution_status_id,
-          'reason' => "Credit card transaction expired (over {$creditCardDays} days)"
-        ];
+        if (!isset($results[$dao->id])) {
+          $results[$dao->id] = [
+            'id' => $dao->id,
+            'payment_instrument_id' => $dao->payment_instrument_id,
+            'receive_date' => $dao->receive_date,
+            'contribution_status_id' => $dao->contribution_status_id,
+            'created_date' => $dao->created_date,
+            'reason' => "Credit card transaction expired (over {$creditCardDays} days)"
+          ];
+        }
       }
     }
-    
+
     // Non-credit card transactions (ATM, convenience store code)
     if (!empty($nonCreditCardIds)) {
       $nonCreditCardSql = "
-        SELECT c.id, c.payment_instrument_id, c.receive_date, c.expiry_date, c.contribution_status_id
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date
         FROM civicrm_contribution c
-        INNER JOIN civicrm_entity_financial_trxn eft ON eft.entity_table = 'civicrm_contribution' AND eft.entity_id = c.id  
+        INNER JOIN civicrm_contribution_product cp ON cp.contribution_id = c.id
         WHERE c.contribution_status_id IN ({$statusList})
+          AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$nonCreditCardIds})
-          AND c.expiry_date IS NOT NULL
-          AND DATEDIFF(NOW(), c.expiry_date) > %1
-          AND c.id IN (
-            SELECT cp.contribution_id FROM civicrm_contribution_premium cp WHERE cp.contribution_id = c.id
-          )
+          AND DATEDIFF(NOW(), c.created_date) > %1
+          AND cp.restock = 0
       ";
-      
+
       $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer']]);
       while ($dao->fetch()) {
-        $results[] = [
-          'id' => $dao->id,
-          'payment_instrument_id' => $dao->payment_instrument_id,
-          'receive_date' => $dao->receive_date,
-          'expiry_date' => $dao->expiry_date,
-          'contribution_status_id' => $dao->contribution_status_id,
-          'reason' => "Non-credit card transaction expired (over {$nonCreditCardDays} days)"
-        ];
+        if (!isset($results[$dao->id])) {
+          $results[$dao->id] = [
+            'id' => $dao->id,
+            'payment_instrument_id' => $dao->payment_instrument_id,
+            'receive_date' => $dao->receive_date,
+            'contribution_status_id' => $dao->contribution_status_id,
+            'created_date' => $dao->created_date,
+            'reason' => "Non-credit card transaction expired (over {$nonCreditCardDays} days)"
+          ];
+        }
       }
     }
-    
+
     // Special case for convenience store barcodes (slower processing)
     if (!empty($barcodeIds)) {
       $barcodeSpecialSql = "
-        SELECT c.id, c.payment_instrument_id, c.receive_date, c.expiry_date, c.contribution_status_id
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date
         FROM civicrm_contribution c
-        INNER JOIN civicrm_entity_financial_trxn eft ON eft.entity_table = 'civicrm_contribution' AND eft.entity_id = c.id
+        INNER JOIN civicrm_contribution_product cp ON cp.contribution_id = c.id
         WHERE c.contribution_status_id IN ({$statusList})
+          AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$barcodeIds})
-          AND c.expiry_date IS NOT NULL  
-          AND DATEDIFF(NOW(), c.expiry_date) > %1
-          AND c.id IN (
-            SELECT cp.contribution_id FROM civicrm_contribution_premium cp WHERE cp.contribution_id = c.id
-          )
+          AND DATEDIFF(NOW(), c.created_date) > %1
+          AND cp.restock = 0
       ";
-      
+
       $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer']]);
       while ($dao->fetch()) {
-        $results[] = [
-          'id' => $dao->id,
-          'payment_instrument_id' => $dao->payment_instrument_id,
-          'receive_date' => $dao->receive_date,
-          'expiry_date' => $dao->expiry_date,
-          'contribution_status_id' => $dao->contribution_status_id,
-          'reason' => "Convenience store barcode transaction expired (over {$convenienceStoreDays} days)"
-        ];
+        if (!isset($results[$dao->id])) {
+          $results[$dao->id] = [
+            'id' => $dao->id,
+            'payment_instrument_id' => $dao->payment_instrument_id,
+            'receive_date' => $dao->receive_date,
+            'contribution_status_id' => $dao->contribution_status_id,
+            'created_date' => $dao->created_date,
+            'reason' => "Convenience store barcode transaction expired (over {$convenienceStoreDays} days)"
+          ];
+        }
       }
     }
 
