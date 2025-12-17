@@ -2816,9 +2816,52 @@ ul.crm-list,
     padding     : 3px;
     top         : 0;
     right       : 0;
+  }
+.crm-container .cmsmessagebox {
+  top: -45px;
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  font-size: 14px;
+  color: #000;
+  border: 2px solid #c93;
+  border-radius: 4px;
+  background: #FFC;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+}
+.crm-container .cmsmessagebox i {
+  font-size: 18px;
+}
+.crm-container .cmsmessagebox-success {
+  color: #1B5E20;
+  border-color: #58AD57;
+  background: #fff;
+}
+.crm-container .cmsmessagebox-success i {
+  color: #58AD57;
+}
+.crm-container .cmsmessagebox-error {
+  color: #CC0000;
+  border-color: #CC0000;
+  background: #fff;
+}
+.crm-container .cmsmessagebox-error i {
+  color: #CC0000;
 }
 .crm-container .cms_name-section {
     position: relative;
+}
+.crm-container .crm-form-elem + #checkavailability {
+  margin: 10px 0;
+}
+
+@media screen and (min-width: 992px) {
+  .crm-container .cmsmessagebox {
+    top: -45px;
+  }
+  .crm-container .crm-form-elem + #checkavailability {
+    margin: 0 0 0 10px;
+  }
 }
 
 /* class for text area resizer jquery plugin*/
