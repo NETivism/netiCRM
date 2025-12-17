@@ -5,6 +5,21 @@
  */
 class CRM_AI_Page_AJAX {
 
+  // HTTP status code constants
+  const HTTP_BAD_REQUEST = 400;
+  const HTTP_UNAUTHORIZED = 401;
+  const HTTP_FORBIDDEN = 403;
+  const HTTP_NOT_FOUND = 404;
+  const HTTP_METHOD_NOT_ALLOWED = 405;
+  const HTTP_PAYLOAD_TOO_LARGE = 413;
+  const HTTP_UNSUPPORTED_MEDIA_TYPE = 415;
+  const HTTP_UNPROCESSABLE_ENTITY = 422;
+  const HTTP_TOO_MANY_REQUESTS = 429;
+  const HTTP_INTERNAL_SERVER_ERROR = 500;
+  const HTTP_BAD_GATEWAY = 502;
+  const HTTP_SERVICE_UNAVAILABLE = 503;
+  const HTTP_GATEWAY_TIMEOUT = 504;
+
   public static function chat() {
     $maxlength = 2000;
     $toneStyle = $aiRole = $context = null;
@@ -418,7 +433,7 @@ class CRM_AI_Page_AJAX {
         self::responseError([
           'status' => 0,
           'message' => 'The request is not a valid JSON format.',
-        ]);
+        ], self::HTTP_BAD_REQUEST);
       }
 
       $allowedInput = [
@@ -433,7 +448,7 @@ class CRM_AI_Page_AJAX {
         self::responseError([
           'status' => 0,
           'message' => 'The request does not match the expected format.',
-        ]);
+        ], self::HTTP_BAD_REQUEST);
       }
 
       $text = $jsondata['text'];
@@ -441,7 +456,7 @@ class CRM_AI_Page_AJAX {
         self::responseError([
           'status' => 0,
           'message' => "Content exceeds the maximum character limit.",
-        ]);
+        ], self::HTTP_UNPROCESSABLE_ENTITY);
       }
 
       // URL whitelist check (follow chat() pattern)
@@ -467,7 +482,7 @@ class CRM_AI_Page_AJAX {
         self::responseError([
           'status' => 0,
           'message' => "No corresponding component was found.",
-        ]);
+        ], self::HTTP_FORBIDDEN);
       }
 
       // Use complete AIGenImage workflow with database integration
@@ -484,12 +499,23 @@ class CRM_AI_Page_AJAX {
       } catch (Exception $e) {
         // Handle image generation errors only
         // Parse error code and preserve original technical message
-        $errorCode = self::parseErrorCode($e->getMessage());
+        $errorMessage = $e->getMessage();
+        $errorCode = self::parseErrorCode($errorMessage);
+        $statusCode = self::HTTP_INTERNAL_SERVER_ERROR; // Default to 500
+
+        if ($errorCode === 'GATEWAY_TIMEOUT') {
+          $statusCode = self::HTTP_GATEWAY_TIMEOUT;
+        } elseif ($errorCode === 'BAD_GATEWAY' || $errorCode === 'API_ERROR') {
+          $statusCode = self::HTTP_BAD_GATEWAY;
+        } elseif ($errorCode === 'VALIDATION_ERROR') {
+          $statusCode = self::HTTP_UNPROCESSABLE_ENTITY;
+        }
+
         self::responseError([
           'status' => 0,
-          'message' => 'Image generation failed: ' . $e->getMessage(),
+          'message' => 'Image generation failed: ' . $errorMessage,
           'error_code' => $errorCode
-        ]);
+        ], $statusCode);
         return; // Ensure we don't continue after error response
       }
 
@@ -522,15 +548,15 @@ class CRM_AI_Page_AJAX {
           'status' => 0,
           'message' => 'Image generation failed: ' . $errorMessage,
           'error_code' => $errorCode
-        ]);
+        ], self::HTTP_BAD_GATEWAY);
       }
     }
 
-    // If we reach here, it means the request method is not POST or content-type is not JSON
+    // This should not be reached due to early validation above
     self::responseError([
       'status' => 0,
       'message' => 'Invalid request method or missing data.',
-    ]);
+    ], self::HTTP_BAD_REQUEST);
   }
 
   public static function getSampleImage() {
@@ -751,7 +777,7 @@ class CRM_AI_Page_AJAX {
         self::responseError([
           'status' => 0,
           'message' => 'Database error occurred while retrieving image history.',
-        ]);
+        ], self::HTTP_INTERNAL_SERVER_ERROR);
         return;
       }
 
@@ -832,8 +858,13 @@ class CRM_AI_Page_AJAX {
    *
    * @param mixed $error The error message or object that needs to be sent as a response.
    */
-  public static function responseError($error) {
-    http_response_code(400);
+  public static function responseError($error, $statusCode = 400) {
+    // 405 status code needs special handling for Allow header
+    if ($statusCode === self::HTTP_METHOD_NOT_ALLOWED) {
+      header('Allow: POST');
+    }
+    
+    http_response_code($statusCode);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($error);
     CRM_Utils_System::civiExit();
@@ -923,9 +954,14 @@ class CRM_AI_Page_AJAX {
       return $matches[1]; // Returns: 'CONTENT_VIOLATION', 'PROMPT_INJECTION', etc.
     }
 
-    // Check for other common error patterns
-    if (strpos($errorMessage, 'Image generation failed') !== false) {
-      return 'API_ERROR';
+    // Check for timeout errors
+    if (strpos($errorMessage, 'timed out') !== false || strpos($errorMessage, 'timeout') !== false) {
+      return 'GATEWAY_TIMEOUT';
+    }
+
+    // Check for other common error patterns related to API issues
+    if (strpos($errorMessage, 'Image generation failed') !== false || strpos($errorMessage, 'API error') !== false) {
+      return 'BAD_GATEWAY';
     }
 
     if (strpos($errorMessage, 'validation') !== false || strpos($errorMessage, 'invalid') !== false) {
