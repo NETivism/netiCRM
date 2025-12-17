@@ -1870,6 +1870,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       civicrm_payment_processor p
     ON
       c.payment_processor_id = p.id
+    INNER JOIN civicrm_contribution_spgateway s
+    ON
+      s.contribution_recur_id = r.id
     WHERE
       $cycleDayFilter AND
       (SELECT MAX(created_date) FROM civicrm_contribution WHERE contribution_recur_id = r.id GROUP BY r.id) < '$currentDate'
@@ -1877,6 +1880,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     AND r.frequency_unit = 'month'
     AND p.payment_processor_type = 'SPGATEWAY'
     AND COALESCE(p.url_api, '') != ''
+    AND s.token_value IS NOT NULL
     GROUP BY r.id
     ORDER BY r.id
     LIMIT 0, 100
@@ -1970,8 +1974,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $spgateway->contribution_recur_id = $recurId;
     $spgateway->orderBy("expiry_date DESC");
     $spgateway->find(TRUE);
+
+    $spgatewayT = new CRM_Contribute_DAO_SPGATEWAY();
+    $spgatewayT->contribution_recur_id = $recurId;
+    $spgatewayT->where("COALESCE(token_value, '') != ''");
+    $spgatewayT->find(TRUE);
     $expiry_date = $spgateway->expiry_date;
-    if (!empty($spgateway) && empty($spgateway->token_value)) {
+    if (!empty($spgateway) && empty($spgatewayT->token_value)) {
       $resultNote .= "Payment doesn't be executed because token_value is empty.";
     }
     elseif ($goPayment) {

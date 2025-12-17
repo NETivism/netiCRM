@@ -164,6 +164,7 @@ class CRM_AI_BAO_AIGenImage {
         // Check for direct error in array response first
         if (isset($translationResponse['success']) && $translationResponse['success'] === false) {
           $errorMessage = $translationResponse['error'] ?? $translationResponse['message'] ?? 'Unknown translation error';
+          CRM_Core_Error::debug_log_message('AI Image Generation translation error: Direct response failure: ' . $errorMessage);
           throw new Exception("Prompt translation failed: {$errorMessage}");
         }
 
@@ -181,6 +182,7 @@ class CRM_AI_BAO_AIGenImage {
               $errorCode = $parsedData['error']['code'] ?? 'UNKNOWN_ERROR';
               $errorMessage = $parsedData['error']['message'] ?? 'Unknown error occurred';
 
+              CRM_Core_Error::debug_log_message('AI Image Generation translation error: JSON response failure - ' . $errorCode . ': ' . $errorMessage);
               throw new Exception("Prompt translation failed - {$errorCode}: {$errorMessage}");
             }
 
@@ -201,8 +203,9 @@ class CRM_AI_BAO_AIGenImage {
 
       // Step 6: Check for generation errors
       if ($this->imageService->isError($imageData)) {
-        throw new Exception('Image generation failed: ' .
-          ($imageData['error']['message'] ?? 'Unknown error'));
+        $serviceError = $imageData['error']['message'] ?? 'Unknown error';
+        CRM_Core_Error::debug_log_message('AI Image Generation service error: Image generation failed: ' . $serviceError);
+        throw new Exception('Image generation failed: ' . $serviceError);
       }
 
       // Step 7: Process and store image
@@ -243,6 +246,7 @@ class CRM_AI_BAO_AIGenImage {
   public function processImage($responseData) {
     // Step 1: Validate response data structure
     if (empty($responseData) || !isset($responseData['image_data'])) {
+      CRM_Core_Error::debug_log_message('AI Image Generation processing error: Empty or invalid image data received');
       throw new Exception('Empty or invalid image data received');
     }
 
@@ -251,6 +255,7 @@ class CRM_AI_BAO_AIGenImage {
     $binaryData = $responseData['image_data'];
 
     if (empty($binaryData)) {
+      CRM_Core_Error::debug_log_message('AI Image Generation processing error: Empty binary image data');
       throw new Exception('Empty binary image data');
     }
 
@@ -286,6 +291,7 @@ class CRM_AI_BAO_AIGenImage {
     // Step 7: Write binary data to file
     $result = file_put_contents($fullPath, $binaryData);
     if ($result === FALSE) {
+      CRM_Core_Error::debug_log_message('AI Image Generation file error: Failed to write image file to: ' . $fullPath);
       throw new Exception('Failed to write image file to: ' . $fullPath);
     }
 
@@ -344,15 +350,18 @@ class CRM_AI_BAO_AIGenImage {
    */
   public function validateInput($params) {
     if (empty($params['text'])) {
+      CRM_Core_Error::debug_log_message('AI Image Generation validation error: Text description is required');
       throw new Exception('Text description is required');
     }
 
     if (strlen($params['text']) > 1000) {
+      CRM_Core_Error::debug_log_message('AI Image Generation validation error: Text description is too long (max 1000 characters), actual length: ' . strlen($params['text']));
       throw new Exception('Text description is too long (max 1000 characters)');
     }
 
     $allowedRatios = ['1:1', '4:3', '3:4', '16:9', '9:16'];
     if (!empty($params['ratio']) && !in_array($params['ratio'], $allowedRatios)) {
+      CRM_Core_Error::debug_log_message('AI Image Generation validation error: Invalid ratio provided: ' . $params['ratio'] . ', allowed: ' . implode(', ', $allowedRatios));
       throw new Exception('Invalid ratio. Allowed: ' . implode(', ', $allowedRatios));
     }
   }
@@ -535,11 +544,13 @@ class CRM_AI_BAO_AIGenImage {
   private function ensureDirectoryExists($directory) {
     if (!is_dir($directory)) {
       if (!mkdir($directory, 0755, true)) {
+        CRM_Core_Error::debug_log_message('AI Image Generation directory error: Cannot create upload directory: ' . $directory);
         throw new Exception('Cannot create upload directory: ' . $directory);
       }
     }
 
     if (!is_writable($directory)) {
+      CRM_Core_Error::debug_log_message('AI Image Generation directory error: Upload directory is not writable: ' . $directory);
       throw new Exception('Upload directory is not writable: ' . $directory);
     }
   }

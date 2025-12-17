@@ -1438,8 +1438,11 @@ LIMIT 0, 100
             $recurDAO->find(TRUE);
             $currentStatusId = $recurDAO->contribution_status_id;
 
-            $canUpdateStatus = TRUE;
+            $canUpdateStatus = FALSE;
+            // Only allow status update from Expired (6) to In Progress (5) when conditions are met
             if ($currentStatusId == 6 && $data->card_info->token_status == 'ACTIVE') {
+              $canUpdateStatus = TRUE;
+
               // Check if end_date has passed
               if (!empty($recurDAO->end_date) && time() > strtotime($recurDAO->end_date)) {
                 $canUpdateStatus = FALSE;
@@ -1452,7 +1455,7 @@ LIMIT 0, 100
                   $canUpdateStatus = FALSE;
                 }
               }
-              // Check if status was manually set to Completed
+              // Check if status was manually set to Expired
               if ($canUpdateStatus) {
                 $logSQL = "
                   SELECT modified_id, data

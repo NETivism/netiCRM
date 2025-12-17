@@ -128,7 +128,7 @@ cj("#checkavailability").click(function() {
     var notavailable = "{/literal}<i class='zmdi zmdi-close-circle'></i>{ts}This username is taken.{/ts}{literal}";
          
     //remove all the class add the messagebox classes and start fading
-    cj("#msgbox").removeClass().addClass('cmsmessagebox').css({"color":"#000","backgroundColor":"#FFC","border":"1px solid #c93"}).text(check).fadeIn("slow");
+    cj("#msgbox").removeClass().addClass('cmsmessagebox').text(check).fadeIn("slow");
 	 
     //check the username exists or not from ajax
     var qfKey = '{/literal}{$cmsQfKey}{literal}';
@@ -137,19 +137,19 @@ cj("#checkavailability").click(function() {
     cj.post(contactUrl,{ cms_name:cj("#cms_name").val() } ,function(data) {
 	    if ( data.name == "no") { // user name not available
 	      cj("#msgbox").fadeTo(200,0.1,function() {
-          cj(this).html(notavailable).addClass('cmsmessagebox').css({"color":"#CC0000","backgroundColor":"#F7CBCA","border":"1px solid #CC0000"}).fadeTo(900,1);
+          cj(this).html(notavailable).addClass('cmsmessagebox cmsmessagebox-error').fadeTo(900,1);
         });
 	    }
       else {
 	      cj("#msgbox").fadeTo(200,0.1,function() {
-          cj(this).html(available).addClass('cmsmessagebox').css({"color":"#008000","backgroundColor":"#C9FFCA", "border": "1px solid #349534"}).fadeTo(900,1);
+          cj(this).html(available).addClass('cmsmessagebox cmsmessagebox-success').fadeTo(900,1);
         });
 	    }	    
 	  }, "json");
 	  lastName = cmsUserName;
   }
   else {
-    cj("#msgbox").removeClass().text('').css({"backgroundColor":"#FFFFFF", "border":"0px #FFFFFF"}).fadeIn("fast");
+    cj("#msgbox").removeClass().text('').fadeIn("fast");
   }
 });
 {/literal}{/if}{*do not check user name on drupal9*}{literal}

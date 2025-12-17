@@ -41317,7 +41317,7 @@ msgid "Israel"
 msgstr "以色列"
 
 msgid "Italy"
-msgstr "意大利"
+msgstr "義大利"
 
 msgid "Jamaica"
 msgstr "牙買加"
