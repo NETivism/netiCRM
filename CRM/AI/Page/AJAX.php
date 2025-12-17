@@ -544,11 +544,21 @@ class CRM_AI_Page_AJAX {
         // Parse error code and preserve original technical message
         $errorMessage = $generateResult['error'] ?? 'Unknown error occurred during image generation';
         $errorCode = self::parseErrorCode($errorMessage);
+
+        $statusCode = self::HTTP_BAD_GATEWAY;
+        if ($errorCode === 'CONTENT_VIOLATION') {
+          $statusCode = self::HTTP_UNPROCESSABLE_ENTITY;
+        } elseif ($errorCode === 'PROMPT_INJECTION') {
+          $statusCode = self::HTTP_BAD_REQUEST;
+        } elseif ($errorCode === 'PROCESSING_ERROR') {
+          $statusCode = self::HTTP_INTERNAL_SERVER_ERROR;
+        }
+
         self::responseError([
           'status' => 0,
           'message' => 'Image generation failed: ' . $errorMessage,
           'error_code' => $errorCode
-        ], self::HTTP_BAD_GATEWAY);
+        ], $statusCode);
       }
     }
 
