@@ -231,7 +231,7 @@
 .netiaiig-container .floating-message {
   position: relative;
   display: none;
-  max-width: 300px;
+  max-width: 400px;
   margin-bottom: 4px;
   transform: translateY(2px);
   transition: all 0.3s ease;
@@ -1532,6 +1532,7 @@ html[lang="zh-hant"] .netiaiig-container .sample-prompt-tooltip {
 }
 
 /* AI Generate Link for file upload fields */
-.generate-ai-sample-image {
+.crm-container .generate-ai-sample-image,
+.crm-container .fill-ai-image-path {
   margin-left: 8px;
 }
