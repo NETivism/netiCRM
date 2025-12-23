@@ -2439,12 +2439,13 @@
       // Configuration for file upload fields and their ratios
       const uploadFieldConfigs = {
         'uploadBackgroundImage': '4:3',
-        'uploadMobileBackgroundImage': '9:16'
+        'uploadMobileBackgroundImage': '9:16',
+        'files[fullbg_upload]': '4:3'
       };
 
       // Check each upload field
       Object.keys(uploadFieldConfigs).forEach(fieldName => {
-        const $uploadField = $('.crm-container input[type="file"][name="' + fieldName + '"]');
+        const $uploadField = $('input[type="file"][name="' + fieldName + '"]');
 
         if ($uploadField.length > 0) {
           const ratio = uploadFieldConfigs[fieldName];
