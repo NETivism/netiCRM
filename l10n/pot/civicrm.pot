@@ -50722,3 +50722,27 @@ msgstr ""
 #: CRM/Contribute/BAO/Contribution.php
 msgid "Premium Combination Content"
 msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Use current AI-generated image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Click to automatically fill in the path of the current AI-generated image"
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "AI image area currently has errors or warnings. Please resolve them first."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No AI image available. Please generate an image or load a sample image first."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "No valid AI image found. Please generate an image or load a sample image first."
+msgstr ""
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "AI image path has been filled successfully."
+msgstr ""
