@@ -880,23 +880,44 @@ class CRM_Export_BAO_Export {
             // Special case for premium combination fields
             $row[$field] = '';
             if (!empty($dao->contribution_id)) {
-              $contributionProductDAO = new CRM_Contribute_DAO_ContributionProduct();
-              $contributionProductDAO->contribution_id = $dao->contribution_id;
-              if ($contributionProductDAO->find(TRUE) && !empty($contributionProductDAO->combination_id)) {
-                $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
-                $combinationDAO->id = $contributionProductDAO->combination_id;
-                if ($combinationDAO->find(TRUE)) {
-                  if ($field == 'premium_combination_name') {
+              // Get all contribution_product records for this contribution with combination_id
+              $sql = "
+                SELECT cp.combination_id, cp.quantity, p.name
+                FROM civicrm_contribution_product cp
+                LEFT JOIN civicrm_product p ON cp.product_id = p.id
+                WHERE cp.contribution_id = %1 AND cp.combination_id IS NOT NULL
+                ORDER BY p.name
+              ";
+              $productDao = CRM_Core_DAO::executeQuery($sql, [
+                1 => [$dao->contribution_id, 'Integer']
+              ]);
+
+              $combinationId = NULL;
+              $combinationContentArray = [];
+              while ($productDao->fetch()) {
+                if (empty($combinationId)) {
+                  $combinationId = $productDao->combination_id;
+                }
+                $combinationContentArray[] = $productDao->name . ' x' . $productDao->quantity;
+              }
+
+              // If we have combination products
+              if (!empty($combinationId)) {
+                if ($field == 'premium_combination_name') {
+                  // Try to get combination name, even if deleted
+                  $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+                  $combinationDAO->id = $combinationId;
+                  if ($combinationDAO->find(TRUE)) {
                     $row[$field] = $combinationDAO->combination_name;
                   }
                   else {
-                    $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($contributionProductDAO->combination_id);
-                    $combinationContentArray = [];
-                    foreach ($combinationProducts as $product) {
-                      $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
-                    }
-                    $row[$field] = implode(', ', $combinationContentArray);
+                    // Combination was deleted, show combination_id instead
+                    $row[$field] = '[Deleted Combination #' . $combinationId . ']';
                   }
+                }
+                else {
+                  // premium_combination_content - always show products from contribution_product table
+                  $row[$field] = implode(', ', $combinationContentArray);
                 }
               }
             }
