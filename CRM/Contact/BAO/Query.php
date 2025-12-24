@@ -239,6 +239,27 @@ class CRM_Contact_BAO_Query {
   public $_displayRelationshipType = NULL;
 
   /**
+   * Flag to track if relationship type has been processed
+   *
+   * @var boolean
+   */
+  public $_rTypeProcessed = NULL;
+
+  /**
+   * Relationship type FROM clause
+   *
+   * @var string
+   */
+  public $_rTypeFrom = NULL;
+
+  /**
+   * Relationship type WHERE clause
+   *
+   * @var string
+   */
+  public $_rTypeWhere = NULL;
+
+  /**
    * reference to the query object for custom values
    *
    * @var Object
@@ -4778,12 +4799,8 @@ SELECT COUNT( cc.total_amount ) as cancel_count,
     &$where,
     &$having
   ) {
-    static $_rTypeProcessed = NULL;
-    static $_rTypeFrom = NULL;
-    static $_rTypeWhere = NULL;
-
-    if (!$_rTypeProcessed) {
-      $_rTypeProcessed = TRUE;
+    if (!$this->_rTypeProcessed) {
+      $this->_rTypeProcessed = TRUE;
 
       // create temp table with contact ids
       $tableName = CRM_Core_DAO::createTempTableName('civicrm_transform', TRUE);
@@ -4804,11 +4821,11 @@ SELECT contact_a.id
 
       if (is_numeric($this->_displayRelationshipType)) {
         $relationshipTypeLabel = $rTypes[$this->_displayRelationshipType]['label_a_b'];
-        $_rTypeFrom = "
+        $this->_rTypeFrom = "
 INNER JOIN civicrm_relationship displayRelType ON ( displayRelType.contact_id_a = contact_a.id OR displayRelType.contact_id_b = contact_a.id )
 INNER JOIN $tableName transform_temp ON ( transform_temp.contact_id = displayRelType.contact_id_a OR transform_temp.contact_id = displayRelType.contact_id_b )
 ";
-        $_rTypeWhere = "
+        $this->_rTypeWhere = "
 WHERE displayRelType.relationship_type_id = {$this->_displayRelationshipType}
 AND   displayRelType.is_active = 1
 ";
@@ -4817,19 +4834,19 @@ AND   displayRelType.is_active = 1
         list($relType, $dirOne, $dirTwo) = explode('_', $this->_displayRelationshipType);
         if ($dirOne == 'a') {
           $relationshipTypeLabel = $rTypes[$relType]['label_a_b'];
-          $_rTypeFrom .= "
+          $this->_rTypeFrom .= "
 INNER JOIN civicrm_relationship displayRelType ON ( displayRelType.contact_id_a = contact_a.id )
 INNER JOIN $tableName transform_temp ON ( transform_temp.contact_id = displayRelType.contact_id_b )
 ";
         }
         else {
           $relationshipTypeLabel = $rTypes[$relType]['label_b_a'];
-          $_rTypeFrom .= "
+          $this->_rTypeFrom .= "
 INNER JOIN civicrm_relationship displayRelType ON ( displayRelType.contact_id_b = contact_a.id )
 INNER JOIN $tableName transform_temp ON ( transform_temp.contact_id = displayRelType.contact_id_a )
 ";
         }
-        $_rTypeWhere = "
+        $this->_rTypeWhere = "
 WHERE displayRelType.relationship_type_id = $relType
 AND   displayRelType.is_active = 1
 ";
@@ -4838,12 +4855,12 @@ AND   displayRelType.is_active = 1
       $this->_qill[0][] = $qillMessage . "'" . $relationshipTypeLabel . "'";
     }
 
-    if (strpos($from, $_rTypeFrom) === FALSE) {
+    if (strpos($from, $this->_rTypeFrom) === FALSE) {
       // lets replace all the INNER JOIN's in the $from so we dont exclude other data
       // this happens when we have an event_type in the quert (CRM-7969)
       $from = str_replace("INNER JOIN", "LEFT JOIN", $from);
-      $from .= $_rTypeFrom;
-      $where = $_rTypeWhere;
+      $from .= $this->_rTypeFrom;
+      $where = $this->_rTypeWhere;
     }
 
     $having = NULL;
