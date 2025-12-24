@@ -64,6 +64,8 @@
       // Initialize file upload field integration
       this.initFileUploadIntegration();
 
+      // Initialize file upload field integration
+      this.initFilePathIntegration();
     },
 
     // Initialize empty state visibility
@@ -2439,12 +2441,13 @@
       // Configuration for file upload fields and their ratios
       const uploadFieldConfigs = {
         'uploadBackgroundImage': '4:3',
-        'uploadMobileBackgroundImage': '9:16'
+        'uploadMobileBackgroundImage': '9:16',
+        'files[fullbg_upload]': '4:3'
       };
 
       // Check each upload field
       Object.keys(uploadFieldConfigs).forEach(fieldName => {
-        const $uploadField = $('.crm-container input[type="file"][name="' + fieldName + '"]');
+        const $uploadField = $('input[type="file"][name="' + fieldName + '"]');
 
         if ($uploadField.length > 0) {
           const ratio = uploadFieldConfigs[fieldName];
@@ -2534,6 +2537,134 @@
 
       // Insert after the upload field
       $uploadField.after($aiLink);
+
+      // Initialize PowerTip for the new link
+      this.initializeLinkTooltip($aiLink);
+    },
+
+    // Initialize file path field integration
+    initFilePathIntegration: function() {
+      const self = this;
+
+      // Configuration for file upload fields and their ratios
+      const pathFields = ['fullbg_path'];
+  
+      // Check each path field
+      pathFields.forEach(fieldName => {
+        const $pathField = $('input[type="text"][name="' + fieldName + '"]');
+
+        if ($pathField.length > 0) {
+          self.addFillAIImagePathLink($pathField);
+        }
+      });
+    },
+
+    // Add AI generate link after file path field
+    addFillAIImagePathLink: function($pathField) {
+      // Check if link already exists to avoid duplicates
+      if ($pathField.next('.fill-ai-image-path').length > 0) {
+        return;
+      }
+
+      // Get translated text
+      const linkText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.UseCurrentAIGeneratedImage
+        ? window.AIImageGeneration.translation.UseCurrentAIGeneratedImage
+        : 'Use current AI-generated image';
+
+      // Get translated tooltip text
+      const tooltipText = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.autoFillAIImagePath
+        ? window.AIImageGeneration.translation.autoFillAIImagePath
+        : 'Click to automatically fill in the path of the current AI-generated image';
+
+      // Create AI generate link with tooltip
+      const $aiLink = $('<a href="#" class="fill-ai-image-path" title="' + tooltipText + '">' + linkText + '</a>');
+
+      // Add click event handler
+      $aiLink.on('click', function(e) {
+        e.preventDefault();
+        // Check current state for errors or warnings
+        const currentState = NetiAIImageGeneration.visualStateManager.getState();
+        const errorStates = [
+          NetiAIImageGeneration.visualStateManager.STATES.ERROR,
+          NetiAIImageGeneration.visualStateManager.STATES.SAMPLE_ERROR
+        ];
+        
+        // If there are errors or warnings, show alert to user
+        if (errorStates.includes(currentState)) {
+          const alertMessage = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.aiImageHasErrors
+            ? window.AIImageGeneration.translation.aiImageHasErrors
+            : 'AI image area currently has errors or warnings. Please resolve them first.';
+          alert(alertMessage);
+          return;
+        }
+        
+        // Get current AI image (both generated and sample images are acceptable)
+        const $container = $(NetiAIImageGeneration.config.container);
+        let $image = $container.find('.image-placeholder .ai-generated-image');
+        
+        // Include sample images - users can use sample images from get-sample API
+        if ($image.length === 0) {
+          $image = $container.find('.image-placeholder .ai-sample-image');
+        }
+        
+        // Check if valid image exists and is not placeholder
+        if ($image.length === 0 || !$image.is(':visible')) {
+          const noImageMessage = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.noAIImageAvailable
+            ? window.AIImageGeneration.translation.noAIImageAvailable
+            : 'No AI image available. Please generate an image or load a sample image first.';
+          alert(noImageMessage);
+          return;
+        }
+        
+        const imageUrl = $image.attr('src');
+        if (!imageUrl || NetiAIImageGeneration.isPlaceholderImage(imageUrl)) {
+          const noValidImageMessage = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.noValidAIImage
+            ? window.AIImageGeneration.translation.noValidAIImage
+            : 'No valid AI image found. Please generate an image or load a sample image first.';
+          alert(noValidImageMessage);
+          return;
+        }
+        
+        // Convert full URL to relative path for file field
+        let imagePath = imageUrl;
+        
+        // Remove domain and protocol if present (convert absolute URL to relative path)
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+          try {
+            const url = new URL(imagePath);
+            imagePath = url.pathname;
+          } catch (e) {
+            console.warn('Failed to parse image URL:', imagePath);
+          }
+        }
+        
+        // Remove leading slash if present to make it relative
+        if (imagePath.startsWith('/')) {
+          imagePath = imagePath.substring(1);
+        }
+        
+        // Fill the path into the corresponding pathField
+        $pathField.val(imagePath);
+        
+        // Trigger change event to notify other components
+        $pathField.trigger('change');
+        
+        // Show success message
+        const successMessage = window.AIImageGeneration && window.AIImageGeneration.translation && window.AIImageGeneration.translation.aiImagePathFilled
+          ? window.AIImageGeneration.translation.aiImagePathFilled
+          : 'AI image path has been filled successfully.';
+        
+        // Use existing success notification system
+        if (NetiAIImageGeneration.floatingMessage && typeof NetiAIImageGeneration.floatingMessage.showSuccess === 'function') {
+          NetiAIImageGeneration.floatingMessage.showSuccess(successMessage);
+        } else {
+          // Fallback to alert if floating message system not available
+          alert(successMessage);
+        }
+      });
+
+      // Insert after the upload field
+      $pathField.after($aiLink);
 
       // Initialize PowerTip for the new link
       this.initializeLinkTooltip($aiLink);

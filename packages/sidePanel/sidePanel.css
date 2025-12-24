@@ -299,3 +299,32 @@ ul.nme-setting-panels-tabs li a.is-active {
 .nsp-container[data-tab-active-id*="aiimagegeneration"] .nsp-footer {
   display: none;
 }
+
+/* Fix */
+.nsp-container.is-opened {
+  max-width: 1100px;
+}
+.nsp-container .nsp-content {
+  height: var(--nsp-content-height);
+}
+.civicrm-menu-enabled .nsp-container .nsp-content {
+  --nsp-content-height: calc(100vh - 30px - 66px);
+  height: var(--nsp-content-height);
+}
+.is-civicrm-user .nsp-container .nsp-content {
+  --nsp-content-height: calc(100vh - 60px - 66px);
+  height: var(--nsp-content-height);
+}
+.is-civicrm-user.civicrm-menu-enabled .nsp-container .nsp-content {
+  --nsp-content-height: calc(100vh - 30px - 60px - 66px);
+  height: var(--nsp-content-height);
+}
+.nsp-container.nme-setting-panels .nsp-content .nme-setting-panel:not(#nme-aicompletion) {
+  padding: 20px 20px 60px 20px;
+}
+.nsp-container.nme-setting-panels .nsp-content {
+  padding: 0;
+}
+.nme-setting-panels .nme-setting-panel .nme-setting-panel-title {
+  display: none;
+}

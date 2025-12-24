@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2025\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51399,3 +51399,33 @@ msgstr "根據更新後的卡片效期，自動恢復為進行中。"
 #: CRM/Contribute/BAO/Contribution.php
 msgid "Premium Combination Content"
 msgstr "感謝禮組合內容"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "Use current AI-generated image"
+msgstr "使用目前 AI 生成的圖片"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"Click to automatically fill in the path of the current AI-generated image"
+msgstr "點擊後會自動填入目前 AI 生成的圖片路徑"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"AI image area currently has errors or warnings. Please resolve them first."
+msgstr "AI 生成圖片區域目前有錯誤或警告，請先處理後再繼續。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"No AI image available. Please generate an image or load a sample image "
+"first."
+msgstr "目前AI生成圖片區域沒有可用的 AI 圖片，請先生成圖片或載入範例圖片。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid ""
+"No valid AI image found. Please generate an image or load a sample image "
+"first."
+msgstr "找不到有效的 AI 圖片，請先生成圖片或載入範例圖片。"
+
+#: templates/CRM/AI/AIImageGeneration.tpl
+msgid "AI image path has been filled successfully."
+msgstr "AI 圖片路徑已成功填入。"

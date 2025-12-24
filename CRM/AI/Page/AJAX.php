@@ -76,6 +76,7 @@ class CRM_AI_Page_AJAX {
         'CiviEvent' => ['civicrm/event/add', 'civicrm/event/manage/eventInfo'],
         'CiviMail' => ['civicrm/mailing/send'],
         'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity', 'civicrm/contact/search'],
+        'Other' => ['admin/appearance/settings/neticrm'],
       ];
 
       foreach ($allowPatterns as $component => $allowedUrls) {
@@ -466,6 +467,7 @@ class CRM_AI_Page_AJAX {
         'CiviEvent' => ['civicrm/event/add', 'civicrm/event/manage/eventInfo'],
         'CiviMail' => ['civicrm/mailing/send'],
         'Activity' => ['civicrm/activity/add', 'civicrm/contact/view/activity', 'civicrm/contact/search'],
+        'Other' => ['admin/appearance/settings/neticrm'],
       ];
 
       $component = '';

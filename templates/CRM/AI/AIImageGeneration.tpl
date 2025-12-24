@@ -103,7 +103,13 @@ window.AIImageGeneration = {
     "confirmReplaceButton": "{/literal}{ts}Confirm Replace{/ts}{literal}",
     "cancelButton": "{/literal}{ts}Cancel{/ts}{literal}",
     "closeDialog": "{/literal}{ts}Close dialog{/ts}{literal}",
-    "generateAILinkTooltip": "{/literal}{ts}Click to open AI image generator, please download and upload the image manually after generation{/ts}{literal}"
+    "generateAILinkTooltip": "{/literal}{ts}Click to open AI image generator, please download and upload the image manually after generation{/ts}{literal}",
+    "UseCurrentAIGeneratedImage": "{/literal}{ts}Use current AI-generated image{/ts}{literal}",
+    "autoFillAIImagePath": "{/literal}{ts}Click to automatically fill in the path of the current AI-generated image{/ts}{literal}",
+    "aiImageHasErrors": "{/literal}{ts}AI image area currently has errors or warnings. Please resolve them first.{/ts}{literal}",
+    "noAIImageAvailable": "{/literal}{ts}No AI image available. Please generate an image or load a sample image first.{/ts}{literal}",
+    "noValidAIImage": "{/literal}{ts}No valid AI image found. Please generate an image or load a sample image first.{/ts}{literal}",
+    "aiImagePathFilled": "{/literal}{ts}AI image path has been filled successfully.{/ts}{literal}"
   }
 };
 

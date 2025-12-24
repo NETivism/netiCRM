@@ -648,45 +648,54 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       1 => [CRM_Utils_Array::implode(',', $ids), 'CommaSeparatedIntegers']
     ]);
     $premiums = [];
-    $combinationIds = [];
+    $combinationContributions = [];
     while($dao->fetch()) {
       if (!empty($dao->combination_id)) {
         // For combination premium
-        $combinationIds[] = $dao->combination_id;
-        $premiums[$dao->contribution_id]['combination_id'] = $dao->combination_id;
+        $combinationContributions[$dao->contribution_id] = $dao->combination_id;
       } else {
         // For regular premium
         $premiums[$dao->contribution_id]['product_name'] = $dao->name;
       }
       $premiums[$dao->contribution_id]['product_option'] = $dao->product_option;
     }
+
     // Handle combination premiums
-    if (!empty($combinationIds)) {
-      $combinationIds = array_unique($combinationIds);
-      $combinationSql = "
-        SELECT
-          pc.id as combination_id,
-          pc.combination_name,
-          GROUP_CONCAT(p.name ORDER BY p.name SEPARATOR ', ') as product_names
-        FROM civicrm_premiums_combination pc
-        INNER JOIN civicrm_premiums_combination_products pcp ON pc.id = pcp.combination_id
-        INNER JOIN civicrm_product p ON pcp.product_id = p.id
-        WHERE pc.id IN (%1)
-        GROUP BY pc.id, pc.combination_name
-      ";
-      $combinationDao = CRM_Core_DAO::executeQuery($combinationSql, [
-        1 => [CRM_Utils_Array::implode(',', $combinationIds), 'CommaSeparatedIntegers']
-      ]);
-      $combinations = [];
-      while($combinationDao->fetch()) {
-        $combinations[$combinationDao->combination_id] = $combinationDao->combination_name . '(' . $combinationDao->product_names . ')';
-      }
-      // Update premiums with combination names
-      foreach($premiums as $contributionId => &$premium) {
-        if (!empty($premium['combination_id']) && isset($combinations[$premium['combination_id']])) {
-          $premium['product_name'] = $combinations[$premium['combination_id']];
-          unset($premium['combination_id']);
+    if (!empty($combinationContributions)) {
+      foreach ($combinationContributions as $contributionId => $combinationId) {
+        // Get combination name from combination table
+        $combinationSql = "
+          SELECT combination_name
+          FROM civicrm_premiums_combination
+          WHERE id = %1
+        ";
+        $combinationDao = CRM_Core_DAO::executeQuery($combinationSql, [
+          1 => [$combinationId, 'Integer']
+        ]);
+        $combinationName = '';
+        if ($combinationDao->fetch()) {
+          $combinationName = $combinationDao->combination_name;
         }
+
+        // Get products from contribution_product table
+        $productSql = "
+          SELECT p.name
+          FROM civicrm_contribution_product cp
+          INNER JOIN civicrm_product p ON cp.product_id = p.id
+          WHERE cp.contribution_id = %1 AND cp.combination_id = %2
+          ORDER BY p.name
+        ";
+        $productDao = CRM_Core_DAO::executeQuery($productSql, [
+          1 => [$contributionId, 'Integer'],
+          2 => [$combinationId, 'Integer']
+        ]);
+
+        $productNames = [];
+        while ($productDao->fetch()) {
+          $productNames[] = $productDao->name;
+        }
+
+        $premiums[$contributionId]['product_name'] = $combinationName . '(' . implode(', ', $productNames) . ')';
       }
     }
     return $premiums;

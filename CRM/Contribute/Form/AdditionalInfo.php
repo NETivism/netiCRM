@@ -57,22 +57,39 @@ class CRM_Contribute_Form_AdditionalInfo {
       if ($dao->find(TRUE)) {
         if (!empty($dao->combination_id)) {
           $isCombination = TRUE;
-          // Get combination details
+
+          // Get products from contribution_product table
+          $sql = "
+            SELECT cp.product_id, cp.quantity, p.name, p.stock_status
+            FROM civicrm_contribution_product cp
+            LEFT JOIN civicrm_product p ON cp.product_id = p.id
+            WHERE cp.contribution_id = %1 AND cp.combination_id = %2
+            ORDER BY p.name
+          ";
+          $productDao = CRM_Core_DAO::executeQuery($sql, [
+            1 => [$form->_id, 'Integer'],
+            2 => [$dao->combination_id, 'Integer']
+          ]);
+
+          $combinationContentArray = [];
+          while ($productDao->fetch()) {
+            $combinationContentArray[] = $productDao->name . ' x' . $productDao->quantity;
+            // Check if any product in combination has stock management enabled
+            if (!empty($productDao->stock_status) && $productDao->stock_status == 1) {
+              $hasStockManagement = TRUE;
+            }
+          }
+          $combinationContent = implode(', ', $combinationContentArray);
+
+          // Get combination name
           $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
           $combinationDAO->id = $dao->combination_id;
           if ($combinationDAO->find(TRUE)) {
             $combinationName = $combinationDAO->combination_name;
-            // Get combination products
-            $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
-            $combinationContentArray = [];
-            foreach ($combinationProducts as $product) {
-              $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
-              // Check if any product in combination has stock management enabled
-              if (!empty($product['stock_status']) && $product['stock_status'] == 1) {
-                $hasStockManagement = TRUE;
-              }
-            }
-            $combinationContent = implode(', ', $combinationContentArray);
+          }
+          else {
+            // Combination was deleted, show ID and content
+            $combinationName = '[Deleted Combination #' . $dao->combination_id . ']';
           }
         }
         else if (!empty($dao->product_id)) {
