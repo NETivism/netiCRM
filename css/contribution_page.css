@@ -690,6 +690,7 @@ body .crm-container fieldset{
 }
 
 .price-set-btn div {
+  display: flex;
   font-size: 14px;
   font-weight: normal;
   padding: 28px 0 20px 0;
@@ -727,11 +728,8 @@ body .crm-container fieldset{
   text-align: right;
   font-weight: normal;
   font-size: 40px;
-  position: absolute;
-  right: 0;
-  top: 20px;
   color: black;
-  margin: 0;
+  margin: 0 0 0 auto;
   -webkit-transition: all ease-in-out .2s;
        -o-transition: all ease-in-out .2s;
           transition: all ease-in-out .2s;

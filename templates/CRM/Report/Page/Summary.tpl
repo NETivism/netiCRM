@@ -31,9 +31,9 @@
 
 {if $hasChart}
   {if $contribute_total or $chartConributeOnlineOffline or $participant_total or $chartParticipantOnlineOffline or $contact_total or $mailing}
-  <div class="row">
+  <div class="ncg-row">
     {if $contribute_total or $chartConributeOnlineOffline}
-    <div class="col-md-3 col-xs-6">
+    <div class="ncg-col-md-3 ncg-col-xs-6">
       <div id="column-contribution-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           {if $contribute_total}
@@ -48,7 +48,7 @@
     </div>
     {/if}
     {if $participant_total or $chartParticipantOnlineOffline}
-    <div class="col-md-3 col-xs-6">
+    <div class="ncg-col-md-3 ncg-col-xs-6">
       <div id="column-participant-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           {if $participant_total}
@@ -63,7 +63,7 @@
     </div>
     {/if}
     {if $contact_total}
-    <div class="col-md-3 col-xs-6">
+    <div class="ncg-col-md-3 ncg-col-xs-6">
       <div id="column-contact-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           <div class="kpi-box">
@@ -75,7 +75,7 @@
     </div>
     {/if}
     {if $mailing}
-    <div class="col-md-3 col-xs-6">
+    <div class="ncg-col-md-3 ncg-col-xs-6">
       <div id="column-mailing-online-offline" class="box mdl-shadow--2dp">
         <div class="box-content">
           <div class="kpi-box">
@@ -90,8 +90,8 @@
   {/if}
   
   {if $chartContact}
-  <div class="row">
-    <div class="col-md-12">
+  <div class="ncg-row">
+    <div class="ncg-col-md-12">
       <div id="column-contact-source" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contact Source{/ts}</h3>
@@ -103,8 +103,8 @@
   {/if}
 
   {if $static_label and $contribution_type_table}
-  <div class="row">
-    <div class="col-md-12">
+  <div class="ncg-row">
+    <div class="ncg-col-md-12">
       <div id="column-contribution-types" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution Total{/ts}</h3>
@@ -174,8 +174,8 @@
   {/if}
 
   {if $chartInsSum}
-  <div class="row">
-    <div class="col-md-12">
+  <div class="ncg-row">
+    <div class="ncg-col-md-12">
       <div id="column-contribution-instrument" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Payment Instrument{/ts}</h3>
@@ -187,8 +187,8 @@
   {/if}
 
   {if $chartContribTimes}
-  <div class="row">
-    <div class="col-md-12">
+  <div class="ncg-row">
+    <div class="ncg-col-md-12">
       <div id="column-contribution-times" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Donation Count{/ts}</h3>
@@ -200,9 +200,9 @@
   {/if}
 
 {if $chartPeopleGender or $chartContributionGender}
-  <div class="row">
+  <div class="ncg-row">
   {if $chartPeopleGender}
-    <div class="col-md-6">
+    <div class="ncg-col-md-6">
       <div id="column-people-by-gender" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution people percentage by gender{/ts}</h3>
@@ -212,7 +212,7 @@
     </div>
     {/if}
   {if $chartContributionGender}
-    <div class="col-md-6">
+    <div class="ncg-col-md-6">
       <div id="column-people-by-gender" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution sum percentage by gender{/ts}</h3>
@@ -225,9 +225,9 @@
   {/if}
   
   {if $chartPeopleAge or $chartContributionAge}
-  <div class="row">
+  <div class="ncg-row">
   {if $chartPeopleAge}
-    <div class="col-md-6">
+    <div class="ncg-col-md-6">
       <div id="column-people-by-age" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution people percentage by age{/ts}</h3>
@@ -237,7 +237,7 @@
     </div>
     {/if}
     {if $chartContributionAge}
-    <div class="col-md-6">
+    <div class="ncg-col-md-6">
       <div id="column-people-by-age" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution sum percentage by age{/ts}</h3>
@@ -250,9 +250,9 @@
   {/if}
 
 {if $chartPeopleProvince or $chartContributionProvince}
-  <div class="row">
+  <div class="ncg-row">
     {if $chartPeopleProvince}
-    <div class="col-md-6">
+    <div class="ncg-col-md-6">
       <div id="column-people-by-province" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution people percentage by province{/ts}</h3>
@@ -262,7 +262,7 @@
     </div>
     {/if}
     {if $chartContributionProvince}
-    <div class="col-md-6">
+    <div class="ncg-col-md-6">
       <div id="column-people-by-province" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution sum percentage by province{/ts}</h3>
@@ -275,8 +275,8 @@
 {/if}
 
   {if $chartMailingFunnel}
-  <div class="row">
-    <div class="col-md-12">
+  <div class="ncg-row">
+    <div class="ncg-col-md-12">
       <div id="column-mailing-funnel" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Mailing{/ts}</h3>
@@ -288,8 +288,8 @@
   {/if}
 
 {if $chartParticipantAfterMailing}
-  <div class="row">
-    <div class="col-md-12">
+  <div class="ncg-row">
+    <div class="ncg-col-md-12">
       <div id="column-participant-after-mailing" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Participants count in ... after opened mail{/ts}</h3>
@@ -301,8 +301,8 @@
 {/if}
 
 {if $chartContributeAfterMailing}
-  <div class="row">
-    <div class="col-md-12">
+  <div class="ncg-row">
+    <div class="ncg-col-md-12">
       <div id="column-contribute-after-mailing" class="box mdl-shadow--2dp">
         <div class="box-header">
           <h3 class="box-title">{ts}Contribution count in ... after opened mail{/ts}</h3>

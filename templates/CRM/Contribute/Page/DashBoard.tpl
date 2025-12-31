@@ -33,8 +33,8 @@
 {/if}
 
 {if $chart_this_year}
-<div class="row">
-  <div class="col-xs-12">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h3 class="kpi-box-title">{ts}Contributions Since This Year{/ts}</h3>
@@ -60,8 +60,8 @@
 {/if}
 
 {if $chartRecur}
-<div class="row">
-  <div class="col-xs-12">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <div class="crm-section dashboard-section">
@@ -196,8 +196,8 @@
     </span>
   </div>
 </div><!--date selector-->
-<div class="row">
-  <div class="col-xs-12 col-md-4">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <i class="zmdi zmdi-hc-5x zmdi-male"></i>
@@ -220,7 +220,7 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-4">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <i class="zmdi zmdi-hc-5x zmdi-money"></i>
@@ -234,7 +234,7 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-4">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <i class="zmdi zmdi-hc-5x zmdi-money"></i>
@@ -262,10 +262,10 @@
 </div>
 
 {if $contribution_page_stat}
-<div class="row">
+<div class="ncg-row">
   <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Page Status{/ts}</h3>
   {foreach from=$contribution_page_stat item=stat}
-  <div class="col-xs-12 col-md-{$page_col_n}">
+  <div class="ncg-col-xs-12 ncg-col-md-{$page_col_n}">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         {include file="CRM/common/ContributionPageStatusCard.tpl" statistics=$stat}
@@ -277,8 +277,8 @@
 {/if}
 
 
-<div class="row">
-  <div class="col-xs-12 col-md-4">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h3>{ts 1=$days}In %1 days{/ts} {ts}New Non-Recurring Contribution{/ts}</h3>
@@ -300,7 +300,7 @@
   </div>
 
   
-  <div class="col-xs-12 col-md-4">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h3>{ts 1=$days}In %1 days{/ts} {ts}New Recurring Contribution{/ts}</h3>
@@ -321,7 +321,7 @@
     </div>
   </div>
 
-  <div class="col-xs-12 col-md-4">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h3>{ts}End of recurring contribution{/ts}</h3>
@@ -342,8 +342,8 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount{/ts}</h3>
@@ -360,8 +360,8 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Page Visits by Traffic Source{/ts}</h3>
@@ -375,8 +375,8 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-xs-12">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h3>{ts 1=$days}In %1 days{/ts} {ts}Contribution Amount by Province{/ts}</h3>

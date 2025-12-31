@@ -5,8 +5,8 @@
 {else}{* when action is browse *}
 
 {if !$show_reset}
-<div class="row">
-  <div class="col-xs-12 col-md-4">
+<div class="ncg-row">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <div class="kpi-box">
@@ -17,7 +17,7 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-4">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <div class="kpi-box">
@@ -27,7 +27,7 @@
       </div>
     </div>
   </div>
-  <div class="col-xs-12 col-md-4">
+  <div class="ncg-col-xs-12 ncg-col-md-4">
     <div class="box mdl-shadow--2dp">
       <div class="box-content">
         <h5 class="box-title">{ts}Organization intro{/ts}</h5>
