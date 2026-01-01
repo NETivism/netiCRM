@@ -8,7 +8,7 @@
 # Harry Lin <harry@netivism.com.tw>, 2023
 # IreneLin, 2013
 # IreneLin, 2013
-# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2025
+# jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2026
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # peggy chiu, 2024
 # Seal Shen, 2025
@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2025\n"
+"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2026\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51429,3 +51429,8 @@ msgstr "找不到有效的 AI 圖片，請先生成圖片或載入範例圖片�
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "AI image path has been filled successfully."
 msgstr "AI 圖片路徑已成功填入。"
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl
+msgid ""
+"Select a non-3D Secure payment gateway for subsequent recurring payments."
+msgstr "選擇非3D驗證的金流機制，用於後續的定期扣款"

@@ -116,8 +116,12 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       ],
       [
         'name' => 'url_site',
-        'label' => ts('啟用3D驗證'),
-        'msg' => ts(''),
+        'label' => ts('Enable 3D secure'),
+        'msg' => '',
+      ],
+      [
+        'name' => 'url_recur',
+        'label' => 'Merchant ID '. ts('Merchant ID (No 3D secure support)'),
       ],
     ];
     $nullObj = NULL;
@@ -137,6 +141,24 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $smarty = CRM_Core_Smarty::singleton();
       $smarty->assign('having_contribution', $isHavingContribution);
       $smarty->assign('having_contribution_test', $isHavingContributionTest);
+
+      $paymentProcessorsLive = CRM_Core_BAO_PaymentProcessor::getPaymentsByType('tappay', 'live');
+      $paymentProcessorsTest = CRM_Core_BAO_PaymentProcessor::getPaymentsByType('tappay', 'test');
+      $processorOptionsLive = ['' => ts('-- Select --')];
+      foreach ($paymentProcessorsLive as $id => $processor) {
+        if ($id != $ppid && !empty($processor['user_name']) && empty($processor['url_site'])) {
+          $processorOptionsLive[$id] = $processor['user_name']." ({$processor['name']}, ID:{$processor['id']})";
+        }
+      }
+      $smarty->assign('tappay_processor_options_live', json_encode($processorOptionsLive));
+
+      $processorOptionsTest = ['' => ts('-- Select --')];
+      foreach ($paymentProcessorsTest as $id => $processor) {
+        if ($id != $ppid+1 && !empty($processor['user_name']) && empty($processor['url_site'])) {
+          $processorOptionsTest[$id] = $processor['user_name']." ({$processor['name']}, ID:{$processor['id']})";
+        }
+      }
+      $smarty->assign('tappay_processor_options_test', json_encode($processorOptionsTest));
     }
     return $fields;
   }
@@ -403,8 +425,18 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     $ppid = $firstContribution->payment_processor_id;
     $mode = $firstContribution->is_test ? 'test' : 'live';
-    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
+    // refs #45384, support other payment processor for follow-up recurring
+    $originalProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
+    $paymentProcessor = NULL;
+    if (!empty($originalProcessor['url_recur']) && is_numeric($originalProcessor['url_recur'])) {
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($originalProcessor['url_recur'], $mode);
+    }
+    if (empty($paymentProcessor)) {
+      $paymentProcessor = $originalProcessor;
+    }
+
+    $response = [];
     if ($paymentProcessor) {
       //Prepare tappay api
       $contribution = $ids = [];
@@ -433,12 +465,17 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         if (empty($details)) {
           $details = (string) $amount;
         }
+        $merchantId = $paymentProcessor['user_name'];
+        if ($paymentProcessor['id'] == $originalProcessor['id']) {
+          // #39372, #42445, #45384: special case for 3d verify, change merchant id when match rule
+          // special rule for single payment processor but need non-3D verification merchant name(payment user_name)
+          $merchantId = preg_match('/5808001$/', $paymentProcessor['user_name']) ? str_replace('5808001', '5808002', $paymentProcessor['user_name']) : $paymentProcessor['user_name'];
+        }
         $data = [
           'card_key' => $tappayData->card_key,
           'card_token' => $tappayData->card_token,
           'partner_key' => $paymentProcessor['password'],
-          // #39372, #42445: special case for 3d verify, change merchant id when match rule
-          'merchant_id' => preg_match('/5808001$/', $paymentProcessor['user_name']) ? str_replace('5808001', '5808002', $paymentProcessor['user_name']) : $paymentProcessor['user_name'],
+          'merchant_id' => $merchantId,
           'amount' => $amount,
           'currency' => $contributionRecur->currency,
           'order_number' => $contribution['trxn_id'],
@@ -452,6 +489,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // Allow further manipulation of the arguments via custom hooks ..
       $null = NULL;
       $paymentClass = self::singleton($mode, $paymentProcessor, $null);
+      $payment = [];
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
       // Send tappay pay_by_token post

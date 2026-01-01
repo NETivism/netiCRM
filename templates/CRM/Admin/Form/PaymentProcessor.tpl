@@ -155,9 +155,54 @@
 {if $ppType eq 'TapPay'}
     <script>
         {literal}
+            let tappay_processor_options_live = {/literal}{if $tappay_processor_options_live}{$tappay_processor_options_live}{else}{ldelim} {rdelim}{/if};{literal}
+            let tappay_processor_options_test = {/literal}{if $tappay_processor_options_test}{$tappay_processor_options_test}{else}{ldelim} {rdelim}{/if};{literal}
             (function($){
                 if ($('#url_site').length) {
+                    function createMerchantIdSelect($urlRecurElement) {
+                      const $originalInput = $urlRecurElement.find('input').first();
+                      const currentValue = $originalInput.val();
+                      const elementClass = $urlRecurElement[0].className || 'default-class';
+                      const selectId = elementClass + '-select';
+                      const isTestElement = (elementClass.indexOf('-test_') !== -1);
+
+                      // Hide the original input
+                      $originalInput.hide();
+
+                      // Create select dropdown
+                      const $select = $('<select>')
+                        .attr('id', selectId)
+                        .addClass('form-select');
+
+                      // Determine which options to use based on test/live
+                      const options = isTestElement ? tappay_processor_options_test : tappay_processor_options_live;
+
+                      // Add options to select
+                      if (options) {
+                        for (let value in options) {
+                          if (options.hasOwnProperty(value)) {
+                            const $option = $('<option>')
+                              .attr('value', value)
+                              .text(options[value]);
+                            $select.append($option);
+                          }
+                        }
+                      }
+                      // Set current value
+                      $select.val(currentValue);
+
+                      // Sync select value with hidden input
+                      $select.on('change', function() {
+                        $originalInput.val($(this).val());
+                      });
+                      $select.insertAfter($originalInput);
+
+                      const $desc = $("<span class=\"description\">{/literal}{ts}Select a non-3D Secure payment gateway for subsequent recurring payments.{/ts}{literal}</span>");
+                      $desc.insertAfter($select);
+                      return $select;
+                    }
                     function setTapPay3DSecureOption(formBlockName) {
+                        var urlRecurFieldTr = $(formBlockName.replace('url_site', 'url_recur'));
                         var urlSiteFieldDiv = $(formBlockName);
                         var urlSiteTextField = urlSiteFieldDiv.find('input.form-text[type="text"]');
                         urlSiteTextField.hide();
@@ -191,12 +236,28 @@
                         urlSiteFieldDiv.find('.helpicon').hide();
 
                         // hide url recur
-                        var urlRecurFieldTr = $(formBlockName.replace('url_site', 'url_recur')).hide();
+                        createMerchantIdSelect(urlRecurFieldTr);
+                        newCheckBox.click(function(){
+                          if ($(this).prop('checked')) {
+                            urlRecurFieldTr.show();
+                          }
+                          else{
+                            urlRecurFieldTr.hide();
+                          }
+                        });
+                        if (newCheckBox.prop('checked')) {
+                          urlRecurFieldTr.show();
+                        }
+                        else{
+                          urlRecurFieldTr.hide();
+                        }
+                        // add dropdown select
                     }
 
                     setTapPay3DSecureOption('.crm-paymentProcessor-form-block-url_site');
                     setTapPay3DSecureOption('.crm-paymentProcessor-form-block-test_url_site');
                 }
+
             })(jQuery);
         {/literal}
     </script>
