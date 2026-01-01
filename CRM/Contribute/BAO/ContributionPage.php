@@ -279,6 +279,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
         'lineItem' => CRM_Utils_Array::value('lineItem', $values),
         // CRM-5095
         'priceSetID' => CRM_Utils_Array::value('priceSetID', $values),
+        'amount_level' => str_replace(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, '<br>', CRM_Utils_Array::value('amount_level', $values)),
       ];
 
       // #18853, tokenize thank you top text
