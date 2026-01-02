@@ -50746,3 +50746,7 @@ msgstr ""
 #: templates/CRM/AI/AIImageGeneration.tpl
 msgid "AI image path has been filled successfully."
 msgstr ""
+
+#: templates/CRM/Admin/Form/PaymentProcessor.tpl
+msgid "Select a non-3D Secure payment gateway for subsequent recurring payments."
+msgstr ""

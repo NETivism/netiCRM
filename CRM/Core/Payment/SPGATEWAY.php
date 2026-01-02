@@ -99,7 +99,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       ],
       [
         'name' => 'url_site',
-        'label' => ts('Merchant ID').'('.ts('No 3D secure support').')',
+        'label' => ts('Merchant ID (No 3D secure support)')
       ],
     ];
     $nullObj = NULL;
@@ -126,16 +126,16 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
       $processorOptionsLive = ['' => ts('-- Select --')];
       foreach ($paymentProcessorsLive as $id => $processor) {
-        if ($id != $ppid) {
-          $processorOptionsLive[$id] = $processor['name'];
+        if ($id != $ppid && !empty($processor['user_name'])) {
+          $processorOptionsLive[$id] = $processor['user_name']." ({$processor['name']}, ID:{$processor['id']})";
         }
       }
       $smarty->assign('spgateway_processor_options_live', json_encode($processorOptionsLive));
 
       $processorOptionsTest = ['' => ts('-- Select --')];
       foreach ($paymentProcessorsTest as $id => $processor) {
-        if ($id != $ppid+1) {
-          $processorOptionsTest[$id] = $processor['name'];
+        if ($id != $ppid+1 && !empty($processor['user_name'])) {
+          $processorOptionsTest[$id] = $processor['user_name']." ({$processor['name']}, ID:{$processor['id']})";
         }
       }
       $smarty->assign('spgateway_processor_options_test', json_encode($processorOptionsTest));
