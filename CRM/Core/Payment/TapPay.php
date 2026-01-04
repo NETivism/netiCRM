@@ -420,7 +420,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     // Update new trxn_id
     $c->trxn_id = self::getContributionTrxnID($c->id);
-    $c->save();
 
 
     $ppid = $firstContribution->payment_processor_id;
@@ -435,6 +434,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (empty($paymentProcessor)) {
       $paymentProcessor = $originalProcessor;
     }
+    // use new payment processor id for this copied contribution
+    if ($paymentProcessor) {
+      $c->payment_processor_id = $paymentProcessor['id'];
+    }
+    $c->save();
 
     $response = [];
     if ($paymentProcessor) {
