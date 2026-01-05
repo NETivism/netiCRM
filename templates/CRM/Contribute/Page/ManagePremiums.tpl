@@ -47,7 +47,7 @@
         <table id="options" class="display">
           <thead>
            <tr>
-            <th>#</th>
+            <th id="sortable">#</th>
             <th id="sortable">{ts}Name{/ts}</th>
             <th>{ts}SKU{/ts}</th>
             <th>{ts}Market Value{/ts}</th>
