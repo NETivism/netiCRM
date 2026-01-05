@@ -50,12 +50,12 @@
             <th id="sortable">#</th>
             <th id="sortable">{ts}Name{/ts}</th>
             <th>{ts}SKU{/ts}</th>
-            <th>{ts}Market Value{/ts}</th>
-            <th>{ts}Min Contribution{/ts}</th>
+            <th id="sortable">{ts}Market Value{/ts}</th>
+            <th id="sortable">{ts}Min Contribution{/ts}</th>
             <th>{ts}Stock Status{/ts}</th>
-            <th>{ts}Total Stock{/ts}</th>
-            <th>{ts}Sent Quantity{/ts}</th>
-            <th>{ts}Remaining{/ts}</th>
+            <th id="sortable">{ts}Total Stock{/ts}</th>
+            <th id="sortable">{ts}Sent Quantity{/ts}</th>
+            <th id="sortable">{ts}Remaining{/ts}</th>
             <th>{ts}Active?{/ts}</th>
             <th></th>
            </tr>
