@@ -272,28 +272,28 @@ test.describe.serial('Batch Action', () => {
             /* fill in the incomplete data of 3 users with random values */
             for (let i = 1; i <= 3; i++) {
 
-                /* Home Phone */
+                /* Street Address */
                 element = `tr:nth-child(${i}) td:nth-child(2) input`;
                 if (await page.locator(element).first().evaluate(el => el.value) == '') {
                     await utils.fillInput(page.locator(element), utils.makeid(10));
                 }
 
-                /* Home Mobile */
+                /* City */
                 element = `tr:nth-child(${i}) td:nth-child(3) input`;
                 if (await page.locator(element).first().evaluate(el => el.value) == '') {
                     await utils.fillInput(page.locator(element), utils.makeid(10));
                 }
                 
-                /* Primary Address */
+                /* Postal Code */
                 element = `tr:nth-child(${i}) td:nth-child(4) input`;
                 if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), utils.makeid(5));
+                    await utils.fillInput(page.locator(element), utils.makeid(3));
                 }
                 
-                /* City */
+                /* Country */
                 element = `tr:nth-child(${i}) td:nth-child(5) input`;
-                if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), utils.makeid(3));
+                if (await page.locator(element).first().evaluate(el => el.selectedIndex) == 0) {
+                    await utils.selectOption(page.locator(element), { index: 1 });
                 }
                 
                 /* State */
@@ -302,31 +302,6 @@ test.describe.serial('Batch Action', () => {
                     await utils.selectOption(page.locator(element), { index: 1 });
                 }
                 
-                /* Postal Code */
-                element = `tr:nth-child(${i}) td:nth-child(7) input`;
-                if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), utils.makeid(3));
-                }
-
-                /* Primary Email */
-                element = `tr:nth-child(${i}) td:nth-child(8) input`;
-                if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), `${utils.makeid(5)}@example.com`);
-                }
-
-                /* Group */
-                element = `tr:nth-child(${i}) td:nth-child(9) input[value="1"]`;
-                locator = page.locator(element).first();
-                if (await locator.evaluate(el => el.checked) == false) {
-                    await utils.checkInput(page, locator);
-                }
-
-                /* Tag */
-                element = `tr:nth-child(${i}) td:nth-child(10) input`;
-                locator = page.locator(element).nth(2);
-                if (await locator.evaluate(el => el.checked) == false) {
-                    await utils.checkInput(page, locator);
-                }                
                 
             }
 
