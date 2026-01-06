@@ -218,6 +218,7 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
       // Only add combination to array if it has active products
       if (!empty($content)) {
         $combinations[$combinationDAO->id] = [];
+        $combinations[$combinationDAO->id]['is_active'] = $combinationDAO->is_active ?? 0;
         $combinations[$combinationDAO->id]['id'] = $combinationDAO->id;
         $combinations[$combinationDAO->id]['combination_name'] = $combinationDAO->combination_name;
         $combinations[$combinationDAO->id]['sku'] = $combinationDAO->sku;
