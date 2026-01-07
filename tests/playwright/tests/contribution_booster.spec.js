@@ -94,7 +94,7 @@ test.describe.serial('Contribution Booster', () => {
             await expect(page).toHaveURL('/civicrm/contact/search/custom?force=1&reset=1&csid=18');
 
             /* Step 2: check titles */
-            await check_page_title('找到首次捐款人');
+            await check_page_title('First time donation donors');
 
             await check_and_set_accordionElement();
             /* select date from */
