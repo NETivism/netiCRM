@@ -62,7 +62,13 @@ test.describe.serial('ALLPAY - Barcode', () => {
 
             await utils.wait(wait_secs);
 
-            element = await utils.findElementByLabel(page, '超商條碼繳費');
+            try {
+              element = await utils.findElementByLabel(page, '超商條碼繳費', { exact: true });
+              await element.waitFor({ timeout: 5000 });
+            } catch (e) {
+              element = await utils.findElementByLabel(page, 'Convenient Store Barcode', { exact: true });
+              await element.waitFor({ timeout: 5000 });
+            }
             await utils.clickElement(page, element);
             await expect(element).toBeChecked();
 
