@@ -235,7 +235,7 @@ cj(document).ready(function($){
   }
 
   function isValidName(name) {
-    var nameRegex = /^[0-9a-zA-Z,.\'\s]+$/;
+    var nameRegex = /^[0-9a-zA-Z,.\'\s-]+$/;
     return nameRegex.test(name);
   }
 

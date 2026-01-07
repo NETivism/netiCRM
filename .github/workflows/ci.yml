@@ -14,6 +14,9 @@ jobs:
         run: |
           git submodule init
           git submodule update
+          BRANCH_PREFIX="${GITHUB_REF_NAME%%-*}"
+          cd $GITHUB_WORKSPACE/drupal && git checkout 7.x-$BRANCH_PREFIX && git pull
+          cd $GITHUB_WORKSPACE/neticrm && git checkout 7.x-$BRANCH_PREFIX && git pull
 
       - name: Prepare container
         run: |
@@ -123,6 +126,9 @@ jobs:
         run: |
           git submodule init
           git submodule update
+          BRANCH_PREFIX="${GITHUB_REF_NAME%%-*}"
+          cd $GITHUB_WORKSPACE/drupal && git checkout 7.x-$BRANCH_PREFIX && git pull
+          cd $GITHUB_WORKSPACE/neticrm && git checkout 7.x-$BRANCH_PREFIX && git pull
 
       - name: Prepare container
         run: |
@@ -232,8 +238,9 @@ jobs:
         run: |
           git submodule init
           git submodule update
-          cd $GITHUB_WORKSPACE/drupal && git checkout 9.x-develop && git pull
-          cd $GITHUB_WORKSPACE/neticrm && git checkout 9.x-develop && git pull
+          BRANCH_PREFIX="${GITHUB_REF_NAME%%-*}"
+          cd $GITHUB_WORKSPACE/drupal && git checkout 10.x-$BRANCH_PREFIX && git pull
+          cd $GITHUB_WORKSPACE/neticrm && git checkout 10.x-$BRANCH_PREFIX && git pull
 
       - name: Prepare container
         run: |

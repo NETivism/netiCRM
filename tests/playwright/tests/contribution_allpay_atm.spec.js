@@ -62,7 +62,14 @@ test.describe.serial('ALLPAY - ATM', () => {
 
             await utils.wait(wait_secs);
 
-            element = await utils.findElementByLabel(page, 'ATM 轉帳');
+            // Find element with either Chinese or English label (5 second timeout)
+            try {
+              element = page.getByLabel('ATM 轉帳', { exact: true });
+              await element.waitFor({ timeout: 5000 });
+            } catch (e) {
+              element = page.getByLabel('ATM Transfer', { exact: true });
+              await element.waitFor({ timeout: 5000 });
+            }
             await utils.clickElement(page, element);
             await expect(element).toBeChecked();
 

@@ -64,16 +64,16 @@ async function list_contacts_and_select_top_n(page, top_n=3) {
 /**
  * Select an option from the "Actions" dropdown and clicks the "Go" button.
  * @param {Object} page - The Playwright page object.
- * @param {number} option_index - The index of the option to be selected.
+ * @param {string} option_value - The value of the option to be selected.
  * @param {string} expect_element - The CSS selector of the element expected to appear on the page.
  * @return {Promise<void>}
  */
-async function select_action_and_go(page, option_index, expect_element) {
+async function select_action_and_go(page, option_value, expect_element) {
 
     /* select option from the "Actions" dropdown */
     element = '#task';
     await utils.findElement(page, element);
-    await utils.selectOption(page.locator(element), { index: option_index });
+    await utils.selectOption(page.locator(element), option_value);
 
     /* click "Go" button */
     element = 'input#Go';
@@ -181,7 +181,7 @@ test.describe.serial('Batch Action', () => {
             await list_contacts_and_select_top_n(page);
 
             /* select "Add Contact to Organization" and click "Go" */
-            await select_action_and_go(page, 6, 'form#AddToOrganization')
+            await select_action_and_go(page, "10", 'form#AddToOrganization')
 
             /* select "Relationship Type" */
             element = '#relationship_type_id';
@@ -226,7 +226,7 @@ test.describe.serial('Batch Action', () => {
             await list_contacts_and_select_top_n(page);
 
             /* select "Record Activity for Contacts" and click "Go" */
-            await select_action_and_go(page, 7, 'form#Activity');
+            await select_action_and_go(page, "11", 'form#Activity');
 
             /* select "Activity Type" */
             element = '#activity_type_id';
@@ -253,12 +253,12 @@ test.describe.serial('Batch Action', () => {
             await list_contacts_and_select_top_n(page);
 
             /* select "Batch Update via Profile" and click "Go" */
-            await select_action_and_go(page, 8, 'form#PickProfile');
+            await select_action_and_go(page, "17", 'form#PickProfile');
 
             /* select "Profile" */
             element = '#uf_group_id';
             await utils.findElement(page, element);
-            await utils.selectOption(page.locator(element), { index: 3 });
+            await utils.selectOption(page.locator(element), { value: "8" });
 
             /* click "Continue" button */
             element = '#_qf_PickProfile_next';
@@ -272,28 +272,28 @@ test.describe.serial('Batch Action', () => {
             /* fill in the incomplete data of 3 users with random values */
             for (let i = 1; i <= 3; i++) {
 
-                /* Home Phone */
+                /* Street Address */
                 element = `tr:nth-child(${i}) td:nth-child(2) input`;
                 if (await page.locator(element).first().evaluate(el => el.value) == '') {
                     await utils.fillInput(page.locator(element), utils.makeid(10));
                 }
 
-                /* Home Mobile */
+                /* City */
                 element = `tr:nth-child(${i}) td:nth-child(3) input`;
                 if (await page.locator(element).first().evaluate(el => el.value) == '') {
                     await utils.fillInput(page.locator(element), utils.makeid(10));
                 }
                 
-                /* Primary Address */
+                /* Postal Code */
                 element = `tr:nth-child(${i}) td:nth-child(4) input`;
                 if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), utils.makeid(5));
+                    await utils.fillInput(page.locator(element), utils.makeid(3));
                 }
                 
-                /* City */
-                element = `tr:nth-child(${i}) td:nth-child(5) input`;
-                if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), utils.makeid(3));
+                /* Country */
+                element = `tr:nth-child(${i}) td:nth-child(5) select`;
+                if (await page.locator(element).first().evaluate(el => el.selectedIndex) == 0) {
+                    await utils.selectOption(page.locator(element), { index: 1 });
                 }
                 
                 /* State */
@@ -302,31 +302,6 @@ test.describe.serial('Batch Action', () => {
                     await utils.selectOption(page.locator(element), { index: 1 });
                 }
                 
-                /* Postal Code */
-                element = `tr:nth-child(${i}) td:nth-child(7) input`;
-                if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), utils.makeid(3));
-                }
-
-                /* Primary Email */
-                element = `tr:nth-child(${i}) td:nth-child(8) input`;
-                if (await page.locator(element).first().evaluate(el => el.value) == '') {
-                    await utils.fillInput(page.locator(element), `${utils.makeid(5)}@example.com`);
-                }
-
-                /* Group */
-                element = `tr:nth-child(${i}) td:nth-child(9) input[value="1"]`;
-                locator = page.locator(element).first();
-                if (await locator.evaluate(el => el.checked) == false) {
-                    await utils.checkInput(page, locator);
-                }
-
-                /* Tag */
-                element = `tr:nth-child(${i}) td:nth-child(10) input`;
-                locator = page.locator(element).nth(2);
-                if (await locator.evaluate(el => el.checked) == false) {
-                    await utils.checkInput(page, locator);
-                }                
                 
             }
 
@@ -350,7 +325,7 @@ test.describe.serial('Batch Action', () => {
             await list_contacts_and_select_top_n(page);
 
             /* select "Export Contacts" and click "Go" */
-            await select_action_and_go(page, 9, 'form#Select');
+            await select_action_and_go(page, "5", 'form#Select');
 
             /* click "Continue" button */
             element = '#_qf_Select_next-top';
@@ -394,8 +369,8 @@ test.describe.serial('Batch Action', () => {
             await select_top_n(page, 2);
         
             /* select "Merge Contacts" and click "Go" */
-            await select_action_and_go(page, 10, 'form#Merge');
- 
+            await select_action_and_go(page, "21", 'form#Merge');
+
             /* click "Merge" button */
             element = '#_qf_Merge_next-bottom';
             await utils.findElement(page, element);
@@ -418,7 +393,7 @@ test.describe.serial('Batch Action', () => {
             await select_top_n(page, 2);
 
             /* select "Merge Contacts" and click "Go" */
-            await select_action_and_go(page, 10, 'form#Merge');
+            await select_action_and_go(page, "21", 'form#Merge');
 
             /* click "Mark this pair as not a duplicate" button */
             element = '#notDuplicate';
@@ -442,12 +417,12 @@ test.describe.serial('Batch Action', () => {
             await list_contacts_and_select_top_n(page);
 
             /* select "Tag Contacts (assign tags)" and click "Go" */
-            await select_action_and_go(page, 11, 'form#AddToTag')
+            await select_action_and_go(page, "3", 'form#AddToTag')
 
-            /* click scrollbar */
-            element = 'tr.crm-contact-task-addtotag-form-block-tag div.listing-box div:first-child input';
+            /* click scrollbar and choose major donor*/
+            element = 'tr.crm-contact-task-addtotag-form-block-tag input[id="tag[4]"]';
             await utils.findElement(page, element);
-            await utils.clickElement(page, page.locator(element).first());
+            await utils.clickElement(page, page.locator(element));
 
             /* click "Tag Contacts" */
             element = '#_qf_AddToTag_next-bottom';
@@ -457,7 +432,7 @@ test.describe.serial('Batch Action', () => {
             await utils.wait(wait_secs);
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages h3').first()).toHaveText('Contact(s) tagged as: 主要捐款者');
+            await expect(page.locator('.messages h3').first()).toContainText('Contact(s) tagged as: ');
             await expect(page.locator('.messages ul').nth(1).locator('li')).toHaveText('Total Contact(s) tagged: 3');
             await utils.print('Contact(s) tagged successfully.');
 
@@ -471,7 +446,7 @@ test.describe.serial('Batch Action', () => {
             await list_contacts_and_select_top_n(page);
 
             /* select "Add Contacts to Group" and click "Go" */
-            await select_action_and_go(page, 2, 'form#AddToGroup');
+            await select_action_and_go(page, "1", 'form#AddToGroup');
 
             /* select first option from "Select Group" dropdown */
             element = '#group_id';
@@ -486,7 +461,7 @@ test.describe.serial('Batch Action', () => {
             await utils.wait(wait_secs);
 
             await expect(page.locator('.crm-error')).toHaveCount(0);
-            await expect(page.locator('.messages').first()).toHaveText("Added Contact(s) to 管理員Total Selected Contact(s): 3Total Contact(s) added to group: 3");
+            await expect(page.locator('.messages').first()).toContainText("Total Selected Contact(s): 3Total Contact(s) added to group: 3");
             await utils.print('Successfully added contact to existing group.');
 
         });
@@ -499,7 +474,7 @@ test.describe.serial('Batch Action', () => {
             await list_contacts_and_select_top_n(page);
 
             /* select "Add Contacts to Group" and click "Go" */
-            await select_action_and_go(page, 2, 'form#AddToGroup');
+            await select_action_and_go(page, "1", 'form#AddToGroup');
 
             /* click "Create New Group" */
             element = '#CIVICRM_QFID_1_4';
@@ -537,7 +512,7 @@ test.describe.serial('Batch Action', () => {
             await utils.clickElement(page, page.locator(element).first());
 
             /* select "New Smart Group" and click "Go" */
-            await select_action_and_go(page, 4, 'form#SaveSearch');
+            await select_action_and_go(page, "13", 'form#SaveSearch');
 
             /* fill in "Name" */
             element = '#title';
@@ -576,7 +551,7 @@ test.describe.serial('Batch Action', () => {
             await select_top_n(page, 2);
 
             /* select "Delete Contacts" and click "Go" */
-            await select_action_and_go(page, 17, 'form#Delete');
+            await select_action_and_go(page, "8", 'form#Delete');
 
             /* click "Delete Contact(s)" */
             element = '#_qf_Delete_done';

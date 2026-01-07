@@ -91,7 +91,7 @@ const url_contact_ary = [
     {title:'New Household', url:'/civicrm/contact/add?reset=1&ct=Household'},
     {title:'Find and Merge Duplicate Contacts', url:'/civicrm/contact/deduperules?reset=1'},
     {title:'Search Builder', url:'/civicrm/contact/search/builder?reset=1'},
-    {title:'全文搜尋', url:'/civicrm/contact/search/custom?csid=15&reset=1'},
+    {title:'Full-text Search', url:'/civicrm/contact/search/custom?csid=15&reset=1'},
     {title:'Advanced Search', url:'/civicrm/contact/search/advanced?reset=1'},
     {title:'Find Contacts', url:'/civicrm/contact/search/basic'},
     {title:'Simple Search', url:'/civicrm/contact/search/simple'},
@@ -103,7 +103,7 @@ const url_contact_ary = [
 const url_group_ary = [
     {title:'Manage Groups', url:'/civicrm/group?reset=1'},
     {title:'New Group', url:'/civicrm/group/add?reset=1'},
-    {title:'包括/不包括群組聯絡人/標籤', url:'/civicrm/contact/search/custom?reset=1&csid=4'},
+    {title:'Include / Exclude Contacts in a Group / Tag', url:'/civicrm/contact/search/custom?reset=1&csid=4'},
 ];
 
 // List all activity page links
@@ -133,8 +133,8 @@ const url_contribute_ary = [
     {title:'Find Contributions', url:'/civicrm/contribute/search?reset=1'},
     {title:'Contribution Booster', url:'/civicrm/contribute/booster?reset=1'},
     {title:'Custom Search - Recurring Contribution', url:'/civicrm/contact/search/custom?reset=1&csid=17'},
-    {title:'捐款整合', url:'/civicrm/contact/search/custom?reset=1&csid=2'},
-    {title:'匯出募款專頁的價格表內容', url:'/civicrm/contact/search/custom?reset=1&csid=16'},
+    {title:'Contribution Aggregate', url:'/civicrm/contact/search/custom?reset=1&csid=2'},
+    {title:'Export Price Set Info for a Contribution Page', url:'/civicrm/contact/search/custom?reset=1&csid=16'},
     // manage contribution page
     {title:'Manage Contribution Pages', url:'/civicrm/admin/contribute?reset=1'},
     {title:'Personal Campaign Pages', url:'/civicrm/admin/pcp?reset=1'},
@@ -160,7 +160,7 @@ const url_event_ary = [
     {title:'Event Templates', url:'/civicrm/admin/eventTemplate?reset=1'},
     // participant
     {title:'Register New Participant', url:'/civicrm/participant/add?reset=1&action=add&context=standalone'},
-    {title:'給活動參與者的價格表詳情' ,url:'/civicrm/contact/search/custom?reset=1&csid=9'},
+    {title:'Price Set Details for Event Participants' ,url:'/civicrm/contact/search/custom?reset=1&csid=9'},
     {title:'Find Participants', url:'/civicrm/event/search?reset=1'},
 ];
 

@@ -38,6 +38,7 @@
   {strip}
   <table>
   <tr class="columnheader">
+      <th>{ts}Is Active?{/ts}</th>
       <th>{ts}Combination Name{/ts}</th>
       <th>{ts}SKU{/ts}</th>
       <th>{ts}Combination Contents{/ts}</th>
@@ -46,10 +47,10 @@
       <th>{ts}Min Recurring Contribution{/ts}</th>
       <th>{ts}Weight{/ts}</th>
       <th>{ts}Operation{/ts}</th>
-      <th></th>
   </tr>
   {foreach from=$combinations item=combination}
   <tr class="{cycle values='odd-row,even-row'} {$combination.class}{if NOT $combination.is_active} disabled{/if}">
+      <td class="crm-contribution-form-block-is_active">{if $combination.is_active}{ts}Yes{/ts}{else}{ts}No{/ts}{/if}</td>
       <td class="crm-contribution-form-block-combination_name">{$combination.combination_name}</td>
       <td class="crm-contribution-form-block-sku">{$combination.sku|default:'-'}</td>
       <td class="crm-contribution-form-block-combination_content">{$combination.combination_content|replace:', ':'<br>'}</td>

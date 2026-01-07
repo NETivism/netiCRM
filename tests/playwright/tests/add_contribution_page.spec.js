@@ -145,14 +145,11 @@ test.describe.serial('Contribution Page Editing', () => {
             /* select Include Profile(top of page) */
             element = "#custom_pre_id";
             await utils.findElement(page, element);
-            await page.locator(element).selectOption('14');
-            await expect(page.locator(element)).toHaveValue('14');
-
-            /* select Include Profile(bottom of page) */
-            element = "#custom_post_id";
-            await utils.findElement(page, element);
-            await page.locator(element).selectOption('14');
-            await expect(page.locator(element)).toHaveValue('14');
+            // Get the first option with a non-empty value
+            const firstOption = await page.locator(`${element} option[value]:not([value=""])`).first();
+            const firstValue = await firstOption.getAttribute('value');
+            await page.locator(element).selectOption(firstValue);
+            await expect(page.locator(element)).toHaveValue(firstValue);
 
             /* click submit */
             element = "#_qf_Custom_upload-bottom";

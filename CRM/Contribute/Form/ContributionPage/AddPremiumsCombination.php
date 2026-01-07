@@ -575,6 +575,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       // Set premiums_id for new combinations
       $params['premiums_id'] = $premiumID;
     }
+    $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $dao->copyValues($params);
     $dao->save();
     $combinationId = $dao->id;

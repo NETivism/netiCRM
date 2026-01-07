@@ -1,5 +1,5 @@
 {if $funnel.series}
-  <script type="text/javascript" src="{$config->resourceBase}packages/ncfunnel/ncfunnel.js"></script>
+  {js src=packages/ncfunnel/ncfunnel.js group=999 weight=998 library=civicrm/civicrm-js-ncfunnel}{/js}
   <link rel="stylesheet" href="{$config->resourceBase}packages/ncfunnel/ncfunnel.css">
 
   {php}
@@ -21,7 +21,7 @@
   {/if}
 
   <script type="text/javascript">{literal}
-  jQuery(document).ready(function() {
+  cj(document).ready(function() {
     var chartSeries = {/literal}{$funnel.series|default:"[]"}{literal};
     var chartLabels = {/literal}{$funnel.labels|default:"[]"}{literal};
     var chartLabelsTop = {/literal}{$funnel.labelsTop|default:"[]"}{literal};
@@ -38,7 +38,7 @@
       options.labelsTop = chartLabelsTop;
     }
 
-    jQuery(chartSelector).ncfunnel(options);
+    cj(chartSelector).ncfunnel(options);
   });
   {/literal}</script>
 {/if}

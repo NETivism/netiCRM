@@ -9,6 +9,8 @@ steps:
   pull: if-not-exists
   commands:
   - git submodule update --init --recursive
+  - cd drupal && git checkout 7.x-develop && git pull && cd ..
+  - cd neticrm && git checkout 7.x-develop && git pull && cd ..
 - name: neticrm ci php 7
   image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php7
   pull: always
@@ -94,6 +96,8 @@ steps:
   pull: if-not-exists
   commands:
   - git submodule update --init --recursive
+  - cd drupal && git checkout 7.x-develop && git pull && cd ..
+  - cd neticrm && git checkout 7.x-develop && git pull && cd ..
 - name: neticrm ci php 8
   image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php8
   pull: always
@@ -181,8 +185,8 @@ steps:
   pull: if-not-exists
   commands:
   - git submodule update --init --recursive
-  - cd drupal && git checkout 9.x-develop && git pull && cd ..
-  - cd neticrm && git checkout 9.x-develop && git pull && cd ..
+  - cd drupal && git checkout 10.x-develop && git pull && cd ..
+  - cd neticrm && git checkout 10.x-develop && git pull && cd ..
 - name: neticrm ci php 8 drupal 10
   image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php82-d10
   pull: always

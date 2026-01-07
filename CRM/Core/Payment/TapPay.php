@@ -420,7 +420,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     // Update new trxn_id
     $c->trxn_id = self::getContributionTrxnID($c->id);
-    $c->save();
 
 
     $ppid = $firstContribution->payment_processor_id;
@@ -435,6 +434,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if (empty($paymentProcessor)) {
       $paymentProcessor = $originalProcessor;
     }
+    // use new payment processor id for this copied contribution
+    if ($paymentProcessor) {
+      $c->payment_processor_id = $paymentProcessor['id'];
+    }
+    $c->save();
 
     $response = [];
     if ($paymentProcessor) {
@@ -1037,11 +1041,12 @@ LIMIT 0, 100
     $currentExpiryDate = $tappay->expiry_date;
 
     if ($goPayment) {
-      if ((strtotime($newExpiryDate) >= strtotime($currentExpiryDate)) && $activeTokenOverride) {
-        $isProgress = TRUE;
-      }
       // Check if Credit card over date, unless it's expired recurring with active token
       if ($time <= strtotime($currentExpiryDate) || ($activeTokenOverride && $time > strtotime($currentExpiryDate))) {
+        // Change status to In Progress when card expiry date has been updated
+        if ($activeTokenOverride && !empty($newExpiryDate) && strtotime($newExpiryDate) >= strtotime($currentExpiryDate) && $time > strtotime($currentExpiryDate)) {
+          $isProgress = TRUE;
+        }
         $resultNote .= $reason;
         $resultNote .= ts("Finish synchronizing recurring.");
         self::payByToken($dao->recur_id);

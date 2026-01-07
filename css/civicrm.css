@@ -7198,15 +7198,24 @@ input.crm-form-textfield,
   color: red;
   padding-left: 10px;
 }
-.coupon-html-wrapper{
+.coupon-html-wrapper {
   position: relative;
+  display: flex;
 }
+@media (min-width: 768px) {
+  .coupon-html-wrapper {
+    display: inline-flex;
+    margin-right: 10px;
+  }
+}
+
 .region-content div .coupon-check-symbol{
   display: none;
   position: absolute;
   right: 10px;
-  top: 5px;
+  top: 9px;
   color: #1faa00;
+  margin: 0;
 }
 .crm-container .advanced-float-buttons{
   position: fixed;
