@@ -643,61 +643,26 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
   }
 
   public static function getContributionPremiums($ids) {
-    $sql = "SELECT cp.contribution_id, cp.product_option, cp.combination_id, p.name FROM civicrm_contribution_product cp INNER JOIN civicrm_product p ON p.id = cp.product_id WHERE cp.contribution_id IN (%1)";
+    $premiums = [];
+
+    // Get all contribution IDs that have premiums
+    $sql = "SELECT DISTINCT contribution_id FROM civicrm_contribution_product WHERE contribution_id IN (%1)";
     $dao = CRM_Core_DAO::executeQuery($sql, [
       1 => [CRM_Utils_Array::implode(',', $ids), 'CommaSeparatedIntegers']
     ]);
-    $premiums = [];
-    $combinationContributions = [];
+
+    $contributionIds = [];
     while($dao->fetch()) {
-      if (!empty($dao->combination_id)) {
-        // For combination premium
-        $combinationContributions[$dao->contribution_id] = $dao->combination_id;
-      } else {
-        // For regular premium
-        $premiums[$dao->contribution_id]['product_name'] = $dao->name;
-      }
-      $premiums[$dao->contribution_id]['product_option'] = $dao->product_option;
+      $contributionIds[] = $dao->contribution_id;
     }
-
-    // Handle combination premiums
-    if (!empty($combinationContributions)) {
-      foreach ($combinationContributions as $contributionId => $combinationId) {
-        // Get combination name from combination table
-        $combinationSql = "
-          SELECT combination_name
-          FROM civicrm_premiums_combination
-          WHERE id = %1
-        ";
-        $combinationDao = CRM_Core_DAO::executeQuery($combinationSql, [
-          1 => [$combinationId, 'Integer']
-        ]);
-        $combinationName = '';
-        if ($combinationDao->fetch()) {
-          $combinationName = $combinationDao->combination_name;
-        }
-
-        // Get products from contribution_product table
-        $productSql = "
-          SELECT p.name
-          FROM civicrm_contribution_product cp
-          INNER JOIN civicrm_product p ON cp.product_id = p.id
-          WHERE cp.contribution_id = %1 AND cp.combination_id = %2
-          ORDER BY p.name
-        ";
-        $productDao = CRM_Core_DAO::executeQuery($productSql, [
-          1 => [$contributionId, 'Integer'],
-          2 => [$combinationId, 'Integer']
-        ]);
-
-        $productNames = [];
-        while ($productDao->fetch()) {
-          $productNames[] = $productDao->name;
-        }
-
-        $premiums[$contributionId]['product_name'] = $combinationName . '(' . implode(', ', $productNames) . ')';
+    foreach ($contributionIds as $contributionId) {
+      $premiumDetails = CRM_Contribute_BAO_Premium::getContributionPremiumDetails($contributionId);
+      if (!empty($premiumDetails['product_name'])) {
+        $premiums[$contributionId]['product_name'] = $premiumDetails['product_name'];
+        $premiums[$contributionId]['product_option'] = $premiumDetails['product_option'];
       }
     }
+
     return $premiums;
   }
 

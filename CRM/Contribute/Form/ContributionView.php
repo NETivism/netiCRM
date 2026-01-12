@@ -155,48 +155,24 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     if ($premiumId) {
-      if (!empty($dao->combination_id)) {
+      $premiumDetails = CRM_Contribute_BAO_Premium::getContributionPremiumDetails($id);
+
+      if ($premiumDetails['is_combination']) {
         $this->assign('is_combination', TRUE);
-
-        // Get combination name from civicrm_premiums_combination
-        $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
-        $combinationDAO->id = $dao->combination_id;
-        if ($combinationDAO->find(TRUE)) {
-          $this->assign('combination_name', $combinationDAO->combination_name);
-          $this->assign('combination_id', $dao->combination_id);
-        }
-
-        // Get products from contribution_product table
-        $sql = "
-          SELECT cp.product_id, cp.quantity, p.name, p.sku
-          FROM civicrm_contribution_product cp
-          LEFT JOIN civicrm_product p ON cp.product_id = p.id
-          WHERE cp.contribution_id = %1 AND cp.combination_id = %2
-        ";
-        $productDao = CRM_Core_DAO::executeQuery($sql, [
-          1 => [$id, 'Integer'],
-          2 => [$dao->combination_id, 'Integer']
-        ]);
-
-        $combinationContent = [];
-        while ($productDao->fetch()) {
-          $combinationContent[] = $productDao->name . ' x' . $productDao->quantity;
-        }
-        $this->assign('combination_content', implode(', ', $combinationContent));
+        $this->assign('combination_name', $premiumDetails['combination_name']);
+        $this->assign('combination_id', $premiumDetails['combination_id']);
+        $this->assign('combination_content', $premiumDetails['product_content']);
 
         if (!empty($values['contribution_page_id'])) {
           $editUrl = CRM_Utils_System::url('civicrm/admin/contribute/premium',"action=update&id={$values['contribution_page_id']}&reset=1");
           $this->assign('combination_edit_url', $editUrl);
         }
-      } else {
-        // This is an individual product
-        $productDAO = new CRM_Contribute_DAO_Product();
-        $productDAO->id = $productID;
-        $productDAO->find(TRUE);
-
-        $this->assign('premium', $productDAO->name);
       }
-      $this->assign('option', $dao->product_option);
+      else {
+        // This is an individual product
+        $this->assign('premium', $premiumDetails['product_name']);
+      }
+      $this->assign('option', $premiumDetails['product_option']);
       $this->assign('fulfilled', $dao->fulfilled_date);
     }
 
