@@ -152,6 +152,22 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         CRM_Core_DAO::storeValues($combinationDAO, $combinationData);
         // Get products in this combination
         $combinationData['products'] = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationDAO->id);
+        $combinationData['stock_status'] = FALSE;
+        $combinationData['out_of_stock'] = FALSE;
+        $combinationData['out_of_stock_products'] = [];
+        foreach($combinationData['products'] as $productInfo) {
+          if (!empty($productInfo['stock_status']) && $productInfo['stock_qty'] > 0) {
+            $combinationData['stock_status'] = TRUE;
+          }
+          if (!empty($productInfo['stock_status']) && $productInfo['stock_qty'] <= $productInfo['send_qty']) {
+            $combinationData['out_of_stock_products'][$productInfo['product_id']] = TRUE;
+            break;
+          }
+        }
+        if ($combinationData['stock_status'] && !empty($combinationData['out_of_stock_products'])) {
+          $combinationData['out_of_stock'] = TRUE;
+        }
+
         // Apply selection filter similar to regular premium block
         if ($selectedProductID != NULL) {
           if ($selectedProductID == $combinationDAO->id) {
@@ -171,6 +187,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           $combinationAttr['data-min-contribution-recur'] = $combinationDAO->min_contribution_recur;
           $combinationAttr['data-calculate-mode'] = $combinationDAO->calculate_mode;
           $combinationAttr['data-installments'] = $combinationDAO->installments;
+          $combinationAttr['data-out-of-stock'] = $combinationData['out_of_stock'];
           $radio[$combinationDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $combinationDAO->id, $combinationAttr);
         }
       }
@@ -235,12 +252,25 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         else {
           CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
         }
+
+        $products[$productDAO->id]['stock_status'] = FALSE;
+        $products[$productDAO->id]['out_of_stock'] = FALSE;
+        $products[$productDAO->id]['out_of_stock_products'] = [];
+        if (!empty($productDAO->stock_status) && $productDAO->stock_qty > 0) {
+          $products[$productDAO->id]['stock_status'] = TRUE;
+        }
+        if (!empty($productDAO->stock_status) && $productDAO->stock_qty <= $productDAO->send_qty) {
+          $products[$productDAO->id]['out_of_stock_products'][$productDAO->id] = TRUE;
+          $products[$productDAO->id]['out_of_stock'] = TRUE;
+        }
       }
+
       $productAttr = [];
       $productAttr['data-min-contribution'] = $products[$productDAO->id]['min_contribution'];
       $productAttr['data-min-contribution-recur'] = $products[$productDAO->id]['min_contribution_recur'];
       $productAttr['data-calculate-mode'] = $products[$productDAO->id]['calculate_mode'];
       $productAttr['data-installments'] = $products[$productDAO->id]['installments'];
+      $productAttr['data-out-of-stock'] = $products[$productDAO->id]['out_of_stock'];
       
       $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, $productAttr);
       $options = $temp = [];
@@ -717,6 +747,108 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     }
     
     $transaction->commit();
+  }
+
+  /**
+   * Get contribution premium details from civicrm_contribution_product table
+   *
+   * This function retrieves what products were actually selected by the user
+   * in a contribution. It queries the civicrm_contribution_product table which
+   * stores the actual selection, not the combination definition.
+   *
+   * @param int $contributionId The contribution ID
+   *
+   * @return array Array containing premium details with keys:
+   *   - 'is_combination': boolean - Whether this is a combination premium
+   *   - 'combination_id': int|null - Combination ID if applicable
+   *   - 'combination_name': string - Combination name (or [Deleted Combination #X] if deleted)
+   *   - 'product_name': string - Full product display name
+   *   - 'product_content': string - Detailed product list with quantities (e.g., "T-Shirt x1, Hat x2")
+   *   - 'products': array - Array of individual products with name, quantity, sku
+   *   - 'product_option': string - Product option selected
+   *
+   * @access public
+   * @static
+   */
+  public static function getContributionPremiumDetails($contributionId) {
+    $details = [
+      'is_combination' => FALSE,
+      'combination_id' => NULL,
+      'combination_name' => '',
+      'product_name' => '',
+      'product_content' => '',
+      'products' => [],
+      'product_option' => '',
+    ];
+
+    // Get basic contribution product info
+    $dao = new CRM_Contribute_DAO_ContributionProduct();
+    $dao->contribution_id = $contributionId;
+
+    if (!$dao->find(TRUE)) {
+      return $details;
+    }
+
+    $details['product_option'] = $dao->product_option;
+
+    // Handle combination premium
+    if (!empty($dao->combination_id)) {
+      $details['is_combination'] = TRUE;
+      $details['combination_id'] = $dao->combination_id;
+
+      // Get combination name
+      $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
+      $combinationDAO->id = $dao->combination_id;
+      if ($combinationDAO->find(TRUE)) {
+        $details['combination_name'] = $combinationDAO->combination_name;
+      }
+      else {
+        $details['combination_name'] = '[Deleted Combination #' . $dao->combination_id . ']';
+      }
+
+      // Get actual selected products from contribution_product
+      $sql = "
+        SELECT cp.product_id, cp.quantity, p.name, p.sku
+        FROM civicrm_contribution_product cp
+        LEFT JOIN civicrm_product p ON cp.product_id = p.id
+        WHERE cp.contribution_id = %1 AND cp.combination_id = %2
+        ORDER BY p.name
+      ";
+
+      $productDao = CRM_Core_DAO::executeQuery($sql, [
+        1 => [$contributionId, 'Integer'],
+        2 => [$dao->combination_id, 'Integer']
+      ]);
+
+      $productContentArray = [];
+      while ($productDao->fetch()) {
+        $details['products'][] = [
+          'product_id' => $productDao->product_id,
+          'name' => $productDao->name,
+          'quantity' => $productDao->quantity,
+          'sku' => $productDao->sku,
+        ];
+        $productContentArray[] = $productDao->name . ' x' . $productDao->quantity;
+      }
+
+      $details['product_content'] = implode(', ', $productContentArray);
+      $details['product_name'] = $details['combination_name'] . ' (' . $details['product_content'] . ')';
+    }
+    // Handle single product premium
+    else if (!empty($dao->product_id)) {
+      $productDAO = new CRM_Contribute_DAO_Product();
+      $productDAO->id = $dao->product_id;
+      if ($productDAO->find(TRUE)) {
+        $details['product_name'] = $productDAO->name;
+        $details['products'][] = [
+          'product_id' => $productDAO->id,
+          'name' => $productDAO->name,
+          'quantity' => 1,
+          'sku' => $productDAO->sku,
+        ];
+      }
+    }
+    return $details;
   }
 
   /**

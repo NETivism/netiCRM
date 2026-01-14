@@ -4755,13 +4755,54 @@ ul.ui-sortable {
 .crm-container .premiums-listings tr.not-available {
   font-size: 0.85em;
 }
+.crm-container .premiums-listings tr.not-available .premium-name {
+  color: #9e9e9e;
+}
+.crm-container .premiums-listings tr.not-available .combination-products {
+  color: #9e9e9e;
+}
+.crm-container .premiums-listings tr.not-available .premium-img label {
+  cursor: not-allowed;
+  background: #FFF;
+}
 .crm-container .premiums-listings tr.not-available .premium-img img {
-  height: 50px;
-  opacity: .5;
+  filter: opacity(0.5);
+  cursor: not-allowed;
 }
 .crm-container .premiums-listings tr.not-available .premium-info .description,
 .crm-container .premiums-listings tr.not-available .premium-info .description .zmdi{
   color: red;
+}
+.crm-container .premiums-listings tr.out-of-stock {
+  font-size: 0.85em;
+}
+.crm-container .premiums-listings tr.out-of-stock .premium-name {
+  color: #9e9e9e;
+}
+.crm-container .premiums-listings tr.out-of-stock .premium-name .product-name-text {
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+.crm-container .premiums-listings tr.out-of-stock .premium-name .out-of-stock-label {
+  color: red;
+  font-weight: normal;
+  margin-left: 10px;
+}
+.crm-container .premiums-listings tr.out-of-stock .combination-products {
+  color: #9e9e9e;
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+.crm-container .premiums-listings tr.out-of-stock .premium-img label {
+  cursor: not-allowed;
+  background: #FFF;
+}
+.crm-container .premiums-listings tr.out-of-stock .premium-img img {
+  filter: opacity(0.5);
+  cursor: not-allowed;
+}
+.crm-container .premiums-listings tr.out-of-stock input[type="radio"] {
+  cursor: not-allowed;
 }
 
 /* form elements */
@@ -6600,7 +6641,7 @@ input.crm-form-textfield,
 .crm-container-md .crm-form-radio .form-radio[readonly] + .elem-label::after,
 .crm-container-md .crm-form-checkbox .form-checkbox[readonly] + .elem-label::after {
   cursor: not-allowed;
-  border: 2px solid #bdbdbd;
+  border: 2px dotted #bdbdbd;
   background-color: #fff;
 }
 .crm-container-md .crm-form-radio .form-radio:disabled + .elem-label::before,
@@ -7209,7 +7250,7 @@ input.crm-form-textfield,
   }
 }
 
-.region-content div .coupon-check-symbol{
+.coupon-html-wrapper .coupon-check-symbol {
   display: none;
   position: absolute;
   right: 10px;

@@ -703,8 +703,12 @@
         });
 
         if (isScrollAnimate) {
-          var topPosition = $rightCol.offset().top - $stepInfo.height();
-          $('html,body').animate({ scrollTop: topPosition }, 500);
+          // Scroll after fade-in animation completes to ensure stable layout
+          setTimeout(function() {
+            var fixedHeaderBuffer = 100;
+            var topPosition = $rightCol.offset().top - $stepInfo.height() - fixedHeaderBuffer;
+            $('html,body').animate({ scrollTop: topPosition }, 500);
+          }, 800);
         }
 
         $('.step-text').removeClass('active');

@@ -914,43 +914,41 @@ class CRM_Core_Payment_BaseIPN {
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contribution->id;
     if ($dao->find(TRUE)) {
-      $template->assign('option', $dao->product_option);
       $template->assign('selectPremium', TRUE);
+      $premiumDetails = CRM_Contribute_BAO_Premium::getContributionPremiumDetails($contribution->id);
+      $template->assign('option', $premiumDetails['product_option']);
 
-      // Check if this is a combination premium
-      if (!empty($dao->combination_id)) {
-        $combinationDAO = new CRM_Contribute_DAO_PremiumsCombination();
-        $combinationDAO->id = $dao->combination_id;
-        if ($combinationDAO->find(TRUE)) {
-          $combinationName = $combinationDAO->combination_name;
-          $combinationProducts = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($dao->combination_id);
-          $combinationContentArray = [];
-          $totalPrice = 0;
-          $skuArray = [];
-          foreach ($combinationProducts as $product) {
-            $combinationContentArray[] = $product['name'] . ' x' . $product['quantity'];
-            if (!empty($product['price'])) {
-              $totalPrice += $product['price'] * $product['quantity'];
-            }
-            if (!empty($product['sku'])) {
-              $skuArray[] = $product['sku'];
+      if ($premiumDetails['is_combination']) {
+        // Calculate total price and collect SKUs for combination
+        $totalPrice = 0;
+        $skuArray = [];
+        foreach ($premiumDetails['products'] as $product) {
+          // Get price for each product
+          $productDAO = new CRM_Contribute_DAO_Product();
+          $productDAO->id = $product['product_id'];
+          if ($productDAO->find(TRUE)) {
+            if (!empty($productDAO->price)) {
+              $totalPrice += $productDAO->price * $product['quantity'];
             }
           }
-          $combinationContent = implode(', ', $combinationContentArray);
-          $template->assign('product_name', $combinationName . ': ' . $combinationContent);
-          $template->assign('price', $totalPrice);
-          $template->assign('sku', implode(', ', $skuArray));
+          if (!empty($product['sku'])) {
+            $skuArray[] = $product['sku'];
+          }
         }
+        $template->assign('product_name', $premiumDetails['combination_name'] . ': ' . $premiumDetails['product_content']);
+        $template->assign('price', $totalPrice);
+        $template->assign('sku', implode(', ', $skuArray));
       }
-      else if (!empty($dao->product_id)) {
+      else if (!empty($premiumDetails['products'])) {
         // Single product premium
-        $premiumId = $dao->product_id;
+        $product = $premiumDetails['products'][0];
         $productDAO = new CRM_Contribute_DAO_Product();
-        $productDAO->id = $premiumId;
-        $productDAO->find(TRUE);
-        $template->assign('product_name', $productDAO->name);
-        $template->assign('price', $productDAO->price);
-        $template->assign('sku', $productDAO->sku);
+        $productDAO->id = $product['product_id'];
+        if ($productDAO->find(TRUE)) {
+          $template->assign('product_name', $productDAO->name);
+          $template->assign('price', $productDAO->price);
+          $template->assign('sku', $productDAO->sku);
+        }
       }
     }
 
