@@ -705,7 +705,8 @@
         if (isScrollAnimate) {
           // Scroll after fade-in animation completes to ensure stable layout
           setTimeout(function() {
-            var topPosition = $rightCol.offset().top - $stepInfo.height();
+            var fixedHeaderBuffer = 100;
+            var topPosition = $rightCol.offset().top - $stepInfo.height() - fixedHeaderBuffer;
             $('html,body').animate({ scrollTop: topPosition }, 500);
           }, 800);
         }
