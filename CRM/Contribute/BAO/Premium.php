@@ -152,6 +152,22 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         CRM_Core_DAO::storeValues($combinationDAO, $combinationData);
         // Get products in this combination
         $combinationData['products'] = CRM_Contribute_BAO_PremiumsCombination::getCombinationProducts($combinationDAO->id);
+        $combinationData['stock_status'] = FALSE;
+        $combinationData['out_of_stock'] = FALSE;
+        $combinationData['out_of_stock_products'] = [];
+        foreach($combinationData['products'] as $productInfo) {
+          if (!empty($productInfo['stock_status']) && $productInfo['stock_qty'] > 0) {
+            $combinationData['stock_status'] = TRUE;
+          }
+          if (!empty($productInfo['stock_status']) && $productInfo['stock_qty'] <= $productInfo['send_qty']) {
+            $combinationData['out_of_stock_products'][$productInfo['product_id']] = TRUE;
+            break;
+          }
+        }
+        if ($combinationData['stock_status'] && !empty($combinationData['out_of_stock_products'])) {
+          $combinationData['out_of_stock'] = TRUE;
+        }
+
         // Apply selection filter similar to regular premium block
         if ($selectedProductID != NULL) {
           if ($selectedProductID == $combinationDAO->id) {
@@ -171,6 +187,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           $combinationAttr['data-min-contribution-recur'] = $combinationDAO->min_contribution_recur;
           $combinationAttr['data-calculate-mode'] = $combinationDAO->calculate_mode;
           $combinationAttr['data-installments'] = $combinationDAO->installments;
+          $combinationAttr['data-out-of-stock'] = $combinationData['out_of_stock'];
           $radio[$combinationDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $combinationDAO->id, $combinationAttr);
         }
       }
@@ -235,12 +252,25 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         else {
           CRM_Core_DAO::storeValues($productDAO, $products[$productDAO->id]);
         }
+
+        $products[$productDAO->id]['stock_status'] = FALSE;
+        $products[$productDAO->id]['out_of_stock'] = FALSE;
+        $products[$productDAO->id]['out_of_stock_products'] = [];
+        if (!empty($productDAO->stock_status) && $productDAO->stock_qty > 0) {
+          $products[$productDAO->id]['stock_status'] = TRUE;
+        }
+        if (!empty($productDAO->stock_status) && $productDAO->stock_qty <= $productDAO->send_qty) {
+          $products[$productDAO->id]['out_of_stock_products'][$productDAO->id] = TRUE;
+          $products[$productDAO->id]['out_of_stock'] = TRUE;
+        }
       }
+
       $productAttr = [];
       $productAttr['data-min-contribution'] = $products[$productDAO->id]['min_contribution'];
       $productAttr['data-min-contribution-recur'] = $products[$productDAO->id]['min_contribution_recur'];
       $productAttr['data-calculate-mode'] = $products[$productDAO->id]['calculate_mode'];
       $productAttr['data-installments'] = $products[$productDAO->id]['installments'];
+      $productAttr['data-out-of-stock'] = $products[$productDAO->id]['out_of_stock'];
       
       $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, $productAttr);
       $options = $temp = [];
