@@ -41,10 +41,26 @@ cj(document).ready(function($){
     }
   }
   var filterPremiumByAmount = function(amt, amt_recur){
-    $('tr.product-row, tr.combination-row').addClass('not-available');
-    $('tr.product-row input[name=selectProduct], tr.combination-row input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', false);
-    $('tr.product-row.not-available .premium-info .description, tr.combination-row.not-available .premium-info .description').find('.zmdi-alert-triangle').remove();
+    // First, handle out-of-stock items separately
+    $('tr.product-row, tr.combination-row').removeClass('out-of-stock not-available');
+    $('tr.product-row input[name=selectProduct], tr.combination-row input[name=selectProduct], tr.product-row .premium-options select').prop('disabled', false);
+
+    // Mark out-of-stock items
+    $("input[name=selectProduct]").each(function(){
+      if (parseInt($(this).data('out-of-stock')) === 1) {
+        $(this).closest('tr.product-row, tr.combination-row').addClass('out-of-stock');
+        $(this).prop('disabled', true);
+      }
+    });
+
+    // Filter by amount for non-out-of-stock items
+    $('tr.product-row:not(.out-of-stock), tr.combination-row:not(.out-of-stock)').addClass('not-available');
     var $available = $("input[name=selectProduct]").filter(function(idx){
+      // Skip out-of-stock items
+      if (parseInt($(this).data('out-of-stock')) === 1) {
+        return false;
+      }
+
       var minContribution = parseFloat($(this).data('min-contribution'));
       var minContributionRecur = parseFloat($(this).data('min-contribution-recur'));
       if (amt < minContribution && amt > 0) {
@@ -73,10 +89,12 @@ cj(document).ready(function($){
     if (!$available.filter(":checked").length) {
       $('input[name=selectProduct]').prop('checked', false);
     }
-    $('tr.product-row.not-available input[name=selectProduct], tr.combination-row.not-available input[name=selectProduct], tr.product-row.not-available  .premium-options select').prop('disabled', true);
-    $('tr.product-row.not-available .premium-info .description, tr.combination-row.not-available .premium-info .description').prepend('<i class="zmdi zmdi-alert-triangle"></i>');
+    $('tr.product-row.not-available input[name=selectProduct], tr.combination-row.not-available input[name=selectProduct], tr.product-row.not-available .premium-options select').prop('disabled', true);
   }
   var initialize = function (){
+    // First, initialize all items including out-of-stock
+    filterPremiumByAmount(0, 0);
+    // Then update based on current amount selection
     handleAmountChange();
   }
   var handleAmountChange = function() {
@@ -163,7 +181,10 @@ cj(document).ready(function($){
                 <td class="premium-img"><label for="{$form.selectProduct.$combination_id.id}"><img src="{$combination.thumbnail}" alt="{$combination.combination_name}" class="no-border" /></label></td>
                 {/if}
                 <td class="premium-info"{if !$combination.thumbnail} colspan="2"{/if}>
-                    <label class="premium-name" for="{$form.selectProduct.$combination_id.id}">{$combination.combination_name}</label>
+                    <label class="premium-name" for="{$form.selectProduct.$combination_id.id}">
+                      <span class="product-name-text">{$combination.combination_name}</span>
+                      {if $combination.out_of_stock}<span class="out-of-stock-label">({ts}Product is out of stock.{/ts})</span>{/if}
+                    </label>
                     <div class="combination-products">
                         {foreach from=$combination.products item=product name=productLoop}
                             {$smarty.foreach.productLoop.iteration}.{$product.name} x {$product.quantity}<br/>
@@ -213,7 +234,10 @@ cj(document).ready(function($){
                 <td class="premium-img"><label for="{$form.selectProduct.$pid.id}"><img src="{$row.thumbnail}" alt="{$row.name}" class="no-border" /></label></td>
                 {/if}
     	        <td class="premium-info"{if !$row.thumbnail} colspan="2"{/if}>
-                    <label class="premium-name" for="{$form.selectProduct.$pid.id}">{$row.name}</label>
+                    <label class="premium-name" for="{$form.selectProduct.$pid.id}">
+                      <span class="product-name-text">{$row.name}</span>
+                      {if $row.out_of_stock}<span class="out-of-stock-label">({ts}Product is out of stock.{/ts})</span>{/if}
+                    </label>
                     <div>{$row.description|nl2br}</div>
                     {if ($premiumBlock.premiums_display_min_contribution AND $context EQ "makeContribution") OR $preview EQ 1}
                       {capture assign="limitation"}{/capture}
