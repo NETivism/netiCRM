@@ -663,7 +663,6 @@
 
       updateFormStep: function(isScrollAnimate) {
         var currentStepClassName = 'contrib-step-'+this.currentFormStep;
-        var $rightCol = $('#main-inner').length ? $('#main-inner') : $('#main .row-offcanvas');
         var $stepInfo = $('.custom-step-info');
 
         $('[class*=contrib-step-]').each(function(){
@@ -703,8 +702,15 @@
         });
 
         if (isScrollAnimate) {
-          var topPosition = $rightCol.offset().top - $stepInfo.height();
-          $('html,body').animate({ scrollTop: topPosition }, 500);
+          // Use native scrollIntoView for reliable scrolling
+          // Ensure $stepInfo is fully visible at the top of viewport
+          if ($stepInfo.length && $stepInfo[0]) {
+            $stepInfo[0].scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+              inline: 'nearest'
+            });
+          }
         }
 
         $('.step-text').removeClass('active');
