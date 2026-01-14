@@ -7250,7 +7250,7 @@ input.crm-form-textfield,
   }
 }
 
-.region-content div .coupon-check-symbol{
+.coupon-html-wrapper .coupon-check-symbol {
   display: none;
   position: absolute;
   right: 10px;
