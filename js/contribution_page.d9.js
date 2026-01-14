@@ -663,6 +663,7 @@
 
       updateFormStep: function(isScrollAnimate) {
         var currentStepClassName = 'contrib-step-'+this.currentFormStep;
+        var $rightCol = $('#main-inner').length ? $('#main-inner') : $('#main .row-offcanvas');
         var $stepInfo = $('.custom-step-info');
 
         $('[class*=contrib-step-]').each(function(){
@@ -693,15 +694,6 @@
               $this.animate({'opacity': 1} ,300,  function(){
                 window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-in').addClass('type-is-front');
-
-                // Scroll after fade-in animation completes to ensure stable layout
-                if (isScrollAnimate && $stepInfo.length && $stepInfo[0]) {
-                  $stepInfo[0].scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                    inline: 'nearest'
-                  });
-                }
               });
             }, 500);
           }
@@ -709,6 +701,14 @@
             $this.addClass('type-is-back');
           }
         });
+
+        if (isScrollAnimate) {
+          // Scroll after fade-in animation completes to ensure stable layout
+          setTimeout(function() {
+            var topPosition = $rightCol.offset().top - $stepInfo.height();
+            $('html,body').animate({ scrollTop: topPosition }, 500);
+          }, 800);
+        }
 
         $('.step-text').removeClass('active');
         if(this.currentPage == 'Main'){
