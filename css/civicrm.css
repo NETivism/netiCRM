@@ -4763,10 +4763,10 @@ ul.ui-sortable {
 }
 .crm-container .premiums-listings tr.not-available .premium-img label {
   cursor: not-allowed;
+  background: #FFF;
 }
 .crm-container .premiums-listings tr.not-available .premium-img img {
-  height: 50px;
-  filter: grayscale(100%) opacity(0.5) blur(0.5px);
+  filter: opacity(0.5);
   cursor: not-allowed;
 }
 .crm-container .premiums-listings tr.not-available .premium-info .description,
@@ -4795,11 +4795,10 @@ ul.ui-sortable {
 }
 .crm-container .premiums-listings tr.out-of-stock .premium-img label {
   cursor: not-allowed;
+  background: #FFF;
 }
 .crm-container .premiums-listings tr.out-of-stock .premium-img img {
-  height: 50px;
-  filter: grayscale(100%);
-  opacity: 0.6;
+  filter: opacity(0.5);
   cursor: not-allowed;
 }
 .crm-container .premiums-listings tr.out-of-stock input[type="radio"] {

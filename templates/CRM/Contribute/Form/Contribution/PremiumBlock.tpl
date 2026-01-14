@@ -44,7 +44,6 @@ cj(document).ready(function($){
     // First, handle out-of-stock items separately
     $('tr.product-row, tr.combination-row').removeClass('out-of-stock not-available');
     $('tr.product-row input[name=selectProduct], tr.combination-row input[name=selectProduct], tr.product-row .premium-options select').prop('disabled', false);
-    $('tr.product-row .premium-info .description, tr.combination-row .premium-info .description').find('.zmdi-alert-triangle').remove();
 
     // Mark out-of-stock items
     $("input[name=selectProduct]").each(function(){
@@ -91,7 +90,6 @@ cj(document).ready(function($){
       $('input[name=selectProduct]').prop('checked', false);
     }
     $('tr.product-row.not-available input[name=selectProduct], tr.combination-row.not-available input[name=selectProduct], tr.product-row.not-available .premium-options select').prop('disabled', true);
-    $('tr.product-row.not-available .premium-info .description, tr.combination-row.not-available .premium-info .description').prepend('<i class="zmdi zmdi-alert-triangle"></i>');
   }
   var initialize = function (){
     // First, initialize all items including out-of-stock
