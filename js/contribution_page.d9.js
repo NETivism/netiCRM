@@ -693,6 +693,15 @@
               $this.animate({'opacity': 1} ,300,  function(){
                 window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-in').addClass('type-is-front');
+
+                // Scroll after fade-in animation completes to ensure stable layout
+                if (isScrollAnimate && $stepInfo.length && $stepInfo[0]) {
+                  $stepInfo[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                  });
+                }
               });
             }, 500);
           }
@@ -700,18 +709,6 @@
             $this.addClass('type-is-back');
           }
         });
-
-        if (isScrollAnimate) {
-          // Use native scrollIntoView for reliable scrolling
-          // Ensure $stepInfo is fully visible at the top of viewport
-          if ($stepInfo.length && $stepInfo[0]) {
-            $stepInfo[0].scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-              inline: 'nearest'
-            });
-          }
-        }
 
         $('.step-text').removeClass('active');
         if(this.currentPage == 'Main'){
