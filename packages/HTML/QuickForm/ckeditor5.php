@@ -12,7 +12,7 @@ require_once('HTML/QuickForm/textarea.php');
  * @author       netiCRM Development Team
  * @access       public
  */
-class HTML_QuickForm_CKeditor5 extends HTML_QuickForm_textarea
+class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
 {
   /**
    * The width of the editor in pixels or percent
@@ -44,7 +44,7 @@ class HTML_QuickForm_CKeditor5 extends HTML_QuickForm_textarea
   {
     parent::__construct($elementName, $elementLabel, $attributes);
     $this->_persistantFreeze = true;
-    $this->_type = 'CKeditor5';
+    $this->_type = 'CKEditor5';
 
     // Set smaller height if schema defines rows as 4 or less
     if (is_array($attributes) && array_key_exists('rows', $attributes) && $attributes['rows'] <= 4) {
@@ -78,7 +78,7 @@ class HTML_QuickForm_CKeditor5 extends HTML_QuickForm_textarea
   <p style="margin: 8px 0 0 0; font-size: 13px; color: #555; line-height: 1.5;">
     <strong>Test Information:</strong><br>
     • Textarea ID: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">' . htmlspecialchars($name) . '</code><br>
-    • Class Name: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">HTML_QuickForm_CKeditor5</code><br>
+    • Class Name: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">HTML_QuickForm_CKEditor5</code><br>
     • File Path: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">/civicrm/packages/HTML/QuickForm/ckeditor5.php</code>
   </p>
   <p style="margin: 8px 0 0 0; font-size: 12px; color: #666; font-style: italic;">
