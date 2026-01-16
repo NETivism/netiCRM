@@ -1,8 +1,11 @@
 [submodule "drupal"]
 	path = drupal
-	url = https://github.com/NETivism/netiCRM-drupal.git
+	url = git@github.com:NETivism/netiCRM-drupal.git
 	branch = 7.x-develop
 [submodule "neticrm"]
 	path = neticrm
-	url = https://github.com/NETivism/netiCRM-neticrm.git
+	url = git@github.com:NETivism/netiCRM-neticrm.git
 	branch = 7.x-develop
+[submodule ".claude"]
+	path = .claude
+	url = git@github.com:NETivism/neticrm-claude.git
