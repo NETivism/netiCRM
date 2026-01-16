@@ -884,10 +884,17 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
       $dao->fetch();
       $current = strstr($type, 'amount') ? $dao->sum : $dao->count;
-      $percent = round(ceil(($current/$goal)*100));
-      if ($current > 0 && $percent < 1) {
-        $percent = 1; // when there is value, we have at least 1 percent
+      $raw = ($current / $goal) * 100;
+      if ($current >= $goal) {
+        $percent = (int)ceil($raw);
       }
+      elseif ($raw < 1 && $current > 0) {
+        $percent = 1;
+      }
+      else {
+        $percent = (int)floor($raw);
+      }
+
       return [
         'type' => $type,
         'label' => $label,
