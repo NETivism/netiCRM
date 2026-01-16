@@ -852,6 +852,120 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   }
 
   /**
+   * Get stock logs for a contribution's premium products
+   *
+   * @param int $contributionId The contribution ID
+   *
+   * @return array Array of stock log entries grouped by timestamp
+   */
+  public static function getStockLogs($contributionId) {
+    $logs = [];
+
+    // Get product IDs associated with this contribution
+    $sql = "
+      SELECT DISTINCT cp.product_id, p.name as product_name
+      FROM civicrm_contribution_product cp
+      LEFT JOIN civicrm_product p ON cp.product_id = p.id
+      WHERE cp.contribution_id = %1
+    ";
+
+    $productDao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$contributionId, 'Integer']
+    ]);
+
+    $productMap = [];
+    while ($productDao->fetch()) {
+      $productMap[$productDao->product_id] = $productDao->product_name;
+    }
+
+    if (empty($productMap)) {
+      return $logs;
+    }
+
+    // Build product ID list for IN clause
+    $productIds = implode(',', array_map('intval', array_keys($productMap)));
+
+    // Query logs for these products that match this contribution
+    $logSql = "
+      SELECT l.id, l.entity_id, l.data, l.modified_date, l.modified_id,
+             c.display_name as modified_by
+      FROM civicrm_log l
+      LEFT JOIN civicrm_contact c ON l.modified_id = c.id
+      WHERE l.entity_table = 'civicrm_product'
+        AND l.entity_id IN ({$productIds})
+        AND l.data LIKE %1
+      ORDER BY l.modified_date ASC
+    ";
+
+    $logDao = CRM_Core_DAO::executeQuery($logSql, [
+      1 => ["%::{$contributionId}::%", 'String']
+    ]);
+
+    $groupedLogs = [];
+
+    while ($logDao->fetch()) {
+      $data = $logDao->data;
+      $parsed = self::parseStockLogData($data);
+
+      if ($parsed === FALSE) {
+        continue;
+      }
+
+      $dateKey = $logDao->modified_date;
+
+      if (!isset($groupedLogs[$dateKey])) {
+        $groupedLogs[$dateKey] = [
+          'modified_date' => $logDao->modified_date,
+          'modified_by' => $logDao->modified_by ?: '',
+          'entries' => [],
+          'reason' => '',
+        ];
+      }
+
+      $groupedLogs[$dateKey]['entries'][] = [
+        'type' => $parsed['type'],
+        'product_name' => $productMap[$logDao->entity_id] ?? ts('Unknown Product'),
+        'quantity' => $parsed['quantity'],
+      ];
+
+      if (!empty($parsed['reason']) && empty($groupedLogs[$dateKey]['reason'])) {
+        $groupedLogs[$dateKey]['reason'] = $parsed['reason'];
+      }
+    }
+
+    return array_values($groupedLogs);
+  }
+
+  /**
+   * Parse stock log data string
+   *
+   * @param string $data The data string from civicrm_log.data
+   *
+   * @return array|false Array with 'type', 'quantity', 'contribution_id', 'reason' or FALSE
+   */
+  private static function parseStockLogData($data) {
+    // Pattern: {sign}{quantity}::{contribution_id}::{reason}
+    if (!preg_match('/^([+-])(\d+)::(\d+)::(.*)$/s', $data, $matches)) {
+      return FALSE;
+    }
+
+    $sign = $matches[1];
+    $quantity = (int)$matches[2];
+    $contributionId = (int)$matches[3];
+    $reason = trim($matches[4]);
+
+    // Clean up reason - remove "via contribution ID XXX" suffix
+    $reason = preg_replace('/\s*via contribution ID \d+$/i', '', $reason);
+
+    return [
+      'type' => ($sign === '-') ? 'deduct' : 'restock',
+      'quantity' => $quantity,
+      'contribution_id' => $contributionId,
+      'reason' => $reason,
+    ];
+  }
+
+  /**
    * Reserve product stock by updating send_qty for a given product
    *
    * This function handles stock management when a premium product is selected
@@ -885,16 +999,29 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           $transaction = new CRM_Core_Transaction();
           $product->send_qty += $quantity;
           $product->save();
+
+          // Update restock to -1 to indicate stock has been deducted
+          $restockSql = "
+            UPDATE civicrm_contribution_product
+            SET restock = -1
+            WHERE contribution_id = %1 AND product_id = %2
+          ";
+          CRM_Core_DAO::executeQuery($restockSql, [
+            1 => [$contributionId, 'Integer'],
+            2 => [$productId, 'Integer'],
+          ]);
+
           $logParams = [
             'entity_table' => 'civicrm_product',
             'entity_id' => $product->id,
             'modified_date' => date('YmdHis'),
-            'data' => "-{$quantity}::$contributionId::{$comment}",
+            'data' => "-{$quantity}::{$contributionId}::" . ts('Stock deducted') . ' via contribution ID ' . $contributionId . ($comment ? " ({$comment})" : ''),
           ];
           $userID = CRM_Core_Session::singleton()->get('userID');
           if (!empty($userID)) {
             $logParams['modified_id'] = $userID;
           }
+          CRM_Core_BAO_Log::add($logParams);
           $transaction->commit();
         }
         else {

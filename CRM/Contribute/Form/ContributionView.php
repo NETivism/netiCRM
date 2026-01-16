@@ -174,6 +174,12 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       }
       $this->assign('option', $premiumDetails['product_option']);
       $this->assign('fulfilled', $dao->fulfilled_date);
+
+      // Get stock logs for this contribution's premium products
+      $stockLogs = CRM_Contribute_BAO_Premium::getStockLogs($id);
+      if (!empty($stockLogs)) {
+        $this->assign('stock_logs', $stockLogs);
+      }
     }
 
     // Get Note
