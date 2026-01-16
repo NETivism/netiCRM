@@ -170,6 +170,14 @@
      <weight>365</weight>
   </item>
   <item>
+     <path>civicrm/admin/contribute/premium/stockLog</path>
+     <title>Premium Stock Log</title>
+     <page_callback>CRM_Contribute_Page_ProductStockLog</page_callback>
+     <desc>View stock transaction history for a premium product.</desc>
+     <access_arguments>administer CiviCRM</access_arguments>
+     <weight>366</weight>
+  </item>
+  <item>
      <path>civicrm/admin/contribute/premiumsSetting</path>
      <title>Premiums Settings</title>
      <page_callback>CRM_Admin_Form_Setting_PremiumsSetting</page_callback>
