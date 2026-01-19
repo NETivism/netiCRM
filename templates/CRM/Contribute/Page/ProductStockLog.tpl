@@ -20,12 +20,13 @@
           <th>{ts}Stock Change{/ts}</th>
           <th id="sortable">{ts}Contribution ID{/ts}</th>
           <th>{ts}Reason{/ts}</th>
+          <th>{ts}Modified By{/ts}</th>
         </tr>
       </thead>
       <tbody>
         {foreach from=$rows item=row}
           <tr class="{cycle values="odd-row,even-row"}">
-            <td class="crm-stock-log-modified_date">{$row.modified_date}</td>
+            <td class="crm-stock-log-modified_date">{$row.modified_date|crmDate}</td>
             <td class="crm-stock-log-stock_change">{$row.stock_change}</td>
             <td class="crm-stock-log-contribution_id">
               {if $row.contribution_id}
@@ -35,6 +36,7 @@
               {/if}
             </td>
             <td class="crm-stock-log-reason">{$row.reason}</td>
+            <td class="crm-stock-log-modified_by">{$row.modified_by}</td>
           </tr>
         {/foreach}
       </tbody>

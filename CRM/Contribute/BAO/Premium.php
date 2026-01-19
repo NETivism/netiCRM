@@ -518,7 +518,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$creditCardIds})
           AND DATEDIFF(NOW(), c.created_date) > %1
-          AND cp.restock = 0
+          AND cp.restock <= 0
       ";
       
       $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer']]);
@@ -530,7 +530,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             'receive_date' => $dao->receive_date,
             'contribution_status_id' => $dao->contribution_status_id,
             'created_date' => $dao->created_date,
-            'reason' => "Credit card transaction expired (over {$creditCardDays} days)"
+            'reason' => ts('Credit card transaction expired (over %1 days)', [1 => $creditCardDays])
           ];
         }
       }
@@ -546,7 +546,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$nonCreditCardIds})
           AND DATEDIFF(NOW(), c.created_date) > %1
-          AND cp.restock = 0
+          AND cp.restock <= 0
       ";
 
       $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer']]);
@@ -558,7 +558,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             'receive_date' => $dao->receive_date,
             'contribution_status_id' => $dao->contribution_status_id,
             'created_date' => $dao->created_date,
-            'reason' => "Non-credit card transaction expired (over {$nonCreditCardDays} days)"
+            'reason' => ts('Non-credit card transaction expired (over %1 days)', [1 => $nonCreditCardDays])
           ];
         }
       }
@@ -574,7 +574,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$barcodeIds})
           AND DATEDIFF(NOW(), c.created_date) > %1
-          AND cp.restock = 0
+          AND cp.restock <= 0
       ";
 
       $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer']]);
@@ -586,7 +586,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             'receive_date' => $dao->receive_date,
             'contribution_status_id' => $dao->contribution_status_id,
             'created_date' => $dao->created_date,
-            'reason' => "Convenience store barcode transaction expired (over {$convenienceStoreDays} days)"
+            'reason' => ts('Convenience store barcode transaction expired (over %1 days)', [1 => $convenienceStoreDays])
           ];
         }
       }
@@ -604,12 +604,12 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    */
   static function restockPremiumInventory($contributionId, $source) {
     // Get premium products associated with this contribution from civicrm_contribution_product
-    // Only get products that haven't been restocked yet (restock IS NULL OR restock = 0)
+    // Only get products that haven't been restocked yet (restock IS NULL OR restock <= 0)
     $sql = "
       SELECT cp.id, cp.product_id, cp.contribution_id, cp.product_option, cp.quantity
       FROM civicrm_contribution_product cp
       WHERE cp.contribution_id = %1 
-        AND (cp.restock IS NULL OR cp.restock = 0)
+        AND (cp.restock IS NULL OR cp.restock <= 0)
     ";
     
     $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$contributionId, 'Integer']]);
@@ -725,9 +725,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       else {
         $logParams = [
           'entity_table' => 'civicrm_product',
-          'entity_id' => $productInfo['id'],
+          'entity_id' => $productInfo['product_id'],
           'modified_date' => date('YmdHis'),
-          'data' => "+{$productInfo['quantity']}::{$productInfo['contribution_id']}::".$source.' via contribution ID '.$productInfo['contribution_id'],
+          'data' => "+{$productInfo['quantity']}::{$productInfo['contribution_id']}::".$source,
         ];
         $userID = CRM_Core_Session::singleton()->get('userID');
         if (!empty($userID)) {
@@ -977,9 +977,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $quantity The quantity to reserve
    * @param string $comment The comment/description for the stock reservation log
    *
-   * @throws CRM_Core_Exception When insufficient stock or product is out of stock
+   * @throws CRM_Core_Exception When product not found, insufficient stock or product is out of stock
    *
-   * @return void
+   * @return bool TRUE if stock was reserved, FALSE if stock management not enabled
    * @access public
    * @static
    */
@@ -987,48 +987,50 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     $product = new CRM_Contribute_DAO_Product();
     $product->id = $productId;
 
-    if ($product->find(TRUE)) {
-      if ($product->stock_status > 0) {
-        if ($product->stock_qty > 0) {
-          $remainQty = $product->stock_qty - $product->send_qty;
+    if (!$product->find(TRUE)) {
+      throw new CRM_Core_Exception(ts('Premium product not found.'));
+    }
 
-          if ($remainQty < $quantity) {
-            throw new CRM_Core_Exception(ts('Insufficient stock. Available quantity: %1, Requested: %2',
-              [1 => $remainQty, 2 => $quantity]));
-          }
-          $transaction = new CRM_Core_Transaction();
-          $product->send_qty += $quantity;
-          $product->save();
+    if ($product->stock_status <= 0) {
+      // Stock management not enabled for this product, skip silently
+      return FALSE;
+    }
 
-          // Update restock to -1 to indicate stock has been deducted
-          $restockSql = "
-            UPDATE civicrm_contribution_product
-            SET restock = -1
-            WHERE contribution_id = %1 AND product_id = %2
-          ";
-          CRM_Core_DAO::executeQuery($restockSql, [
-            1 => [$contributionId, 'Integer'],
-            2 => [$productId, 'Integer'],
-          ]);
+    if ($product->stock_qty <= 0) {
+      throw new CRM_Core_Exception(ts('Product is out of stock.'));
+    }
 
-          $logParams = [
-            'entity_table' => 'civicrm_product',
-            'entity_id' => $product->id,
-            'modified_date' => date('YmdHis'),
-            'data' => "-{$quantity}::{$contributionId}::" . ts('Stock deducted') . ' via contribution ID ' . $contributionId . ($comment ? " ({$comment})" : ''),
-          ];
-          $userID = CRM_Core_Session::singleton()->get('userID');
-          if (!empty($userID)) {
-            $logParams['modified_id'] = $userID;
-          }
-          CRM_Core_BAO_Log::add($logParams);
-          $transaction->commit();
-        }
-        else {
-          throw new CRM_Core_Exception(ts('Product is out of stock.'));
-        }
+    $remainQty = $product->stock_qty - $product->send_qty;
+
+    if ($remainQty < $quantity) {
+      throw new CRM_Core_Exception(ts('Insufficient stock. Available quantity: %1, Requested: %2',
+        [1 => $remainQty, 2 => $quantity]));
+    }
+
+    $transaction = new CRM_Core_Transaction();
+    $product->send_qty += $quantity;
+    $product->save();
+
+    $logParams = [
+      'entity_table' => 'civicrm_product',
+      'entity_id' => $product->id,
+      'modified_date' => date('YmdHis'),
+      'data' => "-{$quantity}::{$contributionId}::" . ($comment ? $comment : ''),
+    ];
+    $userID = CRM_Core_Session::singleton()->get('userID');
+    if (!empty($userID)) {
+      $logParams['modified_id'] = $userID;
+    }
+    else {
+      $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contact_id');
+      if (!empty($contactId)) {
+        $logParams['modified_id'] = $contactId;
       }
     }
+    CRM_Core_BAO_Log::add($logParams);
+    $transaction->commit();
+
+    return TRUE;
   }
 }
 

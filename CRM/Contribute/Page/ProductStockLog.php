@@ -56,13 +56,15 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
     // Process logs for display
     $rows = [];
     foreach ($logs as $log) {
+      $contactId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $log['contribution_id'], 'contact_id');
       $row = [
-        'modified_date' => CRM_Utils_Date::customFormat($log['modified_date'], '%Y-%m-%d %H:%M:%S'),
+        'modified_date' => $log['modified_date'],
         'stock_change' => $this->formatStockChange($log['type'], $log['quantity']),
         'contribution_id' => $log['contribution_id'],
         'contribution_url' => CRM_Utils_System::url('civicrm/contact/view/contribution',
-          "action=view&reset=1&id={$log['contribution_id']}&cid=&context=search"),
+          "action=view&reset=1&id={$log['contribution_id']}&cid={$contactId}&context=search"),
         'reason' => $log['reason'] ?: '-',
+        'modified_by' => $log['modified_by'] ?: '',
       ];
       $rows[] = $row;
     }
