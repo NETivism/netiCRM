@@ -11,7 +11,7 @@
 # jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2026
 # Chang Shu-huai <junsuwhy@gmail.com>, 2015-2016
 # peggy chiu, 2024
-# Seal Shen, 2025
+# Seal Shen, 2025-2026
 # SharonKwan <sharon@netivism.com.tw>, 2015-2017
 # SIAOLING HUANG, 2024
 # charlesc <yeouhsin@gmail.com>, 2013-2014,2016,2020,2022
@@ -50829,7 +50829,7 @@ msgstr "您確定要將此筆捐款連結至"
 
 #: templates/CRM/Core/Page/Payment/TapPay.tpl
 msgid "Cardholder Name"
-msgstr "卡片持有人姓名（英文）"
+msgstr "卡片持有人英文姓名"
 
 #: templates/CRM/Core/Page/Payment/TapPay.tpl
 msgid "Same on your credit card."
@@ -51434,3 +51434,75 @@ msgstr "AI 圖片路徑已成功填入。"
 msgid ""
 "Select a non-3D Secure payment gateway for subsequent recurring payments."
 msgstr "選擇非3D驗證的金流機制，用於後續的定期扣款"
+
+#: CRM/Contribute/BAO/Contribution.php:968
+msgid "Online contribution page selected premium"
+msgstr "線上捐款頁面挑選的感謝禮"
+
+#: CRM/Contribute/BAO/Premium.php:533
+msgid "Credit card transaction expired (over %1 days)"
+msgstr "信用卡交易已過期（超過 %1 天）"
+
+#: CRM/Contribute/BAO/Premium.php:561
+msgid "Non-credit card transaction expired (over %1 days)"
+msgstr "非信用卡交易已過期（超過 %1 天）"
+
+#: CRM/Contribute/BAO/Premium.php:589
+msgid "Convenience store barcode transaction expired (over %1 days)"
+msgstr "超商條碼交易已過期（超過 %1 天）"
+
+#: CRM/Contribute/BAO/Premium.php:929
+msgid "Unknown Product"
+msgstr "未知感謝禮"
+
+#: CRM/Contribute/Form/AdditionalInfo.php:446
+msgid "Backend contribution form selected premium"
+msgstr "後台捐款表單選擇的感謝禮"
+
+#: CRM/Contribute/Form/Contribution.php:1553
+msgid "Manually restock by user change contribution status."
+msgstr "由使用者變動捐款狀態而回補"
+
+#: CRM/Contribute/Page/ManagePremiums.php:89
+msgid "Stock Log"
+msgstr "庫存紀錄"
+
+#: CRM/Contribute/Page/ManagePremiums.php:92
+msgid "View Stock Log"
+msgstr "查看庫存紀錄"
+
+#: CRM/Contribute/Page/ProductStockLog.php:33
+msgid "Premium product not found."
+msgstr "沒有此感謝禮。"
+
+#: CRM/Contribute/Page/ProductStockLog.php:37
+msgid "Stock management is not enabled for this premium product."
+msgstr "此感謝禮未啟用庫存管理。"
+
+#: CRM/Contribute/Page/ProductStockLog.php:88
+msgid "Deduct premium: %1x%2"
+msgstr "扣除感謝禮：%1x%2"
+
+#: CRM/Contribute/Page/ProductStockLog.php:91
+msgid "Restock premium: %1x%2"
+msgstr "回補感謝禮：%1x%2"
+
+#: CRM/Core/Payment/BaseIPN.php:310
+msgid "Transaction failed or batch action"
+msgstr "交易失敗或批次操作"
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:12
+msgid "Stock transaction history for premium: <strong>%1</strong>"
+msgstr "感謝禮的庫存變動紀錄：<strong>%1</strong>"
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:21
+msgid "Stock Change"
+msgstr "庫存變化"
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:44
+msgid "No stock log records found for this premium product."
+msgstr "找不到此感謝禮的庫存記錄。"
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:51
+msgid "Back to Manage Premiums"
+msgstr "返回管理感謝禮"

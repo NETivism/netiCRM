@@ -356,9 +356,9 @@
         					{foreach from=$log_group.entries item=entry}
         						<span class="stock-log-entry stock-log-{$entry.type}">
         							{if $entry.type eq 'deduct'}
-        								{ts 1=$entry.product_name 2=$entry.quantity}Deduct Premium - %1×%2{/ts}
+        								{ts 1=$entry.product_name 2=$entry.quantity}Deduct premium: %1x%2{/ts}
         							{else}
-        								{ts 1=$entry.product_name 2=$entry.quantity}Restock Premium - %1×%2{/ts}
+        								{ts 1=$entry.product_name 2=$entry.quantity}Restock premium: %1x%2{/ts}
         							{/if}
         						</span>
         						<br/>
