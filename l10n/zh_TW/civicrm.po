@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: jimyhuang <jimmy@netivism.com.tw>, 2013,2015-2026\n"
+"Last-Translator: Seal Shen, 2025-2026\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51445,7 +51445,7 @@ msgstr "信用卡交易已過期（超過 %1 天）"
 
 #: CRM/Contribute/BAO/Premium.php:561
 msgid "Non-credit card transaction expired (over %1 days)"
-msgstr "非信用卡交易已過期（超過 %1 天）"
+msgstr "非信用卡（虛擬ATM／超商代碼）交易已過期（超過 %1 天）"
 
 #: CRM/Contribute/BAO/Premium.php:589
 msgid "Convenience store barcode transaction expired (over %1 days)"
