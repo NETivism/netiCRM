@@ -1550,7 +1550,7 @@ WHERE  contribution_id = {$this->_id}
         // pending contribution to restock
         if ($config->premiumIRManualCancel && ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4) ) {
           try{
-            CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Manually restock by user');
+            CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, ts('Manually restock by user change contribution status.'));
           }
           catch (Exception $e) {
             $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();
@@ -1739,7 +1739,7 @@ WHERE  contribution_id = {$this->_id}
         ($originalValues['contribution_status_id'] == 1 || $originalValues['contribution_status_id'] == 2) &&
         ($submittedValues['contribution_status_id'] == 3 || $submittedValues['contribution_status_id'] == 4)) {
         try{
-          CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, 'Manually restock by user');
+          CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, ts('Manually restock by user change contribution status.'));
         }
         catch (Exception $e) {
           $errorMessage = "Failed to restock contribution ID {$contribution->id}: " . $e->getMessage();

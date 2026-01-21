@@ -6,3 +6,6 @@
 	path = neticrm
 	url = https://github.com/NETivism/netiCRM-neticrm.git
 	branch = 7.x-develop
+[submodule ".claude"]
+	path = .claude
+	url = https://github.com/NETivism/netiCRM-claude.git

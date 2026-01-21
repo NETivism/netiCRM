@@ -961,12 +961,16 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
   static function addPremium(&$params) {
     if (empty($params['preview']) && !empty($params['product_id']) && !empty($params['quantity'])) {
       try {
-        CRM_Contribute_BAO_Premium::reserveProductStock(
+        $stockReserved = CRM_Contribute_BAO_Premium::reserveProductStock(
           $params['contribution_id'],
           $params['product_id'],
           $params['quantity'],
-          "Contribution Page Submission via contribution ID {$params['contribution_id']}"
+          ts('Online contribution page selected premium')
         );
+        if ($stockReserved) {
+          // Mark as stock deducted - set restock = -1
+          $params['restock'] = -1;
+        }
       }
       catch (Exception $e) {
         $params['comment'] .= ts("Inventory Management").': '.$e->getMessage();

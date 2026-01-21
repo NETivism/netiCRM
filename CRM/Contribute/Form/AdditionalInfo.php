@@ -439,16 +439,20 @@ class CRM_Contribute_Form_AdditionalInfo {
       // Handle stock management for new premium creation
       if (!empty($params['product_name'][0]) && !empty($contributionID)) {
         try {
-          CRM_Contribute_BAO_Premium::reserveProductStock(
+          $stockReserved = CRM_Contribute_BAO_Premium::reserveProductStock(
             $contributionID,
             $params['product_name'][0],
             1, // Default quantity is 1 for premium products
-            "Premium selection via contribution ID {$contributionID}"
+            ts('Backend contribution form selected premium')
           );
+          if ($stockReserved) {
+            // Mark as stock deducted - set restock = -1
+            $dao->restock = -1;
+          }
         }
         catch (Exception $e) {
           // Log the error but don't stop the premium creation process
-          CRM_Core_Error::debug_log_message("Stock management failed for premium: " . $e->getMessage());
+          CRM_Core_Error::debug_log_message("Stock management log for premium product id {$params['product_name'][0]}: " . $e->getMessage());
         }
       }
 

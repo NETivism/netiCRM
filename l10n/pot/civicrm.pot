@@ -50750,3 +50750,76 @@ msgstr ""
 #: templates/CRM/Admin/Form/PaymentProcessor.tpl
 msgid "Select a non-3D Secure payment gateway for subsequent recurring payments."
 msgstr ""
+
+#: CRM/Contribute/BAO/Contribution.php:968
+msgid "Online contribution page selected premium"
+msgstr ""
+
+#: CRM/Contribute/BAO/Premium.php:533
+msgid "Credit card transaction expired (over %1 days)"
+msgstr ""
+
+#: CRM/Contribute/BAO/Premium.php:561
+msgid "Non-credit card transaction expired (over %1 days)"
+msgstr ""
+
+#: CRM/Contribute/BAO/Premium.php:589
+msgid "Convenience store barcode transaction expired (over %1 days)"
+msgstr ""
+
+#: CRM/Contribute/BAO/Premium.php:929
+msgid "Unknown Product"
+msgstr ""
+
+#: CRM/Contribute/Form/AdditionalInfo.php:446
+msgid "Backend contribution form selected premium"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution.php:1553
+msgid "Manually restock by user change contribution status."
+msgstr ""
+
+#: CRM/Contribute/Page/ManagePremiums.php:89
+msgid "Stock Log"
+msgstr ""
+
+#: CRM/Contribute/Page/ManagePremiums.php:92
+msgid "View Stock Log"
+msgstr ""
+
+#: CRM/Contribute/Page/ProductStockLog.php:33
+msgid "Premium product not found."
+msgstr ""
+
+#: CRM/Contribute/Page/ProductStockLog.php:37
+msgid "Stock management is not enabled for this premium product."
+msgstr ""
+
+#: CRM/Contribute/Page/ProductStockLog.php:88
+msgid "Deduct premium: %1x%2"
+msgstr ""
+
+#: CRM/Contribute/Page/ProductStockLog.php:91
+msgid "Restock premium: %1x%2"
+msgstr ""
+
+#: CRM/Core/Payment/BaseIPN.php:310
+msgid "Transaction failed or batch action"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:12
+msgid "Stock transaction history for premium: <strong>%1</strong>"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:21
+msgid "Stock Change"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:44
+msgid "No stock log records found for this premium product."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ProductStockLog.tpl:51
+msgid "Back to Manage Premiums"
+msgstr ""
+
