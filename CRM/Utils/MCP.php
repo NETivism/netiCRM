@@ -10,11 +10,22 @@
 class CRM_Utils_MCP {
   const LAST_HIT = 'mcp_lasthit';
   const RATE_LIMIT = 0.2;
-  
+  const SESSION_SCOPE = 'mcp';
+
   /**
    * @var bool Whether to output streaming responses
    */
   private $isStreamable = false;
+
+  /**
+   * @var string|null Input session ID from request header
+   */
+  private $inputSessionId = null;
+
+  /**
+   * @var string|null Output session ID to return in response header
+   */
+  private $outputSessionId = null;
 
   /**
    * Set streaming mode
@@ -22,6 +33,22 @@ class CRM_Utils_MCP {
    */
   public function setStreamable($isStreamable) {
     $this->isStreamable = $isStreamable;
+  }
+
+  /**
+   * Set input session ID from request header
+   * @param string|null $sessionId Session ID from Mcp-Session-Id header
+   */
+  public function setInputSessionId($sessionId) {
+    $this->inputSessionId = $sessionId;
+  }
+
+  /**
+   * Get output session ID for response header
+   * @return string|null Session ID to return to client
+   */
+  public function getOutputSessionId() {
+    return $this->outputSessionId;
   }
 
   /**
@@ -54,14 +81,53 @@ class CRM_Utils_MCP {
       $input = file_get_contents('php://input');
       $request = json_decode($input, TRUE);
     }
-    
+
     if (!$request || !isset($request['jsonrpc']) || $request['jsonrpc'] !== '2.0') {
       return $this->error(-32600, 'Invalid Request', $request['id'] ?? NULL);
     }
-    
+
     $method = $request['method'] ?? '';
     $params = $request['params'] ?? [];
     $id = $request['id'] ?? NULL;
+
+    // Check for existing valid MCP session (for non-initialize requests)
+    if ($method !== 'initialize' && !empty($this->inputSessionId)) {
+      $session = CRM_Core_Session::singleton();
+      $mcpContactId = $session->get('contactId', self::SESSION_SCOPE);
+      $mcpExpiry = $session->get('expiry', self::SESSION_SCOPE);
+
+      if ($mcpContactId && $mcpExpiry && $mcpExpiry > time()) {
+        // Valid session exists, restore user context
+        $uid = CRM_Core_BAO_UFMatch::getUFId($mcpContactId);
+        if ($uid) {
+          CRM_Utils_System::loadUser(['uid' => $uid]);
+          $session->set('ufID', $uid);
+          $session->set('userID', $mcpContactId);
+
+          // Extend session expiry
+          $session->set('expiry', time() + CRM_Core_Session::EXPIRED_TIME, self::SESSION_SCOPE);
+
+          // Return session ID for client
+          $this->outputSessionId = session_id();
+
+          // Check rate limit and route to method
+          /* temporary remove request rate limit for mcp
+          $args = ['mcp', $method];
+          $error = $this->requestRateLimit($args);
+          if (!empty($error)) {
+            return $this->error(-32000, 'FATAL: ' . $error, $id);
+          }
+          */
+
+          return $this->routeMethod($method, $params, $id);
+        }
+      }
+
+      // Session expired or invalid
+      if ($this->inputSessionId) {
+        return $this->error(-32000, 'Session expired or invalid. Please re-authenticate.', $id);
+      }
+    }
 
     // Check from IP address when allowed list defined
     if (defined('CIVICRM_API_ALLOWED_IP')) {
@@ -147,14 +213,33 @@ class CRM_Utils_MCP {
       return $this->sendOAuthChallenge($id);
     }
 
+    // Store MCP session data using CRM_Core_Session
+    $session->set('contactId', $validUser, self::SESSION_SCOPE);
+    $session->set('expiry', time() + CRM_Core_Session::EXPIRED_TIME, self::SESSION_SCOPE);
+
+    // Return session ID for client to use in subsequent requests
+    $this->outputSessionId = session_id();
+
     // Check request rate limit
+    /* temporary remove request rate limit for mcp
     $args = ['mcp', $method];
     $error = $this->requestRateLimit($args);
     if (!empty($error)) {
       return $this->error(-32000, 'FATAL: ' . $error, $id);
     }
-    
-    // Route to appropriate MCP method
+    */
+
+    return $this->routeMethod($method, $params, $id);
+  }
+
+  /**
+   * Route to appropriate MCP method handler
+   * @param string $method Method name
+   * @param array $params Method parameters
+   * @param mixed $id Request ID
+   * @return array Response
+   */
+  private function routeMethod($method, $params, $id) {
     switch ($method) {
       case 'initialize':
         return $this->initialize($params, $id);
@@ -184,14 +269,104 @@ class CRM_Utils_MCP {
     if (defined('JSON_INVALID_UTF8_IGNORE')) {
       $options |= JSON_INVALID_UTF8_IGNORE;
     }
-    
+
     $jsonResponse = json_encode($result, $options);
-    
+
     if ($this->isStreamable) {
-      return "data: " . $jsonResponse . "\n\n";
+      return $this->formatSSE('message', $jsonResponse);
     } else {
       return $jsonResponse;
     }
+  }
+
+  /**
+   * Format data as Server-Sent Event
+   * @param string $event Event type (message, error, ping, etc.)
+   * @param string $data JSON data
+   * @param string|null $id Optional event ID
+   * @return string SSE formatted string
+   */
+  private function formatSSE($event, $data, $id = null) {
+    $output = '';
+    if ($id !== null) {
+      $output .= "id: {$id}\n";
+    }
+    $output .= "event: {$event}\n";
+    $output .= "data: {$data}\n\n";
+    return $output;
+  }
+
+  /**
+   * Send a streaming event immediately (for long-running operations)
+   * This flushes output buffers to send data to client in real-time
+   * @param string $event Event type
+   * @param array $data Event data
+   */
+  public function streamEvent($event, $data) {
+    if (!$this->isStreamable) {
+      return;
+    }
+
+    $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    if (defined('JSON_INVALID_UTF8_IGNORE')) {
+      $options |= JSON_INVALID_UTF8_IGNORE;
+    }
+
+    $json = json_encode($data, $options);
+    echo $this->formatSSE($event, $json);
+
+    // Flush output buffers for real-time streaming
+    if (ob_get_level() > 0) {
+      ob_flush();
+    }
+    flush();
+  }
+
+  /**
+   * Send a progress notification during tool execution
+   * @param string $progressToken Progress token from client
+   * @param int $progress Current progress (0-100)
+   * @param int|null $total Total items (optional)
+   */
+  public function sendProgress($progressToken, $progress, $total = null) {
+    if (!$this->isStreamable || empty($progressToken)) {
+      return;
+    }
+
+    $notification = [
+      'jsonrpc' => '2.0',
+      'method' => 'notifications/progress',
+      'params' => [
+        'progressToken' => $progressToken,
+        'progress' => $progress,
+      ]
+    ];
+
+    if ($total !== null) {
+      $notification['params']['total'] = $total;
+    }
+
+    $this->streamEvent('message', $notification);
+  }
+
+  /**
+   * Initialize streaming mode - disable output buffering for real-time output
+   */
+  public function initStreaming() {
+    if (!$this->isStreamable) {
+      return;
+    }
+
+    // Disable output buffering for real-time streaming
+    while (ob_get_level() > 0) {
+      ob_end_flush();
+    }
+
+    // Disable implicit flush
+    ob_implicit_flush(true);
+
+    // Set unlimited execution time for long-running streams
+    set_time_limit(0);
   }
 
   /**
@@ -201,10 +376,19 @@ class CRM_Utils_MCP {
    * @return array Response
    */
   private function initialize($params, $id) {
+    // Log client info for debugging
+    $clientInfo = $params['clientInfo'] ?? [];
+    if (!empty($clientInfo)) {
+      CRM_Core_Error::debug_log_message(
+        'MCP client connected: ' . ($clientInfo['name'] ?? 'unknown') .
+        ' v' . ($clientInfo['version'] ?? 'unknown')
+      );
+    }
+
     return [
       'jsonrpc' => '2.0',
       'result' => [
-        'protocolVersion' => '2024-11-05',
+        'protocolVersion' => '2025-03-26',
         'capabilities' => [
           'tools' => [
             'listChanged' => false
@@ -216,8 +400,9 @@ class CRM_Utils_MCP {
         ],
         'serverInfo' => [
           'name' => 'netiCRM MCP Server',
-          'version' => '1.0.0'
-        ]
+          'version' => '1.1.0'
+        ],
+        'instructions' => 'netiCRM MCP Server provides access to CRM data including contacts and contributions. After authentication, use the Mcp-Session-Id header from the response for subsequent requests.'
       ],
       'id' => $id
     ];
@@ -1010,42 +1195,194 @@ class CRM_Utils_MCP {
 
   /**
    * Send OAuth challenge response with 401 status and WWW-Authenticate header
+   *
+   * Implements RFC 6750 (Bearer Token Usage) and MCP OAuth requirements.
+   * The WWW-Authenticate header points to the resource metadata endpoint
+   * which contains OAuth server discovery information.
+   *
    * @param mixed $id Request ID
    * @return array OAuth challenge response
    */
   private function sendOAuthChallenge($id) {
     // Set HTTP 401 Unauthorized status
     http_response_code(401);
-    
-    // Get base URL for OAuth authorization server
+
+    // Get base URL
     $config = CRM_Core_Config::singleton();
-    $baseUrl = $config->userFrameworkBaseURL;
-    
-    // Set WWW-Authenticate header with OAuth authorization server information
-    $authServer = rtrim($baseUrl, '/') . '/oauth2';
+    $baseUrl = rtrim($config->userFrameworkBaseURL, '/');
+
+    // Discovery endpoints
+    $resourceMetadata = $baseUrl . '/.well-known/oauth-protected-resource';
+    $authServerMetadata = $baseUrl . '/.well-known/oauth-authorization-server';
+    $authServer = $baseUrl . '/oauth2';
+
+    // RFC 6750 compliant WWW-Authenticate header with MCP extensions
+    // MCP clients use resource_metadata to discover OAuth server
     $wwwAuthenticate = sprintf(
-      'Bearer realm="%s", authorization_uri="%s/authorize", token_uri="%s/token"',
-      'netiCRM MCP API',
-      $authServer,
-      $authServer
+      'Bearer realm="netiCRM MCP API", resource_metadata="%s"',
+      $resourceMetadata
     );
-    
+
     header('WWW-Authenticate: ' . $wwwAuthenticate);
-    
-    // Return JSON-RPC error response
+
+    // Return JSON-RPC error response with discovery information
     return [
       'jsonrpc' => '2.0',
       'error' => [
         'code' => -32001,
-        'message' => 'Unauthorized: Valid OAuth Bearer token required',
+        'message' => 'Unauthorized: Authentication required. Use OAuth Bearer token or API key.',
         'data' => [
-          'authorization_uri' => $authServer . '/authorize',
-          'token_uri' => $authServer . '/token',
-          'realm' => 'netiCRM MCP API'
+          'resource_metadata' => $resourceMetadata,
+          'authorization_server_metadata' => $authServerMetadata,
+          'authorization_endpoint' => $authServer . '/authorize',
+          'token_endpoint' => $authServer . '/token',
+          'api_key_header' => 'X-CIVICRM-API-KEY',
         ]
       ],
       'id' => $id
     ];
+  }
+
+  /**
+   * Clean up expired MCP sessions
+   *
+   * This method cleans up expired MCP session data. It can be called:
+   * - From a cron job via extern/mcp-cron.php
+   * - Manually from admin interface
+   * - As part of regular system maintenance
+   *
+   * Note: PHP's native session garbage collection also handles expired sessions,
+   * but this method provides explicit control over MCP-specific cleanup.
+   *
+   * @param bool $force Force cleanup even if not expired
+   * @return array Cleanup result with count of cleaned sessions
+   */
+  public static function cleanupExpiredSessions($force = false) {
+    $cleaned = 0;
+    $errors = [];
+
+    try {
+      // Get session save path
+      $savePath = session_save_path();
+      if (empty($savePath)) {
+        $savePath = sys_get_temp_dir();
+      }
+
+      // Find session files
+      $sessionFiles = glob($savePath . '/sess_*');
+      if ($sessionFiles === false) {
+        $sessionFiles = [];
+      }
+
+      $now = time();
+      $maxLifetime = (int) ini_get('session.gc_maxlifetime');
+      if ($maxLifetime <= 0) {
+        $maxLifetime = CRM_Core_Session::EXPIRED_TIME;
+      }
+
+      foreach ($sessionFiles as $sessionFile) {
+        // Check if file is old enough to consider
+        $mtime = filemtime($sessionFile);
+        if ($mtime === false) {
+          continue;
+        }
+
+        // Skip if session is still within lifetime (unless force)
+        if (!$force && ($now - $mtime) < $maxLifetime) {
+          continue;
+        }
+
+        // Read session data to check for MCP scope
+        $sessionData = file_get_contents($sessionFile);
+        if ($sessionData === false) {
+          continue;
+        }
+
+        // Check if this session has MCP data with expired timestamp
+        if (strpos($sessionData, self::SESSION_SCOPE) !== false) {
+          // Parse session data to check expiry
+          // Session data format: key|serialized_value;key|serialized_value;...
+          if (preg_match('/expiry\|i:(\d+);/', $sessionData, $matches)) {
+            $expiry = (int) $matches[1];
+            if ($force || $expiry < $now) {
+              // Session is expired, delete file
+              if (@unlink($sessionFile)) {
+                $cleaned++;
+              } else {
+                $errors[] = 'Failed to delete: ' . basename($sessionFile);
+              }
+            }
+          }
+        }
+      }
+    } catch (Exception $e) {
+      $errors[] = 'Exception: ' . $e->getMessage();
+      CRM_Core_Error::debug_log_message('MCP session cleanup error: ' . $e->getMessage());
+    }
+
+    $result = [
+      'success' => empty($errors),
+      'cleaned' => $cleaned,
+      'errors' => $errors,
+      'timestamp' => date('Y-m-d H:i:s'),
+    ];
+
+    CRM_Core_Error::debug_log_message('MCP session cleanup: ' . json_encode($result));
+
+    return $result;
+  }
+
+  /**
+   * Get MCP session statistics
+   *
+   * @return array Session statistics
+   */
+  public static function getSessionStats() {
+    $stats = [
+      'active' => 0,
+      'expired' => 0,
+      'total' => 0,
+    ];
+
+    try {
+      $savePath = session_save_path();
+      if (empty($savePath)) {
+        $savePath = sys_get_temp_dir();
+      }
+
+      $sessionFiles = glob($savePath . '/sess_*');
+      if ($sessionFiles === false) {
+        $sessionFiles = [];
+      }
+
+      $now = time();
+
+      foreach ($sessionFiles as $sessionFile) {
+        $sessionData = @file_get_contents($sessionFile);
+        if ($sessionData === false) {
+          continue;
+        }
+
+        // Check if this session has MCP data
+        if (strpos($sessionData, self::SESSION_SCOPE) !== false) {
+          $stats['total']++;
+
+          // Check expiry
+          if (preg_match('/expiry\|i:(\d+);/', $sessionData, $matches)) {
+            $expiry = (int) $matches[1];
+            if ($expiry > $now) {
+              $stats['active']++;
+            } else {
+              $stats['expired']++;
+            }
+          }
+        }
+      }
+    } catch (Exception $e) {
+      CRM_Core_Error::debug_log_message('MCP session stats error: ' . $e->getMessage());
+    }
+
+    return $stats;
   }
 
 }

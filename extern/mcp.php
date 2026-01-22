@@ -1,12 +1,41 @@
 <?php
 /**
  * Model Context Protocol (MCP) Server endpoint for netiCRM
- * 
+ *
  * This endpoint implements the Model Context Protocol specification
  * for secure tool calling and resource access.
- * 
+ *
+ * Uses PHP native session (via CRM_Core_Session) for Mcp-Session-Id support.
+ *
+ * Server Configuration:
+ * For OAuth discovery endpoints, add these rewrite rules:
+ *
+ * Apache (.htaccess):
+ *   RewriteRule ^\.well-known/oauth-protected-resource$ extern/oauth-discovery.php [L]
+ *   RewriteRule ^\.well-known/oauth-authorization-server$ extern/oauth-discovery.php [L]
+ *
+ * Nginx:
+ *   location ~ ^/\.well-known/oauth-(protected-resource|authorization-server)$ {
+ *     try_files $uri /extern/oauth-discovery.php?$query_string;
+ *   }
+ *
  * @see https://modelcontextprotocol.io/specification/
  */
+
+// Check if this is a .well-known request routed here
+$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+if (strpos($requestUri, '.well-known/oauth-') !== false) {
+  require_once __DIR__ . '/oauth-discovery.php';
+  exit;
+}
+
+// Extract Mcp-Session-Id BEFORE session starts
+$mcpSessionId = $_SERVER['HTTP_MCP_SESSION_ID'] ?? null;
+
+// If client provides a session ID, set it before session starts
+if ($mcpSessionId && preg_match('/^[a-zA-Z0-9,-]{22,128}$/', $mcpSessionId)) {
+  session_id($mcpSessionId);
+}
 
 require_once __DIR__.'/extern.inc';
 CRM_Core_Config::singleton();
@@ -15,15 +44,29 @@ CRM_Core_Config::singleton();
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   // Handle CORS preflight requests
   header('Access-Control-Allow-Origin: *');
-  header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-  header('Access-Control-Allow-Headers: Content-Type, Authorization, X-CIVICRM-API-KEY, Accept');
+  header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
+  header('Access-Control-Allow-Headers: Content-Type, Authorization, X-CIVICRM-API-KEY, Accept, Mcp-Session-Id');
+  header('Access-Control-Expose-Headers: Mcp-Session-Id');
   header('Access-Control-Max-Age: 86400');
   http_response_code(200);
+  exit;
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+  // Handle session termination (MCP spec)
+  header('Access-Control-Allow-Origin: *');
+  if ($mcpSessionId) {
+    // Destroy the session
+    $session = CRM_Core_Session::singleton();
+    $session->reset();
+    if (session_status() === PHP_SESSION_ACTIVE) {
+      session_destroy();
+    }
+  }
+  http_response_code(204);
   exit;
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
   // Handle GET request for MCP backwards compatibility detection
   // For Claude Desktop connector, we need to handle GET requests with query parameters
-  
+
   // Check if this is a simple MCP endpoint detection
   if (empty($_GET)) {
     // Return SSE stream for legacy HTTP+SSE transport detection
@@ -31,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     header('Cache-Control: no-cache');
     header('Connection: keep-alive');
     header('Access-Control-Allow-Origin: *');
-    
+
     // Send endpoint event for legacy HTTP+SSE transport detection
     echo "event: endpoint\n";
     echo "data: " . json_encode([
@@ -41,16 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         'transport' => 'http+sse'
       ]
     ]) . "\n\n";
-    
+
     // Keep connection alive for SSE
     while (true) {
       echo "event: ping\n";
       echo "data: " . json_encode(['timestamp' => time()]) . "\n\n";
-      
+
       if (connection_aborted()) {
         break;
       }
-      
+
       sleep(30); // Send ping every 30 seconds
     }
     exit;
@@ -59,13 +102,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     // Convert GET parameters to a simple JSON-RPC initialize request
     header('Content-Type: application/json; charset=utf-8');
     header('Access-Control-Allow-Origin: *');
-    
+
     // Create a mock initialize request
     $mockRequest = [
       'jsonrpc' => '2.0',
       'method' => 'initialize',
       'params' => [
-        'protocolVersion' => '2024-11-05',
+        'protocolVersion' => '2025-03-26',
         'capabilities' => [],
         'clientInfo' => [
           'name' => 'Claude Desktop',
@@ -74,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
       ],
       'id' => 'get-init'
     ];
-    
+
     // Override the input for GET requests
     $_POST = $mockRequest;
     // Continue processing as if it was a POST request
@@ -82,19 +125,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 } elseif ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   // Reject other methods
   http_response_code(405);
-  header('Allow: GET, POST, OPTIONS');
+  header('Allow: GET, POST, DELETE, OPTIONS');
   echo json_encode([
     'jsonrpc' => '2.0',
     'error' => [
       'code' => -32600,
-      'message' => 'Invalid Request - Only GET, POST, OPTIONS methods allowed for MCP'
+      'message' => 'Invalid Request - Only GET, POST, DELETE, OPTIONS methods allowed for MCP'
     ],
     'id' => null
   ]);
   exit;
 }
 
-// Check if client requests streaming response
+// Check if client requests streaming response (Streamable HTTP transport)
 $isStreamable = false;
 $acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
 if (strpos($acceptHeader, 'text/event-stream') !== false) {
@@ -102,10 +145,12 @@ if (strpos($acceptHeader, 'text/event-stream') !== false) {
   header('Content-Type: text/event-stream; charset=utf-8');
   header('Cache-Control: no-cache');
   header('Connection: keep-alive');
+  header('X-Accel-Buffering: no'); // Disable nginx buffering for real-time streaming
 } else {
   header('Content-Type: application/json; charset=utf-8');
 }
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Expose-Headers: Mcp-Session-Id');
 
 // Check if MCP is enabled
 if (!defined('CIVICRM_MCP_ENABLED') || !CIVICRM_MCP_ENABLED) {
@@ -118,7 +163,7 @@ if (!defined('CIVICRM_MCP_ENABLED') || !CIVICRM_MCP_ENABLED) {
     ],
     'id' => null
   ];
-  
+
   if ($isStreamable) {
     echo "data: " . json_encode($errorResponse) . "\n\n";
   } else {
@@ -131,7 +176,22 @@ if (!defined('CIVICRM_MCP_ENABLED') || !CIVICRM_MCP_ENABLED) {
 try {
   $mcp = new CRM_Utils_MCP();
   $mcp->setStreamable($isStreamable);
-  echo $mcp->bootAndRun();
+  $mcp->setInputSessionId($mcpSessionId);
+
+  // Initialize streaming mode if requested (disables output buffering)
+  if ($isStreamable) {
+    $mcp->initStreaming();
+  }
+
+  $result = $mcp->bootAndRun();
+
+  // Output session ID header for client to use in subsequent requests
+  $outputSessionId = $mcp->getOutputSessionId();
+  if ($outputSessionId) {
+    header('Mcp-Session-Id: ' . $outputSessionId);
+  }
+
+  echo $result;
 } catch (Exception $e) {
   http_response_code(500);
   $errorResponse = [
@@ -142,7 +202,7 @@ try {
     ],
     'id' => null
   ];
-  
+
   if ($isStreamable) {
     echo "data: " . json_encode($errorResponse) . "\n\n";
   } else {
