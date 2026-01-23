@@ -5,7 +5,6 @@
  * This endpoint implements the Model Context Protocol specification
  * for secure tool calling and resource access.
  *
- * Uses PHP native session (via CRM_Core_Session) for Mcp-Session-Id support.
  *
  * Server Configuration:
  * For OAuth discovery endpoints, add these rewrite rules:
@@ -29,14 +28,6 @@ if (strpos($requestUri, '.well-known/oauth-') !== false) {
   exit;
 }
 
-// Extract Mcp-Session-Id BEFORE session starts
-$mcpSessionId = $_SERVER['HTTP_MCP_SESSION_ID'] ?? null;
-
-// If client provides a session ID, set it before session starts
-if ($mcpSessionId && preg_match('/^[a-zA-Z0-9,-]{22,128}$/', $mcpSessionId)) {
-  session_id($mcpSessionId);
-}
-
 require_once __DIR__.'/extern.inc';
 CRM_Core_Config::singleton();
 
@@ -53,14 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   // Handle session termination (MCP spec)
   header('Access-Control-Allow-Origin: *');
-  if ($mcpSessionId) {
-    // Destroy the session
-    $session = CRM_Core_Session::singleton();
-    $session->reset();
-    if (session_status() === PHP_SESSION_ACTIVE) {
-      session_destroy();
-    }
-  }
   http_response_code(204);
   exit;
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -176,21 +159,12 @@ if (!defined('CIVICRM_MCP_ENABLED') || !CIVICRM_MCP_ENABLED) {
 try {
   $mcp = new CRM_Utils_MCP();
   $mcp->setStreamable($isStreamable);
-  $mcp->setInputSessionId($mcpSessionId);
-
   // Initialize streaming mode if requested (disables output buffering)
   if ($isStreamable) {
     $mcp->initStreaming();
   }
 
   $result = $mcp->bootAndRun();
-
-  // Output session ID header for client to use in subsequent requests
-  $outputSessionId = $mcp->getOutputSessionId();
-  if ($outputSessionId) {
-    header('Mcp-Session-Id: ' . $outputSessionId);
-  }
-
   echo $result;
 } catch (Exception $e) {
   http_response_code(500);
