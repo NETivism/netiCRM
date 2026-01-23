@@ -164,7 +164,7 @@ try {
     $mcp->initStreaming();
   }
 
-  $result = $mcp->bootAndRun();
+  $result = $mcp->run();
   echo $result;
 } catch (Exception $e) {
   http_response_code(500);

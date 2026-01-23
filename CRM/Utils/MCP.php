@@ -14,22 +14,19 @@ class CRM_Utils_MCP {
   /**
    * @var bool Whether to output streaming responses
    */
-  private $isStreamable = false;
+  private $_isStreamable = false;
+
+  /**
+   * @var int User who use mcp
+   */
+  private $_contactId;
 
   /**
    * Set streaming mode
    * @param bool $isStreamable Whether to enable streaming responses
    */
   public function setStreamable($isStreamable) {
-    $this->isStreamable = $isStreamable;
-  }
-
-  /**
-   * MCP (Model Context Protocol) entry point
-   * @return string JSON-RPC 2.0 response
-   */
-  public function bootAndRun() {
-    return $this->run();
+    $this->_isStreamable = $isStreamable;
   }
 
   /**
@@ -54,7 +51,6 @@ class CRM_Utils_MCP {
       $input = file_get_contents('php://input');
       $request = json_decode($input, TRUE);
     }
-    CRM_Core_Error::debug_var('mcp_post', $request);
 
     if (!$request || !isset($request['jsonrpc']) || $request['jsonrpc'] !== '2.0') {
       return $this->error(-32600, 'Invalid Request', $request['id'] ?? NULL);
@@ -144,6 +140,10 @@ class CRM_Utils_MCP {
     if (empty($validUser)) {
       return $this->sendOAuthChallenge($id);
     }
+    else {
+      $this->_contactId = $validUser;
+    }
+    CRM_Core_Error::debug_var("mcp_post_via_contact_$this->_contactId", $request);
 
     // Check request rate limit
     $args = ['mcp', $method];
@@ -194,8 +194,11 @@ class CRM_Utils_MCP {
     }
 
     $jsonResponse = json_encode($result, $options);
+    if (CRM_Core_Config::singleton()->debug) {
+      CRM_Core_Error::debug_var('mcp_result', $result);
+    }
 
-    if ($this->isStreamable) {
+    if ($this->_isStreamable) {
       return $this->formatSSE('message', $jsonResponse);
     } else {
       return $jsonResponse;
@@ -226,7 +229,7 @@ class CRM_Utils_MCP {
    * @param array $data Event data
    */
   public function streamEvent($event, $data) {
-    if (!$this->isStreamable) {
+    if (!$this->_isStreamable) {
       return;
     }
 
@@ -252,7 +255,7 @@ class CRM_Utils_MCP {
    * @param int|null $total Total items (optional)
    */
   public function sendProgress($progressToken, $progress, $total = null) {
-    if (!$this->isStreamable || empty($progressToken)) {
+    if (!$this->_isStreamable || empty($progressToken)) {
       return;
     }
 
@@ -276,7 +279,7 @@ class CRM_Utils_MCP {
    * Initialize streaming mode - disable output buffering for real-time output
    */
   public function initStreaming() {
-    if (!$this->isStreamable) {
+    if (!$this->_isStreamable) {
       return;
     }
 
@@ -873,7 +876,7 @@ class CRM_Utils_MCP {
         'content' => [
           [
             'type' => 'text',
-            'text' => json_encode($results, JSON_PRETTY_PRINT)
+            'text' => json_encode($results)
           ]
         ],
         'isError' => $isError
@@ -947,7 +950,7 @@ class CRM_Utils_MCP {
           'content' => [
             [
               'type' => 'text',
-              'text' => json_encode($result, JSON_PRETTY_PRINT)
+              'text' => json_encode($result)
             ]
           ],
           'isError' => $isError
