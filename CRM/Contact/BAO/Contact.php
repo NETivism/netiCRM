@@ -980,7 +980,7 @@ WHERE id={$id}; ";
       $contactType = 'All';
     }
 
-    $cacheKeyString = "importableFields $contactType";
+    $cacheKeyString = __CLASS__.'::'.__FUNCTION__.'--'.$contactType;
     $cacheKeyString .= $status ? "_1" : "_0";
     $cacheKeyString .= $showAll ? "_1" : "_0";
     $cacheKeyString .= $isProfile ? "_1" : "_0";
@@ -992,7 +992,7 @@ WHERE id={$id}; ";
 
       // check if we can retrieve from database cache
       $cache = &CRM_Utils_Cache::singleton();
-      $cacheKey = 'CRM_Contact_BAO_Contact_importableFields_' . $cacheKeyString . '_' . CRM_Core_Config::domainID();
+      $cacheKey = $cacheKeyString . '_' . CRM_Core_Config::domainID();
       $fields = $cache->get($cacheKey);
 
       if (!$fields) {
