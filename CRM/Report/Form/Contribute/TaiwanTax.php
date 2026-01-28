@@ -236,46 +236,55 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             }
             elseif ($fieldName === $this->_receiptTitle) {
               // receipt_title logic:
-              // 1. If receiptTitle has value -> use it
+              // 1. If receiptTitle has value -> use it (TRIM to remove whitespace)
               // 2. If receiptTitle is empty:
               //    - If TRIM(receiptSerial) = TRIM(legal_identifier) -> use sort_name
+              //    - If both receiptTitle and receiptSerial are empty -> use sort_name (fallback)
               //    - Otherwise -> NULL
               $select[] = "
 (CASE
   WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH(TRIM({$field['dbAlias']})) > 0
-  THEN {$field['dbAlias']}
-  ELSE
-    (CASE
-      WHEN TRIM(COALESCE({$receiptSerialDbAlias}, '')) = TRIM(COALESCE({$contactAlias}.legal_identifier, ''))
-           AND LENGTH(TRIM(COALESCE({$contactAlias}.legal_identifier, ''))) > 0
-      THEN {$contactAlias}.sort_name
-      ELSE NULL
-    END)
+  THEN TRIM({$field['dbAlias']})
+  WHEN TRIM(COALESCE({$receiptSerialDbAlias}, '')) = TRIM(COALESCE({$contactAlias}.legal_identifier, ''))
+       AND LENGTH(TRIM(COALESCE({$contactAlias}.legal_identifier, ''))) > 0
+  THEN {$contactAlias}.sort_name
+  WHEN ({$field['dbAlias']} IS NULL OR LENGTH(TRIM({$field['dbAlias']})) = 0)
+       AND ({$receiptSerialDbAlias} IS NULL OR LENGTH(TRIM({$receiptSerialDbAlias})) = 0)
+       AND {$contactAlias}.legal_identifier IS NOT NULL
+  THEN {$contactAlias}.sort_name
+  ELSE NULL
 END) as receipt_title
 ";
             }
             elseif ($fieldName === $this->_receiptSerial) {
               // receipt_serial logic:
-              // 1. If receiptSerial has value -> use it
+              // 1. If receiptSerial has value -> use it (TRIM to remove whitespace)
               // 2. If receiptSerial is empty:
               //    - If TRIM(receiptTitle) = TRIM(sort_name) -> use legal_identifier (or sic_code for Organization)
+              //    - If both receiptTitle and receiptSerial are empty -> use legal_identifier (or sic_code for Organization) (fallback)
               //    - Otherwise -> NULL
               $this->_specialCase = "
 (CASE
   WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH(TRIM({$field['dbAlias']})) > 0
-  THEN {$field['dbAlias']}
-  ELSE
+  THEN TRIM({$field['dbAlias']})
+  WHEN TRIM(COALESCE({$receiptTitleDbAlias}, '')) = TRIM(COALESCE({$contactAlias}.sort_name, ''))
+       AND LENGTH(TRIM(COALESCE({$contactAlias}.sort_name, ''))) > 0
+  THEN
     (CASE
-      WHEN TRIM(COALESCE({$receiptTitleDbAlias}, '')) = TRIM(COALESCE({$contactAlias}.sort_name, ''))
-           AND LENGTH(TRIM(COALESCE({$contactAlias}.sort_name, ''))) > 0
-      THEN
-        (CASE
-          WHEN {$contactAlias}.contact_type = 'Organization'
-          THEN {$contactAlias}.sic_code
-          ELSE {$contactAlias}.legal_identifier
-        END)
-      ELSE NULL
+      WHEN {$contactAlias}.contact_type = 'Organization'
+      THEN {$contactAlias}.sic_code
+      ELSE {$contactAlias}.legal_identifier
     END)
+  WHEN ({$receiptTitleDbAlias} IS NULL OR LENGTH(TRIM({$receiptTitleDbAlias})) = 0)
+       AND ({$field['dbAlias']} IS NULL OR LENGTH(TRIM({$field['dbAlias']})) = 0)
+       AND {$contactAlias}.sort_name IS NOT NULL
+  THEN
+    (CASE
+      WHEN {$contactAlias}.contact_type = 'Organization'
+      THEN {$contactAlias}.sic_code
+      ELSE {$contactAlias}.legal_identifier
+    END)
+  ELSE NULL
 END)
 ";
               $select[] = $this->_specialCase . ' as receipt_serial ';
@@ -321,15 +330,15 @@ ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribut
       $this->_params['legal_identifier_op'] = 'has';
     }
     parent::where();
-    
+
     // contact doesn't has legal identifier
-    if (isset($params['legal_identifier_op']) && $params['legal_identifier_op'] == 'nll') {
+    if (isset($params['legal_identifier_op']) && $params['legal_identifier_op'] === 'nll') {
       // force empty string to go null
       $this->_where .= "AND (NULLIF({$this->_specialCase}, '') IS NULL)";
     }
-    // only contacts has legal identifier
+    // only contacts has legal identifier (exclude 8-digit company UBN)
     else {
-      // empty string will go null, then regexp can filter out
+      // Exclude 8-digit numbers (company UBN), keep personal ID format (letter + 9 digits)
       $this->_where .= "AND (NULLIF({$this->_specialCase}, '') NOT REGEXP '^[0-9]{8}$')";
     }
   }
