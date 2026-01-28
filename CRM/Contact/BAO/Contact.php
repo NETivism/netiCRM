@@ -980,7 +980,7 @@ WHERE id={$id}; ";
       $contactType = 'All';
     }
 
-    $cacheKeyString = "importableFields $contactType";
+    $cacheKeyString = __CLASS__.'::'.__FUNCTION__.'--'.$contactType;
     $cacheKeyString .= $status ? "_1" : "_0";
     $cacheKeyString .= $showAll ? "_1" : "_0";
     $cacheKeyString .= $isProfile ? "_1" : "_0";
@@ -991,8 +991,9 @@ WHERE id={$id}; ";
       }
 
       // check if we can retrieve from database cache
-
-      $fields = &CRM_Core_BAO_Cache::getItem('contact fields', $cacheKeyString);
+      $cache = &CRM_Utils_Cache::singleton();
+      $cacheKey = $cacheKeyString . '_' . CRM_Core_Config::domainID();
+      $fields = $cache->get($cacheKey);
 
       if (!$fields) {
         $fields = CRM_Contact_DAO_Contact::import();
@@ -1092,7 +1093,7 @@ WHERE id={$id}; ";
         $fields = array_merge($sortArray, $fields);
         $fields = CRM_Core_FieldHierarchy::arrange($fields);
 
-        CRM_Core_BAO_Cache::setItem($fields, 'contact fields', $cacheKeyString);
+        $cache->set($cacheKey, $fields);
       }
 
       self::$_importableFields[$cacheKeyString] = $fields;
@@ -1130,7 +1131,7 @@ WHERE id={$id}; ";
       $contactType = 'All';
     }
 
-    $cacheKeyString = "exportableFields $contactType";
+    $cacheKeyString = __CLASS__ . '::' . __FUNCTION__ . '--' . $contactType;
     $cacheKeyString .= $export ? "_1" : "_0";
     $cacheKeyString .= $status ? "_1" : "_0";
 
@@ -1140,8 +1141,9 @@ WHERE id={$id}; ";
       }
 
       // check if we can retrieve from database cache
-
-      $fields = &CRM_Core_BAO_Cache::getItem('contact fields', $cacheKeyString);
+      $cache = &CRM_Utils_Cache::singleton();
+      $cacheKey = $cacheKeyString . '_' . CRM_Core_Config::domainID();
+      $fields = $cache->get($cacheKey);
 
       $masterAddress['master_address_belongs_to'] = ['name' => 'master_id',
         'title' => ts('Master Address Belongs To'),
@@ -1276,7 +1278,7 @@ WHERE id={$id}; ";
           }
         }
 
-        CRM_Core_BAO_Cache::setItem($fields, 'contact fields', $cacheKeyString);
+        $cache->set($cacheKey, $fields);
       }
       self::$_exportableFields[$cacheKeyString] = $fields;
     }

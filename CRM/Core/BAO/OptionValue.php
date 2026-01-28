@@ -365,7 +365,7 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
    */
   static function getOptionValuesArray($optionGroupID) {
     // check if we can get the field values from the system cache
-    $cacheKey = "CRM_Core_BAO_OptionValue_OptionGroupID_{$optionGroupID}";
+    $cacheKey = __CLASS__ . '::' . __FUNCTION__ . '--' . $optionGroupID;
     $cache = CRM_Utils_Cache::singleton();
     $optionValues = $cache->get($cacheKey);
     if (empty($optionValues)) {
