@@ -206,6 +206,24 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     $columnHeaders = [];
     $this->_specialCase = '';
 
+    // Pre-collect dbAlias for receipt fields since they reference each other
+    $receiptTitleDbAlias = NULL;
+    $receiptSerialDbAlias = NULL;
+    foreach ($this->_columns as $tableName => $table) {
+      if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
+        foreach ($table['fields'] as $fieldName => $field) {
+          if ($fieldName === $this->_receiptTitle) {
+            $receiptTitleDbAlias = $field['dbAlias'];
+          }
+          elseif ($fieldName === $this->_receiptSerial) {
+            $receiptSerialDbAlias = $field['dbAlias'];
+          }
+        }
+      }
+    }
+
+    $contactAlias = $this->_aliases['civicrm_contact'];
+
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
@@ -213,29 +231,56 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             CRM_Utils_Array::value($fieldName, $this->_params['fields'])
           ) {
             // only include statistics columns if set
-            if($fieldName == 'total_amount'){
+            if ($fieldName === 'total_amount') {
               $select[] = "SUM({$field['dbAlias']}) as {$tableName}_{$fieldName}";
             }
-            elseif ($fieldName == $this->_receiptTitle) {
+            elseif ($fieldName === $this->_receiptTitle) {
+              // receipt_title logic:
+              // 1. If receiptTitle has value -> use it
+              // 2. If receiptTitle is empty:
+              //    - If TRIM(receiptSerial) = TRIM(legal_identifier) -> use sort_name
+              //    - Otherwise -> NULL
               $select[] = "
 (CASE
-  WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH({$field['dbAlias']}) > 0 
+  WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH(TRIM({$field['dbAlias']})) > 0
   THEN {$field['dbAlias']}
-  ELSE {$this->_aliases['civicrm_contact']}.sort_name END) as receipt_title
+  ELSE
+    (CASE
+      WHEN TRIM(COALESCE({$receiptSerialDbAlias}, '')) = TRIM(COALESCE({$contactAlias}.legal_identifier, ''))
+           AND LENGTH(TRIM(COALESCE({$contactAlias}.legal_identifier, ''))) > 0
+      THEN {$contactAlias}.sort_name
+      ELSE NULL
+    END)
+END) as receipt_title
 ";
             }
-            elseif ($fieldName == $this->_receiptSerial) {
+            elseif ($fieldName === $this->_receiptSerial) {
+              // receipt_serial logic:
+              // 1. If receiptSerial has value -> use it
+              // 2. If receiptSerial is empty:
+              //    - If TRIM(receiptTitle) = TRIM(sort_name) -> use legal_identifier (or sic_code for Organization)
+              //    - Otherwise -> NULL
               $this->_specialCase = "
 (CASE
-  WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH({$field['dbAlias']}) > 0
+  WHEN {$field['dbAlias']} IS NOT NULL AND LENGTH(TRIM({$field['dbAlias']})) > 0
   THEN {$field['dbAlias']}
-  ELSE 
-    (CASE WHEN {$this->_aliases['civicrm_contact']}.contact_type = 'Organization' THEN {$this->_aliases['civicrm_contact']}.sic_code ELSE {$this->_aliases['civicrm_contact']}.legal_identifier END)
-  END)
+  ELSE
+    (CASE
+      WHEN TRIM(COALESCE({$receiptTitleDbAlias}, '')) = TRIM(COALESCE({$contactAlias}.sort_name, ''))
+           AND LENGTH(TRIM(COALESCE({$contactAlias}.sort_name, ''))) > 0
+      THEN
+        (CASE
+          WHEN {$contactAlias}.contact_type = 'Organization'
+          THEN {$contactAlias}.sic_code
+          ELSE {$contactAlias}.legal_identifier
+        END)
+      ELSE NULL
+    END)
+END)
 ";
-              $select[] = $this->_specialCase .' as receipt_serial ';
+              $select[] = $this->_specialCase . ' as receipt_serial ';
             }
-            else{
+            else {
               $select[] = "{$field['dbAlias']} as {$tableName}_{$fieldName}";
             }
             $columnHeaders["{$tableName}_{$fieldName}"]['type'] = $field['type'];
