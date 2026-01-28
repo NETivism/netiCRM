@@ -455,9 +455,9 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         self::$_importFields = [];
       }
 
-      // check if we can retrieve from database cache
+      // check if we can retrieve from cache
       $cache = &CRM_Utils_Cache::singleton();
-      $cacheKeyString = 'CRM_Core_BAO_CustomField_getFields_' . $cacheKey . '_' . CRM_Core_Config::domainID();
+      $cacheKeyString = __CLASS__ . '::' . __FUNCTION__ . '--' . $cacheKey . '_' . CRM_Core_Config::domainID();
       $fields = $cache->get($cacheKeyString);
 
       $extends = '';
@@ -1770,7 +1770,7 @@ SELECT $columnName
   }
 
   static function getTableColumnGroup($fieldID, $force = FALSE) {
-    $cacheKey = "CRM_Core_DAO_CustomField_CustomGroup_TableColumn_{$fieldID}";
+    $cacheKey = __CLASS__ . '::' . __FUNCTION__ . '--' . $fieldID;
     $cache = CRM_Utils_Cache::singleton();
     $fieldValues = $cache->get($cacheKey);
 
