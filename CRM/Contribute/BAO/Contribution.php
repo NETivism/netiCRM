@@ -508,8 +508,15 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * @return array array of importable Fields
    * @access public
    */
-  static function &importableFields($contacType = 'Individual', $status = TRUE) {
-    if (!self::$_importableFields) {
+  static function &importableFields($contactType = 'Individual', $status = TRUE) {
+    if (empty($contactType)) {
+      $contactType = 'Individual';
+    }
+
+    $cacheKeyString = __CLASS__.'::'.__FUNCTION__.'--'.$contactType;
+    $cacheKeyString .= $status ? "_1" : "_0";
+
+    if (!self::$_importableFields || !CRM_Utils_Array::value($cacheKeyString, self::$_importableFields)) {
       if (!self::$_importableFields) {
         self::$_importableFields = [];
       }
@@ -528,14 +535,14 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       $optionFields = CRM_Core_OptionValue::getFields($mode = 'contribute');
 
       $contactFields = [];
-      $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+      $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
       $tmpContactFields = CRM_Core_BAO_Address::validateAddressOptions($tmpContactFields);
 
       $contactFieldsIgnore = ['id', 'note', 'do_not_import', 'contact_sub_type', 'group_name', 'tag_name'];
 
       // Using new Dedupe rule.
       $ruleParams = [
-        'contact_type' => $contacType,
+        'contact_type' => $contactType,
         'level' => 'Strict',
       ];
       $dupeFields = CRM_Dedupe_BAO_Rule::dedupeRuleFields($ruleParams);
@@ -558,9 +565,9 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       $fields = array_merge($fields, $optionFields);
       $fields = array_merge($fields, $note);
       $fields = array_merge($fields, $contactFields);
-      self::$_importableFields = $fields;
+      self::$_importableFields[$cacheKeyString] = $fields;
     }
-    return self::$_importableFields;
+    return self::$_importableFields[$cacheKeyString];
   }
 
   static function &exportableFields() {
