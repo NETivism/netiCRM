@@ -455,10 +455,8 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         self::$_importFields = [];
       }
 
-      // check if we can retrieve from cache
-      $cache = &CRM_Utils_Cache::singleton();
-      $cacheKeyString = __CLASS__ . '::' . __FUNCTION__ . '--' . $cacheKey . '_' . CRM_Core_Config::domainID();
-      $fields = $cache->get($cacheKeyString);
+      // check if we can retrieve from database cache
+      $fields = &CRM_Core_BAO_Cache::getItem('contact fields', "custom importableFields $cacheKey");
 
       $extends = '';
       if ($fields === NULL) {
@@ -561,7 +559,10 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           $fields[$dao->id]['time_format'] = $dao->time_format;
         }
 
-        $cache->set($cacheKeyString, $fields);
+        CRM_Core_BAO_Cache::setItem($fields,
+          'contact fields',
+          "custom importableFields $cacheKey"
+        );
       }
       self::$_importFields[$cacheKey] = $fields;
     }

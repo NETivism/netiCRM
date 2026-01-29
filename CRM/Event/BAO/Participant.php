@@ -658,7 +658,15 @@ GROUP BY  participant.event_id
    * @access public
    */
   static function &importableFields($contactType = 'Individual', $status = TRUE, $onlyParticipant = FALSE) {
-    if (!self::$_importableFields) {
+    if (empty($contactType)) {
+      $contactType = 'Individual';
+    }
+
+    $cacheKeyString = __CLASS__.'::'.__FUNCTION__.'--'.$contactType;
+    $cacheKeyString .= $status ? "_1" : "_0";
+    $cacheKeyString .= $onlyParticipant ? "_1" : "_0";
+
+    if (!self::$_importableFields || !CRM_Utils_Array::value($cacheKeyString, self::$_importableFields)) {
       if (!self::$_importableFields) {
         self::$_importableFields = [];
       }
@@ -736,10 +744,10 @@ GROUP BY  participant.event_id
       //$fields = array_merge($fields, $optionFields);
 
       $fields = array_merge($fields, CRM_Core_BAO_CustomField::getFieldsForImport('Participant'));
-      self::$_importableFields = $fields;
+      self::$_importableFields[$cacheKeyString] = $fields;
     }
 
-    return self::$_importableFields;
+    return self::$_importableFields[$cacheKeyString];
   }
 
   /**
