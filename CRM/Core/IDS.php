@@ -151,7 +151,8 @@ class CRM_Core_IDS {
       'civicrm/ajax/track' => ['data:json'],
       'civicrm/contribute/transact' => ['JSONData:json:_qf_ThankYou_display=1'],
       'civicrm/event/register' => ['JSONData:json:_qf_ThankYou_display=1'],
-      '*/civicrm/extern/rest.php' => ['json:json']
+      '*/civicrm/extern/rest.php' => ['json:json'],
+      '*/civicrm/extern/mcp.php' => ['IDS_php_input'],
     ],
   ];
 

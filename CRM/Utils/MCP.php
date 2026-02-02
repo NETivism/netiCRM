@@ -9,27 +9,24 @@
  */
 class CRM_Utils_MCP {
   const LAST_HIT = 'mcp_lasthit';
-  const RATE_LIMIT = 0.2;
-  
+  const RATE_LIMIT = 0.1;
+
   /**
    * @var bool Whether to output streaming responses
    */
-  private $isStreamable = false;
+  private $_isStreamable = false;
+
+  /**
+   * @var int User who use mcp
+   */
+  private $_contactId;
 
   /**
    * Set streaming mode
    * @param bool $isStreamable Whether to enable streaming responses
    */
   public function setStreamable($isStreamable) {
-    $this->isStreamable = $isStreamable;
-  }
-
-  /**
-   * MCP (Model Context Protocol) entry point
-   * @return string JSON-RPC 2.0 response
-   */
-  public function bootAndRun() {
-    return $this->run();
+    $this->_isStreamable = $isStreamable;
   }
 
   /**
@@ -54,11 +51,11 @@ class CRM_Utils_MCP {
       $input = file_get_contents('php://input');
       $request = json_decode($input, TRUE);
     }
-    
+
     if (!$request || !isset($request['jsonrpc']) || $request['jsonrpc'] !== '2.0') {
       return $this->error(-32600, 'Invalid Request', $request['id'] ?? NULL);
     }
-    
+
     $method = $request['method'] ?? '';
     $params = $request['params'] ?? [];
     $id = $request['id'] ?? NULL;
@@ -90,15 +87,14 @@ class CRM_Utils_MCP {
     // to make sure we're working with a trusted user.
 
     // There are three ways to check for a trusted user:
-    // First: they can be someone that has a valid session currently
-    // Second: they can be someone that has provided an API_Key
-    // Third: they can be someone that has provided a valid OAuth Bearer token
+    // First: they can be someone that has provided an API_Key
+    // Second: they can be someone that has provided a valid OAuth Bearer token
     $validUser = FALSE;
 
     // Check for valid session. Session ID's only appear here if you have
     // run the rest_api login function. That might be a problem for the
     // AJAX methods.
-    $session = CRM_Core_Session::singleton();
+    CRM_Core_Session::singleton();
 
     // Check for OAuth Bearer token first
     $bearerToken = $this->getBearerToken();
@@ -132,8 +128,6 @@ class CRM_Utils_MCP {
           $ufId = CRM_Utils_System::getLoggedInUfID();
           if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
             $validUser = $contactId;
-            $session->set('ufID', $uid);
-            $session->set('userID', $contactId);
           }
         }
         if (!$validUser) {
@@ -146,6 +140,10 @@ class CRM_Utils_MCP {
     if (empty($validUser)) {
       return $this->sendOAuthChallenge($id);
     }
+    else {
+      $this->_contactId = $validUser;
+    }
+    CRM_Core_Error::debug_var("mcp_post_via_contact_$this->_contactId", $request);
 
     // Check request rate limit
     $args = ['mcp', $method];
@@ -153,8 +151,18 @@ class CRM_Utils_MCP {
     if (!empty($error)) {
       return $this->error(-32000, 'FATAL: ' . $error, $id);
     }
-    
-    // Route to appropriate MCP method
+
+    return $this->routeMethod($method, $params, $id);
+  }
+
+  /**
+   * Route to appropriate MCP method handler
+   * @param string $method Method name
+   * @param array $params Method parameters
+   * @param mixed $id Request ID
+   * @return array Response
+   */
+  private function routeMethod($method, $params, $id) {
     switch ($method) {
       case 'initialize':
         return $this->initialize($params, $id);
@@ -184,14 +192,107 @@ class CRM_Utils_MCP {
     if (defined('JSON_INVALID_UTF8_IGNORE')) {
       $options |= JSON_INVALID_UTF8_IGNORE;
     }
-    
+
     $jsonResponse = json_encode($result, $options);
-    
-    if ($this->isStreamable) {
-      return "data: " . $jsonResponse . "\n\n";
+    if (CRM_Core_Config::singleton()->debug) {
+      CRM_Core_Error::debug_var('mcp_result', $result);
+    }
+
+    if ($this->_isStreamable) {
+      return $this->formatSSE('message', $jsonResponse);
     } else {
       return $jsonResponse;
     }
+  }
+
+  /**
+   * Format data as Server-Sent Event
+   * @param string $event Event type (message, error, ping, etc.)
+   * @param string $data JSON data
+   * @param string|null $id Optional event ID
+   * @return string SSE formatted string
+   */
+  private function formatSSE($event, $data, $id = null) {
+    $output = '';
+    if ($id !== null) {
+      $output .= "id: {$id}\n";
+    }
+    $output .= "event: {$event}\n";
+    $output .= "data: {$data}\n\n";
+    return $output;
+  }
+
+  /**
+   * Send a streaming event immediately (for long-running operations)
+   * This flushes output buffers to send data to client in real-time
+   * @param string $event Event type
+   * @param array $data Event data
+   */
+  public function streamEvent($event, $data) {
+    if (!$this->_isStreamable) {
+      return;
+    }
+
+    $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+    if (defined('JSON_INVALID_UTF8_IGNORE')) {
+      $options |= JSON_INVALID_UTF8_IGNORE;
+    }
+
+    $json = json_encode($data, $options);
+    echo $this->formatSSE($event, $json);
+
+    // Flush output buffers for real-time streaming
+    if (ob_get_level() > 0) {
+      ob_flush();
+    }
+    flush();
+  }
+
+  /**
+   * Send a progress notification during tool execution
+   * @param string $progressToken Progress token from client
+   * @param int $progress Current progress (0-100)
+   * @param int|null $total Total items (optional)
+   */
+  public function sendProgress($progressToken, $progress, $total = null) {
+    if (!$this->_isStreamable || empty($progressToken)) {
+      return;
+    }
+
+    $notification = [
+      'jsonrpc' => '2.0',
+      'method' => 'notifications/progress',
+      'params' => [
+        'progressToken' => $progressToken,
+        'progress' => $progress,
+      ]
+    ];
+
+    if ($total !== null) {
+      $notification['params']['total'] = $total;
+    }
+
+    $this->streamEvent('message', $notification);
+  }
+
+  /**
+   * Initialize streaming mode - disable output buffering for real-time output
+   */
+  public function initStreaming() {
+    if (!$this->_isStreamable) {
+      return;
+    }
+
+    // Disable output buffering for real-time streaming
+    while (ob_get_level() > 0) {
+      ob_end_flush();
+    }
+
+    // Disable implicit flush
+    ob_implicit_flush(true);
+
+    // Set unlimited execution time for long-running streams
+    set_time_limit(0);
   }
 
   /**
@@ -201,10 +302,19 @@ class CRM_Utils_MCP {
    * @return array Response
    */
   private function initialize($params, $id) {
+    // Log client info for debugging
+    $clientInfo = $params['clientInfo'] ?? [];
+    if (!empty($clientInfo)) {
+      CRM_Core_Error::debug_log_message(
+        'MCP client connected: ' . ($clientInfo['name'] ?? 'unknown') .
+        ' v' . ($clientInfo['version'] ?? 'unknown')
+      );
+    }
+
     return [
       'jsonrpc' => '2.0',
       'result' => [
-        'protocolVersion' => '2024-11-05',
+        'protocolVersion' => '2025-03-26',
         'capabilities' => [
           'tools' => [
             'listChanged' => false
@@ -216,8 +326,9 @@ class CRM_Utils_MCP {
         ],
         'serverInfo' => [
           'name' => 'netiCRM MCP Server',
-          'version' => '1.0.0'
-        ]
+          'version' => '1.1.0'
+        ],
+        'instructions' => 'netiCRM MCP Server provides access to CRM data including contacts and contributions.'
       ],
       'id' => $id
     ];
@@ -765,7 +876,7 @@ class CRM_Utils_MCP {
         'content' => [
           [
             'type' => 'text',
-            'text' => json_encode($results, JSON_PRETTY_PRINT)
+            'text' => json_encode($results)
           ]
         ],
         'isError' => $isError
@@ -839,7 +950,7 @@ class CRM_Utils_MCP {
           'content' => [
             [
               'type' => 'text',
-              'text' => json_encode($result, JSON_PRETTY_PRINT)
+              'text' => json_encode($result)
             ]
           ],
           'isError' => $isError
@@ -923,6 +1034,7 @@ class CRM_Utils_MCP {
    * @return array Error response
    */
   private function error($code, $message, $id) {
+    CRM_Core_Error::debug_log_message("MCP error response: code:$code $message $id");
     return [
       'jsonrpc' => '2.0',
       'error' => [
@@ -959,89 +1071,54 @@ class CRM_Utils_MCP {
     if (empty($token)) {
       return false;
     }
-    
-    // Check if we're in a Drupal environment and OAuth2 server module is available
-    if (!function_exists('oauth2_server_check_access')) {
-      return false;
-    }
-    
-    try {
-      // Use Drupal's OAuth2 server to validate the token
-      // We need to temporarily set the Authorization header for the OAuth2 library
-      $originalAuthHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? null;
-      $_SERVER['HTTP_AUTHORIZATION'] = 'Bearer ' . $token;
-      
-      // Try to validate using the default MCP server name
-      // This should be configured in your Drupal OAuth2 server settings
-      $serverName = 'mcp_server'; // Default server name for MCP
-      $result = oauth2_server_check_access($serverName);
-      
-      // Restore original auth header
-      if ($originalAuthHeader !== null) {
-        $_SERVER['HTTP_AUTHORIZATION'] = $originalAuthHeader;
-      } else {
-        unset($_SERVER['HTTP_AUTHORIZATION']);
-      }
-      
-      // If result is an array, it's a valid token
-      if (is_array($result) && isset($result['user_id'])) {
-        $uid = $result['user_id'];
-        
-        // Convert Drupal user ID to CiviCRM contact ID
-        if ($uid) {
-          $contactId = CRM_Core_BAO_UFMatch::getContactId($uid);
-          if ($contactId) {
-            // Set up session for the validated user
-            $session = CRM_Core_Session::singleton();
-            $session->set('ufID', $uid);
-            $session->set('userID', $contactId);
-            return $contactId;
-          }
-        }
-      }
-      
-    } catch (Exception $e) {
-      // Token validation failed
-      error_log('OAuth token validation failed: ' . $e->getMessage());
-    }
-    
+    // TODO: implement bearer token validation
     return false;
   }
 
   /**
    * Send OAuth challenge response with 401 status and WWW-Authenticate header
+   *
+   * Implements RFC 6750 (Bearer Token Usage) and MCP OAuth requirements.
+   * The WWW-Authenticate header points to the resource metadata endpoint
+   * which contains OAuth server discovery information.
+   *
    * @param mixed $id Request ID
    * @return array OAuth challenge response
    */
   private function sendOAuthChallenge($id) {
     // Set HTTP 401 Unauthorized status
     http_response_code(401);
-    
-    // Get base URL for OAuth authorization server
+
+    // Get base URL
     $config = CRM_Core_Config::singleton();
-    $baseUrl = $config->userFrameworkBaseURL;
-    
-    // Set WWW-Authenticate header with OAuth authorization server information
-    $authServer = rtrim($baseUrl, '/') . '/oauth2';
+    $baseUrl = rtrim($config->userFrameworkBaseURL, '/');
+
+    // Discovery endpoints
+    $resourceMetadata = $baseUrl . '/.well-known/oauth-protected-resource';
+    $authServerMetadata = $baseUrl . '/.well-known/oauth-authorization-server';
+    $authServer = $baseUrl . '/oauth2';
+
+    // RFC 6750 compliant WWW-Authenticate header with MCP extensions
+    // MCP clients use resource_metadata to discover OAuth server
     $wwwAuthenticate = sprintf(
-      'Bearer realm="%s", authorization_uri="%s/authorize", token_uri="%s/token"',
-      'netiCRM MCP API',
-      $authServer,
-      $authServer
+      'Bearer realm="netiCRM MCP API", resource_metadata="%s"',
+      $resourceMetadata
     );
-    
+
     header('WWW-Authenticate: ' . $wwwAuthenticate);
-    
-    // Return JSON-RPC error response
+
+    // Return JSON-RPC error response with discovery information
     return [
       'jsonrpc' => '2.0',
       'error' => [
         'code' => -32001,
-        'message' => 'Unauthorized: Valid OAuth Bearer token required',
+        'message' => 'Unauthorized: Authentication required. Use OAuth Bearer token or API key.',
         'data' => [
-          'authorization_uri' => $authServer . '/authorize',
-          'token_uri' => $authServer . '/token',
-          'realm' => 'netiCRM MCP API'
+          'resource_metadata' => $resourceMetadata,
+          'authorization_server_metadata' => $authServerMetadata,
+          'authorization_endpoint' => $authServer . '/authorize',
+          'token_endpoint' => $authServer . '/token',
+          'api_key_header' => 'X-CIVICRM-API-KEY',
         ]
       ],
       'id' => $id
