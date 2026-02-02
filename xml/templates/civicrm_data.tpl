@@ -377,7 +377,7 @@ VALUES
   (@option_group_id_pi, '{ts escape="sql"}ATM Transfer{/ts}',  14, 'ATM', NULL, 0, NULL, 14, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}Yahoo Charity{/ts}',  15, 'Yahoo', NULL, 0, NULL, 15, NULL, 0, 0, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}UnionPay{/ts}',  16, 'UnionPay', NULL, 0, NULL, 16, NULL, 0, 1, 1, NULL, NULL),
-  (@option_group_id_pi, '{ts escape="sql"}ApplePay{/ts}',  17, 'ApplePay', NULL, 0, NULL, 17, NULL, 0, 1, 1, NULL, NULL),
+  (@option_group_id_pi, '{ts escape="sql"}ApplePay{/ts}',  17, 'ApplePay', NULL, 0, NULL, 17, NULL, 0, 1, 0, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}GooglePay{/ts}',  18, 'GooglePay', NULL, 0, NULL, 18, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}LinePay{/ts}',  19, 'LinePay', NULL, 0, NULL, 19, NULL, 0, 1, 1, NULL, NULL),
   (@option_group_id_pi, '{ts escape="sql"}ACH Bank{/ts}',  20, 'ACH Bank', NULL, 0, NULL, 20, NULL, 0, 1, 1, NULL, NULL),
