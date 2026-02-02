@@ -8,8 +8,10 @@
  *
  */
 class CRM_Utils_MCP {
-  const LAST_HIT = 'mcp_lasthit';
-  const RATE_LIMIT = 0.1;
+  const LAST_HIT = 'mcp_lasthit';  // Kept for backward compatibility, used as prefix
+  const RATE_LIMIT = 0.1;  // Kept for backward compatibility
+  const RATE_LIMIT_WINDOW = 60;  // 60 second time window
+  const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
 
   /**
    * @var bool Whether to output streaming responses
@@ -1005,25 +1007,27 @@ class CRM_Utils_MCP {
    * @return string Error message if rate limit exceeded, empty string otherwise
    */
   function requestRateLimit($args) {
-    $dao = new CRM_Core_DAO_Sequence();
-    $dao->name = self::LAST_HIT;
-    if ($dao->find(TRUE)) {
-      $interval = microtime(true) - $dao->timestamp;
-      $config = CRM_Core_Config::singleton();
-      $rateLimit = $config->restAPIRateLimit ? $config->restAPIRateLimit : self::RATE_LIMIT;
-      if ($interval < $rateLimit) {
-        return 'Request rate limit reached. Last hit: '.round($interval, 2).' seconds ago. Usage: '.$dao->value;
-      }
-      $dao->timestamp = microtime(true);
-      $dao->value = CRM_Utils_Array::implode('-', $args);
-      $dao->update();
+    // IP-based rate limiting using CRM_Utils_RateLimiter
+    $prefix = self::LAST_HIT;
+    $windowSeconds = self::RATE_LIMIT_WINDOW;
+    $maxRequests = self::RATE_LIMIT_MAX_REQUESTS;
+
+    // Check if custom rate limit is configured
+    $config = CRM_Core_Config::singleton();
+    if (!empty($config->restAPIRateLimit)) {
+      // Convert old time-interval config to request count
+      // Old config: seconds between requests (e.g., 0.1 = 10 req/sec)
+      // New config: max requests per window
+      $requestsPerSecond = 1 / $config->restAPIRateLimit;
+      $maxRequests = (int) ($requestsPerSecond * $windowSeconds);
     }
-    else {
-      $dao->timestamp = microtime(true);
-      $dao->value = CRM_Utils_Array::implode('-', $args);
-      $dao->insert();
+
+    if (CRM_Utils_RateLimiter::isRateLimited($prefix, $windowSeconds, $maxRequests)) {
+      return 'Request rate limit reached. Please try again later.';
     }
-    return [];
+
+    // Probabilistic cleanup of expired records
+    CRM_Utils_RateLimiter::cleanup($prefix, $windowSeconds);
   }
 
   /**

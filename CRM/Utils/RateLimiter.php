@@ -73,6 +73,21 @@ class CRM_Utils_RateLimiter {
     $windowSeconds = $windowSeconds !== NULL ? (int) $windowSeconds : self::DEFAULT_WINDOW_SECONDS;
     $maxRequests = $maxRequests !== NULL ? (int) $maxRequests : self::DEFAULT_MAX_REQUESTS;
 
+    // Validate parameters - must be positive
+    if ($windowSeconds <= 0) {
+      CRM_Core_Error::debug_log_message(
+        "RateLimiter: Invalid windowSeconds=$windowSeconds for prefix=$prefix, disabling rate limit"
+      );
+      return FALSE;
+    }
+
+    if ($maxRequests < 0) {
+      CRM_Core_Error::debug_log_message(
+        "RateLimiter: Invalid maxRequests=$maxRequests for prefix=$prefix, disabling rate limit"
+      );
+      return FALSE;
+    }
+
     // Get client IP address
     $ip = CRM_Utils_System::ipAddress();
 
