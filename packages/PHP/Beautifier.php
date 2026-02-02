@@ -24,8 +24,7 @@ error_reporting(E_ALL);
 if (!extension_loaded('tokenizer')) {
     throw new Exception("Compile php with tokenizer extension. Use --enable-tokenizer or don't use --disable-all on configure.");
 }
-include_once 'PEAR.php';
-include_once 'PEAR/Exception.php';
+
 /**
  * Require PHP_Beautifier_Filter
  */
