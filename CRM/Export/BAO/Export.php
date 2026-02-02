@@ -43,6 +43,7 @@ class CRM_Export_BAO_Export {
   CONST EXPORT_BATCH_CSV_THRESHOLD = 100000;
   CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
   CONST DISPLAY_SEPARATOR = '|';
+  CONST EXPORT_TEMP_TABLE = 'civicrm_export';
 
   /**
    * Function to get the list the export fields
@@ -606,7 +607,7 @@ class CRM_Export_BAO_Export {
 
     if (empty($civicrm_batch)) {
       $countDAO = CRM_Core_DAO::executeQuery($countQuery);
-      $totalNumRows = $countDAO->N;
+      $totalNumRows = $exportCustomVars['selectedRecordsCount'] ?? $countDAO->N;
       $fileName = self::getExportFileName($exportMode);
       if ($totalNumRows > self::EXPORT_BATCH_THRESHOLD) {
         // start batch
@@ -1169,7 +1170,7 @@ class CRM_Export_BAO_Export {
         $exportCustomVars['customSearchClass'],
         $exportCustomVars['formValues'],
         $exportCustomVars['order'],
-        $exportCustomVars['pirmaryIDName'],
+        $exportCustomVars['primaryIDName'],
         TRUE,
         FALSE,
         $exportMode
@@ -1177,7 +1178,7 @@ class CRM_Export_BAO_Export {
 
       $customHeader = $exportCustomResult['header'];
       $customRows = $exportCustomResult['rows'];
-      $primaryIDName = empty($exportCustomVars['pirmaryIDName']) ? 'contact_id' : $exportCustomVars['pirmaryIDName'];
+      $primaryIDName = empty($exportCustomVars['primaryIDName']) ? 'contact_id' : $exportCustomVars['primaryIDName'];
       $csResultTempTable = CRM_Core_DAO::createTempTableName('civicrm_task_action', FALSE);
       foreach ($customHeader as $columnName => $val) {
         if ($primaryIDName == 'contact_id' && $columnName == 'contact_id') {
@@ -1231,10 +1232,10 @@ class CRM_Export_BAO_Export {
         }
       }
       $exportTempTableSelectColumns = CRM_Utils_Array::implode(', ', $exportTempTableSelectFields);
-      $tempTableName = 'new_export_temp_table';
-      $sql = "CREATE TEMPORARY TABLE $tempTableName SELECT $exportTempTableSelectColumns $componentColumns FROM $csResultTempTable csResultTable INNER JOIN $exportTempTable ON csResultTable.contact_id = $exportTempTable.contact_id";
+      $csCombineTempTable = CRM_Core_DAO::createTempTableName('civicrm_cscombine_export', TRUE);
+      $sql = "CREATE TEMPORARY TABLE $csCombineTempTable SELECT $exportTempTableSelectColumns $componentColumns FROM $csResultTempTable csResultTable INNER JOIN $exportTempTable ON csResultTable.contact_id = $exportTempTable.contact_id";
       CRM_Core_DAO::executeQuery($sql);
-      $exportTempTable = $tempTableName;
+      $exportTempTable = $csCombineTempTable;
 
       // unset 'contact_id' in header
       $key = array_search('contact_id', $headerRows);
@@ -1254,6 +1255,9 @@ class CRM_Export_BAO_Export {
       $fileUri = $civicrm_batch->data['exportFile']; 
       $query = "SELECT * FROM $exportTempTable";
       $dao = CRM_Core_DAO::executeQuery($query);
+      if (strpos($exportTempTable, self::EXPORT_TEMP_TABLE) === FALSE) {
+        $count = $dao->N;
+      }
       CRM_Core_Error::debug_log_message("expect $count rows, temp table rows $dao->N");
       if (!empty($count) && $count == $dao->N) {
         self::writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileUri);
@@ -1654,14 +1658,14 @@ VALUES $sqlValueString
 
   static function createTempTable(&$sqlColumns) {
     //creating a temporary table for the search result that need be exported
-    $exportTempTable = CRM_Core_DAO::createTempTableName('civicrm_export', FALSE);
+    $exportTempTable = CRM_Core_DAO::createTempTableName(self::EXPORT_TEMP_TABLE, FALSE);
 
     // also create the sql table
     $sql = "DROP TABLE IF EXISTS {$exportTempTable}";
     CRM_Core_DAO::executeQuery($sql);
 
     $sql = "
-CREATE TABLE {$exportTempTable} ( 
+CREATE TEMPORARY TABLE {$exportTempTable} ( 
      id int unsigned NOT NULL AUTO_INCREMENT,
 ";
     $sql .= CRM_Utils_Array::implode(",\n", array_values($sqlColumns));

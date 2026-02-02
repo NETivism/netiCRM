@@ -116,7 +116,6 @@ class CRM_GenCode_Main {
     require_once 'CRM/Core/Smarty/plugins/block.localize.php';
     $this->smarty->register_block('localize', 'smarty_block_localize');
 
-    require_once 'PHP/Beautifier.php';
     // create a instance
     $this->beautifier = new PHP_Beautifier();
     $this->beautifier->addFilter('ArrayNested');

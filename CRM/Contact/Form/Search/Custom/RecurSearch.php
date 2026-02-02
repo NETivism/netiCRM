@@ -511,13 +511,19 @@ $having
       }
     }
 
-    $action = array_sum(array_keys(CRM_Contribute_Page_Tab::recurLinks()));
-    $row['action'] = CRM_Core_Action::formLink(CRM_Contribute_Page_Tab::recurLinks(), $action,
-      ['cid' => $row['contact_id'],
-        'id' => $row['id'],
-        'cxt' => 'contribution',
-      ]
-    );
+    $recurLinks = CRM_Contribute_Page_Tab::recurLinks();
+    if (!empty($recurLinks) && is_array($recurLinks)) {
+      $action = array_sum(array_keys($recurLinks));
+      $row['action'] = CRM_Core_Action::formLink($recurLinks, $action,
+        ['cid' => $row['contact_id'],
+          'id' => $row['id'],
+          'cxt' => 'contribution',
+        ]
+      );
+    }
+    else {
+      $row['action'] = '';
+    }
     // Refs #38855, Workaround for export error when there are NULL field.
     foreach ($row as $key => $value) {
       if ($value === NULL) {

@@ -42,7 +42,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['TradeInfo'], $paymentProcessor);
       // special case for credit card agreement
       // first contribution and follow contribution have diffrent merchant id
-      if (empty($post)) {
+      if (empty($post) || json_decode($post) === null) {
         $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
         $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
         $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $isTest ? 'test' : 'live');
@@ -109,7 +109,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       $post = CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($this->_post['Period'], $paymentProcessor);
       // special case for credit card agreement
       // first contribution and follow contribution have diffrent merchant id
-      if ($post === FALSE) {
+      if (empty($post) || json_decode($post) === null) {
         $sql = 'SELECT payment_processor_id FROM civicrm_contribution WHERE id = %1';
         $ppid = CRM_Core_DAO::singleValueQuery($sql, [1 => [$ids['contribution'], 'Integer']]);
         if (!empty($ppid)) {
