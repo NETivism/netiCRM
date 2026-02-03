@@ -340,16 +340,25 @@ class CRM_Utils_SqlParser {
       return;
     }
 
-    if (!empty($expression->column) && $context == 'select') {
-      $this->validateField($expression->column);
+    if (!empty($expression->column) && $context === 'select') {
+      // If it's a SQL function, validate the function; otherwise validate as field
+      if ($this->isSqlFunction($expression->column)) {
+        $this->validateSqlFunction($expression->column);
+      } else {
+        $this->validateField($expression->column);
+      }
     }
 
     if (!empty($expression->table)) {
       $this->validateTable($expression->table);
     }
 
+    // Only validate subqueries if expr is not a SQL function call
+    // This prevents treating function arguments (like "INTERVAL 1 DAY") as subqueries
     if (!empty($expression->expr) && $expression->subquery) {
-      $this->validateSubquery($expression->expr);
+      if (!$this->isSqlFunction($expression->expr)) {
+        $this->validateSubquery($expression->expr);
+      }
     }
   }
 
@@ -389,6 +398,12 @@ class CRM_Utils_SqlParser {
    */
   private function validateOperand(string $operand): void {
     if ($this->isLiteral($operand)) {
+      return;
+    }
+
+    // If it's a SQL function, validate the function and skip field validation
+    if ($this->isSqlFunction($operand)) {
+      $this->validateSqlFunction($operand);
       return;
     }
 
@@ -462,6 +477,102 @@ class CRM_Utils_SqlParser {
   }
 
   /**
+   * Check if string looks like a SQL function call
+   *
+   * @param string $value
+   * @return bool True if it matches function pattern (regardless of whether it's allowed)
+   */
+  private function isSqlFunction(string $value): bool {
+    $value = trim($value);
+    // Check if it matches function call pattern: NAME(
+    return preg_match('/^[A-Za-z_][A-Za-z0-9_]*\s*\(/', $value) === 1;
+  }
+
+  /**
+   * Validate SQL function against whitelist/blacklist
+   *
+   * Only allow safe, read-only SQL functions that cannot be used for:
+   * - System information disclosure
+   * - File operations
+   * - Data modification
+   * - Code execution
+   *
+   * @param string $value
+   * @return void Adds error if function is not allowed
+   */
+  private function validateSqlFunction(string $value): void {
+    $value = trim($value);
+
+    // Extract function name from the value
+    if (!preg_match('/^([A-Za-z_][A-Za-z0-9_]*)\s*\(/', $value, $matches)) {
+      return;
+    }
+
+    $functionName = strtoupper($matches[1]);
+
+    // Whitelist of allowed SQL functions (read-only, safe functions)
+    $allowedFunctions = [
+      // Aggregate functions
+      'COUNT', 'SUM', 'AVG', 'MAX', 'MIN', 'GROUP_CONCAT',
+
+      // Date and time functions
+      'NOW', 'CURDATE', 'CURTIME', 'DATE', 'TIME', 'YEAR', 'MONTH', 'DAY',
+      'HOUR', 'MINUTE', 'SECOND', 'DAYOFWEEK', 'DAYOFMONTH', 'DAYOFYEAR',
+      'WEEK', 'WEEKDAY', 'YEARWEEK', 'QUARTER', 'DATE_ADD', 'DATE_SUB',
+      'DATEDIFF', 'TIMESTAMPDIFF', 'DATE_FORMAT', 'STR_TO_DATE', 'UNIX_TIMESTAMP',
+      'FROM_UNIXTIME', 'LAST_DAY', 'MAKEDATE',
+
+      // String functions
+      'CONCAT', 'CONCAT_WS', 'SUBSTRING', 'SUBSTR', 'LEFT', 'RIGHT', 'LENGTH',
+      'CHAR_LENGTH', 'LOWER', 'UPPER', 'TRIM', 'LTRIM', 'RTRIM', 'REPLACE',
+      'REVERSE', 'REPEAT', 'SPACE', 'LPAD', 'RPAD', 'LOCATE', 'POSITION',
+      'INSTR', 'STRCMP', 'FIELD', 'FIND_IN_SET', 'ASCII', 'CHAR',
+
+      // Numeric functions
+      'ABS', 'CEIL', 'CEILING', 'FLOOR', 'ROUND', 'TRUNCATE', 'MOD', 'POW',
+      'POWER', 'SQRT', 'EXP', 'LN', 'LOG', 'LOG2', 'LOG10', 'PI', 'RAND',
+      'SIGN', 'DEGREES', 'RADIANS', 'SIN', 'COS', 'TAN', 'ASIN', 'ACOS', 'ATAN',
+
+      // Conditional functions
+      'IF', 'IFNULL', 'NULLIF', 'COALESCE', 'CASE',
+
+      // Conversion functions
+      'CAST', 'CONVERT',
+
+      // Other safe functions
+      'ISNULL', 'GREATEST', 'LEAST',
+    ];
+
+    // Blocked dangerous functions (explicitly blocked, even if somehow added to allowlist)
+    $blockedFunctions = [
+      // System/Database information functions (potential information disclosure)
+      'DATABASE', 'USER', 'CURRENT_USER', 'SESSION_USER', 'SYSTEM_USER', 'VERSION',
+      'CONNECTION_ID', 'SCHEMA', 'BENCHMARK',
+
+      // File operations (dangerous)
+      'LOAD_FILE', 'INTO_OUTFILE', 'INTO_DUMPFILE',
+
+      // Encryption/Hashing (could be used for attacks)
+      'ENCRYPT', 'PASSWORD', 'MD5', 'SHA', 'SHA1', 'SHA2',
+
+      // System execution (dangerous)
+      'SLEEP', 'GET_LOCK', 'RELEASE_LOCK',
+    ];
+
+    // First check if it's in the blocked list
+    if (in_array($functionName, $blockedFunctions, true)) {
+      $this->addError("SQL function '{$functionName}' is not allowed (blocked for security)");
+      return;
+    }
+
+    // Then check if it's in the allowed list
+    if (!in_array($functionName, $allowedFunctions, true)) {
+      $this->addError("SQL function '{$functionName}' is not in the allowed function list");
+      return;
+    }
+  }
+
+  /**
    * Check if string is a literal value (number, string, date)
    *
    * @param string $value
@@ -469,22 +580,22 @@ class CRM_Utils_SqlParser {
    */
   private function isLiteral(string $value): bool {
     $value = trim($value);
-    
+
     // Check for quoted strings
     if (preg_match('/^["\'].*["\']$/', $value)) {
       return true;
     }
-    
+
     // Check for numbers
     if (is_numeric($value)) {
       return true;
     }
-    
+
     // Check for date/timestamp literals
     if (preg_match('/^\d{4}-\d{2}-\d{2}/', $value)) {
       return true;
     }
-    
+
     return false;
   }
 

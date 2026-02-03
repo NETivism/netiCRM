@@ -134,16 +134,26 @@ cj("#checkavailability").click(function() {
 	  var contactUrl = {/literal}"{crmURL p='civicrm/ajax/cmsuser' h=0 q="qfKey=`$cmsQfKey`&ctrName=`$cmsCtrName`"}"{literal};
 	 
     cj.post(contactUrl,{ cms_name:cj("#cms_name").val() } ,function(data) {
-	    if ( data.name == "no") { // user name not available
+      // Handle rate limiting - silently hide message box
+      if (data.rate_limited === true) {
+        cj("#msgbox").removeClass().text('').fadeOut("fast");
+        return;
+      }
+
+	    if (data.name === "no") { // user name not available
 	      cj("#msgbox").fadeTo(200,0.1,function() {
           cj(this).html(notavailable).addClass('cmsmessagebox cmsmessagebox-error').fadeTo(900,1);
         });
 	    }
-      else {
+      else if (data.name === "yes") { // user name available
 	      cj("#msgbox").fadeTo(200,0.1,function() {
           cj(this).html(available).addClass('cmsmessagebox cmsmessagebox-success').fadeTo(900,1);
         });
-	    }	    
+	    }
+      else {
+        // Unknown response - hide message box
+        cj("#msgbox").removeClass().text('').fadeOut("fast");
+      }
 	  }, "json");
 	  lastName = cmsUserName;
   }
