@@ -3,11 +3,14 @@
 require_once('HTML/QuickForm/textarea.php');
 
 /**
- * HTML Quickform element for CKEditor 5 (Test Version)
+ * HTML Quickform element for CKEditor 5
  *
- * This is a minimal implementation to test QuickForm loading mechanism.
- * This file only validates that the QuickForm element can be loaded correctly
- * by the system. It does NOT integrate the actual CKEditor 5 library.
+ * CKEditor 5 is a modern WYSIWYG editor with modular architecture.
+ * This implementation uses self-hosted files from packages/ckeditor5/
+ * following the same pattern as CKEditor 4 for consistency.
+ *
+ * Installation: CKEditor 5 files are installed locally in packages/ckeditor5/
+ * Updates: Download new version and replace files in packages/ckeditor5/
  *
  * @author       netiCRM Development Team
  * @access       public
@@ -55,8 +58,8 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
   /**
    * Initialize CKEditor 5 on the textarea element
    *
-   * Loads CKEditor 5 via CDN and initializes ClassicEditor
-   * with basic configuration.
+   * Loads CKEditor 5 from local files (packages/ckeditor5/) and initializes
+   * ClassicEditor with configured plugins and toolbar.
    *
    * @access public
    * @return string HTML output
@@ -73,10 +76,10 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     // Render textarea element
     $html = parent::toHtml();
 
-    // Load CKEditor 5 CSS and JS only once
+    // Load CKEditor 5 assets only once (similar to CKEditor 4 pattern)
     if (empty($GLOBALS['civicrm_ckeditor5_assets'])) {
-      $html .= "\n" . '<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">' . "\n";
-      $html .= '<script src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>' . "\n";
+      $html .= "\n" . '<link rel="stylesheet" href="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.css?' . $config->ver . '">' . "\n";
+      $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>' . "\n";
       $GLOBALS['civicrm_ckeditor5_assets'] = TRUE;
     }
 
@@ -111,6 +114,7 @@ cj(function() {
   // Initialize CKEditor 5
   ClassicEditor
     .create(document.querySelector('#{$name}'), {
+      licenseKey: 'GPL',  // Use GPL license for open source projects
       plugins: [
         Essentials,
         Bold,
