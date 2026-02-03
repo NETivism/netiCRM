@@ -136,55 +136,56 @@ class CRM_Utils_System_Drupal8 {
    *   Array of name and mail values.
    * @param string $emailName
    *   Field label for the 'email'.
-   * @return @param array $errors
-   *   Errors.
+   * @return array $errors
+   *   Errors array with any validation messages.
    */
   public static function checkUserNameEmailExists(&$params, $emailName = 'email') {
-    // If we are given a name, let's check to see if it already exists.
+    $errors = [];
+
+    // Check username using Drupal's native validation.
     if (!empty($params['name'])) {
       $name = $params['name'];
 
-      if (function_exists('entity_create')) {
-        $user = entity_create('user');
-      }
-      else {
-        $user = \Drupal\user\Entity\User::create();
-      }
+      // Create a temporary user entity to leverage Drupal's validation rules.
+      $user = \Drupal\user\Entity\User::create();
       $user->setUsername($name);
 
-      // This checks for both username uniqueness and validity.
+      // Validate using Drupal's validation constraints.
+      // This checks format, length, special characters, and uniqueness.
       $violations = iterator_to_array($user->validate());
-      // We only care about violations on the username field; discard the rest.
+
+      // Filter violations related to username field only.
       $violations = array_values(array_filter($violations, function ($v) {
-        return $v->getPropertyPath() == 'name';
+        return $v->getPropertyPath() === 'name';
       }));
+
       if (count($violations) > 0) {
         $errors['cms_name'] = (string) $violations[0]->getMessage();
       }
     }
 
-    // And if we are given an email address, let's check to see if it already exists.
+    // Check email using Drupal's native validation.
     if (!empty($params['mail'])) {
       $mail = $params['mail'];
 
-      if (function_exists('entity_create')) {
-        $user = entity_create('user');
-      }
-      else {
-        $user = \Drupal\user\Entity\User::create();
-      }
+      // Create a temporary user entity to leverage Drupal's validation rules.
+      $user = \Drupal\user\Entity\User::create();
       $user->setEmail($mail);
 
-      // This checks for both email uniqueness.
+      // Validate using Drupal's validation constraints.
+      // This checks format and uniqueness.
       $violations = iterator_to_array($user->validate());
-      // We only care about violations on the email field; discard the rest.
+
+      // Filter violations related to email field only.
       $violations = array_values(array_filter($violations, function ($v) {
-        return $v->getPropertyPath() == 'mail';
+        return $v->getPropertyPath() === 'mail';
       }));
+
       if (count($violations) > 0) {
         $errors[$emailName] = (string) $violations[0]->getMessage();
       }
     }
+
     return $errors;
   }
 

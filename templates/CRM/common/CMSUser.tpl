@@ -47,7 +47,7 @@
       <div class="label" for="">{$form.cms_name.label}</div>
       <div class="content">
         {$form.cms_name.html}
-        {if $config->userFrameworkVersion < 8}<a id="checkavailability" href="#" onClick="return false;">{ts}<strong>Check Availability</strong>{/ts}</a>{/if}
+        <a id="checkavailability" href="#" onClick="return false;">{ts}<strong>Check Availability</strong>{/ts}</a>
         <div id="msgbox" style="display:none"></div>
         <div class="description">{ts}Your preferred username; punctuation is not allowed except for periods, hyphens, and underscores.{/ts}</div>
       </div>
@@ -94,7 +94,6 @@ function showMessage(frm){
   }
 }
 var lastName = null;
-{/literal}{if $config->userFrameworkVersion < 8}{literal}
 cj("#checkavailability").click(function() {
   var cmsUserName = cj.trim(cj("#cms_name").val());
   if ( lastName == cmsUserName) {
@@ -152,7 +151,6 @@ cj("#checkavailability").click(function() {
     cj("#msgbox").removeClass().text('').fadeIn("fast");
   }
 });
-{/literal}{/if}{*do not check user name on drupal9*}{literal}
 
 </script>
 {/literal}
