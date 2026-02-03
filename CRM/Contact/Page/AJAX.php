@@ -629,6 +629,15 @@ WHERE sort_name LIKE '%$name%'";
     */
 
   static public function checkUserName() {
+    // Rate limiting check BEFORE validation to prevent bypass via session
+    if (CRM_Utils_RateLimiter::isRateLimited('username_check')) {
+      echo json_encode(['name' => 'rate_limited', 'rate_limited' => TRUE]);
+      CRM_Utils_System::civiExit();
+    }
+
+    // Probabilistic cleanup of expired rate limit records
+    CRM_Utils_RateLimiter::cleanup('username_check');
+
     self::validate();
     $config = CRM_Core_Config::singleton();
     $username = $_POST['cms_name'];

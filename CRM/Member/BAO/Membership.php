@@ -846,7 +846,14 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
    * @access public
    */
   static function &importableFields($contactType = 'Individual', $status = TRUE) {
-    if (!self::$_importableFields) {
+    if (empty($contactType)) {
+      $contactType = 'Individual';
+    }
+
+    $cacheKeyString = __CLASS__.'::'.__FUNCTION__.'--'.$contactType;
+    $cacheKeyString .= $status ? "_1" : "_0";
+
+    if (!self::$_importableFields || !CRM_Utils_Array::value($cacheKeyString, self::$_importableFields)) {
       if (!self::$_importableFields) {
         self::$_importableFields = [];
       }
@@ -865,7 +872,7 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
       $optionFields = CRM_Core_OptionValue::getFields($mode = 'member');
 
       $contactFields = [];
-      $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contacType, NULL);
+      $tmpContactFields = CRM_Contact_BAO_Contact::importableFields($contactType, NULL);
       $tmpContactFields = CRM_Core_BAO_Address::validateAddressOptions($tmpContactFields);
       $contactFieldsIgnore = ['id', 'note', 'do_not_import', 'contact_sub_type', 'group_name', 'tag_name'];
 
@@ -895,9 +902,9 @@ INNER JOIN  civicrm_membership_type type ON ( type.id = membership.membership_ty
       $fields = array_merge($fields, $optionFields);
       $fields = array_merge($fields, $note);
       $fields = array_merge($fields, $contactFields);
-      self::$_importableFields = $fields;
+      self::$_importableFields[$cacheKeyString] = $fields;
     }
-    return self::$_importableFields;
+    return self::$_importableFields[$cacheKeyString];
   }
 
   /**

@@ -235,6 +235,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     $separateMode = $this->get('separateMode');
     $customHeaders = $this->get('customHeader');
     $customSearchID = $this->get('customSearchID');
+    $totalSelectedRecords = $this->get('totalSelectedRecords');
     if ($customSearchID) {
       $customSearchClass = $this->get('customSearchClass');
       $primaryIDName = '';
@@ -245,7 +246,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
         'customSearchClass' => $this->get('customSearchClass'),
         'formValues' => $this->get('formValues'),
         'order' => $this->get(CRM_Utils_Sort::SORT_ORDER),
-        'pirmaryIDName' => $primaryIDName,
+        'primaryIDName' => $primaryIDName,
+        'selectedRecordsCount' => $totalSelectedRecords,
       ];
       // If select fields is empty, than only export custom search result table.
       $isSelectorEmpty = TRUE;

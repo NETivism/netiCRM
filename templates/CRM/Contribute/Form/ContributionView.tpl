@@ -341,6 +341,38 @@
         		<td class="label">{ts}Fulfilled{/ts}</td>
         		<td>{$fulfilled|truncate:10:''|crmDate}</td>
         	</tr>
+        	{if $stock_logs}
+        	<tr>
+        		<td class="label">{ts}Stock Log{/ts}</td>
+        		<td>
+        			<div class="stock-log-entries">
+        			{foreach from=$stock_logs item=log_group}
+        				<div class="stock-log-group" style="margin-bottom: 8px;">
+        					<strong>{$log_group.modified_date|crmDate}</strong>
+        					{if $log_group.modified_by}
+        						<span class="stock-log-modifier">({$log_group.modified_by})</span>
+        					{/if}
+        					<br/>
+        					{foreach from=$log_group.entries item=entry}
+        						<span class="stock-log-entry stock-log-{$entry.type}">
+        							{if $entry.type eq 'deduct'}
+        								{ts 1=$entry.product_name 2=$entry.quantity}Deduct premium: %1x%2{/ts}
+        							{else}
+        								{ts 1=$entry.product_name 2=$entry.quantity}Restock premium: %1x%2{/ts}
+        							{/if}
+        						</span>
+        						<br/>
+        					{/foreach}
+        					{if $log_group.reason}
+        						<span class="stock-log-reason">({ts}Reason{/ts}: {$log_group.reason})</span>
+        						<br/>
+        					{/if}
+        				</div>
+        			{/foreach}
+        			</div>
+        		</td>
+        	</tr>
+        	{/if}
         </table>
         </div>
     </div>

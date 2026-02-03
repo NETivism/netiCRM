@@ -150,5 +150,90 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
     $premium->id = $productID;
     $premium->delete();
   }
+
+  /**
+   * Get stock logs for a specific product
+   *
+   * @param int $productId The product ID
+   * @param int $limit Number of records to return (0 = unlimited)
+   * @param int $offset Starting offset for pagination
+   *
+   * @return array Array of stock log entries
+   */
+  public static function getStockLogsByProductId($productId, $limit = 0, $offset = 0) {
+    $logs = [];
+
+    $sql = "
+      SELECT l.id, l.entity_id, l.data, l.modified_date, l.modified_id,
+             c.display_name as modified_by
+      FROM civicrm_log l
+      LEFT JOIN civicrm_contact c ON l.modified_id = c.id
+      WHERE l.entity_table = 'civicrm_product'
+        AND l.entity_id = %1
+      ORDER BY l.modified_date DESC
+    ";
+
+    $params = [1 => [$productId, 'Integer']];
+
+    if ($limit > 0) {
+      $sql .= " LIMIT %2";
+      $params[2] = [$limit, 'Integer'];
+      if ($offset > 0) {
+        $sql .= " OFFSET %3";
+        $params[3] = [$offset, 'Integer'];
+      }
+    }
+
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+
+    while ($dao->fetch()) {
+      $parsed = self::parseStockLogData($dao->data);
+
+      if ($parsed === FALSE) {
+        continue;
+      }
+
+      $logs[] = [
+        'id' => $dao->id,
+        'modified_date' => $dao->modified_date,
+        'modified_by' => $dao->modified_by ?: '',
+        'type' => $parsed['type'],
+        'quantity' => $parsed['quantity'],
+        'contribution_id' => $parsed['contribution_id'],
+        'reason' => $parsed['reason'],
+      ];
+    }
+
+    return $logs;
+  }
+
+  /**
+   * Parse stock log data string
+   *
+   * @param string $data The data string from civicrm_log.data
+   *
+   * @return array|false Array with 'type', 'quantity', 'contribution_id', 'reason' or FALSE
+   */
+  private static function parseStockLogData($data) {
+    // Pattern: {sign}{quantity}::{contribution_id}::{reason}
+    if (!preg_match('/^([+-])(\d+)::(\d+)::(.*)$/s', $data, $matches)) {
+      return FALSE;
+    }
+
+    $sign = $matches[1];
+    $quantity = (int)$matches[2];
+    $contributionId = (int)$matches[3];
+    $reason = trim($matches[4]);
+
+    // Clean up reason - remove "via contribution ID XXX" suffix
+    $reason = preg_replace('/\s*via contribution ID \d+$/i', '', $reason);
+
+    return [
+      'type' => ($sign === '-') ? 'deduct' : 'restock',
+      'quantity' => $quantity,
+      'contribution_id' => $contributionId,
+      'reason' => $reason,
+    ];
+  }
 }
 

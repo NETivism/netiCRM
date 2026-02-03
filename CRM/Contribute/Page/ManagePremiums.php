@@ -83,6 +83,12 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
           'ref' => 'disable-action',
           'title' => ts('Disable Premium'),
         ],
+        CRM_Core_Action::BROWSE => [
+          'name' => ts('Stock Log'),
+          'url' => 'civicrm/admin/contribute/premium/stockLog',
+          'qs' => 'product_id=%%id%%&reset=1',
+          'title' => ts('View Stock Log'),
+        ],
         CRM_Core_Action::ENABLE => [
           'name' => ts('Enable'),
           'extra' => 'onclick = "enableDisable( %%id%%,\'' . 'CRM_Contribute_BAO_ManagePremiums' . '\',\'' . 'disable-enable' . '\' );"',
@@ -170,6 +176,11 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
       }
       else {
         $action -= CRM_Core_Action::DISABLE;
+      }
+
+      // Only show Stock Log link if stock management is enabled
+      if (empty($dao->stock_status)) {
+        $action -= CRM_Core_Action::BROWSE;
       }
 
       $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
