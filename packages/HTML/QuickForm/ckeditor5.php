@@ -53,10 +53,10 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
   }
 
   /**
-   * Render the textarea with a visual indicator for testing
+   * Initialize CKEditor 5 on the textarea element
    *
-   * This test version renders a normal textarea with a green banner
-   * to confirm that the CKEditor5 QuickForm element is being loaded.
+   * Loads CKEditor 5 via CDN and initializes ClassicEditor
+   * with basic configuration.
    *
    * @access public
    * @return string HTML output
@@ -67,24 +67,91 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
       return $this->getFrozenHtml();
     }
 
-    // Render normal textarea (maintains form functionality)
+    $config = CRM_Core_Config::singleton();
+    $name = $this->getAttribute('name');
+
+    // Render textarea element
     $html = parent::toHtml();
 
-    // Add visual indicator for testing purposes
-    $name = $this->getAttribute('name');
-    $html .= '
-<div style="border: 2px solid #4CAF50; background: #E8F5E9; padding: 12px; margin: 10px 0; border-radius: 4px; font-family: sans-serif;">
-  <strong style="color: #2E7D32; font-size: 14px;">✓ CKEditor 5 QuickForm Element Loaded Successfully</strong>
-  <p style="margin: 8px 0 0 0; font-size: 13px; color: #555; line-height: 1.5;">
-    <strong>Test Information:</strong><br>
-    • Textarea ID: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">' . htmlspecialchars($name) . '</code><br>
-    • Class Name: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">HTML_QuickForm_CKEditor5</code><br>
-    • File Path: <code style="background: #fff; padding: 2px 6px; border-radius: 3px;">/civicrm/packages/HTML/QuickForm/ckeditor5.php</code>
-  </p>
-  <p style="margin: 8px 0 0 0; font-size: 12px; color: #666; font-style: italic;">
-    ℹ️ Currently in "QuickForm Loading Mechanism Test" phase. The actual CKEditor 5 library is NOT integrated yet.
-  </p>
-</div>';
+    // Load CKEditor 5 CSS and JS only once
+    if (empty($GLOBALS['civicrm_ckeditor5_assets'])) {
+      $html .= "\n" . '<link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.css">' . "\n";
+      $html .= '<script src="https://cdn.ckeditor.com/ckeditor5/43.3.1/ckeditor5.umd.js"></script>' . "\n";
+      $GLOBALS['civicrm_ckeditor5_assets'] = TRUE;
+    }
+
+    // Initialize CKEditor 5 ClassicEditor
+    $html .= "<script type='text/javascript'>
+cj(function() {
+  // Check if already processed
+  if (cj('#{$name}').hasClass('ckeditor5-processed')) {
+    return;
+  }
+  cj('#{$name}').addClass('ckeditor5-processed');
+
+  // Destructure required classes from CKEDITOR global
+  const {
+    ClassicEditor,
+    Essentials,
+    Bold,
+    Italic,
+    Underline,
+    Strikethrough,
+    Paragraph,
+    Heading,
+    Link,
+    List,
+    Alignment,
+    Font,
+    RemoveFormat,
+    SourceEditing,
+    Undo
+  } = CKEDITOR;
+
+  // Initialize CKEditor 5
+  ClassicEditor
+    .create(document.querySelector('#{$name}'), {
+      plugins: [
+        Essentials,
+        Bold,
+        Italic,
+        Underline,
+        Strikethrough,
+        Paragraph,
+        Heading,
+        Link,
+        List,
+        Alignment,
+        Font,
+        RemoveFormat,
+        SourceEditing,
+        Undo
+      ],
+      toolbar: [
+        'undo', 'redo', '|',
+        'heading', '|',
+        'bold', 'italic', 'underline', 'strikethrough', '|',
+        'link', '|',
+        'bulletedList', 'numberedList', '|',
+        'alignment', '|',
+        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+        'removeFormat', '|',
+        'sourceEditing'
+      ],
+      height: '{$this->height}px'
+    })
+    .then(editor => {
+      console.log('CKEditor 5 initialized successfully for #{$name}');
+      // Prevent form navigation on key press
+      editor.model.document.on('change:data', () => {
+        global_formNavigate = false;
+      });
+    })
+    .catch(error => {
+      console.error('CKEditor 5 initialization failed:', error);
+    });
+});
+</script>";
 
     return $html;
   }
