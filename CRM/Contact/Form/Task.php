@@ -175,7 +175,10 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       $fv = $form->get('formValues');
       $customClass = $form->get('customSearchClass');
 
-      $returnProperties = CRM_Core_BAO_Mapping::returnProperties($values);
+      // Get returnProperties from session to ensure consistent column headers with search page
+      // We always use returnProperties from session (even if NULL) to maintain consistency with the search page.
+      // NULL means use default column headers.
+      $returnProperties = $form->get('returnProperties');
       $selector = new $selectorName($customClass, $fv, NULL, $returnProperties);
 
       $params = $form->get('queryParams');
