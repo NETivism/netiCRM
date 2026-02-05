@@ -397,32 +397,10 @@ class CRM_Utils_MCP {
     $entity = $parts[0];
     $action = $parts[1];
     
-    // Handle special entity names
-    switch ($entity) {
-      case 'contributionrecur':
-        $entity = 'ContributionRecur';
-        break;
-      default:
-        // Capitalize first letter for proper API entity name
-        $entity = ucfirst($entity);
-        break;
-    }
     
     // Map tool action to API action
     $apiAction = '';
     switch ($action) {
-      case 'search':
-        $apiAction = 'get';
-        break;
-      case 'create':
-        $apiAction = 'create';
-        break;
-      case 'update':
-        $apiAction = 'update';
-        break;
-      case 'delete':
-        $apiAction = 'delete';
-        break;
       case 'query':
         $apiAction = 'query';
         break;
@@ -432,40 +410,15 @@ class CRM_Utils_MCP {
     
     // Check REST API permissions based on action
     $permissionRequired = '';
-    if (in_array($apiAction, ['create'])) {
-      $permissionRequired = 'API create';
-    }
-    elseif (in_array($apiAction, ['update'])) {
-      $permissionRequired = 'API update';
-    }
-    elseif (in_array($apiAction, ['delete'])) {
-      $permissionRequired = 'API delete';
-    }
-    elseif (in_array($apiAction, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
-      $permissionRequired = 'API search';
-    }
-    elseif (in_array($apiAction, ['query'])) {
+    if (in_array($apiAction, ['query'])) {
       $permissionRequired = 'MCP query';
     }
     
     // Check REST API permission if required
-    if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
-      return FALSE;
+    if (!empty($permissionRequired) && CRM_Core_Permission::check($permissionRequired)) {
+      return TRUE;
     }
 
-    // Check standard API permissions using the permission checking function
-    if (!empty($entity) && !empty($apiAction)) {
-      try {
-        require_once 'api/v3/utils.php';
-        $emptyParams = [];
-        _civicrm_api3_api_check_permission($entity, $apiAction, $emptyParams, TRUE);
-        return TRUE;
-      }
-      catch (Exception $e) {
-        return FALSE;
-      }
-    }
-    
     return FALSE;
   }
 
@@ -729,39 +682,6 @@ class CRM_Utils_MCP {
     
     $tools = [
       [
-        'name' => 'contact_search',
-        'description' => 'Search contacts using various filters. Available searchable fields: ' . implode(', ', array_keys($contactSearchableFields)) . '. To specify which fields to return: use return.<field_name> (e.g., return.total_amount) for individual fields, or use "return" parameter with comma-separated field names (e.g., "display_name,email,phone"). Field names alone are used for filtering.',
-        'inputSchema' => [
-          'type' => 'object',
-          'properties' => $this->generateInputSchemaProperties('contact', [
-            'contact_type' => ['type' => 'string', 'description' => 'Contact type (Individual, Organization, Household)'],
-            'display_name' => ['type' => 'string', 'description' => 'Contact display name'],
-            'first_name' => ['type' => 'string', 'description' => 'First name'],
-            'last_name' => ['type' => 'string', 'description' => 'Last name'],
-            'email' => ['type' => 'string', 'description' => 'Email address'],
-            'phone' => ['type' => 'string', 'description' => 'Phone number'],
-            'external_identifier' => ['type' => 'string', 'description' => 'External identifier'],
-            'id' => ['type' => 'integer', 'description' => 'Contact ID']
-          ])
-        ]
-      ],
-      [
-        'name' => 'contribution_search',
-        'description' => 'Search contributions using various filters. Available searchable fields: ' . implode(', ', array_keys($contributionSearchableFields)) . '. To specify which fields to return: use return.<field_name> (e.g., return.total_amount) for individual fields, or use "return" parameter with comma-separated field names (e.g., "total_amount,contact_id,receive_date"). Field names alone are used for filtering.',
-        'inputSchema' => [
-          'type' => 'object',
-          'properties' => $this->generateInputSchemaProperties('contribution', [
-            'contact_id' => ['type' => 'integer', 'description' => 'Contact ID'],
-            'contribution_type_id' => ['type' => 'integer', 'description' => 'Contribution type ID'],
-            'contribution_status_id' => ['type' => 'integer', 'description' => 'Contribution status ID'],
-            'payment_instrument_id' => ['type' => 'integer', 'description' => 'Payment instrument ID'],
-            'receive_date' => ['type' => 'string', 'description' => 'Receive date (YYYY-MM-DD)'],
-            'total_amount' => ['type' => 'number', 'description' => 'Total amount'],
-            'id' => ['type' => 'integer', 'description' => 'Contribution ID']
-          ])
-        ]
-      ],
-      [
         'name' => 'contact_query',
         'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
         'inputSchema' => [
@@ -814,68 +734,12 @@ class CRM_Utils_MCP {
     }
     
     switch ($toolName) {
-      case 'contact_search':
-        return $this->handleContactSearch($arguments, $id);
-      case 'contribution_search':
-        return $this->handleContributionSearch($arguments, $id);
       case 'contact_query':
       case 'contribution_query':
         return $this->handleMCPQuery($arguments, $id);
-      case 'civicrm_api':
-        return $this->handleGenericApi($arguments, $id);
       default:
         return $this->error(-32601, 'Unknown tool: ' . $toolName, $id);
     }
-  }
-
-  /**
-   * Handle contact search
-   */
-  private function handleContactSearch($arguments, $id) {
-    $apiParams = [];
-    $fields = ['contact_type', 'display_name', 'first_name', 'last_name', 'email', 'phone', 'external_identifier', 'id', 'limit', 'offset', 'sort'];
-    foreach ($fields as $field) {
-      if (isset($arguments[$field])) {
-        $apiParams[$field] = $arguments[$field];
-      }
-    }
-    
-    $apiParams['return.id'] = 1;
-    $apiParams['return.contact_type'] = 1;
-    $apiParams['return.employer_id'] = 1;
-    $apiParams['return.birth_date'] = 1;
-    $apiParams['return.prefix_id'] = 1;
-    $apiParams['return.suffix_id'] = 1;
-    $apiParams['return.gender_id'] = 1;
-    $apiParams['return.job_title'] = 1;
-    $apiParams['return.created_date'] = 1;
-    $apiParams['return.modified_date'] = 1;
-    return $this->executeApiCall('Contact', 'get', $apiParams, $id);
-  }
-
-  /**
-   * Handle contribution search
-   */
-  private function handleContributionSearch($arguments, $id) {
-    $apiParams = [];
-    $fields = ['contact_id', 'contribution_type_id', 'contribution_status_id', 'payment_instrument_id', 'receive_date', 'total_amount', 'id', 'limit', 'offset', 'sort'];
-    foreach ($fields as $field) {
-      if (isset($arguments[$field])) {
-        $apiParams[$field] = $arguments[$field];
-      }
-    }
-    $apiParams['return.contact_id'] = 1;
-    $apiParams['return.contribution_page_id'] = 1;
-    $apiParams['return.contribution_type_id'] = 1;
-    $apiParams['return.contribution_recurring_id'] = 1;
-    $apiParams['return.contribution_status_id'] = 1;
-    $apiParams['return.amount_level'] = 1;
-    $apiParams['return.payment_instrument_id'] = 1;
-    $apiParams['return.currency'] = 1;
-    $apiParams['return.total_amount'] = 1;
-    $apiParams['return.receive_date'] = 1;
-    $results = $this->executeApiCall('Contribution', 'get', $apiParams, $id);
-    return $results;
   }
 
   private function handleMCPQuery($arguments, $id) {
@@ -913,96 +777,6 @@ class CRM_Utils_MCP {
       ],
       'id' => $id
     ];
-  }
-
-  /**
-   * Handle generic API calls
-   */
-  private function handleGenericApi($arguments, $id) {
-    $entity = $arguments['entity'] ?? '';
-    $action = $arguments['action'] ?? '';
-    $apiParams = $arguments['params'] ?? [];
-    
-    if (!$entity || !$action) {
-      return $this->error(-32602, 'Invalid params: entity and action required', $id);
-    }
-    
-    // Restrict to read-only actions only
-    $allowedActions = ['get', 'getoptions'];
-    if (!in_array(strtolower($action), $allowedActions)) {
-      return $this->error(-32000, 'Only read-only actions are allowed: ' . implode(', ', $allowedActions), $id);
-    }
-    
-    return $this->executeApiCall($entity, $action, $apiParams, $id);
-  }
-
-  /**
-   * Execute CiviCRM API call
-   */
-  private function executeApiCall($entity, $action, $apiParams, $id) {
-    // Use existing API processing from REST class
-    $args = ['civicrm', $entity, $action];
-    $apiParams['version'] = 3;
-    $apiParams['sequential'] = 1;
-    
-    // Handle options parameter for pagination and sorting
-    $options = [];
-    if (isset($apiParams['limit'])) {
-      $options['limit'] = min((int)$apiParams['limit'], 100); // Max 100 results
-      unset($apiParams['limit']);
-    }
-    if (isset($apiParams['offset'])) {
-      $options['offset'] = (int)$apiParams['offset'];
-      unset($apiParams['offset']);
-    }
-    if (isset($apiParams['sort'])) {
-      $options['sort'] = $apiParams['sort'];
-      unset($apiParams['sort']);
-    }
-    
-    // Add options to API params if any are set
-    if (!empty($options)) {
-      $apiParams['options'] = $options;
-    }
-    
-    try {
-      $result = CRM_Utils_REST::process($args, $apiParams);
-      
-      // Check if API call was successful
-      $isError = false;
-      if (isset($result['is_error']) && $result['is_error']) {
-        $isError = true;
-      }
-      
-      return [
-        'jsonrpc' => '2.0',
-        'result' => [
-          'content' => [
-            [
-              'type' => 'text',
-              'text' => json_encode($result)
-            ]
-          ],
-          'isError' => $isError
-        ],
-        'id' => $id
-      ];
-    }
-    catch (Exception $e) {
-      return [
-        'jsonrpc' => '2.0',
-        'result' => [
-          'content' => [
-            [
-              'type' => 'text',
-              'text' => 'Error: ' . $e->getMessage()
-            ]
-          ],
-          'isError' => true
-        ],
-        'id' => $id
-      ];
-    }
   }
 
   /**
