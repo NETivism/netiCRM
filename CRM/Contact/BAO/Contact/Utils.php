@@ -128,7 +128,7 @@ WHERE  id IN ( $idString )
    * @static
    * @access public
    */
-  static function generateChecksum($contactID, $ts = NULL, $live = NULL) {
+  public static function generateChecksum($contactID, $ts = NULL, $live = NULL) {
     $hash = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
       $contactID, 'hash'
     );
@@ -150,6 +150,88 @@ WHERE  id IN ( $idString )
 
     $cs = md5("{$hash}_{$contactID}_{$ts}_{$live}");
     return "{$cs}_{$ts}_{$live}";
+  }
+
+  /**
+   * Generate API Key for a contact
+   *
+   * Checks if the contact already has an API key. If not, generates a new 32-character
+   * API key using bin2hex(random_bytes(16)) and updates the contact record.
+   *
+   * @param int $contactId The contact ID
+   *
+   * @return string|null The API key (existing or newly generated), or NULL if contact not found
+   * @access public
+   * @static
+   */
+  public static function generateAPIKey($contactId) {
+    if (!$contactId) {
+      return NULL;
+    }
+
+    // Retrieve the contact to check if api_key already exists
+    $contact = new CRM_Contact_DAO_Contact();
+    $contact->id = $contactId;
+    $contact->selectAdd();
+    $contact->selectAdd('api_key');
+
+    if (!$contact->find(TRUE)) {
+      return NULL;
+    }
+
+    // Check if api_key already has a value
+    if (!empty($contact->api_key)) {
+      return $contact->api_key;
+    }
+
+    // Generate new 32-character API key
+    $apiKey = bin2hex(random_bytes(16));
+
+    // Update the contact with the new API key
+    $contact->api_key = $apiKey;
+    $contact->save();
+
+    return $apiKey;
+  }
+
+
+  /**
+   * Generate API checksum for MCP authentication
+   *
+   * Generates a SHA256 checksum using the site key, contact hash, and API key.
+   * This checksum is used for validating MCP (Model Context Protocol) requests.
+   *
+   * @param int $contactId The contact ID
+   *
+   * @return string|null The generated checksum, or NULL if contact not found or missing required fields
+   * @access public
+   * @static
+   */
+  public static function generateAPIChecksum($contactId) {
+    $siteKey = defined('CIVICRM_SITE_KEY') ? CIVICRM_SITE_KEY : NULL;
+    if (!$contactId || !$siteKey) {
+      return NULL;
+    }
+
+    // Retrieve the contact to get hash and api_key
+    $contact = new CRM_Contact_DAO_Contact();
+    $contact->id = $contactId;
+    $contact->selectAdd();
+    $contact->selectAdd('hash, api_key');
+
+    if (!$contact->find(TRUE)) {
+      return NULL;
+    }
+
+    // Ensure both hash and api_key exist
+    if (empty($contact->hash) || empty($contact->api_key)) {
+      return NULL;
+    }
+
+    // Generate SHA256 checksum
+    $checksum = hash('sha256', $siteKey . $contact->hash . $contact->api_key);
+
+    return $checksum;
   }
 
   /**
