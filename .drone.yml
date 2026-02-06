@@ -179,7 +179,7 @@ depends_on:
 ---
 kind: pipeline
 type: docker
-name: php82-d10
+name: php83-d10
 
 steps:
 - name: submodules
@@ -191,7 +191,7 @@ steps:
   - cd drupal && git checkout 10.x-$MAIN_BRANCH && git pull && cd ..
   - cd neticrm && git checkout 10.x-$MAIN_BRANCH && git pull && cd ..
 - name: neticrm ci php 8 drupal 10
-  image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php82-d10
+  image: rg.netivism.com.tw/netivism/docker-neticrm-ci:drone-php83-d10
   pull: always
   environment:
     DRUPAL: "10"
@@ -291,4 +291,4 @@ steps:
 depends_on:
 - php7
 - php8
-- php82-d10
+- php83-d10
