@@ -1455,16 +1455,22 @@ LIMIT 0, 100
 
           // update status
           if (strtolower($data->card_info->token_status) !== 'active') {
-            $tokenStatus = strtolower($data->card_info->token_status);
-            $params = [
-              'id' => $dao->contribution_recur_id,
-              'contribution_status_id' => 7, // suspend
-              'auto_renew' => 9,
-              'message' => ts("The recurring have been suspended due to TapPay Notify token status is %1.", [1 => $tokenStatus]),
-            ];
-            CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
-            $noteTitle = ts('TapPay Payment').': '.ts('Credit Card Information').' '.ts('updated');
-            CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $noteTitle, $params['message']);
+            // Get current recur status
+            $currentStatusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $dao->contribution_recur_id, 'contribution_status_id');
+
+            // Only suspend if current status is In Progress
+            if ($currentStatusId == 5) {
+              $tokenStatus = strtolower($data->card_info->token_status);
+              $params = [
+                'id' => $dao->contribution_recur_id,
+                'contribution_status_id' => 7, // suspend
+                'auto_renew' => 9,
+                'message' => ts("The recurring have been suspended due to TapPay Notify token status is %1.", [1 => $tokenStatus]),
+              ];
+              CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
+              $noteTitle = ts('TapPay Payment').': '.ts('Credit Card Information').' '.ts('updated');
+              CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $noteTitle, $params['message']);
+            }
             break;
           }
           elseif ($expiryDate != $dao->expiry_date  && strtotime($expiryDate ) > strtotime($dao->expiry_date)) {
