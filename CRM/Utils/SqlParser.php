@@ -119,6 +119,31 @@ class CRM_Utils_SqlParser {
         }
       }
     }
+
+    $this->collectConditionSubqueryAliases($statement->where);
+    $this->collectConditionSubqueryAliases($statement->having);
+  }
+
+  /**
+   * Collect subquery aliases from condition arrays (WHERE, HAVING)
+   *
+   * @param array|null $conditions
+   */
+  private function collectConditionSubqueryAliases(?array $conditions): void {
+    if (empty($conditions)) {
+      return;
+    }
+
+    foreach ($conditions as $condition) {
+      if ($condition instanceof Condition && !$condition->isOperator) {
+        if (is_string($condition->expr)) {
+          $subquery = $this->extractSubquery($condition->expr);
+          if ($subquery !== null) {
+            $this->collectSubqueryAliases($subquery);
+          }
+        }
+      }
+    }
   }
 
   /**
@@ -279,6 +304,12 @@ class CRM_Utils_SqlParser {
         }
       }
     }
+
+    if ($statement->having) {
+      foreach ($statement->having as $condition) {
+        $this->validateCondition($condition);
+      }
+    }
   }
 
   /**
@@ -372,10 +403,26 @@ class CRM_Utils_SqlParser {
       return;
     }
 
+    // Check if condition contains a subquery (e.g., IN (SELECT ...))
     if (!empty($condition->expr)) {
-      foreach ($condition->expr as $expression) {
-        if ($expression instanceof Expression) {
-          $this->validateExpression($expression, 'condition');
+      if (is_string($condition->expr)) {
+        $subquery = $this->extractSubquery($condition->expr);
+        if ($subquery !== null) {
+          // Validate left operand against outer query allowlist
+          if (!empty($condition->leftOperand)) {
+            $this->validateOperand($condition->leftOperand);
+          }
+          // Validate subquery independently
+          $this->validateSubquery($subquery);
+          return;
+        }
+      }
+
+      if (is_array($condition->expr)) {
+        foreach ($condition->expr as $expression) {
+          if ($expression instanceof Expression) {
+            $this->validateExpression($expression, 'condition');
+          }
         }
       }
     }
@@ -431,6 +478,43 @@ class CRM_Utils_SqlParser {
         $this->addError("Subquery error: {$error}");
       }
     }
+  }
+
+  /**
+   * Extract subquery SQL from a condition expression string
+   *
+   * Detects patterns like: IN (SELECT ...), EXISTS (SELECT ...), etc.
+   *
+   * @param string $expr
+   * @return string|null The subquery SQL without outer parentheses, or null
+   */
+  private function extractSubquery(string $expr): ?string {
+    $pos = stripos($expr, 'SELECT');
+    if ($pos === false) {
+      return null;
+    }
+
+    // Find the opening parenthesis before SELECT
+    $parenStart = strrpos(substr($expr, 0, $pos), '(');
+    if ($parenStart === false) {
+      return null;
+    }
+
+    // Match balanced parentheses from parenStart
+    $depth = 0;
+    $len = strlen($expr);
+    for ($i = $parenStart; $i < $len; $i++) {
+      if ($expr[$i] === '(') {
+        $depth++;
+      } elseif ($expr[$i] === ')') {
+        $depth--;
+        if ($depth === 0) {
+          return substr($expr, $parenStart + 1, $i - $parenStart - 1);
+        }
+      }
+    }
+
+    return null;
   }
 
   /**

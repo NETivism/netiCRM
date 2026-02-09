@@ -753,12 +753,18 @@ class CRM_Utils_MCP {
     $parser = new CRM_Utils_SqlParser($arguments['query'], $allowlist);
     $isError = FALSE;
     if ($parser->isValid()) {
-      $sql = $parser->getQuery(TRUE);
-      $dbo = CRM_Core_DAO::initReadonly();
-      $sth = $dbo->prepare($sql);
-      $sth->execute();
-      $results = $sth->fetchAll();
-
+      try {
+        $sql = $parser->getQuery(TRUE);
+        $dbo = CRM_Core_DAO::initReadonly();
+        $sth = $dbo->prepare($sql);
+        $sth->execute();
+        $results = $sth->fetchAll();
+      }
+      catch (\Exception $e) {
+        CRM_Core_Error::debug_log_message('MCP query error: ' . $e->getMessage());
+        $results = ['Query execution failed.'];
+        $isError = TRUE;
+      }
     }
     else {
       $results = $parser->getErrors();
