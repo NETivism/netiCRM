@@ -77,12 +77,8 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     // Render textarea element
     $html = parent::toHtml();
 
-    // Load CKEditor 5 assets only once (similar to CKEditor 4 pattern)
-    if (empty($GLOBALS['civicrm_ckeditor5_assets'])) {
-      $html .= "\n" . '<link rel="stylesheet" href="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.css?' . $config->ver . '">' . "\n";
-      $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>' . "\n";
-      $GLOBALS['civicrm_ckeditor5_assets'] = TRUE;
-    }
+    $html .= "\n" . '<link rel="stylesheet" href="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.css?' . $config->ver . '">' . "\n";
+    $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>' . "\n";
 
     // Initialize CKEditor 5 ClassicEditor
     $html .= "<script type='text/javascript'>
