@@ -113,6 +113,8 @@ cj(function() {
     Font,
     RemoveFormat,
     SourceEditing,
+    FullPage,
+    GeneralHtmlSupport,
     Undo
   } = CKEDITOR;
 
@@ -134,6 +136,8 @@ cj(function() {
         Font,
         RemoveFormat,
         SourceEditing,
+        FullPage,
+        GeneralHtmlSupport,
         Undo
       ],
       toolbar: [
@@ -147,6 +151,16 @@ cj(function() {
         'removeFormat', '|',
         'sourceEditing'
       ],
+      htmlSupport: {
+        allow: [
+          {
+            name: /^(html|head|body|title|meta|style|script|div|span|p|h[1-6]|table|thead|tbody|tr|td|th|ul|ol|li|a|img|br|hr)$/,
+            attributes: true,
+            classes: true,
+            styles: true
+          }
+        ]
+      },
       height: '{$this->height}px'
     })
     .then(editor => {
