@@ -72,6 +72,7 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
 
     $config = CRM_Core_Config::singleton();
     $name = $this->getAttribute('name');
+    $elementId = $this->getAttribute('id');
 
     // Render textarea element
     $html = parent::toHtml();
@@ -86,11 +87,19 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     // Initialize CKEditor 5 ClassicEditor
     $html .= "<script type='text/javascript'>
 cj(function() {
-  // Check if already processed
-  if (cj('#{$name}').hasClass('ckeditor5-processed')) {
+  // Get element by id (preferred) or name (fallback)
+  var element = " . ($elementId ? "document.getElementById('{$elementId}')" : "document.getElementsByName('{$name}')[0]") . ";
+
+  if (!element) {
+    console.error('CKEditor 5: Element not found');
     return;
   }
-  cj('#{$name}').addClass('ckeditor5-processed');
+
+  // Check if already processed
+  if (cj(element).hasClass('ckeditor5-processed')) {
+    return;
+  }
+  cj(element).addClass('ckeditor5-processed');
 
   // Destructure required classes from CKEDITOR global
   const {
@@ -113,7 +122,7 @@ cj(function() {
 
   // Initialize CKEditor 5
   ClassicEditor
-    .create(document.querySelector('#{$name}'), {
+    .create(element, {
       licenseKey: 'GPL',  // Use GPL license for open source projects
       plugins: [
         Essentials,
@@ -145,7 +154,7 @@ cj(function() {
       height: '{$this->height}px'
     })
     .then(editor => {
-      console.log('CKEditor 5 initialized successfully for #{$name}');
+      console.log('CKEditor 5 initialized successfully for element:', element.id || element.name);
       // Prevent form navigation on key press
       editor.model.document.on('change:data', () => {
         global_formNavigate = false;
