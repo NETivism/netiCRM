@@ -327,6 +327,9 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       $statusId = $runningStatus;
     }
     $session = CRM_Core_Session::singleton();
+    if (php_sapi_name() === 'cli') {
+      $session->set('userID', NULL);
+    }
     $currentContact = $session->get('userID');
     $params = [
       'name' => 'batch-'.date('YmdHis').'.'.mt_rand(1,100),
