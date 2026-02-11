@@ -165,34 +165,16 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
   }
 
   /**
-   * Load both CKEditor 4 and CKEditor 5 with namespace swapping
+   * Prepare editor switcher - CKE5 is loaded by ckeditor5.php, CKE4 will be loaded dynamically
    * This enables dynamic switching between editors for testing compatibility
    *
    * @return void
    * @access private
    */
   private function loadBothEditors() {
-    $config = CRM_Core_Config::singleton();
-
-    // Load both editors with namespace swapping to avoid global variable conflict
-    $editorScripts = '
-    <script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>
-    <script type="text/javascript">
-      if (window.CKEDITOR) {
-        window.CKEDITOR_5 = window.CKEDITOR;
-        window.CKEDITOR = undefined;
-        console.log("✅ Namespace swapping complete: CKE5 → window.CKEDITOR_5");
-      }
-    </script>
-    <script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor/ckeditor.js?' . $config->ver . '"></script>
-    ';
-
-    // Assign to template so it can be rendered in page header
-    $this->assign('editorSwitcherScripts', $editorScripts);
-
-    // Set global flag to prevent duplicate loading
-    $GLOBALS['ckeditor5_script_loaded'] = TRUE;
-    $GLOBALS['civicrm_ckeditor_script'] = TRUE;
+    // CKE5 is loaded by ckeditor5.php automatically with namespace swapping
+    // CKE4 will be loaded dynamically when user switches to it
+    // No need to preload anything here
   }
 
   /**
@@ -202,6 +184,9 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
    * @access private
    */
   private function addEditorSwitcher() {
+    $config = CRM_Core_Config::singleton();
+    $cke4Path = $config->resourceBase . 'packages/ckeditor/ckeditor.js?' . $config->ver;
+
     $html = '
     <div class="crm-section editor-switcher-section" style="margin-top: 10px; padding: 10px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;">
       <div class="label">
@@ -336,19 +321,31 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       }
 
       async function initializeCKE4(content) {
+        // Load CKE4 script dynamically if not already loaded
         if (!window.CKEDITOR || !window.CKEDITOR.replace) {
-          throw new Error("CKEditor 4 not loaded");
+          const cke4Path = "' . $cke4Path . '";
+          await loadScript(cke4Path);
+
+          // Wait for CKEDITOR to be available
+          let attempts = 0;
+          while ((!window.CKEDITOR || !window.CKEDITOR.replace) && attempts < 50) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            attempts++;
+          }
+
+          if (!window.CKEDITOR || !window.CKEDITOR.replace) {
+            throw new Error("CKEditor 4 failed to load");
+          }
         }
 
         // Set content to textarea first
         editorElement.value = content;
 
-        // Initialize CKE4
+        // Initialize CKE4 with basic configuration (without problematic plugins)
         const editor = window.CKEDITOR.replace(editorElement.name, {
           height: 400,
           toolbar: "CiviCRM",
           allowedContent: true,
-          extraPlugins: "widget,lineutils,mediaembed,tableresize,image2",
           customConfig: false
         });
 
@@ -361,6 +358,24 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
           editor.on("error", function(evt) {
             reject(new Error("CKE4 initialization failed: " + evt.data.message));
           });
+        });
+      }
+
+      // Helper function to load script dynamically
+      function loadScript(src) {
+        return new Promise((resolve, reject) => {
+          const existing = document.querySelector(`script[src="${src}"]`);
+          if (existing) {
+            resolve();
+            return;
+          }
+
+          const script = document.createElement("script");
+          script.src = src;
+          script.type = "text/javascript";
+          script.onload = resolve;
+          script.onerror = () => reject(new Error(`Failed to load ${src}`));
+          document.head.appendChild(script);
         });
       }
 

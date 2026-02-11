@@ -82,6 +82,16 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     // Load script only once to avoid conflicts when switching editors
     if (empty($GLOBALS['ckeditor5_script_loaded'])) {
       $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>' . "\n";
+
+      // Immediately swap namespace after loading to avoid conflicts
+      $html .= '<script type="text/javascript">
+if (window.CKEDITOR && !window.CKEDITOR_5) {
+  window.CKEDITOR_5 = window.CKEDITOR;
+  window.CKEDITOR = undefined;
+  console.log("✅ Namespace swapping complete: CKE5 → window.CKEDITOR_5");
+}
+</script>' . "\n";
+
       $GLOBALS['ckeditor5_script_loaded'] = TRUE;
     }
 

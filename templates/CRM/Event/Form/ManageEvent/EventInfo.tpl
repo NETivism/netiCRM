@@ -24,11 +24,6 @@
  +--------------------------------------------------------------------+
 *}
 
-{* Load both CKEditor scripts with namespace swapping *}
-{if $editorSwitcherScripts}
-  {$editorSwitcherScripts}
-{/if}
-
 {* Step 1 of New Event Wizard, and Edit Event Info form. *} 
 {if $noEventTemplates}
 	{capture assign=etUrl}{crmURL p='civicrm/admin/eventTemplate' q="reset=1"}{/capture}
