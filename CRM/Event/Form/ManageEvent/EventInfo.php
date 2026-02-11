@@ -165,12 +165,296 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
   }
 
   /**
+   * Load both CKEditor 4 and CKEditor 5 with namespace swapping
+   * This enables dynamic switching between editors for testing compatibility
+   *
+   * @return void
+   * @access private
+   */
+  private function loadBothEditors() {
+    $config = CRM_Core_Config::singleton();
+
+    // Load both editors with namespace swapping to avoid global variable conflict
+    $editorScripts = '
+    <script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>
+    <script type="text/javascript">
+      if (window.CKEDITOR) {
+        window.CKEDITOR_5 = window.CKEDITOR;
+        window.CKEDITOR = undefined;
+        console.log("✅ Namespace swapping complete: CKE5 → window.CKEDITOR_5");
+      }
+    </script>
+    <script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor/ckeditor.js?' . $config->ver . '"></script>
+    ';
+
+    // Assign to template so it can be rendered in page header
+    $this->assign('editorSwitcherScripts', $editorScripts);
+
+    // Set global flag to prevent duplicate loading
+    $GLOBALS['ckeditor5_script_loaded'] = TRUE;
+    $GLOBALS['civicrm_ckeditor_script'] = TRUE;
+  }
+
+  /**
+   * Add editor switcher UI and JavaScript for dynamic switching
+   *
+   * @return void
+   * @access private
+   */
+  private function addEditorSwitcher() {
+    $html = '
+    <div class="crm-section editor-switcher-section" style="margin-top: 10px; padding: 10px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;">
+      <div class="label">
+        <label>編輯器測試模式</label>
+      </div>
+      <div class="content">
+        <select id="editor-format-switcher" onchange="switchEditorFormat(this.value)" style="padding: 4px 8px;">
+          <option value="">請選擇編輯器...</option>
+          <option value="cke4">CKEditor 4 (傳統版)</option>
+          <option value="cke5" selected>CKEditor 5 (新版)</option>
+        </select>
+        <span id="editor-switch-status" style="margin-left: 10px; color: #666;"></span>
+      </div>
+      <div class="description" style="margin-top: 5px; font-size: 11px; color: #666;">
+        💡 此功能用於測試 CKEditor 4 和 5 之間的內容相容性。切換編輯器時，請檢查原始碼是否一致。
+      </div>
+    </div>
+
+    <script type="text/javascript">
+    (function() {
+      let currentEditor = null;
+      let currentEditorType = "cke5"; // Default to CKE5
+      const editorElement = document.querySelector("[name=description]");
+      const statusSpan = document.getElementById("editor-switch-status");
+
+      // Wait for page to load before initializing default editor
+      cj(document).ready(function() {
+        // CKE5 should already be initialized by ckeditor5.php
+        // Just store the reference
+        setTimeout(function() {
+          if (window.CKEDITOR_5 && window.CKEDITOR_5.ClassicEditor) {
+            // Find the CKE5 instance
+            statusSpan.textContent = "✓ CKEditor 5 已載入";
+            statusSpan.style.color = "green";
+          }
+        }, 1000);
+      });
+
+      window.switchEditorFormat = async function(format) {
+        if (!format || format === currentEditorType) {
+          return;
+        }
+
+        statusSpan.textContent = "切換中...";
+        statusSpan.style.color = "#666";
+
+        try {
+          // Save current content
+          const currentContent = await getCurrentContent();
+
+          // Destroy current editor
+          await destroyCurrentEditor();
+
+          // Wait a bit for cleanup
+          await new Promise(resolve => setTimeout(resolve, 200));
+
+          // Initialize new editor
+          if (format === "cke4") {
+            await initializeCKE4(currentContent);
+          } else if (format === "cke5") {
+            await initializeCKE5(currentContent);
+          }
+
+          currentEditorType = format;
+          statusSpan.textContent = "✓ 切換完成";
+          statusSpan.style.color = "green";
+
+        } catch (error) {
+          console.error("Editor switch error:", error);
+          statusSpan.textContent = "✗ 切換失敗: " + error.message;
+          statusSpan.style.color = "red";
+        }
+      };
+
+      async function getCurrentContent() {
+        if (!editorElement) return "";
+
+        // Try to get content from CKE5
+        if (currentEditorType === "cke5") {
+          // Find CKE5 instance by iterating through all editors
+          const editors = document.querySelectorAll(".ck-editor");
+          for (let editorDiv of editors) {
+            const textarea = editorDiv.previousElementSibling;
+            if (textarea && textarea === editorElement) {
+              // Found the matching editor, get data from it
+              const editorInstance = editorDiv.querySelector(".ck-editor__editable");
+              if (editorInstance && editorInstance.ckeditorInstance) {
+                return editorInstance.ckeditorInstance.getData();
+              }
+            }
+          }
+          // Fallback to textarea value
+          return editorElement.value;
+        }
+        // Try to get content from CKE4
+        else if (currentEditorType === "cke4" && window.CKEDITOR && window.CKEDITOR.instances) {
+          const instance = window.CKEDITOR.instances[editorElement.name];
+          if (instance) {
+            return instance.getData();
+          }
+        }
+
+        return editorElement.value;
+      }
+
+      async function destroyCurrentEditor() {
+        if (currentEditorType === "cke4" && window.CKEDITOR && window.CKEDITOR.instances) {
+          const instance = window.CKEDITOR.instances[editorElement.name];
+          if (instance) {
+            instance.destroy();
+            cj(editorElement).removeClass("ckeditor-processed");
+          }
+        } else if (currentEditorType === "cke5") {
+          // Find and destroy CKE5 instance
+          const editors = document.querySelectorAll(".ck-editor");
+          for (let editorDiv of editors) {
+            const textarea = editorDiv.previousElementSibling;
+            if (textarea && textarea === editorElement) {
+              const editorInstance = editorDiv.querySelector(".ck-editor__editable");
+              if (editorInstance && editorInstance.ckeditorInstance) {
+                await editorInstance.ckeditorInstance.destroy();
+              }
+              editorDiv.remove();
+            }
+          }
+          cj(editorElement).removeClass("ckeditor5-processed");
+        }
+
+        // Show textarea
+        editorElement.style.display = "block";
+        currentEditor = null;
+      }
+
+      async function initializeCKE4(content) {
+        if (!window.CKEDITOR || !window.CKEDITOR.replace) {
+          throw new Error("CKEditor 4 not loaded");
+        }
+
+        // Set content to textarea first
+        editorElement.value = content;
+
+        // Initialize CKE4
+        const editor = window.CKEDITOR.replace(editorElement.name, {
+          height: 400,
+          toolbar: "CiviCRM",
+          allowedContent: true,
+          extraPlugins: "widget,lineutils,mediaembed,tableresize,image2",
+          customConfig: false
+        });
+
+        return new Promise((resolve, reject) => {
+          editor.on("instanceReady", function() {
+            console.log("CKEditor 4 initialized");
+            currentEditor = editor;
+            resolve();
+          });
+          editor.on("error", function(evt) {
+            reject(new Error("CKE4 initialization failed: " + evt.data.message));
+          });
+        });
+      }
+
+      async function initializeCKE5(content) {
+        if (!window.CKEDITOR_5 || !window.CKEDITOR_5.ClassicEditor) {
+          throw new Error("CKEditor 5 not loaded at window.CKEDITOR_5");
+        }
+
+        // Set content to textarea first
+        editorElement.value = content;
+
+        const {
+          ClassicEditor,
+          Essentials,
+          Bold,
+          Italic,
+          Underline,
+          Strikethrough,
+          Paragraph,
+          Heading,
+          Link,
+          List,
+          Alignment,
+          Font,
+          RemoveFormat,
+          SourceEditing,
+          FullPage,
+          GeneralHtmlSupport,
+          Undo
+        } = window.CKEDITOR_5;
+
+        const editor = await ClassicEditor.create(editorElement, {
+          licenseKey: "GPL",
+          plugins: [
+            Essentials, Bold, Italic, Underline, Strikethrough,
+            Paragraph, Heading, Link, List, Alignment, Font,
+            RemoveFormat, SourceEditing, FullPage, GeneralHtmlSupport, Undo
+          ],
+          toolbar: [
+            "undo", "redo", "|",
+            "heading", "|",
+            "bold", "italic", "underline", "strikethrough", "|",
+            "link", "|",
+            "bulletedList", "numberedList", "|",
+            "alignment", "|",
+            "fontSize", "fontFamily", "fontColor", "fontBackgroundColor", "|",
+            "removeFormat", "|",
+            "sourceEditing"
+          ],
+          htmlSupport: {
+            allow: [
+              {
+                name: /^(html|head|body|title|meta|style|script|div|span|p|h[1-6]|table|thead|tbody|tr|td|th|ul|ol|li|a|img|br|hr)$/,
+                attributes: true,
+                classes: true,
+                styles: true
+              }
+            ]
+          },
+          height: "400px"
+        });
+
+        console.log("CKEditor 5 initialized");
+        currentEditor = editor;
+
+        // Store instance reference for later retrieval
+        const ckEditorDiv = editorElement.nextElementSibling;
+        if (ckEditorDiv && ckEditorDiv.classList.contains("ck-editor")) {
+          const editableDiv = ckEditorDiv.querySelector(".ck-editor__editable");
+          if (editableDiv) {
+            editableDiv.ckeditorInstance = editor;
+          }
+        }
+
+        return editor;
+      }
+    })();
+    </script>
+    ';
+
+    // Assign to template variable for rendering
+    $this->assign('editorSwitcherUI', $html);
+  }
+
+  /**
    * Function to build the form
    *
    * @return None
    * @access public
    */
   public function buildQuickForm() {
+    // Load both CKEditor 4 and CKEditor 5 for dynamic switching
+    $this->loadBothEditors();
+
     $config = CRM_Core_Config::singleton();
 
     if ($this->_cdType) {
@@ -236,6 +520,10 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
     $this->add('textarea', 'summary', ts('Event Summary'), $attributes['summary']);
     $this->addWysiwyg('description', ts('Complete Description'), $attributes['event_description']);
+
+    // Add editor switcher for testing CKEditor 4/5 compatibility
+    $this->addEditorSwitcher();
+
     $this->addElement('checkbox', 'is_public', ts('Public Event?'));
     $this->addElement('checkbox', 'is_map', ts('Include Map to Event Location?'));
 

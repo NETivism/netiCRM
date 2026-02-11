@@ -24,6 +24,11 @@
  +--------------------------------------------------------------------+
 *}
 
+{* Load both CKEditor scripts with namespace swapping *}
+{if $editorSwitcherScripts}
+  {$editorSwitcherScripts}
+{/if}
+
 {* Step 1 of New Event Wizard, and Edit Event Info form. *} 
 {if $noEventTemplates}
 	{capture assign=etUrl}{crmURL p='civicrm/admin/eventTemplate' q="reset=1"}{/capture}
@@ -94,6 +99,12 @@
 			<td class="label">{$form.description.label}</td>
 			<td>{$form.description.html}</td>
 		</tr>
+		{* Editor switcher UI for testing CKEditor 4/5 compatibility *}
+		{if $editorSwitcherUI}
+		<tr>
+			<td colspan="2">{$editorSwitcherUI}</td>
+		</tr>
+		{/if}
 		{if !$isTemplate}
 			<tr class="crm-event-manage-eventinfo-form-block-start_date">
 				<td class="label">{$form.start_date.label}</td>

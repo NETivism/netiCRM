@@ -78,7 +78,12 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     $html = parent::toHtml();
 
     $html .= "\n" . '<link rel="stylesheet" href="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.css?' . $config->ver . '">' . "\n";
-    $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>' . "\n";
+
+    // Load script only once to avoid conflicts when switching editors
+    if (empty($GLOBALS['ckeditor5_script_loaded'])) {
+      $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5.umd.js?' . $config->ver . '"></script>' . "\n";
+      $GLOBALS['ckeditor5_script_loaded'] = TRUE;
+    }
 
     // Initialize CKEditor 5 ClassicEditor
     $html .= "<script type='text/javascript'>
@@ -97,7 +102,7 @@ cj(function() {
   }
   cj(element).addClass('ckeditor5-processed');
 
-  // Destructure required classes from CKEDITOR global
+  // Destructure required classes from CKEDITOR_5 (to avoid conflict with CKEditor 4)
   const {
     ClassicEditor,
     Essentials,
@@ -116,7 +121,7 @@ cj(function() {
     FullPage,
     GeneralHtmlSupport,
     Undo
-  } = CKEDITOR;
+  } = window.CKEDITOR_5;
 
   // Initialize CKEditor 5
   ClassicEditor
