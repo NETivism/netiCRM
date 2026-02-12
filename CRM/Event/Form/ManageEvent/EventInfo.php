@@ -214,6 +214,14 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       $extraPluginsCode[] = "CKEDITOR.plugins.addExternal('{$name}', '{$config->resourceBase}packages/ckeditor/extraplugins/{$name}/', 'plugin.js');";
     }
 
+    // Check if IMCE module is enabled (matching civicrm.module:620)
+    $imceEnabled = FALSE;
+    $imceUrl = '';
+    if (CRM_Utils_System::moduleExists('imce')) {
+      $imceEnabled = TRUE;
+      $imceUrl = CRM_Utils_System::url('imce');
+    }
+
     // Prepare configuration data for JavaScript
     $cke4Config = array(
       'resourceBase' => $config->resourceBase,
@@ -225,11 +233,10 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       'allowedContent' => $allowedContent,
       'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
       'width' => '94%',
-      'height' => '400'
+      'height' => '400',
+      'imceEnabled' => $imceEnabled,
+      'imceUrl' => $imceUrl
     );
-
-    // Convert to JSON for JavaScript (escape for use in HTML attribute)
-    $cke4ConfigJson = htmlspecialchars(json_encode($cke4Config), ENT_QUOTES, 'UTF-8');
 
     $html = '
     <div class="crm-section editor-switcher-section" style="margin-top: 10px; padding: 10px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;">
@@ -253,6 +260,21 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     (function() {
       // CKE4 configuration from PHP (matching ckeditor.php)
       const cke4Config = ' . json_encode($cke4Config) . ';
+
+      // IMCE integration (matching civicrm.module:628-638)
+      if (cke4Config.imceEnabled) {
+        window.civicrmImceCkeditSendTo = function (file, win) {
+          var parts = /\?(?:.*&)?CKEditorFuncNum=(\d+)(?:&|$)/.exec(win.location.href);
+          if (parts && parts.length > 1) {
+            var url = file.getUrl();
+            win.opener.CKEDITOR.tools.callFunction(parts[1], url);
+            win.close();
+          }
+          else {
+            throw "CKEditorFuncNum parameter not found or invalid: " + win.location.href;
+          }
+        };
+      }
 
       let currentEditor = null;
       let currentEditorType = "cke5"; // Default to CKE5
@@ -429,6 +451,11 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
           // Set toolbar
           instance.config.toolbar = cke4Config.toolbar;
 
+          // Set IMCE filebrowser URL if enabled (matching civicrm.module:645)
+          if (cke4Config.imceEnabled) {
+            instance.config.filebrowserImageBrowseUrl = cke4Config.imceUrl + "?sendto=civicrmImceCkeditSendTo";
+          }
+
           // Note: fullPage is not used in EventInfo form, so we don\'t set it
         }
 
@@ -438,7 +465,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
               toolbar: this.config.toolbar,
               extraPlugins: this.config.extraPlugins,
               allowedContent: this.config.allowedContent,
-              height: this.config.height
+              height: this.config.height,
+              filebrowserImageBrowseUrl: this.config.filebrowserImageBrowseUrl
             });
             currentEditor = editor;
             resolve();
