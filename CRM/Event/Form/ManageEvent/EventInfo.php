@@ -187,6 +187,50 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     $config = CRM_Core_Config::singleton();
     $cke4Path = $config->resourceBase . 'packages/ckeditor/ckeditor.js?' . $config->ver;
 
+    // Prepare CKE4 configuration (matching ckeditor.php logic)
+    $plugins = array('widget', 'lineutils', 'mediaembed', 'tableresize', 'image2');
+
+    // Add clipboard_image plugin only if user has permission
+    // Permission check follows the same logic as ckeditor.php:71-74
+    if (CRM_Core_Permission::check('access CiviCRM') ||
+        CRM_Core_Permission::check('paste and upload images')) {
+      $plugins[] = 'clipboard_image';
+    }
+
+    // Determine toolbar and allowedContent based on permission
+    // Follows the same logic as ckeditor.php:78-85
+    if (CRM_Core_Permission::check('access CiviCRM')) {
+      $toolbar = 'CiviCRM';
+      $allowedContent = 'true';
+    }
+    else {
+      $toolbar = 'CiviCRMBasic';
+      $allowedContent = "'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}'";
+    }
+
+    // Build extra plugins registration code
+    $extraPluginsCode = array();
+    foreach ($plugins as $name) {
+      $extraPluginsCode[] = "CKEDITOR.plugins.addExternal('{$name}', '{$config->resourceBase}packages/ckeditor/extraplugins/{$name}/', 'plugin.js');";
+    }
+
+    // Prepare configuration data for JavaScript
+    $cke4Config = array(
+      'resourceBase' => $config->resourceBase,
+      'ver' => $config->ver,
+      'plugins' => $plugins,
+      'extraPluginsCode' => implode("\n      ", $extraPluginsCode),
+      'extraPluginsList' => implode(',', $plugins),
+      'toolbar' => $toolbar,
+      'allowedContent' => $allowedContent,
+      'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
+      'width' => '94%',
+      'height' => '400'
+    );
+
+    // Convert to JSON for JavaScript (escape for use in HTML attribute)
+    $cke4ConfigJson = htmlspecialchars(json_encode($cke4Config), ENT_QUOTES, 'UTF-8');
+
     $html = '
     <div class="crm-section editor-switcher-section" style="margin-top: 10px; padding: 10px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 4px;">
       <div class="label">
@@ -207,6 +251,9 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
     <script type="text/javascript">
     (function() {
+      // CKE4 configuration from PHP (matching ckeditor.php)
+      const cke4Config = ' . json_encode($cke4Config) . ';
+
       let currentEditor = null;
       let currentEditorType = "cke5"; // Default to CKE5
       const editorElement = document.querySelector("[name=description]");
@@ -338,20 +385,61 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
           }
         }
 
+        // Register extra plugins (matching ckeditor.php logic)
+        // This must be done before replace() to ensure plugins are available
+        if (!window.cke4PluginsRegistered) {
+          ' . implode("\n          ", $extraPluginsCode) . '
+          window.cke4PluginsRegistered = true;
+        }
+
         // Set content to textarea first
         editorElement.value = content;
 
-        // Initialize CKE4 with basic configuration (without problematic plugins)
-        const editor = window.CKEDITOR.replace(editorElement.name, {
-          height: 400,
-          toolbar: "CiviCRM",
-          allowedContent: true,
-          customConfig: false
-        });
+        // Add ckeditor-processed class to prevent double initialization
+        if (!cj(editorElement).hasClass("ckeditor-processed")) {
+          cj(editorElement).addClass("ckeditor-processed");
+        }
+
+        // Initialize CKE4 (matching ckeditor.php:109)
+        // Note: Do NOT pass config here, set it after replace (as ckeditor.php does)
+        const editor = window.CKEDITOR.replace(editorElement.name);
+
+        // Get the editor instance
+        const instance = window.CKEDITOR.instances[editorElement.name];
+
+        if (instance) {
+          // Configure editor immediately after replace (matching ckeditor.php:111-122)
+          instance.on("key", function(evt) {
+            global_formNavigate = false;
+          });
+
+          // Set configuration (matching ckeditor.php line by line)
+          instance.config.extraPlugins = cke4Config.extraPluginsList;
+          instance.config.customConfig = cke4Config.customConfigPath;
+          instance.config.width = cke4Config.width;
+          instance.config.height = cke4Config.height;
+
+          // Set allowedContent based on permission
+          if (cke4Config.allowedContent === "true") {
+            instance.config.allowedContent = true;
+          } else {
+            instance.config.allowedContent = cke4Config.allowedContent;
+          }
+
+          // Set toolbar
+          instance.config.toolbar = cke4Config.toolbar;
+
+          // Note: fullPage is not used in EventInfo form, so we don\'t set it
+        }
 
         return new Promise((resolve, reject) => {
           editor.on("instanceReady", function() {
-            console.log("CKEditor 4 initialized");
+            console.log("CKEditor 4 initialized with config:", {
+              toolbar: this.config.toolbar,
+              extraPlugins: this.config.extraPlugins,
+              allowedContent: this.config.allowedContent,
+              height: this.config.height
+            });
             currentEditor = editor;
             resolve();
           });
