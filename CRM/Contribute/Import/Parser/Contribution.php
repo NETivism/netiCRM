@@ -78,6 +78,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   public $_allExternalIdentifiers;
   public $_dedupeRuleFields;
   public $_statusFieldName;
+  public $_sourceIp;
   public $_dateFormats;
   public $_contributionPages;
   public $_contactSubType;
@@ -895,6 +896,9 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @access public
    */
   function importContribution($formatted, &$values) {
+    if (!empty($this->_sourceIp)) {
+      $formatted['source_ip'] = $this->_sourceIp;
+    }
     $newContribution = civicrm_contribution_format_create($formatted);
     $statusFieldName = $this->_statusFieldName;
     if (civicrm_error($newContribution)) {

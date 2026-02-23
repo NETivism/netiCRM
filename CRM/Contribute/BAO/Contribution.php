@@ -125,6 +125,13 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
       $params['is_test'] = 0;
     }
 
+    // Handle source_ip auto-set on create if not pre-set, prevent update
+    if (CRM_Utils_Array::value('contribution', $ids)) {
+      unset($params['source_ip']);
+    }
+    elseif (empty($params['source_ip'])) {
+      $params['source_ip'] = CRM_Utils_System::ipAddress();
+    }
 
     if (CRM_Utils_Array::value('contribution', $ids)) {
       CRM_Utils_Hook::pre('edit', 'Contribution', $ids['contribution'], $params);

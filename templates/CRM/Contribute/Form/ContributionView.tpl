@@ -284,7 +284,14 @@
 	        <td class="label">{ts}Invoice ID{/ts}</td>
 	        <td>{$invoice_id}&nbsp;</td>
 	    </tr>
-	{/if} 
+	{/if}
+
+	{if $source_ip}
+	    <tr>
+	        <td class="label">{ts}Source IP{/ts}</td>
+	        <td>{$source_ip}</td>
+	    </tr>
+	{/if}
 
 	{if $honor_display}
 	    <tr>
