@@ -162,6 +162,9 @@
                 <tr id="checkNumber" class="crm-contribution-form-block-check_number"><td class="label">{$form.check_number.label}</td><td>{$form.check_number.html|crmReplace:class:six}</td></tr>
             {/if}
             <tr class="crm-contribution-form-block-trxn_id"><td class="label">{$form.trxn_id.label}</td><td{$valueStyle}>{$form.trxn_id.html|crmReplace:class:twelve} {help id="id-trans_id"}</td></tr>
+            {if $form.source_ip}
+              <tr class="crm-contribution-form-block-source_ip"><td class="label">{$form.source_ip.label}</td><td{$valueStyle}>{$form.source_ip.html}</td></tr>
+            {/if}
             <tr id="receipt" class="crm-contribution-form-block-receipt">
               <td class="label"><label>{ts}Receipt{/ts}</label></td>
               <td>

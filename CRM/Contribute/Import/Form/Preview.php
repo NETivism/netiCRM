@@ -183,6 +183,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       'createContactOption' => $this->get('createContactOption'),
       'skipColumnHeader' => $this->get('skipColumnHeader'),
       'dateFormats' => $this->get('dateFormats'),
+      'sourceIp' => CRM_Utils_System::ipAddress(),
     ];
     $properties = [
       'ims' => 'mapperImProvider',

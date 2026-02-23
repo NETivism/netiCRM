@@ -944,6 +944,11 @@ WHERE  contribution_id = {$this->_id}
       );
     }
 
+    // add source_ip as read-only field for existing contributions
+    if ($this->_id && !empty($this->_values['source_ip'])) {
+      $element = $this->add('text', 'source_ip', ts('Source IP'), $attributes['source_ip']);
+      $element->freeze();
+    }
 
     //add receipt for offline contribution
     $receiptEle = $this->addElement('checkbox', 'is_email_receipt', ts('Send Payment Notification').'?', NULL, [
