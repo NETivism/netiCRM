@@ -1530,7 +1530,7 @@ cj(function() {
       }
     }
 
-
+    $sent = $notSent = [];
     if (CRM_Utils_Array::value('send_receipt', $params)) {
       $receiptFrom = CRM_Utils_Array::value($params['from_email_address'], $this->_fromEmails['name']);
 
