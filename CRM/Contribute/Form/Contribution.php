@@ -1139,12 +1139,6 @@ WHERE  contribution_id = {$this->_id}
     $this->addElement('text', 'soft_credit_to', ts('Soft Credit To'));
     $this->addElement('hidden', 'soft_contact_id', '', ['id' => 'soft_contact_id']);
 
-    // add source_ip as read-only field for existing contributions
-    if ($this->_id && !empty($this->_values['source_ip'])) {
-      $source_ip_attr = array_merge($attributes['source_ip'], ['readonly' => 'readonly', 'class' => 'readonly']);
-      $this->add('text', 'source_ip', ts('Source IP'), $source_ip_attr);
-    }
-
     // add form element for participant
     if ($this->_action & CRM_Core_Action::ADD) {
       if(!empty($this->_participantId)){
