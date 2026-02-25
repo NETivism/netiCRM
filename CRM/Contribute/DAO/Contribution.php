@@ -262,6 +262,12 @@
    * @var datetime
    */
   public $expire_date;
+  /**
+   * IP address at the time of contribution creation
+   *
+   * @var string
+   */
+  public $source_ip;
    /**
    * class constructor
    *
@@ -654,6 +660,18 @@
            'export' => true,
                'usage' => 'System',
        ] ,
+        'source_ip' => [
+          'name' => 'source_ip',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Source IP'),
+           'maxlength' => 45,
+           'size' => CRM_Utils_Type::BIG,
+             'import' => false,
+          'where' => 'civicrm_contribution.source_ip',
+          'headerPattern' => '',
+          'dataPattern' => '',
+           'export' => true,
+            ] ,
       ];
     }
     return self::$_fields;

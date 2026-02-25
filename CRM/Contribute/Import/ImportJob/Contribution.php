@@ -99,6 +99,9 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     if (!empty($this->_dedupeRuleGroupId)) {
       $this->_parser->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
     }
+    if (!empty($this->_sourceIp)) {
+      $this->_parser->_sourceIp = $this->_sourceIp;
+    }
 
     $this->_parser->_job = $this;
 

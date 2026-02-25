@@ -47,7 +47,7 @@
       <div class="label" for="">{$form.cms_name.label}</div>
       <div class="content">
         {$form.cms_name.html}
-        {if $config->userFrameworkVersion < 8}<a id="checkavailability" href="#" onClick="return false;">{ts}<strong>Check Availability</strong>{/ts}</a>{/if}
+        <a id="checkavailability" href="#" onClick="return false;">{ts}<strong>Check Availability</strong>{/ts}</a>
         <div id="msgbox" style="display:none"></div>
         <div class="description">{ts}Your preferred username; punctuation is not allowed except for periods, hyphens, and underscores.{/ts}</div>
       </div>
@@ -94,7 +94,6 @@ function showMessage(frm){
   }
 }
 var lastName = null;
-{/literal}{if $config->userFrameworkVersion < 8}{literal}
 cj("#checkavailability").click(function() {
   var cmsUserName = cj.trim(cj("#cms_name").val());
   if ( lastName == cmsUserName) {
@@ -135,16 +134,26 @@ cj("#checkavailability").click(function() {
 	  var contactUrl = {/literal}"{crmURL p='civicrm/ajax/cmsuser' h=0 q="qfKey=`$cmsQfKey`&ctrName=`$cmsCtrName`"}"{literal};
 	 
     cj.post(contactUrl,{ cms_name:cj("#cms_name").val() } ,function(data) {
-	    if ( data.name == "no") { // user name not available
+      // Handle rate limiting - silently hide message box
+      if (data.rate_limited === true) {
+        cj("#msgbox").removeClass().text('').fadeOut("fast");
+        return;
+      }
+
+	    if (data.name === "no") { // user name not available
 	      cj("#msgbox").fadeTo(200,0.1,function() {
           cj(this).html(notavailable).addClass('cmsmessagebox cmsmessagebox-error').fadeTo(900,1);
         });
 	    }
-      else {
+      else if (data.name === "yes") { // user name available
 	      cj("#msgbox").fadeTo(200,0.1,function() {
           cj(this).html(available).addClass('cmsmessagebox cmsmessagebox-success').fadeTo(900,1);
         });
-	    }	    
+	    }
+      else {
+        // Unknown response - hide message box
+        cj("#msgbox").removeClass().text('').fadeOut("fast");
+      }
 	  }, "json");
 	  lastName = cmsUserName;
   }
@@ -152,7 +161,6 @@ cj("#checkavailability").click(function() {
     cj("#msgbox").removeClass().text('').fadeIn("fast");
   }
 });
-{/literal}{/if}{*do not check user name on drupal9*}{literal}
 
 </script>
 {/literal}

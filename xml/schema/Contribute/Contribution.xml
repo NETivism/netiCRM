@@ -441,9 +441,18 @@
       <usage>System</usage>
       <headerPattern>/expire(.?date)?/i</headerPattern>
       <dataPattern>/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/</dataPattern>
-      <comment>when is payment expiration</comment> 
-      <add>3.3</add> 
-  </field> 
+      <comment>when is payment expiration</comment>
+      <add>3.3</add>
+  </field>
+  <field>
+      <name>source_ip</name>
+      <type>varchar</type>
+      <length>45</length>
+      <comment>IP address at the time of contribution creation</comment>
+      <add>3.3</add>
+      <import>false</import>
+      <export>true</export>
+  </field>
   <index>
     <name>ML_contribution</name>
     <fieldName>contact_id</fieldName> <fieldName>contribution_type_id</fieldName> 

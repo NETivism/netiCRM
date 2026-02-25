@@ -50823,3 +50823,6 @@ msgstr ""
 msgid "Back to Manage Premiums"
 msgstr ""
 
+#: templates/CRM/Contribute/Form/ContributionView.tpl
+msgid "Source IP"
+msgstr ""

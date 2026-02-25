@@ -303,24 +303,24 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       }
 
       // get year from join date
-      $year = $toDay[0];
-      $month = $toDay[1];
+      $year = (int) $toDay[0];
+      $month = (int) $toDay[1];
 
       if ($membershipTypeDetails['duration_unit'] == 'year') {
 
         //get start fixed day
-        $startMonth = substr($membershipTypeDetails['fixed_period_start_day'], 0,
+        $startMonth = (int) substr($membershipTypeDetails['fixed_period_start_day'], 0,
           strlen($membershipTypeDetails['fixed_period_start_day']) - 2
         );
-        $startDay = substr($membershipTypeDetails['fixed_period_start_day'], -2);
+        $startDay = (int) substr($membershipTypeDetails['fixed_period_start_day'], -2);
 
         $fixedStartDate = date('Y-m-d', mktime(0, 0, 0, $startMonth, $startDay, $year));
 
         //get start rollover day
-        $rolloverMonth = substr($membershipTypeDetails['fixed_period_rollover_day'], 0,
+        $rolloverMonth = (int) substr($membershipTypeDetails['fixed_period_rollover_day'], 0,
           strlen($membershipTypeDetails['fixed_period_rollover_day']) - 2
         );
-        $rolloverDay = substr($membershipTypeDetails['fixed_period_rollover_day'], -2);
+        $rolloverDay = (int) substr($membershipTypeDetails['fixed_period_rollover_day'], -2);
 
         $fixedRolloverDate = date('Y-m-d', mktime(0, 0, 0, $rolloverMonth, $rolloverDay, $year));
 
@@ -373,9 +373,9 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     if (!$endDate) {
       //end date calculation
       $date = explode('-', $actualStartDate);
-      $year = $date[0];
-      $month = $date[1];
-      $day = $date[2];
+      $year = (int) $date[0];
+      $month = (int) $date[1];
+      $day = (int) $date[2];
 
       switch ($membershipTypeDetails['duration_unit']) {
         case 'year':
@@ -463,15 +463,15 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       $startDate = $membershipDetails[$membershipId]->start_date;
       $date = explode('-', $membershipDetails[$membershipId]->end_date);
       $logStartDate = date('Y-m-d', mktime(0, 0, 0,
-          (float) $date[1],
-          (float)($date[2] + 1),
-          (float) $date[0]
+          (int) $date[1],
+          (int) $date[2] + 1,
+          (int) $date[0]
         ));
       $date = explode('-', $logStartDate);
 
-      $year = $date[0];
-      $month = $date[1];
-      $day = $date[2];
+      $year = (int) $date[0];
+      $month = (int) $date[1];
+      $day = (int) $date[2];
 
       switch ($membershipTypeDetails['duration_unit']) {
         case 'year':
@@ -515,24 +515,24 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         // 1. Renew the start date
         // 2. Renew the end date
         $yearValue = date('Y');
-        $fixedStartDay = substr($membershipTypeDetails['fixed_period_start_day'], -2);
-        $fixedStartMonth = substr($membershipTypeDetails['fixed_period_start_day'], 0, -2);
+        $fixedStartDay = (int) substr($membershipTypeDetails['fixed_period_start_day'], -2);
+        $fixedStartMonth = (int) substr($membershipTypeDetails['fixed_period_start_day'], 0, -2);
         $startDate = $logStartDate = date('Y-m-d', mktime(0, 0, 0,
-          (float) $fixedStartMonth,
-          (float) $fixedStartDay,
+          $fixedStartMonth,
+          $fixedStartDay,
           $yearValue
         ));
 
         // before moving to the step 2, check if TODAY is in
         // rollover window.
-        $rolloverDay = substr($membershipTypeDetails['fixed_period_rollover_day'], -2);
-        $rolloverMonth = substr($membershipTypeDetails['fixed_period_rollover_day'], 0, -2);
+        $rolloverDay = (int) substr($membershipTypeDetails['fixed_period_rollover_day'], -2);
+        $rolloverMonth = (int) substr($membershipTypeDetails['fixed_period_rollover_day'], 0, -2);
 
         if (($rolloverMonth - $fixedStartMonth) < 0) {
           $rolloverDate = date('Ymd',
             mktime(0, 0, 0,
-              (float) $rolloverMonth,
-              (float) $rolloverDay,
+              $rolloverMonth,
+              $rolloverDay,
               $yearValue + 1
             )
           );
@@ -540,8 +540,8 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         else {
           $rolloverDate = date('Ymd',
             mktime(0, 0, 0,
-              (float) $rolloverMonth,
-              (float) $rolloverDay,
+              $rolloverMonth,
+              $rolloverDay,
               $yearValue
             )
           );
@@ -555,9 +555,9 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       // 2.
       $date = explode('-', $startDate);
 
-      $year = (float) $date[0];
-      $month = (float) $date[1];
-      $day = (float) $date[2];
+      $year = (int) $date[0];
+      $month = (int) $date[1];
+      $day = (int) $date[2];
 
       switch ($membershipTypeDetails['duration_unit']) {
         case 'year':
