@@ -6,6 +6,7 @@
 vendor
 *.DS_Store
 .vscode
+.php-cs-fixer.cache
 tests/casperjs/picture
 **/node_modules
 .php-cs-fixer.cache

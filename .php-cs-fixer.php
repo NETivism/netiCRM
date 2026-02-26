@@ -2,8 +2,11 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
-    ->exclude(['drupal', 'packages', 'neticrm', 'l10n'])
-    ->name(['*.php', '*.inc', '*.module']);
+    ->exclude(['packages', 'l10n'])
+    ->name('*.php')
+    ->name('*.inc')
+    ->name('*.install')
+    ->name('*.module');
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
