@@ -674,28 +674,28 @@
             * type-is-front
           */
           if($this.hasClass('type-is-front') && !$this.hasClass(currentStepClassName)){
-            /** first scroll to top 0.5 second */
+            /** first scroll to top 0.1 second */
             window.ContribPage.executingAnimationCount++;
             setTimeout(function(){
               $this.removeClass('type-is-front').addClass('type-is-fade-out').css({'opacity': 1});
               /** then fade change */
-              $this.animate({'opacity': 0} ,300, function(){
+              $this.animate({'opacity': 0} ,50, function(){
                 window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-out').addClass('type-is-back');
               });
-            }, 500);
+            }, 100);
           }
           else if($this.hasClass(currentStepClassName)){
-            /** first scroll to top 0.5 second */
+            /** first scroll to top 0.1 second */
             window.ContribPage.executingAnimationCount++;
             setTimeout(function(){
               $this.removeClass('type-is-back').addClass('type-is-fade-in').css({'opacity': 0});
               /** then fade change */
-              $this.animate({'opacity': 1} ,300,  function(){
+              $this.animate({'opacity': 1} ,50,  function(){
                 window.ContribPage.executingAnimationCount--;
                 $this.removeClass('type-is-fade-in').addClass('type-is-front');
               });
-            }, 500);
+            }, 100);
           }
           else if(!$this.hasClass('type-is-back')){
             $this.addClass('type-is-back');
@@ -707,8 +707,8 @@
           setTimeout(function() {
             var fixedHeaderBuffer = 100;
             var topPosition = $rightCol.offset().top - $stepInfo.height() - fixedHeaderBuffer;
-            $('html,body').animate({ scrollTop: topPosition }, 500);
-          }, 800);
+            $('html,body').animate({ scrollTop: topPosition }, 100);
+          }, 150);
         }
 
         $('.step-text').removeClass('active');

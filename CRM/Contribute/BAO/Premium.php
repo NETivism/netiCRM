@@ -411,15 +411,9 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    */
   static function restockContributionProducts() {
     $config = CRM_Core_Config::singleton();
-    
-    $creditCardDays = $config->premiumIRCreditCardDays ?? 7;
-    $nonCreditCardDays = $config->premiumIRNonCreditCardDays ?? 3;
-    $convenienceStoreDays = $config->premiumIRConvenienceStoreDays ?? 3;
-    $checkStatuses = $config->premiumIRCheckStatuses ?? [2]; // Pending
-    $statusChangeStyle = $config->premiumIRStatusChange ?? 'maintain'; // maintain or cancelled
 
     // Get contributions that need to be processed for restocking
-    $contributionsToRestock = self::getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $convenienceStoreDays, $checkStatuses);
+    $contributionsToRestock = self::getExpiredOnlineContributions($config->premiumIRCreditCardDays, $config->premiumIRNonCreditCardDays, $config->premiumIRConvenienceStoreDays, $config->premiumIRCheckStatuses);
     
     if (empty($contributionsToRestock)) {
       return [];
@@ -430,7 +424,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     foreach ($contributionsToRestock as $contribution) {
       try {
         // Update contribution status only if statusChangeStyle is 'cancelled'
-        if ($statusChangeStyle === 'cancelled') {
+        if ($config->premiumIRStatusChange === 'cancelled') {
           $sql = "UPDATE civicrm_contribution SET contribution_status_id = %1 WHERE id = %2";
           $params = [
             1 => [3, 'Integer'], // 3 = Cancelled status
@@ -498,7 +492,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     $statusList = implode(',', array_map('intval', $statusIds));
     
     // Get payment instrument IDs based on names
-    $creditCardInstruments = self::getPaymentInstrumentIdsByNames(['Credit Card', 'Web ATM', 'LinePay']);
+    $creditCardInstruments = self::getPaymentInstrumentIdsByNames(['Credit Card', 'Web ATM', 'LinePay', 'ApplePay', 'ApplePayFront', 'GooglePay']);
     $nonCreditCardInstruments = self::getPaymentInstrumentIdsByNames(['ATM', 'Convenient Store (Code)']);
     $barcodeInstruments = self::getPaymentInstrumentIdsByNames(['Convenient Store']);
     
@@ -511,13 +505,16 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     // Credit card transactions (immediate)
     if (!empty($creditCardIds)) {
       $creditCardSql = "
-        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date, c.expire_date
         FROM civicrm_contribution c
         INNER JOIN civicrm_contribution_product cp ON cp.contribution_id = c.id
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$creditCardIds})
-          AND DATEDIFF(NOW(), c.created_date) > %1
+          AND (
+            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
+          )
           AND cp.restock <= 0
       ";
       
@@ -530,6 +527,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             'receive_date' => $dao->receive_date,
             'contribution_status_id' => $dao->contribution_status_id,
             'created_date' => $dao->created_date,
+            'expire_date' => $dao->expire_date,
             'reason' => ts('Credit card transaction expired (over %1 days)', [1 => $creditCardDays])
           ];
         }
@@ -539,13 +537,16 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     // Non-credit card transactions (ATM, convenience store code)
     if (!empty($nonCreditCardIds)) {
       $nonCreditCardSql = "
-        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date, c.expire_date
         FROM civicrm_contribution c
         INNER JOIN civicrm_contribution_product cp ON cp.contribution_id = c.id
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$nonCreditCardIds})
-          AND DATEDIFF(NOW(), c.created_date) > %1
+          AND (
+            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
+          )
           AND cp.restock <= 0
       ";
 
@@ -558,6 +559,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             'receive_date' => $dao->receive_date,
             'contribution_status_id' => $dao->contribution_status_id,
             'created_date' => $dao->created_date,
+            'expire_date' => $dao->expire_date,
             'reason' => ts('Non-credit card transaction expired (over %1 days)', [1 => $nonCreditCardDays])
           ];
         }
@@ -567,13 +569,16 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     // Special case for convenience store barcodes (slower processing)
     if (!empty($barcodeIds)) {
       $barcodeSpecialSql = "
-        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date
+        SELECT c.id, c.payment_instrument_id, c.receive_date, c.contribution_status_id, c.created_date, c.expire_date
         FROM civicrm_contribution c
         INNER JOIN civicrm_contribution_product cp ON cp.contribution_id = c.id
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$barcodeIds})
-          AND DATEDIFF(NOW(), c.created_date) > %1
+          AND (
+            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
+          )
           AND cp.restock <= 0
       ";
 
@@ -586,6 +591,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             'receive_date' => $dao->receive_date,
             'contribution_status_id' => $dao->contribution_status_id,
             'created_date' => $dao->created_date,
+            'expire_date' => $dao->expire_date,
             'reason' => ts('Convenience store barcode transaction expired (over %1 days)', [1 => $convenienceStoreDays])
           ];
         }

@@ -68,14 +68,6 @@ class CRM_Admin_Form_Setting_PremiumsSetting extends CRM_Admin_Form_Setting {
   function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
-    // Set default values only if not already set
-    $defaults['premiumIRCreditCardDays'] = $defaults['premiumIRCreditCardDays'] ?? 1;
-    $defaults['premiumIRNonCreditCardDays'] = $defaults['premiumIRNonCreditCardDays'] ?? 3;
-    $defaults['premiumIRConvenienceStoreDays'] = $defaults['premiumIRConvenienceStoreDays'] ?? 3;
-    $defaults['premiumIRCheckStatuses'] = $defaults['premiumIRCheckStatuses'] ?? ['Pending'];
-    $defaults['premiumIRStatusChange'] = $defaults['premiumIRStatusChange'] ?? 'maintain';
-    $defaults['premiumIRManualCancel'] = $defaults['premiumIRManualCancel'] ?? '1';
-
     return $defaults;
   }
 

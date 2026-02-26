@@ -935,7 +935,11 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     $sortOrder = &$this->getSortOrder($this->_action);
     $sort = new CRM_Utils_Sort($sortOrder, $sortID);
 
-    $query = new CRM_Contact_BAO_Query($params, $this->_returnProperties);
+    $displayRelationshipType = NULL;
+    if(!empty($this->_formValues['display_relationship_type'])) {
+      $displayRelationshipType = $this->_formValues['display_relationship_type'];
+    }
+    $query = new CRM_Contact_BAO_Query($params, $this->_returnProperties, NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, FALSE, TRUE, TRUE, $displayRelationshipType);
     $value = $query->searchQuery(0, 0, $sort,
       FALSE, FALSE, FALSE,
       FALSE, FALSE

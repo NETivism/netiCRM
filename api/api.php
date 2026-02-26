@@ -167,6 +167,58 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
 }
 
 /**
+ * Version 3 wrapper for civicrm_api
+ *
+ * This function simplifies API v3 calls by automatically setting the version parameter.
+ * It is the recommended way to call CiviCRM API v3 from external code.
+ *
+ * @param string $entity
+ *   The entity to perform action on (e.g., 'Contact', 'Contribution', 'Event')
+ * @param string $action
+ *   The action to perform (e.g., 'create', 'get', 'delete', 'update')
+ * @param array $params
+ *   Array of parameters for the API call. Do not include 'version' as it will be
+ *   automatically set to 3.
+ * @param mixed $extra
+ *   Optional extra parameter passed through to the underlying API function
+ *
+ * @return array
+ *   API result array with standard keys:
+ *   - is_error: 0 or 1
+ *   - version: 3
+ *   - count: number of items returned (for get actions)
+ *   - values: array of result values
+ *   - id: created/updated entity ID (for create/update actions)
+ *   - error_message: error description (if is_error = 1)
+ *
+ * @throws Exception
+ *   When API call fails catastrophically
+ *
+ * @example
+ *   // Create a new contact
+ *   $result = civicrm_api3('Contact', 'create', [
+ *     'contact_type' => 'Individual',
+ *     'first_name' => 'John',
+ *     'last_name' => 'Doe',
+ *   ]);
+ *
+ * @example
+ *   // Get contacts
+ *   $result = civicrm_api3('Contact', 'get', [
+ *     'contact_type' => 'Individual',
+ *     'legal_identifier' => 'A123456789',
+ *   ]);
+ *
+ * @see civicrm_api()
+ * @access public
+ * @static
+ */
+function civicrm_api3($entity, $action, $params, $extra = NULL) {
+  $params['version'] = 3;
+  return civicrm_api($entity, $action, $params, $extra);
+}
+
+/**
  * Look up the implementation for a given API request
  *
  * @param $apiRequest array with keys:

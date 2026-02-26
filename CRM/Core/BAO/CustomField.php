@@ -1771,7 +1771,7 @@ SELECT $columnName
   }
 
   static function getTableColumnGroup($fieldID, $force = FALSE) {
-    $cacheKey = "CRM_Core_DAO_CustomField_CustomGroup_TableColumn_{$fieldID}";
+    $cacheKey = __CLASS__ . '::' . __FUNCTION__ . '--' . $fieldID;
     $cache = CRM_Utils_Cache::singleton();
     $fieldValues = $cache->get($cacheKey);
 
