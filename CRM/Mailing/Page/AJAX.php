@@ -94,10 +94,10 @@ class CRM_Mailing_Page_AJAX {
         ];
       }
       elseif (!empty($syncResult['result']['#report']['error'])) {
-        $remoteResult = array(
+        $remoteResult = [
           'success' => FALSE,
           'message' => ts('Synchronize error').': '.$syncResult['result']['#report']['error'],
-        );
+        ];
       }
       else {
         $report = ts('Synchronize error').': ';

@@ -330,9 +330,9 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
 
     // try to enable DMARC when verify passed (sender = from addr)
     if ($enableDMARC) {
-      $params = array(
+      $params = [
         'enableDMARC' => 1,
-      );
+      ];
       CRM_Core_BAO_ConfigSetting::add($params);
     }
 

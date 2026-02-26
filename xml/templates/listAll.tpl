@@ -1,12 +1,12 @@
 <?php
 // (GenCodeChecksum:{$genCodeChecksum})
 
-return array(
+return [
 {foreach from=$tables key=tableName item=table}
-  '{$table.className}' => array(
+  '{$table.className}' => [
     'name' => '{$table.objectName}',
     'class' => '{$table.className}',
     'table' => '{$tableName}',
-  ),
+  ],
 {/foreach}
-);
+];

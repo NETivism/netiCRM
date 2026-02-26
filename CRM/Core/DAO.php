@@ -120,11 +120,11 @@ class CRM_Core_DAO extends DB_DataObject {
         default:
           return FALSE;
       }
-      $host = isset($parsed['host']) ? $parsed['host'] : 'localhost';
-      $port = isset($parsed['port']) ? $parsed['port'] : 3306;
+      $host = $parsed['host'] ?? 'localhost';
+      $port = $parsed['port'] ?? 3306;
       $dbname = isset($parsed['path']) ? ltrim($parsed['path'], '/') : '';
-      $username = isset($parsed['user']) ? $parsed['user'] : '';
-      $password = isset($parsed['pass']) ? $parsed['pass'] : '';
+      $username = $parsed['user'] ?? '';
+      $password = $parsed['pass'] ?? '';
       $pdoDsn = "{$driver}:host={$host};port={$port};dbname={$dbname}";
       $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

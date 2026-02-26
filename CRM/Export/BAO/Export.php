@@ -926,7 +926,7 @@ class CRM_Export_BAO_Export {
             }
           }
           elseif (CRM_Utils_Array::arrayKeyExists($field, $contactRelationshipTypes)) {
-            $relDAO = isset($allRelContactArray[$field][$dao->contact_id]) ? $allRelContactArray[$field][$dao->contact_id] : null;
+            $relDAO = $allRelContactArray[$field][$dao->contact_id] ?? null;
 
             if (is_array($value)) {
               foreach ($value as $relationField => $relationValue) {

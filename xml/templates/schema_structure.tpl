@@ -39,15 +39,15 @@ class CRM_Core_I18n_SchemaStructure
     {ldelim}
         static $result = null;
         if (!$result) {ldelim}
-          $result = array(
-            {foreach from=$columns key=table item=types}
-              '{$table}' => array(
-                {foreach from=$types key=column item=type}
-                  '{$column}' => "{$type}",
-                {/foreach}
-              ),
-            {/foreach}
-          );
+          $result = [
+{foreach from=$columns key=table item=types}
+            '{$table}' => [
+{foreach from=$types key=column item=type}
+              '{$column}' => "{$type}",
+{/foreach}
+            ],
+{/foreach}
+          ];
         {rdelim}
         return $result;
     {rdelim}
@@ -55,23 +55,23 @@ class CRM_Core_I18n_SchemaStructure
     {ldelim}
         static $result = null;
         if (!$result) {ldelim}
-          $result = array(
-            {foreach from=$indices key=table item=tableIndices}
-              '{$table}' => array(
-                {foreach from=$tableIndices key=name item=info}
-                  '{$name}' => array(
-                      'name' => '{$info.name}',
-                      'field' => array(
-                        {foreach from=$info.field item=field}
-                          '{$field}',
-                        {/foreach}
-                      ),
-                      {if $info.unique}'unique' => 1,{/if}
-                  ),
-                {/foreach}
-              ),
-            {/foreach}
-          );
+          $result = [
+{foreach from=$indices key=table item=tableIndices}
+            '{$table}' => [
+{foreach from=$tableIndices key=name item=info}
+              '{$name}' => [
+                'name' => '{$info.name}',
+                'field' => [
+{foreach from=$info.field item=field}
+                  '{$field}',
+{/foreach}
+                ],
+{if $info.unique}                'unique' => 1,{"\n"}{/if}
+              ],
+{/foreach}
+            ],
+{/foreach}
+          ];
         {rdelim}
         return $result;
     {rdelim}

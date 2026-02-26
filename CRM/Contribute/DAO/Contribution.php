@@ -663,7 +663,7 @@
         'source_ip' => [
           'name' => 'source_ip',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Source IP'),
+          'title' => ts('Source Ip') ,
            'maxlength' => 45,
            'size' => CRM_Utils_Type::BIG,
              'import' => false,

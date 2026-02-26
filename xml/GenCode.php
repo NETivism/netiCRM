@@ -87,7 +87,6 @@ class CRM_GenCode_Util_File {
 }
 
 class CRM_GenCode_Main {
-  public $beautifier;
   public $buildVersion;
   public $compileDir;
   public $classNames;
@@ -115,17 +114,6 @@ class CRM_GenCode_Main {
     // CRM-5308 / CRM-3507 - we need {localize} to work in the templates
     require_once 'CRM/Core/Smarty/plugins/block.localize.php';
     $this->smarty->register_block('localize', 'smarty_block_localize');
-
-    // create a instance
-    $this->beautifier = new PHP_Beautifier();
-    $this->beautifier->addFilter('ArrayNested');
-    // add one or more filters
-    $this->beautifier->addFilter('Pear');
-    // add one or more filters
-    $this->beautifier->addFilter('NewLines', ['after' => 'class, public, require, comment']);
-    $this->beautifier->setIndentChar(' ');
-    $this->beautifier->setIndentNumber(2);
-    $this->beautifier->setNewLine("\n");
 
     CRM_GenCode_Util_File::createDir($this->sqlCodePath);
   }
@@ -223,10 +211,8 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     $this->smarty->clear_all_cache();
     $this->smarty->clear_all_assign();
     $this->smarty->assign_by_ref('tables', $tables);
-    $this->beautifier->setInputString($this->smarty->fetch('listAll.tpl'));
-    $this->beautifier->setOutputFile($this->CoreDAOCodePath."AllCoreTables.data.php");
-    $this->beautifier->process();
-    $this->beautifier->save();
+    $listAll = $this->smarty->fetch('listAll.tpl');
+    file_put_contents($this->CoreDAOCodePath . "AllCoreTables.data.php", $listAll);
   }
 
   function generateCiviTestTruncate($tables) {
@@ -369,11 +355,8 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     $this->smarty->clear_all_assign();
     $this->smarty->assign_by_ref('columns', $columns);
     $this->smarty->assign_by_ref('indices', $indices);
-
-    $this->beautifier->setInputString($this->smarty->fetch('schema_structure.tpl'));
-    $this->beautifier->setOutputFile($this->phpCodePath . "/CRM/Core/I18n/SchemaStructure.php");
-    $this->beautifier->process();
-    $this->beautifier->save();
+    $schemaStructure = $this->smarty->fetch('schema_structure.tpl');
+    file_put_contents($this->phpCodePath . "/CRM/Core/I18n/SchemaStructure.php", $schemaStructure);
   }
 
   function generateTemplateVersion($argVersion) {
