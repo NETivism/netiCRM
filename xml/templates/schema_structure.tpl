@@ -35,7 +35,7 @@
  */
 class CRM_Core_I18n_SchemaStructure
 {ldelim}
-    static function &columns()
+    public static function &columns()
     {ldelim}
         static $result = null;
         if (!$result) {ldelim}
@@ -51,7 +51,7 @@ class CRM_Core_I18n_SchemaStructure
         {rdelim}
         return $result;
     {rdelim}
-    static function &indices()
+    public static function &indices()
     {ldelim}
         static $result = null;
         if (!$result) {ldelim}
@@ -75,7 +75,7 @@ class CRM_Core_I18n_SchemaStructure
         {rdelim}
         return $result;
     {rdelim}
-    static function &tables()
+    public static function &tables()
     {ldelim}
         static $result = null;
         if (!$result) {ldelim}

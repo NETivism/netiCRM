@@ -46,21 +46,21 @@ class {$table.className} extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = '{$table.name}';
+  public static $_tableName = '{$table.name}';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -68,7 +68,7 @@ class {$table.className} extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,7 +76,7 @@ class {$table.className} extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -84,7 +84,7 @@ class {$table.className} extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = {$table.log};
+  public static $_log = {$table.log};
   {if $table.primaryKey.name != "id"}
   /**
    * table primary key
@@ -109,7 +109,7 @@ class {$table.className} extends CRM_Core_DAO
    * @access public
    * @return {$table.name}
    */
-  function __construct()
+  public function __construct()
   {ldelim}
     parent::__construct();
   {rdelim}
@@ -120,7 +120,7 @@ class {$table.className} extends CRM_Core_DAO
    * @access public
    * @return array
    */
-  function &links()
+  public function &links()
   {ldelim}
     if (!(self::$_links)) {ldelim}
       self::$_links = [
@@ -159,7 +159,7 @@ class {$table.className} extends CRM_Core_DAO
    * @access public
    * @return array
    */
-  static function &fields()
+  public static function &fields()
   {ldelim}
     if (!(self::$_fields)) {ldelim}
       self::$_fields = [
@@ -226,7 +226,7 @@ class {$table.className} extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  static function getTableName()
+  public static function getTableName()
   {ldelim}
     {if $table.localizable}
     global $dbLocale;
@@ -241,7 +241,7 @@ class {$table.className} extends CRM_Core_DAO
    * @access public
    * @return boolean
    */
-  function getLog()
+  public function getLog()
   {ldelim}
     return self::$_log;
   {rdelim}
@@ -251,7 +251,7 @@ class {$table.className} extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &import($prefix = false)
+  public static function &import($prefix = false)
   {ldelim}
     if (!(self::$_import)) {ldelim}
       self::$_import = [];
@@ -282,7 +282,7 @@ class {$table.className} extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &export($prefix = false)
+  public static function &export($prefix = false)
   {ldelim}
     if (!(self::$_export)) {ldelim}
       self::$_export = [];
@@ -313,7 +313,7 @@ class {$table.className} extends CRM_Core_DAO
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {ldelim}
     static $enums = [
       {foreach from=$table.fields item=field}
@@ -332,7 +332,7 @@ class {$table.className} extends CRM_Core_DAO
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
+  public static function tsEnum($field, $value)
   {ldelim}
     static $translations = null;
     if (!$translations) {ldelim}
@@ -356,7 +356,7 @@ class {$table.className} extends CRM_Core_DAO
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
+  public static function addDisplayEnums(&$values)
   {ldelim}
     $enumFields = &{$table.className}::getEnums();
     foreach ($enumFields as $enum) {ldelim}
