@@ -10,7 +10,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-        '@PHP8x4Migration' => true,
+        '@PHP8x5Migration' => true,
         'array_syntax' => ['syntax' => 'short'],
         'heredoc_indentation' => ['indentation' => 'same_as_start'],
         'list_syntax' => false,
@@ -33,6 +33,7 @@ return $config->setRules([
         'no_unneeded_final_method' => true,
         'no_unreachable_default_argument_value' => true,
         'phpdoc_readonly_class_comment_to_keyword' => true,
+        'modern_serialization_methods' => true,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

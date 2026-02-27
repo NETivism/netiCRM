@@ -104,7 +104,7 @@ class CRM_Utils_Type {
         $string = 'Mediumblob';
         break;
 
-      case 32768;
+      case 32768:
         $string = 'Double';
         break;
 
