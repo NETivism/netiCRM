@@ -37,7 +37,7 @@
 
 class CRM_Exception extends PEAR_Exception {
   // Redefine the exception so message isn't optional
-  public function __construct($message = NULL, $code = 0, Exception$previous = NULL) {
+  public function __construct($message = NULL, $code = 0, ?Exception$previous = NULL) {
     parent::__construct($message, $code, $previous);
   }
 }

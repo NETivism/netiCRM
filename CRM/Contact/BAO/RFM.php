@@ -388,7 +388,7 @@ class CRM_Contact_BAO_RFM {
    * @param  bool $download Bool to indicate print to browser or not
    * @return string Path to the exported CSV file
    */
-  public function exportToCSV(string $filename = null, bool $download = TRUE): string {
+  public function exportToCSV(?string $filename = null, bool $download = TRUE): string {
     if (!$this->_tables['rfm']) {
       $this->calcRFM();
     }

@@ -31,7 +31,7 @@ class API_Exception extends Exception  {
    * @param array $extraParams
    * @param Exception $previous
    */
-  public function __construct($message, $error_code = 0, $extraParams = [],Exception $previous = null) {
+  public function __construct($message, $error_code = 0, $extraParams = [],?Exception $previous = null) {
     if (is_numeric ($error_code)) // using int for error code "old way")
       $code = $error_code;
     else

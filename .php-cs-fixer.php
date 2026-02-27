@@ -10,7 +10,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-        '@PHP73Migration' => true,
+        '@PHP8x4Migration' => true,
         'array_syntax' => ['syntax' => 'short'],
         'heredoc_indentation' => ['indentation' => 'same_as_start'],
         'list_syntax' => false,
@@ -19,10 +19,20 @@ return $config->setRules([
         'method_argument_space' => false,
         'trailing_comma_in_multiline' => false,
         'whitespace_after_comma_in_array' => false,
+        'assign_null_coalescing_to_coalesce_equal' => false, // 7.3 backward compatibility
+        'octal_notation' => false, // 8.0 backward compatibility
+        'nullable_type_declaration_for_default_null_value' => true, // 7.1+ compatibility, ?string nullable type declaration
+        #### risky ####
         'pow_to_exponentiation' => true,
         'combine_nested_dirname' => true,
         'implode_call' => true,
         'no_alias_functions' => true,
+        'get_class_to_class_keyword' => false, // 7.4 backward compatibility
+        'modernize_strpos' => false, // 7.4 backward compatibility
+        'no_php4_constructor' => true,
+        'no_unneeded_final_method' => true,
+        'no_unreachable_default_argument_value' => true,
+        'phpdoc_readonly_class_comment_to_keyword' => true,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)
