@@ -20,6 +20,7 @@ return $config->setRules([
         'method_argument_space' => false,
         'trailing_comma_in_multiline' => false,
         'whitespace_after_comma_in_array' => false,
+        'combine_nested_dirname' => true,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

@@ -31,7 +31,7 @@
  */
 // require_once 'PHPUnit/Framework/TestSuite.php';
 global $civicrm_root;
-$civicrm_root = dirname (dirname (dirname (dirname( __FILE__ ) )));
+$civicrm_root = dirname ( __FILE__, 4);
 $include_path = '.' . PATH_SEPARATOR .
                 $civicrm_root . PATH_SEPARATOR .
                 $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR . get_include_path();

@@ -242,8 +242,8 @@ class CiviUnitTestCase extends CiviUnitTestBase {
     }
 
     //  initialize test database
-    $sql_file2 = dirname(dirname(dirname(dirname(__FILE__)))) . "/sql/civicrm_data.mysql";
-    $sql_file3 = dirname(dirname(dirname(dirname(__FILE__)))) . "/sql/test_data.mysql";
+    $sql_file2 = dirname(__FILE__, 4) . "/sql/civicrm_data.mysql";
+    $sql_file3 = dirname(__FILE__, 4) . "/sql/test_data.mysql";
     $query2    = file_get_contents($sql_file2);
     $query3    = file_get_contents($sql_file3);
     if (self::$utils->do_query($query2) === FALSE) {
@@ -2030,7 +2030,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
       unset($config->customPHPPathDir);
     }
     elseif ($customDirs['php_path'] === TRUE) {
-      $config->customPHPPathDir = dirname(dirname(__FILE__)) . '/custom_directories/php/';
+      $config->customPHPPathDir = dirname(__FILE__, 2) . '/custom_directories/php/';
     }
     else {
       $config->customPHPPathDir = $php_path;
@@ -2040,7 +2040,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
       unset($config->customTemplateDir);
     }
     elseif ($customDirs['template_path'] === TRUE) {
-      $config->customTemplateDir = dirname(dirname(__FILE__)) . '/custom_directories/templates/';
+      $config->customTemplateDir = dirname(__FILE__, 2) . '/custom_directories/templates/';
     }
     else {
       $config->customTemplateDir = $template_path;

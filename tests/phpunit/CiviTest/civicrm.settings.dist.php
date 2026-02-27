@@ -73,7 +73,7 @@ grant SUPER on *.* to db_username@localhost identified by 'db_password';\n";
 }
 
 global $civicrm_root;
-$civicrm_root = dirname(dirname(dirname(dirname( __FILE__ ))));
+$civicrm_root = dirname( __FILE__, 4);
 
 $include_path = '.' . PATH_SEPARATOR .
               $civicrm_root . PATH_SEPARATOR .
