@@ -373,7 +373,7 @@ function civicrm_get_api_version($desired_version = NULL) {
     $params = $desired_version;
     $desired_version = empty($params['version']) ? NULL : (int) $params['version'];
   }
-  if (isset($desired_version) && is_integer($desired_version)) {
+  if (isset($desired_version) && is_int($desired_version)) {
     $_version = $desired_version;
     // echo "\n".'version: '. $_version ." (parameter)\n";
   }

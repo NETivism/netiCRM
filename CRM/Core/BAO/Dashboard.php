@@ -291,7 +291,7 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
     $dashletIDs = [];
     if (is_array($columns)) {
       foreach ($columns as $colNo => $dashlets) {
-        if (!is_integer($colNo)) {
+        if (!is_int($colNo)) {
           continue;
         }
         $weight = 1;

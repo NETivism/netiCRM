@@ -11,7 +11,6 @@ $finder = PhpCsFixer\Finder::create()
 $config = new PhpCsFixer\Config();
 return $config->setRules([
         '@PHP73Migration' => true,
-        '@PHP5x6Migration:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'heredoc_indentation' => ['indentation' => 'same_as_start'],
         'list_syntax' => false,
@@ -20,7 +19,10 @@ return $config->setRules([
         'method_argument_space' => false,
         'trailing_comma_in_multiline' => false,
         'whitespace_after_comma_in_array' => false,
+        'pow_to_exponentiation' => true,
         'combine_nested_dirname' => true,
+        'implode_call' => true,
+        'no_alias_functions' => true,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

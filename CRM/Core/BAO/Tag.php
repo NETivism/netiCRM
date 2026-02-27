@@ -116,7 +116,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
         $parent['children'][$dao->id] = ['name' => $dao->name];
       }
     }
-    if (sizeof($orphan)) {
+    if (count($orphan)) {
       //hang the 3rd level lists at the right place
       foreach ($this->tree as & $level1) {
         if (!isset($level1['children'])) {

@@ -60,7 +60,7 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals('civicrm_event.amount.560', $result['values'][0]['name'], 'In line ' . __LINE__);
-    $this->assertTrue(is_integer($result['values'][0]['api.OptionValue.create']));
+    $this->assertTrue(is_int($result['values'][0]['api.OptionValue.create']));
     $this->assertGreaterThan(0, $result['values'][0]['api.OptionValue.create']);
     civicrm_api('OptionGroup', 'delete', ['version' => 3, 'id' => $result['id']]);
   }

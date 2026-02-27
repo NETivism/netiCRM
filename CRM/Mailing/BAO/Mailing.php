@@ -692,7 +692,7 @@ ORDER BY   i.contact_id, i.email_id
     $patterns[] = '\\\\\{\w+\.\w+\\\\\}|\{\{\w+\.\w+\}\}';
     $patterns[] = '\{\w+\.\w+\}';
 
-    $patterns = '{' . join('|', $patterns) . '}imu';
+    $patterns = '{' . implode('|', $patterns) . '}imu';
 
     return $patterns;
   }
@@ -836,7 +836,7 @@ ORDER BY   i.contact_id, i.email_id
           $template[] = $this->footer->body_text;
         }
 
-        $this->templates['text'] = join("\n", $template);
+        $this->templates['text'] = implode("\n", $template);
       }
 
       if ($this->body_html) {
@@ -852,13 +852,13 @@ ORDER BY   i.contact_id, i.email_id
           $template[] = $this->footer->body_html;
         }
 
-        $this->templates['html'] = join("\n", $template);
+        $this->templates['html'] = implode("\n", $template);
       }
 
       if ($this->subject) {
         $template = [];
         $template[] = $this->subject;
-        $this->templates['subject'] = join("\n", $template);
+        $this->templates['subject'] = implode("\n", $template);
       }
     }
     return $this->templates;
@@ -1347,7 +1347,7 @@ AND civicrm_contact.is_opt_out =0";
       // this is where we create a text template from the html template if the text template did not exist
       // this way we ensure that every recipient will receive an email even if the pref is set to text and the
       // user uploads an html email only
-      $text = CRM_Utils_String::htmlToText(join('', $html));
+      $text = CRM_Utils_String::htmlToText(implode('', $html));
     }
 
     // push the tracking url on to the html email if necessary
@@ -1376,7 +1376,7 @@ AND civicrm_contact.is_opt_out =0";
         ($contact['preferred_mail_format'] == 'HTML' && !CRM_Utils_Array::arrayKeyExists('html', $pEmails))
       )) {
       if (is_array($text)) {
-        $textBody = join('', $text);
+        $textBody = implode('', $text);
       }
       else {
         $textBody = $text;
@@ -1387,7 +1387,7 @@ AND civicrm_contact.is_opt_out =0";
     if ($html && ($test || ($contact['preferred_mail_format'] == 'HTML' ||
           $contact['preferred_mail_format'] == 'Both'
         ))) {
-      $htmlBody = join('', $html);
+      $htmlBody = implode('', $html);
 
       // refs #32614, disable smarty evaluation functions
       // #17688, rwd support for newsletter image
@@ -1409,7 +1409,7 @@ AND civicrm_contact.is_opt_out =0";
 
     $mailingSubject = CRM_Utils_Array::value('subject', $pEmails);
     if (is_array($mailingSubject)) {
-      $mailingSubject = join('', $mailingSubject);
+      $mailingSubject = implode('', $mailingSubject);
     }
     $mailParams['Subject'] = $mailingSubject;
 

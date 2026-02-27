@@ -157,7 +157,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
         foreach ($discountDefualt[$key] as $k => $v) {
           $defaults["discounted_value"][$k][$key + 1] = $v;
         }
-        $maxSize[$key] = sizeof($val['label']);
+        $maxSize[$key] = count($val['label']);
       }
 
       $this->set('discountSection', 1);

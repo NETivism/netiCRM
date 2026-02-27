@@ -197,7 +197,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
-    $this->_numStrings = sizeof($params['old']);
+    $this->_numStrings = count($params['old']);
 
     $enabled['exactMatch'] = $enabled['wildcardMatch'] = $disabled['exactMatch'] = $disabled['wildcardMatch'] = [];
     for ($i = 1; $i <= $this->_numStrings; $i++) {

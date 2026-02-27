@@ -370,7 +370,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     );
     //unset selected fields
     foreach ($groupFieldList as $key => $value) {
-      if (is_integer($key)) {
+      if (is_int($key)) {
         unset($fields['Individual'][$value], $fields['Household'][$value], $fields['Organization'][$value]);
         continue;
       }

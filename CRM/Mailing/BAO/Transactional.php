@@ -479,7 +479,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       // this is where we create a text template from the html template if the text template did not exist
       // this way we ensure that every recipient will receive an email even if the pref is set to text and the
       // user uploads an html email only
-      $text = CRM_Utils_String::htmlToText(join('', $html));
+      $text = CRM_Utils_String::htmlToText(implode('', $html));
     }
 
     // push the tracking url on to the html email if necessary
@@ -511,7 +511,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
         ($contact['preferred_mail_format'] == 'HTML' && !CRM_Utils_Array::arrayKeyExists('html', $pEmails))
       )) {
       if (is_array($text)) {
-        $textBody = join('', $text);
+        $textBody = implode('', $text);
       }
       else {
         $textBody = $text;
@@ -520,7 +520,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
 
     if ($html && ($test || ($contact['preferred_mail_format'] == 'HTML' || $contact['preferred_mail_format'] == 'Both'))) {
-      $htmlBody = join('', $html);
+      $htmlBody = implode('', $html);
 
       // refs #32614, disable smarty evaluation functions
       // #17688, rwd support for newsletter image
@@ -540,7 +540,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $mailParams['images'] = $attachFiles['images'];
     $mailingSubject = CRM_Utils_Array::value('subject', $pEmails);
     if (is_array($mailingSubject)) {
-      $mailingSubject = join('', $mailingSubject);
+      $mailingSubject = implode('', $mailingSubject);
     }
     $mailParams['Subject'] = $mailingSubject;
 
