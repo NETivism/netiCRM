@@ -63,7 +63,7 @@ class CRM_Contact_BAO_ProximityQuery {
       self::$_earthFlattening = 1.0 / 298.257223563;
       self::$_earthRadiusSemiMajor = 6378137.0;
       self::$_earthRadiusSemiMinor = self::$_earthRadiusSemiMajor * (1.0 - self::$_earthFlattening);
-      self::$_earthEccentricitySQ = 2 * self::$_earthFlattening - pow(self::$_earthFlattening, 2);
+      self::$_earthEccentricitySQ = 2 * self::$_earthFlattening - self::$_earthFlattening** 2;
     }
   }
 

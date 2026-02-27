@@ -11,6 +11,7 @@ $finder = PhpCsFixer\Finder::create()
 $config = new PhpCsFixer\Config();
 return $config->setRules([
         '@PHP73Migration' => true,
+        '@PHP5x6Migration:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
         'heredoc_indentation' => ['indentation' => 'same_as_start'],
         'list_syntax' => false,
@@ -20,6 +21,7 @@ return $config->setRules([
         'trailing_comma_in_multiline' => false,
         'whitespace_after_comma_in_array' => false,
     ])
+    ->setRiskyAllowed(true)
     ->setFinder($finder)
     ->setIndent('  ') // 2 spaces as per your guidelines
     ->setLineEnding("\n");
