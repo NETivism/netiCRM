@@ -48,7 +48,7 @@ class CRM_Activity_StateMachine_Search extends CRM_Core_StateMachine {
   /**
    * class constructor
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $this->_pages = [];
@@ -79,7 +79,7 @@ class CRM_Activity_StateMachine_Search extends CRM_Core_StateMachine {
    * @return string the name of the form that will handle the task
    * @access protected
    */
-  function taskName($controller, $formName = 'Search') {
+  public function taskName($controller, $formName = 'Search') {
     // total hack, check POST vars and then session to determine stuff
     // fix value if print button is pressed
     if (CRM_Utils_Array::value('_qf_' . $formName . '_next_print', $_POST)) {
@@ -101,7 +101,7 @@ class CRM_Activity_StateMachine_Search extends CRM_Core_StateMachine {
    * @return string
    * @access public
    */
-  function getTaskFormName() {
+  public function getTaskFormName() {
     return CRM_Utils_String::getClassName($this->_task);
   }
 }

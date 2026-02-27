@@ -36,11 +36,11 @@ class CRM_Core_Lock {
 
   public $_timeout;
   // lets have a 1 second timeout for now
-  CONST TIMEOUT = 1;
+  public CONST TIMEOUT = 1;
 
   protected $_hasLock = FALSE;
 
-  protected $_name; function __construct($name, $timeout = NULL) {
+  protected $_name; public function __construct($name, $timeout = NULL) {
     $config = CRM_Core_Config::singleton();
     $dsnArray = DB::parseDSN($config->dsn);
     $database = $dsnArray['database'];
@@ -51,11 +51,11 @@ class CRM_Core_Lock {
     $this->acquire();
   }
 
-  function __destruct() {
+  public function __destruct() {
     $this->release();
   }
 
-  function acquire() {
+  public function acquire() {
     if (!$this->_hasLock) {
       $query = "SELECT GET_LOCK( %1, %2 )";
       $params = [1 => [$this->_name, 'String'],
@@ -69,7 +69,7 @@ class CRM_Core_Lock {
     return $this->_hasLock;
   }
 
-  function release() {
+  public function release() {
     if ($this->_hasLock) {
       $this->_hasLock = FALSE;
 
@@ -79,7 +79,7 @@ class CRM_Core_Lock {
     }
   }
 
-  function isAcquired() {
+  public function isAcquired() {
     return $this->_hasLock;
   }
 

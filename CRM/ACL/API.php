@@ -39,7 +39,7 @@ class CRM_ACL_API {
    *
    * @var int
    */
-  CONST EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6;
+  public CONST EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6;
 
   /**
    * given a permission string, check for access requirements
@@ -51,7 +51,7 @@ class CRM_ACL_API {
    * @static
    * @access public
    */
-  static function check($str, $contactID = NULL) {
+  public static function check($str, $contactID = NULL) {
     if ($contactID == NULL) {
       $session = CRM_Core_Session::singleton();
       $contactID = $session->get('userID');

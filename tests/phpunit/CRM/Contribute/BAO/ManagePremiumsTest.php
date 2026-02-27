@@ -30,7 +30,7 @@ require_once 'CRM/Contribute/BAO/ManagePremiums.php';
 class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'ManagePremiums BAOs',
@@ -39,7 +39,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -48,7 +48,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
     /**
      * check method add()
      */
-    function testAdd()
+    public function testAdd()
     {
         $ids    = [ ];
         $params =  [
@@ -74,7 +74,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
     /**
      * check method retrieve( )
      */
-    function testRetrieve( ) 
+    public function testRetrieve( ) 
     {
         $ids    = [ ];
         $params =  [
@@ -97,7 +97,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
     /**
      * check method setIsActive( )
      */
-    function testSetIsActive( ) 
+    public function testSetIsActive( ) 
     { 
         $ids    = [ ];
         $params =  [
@@ -124,7 +124,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase
     /**
      * check method del( )
      */
-    function testDel( ) 
+    public function testDel( ) 
     {
         $ids    = [ ];
         $params =  [

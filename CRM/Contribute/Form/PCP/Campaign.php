@@ -92,7 +92,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     parent::preProcess();
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $dafaults = [];
     $dao = new CRM_Contribute_DAO_PCP();
 
@@ -233,7 +233,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($fields['goal_amount'] <= 0) {
       $errors['goal_amount'] = ts('Goal Amount should be a numeric value greater than zero.');

@@ -5,7 +5,7 @@ require_once 'CiviTest/Contact.php';
 
 class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'OpenID BAOs',
@@ -14,13 +14,13 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
                      ];
     }
     
-    function tearDown( )
+    public function tearDown( )
     {
         $tablesToTruncate = [ 'civicrm_contact' ];
         $this->quickCleanup( $tablesToTruncate );
     }
 
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -28,7 +28,7 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
     /**
      * add() method (create and update modes)
      */
-    function testAdd( )
+    public function testAdd( )
     {
         $contactId = Contact::createIndividual( );
         
@@ -67,7 +67,7 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
     /**
      * ifAllowedToLogin() method (set and reset allowed_to_login)
      */
-    function testIfAllowedToLogin( )
+    public function testIfAllowedToLogin( )
     {
         $contactId = Contact::createIndividual( );
         $openIdURL = "http://test-username.civicrm.org/";
@@ -108,7 +108,7 @@ class CRM_Core_BAO_OpenIDTest extends CiviUnitTestCase
     /**
      * allOpenIDs() method - get all OpenIDs for the given contact
      */
-    function testAllOpenIDs( )
+    public function testAllOpenIDs( )
     {
         $contactId = Contact::createIndividual( );
         

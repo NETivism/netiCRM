@@ -40,7 +40,7 @@ require_once 'CiviTest/Custom.php';
 class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase 
 {
 
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'CustomValue BAOs',
@@ -49,7 +49,7 @@ class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase
                      ];
     }
 
-    function testTypeCheckWithValidInput( )
+    public function testTypeCheckWithValidInput( )
     {
 
         $values = [ ];
@@ -74,7 +74,7 @@ class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase
         } 
     }     
     
-    function testTypeCheckWithInvalidInput( )
+    public function testTypeCheckWithInvalidInput( )
     {
         $values = [ ];
         $values = [ 'check1'  => 'chk' ];
@@ -85,7 +85,7 @@ class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase
         }
     }
     
-    function testTypeCheckWithWrongInput( )
+    public function testTypeCheckWithWrongInput( )
     {
         $values = [ ];
         $values =  [ 'String'   => 1 ,
@@ -99,7 +99,7 @@ class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase
 
     }
 
-    function testTypeToFieldWithValidInput ( )
+    public function testTypeToFieldWithValidInput ( )
     {
         $values = [ ];
         $values = [ 'String'        => 'char_data',
@@ -122,7 +122,7 @@ class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase
         }
     }
 
-    function testTypeToFieldWithWrongInput ( )
+    public function testTypeToFieldWithWrongInput ( )
     {
       $values = [ ];
       $values = [ 'String'        => 'memo_data',
@@ -137,7 +137,7 @@ class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase
       
     }
     
-    function testFixFieldValueOfTypeMemo ( )
+    public function testFixFieldValueOfTypeMemo ( )
     {
         $customGroup = Custom::createGroup( [], 'Individual' );
      
@@ -163,7 +163,7 @@ class CRM_Core_BAO_CustomValueTest extends CiviUnitTestCase
         Custom::deleteGroup( $customGroup );    
     }
 
-    function testFixFieldValueOfTypeMemoWithEmptyParams ( )
+    public function testFixFieldValueOfTypeMemoWithEmptyParams ( )
     {
         $params =  [ ];
         require_once 'CRM/Core/BAO/CustomValue.php';

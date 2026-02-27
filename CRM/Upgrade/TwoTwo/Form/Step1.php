@@ -35,7 +35,7 @@
 
 
 class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     // check if log file is writable
     $config = CRM_Core_Config::singleton();
 
@@ -172,26 +172,26 @@ class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
     return TRUE;
   }
 
-  function upgrade() {
+  public function upgrade() {
     $this->setVersion('2.1.101');
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '1']);
     return $this->checkVersion('2.1.101');
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('CiviCRM 2.2 Upgrade: Step One (Check Version)');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     $msg = '<p><strong>' . ts('This process will upgrade your v2.1 CiviCRM database to the v2.2 database format.') . '</strong></p><div class="messsages status"><ul><li><strong>' . ts('Make sure you have a current and complete backup of your CiviCRM database and codebase files before starting the upgrade process.') . '</strong></li><li>' . '</li></ul></div><p>' . ts('Click <strong>Begin Upgrade</strong> to begin the process.') . '</p>';
 
     return $msg;
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Begin Upgrade');
   }
 }

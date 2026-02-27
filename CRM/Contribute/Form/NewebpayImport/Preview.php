@@ -17,7 +17,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
 
   protected $_errorFileName = 'NewebpayImportPreviewError.xlsx';
 
-  function preProcess() {
+  public function preProcess() {
     $downloadErrorType = CRM_Utils_Request::retrieve( 'downloadType', 'String', CRM_Core_DAO::$_nullObject);
 
     $this->_result = $this->get('parseResult');
@@ -157,7 +157,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     $this->assign('downloadStatusUrl', $downloadStatusUrl);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addButtons([
         ['type' => 'upload',
           'name' => ts('Import'),
@@ -175,13 +175,13 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [
     ];
     return $defaults;
   }
 
-  function postProcess() {
+  public function postProcess() {
     if (!empty($this->_successedContribution)) {
       foreach ($this->_successedContribution as &$contributionRow) {
         $this->processImportData($contributionRow);
@@ -275,7 +275,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     self::addNote($contributionRow[ts('Result')], $contributionRow);
   }
 
-  static private function addNote($note, &$contributionRow){
+  private static function addNote($note, &$contributionRow){
 
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contributionRow['id'], 'civicrm_contribution' );

@@ -9,7 +9,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  function get_info() {
+  public function get_info() {
     return [
      'name' => 'MyPay payment processor',
      'description' => 'Test MyPay payment processor.',
@@ -20,7 +20,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
     $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
     $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
@@ -107,11 +107,11 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->_processor = NULL;
   }
 
-  function testSinglePaymentNotify(){
+  public function testSinglePaymentNotify(){
     $now = time() - 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
@@ -215,7 +215,7 @@ class CRM_Core_Payment_MyPayTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function testSingleWithWrongParms(){
+  public function testSingleWithWrongParms(){
     $now = time() - 60;
     $trxn_id = 'emptyut'.substr($now, -5);
     $amount = 222;

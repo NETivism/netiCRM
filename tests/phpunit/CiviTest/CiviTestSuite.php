@@ -46,7 +46,7 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
   /**
    * Simple name based constructor
    */
-  function __construct($theClass = '', $name = '') {
+  public function __construct($theClass = '', $name = '') {
     if (empty($name)) {
       $name = str_replace('_',
         ' ',
@@ -81,7 +81,7 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
    *  suppress failed test error issued by phpunit when it finds
    *  a test suite with no tests
    */
-  function testNothing() {}
+  public function testNothing() {}
 
   /**
    *

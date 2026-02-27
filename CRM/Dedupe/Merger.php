@@ -34,7 +34,7 @@
  */
 class CRM_Dedupe_Merger {
   // FIXME: this should be auto-generated from the schema
-  static $validFields = [
+  public static $validFields = [
     'addressee', 'addressee_custom', 'birth_date', 'contact_source', 'contact_type',
     'deceased_date', 'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_phone',
     'do_not_trade', 'external_identifier', 'email_greeting', 'email_greeting_custom', 'first_name', 'gender',
@@ -46,7 +46,7 @@ class CRM_Dedupe_Merger {
     'current_employer_id',
   ];
 
-  static $locationBlocks = [
+  public static $locationBlocks = [
     'email' => 'Email',
     'phone' => 'Phone',
     'im' => 'IM',
@@ -55,7 +55,7 @@ class CRM_Dedupe_Merger {
     'website' => 'Website',
   ];
 
-  static $locationValueField = [
+  public static $locationValueField = [
     'email' => 'email',
     'phone' => 'phone',
     'im' => 'name',
@@ -64,12 +64,12 @@ class CRM_Dedupe_Merger {
     'website' => 'url',
   ];
 
-  static $dupePairsSorted = [];
+  public static $dupePairsSorted = [];
 
   // FIXME: consider creating a common structure with cidRefs() and eidRefs()
   // FIXME: the sub-pages references by the URLs should
   // be loaded dynamically on the merge form instead
-  static function relTables() {
+  public static function relTables() {
     static $relTables;
 
     $config = CRM_Core_Config::singleton();
@@ -190,7 +190,7 @@ class CRM_Dedupe_Merger {
   /**
    * Returns the related tables groups for which a contact has any info entered
    */
-  static function getActiveRelTables($cid) {
+  public static function getActiveRelTables($cid) {
     $cid = (int) $cid;
     $groups = [];
 
@@ -264,7 +264,7 @@ class CRM_Dedupe_Merger {
   /**
    * return custom processing tables.
    */
-  static function cpTables() {
+  public static function cpTables() {
     static $tables;
     if (!$tables) {
       $tables = [
@@ -282,7 +282,7 @@ class CRM_Dedupe_Merger {
   /**
    * return payment related table.
    */
-  static function paymentTables() {
+  public static function paymentTables() {
     static $tables;
     if (!$tables) {
       $tables = ['civicrm_pledge', 'civicrm_membership', 'civicrm_participant'];
@@ -294,7 +294,7 @@ class CRM_Dedupe_Merger {
   /**
    * return payment update Query.
    */
-  static function paymentSql($tableName, $mainContactId, $otherContactId) {
+  public static function paymentSql($tableName, $mainContactId, $otherContactId) {
     $sqls = [];
     if (!$tableName || !$mainContactId || !$otherContactId) {
       return $sqls;
@@ -337,7 +337,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     return $sqls;
   }
 
-  static function operationSql($mainId, $otherId, $tableName, $tableOperations = [], $mode = 'add') {
+  public static function operationSql($mainId, $otherId, $tableName, $tableOperations = [], $mode = 'add') {
     $sqls = [];
     if (!$tableName || !$mainId || !$otherId) {
       return $sqls;
@@ -356,7 +356,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * Based on the provided two contact_ids and a set of tables, move the
    * belongings of the other contact to the main one.
    */
-  static function moveContactBelongings($mainId, $otherId, $tables = FALSE, $tableOperations = []) {
+  public static function moveContactBelongings($mainId, $otherId, $tables = FALSE, $tableOperations = []) {
     $cidRefs = self::cidRefs();
     $eidRefs = self::eidRefs();
     $cpTables = self::cpTables();
@@ -438,7 +438,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
   /**
    * Find differences between contacts.
    */
-  static function findDifferences($main, $other) {
+  public static function findDifferences($main, $other) {
     $result = [
       'contact' => [],
       'custom' => [],
@@ -477,7 +477,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @static
    * @access public
    */
-  static function merge($dupePairs = [], $cacheParams = [], $mode = 'safe', $autoFlip = TRUE, $redirectForPerformance = FALSE, $action = CRM_Core_Action::PREVIEW) {
+  public static function merge($dupePairs = [], $cacheParams = [], $mode = 'safe', $autoFlip = TRUE, $redirectForPerformance = FALSE, $action = CRM_Core_Action::PREVIEW) {
     $cacheKeyString = CRM_Utils_Array::value('cache_key_string', $cacheParams);
     $resultStats = ['merged' => [], 'skipped' => []];
 
@@ -589,7 +589,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @static
    * @access public
    */
-  static function skipMerge($mainId, $otherId, &$migrationInfo, $mode, &$reason) {
+  public static function skipMerge($mainId, $otherId, &$migrationInfo, $mode, &$reason) {
     $conflicts = [];
     $migrationData = [
       'old_migration_info' => $migrationInfo,
@@ -708,7 +708,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @static
    * @access public
    */
-  static function getRowsElementsAndInfo($mainId, $otherId) {
+  public static function getRowsElementsAndInfo($mainId, $otherId) {
     $qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
 
     // Fetch contacts
@@ -1097,7 +1097,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
    * @static
    * @access public
    */
-  static function moveAllBelongings($mainId, $otherId, $migrationInfo) {
+  public static function moveAllBelongings($mainId, $otherId, $migrationInfo) {
     if (empty($migrationInfo)) {
       return FALSE;
     }
@@ -1450,7 +1450,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     return TRUE;
   }
 
-  static function formatReason($conflicts) {
+  public static function formatReason($conflicts) {
     static $lables;
     static $customFields;
     if (empty($labels)) {
@@ -1513,14 +1513,14 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
   /**
    * Sort dupes by deepest tree(children) to root(parent)
    */
-  static function sortDupes($dupePairs) {
+  public static function sortDupes($dupePairs) {
     self::$dupePairsSorted = [];
     $dupeTree = CRM_Dedupe_Merger::treeDupes($dupePairs);
     $iterator = new RecursiveArrayIterator($dupeTree);
     iterator_apply($iterator, [self, 'recursiveIterator'], [$iterator]);
     return self::$dupePairsSorted;
   }
-  function recursiveIterator($iterator) {
+  public function recursiveIterator($iterator) {
     while ( $iterator -> valid() ) {
       if ( $iterator->hasChildren() ) {
         self::recursiveIterator($iterator->getChildren());

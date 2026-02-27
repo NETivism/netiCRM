@@ -45,7 +45,7 @@ class CRM_Event_Badge_Simple extends CRM_Event_Badge {
   public $tMarginName;
   public $pdf;
   public $border;
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     $config = CRM_Core_Config::singleton();
     // A4

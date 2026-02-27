@@ -42,7 +42,7 @@ class CRM_Activity_BAO_Query {
    * @return void
    * @access public
    */
-  static function select(&$query) {
+  public static function select(&$query) {
     if (CRM_Utils_Array::value('activity_id', $query->_returnProperties)) {
       $query->_select['activity_id'] = "civicrm_activity.id as activity_id";
       $query->_element['activity_id'] = 1;
@@ -135,7 +135,7 @@ class CRM_Activity_BAO_Query {
    * @return void
    * @access public
    */
-  static function where(&$query) {
+  public static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
@@ -165,7 +165,7 @@ class CRM_Activity_BAO_Query {
    * @return void
    * @access public
    */
-  static function whereClauseSingle(&$values, &$query) {
+  public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
     $query->_tables['civicrm_activity'] = $query->_whereTables['civicrm_activity'] = 1;
@@ -318,7 +318,7 @@ class CRM_Activity_BAO_Query {
     }
   }
 
-  static function from($name, $mode, $side) {
+  public static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
       case 'civicrm_activity':
@@ -370,7 +370,7 @@ class CRM_Activity_BAO_Query {
    * @return string
    * @access public
    */
-  function qill() {
+  public function qill() {
     return (isset($this->_qill)) ? $this->_qill : "";
   }
 
@@ -382,7 +382,7 @@ class CRM_Activity_BAO_Query {
    * @return void
    * @static
    */
-  static function buildSearchForm(&$form) {
+  public static function buildSearchForm(&$form) {
     $form->addElement('text', 'activity_contact_name', ts('Contact Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
     $activityOptions = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'label', TRUE);
@@ -429,12 +429,12 @@ class CRM_Activity_BAO_Query {
     }
   }
 
-  static function addShowHide(&$showHide) {
+  public static function addShowHide(&$showHide) {
     $showHide->addHide('caseActivityForm');
     $showHide->addShow('caseActivityForm_show');
   }
 
-  static function defaultReturnProperties($mode) {
+  public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
       $properties = [

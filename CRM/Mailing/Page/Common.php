@@ -39,7 +39,7 @@
 class CRM_Mailing_Page_Common extends CRM_Core_Page {
   protected $_type = NULL;
   
-  function run() {
+  public function run() {
 
     $job_id = CRM_Utils_Request::retrieve('jid', 'Integer', CRM_Core_DAO::$_nullObject);
     $queue_id = CRM_Utils_Request::retrieve('qid', 'Integer', CRM_Core_DAO::$_nullObject);

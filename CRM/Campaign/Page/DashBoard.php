@@ -61,7 +61,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
    * @return array $_campaignActionLinks
    *
    */
-  function &campaignActionLinks() {
+  public function &campaignActionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_campaignActionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this Campaign?');
@@ -96,7 +96,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     return self::$_campaignActionLinks;
   }
 
-  function &surveyActionLinks($activityType = NULL) {
+  public function &surveyActionLinks($activityType = NULL) {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_surveyActionLinks)) {
       self::$_surveyActionLinks = [
@@ -173,7 +173,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     return self::$_surveyActionLinks;
   }
 
-  function browseCampaign() {
+  public function browseCampaign() {
     $campaignsData = [];
     //get the campaigns.
     $campaigns = CRM_Campaign_BAO_Campaign::getCampaign(TRUE);
@@ -210,7 +210,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     $this->assign('addCampaignUrl', CRM_Utils_System::url('civicrm/campaign/add', 'reset=1&action=add'));
   }
 
-  function browsePetition() {
+  public function browsePetition() {
     $surveysData = [];
     //get the survey.
     $surveys = CRM_Campaign_BAO_Petition::getPetition(TRUE);
@@ -249,7 +249,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     $this->assign('addSurveyUrl', CRM_Utils_System::url('civicrm/petition/add', 'reset=1&action=add'));
   }
 
-  function browseSurvey() {
+  public function browseSurvey() {
     $surveysData = [];
     //get the survey.
     $surveys = CRM_Campaign_BAO_Survey::getSurvey(TRUE);
@@ -287,7 +287,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     $this->assign('addSurveyUrl', CRM_Utils_System::url('civicrm/survey/add', 'reset=1&action=add'));
   }
 
-  function browse() {
+  public function browse() {
     $this->_tabs = ['campaign' => ts('Campaigns'),
       'survey' => ts('Surveys'),
       'petition' => ts('Petitions'),
@@ -310,7 +310,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
       ));
   }
 
-  function run() {
+  public function run() {
 
     if (!CRM_Campaign_BAO_Campaign::accessCampaignDashboard()) {
       CRM_Utils_System::permissionDenied();
@@ -321,7 +321,7 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     parent::run();
   }
 
-  function buildTabs() {
+  public function buildTabs() {
     $allTabs = [];
     foreach ($this->_tabs as $name => $title) {
       $allTabs[] = ['id' => $name,

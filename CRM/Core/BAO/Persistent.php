@@ -50,7 +50,7 @@ class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $dao = new CRM_Core_DAO_Persistent();
     $dao->copyValues($params);
 
@@ -75,7 +75,7 @@ class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
    *
    * @return object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     if (CRM_Utils_Array::value('is_config', $params) == 1) {
       $params['data'] = serialize(explode(',', $params['data']));
     }
@@ -87,7 +87,7 @@ class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
     return $persistentDAO;
   }
 
-  static function getContext($context, $name = NULL) {
+  public static function getContext($context, $name = NULL) {
     static $contextNameData = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($context, $contextNameData)) {

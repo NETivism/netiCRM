@@ -1,8 +1,8 @@
 <?php
 
 class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_SmartMarketing {
-  const API_BASE_PATH = 'https://api.flydove.net/index.php?r=api/';
-  const BATCH_NUM = 500;
+  public const API_BASE_PATH = 'https://api.flydove.net/index.php?r=api/';
+  public const BATCH_NUM = 500;
 
   /**
    * Remote group cache

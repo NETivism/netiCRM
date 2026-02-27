@@ -39,7 +39,7 @@
  */
 class CRM_Campaign_Page_AJAX {
 
-  static function registerInterview() {
+  public static function registerInterview() {
     $voterId = CRM_Utils_Array::value('voter_id', $_POST);
     $activityId = CRM_Utils_Array::value('activity_id', $_POST);
     $params = ['voter_id' => $voterId,
@@ -82,7 +82,7 @@ class CRM_Campaign_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  static function loadOptionGroupDetails() {
+  public static function loadOptionGroupDetails() {
 
     $id = CRM_Utils_Array::value('option_group_id', $_POST);
     $status = 'fail';
@@ -124,7 +124,7 @@ class CRM_Campaign_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function voterList() {
+  public function voterList() {
     $searchParams = ['city',
       'sort_name',
       'street_unit',
@@ -313,7 +313,7 @@ class CRM_Campaign_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function processVoterData() {
+  public function processVoterData() {
     $status = NULL;
     $operation = CRM_Utils_Type::escape($_POST['operation'], 'String');
     if ($operation == 'release') {

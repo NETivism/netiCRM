@@ -35,7 +35,7 @@ require_once 'CiviTest/PaypalPro.php';
 class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Contribution BAOs',
@@ -44,14 +44,14 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
         $this->_contributionTypeID = $this->contributionTypeCreate();
        
     }
     
-    function tearDown( )
+    public function tearDown( )
     {
         $this->contributionTypeDelete( );
     }
@@ -59,7 +59,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
     /**
      * create() method (create Contribution Page)
      */
-    function testCreate( )
+    public function testCreate( )
     {
         
         $params =  [
@@ -94,7 +94,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
      *  test setIsActive() method
      */
 
-    function testsetIsActive( )
+    public function testsetIsActive( )
     {
         
         $params =  [
@@ -117,7 +117,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
      * test setValues() method
      */
     
-    function testSetValues( )
+    public function testSetValues( )
     {
 
         $params =  [
@@ -144,7 +144,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
      * test copy() method
      */
     
-    function testcopy ( )
+    public function testcopy ( )
     {   
         $params =  [
                          'qfkey'                  => '9a3ef3c08879ad4c8c109b21c583400e',
@@ -180,7 +180,7 @@ class CRM_Contribute_BAO_ContributionPageTest extends CiviUnitTestCase
      * test checkRecurPaymentProcessor() method
      */
     
-    function testcheckRecurPaymentProcessor( )
+    public function testcheckRecurPaymentProcessor( )
     { 
         $paymentProcessor = PaypalPro::create( );
         $params =  [

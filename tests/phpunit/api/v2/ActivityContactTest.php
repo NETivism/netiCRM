@@ -86,7 +86,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  function tearDown() {
+  public function tearDown() {
     $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_activity',
@@ -98,7 +98,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activities_contact_get()
    */
-  function testActivitiesContactGet() {
+  public function testActivitiesContactGet() {
 
     //  Get activities associated with contact 17
     $params = ['contact_id' => 17];
@@ -125,7 +125,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   /**
    * check civicrm_activities_contact_get() with empty array
    */
-  function testActivityContactGetEmpty() {
+  public function testActivityContactGetEmpty() {
     $params = [];
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 1,
@@ -136,7 +136,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   /**
    *  Test  civicrm_activity_contact_get() with missing source_contact_id
    */
-  function testActivitiesContactGetWithInvalidParameter() {
+  public function testActivitiesContactGetWithInvalidParameter() {
     $params = NULL;
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 1,
@@ -147,7 +147,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_contact_get() with invalid Contact Id
    */
-  function testActivitiesContactGetWithInvalidContactId() {
+  public function testActivitiesContactGetWithInvalidContactId() {
     $params = ['contact_id' => NULL];
     $result = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 1,
@@ -170,7 +170,7 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_contact_get() with contact having no Activity
    */
-  function testActivitiesContactGetHavingNoActivity() {
+  public function testActivitiesContactGetHavingNoActivity() {
     $params = [
       'first_name' => 'dan',
       'last_name' => 'conberg',

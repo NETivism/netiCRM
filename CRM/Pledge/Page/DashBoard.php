@@ -48,7 +48,7 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('CiviPledge'));
 
     $startToDate = [];
@@ -105,7 +105,7 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Search',

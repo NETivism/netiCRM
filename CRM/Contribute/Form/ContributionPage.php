@@ -206,7 +206,7 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $config = CRM_Core_Config::singleton();
     if (isset($this->_id)) {

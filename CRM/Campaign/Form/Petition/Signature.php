@@ -50,7 +50,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    */
   public $_fields;
   public $thankyou;
-  CONST EMAIL_THANK = 1, EMAIL_CONFIRM = 2, MODE_CREATE = 4;
+  public CONST EMAIL_THANK = 1, EMAIL_CONFIRM = 2, MODE_CREATE = 4;
 
   protected $_mode;
 
@@ -150,7 +150,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
   protected $_image_URL;
 
-  protected $_defaults = NULL; function __construct() {
+  protected $_defaults = NULL; public function __construct() {
     parent::__construct();
     // this property used by civicrm_fb module and if true, forces thank you email to be sent
     // for users signing in via Facebook connect; also sets Fb email to check against
@@ -228,7 +228,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     $this->_defaults = [];
     if ($this->_contactId) {
@@ -314,7 +314,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    * @see valid_date
    */
 
-  static function formRule($fields, $files, $errors) {
+  public static function formRule($fields, $files, $errors) {
     $errors = [];
 
     return empty($errors) ? TRUE : $errors;
@@ -541,7 +541,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function buildCustom($id, $name, $viewOnly = FALSE) {
+  public function buildCustom($id, $name, $viewOnly = FALSE) {
 
     if ($id) {
 
@@ -606,7 +606,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->thankyou) {
       return ('CRM/Campaign/Page/Petition/ThankYou.tpl');
     }
@@ -615,7 +615,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
   }
 
   // check if user has already signed this petition
-  function redirectIfSigned($params) {
+  public function redirectIfSigned($params) {
     $signature = $this->bao->checkSignature($this->_surveyId, $this->_contactId);
     //TODO: error case when more than one signature found for this petition and this contact
     if (!empty($signature) && (count($signature) == 1)) {

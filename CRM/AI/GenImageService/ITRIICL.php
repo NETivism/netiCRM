@@ -8,7 +8,7 @@
  */
 class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
 
-  const DEFAULT_TIMEOUT = 90;
+  public const DEFAULT_TIMEOUT = 90;
 
   private $apiKey;
   private $endpoint;

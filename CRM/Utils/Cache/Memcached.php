@@ -33,11 +33,11 @@
  *
  */
 class CRM_Utils_Cache_Memcached {
-  CONST DEFAULT_HOST = 'localhost';
-  CONST DEFAULT_PORT = 11211;
-  CONST DEFAULT_TIMEOUT = 3600;
-  CONST DEFAULT_PREFIX = '';
-  CONST MAX_KEY_LEN = 62;
+  public CONST DEFAULT_HOST = 'localhost';
+  public CONST DEFAULT_PORT = 11211;
+  public CONST DEFAULT_TIMEOUT = 3600;
+  public CONST DEFAULT_PREFIX = '';
+  public CONST MAX_KEY_LEN = 62;
 
   /**
    * The host name of the memcached server
@@ -85,7 +85,7 @@ class CRM_Utils_Cache_Memcached {
    *
    * @return void
    */
-  function __construct($config) {
+  public function __construct($config) {
     if (isset($config['host'])) {
       $this->_host = $config['host'];
     }
@@ -108,7 +108,7 @@ class CRM_Utils_Cache_Memcached {
     }
   }
 
-  function set($key, &$value) {
+  public function set($key, &$value) {
     $key = $this->cleanKey($key);
     if (!$this->_cache->set($key, $value, $this->_timeout)) {
       CRM_Core_Error::debug('Result Code: ', $this->_cache->getResultMessage());
@@ -118,18 +118,18 @@ class CRM_Utils_Cache_Memcached {
     return TRUE;
   }
 
-  function &get($key) {
+  public function &get($key) {
     $key = $this->cleanKey($key);
     $result = $this->_cache->get($key);
     return $result;
   }
 
-  function delete($key) {
+  public function delete($key) {
     $key = $this->cleanKey($key);
     return $this->_cache->delete($key);
   }
 
-  function cleanKey($key) {
+  public function cleanKey($key) {
     $key = preg_replace('/\s+|\W+/', '_', $this->_prefix . $key);
     if (strlen($key) > self::MAX_KEY_LEN) {
       // this should be 32 characters in length
@@ -140,7 +140,7 @@ class CRM_Utils_Cache_Memcached {
     return $key;
   }
 
-  function flush() {
+  public function flush() {
     return $this->_cache->flush();
   }
 }

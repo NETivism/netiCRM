@@ -126,7 +126,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * form fields based on their requirement
    *
    */
-  function setFields() {
+  public function setFields() {
     $this->_fields = [
       'subject' => ['type' => 'text',
         'label' => ts('Subject'),
@@ -206,7 +206,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
     $this->assign('cdType', FALSE);
     if ($this->_cdType) {
@@ -476,7 +476,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
@@ -841,7 +841,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     // skip form rule if deleting
     if (CRM_Utils_Array::value('_qf_Activity_next_', $fields) == 'Delete') {
       return TRUE;
@@ -1133,7 +1133,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * needed, before the activity is added/updated
    *
    */
-  function beginPostProcess(&$params) {
+  public function beginPostProcess(&$params) {
     if ($this->_activityTypeFile) {
       $className = "CRM_{$this->_crmDir}_Form_Activity_{$this->_activityTypeFile}";
       $className::beginPostProcess( $this, $params );
@@ -1145,7 +1145,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
    * needed, after the activity has been added/updated
    *
    */
-  function endPostProcess(&$params, &$activity) {
+  public function endPostProcess(&$params, &$activity) {
     if ($this->_activityTypeFile) {
       $className = "CRM_{$this->_crmDir}_Form_Activity_{$this->_activityTypeFile}";
       $className::endPostProcess( $this, $params, $activity );

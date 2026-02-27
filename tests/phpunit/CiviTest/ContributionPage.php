@@ -7,7 +7,7 @@ class ContributionPage extends PHPUnit_Framework_Testcase
      *
      * @return $contributionPage id of created Contribution Page
      */
-    function create( $id = null ) 
+    public function create( $id = null ) 
     {
         require_once "CRM/Contribute/BAO/ContributionPage.php";        
         $params = [
@@ -42,7 +42,7 @@ class ContributionPage extends PHPUnit_Framework_Testcase
      * @return boolean true if Contribution Page deleted, false otherwise
      * 
      */
-    function delete( $contributionPageId ) 
+    public function delete( $contributionPageId ) 
     {
         require_once "CRM/Contribute/DAO/ContributionPage.php";        
         $cp     = new CRM_Contribute_DAO_ContributionPage( );

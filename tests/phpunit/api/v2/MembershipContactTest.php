@@ -43,7 +43,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
   protected $_orgContact;
   protected $_membershipTypeID;
   protected $_membershipStatusID;
-  protected $_membershipID; function get_info() {
+  protected $_membershipID; public function get_info() {
     return [
       'name' => 'Membership Contact',
       'description' => 'Test all Membership API methods.',
@@ -56,7 +56,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * This method is called before a test is executed.
    *
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->_contactID = $this->individualCreate();
@@ -88,7 +88,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * This method is called after a test is executed.
    *
    */
-  function tearDown() {
+  public function tearDown() {
     $this->membershipDelete($this->_membershipID);
     $this->membershipStatusDelete($this->_membershipStatusID);
     $this->membershipTypeDelete(['id' => $this->_membershipTypeID]);
@@ -102,7 +102,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_get with empty params.
    * Error expected.
    */
-  function testGetWithEmptyParams() {
+  public function testGetWithEmptyParams() {
     $params = [];
     $result = &civicrm_contact_memberships_get($params);
     $this->assertEquals($result['is_error'], 1,
@@ -114,7 +114,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_get with params with wrong type.
    * Gets treated as contact_id, memberships expected.
    */
-  function testGetWithWrongParamsType() {
+  public function testGetWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_contact_memberships_get($params);
     $this->assertEquals($result['is_error'], 1,
@@ -126,7 +126,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_get with params not array.
    * Gets treated as contact_id, memberships expected.
    */
-  function testGetWithParamsContactId() {
+  public function testGetWithParamsContactId() {
     $membership = &civicrm_contact_memberships_get($this->_contactID);
 
     $result = $membership[$this->_contactID][$this->_membershipID];
@@ -145,7 +145,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_get with proper params.
    * Memberships expected.
    */
-  function testGet() {
+  public function testGet() {
     $params = ['contact_id' => $this->_contactID];
 
     $membership = &civicrm_contact_memberships_get($params);
@@ -166,7 +166,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_get for only active.
    * Memberships expected.
    */
-  function testGetOnlyActive() {
+  public function testGetOnlyActive() {
     $params = [
       'contact_id' => $this->_contactID,
       'active_only' => 1,
@@ -183,7 +183,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_get for non exist contact.
    * empty Memberships.
    */
-  function testGetNoContactExists() {
+  public function testGetNoContactExists() {
     $params = ['contact_id' => 'NoContact'];
 
     $membership = &civicrm_contact_memberships_get($params);
@@ -194,7 +194,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_get with relationship.
    * get Memberships.
    */
-  function testGetWithRelationship() {
+  public function testGetWithRelationship() {
 
     $membershipOrgId = $this->organizationCreate();
     $memberContactId = $this->individualCreate();
@@ -272,7 +272,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_create with empty params.
    * Error expected.
    */
-  function testCreateWithEmptyParams() {
+  public function testCreateWithEmptyParams() {
     $params = [];
     $result = civicrm_membership_contact_create($params);
     $this->assertEquals($result['is_error'], 1);
@@ -282,7 +282,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_create with params with wrong type.
    * Error expected.
    */
-  function testCreateWithParamsString() {
+  public function testCreateWithParamsString() {
     $params = 'a string';
     $result = &civicrm_contact_membership_create($params);
     $this->assertEquals($result['is_error'], 1,
@@ -290,7 +290,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
     );
   }
 
-  function testMembershipCreateMissingRequired() {
+  public function testMembershipCreateMissingRequired() {
     $params = [
       'membership_type_id' => '1',
       'join_date' => '2006-01-21',
@@ -304,7 +304,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testMembershipCreate() {
+  public function testMembershipCreate() {
     $params = [
       'contact_id' => $this->_contactID,
       'membership_type_id' => $this->_membershipTypeID,
@@ -327,7 +327,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * membership).
    * success expected.
    */
-  function testMembershipCreateWithId() {
+  public function testMembershipCreateWithId() {
     $params = [
       'id' => $this->_membershipID,
       'contact_id' => $this->_contactID,
@@ -349,7 +349,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_create Invalid membership data
    * Error expected.
    */
-  function testMembershipCreateInvalidMemData() {
+  public function testMembershipCreateInvalidMemData() {
     //membership_contact_id as string
     $params = [
       'membership_contact_id' => 'Invalid',
@@ -383,7 +383,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * membership).
    * Success expected.
    */
-  function testMembershipCreateWithMemContact() {
+  public function testMembershipCreateWithMemContact() {
 
     $params = [
       'membership_contact_id' => $this->_contactID,
@@ -409,7 +409,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
    * Test civicrm_contact_memberships_delete with params with wrong type.
    * Error expected.
    */
-  function testDeleteWithParamsString() {
+  public function testDeleteWithParamsString() {
     $params = 'a string';
     $result = &civicrm_contact_membership_create($params);
     $this->assertEquals($result['is_error'], 1,
@@ -417,13 +417,13 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
     );
   }
 
-  function testMembershipDeleteEmpty() {
+  public function testMembershipDeleteEmpty() {
     $params = [];
     $result = civicrm_membership_delete($params);
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testMembershipDelete() {
+  public function testMembershipDelete() {
     $params = [
       'contact_id' => $this->_contactID,
       'membership_type_id' => $this->_membershipTypeID,
@@ -441,7 +441,7 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
   }
 
   ///////////////// _civicrm_membership_format_params with $create
-  function testMemebershipFormatParamsWithCreate() {
+  public function testMemebershipFormatParamsWithCreate() {
 
     $params = [
       'contact_id' => $this->_contactID,

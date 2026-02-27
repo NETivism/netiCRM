@@ -55,7 +55,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * @var int
    * @const
    */
-  CONST LOCATION_BLOCKS = 1;
+  public CONST LOCATION_BLOCKS = 1;
 
   /**
    * the id of the event we are proceessing
@@ -216,7 +216,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_eventId = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
 
@@ -565,7 +565,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function assignToTemplate() {
+  public function assignToTemplate() {
     //process only primary participant params
     $this->_params = $this->get('params');
     if (isset($this->_params[0])) {
@@ -655,7 +655,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function buildCustom($id, $name, $viewOnly = FALSE) {
+  public function buildCustom($id, $name, $viewOnly = FALSE) {
     $stateCountryMap = $fields = [];
 
     if ($id) {
@@ -793,7 +793,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     }
   }
 
-  static function initEventFee(&$form, $eventID) {
+  public static function initEventFee(&$form, $eventID) {
     // get price info
 
     $price = CRM_Price_BAO_Set::initSet($form, $eventID, 'civicrm_event');
@@ -836,7 +836,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function confirmPostProcess($contactID = NULL, $contribution = NULL, $payment = NULL) {
+  public function confirmPostProcess($contactID = NULL, $contribution = NULL, $payment = NULL) {
     // add/update contact information
     $fields = [];
     unset($this->_params['note']);
@@ -1365,7 +1365,7 @@ WHERE  v.option_group_id = g.id
      * @return array $optionsCount, array of each option w/ count total.
      * @access public 
      */
-  static function getPriceSetOptionCount(&$form) {
+  public static function getPriceSetOptionCount(&$form) {
     $params = $form->get('params');
     $priceSet = $form->get('priceSet');
     $priceSetId = $form->get('priceSetId');
@@ -1418,7 +1418,7 @@ WHERE  v.option_group_id = g.id
     return $optionsCount;
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_eventId) {
       $templateName = $this->_name;
       if (substr($templateName, 0, 12) == 'Participant_') {
@@ -1434,7 +1434,7 @@ WHERE  v.option_group_id = g.id
     return parent::getTemplateFileName();
   }
 
-  function getContactID() {
+  public function getContactID() {
     $tempID = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
     // force to ignore the authenticated user
@@ -1462,7 +1462,7 @@ WHERE  v.option_group_id = g.id
      * as well as user should select at least one price field option.
      *
      */
-  static function validatePriceSet(&$form, $params) {
+  public static function validatePriceSet(&$form, $params) {
     $errors = [];
     if (!is_array($params) || empty($params)) {
       return $errors;
@@ -1570,7 +1570,7 @@ WHERE  v.option_group_id = g.id
     return $errors;
   }
 
-  function isEventFull() {
+  public function isEventFull() {
     // count with waitlist
     $this->_availableRegistrations = CRM_Event_BAO_Participant::eventFull($this->_values['event']['id'], TRUE);
     $this->_allowWaitlist = CRM_Utils_Array::value('has_waitlist', $this->_values['event']);
@@ -1702,7 +1702,7 @@ WHERE  v.option_group_id = g.id
     return $contactID;
   }
 
-  function setParticipantCustomDefault($participantId, $fields, &$defaults){
+  public function setParticipantCustomDefault($participantId, $fields, &$defaults){
     $participantDefault = [];
     CRM_Core_BAO_UFGroup::setComponentDefaults($fields, $participantId, 'Event', $participantDefault);
     foreach($participantDefault as $cfKey => $value) {

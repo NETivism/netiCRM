@@ -51,7 +51,7 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
      ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $tablesToTruncate = [
         'civicrm_contact',
         'civicrm_contribution',

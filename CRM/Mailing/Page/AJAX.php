@@ -41,7 +41,7 @@ class CRM_Mailing_Page_AJAX {
   /**
    * Function to fetch the template text/html messages
    */
-  static function template() {
+  public static function template() {
 
     $templateId = CRM_Utils_Type::escape($_POST['tid'], 'Integer');
 

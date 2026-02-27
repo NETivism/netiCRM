@@ -37,7 +37,7 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   protected $_cId_a;
   protected $_cId_b;
-  protected $_relTypeID; function get_info() {
+  protected $_relTypeID; public function get_info() {
     return [
       'name' => 'RelationshipType Create',
       'description' => 'Test all RelationshipType Create API methods.',
@@ -45,14 +45,14 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->_cId_a = $this->individualCreate();
     $this->_cId_b = $this->organizationCreate();
   }
 
-  function tearDown() {
+  public function tearDown() {
 
     CRM_Core_PseudoConstant::flush('relationshipType');
 
@@ -65,7 +65,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testRelationshipTypeCreateEmpty() {
+  public function testRelationshipTypeCreateEmpty() {
     $params = [];
     $result = &civicrm_relationship_type_add($params);
 
@@ -76,7 +76,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with No array
    */
-  function testRelationshipTypeCreateParamsNotArray() {
+  public function testRelationshipTypeCreateParamsNotArray() {
     $params = 'name_a_b = Employee of';
     $result = &civicrm_relationship_type_add($params);
 
@@ -87,7 +87,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with no name
    */
-  function testRelationshipTypeCreateWithoutName() {
+  public function testRelationshipTypeCreateWithoutName() {
     $relTypeParams = [
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
@@ -103,7 +103,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with no contact type
    */
-  function testRelationshipTypeCreateWithoutContactType() {
+  public function testRelationshipTypeCreateWithoutContactType() {
     $relTypeParams = [
       'name_a_b' => 'Relation 1 without contact type',
       'name_b_a' => 'Relation 2 without contact type',
@@ -119,7 +119,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * create relationship type
    */
-  function testRelationshipTypeCreate() {
+  public function testRelationshipTypeCreate() {
     $relTypeParams = [
       'name_a_b' => 'Relation 1 for relationship type create',
       'name_b_a' => 'Relation 2 for relationship type create',
@@ -141,7 +141,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testRelationshipTypeDeleteEmpty() {
+  public function testRelationshipTypeDeleteEmpty() {
     $params = [];
     $result = &civicrm_relationship_type_delete($params);
 
@@ -151,7 +151,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with No array
    */
-  function testRelationshipTypeDeleteParamsNotArray() {
+  public function testRelationshipTypeDeleteParamsNotArray() {
     $params = 'name_a_b = Test1';
     $result = &civicrm_relationship_type_delete($params);
 
@@ -161,7 +161,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check if required fields are not passed
    */
-  function testRelationshipTypeDeleteWithoutRequired() {
+  public function testRelationshipTypeDeleteWithoutRequired() {
     $params = [
       'name_b_a' => 'Relation 2 delete without required',
       'contact_type_b' => 'Individual',
@@ -178,7 +178,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with incorrect required fields
    */
-  function testRelationshipTypeDeleteWithIncorrectData() {
+  public function testRelationshipTypeDeleteWithIncorrectData() {
     $params = [
       'id' => 'abcd',
       'name_b_a' => 'Relation 2 delete with incorrect',
@@ -198,7 +198,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check relationship type delete
    */
-  function testRelationshipTypeDelete() {
+  public function testRelationshipTypeDelete() {
     // create sample relationship type.
     $params['id'] = $this->_relationshipTypeCreate();
 
@@ -212,7 +212,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testRelationshipTypeUpdateEmpty() {
+  public function testRelationshipTypeUpdateEmpty() {
     $params = [];
     $result = &civicrm_relationship_type_update($params);
 
@@ -223,7 +223,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with No array
    */
-  function testRelationshipTypeUpdateParamsNotArray() {
+  public function testRelationshipTypeUpdateParamsNotArray() {
     $params = 'name_a_b = Relation 1';
     $result = &civicrm_relationship_type_update($params);
 
@@ -234,7 +234,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with no contact type
    */
-  function testRelationshipTypeUpdateWithoutContactType() {
+  public function testRelationshipTypeUpdateWithoutContactType() {
     // create sample relationship type.
     $this->_relTypeID = $this->_relationshipTypeCreate();
 
@@ -260,7 +260,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with all parameters
    */
-  function testRelationshipTypeUpdate() {
+  public function testRelationshipTypeUpdate() {
     // create sample relationship type.
     $this->_relTypeID = $this->_relationshipTypeCreate();
 
@@ -287,7 +287,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check for success
    */
-  function testRelationshipTypesGet() {
+  public function testRelationshipTypesGet() {
     $firstRelTypeParams = [
       'name_a_b' => 'Relation 1 for create',
       'name_b_a' => 'Relation 2 for create',
@@ -350,7 +350,7 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * create relationship type.
    */
-  function _relationshipTypeCreate($params = NULL) {
+  public function _relationshipTypeCreate($params = NULL) {
     if (!is_array($params) || empty($params)) {
       $params = [
         'name_a_b' => 'Relation 1 for create',

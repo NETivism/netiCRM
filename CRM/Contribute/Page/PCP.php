@@ -47,14 +47,14 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Contribute_BAO_PCP';
   }
 
@@ -63,7 +63,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this Campaign Page ?');
@@ -133,7 +133,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    * @return void
    * @access public
    */
-  function run() {
+  public function run() {
     // get the requested action
     $action = CRM_Utils_Request::retrieve('action', 'String',
       $this, FALSE,
@@ -189,7 +189,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse($action = NULL) {
+  public function browse($action = NULL) {
     $pcpSummary = $params = [];
 
     $pcpSummary = $this->get("pcpSummary");
@@ -318,7 +318,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
     }
   }
 
-  function search() {
+  public function search() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
     }
@@ -335,7 +335,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Contribute_Form_PCP_PCP';
   }
 
@@ -344,7 +344,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return ts('Personal Campaign Page');
   }
 
@@ -353,7 +353,7 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/pcp';
   }
 

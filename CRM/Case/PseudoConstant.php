@@ -44,42 +44,42 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
    * @var array
    * @static
    */
-  static $caseStatus = [];
+  public static $caseStatus = [];
 
   /**
    * redaction rules
    * @var array
    * @static
    */
-  static $redactionRule;
+  public static $redactionRule;
 
   /**
    * case type
    * @var array
    * @static
    */
-  static $caseType = [];
+  public static $caseType = [];
 
   /**
    * Encounter Medium
    * @var array
    * @static
    */
-  static $encounterMedium = [];
+  public static $encounterMedium = [];
 
   /**
    * activity type
    * @var array
    * @static
    */
-  static $activityTypeList = [];
+  public static $activityTypeList = [];
 
   /**
    * case type
    * @var array
    * @static
    */
-  static $caseTypePair = [];
+  public static $caseTypePair = [];
 
   /**
    * Get all the case statues

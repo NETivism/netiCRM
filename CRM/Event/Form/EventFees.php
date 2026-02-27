@@ -45,7 +45,7 @@ class CRM_Event_Form_EventFees {
    * @return void
    * @access public
    */
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     //as when call come from register.php
     if (!$form->_eventId) {
       $form->_eventId = CRM_Utils_Request::retrieve('eventId', 'Positive', $form);
@@ -98,7 +98,7 @@ class CRM_Event_Form_EventFees {
    *
    * @return None
    */
-  static function setDefaultValues(&$form) {
+  public static function setDefaultValues(&$form) {
     $defaults = [];
 
     if ($form->_eventId) {
@@ -400,7 +400,7 @@ class CRM_Event_Form_EventFees {
    *
    * @return None
    */
-  static function setDefaultPriceSet($participantID, $eventID = NULL) {
+  public static function setDefaultPriceSet($participantID, $eventID = NULL) {
     $defaults = [];
     if (!$eventID && $participantID) {
       $eventID = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $participantID, 'event_id');
@@ -487,7 +487,7 @@ SELECT  id, html_type
    * @return None
    * @access public
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     if ($form->_eventId) {
       $form->_isPaidEvent = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $form->_eventId, 'is_monetary');
       if ($form->_isPaidEvent) {

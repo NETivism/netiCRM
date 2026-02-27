@@ -5,7 +5,7 @@ require_once 'CiviTest/Contact.php';
 
 class CRM_Core_BAO_EmailTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Email BAOs',
@@ -14,7 +14,7 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -22,7 +22,7 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
     /**
      * add() method (create and update modes)
      */
-    function testAdd( )
+    public function testAdd( )
     {
         $contactId = Contact::createIndividual( );
 
@@ -58,7 +58,7 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
     /**
      * holdEmail() method (set and reset on_hold condition)
      */
-    function testHoldEmail( )
+    public function testHoldEmail( )
     {
         $contactId = Contact::createIndividual( );
         
@@ -119,7 +119,7 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase
     /**
      * allEmails() method - get all emails for our contact, with primary email first
      */
-    function testAllEmails( )
+    public function testAllEmails( )
     {
         $contactParams =  [ 'first_name' => 'Alan',
                                  'last_name'  => 'Smith',

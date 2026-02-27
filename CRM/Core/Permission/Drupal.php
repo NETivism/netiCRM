@@ -43,23 +43,23 @@ class CRM_Core_Permission_Drupal {
    *
    * @var boolean
    */
-  static protected $_viewAdminUser = FALSE;
-  static protected $_editAdminUser = FALSE;
+  protected static $_viewAdminUser = FALSE;
+  protected static $_editAdminUser = FALSE;
 
   /**
    * am in in view permission or edit permission?
    * @var boolean
    */
-  static protected $_viewPermission = FALSE;
-  static protected $_editPermission = FALSE;
+  protected static $_viewPermission = FALSE;
+  protected static $_editPermission = FALSE;
 
   /**
    * the current set of permissioned groups for the user
    *
    * @var array
    */
-  static protected $_viewPermissionedGroups;
-  static protected $_editPermissionedGroups;
+  protected static $_viewPermissionedGroups;
+  protected static $_editPermissionedGroups;
 
   /**
    * Get all groups from database, filtered by permissions
@@ -247,7 +247,7 @@ class CRM_Core_Permission_Drupal {
    * @static
    * @access public
    */
-  static function check($permission, $contactID = NULL) {
+  public static function check($permission, $contactID = NULL) {
     $ufID = NULL;
     if ($contactID) {
       $ufID = CRM_Core_BAO_UFMatch::getUFId($contactID);

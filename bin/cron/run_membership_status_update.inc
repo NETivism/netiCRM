@@ -10,7 +10,7 @@ function run_membership_status_update(){
 }
 class CRM_UpdateMembershipRecord {
     
-    function __construct() 
+    public function __construct() 
     {
         //log the execution time of script
         CRM_Core_Error::debug_log_message( 'UpdateMembershipRecord.php' );

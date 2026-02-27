@@ -39,13 +39,13 @@
  *  Access Control List
  */
 class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
-  static $_entityTable = NULL;
-  static $_objectTable = NULL;
-  static $_operation = NULL;
+  public static $_entityTable = NULL;
+  public static $_objectTable = NULL;
+  public static $_operation = NULL;
 
-  static $_fieldKeys = NULL;
-  static $_groupCache = [];
-  static function entityTable() {
+  public static $_fieldKeys = NULL;
+  public static $_groupCache = [];
+  public static function entityTable() {
     if (!self::$_entityTable) {
       self::$_entityTable = [
         'civicrm_contact' => ts('Contact'),
@@ -55,7 +55,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     return self::$_entityTable;
   }
 
-  static function objectTable() {
+  public static function objectTable() {
     if (!self::$_objectTable) {
       self::$_objectTable = [
         'civicrm_contact' => ts('Contact'),
@@ -68,7 +68,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     return self::$_objectTable;
   }
 
-  static function operation() {
+  public static function operation() {
     if (!self::$_operation) {
       self::$_operation = [
         'View' => ts('View'),
@@ -642,13 +642,13 @@ SELECT $acl.*
     return $result;
   }
 
-  static function create(&$params) {
+  public static function create(&$params) {
     $dao = new CRM_ACL_DAO_ACL();
     $dao->copyValues($params);
     $dao->save();
   }
 
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     CRM_Core_DAO::commonRetrieve('CRM_ACL_DAO_ACL', $params, $defaults);
   }
 
@@ -661,7 +661,7 @@ SELECT $acl.*
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
 
     // note this also resets any ACL cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
@@ -669,7 +669,7 @@ SELECT $acl.*
     return CRM_Core_DAO::setFieldValue('CRM_ACL_DAO_ACL', $id, 'is_active', $is_active);
   }
 
-  static function check($str, $contactID) {
+  public static function check($str, $contactID) {
 
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
@@ -1100,7 +1100,7 @@ ORDER BY a.object_id
     return $is_visited;
   }
 
-  static function matchType($type, $operation) {
+  public static function matchType($type, $operation) {
     $typeCheck = FALSE;
     switch ($operation) {
       case 'All':
@@ -1148,7 +1148,7 @@ ORDER BY a.object_id
    * @access public
    * @static
    */
-  static function del($aclId) {
+  public static function del($aclId) {
     // delete all entries from the acl cache
 
     CRM_ACL_BAO_Cache::resetCache();

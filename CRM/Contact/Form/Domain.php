@@ -61,7 +61,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @var int
    * @const
    */
-  CONST LOCATION_BLOCKS = 1; function preProcess() {
+  public CONST LOCATION_BLOCKS = 1; public function preProcess() {
 
     CRM_Utils_System::setTitle(ts('Domain Information'));
     $breadCrumbPath = CRM_Utils_System::url('civicrm/admin', 'reset=1');
@@ -82,7 +82,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
      * @access public
      * @return None
      */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
 
 
@@ -181,7 +181,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Domain', 'formRule']);
   }
 
@@ -194,7 +194,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);

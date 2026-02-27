@@ -96,7 +96,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  function tearDown() {
+  public function tearDown() {
     $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_activity',
@@ -109,7 +109,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activities_get_contact()
    */
-  function testActivitiesGetContact() {
+  public function testActivitiesGetContact() {
     //  Insert rows in civicrm_activity creating activities 4 and
     //  13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
@@ -144,7 +144,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testActivityCreateEmpty() {
+  public function testActivityCreateEmpty() {
     $params = [];
     $result = &civicrm_activity_create($params);
     $this->assertEquals($result['is_error'], 1,
@@ -155,7 +155,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check if required fields are not passed
    */
-  function testActivityCreateWithoutRequired() {
+  public function testActivityCreateWithoutRequired() {
     $params = [
       'subject' => 'this case should fail',
       'scheduled_date_time' => date('Ymd'),
@@ -170,7 +170,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_create() with missing subject
    */
-  function testActivityCreateMissingSubject() {
+  public function testActivityCreateMissingSubject() {
     $params = [
       'source_contact_id' => 17,
       'activity_date_time' => date('Ymd'),
@@ -192,7 +192,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_create() with mismatched activity_type_id
    *  and activity_name
    */
-  function testActivityCreateMismatchNameType() {
+  public function testActivityCreateMismatchNameType() {
     $params = [
       'source_contact_id' => 17,
       'subject' => 'Test activity',
@@ -215,7 +215,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_id() with missing source_contact_id
    */
-  function testActivityCreateWithMissingContactId() {
+  public function testActivityCreateWithMissingContactId() {
     $params = [
       'subject' => 'Discussion on Apis for v2',
       'activity_date_time' => date('Ymd'),
@@ -236,7 +236,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_id() with non-numeric source_contact_id
    */
-  function testActivityCreateWithNonNumericContactId() {
+  public function testActivityCreateWithNonNumericContactId() {
     $params = [
       'source_contact_id' => 'fubar',
       'subject' => 'Discussion on Apis for v2',
@@ -282,7 +282,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check with incorrect required fields
    */
-  function testActivityCreateWithNonNumericActivityTypeId() {
+  public function testActivityCreateWithNonNumericActivityTypeId() {
     $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
@@ -304,7 +304,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check with incorrect required fields
    */
-  function testActivityCreateWithUnknownActivityTypeId() {
+  public function testActivityCreateWithUnknownActivityTypeId() {
     $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
@@ -326,7 +326,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_create() with valid parameters
    */
-  function testActivityCreate() {
+  public function testActivityCreate() {
     $params = [
       'source_contact_id' => 17,
       'subject' => 'Discussion on Apis for v2',
@@ -355,7 +355,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_create() with valid parameters
    *  and some custom data
    */
-  function testActivityCreateCustom() {
+  public function testActivityCreateCustom() {
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
     $op->execute($this->_dbconn,
@@ -470,7 +470,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_create() with an invalid text status_id
    */
-  function testActivityCreateBadTextStatus() {
+  public function testActivityCreateBadTextStatus() {
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
     $op->execute($this->_dbconn,
@@ -519,7 +519,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_create() with valid parameters,
    *  using a text status_id
    */
-  function testActivityCreateTextStatus() {
+  public function testActivityCreateTextStatus() {
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
     $op->execute($this->_dbconn,
@@ -574,7 +574,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_get_contact()
    */
-  function testActivityGetContact() {
+  public function testActivityGetContact() {
     //  Insert rows in civicrm_activity creating activities 4 and
     //  13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
@@ -609,7 +609,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_get() with no params
    */
-  function testActivityGetEmpty() {
+  public function testActivityGetEmpty() {
     $params = [];
     $result = civicrm_activity_get($params);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
@@ -618,7 +618,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_get() with a non-numeric activity ID
    */
-  function testActivityGetNonNumericID() {
+  public function testActivityGetNonNumericID() {
     $params = ['activity_id' => 'fubar'];
     $result = civicrm_activity_get($params);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
@@ -627,7 +627,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_get() with a bad activity ID
    */
-  function testActivityGetBadID() {
+  public function testActivityGetBadID() {
     $params = ['activity_id' => 42];
     $result = civicrm_activity_get($params);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
@@ -636,7 +636,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_get() with a good activity ID
    */
-  function testActivityGetGoodID() {
+  public function testActivityGetGoodID() {
     //  Insert rows in civicrm_activity creating activities 4 and
     //  13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
@@ -670,7 +670,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_get() with a good activity ID which
    *  has associated custom data
    */
-  function testActivityGetGoodIDCustom() {
+  public function testActivityGetGoodIDCustom() {
     //  Insert rows in civicrm_activity creating activities 4 and
     //  13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
@@ -741,7 +741,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_get_types()
    */
-  function testActivityGetTypes() {
+  public function testActivityGetTypes() {
     $result = civicrm_activity_get_types();
     $this->assertTrue(is_array($result),
       "In line " . __LINE__
@@ -754,7 +754,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check activity deletion with empty params
    */
-  function testDeleteActivityForEmptyParams() {
+  public function testDeleteActivityForEmptyParams() {
     $params = [];
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 1,
@@ -765,7 +765,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check activity deletion without activity id
    */
-  function testDeleteActivityWithoutId() {
+  public function testDeleteActivityWithoutId() {
     $params = ['activity_name' => 'Meeting'];
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 1,
@@ -776,7 +776,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check activity deletion without activity type
    */
-  function testDeleteActivityWithoutActivityType() {
+  public function testDeleteActivityWithoutActivityType() {
     $params = ['id' => 1];
     $result = &civicrm_activity_delete($params);
     $this->assertEquals($result['is_error'], 1,
@@ -787,7 +787,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check activity deletion with incorrect data
    */
-  function testDeleteActivityWithIncorrectActivityType() {
+  public function testDeleteActivityWithIncorrectActivityType() {
     $params = [
       'id' => 1,
       'activity_name' => 'Test Activity',
@@ -802,7 +802,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check activity deletion with correct data
    */
-  function testDeleteActivity() {
+  public function testDeleteActivity() {
     //  Insert rows in civicrm_activity creating activities 4 and
     //  13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
@@ -825,7 +825,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_processmail() with non-existent file
    */
-  function testActivityProcessEMailNoFile() {
+  public function testActivityProcessEMailNoFile() {
     $result = civicrm_activity_process_email('no/such/file/nohow', 5);
     $this->assertEquals($result['is_error'], 1,
       "In line " . __LINE__
@@ -847,7 +847,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_processmail()
    */
-  function testActivityProcessEMail() {
+  public function testActivityProcessEMail() {
     //  Give contact 17 an email address
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute($this->_dbconn,
@@ -915,7 +915,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testActivityUpdateEmpty() {
+  public function testActivityUpdateEmpty() {
     $params = [];
     $result = &civicrm_activity_update($params);
     $this->assertEquals($result['is_error'], 1,
@@ -926,7 +926,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check if required fields are not passed
    */
-  function testActivityUpdateWithoutRequired() {
+  public function testActivityUpdateWithoutRequired() {
     $params = [
       'subject' => 'this case should fail',
       'scheduled_date_time' => date('Ymd'),
@@ -941,7 +941,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check with incorrect required fields
    */
-  function testActivityUpdateWithIncorrectData() {
+  public function testActivityUpdateWithIncorrectData() {
     $params = [
       'activity_name' => 'Meeting',
       'subject' => 'this case should fail',
@@ -957,7 +957,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * Test civicrm_activity_update() with non-numeric id
    */
-  function testActivityUpdateWithNonNumericId() {
+  public function testActivityUpdateWithNonNumericId() {
     $params = [
       'id' => 'lets break it',
       'activity_name' => 'Meeting',
@@ -974,7 +974,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check with incorrect required fields
    */
-  function testActivityUpdateWithIncorrectContactActivityType() {
+  public function testActivityUpdateWithIncorrectContactActivityType() {
     $params = [
       'id' => 1,
       'activity_name' => 'Test Activity',
@@ -992,7 +992,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_update() to update an existing activity
    */
-  function testActivityUpdate() {
+  public function testActivityUpdate() {
     //  Insert rows in civicrm_activity creating activities 4 and 13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute($this->_dbconn,
@@ -1031,7 +1031,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_update() with valid parameters
    *  and some custom data
    */
-  function testActivityUpdateCustom() {
+  public function testActivityUpdateCustom() {
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
     $op->execute($this->_dbconn,
@@ -1179,7 +1179,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
    *  Test civicrm_activity_update() where the DB has a date_time
    *  value and there is none in the update params.
    */
-  function testActivityUpdateNotDate() {
+  public function testActivityUpdateNotDate() {
     //  Insert rows in civicrm_activity creating activities 4 and 13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute($this->_dbconn,
@@ -1216,7 +1216,7 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
   /**
    * check activity update with status
    */
-  function testActivityUpdateWithStatus() {
+  public function testActivityUpdateWithStatus() {
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
     $op->execute($this->_dbconn,

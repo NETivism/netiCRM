@@ -39,7 +39,7 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -62,7 +62,7 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
    *               failure.
    * @access public
    */
-  function send($recipient, $headers, $body, $job_id) {
+  public function send($recipient, $headers, $body, $job_id) {
 
     $headerStr = [];
     foreach ($headers as $name => $value) {

@@ -49,7 +49,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
   /**
    * max number of contacts we will display for a relationship
    */
-  CONST MAX_RELATIONSHIPS = 50;
+  public CONST MAX_RELATIONSHIPS = 50;
 
   /**
    * The relationship id, used when editing the relationship
@@ -111,7 +111,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
   /**
    * casid if it called from case context
    */
-  protected $_caseId; function preProcess() {
+  protected $_caseId; public function preProcess() {
     //custom data related code
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
     $this->assign('cdType', FALSE);
@@ -181,7 +181,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
@@ -252,7 +252,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function addRules() {
+  public function addRules() {
     if ($this->_cdType) {
       return;
     }
@@ -681,7 +681,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * @return None
    *
    */
-  static function search(&$params, $object = NULL) {
+  public static function search(&$params, $object = NULL) {
     if (isset($this)) {
       $object = $this;
     }
@@ -789,7 +789,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($params, $files, $form) {
+  public static function formRule($params, $files, $form) {
 
     // hack, no error check for refresh
     if (CRM_Utils_Array::value('_qf_Relationship_refresh', $_POST) ||
@@ -865,7 +865,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function dateRule($params) {
+  public static function dateRule($params) {
     $errors = [];
 
     // check start and end date
@@ -882,7 +882,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     return empty($errors) ? TRUE : $errors;
   }
 
-  function modifyParams(&$params) {
+  public function modifyParams(&$params) {
     if (!$this->_callAjax) {
       return;
     }

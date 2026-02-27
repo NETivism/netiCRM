@@ -47,7 +47,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('contactIds', $this->_contactIds);
     parent::preProcess();
   }
@@ -59,7 +59,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Make Mailing Labels'));
 
     //add select for label
@@ -99,7 +99,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['do_not_mail'] = 1;
 
@@ -370,7 +370,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return  null
    * @access  public
    */
-  function createLabel(&$contactRows, &$format) {
+  public function createLabel(&$contactRows, &$format) {
 
 
 
@@ -401,7 +401,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return array of returnProperties
    * @access  public
    */
-  function getReturnProperties(&$format) {
+  public function getReturnProperties(&$format) {
     $returnProperties = [];
     $matches = [];
     preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
@@ -421,7 +421,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     return $returnProperties;
   }
 
-  function mergeSameAddress(&$rows) {
+  public function mergeSameAddress(&$rows) {
     $uniqueAddress = [];
     foreach (array_keys($rows) as $rowID) {
       // load complete address as array key
@@ -469,7 +469,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
   }
 
-  function mergeSameHousehold(&$rows) {
+  public function mergeSameHousehold(&$rows) {
     # group selected contacts by type
     $individuals = [];
     $households = [];

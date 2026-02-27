@@ -55,7 +55,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   protected $_isTypeFreezed = NULL;
   
   protected $_ppDAO;
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
@@ -294,7 +294,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Admin_Form_PaymentProcessor', 'formRule']);
   }
 
-  static function formRule($fields) {
+  public static function formRule($fields) {
 
     // make sure that at least one of live or test is present
     // and we have at least name and url_site
@@ -329,7 +329,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     return empty($errors) ? TRUE : $errors;
   }
 
-  static function checkSection(&$fields, &$errors, $section = NULL) {
+  public static function checkSection(&$fields, &$errors, $section = NULL) {
     if (!empty($fields['payment_processor_type'])) {
       $processorType = CRM_Core_DAO::executeQuery("SELECT user_name_label, password_label, signature_label, subject_label FROM civicrm_payment_processor_type WHERE name LIKE %1", [1 => [$fields['payment_processor_type'], 'String']]);
       $processorType->fetch();
@@ -385,7 +385,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     return $isAllEmpty;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     $defaults['payment_processor_type'] = $this->_ppType;
@@ -464,7 +464,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->updatePaymentProcessor($values, $domainID, TRUE);
   }
   //end of function
-  function updatePaymentProcessor(&$values, $domainID, $test) {
+  public function updatePaymentProcessor(&$values, $domainID, $test) {
     $dao = new CRM_Core_DAO_PaymentProcessor();
 
     $dao->id = $test ? $this->_testID : $this->_id;

@@ -64,8 +64,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * System default language(fallback language)
    */
-  CONST SYSTEM_LANG = 'en_US';
-  CONST SYSTEM_FILEDIR = 'civicrm';
+  public CONST SYSTEM_LANG = 'en_US';
+  public CONST SYSTEM_FILEDIR = 'civicrm';
 
   /**
    * the dsn of the database connection
@@ -218,7 +218,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @return object
    * @static
    */
-  static function &singleton($loadFromDB = TRUE, $force = FALSE) {
+  public static function &singleton($loadFromDB = TRUE, $force = FALSE) {
     if (self::$_singleton === NULL || $force) {
       global $civicrm_root;
       $civicrm_root = rtrim($civicrm_root, '/').'/'; // force add traling slash
@@ -423,7 +423,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    *
    * @return object
    */
-  static public function &getLog() {
+  public static function &getLog() {
     if (!isset(self::$_log)) {
       self::$_log = &Log::singleton('display');
     }
@@ -544,7 +544,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    *
    * @return object
    */
-  static function &getMailer($mailerType = '') {
+  public static function &getMailer($mailerType = '') {
     $mailerTypes = CRM_Core_BAO_MailSettings::$_mailerTypes;
     // refs #30289, special case for retrieve mailer type from mail settings
     if (is_numeric($mailerType) && !empty($mailerTypes[$mailerType])) {
@@ -684,7 +684,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @static
    * @access public
    */
-  static function check(&$config, &$required) {
+  public static function check(&$config, &$required) {
     foreach ($required as $name) {
       if (CRM_Utils_System::isNull($config->$name)) {
         return FALSE;
@@ -697,7 +697,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * reset the serialized array and recompute
    * use with care
    */
-  function reset() {
+  public function reset() {
     $query = "UPDATE civicrm_domain SET config_backend = null";
     CRM_Core_DAO::executeQuery($query);
   }
@@ -705,7 +705,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * one function to get domain ID
    */
-  static function domainID($domainID = NULL, $reset = FALSE) {
+  public static function domainID($domainID = NULL, $reset = FALSE) {
     static $domain;
     if ($domainID) {
       $domain = $domainID;
@@ -720,7 +720,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear db cache
    */
-  static function clearDBCache() {
+  public static function clearDBCache() {
     $queries = ['TRUNCATE TABLE civicrm_acl_cache',
       'TRUNCATE TABLE civicrm_acl_contact_cache',
       'TRUNCATE TABLE civicrm_cache',
@@ -741,7 +741,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear up session
    */
-  function sessionReset(){
+  public function sessionReset(){
     $session = CRM_Core_Session::singleton();
     $session->reset(2);
   }
@@ -749,7 +749,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear leftover temporary tables
    */
-  function clearTempTables() {
+  public function clearTempTables() {
     // CRM-5645
 
     $dao = new CRM_Contact_DAO_Contact();
@@ -786,7 +786,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * function to check if running in upgrade mode
    */
-  static function isUpgradeMode($path = NULL) {
+  public static function isUpgradeMode($path = NULL) {
     if ($path && $path == 'civicrm/upgrade') {
       return TRUE;
     }

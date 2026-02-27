@@ -16,7 +16,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   protected $_refundAmount;
   protected $_refundContributionId;
 
-  function get_info() {
+  public function get_info() {
     return [
      'name' => 'TapPay payment processor',
      'description' => 'Test TapPay payment processor.',
@@ -27,7 +27,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
     $this->_page_id = 1;
     $this->prepareMailLog();
@@ -126,11 +126,11 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->_processor = NULL;
   }
 
-  function testSinglePaymentNotify(){
+  public function testSinglePaymentNotify(){
     $now = time();
     $trxnId = 'testing_'.substr($now, -5);
     $amount = 111;
@@ -238,7 +238,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('2022-11-30', $dao->expiry_date, "In line " . __LINE__);
   }
 
-  function testRecurringPaymentNotify(){
+  public function testRecurringPaymentNotify(){
     ### 1st contribution of recurring
     $now = time();
     $basemonth = strtotime(date('Y-m',time()) . '-01 00:00:01');
@@ -650,7 +650,7 @@ HAVING MAX(t.expiry_date) < %2";
     $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', 6, "In line " . __LINE__);
   }
 
-  function testCardMetadata(){
+  public function testCardMetadata(){
     $cardMetadata = (object)([
       'status' => 0,
       'msg' => 'Success',
@@ -696,7 +696,7 @@ HAVING MAX(t.expiry_date) < %2";
     $this->assertDBQuery(1, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", [ 1 => [$this->_recurFirstContributionId, 'Integer'] ]);
   }
 
-  function testRecordSync() {
+  public function testRecordSync() {
     $microtime = round(microtime(true) * 1000);
 
     // full refund
@@ -891,7 +891,7 @@ HAVING MAX(t.expiry_date) < %2";
     ];
   }
 
-  function testUpdateExpiryDate() {
+  public function testUpdateExpiryDate() {
     // Test 1: Update expiry date with ACTIVE token
     $recurData1 = $this->createRecurringContributionWithTapPay([
       'amount' => 123,

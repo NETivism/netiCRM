@@ -9,7 +9,7 @@ class PaypalPro extends PHPUnit_Framework_Testcase
      *
      * @return $paymentProcessor id of created payment processor
      */
-    function create( ) 
+    public function create( ) 
     {
 
         $paymentProcessor = new CRM_Core_DAO_PaymentProcessor( );
@@ -42,7 +42,7 @@ class PaypalPro extends PHPUnit_Framework_Testcase
      * @return boolean true if payment processor deleted, false otherwise
      * 
      */
-    function delete( $id ) 
+    public function delete( $id ) 
     {
         $pp     = new CRM_Core_DAO_PaymentProcessor( );
         $pp->id = $id; 

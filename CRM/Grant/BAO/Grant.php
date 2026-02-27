@@ -40,25 +40,25 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * the name of option value group from civicrm_option_group table
    * that stores grant statuses
    */
-  static $statusGroupName = 'grant_status';
+  public static $statusGroupName = 'grant_status';
 
   /**
    * the name of option value group from civicrm_option_group table
    * that stores grant statuses
    */
-  static $typeGroupName = 'grant_type';
+  public static $typeGroupName = 'grant_type';
 
   /**
    * static field for all the grant information that we can potentially export
    * @var array
    * @static
    */
-  static $_exportableFields = NULL;
+  public static $_exportableFields = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -69,7 +69,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of event summary values
    */
-  static function getGrantSummary($admin = FALSE) {
+  public static function getGrantSummary($admin = FALSE) {
     $query = "
             SELECT status_id, count(id) as status_total 
             FROM civicrm_grant  GROUP BY status_id";
@@ -106,7 +106,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of event summary values
    */
-  static function getGrantStatusOptGroup() {
+  public static function getGrantStatusOptGroup() {
 
 
     $params = [];
@@ -124,7 +124,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     return $og;
   }
 
-  static function getGrantStatuses() {
+  public static function getGrantStatuses() {
     $og = CRM_Grant_BAO_Grant::getGrantStatusOptGroup();
 
 
@@ -149,7 +149,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of grant summary statistics
    */
-  static function getGrantTypes() {
+  public static function getGrantTypes() {
 
     return CRM_Core_OptionGroup::values(CRM_Grant_BAO_Grant::$typeGroupName);
   }
@@ -161,7 +161,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return array Array of grant summary statistics
    */
-  static function getGrantStatistics($admin = FALSE) {
+  public static function getGrantStatistics($admin = FALSE) {
     $grantStatuses = [];
   }
 
@@ -179,7 +179,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $grant = new CRM_Grant_DAO_Grant();
     $grant->copyValues($params);
     if ($grant->find(TRUE)) {
@@ -200,7 +200,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    *
    * @return object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
 
 
     if (CRM_Utils_Array::value('grant', $ids)) {
@@ -351,7 +351,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @static
    *
    */
-  static function deleteContact($id) {
+  public static function deleteContact($id) {
 
     $grant = new CRM_Grant_DAO_Grant();
     $grant->contact_id = $id;
@@ -368,7 +368,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @static
    *
    */
-  static function del($id) {
+  public static function del($id) {
 
     $grant = new CRM_Grant_DAO_Grant();
     $grant->id = $id;
@@ -395,7 +395,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @return array array of exportable Fields
    * @access public
    */
-  static function &exportableFields() {
+  public static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = [];
@@ -452,7 +452,7 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    * @access public
    * @static
    */
-  static function getContactGrantCount($contactID) {
+  public static function getContactGrantCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_grant WHERE civicrm_grant.contact_id = {$contactID} ";
     return CRM_Core_DAO::singleValueQuery($query);
   }

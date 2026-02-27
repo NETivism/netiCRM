@@ -38,12 +38,12 @@
  *
  */
 class CRM_Export_BAO_Export {
-  CONST EXPORT_ROW_COUNT = 2000;
-  CONST EXPORT_BATCH_THRESHOLD = 10000;
-  CONST EXPORT_BATCH_CSV_THRESHOLD = 100000;
-  CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
-  CONST DISPLAY_SEPARATOR = '|';
-  CONST EXPORT_TEMP_TABLE = 'civicrm_export';
+  public CONST EXPORT_ROW_COUNT = 2000;
+  public CONST EXPORT_BATCH_THRESHOLD = 10000;
+  public CONST EXPORT_BATCH_CSV_THRESHOLD = 100000;
+  public CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
+  public CONST DISPLAY_SEPARATOR = '|';
+  public CONST EXPORT_TEMP_TABLE = 'civicrm_export';
 
   /**
    * Function to get the list the export fields
@@ -63,7 +63,7 @@ class CRM_Export_BAO_Export {
    * @static
    * @access public
    */
-  static function exportComponents($selectAll,
+  public static function exportComponents($selectAll,
     $ids,
     $params,
     $order = NULL,
@@ -1279,7 +1279,7 @@ class CRM_Export_BAO_Export {
    *
    * @return string name of the file
    */
-  static function getExportFileName($mode = NULL) {
+  public static function getExportFileName($mode = NULL) {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
     $name = self::getExportName($mode);
     return date('Ymd_').str_replace([' ', '.', '/', '-'] , '_', $name) . "_" . $rand . '.xlsx';
@@ -1373,7 +1373,7 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE, $exportMode = NULL) {
+  public static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE, $exportMode = NULL) {
     if ($exportMode === NULL) {
       $exportMode = CRM_Export_Form_Select::CONTACT_EXPORT;
     }
@@ -1511,7 +1511,7 @@ class CRM_Export_BAO_Export {
     }
   }
 
-  static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {
+  public static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {
     if (substr($field, -4) == '_a_b' ||
       substr($field, -4) == '_b_a'
     ) {
@@ -1607,7 +1607,7 @@ class CRM_Export_BAO_Export {
     }
   }
 
-  static function writeDetailsToTable($tableName, &$details, &$sqlColumns) {
+  public static function writeDetailsToTable($tableName, &$details, &$sqlColumns) {
     if (empty($details)) {
       return;
     }
@@ -1656,7 +1656,7 @@ VALUES $sqlValueString
     CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function createTempTable(&$sqlColumns) {
+  public static function createTempTable(&$sqlColumns) {
     //creating a temporary table for the search result that need be exported
     $exportTempTable = CRM_Core_DAO::createTempTableName(self::EXPORT_TEMP_TABLE, FALSE);
 
@@ -1694,7 +1694,7 @@ CREATE TEMPORARY TABLE {$exportTempTable} (
     return $exportTempTable;
   }
 
-  static function mergeSameAddress($tableName, &$headerRows, &$sqlColumns, $drop = FALSE) {
+  public static function mergeSameAddress($tableName, &$headerRows, &$sqlColumns, $drop = FALSE) {
     // find all the records that have the same street address BUT not in a household
     $sql = "
 SELECT    r1.id as master_id,
@@ -1821,7 +1821,7 @@ DROP  $drop";
    * @param array  $sqlColumns array of names of the table columns of the temp table
    * @param string $prefix name of the relationship type that is prefixed to the table columns
    */
-  static function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
+  public static function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
     $prefixColumn = $prefix . '_';
     $allKeys = [];
     foreach ($sqlColumns as $value) {
@@ -1908,7 +1908,7 @@ GROUP BY civicrm_primary_id ";
     $dao = CRM_Core_DAO::executeQuery($query);
   }
 
-  static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
+  public static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
 
     $query = "SELECT * FROM $exportTempTable";
     $componentDetails = [];
@@ -1954,7 +1954,7 @@ GROUP BY civicrm_primary_id ";
     }
   }
 
-  static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
+  public static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
     if (strstr($fileName, '.csv')) {
       // export csv. use Spout to add header row and BOM
       if (!is_file($fileName)){
@@ -2068,7 +2068,7 @@ GROUP BY civicrm_primary_id ";
    * Function to manipulate header rows for relationship fields
    *
    */
-  static function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
+  public static function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
     foreach ($headerRows as & $header) {
       $split = explode('-', $header);
       if ($relationTypeName = CRM_Utils_Array::value($split[0], $contactRelationshipTypes)) {

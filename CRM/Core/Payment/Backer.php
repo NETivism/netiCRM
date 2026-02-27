@@ -15,7 +15,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
   }
@@ -43,7 +43,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
 
     if (empty($this->_paymentProcessor['password'])) {
@@ -59,7 +59,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
-  static function getAdminFields($ppDAO, $form){
+  public static function getAdminFields($ppDAO, $form){
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
     foreach($pages as $id => $page) {
       $pages[$id] .= " ($id)";
@@ -87,31 +87,31 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     ];
   }
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function cancelRecuringMessage($recurID) {
+  public function cancelRecuringMessage($recurID) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function checkSignature($string, $signature = NULL) {
+  public function checkSignature($string, $signature = NULL) {
     if (empty($signature)) {
       $headers = CRM_Utils_System::getAllHeaders();
       $signature = $_SERVER['HTTP_X_BACKME_SIGNATURE'];
@@ -134,7 +134,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return FALSE;
   }
 
-  function processContribution($jsonString, &$contributionResult) {
+  public function processContribution($jsonString, &$contributionResult) {
     $params = self::formatParams($jsonString);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
@@ -482,7 +482,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
-  function processIPN($ids, $contrib) {
+  public function processIPN($ids, $contrib) {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
     $input = $objects = [];

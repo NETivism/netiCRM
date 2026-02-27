@@ -30,7 +30,7 @@ require_once 'CRM/Contribute/BAO/ContributionType.php';
 class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'ContributionType BAOs',
@@ -39,7 +39,7 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -48,7 +48,7 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase
     /**
      * check method add()
      */
-    function testAdd( )
+    public function testAdd( )
     {
         $params = [ 'name'          => 'Donations',
                          'is_deductible' => 0,
@@ -67,7 +67,7 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase
     /**
      * check method retrive()
      */
-    function testRetrieve( ) 
+    public function testRetrieve( ) 
     {
         $params = [ 'name'          => 'Donations',
                          'is_deductible' => 0,
@@ -85,7 +85,7 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase
     /**
      * check method setIsActive()
      */
-    function testSetIsActive(  ) 
+    public function testSetIsActive(  ) 
     {
         $params = [ 'name'          => 'testDonations',
                          'is_deductible' => 0,
@@ -105,7 +105,7 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase
     /**
      * check method del()
      */
-    function testdel(  ) 
+    public function testdel(  ) 
     {
         $params = [ 'name'          => 'checkDonations',
                          'is_deductible' => 0,

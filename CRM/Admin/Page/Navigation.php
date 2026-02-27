@@ -47,14 +47,14 @@ class CRM_Admin_Page_Navigation extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_Navigation';
   }
 
@@ -63,14 +63,14 @@ class CRM_Admin_Page_Navigation extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {}
+  public function &links() {}
 
   /**
    * Get name of edit form
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_Navigation';
   }
 
@@ -79,7 +79,7 @@ class CRM_Admin_Page_Navigation extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'CiviCRM Navigation';
   }
 
@@ -88,14 +88,14 @@ class CRM_Admin_Page_Navigation extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/menu';
   }
 
   /**
    * Browse all menus
    */
-  function browse() {
+  public function browse() {
     // assign home id to the template
     $homeMenuId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Navigation', 'Home', 'id', 'name');
     $this->assign('homeMenuId', $homeMenuId);

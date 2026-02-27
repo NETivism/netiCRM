@@ -47,7 +47,7 @@ class CRM_Contact_Page_Dashlet extends CRM_Core_Page {
    * @return none
    * @access public
    */
-  function run() {
+  public function run() {
     CRM_Utils_System::setTitle(ts('Dashlets'));
 
     $this->assign('admin', CRM_Core_Permission::check('administer CiviCRM'));

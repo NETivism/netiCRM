@@ -49,7 +49,7 @@ class CRM_Contact_Page_View_Print extends CRM_Contact_Page_View_Summary {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     $this->_print = CRM_Core_Smarty::PRINT_PAGE;
 
     $this->preProcess();
@@ -65,7 +65,7 @@ class CRM_Contact_Page_View_Print extends CRM_Contact_Page_View_Summary {
    * @return void
    * @access public
    */
-  function view() {
+  public function view() {
     $params = [];
     $defaults = [];
     $ids = [];

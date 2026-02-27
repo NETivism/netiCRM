@@ -1,7 +1,7 @@
 <?php
 class CRM_Coupon_Page_CouponBatch extends CRM_Core_Page {
 
-  function run() {
+  public function run() {
     $list = [];
     $dao = CRM_Core_DAO::executeQuery("SELECT SUBSTR(code, 1, LOCATE('-' , code)) as batch_prefix, count(*) as generated, c.description FROM civicrm_coupon c WHERE code LIKE '%-%' GROUP BY SUBSTR(code, 1, LOCATE('-' , code)) ORDER BY start_date DESC, batch_prefix ASC");
     while($dao->fetch()) {

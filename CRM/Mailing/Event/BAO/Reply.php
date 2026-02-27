@@ -43,7 +43,7 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 

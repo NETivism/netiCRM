@@ -32,7 +32,7 @@
  */
 class CRM_Mailing_BAO_Query {
 
-  static $_mailingFields = NULL;
+  public static $_mailingFields = NULL;
 
   /**
    * @return array|null

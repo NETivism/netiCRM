@@ -33,10 +33,10 @@
  *
  */
 class CRM_Utils_Crypt {
-  const ALGORITHM = 'AES-128-CBC';
-  const VER2 = '$O$';
+  public const ALGORITHM = 'AES-128-CBC';
+  public const VER2 = '$O$';
 
-  static function encrypt($string) {
+  public static function encrypt($string) {
     if (!self::checkAvailableCrypt('openssl')) {
       return $string;
     }
@@ -53,7 +53,7 @@ class CRM_Utils_Crypt {
     return $string;
   }
 
-  static function decrypt($string) {
+  public static function decrypt($string) {
     if (substr($string, 0, strlen(self::VER2)) !== self::VER2 && self::checkAvailableCrypt('mcrypt')) {
       return self::deprecatedDecrypt($string);
     }
@@ -78,7 +78,7 @@ class CRM_Utils_Crypt {
    * @param string $string
    * @return string
    */
-  static function deprecatedEncrypt($string) {
+  public static function deprecatedEncrypt($string) {
     if (!self::checkAvailableCrypt('mcrypt')) {
       return base64_encode($string);
     }
@@ -106,7 +106,7 @@ class CRM_Utils_Crypt {
    * @param string $string
    * @return string
    */
-  static function deprecatedDecrypt($string) {
+  public static function deprecatedDecrypt($string) {
     if (!self::checkAvailableCrypt('mcrypt')) {
       return base64_decode($string);
     }
@@ -137,7 +137,7 @@ class CRM_Utils_Crypt {
    * @param string $type  openssl or mcrypt
    * @return void
    */
-  static function checkAvailableCrypt($type) {
+  public static function checkAvailableCrypt($type) {
     if ($type == 'openssl') {
       return extension_loaded('openssl');
     }

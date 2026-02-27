@@ -35,9 +35,9 @@
  */
 class CRM_Utils_Mail {
 
-  const DMARC_MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com';
-  const DKIM_EXTERNAL_VERIFIED_FILE = 'verified_external_dkim.config';
-  const RFC_2822_SPECIAL_CHARS = '()<>[]:;@\,."';
+  public const DMARC_MAIL_PROVIDERS = 'yahoo.com|gmail.com|msn.com|outlook.com|hotmail.com';
+  public const DKIM_EXTERNAL_VERIFIED_FILE = 'verified_external_dkim.config';
+  public const RFC_2822_SPECIAL_CHARS = '()<>[]:;@\,."';
 
   /**
    * Wrapper function to send mail in CiviCRM. Hooks are called from this function.
@@ -75,7 +75,7 @@ class CRM_Utils_Mail {
    *
    * @return boolean true if a mail was sent, else false
    */
-  static function send(&$params, $callback = NULL) {
+  public static function send(&$params, $callback = NULL) {
     $config = CRM_Core_Config::singleton();
     $returnPath = CRM_Core_BAO_MailSettings::defaultReturnPath();
     $from = CRM_Utils_Array::value('from', $params);
@@ -281,7 +281,7 @@ class CRM_Utils_Mail {
     }
   }
 
-  static function errorMessage($mailer, $result) {
+  public static function errorMessage($mailer, $result) {
     $message = '<p>' . ts('An error occurred when CiviCRM attempted to send an email (via %1). If you received this error after submitting on online contribution or event registration - the transaction was completed, but we were unable to send the email receipt.', [1 => 'SMTP']) . '</p>' . '<p>' . ts('The mail library returned the following error message:') . '<br /><span class="font-red"><strong>' . $result->getMessage() . '</strong></span></p>' . '<p>' . ts('This is probably related to a problem in your Outbound Email Settings (Administer CiviCRM &raquo; Global Settings &raquo; Outbound Email), OR the FROM email address specifically configured for your contribution page or event. Possible causes are:') . '</p>';
 
     if (is_a($mailer, 'Mail_smtp')) {
@@ -296,7 +296,7 @@ class CRM_Utils_Mail {
     return $message;
   }
 
-  static function logger(&$to, &$headers, &$message) {
+  public static function logger(&$to, &$headers, &$message) {
     if (is_array($to)) {
       $toString = CRM_Utils_Array::implode(', ', $to);
       $fileName = $to[0];
@@ -334,7 +334,7 @@ class CRM_Utils_Mail {
    *
    * @return string          the plucked email address
    */
-  static function pluckEmailFromHeader($header) {
+  public static function pluckEmailFromHeader($header) {
     preg_match('/<([^<]*)>$/', $header, $matches);
     return $matches[1];
   }
@@ -346,7 +346,7 @@ class CRM_Utils_Mail {
    *
    * @return string          the plucked email address
    */
-  static function pluckNameFromHeader($header) {
+  public static function pluckNameFromHeader($header) {
     $email = self::pluckEmailFromHeader($header);
     $name = str_replace("<{$email}>", '', $header);
     $name = trim($name, '" ');
@@ -360,7 +360,7 @@ class CRM_Utils_Mail {
    * @access public
    * @static
    */
-  static function validOutBoundMail() {
+  public static function validOutBoundMail() {
 
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     if ($mailingInfo['outBound_option'] == 3) {
@@ -384,7 +384,7 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
-  static function &setMimeParams(&$message, $params = NULL) {
+  public static function &setMimeParams(&$message, $params = NULL) {
     static $mimeParams = NULL;
     if (!$params) {
       if (!$mimeParams) {
@@ -464,7 +464,7 @@ class CRM_Utils_Mail {
     return TRUE;
   }
 
-  static function formatRFC822Email($name, $email, $useQuote = TRUE) {
+  public static function formatRFC822Email($name, $email, $useQuote = TRUE) {
     $result = '';
     $email = CRM_Utils_Type::escape($email, 'Email', FALSE);
     if (empty($email)) {
@@ -492,7 +492,7 @@ class CRM_Utils_Mail {
   }
 
 
-  static function checkMailProviders($email) {
+  public static function checkMailProviders($email) {
     $mailProviders = str_replace('.', '\.', self::DMARC_MAIL_PROVIDERS);
     if (preg_match('/'.$mailProviders.'/i', $email)) {
       return FALSE;
@@ -507,7 +507,7 @@ class CRM_Utils_Mail {
    * @param object $mailer specific mailer which contain host info to help verify
    * @return bool|string return TRUE when success, return fail reason explain when failed.
    */
-  static function checkSPF($email, $mailer = NULL) {
+  public static function checkSPF($email, $mailer = NULL) {
     if (strstr($email, '@')) {
       list($user, $domain) = explode('@', trim($email));
     }
@@ -577,7 +577,7 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
-  static function getSPF($email) {
+  public static function getSPF($email) {
     if (strstr($email, '@')) {
       list($user, $domain) = explode('@', trim($email));
     }
@@ -599,7 +599,7 @@ class CRM_Utils_Mail {
    *   Return NULL when there is no dkim selector or domain.
    *   Return bool when apply the validation.
    */
-  static function checkDKIM($email) {
+  public static function checkDKIM($email) {
     global $civicrm_conf;
 
     // skip check when there were no selector
@@ -618,7 +618,7 @@ class CRM_Utils_Mail {
     return FALSE;
   }
 
-  static function getDKIM($email) {
+  public static function getDKIM($email) {
     global $civicrm_conf;
 
     // skip check when there were no selector
@@ -648,7 +648,7 @@ class CRM_Utils_Mail {
    * @param array $domains
    * @return bool
    */
-  static function checkMailInDomains($email, $domains) {
+  public static function checkMailInDomains($email, $domains) {
     if (strstr($email, '<')) {
       $email = self::pluckEmailFromHeader($email);
     }

@@ -41,7 +41,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
   public $_customGroupIDs;
   protected $_groupTree;
   protected $_tables;
-  protected $_options; function __construct(&$formValues) {
+  protected $_options; public function __construct(&$formValues) {
     parent::__construct($formValues);
 
 
@@ -66,7 +66,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
-  function addColumns() {
+  public function addColumns() {
     // add all the fields for chosen groups
     $this->_tables = $this->_options = [];
     foreach ($this->_groupTree as $groupID => $group) {
@@ -91,7 +91,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $form->add('text', 'sort_name', ts('Contact Name'), TRUE);
 
     // add select for contact type
@@ -122,11 +122,11 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
-  function summary() {
+  public function summary() {
     return NULL;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all($offset = 0, $rowcount = 0, $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     //redirect if custom group not select in search criteria
@@ -158,7 +158,7 @@ contact_a.sort_name    as sort_name,
     );
   }
 
-  function from() {
+  public function from() {
     $from = "FROM civicrm_contact contact_a";
     $customFrom = [];
     // lets do an INNER JOIN so we get only relevant values rather than all values
@@ -183,7 +183,7 @@ contact_a.sort_name    as sort_name,
     return $from;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $count = 1;
     $clause = [];
     $params = [];
@@ -228,15 +228,15 @@ contact_a.sort_name    as sort_name,
     return $this->whereClause($where, $params);
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/MultipleValues.tpl';
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [];
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     foreach ($this->_options as $fieldID => $values) {
       $customVal = $valueSeparatedArray = [];
       if (in_array($values['attributes']['html_type'],

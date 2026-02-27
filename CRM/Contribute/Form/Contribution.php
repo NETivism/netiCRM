@@ -549,7 +549,7 @@ WHERE  contribution_id = {$this->_id}
     $this->assign('lineItem', empty($this->_lineItems) ? FALSE : $this->_lineItems);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
@@ -1211,7 +1211,7 @@ WHERE  contribution_id = {$this->_id}
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     //check if contact is selected in standalone mode
@@ -1832,7 +1832,7 @@ WHERE  contribution_id = {$this->_id}
   /**
    * This function process contribution related objects.
    */
-  function updateRelatedComponent($contributionId, $statusId, $previousStatusId = NULL) {
+  public function updateRelatedComponent($contributionId, $statusId, $previousStatusId = NULL) {
     $statusMsg = NULL;
     if (!$contributionId || !$statusId) {
       return $statusMsg;

@@ -7,17 +7,17 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   /**
    * queue name
    */
-  const QUEUE_NAME = 'batch_auto';
+  public const QUEUE_NAME = 'batch_auto';
 
   /**
    * expire day
    */
-  const EXPIRE_DAY = 8;
+  public const EXPIRE_DAY = 8;
 
   /**
    * stuck expire hour
    */
-  const EXPIRE_HOUR = 4;
+  public const EXPIRE_HOUR = 4;
 
   /**
    * Batch id to load
@@ -296,7 +296,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * 
    * @return object
    */
-  function __construct($batchId = NULL) {
+  public function __construct($batchId = NULL) {
     self::batchType();
     self::batchStatus();
     if ($batchId) {

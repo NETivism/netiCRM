@@ -44,7 +44,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
   /**
    * Save UFMatch data
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     if ($params['contact_id'] && $params['uf_id'] && $params['uf_name']) {
       $ufmatch = new CRM_Core_DAO_UFMatch();
       $ufmatch->copyValues($params);
@@ -71,7 +71,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
    * @access public
    * @static
    */
-  static function synchronize(&$user, $update, $uf, $ctype, $isLogin = FALSE) {
+  public static function synchronize(&$user, $update, $uf, $ctype, $isLogin = FALSE) {
     $userSystem = CRM_Core_Config::singleton()->userSystem;
     $session = CRM_Core_Session::singleton();
     if (!is_object($session)) {
@@ -169,7 +169,7 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
    * @access public
    * @static
    */
-  static function &synchronizeUFMatch(&$user, $userKey, $uniqId, $uf, $status = NULL, $ctype = NULL, $isLogin = FALSE) {
+  public static function &synchronizeUFMatch(&$user, $userKey, $uniqId, $uf, $status = NULL, $ctype = NULL, $isLogin = FALSE) {
     if (!CRM_Utils_Rule::email($uniqId)) {
       return $status ? NULL : FALSE;
     }
@@ -308,7 +308,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function updateUFName($contactId) {
+  public static function updateUFName($contactId) {
     if (!$contactId) {
       return;
     }
@@ -371,7 +371,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function updateContactEmail($contactId, $emailAddress) {
+  public static function updateContactEmail($contactId, $emailAddress) {
     $emailAddress = mb_strtolower($emailAddress, 'UTF-8');
 
     $ufmatch = new CRM_Core_DAO_UFMatch();
@@ -427,7 +427,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function deleteUser($ufID) {
+  public static function deleteUser($ufID) {
     $ufmatch = new CRM_Core_DAO_UFMatch();
 
     $ufmatch->uf_id = $ufID;
@@ -444,7 +444,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function getContactId($ufID) {
+  public static function getContactId($ufID) {
     if (!isset($ufID)) {
       return NULL;
     }
@@ -468,7 +468,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function getUFId($contactID) {
+  public static function getUFId($contactID) {
     if (!isset($contactID)) {
       return NULL;
     }
@@ -482,7 +482,7 @@ AND    domain_id    = %4
     return NULL;
   }
 
-  static function isEmptyTable() {
+  public static function isEmptyTable() {
     $sql = "SELECT count(id) FROM civicrm_uf_match";
     return CRM_Core_DAO::singleValueQuery($sql) > 0 ? FALSE : TRUE;
   }
@@ -495,7 +495,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function getContactIDs() {
+  public static function getContactIDs() {
     $id = [];
     $dao = new CRM_Core_DAO_UFMatch();
     $dao->find();
@@ -513,7 +513,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function getAllowedToLogin($openId) {
+  public static function getAllowedToLogin($openId) {
     $ufmatch = new CRM_Core_DAO_UFMatch();
     $ufmatch->uf_name = $openId;
     $ufmatch->allowed_to_login = 1;
@@ -532,7 +532,7 @@ AND    domain_id    = %4
    * @access public
    * @static
    */
-  static function getNextUfIdValue() {
+  public static function getNextUfIdValue() {
     $query = "SELECT MAX(uf_id)+1 AS next_uf_id FROM civicrm_uf_match";
     $dao = CRM_Core_DAO::executeQuery($query);
     if ($dao->fetch()) {
@@ -545,7 +545,7 @@ AND    domain_id    = %4
     return $ufId;
   }
 
-  static function isDuplicateUser($email) {
+  public static function isDuplicateUser($email) {
     $session = CRM_Core_Session::singleton();
     $contactID = $session->get('userID');
     if (!empty($email) &&
@@ -569,7 +569,7 @@ AND    domain_id    = %4
    *
    * return array  $ufValues uf values.
    **/
-  static function getUFValues($ufID = NULL) {
+  public static function getUFValues($ufID = NULL) {
     if (!$ufID) {
       $ufID = CRM_Utils_System::getLoggedInUfID();
     }

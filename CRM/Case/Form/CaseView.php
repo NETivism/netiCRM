@@ -213,7 +213,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }

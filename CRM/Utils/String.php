@@ -38,18 +38,18 @@
  *
  */
 class CRM_Utils_String {
-  CONST COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r", MASK = '*';
+  public CONST COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r", MASK = '*';
 
   /**
    * List of all letters and numbers
    */
-  const ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+  public const ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
 
   /**
    * Allowed HTML Tags
    */
-  const ALLOWED_TAGS = [
+  public const ALLOWED_TAGS = [
     'div[style]','b','strong','i','em','s','a[href|title]',
     'ul','ol','li','p[style]','blockquote','br','span[style]',
     'img[width|height|alt|src|style]','figure[class|style]',
@@ -71,7 +71,7 @@ class CRM_Utils_String {
    * @return string (or null)
    * @static
    */
-  static function titleToVar($title, $maxLength = 31) {
+  public static function titleToVar($title, $maxLength = 31) {
     $variable = self::munge($title, '_', $maxLength);
 
 
@@ -97,7 +97,7 @@ class CRM_Utils_String {
    * @return string returns the manipulated string
    * @static
    */
-  static function munge($name, $char = '_', $len = 63) {
+  public static function munge($name, $char = '_', $len = 63) {
     // replace all white space and non-alpha numeric with $char
     $mungedName = '';
     $name = preg_replace('/[-.]+/', $char, $name);
@@ -136,7 +136,7 @@ class CRM_Utils_String {
      * @static
      */
 
-  static function rename($name, $len = 4) {
+  public static function rename($name, $len = 4) {
     $rand = substr(uniqid(), 0, $len);
     return substr_replace($name, $rand, -$len, $len);
   }
@@ -153,7 +153,7 @@ class CRM_Utils_String {
    * @return string the last component
    * @static
    */
-  static function getClassName($string, $char = '_') {
+  public static function getClassName($string, $char = '_') {
     if (!is_array($string)) {
       $names = explode($char, $string);
     }
@@ -174,7 +174,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function append(&$str, $delim, $name) {
+  public static function append(&$str, $delim, $name) {
     if (empty($name)) {
       return;
     }
@@ -212,7 +212,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function isAscii($str, $utf8 = TRUE) {
+  public static function isAscii($str, $utf8 = TRUE) {
     if (!function_exists('mb_detect_encoding')) {
       // eliminate all white space from the string
       $str = preg_replace('/\s+/', '', $str);
@@ -258,7 +258,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function regex($str, $regexRules) {
+  public static function regex($str, $regexRules) {
     //redact the regular expressions
     if (!empty($regexRules) && isset($str)) {
       static $matches, $totalMatches, $match = [];
@@ -290,7 +290,7 @@ class CRM_Utils_String {
     return CRM_Core_DAO::$_nullArray;
   }
 
-  static function redaction($str, $stringRules) {
+  public static function redaction($str, $stringRules) {
     //redact the strings
     if (!empty($stringRules)) {
       foreach ($stringRules as $match => $replace) {
@@ -311,7 +311,7 @@ class CRM_Utils_String {
    *
    * @return boolean
    */
-  static function isUtf8($str) {
+  public static function isUtf8($str) {
     if (!function_exists('mb_detect_encoding')) {
       // eliminate all white space from the string
       $str = preg_replace('/\s+/', '', $str);
@@ -341,7 +341,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function match($url1, $url2) {
+  public static function match($url1, $url2) {
     $url1 = strtolower($url1);
     $url2 = strtolower($url2);
 
@@ -364,7 +364,7 @@ class CRM_Utils_String {
    * @return mix $v  returns civicrm url (eg: civicrm/contact/search/...)
    * @access public
    */
-  static function extractURLVarValue($query) {
+  public static function extractURLVarValue($query) {
     $config = CRM_Core_Config::singleton();
     $urlVar = $config->userFrameworkURLVar;
 
@@ -389,7 +389,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function strtobool($str) {
+  public static function strtobool($str) {
     if (preg_match('/^(y(es)?|t(rue)?|1)$/i', $str)) {
       return TRUE;
     }
@@ -405,7 +405,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function strtoboolstr($str) {
+  public static function strtoboolstr($str) {
     $tsstr = ts($str);
     if ($tsstr == ts('Yes')) {
       return '1';
@@ -424,7 +424,7 @@ class CRM_Utils_String {
     }
   }
 
-  static function xssFilter($str, $decodeFirst = FALSE) {
+  public static function xssFilter($str, $decodeFirst = FALSE) {
     if ($decodeFirst) {
       $str = urldecode($str);
     }
@@ -440,13 +440,13 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function htmlToText($html) {
+  public static function htmlToText($html) {
     require_once 'packages/html2text/rcube_html2text.php';
     $converter = new rcube_html2text($html, FALSE, TRUE, 0);
     return $converter->get_text();
   }
 
-  static function htmlPurifier($html, $allowedTags = []) {
+  public static function htmlPurifier($html, $allowedTags = []) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
     static $_purifier;
     $hash = md5(CRM_Utils_Array::implode(',', $allowedTags));
@@ -485,7 +485,7 @@ class CRM_Utils_String {
     return $_purifier[$hash]->purify($html);
   }
 
-  static function extractName($string, &$params) {
+  public static function extractName($string, &$params) {
     $name = trim($string);
     if (empty($name)) {
       return;
@@ -506,7 +506,7 @@ class CRM_Utils_String {
     }
   }
 
-  static function &makeArray($string) {
+  public static function &makeArray($string) {
     $string = trim($string);
 
     $values = explode("\n", $string);
@@ -523,7 +523,7 @@ class CRM_Utils_String {
   /**
    * Function to add include files needed for jquery
    */
-  static function addJqueryFiles(&$html) {
+  public static function addJqueryFiles(&$html) {
     $config = CRM_Core_Config::singleton();
     $smarty = CRM_Core_Smarty::singleton();
     $buffer = $smarty->fetch('CRM/common/jquery.files.tpl');
@@ -550,7 +550,7 @@ class CRM_Utils_String {
    *
    * @return string       only the first alternative found (or the text without alternatives)
    */
-  static function stripAlternatives($full) {
+  public static function stripAlternatives($full) {
     $matches = [];
     preg_match('/-ALTERNATIVE ITEM 0-(.*?)-ALTERNATIVE ITEM 1-.*-ALTERNATIVE END-/s', $full, $matches);
 
@@ -572,7 +572,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function stripSpaces($string) {
+  public static function stripSpaces($string) {
     if (empty($string)) {
       return $string;
     }
@@ -618,7 +618,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function stripPathChars($string,
+  public static function stripPathChars($string,
     $search = NULL,
     $replace = NULL
   ) {
@@ -651,7 +651,7 @@ class CRM_Utils_String {
     return str_replace($search, $replace, $string);
   }
 
-  static function removeImageHeight($html){
+  public static function removeImageHeight($html){
     $html = preg_replace('/(<img[^>]+)(line-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
     $html = preg_replace('/(<img[^>]+)(min-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
     $html = preg_replace('/(<img[^>]+)(height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
@@ -659,7 +659,7 @@ class CRM_Utils_String {
     return $html;
   }
 
-  static function toNumber($str) {
+  public static function toNumber($str) {
     $str = trim($str);
     if (preg_match('/[eE]/', $str)) {
       return $str;
@@ -682,11 +682,11 @@ class CRM_Utils_String {
     return $str;
   }
 
-  static function parseUrl($url) {
+  public static function parseUrl($url) {
     return parse_url($url);
   }
 
-  static function parseUrlUtm($url) {
+  public static function parseUrlUtm($url) {
     $utms = [];
     $original = CRM_Utils_String::parseUrl($url);
     if (stristr($original['query'], 'utm_')) {
@@ -702,7 +702,7 @@ class CRM_Utils_String {
     return $utms;
   }
 
-  static function buildUrl($parts) {
+  public static function buildUrl($parts) {
     return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') . 
       ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') . 
       (isset($parts['user']) ? "{$parts['user']}" : '') . 
@@ -715,7 +715,7 @@ class CRM_Utils_String {
       (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
   }
 
-  static function safeFilename($str) {
+  public static function safeFilename($str) {
     $str = preg_replace("/([^\w\s\d\.\-_~\[\]\(\)]|[\.]{2,})/u", '', $str);
     $str = preg_replace("/\s+/u", '_', $str);
     $str = CRM_Utils_File::sanitizeFileName($str);
@@ -735,7 +735,7 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  static function mask($str, $mode = 'auto', $start = NULL, $end = NULL) {
+  public static function mask($str, $mode = 'auto', $start = NULL, $end = NULL) {
     if (empty($str)) {
       return;
     }
@@ -971,7 +971,7 @@ class CRM_Utils_String {
    * @param int $length
    * @return string
    */
-  function truncate($utf8String, $length) {
+  public function truncate($utf8String, $length) {
     if (extension_loaded('mbstring')) {
       return mb_substr($utf8String, 0, $length, 'UTF-8');
     }

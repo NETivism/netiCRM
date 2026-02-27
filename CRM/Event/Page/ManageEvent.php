@@ -57,9 +57,9 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_actionLinks = NULL;
+  public static $_actionLinks = NULL;
 
-  static $_links = NULL;
+  public static $_links = NULL;
 
   protected $_pager = NULL;
 
@@ -72,7 +72,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_actionLinks)) {
       // helper variable for nicer formatting
       $copyExtra = ts('Are you sure you want to make a copy of this Event?');
@@ -121,7 +121,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
     $action = CRM_Utils_Request::retrieve('action', 'String',
       // default to 'browse'
@@ -175,7 +175,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    *
    * @return void
    */
-  function browse() {
+  public function browse() {
     $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
       'String',
       $this
@@ -285,7 +285,7 @@ ORDER BY start_date desc
    * @return void
    * @access public
    */
-  function copy() {
+  public function copy() {
     $key = CRM_Utils_Request::retrieve('key', 'String',
       CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
     );
@@ -310,7 +310,7 @@ ORDER BY start_date desc
     return CRM_Utils_System::redirect(CRM_Utils_System::url($urlString, $urlParams));
   }
 
-  function search() {
+  public function search() {
     if (isset($this->_action) &
       (CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
@@ -327,7 +327,7 @@ ORDER BY start_date desc
     $controller->run();
   }
 
-  function whereClause(&$params, $sortBy, $force) {
+  public function whereClause(&$params, $sortBy, $force) {
     $values = [];
     $clauses = [];
     $title = $this->get('title');
@@ -365,7 +365,7 @@ ORDER BY start_date desc
     return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }
 
-  function pager($whereClause, $whereParams) {
+  public function pager($whereClause, $whereParams) {
 
 
     $params['status'] = ts('Event %%StatusMessage%%');

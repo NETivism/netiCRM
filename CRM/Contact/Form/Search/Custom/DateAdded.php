@@ -44,7 +44,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
   public $_allSearch;
   public $_groups;
   public $_tableName;
-  protected $_debug = 0; function __construct(&$formValues) {
+  protected $_debug = 0; public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $formValues, []);
@@ -57,7 +57,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $form->addDate('start_date', ts('Start Date'), FALSE, ['formatType' => 'custom']);
     $form->addDate('end_date', ts('End Date'), FALSE, ['formatType' => 'custom']);
 
@@ -100,11 +100,11 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     $form->assign('elements', ['start_date', 'end_date', 'includeGroups', 'excludeGroups']);
   }
 
-  function summary() {
+  public function summary() {
     return NULL;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all($offset = 0, $rowcount = 0, $sort = NULL,
     $includeContactIDs = FALSE
   ) {
 
@@ -138,7 +138,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     );
   }
 
-  function from() {
+  public function from() {
     //define table name
     $randomNum = md5(uniqid());
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
@@ -357,15 +357,15 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     return $from;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     return '(1)';
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
-  function count() {
+  public function count() {
     $sql = $this->all();
 
     $dao = CRM_Core_DAO::executeQuery($sql,
@@ -374,7 +374,7 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     return $dao->N;
   }
 
-  function __destruct() {
+  public function __destruct() {
     //drop the temp. tables if they exist
     if (!empty($this->_includeGroups)) {
       $sql = "DROP TEMPORARY TABLE IF EXISTS Ig_{$this->_tableName}";

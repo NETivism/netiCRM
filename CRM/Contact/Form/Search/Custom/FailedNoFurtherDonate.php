@@ -9,7 +9,7 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
   protected $_tableName = NULL;
   protected $_filled = NULL;
   
-  function __construct(&$formValues){
+  public function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_filled = FALSE;
     if(empty($this->_tableName)){
@@ -21,7 +21,7 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
     }
   }
 
-  function buildColumn(){
+  public function buildColumn(){
     $this->_queryColumns = [ 
       'contact.id' => 'id',
       'failed.contact_id' => 'contact_id',
@@ -38,7 +38,7 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
       ts('Amount') . ' - (' . ts("Failed") . ')' => 'total_amount_failed',
     ];
   }
-  function buildTempTable() {
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -66,7 +66,7 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  function dropTempTable() {
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
@@ -74,7 +74,7 @@ PRIMARY KEY (id)
   /**
    * fill temp table for further use
    */
-  function fillTable(){
+  public function fillTable(){
     $this->buildTempTable();
     $select = [];
     foreach($this->_queryColumns as $k => $v){
@@ -118,7 +118,7 @@ $having
   }
 
 
-  function tempFrom() {
+  public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN 
  (SELECT ca.* FROM civicrm_contribution ca LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = ca.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ca.id WHERE ca.is_test = 0 AND ca.contribution_status_id = 4 AND pp.id IS NULL AND mp.id IS NULL ORDER BY ca.created_date DESC) failed ON failed.contact_id = contact.id
    LEFT JOIN 
@@ -129,7 +129,7 @@ $having
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
-  function tempWhere(){
+  public function tempWhere(){
     $days = $this->_formValues['days'] ? $this->_formValues['days'] : 7;
     $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
@@ -138,33 +138,33 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  public function tempHaving(){
     return '';
   }
 
-  function buildForm(&$form){
+  public function buildForm(&$form){
     for($i = 2; $i <= 15; $i++) {
       $option[$i] = $i;
     } 
     $form->addSelect('days', ts('days'), $option);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [
       'days' => 7,
     ];
   }
 
-  function setBreadcrumb() {
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-  function setTitle() {
+  public function setTitle() {
     $days = $this->_formValues['days']; 
     CRM_Utils_System::setTitle(ts('After payment failed but not retry in %1 days', [1 => $days]));
   }
 
-  function count(){
+  public function count(){
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
@@ -180,7 +180,7 @@ $having
   /**
    * Construct the search query
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
@@ -190,7 +190,7 @@ $having
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -203,11 +203,11 @@ $having
   /**
    * Functions below generally don't need to be modified
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  public function where($includeContactIDs = false) {
   /*
     $receive_date_from = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
     $receive_date_to = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
@@ -252,11 +252,11 @@ $having
     return ' (1) ';
   }
 
-  function having(){
+  public function having(){
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -271,25 +271,25 @@ $having
     }
   }
 
-  function &columns(){
+  public function &columns(){
     return $this->_columns;
   }
   
-  function summary(){
+  public function summary(){
     // return $summary;
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
   }
 
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
-  function templateFile(){
+  public function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.tpl';
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }

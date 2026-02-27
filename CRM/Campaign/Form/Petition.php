@@ -71,7 +71,7 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
    * @return array    array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
 

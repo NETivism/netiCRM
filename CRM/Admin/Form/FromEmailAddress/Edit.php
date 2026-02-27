@@ -15,7 +15,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     if ($this->_defaultFrom === trim($this->_values['email'])) {
       $this->controller->set('skipEmailVerify', TRUE);
@@ -33,7 +33,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
    *
    * @return array array of errors / empty array.
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!empty($fields['from'])) {
       if (preg_match('/["<>]/', $fields['from'])) {
@@ -55,7 +55,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
    * This function sets the default values for the form. MobileProvider that in edit/view mode
    * the default values are retrieved from the database
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (!empty($this->_id) && !empty($this->_values)) {
       $defaults['from'] = $this->_values['from'];

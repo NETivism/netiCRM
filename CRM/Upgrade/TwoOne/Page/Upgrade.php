@@ -36,7 +36,7 @@
 
 
 class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
-  function run() {
+  public function run() {
     $upgrade = new CRM_Upgrade_Form();
 
     $message = ts('CiviCRM upgrade successful');
@@ -90,7 +90,7 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
     echo $contents;
   }
 
-  function runForm($stepID) {
+  public function runForm($stepID) {
 
     $formName = "CRM_Upgrade_TwoOne_Form_Step{$stepID}";
     $form = new $formName();
@@ -117,7 +117,7 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
     }
   }
 
-  function runTwoOneTwo() {
+  public function runTwoOneTwo() {
 
     $formName = "CRM_Upgrade_TwoOne_Form_TwoOneTwo";
     $form = new $formName( '2.1.4' );

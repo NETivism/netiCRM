@@ -1,17 +1,17 @@
 <?php
 
 class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
-  static $_payment_processor = NULL;
-  static $_input = NULL;
+  public static $_payment_processor = NULL;
+  public static $_input = NULL;
   public $_post = NULL;
   public $_get = NULL;
-  function __construct($post, $get) {
+  public function __construct($post, $get) {
     parent::__construct();
     $this->_post = $post;
     $this->_get = $get;
   }
 
-  function main($component, $instrument){
+  public function main($component, $instrument){
     // get the contribution and contact ids from the GET params
 
     $objects = $ids = $input = [];
@@ -86,7 +86,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     // never for front-end user.
   }
 
-  function getIds(&$ids){
+  public function getIds(&$ids){
     $contribId = CRM_Utils_Array::value('cid', $this->_get);
     if (!empty($contribId) && CRM_Utils_Type::escape($contribId, 'Integer')) {
       $ids = CRM_Contribute_BAO_Contribution::buildIds($contribId, FALSE);
@@ -105,7 +105,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  function validateOthers( &$input, &$ids, &$objects, &$note){
+  public function validateOthers( &$input, &$ids, &$objects, &$note){
     $contribution = &$objects['contribution'];
     $pass = TRUE;
     
@@ -239,7 +239,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     return $pass;
   }
 
-  function addNote($note, &$contribution){
+  public function addNote($note, &$contribution){
 
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
@@ -269,7 +269,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
    * 
    * @return void
    */
-  static function doRecordData($cid, $data = null){
+  public static function doRecordData($cid, $data = null){
     if (is_array($cid)) {
       // from civicrm route, first parameter is array.
       // for example: as allpay/record/1, $var1 = ['allpay', 'record', '1']

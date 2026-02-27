@@ -60,7 +60,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return  array   array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       self::$_actionLinks = [
@@ -118,7 +118,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
     $action = CRM_Utils_Request::retrieve('action', 'String',
       // default to 'browse'
@@ -169,7 +169,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function edit($id, $action) {
+  public function edit($id, $action) {
     // create a simple controller for editing custom data
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Group', ts('Custom Set'), $action);
 
@@ -190,7 +190,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function preview($id) {
+  public function preview($id) {
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Preview', ts('Preview Custom Data'), NULL);
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group', 'action=browse'));
@@ -208,7 +208,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse($action = NULL) {
+  public function browse($action = NULL) {
     // get all custom groups sorted by weight
     $customGroup = [];
     $dao = new CRM_Core_DAO_CustomGroup();

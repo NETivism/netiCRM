@@ -35,7 +35,7 @@
 
 class CRM_Report_BAO_Summary {
 
-  const
+  public const
     GENDER = 0,
     AGE = 1,
     PROVINCE = 2,
@@ -51,7 +51,7 @@ class CRM_Report_BAO_Summary {
    * 6. Contribution Summary ( Table )
    */
 
-  static function getMailingData(){
+  public static function getMailingData(){
     $allData = [];
     $allData['Sended Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT meq.id) count FROM civicrm_mailing_event_queue meq");
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count FROM civicrm_mailing_event_delivered med");
@@ -65,7 +65,7 @@ class CRM_Report_BAO_Summary {
     return $allData;
   }
 
-  static function getParitcipantData(){
+  public static function getParitcipantData(){
     $allData = [];
     $allData['Event Total'] = self::parseDataFromSql("SELECT count(e.id) count FROM civicrm_event e");
     $allData['online_offline'] = [];
@@ -77,7 +77,7 @@ class CRM_Report_BAO_Summary {
     return $allData;
   }
 
-  static function getContributionData(){
+  public static function getContributionData(){
     $allData = [];
     $allData['online_offline'] = [];
     $allData['online_offline']['Online Contribution'] = self::parseDataFromSql("SELECT SUM(c.total_amount) sum, COUNT(c.id) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.contribution_status_id = 1 AND c.source LIKE '".ts("Online Contribution")."%' AND c.is_test = 0 {AND};");
@@ -124,7 +124,7 @@ class CRM_Report_BAO_Summary {
     return $allData;
   }
 
-  static function getConToPartData(){
+  public static function getConToPartData(){
     $allData = [];
     $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
     $allData['Contribution'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '".ts("Online Contribution")."%' AND c.is_test =0 {AND}");
@@ -143,7 +143,7 @@ WHERE
     return $allData;
   }
 
-  static function getPartToConData(){
+  public static function getPartToConData(){
     $allData = [];
     $allData['Event Registration'] = self::parseDataFromSql("SELECT COUNT( p.id ) count,COUNT(DISTINCT p.contact_id) people FROM civicrm_participant p {JOIN} WHERE (p.source LIKE '".ts("Online Event Registration")."%' ) AND p.is_test = 0 {AND}");
     $allData['Contribution'] = self::parseDataFromSql("SELECT COUNT( c.id ) count,COUNT(DISTINCT c.contact_id) people FROM civicrm_contribution c {JOIN} WHERE c.source LIKE '".ts("Online Contribution")."%' AND c.is_test =0 {AND}");
@@ -160,7 +160,7 @@ WHERE
     return $allData;
   }
 
-  static function getMailToPartData(){
+  public static function getMailToPartData(){
     $allData = [];
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
     $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0");
@@ -196,7 +196,7 @@ WHERE p.register_date > mm.time_stamp AND p.register_date < DATE_ADD(mm.time_sta
     return $allData;
   }
 
-  static function getMailToConData(){
+  public static function getMailToConData(){
     $allData = [];
     $allData['Successful Deliveries'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_delivered med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
     $allData['Click Count'] = self::parseDataFromSql("SELECT COUNT(DISTINCT med.id) count,COUNT(DISTINCT meq.contact_id) people FROM civicrm_mailing_job mj LEFT JOIN civicrm_mailing_event_queue meq ON meq.job_id = mj.id INNER JOIN civicrm_mailing_event_trackable_url_open med ON med.event_queue_id = meq.id {JOIN} WHERE mj.is_test = 0 {AND}");
@@ -231,7 +231,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return $allData;
   }
 
-  static function getPartAfterMailData(){
+  public static function getPartAfterMailData(){
     $allData = [];
     $allData['1'.ts('hr')] = self::getPartAfterMailFromSql(1);
     $allData['1'.ts('day')] = self::getPartAfterMailFromSql(24);
@@ -242,7 +242,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return $allData;
   }
 
-  static function getConAfterMailData(){
+  public static function getConAfterMailData(){
     $allData = [];
     $allData['1'.ts('hr')] = self::getConAfterMailFromSql(1);
     $allData['1'.ts('day')] = self::getConAfterMailFromSql(24);
@@ -253,7 +253,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
     return $allData;
   }
 
-  static function getContactSource(){
+  public static function getContactSource(){
     $allData = [];
     $all = self::parseDataFromSql("SELECT COUNT(id) people FROM civicrm_contact WHERE is_deleted = 0");
     $all = $all['people'];
@@ -276,7 +276,7 @@ WHERE c.receive_date > mm.time_stamp AND c.receive_date < DATE_ADD(mm.time_stamp
    * @param  Array    $params
    * @return Array
    */
-  static function getStaWithCondition($group_by, $params, $filter = []){
+  public static function getStaWithCondition($group_by, $params, $filter = []){
     switch ($group_by) {
       case self::GENDER:
         // $group_by_condition = $group_by_field = 'gender.label';

@@ -1,7 +1,7 @@
 <?php
 class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
-  const
+  public const
     // default completion service
     COMPLETION_SERVICE = 'OpenAI',
     // default model base on above service
@@ -52,7 +52,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * This is a static function that returns a reference to a singleton instance of a class.
@@ -63,7 +63,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return object A reference to the singleton instance of the class.
    */
-  static function &singleton($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
+  public static function &singleton($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_AI_BAO_AICompletion($serviceProvider, $model, $maxTokens);
     }
@@ -241,7 +241,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_AI_DAO_AICompletion', $params, $defaults);
   }
 

@@ -104,7 +104,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_search = TRUE;
     $session = CRM_Core_Session::singleton();
     // disable anon user for access profile
@@ -303,7 +303,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $this->assign('recentlyViewed', FALSE);
@@ -426,7 +426,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    *
    * @access public
    */
-  static function getProfileContact($gid) {
+  public static function getProfileContact($gid) {
     $session = CRM_Core_Session::singleton();
     $params = $session->get('profileParams');
 
@@ -475,7 +475,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     return $contactIds;
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Page/{$this->_gid}/Listings.tpl";
       $template = &CRM_Core_Page::getTemplate();

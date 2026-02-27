@@ -19,7 +19,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  CONST CHARSET = 'iso-8859-1';
+  public CONST CHARSET = 'iso-8859-1';
 
   protected $_mode = NULL;
 
@@ -30,7 +30,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -39,7 +39,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Click And Pledge');
@@ -62,7 +62,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ClickAndPledge($mode, $paymentProcessor);
@@ -79,7 +79,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @return array the result in an nice formatted array (or an error object)
    * @public
    */
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     $args = [];
 
     $this->initialize($args, 'DoDirectPayment');
@@ -124,7 +124,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
     if ($this->_paymentProcessor['payment_processor_type'] == 'ClickAndPledge') {
       if (empty($this->_paymentProcessor['user_name'])) {
@@ -140,7 +140,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
     }
   }
 
-  function doTransferCheckout(&$params, $component = 'contribute') {
+  public function doTransferCheckout(&$params, $component = 'contribute') {
     $config = CRM_Core_Config::singleton();
 
     if ($component != 'contribute' && $component != 'event') {

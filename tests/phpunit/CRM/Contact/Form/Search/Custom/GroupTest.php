@@ -62,7 +62,7 @@ require_once 'tests/phpunit/CRM/Contact/Form/Search/Custom/GroupTestDataProvider
 class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
 {
 
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Contact Custom Search Group',
@@ -76,12 +76,12 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase
         return new CRM_Contact_Form_Search_Custom_GroupTestDataProvider;
     }
 
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
     
-    function tearDown()
+    public function tearDown()
     {
         
     }

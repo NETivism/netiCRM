@@ -57,7 +57,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * what event type are we browsing?
@@ -103,7 +103,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @return CRM_Contact_Selector_Profile
    * @access public
    */
-  function __construct($event, $distinct, $mailing, $job = NULL, $url = NULL) {
+  public function __construct($event, $distinct, $mailing, $job = NULL, $url = NULL) {
     $this->_event_type = $event;
     $this->_is_distinct = $distinct;
     $this->_mailing_id = $mailing;
@@ -119,7 +119,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @access public
    * @static
    */
-  static function &links() {
+  public static function &links() {
     return self::$_links;
   }
   //end of function
@@ -130,7 +130,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
     $params['status'] = ts('%1 %%StatusMessage%%', [
@@ -153,7 +153,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @return array the column headers that need to be displayed
    * @access public
    */
-  function &getColumnHeaders($action = NULL, $output = NULL) {
+  public function &getColumnHeaders($action = NULL, $output = NULL) {
 
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
 
@@ -273,7 +273,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     switch ($this->_event_type) {
       case 'queue':
 
@@ -363,7 +363,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     switch ($this->_event_type) {
       case 'queue':
 
@@ -440,9 +440,9 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {}
+  public function getExportFileName($output = 'csv') {}
 
-  function eventToTitle() {
+  public function eventToTitle() {
     static $events = NULL;
 
     if (empty($events)) {
@@ -466,7 +466,7 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
     return ts('Statistics').': '.$events[$this->_event_type];
   }
 
-  function getTitle() {
+  public function getTitle() {
     return $this->eventToTitle();
   }
 }

@@ -13,7 +13,7 @@ require_once 'tests/phpunit/CRM/Contact/BAO/QueryTestDataProvider.php';
 class CRM_Contact_BAO_QueryTest extends CiviUnitTestCase 
 {
 
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Contact BAO Query',
@@ -27,12 +27,12 @@ class CRM_Contact_BAO_QueryTest extends CiviUnitTestCase
         return new CRM_Contact_BAO_QueryTestDataProvider;
     }
 
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
     
-    function tearDown()
+    public function tearDown()
     {
         $tablesToTruncate = [ 'civicrm_group_contact',
                                    'civicrm_group',
@@ -48,7 +48,7 @@ class CRM_Contact_BAO_QueryTest extends CiviUnitTestCase
      *  Test CRM_Contact_BAO_Query::searchQuery()
      *  @dataProvider dataProvider
      */
-    function testSearch( $fv, $count, $ids, $full )
+    public function testSearch( $fv, $count, $ids, $full )
     {
         $this->callAPISuccess('SavedSearch', 'create', ['form_values' => 'a:9:{s:5:"qfKey";s:32:"0123456789abcdef0123456789abcdef";s:13:"includeGroups";a:1:{i:0;s:1:"3";}s:13:"excludeGroups";a:0:{}s:11:"includeTags";a:0:{}s:11:"excludeTags";a:0:{}s:4:"task";s:2:"14";s:8:"radio_ts";s:6:"ts_all";s:14:"customSearchID";s:1:"4";s:17:"customSearchClass";s:36:"CRM_Contact_Form_Search_Custom_Group";}']);
         $this->callAPISuccess('SavedSearch', 'create', ['form_values' => 'a:9:{s:5:"qfKey";s:32:"0123456789abcdef0123456789abcdef";s:13:"includeGroups";a:1:{i:0;s:1:"3";}s:13:"excludeGroups";a:0:{}s:11:"includeTags";a:0:{}s:11:"excludeTags";a:0:{}s:4:"task";s:2:"14";s:8:"radio_ts";s:6:"ts_all";s:14:"customSearchID";s:1:"4";s:17:"customSearchClass";s:36:"CRM_Contact_Form_Search_Custom_Group";}']);

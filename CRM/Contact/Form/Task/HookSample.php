@@ -47,7 +47,7 @@ class CRM_Contact_Form_Task_HookSample extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     // display name and email of all contact ids
@@ -81,7 +81,7 @@ AND    c.id IN ( $contactIDs )";
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Back to Search'), 'done');
   }
 

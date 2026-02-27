@@ -107,7 +107,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
   /**
    * class constructor
    */
-  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL,
+  public function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL,
     $mapperImProvider = NULL, $mapperRelated = NULL, $mapperRelatedContactType = NULL,
     $mapperRelatedContactDetails = NULL, $mapperRelatedContactLocType = NULL,
     $mapperRelatedContactPhoneType = NULL, $mapperRelatedContactImProvider = NULL,
@@ -137,7 +137,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return void
    * @access public
    */
-  function init() {
+  public function init() {
 
 
     $contactFields = CRM_Contact_BAO_Contact::importableFields($this->_contactType);
@@ -278,7 +278,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return boolean
    * @access public
    */
-  function mapField(&$values) {
+  public function mapField(&$values) {
     return CRM_Import_Parser::VALID;
   }
 
@@ -290,7 +290,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function preview(&$values) {
+  public function preview(&$values) {
     return $this->summary($values);
   }
 
@@ -302,7 +302,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function summary(&$values) {
+  public function summary(&$values) {
     $response = $this->setActiveFieldValues($values);
     $this->_lineCount++;
 
@@ -450,7 +450,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function import($onDuplicate, &$values, $doGeocodeAddress = FALSE) {
+  public function import($onDuplicate, &$values, $doGeocodeAddress = FALSE) {
     $this->_lastImportContactId = 0;
     $config = &CRM_Core_Config::singleton();
     $this->_unparsedStreetAddressContacts = [];
@@ -1143,7 +1143,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return array
    * @access public
    */
-  function &getImportedContacts() {
+  public function &getImportedContacts() {
     return $this->_newContacts;
   }
 
@@ -1153,7 +1153,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return array
    * @access public
    */
-  function &getRelatedImportedContacts() {
+  public function &getRelatedImportedContacts() {
     return $this->_newRelatedContacts;
   }
 
@@ -1163,7 +1163,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @return void
    * @access public
    */
-  function fini() {}
+  public function fini() {}
 
   /**
    *  function to check if an error in custom data
@@ -1172,7 +1172,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    *
    *  @access public
    */
-  static function isErrorInCustomData($params, &$errorMessage) {
+  public static function isErrorInCustomData($params, &$errorMessage) {
     //CRM-5125
     //add custom fields for contact sub type
     if (isset($this)) {
@@ -1419,7 +1419,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    *
    * @access public
    */
-  function isErrorInCoreData($params, &$errorMessage) {
+  public function isErrorInCoreData($params, &$errorMessage) {
 
     foreach ($params as $key => $value) {
       if ($value) {
@@ -1724,7 +1724,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @static
    * @access public
    */
-  static function addToErrorMsg($errorName, &$errorMessage) {
+  public static function addToErrorMsg($errorName, &$errorMessage) {
     if ($errorMessage) {
       $errorMessage .= "; $errorName";
     }
@@ -1738,7 +1738,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    *
    *
    */
-  function createContact(&$formatted, &$contactFields, $onDuplicate, $contactId = NULL, $requiredCheck = TRUE) {
+  public function createContact(&$formatted, &$contactFields, $onDuplicate, $contactId = NULL, $requiredCheck = TRUE) {
     $dupeCheck = FALSE;
 
     $newContact = NULL;
@@ -1811,7 +1811,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @param $onDuplicate  int
    * @param $cid          int    contact id
    */
-  function formatParams(&$params, $onDuplicate, $cid) {
+  public function formatParams(&$params, $onDuplicate, $cid) {
     if ($onDuplicate == CRM_Import_Parser::DUPLICATE_SKIP) {
       return;
     }
@@ -1945,7 +1945,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    * @param array  $contactFields contact DAO fields.
    * @static
    */
-  function formatCommonData($params, &$formatted, &$contactFields) {
+  public function formatCommonData($params, &$formatted, &$contactFields) {
     $csType = [CRM_Utils_Array::value('contact_type', $formatted)];
 
     //CRM-5125
@@ -2208,7 +2208,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
 
    * @access public
    */
-  function processMessage(&$values, $statusFieldName, $returnCode) {
+  public function processMessage(&$values, $statusFieldName, $returnCode) {
     if (empty($this->_unparsedStreetAddressContacts)) {
       $importRecordParams = [$statusFieldName => CRM_Import_Parser::VALID];
     }
@@ -2226,7 +2226,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     return $returnCode;
   }
 
-  function checkRelatedContactFields($relKey, $params) {
+  public function checkRelatedContactFields($relKey, $params) {
     //avoid blank contact creation.
     $allowToCreate = FALSE;
 
@@ -2263,11 +2263,11 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     return $allowToCreate;
   }
 
-  function getLastImportContactId() {
+  public function getLastImportContactId() {
     return $this->_lastImportContactId;
   }
 
-  static public function checkContactById($params, $cidField) {
+  public static function checkContactById($params, $cidField) {
     $pass = $contactID = 0;
     $checkCid = new CRM_Contact_DAO_Contact();
     if (!empty($params['external_identifier'])) {

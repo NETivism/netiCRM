@@ -49,7 +49,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $openId = new CRM_Core_DAO_OpenID();
 
     // normalize the OpenID URL
@@ -70,7 +70,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function &getValues($entityBlock) {
+  public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('openid', $entityBlock);
   }
 
@@ -83,7 +83,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function isAllowedToLogin($identity_url) {
+  public static function isAllowedToLogin($identity_url) {
     $openId = new CRM_Core_DAO_OpenID();
     $openId->openid = $identity_url;
     if ($openId->find(TRUE)) {
@@ -101,7 +101,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function allOpenIDs($id, $updateBlankLocInfo = FALSE) {
+  public static function allOpenIDs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -141,11 +141,11 @@ ORDER BY
     return $openids;
   }
 
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     // do nothing
   }
 
-  static function normalizeURL($url) {
+  public static function normalizeURL($url) {
     $parsed = parse_url($url);
 
     if (!$parsed) {
@@ -176,7 +176,7 @@ ORDER BY
     return $defragged;
   }
 
-  static function _normalizeURL($uri) {
+  public static function _normalizeURL($uri) {
     $uri_matches = [];
     preg_match('&^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?&', $uri, $uri_matches);
 

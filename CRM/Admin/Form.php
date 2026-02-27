@@ -62,7 +62,7 @@ class CRM_Admin_Form extends CRM_Core_Form {
    */
   protected $_BAOName;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
     $this->_values = [];
@@ -81,7 +81,7 @@ class CRM_Admin_Form extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (isset($this->_id) && empty($this->_values)) {
       $this->_values = [];
       $params = ['id' => $this->_id];

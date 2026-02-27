@@ -52,7 +52,7 @@ class CRM_Contact_Controller_Search extends CRM_Core_Controller {
   /**
    * class constructor
    */
-  function __construct($title = NULL, $modal = TRUE, $action = CRM_Core_Action::NONE) {
+  public function __construct($title = NULL, $modal = TRUE, $action = CRM_Core_Action::NONE) {
 
 
     parent::__construct($title, $modal);

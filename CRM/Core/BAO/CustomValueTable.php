@@ -33,7 +33,7 @@
  *
  */
 class CRM_Core_BAO_CustomValueTable {
-  static function create(&$customParams) {
+  public static function create(&$customParams) {
     if (empty($customParams) ||
       !is_array($customParams)
     ) {
@@ -298,7 +298,7 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  static function store(&$params, $entityTable, $entityID) {
+  public static function store(&$params, $entityTable, $entityID) {
     $cvParams = [];
     foreach ($params as $fieldID => $param) {
       if (is_array($param)) {
@@ -342,7 +342,7 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  static function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
+  public static function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
 
     $customData = CRM_Core_BAO_CustomField::postProcess($params,
       $customFields,
@@ -454,7 +454,7 @@ AND    $cond
    * @return array
    * @static
    */
-  static function setValues(&$params) {
+  public static function setValues(&$params) {
 
 
     if (!isset($params['entityID']) ||
@@ -565,7 +565,7 @@ AND    cf.id IN ( $fieldIDList )
    * @return array
    * @static
    */
-  static function &getValues(&$params) {
+  public static function &getValues(&$params) {
     if (empty($params)) {
       return NULL;
     }

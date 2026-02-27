@@ -1,13 +1,13 @@
 <?php
 class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
-  const SESSION_LIMIT = 1800; // second
-  const LAST_STATE = 4;
-  const FIRST_STATE = 1;
+  public const SESSION_LIMIT = 1800; // second
+  public const LAST_STATE = 4;
+  public const FIRST_STATE = 1;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -23,7 +23,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     if (empty($params['page_type']) || empty($params['page_id'])) {
       return FALSE;
     }
@@ -94,7 +94,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
   /**
    * Function to receive json object
    */
-  static function ajax() {
+  public static function ajax() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();

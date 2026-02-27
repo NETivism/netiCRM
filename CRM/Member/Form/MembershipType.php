@@ -44,7 +44,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
   /**
    * max number of contacts we will display for membership-organisation
    */
-  CONST MAX_CONTACTS = 50;
+  public CONST MAX_CONTACTS = 50;
 
   /**
    * This function sets the default values for the form. MobileProvider that in edit/view mode
@@ -269,7 +269,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
    * @access public
    * @static
    */
-  static function formRule($params) {
+  public static function formRule($params) {
 
     $errors = [];
     if (!isset($params['_qf_MembershipType_refresh']) || !$params['_qf_MembershipType_refresh']) {
@@ -535,7 +535,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
    * @return None
    *
    */
-  function search(&$params) {
+  public function search(&$params) {
     //max records that will be listed
     $searchValues = [];
     if (!empty($params['member_org'])) {

@@ -55,7 +55,7 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    *
    * @var int
    */
-  protected $_contactId; function preProcess() {
+  protected $_contactId; public function preProcess() {
 
     $this->_contactId = $this->get('contactId');
     $this->_groupContactId = $this->get('groupContactId');
@@ -70,7 +70,7 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $params = [];
 
@@ -83,7 +83,7 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function addRules() {}
+  public function addRules() {}
 
   /**
    * Function to build the form

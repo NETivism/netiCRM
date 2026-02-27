@@ -19,7 +19,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
    * @return  array   array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting
@@ -62,7 +62,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     return self::$_actionLinks;
   }
 
-  function run() {
+  public function run() {
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
 
     // assign vars to templates
@@ -109,7 +109,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     parent::run();
   }
   
-  function browse() {
+  public function browse() {
     // get all coupon
     $coupon = [];
     $usedFor = [
@@ -224,7 +224,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     return $coupon;
   }
 
-  function export() {
+  public function export() {
     $filter = [];
     $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
     $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
@@ -285,7 +285,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $writer->close();
   }
 
-  function edit($id, $action) {
+  public function edit($id, $action) {
     // create a simple controller for editing price sets
     $controller = new CRM_Core_Controller_Simple('CRM_Coupon_Form_Coupon', ts('Coupon'), $action);
 
@@ -306,7 +306,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function copy() {
+  public function copy() {
     $key = CRM_Utils_Request::retrieve('key', 'String',
       CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
     );
@@ -325,7 +325,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
   }
 
-  function pager($total) {
+  public function pager($total) {
     $params = []; 
     $params['status'] = '';
     $params['csvString'] = NULL;

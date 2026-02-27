@@ -27,7 +27,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * which page are we browsing tracking from?
@@ -99,7 +99,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return CRM_Contact_Selector_Profile
    * @access public
    */
-  function __construct($filters, $scope = NULL) {
+  public function __construct($filters, $scope = NULL) {
     foreach($filters as $filter => $value) {
       if (!empty($value)) {
         $filter = '_'.$filter;
@@ -170,7 +170,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @access public
    * @static
    */
-  static function &links() {
+  public static function &links() {
     return self::$_links;
   }
   //end of function
@@ -181,7 +181,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
     $params['status'] = ts('%1 %%StatusMessage%%', [1 => $this->referrerToTitle()]);
@@ -201,7 +201,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return array the column headers that need to be displayed
    * @access public
    */
-  function &getColumnHeaders($action = NULL, $type = NULL) {
+  public function &getColumnHeaders($action = NULL, $type = NULL) {
 
     if (!isset($this->_columnHeaders)) {
       $this->_columnHeaders = [
@@ -264,7 +264,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     $dao = $this->getQuery();
     if (!empty($dao->N)) {
       return $dao->N;
@@ -283,7 +283,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $dao = $this->getQuery('*', NULL, $offset, $rowCount, $sort);
 
     $result = [];
@@ -365,7 +365,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
   }
 
 
-  function getQuery($select = '*', $groupBy = NULL, $offset = NULL, $rowCount = NULL, $sort = NULL) {
+  public function getQuery($select = '*', $groupBy = NULL, $offset = NULL, $rowCount = NULL, $sort = NULL) {
     $where = $args = [];
     $where[] = "referrer_type IS NOT NULL";
     if ($this->_pageType) {
@@ -473,9 +473,9 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {}
+  public function getExportFileName($output = 'csv') {}
 
-  function referrerToTitle() {
+  public function referrerToTitle() {
     $name[] = ts('Traffic Source');
     if ($this->_pageType) {
       $name[] = $this->_pageTypes[$this->_pageType];
@@ -500,11 +500,11 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     return CRM_Utils_Array::implode(' - ', $name);
   }
 
-  function getTitle() {
+  public function getTitle() {
     return $this->referrerToTitle();
   }
 
-  function filters($page) {
+  public function filters($page) {
     // generate breadcrumbs
     $get = $_GET;
     foreach($get as $name => $value) {
@@ -559,7 +559,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     $page->assign('drill_down_base', CRM_Utils_System::url($this->_drillDown));
   }
 
-  function breadcrumbs($page) {
+  public function breadcrumbs($page) {
     if ($this->_pageType && $this->_pageId && !$page->_breadcrumbs) {
       // breadcrumb starter
       $breadcrumbs = [

@@ -33,7 +33,7 @@
  *
  */
 class CRM_Utils_Mail_Incoming {
-  function formatMail($mail, &$attachments) {
+  public function formatMail($mail, &$attachments) {
     $t = '';
     $t .= "From:      " . self::formatAddress($mail->from) . "\n";
     $t .= "To:        " . self::formatAddresses($mail->to) . "\n";
@@ -47,7 +47,7 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailPart($part, &$attachments) {
+  public function formatMailPart($part, &$attachments) {
 
     if ($part instanceof ezcMail) {
       return self::formatMail($part, $attachments);
@@ -74,7 +74,7 @@ class CRM_Utils_Mail_Incoming {
       ));
   }
 
-  function formatMailMultipart($part, &$attachments) {
+  public function formatMailMultipart($part, &$attachments) {
 
     if ($part instanceof ezcMailMultiPartAlternative) {
       return self::formatMailMultipartAlternative($part, $attachments);
@@ -101,7 +101,7 @@ class CRM_Utils_Mail_Incoming {
       ));
   }
 
-  function formatMailMultipartMixed($part, &$attachments) {
+  public function formatMailMultipartMixed($part, &$attachments) {
     $t = '';
     foreach ($part->getParts() as $key => $alternativePart) {
       $t .= self::formatMailPart($alternativePart, $attachments);
@@ -109,7 +109,7 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailMultipartRelated($part, &$attachments) {
+  public function formatMailMultipartRelated($part, &$attachments) {
     $t = '';
     $t .= "-RELATED MAIN PART-\n";
     $t .= self::formatMailPart($part->getMainPart(), $attachments);
@@ -121,7 +121,7 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailMultipartDigest($part, &$attachments) {
+  public function formatMailMultipartDigest($part, &$attachments) {
     $t = '';
     foreach ($part->getParts() as $key => $alternativePart) {
       $t .= "-DIGEST-$key-\n";
@@ -131,7 +131,7 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailRfc822Digest($part, &$attachments) {
+  public function formatMailRfc822Digest($part, &$attachments) {
     $t = '';
     $t .= "-DIGEST-ITEM-\n";
     $t .= "Item:\n\n";
@@ -140,7 +140,7 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailMultipartAlternative($part, &$attachments) {
+  public function formatMailMultipartAlternative($part, &$attachments) {
     $t = '';
     foreach ($part->getParts() as $key => $alternativePart) {
       $t .= "-ALTERNATIVE ITEM $key-\n";
@@ -150,13 +150,13 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailText($part, &$attachments) {
+  public function formatMailText($part, &$attachments) {
     $t = '';
     $t .= "\n{$part->text}\n";
     return $t;
   }
 
-  function formatMailMultipartReport($part, &$attachments) {
+  public function formatMailMultipartReport($part, &$attachments) {
     $t = '';
     foreach ($part->getParts() as $key => $reportPart) {
       $t .= "-REPORT-$key-\n";
@@ -166,7 +166,7 @@ class CRM_Utils_Mail_Incoming {
     return $t;
   }
 
-  function formatMailFile($part, &$attachments) {
+  public function formatMailFile($part, &$attachments) {
     $attachments[] = ['dispositionType' => $part->dispositionType,
       'contentType' => $part->contentType,
       'mimeType' => $part->mimeType,
@@ -176,7 +176,7 @@ class CRM_Utils_Mail_Incoming {
     return NULL;
   }
 
-  function formatAddresses($addresses) {
+  public function formatAddresses($addresses) {
     $fa = [];
     foreach ($addresses as $address) {
       $fa[] = self::formatAddress($address);
@@ -184,7 +184,7 @@ class CRM_Utils_Mail_Incoming {
     return CRM_Utils_Array::implode(', ', $fa);
   }
 
-  function formatAddress($address) {
+  public function formatAddress($address) {
     $name = '';
     if (!empty($address->name)) {
       $name = "{$address->name} ";
@@ -192,7 +192,7 @@ class CRM_Utils_Mail_Incoming {
     return $name . "<{$address->email}>";
   }
 
-  static function &parse(&$file) {
+  public static function &parse(&$file) {
 
     // check that the file exists and has some content
     if (!file_exists($file) ||
@@ -224,7 +224,7 @@ class CRM_Utils_Mail_Incoming {
     return $mailParams;
   }
 
-  static function parseMailingObject(&$mail) {
+  public static function parseMailingObject(&$mail) {
     require_once 'api/v2/Activity.php';
     require_once 'api/v2/Contact.php';
 
@@ -281,7 +281,7 @@ class CRM_Utils_Mail_Incoming {
     return $params;
   }
 
-  function parseAddress(&$address, &$params, &$subParam) {
+  public function parseAddress(&$address, &$params, &$subParam) {
     $subParam['email'] = $address->email;
     $subParam['name'] = $address->name;
 
@@ -296,7 +296,7 @@ class CRM_Utils_Mail_Incoming {
     }
   }
 
-  function parseAddresses(&$addresses, $token, &$params) {
+  public function parseAddresses(&$addresses, $token, &$params) {
     $params[$token] = [];
 
     foreach ($addresses as $address) {
@@ -310,7 +310,7 @@ class CRM_Utils_Mail_Incoming {
    * retrieve a contact ID and if not present
    * create one with this email
    */
-  function getContactID($email, $name = NULL, $create = TRUE) {
+  public function getContactID($email, $name = NULL, $create = TRUE) {
 
     $dao = CRM_Contact_BAO_Contact::matchContactOnEmail($email, 'Individual');
     if ($dao) {

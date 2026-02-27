@@ -57,7 +57,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     $session = CRM_Core_Session::singleton();
     $config = CRM_Core_Config::singleton();
     $statusMessage = '';
@@ -328,7 +328,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     parent::run();
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Contribute/Page/{$this->_id}/PCPInfo.tpl";
       $template = &CRM_Core_Page::getTemplate();

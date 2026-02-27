@@ -63,7 +63,7 @@ class Utils {
    *  @return mixed   PDOStatement => Results of the query
    *          false    => Query failed
    */
-  function do_query( $query ) {
+  public function do_query( $query ) {
     $string = preg_replace("/^#[^\n]*$/m", "\n", $query );
     $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
     

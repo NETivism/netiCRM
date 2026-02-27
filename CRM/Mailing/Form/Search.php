@@ -74,7 +74,7 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
       ]);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     foreach ([
         'Scheduled', 'Complete', 'Running',
@@ -84,7 +84,7 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
     return $defaults;
   }
 
-  function postProcess() {
+  public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
 
     $parent = $this->controller->getParent();

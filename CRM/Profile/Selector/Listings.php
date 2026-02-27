@@ -56,7 +56,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -64,7 +64,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * The sql params we use to get the list of contacts
@@ -148,7 +148,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @return CRM_Contact_Selector_Profile
    * @access public
    */
-  function __construct(&$params, &$customFields, $ufGroupIds = NULL, $map = FALSE,
+  public function __construct(&$params, &$customFields, $ufGroupIds = NULL, $map = FALSE,
     $editLink = FALSE, $linkToUF = FALSE
   ) {
     $this->_params = $params;
@@ -208,7 +208,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @access public
    *
    */
-  static function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
+  public static function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
     if (!self::$_links) {
       self::$_links = [];
 
@@ -270,7 +270,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Contact %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
@@ -290,7 +290,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @return array the column headers that need to be displayed
    * @access public
    */
-  function &getColumnHeaders($action = NULL, $output = NULL) {
+  public function &getColumnHeaders($action = NULL, $output = NULL) {
     static $skipFields = ['group', 'tag'];
     $multipleFields = ['url'];
     $direction = CRM_Utils_Sort::ASCENDING;
@@ -373,7 +373,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     return $this->_query->searchQuery(0, 0, NULL, TRUE, NULL, NULL, NULL, NULL);
   }
 
@@ -383,7 +383,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @return string
    * @access public
    */
-  function getQill() {
+  public function getQill() {
     return $this->_query->qill();
   }
 
@@ -398,7 +398,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
     $multipleFields = ['url'];
     //$sort object processing for location fields
@@ -649,7 +649,7 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Profile Listings');
   }
 }

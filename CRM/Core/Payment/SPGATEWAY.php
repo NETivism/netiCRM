@@ -2,20 +2,20 @@
 date_default_timezone_set('Asia/Taipei');
 
 class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
-  const EXPIRE_DAY = 7;
-  const MAX_EXPIRE_DAY = 180;
-  const RESPONSE_TYPE = 'JSON';
-  const MPG_VERSION = '2.3';
-  const AGREEMENT_VERSION = '1.5';
-  const RECUR_VERSION = '1.0';
-  const QUERY_VERSION = '1.1';
-  const REAL_DOMAIN = 'https://core.newebpay.com';
-  const TEST_DOMAIN = 'https://ccore.newebpay.com';
-  const URL_SITE = '/MPG/mpg_gateway';
-  const URL_QUERY = '/API/QueryTradeInfo';
-  const URL_RECUR = '/MPG/period';
-  const URL_CREDITBG = "/API/CreditCard";
-  const QUEUE_NAME = 'spgateway_batch_all_recur';
+  public const EXPIRE_DAY = 7;
+  public const MAX_EXPIRE_DAY = 180;
+  public const RESPONSE_TYPE = 'JSON';
+  public const MPG_VERSION = '2.3';
+  public const AGREEMENT_VERSION = '1.5';
+  public const RECUR_VERSION = '1.0';
+  public const QUERY_VERSION = '1.1';
+  public const REAL_DOMAIN = 'https://core.newebpay.com';
+  public const TEST_DOMAIN = 'https://ccore.newebpay.com';
+  public const URL_SITE = '/MPG/mpg_gateway';
+  public const URL_QUERY = '/API/QueryTradeInfo';
+  public const URL_RECUR = '/MPG/period';
+  public const URL_CREDITBG = "/API/CreditCard";
+  public const QUEUE_NAME = 'spgateway_batch_all_recur';
 
   /**
    * mode of operation: live or test
@@ -63,7 +63,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Spgateway');
@@ -71,7 +71,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_config = $config;
   }
 
-  static function getAdminFields($ppDAO, $form){
+  public static function getAdminFields($ppDAO, $form){
     $fields = [
       [
         'name' => 'user_name',
@@ -241,7 +241,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -262,19 +262,19 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
@@ -287,7 +287,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @access public
    *
    */
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
@@ -430,7 +430,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * @param string $formKey
    * @return void
    */
-  function prepareOrderParams(&$contribution, &$vars, $instrumentCode, $formKey){
+  public function prepareOrderParams(&$contribution, &$vars, $instrumentCode, $formKey){
     global $tsLocale;
 
     // url
@@ -779,7 +779,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $return;
   }
 
-  function doUpdateRecur($params, $debug = FALSE) {
+  public function doUpdateRecur($params, $debug = FALSE) {
     if ($debug) {
       CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $params', $params);
     }
@@ -954,7 +954,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $recurResult;
   }
 
-  function cancelRecuringMessage($recurID){
+  public function cancelRecuringMessage($recurID){
     $sql = "SELECT p.payment_processor_type, p.url_recur FROM civicrm_payment_processor p INNER JOIN civicrm_contribution_recur r ON p.id = r.processor_id WHERE r.id = %1";
     $params = [ 1 => [$recurID, 'Positive']];
     $dao = CRM_Core_DAO::executeQuery($sql, $params);

@@ -46,14 +46,14 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionGroup';
   }
 
@@ -62,7 +62,7 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::BROWSE => [
@@ -105,7 +105,7 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_OptionGroup';
   }
 
@@ -114,7 +114,7 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Options';
   }
 
@@ -123,7 +123,7 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/optionGroup';
   }
 
@@ -135,7 +135,7 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
     $thisArgs = func_get_args();
     $action = $thisArgs[0] ?? NULL;
     $sort = $thisArgs[1] ?? NULL;

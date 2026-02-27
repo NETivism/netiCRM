@@ -34,15 +34,15 @@
  */
 class CRM_Core_Payment_BaseIPN {
 
-  static $_now = NULL;
+  public static $_now = NULL;
 
-  static $_membershipStatus = NULL;
-  function __construct() {
+  public static $_membershipStatus = NULL;
+  public function __construct() {
     self::$_now = date('YmdHis');
     self::$_membershipStatus = CRM_Member_PseudoConstant::membershipStatus();
   }
 
-  function validateData(&$input, &$ids, &$objects, $required = TRUE, $paymentProcessorID = NULL) {
+  public function validateData(&$input, &$ids, &$objects, $required = TRUE, $paymentProcessorID = NULL) {
     // make sure contribution exists and is valid
 
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -79,7 +79,7 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function createContact(&$input, &$ids, &$objects) {
+  public function createContact(&$input, &$ids, &$objects) {
     $params = [];
     $billingID = $ids['billing'];
     $lookup = ["first_name",
@@ -102,7 +102,7 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID, $isReserveObjectsContribution = FALSE) {
+  public function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID, $isReserveObjectsContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
     $contribution = &$objects['contribution'];
 
@@ -262,7 +262,7 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function failed(&$objects, &$transaction, $message = '') {
+  public function failed(&$objects, &$transaction, $message = '') {
     CRM_Utils_Hook::ipnPre('failed', $objects);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
@@ -351,7 +351,7 @@ class CRM_Core_Payment_BaseIPN {
     return $returnArray;
   }
 
-  function pending(&$objects, &$transaction) {
+  public function pending(&$objects, &$transaction) {
     CRM_Utils_Hook::ipnPre('pending', $objects);
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('pending', $objects);
@@ -360,7 +360,7 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function cancelled(&$objects, &$transaction) {
+  public function cancelled(&$objects, &$transaction) {
     CRM_Utils_Hook::ipnPre('cancelled', $objects);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
@@ -408,7 +408,7 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function unhandled(&$objects, &$transaction) {
+  public function unhandled(&$objects, &$transaction) {
     $transaction->rollback();
     // we dont handle this as yet
     CRM_Core_Error::debug_log_message("returning since contribution status: $status is not handled");
@@ -416,7 +416,7 @@ class CRM_Core_Payment_BaseIPN {
     return FALSE;
   }
 
-  function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE, $sendMail = TRUE) {
+  public function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE, $sendMail = TRUE) {
     $values = [];
     CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
     $contribution = &$objects['contribution'];
@@ -745,7 +745,7 @@ class CRM_Core_Payment_BaseIPN {
     }
   }
 
-  static function copyContribution(&$contrib, $rid, $trxn_id) {
+  public static function copyContribution(&$contrib, $rid, $trxn_id) {
     if(is_object($contrib)){
       $c = clone $contrib;
       unset($c->id);
@@ -771,7 +771,7 @@ class CRM_Core_Payment_BaseIPN {
     return FALSE;
   }
 
-  function getBillingID(&$ids) {
+  public function getBillingID(&$ids) {
     // get the billing location type
 
     $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
@@ -784,7 +784,7 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
-  function sendMail(&$input, &$ids, &$objects, &$values, $recur = FALSE, $returnMessageText = FALSE) {
+  public function sendMail(&$input, &$ids, &$objects, &$values, $recur = FALSE, $returnMessageText = FALSE) {
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
@@ -1188,7 +1188,7 @@ class CRM_Core_Payment_BaseIPN {
     }
   }
 
-  static function updateContributionStatus(&$params) {
+  public static function updateContributionStatus(&$params) {
     // get minimum required values.
     $statusId = CRM_Utils_Array::value('contribution_status_id', $params);
     $componentId = CRM_Utils_Array::value('component_id', $params);

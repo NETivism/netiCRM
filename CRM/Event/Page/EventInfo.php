@@ -52,7 +52,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     //get the event id.
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->track();
@@ -248,7 +248,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     parent::run();
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Event/Page/{$this->_id}/EventInfo.tpl";
       $template = &CRM_Core_Page::getTemplate();
@@ -260,7 +260,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return parent::getTemplateFileName();
   }
 
-  function track() {
+  public function track() {
     $params = [
       'state' => '0',
       'page_type' => 'civicrm_event',
@@ -270,7 +270,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     CRM_Core_BAO_Track::add($params);
   }
 
-  function getContactID() {
+  public function getContactID() {
     //check if this is a checksum authentication
     $userChecksum = CRM_Utils_Request::retrieve('cs', 'String', $this);
     if ($userChecksum) {
@@ -287,7 +287,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return $session->get('userID');
   }
 
-  static function feeBlock($eventId) {
+  public static function feeBlock($eventId) {
     $feeBlock = [];
     if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $eventId)) {
       $feeBlock['price_set_id'] = $priceSetId;

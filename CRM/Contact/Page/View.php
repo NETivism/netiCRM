@@ -89,7 +89,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     // process url params
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->assign('id', $this->_id);
@@ -238,7 +238,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  static function getContactDetails($contactId) {
+  public static function getContactDetails($contactId) {
     return list($displayName,
       $contactImage,
       $contactType,
@@ -247,7 +247,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     ) = CRM_Contact_BAO_Contact::getDisplayAndImage($contactId, TRUE);
   }
 
-  function getSearchURL() {
+  public function getSearchURL() {
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
     $context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
     $this->assign('context', $context);
@@ -298,7 +298,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     return CRM_Utils_System::url($urlString, $urlParams);
   }
 
-  static function checkUserPermission($page) {
+  public static function checkUserPermission($page) {
     // check for permissions
     $page->_permission = NULL;
 
@@ -330,7 +330,7 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     }
   }
 
-  static function setTitle($contactId, $isDeleted = FALSE) {
+  public static function setTitle($contactId, $isDeleted = FALSE) {
     static $contactDetails;
     $displayName = $contactImage = NULL;
     if (!isset($contactDetails[$contactId])) {

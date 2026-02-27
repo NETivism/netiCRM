@@ -62,7 +62,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $session = CRM_Core_Session::singleton();
 
     // disable anon user for access some profile
@@ -174,12 +174,12 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     parent::run();
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Page/{$this->_gid}/View.tpl";
       $template = &CRM_Core_Page::getTemplate();

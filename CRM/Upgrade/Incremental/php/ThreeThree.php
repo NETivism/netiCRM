@@ -33,11 +33,11 @@
  *
  */
 class CRM_Upgrade_Incremental_php_ThreeThree {
-  function verifyPreDBstate(&$errors) {
+  public function verifyPreDBstate(&$errors) {
     return TRUE;
   }
 
-  function upgrade_3_3_alpha1($rev) {
+  public function upgrade_3_3_alpha1($rev) {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework == 'Drupal') {
       // CRM-6426 - make civicrm profiles permissioned on drupal my account
@@ -130,7 +130,7 @@ WHERE id = %2
     CRM_Core_BAO_ConfigSetting::add($params);
   }
 
-  function upgrade_3_3_beta1($rev) {
+  public function upgrade_3_3_beta1($rev) {
     $upgrade = new CRM_Upgrade_Form();
     $upgrade->processSQL($rev);
 
@@ -249,7 +249,7 @@ WHERE id = %2
     }
   }
 
-  function upgrade_3_3_beta3($rev) {
+  public function upgrade_3_3_beta3($rev) {
     // get the duplicate Ids of line item entries
     $dupeLineItemIds = [];
     $fields = ['entity_table', 'entity_id', 'price_field_id', 'price_field_value_id'];
@@ -278,7 +278,7 @@ WHERE id = %2
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_3_0($rev) {
+  public function upgrade_3_3_0($rev) {
     $upgrade = new CRM_Upgrade_Form();
     $upgrade->processSQL($rev);
 

@@ -45,7 +45,7 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
 
@@ -101,7 +101,7 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function edit() {
+  public function edit() {
     $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Payment',
       'Update Pledge Payment',
       $this->_action
@@ -115,7 +115,7 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function setContext() {
+  public function setContext() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);

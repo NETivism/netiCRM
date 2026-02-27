@@ -48,7 +48,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
   public $_disallowed;
   public $_fieldset;
   public $_mail;
-  CONST MODE_REGISTER = 1, MODE_SEARCH = 2, MODE_CREATE = 4, MODE_EDIT = 8;
+  public CONST MODE_REGISTER = 1, MODE_SEARCH = 2, MODE_CREATE = 4, MODE_EDIT = 8;
 
   protected $_mode;
 
@@ -153,7 +153,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    *
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
 
 
 
@@ -347,7 +347,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    *
    * @return void
    */
-  function setDefaultsValues() {
+  public function setDefaultsValues() {
     $this->_defaults = [];
     if ($this->_id) {
       CRM_Core_BAO_UFGroup::setProfileDefaults($this->_id, $this->_fields, $this->_defaults, TRUE);
@@ -595,7 +595,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    *
    * @return Array   $errors     Errors ( if any ).
    */
-  static function validateContactActivityProfile($activityId, $contactId, $gid) {
+  public static function validateContactActivityProfile($activityId, $contactId, $gid) {
     $errors = [];
     if (!$activityId) {
       $errors[] = 'Profile is using one or more activity fields, and is missing the activity Id (aid) in the URL.';
@@ -637,7 +637,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     // if no values, return
     if (empty($fields)) {
@@ -1030,7 +1030,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     $transaction->commit();
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Form/{$this->_gid}/{$this->_name}.tpl";
       $template = &CRM_Core_Form::getTemplate();
@@ -1050,7 +1050,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     return parent::getTemplateFileName();
   }
 
-  function track($state) {
+  public function track($state) {
     $params = [
       'state' => $state,
       'page_type' => 'civicrm_uf_group',

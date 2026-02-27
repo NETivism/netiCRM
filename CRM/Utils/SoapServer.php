@@ -50,7 +50,7 @@ class CRM_Utils_SoapServer {
    * Number of seconds we should let a soap process idle
    * @static
    */
-  static $soap_timeout = 0;
+  public static $soap_timeout = 0;
 
   /**
    * Cache the actual UF Class

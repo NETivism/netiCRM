@@ -45,7 +45,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   /**
    * Constants for number of options for data types of multiple option.
    */
-  CONST NUM_OPTION = 11;
+  public CONST NUM_OPTION = 11;
 
   /**
    * the custom set id saved to the session for an update
@@ -132,7 +132,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * @return array    array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
@@ -385,7 +385,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
 
     // all option fields are of type "money"
     $errors = [];

@@ -72,7 +72,7 @@ class CRM_Core_BAO_SchemaHandler {
    * @static
    * @access public
    */
-  static function createTable(&$params) {
+  public static function createTable(&$params) {
     $sql = self::buildTableSQL($params);
     // do not i18n-rewrite
     $dao = &CRM_Core_DAO::executeQuery($sql, [], TRUE, NULL, FALSE, FALSE);
@@ -86,7 +86,7 @@ class CRM_Core_BAO_SchemaHandler {
     return TRUE;
   }
 
-  static function buildTableSQL(&$params) {
+  public static function buildTableSQL(&$params) {
     $sql = "CREATE TABLE {$params['name']} (";
     if (isset($params['fields']) &&
       is_array($params['fields'])
@@ -116,7 +116,7 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildFieldSQL(&$params, $separator, $prefix) {
+  public static function buildFieldSQL(&$params, $separator, $prefix) {
     $sql = '';
     $sql .= $separator;
     $sql .= str_repeat(' ', 8);
@@ -144,7 +144,7 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildPrimaryKeySQL(&$params, $separator, $prefix) {
+  public static function buildPrimaryKeySQL(&$params, $separator, $prefix) {
     $sql = NULL;
     if (CRM_Utils_Array::value('primary', $params)) {
       $sql .= $separator;
@@ -155,7 +155,7 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildSearchIndexSQL(&$params, $separator, $prefix, $indexExist = FALSE) {
+  public static function buildSearchIndexSQL(&$params, $separator, $prefix, $indexExist = FALSE) {
     $sql = NULL;
 
     // dont index blob
@@ -180,7 +180,7 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildIndexSQL(&$params, $separator, $prefix) {
+  public static function buildIndexSQL(&$params, $separator, $prefix) {
     $sql = '';
     $sql .= $separator;
     $sql .= str_repeat(' ', 8);
@@ -206,7 +206,7 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function changeFKConstraint($tableName, $fkTableName) {
+  public static function changeFKConstraint($tableName, $fkTableName) {
     $fkName = "{$tableName}_entity_id";
     if (strlen($fkName) >= 48) {
       $fkName = substr($fkName, 0, 32) . "_" . substr(md5($fkName), 0, 16);
@@ -228,7 +228,7 @@ ALTER TABLE {$tableName}
     return TRUE;
   }
 
-  static function buildForeignKeySQL(&$params, $separator, $prefix, $tableName) {
+  public static function buildForeignKeySQL(&$params, $separator, $prefix, $tableName) {
     $sql = NULL;
     if (CRM_Utils_Array::value('fk_table_name', $params) &&
       CRM_Utils_Array::value('fk_field_name', $params)
@@ -247,7 +247,7 @@ ALTER TABLE {$tableName}
     return $sql;
   }
 
-  static function alterFieldSQL(&$params, $indexExist = FALSE) {
+  public static function alterFieldSQL(&$params, $indexExist = FALSE) {
     $sql = str_repeat(' ', 8);
     $sql .= "ALTER TABLE {$params['table_name']}";
 
@@ -308,17 +308,17 @@ ALTER TABLE {$tableName}
    * @static
    * @access public
    */
-  static function dropTable($tableName) {
+  public static function dropTable($tableName) {
     $sql = "DROP TABLE $tableName";
     $dao = &CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function dropColumn($tableName, $columnName) {
+  public static function dropColumn($tableName, $columnName) {
     $sql = "ALTER TABLE $tableName DROP COLUMN $columnName";
     $dao = &CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function changeUniqueToIndex($tableName, $dropUnique = TRUE) {
+  public static function changeUniqueToIndex($tableName, $dropUnique = TRUE) {
     if ($dropUnique) {
       $sql = "ALTER TABLE $tableName 
 DROP INDEX `unique_entity_id` ,
@@ -332,7 +332,7 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
     $dao = &CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = []) {
+  public static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = []) {
     $queries = [];
 
     $domain = new CRM_Core_DAO_Domain;

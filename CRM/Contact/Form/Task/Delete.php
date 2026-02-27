@@ -67,7 +67,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
 
     //check for delete
     if (!CRM_Core_Permission::check('delete contacts')) {
@@ -199,7 +199,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     if ($this->_restore) {
       $label = ts('Restore Contact(s)');
     }

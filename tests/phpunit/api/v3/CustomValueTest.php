@@ -7,7 +7,7 @@ class api_v3_CustomValueTest extends CiviUnitTestCase {
   protected $individual;
   protected $params;
   protected $ids;
-  public $DBResetRequired = FALSE; function setUp() {
+  public $DBResetRequired = FALSE; public function setUp() {
     parent::setUp();
     $this->_apiversion = 3;
     $this->individual  = $this->individualCreate();
@@ -20,7 +20,7 @@ class api_v3_CustomValueTest extends CiviUnitTestCase {
     $this->ids['multi2'] = $this->CustomGroupMultipleCreateWithFields(['title' => 'group2']);
   }
 
-  function tearDown() {
+  public function tearDown() {
     $tablesToTruncate = [
       'civicrm_email',
       'civicrm_custom_field',

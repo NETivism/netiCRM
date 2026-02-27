@@ -16,7 +16,7 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -24,7 +24,7 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
    * This function sets the default values for the form. MobileProvider that in edit/view mode
    * the default values are retrieved from the database
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }

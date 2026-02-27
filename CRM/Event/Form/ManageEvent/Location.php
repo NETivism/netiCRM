@@ -52,7 +52,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @var int
    * @const
    */
-  CONST LOCATION_BLOCKS = 1;
+  public CONST LOCATION_BLOCKS = 1;
 
   /**
    * the variable, for storing the location array
@@ -80,7 +80,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $blockCount = CRM_Utils_Request::retrieve('count', 'Positive', CRM_Core_DAO::$_nullObject);
     if(empty($blockCount)){
       // for ajax , don't do extra things. refs #20631
@@ -116,7 +116,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $this->_values;
 
     if (CRM_Utils_Array::value('loc_block_id', $defaults)) {
@@ -156,7 +156,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Event_Form_ManageEvent_Location', 'formRule']);
   }
 
@@ -169,7 +169,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);

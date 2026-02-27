@@ -48,7 +48,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
   /**
    * @var array ($cacheKey => $cacheValue)
    */
-  static $_cache = NULL;
+  public static $_cache = NULL;
 
   /**
    * Retrieve an item from the DB cache
@@ -62,7 +62,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @static
    * @access public
    */
-  static function &getItem($group, $path, $componentID = NULL, $createdTime = 0) {
+  public static function &getItem($group, $path, $componentID = NULL, $createdTime = 0) {
     if (self::$_cache === NULL) {
       self::$_cache = [];
     }
@@ -113,7 +113,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @static
    * @access public
    */
-  static function &getItems($group, $componentID = NULL) {
+  public static function &getItems($group, $componentID = NULL) {
     if (self::$_cache === NULL) {
       self::$_cache = [];
     }
@@ -153,7 +153,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @param int $expired unix timestamp indicate this cache to be expire after this date
    * @return void
    */
-  static function setItem(&$data, $group, $path, $componentID = NULL, $expired = NULL) {
+  public static function setItem(&$data, $group, $path, $componentID = NULL, $expired = NULL) {
     if (self::$_cache === NULL) {
       self::$_cache = [];
     }
@@ -201,7 +201,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     $cache->delete($argString);
   }
 
-  static function deleteItem($group, $path, $componentID = NULL) {
+  public static function deleteItem($group, $path, $componentID = NULL) {
     $dao = new CRM_Core_DAO_Cache();
     $dao->group_name = $group;
     $dao->path = $path;
@@ -227,7 +227,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     return $success;
   }
 
-  static function deleteGroup($group = NULL) {
+  public static function deleteGroup($group = NULL) {
     $dao = new CRM_Core_DAO_Cache();
 
     if (!empty($group)) {
@@ -240,7 +240,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     CRM_ACL_BAO_Cache::resetCache();
   }
 
-  static function storeSessionToCache($names, $resetSession = TRUE) {
+  public static function storeSessionToCache($names, $resetSession = TRUE) {
     // CRM_Core_Error::debug_var( 'names in store', $names );
     foreach ($names as $key => $sessionName) {
       if (is_array($sessionName)) {
@@ -273,7 +273,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     self::cleanupSessionCache();
   }
 
-  static function restoreSessionFromCache($names) {
+  public static function restoreSessionFromCache($names) {
     // CRM_Core_Error::debug_var( 'names in restore', $names );
     foreach ($names as $key => $sessionName) {
       if (is_array($sessionName)) {
@@ -313,7 +313,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
    * @param boolean $all clean up all session cache in one run, but calc expired / created date
    * @return void
    */
-  static function cleanupSessionCache($force = FALSE, $all = FALSE) {
+  public static function cleanupSessionCache($force = FALSE, $all = FALSE) {
     // clean up the session cache every $cacheCleanUpNumber probabilistically
     $cacheCleanUpNumber = 757;
 
@@ -337,7 +337,7 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     }
   }
 
-  static function getItemCreatedDate($group, $path, $componentID = NULL) {
+  public static function getItemCreatedDate($group, $path, $componentID = NULL) {
     $dao = new CRM_Core_DAO_Cache();
     $dao->group_name = $group;
     $dao->path = $path;

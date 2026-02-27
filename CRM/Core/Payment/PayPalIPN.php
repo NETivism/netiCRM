@@ -36,12 +36,12 @@
 
 class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
 
-  static $_paymentProcessor = NULL;
-  function __construct() {
+  public static $_paymentProcessor = NULL;
+  public function __construct() {
     parent::__construct();
   }
 
-  static function retrieve($name, $type, $location = 'POST', $abort = TRUE) {
+  public static function retrieve($name, $type, $location = 'POST', $abort = TRUE) {
     static $store = NULL;
     $value = CRM_Utils_Request::retrieve($name, $type, $store,
       FALSE, NULL, $location
@@ -54,7 +54,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     return $value;
   }
 
-  function recur(&$input, &$ids, &$objects, $first) {
+  public function recur(&$input, &$ids, &$objects, $first) {
     if (!isset($input['txnType'])) {
       CRM_Core_Error::debug_log_message("Could not find txn_type in input request");
       echo "Failure: Invalid parameters<p>";
@@ -188,7 +188,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     );
   }
 
-  function single(&$input, &$ids, &$objects,
+  public function single(&$input, &$ids, &$objects,
     $recur = FALSE,
     $first = FALSE
   ) {
@@ -253,7 +253,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     $this->completeTransaction($input, $ids, $objects, $transaction, $recur);
   }
 
-  function main($component = 'contribute') {
+  public function main($component = 'contribute') {
     // CRM_Core_Error::debug_var( 'GET' , $_GET , true, true );
     // CRM_Core_Error::debug_var( 'POST', $_POST, true, true );
 
@@ -304,7 +304,7 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  function getInput(&$input, &$ids) {
+  public function getInput(&$input, &$ids) {
     if (!$this->getBillingID($ids)) {
       return FALSE;
     }

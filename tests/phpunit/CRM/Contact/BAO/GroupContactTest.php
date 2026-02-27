@@ -60,7 +60,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase
     /**
      * test case for add( )
      */
-    function testAdd( )
+    public function testAdd( )
     {
         require_once 'CRM/Contact/BAO/GroupContact.php';
 
@@ -78,7 +78,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase
     /**
      * test case for getGroupId( )
      */
-    function testGetGroupId()
+    public function testGetGroupId()
     {
 
         require_once 'CRM/Contact/BAO/GroupContact.php';
@@ -99,7 +99,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase
     /**
      *  Test case for contact search: CRM-6706, CRM-6586 Parent Group search should return contacts from child groups too.
      */
-    function testContactSearchByParentGroup()
+    public function testContactSearchByParentGroup()
     {
         // create a parent group
         require_once 'CRM/Contact/BAO/Group.php';

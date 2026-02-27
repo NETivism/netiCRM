@@ -34,14 +34,14 @@
  * Convenience class for PHP-Gettext compatibility.
  */
 class CRM_Core_I18n_NativeGettext {
-  function translate($string) {
+  public function translate($string) {
     return gettext($string);
   }
 
   /**
    * Based on php-gettext, since native gettext does not support this as is.
    */
-  function pgettext($context, $text) {
+  public function pgettext($context, $text) {
     $key = $context . chr(4) . $text;
     $ret = $this->translate($key);
 
@@ -53,7 +53,7 @@ class CRM_Core_I18n_NativeGettext {
     }
   }
 
-  function ngettext($text, $plural, $count) {
+  public function ngettext($text, $plural, $count) {
     return ngettext($text, $plural, $count);
   }
 }

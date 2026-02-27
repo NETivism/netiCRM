@@ -49,7 +49,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     //parent::setDefaultValues();
     $defaults = [];
     if (isset($this->_id)) {
@@ -150,7 +150,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    * @access public
    * @static
    */
-  static function formRule($params, $files, $contributionPageId = NULL) {
+  public static function formRule($params, $files, $contributionPageId = NULL) {
     $errors = [];
     if (CRM_Utils_Array::value('is_active', $params)) {
 

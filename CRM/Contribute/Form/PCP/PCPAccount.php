@@ -134,7 +134,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (!$this->_contactID) {
       return;
     }
@@ -243,7 +243,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       foreach ($fields as $key => $value) {

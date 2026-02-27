@@ -35,7 +35,7 @@ require_once 'api/v2/GroupOrganization.php';
  *  @package   CiviCRM
  */
 class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'Group Organization',
       'description' => 'Test all Group Organization API methods.',

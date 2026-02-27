@@ -35,7 +35,7 @@
 
 
 class CRM_Event_Page_ParticipantListing_NameAndEmail extends CRM_Event_Page_ParticipantListing_Simple {
-  function preProcess() {
+  public function preProcess() {
     $this->_participantListingType = 'Name and Email';
 
     parent::preProcess();

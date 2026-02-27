@@ -42,7 +42,7 @@ class CRM_Report_Form_Contribute_Repeat extends CRM_Report_Form {
   public $_from;
   public $_where;
   public $_absoluteUrl;
-  function __construct() {
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'grouping' => 'contact-fields',
@@ -208,15 +208,15 @@ contribution2_total_amount_count, contribution2_total_amount_sum',
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function setDefaultValues($freeze = TRUE) {
+  public function setDefaultValues($freeze = TRUE) {
     return parent::setDefaultValues($freeze);
   }
 
-  function select() {
+  public function select() {
     $select = $uni = [];
     $append = NULL;
 
@@ -281,7 +281,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function groupBy($tableCol = FALSE) {
+  public function groupBy($tableCol = FALSE) {
     $this->_groupBy = [];
     if (is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])
@@ -305,7 +305,7 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     }
   }
 
-  function from() {
+  public function from() {
     foreach (['receive_date1', 'receive_date2'] as $fieldName) {
       $relative = CRM_Utils_Array::value("{$fieldName}_relative", $this->_params);
       $from = CRM_Utils_Array::value("{$fieldName}_from", $this->_params);
@@ -369,7 +369,7 @@ LEFT  JOIN (
 ";
   }
 
-  function where() {
+  public function where() {
     $clauses[] = "!(contribution1_total_amount_count IS NULL AND contribution2_total_amount_count IS NULL)";
 
     foreach ($this->_columns as $tableName => $table) {
@@ -404,7 +404,7 @@ LEFT  JOIN (
     }
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = $checkDate = $errorCount = [];
 
     $rules = ['id' => ['sort_name', 'email', 'phone',
@@ -536,12 +536,12 @@ LEFT  JOIN (
     return $errors;
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
     return $statistics;
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->beginPostProcess();
 
     $this->select();
@@ -615,7 +615,7 @@ LEFT  JOIN (
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     list($from1, $to1) = $this->getFromTo(CRM_Utils_Array::value("receive_date1_relative", $this->_params),
       CRM_Utils_Array::value("receive_date1_from", $this->_params),

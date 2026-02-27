@@ -48,7 +48,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * delete a saved search.
@@ -58,7 +58,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    * @return void
    *
    */
-  function delete($id) {
+  public function delete($id) {
     // first delete the group associated with this saved search
     $group = new CRM_Contact_DAO_Group();
     $group->saved_search_id = $id;
@@ -79,7 +79,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    * @return content of the parents run method
    *
    */
-  function browse() {
+  public function browse() {
     $rows = [];
 
     $savedSearch = new CRM_Contact_DAO_SavedSearch();
@@ -123,7 +123,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $action = CRM_Utils_Request::retrieve('action', 'String',
       $this, FALSE, 'browse'
     );
@@ -145,7 +145,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static function &links() {
+  public static function &links() {
 
     if (!(self::$_links)) {
 

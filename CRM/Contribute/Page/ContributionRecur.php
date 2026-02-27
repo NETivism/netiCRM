@@ -47,7 +47,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * @var array<string, mixed>
    */
   public $_values;
-  static $_links = NULL;
+  public static $_links = NULL;
   public $_permission = NULL;
   public $_contactId = NULL;
 
@@ -57,7 +57,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function view() {
+  public function view() {
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
 
     $recur = new CRM_Contribute_DAO_ContributionRecur();
@@ -243,7 +243,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function edit() {
+  public function edit() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionRecur', 'Create Contribution', $this->_action);
     $controller->setEmbedded(TRUE);
 
@@ -261,7 +261,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'view');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -298,7 +298,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     if ($this->_action & CRM_Core_Action::VIEW) {
@@ -314,7 +314,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return parent::run();
   }
 
-  static function _diff_contribute_recur_log($data) {
+  public static function _diff_contribute_recur_log($data) {
     $allFields = CRM_Contribute_DAO_ContributionRecur::$_fields;
     if (is_string($data)) {
       $log = unserialize($data);

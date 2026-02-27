@@ -65,7 +65,7 @@ class CRM_Admin_Form_Setting_PremiumsSetting extends CRM_Admin_Form_Setting {
    *
    * @return array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
     return $defaults;

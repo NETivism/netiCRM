@@ -10,7 +10,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
   protected $_formValues = [];
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     // get selector defined form values
     $this->_formValues = $this->get('formValues');

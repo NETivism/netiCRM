@@ -40,16 +40,16 @@
 
 class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
   public $dedupe_email;
-  CONST MAX_CONTACTS_TO_PROCESS = 1000;
+  public CONST MAX_CONTACTS_TO_PROCESS = 1000;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
-  function create($params) {
+  public function create($params) {
     $job = new CRM_Mailing_BAO_Job();
     $job->mailing_id = $params['mailing_id'];
     $job->status = $params['status'];

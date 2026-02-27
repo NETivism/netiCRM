@@ -52,7 +52,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -60,7 +60,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
@@ -68,7 +68,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @static
    */
 
-  static $_properties = [
+  public static $_properties = [
     'contact_id',
     'contact_type',
     'contact_sub_type',
@@ -163,7 +163,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct(&$queryParams,
+  public function __construct(&$queryParams,
     $action = CRM_Core_Action::NONE,
     $activityClause = NULL,
     $single = FALSE,
@@ -198,7 +198,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Activities %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
@@ -215,7 +215,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     return $this->_query->searchQuery(0, 0, NULL,
       TRUE, FALSE,
       FALSE, FALSE,
@@ -235,7 +235,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    *
    * @return array  rows in the given offset and rowCount
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $result = $this->_query->searchQuery($offset, $rowCount, $sort,
       FALSE, FALSE,
       FALSE, FALSE,
@@ -380,11 +380,11 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
     return self::$_columnHeaders;
   }
 
-  function alphabetQuery() {
+  public function alphabetQuery() {
     return $this->_query->searchQuery(NULL, NULL, NULL, FALSE, FALSE, TRUE);
   }
 
-  function &getQuery() {
+  public function &getQuery() {
     return $this->_query;
   }
 
@@ -395,7 +395,7 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Activity Search');
   }
 }

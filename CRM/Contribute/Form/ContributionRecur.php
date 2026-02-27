@@ -61,7 +61,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    */
   public $_contactID;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
     $this->_contactID = $this->get('cid');
 
@@ -126,7 +126,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_action & CRM_Core_Action::UPDATE) {

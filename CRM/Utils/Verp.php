@@ -37,7 +37,7 @@
 class CRM_Utils_Verp {
   /* Mapping of reserved characters to hex codes */
 
-  static $encodeMap = [
+  public static $encodeMap = [
     '+' => '2B',
     '@' => '40',
     ':' => '3A',
@@ -50,7 +50,7 @@ class CRM_Utils_Verp {
 
   /* Mapping of hex codes to reserved characters */
 
-  static $decodeMap = [
+  public static $decodeMap = [
     '40' => '@',
     '3A' => ':',
     '25' => '%',

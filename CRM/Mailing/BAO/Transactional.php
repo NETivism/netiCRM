@@ -11,7 +11,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   /**
    * Activity Names that can invoke transactional email
    */
-  const ALLOWED_ACTIVITY_TYPES = 'Email,Email Receipt,Contribution Notification Email,Event Notification Email,Membership Notification Email,PCP Notification Email,Mailing Notification Email';
+  public const ALLOWED_ACTIVITY_TYPES = 'Email,Email Receipt,Contribution Notification Email,Event Notification Email,Membership Notification Email,PCP Notification Email,Mailing Notification Email';
 
   /**
    * job object of this mailing
@@ -328,7 +328,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * We summarize here
    *
    */
-  function __construct($params = NULL) {
+  public function __construct($params = NULL) {
     parent::__construct();
     $this->is_hidden = 1;
     $this->name = 'Transactional Email';

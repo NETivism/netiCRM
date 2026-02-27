@@ -42,7 +42,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
   protected $_openID;
   
-  function preProcess() {
+  public function preProcess() {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework !== "Standalone") {
       CRM_Utils_System::redirect();
@@ -64,7 +64,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     $this->_openID = $session->get('openid');
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     $defaults['user_unique_id'] = $this->_openID;
@@ -72,7 +72,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     return $defaults;
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->add('text',
       'user_unique_id',
       ts('OpenID'),
@@ -116,7 +116,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+  public function postProcess() {
     $formValues = $this->controller->exportValues($this->_name);
 
 

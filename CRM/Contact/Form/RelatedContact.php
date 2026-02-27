@@ -73,7 +73,7 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // reset action from the session
     $this->_action = CRM_Utils_Request::retrieve('action', 'String',
       $this, FALSE, 'update'
@@ -116,7 +116,7 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 

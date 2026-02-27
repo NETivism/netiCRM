@@ -7,7 +7,7 @@ class Event extends PHPUnit_Framework_Testcase
      *
      * @return $event id of created Event
      */
-    function create( ) 
+    public function create( ) 
     {
         require_once "CRM/Event/BAO/Event.php";        
         $params = ['title'                    => 'Test Event',
@@ -35,7 +35,7 @@ class Event extends PHPUnit_Framework_Testcase
      * @return boolean true if event deleted, false otherwise
      * 
      */
-    function delete( $eventId ) {
+    public function delete( $eventId ) {
         return CRM_Event_BAO_Event::del( $eventId );
     }
 }

@@ -98,11 +98,11 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
-  static function &getRecipientsCount($job_id, $mailing_id = NULL) {
+  public static function &getRecipientsCount($job_id, $mailing_id = NULL) {
     // need this for backward compatibility, so we can get count for old mailings
     // please do not use this function if possible
     $eq = self::getRecipients($job_id, $mailing_id);
@@ -111,7 +111,7 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
 
   // note that $job_id is used only as a variable in the temp table construction
   // and does not play a role in the queries generated
-  static function &getRecipients($job_id, $mailing_id = NULL, $offset = NULL, $limit = NULL, $storeRecipients = FALSE, $dedupeEmail = FALSE, $mode = NULL) {
+  public static function &getRecipients($job_id, $mailing_id = NULL, $offset = NULL, $limit = NULL, $storeRecipients = FALSE, $dedupeEmail = FALSE, $mode = NULL) {
     $mailingGroup = new CRM_Mailing_DAO_Group();
 
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
@@ -707,7 +707,7 @@ ORDER BY   i.contact_id, i.email_id
    *                             the type will tell us which function to use for the data lookup
    *                             if we need to do a lookup at all
    */
-  function &getDataFunc($token) {
+  public function &getDataFunc($token) {
     static $_categories = NULL;
     static $_categoryString = NULL;
     if (!$_categories) {
@@ -1055,7 +1055,7 @@ AND civicrm_contact.is_opt_out =0";
    *
    * @return (reference) array    array ref that hold array refs to the verp info and urls
    */
-  static function getVerpAndUrls($job_id, $event_queue_id, $hash, $email) {
+  public static function getVerpAndUrls($job_id, $event_queue_id, $hash, $email) {
     // create a skeleton object and set its properties that are required by getVerpAndUrlsAndHeaders()
 
     $config = CRM_Core_Config::singleton();
@@ -1487,7 +1487,7 @@ AND civicrm_contact.is_opt_out =0";
    * domain and mailing tokens
    *
    */
-  static function tokenReplace(&$mailing) {
+  public static function tokenReplace(&$mailing) {
 
     $domain = CRM_Core_BAO_Domain::getDomain();
 
@@ -1618,7 +1618,7 @@ AND civicrm_contact.is_opt_out =0";
    *
    * @return object
    */
-  static function add(&$params, $ids = []) {
+  public static function add(&$params, $ids = []) {
     $id = CRM_Utils_Array::value('mailing_id', $ids, CRM_Utils_Array::value('id', $params));
     if ($id) {
       CRM_Utils_Hook::pre('edit', 'Mailing', $id, $params);
@@ -2226,7 +2226,7 @@ AND civicrm_contact.is_opt_out =0";
   }
 
 
-  static function checkPermission($id) {
+  public static function checkPermission($id) {
     if (!$id) {
       return;
     }
@@ -2240,7 +2240,7 @@ AND civicrm_contact.is_opt_out =0";
     return;
   }
 
-  static function mailingACL($alias = NULL) {
+  public static function mailingACL($alias = NULL) {
     $mailingACL = " ( 0 ) ";
 
     $mailingIDs = self::mailingACLIDs();
@@ -2252,7 +2252,7 @@ AND civicrm_contact.is_opt_out =0";
     return $mailingACL;
   }
 
-  static function &mailingACLIDs($count = FALSE, $condition = NULL) {
+  public static function &mailingACLIDs($count = FALSE, $condition = NULL) {
     // get all the groups that this user can access
     // if they dont have universal access
     $groups = CRM_Core_PseudoConstant::group();
@@ -2380,7 +2380,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
    * @access public
    */
 
-  static function showEmailDetails($id) {
+  public static function showEmailDetails($id) {
     return CRM_Utils_System::url('civicrm/mailing/report', "mid=$id");
   }
 
@@ -2431,7 +2431,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $dao->delete();
   }
 
-  function getReturnProperties() {
+  public function getReturnProperties() {
     $tokens = &$this->getTokens();
 
     $properties = [];
@@ -2475,7 +2475,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
    * @return array
    * @access public
    */
-  static function getDetails($contactIDs,
+  public static function getDetails($contactIDs,
     $returnProperties = NULL,
     $skipOnHold = TRUE,
     $skipDeceased = TRUE,
@@ -2951,7 +2951,7 @@ SELECT  $mailing.id as mailing_id
     return $report;
   }
 
-  static function overrideVerp($jobID) {
+  public static function overrideVerp($jobID) {
     static $_cache = [];
 
     if (!isset($_cache[$jobID])) {
@@ -2967,7 +2967,7 @@ WHERE  civicrm_mailing_job.id = %1
     return $_cache[$jobID];
   }
 
-  static function processQueue() {
+  public static function processQueue() {
 
     $config = &CRM_Core_Config::singleton();
     CRM_Core_Error::debug_log_message("Beginning processQueue run: {$config->mailerJobsMax}, {$config->mailerJobSize}");
@@ -3077,7 +3077,7 @@ ORDER BY civicrm_mailing.name";
     return FALSE;
   }
 
-  function checkIsHidden() {
+  public function checkIsHidden() {
     if (!empty($this->id)) {
       return CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $this->id, 'is_hidden');
     }

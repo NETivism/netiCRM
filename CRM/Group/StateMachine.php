@@ -39,7 +39,7 @@ class CRM_Group_StateMachine extends CRM_Core_StateMachine {
   /**
    * class constructor
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $this->_pages = [
@@ -58,7 +58,7 @@ class CRM_Group_StateMachine extends CRM_Core_StateMachine {
    * @return string
    * @access public
    */
-  function getTaskFormName() {
+  public function getTaskFormName() {
     return CRM_Utils_String::getClassName('CRM_Contact_Form_Task_AddToGroup');
   }
 }

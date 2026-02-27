@@ -47,7 +47,7 @@ class CRM_Contact_Form_Task_SaveSearch_Update extends CRM_Contact_Form_Task_Save
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     $this->_id = $this->get('ssID');
@@ -68,7 +68,7 @@ class CRM_Contact_Form_Task_SaveSearch_Update extends CRM_Contact_Form_Task_Save
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     $defaults = [];
     $params = [];

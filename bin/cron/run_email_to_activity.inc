@@ -47,7 +47,7 @@ class bin_Email2Activity {
 
     protected $_context;
 
-    function __construct( $dir, $context = 'activity' ) {
+    public function __construct( $dir, $context = 'activity' ) {
         $this->_mailDir = $dir;
         $this->_context = strtolower($context);
         // create the error and processed directories
@@ -55,7 +55,7 @@ class bin_Email2Activity {
         $this->createDir( );
     }
 
-    function createDir( ) {
+    public function createDir( ) {
         require_once 'CRM/Utils/File.php';
 
         // ensure that $this->_mailDir is a directory and is writable
@@ -86,7 +86,7 @@ class bin_Email2Activity {
     }
 
 
-    function run( ) {
+    public function run( ) {
         $directory = new DirectoryIterator( $this->_mailDir );
 
         $success = $error = 0;
@@ -106,7 +106,7 @@ class bin_Email2Activity {
         unset( $directory );
     }
 
-    function process( $file ) {
+    public function process( $file ) {
         if ( $this->_context == 'activity' ) {
             require_once 'api/v2/Activity.php';
             $result = civicrm_activity_process_email( $this->_mailDir . DIRECTORY_SEPARATOR . $file,

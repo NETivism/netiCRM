@@ -50,7 +50,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static function add(&$params, &$ids = NULL) {
+  public static function add(&$params, &$ids = NULL) {
     $transaction = new CRM_Core_Transaction();
 
     // pre-processing hooks
@@ -127,7 +127,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @return boolean true if duplicate, false otherwise
    * @access public
    * static  */
-  static function checkDuplicate($params, &$duplicates) {
+  public static function checkDuplicate($params, &$duplicates) {
     $id = CRM_Utils_Array::value('id', $params);
     $trxn_id = CRM_Utils_Array::value('trxn_id', $params);
     $invoice_id = CRM_Utils_Array::value('invoice_id', $params);
@@ -165,7 +165,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     return $result;
   }
 
-  static function getPaymentProcessor($id, $mode) {
+  public static function getPaymentProcessor($id, $mode) {
     $sql = "SELECT c.payment_processor_id, r.processor_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id IS NOT NULL AND r.id = %1 ORDER BY c.id ASC LiMIT 0, 1";
 
     $params = [1 => [$id, 'Integer']];
@@ -189,7 +189,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @return array $totalCount an array of recurring ids count
    * @access public
    * static  */
-  static function getCount(&$ids) {
+  public static function getCount(&$ids) {
     $recurID = CRM_Utils_Array::implode(',', $ids);
     $totalCount = [];
 
@@ -214,7 +214,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static function deleteRecurContribution($recurId) {
+  public static function deleteRecurContribution($recurId) {
     $result = FALSE;
     if (!$recurId) {
       return $result;
@@ -238,7 +238,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static function cancelRecurContribution($recurId, $objects, $canceledId = 2) {
+  public static function cancelRecurContribution($recurId, $objects, $canceledId = 2) {
     if (!$recurId) {
       return FALSE;
     }
@@ -282,7 +282,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @access public
    * @static
    */
-  static function getRecurContributions($contactId) {
+  public static function getRecurContributions($contactId) {
     $params = [];
 
     $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
@@ -326,7 +326,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     if (!$is_active) {
       return self::cancelRecurContribution($id, CRM_Core_DAO::$_nullObject, 2);
     }
@@ -339,7 +339,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @param int      $id             id of the recurring
    * @param int      $contributionId id of the contribution target to sync
    */
-  static function syncContribute($id, $contributionId = NULL) {
+  public static function syncContribute($id, $contributionId = NULL) {
     $config = CRM_Core_Config::singleton();
     if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
       if (!empty($contributionId)) {
@@ -439,7 +439,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     }
   }
 
-  static function calculateRecurDay($id, $today = NULL, $base = 'start_date'){
+  public static function calculateRecurDay($id, $today = NULL, $base = 'start_date'){
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $id;
     if($recur->find(TRUE) && !empty($recur->$base)){
@@ -449,7 +449,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     return FALSE;
   }
 
-  static function currentRunningSummary(){
+  public static function currentRunningSummary(){
     $sql = " SELECT SUM( c.contributions ) AS contributions, SUM( c.amount ) AS amount, SUM( c.groupby ) AS contacts, c.currency
 FROM (
   SELECT COUNT( r.id ) AS contributions, SUM( r.amount ) AS amount,  '1' AS groupby, r.currency
@@ -471,7 +471,7 @@ GROUP BY c.currency";
     return $summary;
   }
 
-  static function chartEstimateMonthly($limit = 12){
+  public static function chartEstimateMonthly($limit = 12){
     $frequency_unit = 'month';
     $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, CAST(r.installments AS SIGNED) - CAST(count(c.id) AS SIGNED) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = 'month' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result WHERE result.installments > 0 OR result.installments IS NULL GROUP BY result.installments DESC";
     $dao = CRM_Core_DAO::executeQuery($sql);
@@ -521,7 +521,7 @@ GROUP BY c.currency";
     return $chart;
   }
 
-  static function saveLogData($params, $before = NULL, &$logId = NULL, $message = NULL) {
+  public static function saveLogData($params, $before = NULL, &$logId = NULL, $message = NULL) {
     $params = (object) $params;
     if (empty($params->id)) {
       CRM_Core_Error::debug_log_message(ts('Lack of ID in parameters when saving log data.'), TRUE);
@@ -565,7 +565,7 @@ GROUP BY c.currency";
     $log = CRM_Core_BAO_Log::add( $logParams );
   }
 
-  static function addNote($recurringId, $title, $body = NULL) {
+  public static function addNote($recurringId, $title, $body = NULL) {
     $session = CRM_Core_Session::singleton();
     $userId = $session->get('userID');
     if (empty($userId)) {

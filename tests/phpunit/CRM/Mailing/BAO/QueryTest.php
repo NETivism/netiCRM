@@ -15,7 +15,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
 
     use CRMTraits_Mailing_MailingTrait;
 
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Mailing BAO Query',
@@ -29,12 +29,12 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
         return new CRM_Mailing_BAO_QueryTestDataProvider;
     }
 
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
     
-    function tearDown()
+    public function tearDown()
     {
         $tablesToTruncate = [ 
                                    'civicrm_mailing_event_bounce',
@@ -56,7 +56,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase
      *  Test CRM_Contact_BAO_Query::searchQuery()
      *  @dataProvider dataProvider
      */
-    function testSearch( $fv, $count, $ids, $full )
+    public function testSearch( $fv, $count, $ids, $full )
     {
         $this->loadMailingDeliveryDataSet();
 

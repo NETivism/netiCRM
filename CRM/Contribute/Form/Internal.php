@@ -35,7 +35,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (!empty($this->_contactId)) {
       $defaults['contact_id'] = $this->_contactId;
@@ -107,7 +107,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     if (empty($fields['contact_select_id'][1])) {
       if (!ctype_digit($fields['contact_id']) || empty($fields['contact_id'])) {

@@ -54,7 +54,7 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_id = NULL;
 
     // get the submitted values of the search form
@@ -86,7 +86,7 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // get the qill
     $query = new CRM_Contact_BAO_Query($this->get('queryParams'));
     $qill = $query->qill();

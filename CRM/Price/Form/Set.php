@@ -92,7 +92,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $options) {
+  public static function formRule($fields, $files, $options) {
     $errors = [];
 
     //checks the given price set doesnot start with digit
@@ -223,7 +223,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = ['is_active' => TRUE];
     if ($this->_sid) {
       $params = ['id' => $this->_sid];

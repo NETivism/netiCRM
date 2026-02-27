@@ -48,7 +48,7 @@ class CRM_Campaign_Form_Task_Result extends CRM_Campaign_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {}
+  public function preProcess() {}
 
   /**
    * Function to actually build the form

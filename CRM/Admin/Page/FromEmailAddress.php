@@ -8,7 +8,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * The option group id of from_email_address
@@ -16,7 +16,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    * @var int
    * @static
    */
-  static $_optionGroupId = NULL;
+  public static $_optionGroupId = NULL;
 
   /**
    * The edit form controller
@@ -32,7 +32,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     self::$_optionGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'from_email_address', 'id', 'name');
   }
 
@@ -41,7 +41,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
@@ -50,7 +50,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -75,7 +75,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->assign('action', $this->_action);
@@ -131,7 +131,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse() {
+  public function browse() {
     $groupParams = ['name' => 'from_email_address'];
     $optionValues = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'component_id,weight');
     $returnURL = CRM_Utils_System::url("civicrm/admin/from_email_address", "reset=1");
@@ -170,7 +170,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    *
    * @return $controller
    */
-  function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
+  public function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
     $controllerName = $this->editForm();
     $this->_controller = new $controllerName();
 
@@ -188,7 +188,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
     $this->_controller->run();
   }
 
-  function delete($id) {
+  public function delete($id) {
     $this->_controller = new CRM_Core_Controller_Simple('CRM_Admin_Form_FromEmailAddress', $this->editName(), $this->_action, FALSE);
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
@@ -207,7 +207,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Controller_FromEmailAddress';
   }
 
@@ -216,7 +216,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'from_email_address';
   }
 
@@ -225,7 +225,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/from_email_address';
   }
 
@@ -237,7 +237,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    * @return string
    * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return '&reset=1&action=browse';
   }
 }

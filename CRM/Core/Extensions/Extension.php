@@ -48,11 +48,11 @@ class CRM_Core_Extensions_Extension {
   /**
    *
    */
-  CONST OPTION_GROUP_NAME = 'system_extensions';
+  public CONST OPTION_GROUP_NAME = 'system_extensions';
 
   public $type = NULL;
 
-  public $path = NULL; function __construct($key, $type = NULL, $name = NULL, $label = NULL, $file = NULL, $is_active = 0) {
+  public $path = NULL; public function __construct($key, $type = NULL, $name = NULL, $label = NULL, $file = NULL, $is_active = 0) {
     $this->key = $key;
     $this->type = $type;
     $this->name = $name;

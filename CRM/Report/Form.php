@@ -59,12 +59,12 @@ class CRM_Report_Form extends CRM_Core_Form {
 
   protected $_charts;
 
-  CONST ROW_COUNT_LIMIT = 50;
+  public CONST ROW_COUNT_LIMIT = 50;
 
   /**
    * Operator types - used for displaying filter elements
    */
-  CONST OP_INT = 1, OP_STRING = 2, OP_DATE = 4, OP_FLOAT = 8, 
+  public CONST OP_INT = 1, OP_STRING = 2, OP_DATE = 4, OP_FLOAT = 8, 
   OP_SELECT = 64, OP_MULTISELECT = 65, OP_MULTISELECT_SEPARATOR = 66;
 
   /**
@@ -212,7 +212,7 @@ class CRM_Report_Form extends CRM_Core_Form {
   /**
    *
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
 
     // build tag filter
@@ -230,7 +230,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->addCustomDataToColumns();
   }
 
-  function preProcessCommon() {
+  public function preProcessCommon() {
     $this->_force = CRM_Utils_Request::retrieve('force',
       'Boolean',
       CRM_Core_DAO::$_nullObject
@@ -322,7 +322,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->_chartButtonName = $this->getButtonName('submit', 'chart');
   }
 
-  function addBreadCrumb() {
+  public function addBreadCrumb() {
     $breadCrumbs = [['title' => ts('Report Templates'),
         'url' => CRM_Utils_System::url('civicrm/admin/report/template/list', 'reset=1'),
       ]];
@@ -330,7 +330,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     CRM_Utils_System::appendBreadCrumb($breadCrumbs);
   }
 
-  function preProcess() {
+  public function preProcess() {
     $this->preProcessCommon();
     if (!$this->_id) {
       self::addBreadCrumb();
@@ -457,7 +457,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  function setDefaultValues($freeze = TRUE) {
+  public function setDefaultValues($freeze = TRUE) {
     $freezeGroup = [];
 
     // FIXME: generalizing form field naming conventions would reduce
@@ -550,7 +550,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     return $this->_defaults;
   }
 
-  function getElementFromGroup($group, $grpFieldName) {
+  public function getElementFromGroup($group, $grpFieldName) {
     $eleObj = $this->getElement($group);
     foreach ($eleObj->_elements as $index => $obj) {
       if ($grpFieldName == $obj->_attributes['name']) {
@@ -560,7 +560,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     return FALSE;
   }
 
-  function addColumns() {
+  public function addColumns() {
     $options = [];
     $colGroups = NULL;
     foreach ($this->_columns as $tableName => $table) {
@@ -588,7 +588,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->assign('colGroups', $colGroups);
   }
 
-  function addFilters() {
+  public function addFilters() {
 
 
     $options = $filters = [];
@@ -655,7 +655,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->assign('filters', $filters);
   }
 
-  function addOptions() {
+  public function addOptions() {
     if (!empty($this->_options)) {
       // FIXME: For now lets build all elements as checkboxes.
       // Once we clear with the format we can build elements based on type
@@ -677,7 +677,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  function addChartOptions() {
+  public function addChartOptions() {
     if (!empty($this->_charts)) {
       $this->addElement('select', "charts", ts('Chart'), $this->_charts);
       $this->assign('charts', $this->_charts);
@@ -685,7 +685,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  function addGroupBys() {
+  public function addGroupBys() {
     $options = $freqElements = [];
 
     foreach ($this->_columns as $tableName => $table) {
@@ -712,7 +712,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  function buildInstanceAndButtons() {
+  public function buildInstanceAndButtons() {
 
     CRM_Report_Form_Instance::buildForm($this);
 
@@ -758,7 +758,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     );
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addColumns();
 
     $this->addFilters();
@@ -778,7 +778,7 @@ class CRM_Report_Form extends CRM_Core_Form {
   // a formrule function to ensure that fields selected in group_by
   // (if any) should only be the ones present in display/select fields criteria;
   // note: works if and only if any custom field selected in group_by.
-  function customDataFormRule($fields, $ignoreFields = []) {
+  public function customDataFormRule($fields, $ignoreFields = []) {
     $errors = [];
     if (!empty($this->_customGroupExtends) && $this->_customGroupGroupBy && !empty($fields['group_bys'])) {
       foreach ($this->_columns as $tableName => $table) {
@@ -805,7 +805,7 @@ class CRM_Report_Form extends CRM_Core_Form {
 
   // Note: $fieldName param allows inheriting class to build operationPairs
   // specific to a field.
-  static function getOperationPair($type = "string", $fieldName = NULL) {
+  public static function getOperationPair($type = "string", $fieldName = NULL) {
     // FIXME: At some point we should move these key-val pairs
     // to option_group and option_value table.
 
@@ -856,7 +856,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  function buildTagFilter() {
+  public function buildTagFilter() {
 
     $contactTags = CRM_Core_BAO_Tag::getTags();
     if (!empty($contactTags)) {
@@ -874,7 +874,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  static function getSQLOperator($operator = "like") {
+  public static function getSQLOperator($operator = "like") {
     switch ($operator) {
       case 'eq':
         return '=';
@@ -913,7 +913,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  function whereClause(&$field, $op,
+  public function whereClause(&$field, $op,
     $value, $min, $max
   ) {
 
@@ -1051,7 +1051,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     return $clause;
   }
 
-  function dateClause($fieldName,
+  public function dateClause($fieldName,
     $relative, $from, $to, $type = NULL
   ) {
     $clauses = [];
@@ -1079,7 +1079,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     return NULL;
   }
 
-  static function dateDisplay($relative, $from, $to) {
+  public static function dateDisplay($relative, $from, $to) {
     list($from, $to) = self::getFromTo($relative, $from, $to);
 
     if ($from) {
@@ -1103,7 +1103,7 @@ class CRM_Report_Form extends CRM_Core_Form {
     return NULL;
   }
 
-  static function getFromTo($relative, $from, $to) {
+  public static function getFromTo($relative, $from, $to) {
 
     //FIX ME not working for relative
     if ($relative) {
@@ -1120,11 +1120,11 @@ class CRM_Report_Form extends CRM_Core_Form {
     return [$from, $to];
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
   }
 
-  function alterCustomDataDisplay(&$rows) {
+  public function alterCustomDataDisplay(&$rows) {
     // custom code to alter rows having custom values
     if (empty($this->_customGroupExtends)) {
       return;
@@ -1185,7 +1185,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
-  function formatCustomValues($value, $customField, $fieldValueMap) {
+  public function formatCustomValues($value, $customField, $fieldValueMap) {
     if (CRM_Utils_System::isNull($value)) {
       return;
     }
@@ -1296,7 +1296,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 return $retValue;
               }
 
-              function removeDuplicates(&$rows) {
+              public function removeDuplicates(&$rows) {
                 if (empty($this->_noRepeats)) {
                   return;
                 }
@@ -1316,7 +1316,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function fixSubTotalDisplay(&$row, $fields, $subtotal = TRUE) {
+              public function fixSubTotalDisplay(&$row, $fields, $subtotal = TRUE) {
 
                 foreach ($row as $colName => $colVal) {
                   if (in_array($colName, $fields)) {
@@ -1334,7 +1334,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function grandTotal(&$rows) {
+              public function grandTotal(&$rows) {
                 if (!$this->_rollup || ($this->_rollup == '') ||
                   ($this->_limit && count($rows) >= self::ROW_COUNT_LIMIT)
                 ) {
@@ -1359,7 +1359,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 return TRUE;
               }
 
-              function formatDisplay(&$rows, $pager = TRUE) {
+              public function formatDisplay(&$rows, $pager = TRUE) {
                 // set pager based on if any limit was applied in the query.
                 if ($pager) {
                   $this->setPager();
@@ -1397,14 +1397,14 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 $this->alterCustomDataDisplay($rows);
               }
 
-              function buildChart(&$rows) {
+              public function buildChart(&$rows) {
                 // override this method for building charts.
               }
 
               // select() method below has been added recently (v3.3), and many of the report templates might
               // still be having their own select() method. We should fix them as and when encountered and move
               // towards generalizing the select() method below.
-              function select() {
+              public function select() {
                 $select = [];
 
                 $this->_columnHeaders = [];
@@ -1526,11 +1526,11 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
               }
 
-              function selectClause(&$tableName, $tableKey, &$fieldName, &$field) {
+              public function selectClause(&$tableName, $tableKey, &$fieldName, &$field) {
                 return FALSE;
               }
 
-              function where() {
+              public function where() {
                 $whereClauses = $havingClauses = [];
                 foreach ($this->_columns as $tableName => $table) {
                   if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -1585,7 +1585,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function processReportMode() {
+              public function processReportMode() {
                 $buttonName = $this->controller->getButtonName();
 
                 $output = CRM_Utils_Request::retrieve('output',
@@ -1635,7 +1635,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function beginPostProcess() {
+              public function beginPostProcess() {
                 $this->_params = $this->controller->exportValues($this->_name);
                 if (empty($this->_params) &&
                   $this->_force
@@ -1654,7 +1654,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 $this->processReportMode();
               }
 
-              function buildQuery($applyLimit = TRUE) {
+              public function buildQuery($applyLimit = TRUE) {
                 $this->select();
                 $this->from();
                 $this->customDataFrom();
@@ -1676,15 +1676,15 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 return $sql;
               }
 
-              function groupBy() {
+              public function groupBy() {
                 $this->_groupBy = "";
               }
 
-              function orderBy() {
+              public function orderBy() {
                 $this->_orderBy = "";
               }
 
-              function buildRows($sql, &$rows) {
+              public function buildRows($sql, &$rows) {
                 $dao = CRM_Core_DAO::executeQuery($sql);
                 if (!is_array($rows)) {
                   $rows = [];
@@ -1704,18 +1704,18 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function modifyColumnHeaders() {
+              public function modifyColumnHeaders() {
                 // use this method to modify $this->_columnHeaders
               }
 
-              function doTemplateAssignment(&$rows) {
+              public function doTemplateAssignment(&$rows) {
                 $this->assign_by_ref('columnHeaders', $this->_columnHeaders);
                 $this->assign_by_ref('rows', $rows);
                 $this->assign('statistics', $this->statistics($rows));
               }
 
               // override this method to build your own statistics
-              function statistics(&$rows) {
+              public function statistics(&$rows) {
                 $statistics = [];
 
                 $count = is_array($rows) ? count($rows) : 0;
@@ -1733,7 +1733,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 return $statistics;
               }
 
-              function countStat(&$statistics, $count) {
+              public function countStat(&$statistics, $count) {
                 $statistics['counts']['rowCount'] = ['title' => ts('Row(s) Listed'),
                   'value' => $count,
                 ];
@@ -1745,7 +1745,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function groupByStat(&$statistics) {
+              public function groupByStat(&$statistics) {
                 if (CRM_Utils_Array::value('group_bys', $this->_params) &&
                   is_array($this->_params['group_bys']) &&
                   !empty($this->_params['group_bys'])
@@ -1765,7 +1765,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function filterStat(&$statistics) {
+              public function filterStat(&$statistics) {
                 foreach ($this->_columns as $tableName => $table) {
                   if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
                     foreach ($table['filters'] as $fieldName => $field) {
@@ -1833,7 +1833,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function endPostProcess(&$rows = NULL) {
+              public function endPostProcess(&$rows = NULL) {
                 if ($this->_outputMode == 'print' ||
                   $this->_outputMode == 'pdf' ||
                   $this->_sendmail
@@ -1900,7 +1900,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function postProcess() {
+              public function postProcess() {
                 // get ready with post process params
                 $this->beginPostProcess();
 
@@ -1921,7 +1921,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 $this->endPostProcess($rows);
               }
 
-              function limit($rowCount = self::ROW_COUNT_LIMIT) {
+              public function limit($rowCount = self::ROW_COUNT_LIMIT) {
 
                 // lets do the pager if in html mode
                 $this->_limit = NULL;
@@ -1948,7 +1948,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function setPager($rowCount = self::ROW_COUNT_LIMIT) {
+              public function setPager($rowCount = self::ROW_COUNT_LIMIT) {
                 if ($this->_limit && ($this->_limit != '')) {
 
                   $sql = "SELECT FOUND_ROWS();";
@@ -1966,7 +1966,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                 }
               }
 
-              function whereGroupClause($clause) {
+              public function whereGroupClause($clause) {
 
                 $smartGroupQuery = "";
 
@@ -1999,7 +1999,7 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                           {$smartGroupQuery} ) ";
               }
 
-              function whereTagClause($clause) {
+              public function whereTagClause($clause) {
                 // not using left join in query because if any contact
                 // belongs to more than one tag, results duplicate
                 // entries.
@@ -2009,12 +2009,12 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                           WHERE entity_table = 'civicrm_contact' AND {$clause} ) ";
               }
 
-              function buildACLClause($tableAlias = 'contact_a') {
+              public function buildACLClause($tableAlias = 'contact_a') {
 
                 list($this->_aclFrom, $this->_aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause($tableAlias);
               }
 
-              function addCustomDataToColumns($addFields = TRUE) {
+              public function addCustomDataToColumns($addFields = TRUE) {
                 if (empty($this->_customGroupExtends)) {
                   return;
                 }
@@ -2171,7 +2171,7 @@ ORDER BY cg.weight";
                 }
               }
 
-              function customDataFrom() {
+              public function customDataFrom() {
                 if (empty($this->_customGroupExtends)) {
                   return;
                 }
@@ -2204,7 +2204,7 @@ LEFT JOIN civicrm_contact {$field['alias']} ON {$field['alias']}.id = {$this->_a
                 }
               }
 
-              function isFieldSelected($prop) {
+              public function isFieldSelected($prop) {
                 if (empty($prop)) {
                   return FALSE;
                 }

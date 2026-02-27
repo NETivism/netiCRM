@@ -32,7 +32,7 @@ require_once 'api/v2/Location.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_LocationTest extends CiviUnitTestCase {
   protected $_contactID;
-  protected $_locationType; function get_info() {
+  protected $_locationType; public function get_info() {
     return [
       'name' => 'Location Add',
       'description' => 'Test all Location Add API methods.',
@@ -40,7 +40,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->_contactID = $this->organizationCreate();
@@ -49,13 +49,13 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->_locationType = $this->locationTypeCreate();
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->locationTypeDelete($this->_locationType->id);
     $this->contactDelete($this->_contactID);
   }
 
   ///////////////// civicrm_location_add methods
-  function testAddWrongParamsType() {
+  public function testAddWrongParamsType() {
     $params = 1;
     $location = &civicrm_location_add($params);
 
@@ -63,7 +63,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals('Params need to be of type array!', $location['error_message']);
   }
 
-  function testAddWithEmptyParams() {
+  public function testAddWithEmptyParams() {
     $params = [];
     $location = &civicrm_location_add($params);
 
@@ -71,7 +71,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($location['error_message'], 'Input Parameters empty');
   }
 
-  function testAddWithoutContactid() {
+  public function testAddWithoutContactid() {
     $params = [
       'location_type' => 'Home',
       'is_primary' => 1,
@@ -83,7 +83,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($location['error_message'], 'Required fields not found for location contact_id');
   }
 
-  function testAddWithoutLocationid() {
+  public function testAddWithoutLocationid() {
     $params = [
       'contact_id' => $this->_contactID,
       'is_primary' => 1,
@@ -96,7 +96,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($location['error_message'], 'Please set atleast one location block. ( address or email or phone or im or website)');
   }
 
-  function testAddOrganizationWithAddress() {
+  public function testAddOrganizationWithAddress() {
     $address = [
       1 =>
       [
@@ -129,7 +129,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->locationDelete($params);
   }
 
-  function testAddWithAddressEmailPhoneIM() {
+  public function testAddWithAddressEmailPhoneIM() {
     $workPhone = [
       'phone' => '91-20-276048',
       'phone_type_id' => 1,
@@ -219,7 +219,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_location_delete methods
-  function testDeleteWrongParamsType() {
+  public function testDeleteWrongParamsType() {
     $location = 1;
 
     $locationDelete = &civicrm_location_delete($location);
@@ -227,14 +227,14 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($locationDelete['error_message'], 'Params need to be of type array!');
   }
 
-  function testDeleteWithEmptyParams() {
+  public function testDeleteWithEmptyParams() {
     $location = [];
     $locationDelete = &civicrm_location_delete($location);
     $this->assertEquals($locationDelete['is_error'], 1);
     $this->assertEquals($locationDelete['error_message'], '$contact is not valid contact datatype');
   }
 
-  function testDeleteWithMissingContactId() {
+  public function testDeleteWithMissingContactId() {
     $params = ['location_type' => 3];
     $locationDelete = &civicrm_location_delete($params);
 
@@ -242,7 +242,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($locationDelete['error_message'], '$contact is not valid contact datatype');
   }
 
-  function testDeleteWithMissingLocationTypeId() {
+  public function testDeleteWithMissingLocationTypeId() {
     $params = ['contact_id' => $this->_contactID];
     $locationDelete = &civicrm_location_delete($params);
 
@@ -250,7 +250,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($locationDelete['error_message'], 'missing or invalid location');
   }
 
-  function testDeleteWithNoMatch() {
+  public function testDeleteWithNoMatch() {
     $params = [
       'contact_id' => $this->_contactID,
       'location_type' => 10,
@@ -261,7 +261,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($locationDelete['error_message'], 'invalid location type');
   }
 
-  function testDelete() {
+  public function testDelete() {
     $location = $this->locationAdd($this->_contactID);
     $locationTypeId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_LocationType', 'New Location Type', 'id', 'name');
 
@@ -280,7 +280,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_location_get methods
-  function testGetWrongParamsType() {
+  public function testGetWrongParamsType() {
     $params = 1;
 
     $result = &civicrm_location_get($params);
@@ -288,7 +288,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals('Params need to be of type array!', $result['error_message']);
   }
 
-  function testGetWithEmptyParams() {
+  public function testGetWithEmptyParams() {
     // empty params
     $params = [];
 
@@ -296,7 +296,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testGetWithoutContactId() {
+  public function testGetWithoutContactId() {
     // no contact_id
     $params = ['location_type' => 'Main'];
 
@@ -304,7 +304,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testGetWithEmptyLocationType() {
+  public function testGetWithEmptyLocationType() {
     // location_type an empty array
     $params = [
       'contact_id' => $this->_contactId,
@@ -315,7 +315,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testGet() {
+  public function testGet() {
     $location = $this->locationAdd($this->_contactID);
 
     $proper = [
@@ -341,7 +341,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->locationDelete($params);
   }
 
-  function testGetTwoSeriesCompliance() {
+  public function testGetTwoSeriesCompliance() {
     $location = $this->locationAdd($this->_contactID);
     $params = [
       'contact_id' => $this->_contactID,
@@ -375,7 +375,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_location_update methods
-  function testUpdateWrongParamsType() {
+  public function testUpdateWrongParamsType() {
     $location = 1;
 
     $locationUpdate = &civicrm_location_update($location);
@@ -383,14 +383,14 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals('Params need to be of type array!', $locationUpdate['error_message']);
   }
 
-  function testLocationUpdateWithEmptyParams() {
+  public function testLocationUpdateWithEmptyParams() {
     $params = [];
 
     $result = civicrm_location_update($params);
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testLocationUpdateWithMissingContactId() {
+  public function testLocationUpdateWithMissingContactId() {
     $params = ['location_type' => 3];
     $locationUpdate = &civicrm_location_update($params);
 
@@ -398,7 +398,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($locationUpdate['error_message'], '$contact is not valid contact datatype');
   }
 
-  function testLocationUpdateWithMissingLocationTypeId() {
+  public function testLocationUpdateWithMissingLocationTypeId() {
     $params = ['contact_id' => $this->_contactID];
     $locationUpdate = &civicrm_location_update($params);
 
@@ -406,7 +406,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     $this->assertEquals($locationUpdate['error_message'], 'missing or invalid location_type_id');
   }
 
-  function testLocationUpdate() {
+  public function testLocationUpdate() {
     $location = $this->locationAdd($this->_contactID);
 
     $workPhone = [
@@ -448,7 +448,7 @@ class api_v2_LocationTest extends CiviUnitTestCase {
 
 
   ///////////////// helper methods
-  function _checkResult(&$result, &$match) {
+  public function _checkResult(&$result, &$match) {
     if (CRM_Utils_Array::value('address', $match)) {
       $this->assertDBState('CRM_Core_DAO_Address', $result['address'][0], $match['address'][0]);
     }

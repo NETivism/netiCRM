@@ -13,23 +13,23 @@ private $_cache;
  *
  * @return void
  */
-  function __construct($config) {
+  public function __construct($config) {
   $this->_cache = [];
   }
 
-  function set($key, &$value) {
+  public function set($key, &$value) {
     $this->_cache[$key] = $value;
   }
 
-  function get($key) {
+  public function get($key) {
     return CRM_Utils_Array::value($key, $this->_cache);
   }
 
-  function delete($key) {
+  public function delete($key) {
     unset($this->_cache[$key]);
   }
 
-  function flush() {
+  public function flush() {
     unset($this->_cache);
     $this->_cache = [];
   }

@@ -54,7 +54,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
    */
   public $_orderBy;
   public $_absoluteUrl;
-  protected $_summary = NULL; function __construct() {
+  protected $_summary = NULL; public function __construct() {
 
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
@@ -141,11 +141,11 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -166,12 +166,12 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_log {$this->_aliases['civicrm_log']}
         inner join civicrm_contact {$this->_aliases['civicrm_contact']} on {$this->_aliases['civicrm_log']}.modified_id = {$this->_aliases['civicrm_contact']}.id
@@ -180,7 +180,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
         ";
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
@@ -217,7 +217,7 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function orderBy() {
+  public function orderBy() {
     $this->_orderBy = "
 ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
 ";
@@ -237,7 +237,7 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         $this->endPostProcess( $rows );	
     }
 */
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {

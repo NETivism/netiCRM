@@ -11,7 +11,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   public $_bulkMode = FALSE;
 
@@ -33,7 +33,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     return self::$_singleton;
   }
 
-  function __construct($providerId) {
+  public function __construct($providerId) {
     $providerInfo = CRM_SMS_BAO_Provider::getProviderInfo($providerId);
     $this->_providerInfo = $providerInfo;
     if (strstr($this->_providerInfo['api_url'], 'SmBulkSend')) {

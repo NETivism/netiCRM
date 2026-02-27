@@ -44,7 +44,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * Constants for number of options for data types of multiple option.
    */
-  CONST NUM_OPTION = 11;
+  public CONST NUM_OPTION = 11;
 
   /**
    * the custom group id saved to the session for an update
@@ -180,7 +180,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * @return array    array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $this->_values;
 
     if ($this->_id) {
@@ -557,7 +557,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $default = CRM_Utils_Array::value('default_value', $fields);
 
     $errors = [];

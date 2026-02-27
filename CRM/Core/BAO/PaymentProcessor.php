@@ -43,12 +43,12 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
   /**
    * static holder for the default payment processor
    */
-  static $_defaultPaymentProcessor = NULL;
+  public static $_defaultPaymentProcessor = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -64,7 +64,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
     $paymentProcessor->copyValues($params);
     if ($paymentProcessor->find(TRUE)) {
@@ -85,7 +85,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    * @access public
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_PaymentProcessor', $id, 'is_active', $is_active);
   }
 
@@ -99,7 +99,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    * @static
    * @access public
    */
-  static function &getDefault() {
+  public static function &getDefault() {
     if (self::$_defaultPaymentProcessor == NULL) {
       $params = ['is_default' => 1];
       $defaults = [];
@@ -116,7 +116,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    * @access public
    * @static
    */
-  static function del($paymentProcessorID) {
+  public static function del($paymentProcessorID) {
     if (!$paymentProcessorID) {
       CRM_Core_Error::fatal(ts('Invalid value passed to delete function'));
     }
@@ -145,7 +145,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    * @static
    * @access public
    */
-  static function getPayment($paymentProcessorID, $mode) {
+  public static function getPayment($paymentProcessorID, $mode) {
     if (!$paymentProcessorID) {
       CRM_Core_Error::fatal(ts('Invalid value passed to getPayment function'));
     }
@@ -173,7 +173,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
   }
 
 
-  static function getPayments($paymentProcessorIDs, $mode) {
+  public static function getPayments($paymentProcessorIDs, $mode) {
     if (!$paymentProcessorIDs) {
       CRM_Core_Error::fatal(ts('Invalid value passed to getPayment function'));
     }
@@ -217,7 +217,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
     return $paymentDAO;
   }
 
-  static function getPaymentsByType($processorType, $mode) {
+  public static function getPaymentsByType($processorType, $mode) {
     if (!$processorType) {
       return [];
     }
@@ -253,7 +253,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
    * @static
    * @access public
    */
-  static function buildPayment($dao) {
+  public static function buildPayment($dao) {
     $fields = [
       'id', 'name', 'description', 'payment_processor_type', 'user_name', 'password',
       'signature', 'url_site', 'url_api', 'url_recur', 'url_button',

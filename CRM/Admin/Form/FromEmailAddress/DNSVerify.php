@@ -30,7 +30,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('action', CRM_Core_Action::UPDATE);
     parent::preProcess();
 
@@ -60,7 +60,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    *
    * @return array array of errors / empty array.
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     global $civicrm_conf;
     $errors = [];
     // verify on every submission
@@ -118,7 +118,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * This function sets the default values for the form. MobileProvider that in edit/view mode
    * the default values are retrieved from the database
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }

@@ -64,7 +64,7 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
     );
   }
 
-  function tearDown() {
+  public function tearDown() {
     //  Truncate the tables
     $this->quickCleanup(
       [
@@ -90,7 +90,7 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 0);
   }
 
-  function testGetUFMatchIDWrongParam() {
+  public function testGetUFMatchIDWrongParam() {
     $params = 'a string';
     $result = civicrm_api('uf_match', 'get', $params);
     $this->assertEquals($result['is_error'], 1);
@@ -110,7 +110,7 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 0);
   }
 
-  function testGetUFIDWrongParam() {
+  public function testGetUFIDWrongParam() {
     $params = 'a string';
     $result = civicrm_api('uf_match', 'get', $params);
     $this->assertEquals($result['is_error'], 1);

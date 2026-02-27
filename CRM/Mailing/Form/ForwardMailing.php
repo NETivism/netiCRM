@@ -36,7 +36,7 @@
 
 class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
   public $_fromEmail;
-  function preProcess() {
+  public function preProcess() {
     $job_id = CRM_Utils_Request::retrieve('jid', 'Positive',
       $this, NULL
     );

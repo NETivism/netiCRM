@@ -39,7 +39,7 @@ class CRM_Utils_Weight {
    *
    * @return bool
    */
-  static function correctDuplicateWeights($daoName, $fieldValues = NULL, $weightField = 'weight') {
+  public static function correctDuplicateWeights($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $selectField = "MIN(id) AS dupeId, count(id) as dupeCount, $weightField as dupeWeight";
     $groupBy = "$weightField having dupeCount>1";
 
@@ -77,7 +77,7 @@ class CRM_Utils_Weight {
    *
    * @return bool
    */
-  static function delWeight($daoName, $fieldID, $fieldValues = NULL, $weightField = 'weight') {
+  public static function delWeight($daoName, $fieldID, $fieldValues = NULL, $weightField = 'weight') {
     $object = new $daoName();
     $object->id = $fieldID;
     if (!$object->find(TRUE)) {
@@ -111,7 +111,7 @@ class CRM_Utils_Weight {
    *
    * @return bool
    */
-  static function updateOtherWeights($daoName, $oldWeight, $newWeight, $fieldValues = NULL, $weightField = 'weight') {
+  public static function updateOtherWeights($daoName, $oldWeight, $newWeight, $fieldValues = NULL, $weightField = 'weight') {
     $oldWeight = (int ) $oldWeight;
     $newWeight = (int ) $newWeight;
 
@@ -181,7 +181,7 @@ class CRM_Utils_Weight {
    *
    * @return integer
    */
-  static function getNewWeight($daoName, $fieldValues = NULL, $weightField = 'weight') {
+  public static function getNewWeight($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $selectField = "id AS fieldID, $weightField AS weight";
     $field = &CRM_Utils_Weight::query('SELECT', $daoName, $fieldValues, $selectField);
     $sameWeightCount = 0;
@@ -220,7 +220,7 @@ class CRM_Utils_Weight {
    *
    * @return integer
    */
-  static function getMax($daoName, $fieldValues = NULL, $weightField = 'weight') {
+  public static function getMax($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $selectField = "MAX(ROUND($weightField)) AS max_weight";
     $weightDAO = &CRM_Utils_Weight::query('SELECT', $daoName, $fieldValues, $selectField);
     $weightDAO->fetch();
@@ -240,7 +240,7 @@ class CRM_Utils_Weight {
    *
    * @return integer
    */
-  static function getDefaultWeight($daoName, $fieldValues = NULL, $weightField = 'weight') {
+  public static function getDefaultWeight($daoName, $fieldValues = NULL, $weightField = 'weight') {
     $maxWeight = CRM_Utils_Weight::getMax($daoName, $fieldValues, $weightField);
     return $maxWeight + 1;
   }
@@ -256,7 +256,7 @@ class CRM_Utils_Weight {
    *
    * @return Object CRM_Core_DAO objet that holds the results of the query
    */
-  static function &query($queryType,
+  public static function &query($queryType,
     $daoName,
     $fieldValues,
     $queryData,
@@ -326,7 +326,7 @@ class CRM_Utils_Weight {
     return $resultDAO;
   }
 
-  static function addOrder(&$rows, $daoName, $idName, $returnURL, $filter = NULL) {
+  public static function addOrder(&$rows, $daoName, $idName, $returnURL, $filter = NULL) {
     if (empty($rows)) {
       return;
     }
@@ -384,7 +384,7 @@ class CRM_Utils_Weight {
     }
   }
 
-  static function fixOrder() {
+  public static function fixOrder() {
     $daoName = CRM_Utils_Request::retrieve('dao', 'String', CRM_Core_DAO::$_nullObject);
     $id = CRM_Utils_Request::retrieve('id', 'Integer', CRM_Core_DAO::$_nullObject);
     $idName = CRM_Utils_Request::retrieve('idName', 'String', CRM_Core_DAO::$_nullObject);
@@ -460,7 +460,7 @@ class CRM_Utils_Weight {
    * @param string $daoName Dao class name in CRM
    * @param string $filter  WHERE clause in sql (Not include 'WHERE')
    */
-  static function isDuplicateWeights($daoName, $filter, $weightField = 'weight'){
+  public static function isDuplicateWeights($daoName, $filter, $weightField = 'weight'){
     $selectField = "COUNT($weightField) as count";
     $weightDAO = &CRM_Utils_Weight::query(
       'SELECT',

@@ -34,7 +34,7 @@
  */
 class CRM_Report_Utils_Report {
 
-  static function getValueFromUrl($instanceID = NULL) {
+  public static function getValueFromUrl($instanceID = NULL) {
     if ($instanceID) {
       $optionVal = CRM_Core_DAO::getFieldValue('CRM_Report_DAO_Instance',
         $instanceID,
@@ -56,7 +56,7 @@ class CRM_Report_Utils_Report {
     return $optionVal;
   }
 
-  static function getValueIDFromUrl($instanceID = NULL) {
+  public static function getValueIDFromUrl($instanceID = NULL) {
     $optionVal = self::getValueFromUrl($instanceID);
 
     if ($optionVal) {
@@ -68,7 +68,7 @@ class CRM_Report_Utils_Report {
     return FALSE;
   }
 
-  static function getInstanceIDForValue($optionVal) {
+  public static function getInstanceIDForValue($optionVal) {
     static $valId = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($optionVal, $valId)) {
@@ -82,7 +82,7 @@ WHERE  report_id = %1";
     return $valId[$optionVal];
   }
 
-  static function getInstanceIDForPath($path = NULL) {
+  public static function getInstanceIDForPath($path = NULL) {
     static $valId = [];
 
     // if $path is null, try to get it from url
@@ -99,7 +99,7 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
     return $valId[$path];
   }
 
-  static function getNextUrl($urlValue, $query = 'reset=1', $absolute = FALSE, $instanceID = NULL) {
+  public static function getNextUrl($urlValue, $query = 'reset=1', $absolute = FALSE, $instanceID = NULL) {
     if ($instanceID) {
       $instanceID = self::getInstanceIDForValue($urlValue);
 
@@ -120,7 +120,7 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
   }
 
   // get instance count for a template
-  static function getInstanceCount($optionVal) {
+  public static function getInstanceCount($optionVal) {
     $sql = "
 SELECT count(inst.id)
 FROM   civicrm_report_instance inst
@@ -131,7 +131,7 @@ WHERE  inst.report_id = %1";
     return $count;
   }
 
-  static function mailReport($fileContent, $instanceID = NULL, $outputMode = 'html') {
+  public static function mailReport($fileContent, $instanceID = NULL, $outputMode = 'html') {
     if (!$instanceID) {
       return FALSE;
     }
@@ -171,7 +171,7 @@ WHERE  inst.report_id = %1";
     return CRM_Utils_Mail::send($params);
   }
 
-  static function export2xls(&$form, &$rows, $fileName = NULL) {
+  public static function export2xls(&$form, &$rows, $fileName = NULL) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -233,7 +233,7 @@ WHERE  inst.report_id = %1";
     CRM_Utils_System::civiExit();
   }
 
-  static function add2group(&$form, $groupID) {
+  public static function add2group(&$form, $groupID) {
 
     if (is_numeric($groupID) && isset($form->_aliases['civicrm_contact'])) {
 
@@ -282,7 +282,7 @@ WHERE  inst.report_id = %1";
       CRM_Core_Session::setStatus(ts("Listed contact(s) have been added to the selected group."));
     }
   }
-  static function getInstanceID() {
+  public static function getInstanceID() {
 
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
@@ -297,7 +297,7 @@ WHERE  inst.report_id = %1";
     }
   }
 
-  static function getInstancePath() {
+  public static function getInstancePath() {
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
 
@@ -310,7 +310,7 @@ WHERE  inst.report_id = %1";
     }
   }
 
-  static function isInstancePermissioned($instanceId) {
+  public static function isInstancePermissioned($instanceId) {
     if (!$instanceId) {
       return TRUE;
     }

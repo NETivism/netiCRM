@@ -57,7 +57,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * Should we overwrite existing address, total hack for now
    * Please do not use this hack in other places, its totally gross
    */
-  static $_overwrite = TRUE;
+  public static $_overwrite = TRUE;
 
   /**
    * takes an associative array and creates a address
@@ -70,7 +70,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * @access public
    * @static
    */
-  static function create(&$params, $fixAddress, $entity = NULL) {
+  public static function create(&$params, $fixAddress, $entity = NULL) {
     if (!isset($params['address']) ||
       !is_array($params['address'])
     ) {
@@ -158,7 +158,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * @access public
    * @static
    */
-  static function add(&$params, $fixAddress) {
+  public static function add(&$params, $fixAddress) {
     static $customFields = NULL;
     $address = new CRM_Core_DAO_Address();
 
@@ -211,7 +211,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * @access public
    * @static
    */
-  static function fixAddress(&$params) {
+  public static function fixAddress(&$params) {
     if (CRM_Utils_Array::value('billing_street_address', $params)) {
       //Check address is comming from online contribution / registration page
       //Fixed :CRM-5076
@@ -376,7 +376,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * @access public
    * @static
    */
-  static function dataExists(&$params) {
+  public static function dataExists(&$params) {
     //check if location type is set if not return false
     if (!isset($params['location_type_id'])) {
       return FALSE;
@@ -433,7 +433,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * @access public
    * @static
    */
-  static function &getValues(&$entityBlock, $microformat = FALSE, $fieldName = 'contact_id') {
+  public static function &getValues(&$entityBlock, $microformat = FALSE, $fieldName = 'contact_id') {
     if (empty($entityBlock)) {
       return NULL;
     }
@@ -525,7 +525,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * @access public
    *
    */
-  function addDisplay($microformat = FALSE) {
+  public function addDisplay($microformat = FALSE) {
 
     $fields = [
       // added this for CRM 1200
@@ -560,7 +560,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    *
    *
    */
-  static function setOverwrite($overwrite) {
+  public static function setOverwrite($overwrite) {
     self::$_overwrite = $overwrite;
   }
 
@@ -573,7 +573,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
    * @access public
    * @static
    */
-  static function allAddress($id, $updateBlankLocInfo = FALSE) {
+  public static function allAddress($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -609,7 +609,7 @@ ORDER BY civicrm_address.is_primary DESC, address_id ASC";
    * @access public
    * @static
    */
-  static function allEntityAddress(&$entityElements) {
+  public static function allEntityAddress(&$entityElements) {
     if (empty($entityElements)) {
       return $addresses;
     }
@@ -637,7 +637,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     return $addresses;
   }
 
-  static function addStateCountryMap(&$stateCountryMap,
+  public static function addStateCountryMap(&$stateCountryMap,
     $defaults = NULL
   ) {
     // first fix the statecountry map if needed
@@ -655,7 +655,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     );
   }
 
-  static function fixAllStateSelects(&$form, &$defaults) {
+  public static function fixAllStateSelects(&$form, &$defaults) {
     $config = CRM_Core_Config::singleton();
 
     if (!empty($config->stateCountryMap)) {
@@ -684,7 +684,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
      * @return  array of address sequence.
      */
 
-  static function addressSequence() {
+  public static function addressSequence() {
     $config = CRM_Core_Config::singleton();
     $addressSequence = $config->addressSequence();
 
@@ -721,7 +721,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @access public
    * @static
    */
-  static function parseStreetAddress($streetAddress, $locale = NULL) {
+  public static function parseStreetAddress($streetAddress, $locale = NULL) {
     $config = CRM_Core_Config::singleton();
 
     /* locales supported include:
@@ -839,7 +839,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @access public
    * @static
    */
-  static function validateAddressOptions($fields) {
+  public static function validateAddressOptions($fields) {
     static $addressOptions = NULL;
     if (!$addressOptions) {
 
@@ -865,7 +865,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @access public
    * @static
    */
-  static function checkContactSharedAddress($addressId) {
+  public static function checkContactSharedAddress($addressId) {
     $query = 'SELECT count(id) FROM civicrm_address WHERE master_id = %1';
     return CRM_Core_DAO::singleValueQuery($query, [1 => [$addressId, 'Integer']]);
   }
@@ -880,7 +880,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @access public
    * @static
    */
-  static function processSharedAddress($addressId, $params) {
+  public static function processSharedAddress($addressId, $params) {
     $query = 'SELECT id FROM civicrm_address WHERE master_id = %1';
     $dao = CRM_Core_DAO::executeQuery($query, [1 => [$addressId, 'Integer']]);
 
@@ -912,7 +912,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @access public
    * @static
    */
-  static function processSharedAddressRelationship($masterAddressId, $params) {
+  public static function processSharedAddressRelationship($masterAddressId, $params) {
     if (!$masterAddressId) {
       return;
     }
@@ -986,7 +986,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @access public
    * @static
    */
-  static function setSharedAddressDeleteStatus($addressId = NULL, $contactId = NULL, $returnStatus = FALSE) {
+  public static function setSharedAddressDeleteStatus($addressId = NULL, $contactId = NULL, $returnStatus = FALSE) {
     // check if address that is being deleted has any shared
     if ($addressId) {
       $entityId = $addressId;
@@ -1042,7 +1042,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    *
    * @return return if type exists, or return first address
    */
-  static function getAddressByDefault($addresses, $type) {
+  public static function getAddressByDefault($addresses, $type) {
     $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $billingLocationTypeId = array_search('Billing', $locationTypes);
     $billingLocationAddr = NULL;
@@ -1073,7 +1073,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * @param array $params referenced array to be add exists id
    * @return void
    */
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['contact_id'])) {
       $values = [];
       $checkFields = [

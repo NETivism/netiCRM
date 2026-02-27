@@ -50,7 +50,7 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
    * @var int
    */
   protected $_entityID;
-  protected $_entityTable; function preProcess() {
+  protected $_entityTable; public function preProcess() {
     if ($this->get('entityID')) {
       $this->_entityID = $this->get('entityID');
     }

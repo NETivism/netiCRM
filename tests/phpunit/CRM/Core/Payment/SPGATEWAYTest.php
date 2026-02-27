@@ -10,7 +10,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  function get_info() {
+  public function get_info() {
     return [
      'name' => 'SPGATEWAY payment processor',
      'description' => 'Test SPGATEWAY payment processor.',
@@ -21,7 +21,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
 
     // Initialize configuration
@@ -135,7 +135,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->_processor = NULL;
   }
 
@@ -144,7 +144,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
    *
    * @return void
    */
-  function testSinglePaymentNotifyMGP12(){
+  public function testSinglePaymentNotifyMGP12(){
     $now = time();
     $trxn_id = 'singleUt'.substr($now, -5);
     $amount = 111;
@@ -236,7 +236,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
    *
    * @return void
    */
-  function testSinglePaymentNotifyMGP23(){
+  public function testSinglePaymentNotifyMGP23(){
     $now = time();
     $trxn_id = 'singleMGP23'.substr($now, -5);
     $amount = 112;
@@ -327,7 +327,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function testSinglePaymentSync(){
+  public function testSinglePaymentSync(){
     $now = time();
     $trxn_id = 'singleSyncUt'.substr($now, -5);
     $amount = 200;
@@ -466,7 +466,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   }
 
-  function testSingleWithWrongParams() {
+  public function testSingleWithWrongParams() {
     $now = time();
     $trxn_id = 'singleEmptyUt'.substr($now, -5);
     $amount = 222;
@@ -542,7 +542,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotFalse(strpos($error_msg, 'Failuare'));
   }
 
-  function testRecurringPaymentNotify(){
+  public function testRecurringPaymentNotify(){
     $now = time();
     $trxn_id = 'recurUt'.substr($now, -5);
     $amount = 222;
@@ -897,7 +897,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   }
 
 
-  function testNonCreditNotifyMGP12(){
+  public function testNonCreditNotifyMGP12(){
     // BARCODE : 11
     $now = time()+300;
     $trxn_id = 'nonCreditUtMGP12'.substr($now, -5);
@@ -965,7 +965,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
   }
 
-  function doSingleNonCreditTest12($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
+  public function doSingleNonCreditTest12($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
     // create contribution
     $contrib = [
       'trxn_id' => $trxn_id,
@@ -1035,7 +1035,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function testNonCreditNotifyMGP23(){
+  public function testNonCreditNotifyMGP23(){
     // BARCODE : 11
     $now = time()+305;
     $trxn_id = 'nonCreditUtMGP23'.substr($now, -5);
@@ -1103,7 +1103,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
   }
 
-  function doSingleNonCreditTest23($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
+  public function doSingleNonCreditTest23($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
     // create contribution
     $contrib = [
       'trxn_id' => $trxn_id,
@@ -1176,7 +1176,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function doIPN($args, $post, $get, $line) {
+  public function doIPN($args, $post, $get, $line) {
     try {
       CRM_Core_Payment_SPGATEWAY::doIPN($args, $post, $get);
     }

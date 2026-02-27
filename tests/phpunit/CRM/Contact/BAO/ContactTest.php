@@ -6,7 +6,7 @@ require_once 'CiviTest/Contact.php';
 class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Contact BAOs',
@@ -15,7 +15,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -24,7 +24,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for add( )
      * test with empty params.
      */
-    function testAddWithEmptyParams( )
+    public function testAddWithEmptyParams( )
     {
         require_once 'CRM/Contact/BAO/Contact.php';
         $contact = CRM_Contact_BAO_Contact::add( $params = [] );
@@ -38,7 +38,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test with names
      * (create and update modes)
      */
-    function testAddWithNames( )
+    public function testAddWithNames( )
     {
         $firstName = 'Shane';
         $lastName  = 'Whatson';
@@ -78,7 +78,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test with all contact params
      * (creat and update modes)
      */
-    function testAddWithAll( )
+    public function testAddWithAll( )
     {
         //take the common contact params
         $params = $this->contactParams( );
@@ -223,7 +223,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for add( )
      * test with All contact types.
      */
-    function testAddWithAllContactTypes( )
+    public function testAddWithAllContactTypes( )
     {
         $firstName = 'Bill';
         $lastName  = 'Adams';
@@ -288,7 +288,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for create( )
      * test with missing params.
      */
-    function testCreateWithEmptyParams( )
+    public function testCreateWithEmptyParams( )
     {
         $params = [
                         'first_name' => 'Bill',
@@ -306,7 +306,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test with all params.
      * ( create and update modes ).
      */
-    function testCreateWithAll( )
+    public function testCreateWithAll( )
     {
         //take the common contact params
         $params = $this->contactParams( );
@@ -480,7 +480,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for resolveDefaults( )
      * test all pseudoConstant, stateProvince, country. 
      */
-    function testResolveDefaults( )
+    public function testResolveDefaults( )
     {
         $params = [ 'prefix_id'  => 3,
                          'suffix_id'  => 2,
@@ -516,7 +516,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for retrieve( )
      * test with all values. 
      */
-    function testRetrieve( )
+    public function testRetrieve( )
     {
         //take the common contact params
         $params = $this->contactParams( );
@@ -607,7 +607,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
     /**
      * test case for deleteContact( )
      */
-    function testDeleteContact( )
+    public function testDeleteContact( )
     {
         $contactParams = $this->contactParams( );
         
@@ -687,7 +687,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test with all params.
      * ( create and update modes )
      */
-    function testCreateProfileContact( )
+    public function testCreateProfileContact( )
     {
         require_once 'CRM/Contact/BAO/Contact.php';
         $fields = CRM_Contact_BAO_Contact::exportableFields('Individual');
@@ -1049,7 +1049,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
     /**
      * test case for getContactDetails( )
      */
-    function testGetContactDetails( )
+    public function testGetContactDetails( )
     {
         //get the contact params
         $params = $this->contactParams( );
@@ -1076,7 +1076,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for  
      * importableFields( ) and exportableFields( )
      */
-    function testFields( )
+    public function testFields( )
     {
         require_once 'CRM/Contact/BAO/Contact.php';
         $allImpFileds = CRM_Contact_BAO_Contact::importableFields( 'All' );
@@ -1105,7 +1105,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for getPrimaryEmail( ) 
      * 
      */
-    function testGetPrimaryEmail( )
+    public function testGetPrimaryEmail( )
     {
         //get the contact params
         $params = $this->contactParams( );
@@ -1131,7 +1131,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for getPrimaryOpenId( ) 
      * 
      */
-    function testGetPrimaryOpenId( )
+    public function testGetPrimaryOpenId( )
     {
         //get the contact params
         $params = $this->contactParams( );
@@ -1158,7 +1158,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for matchContactOnEmail( ) 
      * 
      */
-    function testMatchContactOnEmail( )
+    public function testMatchContactOnEmail( )
     {
         //get the contact params
         $params = $this->contactParams( ); 
@@ -1181,7 +1181,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for getContactType( ) 
      * 
      */
-    function testGetContactType( )
+    public function testGetContactType( )
     {
         //get the contact params
         $params = $this->contactParams( ); 
@@ -1203,7 +1203,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for displayName( ) 
      * 
      */
-    function testDisplayName( )
+    public function testDisplayName( )
     {
         //get the contact params
         $params = $this->contactParams( ); 
@@ -1237,7 +1237,7 @@ class CRM_Contact_BAO_ContactTest extends CiviUnitTestCase
      * test case for getDisplayAndImage( ) 
      * 
      */
-    function testGetDisplayAndImage( )
+    public function testGetDisplayAndImage( )
     {
         //get the contact params
         $params = $this->contactParams( ); 

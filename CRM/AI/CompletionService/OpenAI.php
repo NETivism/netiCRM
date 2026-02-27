@@ -2,11 +2,11 @@
 
 class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
-  CONST END_POINT_LIST = [
+  public CONST END_POINT_LIST = [
     CRM_AI_BAO_AICompletion::CHAT_COMPLETION => 'https://api.openai.com/v1/chat/completions',
   ];
 
-  CONST MODEL_LIST = [
+  public CONST MODEL_LIST = [
     'gpt-3.5-turbo',
     'gpt-4o',
   ];
@@ -267,7 +267,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    * @param boolean $is_required only return required fields or not  
    * @return array $fields An array contain needed fields.
    */
-  static private function fields($apiType, $is_required = FALSE) {
+  private static function fields($apiType, $is_required = FALSE) {
     $fields = [];
     switch($apiType){
       case 'CHAT_COMPLETION':

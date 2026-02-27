@@ -33,8 +33,8 @@
  *
  */
 class CRM_Core_OptionGroup {
-  static $_values = [];
-  static $_cache = [];
+  public static $_values = [];
+  public static $_cache = [];
 
   /*
      * $_domainIDGroups array maintains the list of option groups for whom 
@@ -42,11 +42,11 @@ class CRM_Core_OptionGroup {
      *
      */
 
-  static $_domainIDGroups = ['from_email_address',
+  public static $_domainIDGroups = ['from_email_address',
     'grant_type',
   ];
 
-  static function &valuesCommon($dao, $flip = FALSE, $grouping = FALSE,
+  public static function &valuesCommon($dao, $flip = FALSE, $grouping = FALSE,
     $localize = FALSE, $labelColumnName = 'label', $keyColumnName = 'value'
   ) {
     self::$_values = [];
@@ -82,7 +82,7 @@ class CRM_Core_OptionGroup {
     return self::$_values;
   }
 
-  static function &values($name, $flip = FALSE, $grouping = FALSE,
+  public static function &values($name, $flip = FALSE, $grouping = FALSE,
     $localize = FALSE, $condition = NULL,
     $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE, $keyColumnName = 'value'
   ) {
@@ -172,7 +172,7 @@ class CRM_Core_OptionGroup {
     return $cacheKey;
   }
 
-  static function &valuesByID($id, $flip = FALSE, $grouping = FALSE, $localize = FALSE, $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE) {
+  public static function &valuesByID($id, $flip = FALSE, $grouping = FALSE, $localize = FALSE, $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE) {
     $cacheKey = self::createCacheKey($id, $flip, $grouping, $localize, $labelColumnName, $onlyActive);
 
     $cache = CRM_Utils_Cache::singleton();
@@ -225,7 +225,7 @@ WHERE  v.option_group_id = g.id
    * @access public
    * @static
    */
-  static function lookupValues(&$params, &$names, $flip = FALSE) {
+  public static function lookupValues(&$params, &$names, $flip = FALSE) {
 
     foreach ($names as $postName => $value) {
       // See if $params field is in $names array (i.e. is a value that we need to lookup)
@@ -272,7 +272,7 @@ WHERE  v.option_group_id = g.id
     }
   }
 
-  static function getName($groupName, $value, $onlyActiveValue = TRUE) {
+  public static function getName($groupName, $value, $onlyActiveValue = TRUE) {
     if (empty($groupName) || empty($value)) {
       return NULL;
     }
@@ -299,7 +299,7 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
-  static function getLabel($groupName, $value, $onlyActiveValue = TRUE) {
+  public static function getLabel($groupName, $value, $onlyActiveValue = TRUE) {
     if (empty($groupName) ||
       empty($value)
     ) {
@@ -328,7 +328,7 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
-  static function getValue($groupName,
+  public static function getValue($groupName,
     $label,
     $labelField = 'label',
     $labelType = 'String',
@@ -364,7 +364,7 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
-  static function createAssoc($groupName, &$values, &$defaultID, $groupLabel = NULL) {
+  public static function createAssoc($groupName, &$values, &$defaultID, $groupLabel = NULL) {
     self::deleteAssoc($groupName);
     if (!empty($values)) {
 
@@ -407,7 +407,7 @@ WHERE  v.option_group_id = g.id
     return $group->id;
   }
 
-  static function getAssoc($groupName, &$values, $flip = FALSE, $field = 'name') {
+  public static function getAssoc($groupName, &$values, $flip = FALSE, $field = 'name') {
     $query = "
 SELECT v.id as amount_id, v.value, v.label, v.name, v.description, v.weight, v.grouping, v.filter, v.is_default
   FROM civicrm_option_group g,
@@ -447,7 +447,7 @@ ORDER BY v.weight
     }
   }
 
-  static function deleteAssoc($groupName, $operator = "=") {
+  public static function deleteAssoc($groupName, $operator = "=") {
     $query = "
 DELETE g, v
   FROM civicrm_option_group g,
@@ -460,7 +460,7 @@ DELETE g, v
     $dao = CRM_Core_DAO::executeQuery($query, $params);
   }
 
-  static function optionLabel($groupName, $value) {
+  public static function optionLabel($groupName, $value) {
     $query = "
 SELECT v.label
   FROM civicrm_option_group g,
@@ -474,7 +474,7 @@ SELECT v.label
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
-  static function getRowValues($groupName, $fieldValue, $field = 'name',
+  public static function getRowValues($groupName, $fieldValue, $field = 'name',
     $fieldType = 'String', $active = TRUE
   ) {
     $query = "
@@ -515,7 +515,7 @@ WHERE  v.option_group_id = g.id
      * will do a couple of variations & aspire to someone cleaning it up later
      */
 
-  static function flush($name, $params = []) {
+  public static function flush($name, $params = []) {
     $defaults = [
       'flip' => FALSE,
       'grouping' => FALSE,
@@ -547,7 +547,7 @@ WHERE  v.option_group_id = g.id
     );
   }
 
-  static function flushAll() {
+  public static function flushAll() {
     self::$_values = [];
     self::$_cache = [];
     CRM_Utils_Cache::singleton()->flush();

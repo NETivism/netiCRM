@@ -46,14 +46,14 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_Tag';
   }
 
@@ -62,7 +62,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -87,7 +87,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_Tag';
   }
 
@@ -96,7 +96,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Tag';
   }
 
@@ -105,7 +105,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function deleteName() {
+  public function deleteName() {
     return 'Tag';
   }
 
@@ -114,7 +114,7 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/tag';
   }
 
@@ -123,14 +123,14 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    *
    * @return string Classname of delete form.
    */
-  function deleteForm() {
+  public function deleteForm() {
     return 'CRM_Admin_Form_Tag';
   }
 
   /**
    * override function browse()
    */
-  function browse($action = NULL, $sort = NULL) {
+  public function browse($action = NULL, $sort = NULL) {
     $adminTagSet = FALSE;
     if (CRM_Core_Permission::check('administer Tagsets')) {
       $adminTagSet = TRUE;

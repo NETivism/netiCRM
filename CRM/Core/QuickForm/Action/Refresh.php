@@ -45,7 +45,7 @@ class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
    * @return object
    * @access public
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     parent::__construct($stateMachine);
   }
 
@@ -58,7 +58,7 @@ class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     // save the form values and validation status to the session
     $page->isFormBuilt() or $page->buildForm();
 

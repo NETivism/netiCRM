@@ -46,7 +46,7 @@ class CRM_Member_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard 
    * return null
    * @access public
    */
-  function listMemberships() {
+  public function listMemberships() {
     $membership = [];
 
     $dao = new CRM_Member_DAO_Membership();
@@ -84,7 +84,7 @@ class CRM_Member_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard 
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     parent::preProcess();
     $this->listMemberships();
   }

@@ -34,7 +34,7 @@ require_once 'api/v2/Mailer.php';
  */
 class api_v2_MailerTest extends CiviUnitTestCase {
   protected $_groupID;
-  protected $_email; function get_info() {
+  protected $_email; public function get_info() {
     return [
       'name' => 'Mailer',
       'description' => 'Test all Mailer methods.',
@@ -42,13 +42,13 @@ class api_v2_MailerTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->_groupID = $this->groupCreate();
     $this->_email = 'test@test.test';
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->groupDelete($this->_groupID);
   }
 

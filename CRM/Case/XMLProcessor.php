@@ -34,7 +34,7 @@
  */
 class CRM_Case_XMLProcessor {
 
-  static protected $_xml; function retrieve($caseType) {
+  protected static $_xml; public function retrieve($caseType) {
 
 
 
@@ -90,7 +90,7 @@ class CRM_Case_XMLProcessor {
     return self::$_xml[$caseType];
   }
 
-  function &allActivityTypes($indexName = TRUE, $all = FALSE) {
+  public function &allActivityTypes($indexName = TRUE, $all = FALSE) {
     static $activityTypes = NULL;
     if (!$activityTypes) {
 
@@ -99,7 +99,7 @@ class CRM_Case_XMLProcessor {
     return $activityTypes;
   }
 
-  function &allRelationshipTypes() {
+  public function &allRelationshipTypes() {
     static $relationshipTypes = [];
 
     if (!$relationshipTypes) {

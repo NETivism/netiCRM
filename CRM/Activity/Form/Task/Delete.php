@@ -57,7 +57,7 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -68,7 +68,7 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Delete Activites'), 'done');
   }
 

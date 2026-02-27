@@ -197,7 +197,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $this->_values;
 
     $fields = [];
@@ -508,7 +508,7 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     //check if contact is selected in standalone mode

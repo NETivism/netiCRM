@@ -46,7 +46,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * The option group name
@@ -54,7 +54,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_gName = NULL;
+  public static $_gName = NULL;
 
   /**
    * The option group name in display format (capitalized, without underscores...etc)
@@ -62,7 +62,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_GName = NULL;
+  public static $_GName = NULL;
 
   /**
    * The option group id
@@ -70,7 +70,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_gId = NULL;
+  public static $_gId = NULL;
 
   /**
    * Obtains the group name from url and sets the title.
@@ -79,7 +79,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     if (!self::$_gName) {
       self::$_gName = CRM_Utils_Request::retrieve('group', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'GET');
     }
@@ -142,7 +142,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
@@ -151,7 +151,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -198,7 +198,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     parent::run();
   }
@@ -211,7 +211,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse() {
+  public function browse() {
 
 
     $groupParams = ['name' => self::$_gName];
@@ -233,7 +233,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_Options';
   }
 
@@ -242,7 +242,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return self::$_GName;
   }
 
@@ -251,7 +251,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/options/' . self::$_gName;
   }
 
@@ -263,7 +263,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @return string
    * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'group=' . self::$_gName . '&reset=1&action=browse';
   }
 }

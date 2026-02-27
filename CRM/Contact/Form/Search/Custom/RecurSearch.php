@@ -49,7 +49,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
 
   public static $_primaryIDName = 'id';
   
-  function __construct(&$formValues){
+  public function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_filled = FALSE;
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
@@ -86,7 +86,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
     }
   }
 
-  function buildColumn(){
+  public function buildColumn(){
     $this->_queryColumns = [ 
       'r.id' => 'id',
       'contact.sort_name' => 'sort_name',
@@ -127,7 +127,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
     ];
   }
 
-  function buildTempTable() {
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -156,7 +156,7 @@ PRIMARY KEY (id)
     CRM_Core_DAO::executeQuery($sql);
   }
   
-  function dropTempTable() {
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
@@ -164,7 +164,7 @@ PRIMARY KEY (id)
   /**
    * fill temp table for further use
    */
-  function fillTable(){
+  public function fillTable(){
     $this->dropTempTable();
     $this->buildTempTable();
 
@@ -209,7 +209,7 @@ $having
   }
 
 
-  function tempFrom() {
+  public function tempFrom() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
@@ -221,7 +221,7 @@ $having
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
-  function tempWhere(){
+  public function tempWhere(){
     $clauses = [];
     $clauses[] = "(r.contact_id = contact.id)";
     $clauses[] = "(r.is_test = 0)";
@@ -261,7 +261,7 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  public function tempHaving(){
     $clauses = [];
     $installments = $this->_formValues['installments'];
     if (is_numeric($installments) && $installments != 'none') {
@@ -280,11 +280,11 @@ $having
     return '';
   }
 
-  function prepareForm(&$form) {
+  public function prepareForm(&$form) {
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
   }
 
-  function buildForm(&$form){
+  public function buildForm(&$form){
     // Define the search form fields here
     if (!empty($this->_mode)) {
       $form->set('mode', $this->_mode);
@@ -328,7 +328,7 @@ $having
     $form->assign('elements', ['status', 'installments', 'sort_name', 'email', 'contribution_page_id']);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_mode == 'booster') {
       return [
         'status' => 5,
@@ -338,7 +338,7 @@ $having
     return [];
   }
 
-  function setTitle() {
+  public function setTitle() {
     if ($this->_mode == 'booster') {
       CRM_Utils_System::setTitle(ts('End of recurring contribution'));
     }
@@ -347,11 +347,11 @@ $having
     }
   }
 
-  function setBreadcrumb() {
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-  function count(){
+  public function count(){
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
@@ -361,7 +361,7 @@ $having
   }
 
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
@@ -370,7 +370,7 @@ $having
    * Which not only provide contact id, but also provide additional id
    * Mostly used by custom search support multiple record of one contact
    */
-  function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     $fields = "contact_a.contact_id, id" ;
 
     if(!$this->_filled){
@@ -383,7 +383,7 @@ $having
   /**
    * Construct the search query
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
@@ -393,7 +393,7 @@ $having
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -406,11 +406,11 @@ $having
   /**
    * Functions below generally don't need to be modified
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  public function where($includeContactIDs = false) {
     $sql = ' ( 1 ) ';
     if ($includeContactIDs) {
       self::includeContactIDs($sql, $this->_formValues, $this->_isExport);
@@ -418,7 +418,7 @@ $having
     return $sql;
   }
 
-  function having(){
+  public function having(){
     return '';
   }
 
@@ -447,11 +447,11 @@ $having
     }
   }
 
-  function &columns(){
+  public function &columns(){
     return $this->_columns;
   }
   
-  function summary(){
+  public function summary(){
     $summary = [];
     if(!$this->_filled){
       $this->fillTable();
@@ -474,7 +474,7 @@ $having
     return $summary;
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
     $processedInstallments = $row['installments'] - $row['remain_installments'];
     if(empty($row['installments'])){
@@ -535,7 +535,7 @@ $having
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
-  function templateFile(){
+  public function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
   }
 }

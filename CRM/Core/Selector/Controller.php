@@ -54,7 +54,7 @@ class CRM_Core_Selector_Controller {
    * @var int
    */
   // move the values from the session to the template
-  CONST SESSION = 1, TEMPLATE = 2,
+  public CONST SESSION = 1, TEMPLATE = 2,
   TRANSFER = 4, EXPORT = 8, SCREEN = 16, PDF = 32;
 
   /**
@@ -194,7 +194,7 @@ class CRM_Core_Selector_Controller {
    * @return Object
    * @access public
    */
-  function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
+  public function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
 
     $this->_object = $object;
     $this->_pageID = $pageID ? $pageID : 1;
@@ -261,7 +261,7 @@ class CRM_Core_Selector_Controller {
    * @return boolean   if the GET params are different from the session params
    * @access public
    */
-  function hasChanged($reset) {
+  public function hasChanged($reset) {
 
     /**
      * if we are in reset state, i.e the store is cleaned out, we return false
@@ -300,7 +300,7 @@ class CRM_Core_Selector_Controller {
    * @return void
    *
    */
-  function run() {
+  public function run() {
 
     // get the column headers
     $columnHeaders = &$this->_object->getColumnHeaders($this->_action, $this->_output);
@@ -422,7 +422,7 @@ class CRM_Core_Selector_Controller {
    * @return object CRM_Utils_Pager
    * @access public
    */
-  function getPager() {
+  public function getPager() {
     return $this->_pager;
   }
 
@@ -432,7 +432,7 @@ class CRM_Core_Selector_Controller {
    * @return object CRM_Utils_Sort
    * @access public
    */
-  function getSort() {
+  public function getSort() {
     return $this->_sort;
   }
 
@@ -442,7 +442,7 @@ class CRM_Core_Selector_Controller {
    * @return void
    * @access public
    */
-  function moveFromSessionToTemplate() {
+  public function moveFromSessionToTemplate() {
     self::$_template->assign_by_ref("{$this->_prefix}pager", $this->_pager);
 
     $rows = $this->_store->get("{$this->_prefix}rows");
@@ -483,7 +483,7 @@ class CRM_Core_Selector_Controller {
    * @return void
    * @access public
    */
-  function setEmbedded($embedded) {
+  public function setEmbedded($embedded) {
     $this->_embedded = $embedded;
   }
 
@@ -493,7 +493,7 @@ class CRM_Core_Selector_Controller {
    * @return boolean return the embedded value
    * @access public
    */
-  function getEmbedded() {
+  public function getEmbedded() {
     return $this->_embedded;
   }
 
@@ -505,7 +505,7 @@ class CRM_Core_Selector_Controller {
    * @return void
    * @access public
    */
-  function setPrint($print) {
+  public function setPrint($print) {
     $this->_print = $print;
   }
 
@@ -515,7 +515,7 @@ class CRM_Core_Selector_Controller {
    * @return boolean return the print value
    * @access public
    */
-  function getPrint() {
+  public function getPrint() {
     return $this->_print;
   }
 }

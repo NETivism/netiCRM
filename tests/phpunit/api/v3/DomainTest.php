@@ -55,7 +55,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
    *  Constructor
    *
    *  Initialize configuration
-   */ function __construct() {
+   */ public function __construct() {
     parent::__construct();
   }
 

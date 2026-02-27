@@ -36,7 +36,7 @@
 
 class CRM_Utils_VersionCheck {
   // timeout for when the connection or the server is slow
-  CONST LATEST_VERSION_AT = '',
+  public CONST LATEST_VERSION_AT = '',
   // relative to $civicrm_root
   CHECK_TIMEOUT = 5, LOCALFILE_NAME = 'civicrm-version.txt',
   // relative to $config->uploadDir
@@ -51,28 +51,28 @@ class CRM_Utils_VersionCheck {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * The version of the current (local) installation
    *
    * @var string
    */
-  var $localVersion = NULL;
+  public $localVersion = NULL;
 
   /**
    * The latest version of CiviCRM
    *
    * @var string
    */
-  var $latestVersion = NULL;
+  public $latestVersion = NULL;
 
   /**
    * Class constructor
    *
    * @access private
    */
-  function __construct() {
+  public function __construct() {
   }
 
   /**
@@ -83,7 +83,7 @@ class CRM_Utils_VersionCheck {
    *
    * @return CRM_Utils_VersionCheck
    */
-  static function &singleton() {
+  public static function &singleton() {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_Utils_VersionCheck();
     }
@@ -95,14 +95,14 @@ class CRM_Utils_VersionCheck {
    *
    * @return string|null  returns the newer version's number or null if the versions are equal
    */
-  function newerVersion() {
+  public function newerVersion() {
     return NULL;
   }
 
   /**
    * A dummy function required for suppressing download errors
    */
-  static function downloadError($errorNumber, $errorString) {
+  public static function downloadError($errorNumber, $errorString) {
     return;
   }
 }

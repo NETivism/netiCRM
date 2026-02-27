@@ -52,7 +52,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->copyValues($params);
     if ($messageTemplates->find(TRUE)) {
@@ -71,7 +71,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_MessageTemplates', $id, 'is_active', $is_active);
   }
 
@@ -85,7 +85,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return object
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
 
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
@@ -103,7 +103,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return object
    */
-  static function del($messageTemplatesID) {
+  public static function del($messageTemplatesID) {
     // make sure messageTemplatesID is an integer
     if (!CRM_Utils_Rule::positiveInteger($messageTemplatesID)) {
        return CRM_Core_Error::statusBounce(ts('Invalid Message template'));
@@ -135,7 +135,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return object
    */
-  static function getMessageTemplates($all = TRUE, $isSMS = FALSE) {
+  public static function getMessageTemplates($all = TRUE, $isSMS = FALSE) {
     $msgTpls = [];
 
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
@@ -164,7 +164,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @param string $valueName workflow value name option value
    * @return array
    */
-  static function getMessageTemplateByWorkflow($groupName, $valueName) {
+  public static function getMessageTemplateByWorkflow($groupName, $valueName) {
     static $cache;
     if (!empty($cache[$groupName.'__'.$valueName])) {
       return $cache[$groupName.'__'.$valueName];
@@ -191,7 +191,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     return $cache[$groupName.'__'.$valueName];
   }
 
-  static function sendReminder($contactId, $email, $messageTemplateID, $from) {
+  public static function sendReminder($contactId, $email, $messageTemplateID, $from) {
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->id = $messageTemplateID;
 
@@ -283,7 +283,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return void
    */
-  static function revert($id) {
+  public static function revert($id) {
     $diverted = new self;
     $diverted->id = (int) $id;
     $diverted->find(1);
@@ -328,7 +328,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return array  of four parameters: a boolean whether the email was sent, and the subject, text and HTML templates
    */
-  static function sendTemplate($params, &$smarty = NULL, $callback = NULL) {
+  public static function sendTemplate($params, &$smarty = NULL, $callback = NULL) {
     $defaults = [
       // activity id for use transactional email
       'activityId' => NULL,
@@ -520,7 +520,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @param int $workflow_id workflow id of message template
    * @return array
    */
-  static function getMessageTemplateNames($workflowId) {
+  public static function getMessageTemplateNames($workflowId) {
     $query = 'SELECT ov.name as groupName, og.name as valueName
                   FROM civicrm_msg_template mt
                   INNER JOIN civicrm_option_value ov ON workflow_id = ov.id

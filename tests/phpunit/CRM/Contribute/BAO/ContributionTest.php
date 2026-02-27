@@ -32,7 +32,7 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase 
 {
 
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Contribution BAOs',
@@ -44,7 +44,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     /**
      * @before
      */
-    function setUpTest()
+    public function setUpTest()
     {
         parent::setUp();
         // $this->emptyContributionData();
@@ -54,7 +54,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     /**
      * @after
      */
-    function tearDownTest( )
+    public function tearDownTest( )
     {
         $this->contributionTypeDelete();
     }
@@ -62,7 +62,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     /**
      * create() method (create and update modes)
      */
-    function testCreate( )
+    public function testCreate( )
     {
         $contactId = Contact::createIndividual( );
         $ids =  ['contribution' => null ];
@@ -112,7 +112,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
     /**
      * create() method with custom data
      */
-    function testCreateWithCustomData( )
+    public function testCreateWithCustomData( )
     {
         $contactId = Contact::createIndividual( );
         $ids =  ['contribution' => null ];
@@ -186,7 +186,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * deleteContribution() method
      */
 
-    function testDeleteContribution( )
+    public function testDeleteContribution( )
     {
         $contactId = Contact::createIndividual( );
         $ids =  ['contribution' => null ];
@@ -228,7 +228,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * createHonorContact();
      */
     
-    function testcreateAndGetHonorContact( ) 
+    public function testcreateAndGetHonorContact( ) 
     {
         $firstName = 'John_' .substr(sha1(rand()), 0, 7);
         $lastName  = 'Smith_'.substr(sha1(rand()), 0, 7);
@@ -297,7 +297,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * contribution batch update through profile 
      * sortName();
      */
-    function testsortName( ) 
+    public function testsortName( ) 
     {
         $params    =  [ 'first_name'   => 'Shane',     
                              'last_name'    => 'Whatson',
@@ -354,7 +354,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * 
      * AddPremium();
      */
-    function testAddPremium( ) 
+    public function testAddPremium( ) 
     {
         $contactId = Contact::createIndividual( );
 
@@ -431,7 +431,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * during the contribution import
      * checkDuplicateIds();
      */
-    function testcheckDuplicateIds( )
+    public function testcheckDuplicateIds( )
     {
         $contactId = Contact::createIndividual( );
 
@@ -479,7 +479,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * update civicrm_contribution set testing receipt_id to null for testLastReceiptId
      * detele civicrm_sequence testing data for testLastReceiptId
      */
-    function emptyContributionData( )
+    public function emptyContributionData( )
     {
         $prefix = 'testReceipt';
         $query_update = "UPDATE civicrm_contribution SET receipt_id ='' WHERE receipt_id LIKE '{$prefix}%' AND receipt_id IS NOT NULL";
@@ -493,7 +493,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * Create contribution at same time
      * CreateContribution()
      */
-    function testCreateContribution($sleep = 5)
+    public function testCreateContribution($sleep = 5)
     {
         if (!empty($sleep)) {
             $GLOBALS['CiviTest_ContributionTest_sleep'] = $sleep;
@@ -541,7 +541,7 @@ class CRM_Contribute_BAO_ContributionTest extends CiviUnitTestCase
      * Check LastReceiptId
      * LastReceiptId();
      */
-    function testLastReceiptId( )
+    public function testLastReceiptId( )
     {
         $this->emptyContributionData();
         $currentTime = time();

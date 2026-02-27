@@ -71,7 +71,7 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
    *
    * @var int
    */
-  protected $_parentId; function preProcess() {
+  protected $_parentId; public function preProcess() {
     $this->_entityTable = $this->get('entityTable');
     $this->_entityId = $this->get('entityId');
     $this->_id = $this->get('id');
@@ -98,7 +98,7 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_action & CRM_Core_Action::UPDATE) {

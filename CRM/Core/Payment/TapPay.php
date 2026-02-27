@@ -2,7 +2,7 @@
 
 class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
-  const QUEUE_NAME = 'tappay_batch_all_recur';
+  public const QUEUE_NAME = 'tappay_batch_all_recur';
 
   protected $_mode = NULL;
 
@@ -44,7 +44,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
-  function __construct($mode, &$paymentProcessor, &$paymentForm, $apiType) {
+  public function __construct($mode, &$paymentProcessor, &$paymentForm, $apiType) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_apiType = $apiType;
@@ -77,7 +77,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -96,7 +96,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
-  static function getAdminFields($ppDAO, $form){
+  public static function getAdminFields($ppDAO, $form){
     $fields = [
       [
         'name' => 'user_name',
@@ -164,23 +164,23 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getPaymentFrame() {
+  public function getPaymentFrame() {
     if (!empty($this->_paymentProcessor)) {
       $this->_paymentForm->add('hidden', 'prime', '');
       $this->_paymentForm->assign('button_name', $this->_paymentForm->getButtonName('next'));
@@ -221,7 +221,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $currentPath = CRM_Utils_System::currentPath();
     $params['prime'] = CRM_Utils_Type::escape($_POST['prime'], 'String');
     $params['mode'] = $this->_mode;
@@ -262,7 +262,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     CRM_Utils_System::redirect($thankyou);
   }
 
-  function cancelRecuringMessage($recurID) {
+  public function cancelRecuringMessage($recurID) {
     $text = '<p>'.ts("Please edit recurring and change status to 'Completed'.").'</p>';
     $js = '<script>cj(".ui-dialog-buttonset button").hide();</script>';
     return $text . $js;
@@ -1819,7 +1819,7 @@ LIMIT 0, 100
     return $logs;
   }
 
-  static function getContributionTrxnID($contributionId, $recurringId = NULL) {
+  public static function getContributionTrxnID($contributionId, $recurringId = NULL) {
     $rand = base_convert(strval(rand(16, 255)), 10, 16);
     if(empty($recurringId)){
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
@@ -1833,7 +1833,7 @@ LIMIT 0, 100
     return $trxnId;
   }
 
-  static function getSyncDataUrl($contributionId) {
+  public static function getSyncDataUrl($contributionId) {
     $get = $_GET;
     unset($get['q']);
     $query = http_build_query($get);
@@ -1844,7 +1844,7 @@ LIMIT 0, 100
   /**
    * Function to add note into CRM log
    */
-  static function addNoteToLog($note, &$contribution){
+  public static function addNoteToLog($note, &$contribution){
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
     CRM_Core_Error::debug_log_message( $note );
   }
@@ -1852,7 +1852,7 @@ LIMIT 0, 100
   /**
    * Function to add note into contribution
    */
-  static function addNote($note, &$contribution){
+  public static function addNote($note, &$contribution){
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $noteExists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($noteExists)){

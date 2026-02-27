@@ -13,11 +13,11 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @var boolean
    */
 
-  CONST GENERATE_COUNT_EACH_TIME = 100;
-  CONST BATCH_THRESHOLD = 100;
+  public CONST GENERATE_COUNT_EACH_TIME = 100;
+  public CONST BATCH_THRESHOLD = 100;
 
-  static protected $_tmpreceipt = NULL;
-  static protected $_exportFileName = NULL;
+  protected static $_tmpreceipt = NULL;
+  protected static $_exportFileName = NULL;
 
   protected $_year = NULL;
 
@@ -27,7 +27,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
     if ($cid) {
       $this->_contactIds = [$cid];
@@ -100,7 +100,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     );
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
     return $defaults;
@@ -188,7 +188,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
   }
 
-  static function getExportFileName() {
+  public static function getExportFileName() {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
     return 'Annual-Receipt-Batch-'.$rand.'-'.date('YmdHi');
   }

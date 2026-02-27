@@ -115,7 +115,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Search_Builder', 'formRule']);
   }
 
@@ -128,7 +128,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
    * @static
    * @access public
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     //CRM_Core_Error::debug('s', $values);
     if (CRM_Utils_Array::value('addMore', $values) || CRM_Utils_Array::value('addBlock', $values)) {
       return TRUE;

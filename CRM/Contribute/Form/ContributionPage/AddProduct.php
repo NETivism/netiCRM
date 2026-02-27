@@ -41,9 +41,9 @@
  */
 class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_Form_ContributionPage {
 
-  static $_products;
+  public static $_products;
 
-  static $_pid;
+  public static $_pid;
 
   /**
    * Function to pre  process the form
@@ -79,7 +79,7 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_pid) {

@@ -4,8 +4,8 @@
  */
 
 class CRM_Core_Payment_TapPayAPI {
-  CONST TAPPAY_TEST = 'https://sandbox.tappaysdk.com';
-  CONST TAPPAY_PROD = 'https://prod.tappaysdk.com';
+  public CONST TAPPAY_TEST = 'https://sandbox.tappaysdk.com';
+  public CONST TAPPAY_PROD = 'https://prod.tappaysdk.com';
 
   public static $_currencies = [
     'USD' => 'USD',
@@ -53,7 +53,7 @@ class CRM_Core_Payment_TapPayAPI {
    *   partnerKey
    *   isTest
    */
-  function __construct($apiParams){
+  public function __construct($apiParams){
     extract($apiParams);
     if (is_null($partnerKey) || empty($apiType)) {
       CRM_Core_Error::fatal('Required parameters missing: $partnerKey, $apiType');
@@ -245,7 +245,7 @@ class CRM_Core_Payment_TapPayAPI {
     return $return;
   }
 
-  static public function saveTapPayData($contributionId, $response, $apiType = '') {
+  public static function saveTapPayData($contributionId, $response, $apiType = '') {
     $tappay = new CRM_Contribute_DAO_TapPay();
     if($contributionId) {
       $tappay->contribution_id = $contributionId;
@@ -309,7 +309,7 @@ class CRM_Core_Payment_TapPayAPI {
   /**
    * API query fields
    */
-  static public function fields($apiType, $is_required = FALSE) {
+  public static function fields($apiType, $is_required = FALSE) {
     $fields = [];
     switch($apiType){
       case 'pay_by_prime':
@@ -345,7 +345,7 @@ class CRM_Core_Payment_TapPayAPI {
     return $fields;
   }
 
-  static public function errorMessage($code) {
+  public static function errorMessage($code) {
     $code = (string) $code;
 
     if (!empty(self::$_errorMessage[$code])) {

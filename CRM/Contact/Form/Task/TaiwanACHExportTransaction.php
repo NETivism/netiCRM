@@ -3,7 +3,7 @@
 class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_Task_TaiwanACHExport {
   public $_exportParams;
   public $_additionalIds;
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $this->_exportParams = [];
     CRM_Utils_System::setTitle(ts("Export ACH Transaction File"));
@@ -38,7 +38,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
     $this->addDate('transact_date', ts('Process Date'), TRUE, ['formatType' => 'searchDate']);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [
       'transact_date' => date('Y-m-d', strtotime('+1 day')),
     ];

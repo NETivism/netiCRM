@@ -79,7 +79,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  CONST NUM_OPTION = 11;
+  public CONST NUM_OPTION = 11;
 
   public function preProcess() {
 
@@ -142,7 +142,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
    * @return array    array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $this->_values;
 
     if ($this->_surveyId) {
@@ -371,7 +371,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
    * global validation rules for the form
    *
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
 
     if (CRM_Utils_Array::value('option_label', $fields) &&

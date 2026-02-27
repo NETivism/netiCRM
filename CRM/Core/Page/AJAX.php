@@ -44,7 +44,7 @@ class CRM_Core_Page_AJAX {
    * @static
    * @access public
    */
-  static function run() {
+  public static function run() {
     $className = CRM_Utils_Type::escape($_REQUEST['class_name'], 'String');
     $type = '';
     if (CRM_Utils_Array::value('type', $_POST)) {
@@ -96,7 +96,7 @@ class CRM_Core_Page_AJAX {
    * @static
    * @access public
    */
-  static function setIsQuickConfig() {
+  public static function setIsQuickConfig() {
     if (!$id = CRM_Utils_Array::value('id', $_GET)) {
       return FALSE;
     }
@@ -119,7 +119,7 @@ class CRM_Core_Page_AJAX {
    * @param string $className 'Class_Name'
    * @param string $fnName method name
    */
-  static function checkAuthz($type, $className, $fnName = NULL) {
+  public static function checkAuthz($type, $className, $fnName = NULL) {
     switch ($type) {
       case 'method':
         if (!preg_match('/^CRM_[a-zA-Z0-9]+_Page_AJAX$/', $className)) {

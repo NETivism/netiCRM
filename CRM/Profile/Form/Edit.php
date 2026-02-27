@@ -60,7 +60,7 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $session = CRM_Core_Session::singleton();
 
     // disable anon user for access some profile
@@ -290,7 +290,7 @@ SELECT module
    *
    * @return    boolean   true if no error found
    */
-  function validate() {
+  public function validate() {
     $errors = parent::validate();
 
     if (!$errors &&

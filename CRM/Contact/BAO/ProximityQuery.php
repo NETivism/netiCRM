@@ -49,12 +49,12 @@ class CRM_Contact_BAO_ProximityQuery {
    * This version has been taken from Drupal's location module: http://drupal.org/project/location
    **/
 
-  static protected $_earthFlattening;
-  static protected $_earthRadiusSemiMinor;
-  static protected $_earthRadiusSemiMajor;
-  static protected $_earthEccentricitySQ;
+  protected static $_earthFlattening;
+  protected static $_earthRadiusSemiMinor;
+  protected static $_earthRadiusSemiMajor;
+  protected static $_earthEccentricitySQ;
 
-  static function initialize() {
+  public static function initialize() {
     static $_initialized = FALSE;
 
     if (!$_initialized) {
@@ -79,7 +79,7 @@ class CRM_Contact_BAO_ProximityQuery {
      * Default to an approximate average radius for the United States.
      */
 
-  static function earthRadius($latitude) {
+  public static function earthRadius($latitude) {
     $lat = deg2rad($latitude);
 
     $x = cos($lat) / self::$_earthRadiusSemiMajor;
@@ -91,7 +91,7 @@ class CRM_Contact_BAO_ProximityQuery {
    * Convert longitude and latitude to earth-centered earth-fixed coordinates.
    * X axis is 0 long, 0 lat; Y axis is 90 deg E; Z axis is north pole.
    */
-  static function earthXYZ($longitude, $latitude, $height = 0) {
+  public static function earthXYZ($longitude, $latitude, $height = 0) {
     $long = deg2rad($longitude);
     $lat = deg2rad($latitude);
 
@@ -112,14 +112,14 @@ class CRM_Contact_BAO_ProximityQuery {
   /**
    * Convert a given angle to earth-surface distance.
    */
-  static function earthArcLength($angle, $latitude) {
+  public static function earthArcLength($angle, $latitude) {
     return deg2rad($angle) * self::earthRadius($latitude);
   }
 
   /**
    * Estimate the earth-surface distance between two locations.
    */
-  static function earthDistance($longitudeSrc, $latitudeSrc,
+  public static function earthDistance($longitudeSrc, $latitudeSrc,
     $longitudeDst, $latitudeDst
   ) {
 
@@ -137,7 +137,7 @@ class CRM_Contact_BAO_ProximityQuery {
   /**
    * Estimate the min and max longitudes within $distance of a given location.
    */
-  static function earthLongitudeRange($longitude, $latitude, $distance) {
+  public static function earthLongitudeRange($longitude, $latitude, $distance) {
     $long = deg2rad($longitude);
     $lat = deg2rad($latitude);
     $radius = self::earthRadius($latitude);
@@ -163,7 +163,7 @@ class CRM_Contact_BAO_ProximityQuery {
   /**
    * Estimate the min and max latitudes within $distance of a given location.
    */
-  static function earthLatitudeRange($longitude, $latitude, $distance) {
+  public static function earthLatitudeRange($longitude, $latitude, $distance) {
     $long = deg2rad($longitude);
     $lat = deg2rad($latitude);
     $radius = self::earthRadius($latitude);
@@ -206,7 +206,7 @@ class CRM_Contact_BAO_ProximityQuery {
      * @param $latitude 
      */
 
-  static function earthDistanceSQL($longitude, $latitude) {
+  public static function earthDistanceSQL($longitude, $latitude) {
     $long = deg2rad($longitude);
     $lat = deg2rad($latitude);
     $radius = self::earthRadius($latitude);
@@ -224,7 +224,7 @@ IFNULL( ACOS( $cosLat * COS( RADIANS( $latitude ) ) *
 ";
   }
 
-  static function where($latitude, $longitude, $distance, $tablePrefix = 'civicrm_address') {
+  public static function where($latitude, $longitude, $distance, $tablePrefix = 'civicrm_address') {
     self::initialize();
 
     $params = [];
@@ -252,7 +252,7 @@ $earthDistanceSQL  <= $distance
     return $where;
   }
 
-  static function process(&$query, &$values) {
+  public static function process(&$query, &$values) {
     list($name, $op, $distance, $grouping, $wildcard) = $values;
 
     // also get values array for all address related info

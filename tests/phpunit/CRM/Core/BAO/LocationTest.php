@@ -42,7 +42,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
 {
     
     public $_contactId;
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Location BAOs',
@@ -51,7 +51,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -62,7 +62,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
      *
      * @access protected
      */
-    function tearDown()
+    public function tearDown()
     {
         $tablesToTruncate = [ 'civicrm_contact',
                                    'civicrm_openid',
@@ -70,7 +70,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
         $this->quickCleanup( $tablesToTruncate );
     }
 
-    function testCreateWithMissingParams( )
+    public function testCreateWithMissingParams( )
     {
         $contactId = Contact::createIndividual( );
         $params = [ 'contact_id'       => $contactId,
@@ -93,7 +93,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
      * without civicrm_loc_block entry
      */
     
-    function testCreateWithoutLocBlock( )
+    public function testCreateWithoutLocBlock( )
     {
         $contactId = Contact::createIndividual( );
         
@@ -206,7 +206,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
      * create various elements of location block
      * with civicrm_loc_block
      */
-    function testCreateWithLocBlock( )
+    public function testCreateWithLocBlock( )
     {
         $this->_contactId = Contact::createIndividual( );
         //create test event record.
@@ -349,7 +349,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
      * 
      */
     
-    function testDeleteLocBlock( )
+    public function testDeleteLocBlock( )
     {
         $this->_contactId = Contact::createIndividual( );
         //create test event record.
@@ -434,7 +434,7 @@ class CRM_Core_BAO_LocationTest extends CiviUnitTestCase
      * getValues() method
      * get the values of various location elements 
      */
-    function testLocBlockgetValues( )
+    public function testLocBlockgetValues( )
     {
         $contactId = Contact::createIndividual( );
         

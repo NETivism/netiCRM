@@ -86,7 +86,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
     $continue = CRM_Utils_Request::retrieve('continue', 'String', $this, FALSE, NULL);
     $reschedule = CRM_Utils_Request::retrieve('reschedule', 'Integer', $this, FALSE, NULL);
@@ -526,7 +526,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     if (isset($fields['includeGroups']) &&
       is_array($fields['includeGroups']) &&

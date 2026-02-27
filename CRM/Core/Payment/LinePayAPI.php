@@ -3,8 +3,8 @@
  * Standalone api without extends from class
  */
 class CRM_Core_Payment_LinePayAPI {
-  CONST LINEPAY_TEST = 'https://sandbox-api-pay.line.me';
-  CONST LINEPAY_PROD = 'https://api-pay.line.me';
+  public CONST LINEPAY_TEST = 'https://sandbox-api-pay.line.me';
+  public CONST LINEPAY_PROD = 'https://api-pay.line.me';
 
   public static $_currencies = [
     'USD' => 'USD',
@@ -109,7 +109,7 @@ class CRM_Core_Payment_LinePayAPI {
   protected $_apiGetMethodTypes = ['query', 'authorization', 'recurring/check'];
   protected $_apiMethod;
 
-  function __construct($apiParams){
+  public function __construct($apiParams){
     extract($apiParams);
     if (empty($channelId) || empty($channelSecret) || is_null($isTest) || empty($apiType)) {
       CRM_Core_Error::fatal('Required parameters missing: channelId, channelSecret, isTest, apiType');
@@ -315,7 +315,7 @@ class CRM_Core_Payment_LinePayAPI {
   /**
    * API query fields
    */
-  static public function fields($apiType, $isResponse = FALSE) {
+  public static function fields($apiType, $isResponse = FALSE) {
     $fields = [];
     switch($apiType){
       case 'query':
@@ -331,7 +331,7 @@ class CRM_Core_Payment_LinePayAPI {
     return $fields;
   }
 
-  static public function errorMessage($code) {
+  public static function errorMessage($code) {
     $code = (string) $code;
 
     if (!empty(self::$_errorMessage[$code])) {

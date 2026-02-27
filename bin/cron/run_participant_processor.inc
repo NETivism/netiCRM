@@ -9,7 +9,7 @@ function run_participant_processor(){
 }
 class CRM_ParticipantProcessor 
 {
-    function __construct( ) 
+    public function __construct( ) 
     {
     }
     

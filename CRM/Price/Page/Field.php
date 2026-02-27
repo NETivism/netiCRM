@@ -69,7 +69,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return array  array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this price field?');
@@ -126,7 +126,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
 
     $priceField = [];
     $priceFieldBAO = new CRM_Price_BAO_Field();
@@ -206,7 +206,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function edit($action) {
+  public function edit($action) {
     // create a simple controller for editing price data
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Field', ts('Price Field'), $action);
 
@@ -228,7 +228,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function copy() {
+  public function copy() {
     $key = CRM_Utils_Request::retrieve('key', 'String',
       CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
     );
@@ -263,7 +263,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function run() {
+  public function run() {
 
 
     // get the group id
@@ -355,7 +355,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function preview($fid) {
+  public function preview($fid) {
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Preview', ts('Preview Form Field'), CRM_Core_Action::PREVIEW);
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&action=browse&sid=' . $this->_sid));

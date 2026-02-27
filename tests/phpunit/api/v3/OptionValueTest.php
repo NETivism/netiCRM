@@ -6,12 +6,12 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_OptionValueTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     parent::setUp();
   }
 
-  function tearDown() {}
+  public function tearDown() {}
 
   public function testGetOptionValueByID() {
     $result = civicrm_api('option_value', 'get', ['id' => 1, 'version' => $this->_apiversion]);
@@ -30,7 +30,7 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   /**
    *  Test limit param
    */
-  function testGetOptionValueLimit() {
+  public function testGetOptionValueLimit() {
     $params = [
       'version' => $this->_apiversion,
     ];
@@ -44,7 +44,7 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   /**
    *  Test offset param
    */
-  function testGetOptionValueOffSet() {
+  public function testGetOptionValueOffSet() {
 
     $result = civicrm_api('option_value', 'getcount', [
       'option_group_id' => 1,
@@ -63,7 +63,7 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   /**
    *  Test offset param
    */
-  function testGetSingleValueOptionValueSort() {
+  public function testGetSingleValueOptionValueSort() {
     $description = "demonstrates use of Sort param (available in many api functions). Also, getsingle";
     $subfile     = 'SortOption';
     $result      = civicrm_api('option_value', 'getsingle', [
@@ -90,7 +90,7 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   /**
    * Try to emulate a pagination: fetch the first page of 10 options, then fetch the second page with an offset of 9 (instead of 10) and check the start of the second page is the end of the 1st one.
    */
-  function testGetValueOptionPagination() {
+  public function testGetValueOptionPagination() {
     $pageSize = 10;
     $page1 = civicrm_api('option_value', 'get', ['options' => ['limit' => $pageSize],
         'version' => $this->_apiversion,

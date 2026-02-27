@@ -36,11 +36,11 @@
 
 
 class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Event_BAO_ParticipantStatusType';
   }
 
-  function &links() {
+  public function &links() {
     static $links = NULL;
     if ($links === NULL) {
       $links = [
@@ -73,7 +73,7 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
     return $links;
   }
 
-  function browse() {
+  public function browse() {
     $statusTypes = [];
 
     $dao = new CRM_Event_DAO_ParticipantStatusType;
@@ -101,15 +101,15 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
     $this->assign('rows', $statusTypes);
   }
 
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_ParticipantStatus';
   }
 
-  function editName() {
+  public function editName() {
     return 'Participant Status';
   }
 
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/participant_status';
   }
 }

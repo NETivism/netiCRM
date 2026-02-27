@@ -43,7 +43,7 @@ class CRM_Core_Extensions_Search {
   /**
    *
    */
-  CONST CUSTOM_SEARCH_GROUP_NAME = 'custom_search';
+  public CONST CUSTOM_SEARCH_GROUP_NAME = 'custom_search';
 
   public function __construct($ext) {
     $this->ext = $ext;

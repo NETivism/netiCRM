@@ -40,7 +40,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  CONST CHARSET = 'iso-8859-1';
+  public CONST CHARSET = 'iso-8859-1';
 
   protected $_mode = NULL;
 
@@ -51,7 +51,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -60,7 +60,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('PayPal Pro');
@@ -87,7 +87,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_PayPalImpl($mode, $paymentProcessor);
@@ -103,7 +103,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @return array the result in an nice formatted array (or an error object)
    * @public
    */
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     $args = [];
 
     $this->initialize($args, 'SetExpressCheckout');
@@ -146,7 +146,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @return array the result in an nice formatted array (or an error object)
    * @public
    */
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     $args = [];
 
     $this->initialize($args, 'GetExpressCheckoutDetails');
@@ -187,7 +187,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @return array the result in an nice formatted array (or an error object)
    * @public
    */
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     $args = [];
 
     $this->initialize($args, 'DoExpressCheckoutPayment');
@@ -223,7 +223,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
   }
 
   //LCD add new function for handling recurring payments for PayPal Express
-  function createRecurringPayments(&$params) {
+  public function createRecurringPayments(&$params) {
     $args = [];
 
     $this->initialize($args, 'CreateRecurringPaymentsProfile');
@@ -270,7 +270,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     return $params;
   }
   //LCD end
-  function initialize(&$args, $method) {
+  public function initialize(&$args, $method) {
     $args['user'] = $this->_paymentProcessor['user_name'];
     $args['pwd'] = $this->_paymentProcessor['password'];
     $args['version'] = 3.0;
@@ -288,7 +288,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @return array the result in an nice formatted array (or an error object)
    * @public
    */
-  function doDirectPayment(&$params, $component = 'contribute') {
+  public function doDirectPayment(&$params, $component = 'contribute') {
     $args = [];
 
     $this->initialize($args, 'DoDirectPayment');
@@ -359,7 +359,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
     if ($this->_paymentProcessor['payment_processor_type'] == 'PayPal_Standard' ||
       $this->_paymentProcessor['payment_processor_type'] == 'PayPal'
@@ -387,7 +387,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     }
   }
 
-  function cancelSubscriptionURL() {
+  public function cancelSubscriptionURL() {
     if ($this->_paymentProcessor['payment_processor_type'] == 'PayPal_Standard') {
       return "{$this->_paymentProcessor['url_site']}cgi-bin/webscr?cmd=_subscr-find&alias=" . urlencode($this->_paymentProcessor['user_name']);
     }
@@ -396,7 +396,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     }
   }
 
-  function doTransferCheckout(&$params, $component = 'contribute') {
+  public function doTransferCheckout(&$params, $component = 'contribute') {
     $config = CRM_Core_Config::singleton();
 
     if ($component != 'contribute' && $component != 'event') {
@@ -546,7 +546,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @nvpStr is nvp string.
    * returns an associtive array containing the response from the server.
    */
-  function invokeAPI($args, $url = NULL) {
+  public function invokeAPI($args, $url = NULL) {
 
     if ($url === NULL) {
       if (empty($this->_paymentProcessor['url_api'])) {
@@ -621,7 +621,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @nvpArray is Associative Array.
    */
 
-  static function deformat($str) {
+  public static function deformat($str) {
     $result = [];
 
     while (strlen($str)) {

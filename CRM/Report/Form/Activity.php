@@ -49,7 +49,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
   public $_groupBy;
   public $_absoluteUrl;
   protected $_emailField = FALSE;
-  protected $_customGroupExtends = ['Activity']; function __construct() {
+  protected $_customGroupExtends = ['Activity']; public function __construct() {
     $config = CRM_Core_Config::singleton();
     $campaignEnabled = in_array("CiviCampaign", $config->enableComponents);
     $this->_columns = [
@@ -242,7 +242,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -267,7 +267,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
 
     $this->_from = "
         FROM civicrm_activity {$this->_aliases['civicrm_activity']}
@@ -311,7 +311,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  public function where() {
     $this->_where = " WHERE civicrm_option_group.name = 'activity_type' AND 
                                 {$this->_aliases['civicrm_activity']}.is_test = 0 AND
                                 {$this->_aliases['civicrm_activity']}.is_deleted = 0 AND
@@ -361,7 +361,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = [];
     if (!empty($this->_params['group_bys'])) {
       foreach ($this->_columns as $tableName => $table) {
@@ -378,7 +378,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy) . " ";
   }
 
-  function buildACLClause($tableAlias = 'contact_a') {
+  public function buildACLClause($tableAlias = 'contact_a') {
     //override for ACL( Since Cotact may be source
     //contact/assignee or target also it may be null )
 
@@ -408,13 +408,13 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         */
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->buildACLClause(['contact_civireport', 'civicrm_contact_target', 'civicrm_contact_assignee']);
     parent::postProcess();
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;

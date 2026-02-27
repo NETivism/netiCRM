@@ -10,7 +10,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Database uniq id
@@ -22,7 +22,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
   /**
    * constants for static parameters of the pager
    */
-  const ROWCOUNT = 20;
+  public const ROWCOUNT = 20;
 
   /**
    * Action of current page
@@ -46,7 +46,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->assign('action', $this->_action);
     if ($this->_action & CRM_Core_Action::VIEW) {
@@ -60,7 +60,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
     return parent::run();
   }
 
-  function browse() {
+  public function browse() {
     // filter
     $filters = [];
     $filters['is_template'] = CRM_Utils_Request::retrieve('is_template', 'Integer', $this);
@@ -184,11 +184,11 @@ DESC
     $this->assign('rows', $rows);
   }
 
-  function view() {
+  public function view() {
     $this->edit();
   }
 
-  function edit() {
+  public function edit() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $controller = new CRM_Core_Controller_Simple('CRM_AI_Form_AICompletion', ts('AI Copywriter'), $this->_action);
     $controller->setEmbedded(TRUE);
@@ -210,7 +210,7 @@ DESC
    * @return array (reference) of action links
    * @static
    */
-  static function &links() {
+  public static function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::VIEW=> [
@@ -230,7 +230,7 @@ DESC
     return self::$_links;
   }
 
-  function pager($total) {
+  public function pager($total) {
     $params = []; 
     $params['status'] = '';
     $params['csvString'] = NULL;
@@ -242,7 +242,7 @@ DESC
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  function buildWhere($filters, &$where, &$params) {
+  public function buildWhere($filters, &$where, &$params) {
     foreach($filters as $ele => $filterValue) {
       if ($ele == 'is_template') {
         $where[] = 'is_template = 1';
@@ -265,7 +265,7 @@ DESC
     }
   }
 
-  function validateFilters(&$filters) {
+  public function validateFilters(&$filters) {
     $filters = array_filter($filters);
     $available = [];
     $available['role'] = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(ai_role) FROM civicrm_aicompletion GROUP BY ai_role");
@@ -289,7 +289,7 @@ DESC
     }
   }
 
-  function getStats() {
+  public function getStats() {
     $stats = [
       'component' => []
     ];

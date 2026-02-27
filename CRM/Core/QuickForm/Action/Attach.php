@@ -32,7 +32,7 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
    * @return object
    * @access public
    */
-  function __construct(&$stateMachine, $uploadDir, $uploadNames) {
+  public function __construct(&$stateMachine, $uploadDir, $uploadNames) {
     parent::__construct($stateMachine);
 
     $this->_uploadDir = $uploadDir;
@@ -50,7 +50,7 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
    * @return void
    * @access private
    */
-  function attach(&$page, &$data, $pageName, $uploadName) {
+  public function attach(&$page, &$data, $pageName, $uploadName) {
     // make sure uploadName exists in the QF array
     // else we skip, CRM-3427
     if (empty($uploadName) ||
@@ -106,7 +106,7 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     // like in Action_Next
     $page->isFormBuilt() or $page->buildForm();
 
@@ -118,7 +118,7 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
     $page->controller->_actions['attach']->realPerform($page, $actionName);
   }
 
-  function realPerform(&$page, $actionName) {
+  public function realPerform(&$page, $actionName) {
     $pageName = $page->getAttribute('name');
     $data = &$page->controller->container();
     $data['values'][$pageName] = $page->exportValues();

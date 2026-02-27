@@ -40,7 +40,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
 
   protected $_stringName = NULL;
 
-  protected $_defaults = NULL; function preProcess() {
+  protected $_defaults = NULL; public function preProcess() {
     $this->_soInstance = CRM_Utils_Array::value('instance', $_GET);
     $this->assign('soInstance', $this->_soInstance);
     $breadCrumbUrl = CRM_Utils_System::url('civicrm/admin/options/wordreplacements',
@@ -164,7 +164,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     $errors = [];
 
     $oldValues = CRM_Utils_Array::value('old', $values);

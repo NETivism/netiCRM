@@ -72,7 +72,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this);
 
     if ($this->_action & (CRM_Core_Action::UPDATE | CRM_Core_Action::DELETE)) {
@@ -108,7 +108,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
    * @return array    array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
     if (!isset($defaults['weight']) || !$defaults['weight']) {

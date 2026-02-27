@@ -42,7 +42,7 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
     // get the primary city, state and zip for the contact
 
     $ids = [$this->_contactId];
@@ -64,7 +64,7 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $this->browse();

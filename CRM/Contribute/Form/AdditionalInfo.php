@@ -41,7 +41,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildPremium(&$form) {
+  public static function buildPremium(&$form) {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
 
@@ -254,7 +254,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildAdditionalDetail(&$form) {
+  public static function buildAdditionalDetail(&$form) {
     //Additional information section
     $form->add('hidden', 'hidden_AdditionalDetail', 1);
 
@@ -319,7 +319,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildHonoree(&$form) {
+  public static function buildHonoree(&$form) {
     //Honoree section
     $form->add('hidden', 'hidden_Honoree', 1);
     $honor = CRM_Core_PseudoConstant::honor();
@@ -342,7 +342,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildPaymentReminders(&$form) {
+  public static function buildPaymentReminders(&$form) {
     //PaymentReminders section
     $form->add('hidden', 'hidden_PaymentReminders', 1);
     $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), ['size' => 3]);
@@ -360,7 +360,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
+  public static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
 
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contributionID;
@@ -467,7 +467,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
+  public static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
 
     $noteParams = ['entity_table' => 'civicrm_contribution',
@@ -490,7 +490,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function postProcessCommon(&$params, &$formatted) {
+  public static function postProcessCommon(&$params, &$formatted) {
     $fields = ['non_deductible_amount',
       'total_amount',
       'fee_amount',
@@ -555,7 +555,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None.
    */
-  static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+  public static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
 
     list($contributorDisplayName,
@@ -792,7 +792,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function processPriceSet($contributionId, $lineItem) {
+  public static function processPriceSet($contributionId, $lineItem) {
     if (!$contributionId || !is_array($lineItem)
       || CRM_Utils_System::isNull($lineItem)
     ) {

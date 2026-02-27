@@ -27,7 +27,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
   }
 
   public function testCreatePriceSet() {

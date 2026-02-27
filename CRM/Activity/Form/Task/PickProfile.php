@@ -66,7 +66,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -97,7 +97,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     $types = ['Activity'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types, TRUE);
@@ -145,7 +145,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Activity_Form_Task_PickProfile', 'formRule']);
   }
 
@@ -158,7 +158,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     return TRUE;
   }
 

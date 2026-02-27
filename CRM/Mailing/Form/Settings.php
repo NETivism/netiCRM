@@ -59,7 +59,7 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
     $count = $this->get('count');
     $this->assign('count', $count);

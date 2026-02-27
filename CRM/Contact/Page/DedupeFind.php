@@ -49,12 +49,12 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
   /**
    * queue name
    */
-  const QUEUE_NAME = 'dedupe_running';
+  public const QUEUE_NAME = 'dedupe_running';
 
   /**
    * running time limit
    */
-  const RUNNING_TIME_LIMIT = 1800;
+  public const RUNNING_TIME_LIMIT = 1800;
 
   protected $_cid = NULL;
   protected $_rgid;
@@ -66,7 +66,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Dedupe_BAO_RuleGroup';
   }
 
@@ -75,7 +75,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {}
+  public function &links() {}
 
   /**
    * Browse all rule groups
@@ -83,7 +83,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    * @return void
    * @access public
    */
-  function run() {
+  public function run() {
     set_time_limit(self::RUNNING_TIME_LIMIT);
     $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, FALSE, 0);
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 0);
@@ -283,7 +283,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
     $this->assign('main_contacts', $this->_mainContacts);
 
     if ($this->_cid) {
@@ -300,7 +300,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    *
    * @return string  classname of edit form
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Contact_Form_DedupeFind';
   }
 
@@ -309,7 +309,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    *
    * @return string  name of this page
    */
-  function editName() {
+  public function editName() {
     return 'DedupeFind';
   }
 
@@ -318,24 +318,24 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    *
    * @return string  user context
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/contact/dedupefind';
   }
 
-  function storeFoundDupes($dupes) {
+  public function storeFoundDupes($dupes) {
     CRM_Core_BAO_Cache::setItem($dupes, 'Dedupe Found Dupes', $this->_cachePath);
   }
 
-  function getFoundDupes() {
+  public function getFoundDupes() {
     $createdTime = CRM_REQUEST_TIME - 3600*6; // 6 hours
     return CRM_Core_BAO_Cache::getItem('Dedupe Found Dupes', $this->_cachePath, NULL, $createdTime);
   }
 
-  function purgeFoundDupes() {
+  public function purgeFoundDupes() {
     return CRM_Core_BAO_Cache::deleteItem('Dedupe Found Dupes', $this->_cachePath);
   }
 
-  function batchMergeDupes() {
+  public function batchMergeDupes() {
     $foundDupes = $this->getFoundDupes();
     $merged = $skipped = [];
     if (!empty($foundDupes)) {
@@ -382,7 +382,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     ];
   }
 
-  function pager($total) {
+  public function pager($total) {
     $params = [];
     $params['status'] = '';
     $params['csvString'] = NULL;
@@ -398,7 +398,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  static function dedupeRunning() {
+  public static function dedupeRunning() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
@@ -411,7 +411,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     return FALSE;
   }
 
-  function dedupeStart() {
+  public function dedupeStart() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
@@ -427,7 +427,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     return $dao;
   }
 
-  function dedupeEnd() {
+  public function dedupeEnd() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find()) {

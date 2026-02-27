@@ -46,7 +46,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
 
     $cc_filter = [];
     if($_GET['start_date']){
@@ -335,7 +335,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     return parent::run();
   }
 
-  static private function getDonutData($data){
+  private static function getDonutData($data){
     $i = 0;
     $returnData = [];
     foreach ($data as $value) {
@@ -443,7 +443,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     return $chart;
   }
 
-  static private function arrayRemoveKey($arr, $types = ['count','people']){
+  private static function arrayRemoveKey($arr, $types = ['count','people']){
     $return = [];
     if(!is_array($arr))return $arr;
     foreach ($types as $type) {
@@ -478,7 +478,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    * @param  array  $types [description]
    * @return [type]        [description]
    */
-  static private function dataTransferShowHidden($arr, $types = ['count','people']){
+  private static function dataTransferShowHidden($arr, $types = ['count','people']){
     $return = [];
     foreach ($types as $type) {
       $set = [];

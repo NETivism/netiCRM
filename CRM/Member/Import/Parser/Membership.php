@@ -109,7 +109,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   /**
    * class constructor
    */
-  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL) {
+  public function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
     $this->_mapperLocType = &$mapperLocType;
@@ -124,7 +124,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    * @return void
    * @access public
    */
-  function init() {
+  public function init() {
     $fields = &CRM_Member_BAO_Membership::importableFields($this->_contactType, FALSE);
     $this->_importableContactFields = $fields;
 
@@ -229,7 +229,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    * @return boolean
    * @access public
    */
-  function mapField(&$values) {
+  public function mapField(&$values) {
     return CRM_Member_Import_Parser::VALID;
   }
 
@@ -241,7 +241,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function preview(&$values) {
+  public function preview(&$values) {
     return $this->summary($values);
   }
 
@@ -253,7 +253,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function summary(&$values) {
+  public function summary(&$values) {
     $erroneousField = NULL;
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
@@ -400,7 +400,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function import($onDuplicate, &$values) {
+  public function import($onDuplicate, &$values) {
     $contactValues = $values;
     // first make sure this is a valid line
     $response = $this->summary($values);
@@ -704,7 +704,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    * @return array
    * @access public
    */
-  function &getImportedMemberships() {
+  public function &getImportedMemberships() {
     return $this->_newMemberships;
   }
 
@@ -714,7 +714,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    * @return void
    * @access public
    */
-  function fini() {}
+  public function fini() {}
 
   /**
    *  to calculate join, start and end dates
@@ -725,7 +725,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
    *
    *  @access public
    */
-  function formattedDates($calcDates, &$formatted) {
+  public function formattedDates($calcDates, &$formatted) {
     $dates = ['join_date',
       'start_date',
       'end_date',
@@ -744,7 +744,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     }
   }
 
-  function importMembership($formatted, &$values) {
+  public function importMembership($formatted, &$values) {
     $startDate = CRM_Utils_Date::customFormat($formatted['start_date'], '%Y-%m-%d');
     $endDate = CRM_Utils_Date::customFormat($formatted['end_date'], '%Y-%m-%d');
     $joinDate = CRM_Utils_Date::customFormat($formatted['join_date'], '%Y-%m-%d');
@@ -794,7 +794,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
 
-  function checkContactById($params) {
+  public function checkContactById($params) {
     $pass = $contactID = 0;
     $checkCid = new CRM_Contact_DAO_Contact();
     if (!empty($params['external_identifier'])) {

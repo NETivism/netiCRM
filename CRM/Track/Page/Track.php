@@ -14,7 +14,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $null = CRM_Core_DAO::$_nullObject;
     $params = [
       'pageType' => CRM_Utils_Request::retrieve('ptype', 'String', $null),

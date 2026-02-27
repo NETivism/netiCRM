@@ -47,7 +47,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
   /**
    * Constants for number of friend contacts
    */
-  CONST NUM_OPTION = 3;
+  public CONST NUM_OPTION = 3;
 
   /**
    * the id of the entity that we are proceessing
@@ -212,7 +212,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
 
     $errors = [];
 

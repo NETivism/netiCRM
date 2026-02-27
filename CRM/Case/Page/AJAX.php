@@ -42,7 +42,7 @@ class CRM_Case_Page_AJAX {
   /**
    * Retrieve unclosed cases.
    */
-  static function unclosedCases() {
+  public static function unclosedCases() {
     $criteria = explode('-', CRM_Utils_Type::escape(CRM_Utils_Array::value('s', $_GET), 'String'));
 
     $limit = NULL;
@@ -71,7 +71,7 @@ class CRM_Case_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function processCaseTags() {
+  public function processCaseTags() {
 
 
     $caseId = CRM_Utils_Type::escape($_POST['case_id'], 'Integer');
@@ -125,7 +125,7 @@ class CRM_Case_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function caseDetails() {
+  public function caseDetails() {
     $caseId = CRM_Utils_Type::escape($_GET['caseId'], 'Integer');
     $contactId = CRM_Utils_Type::escape($_GET['contactId'], 'Integer');
 

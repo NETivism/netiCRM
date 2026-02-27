@@ -56,7 +56,7 @@ class CRM_Member_Form extends CRM_Core_Form {
    */
   protected $_BAOName;
  
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
     if (!empty($this->_id)) {
@@ -75,7 +75,7 @@ class CRM_Member_Form extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (!empty($this->_defaults)) {
       $defaults =& $this->_defaults;
     }

@@ -49,7 +49,7 @@ class CRM_Activity_Import_StateMachine extends CRM_Core_StateMachine {
    *
    * @return object CRM_Activity_Import_StateMachine
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $this->_pages = [

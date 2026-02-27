@@ -105,7 +105,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     // if we are editing
@@ -270,7 +270,7 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
    * @see valid_date
    */
 
-  static function formRule($fields, $files, $errors) {
+  public static function formRule($fields, $files, $errors) {
     $errors = [];
 
     return empty($errors) ? TRUE : $errors;

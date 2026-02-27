@@ -48,7 +48,7 @@ class CRM_Utils_Array {
    * @access public
    *
    */
-  static function value($key, $list, $default = NULL) {
+  public static function value($key, $list, $default = NULL) {
     if (is_array($list)) {
       // faster
       if (isset($list[$key])) {
@@ -69,7 +69,7 @@ class CRM_Utils_Array {
    * @access public
    * @static
    */
-  static function retrieveValueRecursive(&$params, $key) {
+  public static function retrieveValueRecursive(&$params, $key) {
     if (!is_array($params)) {
       return NULL;
     }
@@ -101,7 +101,7 @@ class CRM_Utils_Array {
    * @access public
    *
    */
-  static function key($value, &$list) {
+  public static function key($value, &$list) {
     if (is_array($list)) {
       $key = array_search($value, $list);
 
@@ -114,7 +114,7 @@ class CRM_Utils_Array {
     return NULL;
   }
 
-  static function &xml(&$list, $depth = 1, $seperator = "\n") {
+  public static function &xml(&$list, $depth = 1, $seperator = "\n") {
     $xml = '';
     foreach ($list as $name => $value) {
       $xml .= str_repeat(' ', $depth * 4);
@@ -133,7 +133,7 @@ class CRM_Utils_Array {
     return $xml;
   }
 
-  static function escapeXML($value) {
+  public static function escapeXML($value) {
     static $src = NULL;
     static $dst = NULL;
 
@@ -145,7 +145,7 @@ class CRM_Utils_Array {
     return str_replace($src, $dst, $value);
   }
 
-  static function flatten(&$list, &$flat, $prefix = '', $seperator = ".") {
+  public static function flatten(&$list, &$flat, $prefix = '', $seperator = ".") {
     foreach ($list as $name => $value) {
       $newPrefix = ($prefix) ? $prefix . $seperator . $name : $name;
       if (is_array($value)) {
@@ -168,7 +168,7 @@ class CRM_Utils_Array {
    * @return  $a3
    * @static
    */
-  static function arrayMerge($a1, $a2) {
+  public static function arrayMerge($a1, $a2) {
     if (empty($a1)) {
       return $a2;
     }
@@ -200,7 +200,7 @@ class CRM_Utils_Array {
     return $a3;
   }
 
-  static function isHierarchical(&$list) {
+  public static function isHierarchical(&$list) {
     foreach ($list as $n => $v) {
       if (is_array($v)) {
         return TRUE;
@@ -221,7 +221,7 @@ class CRM_Utils_Array {
    * @static
    * @access public
    */
-  static function arrayDeepCopy(&$array, $maxdepth = 50, $depth = 0) {
+  public static function arrayDeepCopy(&$array, $maxdepth = 50, $depth = 0) {
     if ($depth > $maxdepth) {
       return $array;
     }
@@ -249,7 +249,7 @@ class CRM_Utils_Array {
    * @return  void
    * @static
    */
-  static function arraySplice(&$params, $start, $end) {
+  public static function arraySplice(&$params, $start, $end) {
     // verify start and end date
     if ($start < 0) {
       $start = 0;
@@ -279,7 +279,7 @@ class CRM_Utils_Array {
    * @return bool
    * @static
    */
-  static function inArray($value, $params, $caseInsensitive = TRUE) {
+  public static function inArray($value, $params, $caseInsensitive = TRUE) {
     foreach ($params as $item) {
       if (is_array($item)) {
         $ret = self::inArray($value, $item, $caseInsensitive);
@@ -337,7 +337,7 @@ class CRM_Utils_Array {
    * @param boolean $reverse will flip lookup before search
    * @return void 
    */
-  static function lookupValue(&$defaults, $property, $lookup, $reverse) {
+  public static function lookupValue(&$defaults, $property, $lookup, $reverse) {
     $id = $property . '_id';
 
     $src = $reverse ? $property : $id;
@@ -377,7 +377,7 @@ class CRM_Utils_Array {
    *  @return boolean true is array is empty else false
    *  @static
    */
-  static function isEmpty($array = []) {
+  public static function isEmpty($array = []) {
     if (!is_array($array)) {
       return TRUE;
     }
@@ -521,7 +521,7 @@ class CRM_Utils_Array {
    * @return bool
    * @static
    */
-  static function crmIsEmptyArray($array = []) {
+  public static function crmIsEmptyArray($array = []) {
     return self::isEmpty($array);
   }
 }

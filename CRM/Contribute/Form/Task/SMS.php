@@ -63,7 +63,7 @@ class CRM_Contribute_Form_Task_SMS extends CRM_Contribute_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     // we have all the contribution ids, so now we get the contact ids

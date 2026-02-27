@@ -52,7 +52,7 @@ class CRM_Case_Form_Activity_OpenCase {
    */
   public $_contactID;
 
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     //get multi client case configuration
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
@@ -74,7 +74,7 @@ class CRM_Case_Form_Activity_OpenCase {
    *
    * @return None
    */
-  function setDefaultValues(&$form) {
+  public function setDefaultValues(&$form) {
     $defaults = [];
     if ($form->_context == 'caseActivity') {
       return $defaults;
@@ -107,7 +107,7 @@ class CRM_Case_Form_Activity_OpenCase {
     return $defaults;
   }
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     if ($form->_context == 'caseActivity') {
       return;
     }
@@ -209,7 +209,7 @@ class CRM_Case_Form_Activity_OpenCase {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     if ($form->_context == 'caseActivity') {
       return TRUE;
     }

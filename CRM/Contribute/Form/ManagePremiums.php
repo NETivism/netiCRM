@@ -60,7 +60,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     $defaults = parent::setDefaultValues();
     if ($this->_id) {

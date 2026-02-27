@@ -48,25 +48,25 @@ class CRM_Core_Block {
    *
    * @var int
    */
-  CONST CREATE_NEW = 1, RECENTLY_VIEWED = 2, DASHBOARD = 3, ADD = 4, LANGSWITCH = 5, EVENT = 6, FULLTEXT_SEARCH = 7, AUTOCOMPLETE_SEARCH = 8;
+  public CONST CREATE_NEW = 1, RECENTLY_VIEWED = 2, DASHBOARD = 3, ADD = 4, LANGSWITCH = 5, EVENT = 6, FULLTEXT_SEARCH = 7, AUTOCOMPLETE_SEARCH = 8;
 
   /**
    * template file names for the above blocks
    */
-  static $_properties = NULL;
+  public static $_properties = NULL;
 
   /**
    * class constructor
    *
    */
-  function __construct() {}
+  public function __construct() {}
 
   /**
    * initialises the $_properties array
    *
    * @return void
    */
-  static function initProperties() {
+  public static function initProperties() {
     if (!defined('BLOCK_CACHE_GLOBAL')) {
       define('BLOCK_CACHE_GLOBAL', 0x0008);
     }
@@ -179,7 +179,7 @@ class CRM_Core_Block {
    *
    * @return string  the value of the desired property
    */
-  static function getProperty($id, $property) {
+  public static function getProperty($id, $property) {
     if (!(self::$_properties)) {
       self::initProperties();
     }
@@ -195,7 +195,7 @@ class CRM_Core_Block {
    *
    * @return void
    */
-  static function setProperty($id, $property, $value) {
+  public static function setProperty($id, $property, $value) {
     if (!(self::$_properties)) {
       self::initProperties();
     }
@@ -207,7 +207,7 @@ class CRM_Core_Block {
    *
    * @return array  the $_properties array
    */
-  static function properties() {
+  public static function properties() {
     if (!(self::$_properties)) {
       self::initProperties();
     }
@@ -220,7 +220,7 @@ class CRM_Core_Block {
    * @return array
    * @access public
    */
-  static function getInfo() {
+  public static function getInfo() {
 
     $block = [];
     foreach (self::properties() as $id => $value) {
@@ -524,7 +524,7 @@ class CRM_Core_Block {
    * @return array
    * @access public
    */
-  static function getContent($id) {
+  public static function getContent($id) {
     // return if upgrade mode
     $config = CRM_Core_Config::singleton();
     if (CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET) == 'civicrm/upgrade') {
@@ -597,7 +597,7 @@ class CRM_Core_Block {
    * @return array
    * @access public
    */
-  static function fetch($id, $fileName, $properties) {
+  public static function fetch($id, $fileName, $properties) {
     $template = CRM_Core_Smarty::singleton();
 
     if ($properties) {

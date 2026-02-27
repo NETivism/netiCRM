@@ -26,14 +26,14 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  CONST CHARSET = 'iso-8859-1';
-  CONST AUTH_APPROVED = 1;
-  CONST AUTH_DECLINED = 2;
-  CONST AUTH_ERROR = 3;
+  public CONST CHARSET = 'iso-8859-1';
+  public CONST AUTH_APPROVED = 1;
+  public CONST AUTH_DECLINED = 2;
+  public CONST AUTH_ERROR = 3;
 
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
-  static protected $_params = [];
+  protected static $_params = [];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -42,7 +42,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -51,7 +51,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Authorized .Net');
@@ -77,7 +77,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_AuthorizeNet($mode, $paymentProcessor);
@@ -93,7 +93,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @return array the result in a nice formatted array (or an error object)
    * @public
    */
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     if (!defined('CURLOPT_SSLCERT')) {
       return self::error(9001, 'Authorize.Net requires curl with SSL support');
     }
@@ -189,7 +189,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @return array the result in a nice formatted array (or an error object)
    * @public
    */
-  function doRecurPayment(&$params) {
+  public function doRecurPayment(&$params) {
     $template = CRM_Core_Smarty::singleton();
 
     $intervalLength = $this->_getParam('frequency_interval');
@@ -290,7 +290,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     return $params;
   }
 
-  function _getAuthorizeNetFields() {
+  public function _getAuthorizeNetFields() {
     $fields = [];
     $fields['x_login'] = $this->_getParam('apiLogin');
     $fields['x_tran_key'] = $this->_getParam('paymentKey');
@@ -337,7 +337,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return bool                 True if ID exists, else false
    */
-  function _checkDupe($invoiceId) {
+  public function _checkDupe($invoiceId) {
 
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $invoiceId;
@@ -352,7 +352,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return string the HMAC_MD5 encoding string
    **/
-  function hmac($key, $data) {
+  public function hmac($key, $data) {
     if (function_exists('mhash')) {
       // Use PHP mhash extension
       return (bin2hex(mhash(MHASH_MD5, $data, $key)));
@@ -386,7 +386,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return bool
    */
-  function checkMD5($responseMD5, $transaction_id, $amount) {
+  public function checkMD5($responseMD5, $transaction_id, $amount) {
     // cannot check if no MD5 hash
     $md5Hash = $this->_getParam('md5Hash');
     if ($md5Hash == '') {
@@ -407,7 +407,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return string fingerprint
    **/
-  function CalculateFP() {
+  public function CalculateFP() {
     $x_tran_key = $this->_getParam('paymentKey');
     $loginid = $this->_getParam('apiLogin');
     $sequence = $this->_getParam('sequence');
@@ -426,7 +426,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return array CSV fields
    */
-  function explode_csv($data) {
+  public function explode_csv($data) {
     $data = trim($data);
     //make it easier to parse fields with quotes in them
     $data = str_replace('""', "''", $data);
@@ -461,7 +461,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return array refId, resultCode, code, text, subscriptionId
    */
-  function _parseArbReturn($content) {
+  public function _parseArbReturn($content) {
     $refId = $this->_substring_between($content, '<refId>', '</refId>');
     $resultCode = $this->_substring_between($content, '<resultCode>', '</resultCode>');
     $code = $this->_substring_between($content, '<code>', '</code>');
@@ -482,7 +482,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * Function is from Authorize.Net sample code, and used to avoid using
    * PHP5 XML functions
    */
-  function _substring_between(&$haystack, $start, $end) {
+  public function _substring_between(&$haystack, $start, $end) {
     if (strpos($haystack, $start) === FALSE || strpos($haystack, $end) === FALSE) {
       return FALSE;
     }
@@ -501,11 +501,11 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @return mixed value of the field, or empty string if the field is
    * not set
    */
-  function _getParam($field) {
+  public function _getParam($field) {
     return CRM_Utils_Array::value($field, $this->_params, '');
   }
 
-  function &error($errorCode = NULL, $errorMessage = NULL) {
+  public function &error($errorCode = NULL, $errorMessage = NULL) {
     $e = &CRM_Core_Error::singleton();
     if ($errorCode) {
       $e->push($errorCode, 0, NULL, $errorMessage);
@@ -525,7 +525,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    *
    * @return bool false if value is not a scalar, true if successful
    */
-  function _setParam($field, $value) {
+  public function _setParam($field, $value) {
     if (!is_scalar($value)) {
       return FALSE;
     }
@@ -540,7 +540,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
     if (empty($this->_paymentProcessor['user_name'])) {
       $error[] = ts('APILogin is not set for this payment processor');
@@ -558,7 +558,7 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     }
   }
 
-  function cancelSubscriptionURL() {
+  public function cancelSubscriptionURL() {
     return ($this->_mode == 'test') ? 'https://test.authorize.net' : 'https://authorize.net';
   }
 }

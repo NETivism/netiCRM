@@ -17,7 +17,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
    */
   public $_processorName;
   // (not used, implicit in the API, might need to convert?)
-  CONST
+  public CONST
   CHARSET = 'UFT-8';
 
   /**
@@ -27,7 +27,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /*
      * Constructor
@@ -36,7 +36,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
      *
      * @return void
      */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     // live or test
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
@@ -52,7 +52,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_PayflowPro($mode, $paymentProcessor);
@@ -65,7 +65,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
      * the processor. It is the main function for processing on-server 
 	 * credit card transactions
      */
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     if (!defined('CURLOPT_SSLCERT')) {
       CRM_Core_Error::fatal(ts('PayFlowPro requires curl with SSL support'));
     }
@@ -379,7 +379,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
    *
    * @return bool                  True if ID exists, else false
    */
-  function _checkDupe($invoiceId) {
+  public function _checkDupe($invoiceId) {
     //copied from Eway but not working and not really sure it should!
 
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -390,7 +390,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
   /*
      * Produces error message and returns from class
      */
-  function &errorExit($errorCode = NULL, $errorMessage = NULL) {
+  public function &errorExit($errorCode = NULL, $errorMessage = NULL) {
     $e = &CRM_Core_Error::singleton();
     if ($errorCode) {
       $e->push($errorCode, 0, NULL, $errorMessage);
@@ -405,7 +405,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
   /*
      * NOTE: 'doTransferCheckout' not implemented
      */
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
@@ -425,7 +425,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
   //  function checkConfig( $mode )          // CiviCRM V1.9 Declaration
 
   // CiviCRM V2.0 Declaration
-  function checkConfig() {
+  public function checkConfig() {
     $errorMsg = [];
     if (empty($this->_paymentProcessor['user_name'])) {
       $errorMsg[] = ' ' . ts('ssl_merchant_id is not set for this payment processor');
@@ -446,7 +446,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
   /*
      * convert to a name/value pair (nvp) string
      */
-  function convert_to_nvp($payflow_query_array) {
+  public function convert_to_nvp($payflow_query_array) {
     foreach ($payflow_query_array as $key => $value) {
       $payflow_query[] = $key . '[' . strlen($value) . ']=' . $value;
     }
@@ -460,7 +460,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
      * @payflow_query value string to be posted
      * 
      */
-  function submit_transaction($submiturl, $payflow_query) {
+  public function submit_transaction($submiturl, $payflow_query) {
     /*
          * Submit transaction using CuRL
          */
@@ -603,7 +603,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     return $responseData;
   }
   //end submit_transaction
-  function getRecurringTransactionStatus($recurringProfileID, $processorID) {
+  public function getRecurringTransactionStatus($recurringProfileID, $processorID) {
     if (!defined('CURLOPT_SSLCERT')) {
       CRM_Core_Error::fatal(ts('PayFlowPro requires curl with SSL support'));
     }

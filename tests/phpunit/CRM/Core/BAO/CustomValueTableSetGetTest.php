@@ -6,7 +6,7 @@ require_once 'CiviTest/Custom.php';
 
 class CRM_Core_BAO_CustomValueTableSetGetTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Custom Value Table BAO setValues and getValues',
@@ -15,7 +15,7 @@ class CRM_Core_BAO_CustomValueTableSetGetTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -24,7 +24,7 @@ class CRM_Core_BAO_CustomValueTableSetGetTest extends CiviUnitTestCase
      * Test setValues() and GetValues() methods with custom Date field
      *
      */
-    function testSetGetValuesDate()
+    public function testSetGetValuesDate()
     {
         $params      = [];
         $contactID   = Contact::createIndividual();
@@ -107,7 +107,7 @@ class CRM_Core_BAO_CustomValueTableSetGetTest extends CiviUnitTestCase
      * Test setValues() and getValues() methods with custom field YesNo(Boolean) Radio
      *
      */
-    function testSetGetValuesYesNoRadio()
+    public function testSetGetValuesYesNoRadio()
     {
       $params      = [];
       $contactID   = Contact::createIndividual();

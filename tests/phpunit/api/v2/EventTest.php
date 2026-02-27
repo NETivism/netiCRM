@@ -29,7 +29,7 @@
 require_once 'api/v2/Event.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_EventTest extends CiviUnitTestCase {
-  protected $_params; function get_info() {
+  protected $_params; public function get_info() {
     return [
       'name' => 'Event Create',
       'description' => 'Test all Event Create API methods.',
@@ -37,7 +37,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->_params = [
@@ -68,7 +68,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
     $this->_eventId = $this->_event['event_id'];
   }
 
-  function tearDown() {
+  public function tearDown() {
     if ($this->_eventId) {
       $this->eventDelete($this->_eventId);
     }
@@ -76,7 +76,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_event_get methods
-  function testGetWrongParamsType() {
+  public function testGetWrongParamsType() {
     $params = 'Annual CiviCRM meet';
     $result = civicrm_event_get($params);
 
@@ -84,7 +84,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'Input parameters is not an array.');
   }
 
-  function testGetEventEmptyParams() {
+  public function testGetEventEmptyParams() {
     $params = [];
     $result = civicrm_event_get($params);
 
@@ -92,13 +92,13 @@ class api_v2_EventTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'Params cannot be empty.');
   }
 
-  function testGetEventById() {
+  public function testGetEventById() {
     $params = ['id' => $this->_event['event_id']];
     $result = civicrm_event_get($params);
     $this->assertEquals($result['event_title'], 'Annual CiviCRM meet');
   }
 
-  function testGetEventByEventTitle() {
+  public function testGetEventByEventTitle() {
     $params = ['title' => 'Annual CiviCRM meet'];
 
     $result = civicrm_event_get($params);
@@ -106,42 +106,42 @@ class api_v2_EventTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_event_create methods
-  function testCreateEventParamsNotArray() {
+  public function testCreateEventParamsNotArray() {
     $params = NULL;
     $result = civicrm_event_create($params);
     $this->assertEquals(1, $result['is_error']);
     $this->assertEquals('Input parameters is not an array', $result['error_message'], 'In line ' . __LINE__);
   }
 
-  function testCreateEventEmptyParams() {
+  public function testCreateEventEmptyParams() {
     $params = [];
     $result = civicrm_event_create($params);
     $this->assertEquals($result['is_error'], 1);
     $this->assertEquals('Mandatory param missing: start_date', $result['error_message'], 'In line ' . __LINE__);
   }
 
-  function testCreateEventParamsWithoutTitle() {
+  public function testCreateEventParamsWithoutTitle() {
     unset($this->_params['title']);
     $result = civicrm_event_create($this->_params);
     $this->assertEquals($result['is_error'], 1);
     $this->assertEquals('Mandatory param missing: title', $result['error_message'], 'In line ' . __LINE__);
   }
 
-  function testCreateEventParamsWithoutEventTypeId() {
+  public function testCreateEventParamsWithoutEventTypeId() {
     unset($this->_params['event_type_id']);
     $result = civicrm_event_create($this->_params);
     $this->assertEquals($result['is_error'], 1);
     $this->assertEquals('Mandatory param missing: event_type_id', $result['error_message'], 'In line ' . __LINE__);
   }
 
-  function testCreateEventParamsWithoutStartDate() {
+  public function testCreateEventParamsWithoutStartDate() {
     unset($this->_params['start_date']);
     $result = civicrm_event_create($this->_params);
     $this->assertEquals($result['is_error'], 1);
     $this->assertEquals('Mandatory param missing: start_date', $result['error_message'], 'In line ' . __LINE__);
   }
 
-  function testCreateEvent() {
+  public function testCreateEvent() {
     $result = civicrm_event_create($this->_params);
 
     $this->assertEquals($result['is_error'], 0);
@@ -149,7 +149,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_event_delete methods
-  function testDeleteWrongParamsType() {
+  public function testDeleteWrongParamsType() {
     $params = 'Annual CiviCRM meet';
     $result = &civicrm_event_delete($params);
 
@@ -157,19 +157,19 @@ class api_v2_EventTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'Invalid value for eventID');
   }
 
-  function testDeleteEmptyParams() {
+  public function testDeleteEmptyParams() {
     $params = [];
     $result = &civicrm_event_delete($params);
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testDelete() {
+  public function testDelete() {
     $params = ['event_id' => $this->_eventId];
     $result = &civicrm_event_delete($params);
     $this->assertNotEquals($result['is_error'], 1);
   }
 
-  function testDeleteWithWrongEventId() {
+  public function testDeleteWithWrongEventId() {
     $params = ['event_id' => $this->_eventId];
     $result = &civicrm_event_delete($params);
     // try to delete again - there's no such event anymore
@@ -183,7 +183,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_event_search with wrong params type
    */
-  function testSearchWrongParamsType() {
+  public function testSearchWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_event_search($params);
 
@@ -194,7 +194,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_event_search with empty params
    */
-  function testSearchEmptyParams() {
+  public function testSearchEmptyParams() {
     $event = civicrm_event_create($this->_params);
 
     $params = [];
@@ -210,7 +210,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_event_search. Success expected.
    */
-  function testSearch() {
+  public function testSearch() {
     $params = [
       'event_type_id' => 1,
       'return.title' => 1,
@@ -227,7 +227,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
    *  Test civicrm_event_search. Success expected.
    *  return.offset and return.max_results test (CRM-5266)
    */
-  function testSearchWithOffsetAndMaxResults() {
+  public function testSearchWithOffsetAndMaxResults() {
     $maxEvents = 5;
     $events = [];
     while ($maxEvents > 0) {
@@ -251,7 +251,7 @@ class api_v2_EventTest extends CiviUnitTestCase {
     $this->assertEquals(count($result), 2, 'In line ' . __LINE__);
   }
 
-  function testEventCreationPermissions() {
+  public function testEventCreationPermissions() {
     require_once 'CRM/Core/Permission/UnitTests.php';
     $params = ['event_type_id' => 1, 'start_date' => '2010-10-03', 'title' => 'le cake is a tie', 'check_permissions' => TRUE];
 

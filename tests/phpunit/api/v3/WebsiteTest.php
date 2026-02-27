@@ -9,7 +9,7 @@ class api_v3_WebsiteTest extends CiviUnitTestCase {
   protected $_entity;
   public $_eNoticeCompliant = TRUE;
   public $DBResetRequired = FALSE;
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->_entity     = 'website';
@@ -23,7 +23,7 @@ class api_v3_WebsiteTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->quickCleanup([
       'civicrm_website',
       'civicrm_contact'

@@ -33,7 +33,7 @@ require_once 'CRM/Contribute/BAO/ContributionRecur.php';
 
 class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Authorize.net processing',
@@ -42,7 +42,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
                      ];
     }
    
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
         require_once 'CRM/Core/Payment/AuthorizeNet.php';
@@ -58,7 +58,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
         $this->_contributionTypeId = $this->contributionTypeCreate( );
     }
 
-    function tearDown( )
+    public function tearDown( )
     {
         $this->processorParams->delete( );
         $tablesToTruncate = [ 'civicrm_contribution_type', 'civicrm_contribution', 'civicrm_contribution_recur' ];
@@ -70,7 +70,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
      * 
      * Test works but not both due to some form of caching going on in the SmartySingleton 
      */
-    function testCreateSingleNowDated( )
+    public function testCreateSingleNowDated( )
     {
         $contactId = Contact::createIndividual( );
         $ids       = [ 'contribution' => null ];
@@ -187,7 +187,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase
     /**
      * create a single post dated payment as a recurring transaction
      */
-    function testCreateSinglePostDated( )
+    public function testCreateSinglePostDated( )
     {
         $start_date = date('Ymd',strtotime("+ 1 week") );
         

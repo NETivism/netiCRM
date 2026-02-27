@@ -96,7 +96,7 @@ class CRM_Core_StateMachine {
    * @return object
    * @access public
    */
-  function __construct(&$controller, $action = CRM_Core_Action::NONE) {
+  public function __construct(&$controller, $action = CRM_Core_Action::NONE) {
     $this->_controller = &$controller;
     $this->_action = $action;
 
@@ -137,7 +137,7 @@ class CRM_Core_StateMachine {
    * @return void
    * @access public
    */
-  function perform(&$page, $actionName, $type = 'Next') {
+  public function perform(&$page, $actionName, $type = 'Next') {
     // save the form values and validation status to the session
     $page->isFormBuilt() or $page->buildForm();
 
@@ -187,7 +187,7 @@ class CRM_Core_StateMachine {
    * @return void
    * @access public
    */
-  function addState($name, $type, $prev, $next) {
+  public function addState($name, $type, $prev, $next) {
     $this->_states[$name] = new CRM_Core_State($name, $type, $prev, $next, $this);
   }
 
@@ -199,7 +199,7 @@ class CRM_Core_StateMachine {
    * @return object the state object
    * @access public
    */
-  function find($name) {
+  public function find($name) {
     if (CRM_Utils_Array::arrayKeyExists($name, $this->_states)) {
       return $this->_states[$name];
     }
@@ -214,7 +214,7 @@ class CRM_Core_StateMachine {
    * @return array array of states in the state machine
    * @access public
    */
-  function getStates() {
+  public function getStates() {
     return $this->_states;
   }
 
@@ -226,7 +226,7 @@ class CRM_Core_StateMachine {
    * @return CRM_Core_State state object matching the name
    * @access public
    */
-  function &getState($name) {
+  public function &getState($name) {
     return $this->_states[$name];
   }
 
@@ -236,7 +236,7 @@ class CRM_Core_StateMachine {
    * @return array array of pages in the state machine
    * @access public
    */
-  function getPages() {
+  public function getPages() {
     return $this->_pages;
   }
 
@@ -254,7 +254,7 @@ class CRM_Core_StateMachine {
    *
    * @return void
    */
-  function addSequentialPages(&$pages) {
+  public function addSequentialPages(&$pages) {
     $this->_pages = &$pages;
     $numPages = count($pages);
 
@@ -312,7 +312,7 @@ class CRM_Core_StateMachine {
    * @return void
    * @access public
    */
-  function reset() {
+  public function reset() {
     $this->_controller->reset();
   }
 
@@ -322,7 +322,7 @@ class CRM_Core_StateMachine {
    * @return int
    * @access public
    */
-  function getAction() {
+  public function getAction() {
     return $this->_action;
   }
 
@@ -334,7 +334,7 @@ class CRM_Core_StateMachine {
    * @return void
    * @access public
    */
-  function setContent(&$content) {
+  public function setContent(&$content) {
     $this->_controller->setContent($content);
   }
 
@@ -344,19 +344,19 @@ class CRM_Core_StateMachine {
    * @return string
    * @access public
    */
-  function &getContent() {
+  public function &getContent() {
     return $this->_controller->getContent();
   }
 
-  function getDestination() {
+  public function getDestination() {
     return $this->_controller->getDestination();
   }
 
-  function getSkipRedirection() {
+  public function getSkipRedirection() {
     return $this->_controller->getSkipRedirection();
   }
 
-  function fini() {
+  public function fini() {
     return $this->_controller->fini();
   }
 }

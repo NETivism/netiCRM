@@ -37,9 +37,9 @@
  * Class to abstract token replacement
  */
 class CRM_Utils_Token {
-  static $_requiredTokens = NULL;
+  public static $_requiredTokens = NULL;
 
-  static $_tokens = [
+  public static $_tokens = [
     'action' => [
       'forward',
       'optOut',
@@ -1204,7 +1204,7 @@ class CRM_Utils_Token {
    *
    * @access public
    */
-  static function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
+  public static function replaceGreetingTokens(&$tokenString, $contactDetails = NULL, $contactId = NULL, $className = NULL) {
     if (!$contactDetails && !$contactId) {
       return;
     }
@@ -1245,7 +1245,7 @@ class CRM_Utils_Token {
     }
   }
 
-  static function flattenTokens(&$tokens) {
+  public static function flattenTokens(&$tokens) {
     $flattenTokens = [];
 
     foreach (['html', 'text', 'subject'] as $prop) {
@@ -1316,9 +1316,9 @@ class CRM_Utils_Token {
     return $value;
   }
 
-  function getPermissionEmails($permissionName) {}
+  public function getPermissionEmails($permissionName) {}
 
-  function getRoleEmails($roleName) {}
+  public function getRoleEmails($roleName) {}
 
   /**
    * Formats a token list for the select2 widget

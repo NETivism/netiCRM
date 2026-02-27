@@ -48,7 +48,7 @@ class CRM_Grant_Form_Task_Result extends CRM_Grant_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $session = CRM_Core_Session::singleton();
 
     $this->set('searchRows', '');

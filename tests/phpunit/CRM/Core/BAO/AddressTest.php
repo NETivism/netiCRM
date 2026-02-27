@@ -30,7 +30,7 @@ require_once 'CiviTest/Contact.php';
 
 class CRM_Core_BAO_AddressTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Address BAOs',
@@ -39,7 +39,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
                      ];
     }
    
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -47,7 +47,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     /**
      * create() method (create and update modes)
      */
-    function testCreate( )
+    public function testCreate( )
     {
         $contactId = Contact::createIndividual( );
         
@@ -112,7 +112,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     /**
      * Add() method ( )
      */
-    function testAdd()
+    public function testAdd()
     { 
         $contactId = Contact::createIndividual( );
         
@@ -151,7 +151,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     /**
      * AllAddress() method ( )
      */
-    function testallAddress( )
+    public function testallAddress( )
     { 
         $contactId = Contact::createIndividual( );
         
@@ -210,7 +210,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     /**
      * AllAddress() method ( ) with null value
      */
-    function testnullallAddress()
+    public function testnullallAddress()
     { 
         $contactId = Contact::createIndividual( );
         
@@ -251,7 +251,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     /**
     * getValues() method (get Address fields)
     */
-    function testGetValues( )
+    public function testGetValues( )
     {
         $contactId = Contact::createIndividual( );
         
@@ -294,7 +294,7 @@ class CRM_Core_BAO_AddressTest extends CiviUnitTestCase
     /**
      * parseStreetAddress() method (get street address parsed)
      */
-    function testParseStreetAddress( )
+    public function testParseStreetAddress( )
     {
         
         // valid Street address to be parsed ( without locale )

@@ -35,7 +35,7 @@
 
 
 class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
-  function __construct(&$formValues) {
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     $this->_columns = [ts('Contact Id') => 'contact_id',
@@ -45,7 +45,7 @@ class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Searc
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $form->add('text',
       'postal_code_low',
       ts('Postal Code Start'),
@@ -70,12 +70,12 @@ class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Searc
     $form->assign('elements', ['postal_code_low', 'postal_code_high']);
   }
 
-  function summary() {
+  public function summary() {
     $summary = [];
     return $summary;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all($offset = 0, $rowcount = 0, $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -90,7 +90,7 @@ address.postal_code    as postal_code
     );
   }
 
-  function from() {
+  public function from() {
     return "
 FROM      civicrm_contact contact_a
 LEFT JOIN civicrm_address address ON ( address.contact_id       = contact_a.id AND
@@ -100,7 +100,7 @@ LEFT JOIN civicrm_email   email   ON ( email.contact_id = contact_a.id AND
 ";
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $params = [];
 
     $low = CRM_Utils_Array::value('postal_code_low',
@@ -126,11 +126,11 @@ LEFT JOIN civicrm_email   email   ON ( email.contact_id = contact_a.id AND
     return $this->whereClause($where, $params);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [];
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 }

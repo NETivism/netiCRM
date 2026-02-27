@@ -39,12 +39,12 @@ class CRM_Core_BAO_LocationType extends CRM_Core_DAO_LocationType {
   /**
    * static holder for the default LT
    */
-  static $_defaultLocationType = NULL;
+  public static $_defaultLocationType = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -62,7 +62,7 @@ class CRM_Core_BAO_LocationType extends CRM_Core_DAO_LocationType {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $locationType = new CRM_Core_DAO_LocationType();
     $locationType->copyValues($params);
     if ($locationType->find(TRUE)) {
@@ -83,7 +83,7 @@ class CRM_Core_BAO_LocationType extends CRM_Core_DAO_LocationType {
    * @access public
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_LocationType', $id, 'is_active', $is_active);
   }
 
@@ -97,7 +97,7 @@ class CRM_Core_BAO_LocationType extends CRM_Core_DAO_LocationType {
    * @static
    * @access public
    */
-  static function &getDefault() {
+  public static function &getDefault() {
     if (self::$_defaultLocationType == NULL) {
       $params = ['is_default' => 1];
       $defaults = [];
@@ -114,7 +114,7 @@ class CRM_Core_BAO_LocationType extends CRM_Core_DAO_LocationType {
    * @access public
    * @static
    */
-  static function del($locationTypeId) {
+  public static function del($locationTypeId) {
     $entity = ['address', 'phone', 'email', 'im'];
     //check dependencies
     foreach ($entity as $key) {

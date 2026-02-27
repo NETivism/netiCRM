@@ -5,7 +5,7 @@ require_once 'CiviTest/Contact.php';
 
 class CRM_Core_BAO_IMTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'IM BAOs',
@@ -14,7 +14,7 @@ class CRM_Core_BAO_IMTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -22,7 +22,7 @@ class CRM_Core_BAO_IMTest extends CiviUnitTestCase
     /**
      * add() method (create and update modes)
      */
-    function testAdd( )
+    public function testAdd( )
     {
         $contactId = Contact::createIndividual( );
 
@@ -60,7 +60,7 @@ class CRM_Core_BAO_IMTest extends CiviUnitTestCase
      /**
      * AllIMs() method - get all IMs for our contact, with primary IM first
      */
-    function testAllIMs( )
+    public function testAllIMs( )
     {
         $op = new PHPUnit_Extensions_Database_Operation_Insert;
         $op->execute(

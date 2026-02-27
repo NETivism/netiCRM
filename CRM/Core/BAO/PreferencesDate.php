@@ -39,12 +39,12 @@ class CRM_Core_BAO_PreferencesDate extends CRM_Core_DAO_PreferencesDate {
   /**
    * static holder for the default LT
    */
-  static $_defaultPreferencesDate = NULL;
+  public static $_defaultPreferencesDate = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -62,7 +62,7 @@ class CRM_Core_BAO_PreferencesDate extends CRM_Core_DAO_PreferencesDate {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $dao = new CRM_Core_DAO_PreferencesDate();
     $dao->copyValues($params);
     if ($dao->find(TRUE)) {
@@ -83,7 +83,7 @@ class CRM_Core_BAO_PreferencesDate extends CRM_Core_DAO_PreferencesDate {
    * @access public
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     CRM_Core_Error::fatal();
   }
 
@@ -95,7 +95,7 @@ class CRM_Core_BAO_PreferencesDate extends CRM_Core_DAO_PreferencesDate {
    * @access public
    * @static
    */
-  static function del($id) {
+  public static function del($id) {
     CRM_Core_Error::fatal();
   }
 }

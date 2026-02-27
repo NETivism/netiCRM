@@ -20,7 +20,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     $this->_apiversion = 3;
     parent::setUp();
     $this->_contactID    = $this->organizationCreate();
@@ -40,7 +40,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->locationTypeDelete($this->_locationType);
     // $this->contactDelete($this->_contactID);
   }
@@ -298,7 +298,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   /**
    * Test civicrm_phone_create with wrong params type.
    */
-  function testCreateWrongParamsType() {
+  public function testCreateWrongParamsType() {
     $params = 'a string';
     $result = civicrm_api('Phone', 'Create', $params);
     $this->assertEquals(1, $result['is_error'], "In line " . __LINE__);

@@ -59,7 +59,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   protected $_receiptSerial = NULL;
   protected $_columnSort = NULL;
 
-  function __construct() {
+  public function __construct() {
     $config = CRM_Core_Config::singleton();
     $contactTypes = CRM_Contact_BAO_ContactType::basicTypePairs();
     foreach($contactTypes as $key => $name) {
@@ -197,11 +197,11 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     }
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $columnHeaders = [];
     $this->_specialCase = '';
@@ -302,27 +302,27 @@ END)
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function modifyColumnHeaders(){
+  public function modifyColumnHeaders(){
     $this->_columnHeaders["civicrm_contribution_total_amount"]['type'] = 1;
     $this->_columnHeaders["civicrm_contribution_receive_date"]['type'] = 1;
     $this->_columnHeaders["receipt_title"]['type'] = 1;
     $this->_columnHeaders["receipt_serial"]['type'] = 1;
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
 FROM civicrm_contribution {$this->_aliases['civicrm_contribution']}
 INNER JOIN civicrm_contact {$this->_aliases['civicrm_contact']}
 ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
   }
 
-  function where() {
+  public function where() {
     $params = $this->_params;
 
     // #27716, remove default null operation, because we will use REGEXP after parent build query
@@ -343,21 +343,21 @@ ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribut
     }
   }
 
-  function groupBy(){
+  public function groupBy(){
     $this->_groupBy = "
 GROUP BY receipt_title, receipt_serial";
   }
 
-  function orderBy() {
+  public function orderBy() {
     $this->_orderBy = " ORDER BY receipt_title ASC";
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function endPostProcess(&$rows = NULL) {
+  public function endPostProcess(&$rows = NULL) {
     if ($this->_outputMode == 'csv') {
       $year = $rows[0]['civicrm_contribution_receive_date'];
       CRM_Report_Utils_Report::export2xls($this, $rows, $year . '_' . ts('Your SIC Code'). '.xlsx');
@@ -367,7 +367,7 @@ GROUP BY receipt_title, receipt_serial";
     }
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // change columnheader
     $columnHeaders = $this->_columnHeaders;
     $this->_columnHeaders = [];
@@ -419,7 +419,7 @@ GROUP BY receipt_title, receipt_serial";
     }
   }
 
-  function _chineseYear($date){
+  public function _chineseYear($date){
     $year = (int) date('Y', strtotime($date));
     $year -= 1911;
     return sprintf('%03s', $year);

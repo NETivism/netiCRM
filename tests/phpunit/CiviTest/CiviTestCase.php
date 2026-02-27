@@ -37,7 +37,7 @@
 class CiviTestCase extends PHPUnit_Framework_Testcase
 {
 
-    function __construct( ) 
+    public function __construct( ) 
     {
         parent::__construct( );
 
@@ -45,13 +45,13 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
         $config =& CRM_Core_Config::singleton( );
     }
 
-    function civiGet( $path, $params, $abort = false ) {
+    public function civiGet( $path, $params, $abort = false ) {
         $url = CRM_Utils_System::url( $path, $params, true, null, false );
 
         return $this->civiGetURL( $url, $abort );
     }
 
-    function civiGetURL( $url, $abort = false ) {
+    public function civiGetURL( $url, $abort = false ) {
         $html = $this->_browser->get($url);
         
         if ($this->drupalCheckAuth(true)) {
@@ -72,7 +72,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
     
 
 
-    function getUrlsByLabel($label, $fuzzy = false) {
+    public function getUrlsByLabel($label, $fuzzy = false) {
         if ( ! $fuzzy ) {
             return $this->_browser->_page->getUrlsByLabel( $label );
         }
@@ -88,7 +88,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
         return $matches;
     }
 
-    function isCiviURL( $url, $ignoreVariations = true ) {
+    public function isCiviURL( $url, $ignoreVariations = true ) {
         static $config = null;
         if ( ! $config ) {
             $config =& CRM_Core_Config::singleton( );
@@ -110,7 +110,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
         return true;
     }
 
-    function getUrlsByToken( $token, $path = null ) {
+    public function getUrlsByToken( $token, $path = null ) {
         $matches = [];
         foreach ($this->_browser->_page->_links as $link) {
             $text = $link->getText();
@@ -126,7 +126,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
         return $matches;
     }
 
-    function clickLink($label, $index = 0, $fuzzy = false) {
+    public function clickLink($label, $index = 0, $fuzzy = false) {
         if ( ! $fuzzy ) {
             return parent::clickLink( $label, $index );
         } 
@@ -147,7 +147,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
         return $ret;
     }
 
-    function allPermissions( ) 
+    public function allPermissions( ) 
     {
         return [
                      1 => 'add contacts'               ,
@@ -165,7 +165,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase
                      ];
     }
 
-    function errorPage( &$ret, &$url ) {
+    public function errorPage( &$ret, &$url ) {
         // check if there is a civicrm error or warning message on the page
         // at a later stage, we should also check for CMS based errors
         $this->assertTrue($ret, ts(' [browser] GET %1"', ['%1' => $url]));

@@ -37,7 +37,7 @@
 
 Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
   public $cookieExpire;
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     // expire cookie in one day
     $this->cookieExpire = (1 * 60 * 60 * 24);
@@ -50,7 +50,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
    * @param int $id
    * @static
    */
-  static function getPetition($all = FALSE, $id = FALSE, $defaultOnly = FALSE) {
+  public static function getPetition($all = FALSE, $id = FALSE, $defaultOnly = FALSE) {
 
     $petitionTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'petition', 'name');
 
@@ -85,7 +85,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
    * @access public
    * @static
    */
-  function createSignature(&$params) {
+  public function createSignature(&$params) {
     if (empty($params)) {
       return;
     }
@@ -137,7 +137,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
     return $activity;
   }
 
-  function confirmSignature($activity_id, $contact_id, $petition_id) {
+  public function confirmSignature($activity_id, $contact_id, $petition_id) {
     //change activity status to completed (status_id=2)
     $query = "UPDATE civicrm_activity SET status_id = 2 
                 WHERE 	id = $activity_id 
@@ -177,7 +177,7 @@ Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
    * @param int $id
    * @static
    */
-  static function getPetitionSignatureTotalbyCountry($surveyId) {
+  public static function getPetitionSignatureTotalbyCountry($surveyId) {
     $countries = [];
     $sql = "
 SELECT count(civicrm_address.country_id) as total,
@@ -213,7 +213,7 @@ WHERE
    * @param int $id
    * @static
    */
-  static function getPetitionSignatureTotal($surveyId) {
+  public static function getPetitionSignatureTotal($surveyId) {
     $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo((int) $surveyId);
     //$activityTypeID = $surveyInfo['activity_type_id'];
     $signature = [];
@@ -271,7 +271,7 @@ AND og.name = 'activity_type'";
    * @param int $id
    * @static
    */
-  static function getPetitionSignature($surveyId, $status_id = NULL) {
+  public static function getPetitionSignature($surveyId, $status_id = NULL) {
 
     // sql injection protection
     $surveyId = (int)$surveyId;
@@ -323,7 +323,7 @@ WHERE
    * @return  array   $contactIds    array of contact ids
    * @access public
    */
-  function getEntitiesByTag($tag) {
+  public function getEntitiesByTag($tag) {
 
     $contactIds = [];
     $entityTagDAO = new CRM_Core_DAO_EntityTag();
@@ -343,7 +343,7 @@ WHERE
    * @param int $contactId
    * @static
    */
-  static function checkSignature($surveyId, $contactId) {
+  public static function checkSignature($surveyId, $contactId) {
 
     $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo($surveyId);
     $signature = [];
@@ -386,7 +386,7 @@ WHERE 	a.source_record_id = " . $surveyId . "
    * @access public
    * @static
    */
-  static function sendEmail($params, $sendEmailMode) {
+  public static function sendEmail($params, $sendEmailMode) {
 
     /* sendEmailMode
      * CRM_Campaign_Form_Petition_Signature::EMAIL_THANK

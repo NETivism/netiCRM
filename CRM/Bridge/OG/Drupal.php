@@ -34,7 +34,7 @@
  */
 class CRM_Bridge_OG_Drupal {
 
-  static function nodeapi(&$params, $op) {
+  public static function nodeapi(&$params, $op) {
 
 
 
@@ -63,7 +63,7 @@ class CRM_Bridge_OG_Drupal {
     $transaction->commit();
   }
 
-  static function updateCiviGroup(&$params, $op, $groupType = NULL) {
+  public static function updateCiviGroup(&$params, $op, $groupType = NULL) {
     $abort = ($op == 'delete') ? TRUE : FALSE;
     $params['id'] = CRM_Bridge_OG_Utils::groupID($params['source'], $params['title'], $abort);
 
@@ -89,7 +89,7 @@ class CRM_Bridge_OG_Drupal {
     unset($params['id']);
   }
 
-  static function updateCiviACLTables($aclParams, $op) {
+  public static function updateCiviACLTables($aclParams, $op) {
     if ($op == 'delete') {
       self::updateCiviACL($aclParams, $op);
       self::updateCiviACLEntityRole($aclParams, $op);
@@ -102,7 +102,7 @@ class CRM_Bridge_OG_Drupal {
     }
   }
 
-  static function updateCiviACLRole(&$params, $op) {
+  public static function updateCiviACLRole(&$params, $op) {
 
 
     $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
@@ -146,7 +146,7 @@ SELECT v.id
     $params['acl_role_id'] = $dao->value;
   }
 
-  static function updateCiviACLEntityRole(&$params, $op) {
+  public static function updateCiviACLEntityRole(&$params, $op) {
 
     $dao = new CRM_ACL_DAO_EntityRole();
 
@@ -165,7 +165,7 @@ SELECT v.id
     $params['acl_entity_role_id'] = $dao->id;
   }
 
-  static function updateCiviACL(&$params, $op) {
+  public static function updateCiviACL(&$params, $op) {
 
     $dao = new CRM_ACL_DAO_ACL();
 
@@ -188,7 +188,7 @@ SELECT v.id
     $params['acl_id'] = $dao->id;
   }
 
-  static function og(&$params, $op) {
+  public static function og(&$params, $op) {
     require_once 'api/v2/GroupContact.php';
 
     $contactID = CRM_Bridge_OG_Utils::contactID($params['uf_id']);

@@ -60,7 +60,7 @@ class CRM_Core_I18n {
    *
    * @return         void
    */
-  function __construct($locale) {
+  public function __construct($locale) {
     if (!empty($locale) and $locale != CRM_Core_Config::SYSTEM_LANG) {
       $config = CRM_Core_Config::singleton();
 
@@ -94,7 +94,7 @@ class CRM_Core_I18n {
     }
   }
 
-  function initialize() {
+  public function initialize() {
     $config = CRM_Core_Config::singleton();
     if ($config->initialized && !$this->_initConfig) {
       if (!empty($config->customTranslateFunction)) {
@@ -114,7 +114,7 @@ class CRM_Core_I18n {
    *
    * @return             array    of code/language name mappings
    */
-  static function languages($justEnabled = FALSE) {
+  public static function languages($justEnabled = FALSE) {
     static $all = NULL;
     static $enabled = NULL;
 
@@ -177,7 +177,7 @@ class CRM_Core_I18n {
    *
    * @return      string  modified string
    */
-  function strarg($str) {
+  public function strarg($str) {
     $tr = [];
     $p = 0;
     for ($i = 1; $i < func_num_args(); $i++) {
@@ -214,7 +214,7 @@ class CRM_Core_I18n {
    *
    * @return        string  the translated string
    */
-  function crm_translate($text, $params = []) {
+  public function crm_translate($text, $params = []) {
     if (isset($params['escape'])) {
       $escape = $params['escape'];
       unset($params['escape']);
@@ -326,7 +326,7 @@ class CRM_Core_I18n {
    *
    * @return         string  the translated string
    */
-  function translate($string) {
+  public function translate($string) {
     return ($this->_phpgettext) ? $this->_phpgettext->translate($string) : $string;
   }
 
@@ -335,7 +335,7 @@ class CRM_Core_I18n {
    *
    * @return bool True if gettext is native
    */
-  function isNative() {
+  public function isNative() {
     return $this->_nativegettext;
   }
 
@@ -347,7 +347,7 @@ class CRM_Core_I18n {
    *
    * @return        void
    */
-  function localizeArray(&$array, $params = []) {
+  public function localizeArray(&$array, $params = []) {
     global $tsLocale;
 
     if ($tsLocale == CRM_Core_Config::SYSTEM_LANG) {
@@ -368,7 +368,7 @@ class CRM_Core_I18n {
    *
    * @return        void
    */
-  function localizeTitles(&$array) {
+  public function localizeTitles(&$array) {
     foreach ($array as $key => $value) {
       if (is_array($value)) {
         $this->localizeTitles($value);
@@ -383,7 +383,7 @@ class CRM_Core_I18n {
   /**
    * Static instance provider - return the instance for the current locale.
    */
-  static function singleton() {
+  public static function singleton() {
     static $singleton = [];
 
     global $tsLocale;
@@ -401,7 +401,7 @@ class CRM_Core_I18n {
    *
    * @return string  the final LC_TIME that got set
    */
-  static function setLcTime() {
+  public static function setLcTime() {
     static $locales = [];
 
     global $tsLocale;

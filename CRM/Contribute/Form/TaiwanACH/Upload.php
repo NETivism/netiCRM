@@ -6,11 +6,11 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
-  function preProcess() {
+  public function preProcess() {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH_Upload', 'formRule'], $this);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
     $this->addButtons([
@@ -38,13 +38,13 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
 
-  function postProcess() {
+  public function postProcess() {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);
     if ($submittedValues['uploadFile']['name']) {

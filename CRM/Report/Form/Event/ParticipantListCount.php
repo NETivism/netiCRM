@@ -50,7 +50,7 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Participant']; function __construct() {
+  protected $_customGroupExtends = ['Participant']; public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -225,12 +225,12 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
   //Add The statistics
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
 
     $statistics = parent::statistics($rows);
     $avg = NULL;
@@ -261,7 +261,7 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
     return $statistics;
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
 
@@ -307,12 +307,12 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
 		  FROM civicrm_participant {$this->_aliases['civicrm_participant']}
 				 LEFT JOIN civicrm_event {$this->_aliases['civicrm_event']} 
@@ -330,7 +330,7 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
 						  ON {$this->_aliases['civicrm_participant']}.id ={$this->_aliases['civicrm_line_item']}.entity_id AND {$this->_aliases['civicrm_line_item']}.entity_table = 'civicrm_participant'";
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -384,7 +384,7 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
       is_array($this->_params['group_bys']) &&
@@ -410,7 +410,7 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_participant']}.id " . $this->_groupBy;
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     // get ready with post process params
     $this->beginPostProcess();
@@ -434,7 +434,7 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
 
     $entryFound = FALSE;
     $eventType = CRM_Core_OptionGroup::values('event_type');

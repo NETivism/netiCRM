@@ -35,7 +35,7 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase 
 {
 
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'PCP BAOs',
@@ -55,7 +55,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         parent::setUp();
     }
 
-    function testAddWithPCPBlockTrue()
+    public function testAddWithPCPBlockTrue()
     {
         
         $params = $this->pcpBlockParams();
@@ -79,7 +79,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         
     }
 
-    function testAddWithPCPBlockFalse()
+    public function testAddWithPCPBlockFalse()
     {
         $params = $this->pcpParams();
 
@@ -108,7 +108,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         
     }
 
-    function testAddWithPCPBlockFalseNoStatus()
+    public function testAddWithPCPBlockFalseNoStatus()
     {
         $params = $this->pcpParams();
         unset($params['status_id']);
@@ -137,7 +137,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase
         // CRM_Core_DAO::deleteTestObjects( 'CRM_Contribute_DAO_PCP', $delParams );
     }
 
-    function testDeletePCP()
+    public function testDeletePCP()
     {
         require_once 'CRM/Core/DAO.php';
         require_once 'CRM/Contribute/BAO/PCP.php';

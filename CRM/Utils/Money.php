@@ -37,7 +37,7 @@
  * Money utilties
  */
 class CRM_Utils_Money {
-  static $_currencySymbols = NULL;
+  public static $_currencySymbols = NULL;
 
   /**
    * format a monetary string
@@ -57,7 +57,7 @@ class CRM_Utils_Money {
    *
    * @static
    */
-  static function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
+  public static function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
 
     if (CRM_Utils_System::isNull($amount)) {
       return '';
@@ -161,7 +161,7 @@ class CRM_Utils_Money {
   }
 
 
-  static function toTaiwanDollar($amount) {
+  public static function toTaiwanDollar($amount) {
     $amount = floor($amount);
     $amount = (string) $amount;
 

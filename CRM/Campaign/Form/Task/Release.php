@@ -73,7 +73,7 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_interviewToRelease = $this->get('interviewToRelease');
     if ($this->_interviewToRelease) {
       //user came from interview form.
@@ -147,12 +147,12 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     $this->addDefaultButtons(ts('Release Respondents'), 'done');
   }
 
-  function postProcess() {
+  public function postProcess() {
     $deleteActivityIds = [];
     foreach ($this->_contactIds as $cid) {
       if (CRM_Utils_Array::arrayKeyExists($cid, $this->_surveyActivities)) {

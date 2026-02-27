@@ -49,7 +49,7 @@ class CRM_Utils_ReCAPTCHA {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * singleton function used to manage this object
@@ -60,14 +60,14 @@ class CRM_Utils_ReCAPTCHA {
    * @static
    *
    */
-  static function &singleton() {
+  public static function &singleton() {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Utils_ReCAPTCHA();
     }
     return self::$_singleton;
   }
 
-  function __construct() {
+  public function __construct() {
     $require_path = 'packages/recaptcha/src/ReCaptcha';
     $config = CRM_Core_Config::singleton();
     if(CRM_Utils_System::moduleExists('recaptcha') && $config->userFramework == 'Drupal') {
@@ -90,7 +90,7 @@ class CRM_Utils_ReCAPTCHA {
    * Add element to form
    *
    */
-  function add(&$form) {
+  public function add(&$form) {
     $config = CRM_Core_Config::singleton();
     $html = self::getHTML($config->recaptchaPublicKey);
 
@@ -111,7 +111,7 @@ class CRM_Utils_ReCAPTCHA {
     );
   }
 
-  static function validate($value, $form) {
+  public static function validate($value, $form) {
     // refs #35022 when recaptcha has twice,recored the previous result.
     static $previousResult;
     $config = CRM_Core_Config::singleton();
@@ -134,19 +134,19 @@ class CRM_Utils_ReCAPTCHA {
     return FALSE;
   }
 
-  static function getHTML($pubkey){
+  public static function getHTML($pubkey){
     $output = '<div class="g-recaptcha" data-sitekey="'.$pubkey.'"></div>';
     $output .= '<script src="//www.google.com/recaptcha/api.js"></script>';
     return $output;
   }
 
-  static function checkAnswer($key, $response, $ip){
+  public static function checkAnswer($key, $response, $ip){
     $recaptcha = new \ReCaptcha\ReCaptcha($key);
     $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $ip);
     return $resp;
   }
 
-  static function getIp(){
+  public static function getIp(){
     return CRM_Utils_System::ipAddress();
   }
 }

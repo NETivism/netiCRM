@@ -16,7 +16,7 @@ function run_civireport_mail(){
  * recipients mentioned for that report  
  */
 class CiviReportMail { 
-  static public function processReport( ) {
+  public static function processReport( ) {
         $sendmail     = CRM_Utils_Request::retrieve( 'sendmail', 'Boolean', 
                                                      CRM_Core_DAO::$_nullObject, true, null, 'REQUEST' );
         $instanceId   = CRM_Utils_Request::retrieve( 'instanceId', 'Positive', 

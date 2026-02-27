@@ -98,7 +98,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addFormRule([get_class($this), 'formRule']);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     $defaults['deleteBigStamp'] = '';
     $defaults['deleteSmallStamp'] = '';
@@ -212,7 +212,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     parent::commonProcess($params);
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if ((!empty($fields['receiptDisplayLegalID']) && $fields['receiptDisplayLegalID'] !== 'complete') && (!empty($fields['receiptEmailEncryption']) && $fields['receiptEmailEncryption'] === '1')) {
         $errors['receiptEmailEncryption'] = ts('When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled.');

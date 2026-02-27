@@ -52,7 +52,7 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
    */
   public $_orderBy;
   public $_where;
-  private $loggingDB; function __construct() {
+  private $loggingDB; public function __construct() {
     // don’t display the ‘Add these Contacts to Group’ button
     $this->_add2groupSupported = FALSE;
 
@@ -125,7 +125,7 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     foreach ($rows as & $row) {
       if ($row['log_civicrm_contact_log_action'] != 'Delete') {
         $row['log_civicrm_contact_altered_contact_link'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $row['log_civicrm_contact_id']);
@@ -146,7 +146,7 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
     }
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -168,7 +168,7 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
             FROM {$this->loggingDB}.log_civicrm_contact {$this->_aliases['log_civicrm_contact']}
             JOIN civicrm_contact     {$this->_aliases['civicrm_contact']}
@@ -176,15 +176,15 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
         ";
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = 'GROUP BY log_conn_id, log_user_id, EXTRACT(DAY_MINUTE FROM log_date)';
   }
 
-  function orderBy() {
+  public function orderBy() {
     $this->_orderBy = 'ORDER BY log_date DESC';
   }
 
-  function where() {
+  public function where() {
     parent::where();
     $this->_where .= " AND (log_action != 'Initialization')";
   }

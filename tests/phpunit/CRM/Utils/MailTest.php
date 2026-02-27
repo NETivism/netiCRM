@@ -5,7 +5,7 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class CRM_Utils_MailTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Mail Test',
@@ -14,7 +14,7 @@ class CRM_Utils_MailTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -23,7 +23,7 @@ class CRM_Utils_MailTest extends CiviUnitTestCase
      * test case for add( )
      * test with empty params.
      */
-    function testFormatRFC822( ) 
+    public function testFormatRFC822( ) 
     {
         require_once 'CRM/Utils/Mail.php';
 

@@ -8,7 +8,7 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_parseResult = $this->get('parseResult');
     $this->_processResult = $this->get('processResult');
     $this->assign('processResult', $this->_processResult);
@@ -16,7 +16,7 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
     $this->assign('importType', $this->_parseResult['import_type']);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addButtons([
         ['type' => 'cancel',
           'name' => ts('Done'),
@@ -25,7 +25,7 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+  public function postProcess() {
   }
 
   /**

@@ -54,9 +54,9 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
   public $_permission = NULL;
-  public $_contactId = NULL; function preProcess() {
+  public $_contactId = NULL; public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
@@ -114,7 +114,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function view() {
+  public function view() {
     $controller = new CRM_Core_Controller_Simple('CRM_Case_Form_CaseView',
       'View Case',
       $this->_action
@@ -148,7 +148,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
 
     $controller = new CRM_Core_Controller_Simple('CRM_Case_Form_Search', ts('Case'), NULL);
     $controller->setEmbedded(TRUE);
@@ -172,7 +172,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function edit() {
+  public function edit() {
     $config = CRM_Core_Config::singleton();
 
     $controller = new CRM_Core_Controller_Simple('CRM_Case_Form_Case',
@@ -192,7 +192,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullArray);
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
 
@@ -233,7 +233,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static function &links() {
+  public static function &links() {
     $config = CRM_Core_Config::singleton();
 
     if (!(self::$_links)) {
@@ -256,7 +256,7 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     return self::$_links;
   }
 
-  function setContext() {
+  public function setContext() {
     $context = $this->get('context');
     $url = NULL;
 

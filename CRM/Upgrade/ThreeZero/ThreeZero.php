@@ -37,7 +37,7 @@
 
 
 class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
 
     $errorMessage = ts('Pre-condition failed for upgrade to %1.', [1 => $latestVer]);
@@ -88,7 +88,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
     return TRUE;
   }
 
-  function upgrade($rev) {
+  public function upgrade($rev) {
 
     // fix CRM-5270: if civicrm_report_instance.description is localised,
     // recreate it based on the first locale’s description_xx_YY contents

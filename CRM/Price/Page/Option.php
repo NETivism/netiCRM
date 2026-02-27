@@ -77,7 +77,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * @return array  array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       self::$_actionLinks = [
         CRM_Core_Action::UPDATE => [
@@ -123,7 +123,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
     $customOption = [];
 
 
@@ -175,7 +175,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function edit($action) {
+  public function edit($action) {
     $oid = CRM_Utils_Request::retrieve('oid', 'Positive',
       $this, FALSE, 0
     );
@@ -238,7 +238,7 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function run() {
+  public function run() {
 
 
     // get the field id

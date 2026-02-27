@@ -35,7 +35,7 @@ require_once 'CRM/Member/BAO/MembershipType.php';
 
 class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Membership BAOs',
@@ -44,7 +44,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
         // FIXME: something NULLs $GLOBALS['_HTML_QuickForm_registered_rules'] when the tests are ran all together
@@ -74,14 +74,14 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      * This method is called after a test is executed.
      *
      */
-    function tearDown( )
+    public function tearDown( )
     {
         $this->membershipTypeDelete( [ 'id' => $this->_membershipTypeID ] );
         $this->membershipStatusDelete( $this->_membershipStatusID );
         Contact::delete( $this->_contactID );
     }
 
-    function testCreate( )
+    public function testCreate( )
     {
 
         $contactId = Contact::createIndividual( );
@@ -129,7 +129,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
         Contact::delete( $contactId );
     }
 
-    function testGetValues( )
+    public function testGetValues( )
     {
 //        $this->markTestSkipped( 'causes mysterious exit, needs fixing!' );    
         //  Calculate membership dates based on the current date
@@ -186,7 +186,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
         Contact::delete( $contactId );
     }
 
-    function testRetrieve ()
+    public function testRetrieve ()
     {
         $contactId = Contact::createIndividual( );
         
@@ -213,7 +213,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
         $this->contactDelete( $contactId );
     }
 
-    function testActiveMembers ()
+    public function testActiveMembers ()
     {
         $contactId = Contact::createIndividual( );
         
@@ -270,7 +270,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
         Contact::delete( $contactId );
     }
     
-    function testDeleteMembership ()
+    public function testDeleteMembership ()
     {
         $contactId = Contact::createIndividual( );
         
@@ -296,7 +296,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
         Contact::delete( $contactId );
     }
     
-    function testGetContactMembership ()
+    public function testGetContactMembership ()
     {
         $contactId = Contact::createIndividual( );
         
@@ -330,7 +330,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      * page id from the membership record
      */
 
-    function testgetContributionPageId( )  
+    public function testgetContributionPageId( )  
     {
         $contactId = Contact::createIndividual( );
                
@@ -362,7 +362,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      *
      */
 
-    function testgetMembershipStarts( ) 
+    public function testgetMembershipStarts( ) 
     {
         $contactId = Contact::createIndividual( );
                     
@@ -395,7 +395,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      *
      */
 
-    function testGetMembershipCount( ) 
+    public function testGetMembershipCount( ) 
     {
         $contactId      = Contact::createIndividual( );
         
@@ -428,7 +428,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      *
      */
 
-    function teststatusAvilability( ) 
+    public function teststatusAvilability( ) 
     {
 
         $contactId  = Contact::createIndividual( );
@@ -443,7 +443,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      *
      */
 
-    function testsortName( ) 
+    public function testsortName( ) 
     {
         $contactId      = Contact::createIndividual( );
         
@@ -478,7 +478,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      *
      */
 
-    function testdeleteRelatedMemberships( ) 
+    public function testdeleteRelatedMemberships( ) 
     {
         $contactId = Contact::createIndividual( );
                 
@@ -509,7 +509,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      * Function to renew membership with change in membership type
      *
      */
-    function testRenewMembership( ) 
+    public function testRenewMembership( ) 
     {
         $contactId = Contact::createIndividual( );
         $params = [
@@ -556,7 +556,7 @@ class CRM_Member_BAO_MembershipTest extends CiviUnitTestCase
      * Function to renew stale membership
      *
      */
-    function testStaleMembership( ) 
+    public function testStaleMembership( ) 
     {
         $statusId = 3;
         $contactId = Contact::createIndividual( );

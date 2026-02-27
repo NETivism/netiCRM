@@ -44,49 +44,49 @@ abstract class CRM_Core_Component_Info {
      * Name of the class (minus component namespace path) 
      * of the component invocation class'es name. 
      */
-  CONST COMPONENT_INVOKE_CLASS = 'Invoke';
+  public CONST COMPONENT_INVOKE_CLASS = 'Invoke';
 
   /*
      * Name of the class (minus component namespace path) 
      * of the component configuration class'es name.
      */
-  CONST COMPONENT_CONFIG_CLASS = 'Config';
+  public CONST COMPONENT_CONFIG_CLASS = 'Config';
 
   /*
      * Name of the class (minus component namespace path) 
      * of the component BAO Query class'es name.
      */
-  CONST COMPONENT_BAO_QUERY_CLASS = 'BAO_Query';
+  public CONST COMPONENT_BAO_QUERY_CLASS = 'BAO_Query';
 
   /*
      * Name of the class (minus component namespace path) 
      * of the component user dashboard plugin.
      */
-  CONST COMPONENT_USERDASHBOARD_CLASS = 'Page_UserDashboard';
+  public CONST COMPONENT_USERDASHBOARD_CLASS = 'Page_UserDashboard';
 
   /*
      * Name of the class (minus component namespace path) 
      * of the component tab offered to contact record view.
      */
-  CONST COMPONENT_TAB_CLASS = 'Page_Tab';
+  public CONST COMPONENT_TAB_CLASS = 'Page_Tab';
 
   /*
      * Name of the class (minus component namespace path) 
      * of the component tab offered to contact record view.
      */
-  CONST COMPONENT_ADVSEARCHPANE_CLASS = 'Form_Search_AdvancedSearchPane';
+  public CONST COMPONENT_ADVSEARCHPANE_CLASS = 'Form_Search_AdvancedSearchPane';
 
   /*
      * Name of the directory (assumed in component directory) 
      * where xml resources used by this component live.
      */
-  CONST COMPONENT_XML_RESOURCES = 'xml';
+  public CONST COMPONENT_XML_RESOURCES = 'xml';
 
   /*
      * Name of the directory (assumed in xml resources path) 
      * containing component menu definition XML file names.
      */
-  CONST COMPONENT_MENU_XML = 'Menu';
+  public CONST COMPONENT_MENU_XML = 'Menu';
 
   /*
      * Stores component information.

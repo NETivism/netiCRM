@@ -40,7 +40,7 @@
  *
  */
 class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts('Settings - Site Preferences'));
     // add all the checkboxes
@@ -52,7 +52,7 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     ];
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     parent::cbsDefaultValues($defaults);

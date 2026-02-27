@@ -21,7 +21,7 @@ class CRM_Standalone_User {
 
   public $state_province;
 
-  public $country; function __construct($identityUrl, $email = NULL, $firstName = NULL, $lastName = NULL, $streetAddr = NULL, $city = NULL, $postalCode = NULL, $stateProvince = NULL, $country = NULL) {
+  public $country; public function __construct($identityUrl, $email = NULL, $firstName = NULL, $lastName = NULL, $streetAddr = NULL, $city = NULL, $postalCode = NULL, $stateProvince = NULL, $country = NULL) {
     $this->identity_url = $identityUrl;
     $this->email = $email;
     $this->first_name = $firstName;

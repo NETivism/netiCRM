@@ -49,7 +49,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * use others to indicate other error
    * @var const
    */
-  CONST NO_ERROR = 200, FATAL_ERROR = 500, DATABASE_ERROR = 500, STATUS_BOUNCE = 303, DUPLICATE_CONTACT = 8001, DUPLICATE_CONTRIBUTION = 8002, DUPLICATE_PARTICIPANT = 8003;
+  public CONST NO_ERROR = 200, FATAL_ERROR = 500, DATABASE_ERROR = 500, STATUS_BOUNCE = 303, DUPLICATE_CONTACT = 8001, DUPLICATE_CONTRIBUTION = 8002, DUPLICATE_PARTICIPANT = 8003;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -81,7 +81,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   /**
    * construcor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct('CiviCRM');
 
     $log = CRM_Core_Config::getLog();
@@ -96,7 +96,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     }
   }
 
-  static function getMessages(&$error, $separator = '<br />') {
+  public static function getMessages(&$error, $separator = '<br />') {
     if (is_a($error, 'CRM_Core_Error')) {
       $errors = $error->getErrors();
       $message = [];
@@ -109,7 +109,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return NULL;
   }
 
-  static function displaySessionError(&$error, $separator = '<br />') {
+  public static function displaySessionError(&$error, $separator = '<br />') {
     $message = ts('Payment failed.').' '.ts('We were unable to process your payment. You will not be charged in this transaction.');
     $detail = self::getMessages($error, $separator);
     if (!empty($detail)) {
@@ -228,7 +228,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @static
    * @acess public
    */
-  static function fatal($message = NULL, $status = NULL, $suppress = NULL) {
+  public static function fatal($message = NULL, $status = NULL, $suppress = NULL) {
     $config = CRM_Core_Config::singleton();
     $vars = [];
     if ($config->fatalErrorHandler && class_exists($config->fatalErrorHandler)) {
@@ -262,7 +262,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @param string message The error message to be displayed
    *
    */
-  static function fatalWithoutInitialized($message = NULL) {
+  public static function fatalWithoutInitialized($message = NULL) {
     http_response_code(self::FATAL_ERROR);
     echo $message;
     exit;
@@ -277,7 +277,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @static
    * @acess public
    */
-  static function timeout($message){
+  public static function timeout($message){
     $vars = [
       'message' => $message,
     ];
@@ -298,7 +298,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @access public
    * @static
    */
-  static function debug($name, $variable = NULL, $print = FALSE, $html = TRUE) {
+  public static function debug($name, $variable = NULL, $print = FALSE, $html = TRUE) {
     $error = &self::singleton();
     $out = self::debug_var($name, $variable);
 
@@ -346,7 +346,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @see CRM_Core_Error::debug()
    * @see CRM_Core_Error::debug_log_message()
    */
-  static function debug_var($variable_name,
+  public static function debug_var($variable_name,
     $variable = NULL,
     $print = FALSE,
     $log = TRUE,
@@ -392,7 +392,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    *
    * @static
    */
-  static function debug_log_message($message, $out = FALSE, $comp = '') {
+  public static function debug_log_message($message, $out = FALSE, $comp = '') {
     $config = CRM_Core_Config::singleton();
 
     if ($comp) {
@@ -423,7 +423,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $file_log->close();
   }
 
-  static function backtrace($msg = 'backtrace', $log = TRUE) {
+  public static function backtrace($msg = 'backtrace', $log = TRUE) {
     $backTrace = debug_backtrace();
 
     $msgs = [];
@@ -443,7 +443,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     return $message;
   }
 
-  static function createError($message, $code = 8000, $level = 'Fatal', $params = NULL) {
+  public static function createError($message, $code = 8000, $level = 'Fatal', $params = NULL) {
     $error = &CRM_Core_Error::singleton();
     $error->push($code, $level, [$params], $message);
     return $error;

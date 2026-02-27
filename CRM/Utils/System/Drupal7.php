@@ -11,7 +11,7 @@ class CRM_Utils_System_Drupal7 {
    * @return bool
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
-  function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
+  public function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
     $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
     if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
       if ($throwError) {
@@ -74,7 +74,7 @@ class CRM_Utils_System_Drupal7 {
    *
    * @return void
    */
-  function checkUserNameEmailExists($params, $emailName = 'email') {
+  public function checkUserNameEmailExists($params, $emailName = 'email') {
     $config = CRM_Core_Config::singleton();
     $errors = [];
 
@@ -132,7 +132,7 @@ class CRM_Utils_System_Drupal7 {
    * @access public
    *
    */
-  function createUser($params, $mail) {
+  public function createUser($params, $mail) {
     $form_state = [];
     $form_state['input'] = [
       'name' => $params['cms_name'],
@@ -177,7 +177,7 @@ class CRM_Utils_System_Drupal7 {
    *  @param integer $ufID User ID in CMS
    *  @param string $ufName User name
    */
-  function updateCMSName($ufID, $ufName) {
+  public function updateCMSName($ufID, $ufName) {
     // CRM-5555
     if (function_exists('user_load')) {
       $user = user_load($ufID);
@@ -194,7 +194,7 @@ class CRM_Utils_System_Drupal7 {
     }
   }
 
-  function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+  public function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     static $exists;
     if (empty($url)) {
       return $url;
@@ -252,7 +252,7 @@ class CRM_Utils_System_Drupal7 {
     return $url;
   }
 
-  function setTitle($pageTitle) {
+  public function setTitle($pageTitle) {
     $title = CRM_Utils_String::htmlPurifier($pageTitle);
     drupal_set_title($title, PASS_THROUGH);
   }

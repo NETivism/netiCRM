@@ -8,7 +8,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    * @var const
    * @access public
    */
-  const
+  public const
     VALID_EMAIL = 1,
     VALID_SPF = 2,
     VALID_DKIM = 4;
@@ -39,7 +39,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
     if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::UPDATE || $this->get('id')) {
       $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
@@ -58,7 +58,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
 		$this->_defaultFrom = trim(CRM_Mailing_BAO_Mailing::defaultFromMail());
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->assign('email', $this->_values['email']);
       $this->addButtons([
@@ -76,7 +76,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     }
   }
 
-  function postProcess() {
+  public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Core_BAO_OptionValue::del($this->_id);
       CRM_Core_Session::setStatus(ts('Selected option value has been deleted.'));

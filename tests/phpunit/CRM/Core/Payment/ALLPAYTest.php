@@ -10,7 +10,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'ALLPAY payment processor',
       'description' => 'Test ALLPAY payment processor.',
@@ -21,7 +21,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
     $pageId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_page ORDER BY id");
     $this->assertNotEmpty($pageId, 'You need to have contribution page to procceed.');
@@ -111,11 +111,11 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->_processor = NULL;
   }
 
-  function testSinglePaymentNotify(){
+  public function testSinglePaymentNotify(){
     $now = time() - 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
@@ -184,7 +184,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function testRecurringPaymentNotify(){
+  public function testRecurringPaymentNotify(){
     $now = time();
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
@@ -512,7 +512,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
   }
 
-  function testNonCreditNotify(){
+  public function testNonCreditNotify(){
     // update
     $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay ORDER BY cid DESC LIMIT 0,1");
     $_POST = [
@@ -525,7 +525,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertDBQuery($cid, "SELECT cid FROM civicrm_contribution_allpay WHERE data LIKE '%#info%TEST1%' AND cid = $cid");
   }
 
-  function doIPN($args, $post, $get, $line) {
+  public function doIPN($args, $post, $get, $line) {
     try {
       CRM_Core_Payment_ALLPAY::doIPN($args, $post, $get);
     }

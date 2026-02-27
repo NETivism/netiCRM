@@ -69,7 +69,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     parent::buildQuickForm();
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (!$this->_defaults) {
       parent::setDefaultValues();
 
@@ -83,7 +83,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     return $this->_defaults;
   }
 
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $tmpDir = trim($fields['newBaseDir']);
 
     $errors = [];
@@ -95,7 +95,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     return $errors;
   }
 
-  function postProcess() {
+  public function postProcess() {
     // redirect to admin page after saving
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin'));

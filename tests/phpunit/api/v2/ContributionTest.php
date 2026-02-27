@@ -36,20 +36,20 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
    */
   protected $_individualId;
   protected $_contribution;
-  protected $_contributionTypeId; function setUp() {
+  protected $_contributionTypeId; public function setUp() {
     parent::setUp();
 
     $this->_contributionTypeId = $this->contributionTypeCreate();
     $this->_individualId = $this->individualCreate();
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->contributionTypeDelete();
     $this->contactDelete($this->_individualId);
   }
 
   ///////////////// civicrm_contribution_get methods
-  function testGetEmptyParamsContribution() {
+  public function testGetEmptyParamsContribution() {
 
     $params = [];
     $contribution = &civicrm_contribution_get($params);
@@ -58,14 +58,14 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($contribution['error_message'], 'No input parameters present');
   }
 
-  function testGetParamsNotArrayContribution() {
+  public function testGetParamsNotArrayContribution() {
     $params = 'contact_id= 1';
     $contribution = &civicrm_contribution_get($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Input parameters is not an array');
   }
 
-  function testGetContribution() {
+  public function testGetContribution() {
     $p = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
@@ -100,28 +100,28 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_contribution_add
-  function testCreateEmptyParamsContribution() {
+  public function testCreateEmptyParamsContribution() {
     $params = [];
     $contribution = civicrm_contribution_add($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Input Parameters empty');
   }
 
-  function testCreateParamsNotArrayContribution() {
+  public function testCreateParamsNotArrayContribution() {
     $params = 'contact_id= 1';
     $contribution = &civicrm_contribution_add($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Input parameters is not an array');
   }
 
-  function testCreateParamsWithoutRequiredKeys() {
+  public function testCreateParamsWithoutRequiredKeys() {
     $params = ['no_required' => 1];
     $contribution = &civicrm_contribution_add($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Required fields not found for contribution contact_id');
   }
 
-  function testCreateContribution() {
+  public function testCreateContribution() {
     $params = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
@@ -163,7 +163,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
 
   //To Update Contribution
   //CHANGE: we require the API to do an incremental update
-  function testCreateUpdateContribution() {
+  public function testCreateUpdateContribution() {
     $contributionID = $this->contributionCreate($this->_individualId, $this->_contributionTypeId);
     $old_params = [
       'contribution_id' => $contributionID,
@@ -230,28 +230,28 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_contribution_delete methods
-  function testDeleteEmptyParamsContribution() {
+  public function testDeleteEmptyParamsContribution() {
     $params = [];
     $contribution = civicrm_contribution_delete($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Could not find contribution_id in input parameters');
   }
 
-  function testDeleteParamsNotArrayContribution() {
+  public function testDeleteParamsNotArrayContribution() {
     $params = 'contribution_id= 1';
     $contribution = civicrm_contribution_delete($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Could not find contribution_id in input parameters');
   }
 
-  function testDeleteWrongParamContribution() {
+  public function testDeleteWrongParamContribution() {
     $params = ['contribution_source' => 'SSF'];
     $contribution = &civicrm_contribution_delete($params);
     $this->assertEquals($contribution['is_error'], 1);
     $this->assertEquals($contribution['error_message'], 'Could not find contribution_id in input parameters');
   }
 
-  function testDeleteContribution() {
+  public function testDeleteContribution() {
     $contributionID = $this->contributionCreate($this->_individualId, $this->_contributionTypeId);
     $params         = ['contribution_id' => $contributionID];
     $contribution   = civicrm_contribution_delete($params);
@@ -264,7 +264,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contribution_search with wrong params type
    */
-  function testSearchWrongParamsType() {
+  public function testSearchWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_contribution_search($params);
 
@@ -276,7 +276,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
    *  Test civicrm_contribution_search with empty params.
    *  All available contributions expected.
    */
-  function testSearchEmptyParams() {
+  public function testSearchEmptyParams() {
     $params = [];
 
     $p = [
@@ -317,7 +317,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contribution_search. Success expected.
    */
-  function testSearch() {
+  public function testSearch() {
     $p1 = [
       'contact_id' => $this->_individualId,
       'receive_date' => date('Ymd'),
@@ -366,7 +366,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contribution_format_creat with Empty params
    */
-  function testFormatCreateEmptyParams() {
+  public function testFormatCreateEmptyParams() {
     $params = [];
     $result = &civicrm_contribution_format_create($params);
 
@@ -377,7 +377,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contribution_format_creat with wrong params type
    */
-  function testFormatCreateParamsType() {
+  public function testFormatCreateParamsType() {
     $params = 'a string';
     $result = &civicrm_contribution_format_create($params);
 
@@ -387,7 +387,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contribution_format_creat with invalid data
    */
-  function testFormatCreateInvalidData() {
+  public function testFormatCreateInvalidData() {
     require_once 'CRM/Contribute/DAO/Contribution.php';
     $validParams = [
       'contact_id' => $this->_individualId,
@@ -425,7 +425,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contribution_format_creat success expected
    */
-  function testFormatCreate() {
+  public function testFormatCreate() {
     require_once 'CRM/Contribute/DAO/Contribution.php';
     require_once 'CRM/Contribute/PseudoConstant.php';
 
@@ -449,7 +449,7 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
   }
 
   /////////////////  _civicrm_contribute_format_params for $create
-  function testFormatParams() {
+  public function testFormatParams() {
     require_once 'CRM/Contribute/DAO/Contribution.php';
     $params = [
       'contact_id' => $this->_individualId,

@@ -7,8 +7,8 @@
  */
 class CRM_Widget_Widget {
 
-  static $_methodTable;
-  function initialize() {
+  public static $_methodTable;
+  public function initialize() {
     if (!self::$_methodTable) {
       self::$_methodTable = [
         'getContributionPageData' =>
@@ -32,7 +32,7 @@ class CRM_Widget_Widget {
     }
   }
 
-  function &methodTable() {
+  public function &methodTable() {
     self::initialize();
 
     return self::$_methodTable;
@@ -47,7 +47,7 @@ class CRM_Widget_Widget {
    *
    * @return string
    */
-  function registerRequest($contributionPageID, $widgetID, $action) {
+  public function registerRequest($contributionPageID, $widgetID, $action) {
     return "I registered a request to $action on $contributionPageID from $widgetID";
   }
 

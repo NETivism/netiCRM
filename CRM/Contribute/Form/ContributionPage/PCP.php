@@ -43,7 +43,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    *
    * @return None
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -55,7 +55,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
     CRM_Utils_System::setTitle(ts('Personal Campaign Page Settings (%1)', [1 => $title]));
     $defaults = [];
@@ -83,7 +83,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addElement('checkbox', 'is_active', ts('Enable Personal Campaign Pages (for this contribution page)?'), NULL, ['onclick' => "return showHideByValue('is_active',true,'pcpFields','table-row','radio',false);"]);
 
     $this->addElement('checkbox', 'is_approval_needed', ts('Approval required'));
@@ -165,7 +165,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
 

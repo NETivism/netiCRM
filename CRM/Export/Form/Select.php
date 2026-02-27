@@ -43,12 +43,12 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
   /**
    * various Contact types
    */
-  CONST EXPORT_ALL = 1, EXPORT_SELECTED = 2;
+  public CONST EXPORT_ALL = 1, EXPORT_SELECTED = 2;
 
   /**
    * export modes
    */
-  CONST CONTACT_EXPORT = 1, CONTRIBUTE_EXPORT = 2, MEMBER_EXPORT = 3, EVENT_EXPORT = 4, PLEDGE_EXPORT = 5, CASE_EXPORT = 6, GRANT_EXPORT = 7, ACTIVITY_EXPORT = 8;
+  public CONST CONTACT_EXPORT = 1, CONTRIBUTE_EXPORT = 2, MEMBER_EXPORT = 3, EVENT_EXPORT = 4, PLEDGE_EXPORT = 5, CASE_EXPORT = 6, GRANT_EXPORT = 7, ACTIVITY_EXPORT = 8;
 
   /**
    * current export mode
@@ -74,7 +74,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // we need to determine component export
     $stateMachine = $this->controller->getStateMachine();
     $formName = CRM_Utils_System::getClassName($stateMachine);
@@ -376,7 +376,7 @@ FROM   {$this->_componentTable}
    * Function to build mapping form element
    *
    */
-  function buildMapping() {
+  public function buildMapping() {
     switch ($this->_exportMode) {
       case CRM_Export_Form_Select::CONTACT_EXPORT:
         $exportType = 'Export Contact';

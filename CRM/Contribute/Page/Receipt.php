@@ -6,7 +6,7 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
   public $_contactId = NULL;
   public $_type = NULL;
 
-  function preProcess() {
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_type = CRM_Utils_Request::retrieve('type', 'String', $this);
@@ -30,7 +30,7 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
     }
   }
 
-  function run() {
+  public function run() {
     $this->preProcess();
 
     // refs #31631, needs hook here
@@ -47,7 +47,7 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
     return;
   }
 
-  function createActivity() {
+  public function createActivity() {
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
     if (!empty($activityTypeId)) {
       if (empty($userID)) {

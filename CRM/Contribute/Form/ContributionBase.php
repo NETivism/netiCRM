@@ -711,7 +711,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 
@@ -721,7 +721,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function assignToTemplate() {
+  public function assignToTemplate() {
     $name = CRM_Utils_Array::value('billing_first_name', $this->_params);
     if (CRM_Utils_Array::value('billing_middle_name', $this->_params)) {
       $name .= " {$this->_params['billing_middle_name']}";
@@ -860,7 +860,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function buildCustom($id, $name, $viewOnly = FALSE) {
+  public function buildCustom($id, $name, $viewOnly = FALSE) {
     $stateCountryMap = [];
 
     if ($id) {
@@ -956,7 +956,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Contribute/Form/Contribution/{$this->_id}/{$this->_name}.tpl";
       $template = &CRM_Core_Form::getTemplate();

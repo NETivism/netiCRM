@@ -49,7 +49,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (isset($this->_id) && empty($this->_values)) {
       $this->_values = [];
       $params = ['id' => $this->_id];

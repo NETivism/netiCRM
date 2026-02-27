@@ -658,7 +658,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $fieldMessage = NULL;
 

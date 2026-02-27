@@ -55,7 +55,7 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
 
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
-  function __construct() {
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -148,11 +148,11 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -179,12 +179,12 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
             LEFT JOIN civicrm_address {$this->_aliases['civicrm_address']} 
@@ -206,11 +206,11 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id";
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -227,7 +227,7 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {

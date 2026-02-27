@@ -50,12 +50,12 @@ class CRM_Utils_Request {
    * @access private
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {}
+  public function __construct() {}
 
   /**
    * get the variable information from the request (GET/POST/SESSION
@@ -72,7 +72,7 @@ class CRM_Utils_Request {
    * @static
    *
    */
-  static function retrieve($name, $type, &$store, $abort = FALSE, $default = NULL, $method = 'GET') {
+  public static function retrieve($name, $type, &$store, $abort = FALSE, $default = NULL, $method = 'GET') {
 
     // hack to detect stuff not yet converted to new style
     if (!is_string($type)) {
@@ -126,7 +126,7 @@ class CRM_Utils_Request {
     return $value;
   }
 
-  static function getRedirectDestination($url) {
+  public static function getRedirectDestination($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);

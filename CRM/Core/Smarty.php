@@ -47,7 +47,7 @@ if (!class_exists('Smarty')) {
  *
  */
 class CRM_Core_Smarty extends Smarty {
-  CONST PRINT_PAGE = 1, PRINT_SNIPPET = 2, PRINT_PDF = 3, PRINT_NOFORM = 4;
+  public CONST PRINT_PAGE = 1, PRINT_SNIPPET = 2, PRINT_PDF = 3, PRINT_NOFORM = 4;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -56,7 +56,7 @@ class CRM_Core_Smarty extends Smarty {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * class constructor
@@ -64,7 +64,7 @@ class CRM_Core_Smarty extends Smarty {
    * @return CRM_Core_Smarty
    * @access private
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
 
     $config = CRM_Core_Config::singleton();
@@ -184,7 +184,7 @@ class CRM_Core_Smarty extends Smarty {
    * Method providing static instance of SmartTemplate, as
    * in Singleton pattern.
    */
-  static function &singleton() {
+  public static function &singleton() {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_Core_Smarty();
     }
@@ -199,14 +199,14 @@ class CRM_Core_Smarty extends Smarty {
    * @param string $compile_id
    * @param boolean $display
    */
-  function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
+  public function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
 
     $all_vars =& $this->get_template_vars();
     CRM_Utils_Hook::alterTemplateVars($resource_name, $all_vars);
     return parent::fetch($resource_name, $cache_id, $compile_id, $display);
   }
 
-  function appendValue($name, $value) {
+  public function appendValue($name, $value) {
     $currentValue = $this->get_template_vars($name);
     if (!$currentValue) {
       $this->assign($name, $value);
@@ -218,7 +218,7 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 
-  function clearTemplateVars() {
+  public function clearTemplateVars() {
     foreach (array_keys($this->_tpl_vars) as $key) {
       if ($key == 'config' || $key == 'session') {
         continue;
@@ -227,7 +227,7 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 
-  function isAssigned($var, $value = NULL) { 
+  public function isAssigned($var, $value = NULL) { 
     if(isset($this->_tpl_vars[$var])) {
       $exists = $this->_tpl_vars[$var];
       if($value) {
@@ -242,7 +242,7 @@ class CRM_Core_Smarty extends Smarty {
     return FALSE;
   }
 
-  function addTemplateDirs($dirs = []) {
+  public function addTemplateDirs($dirs = []) {
     if (!empty($dirs) && is_array($dirs)) {
       $this->template_dir = array_merge($dirs, $this->template_dir);
     }

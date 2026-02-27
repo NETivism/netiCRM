@@ -56,7 +56,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -68,7 +68,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $eventId = $this->_id;
 
     $defaults = parent::setDefaultValues();
@@ -141,7 +141,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return void
    */
-  function setShowHide(&$defaults) {
+  public function setShowHide(&$defaults) {
 
     $this->_showHide = new CRM_Core_ShowHideBlocks(['registration' => 1], '');
     if (empty($defaults)) {
@@ -248,7 +248,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @param int $pageId
    * @static
    */
-  function buildRegistrationBlock(&$form) {
+  public function buildRegistrationBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->addWysiwyg('intro_text', ts('Introductory Text'), $attributes['intro_text']);
     // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
@@ -282,7 +282,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @param int $pageId
    * @static
    */
-  function buildConfirmationBlock(&$form) {
+  public function buildConfirmationBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->add('text', 'confirm_title', ts('Title'), $attributes['confirm_title']);
     $form->addWysiwyg('confirm_text', ts('Introductory Text'), $attributes['confirm_text']);
@@ -297,7 +297,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @param int $pageId
    * @static
    */
-  function buildMailBlock(&$form) {
+  public function buildMailBlock(&$form) {
     $form->registerRule('emailList', 'callback', 'emailList', 'CRM_Utils_Rule');
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->addYesNo('is_email_confirm', ts('Send Confirmation Email?'), NULL, NULL, ['onclick' => "return showHideByValue('is_email_confirm','','confirmEmail','block','radio',false);"]);
@@ -360,7 +360,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     );
   }
 
-  function buildThankYouBlock(&$form) {
+  public function buildThankYouBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->add('text', 'thankyou_title', ts('Title'), $attributes['thankyou_title']);
     $form->addWysiwyg('thankyou_text', ts('Introductory Text'), $attributes['thankyou_text']);
@@ -376,7 +376,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Event_Form_ManageEvent_Registration', 'formRule']);
   }
 
@@ -389,7 +389,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @static
    * @access public
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     if ($values['is_online_registration']) {
       if (!$values['confirm_title']) {
         $errorMsg['confirm_title'] = ts('Please enter a Title for the registration Confirmation Page');

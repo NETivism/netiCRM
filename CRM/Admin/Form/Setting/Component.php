@@ -78,7 +78,7 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
    * @access public
    * @static
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
 
     if (is_array($fields['enableComponents'])) {

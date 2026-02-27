@@ -61,7 +61,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
     /**
      *  Test for Add/Update Pledge.
      */
-    function testAdd( ) 
+    public function testAdd( ) 
     {        
         $params = [
                         'contact_id'           =>  $this->_contactId,
@@ -90,7 +90,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
     /**
      *  Retrieve a pledge based on a pledge id = 0
      */
-	function testRetrieveZeroPledeID( ) 
+	public function testRetrieveZeroPledeID( ) 
     {
         $defaults = [];
 		$params   = [ 'pledge_id' => 0 ];
@@ -103,7 +103,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
     /**
      *  Retrieve a payment based on a Null pledge id random string
      */
-    function testRetrieveStringPledgeID( ) 
+    public function testRetrieveStringPledgeID( ) 
     {        
         $defaults = [];
         $params   = [ 'pledge_id' => 'random text' ];
@@ -116,7 +116,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase
     /**
      *  Test that payment retrieve wrks based on known pledge id
      */
-    function testRetrieveKnownPledgeID( ) 
+    public function testRetrieveKnownPledgeID( ) 
     {
         $params = [
                         'contact_id'           =>  $this->_contactId,

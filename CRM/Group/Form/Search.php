@@ -40,7 +40,7 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
     parent::preProcess();
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['active_status'] = 1;
     return $defaults;
@@ -91,7 +91,7 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
     parent::buildQuickForm();
   }
 
-  function postProcess() {
+  public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();
     if (!empty($params)) {

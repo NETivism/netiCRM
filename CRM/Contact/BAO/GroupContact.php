@@ -40,7 +40,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -57,7 +57,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
 
     $dataExists = self::dataExists($params);
     if (!$dataExists) {
@@ -80,7 +80,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @access public
    * @static
    */
-  static function dataExists(&$params) {
+  public static function dataExists(&$params) {
     // return if no data present
     if ($params['group_id'] == 0) {
       return FALSE;
@@ -101,7 +101,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @access public
    * @static
    */
-  static function getValues(&$params, &$values) {
+  public static function getValues(&$params, &$values) {
     if (empty($params)) {
       return NULL;
     }
@@ -130,7 +130,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @access public
    * @static
    */
-  static function addContactsToGroup(&$contactIds, $groupId,
+  public static function addContactsToGroup(&$contactIds, $groupId,
     $method = 'Admin',
     $status = 'Added',
     $tracking = NULL
@@ -176,7 +176,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @access public
    * @static
    */
-  static function removeContactsFromGroup(&$contactIds, $groupId, $method = 'Admin', $status = 'Removed', $tracking = NULL) {
+  public static function removeContactsFromGroup(&$contactIds, $groupId, $method = 'Admin', $status = 'Removed', $tracking = NULL) {
     if (!is_array($contactIds)) {
       return [0, 0, 0];
     }
@@ -256,7 +256,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @return array $values this array has key-> group id and value group title
    * @static
    */
-  static function getGroupList($contactId = 0, $visibility = FALSE) {
+  public static function getGroupList($contactId = 0, $visibility = FALSE) {
 
     $group = new CRM_Contact_DAO_Group();
 
@@ -304,7 +304,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    *
    * $access public
    */
-  static function &getContactGroup($contactId, $status = NULL,
+  public static function &getContactGroup($contactId, $status = NULL,
     $numGroupContact = NULL,
     $count = FALSE,
     $ignorePermission = FALSE,
@@ -424,7 +424,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    *
    * @access public
    */
-  static function getGroupContacts(&$group,
+  public static function getGroupContacts(&$group,
     $returnProperties = NULL,
     $status = 'Added',
     $sort = NULL,
@@ -516,7 +516,7 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @access public
    * @static
    */
-  function &getMembershipDetail($contactId, $groupID) {
+  public function &getMembershipDetail($contactId, $groupID) {
     $query = "SELECT * 
 FROM civicrm_group_contact 
 LEFT JOIN civicrm_subscription_history ON (civicrm_group_contact.contact_id = civicrm_subscription_history.contact_id) 
@@ -545,7 +545,7 @@ AND civicrm_subscription_history.method ='Email' ";
    * @access public
    * @static
    */
-  static function updateGroupMembershipStatus($contactId, $groupID, $method = 'Email', $tracking = NULL) {
+  public static function updateGroupMembershipStatus($contactId, $groupID, $method = 'Email', $tracking = NULL) {
     if (!isset($contactId) && !isset($groupID)) {
       return CRM_Core_Error::fatal("$contactId or $groupID should not empty");
     }
@@ -600,7 +600,7 @@ AND civicrm_group_contact.group_id = %2";
    * @access public
    * @static
    */
-  static function create(&$params, $contactId, $visibility = FALSE, $method = 'Admin') {
+  public static function create(&$params, $contactId, $visibility = FALSE, $method = 'Admin') {
     $contactIds = [];
     $contactIds[] = $contactId;
     //if $visibility is true we are coming in via profile mean $method = 'Web'
@@ -646,7 +646,7 @@ AND civicrm_group_contact.group_id = %2";
     }
   }
 
-  static function isContactInGroup($contactID, $groupID) {
+  public static function isContactInGroup($contactID, $groupID) {
 
     if (!CRM_Utils_Rule::positiveInteger($contactID) ||
       !CRM_Utils_Rule::positiveInteger($groupID)
@@ -678,7 +678,7 @@ AND civicrm_group_contact.group_id = %2";
    * @access public
    * @static
    */
-  static function bulkAddContactsToGroup($contactIDs,
+  public static function bulkAddContactsToGroup($contactIDs,
     $groupID,
     $method = 'Admin',
     $status = 'Added',
@@ -765,7 +765,7 @@ AND    contact_id IN ( $contactStr )
    * @return void.
    * @static
    */
-  static function mergeGroupContact($mainContactId, $otherContactId) {
+  public static function mergeGroupContact($mainContactId, $otherContactId) {
     $params = [1 => [$mainContactId, 'Integer'],
       2 => [$otherContactId, 'Integer'],
     ];

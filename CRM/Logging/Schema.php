@@ -43,7 +43,7 @@ class CRM_Logging_Schema {
   /**
    * Populate $this->tables and $this->logs with current db state.
    */
-  function __construct() {
+  public function __construct() {
     $dsn = defined('CIVICRM_LOGGING_DSN') ? DB::parseDSN(CIVICRM_LOGGING_DSN) : DB::parseDSN(CIVICRM_DSN);
     $this->loggingDB = $dsn['database'];
 
@@ -65,7 +65,7 @@ class CRM_Logging_Schema {
   /**
    * Disable logging by dropping the triggers (but keep the log tables intact).
    */
-  function disableLogging() {
+  public function disableLogging() {
     if (!$this->isEnabled()) {
       return;
     }
@@ -77,7 +77,7 @@ class CRM_Logging_Schema {
   /**
    * Enable logging by creating the log tables (where needed) and creating the triggers.
    */
-  function enableLogging() {
+  public function enableLogging() {
     if ($this->isEnabled()) {
       return;
     }
@@ -92,7 +92,7 @@ class CRM_Logging_Schema {
   /**
    * Add missing log table columns.
    */
-  function fixSchemaDifferences() {
+  public function fixSchemaDifferences() {
     if (!$this->isEnabled()) {
       return;
     }
@@ -108,7 +108,7 @@ class CRM_Logging_Schema {
    * param $table string  name of the relevant table
    * param $cols mixed    array of columns to add or null (to check for the missing columns)
    */
-  function fixSchemaDifferencesFor($table, $cols = NULL) {
+  public function fixSchemaDifferencesFor($table, $cols = NULL) {
     if (!$this->isEnabled()) {
       return;
     }
@@ -141,7 +141,7 @@ class CRM_Logging_Schema {
    * Find missing log table columns by comparing columns of the relevant tables.
    * Returns table-name-keyed array of arrays of missing columns, e.g. array('civicrm_value_foo_1' => array('bar_1', 'baz_2'))
    */
-  function schemaDifferences() {
+  public function schemaDifferences() {
     $diffs = [];
     foreach ($this->tables as $table) {
       $diffs[$table] = array_diff($this->columnsOf($table), $this->columnsOf("log_$table"));

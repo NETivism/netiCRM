@@ -36,7 +36,7 @@
 
 class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
-  protected $_query; function __construct(&$formValues) {
+  protected $_query; public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     $this->normalize();
@@ -71,7 +71,7 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
    * @return void
    * @access private
    */
-  function normalize() {
+  public function normalize() {
     $contactType = CRM_Utils_Array::value('contact_type', $this->_formValues);
     if ($contactType && !is_array($contactType)) {
       unset($this->_formValues['contact_type']);
@@ -93,7 +93,7 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     return;
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $contactTypes = ['' => ts('- any contact type -')] + CRM_Contact_BAO_ContactType::getSelectElements();
     $form->add('select', 'contact_type', ts('Find...'), $contactTypes);
 
@@ -111,11 +111,11 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     $form->assign('elements', ['sort_name', 'contact_type', 'group', 'tag']);
   }
 
-  function count() {
+  public function count() {
     return $this->_query->searchQuery(0, 0, NULL, TRUE);
   }
 
-  function all($offset = 0, $rowCount = 0, $sort = NULL,
+  public function all($offset = 0, $rowCount = 0, $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     return $this->_query->searchQuery($offset, $rowCount, $sort,
@@ -124,18 +124,18 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     );
   }
 
-  function from() {
+  public function from() {
     return $this->_query->_fromClause;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     if ($whereClause = $this->_query->whereClause()) {
       return $whereClause;
     }
     return ' (1) ';
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Basic.tpl';
   }
 }

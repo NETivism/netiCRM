@@ -12,11 +12,11 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
    * @var boolean
    */
 
-  CONST GENERATE_COUNT_EACH_TIME = 100;
-  CONST BATCH_THRESHOLD = 100;
+  public CONST GENERATE_COUNT_EACH_TIME = 100;
+  public CONST BATCH_THRESHOLD = 100;
 
-  static protected $_tmpreceipt = NULL;
-  static protected $_exportFileName = NULL;
+  protected static $_tmpreceipt = NULL;
+  protected static $_exportFileName = NULL;
 
   protected $_year = NULL;
 
@@ -37,7 +37,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('Send Annual Receipt Email'));
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
     if ($cid) {
@@ -102,7 +102,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
     );
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
     return $defaults;

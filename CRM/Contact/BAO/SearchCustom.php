@@ -34,7 +34,7 @@
  */
 class CRM_Contact_BAO_SearchCustom {
 
-  static function details($csID, $ssID = NULL, $gID = NULL) {
+  public static function details($csID, $ssID = NULL, $gID = NULL) {
     $error = [NULL, NULL, NULL];
 
     if (!$csID &&
@@ -96,7 +96,7 @@ class CRM_Contact_BAO_SearchCustom {
     return [$customSearchID, $customSearchClass, $formValues];
   }
 
-  static function customClass($csID, $ssID) {
+  public static function customClass($csID, $ssID) {
     list($customSearchID, $customSearchClass, $formValues) = self::details($csID, $ssID);
 
     if (!$customSearchID) {
@@ -110,12 +110,12 @@ class CRM_Contact_BAO_SearchCustom {
     return $customClass;
   }
 
-  static function contactIDSQL($csID, $ssID) {
+  public static function contactIDSQL($csID, $ssID) {
     $customClass = self::customClass($csID, $ssID);
     return $customClass->contactIDs();
   }
 
-  static function &buildFormValues($args) {
+  public static function &buildFormValues($args) {
     $args = trim($args);
 
     $values = explode("\n", $args);
@@ -129,7 +129,7 @@ class CRM_Contact_BAO_SearchCustom {
     return $formValues;
   }
 
-  static function fromWhereEmail($csID, $ssID) {
+  public static function fromWhereEmail($csID, $ssID) {
     $customClass = self::customClass($csID, $ssID);
 
     $from = $customClass->from();

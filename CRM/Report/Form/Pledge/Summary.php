@@ -46,7 +46,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
   protected $_totalPaid = FALSE;
-  protected $_customGroupExtends = ['Pledge']; function __construct() {
+  protected $_customGroupExtends = ['Pledge']; public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -167,11 +167,11 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -206,7 +206,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
     $this->_select = "SELECT DISTINCT " . CRM_Utils_Array::implode(', ', $select);
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
             FROM civicrm_pledge {$this->_aliases['civicrm_pledge']}
                  LEFT JOIN civicrm_contact {$this->_aliases['civicrm_contact']} 
@@ -233,7 +233,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -285,7 +285,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
     }
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -428,7 +428,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     $checkList = [];

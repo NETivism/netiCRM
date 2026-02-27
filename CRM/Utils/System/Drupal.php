@@ -49,7 +49,7 @@ class CRM_Utils_System_Drupal {
   /**
    * Construct will make sure durpal fully bootstrap
    */
-  function __construct() {
+  public function __construct() {
     // refs #31213, link current object to static variable immediately
     // this will prevent conflict like CRM_Core_Permission_Drupal::check called
     // in loadBootStrap below
@@ -151,7 +151,7 @@ class CRM_Utils_System_Drupal {
    * 
    * Usage: CRM_Core_Config::singleton()->userSystem->$function
    */
-  function __call($method, $args) {
+  public function __call($method, $args) {
     if(method_exists($this->versionalClass, $method)) {
       return call_user_func_array([$this->versionalClass, $method], $args);
     }
@@ -300,7 +300,7 @@ class CRM_Utils_System_Drupal {
    * @return void
    * @access public
    */
-  function setTitle($title, $pageTitle = NULL) {
+  public function setTitle($title, $pageTitle = NULL) {
     if (!$pageTitle) {
       $pageTitle = $title;
     }
@@ -317,7 +317,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function appendBreadCrumb($breadcrumbs) {
+  public static function appendBreadCrumb($breadcrumbs) {
     $version = self::$_version;
     if ($version < 8) {
       $bc = drupal_get_breadcrumb();
@@ -352,7 +352,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function resetBreadCrumb() {
+  public static function resetBreadCrumb() {
     if (self::$_version < 8) {
       $bc = [];
       drupal_set_breadcrumb($bc);
@@ -383,7 +383,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function addHTMLHead($head) {
+  public static function addHTMLHead($head) {
     if(!is_array($head)){
       $message = 'Variable $head should be an Array';
       drupal_set_message($message);
@@ -453,7 +453,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function addJs($params, $text) {
+  public static function addJs($params, $text) {
     global $civicrm_root;
     $crmRelativePath = str_replace($_SERVER['DOCUMENT_ROOT'], '', $civicrm_root);
     $version = self::$_version;
@@ -608,7 +608,7 @@ class CRM_Utils_System_Drupal {
    * @return void
    * @access public
    * @static  */
-  static function variable_get($name, $default) {
+  public static function variable_get($name, $default) {
     // drupal 6 and 7
     $version = self::$_version;
     if ($version < 8 ) {
@@ -627,7 +627,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function siteName() {
+  public static function siteName() {
     $version = self::$_version;
     if ($version >= 8) {
       return \Drupal::config('system.site')->get('name');
@@ -644,7 +644,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function allowedUserRegisteration() {
+  public static function allowedUserRegisteration() {
     $version = self::$_version;
     if ($version >= 8) {
       $allowedRegister = \Drupal::config('user.settings')->get('register');
@@ -667,7 +667,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function userEmailVerification() {
+  public static function userEmailVerification() {
     $version = self::$_version;
     if ($version >= 8) {
       return !empty(\Drupal::config('user.settings')->get('verify_mail')) ? TRUE : FALSE;
@@ -684,7 +684,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function moduleExists($module) {
+  public static function moduleExists($module) {
     $version = self::$_version;
     if ($version >= 8) {
       return \Drupal::moduleHandler()->moduleExists($module);
@@ -703,7 +703,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function mapConfigToSSL() {
+  public static function mapConfigToSSL() {
     global $base_url;
     $base_url = str_replace('http://', 'https://', $base_url);
   }
@@ -717,7 +717,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function postURL($action) {
+  public static function postURL($action) {
     if (!empty($action)) {
       return $action;
     }
@@ -741,7 +741,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    *
    */
-  static function url($path = NULL, $query = NULL, $absolute = FALSE,
+  public static function url($path = NULL, $query = NULL, $absolute = FALSE,
     $fragment = NULL, $htmlize = TRUE,
     $frontend = FALSE
   ) {
@@ -809,7 +809,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function authenticate($name, $password) {
+  public static function authenticate($name, $password) {
     return CRM_Core_Config::$_userSystem->versionalClass->authenticate($name, $password);
   }
 
@@ -821,7 +821,7 @@ class CRM_Utils_System_Drupal {
    * @access public
    * @static
    */
-  static function setMessage($message) {
+  public static function setMessage($message) {
     $version = self::$_version;
 
     if ($version < 8) {
@@ -832,7 +832,7 @@ class CRM_Utils_System_Drupal {
     }
   }
 
-  static function permissionCheck($permission, $uid = NULL) {
+  public static function permissionCheck($permission, $uid = NULL) {
     $version = self::$_version;
     if ($version < 8) {
       if ($uid) {
@@ -860,7 +860,7 @@ class CRM_Utils_System_Drupal {
     return FALSE;
   }
 
-  static function permissionDenied() {
+  public static function permissionDenied() {
     $version = self::$_version;
     if ($version >= 8) {
       throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
@@ -874,12 +874,12 @@ class CRM_Utils_System_Drupal {
     return;
   }
 
-  static function logout() {
+  public static function logout() {
     module_load_include('inc', 'user', 'user.pages');
     return user_logout();
   }
 
-  static function updateCategories() {
+  public static function updateCategories() {
     $version = self::$_version;
 
     // CRM-3600
@@ -897,7 +897,7 @@ class CRM_Utils_System_Drupal {
    *
    * @return string  with the locale or null for none
    */
-  static function getUFLocale() {
+  public static function getUFLocale() {
     $version = self::$_version;
     if ($version >= 8) {
       $languageCode = \Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -928,7 +928,7 @@ class CRM_Utils_System_Drupal {
    *
    * @return string  with the locale or null for none
    */
-  static function switchUFLocale($crmLocale = NULL) {
+  public static function switchUFLocale($crmLocale = NULL) {
     if(empty($crmLocale)){
       global $tsLocale;
       $crmLocale = $tsLocale;
@@ -963,7 +963,7 @@ class CRM_Utils_System_Drupal {
    *   'name' for username
    *   'pass' for password for login
    */
-  static function loadBootStrap($params = [], $throwError = TRUE) {
+  public static function loadBootStrap($params = [], $throwError = TRUE) {
     //take the cms root path.
     $cmsPath = self::cmsRootPath();
     chdir($cmsPath);
@@ -978,7 +978,7 @@ class CRM_Utils_System_Drupal {
    * @param array $params
    * @return void
    */
-  static function loadUser($params = []) {
+  public static function loadUser($params = []) {
     if (empty($params)) {
       return FALSE;
     }
@@ -993,7 +993,7 @@ class CRM_Utils_System_Drupal {
     return FALSE;
   }
 
-  static function cmsRootPath() {
+  public static function cmsRootPath() {
     if (defined('DRUPAL_ROOT')) {
       return DRUPAL_ROOT;
     }
@@ -1059,12 +1059,12 @@ class CRM_Utils_System_Drupal {
     return self::getBestUFID();
   }
 
-  function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+  public function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     // call method in Drupalx.php
     return CRM_Core_Config::$_userSystem->versionalClass->languageNegotiationURL($url, $addLanguagePart, $removeLanguagePart);
   }
 
-  function notFound(){
+  public function notFound(){
     $version = self::$_version;
     if ($version >= 8) {
       throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException();
@@ -1078,7 +1078,7 @@ class CRM_Utils_System_Drupal {
     return;
   }
 
-  function cmsDir($type) {
+  public function cmsDir($type) {
     $version = self::$_version;
     switch($type) {
       case 'temp':
@@ -1113,7 +1113,7 @@ class CRM_Utils_System_Drupal {
     return FALSE;
   }
 
-  function confPath() {
+  public function confPath() {
     global $civicrm_conf_path;
     if (empty($civicrm_conf_path)) {
       $version = self::$_version;
@@ -1127,7 +1127,7 @@ class CRM_Utils_System_Drupal {
     return $civicrm_conf_path;
   }
 
-  function getLogoURL() {
+  public function getLogoURL() {
     $logoURL = theme_get_setting('logo');
     if (empty($logoURL)) {
       $logoURL = theme_get_setting('logo_path');
@@ -1141,7 +1141,7 @@ class CRM_Utils_System_Drupal {
     return $logoURL;
   }
 
-  function moduleImplements($hook) {
+  public function moduleImplements($hook) {
     if (self::$_version < 8) {
       return module_implements($hook);
     }
@@ -1168,7 +1168,7 @@ class CRM_Utils_System_Drupal {
     return [];
   }
 
-  function sessionStart(){
+  public function sessionStart(){
     $version = self::$_version;
     $ufId = self::getBestUFID();
     if ($version < 7) {
@@ -1195,7 +1195,7 @@ class CRM_Utils_System_Drupal {
     }
   }
 
-  function sessionID() {
+  public function sessionID() {
     $version = self::$_version;
 
     // drupal 9+ using lazy session on anonymous user
@@ -1245,7 +1245,7 @@ class CRM_Utils_System_Drupal {
     return '';
   }
 
-  function tempstoreSet($name, $value) {
+  public function tempstoreSet($name, $value) {
     $version = self::$_version;
     // refs #31356, this is drupal 8 / 9 specific code for set tempstore
     if ($version >= 8) {
@@ -1255,7 +1255,7 @@ class CRM_Utils_System_Drupal {
     return FALSE;
   }
   
-  function tempstoreGet($name) {
+  public function tempstoreGet($name) {
     $version = self::$_version;
     // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore
     if ($version >= 8) {

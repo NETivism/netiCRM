@@ -112,7 +112,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    * @return void
    * @acess protected
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
 
     if ($this->_id) {
@@ -203,7 +203,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
      * @access public
      * @return None
      */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if (isset($this->_id)) {
@@ -457,7 +457,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $fileParams, $options) {
+  public static function formRule($fields, $fileParams, $options) {
     $errors = [];
 
     $doParentCheck = $options['doParentCheck'];

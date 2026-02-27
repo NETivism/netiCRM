@@ -46,13 +46,13 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
   protected $_context = NULL;
   protected $_cpage = NULL;
   
-  function __construct(&$formValues){
+  public function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_tableName = 'civicrm_temp_custom_achsearch';
     $this->buildColumn();
   }
 
-  function buildColumn(){
+  public function buildColumn(){
     $this->_queryColumns = [ 
       'r.id' => 'id',
       'r.contact_id' => 'contact_id',
@@ -99,7 +99,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
     ];
   }
 
-  function buildTempTable() {
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -128,7 +128,7 @@ PRIMARY KEY (id)
     CRM_Core_DAO::executeQuery($sql);
   }
   
-  function dropTempTable() {
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
@@ -136,7 +136,7 @@ PRIMARY KEY (id)
   /**
    * fill temp table for further use
    */
-  function fillTable(){
+  public function fillTable(){
     $this->dropTempTable();
     $this->buildTempTable();
 
@@ -181,7 +181,7 @@ $having
   }
 
 
-  function tempFrom() {
+  public function tempFrom() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
     INNER JOIN civicrm_contribution_taiwanach ach ON r.id = ach.contribution_recur_id
@@ -193,17 +193,17 @@ $having
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
-  function tempWhere(){
+  public function tempWhere(){
     $clauses = [];
     $clauses[] = "(r.is_test = 0)";
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  public function tempHaving(){
     return '';
   }
 
-  function buildForm(&$form){
+  public function buildForm(&$form){
     // parent include start_date, status, installments, sort_name, email, contribution_page_id
     parent::buildForm($form);
 
@@ -246,18 +246,18 @@ $having
     ]);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [];
   }
 
-  function setTitle() {
+  public function setTitle() {
     CRM_utils_System::setTitle(ts('ACH Search'));
   }
 
-  function setBreadcrumb() {
+  public function setBreadcrumb() {
   }
 
-  function count(){
+  public function count(){
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
@@ -273,7 +273,7 @@ $having
   /**
    * Construct the search query
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
@@ -283,7 +283,7 @@ $having
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -296,11 +296,11 @@ $having
   /**
    * Functions below generally don't need to be modified
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  public function where($includeContactIDs = false) {
     $clauses = [];
 
     $dateFields = [
@@ -363,7 +363,7 @@ $having
     return $sql;
   }
 
-  function having(){
+  public function having(){
     return '';
   }
 
@@ -392,11 +392,11 @@ $having
     }
   }
 
-  function &columns(){
+  public function &columns(){
     return $this->_columns;
   }
   
-  function summary(){
+  public function summary(){
     $summary = [];
     if(!$this->_filled){
       $this->fillTable();
@@ -419,7 +419,7 @@ $having
     return $summary;
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
     
     if ($row['completed_count']) {
@@ -478,7 +478,7 @@ $having
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
-  function templateFile(){
+  public function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
   }
 

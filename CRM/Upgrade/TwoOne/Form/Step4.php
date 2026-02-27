@@ -35,7 +35,7 @@
 
 
 class CRM_Upgrade_TwoOne_Form_Step4 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '2']);
 
     if (!CRM_Core_DAO::checkTableExists('civicrm_cache') ||
@@ -77,13 +77,13 @@ class CRM_Upgrade_TwoOne_Form_Step4 extends CRM_Upgrade_Form {
     return $this->checkVersion($this->latestVersion);
   }
 
-  function buildQuickForm() {}
+  public function buildQuickForm() {}
 
-  function getTitle() {
+  public function getTitle() {
     return ts('Database Upgrade to v2.1 Completed');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     if ($this->_config->userFramework == 'Drupal') {
       $upgradeDoc = 'http://wiki.civicrm.org/confluence/x/7IFH';
     }

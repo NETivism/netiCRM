@@ -44,7 +44,7 @@ class CRM_Utils_Geocode_Yahoo {
    * @var string
    * @static
    */
-  static protected $_server = 'api.local.yahoo.com';
+  protected static $_server = 'api.local.yahoo.com';
 
   /**
    * uri of service
@@ -52,7 +52,7 @@ class CRM_Utils_Geocode_Yahoo {
    * @var string
    * @static
    */
-  static protected $_uri = '/MapsService/V1/geocode';
+  protected static $_uri = '/MapsService/V1/geocode';
 
   /**
    * function that takes an address object and gets the latitude / longitude for this
@@ -64,7 +64,7 @@ class CRM_Utils_Geocode_Yahoo {
    * @return boolean true if we modified the address, false otherwise
    * @static
    */
-  static function format(&$values, $stateName = FALSE) {
+  public static function format(&$values, $stateName = FALSE) {
     CRM_Utils_System::checkPHPVersion(5, TRUE);
 
     // we need a valid country, else we ignore

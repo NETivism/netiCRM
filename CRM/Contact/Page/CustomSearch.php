@@ -47,7 +47,7 @@ class CRM_Contact_Page_CustomSearch extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   public static function &info() {
     $sql = "
@@ -81,7 +81,7 @@ ORDER By  v.weight
    * @return content of the parents run method
    *
    */
-  function browse() {
+  public function browse() {
     $rows = &self::info();
     $this->assign('rows', $rows);
     return parent::run();
@@ -92,7 +92,7 @@ ORDER By  v.weight
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $action = CRM_Utils_Request::retrieve('action',
       'String',
       $this, FALSE, 'browse'

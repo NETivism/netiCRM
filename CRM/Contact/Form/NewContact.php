@@ -50,7 +50,7 @@ class CRM_Contact_Form_NewContact {
    *
    * @return void
    */
-  static function buildQuickForm(&$form, $blockNo = 1, $extraProfiles = NULL) {
+  public static function buildQuickForm(&$form, $blockNo = 1, $extraProfiles = NULL) {
     // call to build contact autocomplete
     $attributes = ['width' => '200px'];
     $form->add('text', "contact[{$blockNo}]", ts('Select Contact'), $attributes);

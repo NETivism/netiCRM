@@ -2,7 +2,7 @@
 
 class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_Interface {
   public $_columns;
-  protected $_formValues; function __construct(&$formValues) {
+  protected $_formValues; public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     $this->_columns = [ts('Contact Id') => 'contact_id',
@@ -11,23 +11,23 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $form->add('text', 'legal_identifier', ts('Legal Identifier'));
     $form->add('text', 'display_name', ts('Display Name'));
   }
 
-  function count() {
+  public function count() {
     $sql = $this->all();
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     return $dao->N;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE);
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
     $where = $this->where();
 
     $sql = "SELECT DISTINCT cc.id as contact_id, cc.display_name, cc.legal_identifier FROM civicrm_contact AS cc WHERE $where";
@@ -35,11 +35,11 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
     return $sql;
   }
 
-  function from() {
+  public function from() {
     return NULL;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
     $legalid = CRM_Utils_Array::value('legal_identifier', $this->_formValues);
@@ -55,15 +55,15 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
     return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }
 
-  function &columns() {
+  public function &columns() {
     return $this->_columns;
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/LegalId.tpl';
   }
 
-  function summary() {
+  public function summary() {
     return NULL;
   }
 }

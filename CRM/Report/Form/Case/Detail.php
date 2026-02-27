@@ -71,7 +71,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
   protected $_worldRegionField = FALSE;
 
-  protected $_activityField = FALSE; function __construct() {
+  protected $_activityField = FALSE; public function __construct() {
     $this->case_statuses = CRM_Case_PseudoConstant::caseStatus();
     $this->case_types = CRM_Case_PseudoConstant::caseType();
     $rels = CRM_Core_PseudoConstant::relationshipType();
@@ -263,11 +263,11 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -305,7 +305,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
 
     $cc = $this->_aliases['civicrm_case'];
     $c = $this->_aliases['civicrm_contact'];
@@ -360,7 +360,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
@@ -424,11 +424,11 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_case']}.id";
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $select = "select COUNT( DISTINCT( {$this->_aliases['civicrm_address']}.country_id))";
@@ -457,7 +457,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     return $statistics;
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
     if (isset($this->_params['worldregion_id_value']) && !empty($this->_params['worldregion_id_value'])) {
@@ -492,7 +492,7 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     $entryFound = FALSE;
 
     foreach ($rows as $rowNum => $row) {

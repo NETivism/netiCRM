@@ -42,7 +42,7 @@ class CRM_Contact_Page_View_UserDashBoard_GroupContact extends CRM_Contact_Page_
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
     $count = CRM_Contact_BAO_GroupContact::getContactGroup($this->_contactId,
       NULL,
       NULL, TRUE, TRUE,
@@ -84,7 +84,7 @@ class CRM_Contact_Page_View_UserDashBoard_GroupContact extends CRM_Contact_Page_
    * return null
    * @access public
    */
-  function edit($groupId = NULL) {
+  public function edit($groupId = NULL) {
     $this->assign('edit', $this->_edit);
     if (!$this->_edit) {
       return;
@@ -148,7 +148,7 @@ class CRM_Contact_Page_View_UserDashBoard_GroupContact extends CRM_Contact_Page_
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->edit();
     $this->browse();
   }

@@ -45,7 +45,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -58,7 +58,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     $priceSetBAO = new CRM_Price_BAO_Set();
     $priceSetBAO->copyValues($params);
     if (defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
@@ -81,7 +81,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_Set', $params, $defaults);
   }
 
@@ -95,7 +95,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @static
    * @access public
    */
-  static function setIsActive($id, $isActive) {
+  public static function setIsActive($id, $isActive) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_Set', $id, 'is_active', $isActive);
   }
 
@@ -470,7 +470,7 @@ WHERE  id = %1";
     return $setTree;
   }
 
-  static function initSet(&$form, $id, $entityTable = 'civicrm_event') {
+  public static function initSet(&$form, $id, $entityTable = 'civicrm_event') {
     // get price info
     if ($priceSetId = self::getFor($entityTable, $id)) {
       if ($form->_action & CRM_Core_Action::UPDATE) {
@@ -555,7 +555,7 @@ WHERE  id = %1";
     return FALSE;
   }
 
-  static function processAmount(&$fields, &$params, &$lineItem) {
+  public static function processAmount(&$fields, &$params, &$lineItem) {
     // using price set
     $totalPrice = 0;
     $radioLevel = $checkboxLevel = $selectLevel = $textLevel = [];
@@ -644,7 +644,7 @@ WHERE  id = %1";
    * @return None
    * @access public
    */
-  static function buildPriceSet(&$form) {
+  public static function buildPriceSet(&$form) {
     $priceSetId = $form->get('priceSetId');
     if (!$priceSetId) {
       return;
@@ -732,7 +732,7 @@ WHERE  id = %1";
    * @access public
    * @static
    */
-  static function copy($id) {
+  public static function copy($id) {
     $maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_price_set");
 
     $title = ts('[Copy id %1]', [1 => $maxId + 1]);
@@ -767,7 +767,7 @@ WHERE  id = %1";
    *
    * @param int $sid the price set id
    */
-  static function checkPermission($sid) {
+  public static function checkPermission($sid) {
     if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
       $domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domain_id) {

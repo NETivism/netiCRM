@@ -34,7 +34,7 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ContactTypeTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->_apiversion = 3;
     $params = [
@@ -76,7 +76,7 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
    * This method is called after a test is executed.
    *
    */
-  function tearDown() {
+  public function tearDown() {
     $contactTypeIds = [
       $this->_subTypeIndividualId,
       $this->_subTypeOrganizationId,
@@ -91,7 +91,7 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
      * test add methods with valid data
      * success expected
      */
-  function testContactCreate() {
+  public function testContactCreate() {
 
     // check for Type:Individual Subtype:sub_individual
     $contactParams = [
@@ -140,7 +140,7 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   /*
      * test add with invalid data
      */
-  function testContactAddInvalidData() {
+  public function testContactAddInvalidData() {
 
     // check for Type:Individual Subtype:sub_household
     $contactParams = [
@@ -169,7 +169,7 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
      * test update with no subtype to valid subtype
      * success expected
      */
-  function testContactUpdateNoSubtypeValid() {
+  public function testContactUpdateNoSubtypeValid() {
 
     // check for Type:Individual
     $contactParams = [
@@ -243,7 +243,7 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   /*
      * test update with no subtype to invalid subtype
      */
-  function testContactUpdateNoSubtypeInvalid() {
+  public function testContactUpdateNoSubtypeInvalid() {
 
     // check for Type:Individual
     $contactParams = [
@@ -301,7 +301,7 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
      * test update with no subtype to valid subtype
      * success expected
      */
-  function testContactUpdateSubtypeValid() {
+  public function testContactUpdateSubtypeValid() {
 
     $params = [
       'label' => 'sub2_individual',
@@ -399,7 +399,7 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
   /*
      * test update with no subtype to invalid subtype
      */
-  function testContactUpdateSubtypeInvalid() {
+  public function testContactUpdateSubtypeInvalid() {
 
     // check for Type:Individual subtype:sub_individual
     $contactParams = [

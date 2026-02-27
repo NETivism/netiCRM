@@ -82,7 +82,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     // custom data related
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
@@ -217,7 +217,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
    * @static
    * @access public
    */
-  static function formRule($values, $files, $self) {
+  public static function formRule($values, $files, $self) {
     $errors = [];
 
     //CRM-4286

@@ -43,10 +43,10 @@
 class HelloTest extends PHPUnit_Framework_TestCase
 {
 	// contains the object handle of the string class
-	var $abc;
+	public $abc;
 
 
-	function __construct( $name = NULL)
+	public function __construct( $name = NULL)
 	{
 			parent::__construct( $name );
 	}
@@ -54,7 +54,7 @@ class HelloTest extends PHPUnit_Framework_TestCase
 	// called before the test functions will be executed
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
-	function setUp() {
+	public function setUp() {
 		// create a new instance of String with the
 		// string 'abc'
 		$this->abc = "hello";
@@ -63,13 +63,13 @@ class HelloTest extends PHPUnit_Framework_TestCase
 	// called after the test functions are executed
 	// this function is defined in PHPUnit_TestCase and overwritten
 	// here
-	function tearDown() {
+	public function tearDown() {
 		// delete your instance
 		unset($this->abc);
 	}
 
 	// test the toString function
-	function testHello() {
+	public function testHello() {
 		$result = $this->abc;
 		$expected = 'hello';
 		$this->assertEquals($result, $expected);

@@ -58,7 +58,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -66,14 +66,14 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
    * @static
    */
-  static $_properties = ['contact_id', 'contact_type', 'display_name'];
+  public static $_properties = ['contact_id', 'contact_type', 'display_name'];
 
   /**
    * formValues is the array returned by exportValues called on
@@ -127,7 +127,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct($customSearchClass,
+  public function __construct($customSearchClass,
     &$formValues = NULL,
     $params = NULL,
     $returnProperties = NULL,
@@ -175,7 +175,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @access public
    *
    */
-  static function &links() {
+  public static function &links() {
 
     if (!(self::$_links)) {
       self::$_links = [
@@ -213,7 +213,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Contact %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
@@ -233,7 +233,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @return array the column headers that need to be displayed
    * @access public
    */
-  function &getColumnHeaders($action = NULL, $output = NULL) {
+  public function &getColumnHeaders($action = NULL, $output = NULL) {
     $columns = $this->_search->columns();
     foreach($columns as $key => $value){
       if (is_numeric($key)) {
@@ -268,7 +268,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     return $this->_search->count();
   }
 
@@ -283,7 +283,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
     $includeContactIDs = FALSE;
     if (($output == CRM_Core_Selector_Controller::EXPORT ||
@@ -394,22 +394,22 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Custom Search');
   }
 
-  function alphabetQuery() {
+  public function alphabetQuery() {
     return NULL;
   }
 
-  function &contactIDQuery() {
+  public function &contactIDQuery() {
     $params = [];
     $sql = $this->_search->contactIDs($params);
 
     return CRM_Core_DAO::executeQuery($sql, $params);
   }
 
-  function contactAdditionalIDQuery() {
+  public function contactAdditionalIDQuery() {
     $params = [];
     if (method_exists($this->_search, 'contactAdditionalIDs')) {
       $sql = $this->_search->contactAdditionalIDs($params);

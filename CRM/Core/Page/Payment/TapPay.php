@@ -1,6 +1,6 @@
 <?php
 class CRM_Core_Page_Payment_TapPay extends CRM_Core_Page {
-  function run() {
+  public function run() {
     $qfKey = CRM_Utils_Array::value('qfKey', $_REQUEST, NULL);
     $id = CRM_Utils_Array::value('id', $_REQUEST, NULL);
 

@@ -115,7 +115,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   /**
    * class constructor
    */
-  function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL, $mapperPCP = NULL) {
+  public function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL, $mapperPCP = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
     $this->_mapperSoftCredit = &$mapperSoftCredit;
@@ -133,7 +133,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return void
    * @access public
    */
-  function init() {
+  public function init() {
 
     $fields = &CRM_Contribute_BAO_Contribution::importableFields($this->_contactType, FALSE);
     $this->_importableContactFields = $fields;
@@ -310,7 +310,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean
    * @access public
    */
-  function mapField(&$values) {
+  public function mapField(&$values) {
     return CRM_Contribute_Import_Parser::VALID;
   }
 
@@ -322,7 +322,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean      the result of this processing
    * @access public
    */
-  function preview(&$values) {
+  public function preview(&$values) {
     return $this->summary($values);
   }
 
@@ -334,7 +334,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean      the result of this processing
    * @access public
    */
-  function summary(&$values) {
+  public function summary(&$values) {
     $erroneousField = NULL;
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
@@ -502,7 +502,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean      the result of this processing
    * @access public
    */
-  function import($onDuplicate, &$values) {
+  public function import($onDuplicate, &$values) {
     $contactValues = $values;
     $statusFieldName = $this->_statusFieldName;
     // first make sure this is a valid line
@@ -856,7 +856,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   /**
    *  Function to process pledge payments
    */
-  function processPledgePayments(&$formatted) {
+  public function processPledgePayments(&$formatted) {
     $statusFieldName = $this->_statusFieldName;
     if (CRM_Utils_Array::value('pledge_payment_id', $formatted) &&
       CRM_Utils_Array::value('pledge_id', $formatted)
@@ -885,7 +885,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return array
    * @access public
    */
-  function &getImportedContributions() {
+  public function &getImportedContributions() {
     return $this->_newContributions;
   }
 
@@ -895,7 +895,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return array
    * @access public
    */
-  function importContribution($formatted, &$values) {
+  public function importContribution($formatted, &$values) {
     if (!empty($this->_sourceIp)) {
       $formatted['source_ip'] = $this->_sourceIp;
     }
@@ -944,6 +944,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return void
    * @access public
    */
-  function fini() {}
+  public function fini() {}
 }
 

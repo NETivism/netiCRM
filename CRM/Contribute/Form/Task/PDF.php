@@ -40,7 +40,7 @@
  */
 class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
   public $_enableEmailReceipt;
-  CONST PDF_BATCH_THRESHOLD = 100;
+  public CONST PDF_BATCH_THRESHOLD = 100;
 
   /**
    * Are we operating in "single mode", i.e. updating the task of only
@@ -69,7 +69,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     if ($id) {
       $this->_contributionIds = [$id];
@@ -232,7 +232,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $this->addFormRule(['CRM_Contribute_Form_Task_PDF', 'formRule'], $this);
   }
 
-  static public function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!empty($fields['email_pdf_receipt'][1]) && empty($fields['from_email'])) {
       $errors['from_email'] = ts('%1 is a required field.', [1 => ts('From Email')]);
@@ -417,7 +417,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
    * @ $option string
    * see /usr/bin/qpdf --help
    */
-  static function encryptPDF($dest, $encryptPwd, $option = ' --encrypt', $key_length = 256) {
+  public static function encryptPDF($dest, $encryptPwd, $option = ' --encrypt', $key_length = 256) {
     $config = CRM_Core_Config::singleton();
     $qpdf = $config->qpdfPath;
     if (empty($qpdf)) {
@@ -562,7 +562,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
   }
 
-  static private function createActivity($details) {
+  private static function createActivity($details) {
     $activityTypeId = CRM_Core_OptionGroup::getValue('activity_type', 'Print Contribution Receipts', 'name');
     if (!empty($activityTypeId)) {
       $contributeIds = array_keys($details);
@@ -588,7 +588,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     }
   }
 
-  static public function getPrintingTypes(){
+  public static function getPrintingTypes(){
     return [
       'copy_only' => ts('Copied receipt only'),
       'none' => ts('Contain copied receipt without address'),
@@ -597,7 +597,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     ];
   }
 
-  static public function validateData(&$input, &$ids, &$objects, $required = TRUE, $paymentProcessorID = NULL) {
+  public static function validateData(&$input, &$ids, &$objects, $required = TRUE, $paymentProcessorID = NULL) {
     // make sure contribution exists and is valid
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $ids['contribution'];
@@ -630,7 +630,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     return TRUE;
   }
 
-  static public function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID) {
+  public static function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID) {
     $config = CRM_Core_Config::singleton();
     $contribution = &$objects['contribution'];
 

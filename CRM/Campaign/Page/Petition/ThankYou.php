@@ -35,7 +35,7 @@
 
 
 class CRM_Campaign_Page_Petition_ThankYou extends CRM_Core_Page {
-  function run() {
+  public function run() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $petition_id = CRM_Utils_Request::retrieve('pid', 'Positive', $this);
     $this->assign('survey_id', $petition_id);

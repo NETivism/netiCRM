@@ -48,12 +48,12 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
   /**
    * Constants for number of options for data types of multiple option.
    */
-  CONST NUM_OPTION = 11;
+  public CONST NUM_OPTION = 11;
 
   /**
    * Constants for number of discounts for the event.
    */
-  CONST NUM_DISCOUNT = 6;
+  public CONST NUM_DISCOUNT = 6;
 
   /**
    * Page action
@@ -71,7 +71,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -83,7 +83,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $parentDefaults = parent::setDefaultValues();
 
     $eventId = $this->_id;
@@ -412,7 +412,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Event_Form_ManageEvent_Fee', 'formRule']);
   }
 
@@ -425,7 +425,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    * @static
    * @access public
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     $errors = [];
     if (CRM_Utils_Array::value('is_discount', $values)) {
       $occurDiscount = array_count_values($values['discount_name']);

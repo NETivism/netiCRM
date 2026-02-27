@@ -40,8 +40,8 @@
  */
 class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_ContributionPage {
 
-  CONST IS_ACTIVE = 1;
-  CONST IS_SPECIAL = 2;
+  public CONST IS_ACTIVE = 1;
+  public CONST IS_SPECIAL = 2;
 
   /**
    * takes an associative array and creates a contribution page object
@@ -74,11 +74,11 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionPage', $id, 'is_active', $is_active);
   }
 
-  static function setValues($id, &$values) {
+  public static function setValues($id, &$values) {
     $params = ['id' => $id];
 
     CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage', $params, $values);
@@ -118,7 +118,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static function sendMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
+  public static function sendMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
     $config = CRM_Core_Config::singleton();
     $gIds = [];
     $params = [];
@@ -425,7 +425,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static function sendFailedNotifyMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
+  public static function sendFailedNotifyMail($contactID, &$values, $isTest = FALSE, $returnMessageText = FALSE) {
     $recur_id = CRM_Utils_Array::value('contribution_recur_id', $values);
     $contribution_id = CRM_Utils_Array::value('contribution_id', $values);
     $tplParams = [
@@ -489,7 +489,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static function recurringNofify($type, $contactID, $pageID, $recur) {
+  public static function recurringNofify($type, $contactID, $pageID, $recur) {
     $value = [];
     CRM_Core_DAO::commonRetrieveAll('CRM_Contribute_DAO_ContributionPage', 'id',
       $pageID, $value,
@@ -547,7 +547,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static function buildCustomDisplay($gid, $name, $cid, &$template, &$params) {
+  public static function buildCustomDisplay($gid, $name, $cid, &$template, &$params) {
     if ($gid) {
 
       if (CRM_Core_BAO_UFGroup::filterUFGroups($gid, $cid)) {
@@ -595,7 +595,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    */
-  static function copy($id) {
+  public static function copy($id) {
     $fieldsFix = [
       'prefix' => [
         'title' => ts('Copy of') . ' ',
@@ -731,7 +731,7 @@ WHERE entity_table = 'civicrm_contribution_page'
    * @access public
    * @static
    */
-  static function checkRecurPaymentProcessor($contributionPageId) {
+  public static function checkRecurPaymentProcessor($contributionPageId) {
     //FIXME
     $sql = "
     SELECT pp.is_recur
@@ -753,7 +753,7 @@ WHERE entity_table = 'civicrm_contribution_page'
    * @return array $info info regarding all sections.
    * @access public
    */
-  static function getSectionInfo($contribPageIds = []) {
+  public static function getSectionInfo($contribPageIds = []) {
     $info = [];
     $whereClause = NULL;
     if (is_array($contribPageIds) && !empty($contribPageIds)) {
@@ -832,7 +832,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
    * @access public
    * @static
    */
-  static function goalAchieved($contributionPageId) {
+  public static function goalAchieved($contributionPageId) {
     $page = $params = $whereClause = [];
     CRM_Contribute_BAO_ContributionPage::setValues($contributionPageId, $page);
     $whereClause = [
@@ -909,7 +909,7 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     return [];
   }
 
-  static function tokenize($contactId, $input, $contributionId = NULL) {
+  public static function tokenize($contactId, $input, $contributionId = NULL) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
     $contactParams = ['contact_id' => $contactId];

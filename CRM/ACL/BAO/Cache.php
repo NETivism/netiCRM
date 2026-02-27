@@ -40,9 +40,9 @@
  */
 class CRM_ACL_BAO_Cache extends CRM_ACL_DAO_Cache {
 
-  static $_cache = NULL;
+  public static $_cache = NULL;
 
-  static function &build($id) {
+  public static function &build($id) {
     if (!self::$_cache) {
       self::$_cache = [];
     }
@@ -64,7 +64,7 @@ class CRM_ACL_BAO_Cache extends CRM_ACL_DAO_Cache {
     return self::$_cache[$id];
   }
 
-  static function retrieve($id) {
+  public static function retrieve($id) {
     $query = "
 SELECT acl_id
   FROM civicrm_acl_cache
@@ -85,7 +85,7 @@ SELECT acl_id
     return $cache;
   }
 
-  static function store($id, &$cache) {
+  public static function store($id, &$cache) {
     foreach ($cache as $aclID => $data) {
       $dao = new CRM_ACL_DAO_Cache();
       if ($id) {
@@ -99,7 +99,7 @@ SELECT acl_id
     }
   }
 
-  static function deleteEntry($id) {
+  public static function deleteEntry($id) {
     if (self::$_cache &&
       CRM_Utils_Array::arrayKeyExists($id, self::$_cache)
     ) {
@@ -114,7 +114,7 @@ WHERE contact_id = %1
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
   }
 
-  static function updateEntry($id) {
+  public static function updateEntry($id) {
     // rebuilds civicrm_acl_cache
     self::deleteEntry($id);
     self::build($id);
@@ -125,7 +125,7 @@ WHERE contact_id = %1
   }
 
   // deletes all the cache entries
-  static function resetCache() {
+  public static function resetCache() {
     // reset any static caching
     self::$_cache = NULL;
 

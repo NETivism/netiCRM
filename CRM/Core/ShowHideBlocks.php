@@ -39,7 +39,7 @@ class CRM_Core_ShowHideBlocks {
    *
    * @var string
    */
-  static $_showIcon, $_hideIcon;
+  public static $_showIcon, $_hideIcon;
 
   /**
    * The array of ids of blocks that will be shown
@@ -64,7 +64,7 @@ class CRM_Core_ShowHideBlocks {
    * @return Object     the newly created object
    * @access public
    */
-  function __construct($show = NULL, $hide = NULL) {
+  public function __construct($show = NULL, $hide = NULL) {
     if (!empty($show)) {
       $this->_show = $show;
     }
@@ -87,7 +87,7 @@ class CRM_Core_ShowHideBlocks {
    * @access public
    * @static
    */
-  static function setIcons() {
+  public static function setIcons() {
     if (!isset(self::$_showIcon)) {
       $config = CRM_Core_Config::singleton();
       self::$_showIcon = '<img src="' . $config->resourceBase . 'i/TreePlus.gif" class="action-icon" alt="' . ts('show field or section') . '"/>';
@@ -101,7 +101,7 @@ class CRM_Core_ShowHideBlocks {
    * @return void
    * @access public
    */
-  function addToTemplate() {
+  public function addToTemplate() {
     $hide = $show = '';
 
     $first = TRUE;
@@ -135,7 +135,7 @@ class CRM_Core_ShowHideBlocks {
    * @return void
    * @access public
    */
-  function addShow($name) {
+  public function addShow($name) {
     $this->_show[$name] = 1;
     if (CRM_Utils_Array::arrayKeyExists($name, $this->_hide)) {
       unset($this->_hide[$name]);
@@ -150,7 +150,7 @@ class CRM_Core_ShowHideBlocks {
    * @return void
    * @access public
    */
-  function addHide($name) {
+  public function addHide($name) {
     $this->_hide[$name] = 1;
     if (CRM_Utils_Array::arrayKeyExists($name, $this->_show)) {
       unset($this->_show[$name]);
@@ -168,7 +168,7 @@ class CRM_Core_ShowHideBlocks {
    * @return string      the formatted html link
    * @access public
    */
-  static function linkHtml($name, $href, $text, $js) {
+  public static function linkHtml($name, $href, $text, $js) {
     return '<a name="' . $name . '" id="' . $name . '" href="' . $href . '" ' . $js . ">$text</a>";
   }
 
@@ -183,7 +183,7 @@ class CRM_Core_ShowHideBlocks {
    * @return void
    * @access public
    */
-  static function links(&$form, $prefix, $showLinkText, $hideLinkText, $assign = TRUE) {
+  public static function links(&$form, $prefix, $showLinkText, $hideLinkText, $assign = TRUE) {
     $showCode = "show('id_{$prefix}'); hide('id_{$prefix}_show');";
     $hideCode = "hide('id_{$prefix}'); show('id_{$prefix}_show'); return false;";
 
@@ -215,7 +215,7 @@ class CRM_Core_ShowHideBlocks {
    * @return void
    * @access public
    */
-  function linksForArray(&$form, $index, $maxIndex, $prefix, $showLinkText, $hideLinkText, $elementType = NULL, $hideLink = NULL) {
+  public function linksForArray(&$form, $index, $maxIndex, $prefix, $showLinkText, $hideLinkText, $elementType = NULL, $hideLink = NULL) {
     $showHidePrefix = str_replace(["]", "["], ["", "_"], $prefix);
     $showHidePrefix = "id_" . $showHidePrefix;
     if ($index == $maxIndex) {

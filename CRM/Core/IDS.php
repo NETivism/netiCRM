@@ -39,7 +39,7 @@ use IDS\Monitor;
 use IDS\Report;
 
 class CRM_Core_IDS {
-  CONST CONFIG_FILE = 'Config.IDS.ini';
+  public CONST CONFIG_FILE = 'Config.IDS.ini';
 
   /**
    * @var array

@@ -42,7 +42,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
   private $loggingDB;
 
   private $log_conn_id;
-  private $log_date; function __construct() {
+  private $log_date; public function __construct() {
     // don’t display the ‘Add these Contacts to Group’ button
     $this->_add2groupSupported = FALSE;
 
@@ -70,7 +70,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function buildRows($sql, &$rows) {
+  public function buildRows($sql, &$rows) {
     // safeguard for when there aren’t any log entries yet
     if (!$this->log_conn_id or !$this->log_date) {
       return;
@@ -127,7 +127,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     }
   }
 
-  function buildQuery($applyLimit = null) {}
+  public function buildQuery($applyLimit = null) {}
 
   private function sqlToArray($sql, $params) {
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);

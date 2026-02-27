@@ -94,7 +94,7 @@ LEFT  JOIN civicrm_component comp
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $rows = &self::info();
     $this->assign('list', $rows);
 

@@ -712,7 +712,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     if (CRM_Utils_Array::value('saveMapping', $fields)) {
       $nameField = CRM_Utils_Array::value('saveMappingName', $fields);
@@ -1081,7 +1081,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function formatCustomFieldName(&$fields) {
+  public function formatCustomFieldName(&$fields) {
     //CRM-2676, replacing the conflict for same custom field name from different custom group.
     $fieldIds = $formattedFieldNames = [];
     foreach ($fields as $key => $value) {

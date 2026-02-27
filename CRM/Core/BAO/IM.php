@@ -49,7 +49,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $im = new CRM_Core_DAO_IM();
 
     $im->copyValues($params);
@@ -67,7 +67,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static function &getValues($entityBlock) {
+  public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('im', $entityBlock);
   }
 
@@ -80,7 +80,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static function allIMs($id, $updateBlankLocInfo = FALSE) {
+  public static function allIMs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -129,7 +129,7 @@ ORDER BY
    * @access public
    * @static
    */
-  static function allEntityIMs(&$entityElements) {
+  public static function allEntityIMs(&$entityElements) {
     if (empty($entityElements)) {
       return NULL;
     }
@@ -170,7 +170,7 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
    * @param array $params referenced array to be add exists phone id
    * @return void
    */
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['name']) && is_string($params['name']) && !empty($params['contact_id']) && !empty($params['provider_id'])) {
       $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_im WHERE name LIKE %1 AND provider_id = %3 AND contact_id = %2", [
         1 => [$params['name'], 'String'],

@@ -48,7 +48,7 @@ class CRM_Core_BAO_ConfigSetting {
    * @return null
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     CRM_Core_BAO_ConfigSetting::fixParams($params);
 
     // also set a template url so js files can use this
@@ -105,7 +105,7 @@ class CRM_Core_BAO_ConfigSetting {
    * @return null
    * @static
    */
-  static function fixParams(&$params) {
+  public static function fixParams(&$params) {
     // in our old civicrm.settings.php we were using ISO code for country and
     // province limit, now we have changed it to use ids
 
@@ -138,7 +138,7 @@ class CRM_Core_BAO_ConfigSetting {
    * @return null
    * @static
    */
-  static function formatParams(&$params, &$values) {
+  public static function formatParams(&$params, &$values) {
     if (empty($params) ||
       !is_array($params)
     ) {
@@ -160,7 +160,7 @@ class CRM_Core_BAO_ConfigSetting {
    * @return array $defaults
    * @static
    */
-  static function retrieve(&$defaults) {
+  public static function retrieve(&$defaults) {
 
     $domain = new CRM_Core_BAO_Domain();
     $domain->selectAdd();
@@ -316,7 +316,7 @@ class CRM_Core_BAO_ConfigSetting {
   }
 
 
-  static function getConfigSettings() {
+  public static function getConfigSettings() {
     $config = &CRM_Core_Config::singleton();
 
     $url = $dir = $siteName = $siteRoot = NULL;
@@ -353,7 +353,7 @@ class CRM_Core_BAO_ConfigSetting {
     return [$url, $dir, $siteName, $siteRoot];
   }
 
-  static function getBestGuessSettings() {
+  public static function getBestGuessSettings() {
     $config = &CRM_Core_Config::singleton();
 
     $url = $config->userFrameworkBaseURL;
@@ -382,7 +382,7 @@ class CRM_Core_BAO_ConfigSetting {
     return [$url, $dir, $siteName, $siteRoot];
   }
 
-  static function doSiteMove($defaultValues = []) {
+  public static function doSiteMove($defaultValues = []) {
     $moveStatus = ts('Beginning site move process...') . '<br />';
     // get the current and guessed values
     list($oldURL, $oldDir, $oldSiteName, $oldSiteRoot) = self::getConfigSettings();
@@ -491,7 +491,7 @@ WHERE  id = %1
   /**
    * @return array
    */
-  static function skipVars() {
+  public static function skipVars() {
     return [
       'dsn', 'templateCompileDir',
       'userSystem',

@@ -47,7 +47,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Search', ts('Events'), $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -72,7 +72,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function view() {
+  public function view() {
     // build associated contributions
     $is_test = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $this->_id, 'is_test', 'id');
     $this->associatedContribution($is_test);
@@ -94,7 +94,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function edit() {
+  public function edit() {
     // set https for offline cc transaction
     $mode = CRM_Utils_Request::retrieve('mode', 'String', $this);
     if ($mode == 'test' || $mode == 'live') {
@@ -118,7 +118,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -153,7 +153,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     // check if we can process credit card registration
@@ -190,7 +190,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
-  function setContext() {
+  public function setContext() {
     $context = CRM_Utils_Request::retrieve('context',
       'String', $this, FALSE, 'search'
     );
@@ -290,7 +290,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function associatedContribution($is_test = 0) {
+  public function associatedContribution($is_test = 0) {
     if (CRM_Core_Permission::access('CiviContribute')) {
       $this->assign('accessContribution', TRUE);
       $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), NULL);

@@ -76,7 +76,7 @@ ORDER BY  v.weight";
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $rows = &self::info();
     $this->assign('list', $rows);
 

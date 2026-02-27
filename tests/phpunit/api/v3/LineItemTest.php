@@ -38,7 +38,7 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
 
     foreach ($this->contactIds as $id) {
       civicrm_api('contact', 'delete', ['version' => $this->_apiversion, 'id' => $id]);

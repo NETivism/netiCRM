@@ -35,11 +35,11 @@ use Box\Spout\Common\Type;
 class CRM_Core_Report_Excel {
   private static $_singleton = NULL;
 
-  static function &singleton($type) {
+  public static function &singleton($type) {
     return self::writer($type);
   }
 
-  static function writer($type) {
+  public static function writer($type) {
     switch($type) {
       case 'csv':
         $writer = WriterFactory::create(Type::CSV);
@@ -53,7 +53,7 @@ class CRM_Core_Report_Excel {
     return $writer;
   }
 
-  static function reader($type) {
+  public static function reader($type) {
     switch($type) {
       case 'csv':
         $reader = ReaderFactory::create(Type::CSV);
@@ -83,7 +83,7 @@ class CRM_Core_Report_Excel {
    *
    * @access  public
    */
-  function makeCSVTable(&$header, &$rows, $titleHeader = NULL, $print = TRUE, $outputHeader = TRUE) {
+  public function makeCSVTable(&$header, &$rows, $titleHeader = NULL, $print = TRUE, $outputHeader = TRUE) {
     if ($titleHeader) {
       echo $titleHeader;
     }
@@ -194,7 +194,7 @@ class CRM_Core_Report_Excel {
     }
   }
   // end of the 'getTableCsv()' function
-  function writeHTMLFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE) {
+  public function writeHTMLFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE) {
     if ($outputHeader) {
 
       CRM_Utils_System::download(CRM_Utils_String::munge($fileName),
@@ -227,11 +227,11 @@ class CRM_Core_Report_Excel {
     echo "</tbody></table>";
   }
 
-  static function writeCSVFile($fileName, &$header, &$rows, $download = TRUE) {
+  public static function writeCSVFile($fileName, &$header, &$rows, $download = TRUE) {
     return self::writeExportFile('csv', $fileName, $header, $rows, $download);
   }
 
-  static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE, $append = FALSE) {
+  public static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE, $append = FALSE) {
     if ($append) {
       return self::appendExcelFile($fileName, $header, $rows);
     }
@@ -240,7 +240,7 @@ class CRM_Core_Report_Excel {
     }
   }
 
-  static function readExcelFile($fileName) {
+  public static function readExcelFile($fileName) {
     if (file_exists($fileName)) {
       $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
       $reader = self::reader('excel');
@@ -258,7 +258,7 @@ class CRM_Core_Report_Excel {
     return NULL;
   }
   
-  static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
+  public static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $writer = self::singleton($type);
     if ($download) {
@@ -304,7 +304,7 @@ class CRM_Core_Report_Excel {
     }
   }
 
-  static function appendExcelFile($fileName, &$header, &$rows) {
+  public static function appendExcelFile($fileName, &$header, &$rows) {
     $config = CRM_Core_Config::singleton();
     if (strpos($fileName, $config->uploadDir) === 0) {
       $filePath = $fileName;

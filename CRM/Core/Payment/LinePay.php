@@ -40,13 +40,13 @@ class CRM_Core_Payment_LinePay {
 
   private $_linePayAPI;
 
-  function __construct($paymentProcessorId, $type = 'request') {
+  public function __construct($paymentProcessorId, $type = 'request') {
     $this->_paymentProcessId = $paymentProcessorId;
     $this->_apiType = $type;
     $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, $type);
   }
 
-  function doRequest(&$params){
+  public function doRequest(&$params){
 
     // prepare confirm url
     $qfKey = $params['qfKey'];
@@ -117,7 +117,7 @@ class CRM_Core_Payment_LinePay {
   /**
    * $url_params should be array('civicrm', 'contribute', 'transact')
    */
-  static function confirm($url_params, $get = []){
+  public static function confirm($url_params, $get = []){
     if(empty($get)){
       foreach ($_GET as $key => $value) {
         if ($key == 'q') continue;
@@ -140,7 +140,7 @@ class CRM_Core_Payment_LinePay {
     $linePayAPI->doConfirm($params);
   }
 
-  function doConfirm($params){
+  public function doConfirm($params){
     $type = 'linepay';
     $config = CRM_Core_Config::singleton();
     $contribution = self::prepareContribution($params['cid']);
@@ -216,7 +216,7 @@ class CRM_Core_Payment_LinePay {
    *   'id' => $contribution->id,
    * )
    */
-  static function query($url_params, $get = []){
+  public static function query($url_params, $get = []){
     if(empty($get)){
       foreach ($_GET as $key => $value) {
         if($key == 'q')continue;

@@ -35,13 +35,13 @@
 
 
 class CRM_Upgrade_TwoTwo_Form_Step2 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '2']);
 
     return $this->checkVersion('2.1.101');
   }
 
-  function upgrade() {
+  public function upgrade() {
     $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       [dirname(__FILE__), '..', '..',
         'Incremental', 'sql', '2.2.alpha1.mysql',
@@ -72,7 +72,7 @@ class CRM_Upgrade_TwoTwo_Form_Step2 extends CRM_Upgrade_Form {
     $this->setVersion('2.1.102');
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     // check if civicrm_event_page tables droped
     if (CRM_Core_DAO::checkTableExists('civicrm_event_page')) {
       $errorMessage .= '  civicrm_event_page table is not droped.';
@@ -109,15 +109,15 @@ class CRM_Upgrade_TwoTwo_Form_Step2 extends CRM_Upgrade_Form {
     return $this->checkVersion('2.1.102');
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('CiviCRM 2.2 Upgrade: Step Two (Merge CiviEvent Tables)');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     return '<p>' . ts('Step Two will merge the table EventPage into Event table in your database.') . '</p>';
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Upgrade & Continue');
   }
 }

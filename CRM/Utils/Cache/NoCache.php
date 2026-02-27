@@ -41,7 +41,7 @@ class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -50,21 +50,21 @@ class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
    *
    * @return void
    */
-  function __construct($config) {}
+  public function __construct($config) {}
 
-  function set($key, &$value) {
+  public function set($key, &$value) {
     return FALSE;
   }
 
-  function get($key) {
+  public function get($key) {
     return NULL;
   }
 
-  function delete($key) {
+  public function delete($key) {
     return FALSE;
   }
 
-  function flush() {
+  public function flush() {
     return FALSE;
   }
 }

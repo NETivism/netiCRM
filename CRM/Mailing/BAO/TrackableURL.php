@@ -40,7 +40,7 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 

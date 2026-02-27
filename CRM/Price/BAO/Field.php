@@ -57,7 +57,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @access public
    * @static
    */
-  static function &add(&$params, $ids) {
+  public static function &add(&$params, $ids) {
     $priceFieldBAO = new CRM_Price_BAO_Field();
 
     $priceFieldBAO->copyValues($params);
@@ -81,7 +81,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @access public
    * @static
    */
-  static function create(&$params, $ids) {
+  public static function create(&$params, $ids) {
 
 
 
@@ -169,7 +169,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_Field', $params, $defaults);
   }
 
@@ -184,7 +184,7 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @access public
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_Field', $id, 'is_active', $is_active);
   }
 
@@ -578,7 +578,7 @@ WHERE
     return NULL;
   }
 
-  static function &htmlTypes() {
+  public static function &htmlTypes() {
     static $htmlTypes = NULL;
     if (!$htmlTypes) {
       $htmlTypes = [
@@ -672,7 +672,7 @@ WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
     }
   }
 
-  static public function getPriceLevels($where = []) {
+  public static function getPriceLevels($where = []) {
     if (empty($where)) {
       $where = " (1) ";
     }
@@ -747,7 +747,7 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
    * @access public
    * @static
    */
-  static function copy($fid) {
+  public static function copy($fid) {
     $fieldsFix = [
       'suffix' => [
         'label' => ' ' . ts("Copy"),

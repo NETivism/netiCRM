@@ -57,7 +57,7 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
    */
   protected $_fid;
   
-  function preProcess() {
+  public function preProcess() {
 
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->_eid = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);

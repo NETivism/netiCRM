@@ -50,7 +50,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @var array
    * @static
    */
-  static $_exportableFields = NULL;
+  public static $_exportableFields = NULL;
 
   /**
    * static field for all the activity information that we can potentially import
@@ -58,7 +58,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @var array
    * @static
    */
-  static $_importableFields = NULL;
+  public static $_importableFields = NULL;
 
   /**
    * Check if there is absolute minimum of data to add the object
@@ -648,7 +648,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @access public
    * @static
    */
-  static function &getActivities(&$data, $offset = NULL, $rowCount = NULL, $sort = NULL,
+  public static function &getActivities(&$data, $offset = NULL, $rowCount = NULL, $sort = NULL,
     $admin = FALSE, $caseId = NULL, $context = NULL
   ) {
     //step 1: Get the basic activity data
@@ -878,7 +878,7 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
    *
    * return an array of component id and name.
    **/
-  static function activityComponents() {
+  public static function activityComponents() {
 
     $components = [];
     $compInfo = CRM_Core_Component::getEnabledComponents();
@@ -918,7 +918,7 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
    * @access public
    * @static
    */
-  static function &getActivitiesCount($contactID, $admin = FALSE, $caseId = NULL, $context = NULL) {
+  public static function &getActivitiesCount($contactID, $admin = FALSE, $caseId = NULL, $context = NULL) {
     list($sqlClause, $params) = self::getActivitySQLClause($contactID, $admin, $caseId, $context, TRUE);
 
     $query = "SELECT COUNT(DISTINCT(activity_id)) as count  from ( {$sqlClause} ) as tbl";
@@ -936,7 +936,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
-  static function getActivitySQLClause($contactID, $admin = FALSE, $caseId = NULL, $context = NULL, $count = FALSE) {
+  public static function getActivitySQLClause($contactID, $admin = FALSE, $caseId = NULL, $context = NULL, $count = FALSE) {
     $params = [];
     $sourceWhere = $targetWhere = $assigneeWhere = $caseWhere = 1;
 
@@ -1146,7 +1146,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @access public
    * @static
    */
-  static function sendEmail(
+  public static function sendEmail(
     &$contactDetails,
     &$subject,
     &$text,
@@ -1885,7 +1885,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @access public
    * @static
    */
-  static function sendMessage($from,
+  public static function sendMessage($from,
     $fromID,
     $toID,
     &$subject,
@@ -1962,7 +1962,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @return array    array of importable Fields
    * @access public
    */
-  static function &importableFields() {
+  public static function &importableFields() {
     if (!self::$_importableFields) {
       if (!self::$_importableFields) {
         self::$_importableFields = [];
@@ -2008,7 +2008,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @return array    array of activity fields
    * @access public
    */
-  static function getContactActivity($contactId) {
+  public static function getContactActivity($contactId) {
     $activities = [];
 
     // First look for activities where contactId is one of the targets
@@ -2326,7 +2326,7 @@ SELECT  display_name
    * @return int $parentId  Id of parent acyivity otherwise false.
    * @access public
    */
-  static function getParentActivity($activityId) {
+  public static function getParentActivity($activityId) {
     static $parentActivities = [];
 
     $activityId = CRM_Utils_Type::escape($activityId, 'Integer');
@@ -2353,7 +2353,7 @@ SELECT  display_name
    * @return int $params  count of prior acyivities otherwise false.
    * @access public
    */
-  static function getPriorCount($activityID) {
+  public static function getPriorCount($activityID) {
     static $priorCounts = [];
 
     $activityID = CRM_Utils_Type::escape($activityID, 'Integer');
@@ -2390,7 +2390,7 @@ AND id < {$activityID}
    * @return array $result  prior acyivities info.
    * @access public
    */
-  static function getPriorAcitivities($activityID, $onlyPriorRevisions = FALSE) {
+  public static function getPriorAcitivities($activityID, $onlyPriorRevisions = FALSE) {
     static $priorActivities = [];
 
     $activityID = CRM_Utils_Type::escape($activityID, 'Integer');
@@ -2440,7 +2440,7 @@ AND cl.modified_id  = c.id
    * @return int $params  current activity id.
    * @access public
    */
-  static function getLatestActivityId($activityID) {
+  public static function getLatestActivityId($activityID) {
     static $latestActivityIds = [];
 
     $activityID = CRM_Utils_Type::escape($activityID, 'Integer');
@@ -2473,7 +2473,7 @@ AND cl.modified_id  = c.id
    *
    * @access public
    */
-  static function createFollowupActivity($activityId, $params) {
+  public static function createFollowupActivity($activityId, $params) {
     if (!$activityId) {
       return;
     }
@@ -2510,7 +2510,7 @@ AND cl.modified_id  = c.id
    *
    * @static
    */
-  static function getFileForActivityTypeId($activityTypeId, $crmDir = 'Activity') {
+  public static function getFileForActivityTypeId($activityTypeId, $crmDir = 'Activity') {
 
     $activityTypes = CRM_Case_PseudoConstant::caseActivityType(FALSE, TRUE);
 
@@ -2563,7 +2563,7 @@ AND cl.modified_id  = c.id
    * @return array array of exportable Fields
    * @access public
    */
-  static function &exportableFields($name = 'Activity') {
+  public static function &exportableFields($name = 'Activity') {
     if (!isset(self::$_exportableFields[$name])) {
       self::$_exportableFields[$name] = [];
 

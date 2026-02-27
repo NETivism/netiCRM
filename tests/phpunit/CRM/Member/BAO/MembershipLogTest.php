@@ -38,7 +38,7 @@ require_once 'CRM/Member/BAO/MembershipType.php';
  */
 class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase 
 {    
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'MembershipLog Test',
@@ -47,7 +47,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
         
@@ -82,7 +82,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase
      * This method is called after a test is executed.
      *
      */
-    function tearDown( )
+    public function tearDown( )
     {
         $this->relationshipTypeDelete( $this->_relationshipTypeId );
         $this->membershipTypeDelete( [ 'id' => $this->_membershipTypeID ] );
@@ -94,7 +94,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase
     /**
      *  Test add()
      */
-    function testadd()
+    public function testadd()
     {  
         $contactId = Contact::createIndividual( );
         
@@ -121,7 +121,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase
     /**
      *  Test del()
      */
-    function testdel()
+    public function testdel()
     {  
         $contactId = Contact::createIndividual( );
         
@@ -150,7 +150,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase
     /**
      *  Test resetmodified()
      */
-    function testresetmodifiedId()
+    public function testresetmodifiedId()
     {  
         $contactId = Contact::createIndividual( );
         

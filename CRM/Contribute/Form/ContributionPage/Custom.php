@@ -79,7 +79,7 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
     if ($this->_id) {
@@ -163,7 +163,7 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $contributionPageId) {
+  public static function formRule($fields, $files, $contributionPageId) {
     $errors = [];
     $preProfileType = $postProfileType = NULL;
     // for membership profile make sure Membership section is enabled

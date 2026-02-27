@@ -77,7 +77,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
@@ -126,7 +126,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     return empty($errors) ? TRUE : $errors;

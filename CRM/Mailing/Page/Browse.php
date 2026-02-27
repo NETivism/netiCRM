@@ -90,7 +90,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_unscheduled = $this->_archived = $archiveLinks = FALSE;
     $this->_mailingId = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
 
@@ -127,7 +127,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
    *
    * @return void
    */
-  function run($newArgs = NULL) {
+  public function run($newArgs = NULL) {
     $this->preProcess();
 
     $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
@@ -296,7 +296,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
     return parent::run();
   }
 
-  function search() {
+  public function search() {
     if ($this->_action &
       (CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE
@@ -315,7 +315,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
     $form->run();
   }
 
-  function whereClause(&$params, $sortBy = TRUE) {
+  public function whereClause(&$params, $sortBy = TRUE) {
     $values = [];
 
     $clauses = [];

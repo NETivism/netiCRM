@@ -45,17 +45,17 @@ class CRM_Core_Extensions {
   /**
    * The option group name
    */
-  CONST OPTION_GROUP_NAME = 'system_extensions';
+  public CONST OPTION_GROUP_NAME = 'system_extensions';
 
   /**
    * Extension info file name
    */
-  CONST EXT_INFO_FILENAME = 'info.xml';
+  public CONST EXT_INFO_FILENAME = 'info.xml';
 
   /**
    * Extension info file name
    */
-  CONST EXT_TEMPLATES_DIRNAME = 'templates';
+  public CONST EXT_TEMPLATES_DIRNAME = 'templates';
 
   /**
    * Allows quickly verifying if extensions are enabled
@@ -400,7 +400,7 @@ class CRM_Core_Extensions {
    *
    * @return mixed result of CRM_Core_DAO::setFieldValue
    */
-  static public function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     $extensions = new CRM_Core_Extensions();
     $e = $extensions->getExtensionsByKey();
     foreach ($e as $key => $eo) {

@@ -9,7 +9,7 @@ class Contact extends CiviUnitTestCase
      *
      * @return $contactID id of created contact
      */
-    function create( $params ) {
+    public function create( $params ) {
         require_once "CRM/Contact/BAO/Contact.php";
         $contactID = CRM_Contact_BAO_Contact::createProfileContact( $params, CRM_Core_DAO::$_nullArray );
         return $contactID;
@@ -21,7 +21,7 @@ class Contact extends CiviUnitTestCase
      *
      * @return $contactID id of created Individual
      */
-    function createIndividual( $params = null ) {
+    public function createIndividual( $params = null ) {
         //compose the params, when not passed
         if ( !$params ) {
             $first_name = 'John';
@@ -42,7 +42,7 @@ class Contact extends CiviUnitTestCase
      *
      * @return $contactID id of created Household
      */
-    function createHousehold( $params = null) {
+    public function createHousehold( $params = null) {
         //compose the params, when not passed
         if ( !$params ) {
             $household_name = "John Doe's home";
@@ -60,7 +60,7 @@ class Contact extends CiviUnitTestCase
      *
      * @return $contactID id of created Organisation
      */
-    function createOrganisation( $params = null ) {
+    public function createOrganisation( $params = null ) {
         //compose the params, when not passed
         if ( !$params ) {
             $organization_name = "My Organization";
@@ -79,7 +79,7 @@ class Contact extends CiviUnitTestCase
      * @return boolean true if contact deleted, false otherwise
      * 
      */
-    function delete( $contactID ) {
+    public function delete( $contactID ) {
         require_once 'CRM/Contact/BAO/Contact.php';
         return CRM_Contact_BAO_Contact::deleteContact( $contactID );
     }

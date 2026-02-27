@@ -103,7 +103,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
    * @var int
    * @static
    */
-  static $_contactType = NULL;
+  public static $_contactType = NULL;
 
   /**
    * Attempt to resolve the header with our mapper fields
@@ -556,7 +556,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $fieldMessage = NULL;
 

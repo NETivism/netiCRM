@@ -46,7 +46,7 @@ class CRM_Core_Invoke {
    * @static
    * @access public
    */
-  static function invoke($args) {
+  public static function invoke($args) {
     self::menuRebuild($args);
     CRM_Utils_System::civiBeforeInvoke($args);
 
@@ -170,7 +170,7 @@ class CRM_Core_Invoke {
    * @static
    * @access public
    */
-  static function form($action, $contact_type, $contact_sub_type) {
+  public static function form($action, $contact_type, $contact_sub_type) {
     CRM_Utils_System::setUserContext(['civicrm/contact/search/basic', 'civicrm/contact/view']);
     $wrapper = new CRM_Utils_Wrapper();
 
@@ -192,7 +192,7 @@ class CRM_Core_Invoke {
    * @static
    * @access public
    */
-  static function profile($args) {
+  public static function profile($args) {
     if ($args[1] !== 'profile') {
       return;
     }
@@ -325,7 +325,7 @@ class CRM_Core_Invoke {
     return $page->run();
   }
 
-  static function menuRebuild($args = NULL, $force = FALSE) {
+  public static function menuRebuild($args = NULL, $force = FALSE) {
     // when force rebuild, do not check permission and add status message
     if ($force) {
       CRM_Core_Menu::store(FALSE);

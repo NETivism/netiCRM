@@ -70,7 +70,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $flag = FALSE;
     $this->_gid = $this->get('id');
     $this->set('gid', $this->_gid);
@@ -133,7 +133,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $stateCountryMap = [];
     foreach ($this->_fields as $name => $field) {

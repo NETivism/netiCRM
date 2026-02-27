@@ -40,7 +40,7 @@
  */
 class CRM_Admin_Page_Admin extends CRM_Core_Page {
   public $_showHide;
-  function run() {
+  public function run() {
     $groups = ['Customize' => ts('Customize'),
       'Configure' => ts('Configure'),
       'Manage' => ts('Manage'),

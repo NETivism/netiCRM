@@ -58,7 +58,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
   protected $_add2groupSupported = FALSE;
 
   protected $_customGroupExtends = ['Membership'];
-  protected $_customGroupGroupBy = FALSE; function __construct() {
+  protected $_customGroupGroupBy = FALSE; public function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
 
@@ -137,7 +137,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $groupBys = FALSE;
     $this->_columnHeaders = [];
@@ -265,7 +265,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM  civicrm_membership {$this->_aliases['civicrm_membership']}
                
@@ -279,7 +279,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
                          ON payment.contribution_id = {$this->_aliases['civicrm_contribution']}.id";
   }
   // end of from
-  function where() {
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -321,7 +321,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
     if (is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])
@@ -362,7 +362,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     }
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $select = "
@@ -400,11 +400,11 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     return $statistics;
   }
 
-  function postProcess() {
+  public function postProcess() {
     parent::postProcess();
   }
 
-  function buildChart(&$rows) {
+  public function buildChart(&$rows) {
     $graphRows = [];
     $count = 0;
     $membershipTypeValues = CRM_Member_PseudoConstant::membershipType();
@@ -472,7 +472,7 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     $this->assign('chartType', $this->_params['charts']);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {

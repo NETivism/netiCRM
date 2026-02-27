@@ -6,7 +6,7 @@ require_once 'CiviTest/Custom.php';
 
 class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase 
 {
-      function get_info( ) 
+      public function get_info( ) 
     {
         return [
                      'name'        => 'Custom Field BAOs',
@@ -15,12 +15,12 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase
                      ];
     }
 
-    function setUp()
+    public function setUp()
     {
         parent::setUp();
     }    
    
-    function testCreateCustomfield()
+    public function testCreateCustomfield()
     {
         $customGroup = Custom::createGroup( [], 'Individual' );
         $fields = [
@@ -48,7 +48,7 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase
         Custom::deleteGroup( $customGroup );
     }
     
-    function testGetFields()
+    public function testGetFields()
     {
         $customGroup = Custom::createGroup( [], 'Individual' );
         $fields = [
@@ -81,7 +81,7 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase
         Custom::deleteGroup( $customGroup );
     }
     
-    function testGetDisplayedValues()
+    public function testGetDisplayedValues()
     {
         $customGroup = Custom::createGroup( [], 'Individual' );
         $fields = [
@@ -107,7 +107,7 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase
               
         Custom::deleteGroup( $customGroup );
     }
-    function testDeleteCustomfield()
+    public function testDeleteCustomfield()
     {
         $customGroup = Custom::createGroup( [], 'Individual' );
         $fields      =  [

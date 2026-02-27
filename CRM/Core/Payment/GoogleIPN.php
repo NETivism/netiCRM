@@ -46,7 +46,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * mode of operation: live or test
@@ -54,9 +54,9 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
-  static function retrieve($name, $type, $object, $abort = TRUE) {
+  public static function retrieve($name, $type, $object, $abort = TRUE) {
     $value = CRM_Utils_Array::value($name, $object);
     if ($abort && $value === NULL) {
       CRM_Core_Error::debug_log_message("Could not find an entry for $name");
@@ -82,7 +82,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     parent::__construct();
 
     $this->_mode = $mode;
@@ -98,7 +98,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @return void
    *
    */
-  function newOrderNotify($dataRoot, $privateData, $component) {
+  public function newOrderNotify($dataRoot, $privateData, $component) {
     $ids = $input = $params = [];
 
     $input['component'] = strtolower($component);
@@ -189,7 +189,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @return void
    *
    */
-  function orderStateChange($status, $dataRoot, $component) {
+  public function orderStateChange($status, $dataRoot, $component) {
     $input = $objects = $ids = [];
 
     $input['component'] = strtolower($component);
@@ -267,7 +267,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @return object
    * @static
    */
-  static function &singleton($mode, $component, &$paymentProcessor) {
+  public static function &singleton($mode, $component, &$paymentProcessor) {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Payment_GoogleIPN($mode, $paymentProcessor);
     }
@@ -282,7 +282,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @return amount
    * @access public
    */
-  function getAmount($orderNo) {
+  public function getAmount($orderNo) {
 
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $orderNo;
@@ -305,7 +305,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @return array context of this call (test, module, payment processor id)
    * @static
    */
-  static function getContext($xml_response, $privateData, $orderNo, $root) {
+  public static function getContext($xml_response, $privateData, $orderNo, $root) {
 
 
     $isTest = NULL;
@@ -406,7 +406,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * a notification or request is sent by the Google Server.
    *
    */
-  static function main($xml_response) {
+  public static function main($xml_response) {
 
 
 
@@ -520,7 +520,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       }
     }
 
-    function getInput(&$input, &$ids) {
+    public function getInput(&$input, &$ids) {
       if (!$this->getBillingID($ids)) {
         return FALSE;
       }
@@ -547,7 +547,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
      * Converts the comma separated name-value pairs in <merchant-private-data>
      * to an array of name-value pairs.
      */
-    static   function stringToArray($str) {
+    public static function stringToArray($str) {
       $vars = $labels = [];
       $labels = explode(',', $str);
       foreach ($labels as $label) {

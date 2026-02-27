@@ -41,7 +41,7 @@ class CRM_Core_TableHierarchy {
    * @var array
    * @static
    */
-  static $info = [
+  public static $info = [
     'civicrm_contact' => '01',
     'civicrm_address' => '09',
     'civicrm_county' => '10',
@@ -80,7 +80,7 @@ class CRM_Core_TableHierarchy {
 
   ];
 
-  static function &info() {
+  public static function &info() {
     //get the campaign related tables.
 
     CRM_Campaign_BAO_Query::info(self::$info);

@@ -67,7 +67,7 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
 
@@ -96,7 +96,7 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
    * @static
    *
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     //set the userContext stack

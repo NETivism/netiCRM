@@ -31,7 +31,7 @@ require_once 'CRM/Core/BAO/FinancialTrxn.php';
 class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'FinancialTrxn BAOs',
@@ -40,7 +40,7 @@ class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -49,7 +49,7 @@ class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase
     /**
      * check method create()
      */
-    function testCreate()
+    public function testCreate()
     {
         $contactId          = $this->individualCreate( ); 
         $contributionTypeId = $this->contributionTypeCreate(); 

@@ -35,7 +35,7 @@ class CiviMailProcessor {
      * @param int    $age  files older than this many seconds will be deleted (default: 60 days)
      * @return void
      */
-    static function cleanupDir($dir, $age = 5184000) {
+    public static function cleanupDir($dir, $age = 5184000) {
         // return early if we can’t read/write the dir
         if (!is_writable($dir) or !is_readable($dir) or !is_dir($dir)) return;
 
@@ -56,7 +56,7 @@ class CiviMailProcessor {
      * @param string $name  name of the set of settings from civicrm_mail_settings (null for default set)
      * @return void
      */
-    static function process($name = null) {
+    public static function process($name = null) {
 
         $dao = CRM_Core_BAO_MailSettings::defaultDAO();
         $name ? $dao->name = $name : $dao->is_default = 1;

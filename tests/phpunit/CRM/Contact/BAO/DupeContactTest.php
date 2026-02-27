@@ -6,12 +6,12 @@ require_once 'CiviTest/Contact.php';
 class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase 
 {
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
     
-    function testFuzzyDupes( )
+    public function testFuzzyDupes( )
     {
         // make dupe checks based on based on following contact sets:
         // FIRST - LAST - EMAIL
@@ -178,7 +178,7 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase
         civicrm_api('group', 'delete', $params );
     }
 
-    function testDupesByParams( )
+    public function testDupesByParams( )
     {
         // make dupe checks based on based on following contact sets:
         // FIRST - LAST - EMAIL

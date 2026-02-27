@@ -9,7 +9,7 @@ class PCPBlock extends PHPUnit_Framework_Testcase
      * @return array of created pcp block
      *
      */
-    function create( $contributionPageId ) {
+    public function create( $contributionPageId ) {
         $profileParams = [
                                'group_type' => 'Individual,Contact',
                                'title'      => 'Test Supprorter Profile',
@@ -94,7 +94,7 @@ class PCPBlock extends PHPUnit_Framework_Testcase
      * @return boolean true if success, false otherwise
      *
      */
-    function delete( $params )
+    public function delete( $params )
     {
         $api_version = civicrm_get_api_version();
         if ($api_version === 2) {

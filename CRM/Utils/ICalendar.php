@@ -50,7 +50,7 @@ class CRM_Utils_ICalendar {
    * @return  Escaped text
    *
    */
-  static function formatText($text) {
+  public static function formatText($text) {
     $text = html_entity_decode($text, ENT_QUOTES);
     $text = str_replace(['&nbsp;', '&nbsp\;'], '', $text);
     $text = str_replace("\"", "DQUOTE", $text);
@@ -64,7 +64,7 @@ class CRM_Utils_ICalendar {
     return $text;
   }
 
-  static function formatHTML($html) {
+  public static function formatHTML($html) {
     $html = html_entity_decode($html, ENT_QUOTES);
     $html = preg_replace( "/\r|\n/", "", $html);
     return '<html><body>'.$html.'</body></html>';
@@ -78,7 +78,7 @@ class CRM_Utils_ICalendar {
    * @return  Escaped date
    *
    */
-  static function formatDate($date, $gdata = FALSE) {
+  public static function formatDate($date, $gdata = FALSE) {
 
     if ($gdata) {
       return date("Y-m-d\TH:i:s.000",
@@ -115,7 +115,7 @@ class CRM_Utils_ICalendar {
    * @return void
    *
    */
-  static function send($calendar, $content_type = 'text/calendar', $charset = 'us-ascii', $fileName = NULL, $disposition = NULL) {
+  public static function send($calendar, $content_type = 'text/calendar', $charset = 'us-ascii', $fileName = NULL, $disposition = NULL) {
 
     $config = CRM_Core_Config::singleton();
     $lang = $config->lcMessages;
@@ -131,7 +131,7 @@ class CRM_Utils_ICalendar {
     echo $calendar;
   }
 
-  static function mb_str_split($str, $split_len = 1) {
+  public static function mb_str_split($str, $split_len = 1) {
     if (!preg_match('/^[0-9]+$/', $split_len) || $split_len < 1) {
       return FALSE;
     }

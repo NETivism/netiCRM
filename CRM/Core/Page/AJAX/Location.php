@@ -48,7 +48,7 @@ class CRM_Core_Page_AJAX_Location {
    * This method is used by on-behalf-of form to dynamically generate poulate the
    * location field values for selected permissioned contact.
    */
-  function getPermissionedLocation() {
+  public function getPermissionedLocation() {
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       CRM_Utils_System::civiExit();
     }
@@ -116,7 +116,7 @@ class CRM_Core_Page_AJAX_Location {
     CRM_Utils_System::civiExit();
   }
 
-  static function getLocBlock() {
+  public static function getLocBlock() {
     // i wish i could retrieve loc block info based on loc_block_id,
     // Anyway, lets retrieve an event which has loc_block_id set to 'lbid'.
     if ($_POST['lbid']) {

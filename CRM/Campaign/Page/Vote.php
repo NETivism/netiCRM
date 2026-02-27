@@ -42,7 +42,7 @@
 class CRM_Campaign_Page_Vote extends CRM_Core_Page {
   public $_tabs;
   private $_surveyId;
-  private $_interviewerId; function reserve() {
+  private $_interviewerId; public function reserve() {
     //build ajax voter search and selector.
     $controller = new CRM_Core_Controller_Simple('CRM_Campaign_Form_Gotv', ts('Reserve Respondents'));
     $controller->set('votingTab', TRUE);
@@ -59,7 +59,7 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function interview() {
+  public function interview() {
     //build interview and release voter interface.
     $controller = new CRM_Core_Controller_Simple('CRM_Campaign_Form_Task_Interview', ts('Interview Respondents'));
     $controller->set('votingTab', TRUE);
@@ -74,7 +74,7 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function browse() {
+  public function browse() {
     $this->_tabs = ['reserve' => ts('Reserve Respondents'),
       'interview' => ts('Interview Respondents'),
     ];
@@ -101,13 +101,13 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
       ));
   }
 
-  function run() {
+  public function run() {
     $this->browse();
 
     parent::run();
   }
 
-  function buildTabs() {
+  public function buildTabs() {
     //check for required permissions.
     $superUser = FALSE;
     if (CRM_Core_Permission::check('manage campaign') ||

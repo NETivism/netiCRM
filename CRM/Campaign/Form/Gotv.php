@@ -67,7 +67,7 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_search = CRM_Utils_Array::value('search', $_GET);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
     $this->_surveyId = CRM_Utils_Request::retrieve('sid', 'Positive', $this);
@@ -116,7 +116,7 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     if ($this->_search) {
       return;
     }
@@ -167,7 +167,7 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
     $this->validateIds();
   }
 
-  function validateIds() {
+  public function validateIds() {
     $errorMessages = [];
     //check for required permissions.
     if (!CRM_Core_Permission::check('manage campaign') &&

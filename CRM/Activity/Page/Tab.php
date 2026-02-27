@@ -56,7 +56,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
    *
    * @access public
    */
-  function browse() {
+  public function browse() {
 
 
     $output = CRM_Core_Selector_Controller::SESSION;
@@ -95,7 +95,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $this->assign('context', 'activity');
   }
 
-  function edit() {
+  public function edit() {
     // used for ajax tabs
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->assign('context', $context);
@@ -168,7 +168,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
 
@@ -190,7 +190,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $controller->run();
   }
 
-  function delete() {
+  public function delete() {
     $controller = new CRM_Core_Controller_Simple('CRM_Activity_Form_Activity',
       ts('Activity Record'),
       $this->_action
@@ -208,7 +208,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
    *
    * @access public
    */
-  function run() {
+  public function run() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     $action = CRM_Utils_Request::retrieve('action', 'String', $this);

@@ -101,7 +101,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if ($this->_mailingID) {
       /*

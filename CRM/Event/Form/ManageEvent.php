@@ -90,7 +90,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $config = CRM_Core_Config::singleton();
     if (in_array("CiviEvent", $config->enableComponents)) {
       $this->assign('CiviEvent', TRUE);
@@ -222,7 +222,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
@@ -323,7 +323,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     $this->add('hidden', 'is_template', $this->_isTemplate);
   }
 
-  function endPostProcess() {
+  public function endPostProcess() {
     // make submit buttons keep the current working tab opened.
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $className = CRM_Utils_String::getClassName($this->_name);
@@ -357,7 +357,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Event/Form/ManageEvent/{$this->_id}/{$this->_name}.tpl";
       $template = &CRM_Core_Form::getTemplate();

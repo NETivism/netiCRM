@@ -47,19 +47,19 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
    *
    * @return string Classname of BAO
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Mailing_BAO_Mailing';
   }
 
-  function &links() {
+  public function &links() {
     return CRM_Core_DAO::$_nullObject;
   }
 
-  function editForm() {
+  public function editForm() {
     return NULL;
   }
 
-  function editName() {
+  public function editName() {
     return 'CiviMail Report';
   }
 
@@ -68,15 +68,15 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/mailing/report';
   }
 
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'reset=1&mid=' . $this->_mailing_id;
   }
 
-  function run() {
+  public function run() {
     $this->_mailing_id = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
 
     // check that the user has permission to access mailing id

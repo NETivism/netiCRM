@@ -42,7 +42,7 @@
 class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
   protected $_id = NULL;
 
-  protected $_fields = NULL; function preProcess() {
+  protected $_fields = NULL; public function preProcess() {
     parent::preProcess();
 
     $this->_fields = [
@@ -159,7 +159,7 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
     $this->add('checkbox', 'is_recur', ts('Does this Payment Processor Type support recurring donations?'));
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if (!$this->_id) {

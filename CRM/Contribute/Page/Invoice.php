@@ -1,6 +1,6 @@
 <?php
 class CRM_Contribute_Page_Invoice extends CRM_Core_Page {
-  function run() {
+  public function run() {
     // template
     if(!empty($_GET['ii'])){
       $contribution = new CRM_Contribute_DAO_Contribution();

@@ -144,7 +144,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('searchFormName', 'Search');
 
     /**
@@ -235,7 +235,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('Pledger Name or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
 
@@ -313,7 +313,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     if ($this->_done) {
       return;
     }
@@ -409,7 +409,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * @access public
    * @see valid_date
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Pledge_Form_Search', 'formRule']);
   }
 
@@ -423,7 +423,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
 
     if (!empty($errors)) {
@@ -440,13 +440,13 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $defaults = $this->_formValues;
     return $defaults;
   }
 
-  function fixFormValues() {
+  public function fixFormValues() {
     if (!$this->_force) {
       return;
     }
@@ -533,7 +533,7 @@ class CRM_Pledge_Form_Search extends CRM_Core_Form {
     }
   }
 
-  function getFormValues() {
+  public function getFormValues() {
     return NULL;
   }
 

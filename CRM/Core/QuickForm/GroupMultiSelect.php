@@ -53,7 +53,7 @@ class CRM_Core_QuickForm_GroupMultiSelect extends CRM_Core_QuickForm_NestedAdvMu
   public $_upButtonAttributes;
   public $_downButtonAttributes;
   public $_tableAttributes;
-  function toHtml() {
+  public function toHtml() {
     if ($this->_flagFrozen) {
       return $this->getFrozenHtml();
     }

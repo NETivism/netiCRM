@@ -5,7 +5,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 

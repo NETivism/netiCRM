@@ -40,7 +40,7 @@
  *
  */
 class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
-  static $_gid = NULL;
+  public static $_gid = NULL;
 
   /**
    * The option group name
@@ -48,7 +48,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    * @var string
    * @static
    */
-  static $_gName = NULL;
+  public static $_gName = NULL;
 
   /**
    * Function to for pre-processing
@@ -116,7 +116,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults = parent::setDefaultValues();
     if (!CRM_Utils_Array::value('weight', $defaults)) {
@@ -230,7 +230,7 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     //don't allow duplicate value within group.

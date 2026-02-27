@@ -107,7 +107,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Admin_Form_MailSettings', 'formRule'], $this);
   }
   
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($fields['is_default'] != 1 && !empty($fields['localpart'])) {
       $test = preg_match('/'.$fields['localpart'].'/i', 'test');
@@ -118,7 +118,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     // prevent modify global $civicrm_conf['mailing_mailstore'] variable
     if ($this->_action & CRM_Core_Action::UPDATE && $defaults['is_default'] == 1) {
@@ -146,7 +146,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
    *
    * @return None
    */
-  function postProcess() {
+  public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Core_BAO_MailSettings::deleteMailSettings($this->_id);
       CRM_Core_Session::setStatus(ts('Selected Mail Setting has been deleted.'));

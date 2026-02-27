@@ -16,7 +16,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   protected $_entity;
   protected $_params;
   
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     $this->_entity = 'Email';
     parent::setUp();
@@ -41,7 +41,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->contactDelete($this->_contactID);
     $this->locationTypeDelete($this->_locationType->id);
     $this->locationTypeDelete($this->_locationType2->id);

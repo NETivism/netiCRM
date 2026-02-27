@@ -41,7 +41,7 @@ class CRM_Member_Page_AJAX {
   /**
    * Function to setDefaults according to membership type
    */
-  static function getMemberTypeDefaults($config) {
+  public static function getMemberTypeDefaults($config) {
 
     $memType = CRM_Utils_Type::escape($_POST['mtype'], 'Integer');
 

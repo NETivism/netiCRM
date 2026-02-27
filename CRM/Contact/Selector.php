@@ -61,7 +61,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -69,14 +69,14 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
    * @static
    */
-  static $_properties = ['contact_id', 'contact_type', 'contact_sub_type',
+  public static $_properties = ['contact_id', 'contact_type', 'contact_sub_type',
     'sort_name', 'country', 'postal_code',
     'state_province', 'city', 'street_address',
     'geo_code_1', 'geo_code_2',
@@ -153,7 +153,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct($customSearchClass,
+  public function __construct($customSearchClass,
     $formValues = NULL,
     $params = NULL,
     $returnProperties = NULL,
@@ -262,7 +262,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @access public
    *
    */
-  static function &links($context = NULL, $contextMenu = NULL, $key = NULL) {
+  public static function &links($context = NULL, $contextMenu = NULL, $key = NULL) {
     $extraParams = ($key) ? "&key={$key}" : NULL;
     $searchContext = ($context) ? "&context=$context" : NULL;
 
@@ -337,7 +337,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Contact %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
@@ -346,7 +346,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     $params['buttonBottom'] = 'PagerBottomButton';
   }
   //end of function
-  function &getColHeads($action = NULL, $output = NULL) {
+  public function &getColHeads($action = NULL, $output = NULL) {
 
 
     $colHeads = self::_getColumnHeaders();
@@ -365,7 +365,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @return array the column headers that need to be displayed
    * @access public
    */
-  function &getColumnHeaders($action = NULL, $output = NULL) {
+  public function &getColumnHeaders($action = NULL, $output = NULL) {
 
     if ($output == CRM_Core_Selector_Controller::EXPORT) {
       $csvHeaders = [ts('Contact Id'), ts('Contact Type')];
@@ -517,7 +517,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     return $this->_query->searchQuery(0, 0, NULL, TRUE);
   }
 
@@ -532,7 +532,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $config = CRM_Core_Config::singleton();
 
     if (($output == CRM_Core_Selector_Controller::EXPORT ||
@@ -865,7 +865,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Contact Search');
   }
 
@@ -923,15 +923,15 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     return self::$_columnHeaders;
   }
 
-  function &getQuery() {
+  public function &getQuery() {
     return $this->_query;
   }
 
-  function alphabetQuery() {
+  public function alphabetQuery() {
     return $this->_query->searchQuery(NULL, NULL, NULL, FALSE, FALSE, TRUE);
   }
 
-  function contactIDQuery($params, $action, $sortID) {
+  public function contactIDQuery($params, $action, $sortID) {
     $sortOrder = &$this->getSortOrder($this->_action);
     $sort = new CRM_Utils_Sort($sortOrder, $sortID);
 
@@ -947,7 +947,7 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
     return $value;
   }
 
-  function &makeProperties(&$returnProperties) {
+  public function &makeProperties(&$returnProperties) {
     $properties = [];
     foreach ($returnProperties as $name => $value) {
       if ($name != 'location') {

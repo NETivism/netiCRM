@@ -6,13 +6,13 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
   private $_get;
   private $_paymentProcessor;
 
-  function __construct($post, $get) {
+  public function __construct($post, $get) {
     parent::__construct();
     $this->_post = $post;
     $this->_get = $get;
   }
 
-  function main($instrument){
+  public function main($instrument){
     $objects = $ids = $input = [];
     $this->getIds($ids);
     // query result sync
@@ -211,7 +211,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     return FALSE;
   }
 
-  function getIds(&$ids){
+  public function getIds(&$ids){
     $contribId = CRM_Utils_Array::value('cid', $this->_get);
     if (!empty($contribId) && CRM_Utils_Type::escape($contribId, 'Integer')) {
       $ids = CRM_Contribute_BAO_Contribution::buildIds($contribId, FALSE);
@@ -231,7 +231,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  function validateOthers( &$input, &$ids, &$objects, &$note, $instrument = ''){
+  public function validateOthers( &$input, &$ids, &$objects, &$note, $instrument = ''){
     $contribution = &$objects['contribution'];
     $pass = TRUE;
     $validValue = [];
@@ -414,7 +414,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     return $pass;
   }
 
-  function addNote($note, &$contribution){
+  public function addNote($note, &$contribution){
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $noteExists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
     if(count($noteExists)){

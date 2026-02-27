@@ -5,12 +5,12 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ReportTemplateTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     parent::setUp();
   }
 
-  function tearDown() {}
+  public function tearDown() {}
 
   public function testReportTemplate() {
     $result = civicrm_api('ReportTemplate', 'create', [

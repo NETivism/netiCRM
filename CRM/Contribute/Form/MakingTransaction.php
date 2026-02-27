@@ -65,7 +65,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    */
   public $_contactID;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_preventMultipleSubmission = TRUE;
   }
 
@@ -77,7 +77,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     return $defaults;
   }

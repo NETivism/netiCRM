@@ -37,37 +37,37 @@
  * Helper authentication class for unit tests
  */
 class CRM_Utils_System_UnitTests {
-  function setTitle($title, $pageTitle = NULL) {
+  public function setTitle($title, $pageTitle = NULL) {
     return;
   }
 
-  static function authenticate($name, $password) {
+  public static function authenticate($name, $password) {
     $retVal = [1, 1, 12345];
     return $retVal;
   }
 
-  static function appendBreadCrumb($breadCrumbs) {
+  public static function appendBreadCrumb($breadCrumbs) {
     return;
   }
 
-  static function resetBreadCrumb() {
+  public static function resetBreadCrumb() {
     return;
   }
 
-  static function addHTMLHead($head) {
+  public static function addHTMLHead($head) {
     return;
   }
 
-  static function mapConfigToSSL() {
+  public static function mapConfigToSSL() {
     global $base_url;
     $base_url = str_replace('http://', 'https://', $base_url);
   }
 
-  static function postURL($action) {
+  public static function postURL($action) {
     return;
   }
 
-  function url($path = NULL, $query = NULL, $absolute = TRUE, $fragment = NULL, $htmlize = TRUE) {
+  public function url($path = NULL, $query = NULL, $absolute = TRUE, $fragment = NULL, $htmlize = TRUE) {
     $config = CRM_Core_Config::singleton();
     static $script = 'index.php';
 
@@ -121,7 +121,7 @@ class CRM_Utils_System_UnitTests {
     }
   }
 
-  static function getUserID($user) {
+  public static function getUserID($user) {
     //FIXME: look here a bit closer when testing UFMatch
 
 
@@ -130,11 +130,11 @@ class CRM_Utils_System_UnitTests {
     CRM_Core_BAO_UFMatch::synchronize($user, TRUE, 'Standalone', 'Individual');
   }
 
-  static function getAllowedToLogin($user) {
+  public static function getAllowedToLogin($user) {
     return TRUE;
   }
 
-  static function setMessage($message) {
+  public static function setMessage($message) {
     return;
   }
 
@@ -142,24 +142,24 @@ class CRM_Utils_System_UnitTests {
     return;
   }
 
-  static function permissionDenied() {
+  public static function permissionDenied() {
      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
   }
 
-  static function logout() {
+  public static function logout() {
     session_destroy();
     header("Location:index.php");
   }
 
-  static function getUFLocale() {
+  public static function getUFLocale() {
     return NULL;
   }
 
-  static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+  public static function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     return NULL;
   }
 
-  static function cmsRootPath() {
+  public static function cmsRootPath() {
     if (defined('DRUPAL_ROOT')) {
       return DRUPAL_ROOT;
     }
@@ -204,11 +204,11 @@ class CRM_Utils_System_UnitTests {
     return 0;
   }
 
-  function notFound(){
+  public function notFound(){
     return;
   }
 
-  function cmsDir($type) {
+  public function cmsDir($type) {
     $config = CRM_Core_Config::singleton();
     $version = $config->userSystem->version;
     if (empty($version)) {

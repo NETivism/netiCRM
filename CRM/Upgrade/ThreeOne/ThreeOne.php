@@ -37,7 +37,7 @@
 
 
 class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
 
     $errorMessage = ts('Pre-condition failed for upgrade to %1.', [1 => $latestVer]);
@@ -105,7 +105,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
     return TRUE;
   }
 
-  function upgrade($rev) {
+  public function upgrade($rev) {
 
     $upgrade = new CRM_Upgrade_Form();
 
@@ -264,7 +264,7 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
     $template->assign('afterUpgradeMessage', $afterUpgradeMessage);
   }
 
-  function upgrade_3_1_3() {
+  public function upgrade_3_1_3() {
     $count = 0;
     $totalCount = 0;
     $addressQuery = "
@@ -334,7 +334,7 @@ INNER JOIN ( SELECT id, contact_id FROM civicrm_openid WHERE is_primary = 1 GROU
     }
   }
 
-  function upgrade_3_1_4() {
+  public function upgrade_3_1_4() {
     $query = "SELECT id FROM civicrm_payment_processor WHERE payment_processor_type = 'Moneris' LIMIT 1";
     $isMoneris = CRM_Core_DAO::singleValueQuery($query);
 

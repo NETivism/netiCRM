@@ -39,7 +39,7 @@
  *
  */
 class CRM_Case_Task {
-  CONST DELETE_CASES = 1, PRINT_CASES = 2, EXPORT_CASES = 3, RESTORE_CASES = 4;
+  public CONST DELETE_CASES = 1, PRINT_CASES = 2, EXPORT_CASES = 3, RESTORE_CASES = 4;
 
   /**
    * the task array
@@ -47,7 +47,7 @@ class CRM_Case_Task {
    * @var array
    * @static
    */
-  static $_tasks = NULL;
+  public static $_tasks = NULL;
 
   /**
    * the optional task array
@@ -55,7 +55,7 @@ class CRM_Case_Task {
    * @var array
    * @static
    */
-  static $_optionalTasks = NULL;
+  public static $_optionalTasks = NULL;
 
   /**
    * These tasks are the core set of tasks that the user can perform
@@ -65,7 +65,7 @@ class CRM_Case_Task {
    * @static
    * @access public
    */
-  static function &tasks() {
+  public static function &tasks() {
     if (!self::$_tasks) {
       self::$_tasks = [
         1 => ['title' => ts('Delete Cases'),
@@ -106,7 +106,7 @@ class CRM_Case_Task {
    * @static
    * @access public
    */
-  static function &taskTitles() {
+  public static function &taskTitles() {
     self::tasks();
     $titles = [];
     foreach (self::$_tasks as $id => $value) {
@@ -125,7 +125,7 @@ class CRM_Case_Task {
    * @static
    * @access public
    */
-  static function &optionalTaskTitle() {
+  public static function &optionalTaskTitle() {
     $tasks = [];
     return $tasks;
   }
@@ -139,7 +139,7 @@ class CRM_Case_Task {
    * @return array set of tasks that are valid for the user
    * @access public
    */
-  static function &permissionedTaskTitles($permission) {
+  public static function &permissionedTaskTitles($permission) {
     $tasks = [];
     if (($permission == CRM_Core_Permission::EDIT)
       || CRM_Core_Permission::check('edit cases')
@@ -167,7 +167,7 @@ class CRM_Case_Task {
    * @static
    * @access public
    */
-  static function getTask($value) {
+  public static function getTask($value) {
     self::tasks();
     if (!$value || !CRM_Utils_Array::value($value, self::$_tasks)) {
       // make the print task by default

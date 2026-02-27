@@ -43,13 +43,13 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
    * the template to display the required "red" asterick
    * @var string
    */
-  static $_requiredTemplate = NULL;
+  public static $_requiredTemplate = NULL;
 
   /**
    * the template to display error messages inline with the form element
    * @var string
    */
-  static $_errorTemplate = NULL;
+  public static $_errorTemplate = NULL;
 
   /**
    * class constructor
@@ -59,7 +59,7 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
    * @return object
    * @access public
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     parent::__construct($stateMachine);
   }
 
@@ -72,7 +72,7 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     $pageName = $page->getAttribute('id');
 
     // If the original action was 'display' and we have values in container then we load them
@@ -113,7 +113,7 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function renderForm(&$page, $ret = FALSE) {
+  public function renderForm(&$page, $ret = FALSE) {
     $this->_setRenderTemplates($page);
     $template = CRM_Core_Smarty::singleton();
     $template->assign('form', $page->toSmarty());
@@ -164,7 +164,7 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function _setRenderTemplates(&$page) {
+  public function _setRenderTemplates(&$page) {
     if (self::$_requiredTemplate === NULL) {
       $this->initializeTemplates();
     }
@@ -183,7 +183,7 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function initializeTemplates() {
+  public function initializeTemplates() {
     if (self::$_requiredTemplate !== NULL) {
       return;
     }

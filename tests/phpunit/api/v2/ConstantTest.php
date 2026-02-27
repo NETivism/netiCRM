@@ -52,7 +52,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
    *
    *  Initialize configuration
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -75,7 +75,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     );
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->quickCleanup(['civicrm_option_group']);
   }
 

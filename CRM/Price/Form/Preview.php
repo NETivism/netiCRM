@@ -65,7 +65,7 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // get the controller vars
     $groupId = $this->get('groupId');
     $fieldId = $this->get('fieldId');
@@ -102,7 +102,7 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
    * @return array   the default array reference
    * @access protected
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $groupId = $this->get('groupId');
     $fieldId = $this->get('fieldId');

@@ -61,7 +61,7 @@ class CRM_Utils_Image {
    *
    * @return void
    */
-  function __construct($source, $destination, $quality = 90, $replace = FALSE) {
+  public function __construct($source, $destination, $quality = 90, $replace = FALSE) {
     $this->_prepared = FALSE;
     if (!is_file($source) && !is_uploaded_file($source)) {
       return;
@@ -404,7 +404,7 @@ class CRM_Utils_Image {
   /**
    * Destructor
    */
-  function __destruct() {
+  public function __destruct() {
     if (!empty($this->_resource)) {
       imagedestroy($this->_resource);
     }

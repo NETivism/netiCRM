@@ -44,7 +44,7 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -333,7 +333,7 @@ SELECT     civicrm_email.id as email_id
    * @return array $groups    array of group ids
    * @access public
    */
-  static function getContactGroups($email, $contactID = NULL) {
+  public static function getContactGroups($email, $contactID = NULL) {
     if ($contactID) {
       $query = "
                  SELECT DISTINCT group_a.group_id, group_a.status, civicrm_group.title 
@@ -384,7 +384,7 @@ SELECT     civicrm_email.id as email_id
    *
    * @return void
    */
-  static function commonSubscribe(&$groups, &$params, $contactId = NULL, $context = NULL) {
+  public static function commonSubscribe(&$groups, &$params, $contactId = NULL, $context = NULL) {
     $contactGroups = CRM_Mailing_Event_BAO_Subscribe::getContactGroups($params['email'], $contactId);
     $group = [];
     $success = NULL;

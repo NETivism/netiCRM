@@ -8,7 +8,7 @@ require_once 'CRM/Contact/BAO/ContactType.php';
 class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Contact Subtype',
@@ -18,7 +18,7 @@ class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase
         
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {  
         parent::setUp();
         
@@ -57,7 +57,7 @@ class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase
         
     }    
     
-    function tearDown ( )
+    public function tearDown ( )
     {
         $this->quickCleanup( [ 'civicrm_contact' ] );
         $query = "
@@ -72,7 +72,7 @@ DELETE FROM civicrm_contact_type
      * success expected
      * 
      */
-    function testCreateContact( ) 
+    public function testCreateContact( ) 
     {
         //check for Type:Individual
         $params = [ 'first_name'   => 'Anne',     
@@ -145,7 +145,7 @@ DELETE FROM civicrm_contact_type
      * update the contact with no subtype to a valid subtype 
      * success expected
      */
-    function testUpdateContactNosubtypeToValid( ) 
+    public function testUpdateContactNosubtypeToValid( ) 
     {
         $params     =  [ 'first_name'   => 'Anne',     
                               'last_name'    => 'Grant',
@@ -194,7 +194,7 @@ DELETE FROM civicrm_contact_type
      * update the contact with subtype to another valid subtype 
      * success expected
      */
-    function testUpdateContactSubtype( ) 
+    public function testUpdateContactSubtype( ) 
     {
         $params  =  [ 'first_name'       => 'Anne',     
                            'last_name'        => 'Grant',

@@ -41,7 +41,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
   public $_submitValues;
   public $_mailingID;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_mailingID = $this->get('mailing_id');
     $this->assign('mailingID', $this->_mailingID);
 
@@ -62,7 +62,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
 
     //need to differentiate new/reuse mailing, CRM-2873
@@ -601,7 +601,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($params, $files, $self) {
+  public static function formRule($params, $files, $self) {
     if (CRM_Utils_Array::value('_qf_Import_refresh', $_POST)) {
       return TRUE;
     }

@@ -43,7 +43,7 @@
  */
 class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   public $_contactTypeDisplay;
-  CONST RULES_COUNT = 5;
+  public CONST RULES_COUNT = 5;
   protected $_contactType;
   protected $_defaults = [];
   protected $_fields = [];
@@ -55,7 +55,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // Ensure user has permission to be here
 
 
@@ -157,7 +157,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     $total = 0;
     for ($count = 0; $count < self::RULES_COUNT; $count++) {
@@ -176,7 +176,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 

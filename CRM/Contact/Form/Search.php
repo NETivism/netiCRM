@@ -70,7 +70,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
      * @static
      */
 
-  static $_validContext = NULL;
+  public static $_validContext = NULL;
 
   /**
    * list of values used when we want to display other objects
@@ -78,7 +78,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @var array
    * @static
    */
-  static $_modeValues = NULL;
+  public static $_modeValues = NULL;
 
   /**
    * The context that we are working on
@@ -220,7 +220,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
      * @static
      */
 
-  static $csv = ['contact_type', 'group', 'tag'];
+  public static $csv = ['contact_type', 'group', 'tag'];
 
   protected $_componentMode;
   protected $_modeValue;
@@ -247,7 +247,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @access protected
    * @static
    */
-  static function &validContext() {
+  public static function &validContext() {
     if (!(self::$_validContext)) {
       self::$_validContext = [
         'smog' => 'Show members of group',
@@ -262,19 +262,19 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return self::$_validContext;
   }
 
-  static function isSearchContext($context) {
+  public static function isSearchContext($context) {
     $searchContext = CRM_Utils_Array::value($context, self::validContext());
     return $searchContext ? TRUE : FALSE;
   }
 
-  function setModeValues() {
+  public function setModeValues() {
     if (!self::$_modeValues) {
       $selectorName = (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector';
       self::setModeValuesCommon($selectorName);
     }
   }
 
-  function getModeValue($mode = 1) {
+  public function getModeValue($mode = 1) {
     $this->setModeValues();
 
     if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
@@ -343,7 +343,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
   }
 
 
-  function getModeSelect() {
+  public function getModeSelect() {
     $this->setModeValues();
 
     $select = [];
@@ -379,7 +379,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $permission = CRM_Core_Permission::getPermission();
 
     // some tasks.. what do we want to do with the selected contacts ?
@@ -551,7 +551,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
 
     /**
      * set the varios class variables
@@ -768,7 +768,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $controller->moveFromSessionToTemplate();
   }
 
-  function &getFormValues() {
+  public function &getFormValues() {
     return $this->_formValues;
   }
 
@@ -778,7 +778,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     /*
          * sometime we do a postProcess early on, so we dont need to repeat it
          * this will most likely introduce some more bugs :(
@@ -886,7 +886,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
   }
 
-  function &returnProperties() {
+  public function &returnProperties() {
     return CRM_Core_DAO::$_nullObject;
   }
 
@@ -896,7 +896,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @return string
    * @access public
    */
-  function getTitle() {
+  public function getTitle() {
     return ts('Search');
   }
 }

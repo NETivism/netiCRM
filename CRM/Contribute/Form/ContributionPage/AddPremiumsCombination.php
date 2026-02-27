@@ -38,8 +38,8 @@
  */
 class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Contribute_Form_ContributionPage_AddProduct {
 
-  static $_combinations;
-  static $_combination_id;
+  public static $_combinations;
+  public static $_combination_id;
   protected $_action;
   protected $_isEdit = FALSE;
 
@@ -79,7 +79,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_isEdit && $this->_combination_id) {

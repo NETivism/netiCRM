@@ -132,7 +132,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     return $errors;
   }
 
@@ -153,7 +153,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
    * @return int
    * @access public
    */
-  function getAction() {
+  public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
       return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
     }

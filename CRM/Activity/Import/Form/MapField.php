@@ -389,7 +389,7 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     $fieldMessage = NULL;
     if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {

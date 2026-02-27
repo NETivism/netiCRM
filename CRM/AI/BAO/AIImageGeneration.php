@@ -3,10 +3,10 @@
 class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
 
   // Status constants based on planning document
-  const STATUS_SUCCESS = 1;      // Success: Image generated and saved successfully
-  const STATUS_PENDING = 2;      // Pending: Request created, waiting to start processing
-  const STATUS_FAILED = 4;       // Failed: Error occurred during translation or image generation
-  const STATUS_PROCESSING = 5;   // Processing: Currently translating prompt or generating image
+  public const STATUS_SUCCESS = 1;      // Success: Image generated and saved successfully
+  public const STATUS_PENDING = 2;      // Pending: Request created, waiting to start processing
+  public const STATUS_FAILED = 4;       // Failed: Error occurred during translation or image generation
+  public const STATUS_PROCESSING = 5;   // Processing: Currently translating prompt or generating image
 
   /**
    * Create image generation record
@@ -71,7 +71,7 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_AI_DAO_AIImageGeneration', $params, $defaults);
   }
 

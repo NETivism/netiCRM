@@ -2,7 +2,7 @@
 require_once 'api/v2/Group.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_GroupTest extends CiviUnitTestCase {
-  protected $_groupID; function get_info() {
+  protected $_groupID; public function get_info() {
     return [
       'name' => 'Group Get',
       'description' => 'Test all Group Get API methods.',
@@ -10,22 +10,22 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->_groupID = $this->groupCreate();
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->groupDelete($this->_groupID);
   }
 
-  function testgroupAddEmptyParams() {
+  public function testgroupAddEmptyParams() {
     $params = [];
     $group = &civicrm_group_add($params);
     $this->assertEquals($group['error_message'], 'Required parameter missing');
   }
 
-  function testgroupAddNoTitle() {
+  public function testgroupAddNoTitle() {
     $params = [
       'name' => 'Test Group No title ',
       'domain_id' => 1,
@@ -42,14 +42,14 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     $this->assertEquals($group['error_message'], 'Required parameter title missing');
   }
 
-  function testGetGroupEmptyParams() {
+  public function testGetGroupEmptyParams() {
     $params = '';
     $group = civicrm_group_get($params);
 
     $this->assertEquals($group['error_message'], 'Params should be array');
   }
 
-  function testGetGroupWithEmptyParams() {
+  public function testGetGroupWithEmptyParams() {
     $params = [];
 
     $group = civicrm_group_get($params);
@@ -60,7 +60,7 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     $this->assertEquals($group[$this->_groupID]['visibility'], 'Public Pages');
   }
 
-  function testGetGroupParamsWithGroupId() {
+  public function testGetGroupParamsWithGroupId() {
     $params       = [];
     $params['id'] = $this->_groupID;
     $group        = &civicrm_group_get($params);
@@ -74,7 +74,7 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     }
   }
 
-  function testGetGroupParamsWithGroupName() {
+  public function testGetGroupParamsWithGroupName() {
     $params         = [];
     $params['name'] = 'Test Group 1';
     $group          = &civicrm_group_get($params);
@@ -88,7 +88,7 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     }
   }
 
-  function testGetGroupParamsWithReturnName() {
+  public function testGetGroupParamsWithReturnName() {
     $params = [];
     $params['id'] = $this->_groupID;
     $params['return.name'] = 1;
@@ -96,7 +96,7 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     $this->assertEquals($group[$this->_groupID]['name'], 'Test Group 1');
   }
 
-  function testGetGroupParamsWithGroupTitle() {
+  public function testGetGroupParamsWithGroupTitle() {
     $params          = [];
     $params['title'] = 'New Test Group Created';
     $group           = &civicrm_group_get($params);
@@ -110,20 +110,20 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     }
   }
 
-  function testGetNonExistingGroup() {
+  public function testGetNonExistingGroup() {
     $params          = [];
     $params['title'] = 'No such group Exist';
     $group           = &civicrm_group_get($params);
     $this->assertEquals($group['error_message'], 'No such group exists');
   }
 
-  function testgroupdeleteNonArrayParams() {
+  public function testgroupdeleteNonArrayParams() {
     $params = 'TestNotArray';
     $group = &civicrm_group_delete($params);
     $this->assertEquals($group['error_message'], 'Required parameter missing');
   }
 
-  function testgroupdeleteParamsnoId() {
+  public function testgroupdeleteParamsnoId() {
     $params = [];
     $group = &civicrm_group_delete($params);
     $this->assertEquals($group['error_message'], 'Required parameter missing');

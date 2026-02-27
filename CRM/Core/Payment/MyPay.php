@@ -2,10 +2,10 @@
 date_default_timezone_set('Asia/Taipei');
 class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
 
-  const MYPAY_REAL_DOMAIN = 'https://ka.mypay.tw';
-  const MYPAY_TEST_DOMAIN = 'https://pay.usecase.cc';
-  const MYPAY_URL_API = '/api/init';
-  const MYPAY_RECUR_URL_API = '/api/agent';
+  public const MYPAY_REAL_DOMAIN = 'https://ka.mypay.tw';
+  public const MYPAY_TEST_DOMAIN = 'https://pay.usecase.cc';
+  public const MYPAY_URL_API = '/api/init';
+  public const MYPAY_RECUR_URL_API = '/api/agent';
 
   public static $_allowRecurUnit = ['month', 'year'];
 
@@ -18,7 +18,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
   public static $_hideFields = ['invoice_id', 'trxn_id'];
 
@@ -33,7 +33,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -42,7 +42,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor)
+  public function __construct($mode, &$paymentProcessor)
   {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
@@ -57,7 +57,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL)
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL)
   {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
@@ -73,7 +73,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    * @param object $paymen dao that will be added to payment when default is empty
    * @return void
    */
-  static function buildPaymentDefault(&$default, $payment)
+  public static function buildPaymentDefault(&$default, $payment)
   {
     if ($payment->is_test > 0) {
       $default['url_api'] = CRM_Core_Payment_MyPay::MYPAY_TEST_DOMAIN . CRM_Core_Payment_MyPay::MYPAY_URL_API;
@@ -90,7 +90,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig()
+  public function checkConfig()
   {
     $config = CRM_Core_Config::singleton();
 
@@ -107,22 +107,22 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     }
   }
 
-  function setExpressCheckOut(&$params)
+  public function setExpressCheckOut(&$params)
   {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token)
+  public function getExpressCheckoutDetails($token)
   {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params)
+  public function doExpressCheckout(&$params)
   {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params)
+  public function doDirectPayment(&$params)
   {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
@@ -167,7 +167,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
   */
 
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
@@ -275,7 +275,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    *
    * @return array The instruments used by mypay.
    */
-  static function getInstruments($type = 'normal') {
+  public static function getInstruments($type = 'normal') {
     $i = [
       'Credit Card' => ['label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'],
     ];
@@ -305,7 +305,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    *
    * @return string If test, return expand string of id.
    */
-  static function getContributionTrxnID($contributionId, $is_test = 0, $recurringId = NULL) {
+  public static function getContributionTrxnID($contributionId, $is_test = 0, $recurringId = NULL) {
     $rand = base_convert(strval(rand(16, 255)), 10, 16);
     if (empty($recurringId)) {
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
@@ -334,7 +334,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    * @return array Rearrange nessesary arguments for checkout.
    *
    */
-  function getOrderArgs(&$vars, $component, $instrumentCode, $formKey) {
+  public function getOrderArgs(&$vars, $component, $instrumentCode, $formKey) {
     $paymentProcessor = $this->_paymentProcessor;
     // parameter
     if ($component == 'event' && !empty($_SESSION['CiviCRM'][$formKey])) {
@@ -451,7 +451,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    *
    * @return void
    */
-  function postData($url, $data){
+  public function postData($url, $data){
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -510,7 +510,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
    *
    * @return void
    */
-  function outputRedirectForm($redirectVars){
+  public function outputRedirectForm($redirectVars){
     $paymentProcessor = $this->_paymentProcessor;
     header('Pragma: no-cache');
     header('Cache-Control: no-store, no-cache, must-revalidate');
@@ -684,7 +684,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   /**
    * 
    */
-  static public function doRecordData($contributionId, $data, $apiType = '') {
+  public static function doRecordData($contributionId, $data, $apiType = '') {
     $recordType = [
       'uid',
       'uid_key',
@@ -711,7 +711,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   /**
    * 
    */
-  static public function getKey($contributionId) {
+  public static function getKey($contributionId) {
     $mypay = new CRM_Contribute_DAO_MyPay();
     $mypay->contribution_id = $contributionId;
     $mypay->find(TRUE);
@@ -722,7 +722,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   /**
    * 
    */
-  static public function getTrxnIdByPost($input) {
+  public static function getTrxnIdByPost($input) {
     $trxnId = NULL;
     if ($input['order_id']) {
       if ($input['uid'] && !empty($input['nois']) && $input['nois'] > 1) {

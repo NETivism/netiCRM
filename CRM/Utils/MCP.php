@@ -8,10 +8,10 @@
  *
  */
 class CRM_Utils_MCP {
-  const LAST_HIT = 'mcp_lasthit';  // Kept for backward compatibility, used as prefix
-  const RATE_LIMIT = 0.1;  // Kept for backward compatibility
-  const RATE_LIMIT_WINDOW = 60;  // 60 second time window
-  const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
+  public const LAST_HIT = 'mcp_lasthit';  // Kept for backward compatibility, used as prefix
+  public const RATE_LIMIT = 0.1;  // Kept for backward compatibility
+  public const RATE_LIMIT_WINDOW = 60;  // 60 second time window
+  public const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
 
   /**
    * @var bool Whether to output streaming responses
@@ -816,7 +816,7 @@ class CRM_Utils_MCP {
    * @param array $args Request arguments for tracking
    * @return string Error message if rate limit exceeded, empty string otherwise
    */
-  function requestRateLimit($args) {
+  public function requestRateLimit($args) {
     // IP-based rate limiting using CRM_Utils_RateLimiter
     $prefix = self::LAST_HIT;
     $windowSeconds = self::RATE_LIMIT_WINDOW;

@@ -45,7 +45,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * mode of operation: live or test
@@ -53,9 +53,9 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
-  static function retrieve($name, $type, $object, $abort = TRUE) {
+  public static function retrieve($name, $type, $object, $abort = TRUE) {
     $value = CRM_Utils_Array::value($name, $object);
     if ($abort && $value === NULL) {
       CRM_Core_Error::debug_log_message("Could not find an entry for $name");
@@ -81,7 +81,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     parent::__construct();
 
     $this->_mode = $mode;
@@ -96,7 +96,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @return object
    * @static
    */
-  static function &singleton($mode, $component, &$paymentProcessor) {
+  public static function &singleton($mode, $component, &$paymentProcessor) {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_Payment_PaymentExpressIPN($mode, $paymentProcessor);
     }
@@ -112,7 +112,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @return void
    *
    */
-  function newOrderNotify($success, $privateData, $component, $amount, $transactionReference) {
+  public function newOrderNotify($success, $privateData, $component, $amount, $transactionReference) {
     $ids = $input = $params = [];
 
     $input['component'] = strtolower($component);
@@ -200,7 +200,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @return array context of this call (test, component, payment processor id)
    * @static
    */
-  static function getContext($privateData, $orderNo) {
+  public static function getContext($privateData, $orderNo) {
 
 
     $component = NULL;
@@ -285,7 +285,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * $dps_method is either pxaccess or pxpay
    */
 
-  static function main($dps_method, $rawPostData, $dps_url, $dps_user, $dps_key, $mac_key) {
+  public static function main($dps_method, $rawPostData, $dps_url, $dps_user, $dps_key, $mac_key) {
 
     $config = CRM_Core_Config::singleton();
     define('RESPONSE_HANDLER_LOG_FILE', $config->uploadDir . 'CiviCRM.PaymentExpress.log');
@@ -441,7 +441,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * Converts the comma separated name-value pairs in <TxnData2>
    * to an array of values.
    */
-  static function stringToArray($str) {
+  public static function stringToArray($str) {
     $vars = $labels = [];
     $labels = explode(',', $str);
     foreach ($labels as $label) {

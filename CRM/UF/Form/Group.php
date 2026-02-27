@@ -237,7 +237,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     $showHide = new CRM_Core_ShowHideBlocks();

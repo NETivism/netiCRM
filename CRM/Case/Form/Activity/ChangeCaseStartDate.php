@@ -41,7 +41,7 @@
  */
 class CRM_Case_Form_Activity_ChangeCaseStartDate {
 
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     if (!isset($form->_caseId)) {
       CRM_Core_Error::fatal(ts('Case Id not found.'));
     }
@@ -55,13 +55,13 @@ class CRM_Case_Form_Activity_ChangeCaseStartDate {
    *
    * @return None
    */
-  function setDefaultValues(&$form) {
+  public function setDefaultValues(&$form) {
     $defaults = [];
     list($defaults['start_date']) = CRM_Utils_Date::setDateDefaults();
     return $defaults;
   }
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $currentStartDate = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $form->_caseId, 'start_date');
     $form->assign('current_start_date', $currentStartDate);
     $form->addDate('start_date', ts('New Start Date'), FALSE, ['formatType' => 'birth']);
@@ -76,7 +76,7 @@ class CRM_Case_Form_Activity_ChangeCaseStartDate {
    * @static
    * @access public
    */
-  static function formRule($values, $files, $form) {
+  public static function formRule($values, $files, $form) {
     return TRUE;
   }
 

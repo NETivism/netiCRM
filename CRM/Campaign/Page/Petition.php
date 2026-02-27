@@ -40,7 +40,7 @@
  * Page for displaying Petition Signatures
  */
 class CRM_Campaign_Page_Petition extends CRM_Core_Page {
-  function browse() {
+  public function browse() {
 
 
     //get the survey id
@@ -51,7 +51,7 @@ class CRM_Campaign_Page_Petition extends CRM_Core_Page {
     $this->assign('signatures', $signatures);
   }
 
-  function run() {
+  public function run() {
     $action = CRM_Utils_Request::retrieve('action', 'String',
       $this, FALSE, 0
     );

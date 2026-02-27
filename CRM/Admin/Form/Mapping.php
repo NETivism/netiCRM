@@ -88,7 +88,7 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
     }
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     return $defaults;
   }

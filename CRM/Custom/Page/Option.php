@@ -77,7 +77,7 @@ class CRM_Custom_Page_Option extends CRM_Core_Page {
    * @return array  array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       self::$_actionLinks = [
         CRM_Core_Action::UPDATE => [
@@ -123,7 +123,7 @@ class CRM_Custom_Page_Option extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
     //get the default value from custom fields
     $customFieldBAO = new CRM_Core_BAO_CustomField();
     $customFieldBAO->id = $this->_fid;
@@ -244,7 +244,7 @@ ORDER BY weight, label
    * @return void
    * @access public
    */
-  function edit($action) {
+  public function edit($action) {
     // create a simple controller for editing custom data
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Option', ts('Custom Option'), $action);
 
@@ -270,7 +270,7 @@ ORDER BY weight, label
    * @return void
    * @access public
    */
-  function run() {
+  public function run() {
 
 
     // get the field id

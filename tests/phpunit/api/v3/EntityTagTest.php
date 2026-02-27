@@ -39,7 +39,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
   protected $_organizationID;
   protected $_tagID;
   protected $_apiversion;
-  protected $_tag; function setUp() {
+  protected $_tag; public function setUp() {
     parent::setUp();
     $this->_apiversion = 3;
 
@@ -52,16 +52,16 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->_organizationID = $this->organizationCreate(NULL);
   }
 
-  function tearDown() {}
+  public function tearDown() {}
 
-  function testAddEmptyParams() {
+  public function testAddEmptyParams() {
     $params = ['version' => $this->_apiversion];
     $individualEntity = civicrm_api('entity_tag', 'create', $params);
     $this->assertEquals($individualEntity['is_error'], 1);
     $this->assertEquals($individualEntity['error_message'], 'contact_id is a required field');
   }
 
-  function testAddWithoutTagID() {
+  public function testAddWithoutTagID() {
     $params = [
       'contact_id' => $this->_individualID,
       'version' => $this->_apiversion,
@@ -71,7 +71,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($individualEntity['error_message'], 'tag_id is a required field');
   }
 
-  function testAddWithoutContactID() {
+  public function testAddWithoutContactID() {
     $params = [
       'tag_id' => $this->_tagID,
       'version' => $this->_apiversion,
@@ -81,7 +81,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($individualEntity['error_message'], 'contact_id is a required field');
   }
 
-  function testContactEntityTagCreate() {
+  public function testContactEntityTagCreate() {
     $params = [
       'contact_id' => $this->_individualID,
       'tag_id' => $this->_tagID,
@@ -95,7 +95,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['added'], 1);
   }
 
-  function testAddDouble() {
+  public function testAddDouble() {
     $individualId   = $this->_individualID;
     $organizationId = $this->_organizationID;
     $tagID          = $this->_tagID;
@@ -124,7 +124,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_entity_tag_get methods
-  function testGetWrongParamsType() {
+  public function testGetWrongParamsType() {
     $ContactId = $this->_individualID;
     $tagID     = $this->_tagID;
     $params    = [
@@ -146,7 +146,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($entity['error_message'], 'Input variable `params` is not an array');
   }
 
-  function testIndividualEntityTagGetWithoutContactID() {
+  public function testIndividualEntityTagGetWithoutContactID() {
     $paramsEntity = ['version' => $this->_apiversion];
     $entity = civicrm_api('entity_tag', 'get', $paramsEntity);
     $this->assertEquals($entity['is_error'], 1);
@@ -154,7 +154,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($entity['error_message'], 'Mandatory key(s) missing from params array: entity_id');
   }
 
-  function testIndividualEntityTagGet() {
+  public function testIndividualEntityTagGet() {
     $contactId = $this->_individualID;
     $tagID     = $this->_tagID;
     $params    = [
@@ -174,14 +174,14 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $entity = civicrm_api('entity_tag', 'get', $paramsEntity);
   }
 
-  function testHouseholdEntityGetWithoutContactID() {
+  public function testHouseholdEntityGetWithoutContactID() {
     $paramsEntity = ['version' => $this->_apiversion];
     $entity = civicrm_api('entity_tag', 'get', $paramsEntity);
     $this->assertEquals($entity['is_error'], 1);
     $this->assertNotNull($entity['error_message']);
   }
 
-  function testHouseholdEntityGet() {
+  public function testHouseholdEntityGet() {
     $ContactId = $this->_householdID;
     $tagID     = $this->_tagID;
     $params    = [
@@ -198,14 +198,14 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $entity = civicrm_api('entity_tag', 'get', $paramsEntity);
   }
 
-  function testOrganizationEntityGetWithoutContactID() {
+  public function testOrganizationEntityGetWithoutContactID() {
     $paramsEntity = ['version' => $this->_apiversion];
     $entity = civicrm_api('entity_tag', 'get', $paramsEntity);
     $this->assertEquals($entity['is_error'], 1);
     $this->assertNotNull($entity['error_message']);
   }
 
-  function testOrganizationEntityGet() {
+  public function testOrganizationEntityGet() {
     $ContactId = $this->_organizationID;
     $tagID     = $this->_tagID;
     $params    = [
@@ -223,7 +223,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_entity_tag_remove methods
-  function testEntityTagRemoveNoTagId() {
+  public function testEntityTagRemoveNoTagId() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -243,7 +243,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'tag_id is a required field');
   }
 
-  function testEntityTagRemoveINDHH() {
+  public function testEntityTagRemoveINDHH() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -265,7 +265,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['removed'], 2);
   }
 
-  function testEntityTagDeleteHH() {
+  public function testEntityTagDeleteHH() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -285,7 +285,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['removed'], 1);
   }
 
-  function testEntityTagRemoveHHORG() {
+  public function testEntityTagRemoveHHORG() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -307,7 +307,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_entity_tag_display methods
-  function testEntityTagDisplayWithContactId() {
+  public function testEntityTagDisplayWithContactId() {
     $entityTagParams = [
       'contact_id' => $this->_individualID,
       'tag_id' => $this->_tagID,
@@ -329,7 +329,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
 
 
   ///////////////// civicrm_entity_tag_common methods
-  function testCommonAddEmptyParams() {
+  public function testCommonAddEmptyParams() {
     $params = [
       'version' => $this->_apiversion,
     ];
@@ -338,7 +338,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($individualEntity['error_message'], 'contact_id is a required field');
   }
 
-  function testCommonAddWithoutTagID() {
+  public function testCommonAddWithoutTagID() {
     $params = [
       'contact_id' => $this->_individualID,
       'version' => $this->_apiversion,
@@ -348,7 +348,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($individualEntity['error_message'], 'tag_id is a required field');
   }
 
-  function testCommonAddWithoutContactID() {
+  public function testCommonAddWithoutContactID() {
     $params = [
       'tag_id' => $this->_tagID,
       'version' => $this->_apiversion,
@@ -358,7 +358,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($individualEntity['error_message'], 'contact_id is a required field');
   }
 
-  function testCommonContactEntityTagAdd() {
+  public function testCommonContactEntityTagAdd() {
     $params = [
       'contact_id' => $this->_individualID,
       'tag_id' => $this->_tagID,
@@ -370,7 +370,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($individualEntity['added'], 1);
   }
 
-  function testEntityTagCommonRemoveNoContactId() {
+  public function testEntityTagCommonRemoveNoContactId() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -389,7 +389,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'contact_id is a required field');
   }
 
-  function testEntityTagCommonRemoveNoTagId() {
+  public function testEntityTagCommonRemoveNoTagId() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -409,7 +409,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'tag_id is a required field');
   }
 
-  function testEntityTagCommonRemoveINDHH() {
+  public function testEntityTagCommonRemoveINDHH() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -431,7 +431,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['removed'], 2);
   }
 
-  function testEntityTagCommonRemoveHH() {
+  public function testEntityTagCommonRemoveHH() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,
@@ -450,7 +450,7 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['removed'], 1);
   }
 
-  function testEntityTagCommonRemoveHHORG() {
+  public function testEntityTagCommonRemoveHHORG() {
     $entityTagParams = [
       'contact_id_i' => $this->_individualID,
       'contact_id_h' => $this->_householdID,

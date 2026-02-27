@@ -10,7 +10,7 @@ class CRM_Utils_CSP {
   /**
    * CSP allowed formats defined in constant
    */
-  const
+  public const
     // Directive names
     DIRECTIVES = [
       'DIR_DEFAULT' => "default-src",
@@ -89,7 +89,7 @@ class CRM_Utils_CSP {
    *
    * @return object Returns the current object instance
    */
-  function __construct($encPolicy) {
+  public function __construct($encPolicy) {
     $rawDirectives = explode(";", $encPolicy);
 
     foreach($rawDirectives as $rawDirective) {

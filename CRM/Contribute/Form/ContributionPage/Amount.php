@@ -51,7 +51,7 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
   /**
    * Constants for number of options for data types of multiple option.
    */
-  CONST NUM_OPTION = 11;
+  public CONST NUM_OPTION = 11;
 
   /**
    * Function to actually build the form
@@ -246,7 +246,7 @@ SELECT id
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
     CRM_Utils_System::setTitle(ts('Contribution Amounts (%1)', [1 => $title]));
@@ -326,7 +326,7 @@ SELECT id
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     $minAmount = CRM_Utils_Array::value('min_amount', $fields);

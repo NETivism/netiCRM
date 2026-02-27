@@ -42,12 +42,12 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    * @var array
    * @static
    */
-  static $_exportableFields = NULL;
+  public static $_exportableFields = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -65,7 +65,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $pledge = new CRM_Pledge_DAO_Pledge();
     $pledge->copyValues($params);
     if ($pledge->find(TRUE)) {
@@ -85,7 +85,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    *
    * @return object
    */
-  static function add(&$params) {
+  public static function add(&$params) {
 
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'Pledge', $params['id'], $params);
@@ -133,7 +133,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    * @access public
    * @static
    */
-  static function &getValues(&$params, &$values, $returnProperties = NULL) {
+  public static function &getValues(&$params, &$values, $returnProperties = NULL) {
     if (empty($params)) {
       return NULL;
     }
@@ -150,7 +150,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    * @access public
    * @static
    */
-  static function &create(&$params) {
+  public static function &create(&$params) {
 
     //FIXME: a cludgy hack to fix the dates to MySQL format
     $dateFields = ['start_date', 'create_date', 'acknowledge_date', 'modified_date', 'cancel_date', 'end_date'];
@@ -271,7 +271,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    * @static
    *
    */
-  static function deletePledge($id) {
+  public static function deletePledge($id) {
     CRM_Utils_Hook::pre('delete', 'Pledge', $id, CRM_Core_DAO::$_nullArray);
 
 
@@ -314,7 +314,7 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
   /**
    * function to get the amount details date wise.
    */
-  static function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
+  public static function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
     $where = [];
     $select = $from = $queryDate = NULL;
     //get all status
@@ -446,7 +446,7 @@ WHERE  $whereCond
    * @access public
    * @static
    */
-  static function getHonorContacts($honorId) {
+  public static function getHonorContacts($honorId) {
     $params = [];
 
     $honorDAO = new CRM_Pledge_DAO_Pledge();
@@ -482,7 +482,7 @@ WHERE  $whereCond
    *
    * @return None.
    */
-  static function sendAcknowledgment(&$form, $params) {
+  public static function sendAcknowledgment(&$form, $params) {
     //handle Acknowledgment.
     $allPayments = $payments = [];
 
@@ -685,7 +685,7 @@ WHERE  $whereCond
    * @return array array of exportable Fields
    * @access public
    */
-  static function &exportableFields() {
+  public static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
         self::$_exportableFields = [];
@@ -747,7 +747,7 @@ WHERE  $whereCond
    * @return array associated array of pledge id(s)
    * @static
    */
-  static function getContactPledges($contactID) {
+  public static function getContactPledges($contactID) {
     $pledgeDetails = [];
 
     $pledgeStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
@@ -792,7 +792,7 @@ WHERE civicrm_pledge.status_id  {$statusClause}
    * @access public
    * @static
    */
-  static function getContactPledgeCount($contactID) {
+  public static function getContactPledgeCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_pledge WHERE civicrm_pledge.contact_id = {$contactID} AND civicrm_pledge.is_test = 0";
     return CRM_Core_DAO::singleValueQuery($query);
   }

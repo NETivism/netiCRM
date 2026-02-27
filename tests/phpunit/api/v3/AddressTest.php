@@ -38,7 +38,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
   protected $_locationType;
   protected $_params;
   public $_eNoticeCompliant = TRUE;
-  protected $_entity; function setUp() {
+  protected $_entity; public function setUp() {
     $this->_apiversion = 3;
     $this->_entity = 'Address';
     parent::setUp();
@@ -61,7 +61,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->locationTypeDelete($this->_locationType->id);
     $this->contactDelete($this->_contactID);
   }
@@ -252,7 +252,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
   }
 
-  function testGetWithCustom() {
+  public function testGetWithCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
 
     $params = $this->_params;

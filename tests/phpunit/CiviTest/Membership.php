@@ -11,7 +11,7 @@ class Membership extends PHPUnit_Framework_Testcase
      *Helper function to create membership type 
      *
      */
-    function createMembershipType( ) 
+    public function createMembershipType( ) 
     {
         $orgId     = Contact::createOrganisation( );
         
@@ -46,7 +46,7 @@ class Membership extends PHPUnit_Framework_Testcase
      *Helper function to create membership block for contribution page 
      *
      */
-    function createMembershipBlock( $membershipType, $contributionPageId ) 
+    public function createMembershipBlock( $membershipType, $contributionPageId ) 
     {
         $param =  [
                         'is_active'               => 1,
@@ -75,7 +75,7 @@ class Membership extends PHPUnit_Framework_Testcase
      *
      */
 
-    function deleteMembershipBlock( $blcokId ) 
+    public function deleteMembershipBlock( $blcokId ) 
     {
         $dao = new CRM_Member_DAO_MembershipBlock();
         $dao->id = $blcokId;

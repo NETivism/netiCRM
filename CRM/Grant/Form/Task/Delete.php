@@ -56,7 +56,7 @@ class CRM_Grant_Form_Task_Delete extends CRM_Grant_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     //check permission for delete.
@@ -72,7 +72,7 @@ class CRM_Grant_Form_Task_Delete extends CRM_Grant_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Delete Grants'), 'done');
   }
 

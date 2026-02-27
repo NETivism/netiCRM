@@ -49,7 +49,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
   public $_columnHeadersComponent;
   public $_absoluteUrl;
   public $_absoluteUr;
-  CONST ROW_COUNT_LIMIT = 1;
+  public CONST ROW_COUNT_LIMIT = 1;
 
   protected $_summary = NULL;
 
@@ -61,7 +61,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
-  function __construct() {
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -302,12 +302,12 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $this->_csvSupported = FALSE;
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     $this->_component = ['contribution_civireport', 'membership_civireport', 'participant_civireport', 'relationship_civireport', 'activity_civireport'];
@@ -367,7 +367,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     parent::buildQuickForm();
 
     $idOperator = $this->getElement('id_op');
@@ -378,7 +378,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
   }
 
-  function setDefaultValues($freeze = TRUE) {
+  public function setDefaultValues($freeze = TRUE) {
     parent::setDefaultValues($freeze);
     if (empty($this->_defaults['id_value'])) {
       $this->_params['id_value'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE is_deleted = 0");
@@ -387,7 +387,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     return $this->_defaults;
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (empty($fields['id_value'])) {
       $errors['id_value'] = ts('%1 is a required field.', [1 => ts('Contact ID')]);
@@ -395,7 +395,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $group = " ";
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}";
@@ -483,7 +483,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
 
     foreach ($this->_columns as $tableName => $table) {
@@ -520,7 +520,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->_where .= " GROUP BY {$this->_aliases['civicrm_contact']}.id ";
   }
 
-  function clauseComponent() {
+  public function clauseComponent() {
     $selectedContacts = CRM_Utils_Array::implode(',', $this->_contactSelected);
     $contribution = $membership = $participant = NULL;
     $eligibleResult = $rows = $tempArray = [];
@@ -658,7 +658,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     return $rows;
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = [];
 
     $count = count($rows);
@@ -673,16 +673,16 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
   }
 
   //Override to set limit is 10
-  function limit($rowCount = self::ROW_COUNT_LIMIT) {
+  public function limit($rowCount = self::ROW_COUNT_LIMIT) {
     parent::limit($rowCount);
   }
 
   //Override to set pager with limit is 10
-  function setPager($rowCount = self::ROW_COUNT_LIMIT) {
+  public function setPager($rowCount = self::ROW_COUNT_LIMIT) {
     parent::setPager($rowCount);
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -726,7 +726,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->endPostProcess();
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
@@ -773,7 +773,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
   }
 
-  function alterComponentDisplay(&$componentRows) {
+  public function alterComponentDisplay(&$componentRows) {
     // custom code to alter rows
 
     $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, FALSE);

@@ -39,7 +39,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    *   paymentProcessor
    *   isTest
    */
-  function __construct($apiParams) {
+  public function __construct($apiParams) {
     if (!empty($apiParams['paymentProcessor'])) {
       $this->_paymentProcessor = $apiParams['paymentProcessor'];
     }

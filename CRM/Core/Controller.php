@@ -111,14 +111,14 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    *
    * @var CRM_Core_Smarty
    */
-  static protected $_template;
+  protected static $_template;
 
   /**
    * cache the session for efficiency reasons
    *
    * @var CRM_Core_Session
    */
-  static public $_session;
+  public static $_session;
 
   /**
    * The parent of this form if embedded
@@ -148,7 +148,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    *
    */
-  function __construct($title = NULL, $modal = TRUE,
+  public function __construct($title = NULL, $modal = TRUE,
     $mode = NULL, $scope = NULL,
     $addSequence = FALSE, $ignoreKey = FALSE
   ) {
@@ -218,23 +218,23 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     );
   }
 
-  function initSession() {
+  public function initSession() {
     if (!isset(self::$_session)) {
       self::$_session = CRM_Core_Session::singleton();
     }
   }
-  function initTemplate() {
+  public function initTemplate() {
     if (!isset(self::$_template)) {
       self::$_template = CRM_Core_Smarty::singleton();
     }
   }
 
-  function fini() {
+  public function fini() {
 
     CRM_Core_BAO_Cache::storeSessionToCache(["_{$this->_name}_container", ['CiviCRM', $this->_scope]], TRUE);
   }
 
-  function key($name, $addSequence = FALSE, $ignoreKey = FALSE) {
+  public function key($name, $addSequence = FALSE, $ignoreKey = FALSE) {
     $config = CRM_Core_Config::singleton();
 
     if ($ignoreKey ||
@@ -282,7 +282,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * jump action
    *
    */
-  function run() {
+  public function run() {
     // the names of the action and page should be saved
     // note that this is split into two, because some versions of
     // php 5.x core dump on the triple assignment :)
@@ -304,7 +304,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return;
   }
 
-  function validate() {
+  public function validate() {
     $this->_actionName = $this->getActionName();
     list($pageName, $action) = $this->_actionName;
 
@@ -323,7 +323,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return $page->_errors;
   }
 
-  function findValid() {
+  public function findValid() {
     // the names of the action and page should be saved
     // note that this is split into two, because some versions of
     // php 5.x core dump on the triple assignment :)
@@ -358,7 +358,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    *
    */
-  function addActions($uploadDirectory = NULL, $uploadNames = NULL) {
+  public function addActions($uploadDirectory = NULL, $uploadNames = NULL) {
     $names = [
       'display' => 'CRM_Core_QuickForm_Action_Display',
       'next' => 'CRM_Core_QuickForm_Action_Next',
@@ -385,7 +385,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return object
    * @access public
    */
-  function getStateMachine() {
+  public function getStateMachine() {
     return $this->_stateMachine;
   }
 
@@ -397,7 +397,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    * @access public
    */
-  function setStateMachine($stateMachine) {
+  public function setStateMachine($stateMachine) {
     $this->_stateMachine = $stateMachine;
   }
 
@@ -413,7 +413,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @access public
    *
    */
-  function addPages(&$stateMachine, $action = CRM_Core_Action::NONE) {
+  public function addPages(&$stateMachine, $action = CRM_Core_Action::NONE) {
     $pages = $stateMachine->getPages();
 
     foreach ($pages as $name => $value) {
@@ -486,7 +486,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return string the name of the button that has been pressed by the user
    * @access public
    */
-  function getButtonName() {
+  public function getButtonName() {
     $data = &$this->container();
     return CRM_Utils_Array::value('_qf_button_name', $data);
   }
@@ -498,7 +498,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    *
    * @return void
    */
-  function reset() {
+  public function reset() {
     $data = &$this->container(TRUE);
     $class = get_class($this);
     if (strstr($class, 'Form')) {
@@ -520,7 +520,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    * @access public
    */
-  function process() {}
+  public function process() {}
 
   /**
    * Store the variable with the value in the form scope
@@ -533,7 +533,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    *
    */
-  function set($name, $value = NULL) {
+  public function set($name, $value = NULL) {
     self::$_session->set($name, $value, $this->_scope);
   }
 
@@ -548,7 +548,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return mixed
    *
    */
-  function get($name) {
+  public function get($name) {
     return self::$_session->get($name, $this->_scope);
   }
 
@@ -561,7 +561,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return array
    * @access public
    */
-  function wizardHeader($currentPageName) {
+  public function wizardHeader($currentPageName) {
     $wizard = [];
     $wizard['steps'] = [];
     $count = 0;
@@ -592,7 +592,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return $wizard;
   }
 
-  function addWizardStyle(&$wizard) {
+  public function addWizardStyle(&$wizard) {
     $wizard['style'] = ['barClass' => '',
       'stepPrefixCurrent' => '&raquo;',
       'stepPrefixPast' => '&#x2714;',
@@ -613,11 +613,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    * @access public
    */
-  function assign($var, $value = NULL) {
+  public function assign($var, $value = NULL) {
     self::$_template->assign($var, $value);
   }
 
-  function assign_by_ref($var, &$value) {
+  public function assign_by_ref($var, &$value) {
     self::$_template->assign_by_ref($var, $value);
   }
 
@@ -629,7 +629,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    * @access public
    */
-  function setEmbedded($embedded) {
+  public function setEmbedded($embedded) {
     $this->_embedded = $embedded;
   }
 
@@ -639,7 +639,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return boolean return the embedded value
    * @access public
    */
-  function getEmbedded() {
+  public function getEmbedded() {
     return $this->_embedded;
   }
 
@@ -651,7 +651,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    * @access public
    */
-  function setSkipRedirection($skipRedirection) {
+  public function setSkipRedirection($skipRedirection) {
     $this->_skipRedirection = $skipRedirection;
   }
 
@@ -661,11 +661,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return boolean return the skipRedirection value
    * @access public
    */
-  function getSkipRedirection() {
+  public function getSkipRedirection() {
     return $this->_skipRedirection;
   }
 
-  function setWord($fileName = NULL) {
+  public function setWord($fileName = NULL) {
     //Mark as a CSV file.
     header('Content-Type: application/vnd.ms-word');
 
@@ -676,7 +676,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     header("Content-Disposition: attachment; filename=Contacts_$fileName");
   }
 
-  function setExcel($fileName = NULL) {
+  public function setExcel($fileName = NULL) {
     //Mark as an excel file.
     header('Content-Type: application/vnd.ms-excel');
 
@@ -696,7 +696,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    * @access public
    */
-  function setPrint($print) {
+  public function setPrint($print) {
     if ($print == "xls") {
       $this->setExcel();
     }
@@ -712,11 +712,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return boolean return the print value
    * @access public
    */
-  function getPrint() {
+  public function getPrint() {
     return $this->_print;
   }
 
-  function getTemplateFile() {
+  public function getTemplateFile() {
     if ($this->_print) {
       if ($this->_print == CRM_Core_Smarty::PRINT_PAGE) {
         return 'CRM/common/print.tpl';

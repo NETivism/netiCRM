@@ -8,7 +8,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   protected $_action = NULL;
   protected $_parseResult = NULL;
 
-  function preProcess() {
+  public function preProcess() {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH_Preview', 'formRule'], $this);
     $this->_parseResult = $this->get('parseResult');
 
@@ -33,7 +33,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     $this->assign('importType', $this->_parseResult['import_type']);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $result = $this->_parseResult;
     if ($result['import_type'] == 'transaction') {
       if (is_null($result['process_id']) || !empty($this->get('customProcessId'))) {
@@ -125,7 +125,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [
       'receive_date' => date('Y-m-d'),
       'receive_date_time' => date('H:i:s'),
@@ -134,7 +134,7 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
   }
 
 
-  function postProcess() {
+  public function postProcess() {
     // do not submit when button state is refresh
     $buttonPressed = $this->controller->getButtonName();
     if ($buttonPressed == '_qf_Preview_refresh') {

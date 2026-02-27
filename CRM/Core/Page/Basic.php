@@ -52,7 +52,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @access public
    */
 
-  abstract function getBAOName();
+  abstract public function getBAOName();
 
   /**
    * an array of action links
@@ -60,7 +60,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return array (reference)
    * @access public
    */
-  abstract function &links();
+  abstract public function &links();
 
   /**
    * name of the edit form class
@@ -68,7 +68,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  abstract function editForm();
+  abstract public function editForm();
 
   /**
    * name of the form
@@ -76,7 +76,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  abstract function editName();
+  abstract public function editName();
 
   /**
    * userContext to pop back to
@@ -86,7 +86,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  abstract function userContext($mode = NULL);
+  abstract public function userContext($mode = NULL);
 
   /**
    * function to get userContext params
@@ -96,7 +96,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';
   }
 
@@ -122,7 +122,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function addValues($controller) {}
+  public function addValues($controller) {}
 
   /**
    * class constructor
@@ -132,7 +132,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    *
    * @return CRM_Core_Page
    */
-  function __construct($title = NULL, $mode = NULL) {
+  public function __construct($title = NULL, $mode = NULL) {
     parent::__construct($title, $mode);
   }
 
@@ -141,7 +141,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     // what action do we want to perform ? (store it for smarty too.. :)
     $thisArgs = func_get_args();
     $args = $thisArgs[0] ?? NULL;
@@ -184,7 +184,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     return parent::run();
   }
 
-  function superRun() {
+  public function superRun() {
     return parent::run();
   }
 
@@ -196,7 +196,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
     $thisArgs = func_get_args();
     $action = $thisArgs[0] ?? NULL;
     $sort = $thisArgs[1] ?? NULL;
@@ -288,7 +288,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return void
    * @access private
    */
-  function action(&$object, $action, &$values, &$links, $permission, $forceAction = FALSE) {
+  public function action(&$object, $action, &$values, &$links, $permission, $forceAction = FALSE) {
     $values['class'] = '';
     $newAction = $action;
     $hasDelete = $hasDisable = TRUE;
@@ -353,7 +353,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    *
    * @return void
    */
-  function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
+  public function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
     $controller = new CRM_Core_Controller_Simple($this->editForm(), $this->editName(), $mode, $imageUpload);
 
     // set the userContext stack

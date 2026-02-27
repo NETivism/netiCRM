@@ -46,7 +46,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    *
    * Used by both profile and edit contact
    */
-  CONST GROUP = 1, TAG = 2, ALL = 3;
+  public CONST GROUP = 1, TAG = 2, ALL = 3;
 
   /**
    * This function is to build form elements
@@ -63,7 +63,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    * @static
    * @access public
    */
-  static function buildQuickForm(&$form,
+  public static function buildQuickForm(&$form,
     $contactId = 0,
     $type = CRM_Contact_Form_Edit_TagsandGroups::ALL,
     $visibility = FALSE,
@@ -209,7 +209,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    * @access public
    * @static
    */
-  static function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
+  public static function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
     $type = (int ) $type;
     if ($type & self::GROUP) {
       unset($defaults['group']);
@@ -251,7 +251,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    *
    * @return None
    */
-  static function setDefaultValues(&$form, &$defaults) {
+  public static function setDefaultValues(&$form, &$defaults) {
     $contactEditOptions = $form->get('contactEditOptions');
     if ($form->_action & CRM_Core_Action::ADD) {
       if (CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $contactEditOptions)) {

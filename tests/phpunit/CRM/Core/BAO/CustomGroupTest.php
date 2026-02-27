@@ -32,7 +32,7 @@ require_once 'CiviTest/Custom.php';
 
 class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'CustomGroup BAOs',
@@ -41,7 +41,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
@@ -49,7 +49,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getTree()
      */
-    function testGetTree()
+    public function testGetTree()
     {
         $params      = [ ];
         $contactId   = Contact::createIndividual();
@@ -91,7 +91,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test retrieve() with Empty Params
      */
-    function testRetrieveEmptyParams( )
+    public function testRetrieveEmptyParams( )
     {     
         $params = [ ]; 
         require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -102,7 +102,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test retrieve() with Inalid Params
      */
-    function testRetrieveInvalidParams( )
+    public function testRetrieveInvalidParams( )
     { 
         $params = [ 'id' => 99 ]; 
         require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -113,7 +113,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test retrieve()
      */
-    function testRetrieve()
+    public function testRetrieve()
     {
         $customGrouptitle = 'My Custom Group';
         $groupParams = [
@@ -150,7 +150,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test setIsActive()
      */
-    function testSetIsActive()
+    public function testSetIsActive()
     {
         $customGrouptitle = 'My Custom Group';
         $groupParams = [
@@ -181,7 +181,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getGroupDetail() with Empty Params
      */
-    function testGetGroupDetailEmptyParams( )
+    public function testGetGroupDetailEmptyParams( )
     {   
         $customGroupId = [ ]; 
         require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -192,7 +192,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getGroupDetail() with Inalid Params
      */
-    function testGetGroupDetailInvalidParams( )
+    public function testGetGroupDetailInvalidParams( )
     { 
         $customGroupId =  99; 
         require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -203,7 +203,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getGroupDetail()
      */
-    function testGetGroupDetail()
+    public function testGetGroupDetail()
     {
         $customGrouptitle = 'My Custom Group';
         $groupParams = [
@@ -258,7 +258,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getTitle() with Invalid Params()
      */
-    function testGetTitleWithInvalidParams( )
+    public function testGetTitleWithInvalidParams( )
     {
         $params = 99;
         require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -271,7 +271,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getTitle()
      */
-    function testGetTitle()
+    public function testGetTitle()
     {
         $customGrouptitle = 'My Custom Group';
         $groupParams = [
@@ -300,7 +300,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test deleteGroup()
      */
-    function testDeleteGroup( )
+    public function testDeleteGroup( )
     { 
         $customGrouptitle = 'My Custom Group';
         $groupParams = [
@@ -337,7 +337,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test createTable()
      */
-    function testCreateTable( )
+    public function testCreateTable( )
     { 
         $customGrouptitle = 'My Custom Group';
         $groupParams = [
@@ -376,7 +376,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test checkCustomField()
      */
-    function testCheckCustomField()
+    public function testCheckCustomField()
     {
         $customGroupTitle = 'My Custom Group';
         $groupParams = [
@@ -439,7 +439,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getActiveGroups() with Invalid Params()
      */
-    function testGetActiveGroupsWithInvalidParams( )
+    public function testGetActiveGroupsWithInvalidParams( )
     {   
         $contactId = Contact::createIndividual( );      
         require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -447,7 +447,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
         $this->assertEquals( empty($activeGroups) ,true, 'Check that Emprt params are retreived');
     }
     
-    function testGetActiveGroups()
+    public function testGetActiveGroups()
     {
         $contactId = Contact::createIndividual( );
         $customGrouptitle = 'Test Custom Group';
@@ -481,7 +481,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test create()
      */
-    function testCreate( )
+    public function testCreate( )
     {        
         $params = [ 'title'            => 'Test_Group_1',
                          'name'             => 'test_group_1',
@@ -507,7 +507,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test isGroupEmpty()
      */
-    function testIsGroupEmpty( )
+    public function testIsGroupEmpty( )
     {
         $customGrouptitle = 'Test Custom Group';
         $groupParams = [
@@ -532,7 +532,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getGroupTitles() with Invalid Params()
      */
-    function testgetGroupTitlesWithInvalidParams( )
+    public function testgetGroupTitlesWithInvalidParams( )
     {
         $params =  [ 99 ];
         require_once 'CRM/Core/BAO/CustomGroup.php';
@@ -543,7 +543,7 @@ class CRM_Core_BAO_CustomGroupTest extends CiviUnitTestCase
     /**
      * Function to test getGroupTitles()
      */
-    function testgetGroupTitles( )
+    public function testgetGroupTitles( )
     {
         $customGrouptitle = 'Test Custom Group';
         $groupParams = [

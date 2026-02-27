@@ -51,7 +51,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -59,7 +59,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   protected $_parent;
 
@@ -71,7 +71,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @return CRM_Contact_Selector_Profile
    * @access public
    */
-  function __construct() {}
+  public function __construct() {}
   //end of constructor
 
   /**
@@ -81,7 +81,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @access public
    *
    */
-  static function &links() {
+  public static function &links() {
     return self::$_links;
   }
   //end of function
@@ -92,7 +92,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
     $params['status'] = ts('Mailings %%StatusMessage%%');
@@ -111,7 +111,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @return array the column headers that need to be displayed
    * @access public
    */
-  function &getColumnHeaders($action = NULL, $output = NULL) {
+  public function &getColumnHeaders($action = NULL, $output = NULL) {
 
 
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
@@ -205,7 +205,7 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
 
 
     $job = CRM_Mailing_BAO_Job::getTableName();
@@ -238,7 +238,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     static $actionLinks = NULL;
     if (empty($actionLinks)) {
       $cancelExtra = ts('Are you sure you want to cancel this mailing?');
@@ -451,15 +451,15 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviMail Mailings');
   }
 
-  function setParent($parent) {
+  public function setParent($parent) {
     $this->_parent = $parent;
   }
 
-  function whereClause(&$params, $sortBy = TRUE) {
+  public function whereClause(&$params, $sortBy = TRUE) {
     $values = $clauses = [];
     $title = $this->_parent->get('mailing_name');
 
@@ -566,7 +566,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function pagerAtoZ() {
+  public function pagerAtoZ() {
 
 
     $params = [];

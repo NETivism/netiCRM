@@ -14,11 +14,11 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
    * @var boolean
    */
 
-  const BATCH_LIMIT = 100;
-  const BATCH_THRESHOLD = 1;
+  public const BATCH_LIMIT = 100;
+  public const BATCH_THRESHOLD = 1;
 
-  static protected $_tmpreceipt = NULL;
-  static protected $_exportFileName = NULL;
+  protected static $_tmpreceipt = NULL;
+  protected static $_exportFileName = NULL;
 
   /**
    * Display Name of the form
@@ -37,7 +37,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('Send Annual Receipt Email'));
     parent::preProcess();
 
@@ -146,7 +146,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $this->addButtons($buttons);
   }
 
-  function setDefaultValues()
+  public function setDefaultValues()
   {
     $defaults = [];
     return $defaults;

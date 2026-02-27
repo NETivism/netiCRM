@@ -124,7 +124,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (!empty($_REQUEST['contribution_page_id'])) {
       $defaults['contribution_page_id'] = $_REQUEST['contribution_page_id'];
@@ -205,7 +205,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {}
+  public static function formRule($fields, $files, $form) {}
 
   /**
    * Process the form

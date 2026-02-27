@@ -41,7 +41,7 @@ class CRM_Utils_PDF_Utils {
    * @param string $paperSize spcific page size when generate pdf file, default is 'a4'
    * @param $download FALSE for return filename of pdf file, TRUE for download directly
    */
-  static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
+  public static function html2pdf($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $fileName = CRM_Utils_File::makeFileName($fileName);
     $uploadDir = empty($config->uploadDir) ? CRM_Utils_System::cmsDir('temp') .'/' : $config->uploadDir;
@@ -160,7 +160,7 @@ class CRM_Utils_PDF_Utils {
     }
   }
 
-  static function domlib($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
+  public static function domlib($text, $fileName = 'output.pdf', $orientation = 'portrait', $paperSize = 'a4', $download = TRUE) {
     return self::html2pdf($text, $fileName, $orientation, $paperSize, $download);
   }
 
@@ -176,7 +176,7 @@ class CRM_Utils_PDF_Utils {
    * @ $option string
    * see /usr/local/bin/wkhtmltopdf-i386 --help
    */
-  static function wkhtmltopdf($html, $dest, $option = '-n') {
+  public static function wkhtmltopdf($html, $dest, $option = '-n') {
     $config = CRM_Core_Config::singleton();
     $wkhtmltopdf = $config->wkhtmltopdfPath;
 

@@ -65,7 +65,7 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // add select for tag
     $this->_tags = CRM_Core_BAO_Tag::getTags();
 
@@ -81,11 +81,11 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
     $this->addDefaultButtons(ts('Tag Contacts'));
   }
 
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Task_AddToTag', 'formRule']);
   }
 
-  static function formRule($form, $rule) {
+  public static function formRule($form, $rule) {
     $errors = [];
     if (empty($form['tag']) && empty($form['taglist'])) {
       $errors['_qf_default'] = "Please select atleast one tag.";

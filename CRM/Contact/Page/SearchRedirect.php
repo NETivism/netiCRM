@@ -47,7 +47,7 @@ class CRM_Contact_Page_SearchRedirect extends CRM_Core_Page {
   /**
    * Find the path and go to Custom Search
    */
-  function __construct() {
+  public function __construct() {
     $currentPath = CRM_Utils_System::currentPath();
     $split = explode('/', $currentPath);
     if ($split[0] == 'civicrm' && $split[1] == 'search' && !empty($split[2]) && CRM_Utils_Rule::alphanumeric($split[2])) {

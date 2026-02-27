@@ -57,7 +57,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $title = ts('CiviContribute Dashboard');
     CRM_Utils_System::setTitle($title);
 
@@ -81,7 +81,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     // block contribution
     $this->preProcess();
     $this->processDashBoard();
@@ -89,7 +89,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 
-  function getDate($start_date = NULL, $end_date = NULL){
+  public function getDate($start_date = NULL, $end_date = NULL){
     if(!empty($_GET['end_date']) || !empty($_GET['start_date'])){
       $this->is_custom_date = TRUE;
     }
@@ -139,7 +139,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
   }
 
-  function processDashBoard(){
+  public function processDashBoard(){
     if($_GET['debug']){
       $this->assign('debug', 1);
     }
@@ -473,7 +473,7 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
 
   }
 
-  static function getLastDurationTime($start_date, $end_date) {
+  public static function getLastDurationTime($start_date, $end_date) {
     $last_end_date = date('Y-m-d', strtotime($start_date) - 86400);
     $duration_stamp = strtotime($end_date) - strtotime($start_date);
     $last_start_date = date('Y-m-d', strtotime($last_end_date) - $duration_stamp);

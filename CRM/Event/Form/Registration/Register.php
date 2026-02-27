@@ -82,7 +82,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
     $this->assign('ppType', FALSE);
@@ -184,7 +184,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_ppType) {
       return;
     }
@@ -644,7 +644,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @access public
    * @static
    */
-  static public function buildAmount(&$form, $required = TRUE, $discountId = NULL) {
+  public static function buildAmount(&$form, $required = TRUE, $discountId = NULL) {
     //if payment done, no need to build the fee block.
     if (isset($form->_paymentId) && $form->_paymentId && $form->_online) {
       //fix to diaplay line item in update mode.
@@ -924,7 +924,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $self->isEventFull();
 
@@ -1336,7 +1336,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    * @return void
    * @access public
    */
-  static function checkRegistration($fields, &$self, $isAdditional = FALSE) {
+  public static function checkRegistration($fields, &$self, $isAdditional = FALSE) {
     if ($self->_mode == 'test') {
       return FALSE;
     }
@@ -1433,7 +1433,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     return ts('Register for Event');
   }
 
-  static function getRegistrationTimestamp($participantId) {
+  public static function getRegistrationTimestamp($participantId) {
     if (!empty($participantId)) {
       $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
       $activityId = CRM_Utils_Array::key('Event Registration', $activityTypes);

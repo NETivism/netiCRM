@@ -44,12 +44,12 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
   /**
    * ids of the contacts to limit the SQL queries (whole-database queries otherwise)
    */
-  var $contactIds = [];
+  public $contactIds = [];
 
   /**
    * params to dedupe against (queries against the whole contact set otherwise)
    */
-  var $params = [];
+  public $params = [];
 
   /**
    * Return the SQL query for the given rule - either for finding matching
@@ -57,7 +57,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    *
    * @return string  SQL query performing the search
    */
-  function sql() {
+  public function sql() {
     if ($this->params &&
       (!CRM_Utils_Array::arrayKeyExists($this->rule_table, $this->params) ||
         !CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])
@@ -202,7 +202,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    * @return rule fields array associated to rule group
    * @access public
    */
-  static function dedupeRuleFields($params) {
+  public static function dedupeRuleFields($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];
@@ -233,7 +233,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    * @return rule fields array associated to rule group
    * @access public
    */
-  static function dedupeRuleFieldsMapping($params) {
+  public static function dedupeRuleFieldsMapping($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];

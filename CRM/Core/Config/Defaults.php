@@ -90,7 +90,7 @@ class CRM_Core_Config_Defaults {
    * @var int
    */
   public $maxImportFileSize;
-  function setCoreVariables() {
+  public function setCoreVariables() {
     global $civicrm_root;
     $crm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
 

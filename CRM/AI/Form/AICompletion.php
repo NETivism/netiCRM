@@ -15,7 +15,7 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
    */
   protected $_itemValues = [];
 
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
     if (empty($this->_id)) {
       CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
@@ -50,7 +50,7 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['template_title'] = $this->_itemValues['template_title'];
     $defaults['is_template'] = $this->_itemValues['is_template'];

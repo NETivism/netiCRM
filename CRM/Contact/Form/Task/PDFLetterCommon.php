@@ -45,7 +45,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @return void
    * @access public
    */
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
 
     $messageText = [];
     $messageSubject = [];
@@ -61,7 +61,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $form->assign('messageSubject', $messageSubject);
   }
 
-  static function preProcessSingle(&$form, $cid) {
+  public static function preProcessSingle(&$form, $cid) {
     $form->_contactIds = [$cid];
     // put contact display name in title for single contact mode
 
@@ -75,7 +75,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    *
    * @return void
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     if (count($form->_contactIds) > 100) {
       CRM_Core_Error::statusBounce(ts('PDF generation only allow 100 contacts per run.'));
     }
@@ -129,7 +129,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @access public
    *
    */
-  static function formRule($fields, $dontCare, $self) {
+  public static function formRule($fields, $dontCare, $self) {
     $errors = [];
     $template = CRM_Core_Smarty::singleton();
 
@@ -147,7 +147,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    *
    * @return None
    */
-  static function postProcess(&$form) {
+  public static function postProcess(&$form) {
     $formValues = $form->controller->exportValues($form->getName());
 
     // process message template
@@ -253,7 +253,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     CRM_Utils_System::civiExit(1);
   }
 
-  static function formatMessage(&$message) {
+  public static function formatMessage(&$message) {
     $newLineOperators = ['p' => ['oper' => '<p>',
         'pattern' => '/<(\s+)?p(\s+)?>/m',
       ],

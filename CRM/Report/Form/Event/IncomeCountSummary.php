@@ -60,7 +60,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
 
   protected $_add2groupSupported = FALSE;
 
-  protected $_customGroupExtends = ['Event']; function __construct() {
+  protected $_customGroupExtends = ['Event']; public function __construct() {
 
     $this->_columns = [
       'civicrm_event' =>
@@ -147,11 +147,11 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
@@ -198,7 +198,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select);
   }
 
-  function from() {
+  public function from() {
     $this->_from = " 
         FROM civicrm_event {$this->_aliases['civicrm_event']}
              LEFT JOIN civicrm_participant {$this->_aliases['civicrm_participant']} 
@@ -209,7 +209,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
                        {$this->_aliases['civicrm_line_item']}.entity_table = 'civicrm_participant' ";
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     $this->_participantWhere = "";
     foreach ($this->_columns as $tableName => $table) {
@@ -251,7 +251,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     $this->_where = "WHERE  " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
     $select = "
          SELECT SUM( {$this->_aliases['civicrm_line_item']}.participant_count ) as count,
@@ -281,13 +281,13 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     return $statistics;
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->assign('chartSupported', TRUE);
     $this->_rollup = " WITH ROLLUP";
     $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_event']}.id  {$this->_rollup}";
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -336,7 +336,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function buildChart(&$rows) {
+  public function buildChart(&$rows) {
 
     $this->_interval = 'events';
     $countEvent = NULL;
@@ -370,7 +370,7 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     }
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
 
     if (is_array($rows)) {
       $eventType = CRM_Core_OptionGroup::values('event_type');

@@ -57,7 +57,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('searchFormName', 'Advanced');
 
     parent::preProcess();
@@ -70,7 +70,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->set('context', 'advanced');
 
 
@@ -176,7 +176,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if (!$this->_searchPane) {
       return parent::getTemplateFileName();
     }
@@ -198,7 +198,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = $this->_formValues;
     $this->normalizeDefaultValues($defaults);
 
@@ -229,7 +229,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     $this->set('isAdvanced', '1');
 
     // get user submitted values
@@ -318,7 +318,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * @return void
    * @access private
    */
-  function normalizeFormValues() {
+  public function normalizeFormValues() {
     $contactType = CRM_Utils_Array::value('contact_type', $this->_formValues);
 
     if ($contactType && is_array($contactType)) {
@@ -372,7 +372,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * @return void
    * @access private
    */
-  function normalizeDefaultValues(&$defaults) {
+  public function normalizeDefaultValues(&$defaults) {
     if (!is_array($defaults)) {
       $defaults = [];
     }

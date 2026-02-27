@@ -49,7 +49,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
    * Second check for visibility
    * Call a hook to see if hook wants to override visibility setting
    */
-  function checkPermission() {
+  public function checkPermission() {
     if (!$this->_mailing) {
       return FALSE;
     }
@@ -76,7 +76,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
    *
    * @return void
    */
-  function run($id = NULL, $contact_id = NULL, $print = TRUE) {
+  public function run($id = NULL, $contact_id = NULL, $print = TRUE) {
     if (is_numeric($id)) {
       $this->_mailingID = $id;
     }

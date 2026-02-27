@@ -39,7 +39,7 @@ class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
   /**
    * class constructor
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
     parent::__construct($title, $modal, NULL, FALSE, TRUE);
 

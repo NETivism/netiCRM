@@ -97,7 +97,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function __construct($id, $gid, $restrict, $skipPermission = FALSE, $profileIds = NULL, $setTitle = TRUE) {
+  public function __construct($id, $gid, $restrict, $skipPermission = FALSE, $profileIds = NULL, $setTitle = TRUE) {
     $this->_id = $id;
     $this->_gid = $gid;
     $this->_restrict = $restrict;
@@ -118,7 +118,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * @return array $_actionLinks
    *
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     return NULL;
   }
 
@@ -132,7 +132,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     $template = CRM_Core_Smarty::singleton();
     if ($this->_id && $this->_gid) {
 
@@ -239,7 +239,7 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
     return trim($template->fetch($this->getHookedTemplateFileName()));
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Page/{$this->_gid}/Dynamic.tpl";
       $template = &CRM_Core_Page::getTemplate();

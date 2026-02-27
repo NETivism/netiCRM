@@ -72,7 +72,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    * @return array $_actionLinks
    *
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting
@@ -121,7 +121,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    * @return array $_configureActionLinks
    *
    */
-  function &configureActionLinks() {
+  public function &configureActionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_configureActionLinks)) {
       $urlString = 'civicrm/admin/contribute/';
@@ -203,7 +203,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    * @return array $_onlineContributionLinks.
    *
    */
-  function &onlineContributionLinks() {
+  public function &onlineContributionLinks() {
     if (!isset(self::$_onlineContributionLinks)) {
       self::$_onlineContributionLinks = [
         CRM_Core_Action::RENEW => [
@@ -232,7 +232,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    * @return array $_contributionLinks
    *
    */
-  function &contributionLinks() {
+  public function &contributionLinks() {
     if (!isset(self::$_contributionLinks)) {
       //get contribution dates.
 
@@ -291,7 +291,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
     $action = CRM_Utils_Request::retrieve('action', 'String',
       // default to 'browse'
@@ -427,7 +427,7 @@ WHERE       cp.contribution_page_id = {$id}";
    * @return void
    * @access public
    */
-  function copy() {
+  public function copy() {
     $key = CRM_Utils_Request::retrieve('key', 'String',
       CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
     );
@@ -453,7 +453,7 @@ WHERE       cp.contribution_page_id = {$id}";
    * @access public
    * @static
    */
-  function browse($action = NULL) {
+  public function browse($action = NULL) {
     $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
       'String',
       $this
@@ -571,7 +571,7 @@ ORDER BY is_active DESC, id ASC
     }
   }
 
-  function search() {
+  public function search() {
     if (isset($this->_action) &
       (CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
@@ -591,7 +591,7 @@ ORDER BY is_active DESC, id ASC
     $form->run();
   }
 
-  function whereClause(&$params, $sortBy = TRUE) {
+  public function whereClause(&$params, $sortBy = TRUE) {
     $values = $clauses = [];
     $title = $this->get('title');
     $createdId = $this->get('cid');
@@ -644,7 +644,7 @@ ORDER BY is_active DESC, id ASC
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function pager($whereClause, $whereParams) {
+  public function pager($whereClause, $whereParams) {
 
 
     $params['status'] = ts('Contribution %%StatusMessage%%');
@@ -667,7 +667,7 @@ SELECT count(id)
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  function pagerAtoZ($whereClause, $whereParams) {
+  public function pagerAtoZ($whereClause, $whereParams) {
 
 
     $query = "
@@ -682,7 +682,7 @@ SELECT count(id)
     $this->assign('aToZ', $aToZBar);
   }
 
-  function formatConfigureLinks($sectionsInfo) {
+  public function formatConfigureLinks($sectionsInfo) {
     //build the formatted configure links.
     $formattedConfLinks = self::configureActionLinks();
     foreach ($formattedConfLinks as $act => & $link) {
@@ -708,7 +708,7 @@ SELECT count(id)
     return $formattedConfLinks;
   }
 
-  function checkPerm($page) {
+  public function checkPerm($page) {
     $configureActionLinks = self::configureActionLinks();
 
     // form all action links

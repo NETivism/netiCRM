@@ -100,7 +100,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $formValues = $this->_formValues;
     unset($formValues['component_mode']);
     unset($formValues['qfKey']);
@@ -114,7 +114,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     if (method_exists($this->_customClass, 'buildForm')) {
       $this->_customClass->buildForm($this);
     }
@@ -133,7 +133,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
 
 
     $ext = new CRM_Core_Extensions();
@@ -148,7 +148,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     return $fileName ? $fileName : parent::getTemplateFileName();
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->set('isAdvanced', '3');
     $this->set('isCustom', '1');
 
@@ -174,7 +174,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     parent::postProcess();
   }
 
-  function setTitle($title){
+  public function setTitle($title){
     if ($title) {
       CRM_Utils_System::setTitle($title);
     }

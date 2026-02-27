@@ -356,7 +356,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
    * @access public
    * @static
    */
-  static function formRule($params) {
+  public static function formRule($params) {
     $errors = [];
     //total amount condition arise when membership type having no
     //minimum fee

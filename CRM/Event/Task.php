@@ -40,7 +40,7 @@
  */
 class CRM_Event_Task {
   // Value for SAVE_SEARCH is set to 13 in accordance with CRM_Contact_Task::SAVE_SEARCH
-  CONST DELETE_EVENTS = 1, PRINT_EVENTS = 2, EXPORT_EVENTS = 3, BATCH_EVENTS = 4, CANCEL_REGISTRATION = 5, EMAIL_CONTACTS = 6,
+  public CONST DELETE_EVENTS = 1, PRINT_EVENTS = 2, EXPORT_EVENTS = 3, BATCH_EVENTS = 4, CANCEL_REGISTRATION = 5, EMAIL_CONTACTS = 6,
   // Value for LABEL_CONTACTS is set to 16 in accordance with CRM_Contact_Task::LABEL_CONTACTS
   SAVE_SEARCH = 13, SAVE_SEARCH_UPDATE = 14, PARTICIPANT_STATUS = 15,
   LABEL_CONTACTS = 16;
@@ -51,7 +51,7 @@ class CRM_Event_Task {
    * @var array
    * @static
    */
-  static $_tasks = NULL;
+  public static $_tasks = NULL;
 
   /**
    * the optional task array
@@ -59,7 +59,7 @@ class CRM_Event_Task {
    * @var array
    * @static
    */
-  static $_optionalTasks = NULL;
+  public static $_optionalTasks = NULL;
 
   /**
    * These tasks are the core set of tasks that the user can perform
@@ -69,7 +69,7 @@ class CRM_Event_Task {
    * @static
    * @access public
    */
-  static function &tasks() {
+  public static function &tasks() {
     if (!(self::$_tasks)) {
       self::$_tasks = [1 => ['title' => ts('Delete Participants'),
           'class' => 'CRM_Event_Form_Task_Delete',
@@ -147,7 +147,7 @@ class CRM_Event_Task {
    * @static
    * @access public
    */
-  static function &taskTitles() {
+  public static function &taskTitles() {
     self::tasks();
     $titles = [];
     foreach (self::$_tasks as $id => $value) {
@@ -169,7 +169,7 @@ class CRM_Event_Task {
    * @static
    * @access public
    */
-  static function &optionalTaskTitle() {
+  public static function &optionalTaskTitle() {
     $tasks = [
       14 => self::$_tasks[14]['title'],
     ];
@@ -185,7 +185,7 @@ class CRM_Event_Task {
    * @return array set of tasks that are valid for the user
    * @access public
    */
-  static function &permissionedTaskTitles($permission) {
+  public static function &permissionedTaskTitles($permission) {
     $tasks = [];
     if (($permission == CRM_Core_Permission::EDIT)
       || CRM_Core_Permission::check('edit event participants')
@@ -216,7 +216,7 @@ class CRM_Event_Task {
    * @static
    * @access public
    */
-  static function getTask($value) {
+  public static function getTask($value) {
     self::tasks();
     if (!$value || !CRM_Utils_Array::value($value, self::$_tasks)) {
       // make the print task by default

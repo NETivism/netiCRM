@@ -87,7 +87,7 @@ class CRM_Core_Permission_Joomla {
    * @static
    * @access public
    */
-  static function check($str) {
+  public static function check($str) {
     $config = CRM_Core_Config::singleton();
     $adminPerm = ['administer users',
       'edit all contacts',

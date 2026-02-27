@@ -20,7 +20,7 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
    * Run the page.
    * @return void
    */
-  function run() {
+  public function run() {
     // Get product_id from request
     $this->_productId = CRM_Utils_Request::retrieve('product_id', 'Positive', $this, TRUE);
 

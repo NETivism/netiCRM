@@ -452,7 +452,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     if (!empty($self->_params['selectProduct'])) {
@@ -514,7 +514,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @return int
    * @access public
    */
-  function getAction() {
+  public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
       return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
     }
@@ -531,7 +531,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    *
    * @return void
    */
-  function setDefaultValues() {}
+  public function setDefaultValues() {}
 
   /**
    * Process the form
@@ -971,7 +971,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @return object
    * @access public
    */
-  static function processContribution(&$form, $params, $result, $contactID, $contributionType, $deductibleMode = TRUE, $pending = FALSE, $online = TRUE) {
+  public static function processContribution(&$form, $params, $result, $contactID, $contributionType, $deductibleMode = TRUE, $pending = FALSE, $online = TRUE) {
 
     $transaction = new CRM_Core_Transaction();
 
@@ -1318,7 +1318,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * Create the recurring contribution record
    *
    */
-  function processRecurringContribution(&$params, $contactID) {
+  public function processRecurringContribution(&$params, $contactID) {
     // return if this page is not set for recurring
     // or the user has not chosen the recurring option
     if (!CRM_Utils_Array::value('is_recur', $this->_values) ||
@@ -1372,7 +1372,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  function createHonorContact() {
+  public function createHonorContact() {
     $params = $this->controller->exportValues('Main');
 
     // return if we dont have enough information
@@ -1414,7 +1414,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  static function processOnBehalfOrganization(&$behalfOrganization, &$contactID, &$values, &$params) {
+  public static function processOnBehalfOrganization(&$behalfOrganization, &$contactID, &$values, &$params) {
     $isCurrentEmployer = FALSE;
     if ($behalfOrganization['organization_id'] && $behalfOrganization['org_option']) {
       $orgID = $behalfOrganization['organization_id'];

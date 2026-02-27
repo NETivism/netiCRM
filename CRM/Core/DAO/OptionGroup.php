@@ -39,21 +39,21 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_option_group';
+  public static $_tableName = 'civicrm_option_group';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +61,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +69,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,7 +77,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = true;
+  public static $_log = true;
     /**
    * Option Group ID
    *
@@ -120,7 +120,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @access public
    * @return civicrm_option_group
    */
-  function __construct()
+  public function __construct()
   {
     parent::__construct();
   }
@@ -130,7 +130,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @access public
    * @return array
    */
-  static function &fields()
+  public static function &fields()
   {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -179,7 +179,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  static function getTableName()
+  public static function getTableName()
   {
         global $dbLocale;
     return self::$_tableName . $dbLocale;
@@ -190,7 +190,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @access public
    * @return boolean
    */
-  function getLog()
+  public function getLog()
   {
     return self::$_log;
   }
@@ -200,7 +200,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &import($prefix = false)
+  public static function &import($prefix = false)
   {
     if (!(self::$_import)) {
       self::$_import = [];
@@ -223,7 +223,7 @@ class CRM_Core_DAO_OptionGroup extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &export($prefix = false)
+  public static function &export($prefix = false)
   {
     if (!(self::$_export)) {
       self::$_export = [];

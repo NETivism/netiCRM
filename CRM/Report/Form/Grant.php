@@ -50,7 +50,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
   public $_groupBy;
   protected $_addressField = FALSE;
 
-  protected $_customGroupExtends = ['Grant']; function __construct() {
+  protected $_customGroupExtends = ['Grant']; public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -218,7 +218,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function select() {
+  public function select() {
     $select = [];
 
     $this->_columnHeaders = [];
@@ -244,7 +244,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_grant {$this->_aliases['civicrm_grant']}
                         LEFT JOIN civicrm_contact {$this->_aliases['civicrm_contact']} 
@@ -258,7 +258,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -294,7 +294,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
       is_array($this->_params['group_bys']) &&
@@ -315,7 +315,7 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {

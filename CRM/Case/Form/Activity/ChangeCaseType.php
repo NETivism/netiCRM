@@ -41,7 +41,7 @@
  */
 class CRM_Case_Form_Activity_ChangeCaseType {
 
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     if (!isset($form->_caseId)) {
       CRM_Core_Error::fatal(ts('Case Id not found.'));
     }
@@ -55,7 +55,7 @@ class CRM_Case_Form_Activity_ChangeCaseType {
    *
    * @return None
    */
-  function setDefaultValues(&$form) {
+  public function setDefaultValues(&$form) {
     $defaults = [];
 
     $defaults['is_reset_timeline'] = 1;
@@ -67,7 +67,7 @@ class CRM_Case_Form_Activity_ChangeCaseType {
     return $defaults;
   }
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
 
     $form->_caseType = CRM_Case_PseudoConstant::caseType();
     $caseTypeId = explode(CRM_Case_BAO_Case::VALUE_SEPARATOR, CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',
@@ -97,7 +97,7 @@ class CRM_Case_Form_Activity_ChangeCaseType {
    * @static
    * @access public
    */
-  static function formRule($values, $files, $form) {
+  public static function formRule($values, $files, $form) {
     return TRUE;
   }
 

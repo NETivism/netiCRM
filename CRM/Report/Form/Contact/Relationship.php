@@ -54,7 +54,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
   protected $_summary = NULL;
   protected $_emailField_a = FALSE;
   protected $_emailField_b = FALSE;
-  protected $_customGroupExtends = ['Relationship']; function __construct() {
+  protected $_customGroupExtends = ['Relationship']; public function __construct() {
 
     $contact_type = CRM_Contact_BAO_ContactType::getSelectElements(FALSE, TRUE, '_');
 
@@ -225,11 +225,11 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
@@ -255,7 +255,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_relationship {$this->_aliases['civicrm_relationship']}
  
@@ -303,7 +303,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  public function where() {
     $whereClauses = $havingClauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -411,7 +411,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $isStatusFilter = FALSE;
@@ -446,7 +446,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     return $statistics;
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = " ";
     $groupBy = [];
     if ($this->relationType == 'a_b') {
@@ -464,7 +464,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->beginPostProcess();
 
     $this->relationType = NULL;
@@ -490,7 +490,7 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
 

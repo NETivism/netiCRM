@@ -8,7 +8,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -37,7 +37,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH', 'formRule'], $this);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::ADD) {
       if (empty($this->_contactId)) {
         CRM_Contact_Form_NewContact::buildQuickForm($this);
@@ -127,7 +127,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if ($this->_id && $this->_contributionRecurId) {
       $achValues = CRM_Contribute_BAO_TaiwanACH::getValue($this->_contributionRecurId);
@@ -157,7 +157,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   }
 
 
-  function postProcess() {
+  public function postProcess() {
     $submittedValues = $this->controller->exportValues($this->_name);
 
     // set the contact, when contact is selected

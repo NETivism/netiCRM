@@ -48,7 +48,7 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
 
   protected $_config = NULL;
 
-  protected $_params = NULL; function preProcess() {
+  protected $_params = NULL; public function preProcess() {
     $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive',
       $this, FALSE
     );
@@ -94,7 +94,7 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'));
   }
 
-  function cbsDefaultValues(&$defaults) {
+  public function cbsDefaultValues(&$defaults) {
 
     foreach ($this->_cbs as $name => $title) {
       if (isset($this->_config->$name) &&

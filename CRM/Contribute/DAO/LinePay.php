@@ -39,21 +39,21 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_contribution_linepay';
+  public static $_tableName = 'civicrm_contribution_linepay';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = null;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = null;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +61,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = null;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +69,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = null;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,7 +77,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = false;
+  public static $_log = false;
     /**
    * LinePay ID
    *
@@ -162,7 +162,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @access public
    * @return civicrm_contribution_linepay
    */
-  function __construct()
+  public function __construct()
   {
     parent::__construct();
   }
@@ -172,7 +172,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @access public
    * @return array
    */
-  static function &fields()
+  public static function &fields()
   {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -266,7 +266,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  static function getTableName()
+  public static function getTableName()
   {
         return self::$_tableName;
       }
@@ -276,7 +276,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @access public
    * @return boolean
    */
-  function getLog()
+  public function getLog()
   {
     return self::$_log;
   }
@@ -286,7 +286,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &import($prefix = false)
+  public static function &import($prefix = false)
   {
     if (!(self::$_import)) {
       self::$_import = [];
@@ -309,7 +309,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &export($prefix = false)
+  public static function &export($prefix = false)
   {
     if (!(self::$_export)) {
       self::$_export = [];

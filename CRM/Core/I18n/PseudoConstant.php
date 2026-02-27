@@ -35,7 +35,7 @@
 
 
 class CRM_Core_I18n_PseudoConstant {
-  static function &languages() {
+  public static function &languages() {
     static $languages = NULL;
     if ($languages === NULL) {
       $rows = [];
@@ -49,12 +49,12 @@ class CRM_Core_I18n_PseudoConstant {
     return $languages;
   }
 
-  static function longForShort($short) {
+  public static function longForShort($short) {
     $longForShortMapping = &self::longForShortMapping();
     return $longForShortMapping[$short];
   }
 
-  static function &longForShortMapping() {
+  public static function &longForShortMapping() {
     static $longForShortMapping = NULL;
     if ($longForShortMapping === NULL) {
       $rows = [];
@@ -74,7 +74,7 @@ class CRM_Core_I18n_PseudoConstant {
     return $longForShortMapping;
   }
 
-  static function shortForLong($long) {
+  public static function shortForLong($long) {
     return substr($long, 0, 2);
   }
 }

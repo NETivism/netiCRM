@@ -35,7 +35,7 @@
 
 
 class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $config = CRM_Core_Config::singleton();
 
     // Let's first update the config defaults
@@ -244,7 +244,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
     return TRUE;
   }
 
-  function upgrade() {
+  public function upgrade() {
     $currentDir = dirname(__FILE__);
 
     // 1. remove domain_ids from the entire db
@@ -288,22 +288,22 @@ DROP domain_id;";
     $this->setVersion('2.01');
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '1']);
     return $this->checkVersion('2.01');
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('CiviCRM 2.1 Upgrade: Step One (Domain Ids)');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     $msg = '<p><strong>' . ts('This process will upgrade your v2.0 CiviCRM database to the v2.1 database format.') . '</strong></p><div class="messsages status"><ul><li><strong>' . ts('Make sure you have a current and complete backup of your CiviCRM database and codebase files before starting the upgrade process.') . '</strong></li><li>' . '</li></ul></div><p>' . ts('Click <strong>Begin Upgrade</strong> to begin the process.') . '</p>';
 
     return $msg;
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Begin Upgrade');
   }
 }

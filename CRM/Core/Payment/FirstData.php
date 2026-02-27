@@ -59,7 +59,7 @@ future.
 class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   public $_mode;
   # (not used, implicit in the API, might need to convert?)
-  CONST CHARSET = 'UFT-8';
+  public CONST CHARSET = 'UFT-8';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -68,7 +68,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**********************************************************
    * Constructor
@@ -77,7 +77,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    *
    * @return void
    **********************************************************/
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     // live or test
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
@@ -92,7 +92,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_FirstData($mode, $paymentProcessor);
@@ -106,7 +106,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    *
    *  Comment out irrelevant fields
    **********************************************************/
-  function mapProcessorFieldstoParams($params) {
+  public function mapProcessorFieldstoParams($params) {
     /*concatenate full customer name first  - code from EWAY gateway
          */
 
@@ -164,7 +164,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    * This function sends request and receives response from
    * the processor
    **********************************************************/
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     if ($params['is_recur'] == TRUE) {
       CRM_Core_Error::fatal(ts('%1 - recurring payments not implemented', [1 => $paymentProcessor]));
     }
@@ -330,7 +330,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    *
    * @return bool                  True if ID exists, else false
    */
-  function _checkDupe($invoiceId) {
+  public function _checkDupe($invoiceId) {
 
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $invoiceId;
@@ -340,7 +340,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   /**************************************************
    * Produces error message and returns from class
    **************************************************/
-  function &errorExit($errorCode = NULL, $errorMessage = NULL) {
+  public function &errorExit($errorCode = NULL, $errorMessage = NULL) {
     $e = &CRM_Core_Error::singleton();
 
     if ($errorCode) {
@@ -355,7 +355,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   /**************************************************
    * NOTE: 'doTransferCheckout' not implemented
    **************************************************/
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
@@ -372,7 +372,7 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
    ********************************************************************************************/
   //  function checkConfig( $mode )          // CiviCRM V1.9 Declaration
   // CiviCRM V2.0 Declaration
-  function checkConfig() {
+  public function checkConfig() {
     $errorMsg = [];
 
     if (empty($this->_paymentProcessor['user_name'])) {

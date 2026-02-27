@@ -5,17 +5,17 @@
  */
 class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
-  static function add(&$params) {
+  public static function add(&$params) {
     $coupon = new CRM_Coupon_BAO_Coupon();
     $coupon->copyValues($params);
     $coupon->save();
     return $coupon;
   }
 
-  static function create(&$params) {
+  public static function create(&$params) {
     // save
     $fields = CRM_Coupon_DAO_Coupon::fields();
     $data = $additional = [];
@@ -43,11 +43,11 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
    * @static
    * @access public
    */
-  static function setIsActive($id, $isActive) {
+  public static function setIsActive($id, $isActive) {
     return CRM_Core_DAO::setFieldValue('CRM_Coupon_DAO_Coupon', $id, 'is_active', $isActive);
   }
 
-  static function saveCouponEntity($couponId, $data) {
+  public static function saveCouponEntity($couponId, $data) {
     if (empty($couponId) || !is_numeric($couponId)) {
       return;
     }
@@ -147,7 +147,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $coupon;
   }
 
-  static function getCouponList($filter, $returnFetchedResult = False) {
+  public static function getCouponList($filter, $returnFetchedResult = False) {
     $sql = "SELECT cc.*, e.entity_table, e.entity_id FROM civicrm_coupon cc LEFT JOIN civicrm_coupon_entity e ON cc.id = e.coupon_id WHERE ";
     $where = $args = [];
     foreach($filter as $field => $value) {
@@ -218,7 +218,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  static function getCouponUsed($ids) {
+  public static function getCouponUsed($ids) {
     $result = array_fill_keys($ids, 0);
     if (!empty($ids)) {
       $couponIds = CRM_Utils_Array::implode(',', $ids);
@@ -231,7 +231,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $result;
   }
 
-  static function getCouponUsedBy($ids = [], $field = 'ct.coupon_id') {
+  public static function getCouponUsedBy($ids = [], $field = 'ct.coupon_id') {
     if (!empty($ids)) {
       if (empty($field)) {
         $field = 'ct.coupon_id';
@@ -249,7 +249,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  function getContactCouponUsed($contactIds, $ids) {
+  public function getContactCouponUsed($contactIds, $ids) {
     if (!is_array($ids) || !is_array($contactIds)) {
       return;
     }
@@ -265,11 +265,11 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Coupon_DAO_Coupon', $params, $defaults);
   }
 
-  static function formatCouponEntity(&$params) {
+  public static function formatCouponEntity(&$params) {
     foreach($params as $key => $value) {
       if (in_array($key, ['civicrm_event', 'civicrm_price_field_value'])) {
         if (!is_array($value)) {
@@ -291,7 +291,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  static function addQuickFormElement(&$form) {
+  public static function addQuickFormElement(&$form) {
     $ele = $form->add('text', 'coupon', ts('Coupon'), ['placeholder' => ts('Enter coupon code')]);
     if (!empty($form->_coupon['coupon_track_id'])) {
       $form->add('hidden', 'coupon_track_id', $form->_coupon['coupon_track_id']);
@@ -304,7 +304,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  static function validFromCode($code) {
+  public static function validFromCode($code) {
     if(empty($code)){
       return NULL;
     }
@@ -341,7 +341,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $valid;
   }
 
-  static function validEventFromCode($code, $eventId, $additionalVerify = []) {
+  public static function validEventFromCode($code, $eventId, $additionalVerify = []) {
     $valid = TRUE;
     $coupon = self::validFromCode($code);
     if (empty($coupon)) {
@@ -382,7 +382,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  static function getCouponFromFormSubmit($form, $fields){
+  public static function getCouponFromFormSubmit($form, $fields){
     $code = $fields['coupon'];
     if(!empty($code)){
       if(CRM_Utils_Array::value('priceSetId', $fields)){
@@ -462,7 +462,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  static function countAmount($form, $submitValues) {
+  public static function countAmount($form, $submitValues) {
     $coupon = self::getCouponFromFormSubmit($form, $submitValues);
     if(!empty($coupon)){
       $usedOptionsCount = $coupon['usedOptionsCount'];
@@ -486,7 +486,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
-  static function checkError($form, $submitValues) {
+  public static function checkError($form, $submitValues) {
     if(empty($submitValues['coupon'])){
       return ;
     }
@@ -519,7 +519,7 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $errors;
   }
 
-  static function addCouponTrack($couponId, $contributionId, $contactId = NULL, $discountAmount = NULL) {
+  public static function addCouponTrack($couponId, $contributionId, $contactId = NULL, $discountAmount = NULL) {
     $coupon = new CRM_Coupon_DAO_Coupon();
     $coupon->id = $couponId;
     $coupon->find(True);

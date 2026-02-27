@@ -32,7 +32,7 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     }
   }
 
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     if (!empty($fields['batch_prefix'])) {
       // check action
@@ -138,7 +138,7 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $this->addFormRule(['CRM_Coupon_Form_Coupon', 'formRule'], $this);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (isset($this->_id)) {
       $defaults = $this->_defaults;

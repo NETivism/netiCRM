@@ -30,7 +30,7 @@ require_once 'CRM/Member/BAO/MembershipType.php';
 
 class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'MembershipType BAOs',
@@ -39,7 +39,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     { 
         parent::setUp();
         
@@ -65,7 +65,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
      * This method is called after a test is executed.
      *
      */
-    function tearDown( )
+    public function tearDown( )
     {
         $this->relationshipTypeDelete( $this->_relationshipTypeId );
         $this->membershipStatusDelete( $this->_membershipStatusID );
@@ -77,7 +77,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function add()
      *
      */
-    function testAdd( ) 
+    public function testAdd( ) 
     {
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'test type',
@@ -104,7 +104,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function retrive()
      *
      */
-    function testRetrieve( ) 
+    public function testRetrieve( ) 
     {
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
@@ -129,7 +129,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function isActive()
      *
      */
-    function testSetIsActive( ) 
+    public function testSetIsActive( ) 
     {        
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
@@ -158,7 +158,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function del()
      *
      */
-    function testdel( ) 
+    public function testdel( ) 
     {        
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
@@ -183,7 +183,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function convertDayFormat( )
      *
      */
-    function testConvertDayFormat( ) 
+    public function testConvertDayFormat( ) 
     {        
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
@@ -212,7 +212,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function getMembershipTypes( )
      *
      */
-    function testGetMembershipTypes( ) {
+    public function testGetMembershipTypes( ) {
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
                          'description' => null,
@@ -234,7 +234,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function getMembershipTypeDetails( )
      *
      */
-    function testGetMembershipTypeDetails( ) {
+    public function testGetMembershipTypeDetails( ) {
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
                          'description' => null,
@@ -258,7 +258,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function getDatesForMembershipType( )
      *
      */
-    function testGetDatesForMembershipType( ) {
+    public function testGetDatesForMembershipType( ) {
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
                          'description' => null,
@@ -281,7 +281,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function getRenewalDatesForMembershipType( )
      *
      */
-    function testGetRenewalDatesForMembershipType( ) {
+    public function testGetRenewalDatesForMembershipType( ) {
         require_once 'CRM/Member/BAO/Membership.php';
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
@@ -322,7 +322,7 @@ class CRM_Member_BAO_MembershipTypeTest extends CiviUnitTestCase
     /* check function getMembershipTypesByOrg( )
      *
      */
-    function testGetMembershipTypesByOrg( ) {
+    public function testGetMembershipTypesByOrg( ) {
         $ids    = [ 'memberOfContact' => $this->_orgContactID ];
         $params = [ 'name' => 'General',
                          'description' => null,

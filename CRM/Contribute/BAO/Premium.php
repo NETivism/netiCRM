@@ -39,7 +39,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -57,7 +57,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $premium = new CRM_Contribute_DAO_Product();
     $premium->copyValues($params);
     if ($premium->find(TRUE)) {
@@ -76,7 +76,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Premium', $id, 'premiums_active ', $is_active);
   }
 
@@ -87,7 +87,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @static
    */
 
-  static function del($premiumID) {
+  public static function del($premiumID) {
     //check dependencies
 
     //delete from contribution Type table
@@ -103,7 +103,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $pageId
    * @static
    */
-  static function buildPremiumBlock(&$form, $pageID, $formItems = FALSE, $selectedProductID = NULL, $selectedOption = NULL) {
+  public static function buildPremiumBlock(&$form, $pageID, $formItems = FALSE, $selectedProductID = NULL, $selectedOption = NULL) {
 
 
     $dao = new CRM_Contribute_DAO_Premium();
@@ -131,7 +131,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   /**
    * Build combination premium block
    */
-  static function buildCombinationBlock(&$form, $premiumID, $formItems, $selectedProductID = NULL, $selectedOption = NULL) {
+  public static function buildCombinationBlock(&$form, $premiumID, $formItems, $selectedProductID = NULL, $selectedOption = NULL) {
     $dao = new CRM_Contribute_DAO_Premium();
     $dao->id = $premiumID;
     if ($dao->find(TRUE)) {
@@ -214,7 +214,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
   /**
    * Build regular premium block
    */
-  static function buildRegularPremiumBlock(&$form, $premiumID, $formItems, $selectedProductID, $selectedOption, $premiumBlock) {
+  public static function buildRegularPremiumBlock(&$form, $premiumID, $formItems, $selectedProductID, $selectedOption, $premiumBlock) {
     $dao = new CRM_Contribute_DAO_PremiumsProduct();
     $dao->premiums_id = $premiumID;
     $dao->orderBy('weight');
@@ -306,7 +306,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $pageId
    * @static
    */
-  static function buildPremiumPreviewBlock($form, $productID, $premiumProductID = NULL) {
+  public static function buildPremiumPreviewBlock($form, $productID, $premiumProductID = NULL) {
 
 
     if ($premiumProductID) {
@@ -349,7 +349,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param $combinationID
    * @static
    */
-  static function buildCombinationPreviewBlock($form, $combinationID) {
+  public static function buildCombinationPreviewBlock($form, $combinationID) {
     $combinations = [];
     $dao = new CRM_Contribute_DAO_PremiumsCombination();
     $dao->id = $combinationID;
@@ -376,7 +376,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param int $contribution page id
    * @static
    */
-  static function deletePremium($contributionPageID) {
+  public static function deletePremium($contributionPageID) {
     if (!$contributionPageID) {
       return;
     }
@@ -409,7 +409,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    *
    * @static
    */
-  static function restockContributionProducts() {
+  public static function restockContributionProducts() {
     $config = CRM_Core_Config::singleton();
 
     // Get contributions that need to be processed for restocking
@@ -455,7 +455,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @return array
    * @static
    */
-  static function getPaymentInstrumentIdsByNames($names) {
+  public static function getPaymentInstrumentIdsByNames($names) {
     $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument('name');
     $ids = [];
     foreach ($names as $name) {
@@ -477,7 +477,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @return array
    * @static
    */
-  static function getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $convenienceStoreDays, $checkStatuses) {
+  public static function getExpiredOnlineContributions($creditCardDays, $nonCreditCardDays, $convenienceStoreDays, $checkStatuses) {
     // Get all contribution statuses and map names to IDs
     $allStatuses = CRM_Contribute_PseudoConstant::contributionStatus('', 'name');
     $statusNameToId = array_flip($allStatuses);
@@ -608,7 +608,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @param string $source The source of this restock
    * @static
    */
-  static function restockPremiumInventory($contributionId, $source) {
+  public static function restockPremiumInventory($contributionId, $source) {
     // Get premium products associated with this contribution from civicrm_contribution_product
     // Only get products that haven't been restocked yet (restock IS NULL OR restock <= 0)
     $sql = "

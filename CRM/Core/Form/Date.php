@@ -37,7 +37,7 @@ Class CRM_Core_Form_Date {
   /**
    * various Date Formats
    */
-  CONST DATE_yyyy_mm_dd = 1, DATE_mm_dd_yy = 2, DATE_mm_dd_yyyy = 4, DATE_Month_dd_yyyy = 8, DATE_dd_mon_yy = 16, DATE_dd_mm_yyyy = 32;
+  public CONST DATE_yyyy_mm_dd = 1, DATE_mm_dd_yy = 2, DATE_mm_dd_yyyy = 4, DATE_Month_dd_yyyy = 8, DATE_dd_mon_yy = 16, DATE_dd_mm_yyyy = 32;
 
   /**
    * This function is to build the date-format form
@@ -47,7 +47,7 @@ Class CRM_Core_Form_Date {
    * @static
    * @access public
    */
-  static function buildAllowedDateFormats(&$form) {
+  public static function buildAllowedDateFormats(&$form) {
 
     $dateOptions = [];
 
@@ -75,7 +75,7 @@ Class CRM_Core_Form_Date {
    * @static
    * @access public
    */
-  static function buildDateRange(&$form, $fieldName, $count = 1, $required = FALSE, $addReportFilters = TRUE) {
+  public static function buildDateRange(&$form, $fieldName, $count = 1, $required = FALSE, $addReportFilters = TRUE) {
     $selector = [ts('Choose Date Range'),
       'this.year' => ts('This Year'),
       'this.fiscal_year' => ts('This Fiscal Year'),

@@ -67,7 +67,7 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
    * @return void
    * @acess protected
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
 
     $this->_description = CRM_Core_DAO::getFieldValue('CRM_Coupon_DAO_Coupon',

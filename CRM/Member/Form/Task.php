@@ -84,11 +84,11 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     self::preProcessCommon($this);
   }
 
-  static function preProcessCommon(&$form, $useTable = FALSE) {
+  public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_memberIds = [];
 
     $values = $form->controller->exportValues($form->get('searchFormName'));
@@ -171,7 +171,7 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
     $this->addButtons([
         ['type' => $nextType,
           'name' => $title,

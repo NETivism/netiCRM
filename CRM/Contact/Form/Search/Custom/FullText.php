@@ -60,7 +60,7 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
 
   protected $_foundRows = [];
 
-  function __construct(&$formValues) {
+  public function __construct(&$formValues) {
     $formValues['table'] = $this->getFieldValue($formValues, 'table', 'String');
     $this->_table = $formValues['table'];
 
@@ -130,9 +130,9 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
   }
 
 
-  function __destruct() {}
+  public function __destruct() {}
 
-  function buildTempTable() {
+  public function buildTempTable() {
     $randomNum = md5(uniqid());
     $this->_tableName = "civicrm_temp_custom_details_{$randomNum}";
 
@@ -207,7 +207,7 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
     CRM_Core_DAO::executeQuery($sql);
   }
 
-  function fillTable() {
+  public function fillTable() {
 
     $config = CRM_Core_Config::singleton();
 
@@ -252,7 +252,7 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
     $this->filterACLContacts();
   }
 
-  function filterACLContacts() {
+  public function filterACLContacts() {
     if (CRM_Core_Permission::check('view all contacts')) {
       CRM_Core_DAO::executeQuery("DELETE FROM {$this->_tableName} WHERE contact_id IN (SELECT id FROM civicrm_contact WHERE is_deleted = 1)");
       return;
@@ -299,7 +299,7 @@ WHERE      t.table_name = 'Activity' AND
     CRM_Core_DAO::executeQuery($sql, $params);
   }
 
-  function fillCustomInfo(&$tables,
+  public function fillCustomInfo(&$tables,
     $extends
   ) {
 
@@ -327,7 +327,7 @@ AND        cf.html_type IN ( 'Text', 'TextArea', 'RichTextEditor' )
     }
   }
 
-  function runQueries(&$tables) {
+  public function runQueries(&$tables) {
     $sql = "TRUNCATE {$this->_entityIDTableName}";
     CRM_Core_DAO::executeQuery($sql);
 
@@ -391,7 +391,7 @@ AND     {$tableValues['id']} IS NOT NULL
     $this->_foundRows[ucfirst(str_replace('civicrm_', '', $tableKey[0]))] = $maxRowCount;
   }
 
-  function fillContactIDs() {
+  public function fillContactIDs() {
     $tables = ['civicrm_contact' => ['id' => 'id',
         'fields' => ['sort_name' => NULL,
           'nick_name' => NULL,
@@ -425,7 +425,7 @@ AND     {$tableValues['id']} IS NOT NULL
     $this->runQueries($tables);
   }
 
-  function fillContact() {
+  public function fillContact() {
 
     $this->fillContactIDs();
 
@@ -433,7 +433,7 @@ AND     {$tableValues['id']} IS NOT NULL
     $this->moveEntityToDetail('Contact');
   }
 
-  function fillActivityIDs() {
+  public function fillActivityIDs() {
     $contactSQL = [];
 
     $contactSQL[] = "
@@ -497,7 +497,7 @@ AND (ca.is_deleted = 0 OR ca.is_deleted IS NULL OR
     $this->runQueries($tables);
   }
 
-  function fillActivity() {
+  public function fillActivity() {
 
     $this->fillActivityIDs();
 
@@ -505,7 +505,7 @@ AND (ca.is_deleted = 0 OR ca.is_deleted IS NULL OR
     $this->moveEntityToDetail('Activity');
   }
 
-  function fillCase() {
+  public function fillCase() {
     $maxRowCount = 0;
     $sql = "
 INSERT INTO {$this->_tableName}
@@ -544,7 +544,7 @@ WHERE     cc.id = {$this->_textID}
     $this->_foundRows['Case'] = $maxRowCount;
   }
 
-  function fillContribution() {
+  public function fillContribution() {
 
     //get contribution ids in entity table.
     $this->fillContributionIDs();
@@ -556,7 +556,7 @@ WHERE     cc.id = {$this->_textID}
   /**
    * get contribution ids in entity tables.
    */
-  function fillContributionIDs() {
+  public function fillContributionIDs() {
     $contactSQL = [];
     $contactSQL[] = "
 SELECT     distinct cc.id 
@@ -587,7 +587,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     $this->runQueries($tables);
   }
 
-  function fillParticipant() {
+  public function fillParticipant() {
     //get participant ids in entity table.
     $this->fillParticipantIDs();
 
@@ -598,7 +598,7 @@ WHERE      c.sort_name LIKE {$this->_text}
   /**
    * get participant ids in entity tables.
    */
-  function fillParticipantIDs() {
+  public function fillParticipantIDs() {
     $contactSQL = [];
     $contactSQL[] = "
 SELECT     distinct cp.id 
@@ -626,7 +626,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     $this->runQueries($tables);
   }
 
-  function fillMembership() {
+  public function fillMembership() {
 
     //get membership ids in entity table.
     $this->fillMembershipIDs();
@@ -638,7 +638,7 @@ WHERE      c.sort_name LIKE {$this->_text}
   /**
    * get membership ids in entity tables.
    */
-  function fillMembershipIDs() {
+  public function fillMembershipIDs() {
     $contactSQL = [];
     $contactSQL[] = "
 SELECT     distinct cm.id 
@@ -657,7 +657,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     $this->runQueries($tables);
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -698,7 +698,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     $form->assign('csID', CRM_Utils_Array::value('customSearchID', $this->_formValues));
   }
 
-  function &columns() {
+  public function &columns() {
     $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Name') => 'sort_name',
     ];
@@ -706,7 +706,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     return $this->_columns;
   }
 
-  function summary() {
+  public function summary() {
     $summary = ['Contact' => [],
       'Activity' => [],
       'Case' => [],
@@ -761,7 +761,7 @@ WHERE      c.sort_name LIKE {$this->_text}
     return $summary;
   }
 
-  function count() {
+  public function count() {
     if ($this->_table) {
       return $this->_foundRows[$this->_table];
     }
@@ -770,11 +770,11 @@ WHERE      c.sort_name LIKE {$this->_text}
     }
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return CRM_Core_DAO::singleValueQuery("SELECT contact_id FROM {$this->_tableName}");
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all($offset = 0, $rowcount = 0, $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $sql = "
@@ -788,29 +788,29 @@ FROM
     return $sql;
   }
 
-  function from() {
+  public function from() {
     return NULL;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     return NULL;
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/FullText.tpl';
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [];
   }
 
-  function alterRow(&$row) {}
+  public function alterRow(&$row) {}
 
   /**
    * get entity id retrieve related data from db and move all data to detail table.
    *
    */
-  function moveEntityToDetail($tableName) {
+  public function moveEntityToDetail($tableName) {
     $sql = NULL;
     switch ($tableName) {
       case 'Contact':

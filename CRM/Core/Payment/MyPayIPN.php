@@ -1,8 +1,8 @@
 <?php
 
 class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
-  static $_payment_processor = NULL;
-  static $_input = NULL;
+  public static $_payment_processor = NULL;
+  public static $_input = NULL;
   public $_post = NULL;
   public $_get = NULL;
 
@@ -39,7 +39,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
    * @param array $post Input $_POST alternative.
    * @param array $get Input $_GET alternative.
    */
-  function __construct($post = [], $get = []) {
+  public function __construct($post = [], $get = []) {
     parent::__construct();
     $this->_post = $post;
     $this->_get = $get;
@@ -52,7 +52,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
    *
    * @return void
    */
-  function main($instrument){
+  public function main($instrument){
     // get the contribution and contact ids from the GET params
     $objects = $ids = $input = [];
     $this->getIds($ids);
@@ -142,7 +142,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     return '8888';
   }
 
-  function validateOthers(&$input, &$ids, &$objects, &$note, $instrument) {
+  public function validateOthers(&$input, &$ids, &$objects, &$note, $instrument) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
 
@@ -297,7 +297,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
    * MyPay ids doesn't be carried in GET params.
    * If it's recurring, The contribution should be the first time one.
    */
-  function getIds(&$ids = []) {
+  public function getIds(&$ids = []) {
     $trxnId = $this->_post['order_id'];
     $contributionId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_contribution WHERE trxn_id = %1', [1 => [$trxnId, 'String']]);
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId, '');
@@ -306,7 +306,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   /**
    * 
    */
-  function addNote($note, &$contribution){
+  public function addNote($note, &$contribution){
     require_once 'CRM/Core/BAO/Note.php';
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );

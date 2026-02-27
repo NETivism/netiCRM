@@ -46,7 +46,7 @@ class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $rows = [];
     // display name and participation details of participants

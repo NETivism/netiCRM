@@ -111,7 +111,7 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     //  Truncate the tables
     $this->quickCleanup(
       [

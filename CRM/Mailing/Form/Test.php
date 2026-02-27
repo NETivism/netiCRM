@@ -58,7 +58,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $count = $this->get('count');
     $this->assign('count', $count);
   }
@@ -205,7 +205,7 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
    * @return boolean          true on succesful SMTP handoff
    * @access public
    */
-  static function &testMail($testParams, $files, $self) {
+  public static function &testMail($testParams, $files, $self) {
     $error = NULL;
 
     $urlString = 'civicrm/mailing/send';

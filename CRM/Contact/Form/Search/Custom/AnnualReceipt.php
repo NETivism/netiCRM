@@ -35,7 +35,7 @@
 
 class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   public $_year;
-  function __construct(&$formValues) {
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     if (!isset($formValues['year'])) {
@@ -52,7 +52,7 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $years = [];
     for($year = date('Y'); $year < date('Y') + 10; $year++) {
       $years[$year - 9] = $year - 9;
@@ -70,7 +70,7 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     }
   }
 
-  function summary() {
+  public function summary() {
     $year = CRM_Utils_Array::value('year', $this->_formValues);
     $summary = [
       'summary' => ts('Date'),
@@ -79,7 +79,7 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     return $summary;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
     $select = "
 contact_a.id           as contact_id  ,
 contact_a.sort_name    as sort_name,
@@ -99,13 +99,13 @@ SUM(contribution.total_amount) as total_amount
     return $sql;
   }
 
-  function from() {
+  public function from() {
     return "
 FROM      civicrm_contact contact_a
 INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.contact_id";
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $params = [];
     $where = [
       'contribution.is_test = 0',
@@ -124,14 +124,14 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
     return $where;
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
   }
 }
 

@@ -39,7 +39,7 @@
  * Page for displaying list of site configuration tasks with links to each setting form
  */
 class CRM_Admin_Page_ConfigTaskList extends CRM_Core_Page {
-  function run() {
+  public function run() {
 
     CRM_Utils_System::setTitle(ts("Configuration Checklist"));
     $this->assign('recentlyViewed', FALSE);

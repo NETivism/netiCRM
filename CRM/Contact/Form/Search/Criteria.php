@@ -34,7 +34,7 @@
  */
 class CRM_Contact_Form_Search_Criteria {
 
-  static function basic(&$form) {
+  public static function basic(&$form) {
     $form->addElement('hidden', 'hidden_basic', 1);
 
     if ($form->_searchOptions['contactType']) {
@@ -233,7 +233,7 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addDateTime('contact_modified_date_high', ts('and'), FALSE, ['formatType' => 'searchDate']);
   }
 
-  static function location(&$form) {
+  public static function location(&$form) {
     $form->addElement('hidden', 'hidden_location', 1);
 
 
@@ -352,13 +352,13 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
-  static function activity(&$form) {
+  public static function activity(&$form) {
     $form->add('hidden', 'hidden_activity', 1);
 
     CRM_Activity_BAO_Query::buildSearchForm($form);
   }
 
-  static function changeLog(&$form) {
+  public static function changeLog(&$form) {
     $form->add('hidden', 'hidden_changeLog', 1);
 
     // block for change log
@@ -369,7 +369,7 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addDateTime('log_date_high', ts('and'), FALSE, ['formatType' => 'searchDate']);
   }
 
-  static function task(&$form) {
+  public static function task(&$form) {
     $form->add('hidden', 'hidden_task', 1);
 
     if (CRM_Core_Permission::access('Quest')) {
@@ -383,7 +383,7 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
-  static function relationship(&$form) {
+  public static function relationship(&$form) {
     $form->add('hidden', 'hidden_relationship', 1);
 
 
@@ -417,7 +417,7 @@ class CRM_Contact_Form_Search_Criteria {
     }
   }
 
-  static function demographics(&$form) {
+  public static function demographics(&$form) {
     $form->add('hidden', 'hidden_demographics', 1);
     // radio button for gender
     $genderOptions = [];
@@ -438,7 +438,7 @@ class CRM_Contact_Form_Search_Criteria {
     $form->addNumber('age_high', ts('To'), $attribute);
   }
 
-  static function notes(&$form) {
+  public static function notes(&$form) {
     $form->add('hidden', 'hidden_notes', 1);
 
     $form->addElement('text', 'note', ts('Note Text'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
@@ -452,7 +452,7 @@ class CRM_Contact_Form_Search_Criteria {
    *
    * @return void
    */
-  static function custom(&$form) {
+  public static function custom(&$form) {
     $form->add('hidden', 'hidden_custom', 1);
     $extends = array_merge(['Contact', 'Individual', 'Household', 'Organization'],
       CRM_Contact_BAO_ContactType::subTypes()
@@ -483,7 +483,7 @@ class CRM_Contact_Form_Search_Criteria {
     //TODO: validate for only one state if prox_distance isset
   }
 
-  static function CiviCase(&$form) {
+  public static function CiviCase(&$form) {
     //Looks like obsolete code, since CiviCase is a component, but might be used by HRD
     $form->add('hidden', 'hidden_CiviCase', 1);
 

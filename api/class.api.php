@@ -61,7 +61,7 @@
 
  */
 class civicrm_api3 {
-  function __construct($config = NULL) {
+  public function __construct($config = NULL) {
     $this->local      = TRUE;
     $this->input      = [];
     $this->lastResult = [];
@@ -123,7 +123,7 @@ class civicrm_api3 {
     echo "Calling static method '$name' " . CRM_Utils_Array::implode(', ', $arguments) . "\n";
   }
 
-  function remoteCall($entity, $action, $params = [
+  public function remoteCall($entity, $action, $params = [
     ]) {
     $fields = "key={$this->key}&api_key={$this->api_key}";
     $query = $this->uri . "&entity=$entity&action=$action";
@@ -150,7 +150,7 @@ class civicrm_api3 {
     }
   }
 
-  function call($entity, $action = 'Get', $params = [
+  public function call($entity, $action = 'Get', $params = [
     ]) {
     if (is_int($params)) {
       $params = ['id' => $params];
@@ -184,7 +184,7 @@ class civicrm_api3 {
   }
 
   //* helper method for long running programs (eg bots)
-  function ping() {
+  public function ping() {
     global $_DB_DATAOBJECT;
     foreach ($_DB_DATAOBJECT['CONNECTIONS'] as & $c) {
       if (!$c->connection->ping()) {
@@ -196,11 +196,11 @@ class civicrm_api3 {
     }
   }
 
-  function errorMsg() {
+  public function errorMsg() {
     return $this->lastResult->error_message;
   }
 
-  function init() {
+  public function init() {
     CRM_Core_DAO::init($this->cfg->dsn);
   }
 

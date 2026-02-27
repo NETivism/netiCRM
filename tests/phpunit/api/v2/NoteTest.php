@@ -37,11 +37,11 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_params;
   protected $_note;
-  protected $_noteID; function __construct() {
+  protected $_noteID; public function __construct() {
     parent::__construct();
   }
 
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'Note Create',
       'description' => 'Test all Note Create API methods.',
@@ -49,7 +49,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     //  Connect to the database
     parent::setUp();
 
@@ -68,7 +68,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
     $this->_noteID = $this->_note['id'];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->noteDelete($this->_note);
     $this->contactDelete($this->_contactID);
   }
@@ -79,7 +79,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * check retrieve note with wrong params type
    * Error Expected
    */
-  function testGetWithWrongParamsType() {
+  public function testGetWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_get($params);
     $this->assertEquals($result['is_error'], 1,
@@ -91,7 +91,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * check retrieve note with empty parameter array
    * Error expected
    */
-  function testGetWithEmptyParams() {
+  public function testGetWithEmptyParams() {
     $params = [];
     $note = &civicrm_note_get($params);
     $this->assertEquals($note['is_error'], 1);
@@ -102,7 +102,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * check retrieve note with missing patrameters
    * Error expected
    */
-  function testGetWithoutEntityId() {
+  public function testGetWithoutEntityId() {
     $params = ['entity_table' => 'civicrm_contact'];
     $note = &civicrm_note_get($params);
     $this->assertEquals($note['is_error'], 1);
@@ -112,7 +112,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   /**
    * check civicrm_note_get
    */
-  function testGet() {
+  public function testGet() {
 
     $params = [
       'entity_table' => 'civicrm_contact',
@@ -129,7 +129,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check create with wrong parameter
    * Error expected
    */
-  function testCreateWithWrongParamsType() {
+  public function testCreateWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_create($params);
     $this->assertEquals($result['is_error'], 1,
@@ -142,7 +142,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check create with empty parameter array
    * Error Expected
    */
-  function testCreateWithEmptyParams() {
+  public function testCreateWithEmptyParams() {
     $params = [];
     $result = civicrm_note_create($params);
     $this->assertEquals($result['is_error'], 1);
@@ -153,7 +153,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check create with partial params
    * Error expected
    */
-  function testCreateWithoutEntityId() {
+  public function testCreateWithoutEntityId() {
     unset($this->_params['entity_id']);
     $result = civicrm_note_create($this->_params);
     $this->assertEquals($result['is_error'], 1);
@@ -163,7 +163,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   /**
    * Check civicrm_note_create
    */
-  function testCreate() {
+  public function testCreate() {
     $result = civicrm_note_create($this->_params);
     $this->assertEquals($result['note'], 'Hello!!! m testing Note');
     $this->assertArrayHasKey('entity_id', $result);
@@ -178,7 +178,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check update note with wrong params type
    * Error expected
    */
-  function testUpdateWithWrongParamsType() {
+  public function testUpdateWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_update($params);
     $this->assertEquals($result['is_error'], 1,
@@ -190,7 +190,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check update with empty parameter array
    * Error expected
    */
-  function testUpdateWithEmptyParams() {
+  public function testUpdateWithEmptyParams() {
     $params = [];
     $note = &civicrm_note_update($params);
     $this->assertEquals($note['is_error'], 1);
@@ -201,7 +201,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check update with missing parameter (contact id)
    * Error expected
    */
-  function testUpdateWithoutContactId() {
+  public function testUpdateWithoutContactId() {
     $params = [
       'entity_id' => $this->_contactID,
       'entity_table' => 'civicrm_contact',
@@ -214,7 +214,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   /**
    * Check civicrm_note_update
    */
-  function testUpdate() {
+  public function testUpdate() {
     $params = [
       'id' => $this->_noteID,
       'contact_id' => $this->_contactID,
@@ -238,7 +238,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check delete note with wrong params type
    * Error expected
    */
-  function testDeleteWithWrongParamsType() {
+  public function testDeleteWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_delete($params);
     $this->assertEquals($result['is_error'], 1,
@@ -250,7 +250,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check delete with empty parametes array
    * Error expected
    */
-  function testDeleteWithEmptyParams() {
+  public function testDeleteWithEmptyParams() {
     $params = [];
     $deleteNote = &civicrm_note_delete($params);
     $this->assertEquals($deleteNote['is_error'], 1);
@@ -261,7 +261,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
    * Check delete with wrong id
    * Error expected
    */
-  function testDeleteWithWrongID() {
+  public function testDeleteWithWrongID() {
     $params = ['id' => 0];
     $deleteNote = &civicrm_note_delete($params);
     $this->assertEquals($deleteNote['is_error'], 1);
@@ -271,7 +271,7 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   /**
    * Check civicrm_note_delete
    */
-  function testDelete() {
+  public function testDelete() {
     $additionalNote = $this->noteCreate($this->_contactID);
 
     $params = [

@@ -30,7 +30,7 @@ require_once 'CRM/Core/BAO/Preferences.php';
 
 class CRM_Core_BAO_PreferencesTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Preference BAO',
@@ -39,12 +39,12 @@ class CRM_Core_BAO_PreferencesTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
 
-    function testValueOptions( ) {
+    public function testValueOptions( ) {
         
         $addressOptions = CRM_Core_BAO_Preferences::valueOptions( 'address_options' );
         
@@ -53,7 +53,7 @@ class CRM_Core_BAO_PreferencesTest extends CiviUnitTestCase
         $this->assertEquals( $addressOptions['country']       , 1, 'Country is not set in address options' );
     }
 
-    function testSetValueOptions( ) {
+    public function testSetValueOptions( ) {
         $addressOptions = CRM_Core_BAO_Preferences::valueOptions( 'address_options' );
         $addressOptions['county'] = 1;
         CRM_Core_BAO_Preferences::setValue( 'address_options', $addressOptions );

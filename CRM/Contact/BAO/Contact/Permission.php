@@ -33,7 +33,7 @@
  *
  */
 class CRM_Contact_BAO_Contact_Permission {
-  CONST NUM_CONTACTS_TO_INSERT = 200;
+  public CONST NUM_CONTACTS_TO_INSERT = 200;
 
   /**
    * check if the logged in user has permissions for the operation type
@@ -45,7 +45,7 @@ class CRM_Contact_BAO_Contact_Permission {
    * @access public
    * @static
    */
-  static function allow($id, $type = CRM_Core_Permission::VIEW) {
+  public static function allow($id, $type = CRM_Core_Permission::VIEW) {
     $tables = [];
     $whereTables = [];
 
@@ -86,7 +86,7 @@ WHERE contact_a.id = %1 AND $permission";
    * @access public
    * @static
    */
-  static function cache($userID, $type = CRM_Core_Permission::VIEW, $force = FALSE) {
+  public static function cache($userID, $type = CRM_Core_Permission::VIEW, $force = FALSE) {
     static $_processed = [];
 
     if ($type = CRM_Core_Permission::VIEW) {
@@ -153,7 +153,7 @@ WHERE $permission
     return;
   }
 
-  static function cacheClause($contactAlias = 'contact_a', $contactID = NULL) {
+  public static function cacheClause($contactAlias = 'contact_a', $contactID = NULL) {
     if (CRM_Core_Permission::check('view all contacts')) {
       if (is_array($contactAlias)) {
         $wheres = [];
@@ -206,7 +206,7 @@ WHERE $permission
    * selected contact record else false
    * @static
    */
-  static function relationship($selectedContactID, $contactID = NULL) {
+  public static function relationship($selectedContactID, $contactID = NULL) {
     $session = CRM_Core_Session::singleton();
     if (!$contactID) {
       $contactID = $session->get('userID');
@@ -234,7 +234,7 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
   }
 
 
-  static function validateOnlyChecksum($contactID, &$form) {
+  public static function validateOnlyChecksum($contactID, &$form) {
     // check if this is of the format cs=XXX
 
     if (!CRM_Contact_BAO_Contact_Utils::validChecksum($contactID,
@@ -248,7 +248,7 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
     return TRUE;
   }
 
-  static function validateChecksumContact($contactID, &$form) {
+  public static function validateChecksumContact($contactID, &$form) {
     if (!self::allow($contactID, CRM_Core_Permission::EDIT)) {
       // check if this is of the format cs=XXX
       return self::validateOnlyChecksum($contactID, $form);

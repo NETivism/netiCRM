@@ -10,11 +10,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @var object
    */
   public $_config;
-  const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
-  const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';
-  const ALLPAY_URL_SITE = '/Cashier/AioCheckOut';
-  const ALLPAY_URL_API = '/Cashier/QueryTradeInfo';
-  const ALLPAY_URL_RECUR = '/Cashier/QueryCreditCardPeriodInfo';
+  public const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
+  public const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';
+  public const ALLPAY_URL_SITE = '/Cashier/AioCheckOut';
+  public const ALLPAY_URL_API = '/Cashier/QueryTradeInfo';
+  public const ALLPAY_URL_RECUR = '/Cashier/QueryCreditCardPeriodInfo';
 
   /**
    * mode of operation: live or test
@@ -22,7 +22,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
   public static $_hideFields = ['invoice_id', 'trxn_id'];
 
@@ -33,7 +33,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -42,7 +42,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Allpay');
@@ -59,7 +59,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ALLPAY($mode, $paymentProcessor);
@@ -74,7 +74,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @param object $paymen dao that will be added to payment when default is empty
    * @return void
    */
-  static function buildPaymentDefault(&$default, $payment) {
+  public static function buildPaymentDefault(&$default, $payment) {
     if ($payment->is_test > 0) {
       $default['url_site'] = CRM_Core_Payment_ALLPAY::ALLPAY_TEST_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_SITE;
       $default['url_api'] = CRM_Core_Payment_ALLPAY::ALLPAY_TEST_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_API;
@@ -93,7 +93,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -114,19 +114,19 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
@@ -137,7 +137,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return array The instruments used by AllPay.
    */
-  static function getInstruments($type = 'normal'){
+  public static function getInstruments($type = 'normal'){
     $i = [
       'Credit Card' => ['label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'],
       'ATM' => ['label' => ts('ATM Transfer'), 'desc' => '', 'code' => 'ATM'],
@@ -173,7 +173,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string If test, return expand string of id.
    */
-  static function generateTrxnId($is_test, $id){
+  public static function generateTrxnId($is_test, $id){
     if($is_test){
       $id = 'test' . substr(str_replace(['.','-'], '', $_SERVER['HTTP_HOST']), 0, 3) . $id. 'T'. mt_rand(100, 999);
     }
@@ -187,7 +187,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string implode by $parent and $gwsr.
    */
-  static function generateRecurTrxn($parent, $gwsr){
+  public static function generateRecurTrxn($parent, $gwsr){
     if(empty($gwsr)){
       return $parent;
     }
@@ -207,7 +207,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @access public
    *
    */
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
@@ -300,7 +300,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @return array Rearrange nessesary arguments for checkout.
    *
    */
-  static function getOrderArgs(&$vars, $component, &$payment_processor, $instrument_code, $form_key){
+  public static function getOrderArgs(&$vars, $component, &$payment_processor, $instrument_code, $form_key){
 
     // url 
     $notify_url = self::generateNotifyUrl($vars, 'allpay/ipn/'.$instrument_code, $component);
@@ -443,7 +443,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return void
    */
-  static function outputRedirectForm($redirect_vars, $payment_processor){
+  public static function outputRedirectForm($redirect_vars, $payment_processor){
     header('Pragma: no-cache');
     header('Cache-Control: no-store, no-cache, must-revalidate');
     header('Expires: 0');
@@ -484,7 +484,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string The full path or notify URL.
    */
-  static function generateNotifyUrl(&$vars, $path, $component){
+  public static function generateNotifyUrl(&$vars, $path, $component){
     $query = [];
     $query["contact_id"] = $vars['contactID'];
     $query["cid"] = $vars['contributionID'];
@@ -538,7 +538,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string md5 hash of mac values.
    */
-  static function generateMacValue(&$args, $payment_processor){
+  public static function generateMacValue(&$args, $payment_processor){
     // remove empty arg
     if(is_array($args)){
       foreach($args as $k => $v){
@@ -914,7 +914,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string Translated error message response to the code.
    */
-  static function getErrorMsg($code){
+  public static function getErrorMsg($code){
     $code = (string) $code;
     // success
     if($code == '1' || $code == '2'){
@@ -958,7 +958,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @param string $main_trxn The TradeNo of AllPay transaction.
    * @return string|null get the hash
    */
-  static function getNoidHash($o, $main_trxn) {
+  public static function getNoidHash($o, $main_trxn) {
     // check database for this
     $lookup = [
       1 => ['%TradeNo":"'.$main_trxn.'"%ProcessDate":"'.str_replace('/', '\\\\\\\\', $o->process_date).'"%', 'String'],
@@ -984,7 +984,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-  function cancelRecuringMessage($recurID){
+  public function cancelRecuringMessage($recurID){
     if (function_exists("_civicrm_allpay_cancel_recuring_message")) {
       return _civicrm_allpay_cancel_recuring_message(); 
     }
@@ -1003,7 +1003,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string|void If $print is FALSE, function will return the result as Array.
    */
-  static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
+  public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;

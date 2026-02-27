@@ -73,7 +73,7 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if ($this->_id) {
       $params['id'] = $this->_id;

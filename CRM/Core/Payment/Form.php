@@ -116,7 +116,7 @@ class CRM_Core_Payment_Form {
    * @return void
    * @access public
    */
-  static function setCreditCardFields(&$form) {
+  public static function setCreditCardFields(&$form) {
     CRM_Core_Payment_Form::_setPaymentFields($form);
 
     $form->_fields['credit_card_number'] = ['htmlType' => 'text',
@@ -159,7 +159,7 @@ class CRM_Core_Payment_Form {
    * @return void
    * @access public
    */
-  static function setDirectDebitFields(&$form) {
+  public static function setDirectDebitFields(&$form) {
     CRM_Core_Payment_Form::_setPaymentFields($form);
 
     $form->_fields['account_holder'] = ['htmlType' => 'text',
@@ -203,7 +203,7 @@ class CRM_Core_Payment_Form {
    * @return None
    * @access public
    */
-  static function buildCreditCard(&$form, $useRequired = FALSE) {
+  public static function buildCreditCard(&$form, $useRequired = FALSE) {
 
 
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
@@ -256,7 +256,7 @@ class CRM_Core_Payment_Form {
    * @return None
    * @access public
    */
-  static function buildDirectDebit(&$form, $useRequired = FALSE) {
+  public static function buildDirectDebit(&$form, $useRequired = FALSE) {
 
 
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
@@ -301,7 +301,7 @@ class CRM_Core_Payment_Form {
    * @return void
    * @static
    */
-  static function mapParams($id, &$src, &$dst, $reverse = FALSE) {
+  public static function mapParams($id, &$src, &$dst, $reverse = FALSE) {
     static $map = NULL;
     if (!$map) {
       $map = [
@@ -336,7 +336,7 @@ class CRM_Core_Payment_Form {
    * function to return state/province is_required = true/false
    *
    */
-  static function checkRequiredStateProvince($form) {
+  public static function checkRequiredStateProvince($form) {
     // If selected country has possible values for state/province mark the
     // state/province field as required.
 

@@ -64,7 +64,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
    * @var array
    * @public
    */
-  static $_numberMap = [0 => 'Zero',
+  public static $_numberMap = [0 => 'Zero',
     1 => 'One',
     2 => 'Two',
     3 => 'Three',
@@ -74,7 +74,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     7 => 'Seven',
     8 => 'Eight',
     9 => 'Nine',
-  ]; function __construct($state = NULL,
+  ]; public function __construct($state = NULL,
     $action = CRM_Core_Action::NONE,
     $method = 'post',
     $name = NULL
@@ -106,7 +106,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     parent::__construct($state, $action, $method, $name);
   }
 
-  static function &incrementalPhpObject($version) {
+  public static function &incrementalPhpObject($version) {
     static $incrementalPhpObject = [];
 
     $versionParts = explode('.', $version);
@@ -119,7 +119,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     return $incrementalPhpObject[$versionName];
   }
 
-  function checkVersionRelease($version, $release) {
+  public function checkVersionRelease($version, $release) {
     $versionParts = explode('.', $version);
     if ($versionParts[2] == $release) {
       return TRUE;
@@ -127,7 +127,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     return FALSE;
   }
 
-  function checkSQLConstraints(&$constraints) {
+  public function checkSQLConstraints(&$constraints) {
     $pass = $fail = 0;
     foreach ($constraints as $constraint) {
       if ($this->checkSQLConstraint($constraint)) {
@@ -140,12 +140,12 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     }
   }
 
-  function checkSQLConstraint($constraint) {
+  public function checkSQLConstraint($constraint) {
     // check constraint here
     return TRUE;
   }
 
-  function source($fileName, $isQueryString = FALSE) {
+  public function source($fileName, $isQueryString = FALSE) {
 
 
     CRM_Utils_File::sourceSQLFile($this->_config->dsn,
@@ -153,7 +153,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     );
   }
 
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle($this->getTitle());
     if (!$this->verifyPreDBState($errorMessage)) {
       if (!isset($errorMessage)) {
@@ -164,7 +164,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     $this->assign('recentlyViewed', FALSE);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons($this->getButtonTitle(),
       'next',
       NULL,
@@ -172,19 +172,19 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     );
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('Title not Set');
   }
 
-  function getFieldsetTitle() {
+  public function getFieldsetTitle() {
     return ts('');
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Continue');
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     $this->assign('title',
       $this->getFieldsetTitle()
     );
@@ -194,7 +194,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     return 'CRM/Upgrade/Base.tpl';
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->upgrade();
 
     if (!$this->verifyPostDBState($errorMessage)) {
@@ -205,13 +205,13 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     }
   }
 
-  function runQuery($query) {
+  public function runQuery($query) {
     return CRM_Core_DAO::executeQuery($query,
       CRM_Core_DAO::$_nullArray
     );
   }
 
-  function setVersion($version) {
+  public function setVersion($version) {
     $this->logVersion($version);
 
     $query = "
@@ -221,7 +221,7 @@ SET    version = '$version'
     return $this->runQuery($query);
   }
 
-  function logVersion($newVersion) {
+  public function logVersion($newVersion) {
     if ($newVersion) {
       $oldVersion = CRM_Core_BAO_Domain::version();
 
@@ -242,7 +242,7 @@ SET    version = '$version'
     return FALSE;
   }
 
-  function checkVersion($version) {
+  public function checkVersion($version) {
     $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Domain',
       $version, 'id',
       'version'
@@ -250,7 +250,7 @@ SET    version = '$version'
     return $domainID ? TRUE : FALSE;
   }
 
-  function getRevisionSequence() {
+  public function getRevisionSequence() {
     $revList = [];
     $sqlDir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       [dirname(__FILE__), 'Incremental', 'sql']
@@ -276,7 +276,7 @@ SET    version = '$version'
     return $revList;
   }
 
-  function processLocales($tplFile, $rev) {
+  public function processLocales($tplFile, $rev) {
     $smarty = CRM_Core_Smarty::singleton();
 
     $this->source($smarty->fetch($tplFile), TRUE);
@@ -288,7 +288,7 @@ SET    version = '$version'
     return $this->multilingual;
   }
 
-  function processSQL($rev) {
+  public function processSQL($rev) {
     $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
       [dirname(__FILE__), 'Incremental',
         'sql', $rev . '.mysql',

@@ -6,7 +6,7 @@ require_once 'CRM/Utils/String.php';
 class CRM_Utils_StringTest extends CiviUnitTestCase 
 {
     
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'String Test',
@@ -15,12 +15,12 @@ class CRM_Utils_StringTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
     }
 
-    function testStripPathChars( ) {
+    public function testStripPathChars( ) {
         $testSet = [ '' => '',
                           null => null,
                           'civicrm' => 'civicrm',
@@ -38,7 +38,7 @@ class CRM_Utils_StringTest extends CiviUnitTestCase
         }
     }
 
-    function testExtractName() {
+    public function testExtractName() {
         $cases = [
                        [
                              'full_name' => 'Alan',

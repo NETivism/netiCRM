@@ -43,7 +43,7 @@ class CRM_Core_Extensions_Report {
   /**
    *
    */
-  CONST REPORT_GROUP_NAME = 'report_template';
+  public CONST REPORT_GROUP_NAME = 'report_template';
 
   public function __construct($ext) {
     $this->ext = $ext;

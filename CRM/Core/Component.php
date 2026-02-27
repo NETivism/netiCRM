@@ -40,11 +40,11 @@ class CRM_Core_Component {
      * End part (filename) of the component information class'es name 
      * that needs to be present in components main directory.
      */
-  CONST COMPONENT_INFO_CLASS = 'Info';
+  public CONST COMPONENT_INFO_CLASS = 'Info';
 
   private static $_info = NULL;
 
-  static $_contactSubTypes = NULL;
+  public static $_contactSubTypes = NULL;
 
   private static function &_info() {
     if (self::$_info == NULL) {
@@ -64,7 +64,7 @@ class CRM_Core_Component {
     return self::$_info;
   }
 
-  static function get($name, $attribute = NULL) {
+  public static function get($name, $attribute = NULL) {
     $comp = CRM_Utils_Array::value($name, self::_info());
     if ($attribute) {
       return CRM_Utils_Array::value($attribute, $comp->info);
@@ -115,7 +115,7 @@ class CRM_Core_Component {
     return $names;
   }
 
-  static function invoke(&$args, $type) {
+  public static function invoke(&$args, $type) {
     $info = &self::_info();
     $config = CRM_Core_Config::singleton();
 
@@ -153,7 +153,7 @@ class CRM_Core_Component {
     return FALSE;
   }
 
-  static function xmlMenu() {
+  public static function xmlMenu() {
 
     // lets build the menu for all components
     $info = &self::getComponents(TRUE);
@@ -168,7 +168,7 @@ class CRM_Core_Component {
     return $files;
   }
 
-  static function &menu() {
+  public static function &menu() {
     $info = &self::_info();
     $items = [];
     foreach ($info as $name => $comp) {
@@ -183,7 +183,7 @@ class CRM_Core_Component {
     return $items;
   }
 
-  static function addConfig(&$config, $oldMode = FALSE) {
+  public static function addConfig(&$config, $oldMode = FALSE) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -193,13 +193,13 @@ class CRM_Core_Component {
     return;
   }
 
-  static function getComponentID($componentName) {
+  public static function getComponentID($componentName) {
     $info = &self::_info();
 
     return $info[$componentName]->componentID;
   }
 
-  static function getComponentName($componentID) {
+  public static function getComponentName($componentID) {
     $info = &self::_info();
 
     $componentName = NULL;
@@ -213,7 +213,7 @@ class CRM_Core_Component {
     return $componentName;
   }
 
-  static function &getQueryFields() {
+  public static function &getQueryFields() {
     $info = &self::_info();
     $fields = [];
     foreach ($info as $name => $comp) {
@@ -226,7 +226,7 @@ class CRM_Core_Component {
     return $fields;
   }
 
-  static function alterQuery(&$query, $fnName) {
+  public static function alterQuery(&$query, $fnName) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -237,7 +237,7 @@ class CRM_Core_Component {
     }
   }
 
-  static function from($fieldName, $mode, $side) {
+  public static function from($fieldName, $mode, $side) {
     $info = &self::_info();
 
     $from = NULL;
@@ -253,7 +253,7 @@ class CRM_Core_Component {
     return $from;
   }
 
-  static function &defaultReturnProperties($mode) {
+  public static function &defaultReturnProperties($mode) {
     $info = &self::_info();
 
     $properties = NULL;
@@ -269,7 +269,7 @@ class CRM_Core_Component {
     return $properties;
   }
 
-  static function &buildSearchForm(&$form) {
+  public static function &buildSearchForm(&$form) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -280,7 +280,7 @@ class CRM_Core_Component {
     }
   }
 
-  static function &addShowHide(&$showHide) {
+  public static function &addShowHide(&$showHide) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -291,7 +291,7 @@ class CRM_Core_Component {
     }
   }
 
-  static function searchAction(&$row, $id) {
+  public static function searchAction(&$row, $id) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -302,7 +302,7 @@ class CRM_Core_Component {
     }
   }
 
-  static function &contactSubTypes() {
+  public static function &contactSubTypes() {
     if (self::$_contactSubTypes == NULL) {
       self::$_contactSubTypes = [];
 
@@ -323,7 +323,7 @@ class CRM_Core_Component {
   }
 
 
-  static function &contactSubTypeProperties($subType, $op) {
+  public static function &contactSubTypeProperties($subType, $op) {
     $properties = &self::contactSubTypes();
     if (CRM_Utils_Array::arrayKeyExists($subType, $properties) &&
       CRM_Utils_Array::arrayKeyExists($op, $properties[$subType])
@@ -333,7 +333,7 @@ class CRM_Core_Component {
     return CRM_Core_DAO::$_nullObject;
   }
 
-  static function &taskList() {
+  public static function &taskList() {
     $info = &self::_info();
 
     $tasks = [];
@@ -354,7 +354,7 @@ class CRM_Core_Component {
    * @access public
    * @static
    */
-  static function tableNames(&$tables) {
+  public static function tableNames(&$tables) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {

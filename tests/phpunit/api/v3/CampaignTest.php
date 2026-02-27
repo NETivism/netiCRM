@@ -8,7 +8,7 @@ class api_v3_CampaignTest extends CiviUnitTestCase {
   protected $params;
   protected $id;
   public $_eNoticeCompliant = TRUE;
-  public $DBResetRequired = FALSE; function setUp() {
+  public $DBResetRequired = FALSE; public function setUp() {
     $this->_apiversion = 3;
     $this->params = [
       'version' => 3,
@@ -19,7 +19,7 @@ class api_v3_CampaignTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  function tearDown() {}
+  public function tearDown() {}
 
   public function testCreateCampaign() {
     $description = "Create a campaign - Note use of relative dates here http://www.php.net/manual/en/datetime.formats.relative.php";

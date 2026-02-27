@@ -62,7 +62,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   // to side-step this, we use the below UUID as a (re)placeholder
   public $_qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
 
-  function preProcess() {
+  public function preProcess() {
     $this->_hasError = FALSE;
     if (!CRM_Core_Permission::check('merge duplicate contacts')) {
       return CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
@@ -233,11 +233,11 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return ['deleteOther' => 1];
   }
 
-  function addRules() {}
+  public function addRules() {}
 
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Merge Contacts'));
@@ -271,7 +271,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 
-  function validateContacts($cid, $oid) {
+  public function validateContacts($cid, $oid) {
     if (!$cid || !$oid) {
       return;
     }
@@ -292,7 +292,7 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
-  function checkContactIsAdmin($cid, $oid) {
+  public function checkContactIsAdmin($cid, $oid) {
     // Check contact is admin or not
     $cidSql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
     $cidParams = [ 1 => [$cid, 'Integer']];

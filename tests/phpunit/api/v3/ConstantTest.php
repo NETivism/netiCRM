@@ -51,7 +51,7 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
    *  Constructor
    *
    *  Initialize configuration
-   */ function __construct() {
+   */ public function __construct() {
     parent::__construct();
   }
 

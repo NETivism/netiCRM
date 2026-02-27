@@ -91,7 +91,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $this->assign('count', $this->_recipientsCount);
     $defaults['now'] = 1;

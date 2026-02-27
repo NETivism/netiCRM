@@ -52,7 +52,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     // actions buttom contextMenu
@@ -92,7 +92,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
@@ -111,7 +111,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
    * @return void
    * @access public
    */
-  function edit() {
+  public function edit() {
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
     $url = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $this->_contactId);
@@ -129,7 +129,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
    * @return void
    * @access public
    */
-  function view() {
+  public function view() {
     $session = CRM_Core_Session::singleton();
     $url = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $this->_contactId);
     $session->pushUserContext($url);
@@ -399,7 +399,7 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_contactId) {
       $csType = $this->get('contactSubtype');
       if ($csType) {

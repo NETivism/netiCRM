@@ -127,7 +127,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $fieldDefaults = [];
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
@@ -263,7 +263,7 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $optionLabel = CRM_Utils_Type::escape($fields['label'], 'String');
     $optionValue = CRM_Utils_Type::escape($fields['value'], 'String');
     $fieldId = $form->_fid;

@@ -78,7 +78,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     //get the survey id from user submitted values.
@@ -127,7 +127,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
     CRM_Utils_System::setTitle(ts('Reserve Respondents'));
   }
 
-  function validateSurvey() {
+  public function validateSurvey() {
     $errorMsg = NULL;
     $maxVoters = CRM_Utils_Array::value('max_number_of_contacts', $this->_surveyDetails);
     if ($maxVoters) {
@@ -158,7 +158,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $buttons = [['type' => 'done',
         'name' => ts('Reserve'),
         'subName' => 'reserve',

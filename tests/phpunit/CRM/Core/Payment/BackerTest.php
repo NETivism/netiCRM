@@ -11,9 +11,9 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
   protected $_trxnId;
   protected $_signature;
   protected $_json;
-  static $_rtypeId;
+  public static $_rtypeId;
 
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'Backer payment processor',
       'description' => 'Test Backer payment processor.',
@@ -24,7 +24,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     // login by user 1 to get customfield
     CRM_Utils_System::loadUser(['uid' => 1]);
     parent::setUp();
@@ -474,10 +474,10 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
   }
 
-  function testBackerIPN(){
+  public function testBackerIPN(){
     $contributionResult = [];
     $now = time();
     $hash = hash_hmac('sha1', $this->_json[1], $this->_payment['password']);
@@ -536,7 +536,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     $this->assertEquals($formatted['phone'][0]['phone'], $result['values'][$result['id']]['phone']);
   }
 
-  function testBackerAdditionalContact(){
+  public function testBackerAdditionalContact(){
     $now = time();
     $contributionResult = NULL;
 
@@ -673,7 +673,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     $this->assertNotEmpty($blockValue['id'], "Additional phone should be added to same contact. In line " . __LINE__);
   }
 
-  function testBackerReceiptNew(){
+  public function testBackerReceiptNew(){
     $contributionResult = NULL;
     // prepare data
     $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[2]);
@@ -729,7 +729,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
     $this->assertEquals($formatted['phone'][0]['phone'], $result['values'][$result['id']]['phone']);
   }
 
-  function testBackerRecurring(){
+  public function testBackerRecurring(){
     //main
     $contributionResult = NULL;
     $formatted = CRM_Core_Payment_Backer::formatParams($this->_json[3]);

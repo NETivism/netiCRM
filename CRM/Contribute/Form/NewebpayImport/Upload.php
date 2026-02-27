@@ -2,14 +2,14 @@
 
 class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
 
-  function preProcess() {
+  public function preProcess() {
     if (strstr(CRM_Utils_System::currentPath(), '/newebpay/')) {
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/fee/import', 'reset=1'));
     }
     $this->addFormRule(['CRM_Contribute_Form_NewebpayImport_Upload', 'formRule'], $this);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
     $this->addRule('uploadFile', ts('Input file must be in CSV format'), 'utf8File');
@@ -61,13 +61,13 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
 
-  function postProcess() {
+  public function postProcess() {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);
     if ($submittedValues['uploadFile']['name']) {

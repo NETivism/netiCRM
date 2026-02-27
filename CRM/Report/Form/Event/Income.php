@@ -40,11 +40,11 @@
 class CRM_Report_Form_Event_Income extends CRM_Report_Form {
   public $_setVariable;
   public $_outputMode;
-  CONST ROW_COUNT_LIMIT = 2;
+  public CONST ROW_COUNT_LIMIT = 2;
 
   protected $_summary = NULL;
 
-  protected $_add2groupSupported = FALSE; function __construct() {
+  protected $_add2groupSupported = FALSE; public function __construct() {
 
     $this->_columns = [
       'civicrm_event' =>
@@ -65,12 +65,12 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $this->_csvSupported = FALSE;
     parent::preProcess();
   }
 
-  function buildEventReport($eventIDs) {
+  public function buildEventReport($eventIDs) {
 
     $this->assign('events', $eventIDs);
 
@@ -258,7 +258,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->assign('statistics', $this->statistics($eventIDs));
   }
 
-  function statistics(&$eventIDs) {
+  public function statistics(&$eventIDs) {
     $statistics = [];
     $count = count($eventIDs);
     $this->countStat($statistics, $count);
@@ -269,7 +269,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     return $statistics;
   }
 
-  function limit($rowCount = self::ROW_COUNT_LIMIT) {
+  public function limit($rowCount = self::ROW_COUNT_LIMIT) {
     parent::limit($rowCount);
 
     //modify limit
@@ -283,7 +283,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->_limit = ($pageId - 1) * self::ROW_COUNT_LIMIT;
   }
 
-  function setPager($rowCount = null) {
+  public function setPager($rowCount = null) {
 
     $params = ['total' => $this->_rowsFound,
       'rowCount' => self::ROW_COUNT_LIMIT,
@@ -297,7 +297,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->assign_by_ref('pager', $pager);
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->beginPostProcess();
     $this->_setVariable = TRUE;
     if (empty($this->_params['id_value'][0])) {

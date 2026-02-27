@@ -945,7 +945,7 @@ cj(function() {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Event_Form_Participant', 'formRule'], $this);
   }
 
@@ -958,7 +958,7 @@ cj(function() {
    * @static
    * @access public
    */
-  static function formRule($values, $files, $self) {
+  public static function formRule($values, $files, $self) {
     // If $values['_qf_Participant_next'] is Delete or
     // $values['event_id'] is empty, then return
     // instead of proceeding further.

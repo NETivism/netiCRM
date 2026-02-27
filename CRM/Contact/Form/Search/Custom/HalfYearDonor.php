@@ -13,7 +13,7 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
   protected $_tableName = NULL;
   protected $_filled = NULL;
   
-  function __construct(&$formValues){
+  public function __construct(&$formValues){
     parent::__construct($formValues);
     $this->_filled = FALSE;
     $this->_tableName = 'civicrm_temp_custom_halfyeardonor';
@@ -21,7 +21,7 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
     $this->buildColumn();
   }
 
-  function buildColumn(){
+  public function buildColumn(){
     $this->_queryColumns = [ 
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
@@ -39,7 +39,7 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
       0 => 'total_count',
     ];
   }
-  function buildTempTable() {
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -67,7 +67,7 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  function dropTempTable() {
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
@@ -75,7 +75,7 @@ PRIMARY KEY (id)
   /**
    * fill temp table for further use
    */
-  function fillTable(){
+  public function fillTable(){
     $this->buildTempTable();
     $select = [];
     foreach($this->_queryColumns as $k => $v){
@@ -118,14 +118,14 @@ $having
   }
 
 
-  function tempFrom() {
+  public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
   }
 
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
-  function tempWhere(){
+  public function tempWhere(){
     $month = $this->_formValues['month'];
     $halfyear = date('Y-m-01 00:00:00', strtotime('-'.$month.' month'));
     $clauses = [];
@@ -136,28 +136,28 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  public function tempHaving(){
     return '';
   }
 
-  function buildForm(&$form){
+  public function buildForm(&$form){
     for($i = 1; $i <= 12; $i++) {
       $option[$i] = $i;
     } 
     $form->addSelect('month', ts('month'), $option);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [
       'month' => 6,
     ];
   }
 
-  function setBreadcrumb() {
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-  function count(){
+  public function count(){
     if(!$this->_filled){
       $this->fillTable();
       $this->_filled = TRUE;
@@ -174,7 +174,7 @@ $having
   /**
    * Construct the search query
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
     if(!$this->_filled){
@@ -184,7 +184,7 @@ $having
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -197,19 +197,19 @@ $having
   /**
    * Functions below generally don't need to be modified
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  public function where($includeContactIDs = false) {
     return '(1)';
   }
 
-  function having(){
+  public function having(){
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -224,17 +224,17 @@ $having
     }
   }
 
-  function &columns(){
+  public function &columns(){
     return $this->_columns;
   }
   
-  function setTitle(){
+  public function setTitle(){
     $month = $this->_formValues['month'];
     $title = ts('Donor who donate in last %count month', ['count' => $month, 'plural' => 'Donor who donate in last %count months']);
     CRM_Utils_System::setTitle($title);
   }
 
-  function qill(){
+  public function qill(){
     // just add qill
     $month = $this->_formValues['month'];
     $past = date('Y-m-01', strtotime('-'.$month.' month'));
@@ -245,17 +245,17 @@ $having
     ];
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
   }
 
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
-  function templateFile(){
+  public function templateFile(){
     return 'CRM/Contact/Form/Search/Custom/HalfYearDonor.tpl';
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }

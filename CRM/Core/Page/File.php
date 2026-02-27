@@ -35,7 +35,7 @@
 
 
 class CRM_Core_Page_File extends CRM_Core_Page {
-  function run() {
+  public function run() {
 
 
 

@@ -55,7 +55,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -63,14 +63,14 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
    * @static
    */
-  static $_properties = ['contact_id',
+  public static $_properties = ['contact_id',
     'contact_type',
     'sort_name',
     'grant_id',
@@ -153,7 +153,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct(&$queryParams,
+  public function __construct(&$queryParams,
     $action = CRM_Core_Action::NONE,
     $grantClause = NULL,
     $single = FALSE,
@@ -190,7 +190,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @access public
    *
    */
-  static function &links($key = NULL) {
+  public static function &links($key = NULL) {
     $cid = CRM_Utils_Request::retrieve('cid', 'Integer', $this);
     $extraParams = ($key) ? "&key={$key}" : NULL;
 
@@ -234,7 +234,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Grant') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
     if ($this->_limit) {
@@ -257,7 +257,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     return $this->_query->searchQuery(0, 0, NULL,
       TRUE, FALSE,
       FALSE, FALSE,
@@ -277,7 +277,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $result = $this->_query->searchQuery($offset, $rowCount, $sort,
       FALSE, FALSE,
       FALSE, FALSE,
@@ -407,7 +407,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     return self::$_columnHeaders;
   }
 
-  function &getQuery() {
+  public function &getQuery() {
     return $this->_query;
   }
 
@@ -418,7 +418,7 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Grant Search');
   }
 }

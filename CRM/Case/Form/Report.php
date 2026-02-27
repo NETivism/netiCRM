@@ -64,7 +64,7 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_caseID = CRM_Utils_Request::retrieve('caseid', 'Integer', $this, TRUE);
     $this->_clientID = CRM_Utils_Request::retrieve('cid', 'Integer', $this, TRUE);
     $this->_activitySetName = CRM_Utils_Request::retrieve('asn', 'String', $this, TRUE);

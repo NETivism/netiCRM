@@ -66,7 +66,7 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
-  static function formRule($fields) {
+  public static function formRule($fields) {
     if (isset($fields['enableSSL']) &&
       $fields['enableSSL']
     ) {

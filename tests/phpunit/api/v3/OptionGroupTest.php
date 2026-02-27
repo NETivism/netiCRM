@@ -7,12 +7,12 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
 
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     parent::setUp();
   }
 
-  function tearDown() {}
+  public function tearDown() {}
   /*
   * Good to test option group as a representative on the Camel Case
   */

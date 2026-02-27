@@ -38,9 +38,9 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
   /**
    * Minimal cache time in seconds
    */
-  const SMARTGROUP_CACHE_TIMEOUT_MINIMAL = 30;
+  public const SMARTGROUP_CACHE_TIMEOUT_MINIMAL = 30;
 
-  static $_alreadyLoaded = [];
+  public static $_alreadyLoaded = [];
 
   /**
    * Check to see if we have cache entries for this group
@@ -50,7 +50,7 @@ class CRM_Contact_BAO_GroupContactCache extends CRM_Contact_DAO_GroupContactCach
    *
    * @return boolean true if we did not regenerate, false if we did
    */
-  static function check($groupID) {
+  public static function check($groupID) {
     if (empty($groupID)) {
       return TRUE;
     }
@@ -93,7 +93,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     }
   }
 
-  static function checkAll($intersectGroups = []) {
+  public static function checkAll($intersectGroups = []) {
     $group = new CRM_Contact_DAO_Group();
     $group->is_active = 1;
     $group->find();
@@ -108,7 +108,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     CRM_Contact_BAO_GroupContactCache::check($smartGroups);
   }
 
-  static function add($groupID) {
+  public static function add($groupID) {
     // first delete the current cache
     self::remove($groupID);
     if (!is_array($groupID)) {
@@ -123,7 +123,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     }
   }
 
-  static function store(&$groupID, &$values) {
+  public static function store(&$groupID, &$values) {
     $processed = FALSE;
 
     // sort the values so we put group IDs in front and hence optimize
@@ -140,7 +140,7 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     }
   }
 
-  static function remove($groupID = NULL, $onceOnly = TRUE) {
+  public static function remove($groupID = NULL, $onceOnly = TRUE) {
     static $invoked = FALSE;
 
     // typically this needs to happy only once per instance
@@ -246,7 +246,7 @@ WHERE  id = %1
   /**
    * load the smart group cache for a saved search
    */
-  static function load(&$group, $fresh = FALSE) {
+  public static function load(&$group, $fresh = FALSE) {
     $groupID = $group->id;
     $savedSearchID = $group->saved_search_id;
     if (CRM_Utils_Array::arrayKeyExists($groupID, self::$_alreadyLoaded) && !$fresh) {
@@ -384,7 +384,7 @@ WHERE  id = %1
    * @param $groupIDs array(int)
    * @param $processed bool, whether the cache data was recently modified
    */
-  static function updateCacheTime($groupIDs, $processed) {
+  public static function updateCacheTime($groupIDs, $processed) {
     // only update cache entry if we had any values
     if ($processed) {
       // also update the group with cache date information
@@ -419,7 +419,7 @@ WHERE  id = %1
    *
    * @return boolean true if we did not regenerate, false if we did
    */
-  static function loadAll($groupIDs = null, $limit = 0) {
+  public static function loadAll($groupIDs = null, $limit = 0) {
     // ensure that all the smart groups are loaded
     // this function is expensive and should be sparingly used if groupIDs is empty
 
@@ -489,7 +489,7 @@ AND     ( g.cache_date IS NULL OR
     }
   }
 
-  static function smartGroupCacheTimeout() {
+  public static function smartGroupCacheTimeout() {
     $config = CRM_Core_Config::singleton();
 
     if (
@@ -513,7 +513,7 @@ AND     ( g.cache_date IS NULL OR
    *
    * @return array an array of groups that this contact belongs to
    */
-  static function contactGroup($contactID, $showHidden = FALSE) {
+  public static function contactGroup($contactID, $showHidden = FALSE) {
     if (empty($contactID)) {
       return;
     }

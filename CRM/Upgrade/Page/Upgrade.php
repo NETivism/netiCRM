@@ -38,11 +38,11 @@
 
 
 class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function run() {
+  public function run() {
     // lets get around the time limit issue if possible for upgrades
     if (!ini_get('safe_mode')) {
       set_time_limit(0);
@@ -259,7 +259,7 @@ SELECT  count( id ) as statusCount
     return CRM_Utils_System::theme($content);
   }
 
-  function upgrade_2_2_alpha1($rev) {
+  public function upgrade_2_2_alpha1($rev) {
     for ($stepID = 1; $stepID <= 4; $stepID++) {
       $formName = "CRM_Upgrade_TwoTwo_Form_Step{$stepID}";
       $form = new $formName( );
@@ -298,7 +298,7 @@ SELECT  count( id ) as statusCount
     }
   }
 
-  function upgrade_2_1_2($rev) {
+  public function upgrade_2_1_2($rev) {
     $formName = "CRM_Upgrade_TwoOne_Form_TwoOneTwo";
     $form = new $formName( $rev );
 
@@ -325,7 +325,7 @@ SELECT  count( id ) as statusCount
    * Name of this function will change according to the latest release
    *
    */
-  function upgrade_2_2_alpha3($rev) {
+  public function upgrade_2_2_alpha3($rev) {
     // skip processing sql file, if fresh install -
     if (!CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'mail_protocol', 'id', 'name')) {
       $upgrade = new CRM_Upgrade_Form();
@@ -334,7 +334,7 @@ SELECT  count( id ) as statusCount
     return TRUE;
   }
 
-  function upgrade_2_2_beta1($rev) {
+  public function upgrade_2_2_beta1($rev) {
     if (!CRM_Core_DAO::checkFieldExists('civicrm_pcp_block', 'notify_email')) {
       $template = CRM_Core_Smarty::singleton();
       $template->assign('notifyAbsent', TRUE);
@@ -343,7 +343,7 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_2_2_beta2($rev) {
+  public function upgrade_2_2_beta2($rev) {
     $template = CRM_Core_Smarty::singleton();
     if (!CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue',
         'CRM_Contact_Form_Search_Custom_ZipCodeRange', 'id', 'name'
@@ -359,7 +359,7 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_2_2_beta3($rev) {
+  public function upgrade_2_2_beta3($rev) {
     $template = CRM_Core_Smarty::singleton();
     if (!CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'custom_data_type', 'id', 'name')) {
       $template->assign('customDataType', TRUE);
@@ -369,7 +369,7 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_0_alpha1($rev) {
+  public function upgrade_3_0_alpha1($rev) {
 
 
     $threeZero = new CRM_Upgrade_ThreeZero_ThreeZero();
@@ -385,7 +385,7 @@ SELECT  count( id ) as statusCount
     $threeZero->upgrade($rev);
   }
 
-  function upgrade_3_1_alpha1($rev) {
+  public function upgrade_3_1_alpha1($rev) {
 
 
     $threeOne = new CRM_Upgrade_ThreeOne_ThreeOne();
@@ -401,7 +401,7 @@ SELECT  count( id ) as statusCount
     $threeOne->upgrade($rev);
   }
 
-  function upgrade_2_2_7($rev) {
+  public function upgrade_2_2_7($rev) {
     $upgrade = new CRM_Upgrade_Form();
     $upgrade->processSQL($rev);
     $sql = "UPDATE civicrm_report_instance 
@@ -429,7 +429,7 @@ SELECT  count( id ) as statusCount
     }
   }
 
-  function upgrade_3_0_2($rev) {
+  public function upgrade_3_0_2($rev) {
 
     $template = CRM_Core_Smarty::singleton();
 
@@ -447,7 +447,7 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_0_4($rev) {
+  public function upgrade_3_0_4($rev) {
     //make sure 'Deceased' membership status present in db,CRM-5636
     $template = CRM_Core_Smarty::singleton();
 
@@ -462,7 +462,7 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_1_0($rev) {
+  public function upgrade_3_1_0($rev) {
     // upgrade all roles who have 'access CiviEvent' permission, to also have
     // newly added permission 'edit_all_events', CRM-5472
     $config = &CRM_Core_Config::singleton();
@@ -487,7 +487,7 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_1_3($rev) {
+  public function upgrade_3_1_3($rev) {
 
     $threeOne = new CRM_Upgrade_ThreeOne_ThreeOne();
     $threeOne->upgrade_3_1_3();
@@ -496,7 +496,7 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_1_4($rev) {
+  public function upgrade_3_1_4($rev) {
 
     $threeOne = new CRM_Upgrade_ThreeOne_ThreeOne();
     $threeOne->upgrade_3_1_4();

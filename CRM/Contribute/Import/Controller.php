@@ -39,7 +39,7 @@ class CRM_Contribute_Import_Controller extends CRM_Core_Controller {
   /**
    * class constructor
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);
 
     // lets get around the time limit issue if possible, CRM-2113

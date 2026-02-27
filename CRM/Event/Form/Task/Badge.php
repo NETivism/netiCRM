@@ -58,7 +58,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     if ($this->_context == 'view') {
       $this->_single = TRUE;
@@ -87,7 +87,7 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Make Name Badges'));
 
     //add select for label

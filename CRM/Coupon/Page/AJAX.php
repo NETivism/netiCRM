@@ -37,7 +37,7 @@
  * This is base class for all ajax calls
  */
 class CRM_Coupon_Page_AJAX {
-  static function validEventFromCode(){
+  public static function validEventFromCode(){
     $code = CRM_Utils_Request::retrieve('code', 'Text', $object, False, '', 'Post');
     $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, False, '', 'Post');
     if(empty($event_id)){

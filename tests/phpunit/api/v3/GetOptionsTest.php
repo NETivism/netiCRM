@@ -17,7 +17,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
 
     global $tsLocale;
@@ -37,7 +37,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
   }
 
   /**
@@ -51,7 +51,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testExample() {
+  public function testExample() {
     $params = $this->_params += [
       'field' => 'contact_type',
     ];
@@ -78,7 +78,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testContactType() {
+  public function testContactType() {
     $params = $this->_params += [
       'field' => 'contact_type',
     ];
@@ -100,7 +100,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testContactSubType() {
+  public function testContactSubType() {
     // create contact sub type
     CRM_Core_DAO::executeQuery("INSERT IGNORE INTO `civicrm_contact_type` (`name`, `label`, `parent_id`, `is_active`, `is_reserved`) VALUES ('NPO', 'NPO', 3, 1, NULL)");
     $params = $this->_params += [
@@ -125,7 +125,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testPrefixId() {
+  public function testPrefixId() {
     $params = $this->_params += [
       'field' => 'prefix_id',
     ];
@@ -148,7 +148,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testSuffixId() {
+  public function testSuffixId() {
     $params = $this->_params += [
       'field' => 'suffix_id',
     ];

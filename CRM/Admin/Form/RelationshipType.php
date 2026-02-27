@@ -106,7 +106,7 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     }
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_action != CRM_Core_Action::DELETE &&
       isset($this->_id)
     ) {

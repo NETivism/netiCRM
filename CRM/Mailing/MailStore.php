@@ -36,7 +36,7 @@
 class CRM_Mailing_MailStore {
   public $_transport;
   // flag to decide whether to print debug messages
-  var $_debug = FALSE;
+  public $_debug = FALSE;
 
   /**
    * Return the proper mail store implementation, based on config settings
@@ -92,14 +92,14 @@ class CRM_Mailing_MailStore {
    *
    * @return array  array of ezcMail objects
    */
-  function allMails() {
+  public function allMails() {
     return $this->fetchNext(0);
   }
 
   /**
    * Expunge the messages marked for deletion; stub function to be redefined by IMAP store
    */
-  function expunge() {}
+  public function expunge() {}
 
   /**
    * Return the next X messages from the mail store
@@ -108,7 +108,7 @@ class CRM_Mailing_MailStore {
    *
    * @return array      array of ezcMail objects
    */
-  function fetchNext($count = 1) {
+  public function fetchNext($count = 1) {
     if (isset($this->_transport->options->uidReferencing) and $this->_transport->options->uidReferencing) {
       $identifiers = $this->_transport->listUniqueIdentifiers();
       if (is_array($identifiers)) {
@@ -152,7 +152,7 @@ class CRM_Mailing_MailStore {
    *
    * @return string       path to the Maildir's cur directory
    */
-  function maildir($name) {
+  public function maildir($name) {
     $config = CRM_Core_Config::singleton();
     $dir = $config->customFileUploadDir . DIRECTORY_SEPARATOR . $name;
     foreach ([

@@ -39,22 +39,22 @@ class CRM_Utils_RateLimiter {
   /**
    * Default time window in seconds
    */
-  const DEFAULT_WINDOW_SECONDS = 60;
+  public const DEFAULT_WINDOW_SECONDS = 60;
 
   /**
    * Default maximum requests per window
    */
-  const DEFAULT_MAX_REQUESTS = 10;
+  public const DEFAULT_MAX_REQUESTS = 10;
 
   /**
    * Probability of running cleanup (1 in N requests)
    */
-  const CLEANUP_PROBABILITY = 100;
+  public const CLEANUP_PROBABILITY = 100;
 
   /**
    * Maximum key length for civicrm_sequence.name column
    */
-  const MAX_KEY_LENGTH = 64;
+  public const MAX_KEY_LENGTH = 64;
 
   /**
    * Check if the current request should be rate limited

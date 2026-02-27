@@ -44,7 +44,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -59,7 +59,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     // create custom group dao, populate fields and then save.
     $group = new CRM_Core_DAO_CustomGroup();
     $group->title = $params['title'];
@@ -221,7 +221,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_CustomGroup', $params, $defaults);
   }
 
@@ -235,7 +235,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @static
    * @access public
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     // reset the cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
@@ -702,7 +702,7 @@ SELECT $select
    * @return string
    *   SQL condition.
    */
-  static private function whereListHas($column, $value, $delimiter = CRM_Core_DAO::VALUE_SEPARATOR) {
+  private static function whereListHas($column, $value, $delimiter = CRM_Core_DAO::VALUE_SEPARATOR) {
     $bareValue = trim($value, $delimiter); // ?
     $escapedValue = CRM_Utils_Type::escape("%{$delimiter}{$bareValue}{$delimiter}%", 'String', FALSE);
     return "($column LIKE \"$escapedValue\")";
@@ -1084,7 +1084,7 @@ SELECT $select
     return TRUE;
   }
 
-  static function setDefaults(&$groupTree, &$defaults, $viewMode = FALSE, $inactiveNeeded = FALSE, $action = CRM_Core_Action::NONE) {
+  public static function setDefaults(&$groupTree, &$defaults, $viewMode = FALSE, $inactiveNeeded = FALSE, $action = CRM_Core_Action::NONE) {
 
     foreach ($groupTree as $id => $group) {
       if (!isset($group['fields'])) {
@@ -1231,7 +1231,7 @@ SELECT $select
     }
   }
 
-  static function postProcess(&$groupTree, &$params, $skipFile = FALSE) {
+  public static function postProcess(&$groupTree, &$params, $skipFile = FALSE) {
     // Get the Custom form values and groupTree
     // first reset all checkbox and radio data
     foreach ($groupTree as $groupID => $group) {
@@ -1347,7 +1347,7 @@ SELECT $select
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form,
+  public static function buildQuickForm(&$form,
     &$groupTree,
     $inactiveNeeded = FALSE,
     $groupCount = 1,
@@ -1402,7 +1402,7 @@ SELECT $select
    * @access public
    * @static
    */
-  static function extractGetParams(&$form, $type) {
+  public static function extractGetParams(&$form, $type) {
     // if not GET params return
     if (empty($_GET)) {
       return;
@@ -1500,7 +1500,7 @@ SELECT $select
    * @static
    * @access public
    */
-  static function checkCustomField($customFieldId, &$removeCustomFieldTypes) {
+  public static function checkCustomField($customFieldId, &$removeCustomFieldTypes) {
     $query = "SELECT cg.extends as extends
                   FROM civicrm_custom_group as cg, civicrm_custom_field as cf
                   WHERE cg.id = cf.custom_group_id
@@ -1514,7 +1514,7 @@ SELECT $select
     return TRUE;
   }
 
-  static function mapTableName($table) {
+  public static function mapTableName($table) {
     switch ($table) {
       case 'Contact':
       case 'Individual':
@@ -1579,7 +1579,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
     }
   }
 
-  static function createTable($group) {
+  public static function createTable($group) {
     $params = [
       'name' => $group->table_name,
       'is_multiple' => $group->is_multiple ? 1 : 0,
@@ -1602,7 +1602,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    *
    * @return array $formattedGroupTree
    */
-  static function formatGroupTree(&$groupTree, $groupCount, &$form) {
+  public static function formatGroupTree(&$groupTree, $groupCount, &$form) {
     $formattedGroupTree = [];
     $uploadNames = [];
 
@@ -1666,7 +1666,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    *  @param array   $groupTree associated array
    *  @param boolean $returnCount true if customValue count needs to be returned
    */
-  static function buildCustomDataView(&$form, &$groupTree, $returnCount = FALSE, $groupID = NULL, $prefix = NULL) {
+  public static function buildCustomDataView(&$form, &$groupTree, $returnCount = FALSE, $groupID = NULL, $prefix = NULL) {
     foreach ($groupTree as $key => $group) {
       if ($key === 'info') {
         continue;
@@ -1733,7 +1733,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    * @param boolean $dncOptionPerLine true if optionPerLine should not be consider
    *
    */
-  static function formatCustomValues(&$values, &$field, $dncOptionPerLine = FALSE) {
+  public static function formatCustomValues(&$values, &$field, $dncOptionPerLine = FALSE) {
     $value = $values['data'];
 
     //changed isset CRM-4601
@@ -1951,7 +1951,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    * @return array $groupLabels - array consisting of groups and fields labels with ids.
    * @access public
    */
-  static function getGroupTitles($fieldIds) {
+  public static function getGroupTitles($fieldIds) {
     if (!is_array($fieldIds) && empty($fieldIds)) {
       return;
     }
@@ -1978,7 +1978,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
     return $groupLabels;
   }
 
-  static function dropAllTables() {
+  public static function dropAllTables() {
     $query = "SELECT table_name FROM civicrm_custom_group";
     $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -1996,7 +1996,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
     * @return boolean true if empty otherwise false.
     * @access public
     */
-  static function isGroupEmpty($gID) {
+  public static function isGroupEmpty($gID) {
     if (!$gID) {
       return;
     }

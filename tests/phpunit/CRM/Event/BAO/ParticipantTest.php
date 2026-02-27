@@ -33,7 +33,7 @@ require_once 'CiviTest/Participant.php';
 
 class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase 
 {
-    function get_info( ) 
+    public function get_info( ) 
     {
         return [
                      'name'        => 'Participant BAOs',
@@ -42,7 +42,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
                      ];
     }
     
-    function setUp( ) 
+    public function setUp( ) 
     {
         parent::setUp();
         $this->_contactId     = Contact::createIndividual( );
@@ -52,7 +52,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * add() method (add and edit modes of participant)
      */
-    function testAdd( )
+    public function testAdd( )
     {
         $params = [
                         'send_receipt'     => 1,
@@ -97,7 +97,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * getValues() method (fetch value of participant)
      */
-    function testgetValuesWithValidParams( ) 
+    public function testgetValuesWithValidParams( ) 
     {
         $participantId = Participant::create( $this->_contactId, $this->_eventId);
         $params = [ 'id' => $participantId ];
@@ -137,7 +137,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * getValues() method (checking for behavior when params are empty )
      */
-    function testgetValuesWithoutValidParams( ) 
+    public function testgetValuesWithoutValidParams( ) 
     {
         $params = $values = $ids = [ ];
         $participantId = Participant::create( $this->_contactId, $this->_eventId);
@@ -152,7 +152,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * eventFull() method (checking the event for full )
      */
-    function testEventFull()
+    public function testEventFull()
     {
         require_once 'CRM/Event/BAO/Event.php';
         CRM_Event_BAO_Event::add(
@@ -174,7 +174,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * importableFields() method ( Checking the Event's Importable Fields )
      */
-    function testimportableFields()
+    public function testimportableFields()
     {
         require_once 'CRM/Event/BAO/Participant.php';
         $importableFields = CRM_Event_BAO_Participant::importableFields();
@@ -187,7 +187,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * participantDetails() method ( Checking the Participant Details )
      */
-    function testparticipantDetails()
+    public function testparticipantDetails()
     {
         $participantId = Participant::create( $this->_contactId, $this->_eventId);
         $params =   [ 'name'  => 'Doe, John', 'title' => 'Test Event' ];
@@ -206,7 +206,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * deleteParticipant() method ( Delete a Participant )
      */
-    function testdeleteParticipant()
+    public function testdeleteParticipant()
     {
         $params = [
                         'send_receipt'     => 1,
@@ -240,7 +240,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * checkDuplicate() method ( Checking for Duplicate Participant returns array of participant id)
      */
-    function testcheckDuplicate()
+    public function testcheckDuplicate()
     {
         $duplicate    = [];
         
@@ -271,7 +271,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * create() method (create and updation of participant)
      */
-    function testCreate( )
+    public function testCreate( )
     {
         require_once 'CRM/Event/BAO/Participant.php';
         $params = [
@@ -335,7 +335,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * exportableFields() method ( Exportable Fields for Participant)
      */
-    function testexportableFields() 
+    public function testexportableFields() 
     {
         require_once 'CRM/Event/BAO/Participant.php';
         $exportableFields = CRM_Event_BAO_Participant::exportableFields();
@@ -348,7 +348,7 @@ class CRM_Event_BAO_ParticipantTest extends CiviUnitTestCase
     /**
      * fixEventLevel() method (Setting ',' values), resolveDefaults(assinging value to array) method
      */
-    function testfixEventLevel() 
+    public function testfixEventLevel() 
     {
         require_once  'CRM/Utils/String.php';
         require_once  'CRM/Utils/Array.php';

@@ -35,7 +35,7 @@
  *
  */
 class CRM_Core_BAO_CustomQuery {
-  CONST PREFIX = 'custom_value_';
+  public CONST PREFIX = 'custom_value_';
 
   /**
    * the set of custom field ids
@@ -101,7 +101,7 @@ class CRM_Core_BAO_CustomQuery {
    * @var array
    * @static
    */
-  static $extendsMap = [
+  public static $extendsMap = [
     'Contact' => 'civicrm_contact',
     'Individual' => 'civicrm_contact',
     'Household' => 'civicrm_contact',
@@ -128,7 +128,7 @@ class CRM_Core_BAO_CustomQuery {
    *
    * @access public
    */
-  function __construct($ids) {
+  public function __construct($ids) {
     $this->_ids = &$ids;
 
     $this->_select = [];
@@ -246,7 +246,7 @@ SELECT label, value
    * @return void
    * @access public
    */
-  function select() {
+  public function select() {
     if (empty($this->_fields)) {
       return;
     }
@@ -309,7 +309,7 @@ SELECT label, value
    *
    * @access public
    */
-  function where() {
+  public function where() {
     //CRM_Core_Error::debug( 'fld', $this->_fields );
     //CRM_Core_Error::debug( 'ids', $this->_ids );
 
@@ -603,7 +603,7 @@ SELECT label, value
    * @return  array   array of strings
    * @access public
    */
-  function query() {
+  public function query() {
     $this->select();
 
     $this->where();
@@ -627,7 +627,7 @@ SELECT label, value
     ];
   }
 
-  function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
+  public function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
     $qill = [];
 
     if (isset($value['from'])) {

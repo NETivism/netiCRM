@@ -52,7 +52,7 @@ class CRM_Core_Form_Tag {
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
+  public static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
     $tagset = $form->_entityTagValues = [];
 
     foreach ($parentNames as & $parentNameItem) {
@@ -145,7 +145,7 @@ class CRM_Core_Form_Tag {
    * Function to save entity tags when it is not save used AJAX
    *
    */
-  static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
+  public static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
     foreach ($params as $value) {
       if (!$value) {
         continue;

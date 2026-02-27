@@ -33,21 +33,21 @@
  *
  */
 class CRM_Utils_REST {
-  const LAST_HIT = 'rest_lasthit';  // Kept for backward compatibility, used as prefix
-  const RATE_LIMIT = 0.2;  // Kept for backward compatibility
-  const RATE_LIMIT_WINDOW = 60;  // 60 second time window
-  const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
+  public const LAST_HIT = 'rest_lasthit';  // Kept for backward compatibility, used as prefix
+  public const RATE_LIMIT = 0.2;  // Kept for backward compatibility
+  public const RATE_LIMIT_WINDOW = 60;  // 60 second time window
+  public const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
 
   /**
    * Response row limit per request
    */
-  static $limitRows = 100;
+  public static $limitRows = 100;
 
   /**
    * Number of seconds we should let a REST process idle
    * @static
    */
-  static $rest_timeout = 0;
+  public static $rest_timeout = 0;
 
   /**
    * Cache the actual UF Class
@@ -139,16 +139,16 @@ class CRM_Utils_REST {
     return $values;
   }
 
-  function run() {
+  public function run() {
     $result = self::handle();
     return self::output($result);
   }
 
-  function bootAndRun() {
+  public function bootAndRun() {
     return $this->run();
   }
 
-  function requestRateLimit($args) {
+  public function requestRateLimit($args) {
     // IP-based rate limiting using CRM_Utils_RateLimiter
     $prefix = self::LAST_HIT;
     $windowSeconds = self::RATE_LIMIT_WINDOW;
@@ -172,7 +172,7 @@ class CRM_Utils_REST {
     CRM_Utils_RateLimiter::cleanup($prefix, $windowSeconds);
   }
 
-  static function output(&$result) {
+  public static function output(&$result) {
     $hier = FALSE;
     if (is_scalar($result)) {
       if (!$result) {
@@ -230,7 +230,7 @@ class CRM_Utils_REST {
     }
   }
 
-  function handle() {
+  public function handle() {
     // block ajax request REST API to prevent database info leak
     /* It's not reliable way to detect, and shouldn't block whole connection
     if(CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
@@ -368,7 +368,7 @@ class CRM_Utils_REST {
     return self::process($args);
   }
 
-  static function process(&$args, $params = []) {
+  public static function process(&$args, $params = []) {
     if (empty($params)) {
       $params = self::buildParamList();
     }
@@ -455,7 +455,7 @@ class CRM_Utils_REST {
     return $result;
   }
 
-  static function buildParamList() {
+  public static function buildParamList() {
     $params = [];
 
     $skipVars = [
@@ -494,7 +494,7 @@ class CRM_Utils_REST {
     return $params;
   }
 
-  static function fatal($pearError) {
+  public static function fatal($pearError) {
     header('Content-Type: text/xml');
     $error = [];
     $error['code'] = $pearError->getCode();
@@ -511,7 +511,7 @@ class CRM_Utils_REST {
     CRM_Utils_System::civiExit();
   }
 
-  static function APIDoc() {
+  public static function APIDoc() {
 
     CRM_Utils_System::setTitle("API Parameters");
     $template = CRM_Core_Smarty::singleton();
@@ -520,10 +520,10 @@ class CRM_Utils_REST {
   }
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
-  static function loadTemplate() {
+  public static function loadTemplate() {
   }
 
-  static function ajax() {
+  public static function ajax() {
     // this is driven by the menu system, so we can use permissioning to
     // restrict calls to this etc
     // the request has to be sent by an ajax call. First line of protection against csrf

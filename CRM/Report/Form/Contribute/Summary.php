@@ -58,7 +58,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
   protected $_customGroupExtends = ['Contribution'];
   protected $_customGroupGroupBy = TRUE;
 
-  function __construct() {
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -270,15 +270,15 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function setDefaultValues($freeze = TRUE) {
+  public function setDefaultValues($freeze = TRUE) {
     return parent::setDefaultValues($freeze);
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -382,7 +382,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     //check for searching combination of dispaly columns and
     //grouping criteria
@@ -419,7 +419,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_contact  {$this->_aliases['civicrm_contact']}
              INNER JOIN civicrm_contribution   {$this->_aliases['civicrm_contribution']} 
@@ -446,7 +446,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
     $append = FALSE;
     if (is_array($this->_params['group_bys']) &&
@@ -493,7 +493,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     }
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     if (!$this->_having) {
@@ -523,13 +523,13 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     return $statistics;
   }
 
-  function postProcess() {
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function buildChart(&$rows) {
+  public function buildChart(&$rows) {
     $graphRows = [];
     $count = 0;
 
@@ -554,7 +554,7 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     }
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     $payment_instrument = CRM_Core_OptionGroup::values('payment_instrument');

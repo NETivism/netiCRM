@@ -49,7 +49,7 @@ class CRM_Utils_PagerAToZ {
    * @access public
    * @static
    */
-  static function getAToZBar(&$query, $sortByCharacter, $isDAO = FALSE) {
+  public static function getAToZBar(&$query, $sortByCharacter, $isDAO = FALSE) {
     $AToZBar = self::createLinks($query, $sortByCharacter, $isDAO);
     return $AToZBar;
   }
@@ -62,7 +62,7 @@ class CRM_Utils_PagerAToZ {
    * @static
    */
 
-  static function getStaticCharacters() {
+  public static function getStaticCharacters() {
     $staticAlphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     return $staticAlphabets;
   }
@@ -74,7 +74,7 @@ class CRM_Utils_PagerAToZ {
    * @access private
    * @static
    */
-  static function getDynamicCharacters(&$query, $isDAO) {
+  public static function getDynamicCharacters(&$query, $isDAO) {
     if ($isDAO) {
       $result = $query;
     }
@@ -102,7 +102,7 @@ class CRM_Utils_PagerAToZ {
    * @access private
    * @static
    */
-  static function createLinks(&$query, $sortByCharacter, $isDAO) {
+  public static function createLinks(&$query, $sortByCharacter, $isDAO) {
     $AToZBar = self::getStaticCharacters();
     $dynamicAlphabets = self::getDynamicCharacters($query, $isDAO);
 

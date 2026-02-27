@@ -46,14 +46,14 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Contribute_BAO_ContributionType';
   }
 
@@ -62,7 +62,7 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -105,7 +105,7 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
     $action = CRM_Utils_Request::retrieve('action', 'String',
       // default to 'browse'
@@ -135,7 +135,7 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse() {
+  public function browse() {
     // get all custom groups sorted by weight
     $contributionType = [];
 
@@ -175,7 +175,7 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Contribute_Form_ContributionType';
   }
 
@@ -184,7 +184,7 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Contribution Types';
   }
 
@@ -193,7 +193,7 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/contribute/contributionType';
   }
 }

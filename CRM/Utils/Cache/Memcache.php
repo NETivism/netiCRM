@@ -33,10 +33,10 @@
  *
  */
 class CRM_Utils_Cache_Memcache {
-  CONST DEFAULT_HOST = 'localhost';
-  CONST DEFAULT_PORT = 11211;
-  CONST DEFAULT_TIMEOUT = 3600;
-  CONST DEFAULT_PREFIX = '';
+  public CONST DEFAULT_HOST = 'localhost';
+  public CONST DEFAULT_PORT = 11211;
+  public CONST DEFAULT_TIMEOUT = 3600;
+  public CONST DEFAULT_PREFIX = '';
 
   /**
    * The host name of the memcached server
@@ -84,7 +84,7 @@ class CRM_Utils_Cache_Memcache {
    *
    * @return void
    */
-  function __construct($config) {
+  public function __construct($config) {
     if (isset($config['host'])) {
       $this->_host = $config['host'];
     }
@@ -107,23 +107,23 @@ class CRM_Utils_Cache_Memcache {
     }
   }
 
-  function set($key, &$value) {
+  public function set($key, &$value) {
     if (!$this->_cache->set($this->_prefix . $key, $value, FALSE, $this->_timeout)) {
       return FALSE;
     }
     return TRUE;
   }
 
-  function &get($key) {
+  public function &get($key) {
     $result = $this->_cache->get($this->_prefix . $key);
     return $result;
   }
 
-  function delete($key) {
+  public function delete($key) {
     return $this->_cache->delete($this->_prefix . $key);
   }
 
-  function flush() {
+  public function flush() {
     return $this->_cache->flush();
   }
 }

@@ -37,18 +37,18 @@ class CRM_Utils_Hook {
 
   // Allowed values for dashboard hook content placement
   // Default - place content below activity list
-  CONST DASHBOARD_BELOW = 1;
+  public CONST DASHBOARD_BELOW = 1;
   // Place content above activity list
-  CONST DASHBOARD_ABOVE = 2;
+  public CONST DASHBOARD_ABOVE = 2;
   // Don't display activity list at all
-  CONST DASHBOARD_REPLACE = 3;
+  public CONST DASHBOARD_REPLACE = 3;
 
   // by default - place content below existing content
-  CONST SUMMARY_BELOW = 1;
+  public CONST SUMMARY_BELOW = 1;
   // pace hook content above
-  CONST SUMMARY_ABOVE = 2;
+  public CONST SUMMARY_ABOVE = 2;
   // create your own summarys
-  CONST SUMMARY_REPLACE = 3;
+  public CONST SUMMARY_REPLACE = 3;
 
   /**
    * This will return implemented module of hook 
@@ -56,7 +56,7 @@ class CRM_Utils_Hook {
    * @param string $hook
    *   hook name with civicrm to search
    */
-  static function availableHooks($hook) {
+  public static function availableHooks($hook) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::availableHooks($hook);
@@ -70,7 +70,7 @@ class CRM_Utils_Hook {
    * @param int $num Number of rows after dao->find
    * @return void
    */
-  static function get($fetch, &$dao, $numRows) {
+  public static function get($fetch, &$dao, $numRows) {
     $className = CRM_Core_Config::singleton()->userHookClass;
     $null = &CRM_Core_DAO::$_nullObject;
     return $className::invoke( 3, $fetch, $dao, $numRows, $null, $null, 'civicrm_get' );
@@ -88,7 +88,7 @@ class CRM_Utils_Hook {
    * @return null the return value is ignored
    * @access public
    */
-  static function pre($op, $objectName, $id, &$params) {
+  public static function pre($op, $objectName, $id, &$params) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke( 4, $op, $objectName, $id, $params, $op, 'civicrm_pre' );
@@ -106,7 +106,7 @@ class CRM_Utils_Hook {
    *                           an error message which aborts the operation
    * @access public
    */
-  static function post($op, $objectName, $objectId, &$objectRef) {
+  public static function post($op, $objectName, $objectId, &$objectRef) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke( 4, $op, $objectName, $objectId, $objectRef, $op, 'civicrm_post' );
@@ -125,7 +125,7 @@ class CRM_Utils_Hook {
    *
    * @access public
    */
-  static function links($op, $objectName, &$objectId, &$links) {
+  public static function links($op, $objectName, &$objectId, &$links) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke( 4, $op, $objectName, $objectId, $links, $op, 'civicrm_links' );
@@ -143,7 +143,7 @@ class CRM_Utils_Hook {
    *
    * @return null the return value is ignored
    */
-  static function preProcess($formName, &$form) {
+  public static function preProcess($formName, &$form) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     $null = &CRM_Core_DAO::$_nullObject;
@@ -160,7 +160,7 @@ class CRM_Utils_Hook {
    *
    * @return null the return value is ignored
    */
-  static function buildForm($formName, &$form) {
+  public static function buildForm($formName, &$form) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke( 2, $formName, $form, $formName, $formName, $formName, 'civicrm_buildForm' );
@@ -175,7 +175,7 @@ class CRM_Utils_Hook {
    *
    * @return null the return value is ignored
    */
-  static function preSave($formName, &$form) {
+  public static function preSave($formName, &$form) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  2, $formName, $form, $formName, $formName, $formName, 'civicrm_preSave' );
@@ -190,7 +190,7 @@ class CRM_Utils_Hook {
    *
    * @return null the return value is ignored
    */
-  static function postProcess($formName, &$form) {
+  public static function postProcess($formName, &$form) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  2, $formName, $form, $formName, $formName, $formName, 'civicrm_postProcess' );
@@ -210,7 +210,7 @@ class CRM_Utils_Hook {
    *                           an array of error messages which display a QF Error
    * @access public
    */
-  static function validate($formName, &$fields, &$files, &$form) {
+  public static function validate($formName, &$fields, &$files, &$form) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  4, $formName, $fields, $files, $form, $formName, 'civicrm_validate' );
@@ -227,7 +227,7 @@ class CRM_Utils_Hook {
    * @return null the return value is ignored
    * @access public
    */
-  static function custom($op, $groupID, $entityID, &$params) {
+  public static function custom($op, $groupID, $entityID, &$params) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  4, $op, $groupID, $entityID, $params, $op, 'civicrm_custom' );
@@ -246,7 +246,7 @@ class CRM_Utils_Hook {
    * @return null the return value is ignored
    * @access public
    */
-  static function aclWhereClause($type, &$tables, &$whereTables, &$contactID, &$where) {
+  public static function aclWhereClause($type, &$tables, &$whereTables, &$contactID, &$where) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  5, $type, $tables, $whereTables, $contactID, $where, 'civicrm_aclWhereClause' );
@@ -265,7 +265,7 @@ class CRM_Utils_Hook {
    * @return null the return value is ignored
    * @access public
    */
-  static function aclGroup($type, $contactID, $tableName, &$allGroups, &$currentGroups) {
+  public static function aclGroup($type, $contactID, $tableName, &$allGroups, &$currentGroups) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  5, $type, $contactID, $tableName, $allGroups, $currentGroups, 'civicrm_aclGroup' );
@@ -279,7 +279,7 @@ class CRM_Utils_Hook {
    * @return null the return value is ignored
    * @access public
    */
-  static function xmlMenu(&$files) {
+  public static function xmlMenu(&$files) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -292,7 +292,7 @@ class CRM_Utils_Hook {
    * @param $items
    *   Contribution id
    */
-  static function menuItems(&$items) {
+  public static function menuItems(&$items) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
@@ -310,7 +310,7 @@ class CRM_Utils_Hook {
    * @return string the html snippet to include in the dashboard
    * @access public
    */
-  static function dashboard($contactID, &$contentPlacement = self::DASHBOARD_BELOW) {
+  public static function dashboard($contactID, &$contentPlacement = self::DASHBOARD_BELOW) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -336,7 +336,7 @@ class CRM_Utils_Hook {
    * @return array
    * @access public
    */
-  static function recent(&$recentArray) {
+  public static function recent(&$recentArray) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -353,7 +353,7 @@ class CRM_Utils_Hook {
    * @return null
    * @access public
    */
-  static function buildAmount($pageType, &$form, &$amount) {
+  public static function buildAmount($pageType, &$form, &$amount) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -369,7 +369,7 @@ class CRM_Utils_Hook {
    * @return null
    * @access public
    */
-  static function tabs(&$tabs, $contactID) {
+  public static function tabs(&$tabs, $contactID) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -384,7 +384,7 @@ class CRM_Utils_Hook {
    * @return null
    * @access public
    */
-  static function tokens(&$tokens) {
+  public static function tokens(&$tokens) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -404,7 +404,7 @@ class CRM_Utils_Hook {
    * @return null
    * @access public
    */
-  static function tokenValues(&$details, &$contactIDs, $job = NULL, $tokens = [], $context = NULL) {
+  public static function tokenValues(&$details, &$contactIDs, $job = NULL, $tokens = [], $context = NULL) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  5, $details, $contactIDs, $job, $tokens, $context, 'civicrm_tokenValues' );
@@ -419,7 +419,7 @@ class CRM_Utils_Hook {
    * @return null
    * @access public
    */
-  static function pageRun(&$page) {
+  public static function pageRun(&$page) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -436,14 +436,14 @@ class CRM_Utils_Hook {
    * @return null
    * @access public
    */
-  static function copy($objectName, &$object) {
+  public static function copy($objectName, &$object) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  2, $objectName, $object, $null, $null, $null, 'civicrm_copy' );
   }
 
-  static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
+  public static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $included = FALSE;
 
     $result = [];
@@ -487,35 +487,35 @@ class CRM_Utils_Hook {
     return empty($result) ? TRUE : $result;
   }
 
-  static function customFieldOptions($customFieldID, &$options, $detailedFormat = FALSE) {
+  public static function customFieldOptions($customFieldID, &$options, $detailedFormat = FALSE) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  3, $customFieldID, $options, $detailedFormat, $null, $null, 'civicrm_customFieldOptions' );
   }
 
-  static function searchTasks($objectType, &$tasks) {
+  public static function searchTasks($objectType, &$tasks) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  2, $objectType, $tasks, $null, $null, $null, 'civicrm_searchTasks' );
   }
 
-  static function eventDiscount(&$form, &$params) {
+  public static function eventDiscount(&$form, &$params) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  2, $form, $params, $null, $null, $null, 'civicrm_eventDiscount' );
   }
 
-  static function mailingGroups(&$form, &$groups, &$mailings) {
+  public static function mailingGroups(&$form, &$groups, &$mailings) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  3, $form, $groups, $mailings, $null, $null, 'civicrm_mailingGroups' );
   }
 
-  static function membershipTypeValues(&$form, &$membershipTypes) {
+  public static function membershipTypeValues(&$form, &$membershipTypes) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -531,14 +531,14 @@ class CRM_Utils_Hook {
    * @return string the html snippet to include in the contact summary
    * @access public
    */
-  static function summary($contactID, &$content, &$contentPlacement = self::SUMMARY_BELOW) {
+  public static function summary($contactID, &$content, &$contentPlacement = self::SUMMARY_BELOW) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  3, $contactID, $content, $contentPlacement, $null, $null, 'civicrm_summary' );
   }
 
-  static function contactListQuery(&$query, $name, $context, $id) {
+  public static function contactListQuery(&$query, $name, $context, $id) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -563,7 +563,7 @@ class CRM_Utils_Hook {
    * @return void
    */
 
-  static function alterPaymentProcessorParams($paymentObj,
+  public static function alterPaymentProcessorParams($paymentObj,
     &$rawParams,
     &$cookedParams
   ) {
@@ -573,7 +573,7 @@ class CRM_Utils_Hook {
     return $className::invoke(  3, $paymentObj, $rawParams, $cookedParams, $null, $null, 'civicrm_alterPaymentProcessorParams' );
   }
 
-  static function alterMailParams(&$params) {
+  public static function alterMailParams(&$params) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -588,20 +588,20 @@ class CRM_Utils_Hook {
    * @return array of data to be displayed, where the key is a unique id to be used for styling (div id's) and the value is an array with keys 'label' and 'value' specifying label/value pairs
    * @access public
    */
-  static function caseSummary($caseID) {
+  public static function caseSummary($caseID) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  1, $caseID, $null, $null, $null, $null, 'civicrm_caseSummary' );
   }
 
-  static function config(&$config) {
+  public static function config(&$config) {
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
     return $className::invoke(  1, $config, $null, $null, $null, $null, 'civicrm_config' );
   }
 
-  static function enableDisable($recordBAO, $recordID, $isActive) {
+  public static function enableDisable($recordBAO, $recordID, $isActive) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -616,7 +616,7 @@ class CRM_Utils_Hook {
    *
    * @access public
    */
-  static function optionValues(&$options, $name) {
+  public static function optionValues(&$options, $name) {
     $config = &CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -629,7 +629,7 @@ class CRM_Utils_Hook {
    * @param $params associated array of navigation menu entry to Modify/Add
    * @access public
    */
-  static function navigationMenu(&$params) {
+  public static function navigationMenu(&$params) {
     $config = &CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -647,7 +647,7 @@ class CRM_Utils_Hook {
    *
    * @access public
    */
-  static function merge($type, &$data, $mainId = NULL, $otherId = NULL, $tables = NULL) {
+  public static function merge($type, &$data, $mainId = NULL, $otherId = NULL, $tables = NULL) {
     $config = &CRM_Core_Config::singleton();
     $className = $config->userHookClass;
     return $className::invoke(  5, $type, $data, $mainId, $otherId, $tables , 'civicrm_merge' );
@@ -660,7 +660,7 @@ class CRM_Utils_Hook {
    *
    * @access public
    */
-  static function notePrivacy(&$noteValues) {
+  public static function notePrivacy(&$noteValues) {
     $config = &CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -678,7 +678,7 @@ class CRM_Utils_Hook {
    * @return void
    * @access public
    */
-  static function export(&$exportTempTable, &$headerRows, &$sqlColumns, &$exportMode, $mappingId) {
+  public static function export(&$exportTempTable, &$headerRows, &$sqlColumns, &$exportMode, $mappingId) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -694,7 +694,7 @@ class CRM_Utils_Hook {
    *
    * @access public
    */
-  static function dupeQuery($obj, $type, &$query) {
+  public static function dupeQuery($obj, $type, &$query) {
     $config = &CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -718,7 +718,7 @@ class CRM_Utils_Hook {
    * @return void
    * @access public
    */
-  static function import($object, $usage, &$objectRef, &$params) {
+  public static function import($object, $usage, &$objectRef, &$params) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -734,7 +734,7 @@ class CRM_Utils_Hook {
    * @param array &$params       the API parameters
    * @param array &$permisisons  the associative permissions array (probably to be altered by this hook)
    */
-  static function alterAPIPermissions($entity, $action, &$params, &$permissions) {
+  public static function alterAPIPermissions($entity, $action, &$params, &$permissions) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -759,7 +759,7 @@ class CRM_Utils_Hook {
    *
    * @return void  modify the header and values object to pass the data u need
    */
-  static function searchColumns($objectName, &$headers, &$rows, &$selector) {
+  public static function searchColumns($objectName, &$headers, &$rows, &$selector) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -769,7 +769,7 @@ class CRM_Utils_Hook {
   /**
    * Alter receipt id prefix
    */
-  static function alterReceiptId(&$prefix, &$object) {
+  public static function alterReceiptId(&$prefix, &$object) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -779,7 +779,7 @@ class CRM_Utils_Hook {
   /**
    * BaseIPN pre hook
    */
-  static function ipnPre($type, &$objects, &$input = NULL, &$ids = NULL, &$values = NULL) {
+  public static function ipnPre($type, &$objects, &$input = NULL, &$ids = NULL, &$values = NULL) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -788,7 +788,7 @@ class CRM_Utils_Hook {
   /**
    * BaseIPN post hook
    */
-  static function ipnPost($type, &$objects, &$input = NULL, &$ids = NULL, &$values = NULL) {
+  public static function ipnPost($type, &$objects, &$input = NULL, &$ids = NULL, &$values = NULL) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -809,7 +809,7 @@ class CRM_Utils_Hook {
    *
    * @return mixed
    */
-  static function alterContent(&$content, $context, $tplName, &$object) {
+  public static function alterContent(&$content, $context, $tplName, &$object) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -831,7 +831,7 @@ class CRM_Utils_Hook {
    *
    * @return mixed
    */
-  static function alterTemplateFile($formName, &$form, $context, &$tplName) {
+  public static function alterTemplateFile($formName, &$form, $context, &$tplName) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -850,7 +850,7 @@ class CRM_Utils_Hook {
    *
    * @return mixed
    */
-  static function alterTemplateVars(&$resourceName, &$vars) {
+  public static function alterTemplateVars(&$resourceName, &$vars) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -867,7 +867,7 @@ class CRM_Utils_Hook {
    *
    * @return mixed
    */
-  static function prepareInvoice($contribution_id, &$tplParams, $message) {
+  public static function prepareInvoice($contribution_id, &$tplParams, $message) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -888,7 +888,7 @@ class CRM_Utils_Hook {
    *
    * @return mixed
    */
-  static function prepareTaxReceipt($contributionId, &$tplParams, &$taxReceipt, &$object) {
+  public static function prepareTaxReceipt($contributionId, &$tplParams, &$taxReceipt, &$object) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -903,7 +903,7 @@ class CRM_Utils_Hook {
    * @param $receipt
    *   Receipt object stored here.
    */
-  static function validateTaxReceipt($contributionId, &$receipt) {
+  public static function validateTaxReceipt($contributionId, &$receipt) {
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
@@ -918,7 +918,7 @@ class CRM_Utils_Hook {
    *
    * @param $contributionId
    */
-  static function checkRegistration($contactID, $fields, $self, $isAdditional, &$result){
+  public static function checkRegistration($contactID, $fields, $self, $isAdditional, &$result){
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
@@ -933,7 +933,7 @@ class CRM_Utils_Hook {
    *
    * @param $contributionId
    */
-  static function alterTapPayResponse($response, &$object, $provider = 'TapPay', $apiType = ''){
+  public static function alterTapPayResponse($response, &$object, $provider = 'TapPay', $apiType = ''){
     $config = CRM_Core_Config::singleton();
     require_once (str_replace('_', DIRECTORY_SEPARATOR, $config->userHookClass) . '.php');
     $null = &CRM_Core_DAO::$_nullObject;
@@ -950,7 +950,7 @@ class CRM_Utils_Hook {
    * @param boolean $valid  will pass previous validation result. Can be modify by hook.
    * @param string  $phase  validation phase. For example, event have 2 phase. first is code, second is available events
    */
-  static function validateCoupon(&$coupon, &$valid, $phase){
+  public static function validateCoupon(&$coupon, &$valid, $phase){
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -965,7 +965,7 @@ class CRM_Utils_Hook {
    * @param array  $params  The query parameters sent with the API request.
    * @param array  $result The API response data, passed by reference for modification.
    */
-  static function alterAPIResult($entity, $action, $params, &$result) {
+  public static function alterAPIResult($entity, $action, $params, &$result) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;
@@ -981,7 +981,7 @@ class CRM_Utils_Hook {
    * @param array $additional Additional parameter for alter query
    *   - part == 'from', use $additional['tables'] to alter query
    */
-  static function alterQuery($mode, $part, &$object, &$additional) {
+  public static function alterQuery($mode, $part, &$object, &$additional) {
     $config = CRM_Core_Config::singleton();
     $null = &CRM_Core_DAO::$_nullObject;
     $className = $config->userHookClass;

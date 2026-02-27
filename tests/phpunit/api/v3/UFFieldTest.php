@@ -82,7 +82,7 @@ class api_v3_UFFieldTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->quickCleanup(
       [
         'civicrm_group',
@@ -120,13 +120,13 @@ class api_v3_UFFieldTest extends CiviUnitTestCase {
     }
   }
 
-  function testCreateUFFieldWithEmptyParams() {
+  public function testCreateUFFieldWithEmptyParams() {
     $params = [];
     $result = civicrm_api('uf_field', 'create', $params);
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testCreateUFFieldWithWrongParams() {
+  public function testCreateUFFieldWithWrongParams() {
     $result = civicrm_api('uf_field', 'create', ['field_name' => 'test field']);
     $this->assertEquals($result['is_error'], 1);
     $result = civicrm_api('uf_field', 'create', 'a string');
@@ -166,7 +166,7 @@ class api_v3_UFFieldTest extends CiviUnitTestCase {
  *  FIXME: something NULLs $GLOBALS['_HTML_QuickForm_registered_rules'] when the tests are ran all together
  * (NB unclear if this is still required)
  */
-  function _sethtmlGlobals() {
+  public function _sethtmlGlobals() {
    $GLOBALS['_HTML_QuickForm_registered_rules'] = [
       'required' => [
         'html_quickform_rule_required',

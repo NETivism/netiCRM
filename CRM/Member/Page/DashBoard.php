@@ -50,7 +50,7 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
 
 
     CRM_Utils_System::setTitle(ts('CiviMember'));
@@ -212,7 +212,7 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $controller = new CRM_Core_Controller_Simple('CRM_Member_Form_Search', ts('Member'), NULL);

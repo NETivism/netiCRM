@@ -82,7 +82,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_caseId = CRM_Utils_Request::retrieve('caseid', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     if (!$this->_context) {
@@ -234,7 +234,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $this->_defaults = parent::setDefaultValues();
     $targetContactValues = [];
 
@@ -360,7 +360,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     // skip form rule if deleting
     if (CRM_Utils_Array::value('_qf_Activity_next_', $fields) == 'Delete' || CRM_Utils_Array::value('_qf_Activity_next_', $fields) == 'Restore') {
       return TRUE;

@@ -248,7 +248,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     // process defaults only once
     if (!empty($this->_defaults)) {
       // return $this->_defaults;
@@ -856,7 +856,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * @return void
    * @access private
    */
-  function buildAmount($separateMembershipPayment = FALSE) {
+  public function buildAmount($separateMembershipPayment = FALSE) {
     $elements = [];
     $defaultFromRequestAmountId = NULL;
     // set default display
@@ -980,7 +980,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * @return None
    * @access public
    */
-  function buildHonorBlock() {
+  public function buildHonorBlock() {
     $this->assign("honor_block_is_active", TRUE);
     $this->set("honor_block_is_active", TRUE);
 
@@ -1015,7 +1015,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    *
    * @access public
    */
-  function buildOnBehalfOrganization() {
+  public function buildOnBehalfOrganization() {
     if ($this->_membershipContactID) {
 
       $entityBlock = ['contact_id' => $this->_membershipContactID];
@@ -1046,7 +1046,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    *
    * @access public
    */
-  function buildPayLater() {
+  public function buildPayLater() {
 
     $attributes = NULL;
     $this->assign('hidePaymentInformation', FALSE);
@@ -1079,7 +1079,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    *
    * @access public
    */
-  function buildRecur() {
+  public function buildRecur() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionRecur');
     if ($this->_values['is_recur'] == 2) {
       $this->_defaults['is_recur'] = 1;
@@ -1181,7 +1181,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $amount = self::computeAmount($fields, $self);
 
@@ -1657,7 +1657,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
   }
 
-  function checkDuplicateAccount($fields, &$self) {
+  public function checkDuplicateAccount($fields, &$self) {
     // CRM-3907, skip check for preview registrations
     if ($self->_mode == 'test') {
       return FALSE;

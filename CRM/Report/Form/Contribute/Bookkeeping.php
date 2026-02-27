@@ -58,7 +58,7 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
 
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Membership']; function __construct() {
+  protected $_customGroupExtends = ['Membership']; public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -150,11 +150,11 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
 
     $this->_columnHeaders = [];
@@ -176,7 +176,7 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
     $this->_from = NULL;
 
     $this->_from = "
@@ -189,21 +189,21 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
               		  ON payment.membership_id = {$this->_aliases['civicrm_membership']}.id ";
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
   }
 
-  function orderBy() {
+  public function orderBy() {
     $this->_orderBy = " ORDER BY {$this->_aliases['civicrm_contribution']}.id ";
   }
 
-  function postProcess() {
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $select = "
@@ -229,7 +229,7 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     return $statistics;
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $checkList = [];
     $entryFound = FALSE;

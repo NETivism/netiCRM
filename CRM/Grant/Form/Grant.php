@@ -99,7 +99,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
     CRM_Custom_Form_CustomData::preProcess($this, NULL, NULL, 1, 'Grant', $this->_id);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults = parent::setDefaultValues();
 
@@ -248,7 +248,7 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     //check if contact is selected in standalone mode

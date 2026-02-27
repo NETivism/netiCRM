@@ -38,9 +38,9 @@
  * BAO object for crm_log table
  */
 class CRM_Core_BAO_File extends CRM_Core_DAO_File {
-  const PUBLIC_ENTITY_TABLE = 'civicrm_pcp';
+  public const PUBLIC_ENTITY_TABLE = 'civicrm_pcp';
 
-  static function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  public static function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
 
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
@@ -76,7 +76,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return [NULL, NULL, NULL];
   }
 
-  static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  public static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
       $entityFileDAO->entity_table = $entityTable;
@@ -329,7 +329,7 @@ AND       CEF.entity_id    = %2";
     return [$sql, $params];
   }
 
-  static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = []) {
+  public static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = []) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -370,7 +370,7 @@ AND       CEF.entity_id    = %2";
     }
   }
 
-  static function attachmentInfo($entityTable, $entityID, $separator = '<br />') {
+  public static function attachmentInfo($entityTable, $entityID, $separator = '<br />') {
     if (!$entityID) {
       return NULL;
     }
@@ -391,7 +391,7 @@ AND       CEF.entity_id    = %2";
     return NULL;
   }
 
-  static function formatAttachment(&$formValues,
+  public static function formatAttachment(&$formValues,
     &$params,
     $entityTable,
     $entityID = NULL,
@@ -426,7 +426,7 @@ AND       CEF.entity_id    = %2";
     }
   }
 
-  static function processAttachment(&$params,
+  public static function processAttachment(&$params,
     $entityTable,
     $entityID,
     $maxAttachments = 0
@@ -455,7 +455,7 @@ AND       CEF.entity_id    = %2";
     }
   }
 
-  static function uploadNames() {
+  public static function uploadNames() {
     $config = CRM_Core_Config::singleton();
     $numAttachments = 3;
 
@@ -475,7 +475,7 @@ AND       CEF.entity_id    = %2";
      * table and id.
      */
 
-  static function copyEntityFile($oldEntityTable, $oldEntityId, $newEntityTable, $newEntityId) {
+  public static function copyEntityFile($oldEntityTable, $oldEntityId, $newEntityTable, $newEntityId) {
     $oldEntityFile = new CRM_Core_DAO_EntityFile();
     $oldEntityFile->entity_id = $oldEntityId;
     $oldEntityFile->entity_table = $oldEntityTable;

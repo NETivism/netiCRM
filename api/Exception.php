@@ -20,8 +20,8 @@
  *   extra params to return. eg an extra array of ids. It is not mandatory, but can help the computer using the api. Keep in mind the api consumer isn't to be trusted. eg. the database password is NOT a good extra data
  */
 class API_Exception extends Exception  {
-  const UNAUTHORIZED = 'unauthorized';
-  const NOT_IMPLEMENTED = 'not-found';
+  public const UNAUTHORIZED = 'unauthorized';
+  public const NOT_IMPLEMENTED = 'not-found';
 
   private $extraParams = [];
 

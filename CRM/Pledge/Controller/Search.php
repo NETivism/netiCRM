@@ -52,7 +52,7 @@ class CRM_Pledge_Controller_Search extends CRM_Core_Controller {
   /**
    * class constructor
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
 
     parent::__construct($title, $modal);

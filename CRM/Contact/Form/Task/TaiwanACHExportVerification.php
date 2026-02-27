@@ -3,7 +3,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
 
   public $_exportParams;
   public $_additionalIds;
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $this->_exportParams = [];
     CRM_Utils_System::setTitle(ts("Export ACH Verification File"));
@@ -52,7 +52,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     $this->addYesNo('is_overwrite', ts('overwrite').'?');
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [
       'datetime' => date('Y-m-d'),
     ];
