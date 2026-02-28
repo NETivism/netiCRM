@@ -10,6 +10,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
+    # php migration
         '@PHP8x5Migration' => true,
         'array_syntax' => ['syntax' => 'short'],
         'heredoc_indentation' => ['indentation' => 'same_as_start'],
@@ -22,7 +23,7 @@ return $config->setRules([
         'assign_null_coalescing_to_coalesce_equal' => false, // 7.3 backward compatibility
         'octal_notation' => false, // 8.0 backward compatibility
         'nullable_type_declaration_for_default_null_value' => true, // 7.1+ compatibility, ?string nullable type declaration
-        #### risky ####
+    # php migration risky, shouldn't use ruleset
         'pow_to_exponentiation' => true,
         'combine_nested_dirname' => true,
         'implode_call' => true,
@@ -34,6 +35,8 @@ return $config->setRules([
         'no_unreachable_default_argument_value' => true,
         'phpdoc_readonly_class_comment_to_keyword' => true,
         'modern_serialization_methods' => true,
+    # psr rules
+        '@PSR1' => true,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)
