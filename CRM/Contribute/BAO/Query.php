@@ -52,7 +52,6 @@ class CRM_Contribute_BAO_Query {
     if (!self::$_contributionFields) {
       self::$_contributionFields = [];
 
-
       $fields = &CRM_Contribute_BAO_Contribution::exportableFields();
 
       unset($fields['contribution_contact_id']);
@@ -160,7 +159,7 @@ class CRM_Contribute_BAO_Query {
       $query->_element['contribution_landing'] = 1;
       $query->_tables['civicrm_track'] = 1;
     }
-    
+
     /* utm fields */
     if (CRM_Utils_Array::value('contribution_utm_source', $query->_returnProperties)) {
       $query->_select['contribution_utm_source'] = "civicrm_track.referrer_type as contribution_utm_source";
@@ -339,7 +338,7 @@ class CRM_Contribute_BAO_Query {
         $query->_qill[$grouping][] = ts('Print Contribution Receipts') .' '. ts('IS NULL');
         $query->_tables['contribution_activity_print_pdf_receipt'] = $query->_whereTables['contribution_activity_print_pdf_receipt'] = 1;
         return;
-  
+
       case 'contribution_type_id':
       case 'contribution_type':
         $types = CRM_Contribute_PseudoConstant::contributionType();
@@ -434,7 +433,7 @@ class CRM_Contribute_BAO_Query {
             $value,
             "Integer"
           );
-  
+
           $query->_qill[$grouping][] = ts('Paid By - %1', [1 => $pis[$pi]]);
         }
         $query->_tables['civicrm_contribution'] = $query->_whereTables['civicrm_contribution'] = 1;
@@ -956,7 +955,6 @@ class CRM_Contribute_BAO_Query {
    */
   public static function buildSearchForm(&$form) {
 
-
     //added contribution source
     $form->addNumber('contribution_id', ts('Contribution ID'));
     $form->addNumber('contribution_recur_id', ts('Recurring Contributions ID'));
@@ -1097,7 +1095,7 @@ class CRM_Contribute_BAO_Query {
     }
 
     // tracking related
-    $track = new CRM_Core_DAO_Track;
+    $track = new CRM_Core_DAO_Track();
     $trackFields = $track->fields();
     $trafficTypes = CRM_Core_PseudoConstant::referrerTypes();
     unset($trafficTypes['unknown']);

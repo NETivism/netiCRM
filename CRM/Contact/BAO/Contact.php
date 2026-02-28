@@ -33,30 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
 
   /**
@@ -510,7 +486,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
       if (!CRM_Utils_Array::arrayKeyExists($name, $defaults) || !is_array($defaults[$name])) {
         continue;
       }
-      foreach ($defaults[$name] as $count => & $values) {
+      foreach ($defaults[$name] as $count => &$values) {
 
         //get location type id.
         CRM_Utils_Array::lookupValue($values, 'location_type', CRM_Core_PseudoConstant::locationType(), $reverse);
@@ -671,7 +647,6 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    */
   public static function deleteContact($id, $restore = FALSE, $skipUndelete = FALSE, $reason = NULL) {
 
-
     if (!$id) {
       return FALSE;
     }
@@ -713,7 +688,6 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
 
       CRM_Contact_BAO_Contact_Utils::clearAllEmployee($id);
     }
-
 
     CRM_Utils_Hook::pre('delete', $contactType, $id, CRM_Core_DAO::$_nullArray);
 
@@ -869,8 +843,6 @@ WHERE id={$id}; ";
    */
   public static function processImage() {
 
-
-
     $action = CRM_Utils_Request::retrieve('action', 'String', CRM_Core_DAO::$_nullObject);
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject);
     // retrieve contact id in case of Profile context
@@ -910,7 +882,6 @@ WHERE id={$id}; ";
       CRM_Core_DAO::executeQuery($query, $params);
       CRM_Core_BAO_Log::register($contactId, 'civicrm_contact', $contactId, NULL, $reason);
     }
-
 
     $query = "UPDATE civicrm_contact SET {$isDelete} WHERE id = %1";
     CRM_Core_DAO::executeQuery($query, $params);
@@ -1021,7 +992,6 @@ WHERE id={$id}; ";
 
       if (!$fields) {
         $fields = CRM_Contact_DAO_Contact::import();
-
 
         // get the fields thar are meant for contact types
         if (in_array($contactType, ['Individual', 'Household', 'Organization', 'All'])) {
@@ -1245,7 +1215,6 @@ WHERE id={$id}; ";
           CRM_Core_DAO_Worldregion::export()
         );
 
-
         $fields = array_merge(
           $fields,
           CRM_Contact_DAO_Contact::export()
@@ -1463,7 +1432,7 @@ FROM civicrm_contact
      LEFT JOIN civicrm_im      ON ( civicrm_im.is_primary      = 1 AND civicrm_im.contact_id = civicrm_contact.id)
      LEFT JOIN civicrm_openid  ON ( civicrm_openid.is_primary  = 1 AND civicrm_openid.contact_id = civicrm_contact.id)
 WHERE  civicrm_contact.id = %1 ";
-    
+
       $params = [1 => [$contactId, 'Integer']];
 
       $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -1551,7 +1520,6 @@ ORDER BY civicrm_email.is_primary DESC";
       $params['uf_group_id'] = $ufGroupId;
     }
 
-
     if ($contactID) {
       $editHook = TRUE;
       CRM_Utils_Hook::pre('edit', 'Profile', $contactID, $params);
@@ -1578,7 +1546,6 @@ ORDER BY civicrm_email.is_primary DESC";
         CRM_Contact_BAO_SubscriptionHistory::create($shParams);
       }
     }
-
 
     $config = CRM_Core_Config::singleton();
     $config->doNotResetCache = TRUE;
@@ -1630,7 +1597,6 @@ ORDER BY civicrm_email.is_primary DESC";
       $contactIds = [$contactID];
       CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $addToGroupID, 'Web');
     }
-
 
     //to update student record
     if (CRM_Core_Permission::access('Quest') && $studentFieldPresent) {
@@ -2234,7 +2200,6 @@ UNION
           'groupName' => 'preferred_communication_method',
         ]];
 
-
       CRM_Core_OptionGroup::lookupValues($temp, $names, FALSE);
 
       $values['preferred_communication_method'] = $preffComm;
@@ -2363,7 +2328,6 @@ UNION
     $emailGreetingString = $postalGreetingString = $addresseeString = NULL;
     $updateQueryString = [];
 
-
     //email greeting
     if ($contact->contact_type == 'Individual' || $contact->contact_type == 'Household') {
       if ($contact->email_greeting_custom != 'null' && $contact->email_greeting_custom) {
@@ -2466,7 +2430,7 @@ UNION
 
       // build the condition.
       if (is_array($criteria)) {
-        $fields =& $daoName::fields();
+        $fields = &$daoName::fields();
         $conditions = [];
         foreach ($criteria as $field => $value) {
           if (CRM_Utils_Array::arrayKeyExists($field, $fields)) {
@@ -2638,7 +2602,6 @@ UNION
       ],
     ];
 
-
     $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
     if ($providersCount) {
       $menu['sms'] = [
@@ -2654,7 +2617,6 @@ UNION
     //2. check for user permissions.
     //3. check for acls.
     //3. edit and view contact are directly accessible to user.
-
 
     $aclPermissionedTasks = ['view-contact', 'edit-contact', 'new-activity',
       'new-email', 'group-add-contact', 'tag-contact', 'delete-contact',

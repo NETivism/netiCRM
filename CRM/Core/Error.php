@@ -489,7 +489,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $error->_errorsByLevel = [];
   }
 
-
   public static function ignoreException($callback = NULL) {
     if (!$callback) {
       $callback = ['CRM_Core_Error', 'nullHandler'];
@@ -526,7 +525,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
     return $error;
   }
-
 
   /**
    * Error handler to quietly catch otherwise fatal smtp transport errors.
@@ -610,7 +608,6 @@ class CRM_Core_Error extends PEAR_ErrorStack {
   protected static function abend() {
     CRM_Core_Transaction::forceRollbackIfEnabled();
   }
-
 
   /**
    * Generate output of fatal tpl

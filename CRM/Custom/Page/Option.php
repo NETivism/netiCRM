@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Custom Options.
  *
@@ -282,7 +280,6 @@ ORDER BY weight, label
    */
   public function run() {
 
-
     // get the field id
     $this->_fid = CRM_Utils_Request::retrieve(
       'fid',
@@ -333,7 +330,6 @@ ORDER BY weight, label
       FALSE,
       0
     );
-
 
     CRM_Core_Error::debug_var('ACTION', $action);
 

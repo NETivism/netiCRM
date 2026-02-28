@@ -33,16 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
 class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscribe {
 
   /**
@@ -153,8 +143,6 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     /* Make a list of groups and a list of prior mailings that received
          * this mailing */
 
-
-
     $groups = [];
     $base_groups = [];
     $mailings = [];
@@ -176,7 +164,6 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     /* As long as we have prior mailings, find their groups and add to the
          * list */
     $mailings_this_job = $mailings;
-
 
     while (!empty($mailings)) {
       $do->query("
@@ -213,7 +200,6 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     /* Now we have a complete list of recipient groups.  Filter out all
          * those except smart groups, those that the contact belongs to and
          * base groups from search based mailings */
-
 
     $baseGroupClause = '';
     if (count($group_ids) && empty($base_group_ids)) {
@@ -374,7 +360,6 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
       $text = CRM_Utils_Token::replaceMailingTokens($text, $dao, NULL, $tokens['text']);
       $message->setTxtBody($text);
     }
-
 
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 

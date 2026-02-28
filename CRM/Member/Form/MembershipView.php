@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Payment-Instrument
  *
@@ -48,9 +46,6 @@ class CRM_Member_Form_MembershipView extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-
-
-
 
     $values = [];
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -132,7 +127,6 @@ END AS 'relType'
       );
 
       $title = $displayName . ' - ' . ts('Membership Type:') . ' ' . $values['membership_type'];
-
 
       $recentOther = [];
       if (CRM_Core_Permission::checkActionPermission('CiviMember', CRM_Core_Action::UPDATE)) {

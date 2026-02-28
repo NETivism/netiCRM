@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * defines a simple implemenation of a drupal block.
  * blocks definitions and html are in a smarty template file
@@ -355,7 +352,6 @@ class CRM_Core_Block {
             'title' => ts('Activity'),
           ]]);
 
-
       $components = CRM_Core_Component::getEnabledComponents();
 
       if (!empty($config->enableComponents)) {
@@ -506,7 +502,6 @@ class CRM_Core_Block {
   private static function setTemplateEventValues() {
     $config = CRM_Core_Config::singleton();
 
-
     $info = CRM_Event_BAO_Event::getCompleteInfo();
 
     if ($info) {
@@ -593,7 +588,6 @@ class CRM_Core_Block {
       self::getProperty($id, 'template'),
       self::getProperty($id, 'templateValues')
     );
-
 
     return $block;
   }

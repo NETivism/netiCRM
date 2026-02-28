@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for Tell A Friend
  *

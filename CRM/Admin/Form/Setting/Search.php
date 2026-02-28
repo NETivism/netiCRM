@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Search Parameters
  *
@@ -63,7 +61,6 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
       ts('Smart group cache timeout'),
       ['size' => 3, 'maxlength' => 5]
     );
-
 
     $types = ['Contact', 'Individual', 'Organization', 'Household'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);

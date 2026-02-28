@@ -40,7 +40,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
     parent::__construct();
 
     require_once 'CRM/Core/Config.php';
-    $config =& CRM_Core_Config::singleton();
+    $config = &CRM_Core_Config::singleton();
   }
 
   public function civiGet($path, $params, $abort = FALSE) {
@@ -51,7 +51,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
 
   public function civiGetURL($url, $abort = FALSE) {
     $html = $this->_browser->get($url);
-        
+
     if ($this->drupalCheckAuth(TRUE)) {
       $html .= $this->drupalCheckAuth();
     }
@@ -66,12 +66,8 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
     return $html;
   }
 
-
-    
-
-
   public function getUrlsByLabel($label, $fuzzy = FALSE) {
-    if (! $fuzzy) {
+    if (!$fuzzy) {
       return $this->_browser->_page->getUrlsByLabel($label);
     }
 
@@ -88,17 +84,17 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
 
   public function isCiviURL($url, $ignoreVariations = TRUE) {
     static $config = NULL;
-    if (! $config) {
-      $config =& CRM_Core_Config::singleton();
+    if (!$config) {
+      $config = &CRM_Core_Config::singleton();
     }
-        
+
     if (strpos(
       $url,
       $config->userFrameworkBaseURL . 'civicrm/'
     ) === FALSE) {
       return FALSE;
     }
-        
+
     // ignore all urls with snippet, force, crmSID
     if ($ignoreVariations &&
          (strpos($url, 'snippet=') ||
@@ -106,7 +102,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
            strpos($url, 'crmSID='))) {
       return FALSE;
     }
-        
+
     return TRUE;
   }
 
@@ -117,7 +113,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
       $url  = $this->_browser->_page->_getUrlFromLink($link)->asString();
       if ($this->isCiviURL($url) &&
            (strpos($url, $token) !== FALSE)) {
-        if (! $path ||
+        if (!$path ||
              strpos($url, $path) !== FALSE) {
           $matches[$text] = $url;
         }
@@ -127,7 +123,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
   }
 
   public function clickLink($label, $index = 0, $fuzzy = FALSE) {
-    if (! $fuzzy) {
+    if (!$fuzzy) {
       return parent::clickLink($label, $index);
     }
 
@@ -142,9 +138,9 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
 
     $this->_browser->_load($urls[$index], new SimpleGetEncoding());
     $ret = $this->_failOnError($this->_browser->getContent());
-        
+
     $this->assertTrue($ret, ' [browser] clicked link '. t($label) . " ($url_target) from $url_before");
-        
+
     return $ret;
   }
 
@@ -173,7 +169,7 @@ class CiviTestCase extends PHPUnit_Framework_Testcase {
     $this->assertNoText('Sorry. A non-recoverable error has occurred', '[browser] fatal error page?');
     $this->assertNoText('The requested page could not be found', '[browser] page not found?');
     $this->assertNoText('You are not authorized to access this page', '[browser] permission denied?');
-        
+
     return;
   }
 

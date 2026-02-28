@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Price Fields.
  *
@@ -149,7 +147,6 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
         $optionValues = [];
         $params = ['price_field_id' => $priceFieldBAO->id];
 
-
         CRM_Price_BAO_FieldValue::retrieve($params, $optionValues);
 
         $priceField[$priceFieldBAO->id]['price'] = CRM_Utils_Array::value('amount', $optionValues);
@@ -226,7 +223,6 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     $controller->run();
   }
 
-
   /**
    * This function is to make a copy of a price set, including
    * all the fields in the page
@@ -267,7 +263,6 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       'GET'
     );
 
-
     $copy = CRM_Price_BAO_Field::copy($fid);
 
     CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/price/field', "action=update&reset=1&sid={$sid}&fid={$copy->id}"));
@@ -285,7 +280,6 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @access public
    */
   public function run() {
-
 
     // get the group id
     $this->_sid = CRM_Utils_Request::retrieve(
@@ -330,7 +324,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
         // add breadcrumb
 
         $url = CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1');
-        CRM_Utils_System::appendBreadCrumb([['title'=>ts('Price'), 'url'=> $url]]);
+        CRM_Utils_System::appendBreadCrumb([['title' => ts('Price'), 'url' => $url]]);
         $this->assign('usedPriceSetTitle', CRM_Price_BAO_Field::getTitle($fid));
         $this->assign('usedBy', $usedBy);
         $comps = ["Event" => "civicrm_event",

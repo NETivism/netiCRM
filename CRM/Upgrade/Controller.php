@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_Controller extends CRM_Core_Controller {
 
   /**
@@ -45,7 +44,6 @@ class CRM_Upgrade_Controller extends CRM_Core_Controller {
     $modal = TRUE
   ) {
     parent::__construct($title, $modal);
-
 
     $this->_stateMachine = new CRM_Upgrade_StateMachine(
       $this,

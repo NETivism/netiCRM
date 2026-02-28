@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to CiviCRM settings
  *
@@ -67,7 +65,6 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
         $this->_defaults[$name] = $value;
       }
 
-
       $list = array_flip(CRM_Core_OptionGroup::values(
         'contact_autocomplete_options',
         FALSE,
@@ -76,7 +73,6 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
         NULL,
         'name'
       ));
-
 
       $listEnabled = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
 

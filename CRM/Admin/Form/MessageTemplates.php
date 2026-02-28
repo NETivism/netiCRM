@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Message templates
  * used by memberhsip email and send email
@@ -143,7 +141,6 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       return;
     }
 
-
     $breadCrumb = [['title' => ts('Message Templates'),
         'url' => CRM_Utils_System::url(
           'civicrm/admin/messageTemplates',
@@ -242,7 +239,6 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
         ]
       );
     }
-
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 

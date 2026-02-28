@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
 
   public static $_paymentProcessor = NULL;
@@ -234,7 +233,6 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
       $contribution->total_amount = $input['amount'];
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     // fix for CRM-2842
@@ -273,8 +271,6 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
   public function main($component = 'contribute') {
     // CRM_Core_Error::debug_var( 'GET' , $_GET , true, true );
     // CRM_Core_Error::debug_var( 'POST', $_POST, true, true );
-
-
 
     $objects = $ids = $input = [];
     $input['component'] = $component;

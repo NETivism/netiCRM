@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
 
   /**
@@ -188,7 +186,6 @@ WHERE c.title IS NOT NULL" . $whereClause;
     if (!$campaignId) {
       return $campaignGroups;
     }
-
 
     $campGrp = new CRM_Campaign_DAO_CampaignGroup();
     $campGrp->campaign_id = $campaignId;

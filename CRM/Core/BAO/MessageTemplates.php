@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
   public $N;
@@ -207,7 +205,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       if (!$body_text) {
         $body_text = CRM_Utils_String::htmlToText($body_html);
       }
-      $mailing = new CRM_Mailing_BAO_Mailing;
+      $mailing = new CRM_Mailing_BAO_Mailing();
       $mailing->subject = $body_subject;
       $mailing->body_text = $body_text;
       $mailing->body_html = $body_html;
@@ -285,7 +283,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @return void
    */
   public static function revert($id) {
-    $diverted = new self;
+    $diverted = new self();
     $diverted->id = (int) $id;
     $diverted->find(1);
 
@@ -293,7 +291,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       return CRM_Core_Error::statusBounce(ts('Did not find a message template with id of %1.', [1 => $id]));
     }
 
-    $orig = new self;
+    $orig = new self();
     $orig->workflow_id = $diverted->workflow_id;
     $orig->is_reserved = 1;
     $orig->find(1);
@@ -382,7 +380,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
     $domain = CRM_Core_BAO_Domain::getDomain();
     $hookTokens = [];
-    $mailing = new CRM_Mailing_BAO_Mailing;
+    $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->body_text = $text;
     $mailing->body_html = $html;
     $tokens = $mailing->getTokens();

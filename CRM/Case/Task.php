@@ -93,7 +93,6 @@ class CRM_Case_Task {
       }
     }
 
-
     CRM_Utils_Hook::searchTasks('case', self::$_tasks);
     asort(self::$_tasks);
     return self::$_tasks;

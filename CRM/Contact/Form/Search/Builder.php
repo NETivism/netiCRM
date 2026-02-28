@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class if for search builder processing
  */
@@ -137,7 +134,6 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     $fields = [];
     $fields = CRM_Contact_BAO_Contact::exportableFields('All', FALSE, TRUE);
 
-
     $compomentFields = &CRM_Core_Component::getQueryFields();
 
     $activityFields = CRM_Activity_BAO_Activity::exportableFields();
@@ -146,7 +142,6 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
 
     $fld = [];
     $fld = CRM_Core_BAO_Mapping::formattedFields($values, TRUE);
-
 
     $errorMsg = [];
     foreach ($fld as $k => $v) {

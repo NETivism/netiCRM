@@ -12,7 +12,7 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  
+
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
@@ -117,7 +117,6 @@ $having
     }
   }
 
-
   public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
   }
@@ -170,7 +169,6 @@ $having
     $this->_count = $dao->N;
     return $dao->N;
   }
-
 
   /**
    * Construct the search query
@@ -228,7 +226,7 @@ $having
   public function &columns() {
     return $this->_columns;
   }
-  
+
   public function setTitle() {
     $month = $this->_formValues['month'];
     $title = ts('Donor who donate in last %count month', ['count' => $month, 'plural' => 'Donor who donate in last %count months']);

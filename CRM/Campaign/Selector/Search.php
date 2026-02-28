@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -262,8 +254,6 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
       FALSE,
       $this->_campaignClause
     );
-
-
 
     // process the result of the query
     $rows = [];

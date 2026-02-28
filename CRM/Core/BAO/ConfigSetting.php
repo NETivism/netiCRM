@@ -60,7 +60,6 @@ class CRM_Core_BAO_ConfigSetting {
       $params['civiRelativeURL']
     );
 
-
     $domain = new CRM_Core_DAO_Domain();
     $domain->id = CRM_Core_Config::domainID();
     $domain->find(TRUE);
@@ -83,7 +82,6 @@ class CRM_Core_BAO_ConfigSetting {
     foreach ($skipVars as $var) {
       unset($params[$var]);
     }
-
 
     CRM_Core_BAO_Preferences::fixAndStoreDirAndURL($params);
 
@@ -192,7 +190,6 @@ class CRM_Core_BAO_ConfigSetting {
       if (CRM_Utils_Array::value('q', $_GET) == 'civicrm/upgrade') {
         return;
       }
-
 
       // check if there are any locale strings
       if ($domain->locale_custom_strings) {
@@ -316,7 +313,6 @@ class CRM_Core_BAO_ConfigSetting {
     }
   }
 
-
   public static function getConfigSettings() {
     $config = &CRM_Core_Config::singleton();
 
@@ -388,8 +384,6 @@ class CRM_Core_BAO_ConfigSetting {
     // get the current and guessed values
     list($oldURL, $oldDir, $oldSiteName, $oldSiteRoot) = self::getConfigSettings();
     list($newURL, $newDir, $newSiteName, $newSiteRoot) = self::getBestGuessSettings();
-
-
 
     // retrieve these values from the argument list
     $variables = ['URL', 'Dir', 'SiteName', 'SiteRoot', 'Val_1', 'Val_2', 'Val_3'];

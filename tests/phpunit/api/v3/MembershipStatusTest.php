@@ -36,7 +36,7 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
   protected $_membershipStatusID;
   public $_eNoticeCompliant = TRUE;
   protected $_apiversion;
-  
+
   public function get_info() {
     return [
       'name' => 'MembershipStatus Calc',
@@ -159,8 +159,6 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
   //removed as none actually tested functionality - all just tested same stuff
   //generic tests test.
 
-
-
   ///////////////// civicrm_membership_status_calc methods
   /*pending it being re-enabled
 
@@ -202,8 +200,6 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
         $this->membershipDelete( $membershipID );
     }
 */
-
-
 
   ///////////////// civicrm_membership_status_delete methods
   public function testDeleteEmptyParams() {

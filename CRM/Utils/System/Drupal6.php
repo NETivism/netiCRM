@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Drupal specific stuff goes here
  */
@@ -114,7 +113,6 @@ class CRM_Utils_System_Drupal6 {
   FROM {$config->userFrameworkUsersTableName}
   WHERE (LOWER(name) = LOWER('$name')) OR (LOWER(mail) = LOWER('$email'))";
 
-
     $db_cms = DB::connect($config->userFrameworkDSN);
     if (DB::isError($db_cms)) {
       die("Cannot connect to UF db via $dsn, " . $db_cms->getMessage());
@@ -183,7 +181,7 @@ class CRM_Utils_System_Drupal6 {
     }
 
     return $form_state['user']->uid;
-    
+
   }
 
   /**

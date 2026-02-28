@@ -37,12 +37,6 @@
  * Files required
  */
 
-
-
-
-
-
-
 /**
  * advanced search, extends basic search
  */
@@ -73,9 +67,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
   public function buildQuickForm() {
     $this->set('context', 'advanced');
 
-
     $this->_searchPane = CRM_Utils_Array::value('searchPane', $_GET);
-
 
     $this->_searchOptions = CRM_Core_BAO_Preferences::valueOptions('advanced_search_options');
 
@@ -115,7 +107,6 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
     }
 
-
     $components = CRM_Core_Component::getEnabledComponents();
 
     $componentPanes = [];
@@ -128,7 +119,6 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
         $componentPanes[$name]['name'] = $name;
       }
     }
-
 
     usort($componentPanes, ['CRM_Utils_Sort', 'cmpFunc']);
 
@@ -279,7 +269,6 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       $this->_formValues['group'] = [$this->_groupID => 1];
     }
 
-
     //search for civicase
     if (is_array($this->_formValues)) {
       if (CRM_Utils_Array::arrayKeyExists('case_owner', $this->_formValues) &&
@@ -305,9 +294,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
     }
 
-
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
-
 
     $this->_params = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $this->_returnProperties = &$this->returnProperties();

@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/v2/ActivityContact.php';
 require_once 'CRM/Core/BAO/CustomGroup.php';

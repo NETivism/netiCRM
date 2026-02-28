@@ -38,12 +38,12 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // now, retrieve full object by validateData, or false fallback
-    if (! $this->validateData($input, $ids, $objects, FALSE)) {
+    if (!$this->validateData($input, $ids, $objects, FALSE)) {
       return FALSE;
     }
 
     // set global variable for paymentProcessor
-    self::$_payment_processor =& $objects['paymentProcessor'];
+    self::$_payment_processor = &$objects['paymentProcessor'];
     self::$_input = $input;
 
     if ($objects['contribution']->contribution_status_id == 1 && empty($this->_get['is_recur'])) {
@@ -54,7 +54,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       // start validation
       $note = '';
       if ($this->validateOthers($input, $ids, $objects, $note)) {
-        $contribution =& $objects['contribution'];
+        $contribution = &$objects['contribution'];
         if (empty($contribution->receive_date)) {
           if (!empty($input['PaymentDate'])) {
             $contribution->receive_date = date('YmdHis', strtotime($input['PaymentDate']));
@@ -108,7 +108,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
   public function validateOthers(&$input, &$ids, &$objects, &$note) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
-    
+
     // check contribution id matches
     if (!strstr($contribution->trxn_id, $input['MerchantTradeNo'])) {
       $msg = "AllPay: OrderNumber values doesn't match between database and IPN request. {$contribution->trxn_id} : {$input['MerchantTradeNo']} ";
@@ -219,7 +219,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         }
       }
     }
-      
+
     // process fail response
     if ($input['RtnCode'] != 1 && $pass) {
       if (!empty($input['ProcessDate'])) {
@@ -250,7 +250,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     else {
       $note_id = NULL;
     }
-    
+
     $noteParams = [
       'entity_table'  => 'civicrm_contribution',
       'note'          => $note,

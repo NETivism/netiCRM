@@ -43,7 +43,6 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    */
   public static $_batchType = [];
 
-
   /**
    * Create a new batch.
    *
@@ -190,7 +189,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     $status = self::batchStatus();
     unset($status['Running']);
     unset($status['Pending']);
-    $purgeDay = self::EXPIRE_DAY*4;
+    $purgeDay = self::EXPIRE_DAY * 4;
     $sql = "SELECT id FROM civicrm_batch WHERE type_id = %1 AND status_id IN (".CRM_Utils_Array::implode(',', $status).") AND DATE_ADD(modified_date, INTERVAL ".$purgeDay." DAY) < NOW() AND modified_date IS NOT NULL AND data IS NOT NULL ORDER BY modified_date ASC";
     $dao = CRM_Core_DAO::executeQuery($sql, [
       1 => [$type['Auto'], 'Integer'],
@@ -268,7 +267,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
           }
           if ($stuck <= self::EXPIRE_HOUR) {
             array_unshift($processHistories, $meta['processed']);
-            $processHistories = array_slice($processHistories, 0, self::EXPIRE_HOUR+2);
+            $processHistories = array_slice($processHistories, 0, self::EXPIRE_HOUR + 2);
             CRM_Core_DAO::executeQuery("UPDATE civicrm_batch SET description = %1 WHERE id = %2", [
               1 => [implode(':', $processHistories), 'String'],
               2 => [$dao->id, 'Integer'],
@@ -490,7 +489,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
             'created_date' => $this->_batch->created_date,
             'modified_id' => $this->_batch->modified_id,
             'modified_date' => $this->_batch->modified_date,
-            'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->modified_date) + 86400*self::EXPIRE_DAY),
+            'expire_date' => date('Y-m-d H:i:s', strtotime($this->_batch->modified_date) + 86400 * self::EXPIRE_DAY),
             'status_id' => $this->_batch->status_id,
           ],
         ];
@@ -501,7 +500,6 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       }
     }
   }
-
 
   /**
    * Duplicate running process check

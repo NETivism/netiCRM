@@ -74,7 +74,6 @@ class CRM_Widget_Widget {
       return $data;
     }
 
-
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->contribution_page_id = $contributionPageID;
     if (!$widget->find(TRUE)) {
@@ -174,7 +173,6 @@ WHERE  id = %1";
     // because they're being used in a CSS object
     $data->colors["about_link"] = str_replace('#', $hexPrefix, $widget->color_about_link);
     $data->colors["homepage_link"] = str_replace('#', $hexPrefix, $widget->color_homepage_link);
-
 
     return $data;
   }

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Premiums
  */
@@ -169,15 +167,14 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
     while ($dao->fetch()) {
       $premiums[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $premiums[$dao->id]);
-      
+
       // Calculate remaining stock (stock_qty - send_qty)
       $stockQty = $dao->stock_qty ?: 0;
       $sendQty = $dao->send_qty ?: 0;
       $premiums[$dao->id]['remaining_stock'] = $stockQty - $sendQty;
-      
+
       // form all action links
       $action = array_sum(array_keys($this->links()));
-
 
       if ($dao->is_active) {
         $action -= CRM_Core_Action::ENABLE;

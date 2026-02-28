@@ -149,7 +149,6 @@ WHERE  inst.report_id = %1";
     $url = "Report Url: {$url} ";
     $fileContent = $url . $fileContent;
 
-
     list($domainEmailName,
       $domainEmailAddress
     ) = CRM_Core_BAO_Domain::getNameAndEmail();
@@ -173,7 +172,6 @@ WHERE  inst.report_id = %1";
     $params['attachments'] = CRM_Utils_Array::value('attachments', $instanceInfo);
     $params['text'] = '';
     $params['html'] = $fileContent;
-
 
     $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_usedFor);
     return CRM_Utils_Mail::send($params);
@@ -294,7 +292,6 @@ WHERE  inst.report_id = %1";
 
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
-
 
     if ($arg[1] == 'report' &&
       CRM_Utils_Array::value(2, $arg) == 'instance'

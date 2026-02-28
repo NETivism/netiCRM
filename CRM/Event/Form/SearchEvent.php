@@ -33,15 +33,12 @@
  *
  */
 
-
-
 class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
   public $_showHide;
   public $_event_type_id;
   public function setDefaultValues() {
     $defaults = [];
     $defaults['eventsByDates'] = 0;
-
 
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     if (!CRM_Utils_Array::value('eventsByDates', $defaults)) {

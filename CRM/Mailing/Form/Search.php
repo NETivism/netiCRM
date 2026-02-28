@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Mailing_Form_Search extends CRM_Core_Form {
 
   public function preProcess() {
@@ -58,7 +57,6 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
 
     CRM_Campaign_BAO_Campaign::addCampaignInComponentSearch($this);
 */
-
 
     $status = [
       '' => ts('- none -'),

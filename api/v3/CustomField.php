@@ -80,7 +80,6 @@ function civicrm_api3_custom_field_create($params) {
     }
   }
 
-
   // Array created for passing options in params
   if (isset($params['option_values']) && is_array($params['option_values'])) {
     foreach ($params['option_values'] as $key => $value) {

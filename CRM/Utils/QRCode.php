@@ -3,7 +3,7 @@ class CRM_Utils_QRcode {
   public $_dataImg = '';
   public $_format = 'png';
   private $_data;
-  
+
   public function __construct($string, $format = 'png') {
     require_once 'phpqrcode/phpqrcode.php';
 

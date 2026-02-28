@@ -113,7 +113,6 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     return $errors;
   }
 
-
   /**
    * This function sets the default values for the form. MobileProvider that in edit/view mode
    * the default values are retrieved from the database
@@ -144,7 +143,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       $this->assign('spf_record', ts('None'));
     }
 
-    $dkimRecord= CRM_Utils_Mail::getDKIM($this->_values['email']);
+    $dkimRecord = CRM_Utils_Mail::getDKIM($this->_values['email']);
     if (!empty($dkimRecord)) {
       $record = $dkimRecord[0]['host'].' '.$dkimRecord[0]['type'].' '.$dkimRecord[0]['target'];
       $this->assign('dkim_record', $record);

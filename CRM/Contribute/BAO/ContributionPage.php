@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains Contribution Page related functions.
  */
@@ -180,7 +178,6 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
       $contributionTypeId = CRM_Utils_Array::value('contribution_type_id', $values);
       $deductible = CRM_Contribute_BAO_ContributionType::deductible($contributionTypeId, TRUE);
-
 
       if (!CRM_Utils_Array::arrayKeyExists('related_contact', $values)) {
         list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE, $billingLocationTypeId);
@@ -414,7 +411,6 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
     }
   }
 
-
   /**
    * Function to send the emails
    *
@@ -506,7 +502,6 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       $receiptFrom = '"' . CRM_Utils_Array::value('receipt_from_name', $value[$pageID]) . '" <' . $value[$pageID]['receipt_from_email'] . '>';
 
       list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contactID, FALSE);
-
 
       list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         [
@@ -647,7 +642,6 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
       ['contribution_page_id' => $copy->id]
     );
 
-
     //copy option group and values
 
     $copy->default_amount_id = CRM_Core_BAO_OptionGroup::copyValue(
@@ -728,7 +722,6 @@ WHERE entity_table = 'civicrm_contribution_page'
 
     $copy->save();
     $copy->originId = $id;
-
 
     CRM_Utils_Hook::copy('ContributionPage', $copy);
 
@@ -832,7 +825,6 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     return $info;
   }
 
-  
   /**
    * Function to get goal of contribution page
    *

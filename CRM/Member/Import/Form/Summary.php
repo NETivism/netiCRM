@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class summarizes the import results
  */

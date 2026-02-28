@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to save a search
  * Saved Searches are used for saving frequently used queries

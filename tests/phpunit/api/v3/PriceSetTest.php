@@ -50,7 +50,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     $this->assertAPISuccess($getResult, 'In line ' . __LINE__);
     $this->assertEquals(1, $getResult['count'], 'In line ' . __LINE__);
   }
-  
+
   public function testEventPriceSet() {
     $event = civicrm_api('event', 'create', [
       'version' => $this->_apiversion,

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
   /**
@@ -277,9 +276,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
     //get the saved mapping details
 
-
-
-
     if ($mappingType == 'Export') {
       $form->applyFilter('saveMappingName', 'trim');
 
@@ -329,7 +325,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     elseif ($mappingType == 'Search Builder') {
       $required = FALSE;
     }
-
 
     $contactType = ['Individual', 'Household', 'Organization'];
     foreach ($contactType as $value) {
@@ -418,7 +413,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
 
         $fields['Case'] = &CRM_Case_BAO_Case::exportableFields();
         $compArray['Case'] = ts('Case');
-
 
         $fields['Activity'] = &CRM_Activity_BAO_Activity::exportableFields('Case');
         $compArray['Activity'] = ts('Case Activity');
@@ -522,7 +516,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
          * avoids a mozilla browser bug with defaults on dynamically constructed
          * selector widgets. */
 
-
     if ($defaultLocationType) {
       $defaultLocation = $locationTypes[$defaultLocationType->id];
       unset($locationTypes[$defaultLocationType->id]);
@@ -585,7 +578,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
               list($id, $first, $second) = explode('_', $field);
               $relationshipCustomFields = self::getRelationTypeCustomGroupData($id);
               asort($relationshipCustomFields);
-
 
               $relationshipType = new CRM_Contact_BAO_RelationshipType();
               $relationshipType->id = $id;
@@ -928,13 +920,11 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
     return $groupTitle;
   }
 
-
   /* Function returns all  Custom group Names
      * @customfieldId related custom field id
      * @return $customGroupName all custom group names
      */
   public static function getCustomGroupName($customfieldId) {
-
 
     if ($customFieldId = CRM_Core_BAO_CustomField::getKeyID($customfieldId)) {
 
@@ -1053,7 +1043,6 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
         0,
       ];
     }
-
 
     return $fields;
   }

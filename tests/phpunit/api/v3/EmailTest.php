@@ -15,7 +15,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
   protected $_locationType;
   protected $_entity;
   protected $_params;
-  
+
   public function setUp() {
     $this->_apiversion = 3;
     $this->_entity = 'Email';
@@ -77,7 +77,6 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $delresult = civicrm_api('email', 'delete', ['id' => $result['id'], 'version' => 3]);
     $this->assertAPISuccess($delresult, 'In line ' . __LINE__);
   }
-
 
   /**
    * Email Create Unit Test
@@ -154,7 +153,6 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertContains('missing', $result['error_message'], 'In line ' . __LINE__);
     $this->assertContains('email', $result['error_message'], 'In line ' . __LINE__);
   }
-
 
   /**
    * Email Update Unit Test

@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/v2/UFGroup.php';
 require_once 'api/v2/UFJoin.php';
@@ -56,8 +55,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-
-    $op = new PHPUnit_Extensions_Database_Operation_Insert;
+    $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute(
       $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(dirname(__FILE__) . '/dataset/uf_group_test.xml')
@@ -159,8 +157,6 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $result = civicrm_uf_profile_html_by_id_get($this->_contactId, 'a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
-
-
 
   public function testUFJoinEditWrongParamsType() {
     $params = 'a string';
@@ -413,7 +409,6 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       $this->assertEquals($ufJoinUpdated[$key], $params[$key], 'In line ' . __LINE__);
     }
   }
-
 
   public function testFindUFJoinWrongParamsType() {
     $params = 'a string';

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
 
   /**
@@ -160,7 +159,6 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
       }
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     $paymentParams = [];
@@ -204,8 +202,6 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
       CRM_Utils_Array::value('is_pledge_pending', $params)
     ) {
 
-
-
       //if pledge is pending delete all payments and recreate.
       if (CRM_Utils_Array::value('is_pledge_pending', $params)) {
         CRM_Pledge_BAO_Payment::deletePayments($pledge->id);
@@ -223,10 +219,6 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
     }
 
     $transaction->commit();
-
-
-
-
 
     $url = CRM_Utils_System::url(
       'civicrm/contact/view/pledge',
@@ -277,7 +269,6 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    */
   public static function deletePledge($id) {
     CRM_Utils_Hook::pre('delete', 'Pledge', $id, CRM_Core_DAO::$_nullArray);
-
 
     $transaction = new CRM_Core_Transaction();
 
@@ -588,7 +579,6 @@ WHERE  $whereCond
 
     //handle contact token values.
 
-
     $ids = [$params['contact_id']];
     $fields = array_merge(
       array_keys(CRM_Contact_BAO_Contact::importableFields()),
@@ -628,7 +618,6 @@ WHERE  $whereCond
 
     //handle acknowledgment email stuff.
 
-
     list($pledgerDisplayName,
       $pledgerEmail
     ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
@@ -649,7 +638,6 @@ WHERE  $whereCond
       $userEmail = CRM_Utils_Array::value('email', $domainValues);
     }
     $receiptFrom = "$userName <$userEmail>";
-
 
     list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
       [
@@ -710,9 +698,7 @@ WHERE  $whereCond
         self::$_exportableFields = [];
       }
 
-
       $fields = CRM_Pledge_DAO_Pledge::export();
-
 
       $fields = array_merge($fields, CRM_Pledge_DAO_Payment::export());
 
@@ -728,7 +714,6 @@ WHERE  $whereCond
           'data_type' => CRM_Utils_Type::T_STRING,
         ],
       ];
-
 
       $pledgeFields = ['pledge_status' => ['title' => 'Pledge Status',
           'name' => 'pledge_status',

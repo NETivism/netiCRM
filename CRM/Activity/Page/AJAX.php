@@ -64,7 +64,6 @@ class CRM_Activity_Page_AJAX {
 
     $activities = CRM_Case_BAO_Case::getCaseActivity($caseID, $params, $contactID, $context, $userID);
 
-
     $iFilteredTotal = $iTotal = $params['total'];
     $selectorElements = ['display_date', 'subject', 'type', 'with_contacts', 'reporter', 'status', 'links', 'class'];
 
@@ -82,7 +81,6 @@ class CRM_Activity_Page_AJAX {
       echo json_encode(['error_msg' => 'required params missing.']);
       CRM_Utils_System::civiExit();
     }
-
 
     $otherActivity = new CRM_Activity_DAO_Activity();
     $otherActivity->id = $activityID;
@@ -123,7 +121,6 @@ class CRM_Activity_Page_AJAX {
       $otherActivity->save();
     }
     $otherActivity->free();
-
 
     $targetContacts = [];
     if (!empty($targetContactIds)) {

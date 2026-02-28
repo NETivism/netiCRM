@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying Campaigns
  */
@@ -89,7 +86,6 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
   }
 
   public function browse() {
-
 
     $campaigns = CRM_Campaign_BAO_Campaign::getCampaign(TRUE);
 

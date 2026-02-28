@@ -9,12 +9,11 @@ function run_membership_status_update() {
   $obj->updateMembershipStatus();
 }
 class CRM_UpdateMembershipRecord {
-    
+
   public function __construct() {
     //log the execution time of script
     CRM_Core_Error::debug_log_message('UpdateMembershipRecord.php');
   }
-
 
   public function updateMembershipStatus() {
     require_once 'CRM/Member/BAO/MembershipLog.php';
@@ -31,7 +30,7 @@ class CRM_UpdateMembershipRecord {
     $allStatus    = CRM_Member_PseudoConstant::membershipStatus();
     $statusLabels = CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label');
     $allTypes     = CRM_Member_PseudoConstant::membershipType();
-        
+
     $query = "
 SELECT civicrm_membership.id                 as membership_id,
        civicrm_membership.is_override        as is_override,
@@ -50,21 +49,21 @@ WHERE  civicrm_membership.contact_id = civicrm_contact.id
 AND    civicrm_membership.is_test = 0
 ";
     $params = [ ];
-    $dao =& CRM_Core_DAO::executeQuery($query, $params);
-        
+    $dao = &CRM_Core_DAO::executeQuery($query, $params);
+
     $today = date("Y-m-d");
     $count = 0;
 
     require_once 'CRM/Core/Smarty.php';
-    $smarty =& CRM_Core_Smarty::singleton();
-        
+    $smarty = &CRM_Core_Smarty::singleton();
+
     require_once 'CRM/Core/BAO/Domain.php';
     $domainValues     = CRM_Core_BAO_Domain::getNameAndEmail();
     $fromEmailAddress = "$domainValues[0] <$domainValues[1]>";
 
     while ($dao->fetch()) {
       echo ".";
-            
+
       /**
       $count++;
       echo $dao->contact_id . ', '. CRM_Utils_System::memory( ) . "<p>\n";
@@ -92,7 +91,7 @@ AND    civicrm_membership.is_test = 0
                              'source'             => $dao->source,
                              'skipStatusCal'      => TRUE,
                              'skipRecentView'     => TRUE ];
-            
+
       $smarty->assign_by_ref('memberParams', $memberParams);
 
       //update membership record to Deceased if contact is deceased
@@ -102,13 +101,13 @@ AND    civicrm_membership.is_test = 0
         if (!$deceaseStatusId) {
           CRM_Core_Error::fatal(ts("Deceased Membership status is missing or not active. <a href='%1'>Click here to check</a>.", [ 1 => CRM_Utils_System::url('civicrm/admin/member/membershipStatus', 'reset=1') ]));
         }
-                
+
         //process only when status change.
         if ($dao->status_id != $deceaseStatusId) {
           //since there is change in status.
           $statusChange = [ 'status_id' => $deceaseStatusId ];
           $smarty->append_by_ref('memberParams', $statusChange, TRUE);
-                    
+
           //process membership record.
           //take all params that need to save.
           $deceasedMembership =  $memberParams;
@@ -121,13 +120,13 @@ AND    civicrm_membership.is_test = 0
         }
         continue;
       }
-            
+
       //we fetch related, since we need to check for deceased
       //now further processing is handle w/ main membership record.
       if ($dao->owner_membership_id) {
         continue;
       }
-            
+
       //update membership records where status is NOT - Pending OR Cancelled.
       //as well as membership is not override.
       //skipping Expired membership records -> reduced extra processing( kiran )
@@ -135,7 +134,7 @@ AND    civicrm_membership.is_test = 0
            !in_array($dao->status_id, [ array_search('Pending', $allStatus),
                                               array_search('Cancelled', $allStatus),
                                               array_search('Expired', $allStatus) ])) {
-                
+
         //get the membership status as per id.
         $newStatus = civicrm_api(
           'membership_status',
@@ -147,14 +146,14 @@ AND    civicrm_membership.is_test = 0
           ]
         );
         $statusId = $newStatus['id'] ? $newStatus['id'] : NULL;
-                
+
         //process only when status change.
         if ($statusId &&
              $statusId != $dao->status_id) {
           //since there is change in status.
           $statusChange = [ 'status_id' => $statusId ];
           $smarty->append_by_ref('memberParams', $statusChange, TRUE);
-                    
+
           //process member record.
           //take all params that need to save.
           $memParams = $memberParams;
@@ -165,11 +164,11 @@ AND    civicrm_membership.is_test = 0
           civicrm_api('membership', 'create', $memParams);
         }
       }
-            
+
       //convert date from string format to timestamp format
       $reminder_date = CRM_Utils_DATE::unixTime($dao->reminder_date);
       $today_date    = CRM_Utils_DATE::unixTime($today);
-            
+
       //send reminder for membership renewal
       $current_member = CRM_Member_PseudoConstant::membershipStatus(NULL, 'is_current_member = 1');
       if ($dao->reminder_date &&
@@ -178,12 +177,12 @@ AND    civicrm_membership.is_test = 0
            !empty($current_member[$dao->status_id])
       ) {
         $memType = new CRM_Member_BAO_MembershipType();
-                
+
         $memType->id = $dao->membership_type_id;
         if ($memType->find(TRUE) &&
              $memType->renewal_msg_id) {
           $toEmail  = CRM_Contact_BAO_Contact::getPrimaryEmail($dao->contact_id);
-                    
+
           if ($toEmail) {
             $result = CRM_Core_BAO_MessageTemplates::sendReminder(
               $dao->contact_id,
@@ -191,16 +190,16 @@ AND    civicrm_membership.is_test = 0
               $memType->renewal_msg_id,
               $fromEmailAddress
             );
-            if (! $result ||
+            if (!$result ||
                  is_a($result, 'PEAR_Error')) {
               // we could not send an email, for now we ignore
               // CRM-3406
               // at some point we might decide to do something
             }
-                        
+
             //set membership reminder date to NULL since we've sent the reminder.
             CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->membership_id, 'reminder_date', 'null');
-                        
+
             // insert the activity log record.
             $activityParams = [ ];
             $activityParams['subject']            = $allTypes[$dao->membership_type_id] .
@@ -211,7 +210,7 @@ AND    civicrm_membership.is_test = 0
             $activityParams['activity_date_time'] = date('YmdHis');
 
             static $actRelIds = [ ];
-            if (! isset($actRelIds['activity_type_id'])) {
+            if (!isset($actRelIds['activity_type_id'])) {
               $actRelIds['activity_type_id']    =
                   CRM_Core_OptionGroup::getValue(
                     'activity_type',
@@ -220,17 +219,17 @@ AND    civicrm_membership.is_test = 0
                   );
             }
             $activityParams['activity_type_id']   = $actRelIds['activity_type_id'];
-                        
-            if (! isset($actRelIds['activity_status_id'])) {
+
+            if (!isset($actRelIds['activity_status_id'])) {
               $actRelIds['activity_status_id']  =
                   CRM_Core_OptionGroup::getValue('activity_status', 'Completed', 'name');
             }
             $activityParams['status_id']          = $actRelIds['activity_status_id'];
-                        
+
             static $msgTpl = [];
-            if (! isset($msgTpl[$memType->renewal_msg_id])) {
+            if (!isset($msgTpl[$memType->renewal_msg_id])) {
               $msgTpl[$memType->renewal_msg_id] = [ ];
-                            
+
               $messageTemplate = new CRM_Core_DAO_MessageTemplates();
               $messageTemplate->id = $memType->renewal_msg_id;
               if ($messageTemplate->find(TRUE)) {
@@ -246,7 +245,7 @@ Message: {$msgTpl[$memType->renewal_msg_id]['details']}
           }
         }
         $memType->free();
-                
+
       }
       // CRM_Core_Error::debug( 'fEnd', count( $GLOBALS['_DB_DATAOBJECT']['RESULTS'] ) );
     }

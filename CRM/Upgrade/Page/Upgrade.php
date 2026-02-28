@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
   public function preProcess() {
     parent::preProcess();
@@ -384,7 +380,6 @@ SELECT  count( id ) as statusCount
 
   public function upgrade_3_0_alpha1($rev) {
 
-
     $threeZero = new CRM_Upgrade_ThreeZero_ThreeZero();
 
     $error = NULL;
@@ -399,7 +394,6 @@ SELECT  count( id ) as statusCount
   }
 
   public function upgrade_3_1_alpha1($rev) {
-
 
     $threeOne = new CRM_Upgrade_ThreeOne_ThreeOne();
 

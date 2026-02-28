@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
   public const NUM_ROWS_TO_INSERT = 100;
   public function getInfo() {
@@ -120,7 +119,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
       }
 
       if (in_array('', $columns) || $duplicateColName) {
-        foreach ($columns as $colKey => & $colName) {
+        foreach ($columns as $colKey => &$colName) {
           if (!$colName) {
             $colName = "col_$colKey";
           }
@@ -131,7 +130,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
       }
 
       // CRM-4881: we need to quote column names, as they may be MySQL reserved words
-      foreach ($columns as & $column) {
+      foreach ($columns as &$column) {
         $column = "`$column`";
       }
     }

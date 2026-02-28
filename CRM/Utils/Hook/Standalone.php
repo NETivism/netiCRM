@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Utils_Hook_Standalone extends CRM_Utils_Hook {
 
   public static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {

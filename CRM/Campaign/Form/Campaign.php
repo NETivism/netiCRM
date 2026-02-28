@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for processing a campaign
  *
@@ -340,7 +335,6 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     while ($dao->fetch()) {
       $dao->delete();
     }
-
 
     $result = CRM_Campaign_BAO_Campaign::create($params);
 

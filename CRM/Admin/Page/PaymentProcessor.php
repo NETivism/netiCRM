@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of payment processors
  */

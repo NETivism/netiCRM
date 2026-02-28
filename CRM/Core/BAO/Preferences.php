@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  */
@@ -74,7 +72,6 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     }
     return self::$_mailingPref;
   }
-
 
   public static function userObject($userID = NULL) {
     if (!self::$_userObject) {
@@ -287,7 +284,6 @@ AND    v.option_group_id = g.id
 AND    v.name = %3
 ";
 
-
     foreach ($params as $name => $value) {
       // always try to store relative directory or url from CMS root
       if ($type == 'directory') {
@@ -318,8 +314,6 @@ OR       g.name = 'url_preferences' )
 AND    v.option_group_id = g.id
 AND    v.is_active = 1
 ";
-
-
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {

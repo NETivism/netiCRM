@@ -12,9 +12,9 @@ class Membership extends PHPUnit_Framework_Testcase {
    */
   public function createMembershipType() {
     $orgId     = Contact::createOrganisation();
-        
+
     $ids =  [ 'memberOfContact' => $orgId ];
-        
+
     $params =  [
                      'name'                      => 'Test Type',
                      'description'               => 'test membership type',
@@ -62,7 +62,7 @@ class Membership extends PHPUnit_Framework_Testcase {
                     'entity_table'            => 'civicrm_contribution_page',
                     'entity_id'               => $contributionPageId
                     ];
-        
+
     $dao = new CRM_Member_DAO_MembershipBlock();
     $dao->copyValues($param);
     return $dao->save();
@@ -79,6 +79,5 @@ class Membership extends PHPUnit_Framework_Testcase {
       $dao->delete();
     }
   }
-
 
 }

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
 
   /**

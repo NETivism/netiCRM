@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
 * Copyright (C) 2010 Tech To The People
 * Licensed to CiviCRM under the Academic Free License version 3.0.
@@ -37,7 +36,6 @@
  * @package CRM
  *
  */
-
 
 class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
   /**

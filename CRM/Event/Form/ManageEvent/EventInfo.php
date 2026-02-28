@@ -34,11 +34,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -119,12 +114,10 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     }
     $defaults = parent::setDefaultValues();
 
-
     // in update mode, we need to set custom data subtype to tpl
     if (CRM_Utils_Array::value('event_type_id', $defaults)) {
       $this->assign('customDataSubType', $defaults["event_type_id"]);
     }
-
 
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     // Show waitlist features or event_full_text if max participants set
@@ -213,7 +206,6 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     // add event title, make required if this is not a template
     $this->add('text', 'title', ts('Event Title'), $attributes['event_title'], !$this->_isTemplate);
 
-
     $event = CRM_Core_OptionGroup::values('event_type');
 
     $this->add(
@@ -259,7 +251,6 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     );
     $this->addRule('max_participants', ts('Max participants should be a positive number'), 'positiveInteger');
     $this->addRule('max_participants', ts('Max participants should be a positive number'), 'nonzero');
-
 
     $participantStatuses = &CRM_Event_PseudoConstant::participantStatus();
     if (in_array('On waitlist', $participantStatuses) and in_array('Pending from waitlist', $participantStatuses) && !$this->_eventInfo['requires_approval']) {
@@ -354,8 +345,6 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       $this->_id,
       'Event'
     );
-
-
 
     // copy all not explicitely set $params keys from the template (if it should be sourced)
     if (CRM_Utils_Array::value('template_id', $params)) {

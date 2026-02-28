@@ -507,7 +507,6 @@ class CRM_Core_SelectValues {
     static $tokens = NULL;
     if (!$tokens) {
 
-
       $additionalFields = [
         'checksum' => ['title' => ts('Checksum')],
         'contact_id' => ['title' => ts('Internal Contact ID')],
@@ -735,7 +734,6 @@ class CRM_Core_SelectValues {
          echo date( 'Y-m-d', strtotime( 'November 7, 2001') );
          gives proper result
         */
-
 
     return $dateInputFormats;
   }

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Class for civimember task actions
  *

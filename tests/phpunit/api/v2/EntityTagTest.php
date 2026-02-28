@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/EntityTag.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_EntityTagTest extends CiviUnitTestCase {

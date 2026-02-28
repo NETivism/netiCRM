@@ -6,7 +6,6 @@
  */
 require_once 'tests/phpunit/CiviTest/CiviUnitTestCase.php';
 
-
 /**
  *  Test APIv3 civicrm_create_custom_group
  *
@@ -158,8 +157,6 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
                          'option_status'   => array( 1, 1),
                          ));
 */
-
-
 
     return $params;
   }

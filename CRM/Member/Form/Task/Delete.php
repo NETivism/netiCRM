@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality to delete a group of
  * members. This class provides functionality for the actual

@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'api/v2/Membership.php';
 require_once 'api/v2/MembershipStatus.php';
 require_once 'CiviTest/CiviUnitTestCase.php';

@@ -87,7 +87,7 @@ class CRM_Mailing_MailStore_Mbox extends CRM_Mailing_MailStore {
       print "copying message $nr to ignored folder\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_ignored);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_leftToProcess--;
   }
@@ -104,7 +104,7 @@ class CRM_Mailing_MailStore_Mbox extends CRM_Mailing_MailStore {
       print "copying message $nr to processed folder\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_processed);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_leftToProcess--;
   }

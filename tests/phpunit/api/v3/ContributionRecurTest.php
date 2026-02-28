@@ -8,7 +8,6 @@
  * @docmaker_intro_end
  */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ContributionRecurTest extends CiviUnitTestCase {
   protected $_apiversion = 3;

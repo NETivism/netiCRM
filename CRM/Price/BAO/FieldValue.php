@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Business objects for managing price fields values.
  *

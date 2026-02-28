@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * This class handle creation of location block elements
  */
@@ -187,7 +180,6 @@ WHERE e.id = %1";
       return;
     }
 
-
     $locBlock = new CRM_Core_DAO_LocBlock();
     $locBlock->id = $locBlockId;
 
@@ -298,7 +290,6 @@ WHERE e.id = %1";
     }
 
     static $blocks = ['Address', 'Phone', 'IM', 'OpenID', 'Email'];
-
 
     $params = ['contact_id' => $contactId, 'location_type_id' => $locationTypeId];
     foreach ($blocks as $name) {

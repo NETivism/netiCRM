@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains function for UFField
  *
@@ -338,7 +336,6 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
       return TRUE;
     }
 
-
     $customField = new CRM_Core_DAO_CustomField();
     $customField->id = $customFieldId;
     // if uf field is custom field
@@ -531,7 +528,6 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     $subTypes = CRM_Contact_BAO_ContactType::subTypes();
 
     $components = ['Contribution', 'Participant', 'Membership'];
-
 
     $ufGroup = new CRM_Core_DAO_UFGroup();
     $ufGroup->id = $ufGroupId;

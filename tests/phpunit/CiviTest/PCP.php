@@ -16,7 +16,7 @@ class PCPBlock extends PHPUnit_Framework_Testcase {
                            'is_active'  => 1,
                            'is_cms_user' => 2
                            ];
-        
+
     $ufGroup   = civicrm_api('uf_group', 'create', $profileParams);
     $profileId = $ufGroup['id'];
 
@@ -46,7 +46,7 @@ class PCPBlock extends PHPUnit_Framework_Testcase {
                                   'is_required'      => 1,
                                   'is_active'        => 1 ]
                            ];
-        
+
     civicrm_api_include('uf_field');
     foreach ($fieldsParams as $value) {
       $api_version = civicrm_get_api_version();
@@ -68,7 +68,7 @@ class PCPBlock extends PHPUnit_Framework_Testcase {
                          'is_active'    => 1
                          ];
     $ufJoin = civicrm_api('uf_join', 'create', $joinParams);
-        
+
     $params = [
                     'entity_table'          => 'civicrm_contribution_page',
                     'entity_id'             => $contributionPageId,

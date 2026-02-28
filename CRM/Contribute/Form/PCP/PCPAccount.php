@@ -33,7 +33,6 @@
  *
  */
 
-
 /**
  * This class generates form components for processing a ontribution
  *
@@ -142,7 +141,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $fields[$name] = 1;
     }
 
-
     CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactID, $fields, $this->_defaults);
 
     //set custom field defaults
@@ -209,7 +207,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
         $this->assign("isCaptcha", TRUE);
       }
     }
-
 
     $this->assign('campaignName', CRM_Contribute_PseudoConstant::contributionPage($this->_pageId));
 
@@ -294,7 +291,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
         }
       }
     }
-
 
     $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Strict');

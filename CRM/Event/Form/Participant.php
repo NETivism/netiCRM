@@ -34,14 +34,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class generates form components for processing a participation
  * in an event
@@ -255,7 +247,6 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
       $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     }
 
-
     if ($this->_id) {
       $this->_paymentId = CRM_Core_DAO::getFieldValue(
         'CRM_Event_DAO_ParticipantPayment',
@@ -290,7 +281,6 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
 
       foreach ($processors as $ppID => $label) {
 
-
         $paymentProcessor = &CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $this->_mode);
         if ($paymentProcessor['payment_processor_type'] == 'PayPal' && !$paymentProcessor['user_name']) {
           continue;
@@ -324,7 +314,6 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
       $this->assign('bltID', $this->_bltID);
 
       $this->_fields = [];
-
 
       CRM_Core_Payment_Form::setCreditCardFields($this);
 
@@ -557,7 +546,6 @@ SELECT civicrm_custom_group.name as name,
       $ids = [];
       $params = ['id' => $this->_id];
 
-
       CRM_Event_BAO_Participant::getValues($params, $defaults, $ids);
       $sep = CRM_Core_DAO::VALUE_SEPARATOR;
       if ($defaults[$this->_id]['role_id']) {
@@ -754,7 +742,6 @@ SELECT civicrm_custom_group.name as name,
       return;
     }
 
-
     if ($this->_single) {
       $urlPath = 'civicrm/contact/view/participant';
       $urlParams = "reset=1&cid={$this->_contactId}&context=participant";
@@ -841,7 +828,6 @@ WHERE      civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0";
     $eventAndTypeMapping = json_encode($eventAndTypeMapping);
     // building of mapping ends --
 
-
     $element = $this->add(
       'select',
       'event_id',
@@ -872,7 +858,6 @@ cj(function() {
     }
 
     $this->assign('preloadJSSnippet', $preloadJSSnippet);
-
 
     //frozen the field fix for CRM-4171
     $checkRegisteredBy = !empty($this->_registeredById) ? $this->_registeredById : $this->_id;
@@ -1220,14 +1205,12 @@ cj(function() {
       $contributionParams['total_amount'] = CRM_Utils_Array::value('total_amount', $params);
     }
 
-
     // Retrieve the name and email of the current user - this will be the FROM for the receipt email
     $session = CRM_Core_Session::singleton();
     $userID = $session->get('userID');
     list($userName,
       $userEmail
     ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($userID);
-
 
     if ($this->_mode) {
       if (!$this->_isPaidEvent) {
@@ -1240,12 +1223,10 @@ cj(function() {
       $this->_params['participant_register_date'] = $params['register_date'];
       $this->_params['participant_source'] = $params['source'];
 
-
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment(
         $this->_params['payment_processor_id'],
         $this->_mode
       );
-
 
       $now = date('YmdHis');
       $fields = [];
@@ -1379,7 +1360,6 @@ cj(function() {
       // set source if not set
 
       $this->_params['description'] = ts('Submit Credit Card for Event Registration by: %1', [1 => $userName]);
-
 
       //add contribution record
       $this->_params['contribution_type_id'] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $params['event_id'], 'contribution_type_id');
@@ -1905,7 +1885,8 @@ cj(function() {
       }
     }
     elseif ($buttonName == $this->getButtonName('upload', 'new')) {
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/participant',
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/contact/view/participant',
         "reset=1&action=add&context={$this->_context}&cid={$this->_contactId}"
       ));
     }

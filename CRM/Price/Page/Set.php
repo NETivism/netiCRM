@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Price Sets.
  *
@@ -167,8 +165,6 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       $this->copy();
     }
     else {
-
-
 
       // if action is delete do the needful.
       if ($action & (CRM_Core_Action::DELETE)) {
@@ -350,7 +346,6 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       0,
       'GET'
     );
-
 
     CRM_Price_BAO_Set::copy($id);
 

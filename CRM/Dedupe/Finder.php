@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * The CiviCRM duplicate discovery engine is based on an
  * algorithm designed by David Strauss <david@fourkitchens.com>.

@@ -313,7 +313,6 @@ class CRM_Admin_Page_AJAX {
 
     $tagID = $_POST['tagID'];
 
-
     $tagInfo = [];
     // if action is select
     if ($action == 'select') {
@@ -324,7 +323,6 @@ class CRM_Admin_Page_AJAX {
         $params = ['name' => $tagID,
           'parent_id' => $parentId,
         ];
-
 
         $tagObject = CRM_Core_BAO_Tag::add($params, CRM_Core_DAO::$_nullArray);
 

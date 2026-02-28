@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implements Iterator {
 
   public static $_sortOrder = 'ASC';
@@ -438,7 +437,6 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
    * @access public
    */
 
-
   public static function isAncestorGroup($groupIds, $checkGroupId) {
     if (!is_array($groupIds)) {
       $groupIds = [$groupIds];
@@ -689,7 +687,6 @@ class CRM_Contact_BAO_GroupNesting extends CRM_Contact_DAO_GroupNesting implemen
     }
     return $potentialChildGroupIds;
   }
-
 
   public static function getContainingGroups($contactId, $parentGroupId) {
     $groups = CRM_Contact_BAO_Group::getGroups();

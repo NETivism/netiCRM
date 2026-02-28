@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Create a page for displaying Contribute Pages
  * Contribute Pages are pages that are used to display
@@ -267,7 +264,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
           'qs' => "{$urlParams}&start={$yearDate}&end={$yearNow}",
           'uniqueName' => 'fiscal_year_to_date',
         ],
-        CRM_Core_Action::CLOSE=> [
+        CRM_Core_Action::CLOSE => [
           'name' => ts('Export Contributions'),
           'title' => ts('Export Contributions'),
           'url' => 'civicrm/contribute/search',
@@ -327,7 +324,6 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
         CRM_Utils_System::currentPath(),
         'action=browse&reset=1'
       ));
-
 
       $controller = new CRM_Contribute_Controller_ContributionPage(NULL, $action);
       CRM_Utils_System::setTitle(ts('Manage Contribution Page'));
@@ -684,7 +680,6 @@ ORDER BY is_active DESC, id ASC
 
   public function pager($whereClause, $whereParams) {
 
-
     $params['status'] = ts('Contribution %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';
@@ -707,7 +702,6 @@ SELECT count(id)
 
   public function pagerAtoZ($whereClause, $whereParams) {
 
-
     $query = "
    SELECT DISTINCT UPPER(LEFT(title, 1)) as sort_name
      FROM civicrm_contribution_page
@@ -723,7 +717,7 @@ SELECT count(id)
   public function formatConfigureLinks($sectionsInfo) {
     //build the formatted configure links.
     $formattedConfLinks = self::configureActionLinks();
-    foreach ($formattedConfLinks as $act => & $link) {
+    foreach ($formattedConfLinks as $act => &$link) {
       $sectionName = CRM_Utils_Array::value('uniqueName', $link);
       if (!$sectionName) {
         continue;

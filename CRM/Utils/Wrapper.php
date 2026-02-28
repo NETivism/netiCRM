@@ -38,8 +38,6 @@
  *
  */
 
-
-
 class CRM_Utils_Wrapper {
 
   /**

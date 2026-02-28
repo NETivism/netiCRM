@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class provides the functionality for batch profile update for Activities
  */
@@ -115,7 +111,6 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
 
-
     $this->_title = ts('Batch Update for Activities') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
 
@@ -155,12 +150,9 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
       ]
     );
 
-
     $this->assign('profileTitle', $this->_title);
     $this->assign('componentIds', $this->_activityHolderIds);
     $fileFieldExists = FALSE;
-
-
 
     $customFields = CRM_Core_BAO_CustomField::getFields('Activity');
 
@@ -279,7 +271,6 @@ WHERE  id = %1";
 
         // Get Conatct ID
         $value['source_contact_id'] = $dao->source_contact_id;
-
 
         $activityId = civicrm_activity_update($value);
 

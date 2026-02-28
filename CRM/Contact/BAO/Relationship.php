@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
 
   /**
@@ -138,8 +136,6 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
         "action=view&reset=1&id={$relationship->id}&cid={$relationship->contact_id_a}&context=home"
       );
 
-
-
       $session = CRM_Core_Session::singleton();
       $recentOther = [];
 
@@ -157,7 +153,6 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
           ),
         ];
       }
-
 
       $title = CRM_Contact_BAO_Contact::displayName($relationship->contact_id_a) . ' (' . CRM_Core_DAO::getFieldValue(
         'CRM_Contact_DAO_RelationshipType',
@@ -199,7 +194,6 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
     else {
       CRM_Utils_Hook::pre('create', 'Relationship', NULL, $params);
     }
-
 
     $relationshipTypes = CRM_Utils_Array::value('relationship_type_id', $params);
 
@@ -501,7 +495,6 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
     $relationship = new CRM_Contact_DAO_Relationship();
     $relationship->contact_id_b = $contactId;
     $relationship->delete();
-
 
     CRM_Contact_BAO_Household::updatePrimaryContact(NULL, $contactId);
   }
@@ -1110,7 +1103,6 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
       $memParams = ['contact_id' => $cid];
       $memberships = [];
 
-
       CRM_Member_BAO_Membership::getValues($memParams, $memberships, $active);
 
       if (empty($memberships)) {
@@ -1130,7 +1122,6 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
       }
 
       $mainRelatedContactId = key(CRM_Utils_Array::value('relatedContacts', $details, []));
-
 
       foreach ($details['memberships'] as $membershipId => $membershipValues) {
         if ($action & CRM_Core_Action::DELETE) {

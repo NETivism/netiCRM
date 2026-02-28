@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains function for Open Id
  */

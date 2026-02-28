@@ -38,7 +38,6 @@
  *
  */
 
-
 /**
  * This API will give list of the groups for particular contact
  * Particualr status can be sent in params array
@@ -224,10 +223,9 @@ function _civicrm_api3_group_contact_common($params, $op = 'Added') {
   $method = CRM_Utils_Array::value('method', $params, 'API');
   $status = CRM_Utils_Array::value('status', $params, $op);
   $tracking = CRM_Utils_Array::value('tracking', $params);
-  
 
   if ($op == 'Added' || $op == 'Pending') {
-    $extraReturnValues= [
+    $extraReturnValues = [
       'total_count' => 0,
       'added' => 0,
       'not_added' => 0
@@ -246,7 +244,7 @@ function _civicrm_api3_group_contact_common($params, $op = 'Added') {
     }
   }
   else {
-    $extraReturnValues= [
+    $extraReturnValues = [
       'total_count' => 0,
       'removed' => 0,
       'not_removed' => 0

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Page_View_Log extends CRM_Core_Page {
 
   public $_contactId;
@@ -45,7 +44,6 @@ class CRM_Contact_Page_View_Log extends CRM_Core_Page {
    * @access public
    */
   public function browse() {
-
 
     $log = new CRM_Core_DAO_Log();
 

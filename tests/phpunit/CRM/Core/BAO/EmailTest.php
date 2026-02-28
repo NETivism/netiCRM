@@ -11,11 +11,11 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
-    
+
   /**
    * add() method (create and update modes)
    */
@@ -27,10 +27,10 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
                      'is_primary'       => 1,
                      'location_type_id' => 1,
                      'contact_id'       => $contactId ];
-        
+
     require_once 'CRM/Core/BAO/Email.php';
     CRM_Core_BAO_Email::add($params);
-        
+
     $emailId = $this->assertDBNotNull(
       'CRM_Core_DAO_Email',
       'jane.doe@example.com',
@@ -46,9 +46,9 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
                      'contact_id'   => $contactId,
                      'is_bulkmail'  => 1,
                      'on_hold'      => 1, ];
-        
+
     CRM_Core_BAO_Email::add($params);
-        
+
     $isBulkMail = $this->assertDBNotNull(
       'CRM_Core_DAO_Email',
       $emailId,
@@ -66,16 +66,16 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
    */
   public function testHoldEmail() {
     $contactId = Contact::createIndividual();
-        
+
     $params = [ ];
     $params = [ 'email'           => 'jane.doe@example.com',
                     'is_primary'       => 1,
                     'location_type_id' => 1,
                     'contact_id'       => $contactId ];
-        
+
     require_once 'CRM/Core/BAO/Email.php';
     CRM_Core_BAO_Email::add($params);
-        
+
     $emailId = $this->assertDBNotNull(
       'CRM_Core_DAO_Email',
       'jane.doe@example.com',
@@ -83,15 +83,15 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
       'email',
       'Database check for created email address.'
     );
-        
+
     // Now call add() to update on_hold=true and check record state
     $params = [ ];
     $params = [ 'id'          => $emailId,
                     'contact_id'   => $contactId,
                     'on_hold'      => 1, ];
-        
+
     CRM_Core_BAO_Email::add($params);
-        
+
     // Use assertDBNotNull to get back value of hold_date and check if it's in the current year.
     // NOTE: The assertEquals will fail IF this test is run just as the year is changing (low likelihood).
     $holdDate = $this->assertDBNotNull(
@@ -101,7 +101,7 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
       'id',
       'Retrieve hold_date from the updated email record.'
     );
-        
+
     $this->assertEquals(
       substr($holdDate, 0, 4),
       substr(date('YmdHis'), 0, 4),
@@ -116,13 +116,13 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
       1,
       'Check if on_hold=1 in updated email record.'
     );
-        
+
     // Now call add() with on_hold=false and verify that reset_date is set.
     $params = [ ];
     $params = [ 'id'          => $emailId,
                     'contact_id'   => $contactId,
                     'on_hold'      => 'null', ];
-        
+
     CRM_Core_BAO_Email::add($params);
     $this->assertDBCompareValue(
       'CRM_Core_DAO_Email',
@@ -150,13 +150,13 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
       'id',
       'Retrieve reset_date from the updated email record.'
     );
-        
+
     $this->assertEquals(
       substr($resetDate, 0, 4),
       substr(date('YmdHis'), 0, 4),
       'Compare reset_date (' . $resetDate . ') in DB to current year.'
     );
-        
+
     Contact::delete($contactId);
   }
 
@@ -176,12 +176,12 @@ class CRM_Core_BAO_EmailTest extends CiviUnitTestCase {
     $emails = CRM_Core_BAO_Email::allEmails($contactId);
 
     $this->assertEquals(count($emails), 3, 'Checking number of returned emails.');
-        
+
     $firstEmailValue = array_slice($emails, 0, 1);
-        
+
     $this->assertEquals('alan.smith1@example.com', $firstEmailValue[0]['email'], 'Confirm primary email address value.');
     $this->assertEquals(1, $firstEmailValue[0]['is_primary'], 'Confirm first email address is primary.');
-        
+
     Contact::delete($contactId);
   }
 }

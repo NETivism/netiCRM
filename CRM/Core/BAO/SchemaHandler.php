@@ -37,8 +37,6 @@
  *  This file contains functions for creating and altering CiviCRM-tables.
  */
 
-
-
 /**
  * structure, similar to what is used in GenCode.php
  *
@@ -80,7 +78,7 @@ class CRM_Core_BAO_SchemaHandler {
 
     // logging support
 
-    $logging = new CRM_Logging_Schema;
+    $logging = new CRM_Logging_Schema();
     $logging->fixSchemaDifferencesFor($params['name']);
 
     return TRUE;
@@ -291,7 +289,7 @@ ALTER TABLE {$tableName}
     // logging support: if we’re adding a column (but only then!) make sure the potential relevant log table gets a column as well
     if ($params['operation'] == 'add') {
 
-      $logging = new CRM_Logging_Schema;
+      $logging = new CRM_Logging_Schema();
       $logging->fixSchemaDifferencesFor($params['table_name'], [$params['name']]);
     }
 
@@ -335,7 +333,7 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
   public static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = []) {
     $queries = [];
 
-    $domain = new CRM_Core_DAO_Domain;
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
@@ -387,7 +385,7 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
     }
 
     // run the queries without i18n-rewriting
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->query($query, FALSE);
     }

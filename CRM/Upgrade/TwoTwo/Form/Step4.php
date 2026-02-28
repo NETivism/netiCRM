@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_TwoTwo_Form_Step4 extends CRM_Upgrade_Form {
   public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '4']);

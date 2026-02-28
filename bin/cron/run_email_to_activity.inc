@@ -59,12 +59,12 @@ class bin_Email2Activity {
     require_once 'CRM/Utils/File.php';
 
     // ensure that $this->_mailDir is a directory and is writable
-    if (! is_dir($this->_mailDir) ||
-         ! is_readable($this->_mailDir)) {
+    if (!is_dir($this->_mailDir) ||
+         !is_readable($this->_mailDir)) {
       echo "Could not read from {$this->_mailDir}\n";
       exit();
     }
-        
+
     $config = CRM_Core_Config::singleton();
     $dir = $config->uploadDir . DIRECTORY_SEPARATOR . 'mail';
 
@@ -84,7 +84,6 @@ class bin_Email2Activity {
     $this->_errorDir = $this->_errorDir . DIRECTORY_SEPARATOR . $date;
     CRM_Utils_File::createDir($this->_errorDir);
   }
-
 
   public function run() {
     $directory = new DirectoryIterator($this->_mailDir);
@@ -143,7 +142,6 @@ class bin_Email2Activity {
   }
 
 }
-    
 
 function run($supportedArgs, $context) {
   session_start();
@@ -157,7 +155,7 @@ function run($supportedArgs, $context) {
 
   //log the execution of script
   CRM_Core_Error::debug_log_message('Email2Activity.php');
-    
+
   // load bootstrap to call hooks
   require_once 'CRM/Utils/System.php';
   CRM_Utils_System::loadBootStrap();

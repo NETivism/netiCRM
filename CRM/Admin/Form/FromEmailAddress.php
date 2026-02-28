@@ -227,7 +227,6 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     CRM_Core_Error::statusBounce(ts('Invalid URL'));
   }
 
-
   /**
    * Return verified email array
    *

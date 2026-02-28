@@ -67,8 +67,8 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
       }
     }
     catch (CRM_Core_Exception $e) {
-      $errorMessage =$e->getMessage();
-      $errorCode =$e->getErrorCode();
+      $errorMessage = $e->getMessage();
+      $errorCode = $e->getErrorCode();
       CRM_Core_Error::debug_log_message("Flydove error - getRemoteGroups: $errorCode $errorMessage");
       CRM_Core_Session::setStatus(ts('Cannot retrieve remote group, try again later'), TRUE, 'warning');
     }
@@ -219,8 +219,8 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
         $remoteGroups = $flydove->getRemoteGroups();
       }
       catch (CRM_Core_Exception $e) {
-        $errorMessage =$e->getMessage();
-        $errorCode =$e->getErrorCode();
+        $errorMessage = $e->getMessage();
+        $errorCode = $e->getErrorCode();
         if ($civicrm_batch) {
           CRM_Core_Error::debug_log_message("Flydove error - : $errorCode $errorMessage");
           return FALSE;
@@ -332,8 +332,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             }
           }
           catch (CRM_Core_Exception $e) {
-            $errorMessage =$e->getMessage();
-            $errorCode =$e->getErrorCode();
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
             CRM_Core_Error::debug_log_message("Flydove error - BatchCreateCustomer: $errorCode $errorMessage");
             if ($civicrm_batch) {
               return FALSE;

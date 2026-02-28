@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'api/v3/GroupContact.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_GroupContactTest extends CiviUnitTestCase {
@@ -139,7 +136,6 @@ class api_v3_GroupContactTest extends CiviUnitTestCase {
       $this->assertEquals($v['in_method'], $this->_group[$v['group_id']]['in_method']);
     }
   }
-
 
   ///////////////// civicrm_group_contact_add methods
   public function testCreateWithWrongParamsType() {

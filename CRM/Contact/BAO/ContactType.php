@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contact_BAO_ContactType extends CRM_Contact_DAO_ContactType {
 
   /**
@@ -540,8 +538,6 @@ WHERE  subtype.name IN ('" . CRM_Utils_Array::implode("','", $subType) . "' )";
       return FALSE;
     }
 
-
-
     $params = ['id' => $contactTypeId];
     self::retrieve($params, $typeInfo);
     $name = $typeInfo['name'];
@@ -615,8 +611,6 @@ WHERE name = %1";
     $contactType->copyValues($params);
     $contactType->id = CRM_Utils_Array::value('id', $params);
     $contactType->is_active = CRM_Utils_Array::value('is_active', $params, 0);
-
-
 
     $contactType->save();
     if ($contactType->find(TRUE)) {

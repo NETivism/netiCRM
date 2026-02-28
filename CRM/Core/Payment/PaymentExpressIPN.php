@@ -23,7 +23,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
    * PxPay Functionality Copyright (C) 2008 Lucas Baker, Logistic Information Systems Limited (Logis)
    * PxAccess Functionality Copyright (C) 2008 Eileen McNaughton
@@ -32,8 +31,6 @@
    * Grateful acknowledgements go to Donald Lobo for invaluable assistance
    * in creating this payment processor module
    */
-
-
 
 class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
 
@@ -158,7 +155,6 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
       return;
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     // fix for CRM-2842
@@ -201,7 +197,6 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
    * @static
    */
   public static function getContext($privateData, $orderNo) {
-
 
     $component = NULL;
     $isTest = NULL;
@@ -350,7 +345,6 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
     }
     elseif ($dps_method == "pxaccess") {
 
-
       global $pxaccess;
       $pxaccess = new PxAccess($dps_url, $dps_user, $dps_key, $mac_key);
       #getResponse method in PxAccess object returns PxPayResponse object
@@ -394,15 +388,12 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
     list($mode, $component, $paymentProcessorID, $duplicateTransaction) = self::getContext($privateData, $transactionReference);
     $mode = $mode ? 'test' : 'live';
 
-
-
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment(
       $paymentProcessorID,
       $mode
     );
 
     $ipn = &self::singleton($mode, $component, $paymentProcessor);
-
 
     //Check status and take appropriate action
 

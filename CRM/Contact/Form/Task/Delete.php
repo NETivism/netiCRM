@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class provides the functionality to delete a group of
  * contacts. This class provides functionality for the actual
@@ -123,7 +118,6 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
       $pageTitle .= ': '.$contactName;
     }
     CRM_Utils_System::setTitle($pageTitle);
-
 
     $this->_sharedAddressMessage = $this->get('sharedAddressMessage');
     if (!$this->_restore && !$this->_sharedAddressMessage) {

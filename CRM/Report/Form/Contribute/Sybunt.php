@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
 
   public $_columnHeaders;
@@ -269,7 +267,6 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
         }
       }
     }
-
 
     if (empty($clauses)) {
       $this->_where = "WHERE {$this->_aliases['civicrm_contribution']}.is_test = 0 ";

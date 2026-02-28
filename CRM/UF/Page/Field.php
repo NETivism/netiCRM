@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying CiviCRM Profile Fields.
  *
@@ -122,7 +120,6 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
     $ufFieldBAO->orderBy('weight', 'field_name');
     $ufFieldBAO->find();
 
-
     $profileType = CRM_Core_BAO_UFField::getProfileType($this->_gid);
     if ($profileType == 'Contribution' || $profileType == 'Membership' || $profileType == 'Activity' || $profileType == 'Participant') {
       $this->assign('skipCreate', TRUE);
@@ -140,7 +137,6 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
 
     $locationType = [];
     $locationType = &CRM_Core_PseudoConstant::locationType();
-
 
     $fields = &CRM_Contact_BAO_Contact::exportableFields('All', FALSE, TRUE);
 

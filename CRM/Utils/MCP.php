@@ -397,11 +397,10 @@ class CRM_Utils_MCP {
     if (count($parts) < 2) {
       return FALSE;
     }
-    
+
     $entity = $parts[0];
     $action = $parts[1];
-    
-    
+
     // Map tool action to API action
     $apiAction = '';
     switch ($action) {
@@ -411,13 +410,13 @@ class CRM_Utils_MCP {
       default:
         return FALSE;
     }
-    
+
     // Check REST API permissions based on action
     $permissionRequired = '';
     if (in_array($apiAction, ['query'])) {
       $permissionRequired = 'MCP query';
     }
-    
+
     // Check REST API permission if required
     if (!empty($permissionRequired) && CRM_Core_Permission::check($permissionRequired)) {
       return TRUE;
@@ -436,14 +435,14 @@ class CRM_Utils_MCP {
     try {
       $searchableFields = _civicrm_api3_get_entity_form_searchable($entity);
       $detailedFields = [];
-      
+
       foreach (array_keys($searchableFields) as $fieldName) {
         $fieldInfo = [
           'name' => $fieldName,
           'type' => $this->determineFieldType($fieldName),
           'description' => $this->generateFieldDescription($fieldName, $entity)
         ];
-        
+
         // Handle custom fields
         if (preg_match('/^custom_(\d+)$/', $fieldName, $matches)) {
           $customFieldId = $matches[1];
@@ -458,10 +457,10 @@ class CRM_Utils_MCP {
             }
           }
         }
-        
+
         $detailedFields[$fieldName] = $fieldInfo;
       }
-      
+
       return $detailedFields;
     }
     catch (Exception $e) {
@@ -507,15 +506,15 @@ class CRM_Utils_MCP {
         'id' => $customFieldId,
         'version' => 3,
       ]);
-      
+
       $fieldInfo = [
         'label' => $customField['label'] ?? '',
         'data_type' => $customField['data_type'] ?? 'String'
       ];
-      
+
       // Get options using getoptions API for custom fields
       $customFieldName = 'custom_' . $customFieldId;
-      
+
       // Determine entity based on custom field's extends property
       $entity = 'Contact'; // Default entity
       if (!empty($customField['custom_group_id'])) {
@@ -524,7 +523,7 @@ class CRM_Utils_MCP {
             'id' => $customField['custom_group_id'],
             'version' => 3,
           ]);
-          
+
           if (!empty($customGroup['extends'])) {
             $extends = $customGroup['extends'];
             $entityMap = [
@@ -545,14 +544,14 @@ class CRM_Utils_MCP {
           // Use default entity if custom group lookup fails
         }
       }
-      
+
       // Try to get options using getoptions API
       try {
         $optionsResult = civicrm_api($entity, 'getoptions', [
           'field' => $customFieldName,
           'version' => 3,
         ]);
-        
+
         if (!empty($optionsResult['values'])) {
           $fieldInfo['options'] = $optionsResult['values'];
         }
@@ -567,7 +566,7 @@ class CRM_Utils_MCP {
               'is_active' => 1,
               'options' => ['sort' => 'weight']
             ]);
-            
+
             $fieldOptions = [];
             foreach ($options['values'] as $option) {
               $fieldOptions[$option['value']] = $option['label'];
@@ -579,7 +578,7 @@ class CRM_Utils_MCP {
           }
         }
       }
-      
+
       return $fieldInfo;
     }
     catch (Exception $e) {
@@ -604,7 +603,7 @@ class CRM_Utils_MCP {
       'Link' => 'string',
       'File' => 'string'
     ];
-    
+
     return $typeMap[$dataType] ?? 'string';
   }
 
@@ -617,7 +616,7 @@ class CRM_Utils_MCP {
   private function generateInputSchemaProperties($entity, $baseProperties = []) {
     $searchableFields = $this->getSearchableFormFields($entity);
     $properties = $baseProperties;
-    
+
     // Add return.* properties for base properties
     foreach ($baseProperties as $fieldName => $fieldConfig) {
       $returnFieldName = 'return.' . $fieldName;
@@ -628,7 +627,7 @@ class CRM_Utils_MCP {
         ];
       }
     }
-    
+
     // Add each searchable field with detailed information
     foreach ($searchableFields as $fieldName => $fieldInfo) {
       if (!isset($properties[$fieldName])) {
@@ -636,16 +635,16 @@ class CRM_Utils_MCP {
           'type' => $fieldInfo['type'],
           'description' => $fieldInfo['description']
         ];
-        
+
         // Add options if available (for select fields)
         if (!empty($fieldInfo['options'])) {
           $property['enum'] = array_keys($fieldInfo['options']);
           $property['description'] .= '. Options: ' . implode(', ', $fieldInfo['options']);
         }
-        
+
         $properties[$fieldName] = $property;
       }
-      
+
       // Add corresponding return.field_name property for field selection
       $returnFieldName = 'return.' . $fieldName;
       if (!isset($properties[$returnFieldName])) {
@@ -655,7 +654,7 @@ class CRM_Utils_MCP {
         ];
       }
     }
-    
+
     // Add common search properties
     $commonProperties = [
       'limit' => ['type' => 'integer', 'description' => 'Number of results to return'],
@@ -663,13 +662,13 @@ class CRM_Utils_MCP {
       'sort' => ['type' => 'string', 'description' => 'Sort field and direction (e.g., "field_name asc", "created_date desc")'],
       'return' => ['type' => 'string', 'description' => 'Comma-separated list of fields to return (alternative to using individual return.* parameters)']
     ];
-    
+
     foreach ($commonProperties as $key => $value) {
       if (!isset($properties[$key])) {
         $properties[$key] = $value;
       }
     }
-    
+
     return $properties;
   }
 
@@ -683,7 +682,7 @@ class CRM_Utils_MCP {
     // Get available searchable fields for contact and contribution
     $contactSearchableFields = $this->getSearchableFormFields('contact');
     $contributionSearchableFields = $this->getSearchableFormFields('contribution');
-    
+
     $tools = [
       [
         'name' => 'contact_query',
@@ -731,12 +730,12 @@ class CRM_Utils_MCP {
   private function callTool($params, $id) {
     $toolName = $params['name'] ?? '';
     $arguments = $params['arguments'] ?? [];
-    
+
     // Check if user has permission to call this tool
     if (!$this->hasToolPermission($toolName)) {
       return $this->error(-32000, 'FATAL: You do not have permission to call this tool: ' . $toolName, $id);
     }
-    
+
     switch ($toolName) {
       case 'contact_query':
       case 'contribution_query':
@@ -870,11 +869,11 @@ class CRM_Utils_MCP {
     if (empty($authHeader)) {
       return NULL;
     }
-    
+
     if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
       return trim($matches[1]);
     }
-    
+
     return NULL;
   }
 

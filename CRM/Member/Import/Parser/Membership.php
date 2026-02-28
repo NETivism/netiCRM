@@ -205,7 +205,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $this->_parserContact->_dateFormats = $session->get("dateTypes");
     $this->_parserContact->_contactLog = ts('Import Contact').' '.ts('From').' '.ts('Import Membership');
     $this->_parserContact->init();
-    
+
     // create dedupe fields mapping to prevent each loop query
     if (!empty($this->_dedupeRuleGroupId)) {
       $ruleParams = [
@@ -278,7 +278,6 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $params = &$this->getActiveFieldParams();
 
     $errorMessage = NULL;
-
 
     //To check whether start date or join date is provided
     if (!$params['membership_start_date'] && !$params['join_date']) {
@@ -613,7 +612,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     elseif ($this->_createContactOption == self::CONTACT_AUTOCREATE) {
       $doCreateContact = TRUE;
     }
-    
+
     // using duplicate rule when we don't have contact id and external identifier
     if (empty($checkContactId)) {
       //retrieve contact id using contact dedupe rule
@@ -797,7 +796,6 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $this->_newMemberships[] = $newMembership['id'];
     return CRM_Member_Import_Parser::VALID;
   }
-
 
   public function checkContactById($params) {
     $pass = $contactID = 0;

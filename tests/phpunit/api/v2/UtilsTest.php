@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Core/Permission.php';
 require_once 'CRM/Core/Permission/UnitTests.php';

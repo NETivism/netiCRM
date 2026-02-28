@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -242,8 +240,6 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     $this->_submitValues = array_merge($this->_submitValues, $defaults);
 
     $this->setDefaults($defaults);
-
-
 
     $params['entity_id'] = $this->_eventId;
     $params['entity_table'] = 'civicrm_event';

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   public static $_mailerTypes = [
     3 => 'Transaction Notification',
@@ -58,7 +57,7 @@ class CRM_Core_BAO_MailSettings extends CRM_Core_DAO_MailSettings {
   public static function &defaultDAO() {
     static $dao = NULL;
     if (!$dao) {
-      $dao = new self;
+      $dao = new self();
       $dao->is_default = 1;
       $dao->domain_id = CRM_Core_Config::domainID();
       if ($dao->find(TRUE)) {

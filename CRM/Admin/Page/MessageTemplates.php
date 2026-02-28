@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of message templates
  */
@@ -175,7 +173,6 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
       }
 
       $this->_revertedId = $id;
-
 
       CRM_Core_BAO_MessageTemplates::revert($id);
     }

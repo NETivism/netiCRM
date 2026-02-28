@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 /**
  * Core StateMachine. All statemachines subclass for the core one
  * for functionality specific to their needs.

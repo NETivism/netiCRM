@@ -55,7 +55,7 @@ class CRM_Core_Form_Tag {
   public static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
     $tagset = $form->_entityTagValues = [];
 
-    foreach ($parentNames as & $parentNameItem) {
+    foreach ($parentNames as &$parentNameItem) {
       // get the parent id for tag list input for keyword
       $parentId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Tag', $parentNameItem, 'id', 'name');
 

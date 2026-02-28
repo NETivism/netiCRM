@@ -436,7 +436,6 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
       }
     }
 
-
     $voterActValues = CRM_Campaign_BAO_Survey::getSurveyVoterInfo($surveyId, NULL, $statusIds);
 
     if (!empty($voterActValues)) {

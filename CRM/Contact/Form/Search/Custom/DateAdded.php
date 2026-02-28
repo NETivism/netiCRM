@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public $_includeGroups;
@@ -89,7 +88,6 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     $outG->setButtonAttributes('add', ['value' => ts('Add >>')]);
     $inG->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
     $outG->setButtonAttributes('remove', ['value' => ts('<< Remove')]);
-
 
     //redirect if group not available for search criteria
     if (count($groups) == 0) {

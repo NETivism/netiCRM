@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is used by the Search functionality.
  *
@@ -54,15 +51,12 @@ class CRM_Event_Controller_Search extends CRM_Core_Controller {
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
-
     parent::__construct($title, $modal);
 
     $this->_stateMachine = new CRM_Event_StateMachine_Search($this, $action);
 
     // create and instantiate the pages
     $this->addPages($this->_stateMachine, $action);
-
-
 
     $session = CRM_Core_Session::singleton();
     $uploadNames = $session->get('uploadNames');

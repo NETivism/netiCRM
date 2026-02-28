@@ -33,7 +33,6 @@
  *
  */
 
-
 require_once 'api/v2/utils.php';
 require_once 'api/v2/Activity.php';
 
@@ -71,7 +70,6 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @access public
    */
   public function init() {
-
 
     $fields = array_merge(
       CRM_Activity_BAO_Activity::importableFields(),
@@ -182,8 +180,6 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     }
 
     $params = &$this->getActiveFieldParams();
-
-
 
     $errorMessage = NULL;
 
@@ -399,7 +395,6 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
 
     $dateKey = 'date';
     $dateParams = [$dateKey => $date];
-
 
     CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);
     return $dateParams[$dateKey];

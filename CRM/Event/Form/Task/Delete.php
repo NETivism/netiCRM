@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality to delete a group of
  * participations. This class provides functionality for the actual
@@ -84,7 +81,6 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
       2 => ts('Delete only this participant record.'),
     ];
 
-
     $this->addRadio('delete_participant', NULL, $deleteParticipants, NULL, '<br />');
     $this->setDefaults(['delete_participant' => 1]);
     $this->assign("additionalParticipant", $additionalParticipant);
@@ -101,7 +97,6 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
-
 
     if (CRM_Utils_Array::value('delete_participant', $params) == 2) {
       $links = [];
@@ -133,7 +128,6 @@ class CRM_Event_Form_Task_Delete extends CRM_Event_Form_Task {
       ts('Deleted Participation(s): %1', [1 => $deletedParticipants]),
       ts('Total Selected Participation(s): %1', [1 => $deletedParticipants]),
     ];
-
 
     if (!empty($participantLinks)) {
       $status[] = ts('The following participants no longer have an event fee recorded. You can edit their registration and record a replacement contribution by clicking the links below:') . '<br>' . $participantLinks;

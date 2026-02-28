@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Fix for bug CRM-392. Not sure if this is the best fix or it will impact
  * other similar PEAR packages. doubt it
@@ -202,7 +200,7 @@ class CRM_Core_Smarty extends Smarty {
    */
   public function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
 
-    $all_vars =& $this->get_template_vars();
+    $all_vars = &$this->get_template_vars();
     CRM_Utils_Hook::alterTemplateVars($resource_name, $all_vars);
     return parent::fetch($resource_name, $cache_id, $compile_id, $display);
   }

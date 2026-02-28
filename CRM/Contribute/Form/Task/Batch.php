@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality for batch profile update for contributions
  */
@@ -114,7 +111,6 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
 
-
     $this->_title = ts('Batch Update for Contributions') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
 
@@ -153,7 +149,6 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
         ],
       ]
     );
-
 
     $this->assign('profileTitle', $this->_title);
     $this->assign('componentIds', $this->_contributionIds);

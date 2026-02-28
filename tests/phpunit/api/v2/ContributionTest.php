@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'api/v2/Contribution.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_ContributionTest extends CiviUnitTestCase {
@@ -160,7 +158,6 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($contribution['is_error'], 0);
     $this->assertEquals($contribution['result'], 1);
   }
-
 
   //To Update Contribution
   //CHANGE: we require the API to do an incremental update

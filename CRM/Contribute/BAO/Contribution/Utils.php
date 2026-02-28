@@ -62,7 +62,6 @@ class CRM_Contribute_BAO_Contribution_Utils {
 
     CRM_Core_Payment_Form::mapParams($form->_bltID, $form->_params, $paymentParams, TRUE);
 
-
     $contributionType = new CRM_Contribute_DAO_ContributionType();
     if (isset($paymentParams['contribution_type'])) {
       $contributionType->id = $paymentParams['contribution_type'];
@@ -79,7 +78,6 @@ class CRM_Contribute_BAO_Contribution_Utils {
     $paymentParams['contributionType_name'] = $form->_params['contributionType_name'] = $contributionType->name;
     $paymentParams['contributionType_accounting_code'] = $form->_params['contributionType_accounting_code'] = $contributionType->accounting_code;
     $paymentParams['contributionPageID'] = $form->_params['contributionPageID'] = $form->_values['id'];
-
 
     if ($form->_values['is_monetary'] && $form->_amount > 0.0 && is_array($form->_paymentProcessor)) {
 
@@ -113,7 +111,7 @@ class CRM_Contribute_BAO_Contribution_Utils {
       // calculate billing expiration date
       $baseTime = CRM_REQUEST_TIME;
       $plusDay = CRM_Core_Payment::PAY_LATER_DEFAULT_EXPIRED_DAY;
-      $expiredTime= CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
+      $expiredTime = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
       $form->_params['payment_expired_timestamp'] = $expiredTime;
 
       if ($form->_values['is_recur'] &&
@@ -155,7 +153,6 @@ class CRM_Contribute_BAO_Contribution_Utils {
               $form->_values['lineItem'] = $form->_lineItem;
               $form->_values['priceSetID'] = $form->_priceSetId;
             }
-
 
             $form->_values['contribution_id'] = $contribution->id;
             CRM_Contribute_BAO_ContributionPage::sendMail(
@@ -661,10 +658,10 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
     if ($params['trxn_type'] == 'subscrpayment') {
       // see if a recurring record already exists
 
-      $recurring = new CRM_Contribute_BAO_ContributionRecur;
+      $recurring = new CRM_Contribute_BAO_ContributionRecur();
       $recurring->external_id = $params['external_id'];
       if (!$recurring->find(TRUE)) {
-        $recurring = new CRM_Contribute_BAO_ContributionRecur;
+        $recurring = new CRM_Contribute_BAO_ContributionRecur();
         $recurring->invoice_id = $params['invoice_id'];
         $recurring->find(TRUE);
       }
@@ -686,7 +683,6 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
         $params['contribution_recur_id'] = $recurring->id;
       }
     }
-
 
     $contribution = &CRM_Contribute_BAO_Contribution::create(
       $params,
@@ -792,7 +788,7 @@ INNER JOIN   civicrm_contact contact ON ( contact.id = contrib.contact_id )
    * Purge one time link record in database
    */
   public static function clearDonateAgainLink() {
-    $aweekbefore = CRM_REQUEST_TIME - 86400*7;
+    $aweekbefore = CRM_REQUEST_TIME - 86400 * 7;
     CRM_Core_DAO::executeQuery("DELETE FROM civicrm_sequence WHERE `name` LIKE 'DA_%' AND `timestamp` < %1", [
       1 => [$aweekbefore, 'Integer']
     ]);

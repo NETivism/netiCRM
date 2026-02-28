@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'api/v2/Contact.php';
 require_once 'api/v2/Location.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
@@ -447,7 +445,6 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     ];
     $this->locationDelete($params);
   }
-
 
   ///////////////// helper methods
   public function _checkResult(&$result, &$match) {

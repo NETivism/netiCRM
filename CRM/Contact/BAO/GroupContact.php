@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
 
   /**
@@ -140,8 +138,6 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     $tracking = NULL
   ) {
 
-
-
     CRM_Utils_Hook::pre('create', 'GroupContact', $groupId, $contactIds);
 
     list($numContactsAdded,
@@ -186,8 +182,6 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
       return [0, 0, 0];
     }
 
-
-
     if ($status == 'Removed') {
       $op = 'delete';
     }
@@ -200,7 +194,6 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     $date = date('YmdHis');
     $numContactsRemoved = 0;
     $numContactsNotRemoved = 0;
-
 
     $group = new CRM_Contact_DAO_Group();
     $group->id = $groupId;
@@ -350,7 +343,6 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
       $permission = CRM_Core_Permission::whereClause(CRM_Core_Permission::VIEW, $tables, $whereTables, 'group');
     }
 
-
     $from = CRM_Contact_BAO_Query::getFromClause($tables);
 
     $where .= " AND $permission ";
@@ -473,8 +465,6 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     foreach ($groupIds as $groupId) {
       $params[] = ['group', 'IN', [$group->id => TRUE], 0, 0];
     }
-
-
 
     $tables = [
       CRM_Core_BAO_Email::getTableName() => TRUE,

@@ -60,9 +60,7 @@ class CRM_Contact_BAO_Contact_Permission {
       return TRUE;
     }
 
-
     $permission = CRM_ACL_API::whereClause($type, $tables, $whereTables);
-
 
     $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
 
@@ -121,9 +119,7 @@ AND    $operationClause
     $tables = [];
     $whereTables = [];
 
-
     $permission = CRM_ACL_API::whereClause($type, $tables, $whereTables, $userID);
-
 
     $from = CRM_Contact_BAO_Query::getFromClause($whereTables);
 
@@ -232,7 +228,6 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
       return CRM_Core_DAO::singleValueQuery($query, $params);
     }
   }
-
 
   public static function validateOnlyChecksum($contactID, &$form) {
     // check if this is of the format cs=XXX

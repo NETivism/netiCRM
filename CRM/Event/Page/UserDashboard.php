@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is for building event(participation) block on user dashboard
  */

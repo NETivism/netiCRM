@@ -31,7 +31,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
       if (is_array($pid)) {
         $pids = $pid;
         foreach ($pids as $pid) {
-          $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test': 'live');
+          $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test' : 'live');
           $decryptParams = CRM_Core_Payment_SPGATEWAYAPI::dataDecode(CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($post['Period'], $paymentProcessor));
           CRM_Core_Error::debug_var('spgateway_neweb_transfer_decrypt_params', $decryptParams);
           if (!empty($decryptParams['MerchantOrderNo'])) {
@@ -45,7 +45,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
         }
       }
       else {
-        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test': 'live');
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test' : 'live');
         $decryptParams = CRM_Core_Payment_SPGATEWAYAPI::dataDecode(CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($post['Period'], $paymentProcessor));
         CRM_Core_Error::debug_var('spgateway_neweb_transfer_decrypt_params', $decryptParams);
         $rid = $decryptParams['MerchantOrderNo'];
@@ -126,7 +126,6 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
     CRM_Utils_System::civiExit();
   }
 
-
   /**
    * Migrate from civicrm_spgateway_neweb_resync
    *
@@ -182,7 +181,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
         CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: Find not complete contribution in this month, recur_id = {$recurId}, trxn_id = {$dao->last_trxn_id}");
         $lastTrxnId = $dao->last_trxn_id;
         $explodeTrxnId = explode('_', $lastTrxnId);
-        $no = $explodeTrxnId[2]+1;
+        $no = $explodeTrxnId[2] + 1;
         $trxn_id = 'r_'.$recurId.'_'.$no;
         $count++;
         CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: start syncing $trxn_id");

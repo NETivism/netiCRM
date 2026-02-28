@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Dashboard page for managing Access Control
  * For initial version, this page only contains static links - so this class is empty for now.

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is for activity assignment functions
  *

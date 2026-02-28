@@ -73,7 +73,6 @@ class CRM_Contact_BAO_SearchCustom {
       return $error;
     }
 
-
     $ext = new CRM_Core_Extensions();
 
     if (!$ext->isExtensionKey($customSearchClass)) {
@@ -136,7 +135,6 @@ class CRM_Contact_BAO_SearchCustom {
 
     $from = $customClass->from();
     $where = $customClass->where();
-
 
     return [$from, $where];
   }

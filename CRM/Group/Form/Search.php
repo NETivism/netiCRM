@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Group_Form_Search extends CRM_Core_Form {
 
   public function preProcess() {
@@ -53,7 +52,6 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
       ts('Find'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title')
     );
-
 
     $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
     foreach ($groupTypes as $g => $v) {

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality for batch profile update for events
  */
@@ -127,7 +124,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
 
-
     $this->_title = ts('Batch Update for Events') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
     $this->addDefaultButtons(ts('Save'));
@@ -174,7 +170,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
         ],
       ]
     );
-
 
     $this->assign('profileTitle', $this->_title);
     $this->assign('componentIds', $this->_participantIds);
@@ -259,7 +254,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $defaults = [];
     foreach ($this->_participantIds as $participantId) {
       $details[$participantId] = [];
-
 
       $details[$participantId] = CRM_Event_BAO_Participant::participantDetails($participantId);
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $participantId, 'Event');
@@ -362,7 +356,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       return;
     }
 
-
     $contributionId = CRM_Contribute_BAO_Contribution::checkOnlinePendingContribution(
       $participantId,
       'Event'
@@ -374,8 +367,6 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     //status rules.
     //1. participant - positive => contribution - completed.
     //2. participant - negative => contribution - cancelled.
-
-
 
     $positiveStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
     $negativeStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'");

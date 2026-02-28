@@ -45,7 +45,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
   protected $_filled = NULL;
   protected $_context = NULL;
   protected $_cpage = NULL;
-  
+
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_tableName = 'civicrm_temp_custom_achsearch';
@@ -127,7 +127,7 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  
+
   public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
@@ -180,7 +180,6 @@ $having
     }
   }
 
-
   public function tempFrom() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
@@ -230,7 +229,7 @@ $having
     // so using exists start_date element
     $ele = $form->getElement('start_date_from');
     $ele->_label = ts('Stamp Verication Date') .'/'.ts('Recurring Contribution').' - '.ts('Start Date');
-    
+
     $form->assign('elements', [
       'create_date',
       'status',
@@ -395,7 +394,7 @@ $having
   public function &columns() {
     return $this->_columns;
   }
-  
+
   public function summary() {
     $summary = [];
     if (!$this->_filled) {
@@ -410,7 +409,7 @@ $having
     ];
     $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE ".$this->where());
     $query->fetch();
-    
+
     if ($query->amount) {
       $amount = CRM_Utils_Money::format($query->amount);
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', [1 => $amount]);
@@ -421,7 +420,7 @@ $having
 
   public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
-    
+
     if ($row['completed_count']) {
       $row['completed_count'] = $row['completed_count'].' / '.$row['total_count'];
     }

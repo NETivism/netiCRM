@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_ContributionRecur {
 
   /**
@@ -510,7 +509,7 @@ GROUP BY c.currency";
     }
     ksort($values);
     ksort($labels);
-    
+
     $chart = [
       'id' => 'chart-recur',
       'selector' => '#chart-recur',

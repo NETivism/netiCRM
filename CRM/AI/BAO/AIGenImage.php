@@ -396,7 +396,6 @@ class CRM_AI_BAO_AIGenImage {
     return $serviceParams;
   }
 
-
   /**
    * Create initial generation record with pending status
    *

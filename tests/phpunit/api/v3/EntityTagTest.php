@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'api/v3/EntityTag.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_EntityTagTest extends CiviUnitTestCase {
@@ -329,8 +326,6 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_tag_entities_get methods
-
-
 
   ///////////////// civicrm_entity_tag_common methods
   public function testCommonAddEmptyParams() {

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
 
   /**
@@ -315,7 +313,6 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
 
     //delete acl_role option value
     if (CRM_Utils_Array::arrayKeyExists($gName, $aclRole)) {
-
 
       $entityRole = new CRM_ACL_DAO_EntityRole();
       $entityRole->$fieldName = $value;

@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
 
   protected $_action;
@@ -251,7 +247,6 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
       $object->orderBy($key . ' asc');
     }
 
-
     // find all objects
     $object->find();
     while ($object->fetch()) {
@@ -266,7 +261,6 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
         if ($permission) {
           $values[$object->id] = [];
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
-
 
           CRM_Contact_DAO_RelationshipType::addDisplayEnums($values[$object->id]);
 

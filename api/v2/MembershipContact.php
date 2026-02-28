@@ -1,7 +1,6 @@
 <?php
 // $Id: MembershipContact.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -336,7 +335,6 @@ function _civicrm_membership_format_params(&$params, &$values, $create = FALSE) 
   }
 
   _civicrm_custom_format_params($params, $values, 'Membership');
-
 
   if ($create) {
     // CRM_Member_BAO_Membership::create() handles membership_start_date,

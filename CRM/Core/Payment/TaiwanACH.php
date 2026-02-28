@@ -56,7 +56,6 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
       $error[] = ts('Password is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
 
-
     if (!empty($error)) {
       return CRM_Utils_Array::implode('<br>', $error);
     }
@@ -98,7 +97,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
   public static function checkSection(&$fields, &$errors, $section = NULL) {
     $emptyField = 0;
     $isAllEmpty = FALSE;
-    $isTestPrefix = ($section == 'test') ? 'test_': '';
+    $isTestPrefix = ($section == 'test') ? 'test_' : '';
     $ppDAO = new CRM_Core_DAO_PaymentProcessorType();
     $ppDAO->name = 'TaiwanACH';
     $ppDAO->find(TRUE);

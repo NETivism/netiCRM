@@ -9,7 +9,6 @@ abstract class CRM_Mailing_External_SmartMarketing {
    */
   abstract public function getRemoteGroups();
 
-
   /**
    * Parse saved data in group table
    *

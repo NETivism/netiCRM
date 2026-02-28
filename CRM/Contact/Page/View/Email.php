@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Dummy page for details of Email
  *

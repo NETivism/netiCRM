@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class provides the functionality to create PDF letter for a group of
  * contacts or a single contact.

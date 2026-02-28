@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
   public $tree;
@@ -118,12 +117,12 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     }
     if (count($orphan)) {
       //hang the 3rd level lists at the right place
-      foreach ($this->tree as & $level1) {
+      foreach ($this->tree as &$level1) {
         if (!isset($level1['children'])) {
           continue;
         }
 
-        foreach ($level1['children'] as $key => & $level2) {
+        foreach ($level1['children'] as $key => &$level2) {
           if (CRM_Utils_Array::arrayKeyExists($key, $orphan)) {
             $level2['children'] = $orphan[$key]['children'];
           }
@@ -248,7 +247,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
     // Prefix each name with the calcuated spacing to give the visual
     // appearance of ordering when transformed into HTML in the form layer.
-    foreach ($tags as & $tag) {
+    foreach ($tags as &$tag) {
       $tag = $tag[0] . $tag[1];
     }
 
@@ -279,7 +278,6 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     // delete from tag table
     $tag = new CRM_Core_DAO_Tag();
     $tag->id = $id;
-
 
     CRM_Utils_Hook::pre('delete', 'Tag', $id, $tag);
 
@@ -320,7 +318,6 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
     $tag->copyValues($params);
     $tag->id = CRM_Utils_Array::value('tag', $ids);
-
 
     $edit = ($tag->id) ? TRUE : FALSE;
     if ($edit) {

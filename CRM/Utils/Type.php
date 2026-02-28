@@ -242,7 +242,6 @@ class CRM_Utils_Type {
         break;
     }
 
-
     if ($abort) {
       CRM_Core_Error::fatal("Provided data is not of the type $type");
     }

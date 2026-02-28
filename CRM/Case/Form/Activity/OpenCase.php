@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for OpenCase Activity
  *
@@ -80,7 +77,6 @@ class CRM_Case_Form_Activity_OpenCase {
       return $defaults;
     }
 
-
     list($defaults['start_date']) = CRM_Utils_Date::setDateDefaults();
 
     // set case status to 'ongoing'
@@ -92,7 +88,6 @@ class CRM_Case_Form_Activity_OpenCase {
     if (count($medium) == 1) {
       $defaults['medium_id'] = key($medium);
     }
-
 
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
     if ($defaultLocationType->id) {
@@ -116,7 +111,6 @@ class CRM_Case_Form_Activity_OpenCase {
       CRM_Contact_Form_NewContact::buildQuickForm($form);
     }
 
-
     $caseType = CRM_Case_PseudoConstant::caseType();
     $form->add(
       'select',
@@ -137,7 +131,6 @@ class CRM_Case_Form_Activity_OpenCase {
 
     $form->add('text', 'duration', ts('Duration'), ['size' => 4, 'maxlength' => 8]);
     $form->addRule('duration', ts('Please enter the duration as number of minutes (integers only).'), 'positiveInteger');
-
 
     if ($form->_currentlyViewedContactId) {
       list($displayName) = CRM_Contact_BAO_Contact::getDisplayAndImage($form->_currentlyViewedContactId);
@@ -255,8 +248,6 @@ class CRM_Case_Form_Activity_OpenCase {
       return;
     }
 
-
-
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
 
@@ -291,8 +282,6 @@ class CRM_Case_Form_Activity_OpenCase {
       CRM_Case_BAO_Case::addCaseToContact($contactParams);
       $client = $form->_currentlyViewedContactId;
     }
-
-
 
     // 2. initiate xml processor
     $xmlProcessor = new CRM_Case_XMLProcessor_Process();

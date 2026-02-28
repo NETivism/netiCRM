@@ -109,10 +109,10 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   }
 
   public function testSinglePaymentNotify() {
-    
+
   }
 
   public function testNonCreditNotify() {
-    
+
   }
 }

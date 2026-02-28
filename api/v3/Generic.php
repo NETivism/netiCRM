@@ -34,7 +34,7 @@ function civicrm_api3_generic_getfields($apiRequest) {
   }
 
   if (empty($action)) {
-    $action='get';
+    $action = 'get';
   }
   // determines whether to use unique field names - seem comment block above
   $unique = TRUE;

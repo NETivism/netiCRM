@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class is to build the form for adding Group
  */
@@ -305,7 +300,6 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
     );
 
-
     $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
     $config = CRM_Core_Config::singleton();
     if ((
@@ -353,10 +347,10 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
     if (isset($this->_smartMarketingService)) {
       // dropdown box
-      $remoteGroups = CRM_Core_BAO_Cache::getItem('group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME-180);
+      $remoteGroups = CRM_Core_BAO_Cache::getItem('group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME - 180);
       if (empty($remoteGroups)) {
         $remoteGroups = $this->_smartMarketingService->getRemoteGroups();
-        CRM_Core_BAO_Cache::setItem($remoteGroups, 'group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME+180);
+        CRM_Core_BAO_Cache::setItem($remoteGroups, 'group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME + 180);
       }
       // flydove doesn't support create group
       $remoteGroups = array_diff_key($remoteGroups, $this->_smartMarketingFreezed);
@@ -580,7 +574,6 @@ AND    id <> %3
           }
         }
       }
-
 
       $group = &CRM_Contact_BAO_Group::create($params);
 

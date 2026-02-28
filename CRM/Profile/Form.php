@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for custom data
  *
@@ -72,7 +70,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @var array details of the UFGroup used on this page
    */
   protected $_ufGroup = ['name' => 'unknown'];
- 
 
   /**
    * The group id that we are passing in url
@@ -154,8 +151,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-
-
 
     $this->_id = $this->get('id');
     $this->_gid = $this->get('gid');
@@ -295,7 +290,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
       }
 
       $profileType = CRM_Core_BAO_UFField::getProfileType($this->_gid);
-
 
       if ($this->_id) {
         list($contactType, $contactSubType) = CRM_Contact_BAO_Contact::getContactTypes($this->_id);
@@ -731,7 +725,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
         else {
           if ($form->_context == 'dialog') {
 
-
             $contactLinks = CRM_Contact_BAO_Contact_Utils::formatContactIDSToLinks($ids, TRUE, TRUE);
 
             $duplicateContactsLinks = '<div class="matching-contacts-found">';
@@ -764,7 +757,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
             $duplicateContactsLinks .= ts("If you're sure this record is not a duplicate, click the 'Save Matching Contact' button below.");
 
             $errors['_qf_default'] = $duplicateContactsLinks;
-
 
             // let smarty know that there are duplicates
             $template = CRM_Core_Smarty::singleton();
@@ -922,7 +914,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $params['log_data'] = ts('Profile').' - '.$this->_gid;
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     // first, trying to add contact from profile without group
@@ -1015,7 +1006,6 @@ class CRM_Profile_Form extends CRM_Core_Form {
         $confirm = CRM_Mailing_Event_BAO_Confirm::confirm($this->_id, $se->id, $se->hash);
       }
     }
-
 
     $ufGroups = [];
     if ($this->_gid) {

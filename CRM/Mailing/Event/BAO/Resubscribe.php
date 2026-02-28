@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Mailing_Event_BAO_Resubscribe {
 
   /**
@@ -51,7 +49,6 @@ class CRM_Mailing_Event_BAO_Resubscribe {
   public static function &resub_to_mailing($job_id, $queue_id, $hash) {
     /* First make sure there's a matching queue event */
 
-
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
     $success = NULL;
     if (!$q) {
@@ -67,7 +64,6 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     }
 
     $contact_id = $q->contact_id;
-
 
     $transaction = new CRM_Core_Transaction();
 
@@ -102,8 +98,6 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     /* Make a list of groups and a list of prior mailings that received
          * this mailing */
 
-
-
     $groups = [];
     $mailings = [];
 
@@ -118,7 +112,6 @@ class CRM_Mailing_Event_BAO_Resubscribe {
 
     /* As long as we have prior mailings, find their groups and add to the
          * list */
-
 
     while (!empty($mailings)) {
       $do->query("
@@ -140,14 +133,12 @@ class CRM_Mailing_Event_BAO_Resubscribe {
       }
     }
 
-
     $group_ids = array_keys($groups);
     $base_groups = NULL;
     // CRM_Utils_Hook::unsubscribeGroups('resubscribe', $mailing_id, $contact_id, $group_ids, $base_groups);
 
     /* Now we have a complete list of recipient groups.  Filter out all
          * those except smart groups and those that the contact belongs to */
-
 
     $do->query("
             SELECT      $group.id as group_id,
@@ -274,7 +265,6 @@ class CRM_Mailing_Event_BAO_Resubscribe {
       $text = CRM_Utils_Token::replaceMailingTokens($text, $dao, NULL, $tokens['text']);
       $message->setTxtBody($text);
     }
-
 
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 

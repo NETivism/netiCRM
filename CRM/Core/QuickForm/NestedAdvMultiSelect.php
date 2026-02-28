@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_QuickForm_NestedAdvMultiSelect extends HTML_QuickForm_advmultiselect {
   public function load(
     &$options,

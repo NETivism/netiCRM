@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Contribute_BAO_PCP extends CRM_Contribute_DAO_PCP {
 
   /**
@@ -122,7 +119,6 @@ WHERE  civicrm_pcp.contact_id = civicrm_contact.id
    */
   public static function getPcpDashboardInfo($contactId) {
     $links = self::pcpLinks();
-
 
     $query = "
         SELECT pg.start_date, pg.end_date, pg.title as pageTitle, pcp.id as pcpId, 
@@ -369,7 +365,6 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
 
     CRM_Utils_Hook::pre('delete', 'Campaign', $id, CRM_Core_DAO::$_nullArray);
 
-
     $transaction = new CRM_Core_Transaction();
 
     // delete from pcp table
@@ -531,7 +526,6 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     $tplParams['pcpStatus'] = $pcpStatus[$newStatus];
     $tplParams['pcpStatusLabel'] = $pcpStatusLabel[$newStatus];
     $tplParams['pcpTitle'] = $pcpInfo['title'];
-
 
     list($sent, $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
       [

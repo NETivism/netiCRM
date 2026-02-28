@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of site configuration tasks with links to each setting form
  */
@@ -54,7 +52,6 @@ class CRM_Admin_Page_ConfigTaskList extends CRM_Core_Page {
 
     $destination = urlencode($destination);
     $this->assign('destination', $destination);
-
 
     CRM_Core_OptionValue::getValues(['name' => 'from_email_address'], $optionValue);
     if (!empty($optionValue)) {

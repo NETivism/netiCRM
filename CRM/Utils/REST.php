@@ -196,7 +196,6 @@ class CRM_Utils_REST {
       header('Content-Type: text/xml');
       if (isset($result['count'])) {
 
-
         $count = ' count="' . $result['count'] . '" ';
       }
       else {
@@ -428,7 +427,7 @@ class CRM_Utils_REST {
       }
     }
     if (isset($params['options'])) {
-      $options =& $params['options'];
+      $options = &$params['options'];
       // don't allow sort for query security concern
       if (isset($options['sort'])) {
         if (!self::validateSortParameter($options['sort'])) {
@@ -559,14 +558,14 @@ class CRM_Utils_REST {
     if (!empty($className)) {
       $className = CRM_Utils_String::munge($className);
       $fnName = CRM_Utils_Array::value('fnName', $_REQUEST);
-      
+
       // Security check: functions that are defined only in AJAX.php can be called via ajax interface
       if (!CRM_Core_Page_AJAX::checkAuthz('method', $className, $fnName)) {
         $err = ['error_message' => 'Unknown function invocation.', 'is_error' => 1];
         echo self::output($err);
         CRM_Utils_System::civiExit();
       }
-      
+
       $params = self::buildParamList();
       $result = call_user_func([$className, $fnName], $params);
       echo self::output($result);

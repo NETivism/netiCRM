@@ -8,7 +8,7 @@ require_once 'CiviTest/Contact.php';
 require_once 'CRM/Contact/BAO/ContactType.php';
 
 class CRM_Contact_BAO_ContactType_RelationshipTest extends CiviUnitTestCase {
-    
+
   public function get_info() {
     return [
                  'name'        => 'Relationship Subtype',
@@ -16,7 +16,7 @@ class CRM_Contact_BAO_ContactType_RelationshipTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
 
@@ -28,7 +28,7 @@ class CRM_Contact_BAO_ContactType_RelationshipTest extends CiviUnitTestCase {
                      ];
     $result  = CRM_Contact_BAO_ContactType::add($params);
     $this->student = $params['name'];
-        
+
     $params = [ 'label'     => 'indivi_parent',
                      'name'      => 'indivi_parent',
                      'parent_id' => 1,//Individual
@@ -51,37 +51,37 @@ class CRM_Contact_BAO_ContactType_RelationshipTest extends CiviUnitTestCase {
                      'contact_type' => 'Individual',
                      ];
     $this->individual = Contact::create($params);
-        
+
     $params = [ 'first_name'   => 'Bill',
                      'last_name'    => 'Adams',
                      'contact_type' => 'Individual',
                      'contact_sub_type' => $this->student
                      ];
     $this->indivi_student = Contact::create($params);
-        
+
     $params = [ 'first_name'   => 'Alen',
                      'last_name'    => 'Adams',
                      'contact_type' => 'Individual',
                      'contact_sub_type' => $this->parent
                      ];
     $this->indivi_parent = Contact::create($params);
-        
+
     $params = [ 'organization_name' => 'Compumentor' ,
                      'contact_type'      => 'Organization',
                      ];
     $this->organization = Contact::create($params);
-        
+
     $params = [ 'organization_name' => 'Conservation Corp' ,
                      'contact_type'      => 'Organization',
                      'contact_sub_type'  => $this->sponsor
                      ];
     $this->organization_sponsor = Contact::create($params);
-        
+
   }
 
   public function tearDown() {
     $this->quickCleanup([ 'civicrm_contact' ]);
-                   
+
     $query = "
 DELETE FROM civicrm_contact_type 
       WHERE name IN ('{$this->student}','{$this->parent}','{$this->sponsor}');
@@ -127,7 +127,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($result->contact_type_b, 'Individual');
     $this->relationshipTypeDelete($result->id);
   }
-    
+
   public function testRelationshipTypeAddStudentSponcor() {
     //check Student to Sponcer RelationshipType
     $params = [ 'name_a_b'           => 'StudentToSponser',
@@ -168,12 +168,12 @@ DELETE FROM civicrm_contact_type
 
     list($valid, $invalid, $duplicate, $saved, $relationshipIds)
         = CRM_Contact_BAO_Relationship::create($params, $ids);
- 
+
     $this->assertEquals($invalid, 1, 'In line '. __LINE__);
     $this->assertEquals(empty($relationshipIds), TRUE, 'In line '. __LINE__);
     $this->relationshipTypeDelete($relType->id);
   }
-    
+
   /**
    * methods create relationshipe within diff contact type with invalid Relationships
    *
@@ -200,7 +200,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals(empty($relationshipIds), TRUE, 'In line '. __LINE__);
     $this->relationshipTypeDelete($relType->id);
   }
-    
+
   public function testRelCreateInvalidWithinDiffTypeStudentSponcor() {
     //check for Student to Sponcer
     $relTypeParams =  [ 'name_a_b'           => 'StudentToSponser',
@@ -224,7 +224,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals(empty($relationshipIds), TRUE, 'In line '. __LINE__);
     $this->relationshipTypeDelete($relType->id);
   }
-    
+
   /**
    * methods create relationshipe within same contact type with valid data
    * success expected
@@ -275,7 +275,7 @@ DELETE FROM civicrm_contact_type
     $ids = ['contact' => $this->organization_sponsor ];
     list($valid, $invalid, $duplicate, $saved, $relationshipIds)
         = CRM_Contact_BAO_Relationship::create($params, $ids);
-       
+
     $this->assertEquals($valid, 1, 'In line '. __LINE__);
     $this->assertEquals(empty($relationshipIds), FALSE, 'In line '. __LINE__);
     $this->relationshipTypeDelete($relType->id);

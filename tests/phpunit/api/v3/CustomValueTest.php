@@ -61,7 +61,6 @@ class api_v3_CustomValueTest extends CiviUnitTestCase {
       'custom_' . $this->ids['multi2']['custom_field_id'][2] => "vegemite",
     ];
 
-
     $result = civicrm_api('Contact', 'create', $params);
     $this->assertAPISuccess($result, __LINE__);
     $contact_id = $result['id'];

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Main page for viewing all Saved searches.
  *

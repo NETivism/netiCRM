@@ -1,6 +1,5 @@
 <?php
 
-
 class CRM_Event_Badge_Logo extends CRM_Event_Badge {
   public $format;
   public $lMarginLogo;

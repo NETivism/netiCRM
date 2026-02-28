@@ -38,7 +38,6 @@
  *
  */
 
-
 require_once 'CRM/Contact/BAO/GroupOrganization.php';
 
 /**

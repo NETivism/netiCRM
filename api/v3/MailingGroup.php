@@ -42,8 +42,6 @@
  * Files required for this package
  */
 
-
-
 require_once 'CRM/Contact/BAO/Group.php';
 require_once 'CRM/Mailing/Event/BAO/Queue.php';
 require_once 'CRM/Mailing/Event/BAO/Subscribe.php';

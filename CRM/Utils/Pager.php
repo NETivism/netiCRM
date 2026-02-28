@@ -43,7 +43,6 @@
  *
  */
 
-
 class CRM_Utils_Pager extends Pager_Sliding {
 
   /**
@@ -167,7 +166,6 @@ class CRM_Utils_Pager extends Pager_Sliding {
     // set previous and next text labels
     $params['prevImg'] = ' ' . ts('&lt; Previous');
     $params['nextImg'] = ts('Next &gt;') . ' ';
-
 
     // set first and last text fragments
     $params['firstPagePre'] = '';
@@ -324,9 +322,9 @@ class CRM_Utils_Pager extends Pager_Sliding {
         '<a href="%s"%s%s%s%s title="%s">%s</a>',
         htmlentities($this->_url . $href, ENT_COMPAT, 'UTF-8'),
         empty($this->_classString) ? '' : ' '.$this->_classString,
-        empty($this->_attributes)  ? '' : ' '.$this->_attributes,
-        empty($this->_accesskey)   ? '' : ' accesskey="'.$this->_linkData[$this->_urlVar].'"',
-        empty($onclick)            ? '' : ' onclick="'.$onclick.'"',
+        empty($this->_attributes) ? '' : ' '.$this->_attributes,
+        empty($this->_accesskey) ? '' : ' accesskey="'.$this->_linkData[$this->_urlVar].'"',
+        empty($onclick) ? '' : ' onclick="'.$onclick.'"',
         $altText,
         $linkText
       );
@@ -340,8 +338,8 @@ class CRM_Utils_Pager extends Pager_Sliding {
         "<a href='javascript:void(0)' onclick='%s'%s%s%s title='%s'>%s</a>",
         $this->_generateFormOnClick($href, $this->_linkData),
         empty($this->_classString) ? '' : ' '.$this->_classString,
-        empty($this->_attributes)  ? '' : ' '.$this->_attributes,
-        empty($this->_accesskey)   ? '' : ' accesskey=\''.$this->_linkData[$this->_urlVar].'\'',
+        empty($this->_attributes) ? '' : ' '.$this->_attributes,
+        empty($this->_accesskey) ? '' : ' accesskey=\''.$this->_linkData[$this->_urlVar].'\'',
         $altText,
         $linkText
       );

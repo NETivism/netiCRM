@@ -84,7 +84,6 @@ class CRM_Bridge_OG_Utils {
       'email' => $user->mail,
     ];
 
-
     $values = civicrm_contact_add($params);
     if ($values['is_error']) {
       CRM_Core_Error::fatal();

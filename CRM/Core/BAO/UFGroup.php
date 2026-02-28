@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  */
@@ -75,7 +73,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
    * @return string  contact type
    */
   public static function getContactType($id) {
-
 
     $validTypes = array_filter(array_keys(CRM_Core_SelectValues::contactType()));
     $validSubTypes = CRM_Contact_BAO_ContactType::subTypeInfo();
@@ -151,7 +148,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     }
 
     $fields = [];
-
 
     foreach ($ufGroups as $id => $title) {
       if ($ctype) {
@@ -370,9 +366,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
         $importableFields = &CRM_Contact_BAO_Contact::importableFields("All", FALSE, TRUE);
       }
 
-
-
-
       $profileType = CRM_Core_BAO_UFField::getProfileType($group->id);
 
       if ($profileType == 'Activity') {
@@ -408,7 +401,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
       //get location type
       $locationType = [];
       $locationType = &CRM_Core_PseudoConstant::locationType();
-
 
       $customFields = CRM_Core_BAO_CustomField::getFieldsForImport($ctype);
 
@@ -585,7 +577,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     $doNotProcess = FALSE,
     $ctype = NULL
   ) {
-
 
     $session = CRM_Core_Session::singleton();
 
@@ -791,7 +782,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     }
 
     $config = CRM_Core_Config::singleton();
-
 
     $locationTypes = $imProviders = [];
     $locationTypes = CRM_Core_PseudoConstant::locationType(TRUE, 'name');
@@ -1229,7 +1219,6 @@ class CRM_Core_BAO_UFGroup extends CRM_Core_DAO_UFGroup {
     $cache = &CRM_Utils_Cache::singleton();
     $cache->delete('*CRM_Core_DAO*');
 
-
     $profileField = new CRM_Core_DAO_UFField();
     $profileField->uf_group_id = $id;
     $profileField->find();
@@ -1482,7 +1471,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    */
   public static function getModuleUFGroup($moduleName = NULL, $count = 0, $skipPermission = TRUE) {
 
-
     $dao = new CRM_Core_DAO();
     $queryString = 'SELECT civicrm_uf_group.id, title, civicrm_uf_group.is_active, is_reserved, group_type, name
                         FROM civicrm_uf_group
@@ -1493,7 +1481,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
                               WHERE civicrm_uf_join.module = %2';
       $p[2] = [$moduleName, 'String'];
     }
-
 
     // add permissioning for profiles only if not registration
     if (!$skipPermission) {
@@ -1553,7 +1540,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
       $profileType = CRM_Core_BAO_UFField::getProfileType($ufGroupId);
 
-
       if (CRM_Contact_BAO_ContactType::isaSubType($profileType)) {
         $profileType = CRM_Contact_BAO_ContactType::getBasicType($profileType);
       }
@@ -1586,10 +1572,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    * @access public
    */
   public static function buildProfile(&$form, &$field, $mode, $contactId = NULL, $online = FALSE) {
-
-
-
-
 
     $defaultValues = [];
     $fieldName = $field['name'];
@@ -2083,7 +2065,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
 
       $multipleFields = ['website' => 'url'];
 
-
       //start of code to set the default values
       foreach ($fields as $name => $field) {
         //set the field name depending upon the profile mode(single/batch)
@@ -2377,7 +2358,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
     $profiles = [];
     $ufGroups = CRM_Core_PseudoConstant::ufgroup();
 
-
     CRM_Utils_Hook::aclGroup(CRM_Core_Permission::ADMIN, NULL, 'civicrm_uf_group', $ufGroups, $ufGroups);
 
     foreach ($ufGroups as $id => $title) {
@@ -2438,7 +2418,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       ['uf_group_id' => $id],
       ['uf_group_id' => $copy->id]
     );
-
 
     $maxWeight = CRM_Utils_Weight::getMax('CRM_Core_DAO_UFJoin', NULL, 'weight');
 
@@ -2505,7 +2484,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       FALSE
     );
 
-
     //get the default domain email address.
 
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
@@ -2515,7 +2493,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       $fixUrl = CRM_Utils_System::url("civicrm/admin/domain", 'action=update&reset=1');
       return CRM_Core_Error::statusBounce(ts('The site administrator needs to enter a valid \'FROM Email Address\' in <a href="%1">Administer CiviCRM &raquo; Configure &raquo; Domain Information</a>. The email address used may need to be a valid mail account with your email service provider.', [1 => $fixUrl]));
     }
-
 
     foreach ($emailList as $emailTo) {
       // FIXME: take the below out of the foreach loop
@@ -2723,7 +2700,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
       $loc++;
       $data['location'][$loc]['email'][$loc]['email'] = $primaryEmail;
     }
-
 
     return $data;
   }
@@ -3003,7 +2979,6 @@ AND    ( entity_id IS NULL OR entity_id <= 0 )
    */
   public static function getDoubleOptInGroupIds(&$params, $contactId = NULL) {
 
-
     $config = &CRM_Core_Config::singleton();
     $subscribeGroupIds = [];
 
@@ -3086,7 +3061,6 @@ SELECT  group_id
     $subTypes = CRM_Contact_BAO_ContactType::subTypes();
 
     $components = ['Contribution', 'Participant', 'Membership', 'Activity'];
-
 
     $typeCount = ['ctype' => [], 'subtype' => []];
     foreach ($profileIds as $gid) {

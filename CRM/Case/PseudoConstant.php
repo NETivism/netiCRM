@@ -130,7 +130,6 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
       $condition = NULL;
     }
 
-
     self::$redactionRule = CRM_Core_OptionGroup::values('redaction_rule', TRUE, FALSE, FALSE, $condition);
     // }
     return self::$redactionRule;
@@ -261,7 +260,6 @@ class CRM_Case_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!$caseId) {
       return FALSE;
     }
-
 
     if (!CRM_Utils_Array::arrayKeyExists($caseId, self::$caseTypePair) || empty(self::$caseTypePair[$caseId][$column])) {
       $caseTypes = self::caseType($column);

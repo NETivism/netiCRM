@@ -158,7 +158,7 @@ class CRM_Utils_System_Soap {
   public static function &authenticate($name, $pass) {
     if (isset(self::$ufClass)) {
       $ufClassName = self::$ufClass;
-      $result =& $ufClassName::authenticate($name, $pass);
+      $result = &$ufClassName::authenticate($name, $pass);
       return $result;
     }
     else {

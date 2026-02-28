@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
   public $_fromEmail;
   public function preProcess() {
@@ -56,7 +55,6 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
       NULL
     );
 
-
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
 
     if ($q == NULL) {
@@ -77,7 +75,6 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
 
     /* Show the subject instead of the name here, since it's being
          * displayed to external contacts/users */
-
 
     CRM_Utils_System::setTitle(ts('Forward Mailing: %1', [1 => $mailing->subject]));
 
@@ -175,7 +172,6 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
     if ($forwarded) {
       $status = ts('Mailing is forwarded successfully to %count email address.', ['count' => $forwarded, 'plural' => 'Mailing is forwarded successfully to %count email addresses.']);
     }
-
 
     CRM_Utils_System::setUFMessage($status);
 

@@ -21,7 +21,6 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
     $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'recurringSyncExclude', ts('Exclude to sync'), $option, $attrs);
 
-
     $option = [
       'earliest' => ts('Earliest').' ('.ts('Default').')',
       'latest' => ts('Most Recent'),

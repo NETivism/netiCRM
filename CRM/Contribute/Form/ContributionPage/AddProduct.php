@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * form to process actions fo adding product to contribution page
  */
@@ -147,7 +144,6 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
         CRM_Utils_System::redirect($url);
       }
 
-
       $this->addButtons(
         [
           ['type' => 'next',
@@ -257,8 +253,6 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $dao->find(TRUE);
       $premiumID = $dao->id;
       $params['premiums_id'] = $premiumID;
-
-
 
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->copyValues($params);

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is used by the Search functionality.
  *
@@ -53,7 +50,6 @@ class CRM_Contribute_Controller_Search extends CRM_Core_Controller {
    * class constructor
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
-
 
     parent::__construct($title, $modal);
 

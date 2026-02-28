@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form extends CRM_Core_Form {
   public $_section;
   /**
@@ -447,7 +446,6 @@ class CRM_Report_Form extends CRM_Core_Form {
       $this->setDefaultValues(FALSE);
     }
 
-
     CRM_Report_Utils_Get::processFilter(
       $this->_filters,
       $this->_defaults
@@ -556,7 +554,6 @@ class CRM_Report_Form extends CRM_Core_Form {
       $this->_defaults = array_merge($this->_defaults, $this->_instanceValues);
     }
 
-
     CRM_Report_Form_Instance::setDefaultValues($this, $this->_defaults);
 
     return $this->_defaults;
@@ -609,7 +606,6 @@ class CRM_Report_Form extends CRM_Core_Form {
   }
 
   public function addFilters() {
-
 
     $options = $filters = [];
     $count = 1;
@@ -2043,8 +2039,6 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
 
     $smartGroupQuery = "";
 
-
-
     $group = new CRM_Contact_DAO_Group();
     $group->is_active = 1;
     $group->find();
@@ -2053,7 +2047,6 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
         $smartGroups[] = $group->id;
       }
     }
-
 
     CRM_Contact_BAO_GroupContactCache::check($smartGroups);
 
@@ -2281,7 +2274,6 @@ LEFT JOIN civicrm_contact {$field['alias']} ON {$field['alias']}.id = {$this->_a
     if (empty($prop)) {
       return FALSE;
     }
-
 
     if (!empty($this->_params['fields'])) {
       foreach (array_keys($prop['fields']) as $fieldAlias) {

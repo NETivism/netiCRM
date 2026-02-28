@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class is a heart of search query building mechanism.
  */
@@ -2030,7 +2026,6 @@ class CRM_Contact_BAO_Query {
     }
   }
 
-
   public static function getLocationTableName(&$where, &$locType) {
     if (isset($locType[1]) && is_numeric($locType[1])) {
       list($tbName, $fldName) = explode(".", $where);
@@ -2194,7 +2189,6 @@ class CRM_Contact_BAO_Query {
     $mode = $this->_mode ?? self::MODE_CONTACTS;
     $primaryLocation = $this->_primaryLocation ?? TRUE;
 
-
     $from = ' FROM civicrm_contact contact_a';
     if (empty($tables)) {
       return $from;
@@ -2296,7 +2290,7 @@ class CRM_Contact_BAO_Query {
 
     $tables = $newTables;
 
-    $additional['tables'] =& $tables;
+    $additional['tables'] = &$tables;
     CRM_Utils_Hook::alterQuery($mode, 'from', $this, $additional);
 
     foreach ($tables as $name => $value) {
@@ -3819,7 +3813,6 @@ WHERE  id IN ( $groupIDs )
       $this->_qill[$grouping][] = "$allRelationshipType[$value]  $name";
     }
 
-
     //check to see if the target contact is in specified group
     if ($targetGroup) {
       //add contacts from static groups
@@ -3845,7 +3838,6 @@ WHERE  id IN ( $groupIDs )
       }
       $this->_qill[$grouping][] = "$allRelationshipType[$value]  ( " . CRM_Utils_Array::implode(", ", $qillNames) . " )";
     }
-
 
     //check for active, inactive and all relation status
     $today = date('Ymd');
@@ -4258,7 +4250,6 @@ civicrm_relationship.start_date > {$today}
       if ($this->_displayRelationshipType) {
         $doOpt = FALSE;
       }
-
 
       if ($rowCount > 0 && $offset >= 0) {
         $limit = " LIMIT $offset, $rowCount ";

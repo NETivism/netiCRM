@@ -70,7 +70,6 @@ function civicrm_api3_mailing_event_unsubscribe_create($params) {
     return civicrm_api3_create_success($params);
   }
 
-
   return civicrm_api3_create_error('Queue event could not be found');
 }
 /*

@@ -82,7 +82,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $total = 0;
     while ($dao->fetch()) {
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
-      $total = $total+$dao->count;
+      $total = $total + $dao->count;
       $stat[$type] = [
         'name' => $type,
         'label' => empty($dao->referrer_type) ? ts("Unknown") : ts($dao->referrer_type),
@@ -98,7 +98,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
           case 'civicrm_event':
             $statusPending = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'");
             $statusPositive = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
-            $statues = $statusPending+$statusPositive;
+            $statues = $statusPending + $statusPositive;
             $sql = "SELECT SUM(fee_amount) FROM civicrm_participant WHERE id IN($dao->entity_ids) AND is_test = 0 AND status_id IN (".CRM_Utils_Array::implode(",", array_keys($statues)).") GROUP BY is_test";
             $totalAmount = CRM_Core_DAO::singleValueQuery($sql);
             break;
@@ -160,7 +160,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       $dates[$dao->visit_day] = 1;
       $dummy[$dao->referrer_type][$dao->visit_day] += (int)$dao->count;
     }
-    
+
     // prepare period label for chartist
     $start = !empty($selectorParams['visitDateStart']) ? $selectorParams['visitDateStart'] : key($dates);
     end($dates);
@@ -175,7 +175,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     foreach ($period as $key => $val) {
       $label[] = $val->format('Y-m-d');
     }
-     
+
     // prepare series and label for chartist
     $seriesNum = 0;
     foreach ($dummy as $rtype => $d) {

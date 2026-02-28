@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
 
   /**
@@ -227,7 +225,6 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
                LEFT  JOIN civicrm_membership_status {$this->_aliases['civicrm_membership_status']}
                           ON {$this->_aliases['civicrm_membership_status']}.id = 
                              {$this->_aliases['civicrm_membership']}.status_id ";
-
 
     //used when address field is selected
     if ($this->_addressField) {

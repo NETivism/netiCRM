@@ -120,7 +120,6 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
       ]);
     }
 
-
     $component = new CRM_Mailing_BAO_Component();
     $component->is_default = 1;
     $component->is_active = 1;

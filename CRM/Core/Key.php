@@ -72,7 +72,7 @@ class CRM_Core_Key {
    * @var int
    */
   public const HASH_LENGTH = 64;
-  
+
   public static $_key = NULL;
 
   public static $_sessionID = NULL;

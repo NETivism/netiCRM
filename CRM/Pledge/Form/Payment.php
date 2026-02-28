@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for processing a pledge payment
  *
@@ -163,13 +160,11 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     $params['id'] = $this->_id;
     $pledgeId = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment', $params['id'], 'pledge_id');
 
-
     CRM_Pledge_BAO_Payment::add($params);
     $adjustTotalAmount = FALSE;
     if (CRM_Utils_Array::value('option_type', $formValues) == 2) {
       $adjustTotalAmount = TRUE;
     }
-
 
     $pledgeScheduledAmount = CRM_Core_DAO::getFieldValue(
       'CRM_Pledge_DAO_Payment',

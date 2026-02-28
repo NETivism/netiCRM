@@ -232,7 +232,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
       // if not in cache, fire off config construction
       if (!self::$_singleton) {
-        self::$_singleton = new CRM_Core_Config;
+        self::$_singleton = new CRM_Core_Config();
         self::$_singleton->_initialize($loadFromDB);
 
         //initialize variables. for gencode we cannot load from the
@@ -275,7 +275,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         }
       }
 
-
       if (isset(self::$_singleton->customPHPPathDir) &&
         self::$_singleton->customPHPPathDir
       ) {
@@ -309,7 +308,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     return self::$_singleton;
   }
 
-
   private function _setUserFrameworkConfig($userFramework) {
     global $civicrm_root;
 
@@ -335,7 +333,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     if (defined('CIVICRM_UF_BASEURL')) {
       $url = parse_url(CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/'));
       $host = $url['host'];
-      $port = empty($url['port'])? '': ':'.$url['port'];
+      $port = empty($url['port']) ? '' : ':'.$url['port'];
       $path = $url['path'];
     }
     else {
@@ -769,7 +767,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       // check if over 30 days
       if (is_numeric($microtime)) {
         $microtime = (int) $microtime;
-        if (CRM_REQUEST_TIME - $microtime > 86400*30) {
+        if (CRM_REQUEST_TIME - $microtime > 86400 * 30) {
           $importTables[] = $tableDAO->import_table;
         }
       }

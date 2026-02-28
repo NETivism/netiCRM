@@ -34,10 +34,6 @@
  *
  */
 
-
-
-
-
 /**
  * This implements the profile page for all contacts. It uses a selector
  * object to do the actual dispay. The fields displayd are controlled by
@@ -152,7 +148,6 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     if (!$this->_gid) {
       $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this, FALSE, 0, 'GET');
     }
-
 
     if (empty($this->_profileIds)) {
       $gids = $this->_gid;
@@ -360,9 +355,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       }
     }
 
-
     $this->assign('isReset', TRUE);
-
 
     $formController = new CRM_Core_Controller_Simple(
       'CRM_Profile_Form_Search',

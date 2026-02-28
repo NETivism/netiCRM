@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
   public $_isMultiClient;
   public function run(
@@ -52,7 +50,6 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
       ));
       return FALSE;
     }
-
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $this->_isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
@@ -239,7 +236,6 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
 
   public function createRelationship(&$params) {
 
-
     $dao = new CRM_Contact_DAO_Relationship();
     $dao->copyValues($params);
     // only create a relationship if it does not exist
@@ -363,7 +359,6 @@ AND        a.is_deleted = 0
       $client = [1 => $params['clientID']];
     }
 
-
     if ($activityTypeName == 'Open Case') {
       $activityParams = ['activity_type_id' => $activityTypeID,
         'source_contact_id' => $params['creatorID'],
@@ -426,7 +421,6 @@ AND        a.is_deleted = 0
               $caseActivityParams[$referenceSelect] = 1;
             }
 
-
             $referenceActivity = CRM_Case_BAO_Case::getCaseActivityDates($params['caseID'], $caseActivityParams, TRUE);
 
             if (is_array($referenceActivity)) {
@@ -465,7 +459,6 @@ AND        a.is_deleted = 0
     if (CRM_Utils_Array::value('is_auto', $activityParams)) {
       $activityParams['skipRecentView'] = TRUE;
     }
-
 
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
 

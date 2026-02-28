@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Form_TwoOneTwo extends CRM_Upgrade_Form {
   public function __construct($version) {
     parent::__construct();

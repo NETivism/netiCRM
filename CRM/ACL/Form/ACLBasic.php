@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  * @package CRM
@@ -89,7 +87,6 @@ SELECT object_table
       return;
     }
 
-
     $permissions = array_flip(CRM_Core_Permission::basicPermissions());
     $this->addCheckBox(
       'object_table',
@@ -101,8 +98,6 @@ SELECT object_table
       NULL,
       ['</td><td>', '</td></tr><tr><td>']
     );
-
-
 
     $label = ts('Role');
     $role = ['-1' => ts('- select role -'),
@@ -117,7 +112,6 @@ SELECT object_table
 
     $this->addFormRule(['CRM_ACL_Form_ACLBasic', 'formRule']);
   }
-
 
   public static function formRule($params) {
     if ($params['entity_id'] == -1) {
@@ -138,7 +132,6 @@ SELECT object_table
   public function postProcess() {
 
     CRM_ACL_BAO_Cache::resetCache();
-
 
     $params = $this->controller->exportValues($this->_name);
     if ($this->_id ||

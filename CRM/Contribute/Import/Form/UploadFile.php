@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class gets the name of the file to upload
  */

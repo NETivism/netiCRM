@@ -32,9 +32,6 @@
  *
  */
 
-
-
-
 class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
 
   public $_from;

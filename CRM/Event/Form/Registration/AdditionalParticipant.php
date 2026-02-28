@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -252,7 +250,6 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     $allowToProceed = TRUE;
     $includeSkipButton = TRUE;
     $this->_resetAllowWaitlist = FALSE;
-
 
     $pricesetFieldsCount = CRM_Price_BAO_Set::getPricesetCount($this->_priceSetId);
 

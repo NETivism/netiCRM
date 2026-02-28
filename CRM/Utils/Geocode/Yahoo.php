@@ -116,7 +116,6 @@ class CRM_Utils_Geocode_Yahoo {
 
     $query = 'http://' . self::$_server . self::$_uri . '?' . $args;
 
-
     $request = new HTTP_Request($query);
     $request->sendRequest();
     $string = $request->getResponseBody();

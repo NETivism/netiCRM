@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
   /**
@@ -57,7 +55,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     }
 
     /* Find the email address/contact, if it exists */
-
 
     $contact = CRM_Contact_BAO_Contact::getTableName();
     $location = CRM_Core_BAO_Location::getTableName();
@@ -91,7 +88,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
     $dao->fetch();
 
-
     $transaction = new CRM_Core_Transaction();
 
     if (isset($dao->queue_id) ||
@@ -100,10 +96,8 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
       /* We already sent this mailing to $forward_email, or we should
              * never email this contact.  Give up. */
 
-
       return $successfulForward;
     }
-
 
     $contactParams = [
       'email' => $forward_email,
@@ -115,7 +109,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     if ($count == 0) {
 
       /* If the contact does not exist, create one. */
-
 
       $formatted = [
         'contact_type' => 'Individual',
@@ -147,7 +140,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     }
 
     /* Create a new queue event */
-
 
     $queue_params = [
       'email_id' => $email_id,
@@ -218,7 +210,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     if (is_a($result, 'PEAR_Error')) {
       /* Register the bounce event */
 
-
       $params = array_merge(
         $params,
         CRM_Mailing_BAO_BouncePattern::match($result->getMessage())
@@ -228,7 +219,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     else {
       $successfulForward = TRUE;
       /* Register the delivery event */
-
 
       CRM_Mailing_Event_BAO_Delivered::create($params);
     }

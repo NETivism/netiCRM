@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Localization
  *
@@ -57,7 +55,6 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     CRM_Utils_System::setTitle(ts('Settings - Localization'));
 
     $locales = &CRM_Core_I18n::languages();
-
 
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
@@ -95,7 +92,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
 
       // test for create view and trigger permissions and if allowed, add the option to go multilingual
       CRM_Core_Error::ignoreException();
-      $dao = new CRM_Core_DAO;
+      $dao = new CRM_Core_DAO();
       $dao->query('CREATE OR REPLACE VIEW civicrm_domain_view AS SELECT * FROM civicrm_domain');
       $dao->query('CREATE TRIGGER civicrm_domain_trigger BEFORE INSERT ON civicrm_domain FOR EACH ROW BEGIN END');
       $dao->query('DROP TRIGGER IF EXISTS civicrm_domain_trigger');
@@ -130,7 +127,6 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     $this->addSelect('countryLimit', ts('Available Countries'), $country, [
         'multiple' => 'multipl',
     ]);
-
 
     $this->addSelect('provinceLimit', ts('Available States and Provinces'), $country, [
         'multiple' => 'multiple',
@@ -231,7 +227,6 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
       // sort so that when we display drop down, weights have right value
       sort($values['currencyLimit']);
     }
-
 
     // get labels for all the currencies
     $options = [];

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing a ontribution
  *
@@ -315,7 +313,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->_values = [];
       $this->_fields = [];
 
-
       CRM_Contribute_BAO_ContributionPage::setValues($this->_id, $this->_values);
 
       $premiumParams = [
@@ -439,7 +436,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       CRM_Price_BAO_Set::initSet($this, $this->_id, 'civicrm_contribution_page');
 
-
       // this avoids getting E_NOTICE errors in php
       $setNullFields = ['amount_block_is_active',
         'honor_block_is_active',
@@ -457,7 +453,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       $this->_membershipBlock = CRM_Member_BAO_Membership::getMembershipBlock($this->_id);
       $this->set('membershipBlock', $this->_membershipBlock);
-
 
       if ($this->_values['custom_pre_id']) {
         $preProfileType = CRM_Core_BAO_UFField::getProfileType($this->_values['custom_pre_id']);
@@ -480,7 +475,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       ) {
         return CRM_Core_Error::statusBounce(ts('This page includes a Profile with Membership fields - but the Membership Block is NOT enabled. Please notify the site administrator.'));
       }
-
 
       $pledgeBlock = CRM_Pledge_BAO_PledgeBlock::getPledgeBlock($this->_id);
 
@@ -516,7 +510,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       // assign tempalte
       $this->assign_by_ref("viewCustomData", $this->_values['custom_data_view']);
     }
-
 
     $pcpId = CRM_Utils_Request::retrieve('pcpId', 'Positive', $this);
     if ($pcpId) {
@@ -739,7 +732,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       CRM_Utils_System::addHTMLHead($object);
     }
 
-
     // tracking click
     $this->_ppType = CRM_Utils_Array::value('type', $_GET);
     if (!$this->_ppType) {
@@ -836,7 +828,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $addressFields[$n] = CRM_Utils_Array::value('billing_' . $part, $this->_params);
     }
 
-
     $this->assign('address', CRM_Utils_Address::format($addressFields));
 
     if (CRM_Utils_Array::value('is_for_organization', $this->_params)) {
@@ -910,7 +901,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $stateCountryMap = [];
 
     if ($id) {
-
 
       $contactID = $this->_userID;
 
@@ -986,7 +976,6 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
             $addCaptcha = TRUE;
           }
         }
-
 
         CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
 

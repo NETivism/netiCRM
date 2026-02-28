@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components generic to all the contact types.
  *
@@ -174,7 +171,6 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
 
-
     $locType = CRM_Core_BAO_LocationType::getDefault();
     foreach (['phone', 'email', 'address'] as $locFld) {
       if (!empty($this->_defaults[$locFld]) && $this->_defaults[$locFld][1]['location_type_id']) {
@@ -189,7 +185,6 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
 
     $params['contact_type'] = $this->_contactType;
     $params['contact_id'] = $this->_contactId;
-
 
     $contact = &CRM_Contact_BAO_Contact::create($params, TRUE, FALSE);
 

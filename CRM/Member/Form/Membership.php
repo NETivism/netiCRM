@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for Membership Type
  *
@@ -95,7 +90,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $this
     );
 
-
     // check for edit permission
     if (!CRM_Core_Permission::checkActionPermission('CiviMember', $this->_action)) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
@@ -121,7 +115,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
 
       foreach ($processors as $ppID => $label) {
-
 
         $paymentProcessor = &CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $this->_mode);
         if ($paymentProcessor['payment_processor_type'] == 'PayPal' && !$paymentProcessor['user_name']) {
@@ -156,7 +149,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $this->assign('bltID', $this->_bltID);
 
       $this->_fields = [];
-
 
       CRM_Core_Payment_Form::setCreditCardFields($this);
 
@@ -245,7 +237,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     if (CRM_Utils_Array::value('record_contribution', $defaults) && !$this->_mode) {
       $contributionParams = ['id' => $defaults['record_contribution']];
       $contributionIds = [];
-
 
       CRM_Contribute_BAO_Contribution::getValues($contributionParams, $defaults, $contributionIds);
 
@@ -447,7 +438,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->addElement('checkbox', 'record_contribution', ts('Record Membership Payment?'));
 
-
       $this->add(
         'select',
         'contribution_type_id',
@@ -545,7 +535,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     $this->addFormRule(['CRM_Member_Form_Membership', 'formRule'], $this);
-
 
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $this->assign('outBound_option', $mailingInfo['outBound_option']);
@@ -722,9 +711,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
    */
   public function postProcess() {
 
-
-
-
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Member_BAO_Membership::deleteRelatedMemberships($this->_id);
       CRM_Member_BAO_Membership::deleteMembership($this->_id);
@@ -894,8 +880,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $this->_mode
       );
 
-
-
       $now = date('YmdHis');
       $fields = [];
 
@@ -951,7 +935,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       if (CRM_Utils_Array::value('send_receipt', $this->_params)) {
         $paymentParams['email'] = $this->_memberEmail;
       }
-
 
       CRM_Core_Payment_Form::mapParams($this->_bltID, $this->_params, $paymentParams, TRUE);
 
@@ -1033,7 +1016,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           //display end date w/ status message.
           $endDate = $membership->end_date;
 
-
           if (!in_array($membership->status_id, [array_search('Cancelled', $membershipStatuses),
                 array_search('Expired', $membershipStatuses),
               ])) {
@@ -1044,7 +1026,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $this->assign('cancelled', $cancelled);
 
         // here we might updated dates, so get from object.
-        foreach ($calcDates as $date => & $val) {
+        foreach ($calcDates as $date => &$val) {
           if ($membership->$date) {
             $val = $membership->$date;
           }
@@ -1218,7 +1200,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       }
     }
     elseif ($buttonName == $this->getButtonName('upload', 'new')) {
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/membership',
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/contact/view/membership',
         "reset=1&action=add&context=membership&cid={$this->_contactID}"
       ));
     }

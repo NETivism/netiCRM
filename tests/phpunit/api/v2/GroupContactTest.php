@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/GroupContact.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_GroupContactTest extends CiviUnitTestCase {
@@ -62,7 +61,6 @@ class api_v2_GroupContactTest extends CiviUnitTestCase {
       'visibility' => 'User and User Admin Only',
       'version' => 2,
     ];
-
 
     $this->_groupId2 = $this->groupCreate($group);
     $params = [
@@ -236,7 +234,6 @@ class api_v2_GroupContactTest extends CiviUnitTestCase {
       'contact_id.1' => $this->_contactId,
       'group_id' => 1,
     ];
-
 
     $groups = civicrm_group_contact_remove($params);
 

@@ -81,7 +81,6 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     }
     $form->assign('totalSelectedContacts', count($form->_contactIds));
 
-
     CRM_Mailing_BAO_Mailing::commonLetterCompose($form);
     if ($form->_single) {
       $cancelURL = CRM_Utils_System::url(
@@ -176,8 +175,6 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
       }
     }
 
-
-
     $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>body { margin: 56px; }</style></head><body>';
 
     $tokens = [];
@@ -268,9 +265,9 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     ];
 
     $htmlMsg = preg_split($newLineOperators['p']['pattern'], $message);
-    foreach ($htmlMsg as $k => & $m) {
+    foreach ($htmlMsg as $k => &$m) {
       $messages = preg_split($newLineOperators['br']['pattern'], $m);
-      foreach ($messages as $key => & $msg) {
+      foreach ($messages as $key => &$msg) {
         $msg = trim($msg);
         $matches = [];
         if (preg_match('/^(&nbsp;)+/', $msg, $matches)) {

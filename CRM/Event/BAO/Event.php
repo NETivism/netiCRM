@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
 
   /**
@@ -104,15 +103,12 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
 
     CRM_Utils_System::flushCache();
 
-
-
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'Event', $params['id'], $params);
     }
     else {
       CRM_Utils_Hook::pre('create', 'Event', NULL, $params);
     }
-
 
     $event = new CRM_Event_DAO_Event();
 
@@ -192,9 +188,7 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
       return NULL;
     }
 
-
     CRM_Utils_Hook::pre('delete', 'Event', $id, CRM_Core_DAO::$_nullArray);
-
 
     $extends = ['event'];
     $groupTree = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, NULL, $extends);
@@ -243,7 +237,6 @@ class CRM_Event_BAO_Event extends CRM_Event_DAO_Event {
     // price set cleanup, CRM-5527
 
     CRM_Price_BAO_Set::removeFrom('civicrm_event', $id);
-
 
     $event = new CRM_Event_DAO_Event();
     $event->id = $id;
@@ -406,8 +399,6 @@ LIMIT      0, 10
 ";
     $eventParticipant = [];
 
-
-
     $properties = ['eventTitle' => 'event_title', 'isPublic' => 'is_public',
       'maxParticipants' => 'max_participants', 'startDate' => 'start_date',
       'endDate' => 'end_date', 'eventType' => 'event_type',
@@ -560,7 +551,6 @@ LIMIT      0, 10
       }
     }
 
-
     $countedRoles = CRM_Event_PseudoConstant::participantRole(NULL, 'filter = 1');
     $nonCountedRoles = CRM_Event_PseudoConstant::participantRole(NULL, '( filter = 0 OR filter IS NULL )');
     $countedStatus = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1');
@@ -600,7 +590,6 @@ LIMIT      0, 10
   ) {
 
     // consider both role and status for counted participants, CRM-4924.
-
 
     $operator = " AND ";
     // not counted participant.
@@ -745,7 +734,6 @@ WHERE civicrm_event.id = " . CRM_Utils_Type::escape($id, 'Integer');
     }
     $dateCondition = "AND (civicrm_event.start_date >= {$startDate} OR civicrm_event.end_date >= {$endDate})";
 
-
     if ($type) {
       $typeCondition = " AND civicrm_event.event_type_id = " . CRM_Utils_Type::escape($type, 'Integer');
     }
@@ -806,7 +794,6 @@ WHERE civicrm_event.is_active = 1
     }
     $query .= " ORDER BY   civicrm_event.start_date ASC";
 
-
     $params = [1 => [$optionGroupId, 'Integer']];
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
     $all = [];
@@ -820,7 +807,6 @@ WHERE civicrm_event.is_active = 1
 
     // check 'view event info' permission
     $permissions = CRM_Core_Permission::event(CRM_Core_Permission::VIEW);
-
 
     while ($dao->fetch()) {
       if (in_array($dao->event_id, $permissions)) {
@@ -855,7 +841,6 @@ WHERE civicrm_event.is_active = 1
           'country' => $dao->country,
           'county' => NULL,
         ];
-
 
         CRM_Utils_String::append(
           $address,
@@ -931,7 +916,6 @@ WHERE civicrm_event.is_active = 1
       ['entity_id' => $copyEvent->id]
     );
 
-
     //copy option Group and values
     $copyEvent->default_fee_id = CRM_Core_BAO_OptionGroup::copyValue(
       'event',
@@ -999,7 +983,6 @@ WHERE civicrm_event.is_active = 1
     // Need original ID to duplicate Instrument. refs #14946
     $copyEvent->originId = $id;
 
-
     CRM_Utils_Hook::copy('Event', $copyEvent);
 
     return $copyEvent;
@@ -1047,7 +1030,6 @@ WHERE civicrm_event.is_active = 1
       'custom_pre_id' => $values['custom_pre_id'],
       'custom_post_id' => $values['custom_post_id'],
     ];
-
 
     //get the params submitted by participant.
     $participantParams = CRM_Utils_Array::value($participantId, $values['params'], []);
@@ -1389,8 +1371,6 @@ WHERE civicrm_event.is_active = 1
    */
   public static function displayProfile(&$params, $gid, &$groupTitle, &$values) {
     if ($gid) {
-
-
 
       $session = CRM_Core_Session::singleton();
       $contactID = $session->get('userID');
@@ -1910,8 +1890,6 @@ WHERE  ce.loc_block_id = $locBlockId";
       return $alreadyRegistered;
     }
 
-
-
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1");
 
     $participant = new CRM_Event_DAO_Participant();
@@ -1941,7 +1919,6 @@ WHERE  ce.loc_block_id = $locBlockId";
     static $permissions = NULL;
 
     if (empty($permissions)) {
-
 
       $allEvents = CRM_Event_PseudoConstant::event(NULL, TRUE);
       $createdEvents = [];
@@ -2043,7 +2020,6 @@ WHERE  ce.loc_block_id = $locBlockId";
     if (!in_array($domainEmail, $fromEmailIds)) {
       $fromEmailValues[] = $fromEmailIds[] = $domainEmail;
     }
-
 
     // add logged in user's active email ids
     if ($contactID) {

@@ -86,7 +86,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
     $params = [ 'contact_select_id' => 0,
                      'membership_type_id' => [ ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
     $this->assertType(
       'array',
@@ -112,13 +112,13 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
     $unixNow = time();
     $ymdNow = date('m/d/Y', $unixNow);
     $unixYesterday = $unixNow - (24 * 60 * 60);
-    $ymdYesterday= date('m/d/Y', $unixYesterday);
+    $ymdYesterday = date('m/d/Y', $unixYesterday);
     $params = [ 'join_date'          => $ymdNow,
                      'start_date'         => $ymdYesterday,
                      'end_date'           => '',
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = call_user_func(
       ['CRM_Member_Form_Membership','formRule'],
       $params,
@@ -145,13 +145,13 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
     $unixNow = time();
     $ymdNow = date('m/d/Y', $unixNow);
     $unixYesterday = $unixNow - (24 * 60 * 60);
-    $ymdYesterday= date('m/d/Y', $unixYesterday);
+    $ymdYesterday = date('m/d/Y', $unixYesterday);
     $params = [ 'join_date'  => $ymdNow,
                      'start_date' => $ymdNow,
                      'end_date'   => $ymdYesterday,
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
     $this->assertType(
       'array',
@@ -179,7 +179,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'           => $ymdYearFromNow,
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
     $this->assertType(
       'array',
@@ -207,7 +207,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      ),
                      'membership_type_id' => [ '23', '13' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
     $this->assertType(
       'array',
@@ -231,7 +231,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'membership_type_id' => [ '23', '13' ],
                      'is_override' => TRUE ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
     $this->assertType(
       'array',
@@ -256,7 +256,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'   => '',
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
 
     //  Should have found no valid membership status
@@ -282,7 +282,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'   => '',
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
 
     //  Should have found New membership status
@@ -301,7 +301,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'   => '',
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
 
     //  Should have found New membership status
@@ -320,7 +320,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'   => '',
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
 
     //  Should have found Current membership status
@@ -339,7 +339,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'   => '',
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
 
     //  Should have found Grace membership status
@@ -358,7 +358,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'   => '',
                      'membership_type_id' => [ '23', '3' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
 
     //  Should have found Expired membership status
@@ -377,7 +377,7 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
                      'end_date'   => '',
                      'membership_type_id' => [ '23', '7' ] ];
     $files  = [];
-    $obj    = new CRM_Member_Form_Membership;
+    $obj    = new CRM_Member_Form_Membership();
     $rc = $obj->formRule($params, $files, $obj);
 
     //  Should have found Current membership status
@@ -407,7 +407,6 @@ class CRM_Member_Form_MembershipTest extends CiviUnitTestCase {
   //{
   //    throw new PHPUnit_Framework_IncompleteTestError( "not implemented" );
   //}
-    
 
 } // class CRM_Member_Form_MembershipTest
 

@@ -36,7 +36,6 @@
  *
  */
 
-
 class CRM_Core_Action {
 
   /**
@@ -289,8 +288,6 @@ class CRM_Core_Action {
         }
       }
     }
-
-
 
     $result = '';
     $mainLinks = $url;

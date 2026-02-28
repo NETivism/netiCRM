@@ -23,7 +23,6 @@
   +--------------------------------------------------------------------+
 */
 
-
 /*
  * PxPay Functionality Copyright (C) 2008 Lucas Baker, Logistic Information Systems Limited (Logis)
  * PxAccess Functionality Copyright (C) 2008 Eileen McNaughton
@@ -32,8 +31,6 @@
  * Grateful acknowledgements go to Donald Lobo for invaluable assistance
  * in creating this payment processor module
  */
-
-
 
 class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
   /**
@@ -159,7 +156,6 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
       );
     }
 
-
     /*
          * Build the private data string to pass to DPS, which they will give back to us with the
          *
@@ -189,16 +185,12 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
          *  determine whether method is pxaccess or pxpay by whether signature (mac key) is defined
          */
 
-
-
     if (empty($this->_paymentProcessor['signature'])) {
       /*
              * Processor is pxpay
              *
              * This contains the XML/Curl functions we'll need to generate the XML request
              */
-
-
 
       // Build a valid XML string to pass to DPS
       $generateRequest = _valueXml([

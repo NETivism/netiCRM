@@ -37,10 +37,6 @@
  * Files required
  */
 
-
-
-
-
 /**
  * advanced search, extends basic search
  */
@@ -275,14 +271,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     // text for sort_name
     $this->addElement('text', 'sort_name', ts('Contributor Name, Phone or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-
     CRM_Contribute_BAO_Query::buildSearchForm($this);
 
     /*
      * add form checkboxes for each row. This is needed out here to conform to QF protocol
      * of all elements being declared in builQuickForm
      */
-
 
     $rows = $this->get('rows');
     if (is_array($rows)) {
@@ -295,9 +289,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-
       $permission = CRM_Core_Permission::getPermission();
-
 
       $tasks = ['' => ts('- actions -')] + CRM_Contribute_Task::permissionedTaskTitles($permission);
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
@@ -334,7 +326,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
       $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
-      
+
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
       $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
@@ -395,9 +387,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       }
     }
 
-
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
-
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
@@ -434,7 +424,6 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       }
       return;
     }
-
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {

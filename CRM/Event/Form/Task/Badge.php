@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class helps to print the labels for contacts
  *
@@ -119,9 +117,6 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     $params = $this->controller->exportValues($this->_name);
     $config = CRM_Core_Config::singleton();
 
-
-
-
     $returnProperties = &CRM_Event_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_EVENT);
     $additionalFields = ['sort_name', 'current_employer'];
     foreach ($additionalFields as $field) {
@@ -184,7 +179,6 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     }
 
     $eventBadgeClass = new $className();
-
 
     $eventBadgeClass->run($rows);
   }

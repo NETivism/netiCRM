@@ -421,9 +421,7 @@ function civicrm_case_delete(&$params) {
 /***********************************/
 /*                                 */
 
-
 /*     INTERNAL FUNCTIONS          */
-
 
 /*                                 */
 

@@ -608,7 +608,6 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
       )
     );
 
-
     // expected result of above created profile with contact Id $contactId
     $profileData[$contactId] = [
       'first_name' => 'abc1',

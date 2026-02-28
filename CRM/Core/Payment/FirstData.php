@@ -51,11 +51,6 @@ future.
 *For live testing uncomment the result field below and set the value to the response you wish to get from the payment processor
 ***************************/
 
-
-
-
-
-
 class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   public $_mode;
   # (not used, implicit in the API, might need to convert?)
@@ -196,7 +191,6 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
     $port = "1129";
     $host = $this->_paymentProcessor['url_site'] . ":" . $port . "/LSGSXML";
 
-
     //----------------------------------------------------------------------------------------------------
     // Check to see if we have a duplicate before we send
     //----------------------------------------------------------------------------------------------------
@@ -208,19 +202,15 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
     //----------------------------------------------------------------------------------------------------
     $requestxml = lphp::buildXML($requestFields);
 
-
-
     /*----------------------------------------------------------------------------------------------------
          // Send to the payment information using cURL
          /----------------------------------------------------------------------------------------------------
         */
 
-
     $ch = curl_init($host);
     if (!$ch) {
       return self::errorExit(9004, 'Could not initiate connection to payment gateway');
     }
-
 
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $requestxml);

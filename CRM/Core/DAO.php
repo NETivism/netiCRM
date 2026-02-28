@@ -34,12 +34,6 @@
  *
  */
 
-
-
-
-
-
-
 class CRM_Core_DAO extends DB_DataObject {
 
   /**
@@ -369,7 +363,6 @@ class CRM_Core_DAO extends DB_DataObject {
     if (!$cid) {
       return;
     }
-
 
     $dao = new CRM_Core_DAO_Log();
     $dao->entity_table = $this->getTableName();
@@ -978,7 +971,6 @@ FROM   civicrm_domain
 
   public static function composeQuery($query, &$params, $abort) {
 
-
     $tr = [];
     foreach ($params as $key => $item) {
       if (is_numeric($key)) {
@@ -1216,7 +1208,6 @@ SELECT contact_id
 
     CRM_Core_I18n_Schema::dropAllViews();
 
-
     CRM_Utils_File::sourceSQLFile(
       CIVICRM_DSN,
       dirname(__FILE__) . DIRECTORY_SEPARATOR .
@@ -1262,7 +1253,6 @@ SELECT contact_id
   public static function createTestObject($daoName, $params = [], $numObjects = 1, $createOnly = FALSE) {
 
     static $counter = 0;
-
 
     require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
 

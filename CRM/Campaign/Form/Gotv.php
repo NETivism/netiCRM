@@ -37,7 +37,6 @@
  * Files required
  */
 
-
 class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
 
   public $_search;
@@ -152,7 +151,6 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
         $userId
       );
 
-
       $defaults['survey_interviewer_id'] = $cid;
       $defaults['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue(
         'CRM_Contact_DAO_Contact',
@@ -181,7 +179,6 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
     ) {
       $errorMessages[] = ts('You are not authorized to access this page.');
     }
-
 
     $surveys = CRM_Campaign_BAO_Survey::getSurveyList();
     if (empty($surveys)) {

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
 
   /**
@@ -186,7 +185,6 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
       $error['error_message'] = 'The membership status cannot be deleted as memberships of this status exist';
       return $error;
     }
-
 
     //delete from membership Type table
 

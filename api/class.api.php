@@ -188,7 +188,7 @@ class civicrm_api3 {
   //* helper method for long running programs (eg bots)
   public function ping() {
     global $_DB_DATAOBJECT;
-    foreach ($_DB_DATAOBJECT['CONNECTIONS'] as & $c) {
+    foreach ($_DB_DATAOBJECT['CONNECTIONS'] as &$c) {
       if (!$c->connection->ping()) {
         $c->connect($this->cfg->dsn);
         if (!$c->connection->ping()) {
@@ -212,8 +212,6 @@ class civicrm_api3 {
    * or
    * $api->attr ('id',42) //set the id
    */
-
-
 
   public function attr($name, $value = NULL) {
     if ($value === NULL) {
@@ -240,8 +238,6 @@ class civicrm_api3 {
   }
  */
 
-
-
   public function __get($name) {
     //TODO, test if valid entity
     if (strtolower($name) !== $name) {
@@ -266,7 +262,6 @@ class civicrm_api3 {
     $this->currentEntity = $name;
     return $this;
   }
-
 
   // or use $api->value
   public function values() {

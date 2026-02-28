@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Error Handling and Debugging
  *
@@ -104,7 +102,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     $params = $this->controller->exportValues($this->_name);
 
     //CRM-5679
-    foreach ($params as $name => & $val) {
+    foreach ($params as $name => &$val) {
       if ($val && in_array($name, ['newBaseURL', 'newBaseDir', 'newSiteName'])) {
         $val = CRM_Utils_File::addTrailingSlash($val);
       }

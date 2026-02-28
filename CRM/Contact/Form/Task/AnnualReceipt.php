@@ -129,7 +129,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
         }
       }
       CRM_Utils_Hook::postProcess(get_class($this), $this);
-      
+
       $totalNumRows = count($this->_contactIds);
       $batchThreshold = self::BATCH_THRESHOLD;
       if ($totalNumRows > $batchThreshold) {
@@ -217,7 +217,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
 
     // If on batch, eachCount use const GENERATE_COUNT_EACH_TIME,
     // If not batch, eachCount use length of $contactIds.
-    for ($i=$offset; $i < $offset + $eachCount; $i++) {
+    for ($i = $offset; $i < $offset + $eachCount; $i++) {
       if (!isset($contactIds[$i])) {
         break;
       }
@@ -242,7 +242,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
     $filePath = $this->makePDF($download);
     if ($civicrm_batch) {
-      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed']+1);
+      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed'] + 1);
       $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
       $dest .= '_'.$filenameNum.'.pdf';
       rename($filePath, $dest);
@@ -279,6 +279,5 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
 
   }
-
 
 }

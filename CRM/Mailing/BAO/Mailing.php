@@ -127,12 +127,10 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     $email = CRM_Core_DAO_Email::getTableName();
     $contact = CRM_Contact_DAO_Contact::getTableName();
 
-
     $group = CRM_Contact_DAO_Group::getTableName();
     $g2contact = CRM_Contact_DAO_GroupContact::getTableName();
 
     /* Create a temp table for contact exclusion */
-
 
     $mailingGroup->query(
       "CREATE TEMPORARY TABLE X_$job_id 
@@ -142,7 +140,6 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
 
     /* Add all the members of groups excluded from this mailing to the temp
          * table */
-
 
     $excludeSubGroup = "INSERT INTO        X_$job_id (contact_id)
                     SELECT  DISTINCT    $g2contact.contact_id
@@ -158,7 +155,6 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     /* Add all unsubscribe members of base group from this mailing to the temp
          * table */
 
-
     $unSubscribeBaseGroup = "INSERT INTO        X_$job_id (contact_id)
                     SELECT  DISTINCT    $g2contact.contact_id
                     FROM                $g2contact
@@ -172,7 +168,6 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
 
     /* Add all the (intended) recipients of an excluded prior mailing to
          * the temp table */
-
 
     $excludeSubMailing = "INSERT IGNORE INTO X_$job_id (contact_id)
                     SELECT  DISTINCT    $eq.contact_id
@@ -319,7 +314,6 @@ WHERE  c.group_id = {$groupDAO->id}
 
     /* Get all the group contacts we want to include */
 
-
     $mailingGroup->query(
       "CREATE TEMPORARY TABLE I_$job_id 
             (email_id int, contact_id int primary key)
@@ -329,11 +323,7 @@ WHERE  c.group_id = {$groupDAO->id}
     /* Get the group contacts, but only those which are not in the
          * exclusion temp table */
 
-
-
     /* Get the emails with no override */
-
-
 
     $query = "REPLACE INTO       I_$job_id (email_id, contact_id)
 
@@ -515,7 +505,6 @@ AND    $mg.mailing_id = {$mailing_id}
 
     /* Get the emails with only location override */
 
-
     $query = "REPLACE INTO       I_$job_id (email_id, contact_id)
                     SELECT DISTINCT     $email.id as local_email_id,
                                         $contact.id as contact_id
@@ -544,7 +533,6 @@ AND    $mg.mailing_id = {$mailing_id}
     $mailingGroup->query($query);
 
     /* Get the emails with full override */
-
 
     $mailingGroup->query(
       "REPLACE INTO       I_$job_id (email_id, contact_id)
@@ -577,7 +565,6 @@ AND    $mg.mailing_id = {$mailing_id}
     $results = [];
 
     $eq = new CRM_Mailing_Event_BAO_Queue();
-
 
     list($aclFrom, $aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause();
     $aclWhere = $aclWhere ? "WHERE {$aclWhere}" : '';
@@ -615,7 +602,7 @@ INNER JOIN I_$job_id i ON contact_a.id = i.contact_id AND contact_a.is_opt_out =
 ORDER BY   i.contact_id, i.email_id
 ";
       CRM_Core_DAO::executeQuery($sql, $params);
-      
+
       // refs #30407, prevent duplicate entry for mailing recipients
       $sql = "SELECT id FROM civicrm_mailing_recipients WHERE mailing_id = %1 GROUP BY email_id HAVING count(id) > 1";
       $dao = CRM_Core_DAO::executeQuery($sql, $params);
@@ -630,7 +617,6 @@ ORDER BY   i.contact_id, i.email_id
     }
 
     /* Delete the temp table */
-
 
     $mailingGroup->reset();
     $mailingGroup->query("DROP TEMPORARY TABLE X_$job_id");
@@ -718,7 +704,6 @@ ORDER BY   i.contact_id, i.email_id
         'mailing' => NULL,
         'contact' => NULL,
       ];
-
 
       CRM_Utils_Hook::tokens($_categories);
       $_categoryString = CRM_Utils_Array::implode('|', array_keys($_categories));
@@ -1165,7 +1150,6 @@ AND civicrm_contact.is_opt_out =0";
       'optOut' => 'o',
     ];
 
-
     $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
@@ -1315,7 +1299,6 @@ AND civicrm_contact.is_opt_out =0";
     if ($replyToEmail && ($fromEmail != $replyToEmail) && CRM_Utils_Mail::checkRFC822Email($fromEmail)) {
       $headers['Reply-To'] = "{$replyToEmail}";
     }
-
 
     // refs #32614, disable smarty evaluation functions
 
@@ -1771,13 +1754,10 @@ AND civicrm_contact.is_opt_out =0";
       return $mailing;
     }
 
-
-
     $groupTableName = CRM_Contact_BAO_Group::getTableName();
     $mailingTableName = CRM_Mailing_BAO_Mailing::getTableName();
 
     /* Create the mailing group record */
-
 
     $mg = new CRM_Mailing_DAO_Group();
     $tables = [
@@ -1836,12 +1816,6 @@ AND civicrm_contact.is_opt_out =0";
 
     $mailing = new CRM_Mailing_BAO_Mailing();
 
-
-
-
-
-
-
     $t = [
       'mailing' => self::getTableName(),
       'mailing_group' => CRM_Mailing_DAO_Group::getTableName(),
@@ -1862,11 +1836,9 @@ AND civicrm_contact.is_opt_out =0";
       'spool' => CRM_Mailing_BAO_Spool::getTableName(),
     ];
 
-
     $report = [];
 
     /* Get the mailing info */
-
 
     $mailing->query("
             SELECT          {$t['mailing']}.*
@@ -1874,7 +1846,6 @@ AND civicrm_contact.is_opt_out =0";
             WHERE           {$t['mailing']}.id = $mailing_id");
 
     $mailing->fetch();
-
 
     $report['mailing'] = [];
     foreach (array_keys(self::fields()) as $field) {
@@ -1890,7 +1861,6 @@ AND civicrm_contact.is_opt_out =0";
     }
     */
 
-
     //mailing report is called by activity
     //we dont need all detail report
     if ($skipDetails) {
@@ -1898,7 +1868,6 @@ AND civicrm_contact.is_opt_out =0";
     }
 
     /* Get the component info */
-
 
     $query = [];
 
@@ -1936,7 +1905,6 @@ AND civicrm_contact.is_opt_out =0";
     }
 
     /* Get the recipient group info */
-
 
     $mailing->query("
             SELECT          {$t['mailing_group']}.group_type as group_type,
@@ -2010,7 +1978,6 @@ AND civicrm_contact.is_opt_out =0";
     }
 
     /* Get the event totals, grouped by job (retries) */
-
 
     $mailing->query("
             SELECT          {$t['job']}.*,
@@ -2139,7 +2106,6 @@ AND civicrm_contact.is_opt_out =0";
       $report['jobs'][] = $row;
     }
 
-
     $newTableSize = CRM_Mailing_BAO_Recipients::mailingSize($mailing_id);
 
     // we need to do this for backward compatibility, since old mailings did not
@@ -2167,7 +2133,6 @@ AND civicrm_contact.is_opt_out =0";
     }
 
     /* Get the click-through totals, grouped by URL */
-
 
     $mailing->query("
             SELECT      {$t['url']}.url,
@@ -2265,7 +2230,6 @@ AND civicrm_contact.is_opt_out =0";
 
     return $this->count;
   }
-
 
   public static function checkPermission($id) {
     if (!$id) {
@@ -2569,7 +2533,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
 
     //get the total number of contacts to fetch from database.
     $numberofContacts = count($contactIDs);
-
 
     $details = CRM_Contact_BAO_Query::apiQuery($params, $returnProperties, NULL, NULL, 0, $numberofContacts, TRUE, TRUE);
 
@@ -2895,7 +2858,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
       ]
     );
 
-
     $form->_templates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
     if (!empty($form->_templates)) {
       $form->assign('templates', TRUE);
@@ -2914,7 +2876,6 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
 
     $form->add('checkbox', 'saveTemplate', ts('Save As New Template'), NULL, FALSE);
     $form->add('text', 'saveTemplateName', ts('Template Title'));
-
 
     $form->addWysiwyg(
       'html_message',
@@ -2971,7 +2932,6 @@ SELECT  $mailing.id as mailing_id
     $htmlHeader = $textHeader = NULL;
     $htmlFooter = $textFooter = NULL;
 
-
     if ($report['mailing']['header_id']) {
       $header = new CRM_Mailing_BAO_Component();
       $header->id = $report['mailing']['header_id'];
@@ -3019,7 +2979,6 @@ SELECT  $mailing.id as mailing_id
       $form->assign('htmlViewURL', $popup);
     }
 
-
     $report['mailing']['attachment'] = CRM_Core_BAO_File::attachmentInfo(
       'civicrm_mailing',
       $form->_mailing_id
@@ -3048,7 +3007,6 @@ WHERE  civicrm_mailing_job.id = %1
     $config = &CRM_Core_Config::singleton();
     CRM_Core_Error::debug_log_message("Beginning processQueue run: {$config->mailerJobsMax}, {$config->mailerJobSize}");
 
-
     if (CRM_Core_BAO_MailSettings::defaultDomain() == "FIXME.ORG") {
       CRM_Core_Session::setStatus(ts('The <a href="%1">default mailbox</a> has not been configured. You will find <a href="%2">more info in our online user and administrator guide.</a>', [1 => CRM_Utils_System::url('civicrm/admin/mailSettings', 'reset=1'), 2 => "http://book.civicrm.org/user/basic-setup/email-system-configuration"]));
       return;
@@ -3058,7 +3016,6 @@ WHERE  civicrm_mailing_job.id = %1
     // CRM-8460
     $gotCronLock = FALSE;
     if ($config->mailerJobsMax && $config->mailerJobsMax > 1) {
-
 
       $lockArray = range(1, $config->mailerJobsMax);
       shuffle($lockArray);
@@ -3085,9 +3042,7 @@ WHERE  civicrm_mailing_job.id = %1
       }
     }
 
-
     // load bootstrap to call hooks
-
 
     // Split up the parent jobs into multiple child jobs
     CRM_Mailing_BAO_Job::runJobs_pre($config->mailerJobSize);

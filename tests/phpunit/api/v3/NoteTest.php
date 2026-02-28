@@ -137,7 +137,6 @@ class api_v3_NoteTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 0, 'in line ' . __LINE__);
   }
 
-
   ///////////////// civicrm_note_create methods
 
   /**
@@ -245,7 +244,6 @@ class api_v3_NoteTest extends CiviUnitTestCase {
         'version' => $this->_apiversion,
       ]);
   }
-
 
   ///////////////// civicrm_note_update methods
 
@@ -378,7 +376,6 @@ function testNoteCreateExample() {
   $expectedResult = UF_match_get_expectedresult();
   $this->assertEquals($result, $expectedResult);
 }
-
 
 function note_create_example() {
   $params = [

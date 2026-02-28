@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class previews the uploaded file and returns summary
  * statistics
@@ -158,7 +156,6 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     foreach ($mapper as $key => $value) {
       $mapperKeys[$key] = $mapper[$key][0];
     }
-
 
     $parser = new CRM_Event_Import_Parser_Participant($mapperKeys);
 

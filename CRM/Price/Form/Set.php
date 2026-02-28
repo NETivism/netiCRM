@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * form to process actions on Price Sets
  */
@@ -131,8 +128,6 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     if ($this->_action == CRM_Core_Action::UPDATE && $this->_sid) {
       $priceSetUsedTables = CRM_Price_BAO_Set::getUsedBy($this->_sid, TRUE);
     }
-
-
 
     $config = CRM_Core_Config::singleton();
     $components = ['CiviEvent' => ['title' => ts('Event'),

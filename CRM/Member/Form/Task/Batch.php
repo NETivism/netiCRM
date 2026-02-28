@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality for batch profile update for members
  */
@@ -124,7 +121,6 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
 
-
     $this->_title = ts('Batch Update for Members') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
 
@@ -164,11 +160,9 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
       ]
     );
 
-
     $this->assign('profileTitle', $this->_title);
     $this->assign('componentIds', $this->_memberIds);
     $fileFieldExists = FALSE;
-
 
     $customFields = CRM_Core_BAO_CustomField::getFields('Membership');
     foreach ($this->_memberIds as $memberId) {

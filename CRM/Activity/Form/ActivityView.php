@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class handle activity view mode
  *
@@ -102,7 +99,6 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
         $values[$key] = $value;
       }
     }
-
 
     $values['attachment'] = CRM_Core_BAO_File::attachmentInfo(
       'civicrm_activity',

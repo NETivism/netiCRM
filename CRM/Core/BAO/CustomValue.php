@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Business objects for managing custom data values.
  *
@@ -173,7 +171,6 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
         return NULL;
     }
   }
-
 
   public static function fixFieldValueOfTypeMemo(&$formValues) {
     if (empty($formValues)) {

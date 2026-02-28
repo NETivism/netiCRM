@@ -136,7 +136,6 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     return $defaults;
   }
 
-
   public function postProcess() {
     // do not submit when button state is refresh
     $buttonPressed = $this->controller->getButtonName();

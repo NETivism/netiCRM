@@ -12,14 +12,14 @@ function run_civimail_process() {
     if (!ini_get('safe_mode')) {
       set_time_limit(0);
     }
-      
+
     // cleanup directories with old mail files (if they exist): CRM-4452
     CiviMailProcessor::cleanupDir($config->customFileUploadDir . DIRECTORY_SEPARATOR . 'CiviMail.ignored');
     CiviMailProcessor::cleanupDir($config->customFileUploadDir . DIRECTORY_SEPARATOR . 'CiviMail.processed');
-      
+
     // if there are named sets of settings, use them - otherwise use the default (null)
     $names = isset($_REQUEST['names']) && is_array($_REQUEST['names']) ? $_REQUEST['names'] : [ NULL ];
-      
+
     foreach ($names as $name) {
       CiviMailProcessor::process($name);
     }
@@ -248,7 +248,7 @@ class CiviMailProcessor {
           $log = "Failed Processing: {$mail->subject}, Action: $action, Job ID: $job, Queue ID: $queue, Hash: $hash. Failed Reason: {$result['error_message']}";
           CRM_Core_Error::debug_log_message($log);
         }
-                
+
         $store->markProcessed($key);
       }
     }

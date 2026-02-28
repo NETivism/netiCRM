@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Gender
  */
@@ -159,7 +157,6 @@ class CRM_Campaign_Page_SurveyType extends CRM_Core_Page_Basic {
    * @static
    */
   public function browse() {
-
 
     $campaingCompId = CRM_Core_Component::getComponentID('CiviCampaign');
     $groupParams = ['name' => $this->_gName];

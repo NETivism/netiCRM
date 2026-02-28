@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Extensions
  *
@@ -51,7 +49,6 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   public function preProcess() {
     parent::preProcess();
 
-
     $this->_key = CRM_Utils_Request::retrieve(
       'key',
       'String',
@@ -65,7 +62,6 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     $session->pushUserContext($url);
     $this->assign('id', $this->_id);
     $this->assign('key', $this->_key);
-
 
     $ext = new CRM_Core_Extensions();
     $extension = $ext->getExtensionsByKey(TRUE);

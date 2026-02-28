@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType {
 
   /**
@@ -147,8 +146,6 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
     if (!CRM_Utils_Rule::positiveInteger($relationshipTypeId)) {
       return CRM_Core_Error::statusBounce(ts('Invalid relationship type'));
     }
-
-
 
     //check dependencies
 

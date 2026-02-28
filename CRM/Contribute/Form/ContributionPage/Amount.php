@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form to process actions on the group aspect of Custom Data
  */
@@ -60,7 +58,6 @@ class CRM_Contribute_Form_ContributionPage_Amount extends CRM_Contribute_Form_Co
    * @access public
    */
   public function buildQuickForm() {
-
 
     // do u want to allow a free form text field for amount
     $this->addElement('checkbox', 'is_allow_other_amount', ts('Allow other amounts'), NULL, ['onclick' => "minMax(this);showHideAmountBlock( this, 'is_allow_other_amount' );"]);
@@ -132,9 +129,6 @@ SELECT id
       NULL,
       ['&nbsp;&nbsp;', '&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br />']
     );
-
-
-
 
     //check if selected payment processor supports recurring payment
     if (!empty($recurringPaymentProcessor)) {
@@ -291,7 +285,7 @@ SELECT id
     if (!CRM_Utils_Array::value('pay_later_text', $defaults)) {
       $defaults['pay_later_text'] = ts('I will send payment by check');
     }
-    
+
     if (CRM_Utils_Array::value('payment_processor', $defaults)) {
       $defaults['payment_processor'] = array_fill_keys(explode(
         CRM_Core_DAO::VALUE_SEPARATOR,
@@ -314,7 +308,6 @@ SELECT id
         return $defaults;
       }
 
-
       CRM_Core_OptionGroup::getAssoc("civicrm_contribution_page.amount.{$this->_id}", $this->_amountBlock);
       $hasAmountBlock = FALSE;
       if (!empty($this->_amountBlock)) {
@@ -335,7 +328,7 @@ SELECT id
         }
 
         // CRM-4038: fix value display
-        foreach ($defaults['value'] as & $amount) {
+        foreach ($defaults['value'] as &$amount) {
           $amount = trim(CRM_Utils_Money::format($amount, ' '));
         }
       }
@@ -396,7 +389,6 @@ SELECT id
     //check if separate membership payment enabled,
     //if so disable first separate membership payment option
     //then disable contribution amount section. CRM-3801,
-
 
     $membershipBlock = new CRM_Member_DAO_MembershipBlock();
     $membershipBlock->entity_table = 'civicrm_contribution_page';
@@ -540,7 +532,6 @@ SELECT id
       $params['pay_later_receipt'] = 'null';
     }
 
-
     $contributionPage = CRM_Contribute_BAO_ContributionPage::create($params);
     $contributionPageID = $contributionPage->id;
 
@@ -557,9 +548,6 @@ SELECT id
     }
 
     if ($contributionPageID) {
-
-
-
 
       if (CRM_Utils_Array::value('amount_block_is_active', $params)) {
         // handle price set.

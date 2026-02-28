@@ -33,7 +33,6 @@
  *
  */
 
-
 //require_once 'CRM/Price/BAO/Set.php';
 //
 //require_once 'CRM/Core/BAO/CustomOption.php';
@@ -135,7 +134,6 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
     $this->assign('groupTree', $this->_groupTree);
 
     // add the form elements
-
 
     foreach ($this->_groupTree as $group) {
       if (is_array($group['fields']) && !empty($group['fields'])) {

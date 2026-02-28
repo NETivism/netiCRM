@@ -19,15 +19,15 @@ class CRM_Contact_BAO_QueryTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Query Tests',
                  ];
   }
-    
+
   public function dataProvider() {
-    return new CRM_Contact_BAO_QueryTestDataProvider;
+    return new CRM_Contact_BAO_QueryTestDataProvider();
   }
 
   public function setUp() {
     parent::setUp();
   }
-    
+
   public function tearDown() {
     $tablesToTruncate = [ 'civicrm_group_contact',
                                'civicrm_group',
@@ -38,7 +38,7 @@ class CRM_Contact_BAO_QueryTest extends CiviUnitTestCase {
                                ];
     $this->quickCleanup($tablesToTruncate);
   }
-    
+
   /**
    *  Test CRM_Contact_BAO_Query::searchQuery()
    *  @dataProvider dataProvider
@@ -133,7 +133,7 @@ class CRM_Contact_BAO_QueryTest extends CiviUnitTestCase {
     while ($dao->fetch()) {
       $contacts[] = $dao->contact_id;
     }
-        
+
     sort($contacts, SORT_NUMERIC);
 
     $expectedIDs = [];

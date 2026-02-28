@@ -1,6 +1,5 @@
 <?php
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CiviTest/Contact.php';
 require_once 'CiviTest/Custom.php';
@@ -14,7 +13,7 @@ class CRM_Core_BAO_CustomValueTableMultipleTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
@@ -34,11 +33,11 @@ class CRM_Core_BAO_CustomValueTableMultipleTest extends CiviUnitTestCase {
                      "custom_{$customField->id}_-1" => 'First String',
                      ];
     $error = CRM_Core_BAO_CustomValueTable::setValues($params);
-        
+
     $newParams = [ 'entityID'    => $contactID,
                         "custom_{$customField->id}" => 1 ];
     $result = CRM_Core_BAO_CustomValueTable::getValues($newParams);
-        
+
     $this->assertEquals($params["custom_{$customField->id}_-1"], $result["custom_{$customField->id}_1"]);
     $this->assertEquals($params['entityID'], $result['entityID']);
 
@@ -63,11 +62,11 @@ class CRM_Core_BAO_CustomValueTableMultipleTest extends CiviUnitTestCase {
                      "custom_{$customField->id}_-2" => 'Second String',
                      ];
     $error = CRM_Core_BAO_CustomValueTable::setValues($params);
-        
+
     $newParams = [ 'entityID'    => $contactID,
                         "custom_{$customField->id}" => 1 ];
     $result = CRM_Core_BAO_CustomValueTable::getValues($newParams);
-        
+
     $this->assertEquals($params["custom_{$customField->id}_-1"], $result["custom_{$customField->id}_1"]);
     $this->assertEquals($params["custom_{$customField->id}_-2"], $result["custom_{$customField->id}_2"]);
     $this->assertEquals($params['entityID'], $result['entityID']);
@@ -94,12 +93,12 @@ class CRM_Core_BAO_CustomValueTableMultipleTest extends CiviUnitTestCase {
                      "custom_{$customField->id}_-3" => 'Third String',
                      ];
     $error = CRM_Core_BAO_CustomValueTable::setValues($params);
-        
+
     $newParams = [ 'entityID'    => $contactID,
                         "custom_{$customField->id}_1" => 'Updated First String',
                         "custom_{$customField->id}_3" => 'Updated Third String' ];
     $result = CRM_Core_BAO_CustomValueTable::setValues($newParams);
-        
+
     $getParams = [ 'entityID'    => $contactID,
                         "custom_{$customField->id}" => 1 ];
     $result = CRM_Core_BAO_CustomValueTable::getValues($getParams);
@@ -129,11 +128,11 @@ class CRM_Core_BAO_CustomValueTableMultipleTest extends CiviUnitTestCase {
                      "custom_{$customField->id}" => 'First String',
                      ];
     $error = CRM_Core_BAO_CustomValueTable::setValues($params);
-        
+
     $newParams = [ 'entityID'    => $contactID,
                         "custom_{$customField->id}" => 1 ];
     $result = CRM_Core_BAO_CustomValueTable::getValues($newParams);
-        
+
     $this->assertEquals($params["custom_{$customField->id}"], $result["custom_{$customField->id}_1"]);
     $this->assertEquals($params['entityID'], $result['entityID']);
 

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
 
   /**
@@ -65,7 +64,6 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   protected $_mailingidField = FALSE;
 
   protected $_customGroupExtends = [];
-
 
   protected $_charts = ['' => 'Tabular',
     'bar_3dChart' => 'Bar Chart',
@@ -266,7 +264,6 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
   }
 
   public function mailing_select() {
-
 
     $data = [];
 
@@ -554,7 +551,6 @@ class CRM_Report_Form_Mailing_Summary extends CRM_Report_Form {
         }
         $entryFound = TRUE;
       }
-
 
       // skip looking further in rows, if first row itself doesn't
       // have the column we need

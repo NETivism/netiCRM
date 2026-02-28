@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form for thank-you / success page - 3rd step of online contribution process
  */
@@ -138,8 +136,8 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       $this->assign('product_quantity', 1);
       $membershipAmount = $this->get('membership_amount');
       if ($membershipAmount) {
-        $this->assign('product_amount', $this->_params['amount']+$membershipAmount);
-        $this->assign('total_amount', $this->_params['amount']+$membershipAmount);
+        $this->assign('product_amount', $this->_params['amount'] + $membershipAmount);
+        $this->assign('total_amount', $this->_params['amount'] + $membershipAmount);
       }
       else {
         $this->assign('product_amount', $this->_params['amount']);
@@ -222,7 +220,6 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       $this->assign('honor_block_is_active', $honor_block_is_active);
       $this->assign('honor_block_title', CRM_Utils_Array::value('honor_block_title', $this->_values));
 
-
       $prefix = CRM_Core_PseudoConstant::individualPrefix();
       $honor = CRM_Core_PseudoConstant::honor();
       $this->assign('honor_type', $honor[$params["honor_type_id"]]);
@@ -242,7 +239,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     }
 
     if ($membershipTypeID) {
-      $memberTrxnId= $this->get('membership_trx_id');
+      $memberTrxnId = $this->get('membership_trx_id');
       $membershipAmount = $this->get('membership_amount');
       $renewalMode = $this->get('renewal_mode');
       $this->assign('membership_trx_id', $memberTrxnId);

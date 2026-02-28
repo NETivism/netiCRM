@@ -37,7 +37,6 @@
  * @version $Id: CustomGroup.php 30879 2010-11-22 15:45:55Z shot $
  */
 
-
 require_once 'CRM/Core/BAO/CustomGroup.php';
 
 /**
@@ -80,7 +79,6 @@ function civicrm_api3_custom_group_create($params) {
     // BAO fails if this is a string, but API getFields says this must be a string, so we'll do a double backflip
     $params['extends_entity_column_value'] = CRM_Utils_Array::explodePadded($params['extends_entity_column_value']);
   }
-
 
   $customGroup = CRM_Core_BAO_CustomGroup::create($params);
 

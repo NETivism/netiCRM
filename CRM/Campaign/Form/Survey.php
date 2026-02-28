@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for processing a survey
  *
@@ -147,11 +143,9 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
     if ($this->_surveyId) {
 
-
       if (CRM_Utils_Array::value('result_id', $defaults) &&
         CRM_Utils_Array::value('recontact_interval', $defaults)
       ) {
-
 
         $resultId = $defaults['result_id'];
         $recontactInterval = unserialize($defaults['recontact_interval']);
@@ -211,10 +205,6 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
       );
       return;
     }
-
-
-
-
 
     $this->add('text', 'title', ts('Title'), CRM_Core_DAO::getAttribute('CRM_Campaign_DAO_Survey', 'title'), TRUE);
 
@@ -528,9 +518,6 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
     $params['last_modified_id'] = $session->get('userID');
     $params['last_modified_date'] = date('YmdHis');
 
-
-
-
     $updateResultSet = FALSE;
     if ((CRM_Utils_Array::value('option_type', $params) == 2) &&
       CRM_Utils_Array::value('option_group_id', $params)
@@ -560,7 +547,6 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
     $params['is_default'] = CRM_Utils_Array::value('is_default', $params, 0);
 
     $recontactInterval = [];
-
 
     if ($updateResultSet) {
       $optionValue = new CRM_Core_DAO_OptionValue();
@@ -618,8 +604,6 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
         CRM_Core_BAO_OptionGroup::del($this->_values['result_id']);
       }
     }
-
-
 
     // also update the ProfileModule tables
     $ufJoinParams = ['is_active' => 1,

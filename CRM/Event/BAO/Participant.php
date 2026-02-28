@@ -35,7 +35,6 @@
  *
  */
 
-
 class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
 
   /**
@@ -87,7 +86,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
    */
   public static function &add(&$params) {
 
-
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'Participant', $params['id'], $params);
     }
@@ -108,7 +106,7 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
       $params['fee_amount'] = CRM_Utils_Rule::cleanMoney($params['fee_amount']);
     }
 
-    $participantBAO = new CRM_Event_BAO_Participant;
+    $participantBAO = new CRM_Event_BAO_Participant();
     if (CRM_Utils_Array::value('id', $params)) {
       $participantBAO->id = CRM_Utils_Array::value('id', $params);
       $participantBAO->find(TRUE);
@@ -190,8 +188,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
 
   public static function &create(&$params) {
 
-
-
     $transaction = new CRM_Core_Transaction();
     $status = NULL;
 
@@ -262,7 +258,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
           'modified_date' => date('Ymd'),
         ];
 
-
         CRM_Core_BAO_Note::add($noteParams, ['id' => $noteId]);
       }
       elseif ($noteId && $hasNoteField) {
@@ -289,8 +284,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
 
     // do not add to recent items for import, CRM-4399
     if (!CRM_Utils_Array::value('skipRecentView', $params)) {
-
-
 
       $url = CRM_Utils_System::url(
         'civicrm/contact/view/participant',
@@ -376,7 +369,6 @@ class CRM_Event_BAO_Participant extends CRM_Event_DAO_Participant {
     // 2. (count(participants-with-status-on-waitlist) > 0)
     // It might be case there are some empty spaces and still event
     // is full, as waitlist might represent group require spaces > empty.
-
 
     $participantRoles = CRM_Event_PseudoConstant::participantRole(NULL, 'filter = 1');
     $countedStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1");
@@ -532,7 +524,6 @@ SELECT  event.event_full_text,
       return $optionsCount;
     }
 
-
     $allStatusIds = [];
     if ($considerCounted) {
       $countedStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1");
@@ -579,10 +570,10 @@ INNER JOIN  civicrm_contact ct ON ( ct.id = participant.contact_id ) AND ( ct.is
     while ($lineItem->fetch()) {
       $count = $lineItem->count ? $lineItem->count : 0;
       if ($lineItem->html_type == 'Text') {
-        $count = $lineItem->qty*$count;
+        $count = $lineItem->qty * $count;
       }
       elseif ($lineItem->qty) {
-        $count = $lineItem->qty*$count;
+        $count = $lineItem->qty * $count;
       }
       else {
         $count = $lineItem->count;
@@ -689,7 +680,6 @@ GROUP BY  participant.event_id
         $fields = [];
       }
 
-
       $tmpFields = CRM_Event_DAO_Participant::import();
 
       $note = ['participant_note' => [
@@ -770,7 +760,6 @@ GROUP BY  participant.event_id
 
       $fields = [];
 
-
       $participantFields = CRM_Event_DAO_Participant::export();
       $noteField = ['participant_note' => ['title' => ts('Note'),
           'name' => 'participant_note',
@@ -783,7 +772,6 @@ GROUP BY  participant.event_id
       $participantRole = ['participant_role' => ['title' => ts('Participant Role'),
           'name' => 'participant_role',
         ]];
-
 
       $discountFields = CRM_Core_DAO_Discount::export();
       $trackField = CRM_Core_DAO_Track::export();
@@ -839,7 +827,6 @@ WHERE  civicrm_participant.id = {$participantId}
    */
   public static function resolveDefaults(&$defaults, $reverse = FALSE) {
 
-
     self::lookupValue($defaults, 'event', CRM_Event_PseudoConstant::event(), $reverse);
     self::lookupValue($defaults, 'status', CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label'), $reverse);
     self::lookupValue($defaults, 'role', CRM_Event_PseudoConstant::participantRole(), $reverse);
@@ -885,7 +872,6 @@ WHERE  civicrm_participant.id = {$participantId}
    */
   public static function deleteParticipant($id) {
 
-
     // find related contribution
     $relatedContributions = [];
     $participantPayment = new CRM_Event_DAO_ParticipantPayment();
@@ -894,7 +880,6 @@ WHERE  civicrm_participant.id = {$participantId}
     while ($participantPayment->fetch()) {
       $relatedContributions[] = $participantPayment->contribution_id;
     }
-    
 
     $transaction = new CRM_Core_Transaction();
 
@@ -1165,8 +1150,6 @@ INNER JOIN civicrm_price_field_value value ON ( value.id = lineItem.price_field_
     $additionalParticipantIDs = self::getAdditionalParticipantIds($primaryParticipantID);
     if (!empty($additionalParticipantIDs)) {
 
-
-
       foreach ($additionalParticipantIDs as $additionalParticipantID) {
         $additionalContactID = CRM_Core_DAO::getFieldValue(
           "CRM_Event_DAO_Participant",
@@ -1307,7 +1290,6 @@ UPDATE  civicrm_participant
 
     $contactIds = $eventIds = $participantDetails = [];
 
-
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
     $participantRoles = CRM_Event_PseudoConstant::participantRole();
     $pendingStatuses = CRM_Event_PseudoConstant::participantStatus(
@@ -1344,7 +1326,6 @@ UPDATE  civicrm_participant
     //get the domain values.
     if (empty($domainValues)) {
       // making all tokens available to templates.
-
 
       $domain = &CRM_Core_BAO_Domain::getDomain();
       $tokens = ['domain' => ['name', 'phone', 'address', 'email'],
@@ -1464,7 +1445,7 @@ UPDATE  civicrm_participant
             else {
               $baseTime = strtotime($participantValues['register_date']);
             }
-            $plusDay = ceil($eventDetails[$participantValues['event_id']]['expiration_time']/24);
+            $plusDay = ceil($eventDetails[$participantValues['event_id']]['expiration_time'] / 24);
             $lastRegisteration = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
             $lastRegisteration = date('Y-m-d H:i:s', $lastRegisteration);
           }
@@ -1562,7 +1543,6 @@ UPDATE  civicrm_participant
       //calculate the checksum value.
       $checksumValue = NULL;
       if ($mailType == 'Confirm' && !$participantValues['registered_by_id']) {
-
 
         $checksumLife = 'inf';
         if ($endDate = CRM_Utils_Array::value('end_date', $eventDetails)) {
@@ -1757,7 +1737,6 @@ UPDATE  civicrm_participant
 
     $additionalParticipantIds = [];
 
-
     static $participantStatuses = [];
 
     if (empty($participantStatuses)) {
@@ -1856,10 +1835,10 @@ INNER JOIN  civicrm_price_field field ON ( value.price_field_id = field.id )
     while ($lineItem->fetch()) {
       $count = $lineItem->count ? $lineItem->count : 0;
       if ($lineItem->html_type == 'Text') {
-        $count = $lineItem->qty*$count;
+        $count = $lineItem->qty * $count;
       }
       elseif ($lineItem->qty) {
-        $count = $lineItem->qty*$count;
+        $count = $lineItem->qty * $count;
       }
       else {
         $count = $lineItem->count;

@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -423,8 +415,6 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
           ]
         );
       }
-
-
 
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
         $result->contact_sub_type ?

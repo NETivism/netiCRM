@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public $_group;
@@ -141,7 +140,6 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
     $tag = ['' => ts('- any tag -')] + CRM_Core_PseudoConstant::tag();
     $form->addElement('select', 'tag', ts('Tag'), $tag);
 
-
     // state country js, CRM-5233
 
     CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
@@ -222,7 +220,6 @@ LEFT JOIN civicrm_group_contact cgc ON ( cgc.contact_id = contact_a.id AND cgc.s
   public function where($includeContactIDs = FALSE) {
     $params = [];
     $clause = [];
-
 
     $where = CRM_Contact_BAO_ProximityQuery::where(
       $this->_latitude,

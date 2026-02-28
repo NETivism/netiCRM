@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality for cancel registration for event participations
  */

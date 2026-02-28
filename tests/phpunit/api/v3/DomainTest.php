@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/v3/Domain.php';
 
@@ -42,8 +39,6 @@ class api_v3_DomainTest extends CiviUnitTestCase {
 
   /* This test case doesn't require DB reset - apart from
        where cleanDB() is called. */
-
-
 
   public $DBResetRequired = FALSE;
 
@@ -110,7 +105,6 @@ class api_v3_DomainTest extends CiviUnitTestCase {
    * Testing mainly for format.
    */
   public function testGet() {
-    
 
     $params = ['version' => 3];
     $result = civicrm_api('domain', 'get', $params);
@@ -125,7 +119,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
 
       $this->assertEquals("info@FIXME.ORG", $domain['from_email'], 'In line ' . __LINE__);
       $this->assertEquals("FIXME", $domain['from_name'], 'In line' . __LINE__);
-     
+
       // checking other important parts of domain information
       // test will fail if backward incompatible changes happen
       $this->assertArrayHasKey('id', $domain, 'In line' . __LINE__);
@@ -167,8 +161,6 @@ class api_v3_DomainTest extends CiviUnitTestCase {
   /*
     * This test checks for a memory leak observed when doing 2 gets on current domain
     */
-
-
 
   public function testGetCurrentDomainTwice() {
     $domain = civicrm_api('domain', 'getvalue', [

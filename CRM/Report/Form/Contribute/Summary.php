@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
   /**
    * @var array<string, array<'no_display', bool>>

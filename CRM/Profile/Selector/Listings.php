@@ -33,15 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -313,7 +304,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
         ],
       ];
 
-
       $locationTypes = CRM_Core_PseudoConstant::locationType();
 
       foreach ($this->_fields as $name => $field) {
@@ -460,7 +450,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
     }
     $links = &self::links($this->_map, $this->_editLink, $this->_linkToUF, $this->_profileIds);
 
-
     $locationTypes = CRM_Core_PseudoConstant::locationType();
 
     $names = [];
@@ -515,8 +504,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
         }
       }
     }
-
-
 
     $multipleSelectFields = ['preferred_communication_method' => 1];
     if (CRM_Core_Permission::access('Quest')) {

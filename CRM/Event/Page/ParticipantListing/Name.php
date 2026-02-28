@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Event_Page_ParticipantListing_Name extends CRM_Event_Page_ParticipantListing_Simple {
   public function preProcess() {
     $this->_participantListingType == 'Name';

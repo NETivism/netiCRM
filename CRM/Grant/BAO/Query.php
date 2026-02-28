@@ -188,7 +188,6 @@ class CRM_Grant_BAO_Query {
 
         $query->_where[$grouping][] = "civicrm_grant.grant_type_id $op '{$value}'";
 
-
         $grantTypes = CRM_Core_OptionGroup::values('grant_type');
         $value = $grantTypes[$value];
         $query->_qill[$grouping][] = ts('Grant Type %2 %1', [1 => $value, 2 => $op]);
@@ -201,8 +200,6 @@ class CRM_Grant_BAO_Query {
         $value = mb_strtolower(CRM_Core_DAO::escapeString(trim($value)), 'UTF-8');
 
         $query->_where[$grouping][] = "civicrm_grant.status_id $op '{$value}'";
-
-
 
         $grantStatus = CRM_Core_OptionGroup::values('grant_status');
         $value = $grantStatus[$value];
@@ -311,8 +308,6 @@ class CRM_Grant_BAO_Query {
    * @static
    */
   public static function buildSearchForm(&$form) {
-
-
 
     $grantType = CRM_Core_OptionGroup::values('grant_type');
     $form->add(

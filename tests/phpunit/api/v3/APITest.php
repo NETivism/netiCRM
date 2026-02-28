@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/api.php';
 
@@ -96,7 +93,6 @@ class api_v3_APITest extends CiviUnitTestCase {
     * test that error doesn't occur for non-existant file
     */
   public function testAPIWrapperIncludeNoFile() {
-
 
     $result = civicrm_api('RandomFile', 'get', ['version' => 3]);
     $this->assertEquals($result['is_error'], 1);

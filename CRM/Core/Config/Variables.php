@@ -36,7 +36,6 @@
  *
  */
 
-
 class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
 
   /**

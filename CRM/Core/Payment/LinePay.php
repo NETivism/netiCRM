@@ -23,7 +23,6 @@
   +--------------------------------------------------------------------+
 */
 
-
 /*
  * PxPay Functionality Copyright (C) 2008 Lucas Baker, Logistic Information Systems Limited (Logis)
  * PxAccess Functionality Copyright (C) 2008 Eileen McNaughton
@@ -56,13 +55,13 @@ class CRM_Core_Payment_LinePay {
     $path = CRM_Utils_System::currentPath();
 
     if (!empty($params['participantID'])) {
-      $confirmQuery.="&pid={$params['participantID']}";
+      $confirmQuery .= "&pid={$params['participantID']}";
     }
     if (!empty($params['eventID'])) {
-      $confirmQuery.="&eid={$params['eventID']}";
+      $confirmQuery .= "&eid={$params['eventID']}";
     }
     if (!empty($params['membershipID'])) {
-      $confirmQuery.="&mid={$params['membershipID']}";
+      $confirmQuery .= "&mid={$params['membershipID']}";
     }
 
     $confirmUrl = CRM_Utils_System::url('civicrm/linepay/confirm', $confirmQuery, TRUE, NULL, FALSE);

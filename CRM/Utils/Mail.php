@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /**
  *
  * @package CRM
@@ -158,7 +157,6 @@ class CRM_Utils_Mail {
       }
     }
     CRM_Mailing_BAO_Mailing::addMessageIdHeader($headers);
-
 
     $msg = new Mail_mime("\n");
     if ($textMessage) {
@@ -493,7 +491,6 @@ class CRM_Utils_Mail {
     return $result;
   }
 
-
   public static function checkMailProviders($email) {
     $mailProviders = str_replace('.', '\.', self::DMARC_MAIL_PROVIDERS);
     if (preg_match('/'.$mailProviders.'/i', $email)) {
@@ -628,7 +625,6 @@ class CRM_Utils_Mail {
       return [];
     }
 
-
     if (strstr($email, '@')) {
       list($user, $domain) = explode('@', trim($email));
     }
@@ -677,7 +673,7 @@ class CRM_Utils_Mail {
       return NULL;
     }
     $defaultFrom = CRM_Mailing_BAO_Mailing::defaultFromMail();
-    $defaultDomain = substr($defaultFrom, strpos($defaultFrom, '@')+1);
+    $defaultDomain = substr($defaultFrom, strpos($defaultFrom, '@') + 1);
     if ($saveFile) {
       $confPath = CRM_Utils_System::cmsRootPath().DIRECTORY_SEPARATOR.CRM_Utils_System::confPath().DIRECTORY_SEPARATOR;
       $savePath = $confPath.basename($saveFile);

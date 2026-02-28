@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
   protected $_profileID;
@@ -41,7 +40,7 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
   protected $_fields = [];
 
   protected $_openID;
-  
+
   public function preProcess() {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework !== "Standalone") {
@@ -58,7 +57,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     foreach ($ufGroups as $id => $dontCare) {
       $this->_profileID = $id;
     }
-
 
     $session = CRM_Core_Session::singleton();
     $this->_openID = $session->get('openid');
@@ -101,7 +99,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     );
     $this->assign('custom', $fields);
 
-
     foreach ($fields as $key => $field) {
       CRM_Core_BAO_UFGroup::buildProfile(
         $this,
@@ -127,10 +124,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
   public function postProcess() {
     $formValues = $this->controller->exportValues($this->_name);
 
-
-
-
-
     $user = new CRM_Standalone_User(
       $formValues['user_unique_id'],
       $formValues['email'],
@@ -138,7 +131,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
       $formValues['last_name']
     );
     CRM_Utils_System_Standalone::getUserID($user);
-
 
     $session = CRM_Core_Session::singleton();
     $contactId = $session->get('userID');
@@ -156,7 +148,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
     // add first user to admin group
     if ($ufCount == 1) {
-
 
       $group = new CRM_Contact_DAO_Group();
       $group->name = 'Administrators';

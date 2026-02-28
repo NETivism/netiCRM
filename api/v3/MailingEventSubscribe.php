@@ -65,7 +65,6 @@ function civicrm_api3_mailing_event_subscribe_create($params) {
   if ($subscribe !== NULL) {
     /* Ask the contact for confirmation */
 
-
     $subscribe->send_confirm_request($email);
 
     $values = [];

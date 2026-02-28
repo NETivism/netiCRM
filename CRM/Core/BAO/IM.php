@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contain function for IM handling
  */
@@ -134,10 +132,8 @@ ORDER BY
       return NULL;
     }
 
-
     $entityId = $entityElements['entity_id'];
     $entityTable = $entityElements['entity_table'];
-
 
     $sql = "SELECT cim.name as im, ltype.name as locationType, cim.is_primary as is_primary, cim.id as im_id, cim.location_type_id as locationTypeId
 FROM civicrm_loc_block loc, civicrm_im cim, civicrm_location_type ltype, {$entityTable} ev

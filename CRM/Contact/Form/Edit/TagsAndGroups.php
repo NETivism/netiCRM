@@ -127,7 +127,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
 
         if (!empty($elements)) {
           if ($classContext == 'CRM_Contact_Form_Contact') {
-            $form->addSelect($fName, ts($groupName), $elements, ['multiple'=>'multiple']);
+            $form->addSelect($fName, ts($groupName), $elements, ['multiple' => 'multiple']);
             if (!empty($form->_entityId)) {
               $contactGroup = CRM_Contact_BAO_GroupContact::getContactGroup($form->_entityId, 'Added', NULL, FALSE, TRUE);
               if (!empty($contactGroup)) {
@@ -170,7 +170,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       }
       if (!empty($elements)) {
         if ($classContext == 'CRM_Contact_Form_Contact') {
-          $form->addSelect($fName, ts($tagName), $elements, ['multiple'=>'multiple']);
+          $form->addSelect($fName, ts($tagName), $elements, ['multiple' => 'multiple']);
           if (!empty($form->_entityId)) {
             $contactTag = CRM_Core_BAO_EntityTag::getTag($form->_entityId);
             if (!empty($contactTag)) {
@@ -189,7 +189,6 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       }
 
       // build tag widget
-
 
       $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
 
@@ -219,7 +218,6 @@ class CRM_Contact_Form_Edit_TagsandGroups {
         $fName = $fieldName;
       }
 
-
       $contactGroup = &CRM_Contact_BAO_GroupContact::getContactGroup($id, 'Added', NULL, FALSE, TRUE);
       if ($contactGroup) {
         foreach ($contactGroup as $group) {
@@ -233,7 +231,6 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       if ($fieldName) {
         $fName = $fieldName;
       }
-
 
       $contactTag = &CRM_Core_BAO_EntityTag::getTag($id);
       if ($contactTag) {

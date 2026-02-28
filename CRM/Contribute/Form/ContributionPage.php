@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * form to process actions on the group aspect of Custom Data
  */
@@ -313,7 +309,6 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
     else {
       $defaults['is_for_organization'] = 1;
     }
-
 
     return $defaults;
   }

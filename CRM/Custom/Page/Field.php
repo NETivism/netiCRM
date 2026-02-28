@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Custom Fields.
  *
@@ -230,7 +228,6 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    */
   public function run() {
 
-
     // get the group id
     $this->_gid = CRM_Utils_Request::retrieve(
       'gid',
@@ -293,7 +290,6 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $this->preview($id);
     }
     else {
-
 
       $this->browse();
     }

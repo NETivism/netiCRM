@@ -37,9 +37,6 @@
  * Files required
  */
 
-
-
-
 class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
   /**
@@ -134,7 +131,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
    */
   protected $_prefix = "survey_";
 
-
   private $_operation = 'reserve';
 
   /**
@@ -205,7 +201,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
     //get the voter clause.
     $voterClause = $this->voterClause();
-
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
@@ -278,7 +273,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
          * of all elements being declared in builQuickForm
          */
 
-
     $rows = $this->get('rows');
     if (is_array($rows)) {
       if (!$this->_single) {
@@ -289,7 +283,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
       }
 
       $total = $cancel = 0;
-
 
       $permission = CRM_Core_Permission::getPermission();
 
@@ -392,7 +385,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
     //format params as per task.
     $this->formatParams();
-
 
     $this->_queryParams = CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 

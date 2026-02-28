@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
 
   /**
@@ -47,7 +46,6 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
 
     $ids = [$this->_contactId];
     $locations = CRM_Contact_BAO_Contact_Location::getMapInfo($ids);
-
 
     $rows = &CRM_Utils_Sunlight::getInfo(
       $locations[0]['city'],

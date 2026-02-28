@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Premiums
  *
@@ -156,7 +154,6 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->add('file', 'uploadFile', ts('Image File Name'), 'onChange="select_option();"');
     $this->addRule('uploadFile', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '1000x1000');
 
-
     $this->addNumber('price', ts('Market Value'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'price'), TRUE);
     $this->addRule('price', ts('Please enter the Market Value for this product.'), 'money');
 
@@ -179,7 +176,6 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->add('select', 'period_type', ts('Period Type'), ['' => ts('- select -'), 'rolling' => ts('rolling'), 'fixed' => ts('fixed')]);
 
     $this->add('text', 'fixed_period_start_day', ts('Fixed Period Start Day'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'fixed_period_start_day'));
-
 
     $this->add('Select', 'duration_unit', ts('Duration Unit'), ['' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')]);
 

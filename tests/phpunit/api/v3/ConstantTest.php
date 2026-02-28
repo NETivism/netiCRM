@@ -125,8 +125,6 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
     // needed to get rid of cached values from previous tests
     CRM_Core_PseudoConstant::flush('locationType');
 
-
-
     $params = [
       'name' => 'locationType',
       'version' => $this->_apiversion,
@@ -171,7 +169,6 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
    *  Test civicrm_constant_get( 'mailProtocol' )
    */
   public function testmailProtocol() {
-
 
     $parameters = [TRUE, FALSE, TRUE];
 

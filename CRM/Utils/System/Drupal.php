@@ -159,7 +159,7 @@ class CRM_Utils_System_Drupal {
       return FALSE;
     }
   }
-  
+
   /**
    * Redirect to url
    *
@@ -254,11 +254,11 @@ class CRM_Utils_System_Drupal {
     $version = self::$_version;
     if ($version < 8) {
       if (is_object($user)) {
-        return !empty($user->mail) ? $user->mail: 0;
+        return !empty($user->mail) ? $user->mail : 0;
       }
       else {
         global $user;
-        return !empty($user->mail) ? $user->mail: 0;
+        return !empty($user->mail) ? $user->mail : 0;
       }
     }
     else {
@@ -1265,7 +1265,7 @@ class CRM_Utils_System_Drupal {
     }
     return FALSE;
   }
-  
+
   public function tempstoreGet($name) {
     $version = self::$_version;
     // refs #31356, this is drupal 8 / 9 specific code for retrieve tempstore

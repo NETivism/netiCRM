@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * form to process actions on the field aspect of Custom
  */
@@ -144,7 +139,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       $this->_title = $this->_groupInfo['title'];
       CRM_Utils_System::setTitle($this->_title . ' - ' . ts('CiviCRM Profile Fields'));
       $this->assign('groupTitle', $this->_title);
-
 
       $url = CRM_Utils_System::url('civicrm/admin/uf/group/field', "reset=1&action=browse&gid={$this->_gid}");
       CRM_Utils_System::resetBreadCrumb();
@@ -295,7 +289,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $fields['Individual']['current_employer'] = ['name' => 'organization_name',
       'title' => ts('Current Employer'),
     ];
-
 
     $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
 
@@ -515,7 +508,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     }
     $this->assign('noSearchable', $noSearchable);
 
-
     $this->_location_types = CRM_Core_PseudoConstant::locationType();
     $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
     $this->_website_types = CRM_Core_PseudoConstant::websiteType();
@@ -523,7 +515,6 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     /* FIXME: dirty hack to make the default option show up first.  This
         * avoids a mozilla browser bug with defaults on dynamically constructed
         * selector widgets. */
-
 
     if ($defaultLocationType) {
       $defaultLocation = $this->_location_types[$defaultLocationType->id];

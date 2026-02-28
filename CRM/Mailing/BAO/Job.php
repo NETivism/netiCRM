@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 class CRM_Mailing_BAO_Job extends CRM_Mailing_DAO_Job {
   public $dedupe_email;
   public const MAX_CONTACTS_TO_PROCESS = 1000;
@@ -103,8 +98,6 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
       $job->query($query);
     }
 
-
-
     while ($job->fetch()) {
       // still use job level lock for each child job
       $lockName = "civimail.job.{$job->id}";
@@ -161,7 +154,6 @@ ORDER BY j.scheduled_date ASC, m.scheduled_date ASC, j.mailing_id ASC, j.id ASC"
 
       // Compose and deliver each child job
       $isComplete = $job->deliver($mailer, $testParams);
-
 
       CRM_Utils_Hook::post('create', 'CRM_Mailing_DAO_Spool', $job->id, $isComplete);
 
@@ -239,7 +231,6 @@ WHERE j.job_type = 'child'
       // the parent job as well as the mailing status
       if (!$anyChildLeft) {
 
-
         $transaction = new CRM_Core_Transaction();
 
         $saveJob = new CRM_Mailing_DAO_Job();
@@ -256,7 +247,6 @@ WHERE j.job_type = 'child'
       }
     }
   }
-
 
   // before we run jobs, we need to split the jobs
   public static function runJobs_pre($offset = 200) {
@@ -281,8 +271,6 @@ WHERE j.is_test = 0
   AND ( j.job_type is NULL OR j.job_type <> 'child' )
 ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
     $job->query($query);
-
-
 
     // For each of the "Parent Jobs" we find, we split them into
     // X Number of child jobs
@@ -348,8 +336,6 @@ ORDER BY j.scheduled_date ASC, j.start_date ASC LIMIT 1";
     $recipient_count = CRM_Mailing_BAO_Recipients::mailingSize($this->mailing_id);
 
     $jobTable = CRM_Mailing_DAO_Job::getTableName();
-
-
 
     $dao = new CRM_Core_DAO();
 
@@ -589,7 +575,6 @@ VALUES (%1, %2, %3, %4, %5, %6, %7)
     foreach ($fields as $key => $field) {
       $contactID = $field['contact_id'];
       /* Compose the mailing */
-
 
       $recipient = $replyToEmail = NULL;
       $replyValue = strcmp($mailing->replyto_email, $mailing->from_email);
@@ -892,7 +877,6 @@ AND    civicrm_activity.source_record_id = %2";
       if ($activityID) {
         $activity['id'] = $activityID;
       }
-
 
       if (is_a(
         CRM_Activity_BAO_Activity::create($activity),

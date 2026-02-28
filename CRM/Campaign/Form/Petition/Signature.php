@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for processing a petition signature
  *
@@ -194,8 +190,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
     // add the custom contact and activity profile fields to the signature form
 
-
-
     $ufJoinParams = ['entity_id' => $this->_surveyId,
       'entity_table' => 'civicrm_survey',
       'module' => 'CiviCampaign',
@@ -209,7 +203,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     if (!isset($this->_contactProfileFields['email-Primary'])) {
       CRM_Core_Error::fatal('The contact profile needs to contain the primary email address field');
     }
-
 
     $ufJoinParams['weight'] = 1;
     $this->_activityProfileId = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
@@ -240,7 +233,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     }
 
     //set custom field defaults
-
 
     foreach ($this->_contactProfileFields as $name => $field) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
@@ -465,9 +457,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
         break;
     }
 
-
-
-
     $transaction = new CRM_Core_Transaction();
 
     $this->_contactId = CRM_Contact_BAO_Contact::createProfileContact(
@@ -563,7 +552,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
     if ($id) {
 
-
       $session = CRM_Core_Session::singleton();
       $this->assign("petition", $this->petition);
       //$contactID = $this->_contactId;
@@ -591,7 +579,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
                 }
                 */
 
-
         $this->assign($name, $fields);
 
         $addCaptcha = FALSE;
@@ -603,7 +590,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
             // ignore file upload fields
             continue;
           }
-
 
           CRM_Core_BAO_UFGroup::buildProfile($this, $field, CRM_Profile_Form::MODE_CREATE, $contactID, TRUE);
           $this->_fields[$key] = $field;

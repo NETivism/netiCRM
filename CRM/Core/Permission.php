@@ -131,7 +131,6 @@ class CRM_Core_Permission {
       $defaultGroups = array_keys($customGroups);
     }
 
-
     return CRM_ACL_API::group($type, NULL, 'civicrm_custom_group', $customGroups, $defaultGroups);
   }
 
@@ -192,7 +191,6 @@ class CRM_Core_Permission {
         break;
     }
 
-
     return CRM_ACL_API::group($type, NULL, 'civicrm_uf_group', $ufGroups);
   }
 
@@ -224,7 +222,6 @@ class CRM_Core_Permission {
     ) {
       $includeEvents = array_keys($events);
     }
-
 
     $permissionedEvents = CRM_ACL_API::group($type, NULL, 'civicrm_event', $events, $includeEvents);
     if (!$eventID) {
@@ -418,7 +415,6 @@ class CRM_Core_Permission {
       }
 
       $config = CRM_Core_Config::singleton();
-
 
       if (!$all) {
         $components = CRM_Core_Component::getEnabledComponents();

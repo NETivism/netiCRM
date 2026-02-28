@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Option Group
  *
@@ -90,7 +88,6 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     $url = CRM_Utils_System::url('civicrm/admin/campaign/surveyType', 'reset=1');
     $session->pushUserContext($url);
 
-
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domainID) {
@@ -140,7 +137,6 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
     );
 
-
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
     if ($this->_action == CRM_Core_Action::UPDATE &&
@@ -161,7 +157,6 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
    * @return None
    */
   public function postProcess() {
-
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       $fieldValues = ['option_group_id' => $this->_gid];

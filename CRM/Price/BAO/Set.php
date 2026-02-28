@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Business object for managing price sets
  *
@@ -251,7 +248,6 @@ WHERE     ct.id = cp.contribution_type_id AND
     }
     unset($dao);
 
-
     $dao = new CRM_Price_DAO_SetEntity();
     // find if this already exists
     $dao->entity_id = $entityId;
@@ -290,7 +286,6 @@ WHERE     ct.id = cp.contribution_type_id AND
       return FALSE;
     }
 
-
     $dao = new CRM_Price_DAO_SetEntity();
     $dao->entity_table = $entityTable;
     $dao->entity_id = $entityId;
@@ -311,7 +306,6 @@ WHERE     ct.id = cp.contribution_type_id AND
    */
   public static function getSetId(&$params) {
     $fid = NULL;
-
 
     if ($oid = CRM_Utils_Array::value('oid', $params)) {
 
@@ -446,7 +440,6 @@ WHERE price_set_id = %1
         }
         $setTree[$setID]['fields'][$fieldID][$field] = $dao->$field;
       }
-      
 
       $inactiveNeeded = FALSE;
       if (!$isActive) {
@@ -512,7 +505,6 @@ WHERE  id = %1";
       //get the price set fields participant count.
       if ($entityTable == 'civicrm_event') {
 
-
         //get option count info.
         $form->_priceSet['optionsCountTotal'] = self::getPricesetCount($priceSetId);
         if ($form->_priceSet['optionsCountTotal']) {
@@ -559,7 +551,6 @@ WHERE  id = %1";
     // using price set
     $totalPrice = 0;
     $radioLevel = $checkboxLevel = $selectLevel = $textLevel = [];
-
 
     foreach ($fields as $id => $field) {
       if (empty($params["price_{$id}"]) && $params["price_{$id}"] == NULL) {
@@ -757,7 +748,6 @@ WHERE  id = %1";
       }
     }
     $copy->save();
-
 
     CRM_Utils_Hook::copy('Set', $copy);
     return $copy;

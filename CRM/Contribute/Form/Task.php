@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for relationship
  *
@@ -126,13 +123,12 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
         $form->_sort = new CRM_Utils_Sort($sortOrder, $sortID);
       }
 
-
       // separate query to prevent memory peak
       $jobSize = 50000;
       if (is_numeric($rowCount) && $rowCount / $jobSize > 1) {
         $jobs = $rowCount / $jobSize;
         for ($i = 0; $i < $jobs; $i++) {
-          $offset = $i*$jobSize;
+          $offset = $i * $jobSize;
           $result = $query->searchQuery($offset, $jobSize, $form->_sort);
           while ($result->fetch()) {
             $ids[] = $result->contribution_id;

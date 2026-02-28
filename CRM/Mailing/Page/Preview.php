@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * a page for mailing preview
  */
@@ -46,7 +44,6 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
    * @return void
    */
   public function run() {
-
 
     $session = CRM_Core_Session::singleton();
 

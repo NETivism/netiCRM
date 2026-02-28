@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class holds all the Pseudo constants that are specific to Event. This avoids
  * polluting the core class and isolates the Event

@@ -12,7 +12,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
@@ -22,23 +22,23 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
     $tablesToTruncate = [ 'civicrm_contact', 'civicrm_activity' ];
     $this->quickCleanup($tablesToTruncate);
   }
-    
+
   /**
    * testcases for create() method
    * create() method Add/Edit activity.
    */
   public function testCreate() {
     $contactId = Contact::createIndividual();
-      
+
     $params = [
                     'source_contact_id'  => $contactId,
                     'subject'            => 'Scheduling Meeting',
                     'activity_type_id'   => 2
                     ];
-        
+
     require_once 'CRM/Activity/BAO/Activity.php';
     CRM_Activity_BAO_Activity::create($params);
-        
+
     $activityId = $this->assertDBNotNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Meeting',
@@ -46,9 +46,9 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'subject',
       'Database check for created activity.'
     );
-        
+
     // Now call create() to modify an existing Activity
-        
+
     $params = [ ];
     $params = [
                     'id'                 => $activityId,
@@ -58,7 +58,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     ];
 
     CRM_Activity_BAO_Activity::create($params);
-        
+
     $activityTypeId = $this->assertDBNotNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Interview',
@@ -67,11 +67,11 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'Database check on updated activity record.'
     );
     $this->assertEquals($activityTypeId, 3, 'Verify activity type id is 3.');
-        
+
     Contact::delete($contactId);
-        
+
   }
-    
+
   /**
    * testcase for getContactActivity() method.
    * getContactActivity() method get activities detail for given target contact id
@@ -83,7 +83,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                        'last_name'      => 'hurleey',
                        ];
     $targetContactId = Contact::createIndividual($params);
-        
+
     $params = [
                     'source_contact_id'  => $contactId,
                     'subject'            => 'Scheduling Meeting',
@@ -91,10 +91,10 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     'target_contact_id'  => [ $targetContactId ],
                     'activity_date_time' => date('Ymd'),
                     ];
-        
+
     require_once 'CRM/Activity/BAO/Activity.php';
     CRM_Activity_BAO_Activity::create($params);
-        
+
     $activityId = $this->assertDBNotNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Meeting',
@@ -102,11 +102,11 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'subject',
       'Database check for created activity.'
     );
-        
+
     $activities = CRM_Activity_BAO_Activity::getContactActivity($targetContactId);
-        
+
     $this->assertEquals($activities[$activityId]['subject'], 'Scheduling Meeting', 'Verify activity subject is correct.');
-        
+
     Contact::delete($contactId);
     Contact::delete($targetContactId);
   }
@@ -123,7 +123,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                        'last_name'      => 'hurleey',
                        ];
     $targetContactId = Contact::createIndividual($params);
-        
+
     $params = [
                     'source_contact_id'  => $contactId,
                     'subject'            => 'Scheduling Meeting',
@@ -131,10 +131,10 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     'target_contact_id'  => [ $targetContactId ],
                     'activity_date_time' => date('Ymd'),
                     ];
-        
+
     require_once 'CRM/Activity/BAO/Activity.php';
     CRM_Activity_BAO_Activity::create($params);
-        
+
     $activityId = $this->assertDBNotNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Meeting',
@@ -142,7 +142,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'subject',
       'Database check for created activity.'
     );
-        
+
     $activityTargetId = $this->assertDBNotNull(
       'CRM_Activity_DAO_ActivityTarget',
       $targetContactId,
@@ -153,21 +153,21 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
 
     $defaults = [];
     $activity = CRM_Activity_BAO_Activity::retrieve($params, $defaults);
-        
+
     $this->assertEquals($activity->subject, 'Scheduling Meeting', 'Verify activity subject is correct.');
     $this->assertEquals($activity->source_contact_id, $contactId, 'Verify source contact id is correct.');
     $this->assertEquals($activity->activity_type_id, 2, 'Verify activity type id is correct.');
-        
+
     $this->assertEquals($defaults['subject'], 'Scheduling Meeting', 'Verify activity subject is correct.');
     $this->assertEquals($defaults['source_contact_id'], $contactId, 'Verify source contact id is correct.');
     $this->assertEquals($defaults['activity_type_id'], 2, 'Verify activity type id is correct.');
-        
+
     $this->assertEquals($defaults['target_contact'][0], $targetContactId, 'Verify target contact id is correct.');
-        
+
     Contact::delete($contactId);
     Contact::delete($targetContactId);
   }
-    
+
   /**
    * testcase for deleteActivity() method.
    * deleteActivity($params) method deletes activity for given params.
@@ -179,7 +179,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                        'last_name'      => 'hurleey',
                        ];
     $targetContactId = Contact::createIndividual($params);
-        
+
     $params = [
                     'source_contact_id'  => $contactId,
                     'source_record_id'   => $contactId,
@@ -188,10 +188,10 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     'target_contact_id'  => [ $targetContactId ],
                     'activity_date_time' => date('Ymd'),
                     ];
-        
+
     require_once 'CRM/Activity/BAO/Activity.php';
     CRM_Activity_BAO_Activity::create($params);
-        
+
     $activityId = $this->assertDBNotNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Meeting',
@@ -199,7 +199,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'subject',
       'Database check for created activity.'
     );
-        
+
     $activityTargetId = $this->assertDBNotNull(
       'CRM_Activity_DAO_ActivityTarget',
       $targetContactId,
@@ -213,9 +213,9 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     'subject'            => 'Scheduling Meeting',
                     'activity_type_id'   => 2,
                     ];
-        
+
     $result = CRM_Activity_BAO_Activity::deleteActivity($params);
-        
+
     $activityId = $this->assertDBNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Meeting',
@@ -239,7 +239,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                        'last_name'      => 'hurleey',
                        ];
     $targetContactId = Contact::createIndividual($params);
-        
+
     $params = [
                     'source_contact_id'  => $contactId,
                     'subject'            => 'Scheduling Meeting',
@@ -247,10 +247,10 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     'target_contact_id'  => [ $targetContactId ],
                     'activity_date_time' => date('Ymd'),
                     ];
-        
+
     require_once 'CRM/Activity/BAO/Activity.php';
     CRM_Activity_BAO_Activity::create($params);
-        
+
     $activityId = $this->assertDBNotNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Meeting',
@@ -258,7 +258,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'subject',
       'Database check for created activity.'
     );
-        
+
     $activityTargetId = $this->assertDBNotNull(
       'CRM_Activity_DAO_ActivityTarget',
       $targetContactId,
@@ -266,9 +266,9 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'target_contact_id',
       'Database check for created activity target.'
     );
-        
+
     CRM_Activity_BAO_Activity::deleteActivityTarget($activityId);
-        
+
     $this->assertDBNull(
       'CRM_Activity_DAO_ActivityTarget',
       $targetContactId,
@@ -276,11 +276,11 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'target_contact_id',
       'Database check for deleted activity target.'
     );
-        
+
     Contact::delete($contactId);
     Contact::delete($targetContactId);
   }
-    
+
   /**
    * testcase for deleteActivityAssignment() method.
    * deleteActivityAssignment($activityId) method deletes activity assignment for given activity id.
@@ -292,18 +292,18 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                        'last_name'      => 'hurleey',
                        ];
     $assigneeContactId = Contact::createIndividual($params);
-        
+
     $params = [
                     'source_contact_id'  => $contactId,
                     'subject'            => 'Scheduling Meeting',
                     'activity_type_id'   => 2,
-                    'assignee_contact_id'=> [ $assigneeContactId ],
+                    'assignee_contact_id' => [ $assigneeContactId ],
                     'activity_date_time' => date('Ymd'),
                     ];
-        
+
     require_once 'CRM/Activity/BAO/Activity.php';
     CRM_Activity_BAO_Activity::create($params);
-        
+
     $activityId = $this->assertDBNotNull(
       'CRM_Activity_DAO_Activity',
       'Scheduling Meeting',
@@ -311,7 +311,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'subject',
       'Database check for created activity.'
     );
-        
+
     $activityAssignmentId = $this->assertDBNotNull(
       'CRM_Activity_DAO_ActivityAssignment',
       $assigneeContactId,
@@ -319,9 +319,9 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'target_contact_id',
       'Database check for created activity assignment.'
     );
-        
+
     CRM_Activity_BAO_Activity::deleteActivityAssignment($activityId);
-        
+
     $this->assertDBNull(
       'CRM_Activity_DAO_ActivityAssignment',
       $assigneeContactId,
@@ -329,11 +329,11 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       'assignee_contact_id',
       'Database check for deleted activity assignment.'
     );
-        
+
     Contact::delete($contactId);
     Contact::delete($assigneeContactId);
   }
- 
+
   /**
    * Function to test getActivitiesCount BAO method
    */
@@ -424,7 +424,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     ];
     require_once 'CRM/Activity/BAO/Activity.php';
     $activityCount = CRM_Activity_BAO_Activity::getActivitiesCount($params);
-        
+
     //since we are loading activities from dataset, we know total number of activities for this contact
     // 5 activities, Contact Summary should show all activities
     $count = 5;
@@ -456,12 +456,12 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     ];
     require_once 'CRM/Activity/BAO/Activity.php';
     $activityCount = CRM_Activity_BAO_Activity::getActivitiesCount($params);
-       
+
     //since we are loading activities from dataset, we know total number of activities for this contact
     // this contact does not have any activity
     $this->assertEquals(0, $activityCount, 'In line ' . __LINE__);
   }
-    
+
   /**
    * Function to test getActivities BAO method
    */
@@ -536,7 +536,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       $this->assertEquals($value['subject'], "subject {$key}", 'Verify activity subject is correct.');
       $this->assertEquals($value['activity_type_id'], 2, 'Verify activity type is correct.');
       $this->assertEquals($value['status_id'], 1, 'Verify all activities are scheduled.');
-            
+
       if ($key == 3) {
         $this->assertArrayHasKey($contactID, $value['target_contact_name']);
       }
@@ -572,7 +572,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
                     ];
     require_once 'CRM/Activity/BAO/Activity.php';
     $activities = CRM_Activity_BAO_Activity::getActivities($params);
-        
+
     //since we are loading activities from dataset, we know total number of activities for this contact
     // 5 activities, Contact Summary should show all activities
     $count = 5;
@@ -580,7 +580,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
 
     foreach ($activities as $key => $value) {
       $this->assertEquals($value['subject'], "subject {$key}", 'Verify activity subject is correct.');
-            
+
       if ($key > 8) {
         $this->assertEquals($value['status_id'], 2, 'Verify all activities are scheduled.');
       }
@@ -594,7 +594,7 @@ class CRM_Activity_BAO_ActivityTest extends CiviUnitTestCase {
       else {
         $this->assertEquals($value['activity_type_id'], 2, 'Verify activity type is correct.');
       }
-            
+
       if ($key == 3) {
         $this->assertArrayHasKey($contactID, $value['target_contact_name']);
       }

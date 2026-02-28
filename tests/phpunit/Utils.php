@@ -29,7 +29,6 @@
  *   <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  *  Utility functions
  *   @package   CiviCRM
@@ -66,11 +65,11 @@ class Utils {
   public function do_query($query) {
     $string = preg_replace("/^#[^\n]*$/m", "\n", $query);
     $string = preg_replace("/^(--[^-]).*/m", "\n", $string);
-    
+
     $queries  = preg_split('/;$/m', $string);
     foreach ($queries as $query) {
       $query = trim($query);
-      if (! empty($query)) {
+      if (!empty($query)) {
         $result = $this->pdo->query($query);
         if ($this->pdo->errorCode() == 0) {
           continue;

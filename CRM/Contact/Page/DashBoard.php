@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * CiviCRM Dashboard
  *

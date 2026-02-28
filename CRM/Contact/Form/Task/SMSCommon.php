@@ -76,7 +76,6 @@ class CRM_Contact_Form_Task_SMSCommon {
       $form->_contactIds = [$cid];
     }
 
-
     if (!empty($form->_contactIds)) {
       $queryParams = [];
       $returnProperties = [

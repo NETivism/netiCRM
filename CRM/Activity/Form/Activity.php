@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class generates form components for Activity
  *
@@ -456,13 +448,11 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
                                             $this->_activityId );
         */
 
-
     // figure out the file name for activity type, if any
     if ($this->_activityTypeId &&
       $this->_activityTypeFile =
       CRM_Activity_BAO_Activity::getFileForActivityTypeId($this->_activityTypeId, $this->_crmDir)
     ) {
-
 
       $this->assign('activityTypeFile', $this->_activityTypeFile);
       $this->assign('crmDir', $this->_crmDir);
@@ -499,7 +489,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       CRM_Activity_BAO_Activity::retrieve($params, $defaults);
       if ($this->_action & CRM_Core_Action::VIEW) {
         $defaults['details'] = CRM_Utils_String::htmlPurifier($defaults['details'], CRM_Utils_String::ALLOWED_TAGS);
-        
+
         $url = CRM_Utils_System::url(CRM_Utils_Array::implode("/", $this->_urlPath), "reset=1&id={$this->_activityId}&action=view&cid={$this->_values['source_contact_id']}");
         $activityTName = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE, FALSE, 'AND v.value = ' . $this->_activityTypeId, 'name');
         $recentTitle = CRM_Utils_Array::value('subject', $defaults, ts('(no subject)')) . ' - '.$defaults['source_contact']. ' (' . ts($activityTName[$this->_activityTypeId]) . ')';
@@ -703,7 +693,7 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       'positiveInteger'
     );
 
-    $this->addDateTime('activity_date_time', ts('Activity Actual Date %1 %2', [1=>'', 2=>'']), TRUE, ['formatType' => 'activityDateTime']);
+    $this->addDateTime('activity_date_time', ts('Activity Actual Date %1 %2', [1 => '', 2 => '']), TRUE, ['formatType' => 'activityDateTime']);
 
     //autocomplete url
     $dataUrl = CRM_Utils_System::url(
@@ -759,7 +749,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       );
       $this->assign('target_contact_value', $defaultTargetContactName);
     }
-
 
     $tags = CRM_Core_BAO_Tag::getTags('civicrm_activity');
 
@@ -894,7 +883,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
     }
     //FIX me temp. comment
     // make sure if associated contacts exist
-
 
     if ($fields['source_contact_id'] && !is_numeric($fields['source_contact_qid'])) {
       $errors['source_contact_id'] = ts('Source Contact non-existent!');
@@ -1127,7 +1115,6 @@ class CRM_Activity_Form_Activity extends CRM_Contact_Form_Task {
       if (!CRM_Utils_array::crmIsEmptyArray($mailToContacts)) {
         //include attachments while sendig a copy of activity.
         $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_activity', $activity->id);
-
 
         $result = CRM_Case_BAO_Case::sendActivityCopy(NULL, $activity->id, $mailToContacts, $attachments, NULL);
 

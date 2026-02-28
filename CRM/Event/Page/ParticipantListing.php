@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Event_Page_ParticipantListing extends CRM_Core_Page {
 
   protected $_id;

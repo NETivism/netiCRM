@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 
   public $_aliases;
@@ -351,7 +347,7 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
     }
   }
-  
+
   public function orderBy() {
     $this->_orderBy = " ORDER BY participant_count DESC ";
   }
@@ -463,7 +459,6 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
         }
         $entryFound = TRUE;
       }
-
 
       // skip looking further in rows, if first row itself doesn't
       // have the column we need

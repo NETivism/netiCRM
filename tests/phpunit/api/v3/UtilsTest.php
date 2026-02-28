@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Core/Permission.php';
 require_once 'CRM/Core/Permission/UnitTests.php';
@@ -177,7 +174,6 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
       $this->fail('Exception raised when it shouldn\'t have been  in line ' . __LINE__);
     }
   }
-
 
   /*
      * Test GET DAO function returns DAO

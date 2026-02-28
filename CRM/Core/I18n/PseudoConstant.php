@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_I18n_PseudoConstant {
   public static function &languages() {
     static $languages = NULL;

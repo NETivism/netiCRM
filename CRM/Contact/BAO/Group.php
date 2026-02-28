@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
   /**
@@ -82,9 +81,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    */
   public static function discard($id) {
 
-
     CRM_Utils_Hook::pre('delete', 'Group', $id, CRM_Core_DAO::$_nullArray);
-
 
     $transaction = new CRM_Core_Transaction();
 
@@ -304,8 +301,6 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    */
   public static function checkPermission($id, $title) {
 
-
-
     $allGroups = CRM_Core_PseudoConstant::allGroup();
 
     $permissions = NULL;
@@ -353,7 +348,6 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * @static
    */
   public static function &create(&$params) {
-
 
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'Group', $params['id'], $params);
@@ -422,8 +416,6 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
 
     // make the group, child of domain/site group by default.
 
-
-
     $domainGroupID = CRM_Core_BAO_Domain::getGroupId();
     if (CRM_Utils_Array::value('no_parent', $params) !== 1) {
       if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE &&
@@ -485,7 +477,6 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
       // currently same permission we are using for delete a group
       $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/group', 'reset=1&action=delete&id=' . $group->id);
     }
-
 
     // add the recently added group (unless hidden: CRM-6432)
     if (!$group->is_hidden) {
@@ -664,7 +655,6 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
         'visibility' => CRM_Utils_Array::value('visibility', $params),
         'saved_search_id' => $ssId,
       ];
-
 
       $smartGroup = self::create($groupParams);
       $smartGroupId = $smartGroup->id;

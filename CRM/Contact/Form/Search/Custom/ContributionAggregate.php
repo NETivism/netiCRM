@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;

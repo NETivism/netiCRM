@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Mailing_Form_Subscribe extends CRM_Core_Form {
   protected $_groupID = NULL;
   public function preProcess() {
@@ -53,8 +51,6 @@ class CRM_Mailing_Form_Subscribe extends CRM_Core_Form {
     if (!$this->controller->getDestination()) {
       $this->controller->setDestination(NULL, TRUE);
     }
-
-
 
     if ($this->_groupID) {
       $groupTypeCondition = CRM_Contact_BAO_Group::groupTypeCondition('Mailing');

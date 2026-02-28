@@ -1,6 +1,5 @@
 <?php
 
-
 class Custom extends CiviUnitTestCase {
   /*
    * Helper function to create Custom Group
@@ -10,7 +9,7 @@ class Custom extends CiviUnitTestCase {
   public function createGroup($group, $extends =  NULL, $isMultiple = FALSE) {
     if (empty($group)) {
       if (isset($extends) &&
-           ! is_array($extends)) {
+           !is_array($extends)) {
         $extends = [ $extends ];
       }
       $group = [
@@ -22,7 +21,7 @@ class Custom extends CiviUnitTestCase {
                      'is_active'   => 1,
                      'version'     => 3
                      ];
-            
+
     }
     else {
       // this is done for backward compatibility
@@ -50,7 +49,7 @@ class Custom extends CiviUnitTestCase {
 
     return $group;
   }
-    
+
   /*
    * Helper function to create Custom Field
    *
@@ -70,14 +69,14 @@ class Custom extends CiviUnitTestCase {
                       'version'		      => 3
                       ];
     }
-        
+
     $result = civicrm_api('custom_field', 'create', $params);
 
     if ($result['is_error']) {
       print_r($result);
       return NULL;
     }
-        
+
     // this is done for backward compatibility
     // with tests older than 3.2.3
     $customField = new CRM_Core_DAO_CustomField();
@@ -86,7 +85,7 @@ class Custom extends CiviUnitTestCase {
 
     return $customField;
   }
-    
+
   /*
    * Helper function to delete custom field
    *
@@ -97,7 +96,7 @@ class Custom extends CiviUnitTestCase {
     require_once 'CRM/Core/BAO/CustomField.php';
     CRM_Core_BAO_CustomField::deleteField($params);
   }
-    
+
   /*
    * Helper function to delete custom group
    *

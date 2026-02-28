@@ -37,8 +37,6 @@
  * this file contains functions to manage and manipulate task status
  */
 
-
-
 class CRM_Project_BAO_TaskStatus {
 
   public static function &getTaskStatusInitial(
@@ -174,7 +172,6 @@ class CRM_Project_BAO_TaskStatus {
     if (!$params['responsible_entity_table']) {
       $params['responsible_entity_table'] = 'civicrm_contact';
     }
-
 
     $dao = new CRM_Project_DAO_TaskStatus();
     $dao->target_entity_id = $params['target_entity_id'];

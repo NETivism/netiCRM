@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying UF Groups.
  *
@@ -229,7 +227,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       'GET'
     );
 
-
     $copy = CRM_Core_BAO_UFGroup::copy($gid);
 
     CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/uf/group/update', 'reset=1&action=update&id=' . $copy->id));
@@ -256,7 +253,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       if ($shorten) {
         $this->assign('shorten', $shorten);
       }
-      
+
       //get the title of uf group
       $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'title');
       $title = $title . ' - ' . ts('Publish Online Profile');
@@ -391,7 +388,6 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
           'key' => $key
         ]
       );
-
 
       // Create module list, prevent duplicate string
       //get the "Used For" from uf_join

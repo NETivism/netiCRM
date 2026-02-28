@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
   public function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
@@ -95,7 +92,7 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
     // and drop all the description_xx_YY columns
     if (!CRM_Core_DAO::checkFieldExists('civicrm_report_instance', 'description')) {
 
-      $domain = new CRM_Core_DAO_Domain;
+      $domain = new CRM_Core_DAO_Domain();
       $domain->find(TRUE);
       $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
@@ -224,7 +221,6 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
         $addNewAddressee = FALSE;
       }
     }
-
 
     $docURL = CRM_Utils_System::docURL2('Update Greetings and Address Data for Contacts', FALSE, NULL, NULL, 'color: white; text-decoration: underline;');
 

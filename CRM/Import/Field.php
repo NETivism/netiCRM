@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 class CRM_Import_Field {
 
   /**#@+
@@ -121,7 +119,7 @@ class CRM_Import_Field {
    * @var string
    */
   public $_relatedContactPhoneType;
-  
+
   public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $columnPattern = '//', $dataPattern = '//', $hasLocationType = NULL, $phoneType = NULL, $related = NULL, $relatedContactType = NULL, $relatedContactDetails = NULL, $relatedContactLocType = NULL, $relatedContactPhoneType = NULL) {
     $this->_name = $name;
     $this->_title = $title;

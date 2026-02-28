@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to email a group of
  * contacts.
@@ -330,7 +328,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       }
       $contributionIds = array_slice($contributionIds, $offset, self::PDF_BATCH_THRESHOLD);
     }
-    
+
     $contribIDs = CRM_Utils_Array::implode(',', $contributionIds);
     $details = &CRM_Contribute_Form_Task_Status::getDetails($contribIDs);
     $details = array_replace(array_flip($contributionIds), $details);
@@ -338,7 +336,7 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
     $this->createActivity($details);
 
     if ($civicrm_batch) {
-      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed']+1);
+      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed'] + 1);
       $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
       $dest .= '_'.$filenameNum.'.pdf';
       $pdf = $this->makePDF(FALSE);
@@ -497,7 +495,6 @@ class CRM_Contribute_Form_Task_PDF extends CRM_Contribute_Form_Task {
       $ids['membership'] = $detail['membership'];
       $ids['participant'] = $detail['participant'];
       $ids['event'] = $detail['event'];
-
 
       if (!self::validateData($input, $ids, $objects, FALSE)) {
         CRM_Core_Error::fatal("Specific contribution doesn't pass validation before printing receipt. ID: {$contribID}");

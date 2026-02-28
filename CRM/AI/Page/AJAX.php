@@ -886,7 +886,7 @@ class CRM_AI_Page_AJAX {
     if ($statusCode === self::HTTP_METHOD_NOT_ALLOWED) {
       header('Allow: POST');
     }
-    
+
     http_response_code($statusCode);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($error);

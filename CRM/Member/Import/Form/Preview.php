@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class previews the uploaded file and returns summary
  * statistics
@@ -67,7 +64,6 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       $this->assign('loadedMapping', $mappingId);
       $this->assign('savedName', $mapDAO->name);
     }
-
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);

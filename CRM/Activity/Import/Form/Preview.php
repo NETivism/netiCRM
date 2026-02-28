@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class previews the uploaded file and returns summary
  * statistics
@@ -67,7 +64,6 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
       $this->assign('loadedMapping', $mappingId);
       $this->assign('savedName', $mapDAO->name);
     }
-
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
@@ -197,7 +193,6 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
       CRM_Core_Error::statusBounce(ts("The selected import job is already running. To prevent duplicate records being imported, please wait the job complete."));
       CRM_Core_Error::debug_log_message("Trying acquire lock {$this->controller->_key} failed at line ".__LINE__);
     }
-
 
     $errorFilenamePrefix = CRM_Activity_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
     $this->set('errorFilenamePrefix', $errorFilenamePrefix);

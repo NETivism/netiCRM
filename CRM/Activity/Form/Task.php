@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Class for activity task actions
  *

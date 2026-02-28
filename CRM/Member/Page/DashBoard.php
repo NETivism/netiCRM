@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * Page for displaying list of Payment-Instrument
  */
@@ -51,7 +47,6 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
    *
    */
   public function preProcess() {
-
 
     CRM_Utils_System::setTitle(ts('CiviMember'));
     $membershipSummary = [];
@@ -163,7 +158,6 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
       $totalCountCurrent = $totalCountCurrent + $value['current']['count'];
       $totalCountTotal = $totalCountTotal + $value['total']['count'];
     }
-
 
     $totalCount['premonth'] = ["count" => $totalCountPreMonth,
       "url" => CRM_Utils_System::url(

@@ -252,7 +252,6 @@ class CRM_Utils_Token {
         return $addressCache[$cache_key];
       }
 
-
       $value = NULL;
       /* Construct the address token */
 
@@ -712,7 +711,6 @@ class CRM_Utils_Token {
     return $value;
   }
 
-  
   /**
    * Replace all the contact-level tokens in $str with information from
    * $contact.
@@ -1198,8 +1196,6 @@ class CRM_Utils_Token {
     //get the total number of contacts to fetch from database.
     $numberofContacts = count($contactIDs);
 
-
-
     $query = new CRM_Contact_BAO_Query($params, $returnProperties);
 
     $details = $query->apiQuery($params, $returnProperties, NULL, NULL, 0, $numberofContacts, $smartyCache = TRUE, $groupBy = TRUE);
@@ -1349,7 +1345,7 @@ class CRM_Utils_Token {
     ) {
       return $str;
     }
-    
+
     $str = preg_replace_callback(
       self::tokenRegex($key),
       function ($matches) use ($escapeSmarty) {

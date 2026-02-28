@@ -12,11 +12,10 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
-
 
   /*
    * function to test store function for country
@@ -31,9 +30,9 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'dataType' => 'Country',
                           'htmlType' => 'Select Country'
                           ];
-        
+
     $customField = Custom::createField($params, $fields);
-        
+
     $params[] = [ $customField->id =>  [
                           'value'            => 1228,
                           'type'             => 'Country',
@@ -47,7 +46,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::store($params, 'civicrm_contact', $contactID);
     //        $this->assertDBCompareValue('CRM_Custom_DAO_CustomValue', )
-        
+
     Custom::deleteField($customField);
     Custom::deleteGroup($customGroup);
     Contact::delete($contactID);
@@ -66,9 +65,9 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'dataType' => 'File',
                           'htmlType' => 'File'
                           ];
-        
+
     $customField = Custom::createField($params, $fields);
-        
+
     $params[] = [ $customField->id =>  [
                           'value'            => 'i/contact_house.png',
                           'type'             => 'File',
@@ -82,7 +81,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::store($params, 'civicrm_contact', $contactID);
     //        $this->assertDBCompareValue('CRM_Custom_DAO_CustomValue', )
-        
+
     Custom::deleteField($customField);
     Custom::deleteGroup($customGroup);
     Contact::delete($contactID);
@@ -101,9 +100,9 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'dataType' => 'StateProvince',
                           'htmlType' => 'Select State/Province'
                           ];
-        
+
     $customField = Custom::createField($params, $fields);
-        
+
     $params[] = [ $customField->id =>  [
                           'value'            => 1029,
                           'type'             => 'StateProvince',
@@ -113,11 +112,11 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'column_name'      => 'test_StateProvince_'.$customField->id,
                           'file_id'          => 1
                           ]];
-    
+
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::store($params, 'civicrm_contact', $contactID);
     //        $this->assertDBCompareValue('CRM_Custom_DAO_CustomValue', )
-        
+
     Custom::deleteField($customField);
     Custom::deleteGroup($customGroup);
     Contact::delete($contactID);
@@ -136,9 +135,9 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'dataType' => 'Date',
                           'htmlType' => 'Select Date'
                           ];
-        
+
     $customField = Custom::createField($params, $fields);
-        
+
     $params[] = [ $customField->id =>  [
                           'value'            => '20080608000000',
                           'type'             => 'Date',
@@ -152,7 +151,7 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::store($params, 'civicrm_contact', $contactID);
     //        $this->assertDBCompareValue('CRM_Custom_DAO_CustomValue', )
-        
+
     Custom::deleteField($customField);
     Custom::deleteGroup($customGroup);
     Contact::delete($contactID);
@@ -171,9 +170,9 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'htmlType' => 'RichTextEditor',
                           'dataType' => 'Memo'
                           ];
-        
+
     $customField = Custom::createField($params, $fields);
-        
+
     $params[] = [ $customField->id =>  [
                           'value'            => '<p><strong>This is a <u>test</u></p>',
                           'type'             => 'Memo',
@@ -183,11 +182,11 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'column_name'      => 'test_Memo_'.$customField->id,
                           'file_id'          => ''
                           ]];
-        
+
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::store($params, 'civicrm_contact', $contactID);
     //        $this->assertDBCompareValue('CRM_Custom_DAO_CustomValue', )
-        
+
     Custom::deleteField($customField);
     Custom::deleteGroup($customGroup);
     Contact::delete($contactID);
@@ -207,9 +206,9 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'htmlType' => 'RichTextEditor',
                           'dataType' => 'Memo'
                           ];
-        
+
     $customField = Custom::createField($params, $fields);
-        
+
     $params[] = [ $customField->id =>  [
                           'value'            => '<p><strong>This is a <u>test</u></p>',
                           'type'             => 'Memo',
@@ -219,14 +218,14 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                           'column_name'      => 'test_Memo_'.$customField->id,
                           'file_id'          => ''
                           ]];
-        
+
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     CRM_Core_BAO_CustomValueTable::store($params, 'civicrm_contact', $contactID);
     //        $this->assertDBCompareValue('CRM_Custom_DAO_CustomValue', )
 
     require_once 'CRM/Core/BAO/CustomValueTable.php';
     $entityValues =  CRM_Core_BAO_CustomValueTable::getEntityValues($contactID, 'Individual');
-              
+
     $this->assertEquals(
       $entityValues[$customField->id],
       '<p><strong>This is a <u>test</u></p>',
@@ -254,14 +253,14 @@ class CRM_Core_BAO_CustomValueTableTest extends CiviUnitTestCase {
                      'custom_'.$customField->id.'_-1' => 'First String',
                      ];
     $error = CRM_Core_BAO_CustomValueTable::setValues($params);
-        
+
     $newParams = [ 'entityID'                  => $contactID,
                         'custom_'.$customField->id  => 1 ];
     $result = CRM_Core_BAO_CustomValueTable::getValues($newParams);
-        
+
     $this->assertEquals($params['custom_'.$customField->id.'_-1'], $result['custom_'.$customField->id]);
     $this->assertEquals($params['entityID'], $result['entityID']);
-    
+
     Custom::deleteField($customField);
     Custom::deleteGroup($customGroup);
     Contact::delete($contactID);

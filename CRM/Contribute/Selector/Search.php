@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -345,8 +337,6 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
 
     // process the result of the query
     $rows = [];
-
-
 
     //CRM-4418 check for view/edit/delete
     $permissions = [CRM_Core_Permission::VIEW];

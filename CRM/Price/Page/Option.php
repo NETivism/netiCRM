@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Custom Options.
  *
@@ -126,7 +124,6 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
   public function browse() {
     $customOption = [];
 
-
     CRM_Price_BAO_FieldValue::getValues($this->_fid, $customOption);
 
     $config = CRM_Core_Config::singleton();
@@ -195,7 +192,6 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
 
       $sid = CRM_Price_BAO_Set::getSetId($params);
 
-
       $usedBy = &CRM_Price_BAO_Set::getUsedBy($sid);
     }
     else {
@@ -215,7 +211,6 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     $controller->setEmbedded(TRUE);
     $controller->process();
     $controller->run();
-
 
     $this->browse();
 
@@ -251,7 +246,6 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * @access public
    */
   public function run() {
-
 
     // get the field id
     $this->_fid = CRM_Utils_Request::retrieve(

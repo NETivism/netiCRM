@@ -35,7 +35,6 @@ class CRM_Contact_DAO_Factory {
     'data' => '',
   ];
 
-
   public static function &create($className) {
     $type = CRM_Utils_Array::value($className, self::$_classes);
     if (!$type) {

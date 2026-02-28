@@ -49,8 +49,6 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
   protected $_regexForGettingAPIStdFunctions;
   /* This test case doesn't require DB reset */
 
-
-
   public $DBResetRequired = FALSE;
 
   /**

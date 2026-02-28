@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/Event.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_EventTest extends CiviUnitTestCase {

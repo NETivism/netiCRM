@@ -224,7 +224,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'contribution_page_id' => $this->_page_id,
       'payment_processor_id' => $this->_processor['id'],
       'payment_instrument_id' => 1,
-      'created_date' => date('YmdHis', $now-60),
+      'created_date' => date('YmdHis', $now - 60),
       'non_deductible_amount' => 0,
       'total_amount' => $amount,
       'currency' => 'TWD',
@@ -291,7 +291,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
 
     // second payment
-    $now = time()+120;
+    $now = time() + 120;
     $gwsr1 = 111111;
     $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
@@ -308,7 +308,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'ExecTimes' => '12',
       'Amount' => $amount,
       'Gwsr' => $gwsr1,
-      'ProcessDate' => date('Y-m-d H:i:s', $now+3600),
+      'ProcessDate' => date('Y-m-d H:i:s', $now + 3600),
       'AuthCode' => '777777',
       'FirstAuthAmount' => $amount,
       'TotalSuccessTimes' => 2,
@@ -362,12 +362,12 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       'PeriodAmount' => $amount,
       'amount' => $amount,
       'gwsr' => '000000',
-      'process_date' => date('Y-m-d H:i:s', $now+86400*2),
+      'process_date' => date('Y-m-d H:i:s', $now + 86400 * 2),
       'auth_code' => '777777',
       'card4no' => '1234',
       'card6no' => '123456',
       'TotalSuccessTimes' => 3,
-      'TotalSuccessAmount' => $amount*3,
+      'TotalSuccessAmount' => $amount * 3,
       'ExecLog' =>  [
         0 => (object)([
           'RtnCode' => 1,
@@ -380,14 +380,14 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
           'RtnCode' => 1,
           'amount' => $amount,
           'gwsr' => $gwsr1,
-          'process_date' => date('Y-m-d H:i:s', $now+3600),
+          'process_date' => date('Y-m-d H:i:s', $now + 3600),
           'auth_code' => '777777',
         ]),
         2 => (object)([
           'RtnCode' => 1,
           'amount' => $amount,
           'gwsr' => $gwsr2,
-          'process_date' => date('Y-m-d H:i:s', $now+86400*2),
+          'process_date' => date('Y-m-d H:i:s', $now + 86400 * 2),
           'auth_code' => '777777',
         ]),
         // fail contribution from recurring
@@ -395,14 +395,14 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
           'RtnCode' => '',
           'amount' => '',
           'gwsr' => '',
-          'process_date' => date('Y-m-d H:i:s', $now+86400*3),
+          'process_date' => date('Y-m-d H:i:s', $now + 86400 * 3),
           'auth_code' => '',
         ]),
         4 => (object)([
           'RtnCode' => '0',
           'amount' => $amount,
           'gwsr' => '',
-          'process_date' => date('Y-m-d H:i:s', $now+86400*4),
+          'process_date' => date('Y-m-d H:i:s', $now + 86400 * 4),
           'auth_code' => '',
         ]),
         // normal contribution but empty gwsr
@@ -410,7 +410,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
           'RtnCode' => '1',
           'amount' => $amount,
           'gwsr' => 0,
-          'process_date' => date('Y-m-d H:i:s', $now+86400*5),
+          'process_date' => date('Y-m-d H:i:s', $now + 86400 * 5),
           'auth_code' => '',
         ]),
         // failed contribution and have gwsr
@@ -418,7 +418,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
           'RtnCode' => '0',
           'amount' => $amount,
           'gwsr' => '11223344',
-          'process_date' => date('Y-m-d H:i:s', $now+86400*6),
+          'process_date' => date('Y-m-d H:i:s', $now + 86400 * 6),
           'auth_code' => '',
         ]),
       ],

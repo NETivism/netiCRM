@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_ContributionPage {
 
   /**
@@ -180,7 +179,6 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
     $params['id'] = $dao->id;
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_approval_needed'] = CRM_Utils_Array::value('is_approval_needed', $params, FALSE);
-
 
     $dao = CRM_Contribute_BAO_PCP::add($params);
   }

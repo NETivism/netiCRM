@@ -471,7 +471,6 @@ AND    $cond
    */
   public static function setValues(&$params) {
 
-
     if (!isset($params['entityID']) ||
       CRM_Utils_Type::escape(
         $params['entityID'],

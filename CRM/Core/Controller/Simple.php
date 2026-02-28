@@ -37,8 +37,6 @@
  *
  */
 
-
-
 class CRM_Core_Controller_Simple extends CRM_Core_Controller {
 
   /**
@@ -75,7 +73,6 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
     ) {
       $mode = $savedAction;
     }
-
 
     $this->_stateMachine->addSequentialPages($params, $mode);
 

@@ -1,7 +1,7 @@
 <?php
 
 class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEmailAddress {
-  
+
   /**
    * Return a descriptive name for the page, used in wizard header
    *

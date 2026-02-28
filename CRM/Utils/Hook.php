@@ -150,7 +150,6 @@ class CRM_Utils_Hook {
     return $className::invoke(2, $formName, $form, $null, $null, $null, 'civicrm_preProcess');
   }
 
-
   /**
    * This hook is invoked *after* building a CiviCRM form. This hook should also
    * be used to set the default values of a form element

@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/MembershipContact.php';
 require_once 'api/v2/Membership.php';
 require_once 'api/v2/MembershipType.php';

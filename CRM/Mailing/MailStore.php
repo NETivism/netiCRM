@@ -132,7 +132,7 @@ class CRM_Mailing_MailStore {
       return [];
     }
     $mails = [];
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     //set property text attachment as file CRM-5408
     $parser->options->parseTextAttachmentsAsFiles = TRUE;
 

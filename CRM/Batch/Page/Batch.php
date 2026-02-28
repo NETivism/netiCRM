@@ -189,7 +189,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
         if (isset($meta['download']['file']) && file_exists($meta['download']['file'])) {
           $download = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
           if ($dao->status_id == $completedStatus || $dao->status_id == $canceledStatus) {
-            $actions['expiredDate'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400*CRM_Batch_BAO_Batch::EXPIRE_DAY);
+            $actions['expiredDate'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400 * CRM_Batch_BAO_Batch::EXPIRE_DAY);
             // reset action string when expired
             if (strtotime($actions['expiredDate']) < time()) {
               $actions['downloadExpired'] = ts('Download').' - '.ts("Expired");

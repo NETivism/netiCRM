@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This is page is for Pledge Dashboard
  */
@@ -84,8 +82,6 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
     $previousDateEnd = CRM_Utils_Date::customFormat(date("Y-m-t", mktime(0, 0, 0, intval(date("m")) - 1, 1, intval(date("Y")))), '%Y%m%d') . '235959';
     $previousMonth = date("F Y", mktime(0, 0, 0, intval(date("m")) - 1, 1, intval(date("Y"))));
     $this->assign('previousMonthYear', $previousMonth);
-
-
 
     foreach ($prefixes as $prefix) {
       $aName = $prefix . 'ToDate';

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * form to process actions on Premiums
  */
@@ -111,7 +108,6 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
     $this->assign('showForm', $showForm);
     $this->assign('enablePremiumsCombination', $enablePremiumsCombination);
     $this->assign('activePremiums', $activePremiums);
-
 
     parent::buildQuickForm();
   }

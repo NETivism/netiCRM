@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Pledge_BAO_Payment extends CRM_Pledge_DAO_Payment {
 
   /**
@@ -93,7 +92,6 @@ WHERE     pledge_id = %1
   }
 
   public static function create($params) {
-
 
     $transaction = new CRM_Core_Transaction();
     $date = [];
@@ -235,7 +233,7 @@ WHERE     pledge_id = %1
    * @static
    */
   public static function retrieve(&$params, &$defaults) {
-    $payment = new CRM_Pledge_DAO_Payment;
+    $payment = new CRM_Pledge_DAO_Payment();
     $payment->copyValues($params);
     if ($payment->find(TRUE)) {
       CRM_Core_DAO::storeValues($payment, $defaults);
@@ -258,7 +256,6 @@ WHERE     pledge_id = %1
     if (!CRM_Utils_Rule::positiveInteger($id)) {
       return FALSE;
     }
-
 
     $transaction = new CRM_Core_Transaction();
 
@@ -293,7 +290,6 @@ WHERE     pledge_id = %1
     //get all status
 
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
-
 
     $transaction = new CRM_Core_Transaction();
 

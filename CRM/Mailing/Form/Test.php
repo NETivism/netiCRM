@@ -144,7 +144,6 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       $preview['html_link'] = CRM_Utils_System::url('civicrm/mailing/preview', "type=html&qfKey=$qfKey");
     }
 
-
     $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo(
       'civicrm_mailing',
       $mailingID
@@ -158,7 +157,6 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     }
     $session->getVars($options, $prefix);
 
-
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $options['mailing_id'];
     $mailing->find(TRUE);
@@ -167,7 +165,6 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     }
     $fromEmail = $mailing->from_email;
     $replyToEmail = $mailing->replyto_email;
-
 
     $attachments = &CRM_Core_BAO_File::getEntityFile(
       'civicrm_mailing',
@@ -298,7 +295,6 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       }
     }
 
-
     if (CRM_Mailing_Info::workflowEnabled()) {
       if (!CRM_Core_Permission::check('schedule mailings') &&
         CRM_Core_Permission::check('create mailings')
@@ -315,7 +311,6 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
       $error = TRUE;
       return $error;
     }
-
 
     $job = new CRM_Mailing_BAO_Job();
     $job->mailing_id = $self->get('mailing_id');

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for case report
  *
@@ -131,7 +129,6 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
   public function postProcess() {
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
-
 
     $xmlProcessor = new CRM_Case_XMLProcessor_Report();
     $contents = $xmlProcessor->run(

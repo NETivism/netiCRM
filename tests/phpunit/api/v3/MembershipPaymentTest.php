@@ -96,8 +96,6 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
   public function testCreate() {
     $contactId = $this->individualCreate(NULL);
 
-
-
     $params = [
       'contact_id' => $contactId,
       'membership_type_id' => $this->_membershipTypeID,
@@ -124,7 +122,6 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
     $this->assertEquals($result['values'][$result['id']]['contribution_id'], $this->_contribution['id'], 'Check Contribution Id in line ' . __LINE__);
 
   }
-
 
   ///////////////// civicrm_membershipPayment_get methods
 

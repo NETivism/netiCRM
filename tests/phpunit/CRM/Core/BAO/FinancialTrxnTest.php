@@ -27,9 +27,8 @@
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Core/BAO/FinancialTrxn.php';
 
-
 class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase {
-    
+
   public function get_info() {
     return [
                  'name'        => 'FinancialTrxn BAOs',
@@ -37,12 +36,11 @@ class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
-    
- 
+
   /**
    * check method create()
    */
@@ -69,10 +67,8 @@ class CRM_Core_BAO_FinancialTrxnTest extends CiviUnitTestCase {
       'id',
       'Database check on updated financial trxn record.'
     );
-        
+
     $this->assertEquals($result, 10, 'Verify financial trxn total_amount.');
   }
-
-        
 
 }

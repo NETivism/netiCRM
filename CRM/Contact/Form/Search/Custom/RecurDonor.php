@@ -94,7 +94,7 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  
+
   public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
@@ -151,7 +151,6 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       $this->_filled = TRUE;
     }
   }
-
 
   public function tempFrom() {
     return "civicrm_contact as contact
@@ -213,7 +212,6 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
-
 
   public function setDefaultValues() {
   }
@@ -359,7 +357,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     else {
       $sql = ' ( 1 ) ';
     }
-    
+
     if ($includeContactIDs) {
       self::includeContactIDs($sql, $this->_formValues);
     }
@@ -435,7 +433,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     if ($row['contribution_status_id2']) {
       $row['contribution_status_id2'] = $this->_cstatus[$row['contribution_status_id2']];
     }
-    
+
     if ($row['type_id1']) {
       $row['type_id1'] = $this->_ctype[$row['type_id1']];
     }

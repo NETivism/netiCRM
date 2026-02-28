@@ -1,6 +1,5 @@
 <?php
 
-
 class Contact extends CiviUnitTestCase {
   /*
    * Helper function to create
@@ -70,7 +69,7 @@ class Contact extends CiviUnitTestCase {
     $organization = CRM_Contact_BAO_Contact::create($params);
     return $organization->id;
   }
-    
+
   /*
    * Helper function to delete a contact
    *

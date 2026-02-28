@@ -33,15 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -157,12 +148,9 @@ class CRM_Mailing_Selector_Event extends CRM_Core_Selector_Base implements CRM_C
 
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
 
-
     $contact = CRM_Contact_BAO_Contact::getTableName();
 
-
     $email = CRM_Core_BAO_Email::getTableName();
-
 
     $job = CRM_Mailing_BAO_Job::getTableName();
     if (!isset($this->_columnHeaders)) {

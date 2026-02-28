@@ -33,16 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
 /**
  * Main page for viewing contact.
  *
@@ -167,8 +157,6 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
       'subtype' => $contactSubtype,
       'isDeleted' => $isDeleted,
     ];
-
-
 
     if (($session->get('userID') == $this->_contactId) ||
       CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)
@@ -311,7 +299,6 @@ class CRM_Contact_Page_View extends CRM_Core_Page {
     // automatically grant permissin for users on their own record. makes
     // things easier in dashboard
     $session = CRM_Core_Session::singleton();
-
 
     if ($session->get('userID') == $page->_contactId) {
       $page->assign('permission', 'edit');

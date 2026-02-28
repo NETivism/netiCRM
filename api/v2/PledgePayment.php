@@ -27,8 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 /*
 *DRAFT CODE WRITTEN BY EILEEN still dev version (pre-ALPHA)
 *Starting point was Contribute API & some portions are still just that with
@@ -315,7 +313,6 @@ function _civicrm_pledgepayment_check_params(&$params) {
  * @access private
  */
 
-
 /* not yet looked at
  * function _civicrm_pledge_duplicate_check( &$params ) {
     require_once 'CRM/Pledge/BAO/Pledge.php';
@@ -460,7 +457,6 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
 
   return [];
 }
-
 
 //having an 'interogate function to find what can be returned from an API would be SUPER useful. Ideally it would also advise which fields are required too. I
 // imaging the most useful format would be to be like the $params array you need to pass in but the value for each field would be information about it. Ideally the

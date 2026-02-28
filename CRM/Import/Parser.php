@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 abstract class CRM_Import_Parser {
   public $_contactSubType;
   public $_unparsedAddresses;

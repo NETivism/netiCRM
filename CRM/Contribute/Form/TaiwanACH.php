@@ -157,7 +157,6 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     return $defaults;
   }
 
-
   public function postProcess() {
     $submittedValues = $this->controller->exportValues($this->_name);
 

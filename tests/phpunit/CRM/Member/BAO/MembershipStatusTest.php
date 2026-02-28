@@ -36,7 +36,7 @@ class CRM_Member_BAO_MembershipStatusTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
 
@@ -46,12 +46,12 @@ class CRM_Member_BAO_MembershipStatusTest extends CiviUnitTestCase {
    *
    */
   public function testAdd() {
-     
+
     $ids    = [];
     $params = [ 'name' => 'pending',
                      'is_active' => 1
                      ];
-        
+
     $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
 
     $result = $this->assertDBNotNull(
@@ -65,12 +65,12 @@ class CRM_Member_BAO_MembershipStatusTest extends CiviUnitTestCase {
   }
 
   public function testRetrieve() {
- 
+
     $ids    = [];
     $params = [ 'name' => 'testStatus',
                      'is_active' => 1
                      ];
-        
+
     $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
     $defaults = [];
     $result = CRM_Member_BAO_MembershipStatus::retrieve($params, $defaults);
@@ -79,16 +79,16 @@ class CRM_Member_BAO_MembershipStatusTest extends CiviUnitTestCase {
   }
 
   public function testSetIsActive() {
-    
+
     $ids    = [];
     $params = [ 'name' => 'pending',
                      'is_active' => 1
                      ];
-        
+
     $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
     $result = CRM_Member_BAO_MembershipStatus::setIsActive($membershipStatus->id, 0);
     $this->assertEquals($result, TRUE, 'Verify membership status record updation.');
-        
+
     $isActive = $this->assertDBNotNull(
       'CRM_Member_BAO_MembershipStatus',
       $membershipStatus->id,
@@ -97,15 +97,15 @@ class CRM_Member_BAO_MembershipStatusTest extends CiviUnitTestCase {
       'Database check on updated membership status record.'
     );
     $this->assertEquals($isActive, 0, 'Verify membership status is_active.');
-        
+
   }
-     
+
   public function testGetMembershipStatus() {
     $ids    = [];
     $params = [ 'name' => 'pending',
                      'is_active' => 1
                      ];
-        
+
     $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
     $result           = CRM_Member_BAO_MembershipStatus::getMembershipStatus($membershipStatus->id);
     $this->assertEquals($result['name'], 'pending', 'Verify membership status name.');
@@ -116,14 +116,14 @@ class CRM_Member_BAO_MembershipStatusTest extends CiviUnitTestCase {
     $params = [ 'name' => 'testStatus',
                      'is_active' => 1
                      ];
-        
+
     $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
     CRM_Member_BAO_MembershipStatus::del($membershipStatus->id);
     $defaults = [ ];
     $result = CRM_Member_BAO_MembershipStatus::retrieve($params, $defaults);
     $this->assertEquals(empty($result), TRUE, 'Verify membership status record deletion.');
   }
-    
+
   public function testGetMembershipStatusByDate() {
     $ids    = [];
     $params = [ 'name' => 'Current',
@@ -131,25 +131,25 @@ class CRM_Member_BAO_MembershipStatusTest extends CiviUnitTestCase {
                      'start_event' => 'start_date',
                      'end_event'   => 'end_date'
                      ];
-        
+
     $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
     $toDate = date('Ymd');
-        
+
     $result = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($toDate, $toDate, $toDate);
     $this->assertEquals($result['name'], 'Current', 'Verify membership status record.');
   }
 
   public function testgetMembershipStatusCurrent() {
-        
+
     $ids    = [];
     $params = [ 'name' => 'Current',
                      'is_active' => 1,
                      'is_current_member' => 1,
                      ];
-        
+
     $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
     $result = CRM_Member_BAO_MembershipStatus::getMembershipStatusCurrent();
-        
+
     $this->assertEquals(empty($result), FALSE, 'Verify membership status records is_current_member.');
   }
 

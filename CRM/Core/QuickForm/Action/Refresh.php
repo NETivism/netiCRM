@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
 
   /**
@@ -66,7 +65,6 @@ class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
     $data = &$page->controller->container();
     $data['values'][$pageName] = $page->exportValues();
     $data['valid'][$pageName] = $page->validate();
-
 
     // Modal form and page is invalid: don't go further
     if ($page->controller->isModal() && !$data['valid'][$pageName]) {

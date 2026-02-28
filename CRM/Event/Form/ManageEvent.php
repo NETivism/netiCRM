@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -169,7 +167,6 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       }
       $this->assign('title', $title);
     }
-
 
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1', 'label');
     $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 0', 'label');

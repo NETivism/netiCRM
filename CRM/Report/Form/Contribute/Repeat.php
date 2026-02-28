@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_Repeat extends CRM_Report_Form {
   public $_columnHeaders;
   public $_groupBy;
@@ -666,7 +664,6 @@ LEFT  JOIN (
             $this->_absoluteUrl,
             $this->_id
           );
-
 
           $rows[$rowNum]['address_civireport_country_id_link'] = $url;
           $rows[$rowNum]['address_civireport_country_id_hover'] = ts("View contributions for this Country.");

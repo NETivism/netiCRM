@@ -43,10 +43,6 @@
  *
  */
 
-
-
-
-
 class CRM_Core_Controller extends HTML_QuickForm_Controller {
 
   /**
@@ -214,8 +210,6 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     $this->set('qfKey', $this->_key);
     $this->set('expired', CRM_REQUEST_TIME + CRM_Core_Session::EXPIRED_TIME);
 
-
-
     // also retrieve and store destination in session
     $this->_destination = CRM_Utils_Request::retrieve(
       'destination',
@@ -251,8 +245,6 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     ) {
       return NULL;
     }
-
-
 
     $qfKey = CRM_Utils_Array::value('qfKey', $_REQUEST, NULL);
     if (!$qfKey) {
@@ -436,7 +428,6 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       else {
         $formName = CRM_Utils_String::getClassName($name);
       }
-
 
       $ext = new CRM_Core_Extensions();
       if ($ext->isExtensionClass($className)) {

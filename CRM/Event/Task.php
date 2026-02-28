@@ -117,7 +117,6 @@ class CRM_Event_Task {
         ],
       ];
 
-
       $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
       if ($providersCount) {
         self::$_tasks[] = [
@@ -132,7 +131,6 @@ class CRM_Event_Task {
         unset(self::$_tasks[1]);
       }
     }
-
 
     CRM_Utils_Hook::searchTasks('event', self::$_tasks);
     asort(self::$_tasks);

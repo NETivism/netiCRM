@@ -147,7 +147,6 @@ class api_v3_MailingGroupTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'Domain Queue event could not be found', 'In line ' . __LINE__);
   }
 
-
   //----------- civicrm_mailing_group_event_resubscribe methods--------
 
   /**
@@ -207,7 +206,6 @@ class api_v3_MailingGroupTest extends CiviUnitTestCase {
       'time_stamp' => '20101212121212',
       'event_subscribe_id' => $result['values']['subscribe_id'],
     ];
-
 
     $result = civicrm_api('mailing_event_confirm', 'create', $params);
 

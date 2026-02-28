@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for custom data
  *
@@ -134,7 +130,6 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
     $this->_groupID = CRM_Utils_Request::retrieve('groupId', 'Positive', $this, TRUE);
     $this->_tableID = CRM_Utils_Request::retrieve('tableId', 'Positive', $this, TRUE);
-
 
     $this->_contactType = CRM_Contact_BAO_Contact::getContactType($this->_tableID);
     $this->_contactSubType = CRM_Contact_BAO_Contact::getContactSubType($this->_tableID);

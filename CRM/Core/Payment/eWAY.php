@@ -23,7 +23,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
  +--------------------------------------------------------------------+
  | eWAY Core Payment Module for CiviCRM version 3.3 & 1.9             |
@@ -91,8 +90,6 @@
  -----------------------------------------------------------------------------------------------
  **/
 
-
-
 class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
   public $_mode;
   /**
@@ -120,8 +117,6 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
    **********************************************************/
   public function __construct($mode, &$paymentProcessor) {
     // require Standaard eWAY API libraries
-
-
 
     // live or test
     $this->_mode = $mode;
@@ -167,13 +162,13 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     //------------------------------------
     // create eWAY gateway objects
     //------------------------------------
-    $eWAYRequest = new GatewayRequest;
+    $eWAYRequest = new GatewayRequest();
 
     if (($eWAYRequest == NULL) || (!($eWAYRequest instanceof GatewayRequest))) {
       return self::errorExit(9001, "Error: Unable to create eWAY Request object.");
     }
 
-    $eWAYResponse = new GatewayResponse;
+    $eWAYResponse = new GatewayResponse();
 
     if (($eWAYResponse == NULL) || (!($eWAYResponse instanceof GatewayResponse))) {
       return self::errorExit(9002, "Error: Unable to create eWAY Response object.");
@@ -187,7 +182,6 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
        $currentcyID    = $params['currencyID'];
        $country        = $params['country'];
        */
-
 
     //-------------------------------------------------------------
     // Prepare some composite data from _paymentProcessor fields
@@ -414,7 +408,6 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
        }
        */
 
-
     //=============
     // Success !
     //=============
@@ -511,9 +504,6 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
   public function send_alert_email($p_eWAY_tran_num, $p_trxn_out, $p_trxn_back, $p_request, $p_response) {
     // Initialization call is required to use CiviCRM APIs.
     civicrm_initialize(TRUE);
-
-
-
 
     list($fromName, $fromEmail) = CRM_Core_BAO_Domain::getNameAndEmail();
     $from = "$fromName <$fromEmail>";

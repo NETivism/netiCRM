@@ -8,7 +8,6 @@
  * @docmaker_intro_end
  */
 
-
 // require_once 'api/v3/DeprecatedUtils.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ParticipantTest extends CiviUnitTestCase {
@@ -247,7 +246,6 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     //create a second event & add participant to it.
     $event = $this->eventCreate(NULL);
     civicrm_api('participant', 'create', ['version' => 3, 'event_id' => $event['id'], 'contact_id' => $this->_contactID]);
-
 
     $description = "use nested get to get an event";
     $subfile     = "NestedEventGet";
@@ -699,7 +697,6 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     $this->docMakerResponse($participant, __FILE__, __FUNCTION__);
     $this->assertNotEquals($participant['is_error'], 1);
 
-
     if (!$participant['is_error']) {
       $params['id'] = CRM_Utils_Array::value('id', $participant);
 
@@ -713,8 +710,6 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     // Cleanup created participant records.
     // $result = $this->participantDelete($params['id']);
   }
-
-
 
   ///////////////// civicrm_participant_delete methods
 

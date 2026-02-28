@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
   /**
    * @var never[]
@@ -127,7 +126,7 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
   }
 
   public function alterDisplay(&$rows) {
-    foreach ($rows as & $row) {
+    foreach ($rows as &$row) {
       if ($row['log_civicrm_contact_log_action'] != 'Delete') {
         $row['log_civicrm_contact_altered_contact_link'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $row['log_civicrm_contact_id']);
         $row['log_civicrm_contact_altered_contact_hover'] = ts("Go to contact summary.");

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
@@ -237,7 +235,6 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-
   /* This function does a query to get totals for some of the search result columns and returns a totals array. */
   public function summary() {
     $totalSelect = "
@@ -256,7 +253,6 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
         inner join civicrm_entity_financial_trxn
         on (civicrm_entity_financial_trxn.entity_id = civicrm_participant_payment.contribution_id and civicrm_entity_financial_trxn.entity_type='contribution')";
     }
-
 
     $where = $this->where();
 

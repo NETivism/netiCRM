@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -129,19 +127,18 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     // calculate expiration day base on registration day, #22026
     if (!empty($values['event']['expiration_time'])) {
       $baseTime = strtotime($this->_participant['register_date']);
-      $plusDay = ceil($values['event']['expiration_time']/24);
+      $plusDay = ceil($values['event']['expiration_time'] / 24);
       $expiredTime = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
       if (time() > $expiredTime) {
         $expired = TRUE;
       }
     }
-    
+
     // only pending status class family able to confirm.
     $statusMsg = NULL;
     if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId, CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'")) && !$expired) {
       //need to confirm that though participant confirming
       //registration - but is there enough space to confirm.
-
 
       $params = [ 1 => [$this->_participantId, 'Positive']];
       $isTest = CRM_Core_DAO::singleValueQuery("SELECT is_test FROM civicrm_participant WHERE id = %1", $params);
@@ -238,7 +235,6 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     }
     elseif ($buttonName == '_qf_ParticipantConfirm_submit') {
       //need to registration status to 'cancelled'.
-
 
       $cancelledId = array_search('Cancelled', CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'"));
       $additionalParticipantIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId);

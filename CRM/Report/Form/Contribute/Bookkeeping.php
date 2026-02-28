@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
   /**
    * @var never[]
@@ -237,7 +235,6 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     $display_flag = $prev_cid = $cid = 0;
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType();
     $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument();
-
 
     foreach ($rows as $rowNum => $row) {
 

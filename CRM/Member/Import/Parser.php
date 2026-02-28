@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 abstract class CRM_Member_Import_Parser {
   public $_dataReferenceField;
   public const MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;

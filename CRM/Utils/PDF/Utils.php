@@ -206,7 +206,6 @@ class CRM_Utils_PDF_Utils {
       }
       $exec = $wkhtmltopdf . escapeshellcmd(" $option $source $dest");
 
-
       if (!empty($config->wkhtmltopdfLang)) {
         putenv("LANG=".$config->wkhtmltopdfLang.'.utf8');
         putenv("LANGUAGE=".$config->wkhtmltopdfLang.'.utf8');

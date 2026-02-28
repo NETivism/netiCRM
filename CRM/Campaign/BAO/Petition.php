@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
   public $cookieExpire;
   public function __construct() {
@@ -102,7 +100,6 @@ class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
       // get the activity type id associated with this survey
       $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo($params['sid']);
 
-
       // create activity
       // activity status id (from /civicrm/admin/optionValue?reset=1&action=browse&gid=25)
       // 1-Schedule, 2-Completed
@@ -155,7 +152,6 @@ class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
 
     $tag_params['name'] = CIVICRM_TAG_UNCONFIRMED;
     $tag = civicrm_tag_get($tag_params);
-
 
     unset($tag_params);
     $tag_params['contact_id'] = $contact_id;
@@ -225,7 +221,6 @@ SELECT
 WHERE 
 	source_record_id = " . (int) $surveyId . " AND activity_type_id = " . (int) $surveyInfo['activity_type_id'] . " GROUP BY status_id";
 
-
     $statusTotal = [];
     $total = 0;
     $dao = &CRM_Core_DAO::executeQuery($sql);
@@ -236,7 +231,6 @@ WHERE
     $statusTotal['count'] = $total;
     return $statusTotal;
   }
-
 
   public static function getSurveyInfo($surveyId = NULL) {
     $surveyInfo = [];
@@ -360,8 +354,6 @@ WHERE 	a.source_record_id = " . $surveyId . "
 	AND a.activity_type_id = " . $surveyInfo['activity_type_id'] . "
 	AND a.source_contact_id = " . $contactId;
 
-
-
     $dao = &CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       $signature[$dao->id]['id'] = $dao->id;
@@ -398,8 +390,6 @@ WHERE 	a.source_record_id = " . $surveyId . "
      *		send a confirmation request email
      */
 
-
-
     // define constant CIVICRM_PETITION_CONTACTS, if not exist in civicrm.settings.php
     if (!defined('CIVICRM_PETITION_CONTACTS')) {
       define('CIVICRM_PETITION_CONTACTS', 'Petition Contacts');
@@ -429,13 +419,10 @@ WHERE 	a.source_record_id = " . $surveyId . "
       CRM_Core_Error::fatal('Petition doesn\'t exist.');
     }
 
-
     //get the default domain email address.
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
 
-
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
-
 
     $toName = CRM_Contact_BAO_Contact::displayName($params['contactId']);
 
@@ -455,7 +442,6 @@ WHERE 	a.source_record_id = " . $surveyId . "
         $params['group_id'] = $group_id[0];
         $params['contact_id'] = $params['contactId'];
         civicrm_group_contact_add($params);
-
 
         if ($params['email-Primary']) {
           CRM_Core_BAO_MessageTemplates::sendTemplate(
@@ -490,7 +476,6 @@ WHERE 	a.source_record_id = " . $surveyId . "
         $config = CRM_Core_Config::singleton();
         $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
 
-
         $replyTo = CRM_Utils_Array::implode(
           $config->verpSeparator,
           [$localpart . 'c',
@@ -499,7 +484,6 @@ WHERE 	a.source_record_id = " . $surveyId . "
             $se->hash,
           ]
         ) . "@$emailDomain";
-
 
         $confirmUrl = CRM_Utils_System::url(
           'civicrm/petition/confirm',
@@ -518,7 +502,6 @@ WHERE 	a.source_record_id = " . $surveyId . "
         $petitionTokens['confirmUrl'] = $confirmUrl;
         $petitionTokens['confirmUrlPlainText'] = $confirmUrlPlainText;
         $tplParams['petition'] = $petitionTokens;
-
 
         if ($params['email-Primary']) {
           CRM_Core_BAO_MessageTemplates::sendTemplate(

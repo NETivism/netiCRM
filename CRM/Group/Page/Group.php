@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
   /**
@@ -290,7 +289,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $groupPermissions[] = CRM_Core_Permission::DELETE;
     }
 
-
     $links = &$this->links();
     $allTypes = CRM_Core_OptionGroup::values('group_type');
     $smartMarketingTypes = [];
@@ -449,7 +447,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
       $params[4] = [$active_status, 'Boolean'];
     }
 
-
     if ($inactive_status && !$active_status) {
       $clauses[] = 'groups.is_active = 0';
       $params[5] = [$inactive_status, 'Boolean'];
@@ -501,7 +498,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
   public function pager($whereClause, $whereParams) {
 
-
     $params['status'] = ts('Group %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';
@@ -528,12 +524,10 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
     $this->_pager = new CRM_Utils_Pager($params);
 
-
     $this->assign_by_ref('pager', $this->_pager);
   }
 
   public function pagerAtoZ($whereClause, $whereParams) {
-
 
     $query = "
         SELECT DISTINCT UPPER(LEFT(groups.title, 1)) as sort_name

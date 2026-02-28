@@ -23,7 +23,7 @@ class Participant extends PHPUnit_Framework_Testcase {
     $participant = CRM_Event_BAO_Participant::add($params);
     return $participant->id;
   }
- 
+
   /*
    * Helper function to delete a participant
    *

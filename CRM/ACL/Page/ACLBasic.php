@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  * @package CRM
@@ -144,7 +142,6 @@ class CRM_ACL_Page_ACLBasic extends CRM_Core_Page_Basic {
    */
   public function browse() {
 
-
     // get all acl's sorted by weight
     $acl = [];
     $query = "
@@ -158,9 +155,7 @@ ORDER BY entity_id
       CRM_Core_DAO::$_nullArray
     );
 
-
     $roles = CRM_Core_OptionGroup::values('acl_role');
-
 
     $permissions = CRM_Core_Permission::basicPermissions();
     while ($dao->fetch()) {

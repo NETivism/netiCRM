@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/Note.php';
 require_once 'tests/phpunit/CiviTest/CiviUnitTestCase.php';
 
@@ -124,7 +123,6 @@ class api_v2_NoteTest extends CiviUnitTestCase {
     $result = civicrm_note_get($params);
     $this->assertEquals($result['is_error'], 0);
   }
-
 
   ///////////////// civicrm_note_create methods
 

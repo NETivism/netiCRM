@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
 
   public static $_paymentProcessor = NULL;
@@ -141,7 +140,6 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
          recurring_payment_suspended_due_to_max_failed_payment	RP Profile Suspended due to Max Failed Payment
         */
 
-
     //set transaction type
     $txnType = $_POST['txn_type'];
 
@@ -248,7 +246,6 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
       $contribution->total_amount = $input['amount'];
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     // fix for CRM-2842
@@ -287,8 +284,6 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
   public function main($component = 'contribute') {
     CRM_Core_Error::debug_var('GET', $_GET, TRUE, TRUE);
     CRM_Core_Error::debug_var('POST', $_POST, TRUE, TRUE);
-
-
 
     $objects = $ids = $input = [];
     $input['component'] = $component;

@@ -23,7 +23,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
    * Copyright (C) 2009
    * Licensed to CiviCRM under the Academic Free License version 3.0.
@@ -38,7 +37,6 @@
  * @author Tom Kirkpatrick <tkp@kirkdesigns.co.uk>
  * $Id$
  */
-
 
 class CRM_Core_Payment_Realex extends CRM_Core_Payment {
   /**
@@ -146,7 +144,6 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
     $sha1hash = sha1($hashme);
     $hashme = "$sha1hash.{$this->_getParam('secret')}";
     $sha1hash = sha1($hashme);
-
 
     // Generate the request xml that is send to Realex Payments.
     $request_xml = "<request type='auth' timestamp='{$this->_getParam('timestamp')}'>

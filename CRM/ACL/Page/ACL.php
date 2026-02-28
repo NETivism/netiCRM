@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  * @package CRM
@@ -152,7 +150,6 @@ class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
       }
     }
 
-
     // finally browse the acl's
     $this->browse();
 
@@ -169,7 +166,6 @@ class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
    */
   public function browse() {
 
-
     // get all acl's sorted by weight
     $acl = [];
     $query = "
@@ -183,7 +179,6 @@ ORDER BY entity_id
       CRM_Core_DAO::$_nullArray
     );
 
-
     $roles = CRM_Core_OptionGroup::values('acl_role');
 
     $group = ['-1' => ts('- select -'),
@@ -195,7 +190,6 @@ ORDER BY entity_id
     $ufGroup = ['-1' => ts('- select -'),
       '0' => ts('All Profiles'),
     ] + CRM_Core_PseudoConstant::ufGroup();
-
 
     $event = ['-1' => ts('- select -'),
       '0' => ts('All Events'),
@@ -210,7 +204,6 @@ ORDER BY entity_id
       $acl[$dao->id]['object_table'] = $dao->object_table;
       $acl[$dao->id]['object_id'] = $dao->object_id;
       $acl[$dao->id]['is_active'] = $dao->is_active;
-
 
       if ($acl[$dao->id]['entity_id']) {
         $acl[$dao->id]['entity'] = $roles[$acl[$dao->id]['entity_id']];

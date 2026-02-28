@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for processing a case
  *
@@ -170,8 +167,6 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
       );
       return;
     }
-
-
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Grant_DAO_Grant');
     $grantType = CRM_Core_OptionGroup::values('grant_type');
@@ -333,7 +328,6 @@ class CRM_Grant_Form_Grant extends CRM_Core_Form {
       'civicrm_grant',
       $this->_id
     );
-
 
     $grant = CRM_Grant_BAO_Grant::create($params, $ids);
 

@@ -169,7 +169,7 @@ class CRM_Utils_System {
     $frontend = FALSE
   ) {
     // we have a valid query and it has not yet been transformed
-    if ($htmlize && ! empty($query) && strpos($query, '&amp;') === FALSE) {
+    if ($htmlize && !empty($query) && strpos($query, '&amp;') === FALSE) {
       $query = htmlentities($query);
     }
 
@@ -237,7 +237,6 @@ class CRM_Utils_System {
       header("Content-Security-Policy: ".$csp);
     }
   }
-
 
   /**
    * This static function checks if the given path matches any of the patterns in the
@@ -401,7 +400,6 @@ class CRM_Utils_System {
     return CRM_Core_Config::$_userSystem->addHTMLHead($bc);
   }
 
-
   /**
    * Append a javascript file
    *
@@ -495,7 +493,7 @@ class CRM_Utils_System {
    * access public
    * @static  */
   public static function mapConfigToSSL() {
-    $config =& CRM_Core_Config::singleton();
+    $config = &CRM_Core_Config::singleton();
     $url = str_replace('http://', 'https://', $config->userFrameworkResourceURL);
     $config->userFrameworkResourceURL = $url;
     $config->resourceBase = $url;
@@ -536,7 +534,6 @@ class CRM_Utils_System {
     else {
       $key = CRM_Utils_Request::retrieve('site_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
     }
-
 
     if (!$key) {
       return self::authenticateAbort("ERROR: You need to send a valid key to execute this file.", $abort);
@@ -630,8 +627,6 @@ class CRM_Utils_System {
   public static function setUFMessage($message) {
     return CRM_Core_Config::$_userSystem->setMessage($message);
   }
-
-
 
   public static function isNull($value) {
     if (!isset($value) || $value === NULL || $value === '') {
@@ -1702,7 +1697,6 @@ class CRM_Utils_System {
       }
     }
   }
-
 
   /**
    * SameSite cookie compatibility check

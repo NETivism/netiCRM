@@ -122,7 +122,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       if ($this->_response->Status == 'SUCCESS') {
         // Format Every thing.
         // Format of amount
-        $response =& $this->_response;
+        $response = &$this->_response;
         if (!empty($response->amount) && $response->currency != 'TWD') {
           $response->amount = (float)$response->amount / 100;
         }
@@ -253,7 +253,6 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     ];
     return $return;
   }
-
 
   /**
    * Migrate from civicrm_spgateway_record

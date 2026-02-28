@@ -3,7 +3,7 @@
 require_once 'CiviTest/CiviUnitTestCase.php';
 
 class CRM_Utils_MailTest extends CiviUnitTestCase {
-    
+
   public function get_info() {
     return [
                  'name'        => 'Mail Test',
@@ -11,11 +11,11 @@ class CRM_Utils_MailTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
-    
+
   /**
    * test case for add( )
    * test with empty params.

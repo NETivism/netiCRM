@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -106,7 +104,6 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'name'), TRUE);
     $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_LocationType', $this->_id]);
     $this->addRule('name', ts('Name should only have alpha numeric characters.'), 'alphanumeric', ['CRM_Core_DAO_LocationType', $this->_id]);
-
 
     $this->add('text', 'vcard_name', ts('vCard Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'vcard_name'));
 

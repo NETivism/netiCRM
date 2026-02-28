@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * class for managing a http request
  *
@@ -95,7 +92,6 @@ class CRM_Utils_Request {
         $value = CRM_Utils_Array::value($name, $_REQUEST);
         break;
     }
-
 
     if (isset($value) &&
       (CRM_Utils_Type::validate($value, $type, $abort, $name) === NULL)

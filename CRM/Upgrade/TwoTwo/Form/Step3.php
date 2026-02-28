@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_TwoTwo_Form_Step3 extends CRM_Upgrade_Form {
   public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '3']);
@@ -150,7 +149,6 @@ SELECT id
       //it as default from email address..
 
       //get the existing from email address.
-
 
       $optionValues = [];
       $grpParams['name'] = 'from_email_address';
@@ -270,8 +268,6 @@ ALTER TABLE `civicrm_domain`
      * civicrm_preferences and unset these from config backend.
      */
   public function mailerPreferences() {
-
-
 
     $mailerValues = [];
     $mailerFields = ['outBound_option', 'smtpServer', 'smtpPort', 'smtpAuth',

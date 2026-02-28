@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
   public function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
@@ -129,7 +126,6 @@ class CRM_Upgrade_ThreeOne_ThreeOne extends CRM_Upgrade_Form {
         }
       }
     }
-
 
     $domain = new CRM_Core_DAO_Domain();
     $domain->selectAdd();

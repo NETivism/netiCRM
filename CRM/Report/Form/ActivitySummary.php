@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
 
   /**

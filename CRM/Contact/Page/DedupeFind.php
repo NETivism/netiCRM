@@ -197,7 +197,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
           $this->pager(count($foundDupes));
         }
         // pager slice
-        $foundDupes = array_slice($foundDupes, ($this->_currentPage-1)*$this->_numPerPage, $this->_numPerPage);
+        $foundDupes = array_slice($foundDupes, ($this->_currentPage - 1) * $this->_numPerPage, $this->_numPerPage);
 
         foreach ($foundDupes as $dupe) {
           $this->_cids[$dupe[0]] = 1;
@@ -328,7 +328,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
   }
 
   public function getFoundDupes() {
-    $createdTime = CRM_REQUEST_TIME - 3600*6; // 6 hours
+    $createdTime = CRM_REQUEST_TIME - 3600 * 6; // 6 hours
     return CRM_Core_BAO_Cache::getItem('Dedupe Found Dupes', $this->_cachePath, NULL, $createdTime);
   }
 

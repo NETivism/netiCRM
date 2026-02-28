@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_Menu {
 
   /**
@@ -254,8 +253,6 @@ class CRM_Core_Menu {
 
     self::build($menuArray);
 
-
-
     $config = CRM_Core_Config::singleton();
 
     foreach ($menuArray as $path => $item) {
@@ -387,7 +384,6 @@ class CRM_Core_Menu {
         }
       }
     }
-
 
     if (!$all) {
       // remove all collapsed menu items from the array
@@ -598,7 +594,6 @@ UNION (
 )
 ";
     }
-
 
     $menu = new CRM_Core_DAO_Menu();
     $menu->query($query);

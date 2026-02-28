@@ -86,7 +86,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    */
   public $_columnHeaders;
 
-
   /**
    * Class constructor
    *
@@ -363,7 +362,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     }
     return $results;
   }
-
 
   public function getQuery($select = '*', $groupBy = NULL, $offset = NULL, $rowCount = NULL, $sort = NULL) {
     $where = $args = [];

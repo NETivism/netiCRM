@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality for batch profile update for contribution
  */
@@ -98,7 +95,6 @@ class CRM_Contribute_Form_Task_PickProfile extends CRM_Contribute_Form_Task {
    * @return void
    */
   public function buildQuickForm() {
-
 
     $types = ['Contribution'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types, TRUE);

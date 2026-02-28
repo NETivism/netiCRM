@@ -37,18 +37,6 @@
  * Files required
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Base Search / View form for *all* listing of multiple
  * contacts
@@ -342,12 +330,11 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     ];
   }
 
-
   public function getModeSelect() {
     $this->setModeValues();
 
     $select = [];
-    foreach (self::$_modeValues as $id => & $value) {
+    foreach (self::$_modeValues as $id => &$value) {
       $select[$id] = $value['selectorLabel'];
     }
 
@@ -466,7 +453,6 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
              * $this->addGroupRule( 'group_contact_status',
              *                  ts( 'Please select at least Group Status value.' ), 'required', null, 1 );
             */
-
 
       // Set dynamic page title for 'Show Members of Group'
       CRM_Utils_System::setTitle(ts('Contacts in Group: %1', [1 => $this->_group[$this->_groupID]]));
@@ -599,7 +585,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $this->_ufGroupID = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_componentMode = CRM_Utils_Request::retrieve('component_mode', 'Positive', $this, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, $_REQUEST);
     $this->_tagID = CRM_Utils_Request::retrieve('tid', 'Positive', $this);
-    
+
     if (!empty($this->_ssID) && !CRM_Core_Permission::check('edit groups')) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
     }

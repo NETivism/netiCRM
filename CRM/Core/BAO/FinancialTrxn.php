@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
   public function __construct() {
     parent::__construct();
@@ -52,7 +50,6 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
   public static function create(&$params) {
     $trxn = new CRM_Core_DAO_FinancialTrxn();
     $trxn->copyValues($params);
-
 
     if (!CRM_Utils_Rule::currencyCode($trxn->currency)) {
 

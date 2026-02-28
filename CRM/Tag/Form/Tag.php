@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for tags
  *
@@ -109,7 +104,6 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
     $this->assign('tag', $allTag);
 
     //build tag widget
-
 
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, $this->_entityTable, $this->_entityID);

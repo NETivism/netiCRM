@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing a Grant
  *
@@ -91,10 +89,7 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
       $this->assign('note', CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $this->_noteId, 'note'));
     }
 
-
     // add Grant to Recent Items
-
-
 
     $url = CRM_Utils_System::url(
       'civicrm/contact/view/grant',
@@ -125,7 +120,6 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
       NULL,
       $recentOther
     );
-
 
     $attachment = CRM_Core_BAO_File::attachmentInfo(
       'civicrm_grant',

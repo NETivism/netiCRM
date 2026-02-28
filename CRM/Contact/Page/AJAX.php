@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class contains all contact related functions that are called using AJAX (jQuery)
  */
@@ -242,7 +240,6 @@ class CRM_Contact_Page_AJAX {
       CRM_Utils_System::civiExit();
     }
 
-
     $selectOption = &CRM_Core_BAO_CustomOption::valuesByID($fieldID, $optionGroupID);
 
     $completeList = NULL;
@@ -270,7 +267,6 @@ class CRM_Contact_Page_AJAX {
     $relationshipID = CRM_Utils_Array::value('rel_id', $_POST);
     $caseID = CRM_Utils_Array::value('case_id', $_POST);
 
-
     $relationParams = ['relationship_type_id' => $relType . '_a_b',
       'contact_check' => [$relContactID => 1],
       'is_active' => 1,
@@ -283,7 +279,6 @@ class CRM_Contact_Page_AJAX {
       $relationIds['relationship'] = $relationshipID;
       $relationIds['contactTarget'] = $relContactID;
     }
-
 
     $return = CRM_Contact_BAO_Relationship::create($relationParams, $relationIds);
     $status = 'process-relationship-fail';
@@ -339,7 +334,6 @@ class CRM_Contact_Page_AJAX {
       $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
       $name = str_replace('*', '%', $name);
 
-
       $elements = CRM_Contact_BAO_Relationship::getPermissionedEmployer($cid, $name);
 
       if (!empty($elements)) {
@@ -350,7 +344,6 @@ class CRM_Contact_Page_AJAX {
       CRM_Utils_System::civiExit();
     }
   }
-
 
   public static function groupTree() {
     $gids = CRM_Utils_Type::escape($_GET['gids'], 'String');
@@ -567,7 +560,6 @@ WHERE sort_name LIKE '%$name%'";
   public static function deleteCustomValue() {
     $customValueID = CRM_Utils_Type::escape($_POST['valueID'], 'Positive');
     $customGroupID = CRM_Utils_Type::escape($_POST['groupID'], 'Positive');
-
 
     CRM_Core_BAO_CustomValue::deleteCustomValue($customValueID, $customGroupID);
     if ($contactId = CRM_Utils_Array::value('contactId', $_POST)) {
@@ -840,13 +832,11 @@ WHERE sort_name LIKE '%$name%'";
         // This would normally be coming from either the database (this user's settings) or a default/initial dashboard configuration.
         // get contact id of logged in user
 
-
         $dashlets = CRM_Core_BAO_Dashboard::getContactDashlets();
         break;
 
       case 'get_widget':
         $dashletID = CRM_Utils_Type::escape($_GET['id'], 'Positive');
-
 
         $dashlets = CRM_Core_BAO_Dashboard::getDashletInfo($dashletID);
         break;
@@ -911,9 +901,6 @@ WHERE sort_name LIKE '%$name%'";
     $searchValues[] = ['sort_name', 'LIKE', $relContact, 0, 1];
 
     list($rid, $direction) = explode('_', $relType, 2);
-
-
-
 
     $relationshipType = new CRM_Contact_DAO_RelationshipType();
 
@@ -1006,7 +993,6 @@ WHERE sort_name LIKE '%$name%'";
       }
     }
 
-
     $selectorElements = ['check', 'name'];
     if ($typeName == 'Employee of') {
       $selectorElements[] = 'employee_of';
@@ -1035,7 +1021,6 @@ WHERE sort_name LIKE '%$name%'";
       return;
 
     }
-
 
     $exception = new CRM_Dedupe_DAO_Exception();
     $exception->contact_id1 = $cid;

@@ -34,9 +34,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -81,7 +78,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         $defaults['is_multiple_registrations_max'] = $defaults['is_multiple_registrations'];
       }
 
-
       $ufJoinParams = ['entity_table' => 'civicrm_event',
         'module' => 'CiviEvent',
         'entity_id' => $eventId,
@@ -93,7 +89,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
       if ($defaults['is_multiple_registrations']) {
         // CRM-4377: set additional participants’ profiles – set to ‘none’ if explicitly unset (non-active)
-        $ufJoin = new CRM_Core_DAO_UFJoin;
+        $ufJoin = new CRM_Core_DAO_UFJoin();
         $ufJoin->module = 'CiviEvent_Additional';
         $ufJoin->entity_table = 'civicrm_event';
         $ufJoin->entity_id = $eventId;
@@ -217,7 +213,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
     $this->addElement('checkbox', 'allow_same_participant_emails', ts('Allow multiple registrations from the same email address?'));
 
-
     $participantStatuses = &CRM_Event_PseudoConstant::participantStatus();
     if (in_array('Awaiting approval', $participantStatuses) &&
         in_array('Pending from approval', $participantStatuses) &&
@@ -256,8 +251,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
     // explicit height and width.
     $form->addWysiwyg('footer_text', ts('Footer Text'), ['rows' => 2, 'cols' => 40]);
-
-
 
     $types = array_merge(
       ['Contact', 'Individual', 'Participant'],
@@ -474,7 +467,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       );
     }
 
-
     CRM_Event_BAO_Event::add($params);
 
     // also update the ProfileModule tables
@@ -483,8 +475,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       'entity_table' => 'civicrm_event',
       'entity_id' => $this->_id,
     ];
-
-
 
     // first delete all past entries
     CRM_Core_BAO_UFJoin::deleteAll($ufJoinParams);

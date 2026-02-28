@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_ContributionPage {
 
   public $_cdType;
@@ -125,8 +123,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     //need to assign custom data type and subtype to the template
     $this->assign('customDataType', 'ContributionPage');
 
-
-
     $this->_first = TRUE;
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage');
 
@@ -171,7 +167,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       $this->addElement('checkbox', 'is_internal', ts('Is this Online Contribution Page are internal use only?'));
     }
 
-
     $this->addElement('checkbox', 'is_special', ts('Is this Online Contribution Page in the Special Style?'), NULL, ['onclick' => "showSpecial()"]);
 
     // should the honor be enabled
@@ -187,7 +182,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
     $this->addFormRule(['CRM_Contribute_Form_ContributionPage_Settings', 'formRule']);
 
-
     $this->addElement('file', 'uploadBackgroundImage', ts('Background image'));
     $this->addElement('file', 'uploadMobileBackgroundImage', ts('Background image of mobile'));
     $this->addUploadElement('uploadBackgroundImage');
@@ -196,7 +190,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addRule('uploadMobileBackgroundImage', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '2000x2000');
 
     $config = CRM_Core_Config::singleton();
-
 
     $this->add('hidden', 'deleteBackgroundImage');
     $this->add('hidden', 'deleteMobileBackgroundImage');
@@ -282,12 +275,10 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       $params['goal_recuramount'] = 'null';
     }
 
-
     if (!$params['honor_block_is_active']) {
       $params['honor_block_title'] = NULL;
       $params['honor_block_text'] = NULL;
     }
-
 
     $customFields = CRM_Core_BAO_CustomField::getFields('ContributionPage', FALSE, FALSE, CRM_Utils_Array::value('contribution_type_id', $params));
     $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params, $customFields, $this->_id, 'ContributionPage');

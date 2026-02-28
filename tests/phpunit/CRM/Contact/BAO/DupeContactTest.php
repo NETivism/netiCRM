@@ -4,11 +4,11 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CiviTest/Contact.php';
 
 class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase {
-    
+
   public function setUp() {
     parent::setUp();
   }
-    
+
   public function testFuzzyDupes() {
     // make dupe checks based on based on following contact sets:
     // FIRST - LAST - EMAIL
@@ -76,7 +76,7 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase {
     // TODO: This is not an API test!!
     foreach ($params as $param) {
       $param['version'] = 3;
-      $contact =& civicrm_api('contact', 'create', $param);
+      $contact = &civicrm_api('contact', 'create', $param);
       $contactIds[$count++] = $contact['id'];
 
       $grpParams = [ 'contact_id' => $contact['id'],
@@ -230,7 +230,7 @@ class CRM_Contact_BAO_DupeContactTest extends CiviUnitTestCase {
     // TODO: This is not an API test!!
     foreach ($params as $param) {
       $param['version'] = 3;
-      $contact =& civicrm_api('contact', 'create', $param);
+      $contact = &civicrm_api('contact', 'create', $param);
       $contactIds[$count++] = $contact['id'];
     }
 

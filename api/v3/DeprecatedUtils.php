@@ -27,16 +27,12 @@
   +--------------------------------------------------------------------+
 */
 
-
-
 /*
  * These functions have been deprecated out of API v3 Utils folder as they are not part of the
  * API. Calling API functions directly is not supported & these functions are not called by any
  * part of the API so are not really part of the api
  *
  */
-
-
 
 require_once 'api/v3/utils.php';
 
@@ -774,10 +770,7 @@ function _civicrm_api3_deprecated_add_formatted_param(&$values, &$params) {
      *      Custom
      */
 
-
-
   /* Cache the various object fields */
-
 
   static $fields = NULL;
 
@@ -792,8 +785,6 @@ function _civicrm_api3_deprecated_add_formatted_param(&$values, &$params) {
 
   if (isset($values['contact_type'])) {
     /* we're an individual/household/org property */
-
-
 
     $fields[$values['contact_type']] = CRM_Contact_DAO_Contact::fields();
 
@@ -934,7 +925,6 @@ function _civicrm_api3_deprecated_add_formatted_param(&$values, &$params) {
   if (isset($values['note'])) {
     /* add a note field */
 
-
     if (!isset($params['note'])) {
       $params['note'] = [];
     }
@@ -960,7 +950,6 @@ function _civicrm_api3_deprecated_add_formatted_param(&$values, &$params) {
 
   /* Check for custom field values */
 
-
   if (!CRM_Utils_Array::value('custom', $fields)) {
     $fields['custom'] = &CRM_Core_BAO_CustomField::getFields(
       CRM_Utils_Array::value('contact_type', $values),
@@ -977,7 +966,6 @@ function _civicrm_api3_deprecated_add_formatted_param(&$values, &$params) {
   foreach ($values as $key => $value) {
     if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
       /* check if it's a valid custom field id */
-
 
       if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $fields['custom'])) {
         return civicrm_api3_create_error('Invalid custom field ID');
@@ -1018,7 +1006,7 @@ function _civicrm_api3_deprecated_add_formatted_location_blocks(&$values, &$para
 
     if (!CRM_Utils_Array::arrayKeyExists($block, $fields)) {
       $daoName = 'CRM_Core_DAO_' . $block;
-      $fields[$block] =& $daoName::fields();
+      $fields[$block] = &$daoName::fields();
     }
 
     $blockCnt = count($params[$name]);
@@ -1146,7 +1134,6 @@ function _civicrm_api3_deprecated_duplicate_formatted_contact($params) {
 function _civicrm_api3_deprecated_validate_formatted_contact(&$params) {
   /* Look for offending email addresses */
 
-
   if (CRM_Utils_Array::arrayKeyExists('email', $params)) {
     foreach ($params['email'] as $count => $values) {
       if (!is_array($values)) {
@@ -1167,7 +1154,6 @@ function _civicrm_api3_deprecated_validate_formatted_contact(&$params) {
   }
 
   /* Validate custom data fields */
-
 
   if (CRM_Utils_Array::arrayKeyExists('custom', $params) && is_array($params['custom'])) {
     foreach ($params['custom'] as $key => $custom) {
@@ -1215,7 +1201,7 @@ function _civicrm_api3_deprecated_membership_format_params($params, &$values, $c
 
   require_once 'CRM/Core/OptionGroup.php';
   $customFields = CRM_Core_BAO_CustomField::getFields('Membership');
-  
+
   foreach ($params as $key => $value) {
     // ignore empty values or empty arrays etc
     if (CRM_Utils_System::isNull($value)) {
@@ -1246,7 +1232,7 @@ function _civicrm_api3_deprecated_membership_format_params($params, &$values, $c
         }
       }
     }
-     
+
     switch ($key) {
       case 'membership_contact_id':
         if (!CRM_Utils_Rule::integer($value)) {
@@ -1321,7 +1307,6 @@ function _civicrm_api3_deprecated_membership_format_params($params, &$values, $c
   }
 
   _civicrm_api3_custom_format_params($params, $values, 'Membership');
-
 
   if ($create) {
     // CRM_Member_BAO_Membership::create() handles membership_start_date,
@@ -1453,7 +1438,6 @@ function _civicrm_api3_deprecated_contact_check_custom_params($params, $csType =
     if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
       /* check if it's a valid custom field id */
 
-
       if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $customFields)) {
 
         $errorMsg = "Invalid Custom Field Contact Type: {$params['contact_type']}";
@@ -1486,7 +1470,6 @@ function _civicrm_api3_deprecated_contact_check_params(&$params, $dupeCheck = TR
         'organization_name',
       ],
     ];
-
 
     // contact_type has a limited number of valid values
     $fields = CRM_Utils_Array::value($params['contact_type'], $required);

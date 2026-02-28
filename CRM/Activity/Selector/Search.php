@@ -32,12 +32,6 @@
  *
  */
 
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for

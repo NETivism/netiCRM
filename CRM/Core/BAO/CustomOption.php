@@ -93,7 +93,6 @@ class CRM_Core_BAO_CustomOption {
       return $options;
     }
 
-
     $dao = new CRM_Core_DAO_OptionValue();
     $dao->option_group_id = $optionGroupID;
     if (!$inactiveNeeded) {
@@ -108,7 +107,6 @@ class CRM_Core_BAO_CustomOption {
       $options[$dao->id]['label'] = $dao->label;
       $options[$dao->id]['value'] = $dao->value;
     }
-
 
     CRM_Utils_Hook::customFieldOptions($fieldID, $options, TRUE);
 
@@ -149,7 +147,6 @@ WHERE  id = %1
           $options = &self::valuesByID($fieldId);
         }
     }
-
 
     return CRM_Core_BAO_CustomField::getDisplayValueCommon(
       $value,
@@ -282,11 +279,9 @@ SET    {$dao->columnName} = REPLACE( {$dao->columnName}, %1, %2 )";
       );
     }
 
-
     if (!empty($optionGroupID) && is_numeric($optionGroupID)) {
       $options = &CRM_Core_OptionGroup::valuesByID($optionGroupID);
     }
-
 
     CRM_Utils_Hook::customFieldOptions($customFieldID, $options, FALSE);
 

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -215,8 +213,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-
-
     //to save the current mappings
     if (!$this->get('savedMapping')) {
       $saveDetailsName = ts('Save this field mapping');
@@ -272,7 +268,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     $headerPatterns = $this->get('headerPatterns');
     $dataPatterns = $this->get('dataPatterns');
     $hasLocationTypes = $this->get('fieldTypes');
-
 
     /* Initialize all field usages to false */
 
@@ -535,7 +530,7 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     $mapperKeysMain = [];
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);
@@ -587,7 +582,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
         ),
       ];
       $saveMapping = CRM_Core_BAO_Mapping::add($mappingParams);
-
 
       for ($i = 0; $i < $this->_columnCount; $i++) {
         $saveMappingFields = new CRM_Core_DAO_MappingField();

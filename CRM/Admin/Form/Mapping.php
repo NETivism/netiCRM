@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Mapping
  *
@@ -85,7 +83,6 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
         ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'description')
       );
-
 
       $mappingType = $this->addElement('select', 'mapping_type_id', ts('Mapping Type'), CRM_Core_PseudoConstant::mappingTypes());
 

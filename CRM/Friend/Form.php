@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for Tell A Friend Form For End User
  *
@@ -144,7 +141,6 @@ class CRM_Friend_Form extends CRM_Core_Form {
     $this->assign('title', CRM_Utils_Array::value('title', $defaults));
     $this->assign('intro', CRM_Utils_Array::value('intro', $defaults));
     $this->assign('message', CRM_Utils_Array::value('suggested_message', $defaults));
-
 
     list($fromName, $fromEmail) = CRM_Contact_BAO_Contact::getContactDetails($this->_contactID);
 

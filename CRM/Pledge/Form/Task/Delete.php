@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to delete a group of
  * participations. This class provides functionality for the actual

@@ -1137,7 +1137,6 @@ WHERE  id = %1";
              and iterates nested groups in a logical manner for us
             */
 
-
       self::$groupIterator = new CRM_Contact_BAO_GroupNesting($styledLabels);
     }
     return self::$groupIterator;
@@ -1268,7 +1267,6 @@ WHERE  id = %1";
       //now we have name/label columns CRM-3336
       $column_a_b = "{$valueColumnName}_a_b";
       $column_b_a = "{$valueColumnName}_b_a";
-
 
       $relationshipTypeDAO = new CRM_Contact_DAO_RelationshipType();
       $relationshipTypeDAO->selectAdd();
@@ -1517,7 +1515,6 @@ WHERE  id = %1";
     if (!CRM_Utils_Array::arrayKeyExists($column, self::$activityStatus)) {
       self::$activityStatus[$column] = [];
 
-
       self::$activityStatus[$column] = CRM_Core_OptionGroup::values(
         'activity_status',
         FALSE,
@@ -1666,7 +1663,6 @@ ORDER BY name";
         }
         $filterCondition .= "AND (v.filter = 0 OR {$filterVal}) ";
       }
-
 
       self::$greeting[$index] = CRM_Core_OptionGroup::values(
         $filter['greeting_type'],

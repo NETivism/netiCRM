@@ -33,16 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -140,7 +130,6 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
     $this->_customSearchClass = $customSearchClass;
     $this->_formValues = $formValues;
     $this->_includeContactIds = $includeContactIds;
-
 
     $ext = new CRM_Core_Extensions();
 

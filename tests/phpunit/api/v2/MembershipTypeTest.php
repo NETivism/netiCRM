@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/Membership.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_MembershipTypeTest extends CiviUnitTestCase {

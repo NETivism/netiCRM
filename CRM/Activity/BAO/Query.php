@@ -413,10 +413,8 @@ class CRM_Activity_BAO_Query {
       $form->addSelect('activity_tags', ts('Activity Tag(s)'), $activity_tags, $attrmultiple);
     }
 
-
     $surveys = ['' => ts('- none -')] + CRM_Campaign_BAO_Survey::getSurveyList();
     $form->add('select', 'activity_survey_id', ts('Survey'), $surveys, FALSE);
-
 
     $extends = ['Activity'];
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $extends);

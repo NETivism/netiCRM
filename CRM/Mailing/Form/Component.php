@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -165,7 +163,6 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $ids['id'] = $this->_id;
     }
-
 
     CRM_Mailing_BAO_Component::add($params, $ids);
   }

@@ -323,7 +323,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
   $include_dirs = array_unique(explode(PATH_SEPARATOR, get_include_path()));
   foreach ($include_dirs as $include_dir) {
     $action_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, [$include_dir, 'api', "v{$version}", $camelName]);
-    if (! is_dir($action_dir)) {
+    if (!is_dir($action_dir)) {
       continue;
     }
 
@@ -429,7 +429,7 @@ function _civicrm_api_get_camel_name($entity, $version = NULL) {
   }
 
   $fragments = explode('_', $entity);
-  foreach ($fragments as & $fragment) {
+  foreach ($fragments as &$fragment) {
     $fragment = ucfirst($fragment);
   }
   // Special case: UFGroup, UFJoin, UFMatch, UFField
@@ -524,7 +524,6 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
           $defaultSubParams['id'] = $result['values'][$idIndex]['id'];
         }
 
-
         $enforcedSubParams['version'] = $version;
         if (!empty($params['check_permissions'])) {
           $enforcedSubParams['check_permissions'] = $params['check_permissions'];
@@ -571,7 +570,6 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
  */
 function _civicrm_api_replace_variables($entity, $action, &$params, &$parentResult, $separator = '.') {
 
-
   foreach ($params as $field => $value) {
     $hasReplacement = FALSE;
     if (is_string($value)) {
@@ -579,7 +577,7 @@ function _civicrm_api_replace_variables($entity, $action, &$params, &$parentResu
     }
     if ($hasReplacement !== FALSE) {
       if ($hasReplacement > 0) {
-        $valuesubstitute = substr($value, $hasReplacement+7);
+        $valuesubstitute = substr($value, $hasReplacement + 7);
       }
       else {
         $valuesubstitute = substr($value, 7);

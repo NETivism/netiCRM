@@ -105,7 +105,6 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
       ]);
     }
 
-
     // query
     $sql = "
 SELECT
@@ -213,7 +212,7 @@ DESC
   public static function &links() {
     if (!(self::$_links)) {
       self::$_links = [
-        CRM_Core_Action::VIEW=> [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/admin/aicompletion',
           'qs' => 'action=view&reset=1&id=%%id%%',

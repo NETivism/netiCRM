@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying Administer CiviCRM Control Panel
  */
@@ -76,9 +74,7 @@ class CRM_Admin_Page_Admin extends CRM_Core_Page {
       $groups['CiviCampaign'] = ts('CiviCampaign');
     }
 
-
     $values = &CRM_Core_Menu::getAdminLinks();
-
 
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     foreach ($groups as $group => $title) {

@@ -163,7 +163,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
       // start validation
       $note = '';
       if ($this->validateOthers($input, $ids, $objects, $note, $instrument)) {
-        $contribution =& $objects['contribution'];
+        $contribution = &$objects['contribution'];
         if (empty($contribution->receive_date)) {
           if (!empty($input['PayTime'])) {
             $contribution->receive_date = date('YmdHis', strtotime($input['PayTime']));
@@ -287,7 +287,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     // only validate this when not test.
     if (strtolower($instrument) == 'googlepay') {
       $ppid = $this->_paymentProcessor['user_name'];
-      $test = $contribution->is_test ? 'test':'live';
+      $test = $contribution->is_test ? 'test' : 'live';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $test);
     }
     else {

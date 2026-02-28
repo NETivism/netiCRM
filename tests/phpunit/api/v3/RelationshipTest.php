@@ -420,7 +420,6 @@ class api_v3_RelationshipTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
     ];
 
-
     $result = civicrm_api('CustomField', 'create', $params);
 
     $customField = NULL;
@@ -722,7 +721,7 @@ class api_v3_RelationshipTest extends CiviUnitTestCase {
   }
 
   public function testGetIsCurrent() {
-    $rel2Params =[
+    $rel2Params = [
       'contact_id_a' => $this->_cId_a,
       'contact_id_b' => $this->_cId_b2,
       'relationship_type_id' => $this->_relTypeID,
@@ -747,17 +746,17 @@ class api_v3_RelationshipTest extends CiviUnitTestCase {
     $this->AssertEquals($rel1['id'], $result['id']);
 
     // now try not started
-    $rel2Params['is_active'] =1;
-    $rel2Params['start_date'] ='tomorrow';
+    $rel2Params['is_active'] = 1;
+    $rel2Params['start_date'] = 'tomorrow';
     $rel2 = civicrm_api('relationship', 'create', $rel2Params);
     $result = civicrm_api('relationship', 'get', $getParams);
     $this->assertEquals($result['count'], 1);
     $this->AssertEquals($rel1['id'], $result['id']);
 
     // now try finished
-    $rel2Params['is_active'] =1;
-    $rel2Params['start_date'] ='last week';
-    $rel2Params['end_date'] ='yesterday';
+    $rel2Params['is_active'] = 1;
+    $rel2Params['start_date'] = 'last week';
+    $rel2Params['end_date'] = 'yesterday';
     $rel2 = civicrm_api('relationship', 'create', $rel2Params);
   }
   /*
@@ -821,7 +820,6 @@ class api_v3_RelationshipTest extends CiviUnitTestCase {
         'version' => $this->_apiversion,
         'relationship_type_id' => ['IN' => [$relationType2, $relationType3]]
     ];
-
 
     $description = "demonstrates use of IN filter";
     $subfile = 'INRelationshipType';

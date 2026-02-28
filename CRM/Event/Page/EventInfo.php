@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Event Info Page - Summmary about the event
  */
@@ -212,7 +210,6 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
       $values['event']['address'] = $values['location']['address'][1]['display_text'];
     }
     CRM_Event_BAO_Event::assignEventShare($values['event'], $this);
-
 
     // Prepare params used for meta.
     $params = [];

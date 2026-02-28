@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for invoking report templates
  */
@@ -128,7 +125,6 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     ];
     $template->assign('chartParticipantOnlineOffline', $chartContact);
 
-
     /**
      * Contribute
      */
@@ -146,7 +142,6 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     ];
 
     $template->assign('chartContact', $chartContact);
-
 
     /**
      * Contribute
@@ -348,7 +343,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       else {
         break;
       }
-      $i ++;
+      $i++;
     }
     return json_encode($returnData);
   }

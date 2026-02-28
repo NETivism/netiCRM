@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_Page_Tab extends CRM_Core_Page {
 
   public $_action;
@@ -134,9 +133,6 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    * @access public
    */
   public function browse() {
-
-
-
 
     // Check permission have "edit contributions"
     $this->assign('editContributionPermission', CRM_Core_Permission::check('edit contributions'));

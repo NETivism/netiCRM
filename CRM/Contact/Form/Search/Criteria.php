@@ -85,8 +85,6 @@ class CRM_Contact_Form_Search_Criteria {
         );
       }
 
-
-
       $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
       CRM_Core_Form_Tag::buildQuickForm($form, $parentNames, 'civicrm_contact', NULL, TRUE);
     }
@@ -132,7 +130,6 @@ class CRM_Contact_Form_Search_Criteria {
 
     // add search profiles
 
-
     // FIXME: This is probably a part of profiles - need to be
     // FIXME: eradicated from here when profiles are reworked.
     $types = ['Participant', 'Contribution', 'Membership'];
@@ -157,7 +154,6 @@ class CRM_Contact_Form_Search_Criteria {
       ts('Search Views'),
       ['0' => ts('- default view -')] + $searchProfiles
     );
-
 
     $componentModes = $form->getModeSelect();
 
@@ -257,7 +253,6 @@ class CRM_Contact_Form_Search_Criteria {
   public static function location(&$form) {
     $form->addElement('hidden', 'hidden_location', 1);
 
-
     $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_Address');
@@ -346,7 +341,6 @@ class CRM_Contact_Form_Search_Criteria {
     // is there another form rule that does decimals besides money ? ...
     $form->addRule('prox_distance', ts('Please enter positive number as a distance'), 'numeric');
 
-
     CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
     $worldRegions = ['' => ts('- any region -')] + CRM_Core_PseudoConstant::worldRegion();
     $form->addElement('select', 'world_region', ts('World Region'), $worldRegions);
@@ -415,8 +409,6 @@ class CRM_Contact_Form_Search_Criteria {
 
   public static function relationship(&$form) {
     $form->add('hidden', 'hidden_relationship', 1);
-
-
 
     $allRelationshipType = [];
     $allRelationshipType = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, NULL, TRUE);

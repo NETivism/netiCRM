@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for relationship
  *
@@ -160,8 +155,6 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
       $this->_rtype = str_replace($this->_relationshipTypeId . '_', '', $this->_rtypeId);
     }
     $this->assign("rtype", $this->_rtype);
-
-
 
     //use name as it remain constant, CRM-3336
     $this->_allRelationshipNames = CRM_Core_PseudoConstant::relationshipType('name');
@@ -597,7 +590,6 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     ];
     CRM_Core_BAO_Note::add($noteParams, $noteIds);
 
-
     // Membership for related contacts CRM-1657
     if (CRM_Core_Permission::access('CiviMember') && (!$duplicate)) {
       CRM_Contact_BAO_Relationship::relatedMemberships(
@@ -667,7 +659,6 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
         foreach ($individualIds as $key => $Id) {
           $currentEmpParams[$Id] = $this->_contactId;
         }
-
 
         CRM_Contact_BAO_Contact_Utils::setCurrentEmployer($currentEmpParams);
       }
@@ -773,7 +764,6 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
         $searchRows[$contactID]['phone'] = $result->phone;
 
         $contact_type = '<img src="' . $config->resourceBase . 'i/contact_';
-
 
         $searchRows[$contactID]['type'] = CRM_Contact_BAO_Contact_Utils::getImage(
           $result->contact_sub_type ?

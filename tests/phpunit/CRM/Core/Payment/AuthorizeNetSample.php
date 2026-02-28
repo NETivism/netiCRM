@@ -39,7 +39,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                  'group'       => 'Payment Processor Tests',
                  ];
   }
-   
+
   public function setUp() {
     parent::setUp();
     require_once 'CRM/Core/Payment/AuthorizeNet.php';
@@ -50,7 +50,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
     $paymentProcessor = [ 'user_name' => $this->processorParams->user_name,
                                'password'  => $this->processorParams->password,
                                'url_recur' => $this->processorParams->url_recur ];
-        
+
     $this->processor = new CRM_Core_Payment_AuthorizeNet('Contribute', $paymentProcessor);
     $this->_contributionTypeId = $this->contributionTypeCreate();
   }
@@ -60,7 +60,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
     $tablesToTruncate = [ 'civicrm_contribution_type', 'civicrm_contribution', 'civicrm_contribution_recur' ];
     $this->quickCleanup($tablesToTruncate);
   }
-    
+
   /**
    * create a single post dated payment as a recurring transaction.
    *
@@ -69,7 +69,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
   public function testCreateSingleNowDated() {
     $contactId = Contact::createIndividual();
     $ids       = [ 'contribution' => NULL ];
-        
+
     $contributionRecurParams = [ 'contact_id'             => $contactId,
                                       'amount'                 => 150.00,
                                       'currency'               => 'USD',
@@ -82,9 +82,9 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                                       'contribution_status_id' => 2,
                                       'is_test'                => 1,
                                       'payment_processor_id'   => $this->processorParams->id ];
-        
+
     $recur = CRM_Contribute_BAO_ContributionRecur::add($contributionRecurParams, $ids);
-                                          
+
     $contributionParams = [ 'contact_id'             => $contactId,
                                  'contribution_type_id'   => $this->_contributionTypeId,
                                  'recieve_date'           => date('Ymd'),
@@ -96,7 +96,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                                  'contribution_status_id' => 2,
                                  ];
     $contribution = CRM_Contribute_BAO_Contribution::add($contributionParams, $ids);
-        
+
     $params = [
                     'qfKey' => '08ed21c7ca00a1f7d32fff2488596ef7_4454',
                     'hidden_CreditCard' => 1,
@@ -114,7 +114,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                                                     'M' => 10,
                                                     'Y' => 2019
                                                     ],
-                        
+
                     'credit_card_type' => 'Visa',
                     'is_recur' => 1,
                     'frequency_interval' => 1,
@@ -172,22 +172,22 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                          ];
 
     $result = $this->processor->doDirectPayment($params);
-        
+
     $this->assertNotType('CRM_Core_Error', $result, "In line " . __LINE__ . " " .$result->_errors[0]['message']);
     //cancel it or the transaction will be rejected by A.net if the test is re-run
     $this->processor->cancelSubscription() ;
     Contact::delete($contactId);
   }
-        
+
   /**
    * create a single post dated payment as a recurring transaction
    */
   public function testCreateSinglePostDated() {
     $start_date = date('Ymd', strtotime("+ 1 week"));
-        
+
     $contactId = Contact::createIndividual();
     $ids       = [ 'contribution' => NULL ];
-        
+
     $contributionRecurParams = [ 'contact_id'             => $contactId,
                                       'amount'                 => 100.00,
                                       'currency'               => 'USD',
@@ -200,9 +200,9 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                                       'contribution_status_id' => 2,
                                       'is_test'                => 1,
                                       'payment_processor_id'   => $this->processorParams->id ];
-        
+
     $recur = CRM_Contribute_BAO_ContributionRecur::add($contributionRecurParams, $ids);
-                                          
+
     $contributionParams = [ 'contact_id'             => $contactId,
                                  'contribution_type_id'   => $this->_contributionTypeId,
                                  'recieve_date'           => $start_date,
@@ -232,7 +232,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                                                     'M' => 11,
                                                     'Y' => 2019
                                                     ],
-                        
+
                     'credit_card_type' => 'Visa',
                     'is_recur' => 1,
                     'frequency_interval' => 1,
@@ -290,7 +290,7 @@ class CRM_Core_Payment_AuthorizeNetTest extends CiviUnitTestCase {
                          ];
 
     $result = $this->processor->doDirectPayment($params);
-        
+
     $this->assertNotType('CRM_Core_Error', $result, "In line " . __LINE__ . " " .$result->_errors[0]['message']);
     //cancel it or the transaction will be rejected by A.net if the test is re-run
     $this->processor->cancelSubscription() ;

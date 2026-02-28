@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class create activities for a case
  *
@@ -149,7 +141,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
     $this->_caseType = CRM_Case_BAO_Case::getCaseType($this->_caseId, 'name');
     $this->assign('caseType', $this->_caseType);
-
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
@@ -416,7 +407,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
         $statusMsg = ts("Selected Activity cannot be deleted.");
       }
 
-
       $tagParams = ['entity_table' => 'civicrm_activity',
         'entity_id' => $this->_activityId,
       ];
@@ -454,7 +444,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     // store the dates with proper format
     $params['activity_date_time'] = CRM_Utils_Date::processDate($params['activity_date_time'], $params['activity_date_time_time']);
     $params['activity_type_id'] = $this->_activityTypeId;
-
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
@@ -652,7 +641,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     ];
     CRM_Case_BAO_Case::processCaseActivity($caseParams);
 
-
     // create activity assignee records
     $assigneeParams = ['activity_id' => $activity->id];
 
@@ -675,7 +663,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     // Insert civicrm_log record for the activity (e.g. store the
     // created / edited by contact id and date for the activity)
     // Note - civicrm_log is already created by CRM_Activity_BAO_Activity::create()
-
 
     // send copy to selected contacts.
     $mailStatus = '';

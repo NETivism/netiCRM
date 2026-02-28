@@ -9,7 +9,6 @@
    +---------------------------------------------------------------------------+
   */
 
-
 class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
   public $_mode;
   /**
@@ -74,7 +73,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
          * define variables for connecting with the gateway
          */
 
-
     // Are you using the Payflow Fraud Protection Service?
     // Default is YES, change to NO or blank if not.
     //This has not been investigated as part of writing this payment processor
@@ -137,7 +135,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     if ($params['installments'] == 1) {
       $params['is_recur'] == FALSE;
     }
-
 
     if ($params['is_recur'] == TRUE) {
 
@@ -363,8 +360,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
       }
     }
 
-
-
     $payflow_query = $this->convert_to_nvp($payflow_query_array);
 
     /*
@@ -382,7 +377,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     /*
          * Payment succesfully sent to gateway - process the response now
          */
-
 
     $result = strstr($responseData, "RESULT");
     $nvpArray = [];
@@ -487,14 +481,12 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     return $e;
   }
 
-
   /*
      * NOTE: 'doTransferCheckout' not implemented
      */
   public function doTransferCheckout(&$params, $component) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
-
 
   /*
      * This public function checks to see if we have the right processor config values set
@@ -626,7 +618,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
       }
     }
 
-
     /*
          * Transaction submitted -
          * See if we had a curl error - if so tell 'em and bail out
@@ -704,7 +695,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
          * define variables for connecting with the gateway
          */
 
-
     //if you have not set up a separate user account the vendor name is used as the username
     if (!$this->_paymentProcessor['subject']) {
       $user = $this->_paymentProcessor['user_name'];
@@ -714,7 +704,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     }
     //$recurringProfileID = "RT0000000001";
     //     c  $trythis =        $this->getRecurringTransactionStatus($recurringProfileID,17);
-
 
     /*
          *Create the array of variables to be sent to the processor from the $params array
@@ -747,7 +736,6 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     /*
          * Payment succesfully sent to gateway - process the response now
          */
-
 
     $result = strstr($responseData, "RESULT");
     $nvpArray = [];

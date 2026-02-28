@@ -52,11 +52,11 @@ class CiviDBAssert {
       // and hence we get the first value in the db
       $testCase->fail('ID not populated. Please fix your assertDBState usage!!!');
     }
-        
+
     $object   = new $daoName();
     $object->id =  $id;
     $verifiedCount = 0;
-        
+
     // If we're asserting successful record deletion, make sure object is NOT found.
     if ($delete) {
       if ($object->find(TRUE)) {
@@ -67,7 +67,7 @@ class CiviDBAssert {
 
     // Otherwise check matches of DAO field values against expected values in $match.
     if ($object->find(TRUE)) {
-      $fields =& $object->fields();
+      $fields = &$object->fields();
       foreach ($fields as $name => $value) {
         $dbName = $value['name'];
         if (isset($match[$name])) {
@@ -97,7 +97,7 @@ class CiviDBAssert {
     }
     $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn);
     $testCase->assertNotNull($value, $message);
-        
+
     return $value;
   }
 
@@ -132,7 +132,6 @@ class CiviDBAssert {
     //get the values from db
     $dbValues = [ ];
     CRM_Core_DAO::commonRetrieve($daoName, $searchParams, $dbValues);
-        
 
     // compare db values with expected values
     self::assertAttributesEquals($testCase, $expectedValues, $dbValues);

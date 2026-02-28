@@ -84,6 +84,25 @@ return $config->setRules([
         'spaces_inside_parentheses' => [
           'space' => 'none',
         ],
+        # some psr12 rules
+        'binary_operator_spaces' => [
+          'default' => 'at_least_single_space',
+        ],
+        'compact_nullable_type_declaration' => true,
+        'lowercase_cast' => true,
+        'lowercase_static_reference' => true,
+        'new_with_parentheses' => [
+          'anonymous_class' => true,
+          'named_class' => true,
+        ],
+        'no_extra_blank_lines' => true,
+        'no_whitespace_in_blank_line' => true,
+        'return_type_declaration' => [
+          'space_before' => 'none',
+        ],
+        'short_scalar_cast' => true,
+        'ternary_operator_spaces' => true,
+        'unary_operator_spaces' => true,
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

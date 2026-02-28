@@ -33,7 +33,6 @@
  *
  */
 
-
 /**
  * BAO object for crm_log table
  */
@@ -112,7 +111,6 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
 
     return [NULL, NULL, NULL];
   }
-
 
   public static function filePostProcess(
     $data,
@@ -439,7 +437,6 @@ AND       CEF.entity_id    = %2";
   ) {
     $config = CRM_Core_Config::singleton();
     $numAttachments = $maxAttachments ? $maxAttachments : $config->maxAttachments;
-    
 
     for ($i = 0; $i < $numAttachments; $i++) {
       if (isset($params["attachFile_$i"]) &&
@@ -578,7 +575,7 @@ AND       CEF.entity_id    = %2";
         if ($fileInfo->isDot()) {
           continue;
         }
-        if ($fileInfo->isFile() && time() - $fileInfo->getMTime() >= $afterDays*24*60*60) {
+        if ($fileInfo->isFile() && time() - $fileInfo->getMTime() >= $afterDays * 24 * 60 * 60) {
           unlink($fileInfo->getRealPath());
         }
       }

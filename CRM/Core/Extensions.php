@@ -25,10 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
-
 /**
  * This class stores logic for managing CiviCRM extensions.
  * On this level, we are only manipulating extension objects.
@@ -216,7 +212,6 @@ class CRM_Core_Extensions {
    * @return array list of extensions
    */
   private function _discoverInstalled($fullInfo = FALSE) {
-
 
     $result = [];
     $groupParams = ['name' => self::OPTION_GROUP_NAME];

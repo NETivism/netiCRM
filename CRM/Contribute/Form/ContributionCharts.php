@@ -104,7 +104,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     $this->assign('generateDate', date('n/j H:i', $chartTime));
     $abbrMonthNames = [];
     for ($i = 0; $i < 12; $i++) {
-      $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i+1, 10, 1970));
+      $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i + 1, 10, 1970));
     }
 
     if (empty($chartData) || time() - $chartTime > 86400 || $_GET['update']) {

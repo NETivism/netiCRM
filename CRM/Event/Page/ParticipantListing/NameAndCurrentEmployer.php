@@ -1,6 +1,5 @@
 <?php
 
-
 class CRM_Event_Page_ParticipantListing_NameAndCurrentEmployer extends CRM_Core_Page {
   protected $_id;
 
@@ -88,7 +87,6 @@ LIMIT    $offset, $rowCount";
   }
 
   public function pager($fromClause, $whereClause, $whereParams) {
-
 
     $params = [];
 

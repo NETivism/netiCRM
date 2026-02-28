@@ -76,7 +76,6 @@ class CRM_Contact_BAO_Contact_Utils {
           $type = $typeInfo['name'];
         }
 
-
         $imageInfo[$contactType]['image'] = "<span class=\"crm-icon {$type}-icon\" title=\"{$contactType}\"></span>";
         $imageInfo[$contactType]['url'] = NULL;
       }
@@ -199,7 +198,6 @@ WHERE  id IN ( $idString )
 
     return $apiKey;
   }
-
 
   /**
    * Generate API checksum for MCP authentication
@@ -336,7 +334,6 @@ UNION
       $organizationParams = [];
       $organizationParams['organization_name'] = $orgName[0];
 
-
       $dedupeParams = CRM_Dedupe_Finder::formatParams($organizationParams, 'Organization');
 
       $dedupeParams['check_permission'] = FALSE;
@@ -378,7 +375,6 @@ UNION
       list($valid, $invalid, $duplicate,
         $saved, $relationshipIds
       ) = CRM_Contact_BAO_Relationship::create($relationshipParams, $cid);
-
 
       // In case we change employer, clean prveovious employer related records.
       $previousEmployerID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'employer_id');
@@ -539,7 +535,6 @@ WHERE id={$contactId}; ";
     if ($title == 'Contact Information') {
       $title = ts('Contact Information');
     }
-
 
     $config = CRM_Core_Config::singleton();
 
@@ -717,7 +712,6 @@ UPDATE civicrm_contact
     }
 
     // does contact has sufficient permissions.
-
 
     $permissions = ['view' => 'view all contacts',
       'edit' => 'edit all contacts',
@@ -938,7 +932,7 @@ Group By  componentId";
     // 1. loop through entire subnitted address array
     $masterAddress = [];
     $skipFields = ['is_primary', 'location_type_id', 'is_billing', 'master_id'];
-    foreach ($address as & $values) {
+    foreach ($address as &$values) {
       // 2. check if master id exists, if not continue
       if (!CRM_Utils_Array::value('master_id', $values) ||
         !CRM_Utils_Array::value('use_shared_address', $values)

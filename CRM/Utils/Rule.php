@@ -728,7 +728,6 @@ class CRM_Utils_Rule {
 
   public static function cvv($value, $type) {
 
-
     return Validate_Finance_CreditCard::cvv($value, $type);
   }
 

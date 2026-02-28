@@ -42,7 +42,7 @@ class CiviReportMail {
       'REQUEST'
     );
     $optionVal    = CRM_Report_Utils_Report::getValueFromUrl($instanceId);
-        
+
     echo "Report Mail Triggered...<br />";
     require_once 'CRM/Core/OptionGroup.php';
     $templateInfo = CRM_Core_OptionGroup::getRowValues('report_template', $optionVal, 'value');
@@ -50,14 +50,14 @@ class CiviReportMail {
     if (strstr($templateInfo['name'], '_Form')) {
       $instanceInfo = [ ];
       CRM_Report_BAO_Instance::retrieve(['id' => $instanceId], $instanceInfo);
-            
-      if (! empty($instanceInfo['title'])) {
+
+      if (!empty($instanceInfo['title'])) {
         $obj->assign('reportTitle', $instanceInfo['title']);
       }
       else {
         $obj->assign('reportTitle', $templateInfo['label']);
       }
-            
+
       $wrapper = new CRM_Utils_Wrapper();
       $arguments['urlToSession'] = [ [ 'urlVar'     => 'instanceId',
                                                  'type'       => 'Positive',

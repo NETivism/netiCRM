@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for Event Fees
  *
@@ -158,7 +154,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
         $discountDefualt[] = array_combine($discountWeight[$key], $discountValue[$key]);
         //Add label array to default label
         $discounted_label = array_combine($discountWeight[$key], $discountLabel[$key]);
-        $defaults["discounted_label"] = $discounted_label+$defaults["discounted_label"];
+        $defaults["discounted_label"] = $discounted_label + $defaults["discounted_label"];
 
         foreach ($discountDefualt[$key] as $k => $v) {
           $defaults["discounted_value"][$k][$key + 1] = $v;
@@ -235,7 +231,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
       $defaults['pay_later_text'] = ts('I will send payment by check');
     }
 
-
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     if (!$defaults['is_monetary']) {
       $this->_showHide->addHide('event-fees');
@@ -264,7 +259,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
    */
   public function buildQuickForm() {
 
-
     $this->addYesNo(
       'is_monetary',
       ts('Paid Event'),
@@ -275,7 +269,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
 
     //add currency element.
     $this->addCurrency('currency', ts('Currency'), FALSE);
-
 
     $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH' AND billing_mode != 7");
     $this->assign('paymentProcessor', $paymentProcessor);
@@ -326,7 +319,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
 
     $this->add('text', 'fee_label', ts('Fee Label'));
 
-
     $price = CRM_Price_BAO_Set::getAssoc(FALSE, 'CiviEvent');
     if (CRM_Utils_System::isNull($price)) {
       $this->assign('price', FALSE);
@@ -372,7 +364,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     }
 
     $this->assign('discountSection', $discountSection);
-
 
     // form fields of Discount sets
     $defaultOption = [];
@@ -590,9 +581,7 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     return empty($errors) ? TRUE : $errors;
   }
 
-
   public function buildAmountLabel() {
-
 
     $default = [];
     for ($i = 1; $i <= self::NUM_OPTION; $i++) {
@@ -643,7 +632,6 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     }
 
     if ($this->_id) {
-
 
       // delete all the prior label values or discounts in the custom options table
       // and delete a price set if one exists

@@ -19,8 +19,6 @@
  * begin at one, so always delete one from the "Position in Response"
  */
 
-
-
 class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
   /**
    * @var mixed

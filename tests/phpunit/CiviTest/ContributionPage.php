@@ -27,11 +27,11 @@ class ContributionPage extends PHPUnit_Framework_Testcase {
                     'bcc_receipt'              => 'bcc@example.com',
                     'is_active'                => 1
                     ];
-        
+
     $contributionPage = CRM_Contribute_BAO_ContributionPage::create($params);
     return $contributionPage->id;
   }
-     
+
   /*
    * Helper function to delete a Contribution Page
    *

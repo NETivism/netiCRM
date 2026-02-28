@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Option Value
  */
@@ -158,11 +156,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
 
     $dao->option_group_id = $this->_gid;
 
-
     if (in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $dao->domain_id = CRM_Core_Config::domainID();
     }
-
 
     if ($this->_gName == 'encounter_medium') {
       $mediumIds = CRM_Case_BAO_Case::getUsedEncounterMediums();

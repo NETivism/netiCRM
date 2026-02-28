@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Class contains functions for phone
  */

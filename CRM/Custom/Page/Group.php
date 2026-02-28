@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Custom Sets.
  *
@@ -164,7 +162,6 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     }
     else {
 
-
       // finally browse the custom groups
       $this->browse();
     }
@@ -258,10 +255,6 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     //fix for Displaying subTypes
     $subTypes = [];
 
-
-
-
-
     $subTypes['Activity'] = CRM_Core_PseudoConstant::activityType(FALSE, TRUE);
     $subTypes['Contribution'] = CRM_Contribute_PseudoConstant::contributionType();
     $subTypes['ContributionPage'] = CRM_Contribute_PseudoConstant::contributionType();
@@ -275,8 +268,6 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     $subTypes['Individual'] = CRM_Contact_BAO_ContactType::subTypePairs('Individual', FALSE, NULL);
     $subTypes['Household'] = CRM_Contact_BAO_ContactType::subTypePairs('Household', FALSE, NULL);
     $subTypes['Organization'] = CRM_Contact_BAO_ContactType::subTypePairs('Organization', FALSE, NULL);
-
-
 
     $relTypeInd = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Individual');
     $relTypeOrg = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Organization');
@@ -303,7 +294,6 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     }
 
     $subTypes['Relationship'] = $allRelationshipType;
-
 
     $cSubTypes = CRM_Core_Component::contactSubTypes();
     $contactSubTypes = [];

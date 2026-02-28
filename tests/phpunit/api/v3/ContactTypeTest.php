@@ -26,10 +26,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ContactTypeTest extends CiviUnitTestCase {
   protected $_apiversion;
@@ -136,7 +132,6 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     civicrm_api('contact', 'delete', $params);
   }
 
-
   /*
      * test add with invalid data
      */
@@ -163,7 +158,6 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     $contact = civicrm_api('contact', 'create', $contactParams);
     $this->assertEquals($contact['is_error'], 1, "In line " . __LINE__);
   }
-
 
   /*
      * test update with no subtype to valid subtype
@@ -238,7 +232,6 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     $this->assertEquals(end($result['contact_sub_type']), $updateParams['contact_sub_type'], "In line " . __LINE__);
     civicrm_api('contact', 'delete', $params);
   }
-
 
   /*
      * test update with no subtype to invalid subtype
@@ -349,7 +342,6 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     $this->assertEquals($result['contact_type'], $updateParams['contact_type'], "In line " . __LINE__);
     $this->assertEquals(end($result['contact_sub_type']), $updateParams['contact_sub_type'], "In line " . __LINE__);
     civicrm_api('contact', 'delete', $params);
-
 
     $params = [
       'label' => 'sub2_organization',

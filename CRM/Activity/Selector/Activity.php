@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display activities for a contact
  *
@@ -255,7 +248,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         ],
       ];
     }
-
 
     if (CRM_Case_BAO_Case::checkPermission($activityId, 'File On Case', $activityTypeId)) {
       self::$_actionLinks = self::$_actionLinks + [CRM_Core_Action::ADD =>

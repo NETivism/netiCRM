@@ -130,7 +130,6 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
       ];
     }
 
-
     echo json_encode($elements);
     CRM_Utils_System::civiExit();
   }
@@ -139,8 +138,6 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
    * Function to get default participant role
    */
   public static function participantRole() {
-
-
 
     $eventID = $_GET['eventId'];
     if (!CRM_Utils_Rule::positiveInteger($eventID)) {

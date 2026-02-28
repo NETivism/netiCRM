@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * BAO object for crm_email table
  */

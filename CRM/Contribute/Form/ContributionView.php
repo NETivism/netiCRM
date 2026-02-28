@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Payment-Instrument
  *
@@ -58,7 +56,6 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     $this->assign('context', $context);
     $this->assign('compContext', $compContext);
     $this->assign('compId', $compId);
-
 
     CRM_Contribute_BAO_Contribution::getValues($params, $values, $ids);
 
@@ -214,7 +211,6 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       $values = array_merge($values, $softContribution);
     }
 
-
     $lineItems = [];
     if ($id && CRM_Price_BAO_Set::getFor('civicrm_contribution', $id)) {
 
@@ -238,8 +234,6 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     }
 
     // add viewed contribution to recent items list
-
-
 
     $url = CRM_Utils_System::url(
       'civicrm/contact/view/contribution',

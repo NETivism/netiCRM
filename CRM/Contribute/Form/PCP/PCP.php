@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Administer Personal Campaign Pages - Search form
  */

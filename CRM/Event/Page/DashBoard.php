@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This is page is for Event Dashboard
  */
@@ -50,7 +48,6 @@ class CRM_Event_Page_DashBoard extends CRM_Core_Page {
    */
   public function preProcess() {
     CRM_Utils_System::setTitle(ts('CiviEvent'));
-
 
     $eventSummary = CRM_Event_BAO_Event::getEventSummary();
 

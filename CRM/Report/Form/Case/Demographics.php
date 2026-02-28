@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
 
   /**

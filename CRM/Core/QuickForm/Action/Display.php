@@ -34,9 +34,6 @@
  *
  */
 
-
-
-
 class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
 
   /**

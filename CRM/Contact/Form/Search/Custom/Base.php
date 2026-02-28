@@ -33,13 +33,12 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_Base {
 
   protected $_formValues;
 
   protected $_columns;
-  
+
   public function __construct(&$formValues) {
     $this->_formValues = &$formValues;
   }

@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Contact/BAO/ContactType.php';
 require_once 'api/v2/Contact.php';
@@ -155,7 +153,6 @@ class api_v2_ContactTypeTest extends CiviUnitTestCase {
     $this->assertEquals($contact['is_error'], 1, "In line " . __LINE__);
   }
 
-
   /*
      * test update with no subtype to valid subtype
      * success expected
@@ -220,7 +217,6 @@ class api_v2_ContactTypeTest extends CiviUnitTestCase {
     $this->assertEquals($result['contact_sub_type'], $updateParams['contact_sub_type'], "In line " . __LINE__);
     civicrm_contact_delete($params);
   }
-
 
   /*
      * test update with no subtype to invalid subtype

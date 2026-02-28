@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Business object for managing custom data groups
  *
@@ -158,8 +156,6 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       $group->created_id = CRM_Utils_Array::value('created_id', $params);
       $group->created_date = CRM_Utils_Array::value('created_date', $params);
 
-
-
       // lets create the table associated with the group and save it
       $tableName = $group->table_name = "civicrm_value_" . strtolower(CRM_Utils_String::munge($group->title, '_', 32));
 
@@ -203,7 +199,6 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     $transaction->commit();
     CRM_Utils_System::flushCache();
 
-
     if ($tableName) {
       CRM_Utils_Hook::post('create', 'CustomGroup', $group->id, $group);
     }
@@ -245,7 +240,6 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
   public static function setIsActive($id, $is_active) {
     // reset the cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
-
 
     if ($is_active) {
       //CRM_Core_BAO_UFField::setUFFieldStatus($id, $is_active);
@@ -303,7 +297,6 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
         }
       }
     }
-
 
     // create a new tree
     $groupTree = [];
@@ -420,7 +413,6 @@ WHERE civicrm_custom_group.is_active = 1
       // since groupID is false we need to show all Inline groups
       $strWhere .= " AND civicrm_custom_group.style = 'Inline'";
     }
-
 
     // ensure that the user has access to these custom groups
     $strWhere .= " AND " . CRM_Core_Permission::customGroupClause(
@@ -673,7 +665,6 @@ SELECT $select
     return $groupTree;
   }
 
-
   /**
    * Clean and validate the filter before it is used in a db query.
    *
@@ -834,7 +825,6 @@ SELECT $select
       }
     }
 
-
     // ensure that the user has access to these custom groups
     $where .= " AND " . CRM_Core_Permission::customGroupClause(
       CRM_Core_Permission::VIEW,
@@ -887,7 +877,6 @@ SELECT $select
 
     return $groupTree;
   }
-
 
   public static function &getActiveGroups($entityType, $path, $cidToken = '%%cid%%') {
     // for Group's
@@ -1067,7 +1056,6 @@ SELECT $select
    */
   public static function deleteGroup($group, $force = FALSE) {
 
-
     //check wheter this contain any custom fields
     $customField = new CRM_Core_DAO_CustomField();
     $customField->custom_group_id = $group->id;
@@ -1088,7 +1076,6 @@ SELECT $select
 
     //delete  custom group
     $group->delete();
-
 
     CRM_Utils_Hook::post('delete', 'CustomGroup', $group->id, $group);
 
@@ -1370,15 +1357,12 @@ SELECT $select
     $prefix = ''
   ) {
 
-
-
     $form->assign_by_ref("{$prefix}groupTree", $groupTree);
     $sBlocks = [];
     $hBlocks = [];
 
     // this is fix for date field
     $form->assign('currentYear', date('Y'));
-
 
     foreach ($groupTree as $id => $group) {
 
@@ -1605,9 +1589,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
       'extends_name' => self::mapTableName($group->extends),
     ];
 
-
     $tableParams = &CRM_Core_BAO_CustomField::defaultCustomTableSchema($params);
-
 
     CRM_Core_BAO_SchemaHandler::createTable($tableParams);
   }
@@ -1920,7 +1902,6 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
           CRM_Core_Error::fatal(ts('You have hit issue CRM-4716. Please post a report with as much detail as possible on the CiviCRM forums. You can truncate civicr_cache to get around this problem'));
         }
 
-
         CRM_Utils_Hook::customFieldOptions($field['id'], $options, FALSE);
 
         $retValue = NULL;
@@ -2044,7 +2025,6 @@ AND  civicrm_custom_field.id IN {$fIds}";
     return FALSE;
   }
 
-  
   /**
    * Get custom groups/fields for type of entity.
    *

@@ -233,7 +233,6 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     }
   }
 
-
   public function testCreateContributionEmptyID() {
     $params = [
       'contribution_id' => FALSE,
@@ -572,7 +571,6 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($p['source'], $res['contribution_source'], 'In line ' . __LINE__);
     $this->assertEquals(1, $res['contribution_status_id'], 'In line ' . __LINE__);
   }
-
 
   public function testFormatParams() {
     require_once 'CRM/Contribute/DAO/Contribution.php';

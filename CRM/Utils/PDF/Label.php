@@ -265,7 +265,6 @@ class CRM_Utils_PDF_Label extends TCPDF {
     $this->MultiCell($this->width, $this->lineHeight, $var, '', 'L');
   }
 
-
   /*
      * function to Print a label
      */

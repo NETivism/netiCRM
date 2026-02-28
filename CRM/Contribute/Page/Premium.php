@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Premiums
  */
@@ -163,7 +161,6 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
       return;
     }
 
-
     $dao = new CRM_Contribute_DAO_PremiumsProduct();
     $dao->premiums_id = $premiumID;
     $dao->orderBy('weight');
@@ -188,7 +185,6 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
         );
       }
     }
-
 
     if (count(CRM_Contribute_PseudoConstant::products($pageID)) == 0) {
       $this->assign('products', FALSE);

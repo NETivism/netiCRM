@@ -1439,7 +1439,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         unset($submitted['current_employer_id']);
       }
       $submitted['log_data'] = ts('Updated contact') . ' - '.ts('merge duplicate contacts');
-      
+
       // if ext id is submitted then set it null for contact to be deleted to prevent already exists
       if (!empty($submitted['external_identifier'])) {
         $query = "UPDATE civicrm_contact SET external_identifier = null WHERE id = {$otherId}";
@@ -1503,7 +1503,6 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     return array_intersect_key($labels, $conflicts);
   }
 
-
   /**
    * Prioritize parent-child relationship of dupes
    */
@@ -1520,7 +1519,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         $tree[$child] = [];
       }
       if (!empty($parent) && !isset($referenced[$child])) {
-        $tree[$parent][$child] =& $tree[$child];
+        $tree[$parent][$child] = &$tree[$child];
         $referenced[$child] = 1;
       }
     }

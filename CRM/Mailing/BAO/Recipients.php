@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Mailing_BAO_Recipients extends CRM_Mailing_DAO_Recipients {
 
   /**

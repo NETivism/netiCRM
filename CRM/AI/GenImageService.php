@@ -41,7 +41,7 @@ abstract class CRM_AI_GenImageService {
    */
   public function __construct() {
     $this->config = CRM_Core_Config::singleton();
-    
+
     // Set default image size (1:1 ratio)
     $this->imageWidth = 1024;
     $this->imageHeight = 1024;

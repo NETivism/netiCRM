@@ -287,7 +287,6 @@ class CRM_Utils_System_Joomla {
    */
   public static function authenticate($name, $password) {
 
-
     $config = CRM_Core_Config::singleton();
 
     $dbJoomla = DB::connect($config->userFrameworkDSN);

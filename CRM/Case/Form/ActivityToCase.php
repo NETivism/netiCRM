@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for building activity to a case
  *
@@ -71,7 +69,6 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
   public function setDefaultValues() {
     $targetContactValues = $defaults = [];
     $params = ['id' => $this->_activityId];
-
 
     CRM_Activity_BAO_Activity::retrieve($params, $defaults);
     $defaults['case_activity_subject'] = $defaults['subject'];

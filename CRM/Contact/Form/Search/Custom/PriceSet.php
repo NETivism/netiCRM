@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   protected $_eventID = NULL;
@@ -335,7 +334,6 @@ INNER JOIN {$this->_tableName} tempTable ON ( tempTable.contact_id = contact_a.i
     $row['status_id'] = $this->_pstatus[$row['status_id']];
   }
 
-  
   /**
    * This will call by search tasks
    * Which not only provide contact id, but also provide additional id

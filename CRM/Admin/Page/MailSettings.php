@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of Mail account settings
  */
@@ -97,7 +94,6 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
     $allMailSettings = [];
 
     $mailSetting = new CRM_Core_DAO_MailSettings();
-
 
     $allProtocols = CRM_Core_PseudoConstant::mailProtocol();
     $allProtocols += [ 'smtp' => ts('SMTP')];

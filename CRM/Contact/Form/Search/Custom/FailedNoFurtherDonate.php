@@ -8,7 +8,7 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  
+
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
@@ -117,7 +117,6 @@ $having
     }
   }
 
-
   public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN 
  (SELECT ca.* FROM civicrm_contribution ca LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = ca.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ca.id WHERE ca.is_test = 0 AND ca.contribution_status_id = 4 AND pp.id IS NULL AND mp.id IS NULL ORDER BY ca.created_date DESC) failed ON failed.contact_id = contact.id
@@ -176,7 +175,6 @@ $having
     );
     return $dao->N;
   }
-
 
   /**
    * Construct the search query
@@ -275,7 +273,7 @@ $having
   public function &columns() {
     return $this->_columns;
   }
-  
+
   public function summary() {
     // return $summary;
   }

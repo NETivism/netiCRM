@@ -388,7 +388,6 @@ WHERE  v.option_group_id = g.id
       $group->is_active = 1;
       $group->save();
 
-
       foreach ($values as $v) {
         $value = new CRM_Core_DAO_OptionValue();
         $value->option_group_id = $group->id;

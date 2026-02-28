@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Case_Page_CaseDetails extends CRM_Core_Page {
 
   public $_action;
@@ -58,10 +57,8 @@ class CRM_Case_Page_CaseDetails extends CRM_Core_Page {
 
     $caseId = CRM_Utils_Request::retrieve('caseId', 'Positive', $this);
 
-
     $pageTab = new CRM_Case_Page_Tab();
     $pageTab->setContext();
-
 
     $params = ['date_range' => 0];
 

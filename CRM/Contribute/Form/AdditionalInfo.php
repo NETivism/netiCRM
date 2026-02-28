@@ -760,7 +760,6 @@ class CRM_Contribute_Form_AdditionalInfo {
       $fromEmailAddress = "$userName <$userEmail>";
     }
 
-
     $templateParams = [
       'groupName' => 'msg_tpl_workflow_contribution',
       'valueName' => 'contribution_offline_receipt',
@@ -801,7 +800,6 @@ class CRM_Contribute_Form_AdditionalInfo {
       1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, FALSE]],
     ]);
 
-
     return $sendReceipt;
   }
 
@@ -818,8 +816,6 @@ class CRM_Contribute_Form_AdditionalInfo {
     ) {
       return;
     }
-
-
 
     foreach ($lineItem as $priceSetId => $values) {
       if (!$priceSetId) {

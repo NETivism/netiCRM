@@ -34,8 +34,6 @@
  *
  */
 
-
-
 class CRM_Core_Extensions_ExtensionType {
 
   public $extDir;

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains all the function that are called using AJAX
  */
@@ -53,7 +51,6 @@ class CRM_Core_Page_AJAX_Location {
       CRM_Utils_System::civiExit();
     }
     $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
-
 
     $entityBlock = ['contact_id' => $cid];
     $location = &CRM_Core_BAO_Location::getValues($entityBlock);

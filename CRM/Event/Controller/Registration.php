@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Event_Controller_Registration extends CRM_Core_Controller {
 
   /**
@@ -41,7 +40,6 @@ class CRM_Event_Controller_Registration extends CRM_Core_Controller {
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);
-
 
     $this->_stateMachine = new CRM_Event_StateMachine_Registration($this, $action);
 

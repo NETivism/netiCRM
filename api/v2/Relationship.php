@@ -1,7 +1,6 @@
 <?php
 // $Id: Relationship.php 43419 2012-11-05 12:33:14Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -160,7 +159,6 @@ function civicrm_relationship_update($params) {
         * CRM_Contact_BAO_Relationship::getRelatonship throws up some issues
         * (CRM-6905) the relationship is retrieved with a direct query
         */
-
 
     civicrm_verify_mandatory($params, 'CRM_Contact_DAO_Relationship', ['relationship_id']);
 

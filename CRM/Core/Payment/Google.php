@@ -34,9 +34,6 @@
  *
  */
 
-
-
-
 class CRM_Core_Payment_Google extends CRM_Core_Payment {
 
   /**
@@ -200,7 +197,6 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     $googleParams = ['cart' => $cartVal,
       'signature' => $signatureVal,
     ];
-
 
     $params = ['method' => HTTP_REQUEST_METHOD_POST,
       'allowRedirects' => FALSE,

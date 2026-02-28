@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
 
   public static function availableHooks($hook) {

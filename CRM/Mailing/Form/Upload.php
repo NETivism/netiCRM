@@ -97,7 +97,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       //set in session
       $justSavedTemplate = $this->get('justSavedTemplate');
 
-      $this->assign('templateSelected', $justSavedTemplate ? $justSavedTemplate: 0);
+      $this->assign('templateSelected', $justSavedTemplate ? $justSavedTemplate : 0);
       if (isset($defaults['msg_template_id']) && !$justSavedTemplate) {
         $messageTemplate = new CRM_Core_DAO_MessageTemplates();
         $messageTemplate->id = $defaults['msg_template_id'];
@@ -308,7 +308,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $this->addRadio('upload_type', ts('I want to'), $options, $attributes, "&nbsp;&nbsp;");
 
-
     CRM_Mailing_BAO_Mailing::commonCompose($this);
 
     $this->addElement('file', 'textFile', ts('Upload TEXT Message'), 'size=30 maxlength=60');
@@ -338,13 +337,11 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $this->set('uploadNames', ['textFile', 'htmlFile']);
     }
 
-
     CRM_Core_BAO_File::buildAttachment(
       $this,
       'civicrm_mailing',
       $this->_mailingID
     );
-
 
     $this->add(
       'select',
@@ -524,7 +521,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
         $msgTemplate = CRM_Core_BAO_MessageTemplates::add($templateParams);
       }
 
-
       if (isset($msgTemplate->id)) {
         $params['msg_template_id'] = $msgTemplate->id;
       }
@@ -558,8 +554,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     }
 
     /* Build the mailing object */
-
-
 
     CRM_Mailing_BAO_Mailing::create($params, $ids);
 
@@ -625,16 +619,13 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     $errors = [];
     $template = CRM_Core_Smarty::singleton();
 
-
     if (isset($params['html_message'])) {
       $htmlMessage = str_replace(["\n", "\r"], ' ', $params['html_message']);
       $htmlMessage = str_replace("'", "\'", $htmlMessage);
       $template->assign('htmlContent', $htmlMessage);
     }
 
-
     $domain = CRM_Core_BAO_Domain::getDomain();
-
 
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $self->_mailingID;
@@ -659,8 +650,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     foreach ($urls as $key => $value) {
       $urls[$key]++;
     }
-
-
 
     // set $header and $footer
     foreach ([
@@ -724,7 +713,6 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
       /* append header/footer */
 
-
       $str = $header[$file . 'File'] . $str . $footer[$file . 'File'];
 
       $dataErrors = [];
@@ -747,15 +735,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       /* Do a full token replacement on a dummy verp, the current
              * contact and domain, and the first organization. */
 
-
-
       // here we make a dummy mailing object so that we
       // can retrieve the tokens that we need to replace
       // so that we do get an invalid token error
       // this is qute hacky and I hope that there might
       // be a suggestion from someone on how to
       // make it a bit more elegant
-
 
       $dummy_mail = new CRM_Mailing_BAO_Mailing();
       $mess = "body_{$file}";

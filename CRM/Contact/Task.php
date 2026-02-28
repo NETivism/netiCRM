@@ -231,7 +231,6 @@ class CRM_Contact_Task {
 
       self::$_tasks += CRM_Core_Component::taskList();
 
-
       CRM_Utils_Hook::searchTasks('contact', self::$_tasks);
 
       asort(self::$_tasks);
@@ -261,7 +260,6 @@ class CRM_Contact_Task {
     unset($titles[15]);
 
     $config = CRM_Core_Config::singleton();
-
 
     if (!CRM_Utils_Mail::validOutBoundMail()) {
       unset($titles[6]);

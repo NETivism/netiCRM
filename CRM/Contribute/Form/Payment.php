@@ -9,7 +9,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
   public $_entityId;
 
   public $_entityTable;
-  
+
   public $_action;
 
   public $_mode;
@@ -27,7 +27,6 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
   protected $_contrib;
 
   protected $_params;
-
 
   /**
    * Function to set variables up before form is built

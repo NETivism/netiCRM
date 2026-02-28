@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Miscellaneous
  *
@@ -51,7 +49,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
     CRM_Utils_System::setTitle(ts('Settings - Miscellaneous'));
 
     // FIXME: for now, disable logging for multilingual sites
-    $domain = new CRM_Core_DAO_Domain;
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
 
     $this->addYesNo('doNotAttachPDFReceipt', ts('Do not attach PDF copy to receipts'));
@@ -124,7 +122,7 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
     // FIXME: do it only if the setting changed
 
     $values = $this->exportValues();
-    $logging = new CRM_Logging_Schema;
+    $logging = new CRM_Logging_Schema();
     $values['logging'] ? $logging->enableLogging() : $logging->disableLogging();
   }
 }

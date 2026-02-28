@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Gender
  */
@@ -213,7 +211,6 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @static
    */
   public function browse() {
-
 
     $groupParams = ['name' => self::$_gName];
     $optionValue = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'component_id,weight');

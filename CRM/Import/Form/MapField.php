@@ -33,16 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -286,7 +276,6 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-
 
     //to save the current mappings
     if (!$this->get('savedMapping')) {
@@ -775,7 +764,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     $mapperKeysMain = [];
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);

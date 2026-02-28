@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Event_Import_Controller extends CRM_Core_Controller {
 
   /**
@@ -46,7 +45,6 @@ class CRM_Event_Import_Controller extends CRM_Core_Controller {
     if (!ini_get('safe_mode')) {
       set_time_limit(0);
     }
-
 
     $this->_stateMachine = new CRM_Event_Import_StateMachine($this, $action);
 

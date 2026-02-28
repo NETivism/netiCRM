@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * BAO object for crm_log table
  */
@@ -73,7 +71,6 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
    * @static
    */
   public static function add(&$params) {
-
 
     $log = new CRM_Core_DAO_Log();
     $log->copyValues($params);
@@ -142,7 +139,7 @@ UPDATE civicrm_log
    * @return void
    */
   public static function audit($entityId, $auditType, $data) {
-    if (!$entityId || !$auditType|| empty($data)) {
+    if (!$entityId || !$auditType || empty($data)) {
       return;
     }
     $userID = CRM_Core_Session::singleton()->get('userID');

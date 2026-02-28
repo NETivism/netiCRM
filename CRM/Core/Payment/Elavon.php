@@ -24,8 +24,6 @@
  -----------------------------------------------------------------------------------------------
  **/
 
-
-
 class CRM_Core_Payment_Elavon extends CRM_Core_Payment {
   public $_mode;
   /**
@@ -267,7 +265,6 @@ class CRM_Core_Payment_Elavon extends CRM_Core_Payment {
          * test mode always returns trxn_id = 0
          * fix for CRM-2566
          **********************************************************/
-
 
     if ($processorResponse['errorCode']) {
       return self::errorExit(9010, "Error: [" . $processorResponse['errorCode'] . " " . $processorResponse['errorName'] . " " . $processorResponse['errorMessage'] . "] - from payment processor");

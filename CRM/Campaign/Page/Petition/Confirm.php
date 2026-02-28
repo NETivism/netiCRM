@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
   public function run() {
 
@@ -52,7 +49,6 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
       CRM_Core_Error::fatal(ts("Missing input parameters"));
     }
 
-
     $result = $this->confirm($contact_id, $subscribe_id, $hash, $activity_id, $petition_id);
     if ($result === FALSE) {
       $this->assign('success', $result);
@@ -61,7 +57,6 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
       $this->assign('success', TRUE);
       // $this->assign( 'group'  , $result );
     }
-
 
     list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
     $this->assign('display_name', $displayName);
@@ -100,7 +95,6 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
       return FALSE;
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     $ce = new CRM_Mailing_Event_BAO_Confirm();
@@ -108,15 +102,12 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
     $ce->time_stamp = date('YmdHis');
     $ce->save();
 
-
-
     CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus(
       $contact_id,
       $se->group_id,
       'Email',
       $ce->id
     );
-
 
     $bao = new CRM_Campaign_BAO_Petition();
     $bao->confirmSignature($activity_id, $contact_id, $petition_id);

@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to email a group of
  * contacts.
@@ -170,7 +168,6 @@ AND    co.id IN ( $contribIDs )";
         ['CRM_Contribute_DAO_Contribution', $dao->contribution_id, 'trxn_id']
       );
 
-
       $row['fee_amount'] = &$this->add(
         'text',
         "fee_amount_{$row['contribution_id']}",
@@ -257,9 +254,7 @@ AND    co.id IN ( $contribIDs )";
     $params = $this->controller->exportValues($this->_name);
     $statusID = $params['contribution_status_id'];
 
-
     $baseIPN = new CRM_Core_Payment_BaseIPN();
-
 
     $transaction = new CRM_Core_Transaction();
 

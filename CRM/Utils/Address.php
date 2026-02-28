@@ -58,7 +58,6 @@ class CRM_Utils_Address {
   ) {
     static $config = NULL;
 
-
     if (!$format) {
       $format = CRM_Core_BAO_Preferences::value('address_format');
       $format = str_replace('contact.', "", $format);

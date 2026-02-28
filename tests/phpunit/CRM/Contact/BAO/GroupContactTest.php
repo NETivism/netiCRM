@@ -88,13 +88,13 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase {
 
     //check the group contact id is not null
     $this->assertNotNull($groupContact->id);
-        
+
     $this->assertEquals($groupContact->group_id, 11, 'Check for group_id');
 
     //cleanup
     $groupContact->deleteTestObjects('CRM_Contact_DAO_GroupContact');
   }
-   
+
   /**
    *  Test case for contact search: CRM-6706, CRM-6586 Parent Group search should return contacts from child groups too.
    */
@@ -110,7 +110,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase {
                            'is_active'   => 1
                            ];
     $parentGroup = CRM_Contact_BAO_Group::create($groupParams1);
-        
+
     // create a child group
     $groupParams2 =  [
                            'title'       => 'Child Group',
@@ -120,7 +120,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase {
                            'is_active'   => 1
                            ];
     $childGroup = CRM_Contact_BAO_Group::create($groupParams2);
-        
+
     // Create a contact within parent group
     $parentContactParams = [
                                  'first_name'     => 'Parent1 Fname',
@@ -130,7 +130,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase {
                                                              ]
                                  ];
     $parentContact = Contact::createIndividual($parentContactParams);
-        
+
     // create a contact within child dgroup
     $childContactParams = [
                                 'first_name'     => 'Child1 Fname',
@@ -140,7 +140,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase {
                                                             ]
                                 ];
     $childContact = Contact::createIndividual($childContactParams);
-        
+
     // Check if searching by parent group  returns both parent and child group contacts
     $searchParams   = [
             'group' =>  [
@@ -156,8 +156,7 @@ class CRM_Contact_BAO_GroupContactTest extends CiviUnitTestCase {
     }
     $this->assertEquals(2, count($resultContactIds), 'Check the count of returned values');
     $this->assertEquals([ ], array_diff($validContactIds, $resultContactIds), 'Check that the difference between two arrays should be blank array');
-        
-        
+
     // Check if searching by child group returns just child group contacts
     $searchParams   = [
                             'group' =>  [

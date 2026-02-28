@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 /**
  * Business objects for managing custom data fields.
  *
@@ -207,7 +201,6 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         'table_name'
       );
 
-
       if ($params['option_type'] == 1) {
         // first create an option group for this custom group
 
@@ -217,10 +210,6 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
         $optionGroup->is_active = 1;
         $optionGroup->save();
         $params['option_group_id'] = $optionGroup->id;
-
-
-
-
 
         foreach ($params['option_value'] as $k => $v) {
           if (strlen(trim($v))) {
@@ -1333,7 +1322,6 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
     $customField->id = $customFieldId;
     $customField->find(TRUE);
 
-
     $value = NULL;
     if (!$contactId) {
       if ($mode == CRM_Profile_Form::MODE_CREATE) {
@@ -1436,7 +1424,6 @@ class CRM_Core_BAO_CustomField extends CRM_Core_DAO_CustomField {
           'id'
         );
         $result['file_id'] = $fileID;
-
 
         if ($fileType == "image/jpeg" ||
           $fileType == "image/pjpeg" ||
@@ -1578,7 +1565,6 @@ SELECT id
       }
     }
 
-
     if ($customFields[$customFieldId]['html_type'] == 'Multi-Select' ||
       $customFields[$customFieldId]['html_type'] == 'AdvMulti-Select'
     ) {
@@ -1682,7 +1668,6 @@ SELECT id
         $filePath = $value['name'];
         $mimeType = $value['type'];
       }
-
 
       $basename = pathinfo($filePath, PATHINFO_BASENAME);
 
@@ -1837,7 +1822,6 @@ SELECT $columnName
     if (!in_array($field->html_type, ['CheckBox', 'Radio', 'Select', 'Multi-Select', 'AdvMulti-Select', 'Autocomplete-Select']) && !empty($field->default_value)) {
       $params['default'] = "'{$field->default_value}'";
     }
-
 
     CRM_Core_BAO_SchemaHandler::alterFieldSQL($params, $indexExist);
   }
@@ -2088,7 +2072,6 @@ SELECT label, value
         }
       }
 
-
       CRM_Utils_Hook::customFieldOptions($field['id'], $options);
     }
   }
@@ -2138,7 +2121,6 @@ FROM       civicrm_custom_field f
 INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id
 WHERE      f.id IN ($ids)";
 
-
     $dao = CRM_Core_DAO::executeQuery($sql);
     $result = [];
     while ($dao->fetch()) {
@@ -2166,9 +2148,6 @@ WHERE      f.id IN ($ids)";
     if (!is_array($params) || empty($params)) {
       return $errors;
     }
-
-
-
 
     //pick up profile fields.
     $profileFields = [];

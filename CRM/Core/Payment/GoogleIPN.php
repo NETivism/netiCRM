@@ -32,9 +32,6 @@
   *
   */
 
-
-
-
 define('GOOGLE_DEBUG_PP', 0);
 class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
 
@@ -148,7 +145,6 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       return FALSE;
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     // fix for CRM-2842
@@ -197,7 +193,6 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
     // CRM_Core_Error::debug_var( "$status, $component", $dataRoot );
     $orderNo = $dataRoot['google-order-number']['VALUE'];
 
-
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->invoice_id = $orderNo;
     if (!$contribution->find(TRUE)) {
@@ -240,7 +235,6 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     $this->loadObjects($input, $ids, $objects);
-
 
     $transaction = new CRM_Core_Transaction();
 
@@ -308,7 +302,6 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    * @static
    */
   public static function getContext($xml_response, $privateData, $orderNo, $root) {
-
 
     $isTest = NULL;
     $module = NULL;
@@ -412,17 +405,12 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
    */
   public static function main($xml_response) {
 
-
-
-
-
     $config = CRM_Core_Config::singleton();
 
     // Retrieve the XML sent in the HTTP POST request to the ResponseHandler
     if (get_magic_quotes_gpc()) {
       $xml_response = stripslashes($xml_response);
     }
-
 
     $headers = CRM_Utils_System::getAllHeaders();
 
@@ -443,7 +431,6 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
 
     list($mode, $module, $paymentProcessorID) = self::getContext($xml_response, $privateData, $orderNo, $root);
     $mode = $mode ? 'test' : 'live';
-
 
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment(
       $paymentProcessorID,

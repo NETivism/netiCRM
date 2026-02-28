@@ -14,7 +14,7 @@ function civicrm_api3_entity_get($params) {
   #$include_dirs = array(dirname(__FILE__). '/../../');
   foreach ($include_dirs as $include_dir) {
     $api_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, [$include_dir, 'api', 'v3']);
-    if (! is_dir($api_dir)) {
+    if (!is_dir($api_dir)) {
       continue;
     }
     $iterator = new DirectoryIterator($api_dir);

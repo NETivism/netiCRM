@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form to process actions on the group aspect of Custom Data
  */
@@ -85,7 +83,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $this->_params['payer'] = $expressParams['payer'];
         $this->_params['payer_id'] = $expressParams['payer_id'];
         $this->_params['payer_status'] = $expressParams['payer_status'];
-
 
         CRM_Core_Payment_Form::mapParams($this->_bltID, $expressParams, $this->_params, FALSE);
 
@@ -238,7 +235,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   public function buildQuickForm() {
     $this->assignToTemplate();
 
-
     $params = $this->_params;
     $honor_block_is_active = $this->get('honor_block_is_active');
     // make sure we have values for it
@@ -250,7 +246,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     ) {
       $this->assign('honor_block_is_active', $honor_block_is_active);
       $this->assign("honor_block_title", CRM_Utils_Array::value('honor_block_title', $this->_values));
-
 
       $prefix = CRM_Core_PseudoConstant::individualPrefix();
       $honor = CRM_Core_PseudoConstant::honor();
@@ -316,7 +311,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->assign("is_separate_payment", $this->_separateMembershipPayment);
     $this->assign('lineItem', $this->_lineItem);
     $this->assign('priceSetID', $this->_priceSetId);
-
 
     if ($this->_paymentProcessor['payment_processor_type'] == 'Google_Checkout'
       && !$this->_params['is_pay_later']
@@ -584,7 +578,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $premiumParams = $membershipParams = $tempParams = $params = $this->_params;
 
     // refs #30009, add submitted values into _values for CRM_Contribute_BAO_ContributionPage::sendMail
-    $this->_values['submitted'] =& $this->_params;
+    $this->_values['submitted'] = &$this->_params;
 
     //carry payment processor id.
     if ($paymentProcessorId = CRM_Utils_Array::value('id', $this->_paymentProcessor)) {
@@ -776,7 +770,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       }
     }
 
-
     if ($processMembership) {
 
       CRM_Core_Payment_Form::mapParams($this->_bltID, $this->_params, $membershipParams, TRUE);
@@ -802,7 +795,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       // so we copy stuff over to first_name etc.
       $paymentParams = $this->_params;
       $contributionTypeId = $this->_values['contribution_type_id'];
-
 
       CRM_Contribute_BAO_Contribution_Utils::processConfirm(
         $this,
@@ -1143,8 +1135,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       }
     }
 
-
-
     //create an contribution address
     /* shouldn't create empty address which tappay will be empty
     if ($form->_contributeMode != 'notify' && !CRM_Utils_Array::value('is_pay_later', $params)) {
@@ -1216,7 +1206,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
             'actual_amount' => $scheduledAmount,
           ];
 
-
           CRM_Pledge_BAO_Payment::add($pledgePaymentParams);
         }
 
@@ -1244,7 +1233,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $pledgeParams['acknowledge_date'] = date('Ymd');
         $pledgeParams['original_installment_amount'] = $pledgeParams['installment_amount'];
 
-
         $pledge = CRM_Pledge_BAO_Pledge::create($pledgeParams);
 
         $form->_params['pledge_id'] = $pledge->id;
@@ -1262,7 +1250,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
           //get total pledge amount.
           $pledgeParams['total_pledge_amount'] = $pledge->amount;
-
 
           CRM_Pledge_BAO_Pledge::sendAcknowledgment($form, $pledgeParams);
         }
@@ -1290,8 +1277,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_contribution', $contribution->id);
       }
     }
-
-
 
     if (isset($params['related_contact'])) {
       $contactID = $params['related_contact'];
@@ -1391,9 +1376,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     // in paypal IPN we reset this when paypal sends us the real trxn id, CRM-2991
     $recurParams['trxn_id'] = CRM_Utils_Array::value('trxn_id', $params, $params['invoiceID']);
 
-
     $ids = [];
-
 
     $recurring = &CRM_Contribute_BAO_ContributionRecur::add($recurParams, $ids);
     if (is_a($recurring, 'CRM_Core_Error')) {
@@ -1425,7 +1408,6 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     $this->assign('honor_block_is_active', $honor_block_is_active);
     $this->assign("honor_block_title", $this->_values['honor_block_title']);
-
 
     $prefix = CRM_Core_PseudoConstant::individualPrefix();
     $honorType = CRM_Core_PseudoConstant::honor();

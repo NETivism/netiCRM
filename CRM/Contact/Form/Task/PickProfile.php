@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality for batch profile update
  */
@@ -88,7 +86,6 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
       $validate = TRUE;
     }
 
-
     if (CRM_Contact_BAO_Contact_Utils::checkContactType($this->_contactIds)) {
       CRM_Core_Session::setStatus(ts("Batch update requires that all selected contacts be the same type (e.g. all Individuals OR all Organizations...). Please modify your selected contacts and try again."));
       $validate = TRUE;
@@ -120,7 +117,6 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
 
     //add Contact type profiles
     $this->_contactTypes[] = 'Contact';
-
 
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($this->_contactTypes);
 

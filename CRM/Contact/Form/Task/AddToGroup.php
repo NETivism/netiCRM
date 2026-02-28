@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to group
  * contacts. This class provides functionality for the actual
@@ -114,7 +112,6 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
         ts('Description:') . ' ',
         CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
       );
-
 
       $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
       if (!CRM_Core_Permission::access('CiviMail')) {
@@ -237,7 +234,6 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
         $groupParams['group_type'] = '';
       }
       $groupParams['is_active'] = 1;
-
 
       $createdGroup = &CRM_Contact_BAO_Group::create($groupParams);
       $groupID = $createdGroup->id;

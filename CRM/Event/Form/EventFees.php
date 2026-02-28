@@ -78,7 +78,6 @@ class CRM_Event_Form_EventFees {
       }
     }
 
-
     $form->_fromEmails = CRM_Event_BAO_Event::getFromEmailIds($form->_eventId);
 
     //CRM-6907 set event specific currency.
@@ -114,7 +113,6 @@ class CRM_Event_Form_EventFees {
     if ($form->_pId) {
       $ids = [];
       $params = ['id' => $form->_pId];
-
 
       CRM_Event_BAO_Participant::getValues($params, $defaults, $ids);
       if ($form->_action == CRM_Core_Action::UPDATE) {
@@ -171,7 +169,6 @@ class CRM_Event_Form_EventFees {
       $fields["email-{$form->_bltID}"] = 1;
       $fields["email-Primary"] = 1;
 
-
       if ($form->_contactId) {
         CRM_Core_BAO_UFGroup::setProfileDefaults($form->_contactId, $fields, $form->_defaults);
       }
@@ -189,14 +186,12 @@ class CRM_Event_Form_EventFees {
         }
       }
 
-
       $config = CRM_Core_Config::singleton();
       // set default country from config if no country set
       if (!CRM_Utils_Array::value("billing_country_id-{$form->_bltID}", $defaults[$form->_pId])) {
         $defaults[$form->_pId]["billing_country_id-{$form->_bltID}"] = $config->defaultContactCountry;
       }
     }
-
 
     if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $form->_eventId)) {
       // get price set default values, CRM-4090
@@ -572,7 +567,6 @@ SELECT  id, html_type
           ['onclick' => "return showHideByValue('record_contribution','','payment_information','table-row','radio',false);"]
         );
 
-
         $form->add(
           'select',
           'contribution_type_id',
@@ -673,7 +667,6 @@ SELECT  id, html_type
         $form->assign('batchEmail', TRUE);
       }
     }
-
 
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $form->assign('outBound_option', $mailingInfo['outBound_option']);

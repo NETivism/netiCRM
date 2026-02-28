@@ -48,7 +48,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
   protected $_cpage = NULL;
 
   public static $_primaryIDName = 'id';
-  
+
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
@@ -159,7 +159,7 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  
+
   public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
@@ -211,7 +211,6 @@ $having
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
   }
-
 
   public function tempFrom() {
     return "civicrm_contribution_recur AS r 
@@ -294,7 +293,7 @@ $having
       $form->set('mode', $this->_mode);
       $form->assign('mode', $this->_mode);
     }
-    
+
     if ($this->_mode != 'booster') {
       $form->addDateRange('start_date', ts('First recurring date'), NULL, FALSE);
       $form->addElement('text', 'sort_name', ts('Contact Name'));
@@ -304,7 +303,7 @@ $having
       $defaults = $this->setDefaultValues();
       $form->setDefaults($defaults);
     }
-    
+
     $status = $this->_cstatus;
     foreach ([5,2,3,6,7,1] as $key) {
       $statuses[$key] = $status[$key];
@@ -363,7 +362,6 @@ $having
     $value = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM {$this->_tableName}");
     return $value;
   }
-
 
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
@@ -454,7 +452,7 @@ $having
   public function &columns() {
     return $this->_columns;
   }
-  
+
   public function summary() {
     $summary = [];
     if (!$this->_filled) {
@@ -469,7 +467,7 @@ $having
     ];
     $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE 1");
     $query->fetch();
-    
+
     if ($query->amount) {
       $amount = CRM_Utils_Money::format($query->amount);
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', [1 => $amount]);
@@ -491,7 +489,7 @@ $having
     if ($row['remain_installments'] < 0) {
       $row['remain_installments'] = ts('Over %1', [ 1 => -$row['remain_installments']]);
     }
-    
+
     if ($row['completed_count']) {
       $row['completed_count'] = $row['completed_count'].' / '.$row['total_count'];
     }

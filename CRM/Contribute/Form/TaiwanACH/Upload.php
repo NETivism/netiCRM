@@ -44,7 +44,6 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     return $defaults;
   }
 
-
   public function postProcess() {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);

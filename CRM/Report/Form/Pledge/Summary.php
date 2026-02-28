@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
 
   public $_columnHeaders;

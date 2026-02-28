@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is for building membership block on user dashboard
  */

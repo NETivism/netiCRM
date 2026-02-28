@@ -452,7 +452,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
     $dbValues = [];
     CRM_Core_DAO::commonRetrieve($daoName, $searchParams, $dbValues);
 
-
     // compare db values with expected values
     self::assertAttributesEquals($expectedValues, $dbValues);
   }
@@ -516,7 +515,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
     if (!empty($prefix)) {
       $prefix .= ': ';
     }
-    $this->assertEquals(0, $apiResult['is_error'], $prefix . empty($apiResult['error_message'])?'':$apiResult['error_message']);
+    $this->assertEquals(0, $apiResult['is_error'], $prefix . empty($apiResult['error_message']) ? '' : $apiResult['error_message']);
   }
 
   public function assertType($expected, $actual, $message = '') {
@@ -662,7 +661,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
       'financial_type_id' => 1,
     ];
 
-
     $result = civicrm_api('MembershipType', 'Create', $params);
     require_once 'CRM/Member/PseudoConstant.php';
     CRM_Member_PseudoConstant::flush('membershipType');
@@ -750,7 +748,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
   }
 
   public function membershipStatusDelete($membershipStatusID) {
-    if (! $membershipStatusID) {
+    if (!$membershipStatusID) {
       return;
     }
     $result = civicrm_api('MembershipStatus', 'Delete', ['id' => $membershipStatusID, 'version' => 3]);
@@ -894,7 +892,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
       ];
     }
 
-
     $result = civicrm_api('Tag', 'create', $params);
 
     return $result;
@@ -987,8 +984,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
    */
   public function contributionCreate($cID, $cTypeID, $invoiceID = 67890, $trxnID = 12345) {
 
-
-
     $params = [
       'domain_id' => 1,
       'contact_id' => $cID,
@@ -1034,7 +1029,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
       'version' => API_LATEST_VERSION,
     ];
     $result = civicrm_api('contribution', 'delete', $params);
-
 
     if (CRM_Utils_Array::value('is_error', $result) ||
       !CRM_Utils_Array::value('id', $result)
@@ -1129,7 +1123,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
    */
   public function participantPaymentCreate($participantID, $contributionID = NULL) {
 
-
     //Create Participant Payment record With Values
     $params = [
       'participant_id' => $participantID,
@@ -1137,9 +1130,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
       'version' => API_LATEST_VERSION,
     ];
 
-
     $result = civicrm_api('participant_payment', 'create', $params);
-
 
     if (CRM_Utils_Array::value('is_error', $result) ||
       !CRM_Utils_Array::value('id', $result)
@@ -1422,7 +1413,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
         'version' => API_LATEST_VERSION,
       ];
     }
-
 
     $result = civicrm_api('Activity', 'create', $params);
 
@@ -1854,7 +1844,6 @@ class CiviUnitTestCase extends CiviUnitTestBase {
    */
   public function customFieldOptionValueCreate($customGroup, $name) {
 
-
     $fieldParams = [
       'custom_group_id' => $customGroup['id'],
       'name' => 'test_custom_group',
@@ -2009,7 +1998,6 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
      *@param array $unformattedArray The array from which the 'id' has to be unset
      *
      */
-
 
   public static function unsetId(&$unformattedArray) {
     $formattedArray = [];
@@ -2187,7 +2175,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
                   $value = (float)mt_rand(10, 10000);
                   break;
                 case "Date":
-                  $value = date('Ymd', time()-mt_rand(10000, 500000));
+                  $value = date('Ymd', time() - mt_rand(10000, 500000));
                   break;
                 case "ContactReference":
                   break;

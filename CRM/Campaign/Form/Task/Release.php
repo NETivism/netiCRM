@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class provides the functionality to add contacts for
  * voter reservation.
@@ -108,7 +104,6 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
     $surveyDetails = [];
     $params = ['id' => $this->_surveyId];
     $this->_surveyDetails = CRM_Campaign_BAO_Survey::retrieve($params, $surveyDetails);
-
 
     $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
     $statusIds = [];

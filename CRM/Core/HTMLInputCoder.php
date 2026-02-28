@@ -147,7 +147,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
    */
   public static function encodeInput(&$values, $castToString = TRUE) {
     if (is_array($values)) {
-      foreach ($values as & $value) {
+      foreach ($values as &$value) {
         self::encodeInput($value);
       }
     }
@@ -158,7 +158,7 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
 
   public static function decodeOutput(&$values, $castToString = TRUE) {
     if (is_array($values)) {
-      foreach ($values as & $value) {
+      foreach ($values as &$value) {
         self::decodeOutput($value);
       }
     }

@@ -163,7 +163,6 @@ function civicrm_api3_relationship_get($params) {
     _civicrm_api3_custom_data_get($relationships[$relationshipId], 'Relationship', $relationshipId, NULL, CRM_Utils_Array::value('relationship_type_id', $values));
   }
 
-
   return civicrm_api3_create_success($relationships, $params);
 }
 
@@ -267,7 +266,6 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
  * @deprecated - checking to be moved to wrapper
  */
 function _civicrm_api3_relationship_check_params(&$params) {
-
 
   // check params for validity of Relationship id
   if (CRM_Utils_Array::value('id', $params)) {

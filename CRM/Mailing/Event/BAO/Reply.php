@@ -33,10 +33,8 @@
  *
  */
 
-
 require_once 'ezc/Base/src/ezc_bootstrap.php';
 require_once 'ezc/autoload/mail_autoload.php';
-
 
 class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
@@ -60,7 +58,6 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
    */
   public static function &reply($job_id, $queue_id, $hash, $replyto = NULL) {
     /* First make sure there's a matching queue event */
-
 
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
 
@@ -133,7 +130,7 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     if ($fullEmail) {
       // parse the email and set a new destination
-      $parser = new ezcMailParser;
+      $parser = new ezcMailParser();
       $set = new ezcMailVariableSet($fullEmail);
       $parsed = array_shift($parser->parseMail($set));
       $parsed->to = [new ezcMailAddress($mailing->replyto_email)];
@@ -236,10 +233,8 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     $message = new Mail_Mime("\n");
 
-
     $domain = CRM_Core_BAO_Domain::getDomain();
     list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
-
 
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
@@ -253,7 +248,6 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     /* TODO: do we need reply tokens? */
 
-
     $html = $component->body_html;
     if ($component->body_text) {
       $text = $component->body_text;
@@ -261,7 +255,6 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
     else {
       $text = CRM_Utils_String::htmlToText($component->body_html);
     }
-
 
     $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;

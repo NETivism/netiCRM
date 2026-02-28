@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for invoking report templates
  */
@@ -52,9 +49,6 @@ class CRM_Report_Page_Report extends CRM_Core_Page {
     }
 
     $optionVal = CRM_Report_Utils_Report::getValueFromUrl();
-
-
-
 
     $templateInfo = CRM_Core_OptionGroup::getRowValues(
       'report_template',

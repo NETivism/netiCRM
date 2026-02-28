@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Build the form for disable mail feature
  *
@@ -63,7 +60,6 @@ class CRM_Mailing_Form_Browse extends CRM_Core_Form {
     if (!CRM_Core_Permission::checkActionPermission('CiviMail', $this->_action)) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
-
 
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $this->_mailingId;

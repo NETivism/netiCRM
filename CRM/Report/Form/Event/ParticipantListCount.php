@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
 
   public $_aliases;
@@ -519,7 +515,6 @@ class CRM_Report_Form_Event_ParticipantListCount extends CRM_Report_Form {
         }
         $entryFound = TRUE;
       }
-
 
       // skip looking further in rows, if first row itself doesn't
       // have the column we need

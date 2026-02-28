@@ -298,7 +298,6 @@ function civicrm_api3_contact_delete($params) {
   }
 }
 
-
 function _civicrm_api3_contact_check_params(&$params, $dupeCheck = TRUE, $dupeErrorArray = FALSE, $obsoletevalue = TRUE, $dedupeRuleGroupID = NULL) {
 
   switch (strtolower(CRM_Utils_Array::value('contact_type', $params))) {
@@ -342,8 +341,8 @@ function _civicrm_api3_contact_check_params(&$params, $dupeCheck = TRUE, $dupeEr
 
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type'], 'Strict', []);
 
-    if (count($ids) >0) {
-      throw new API_Exception("Found matching contacts: ". CRM_Utils_Array::implode(',', $ids), "duplicate", ["ids"=>$ids]);
+    if (count($ids) > 0) {
+      throw new API_Exception("Found matching contacts: ". CRM_Utils_Array::implode(',', $ids), "duplicate", ["ids" => $ids]);
     }
   }
 
@@ -547,7 +546,7 @@ function civicrm_api3_contact_getquick($params) {
   $setting->add($params);
   // get the autocomplete options from settings
 
-  $acpref = [1=>1, 2=>1];
+  $acpref = [1 => 1, 2 => 1];
 
   // get the option values for contact autocomplete
   $acOptions = CRM_Core_OptionGroup::values('contact_autocomplete_options', FALSE, FALSE, FALSE, NULL, 'name');
@@ -895,7 +894,6 @@ WHERE     $whereClause
 
   return civicrm_api3_create_success($contacts, $params, 'contact', 'get_by_location', $dao);
 }
-
 
 function _civicrm_api3_contact_checksum_spec(&$params) {
   $params['contact_id']['api.required'] = 1;

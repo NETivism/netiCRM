@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class holds all the Pseudo constants that are specific to Contributions. This avoids
  * polluting the core class and isolates the mass mailer class
@@ -117,7 +114,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   private static $taiwanACH;
-  
+
   /**
    * Taiwan ACH return failed code and reason
    * @var array
@@ -280,7 +277,6 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
       $premiumID = $dao->id;
 
       $productID = [];
-
 
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->premiums_id = $premiumID;

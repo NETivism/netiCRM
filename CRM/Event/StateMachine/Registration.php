@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * State machine for managing different states of the EventWizard process.
  *

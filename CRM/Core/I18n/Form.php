@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Core_I18n_Form extends CRM_Core_Form {
   public $_locales;
   public $_structure;

@@ -48,7 +48,7 @@ class api_v2_AllTests extends CiviTestSuite {
    */
   private static function getInstance() {
     if (is_null(self::$instance)) {
-      self::$instance = new self;
+      self::$instance = new self();
     }
     return self::$instance;
   }

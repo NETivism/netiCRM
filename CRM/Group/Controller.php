@@ -33,14 +33,12 @@
  *
  */
 
-
 class CRM_Group_Controller extends CRM_Core_Controller {
   /**
    * class constructor
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);
-
 
     $this->_stateMachine = new CRM_Group_StateMachine($this, $action);
 
@@ -55,7 +53,6 @@ class CRM_Group_Controller extends CRM_Core_Controller {
 
     // to handle file type custom data
     $uploadDir = $config->uploadDir;
-
 
     $uploadNames = $this->get('uploadNames');
     if (!empty($uploadNames)) {

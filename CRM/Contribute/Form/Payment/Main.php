@@ -33,7 +33,6 @@
  *
  */
 
-
 /**
  * form for thank-you / success page - 1st step of payment
  */
@@ -82,7 +81,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
 
     if (!empty($this->_paymentProcessors)) {
       $pps = $this->_paymentProcessors;
-      foreach ($pps as $key => & $name) {
+      foreach ($pps as $key => &$name) {
         $pps[$key] = $name['name'];
       }
     }

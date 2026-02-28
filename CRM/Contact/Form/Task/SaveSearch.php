@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to save a search
  * Saved Searches are used for saving frequently used queries
@@ -103,14 +101,12 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
       TRUE
     );
 
-
     $this->addElement(
       'textarea',
       'description',
       ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
     );
-
 
     $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
     unset($groupTypes['Access Control']);
@@ -173,7 +169,6 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     if ($isAdvanced == '2' && $isSearchBuilder == '1') {
       //save the mapping for search builder
 
-
       if (!$this->_id) {
         //save record in mapping table
         $mappingParams = ['mapping_type' => 'Search Builder'];
@@ -183,7 +178,6 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
       }
       else {
         //get the mapping id from saved search
-
 
         $savedSearch = new CRM_Contact_BAO_SavedSearch();
         $savedSearch->id = $this->_id;
@@ -231,7 +225,6 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
       $name .= '_rand'.(string) mt_rand(11, 99);
       $params['name'] = $name;
     }
-
 
     $group = &CRM_Contact_BAO_Group::create($params);
   }

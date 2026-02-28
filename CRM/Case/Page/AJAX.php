@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class contains all case related functions that are called using AJAX (jQuery)
  */
@@ -73,7 +71,6 @@ class CRM_Case_Page_AJAX {
 
   public function processCaseTags() {
 
-
     $caseId = CRM_Utils_Type::escape($_POST['case_id'], 'Integer');
     $tags = CRM_Utils_Type::escape($_POST['tag'], 'String');
 
@@ -100,8 +97,6 @@ class CRM_Case_Page_AJAX {
 
     $session = &CRM_Core_Session::singleton();
 
-
-
     $activityParams = [];
 
     $activityParams['source_contact_id'] = $session->get('userID');
@@ -113,7 +108,6 @@ class CRM_Case_Page_AJAX {
     $activityParams['subject'] = 'Change Case Tags';
 
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
-
 
     $caseParams = ['activity_id' => $activity->id,
       'case_id' => $caseId,

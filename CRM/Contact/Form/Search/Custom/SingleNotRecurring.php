@@ -8,7 +8,7 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  
+
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
@@ -117,7 +117,6 @@ $having
     }
   }
 
-
   public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 AND c.contribution_status_id = 1 LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
   }
@@ -214,7 +213,6 @@ $having
     return $dao->N;
   }
 
-
   /**
    * Construct the search query
    */
@@ -271,7 +269,7 @@ $having
   public function &columns() {
     return $this->_columns;
   }
-  
+
   public function summary() {
     // return $summary;
   }

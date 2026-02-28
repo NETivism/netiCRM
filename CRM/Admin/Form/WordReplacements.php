@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   public $_soInstance;
   protected $_numStrings = 10;
@@ -246,7 +245,6 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
 
     $params = ['locale_custom_strings' => $stringOverride];
     $id = CRM_Core_Config::domainID();
-
 
     $wordReplacementSettings = CRM_Core_BAO_Domain::edit($params, $id);
 

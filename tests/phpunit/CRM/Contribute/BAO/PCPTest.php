@@ -53,7 +53,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase {
   }
 
   public function testAddWithPCPBlockTrue() {
-        
+
     $params = $this->pcpBlockParams();
     require_once 'CRM/Contribute/BAO/PCP.php';
     $pcpBlock = CRM_Contribute_BAO_PCP::add($params, TRUE);
@@ -72,7 +72,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase {
     $delParams = [ 'id' => $pcpBlock->id ];
     // FIXME: Currently this delete fails with an FK constraint error: DELETE FROM civicrm_contribution_type  WHERE (  civicrm_contribution_type.id = 5 )
     // CRM_Core_DAO::deleteTestObjects( 'CRM_Contribute_DAO_PCPBlock', $delParams );
-        
+
   }
 
   public function testAddWithPCPBlockFalse() {
@@ -94,13 +94,13 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase {
     $this->assertEquals($params['goal_amount'], $pcp->goal_amount, 'Check for goal_amount.');
     $this->assertEquals($params['referer'], $pcp->referer, 'Check for referer.');
     $this->assertEquals($params['is_active'], $pcp->is_active, 'Check for is_active.');
-        
+
     // Delete our test object
     require_once 'CRM/Core/DAO.php';
     $delParams = [ 'id' => $pcp->id ];
     // FIXME: Currently this delete fails with an FK constraint error: DELETE FROM civicrm_contribution_type  WHERE (  civicrm_contribution_type.id = 5 )
     // CRM_Core_DAO::deleteTestObjects( 'CRM_Contribute_DAO_PCP', $delParams );
-        
+
   }
 
   public function testAddWithPCPBlockFalseNoStatus() {
@@ -143,7 +143,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase {
       $pcpId,
       'Database check PCP deleted successfully.'
     );
-        
+
   }
 
   /**
@@ -167,7 +167,7 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase {
         'link_text' => 'Create your own PCP',
         'is_active' => 1
         ];
-        
+
     return $params;
   }
 
@@ -196,10 +196,10 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase {
         'referer' => 'referrer value',
         'is_active' => 1,
         ];
-        
+
     return $params;
   }
-    
+
   /**
    * Tears down the fixture, for example, closes a network connection.
    * This method is called after a test is executed.
@@ -208,7 +208,5 @@ class CRM_Contribute_BAO_PCPTest extends CiviUnitTestCase {
    */
   protected function tearDown() {
   }
-
-
 
 }

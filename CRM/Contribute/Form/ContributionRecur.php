@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to recurring contributions
  *
@@ -85,7 +83,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $this->set('payment_type', $processorName);
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
-      $test = $isTest ? 'test':'live';
+      $test = $isTest ? 'test' : 'live';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $test);
       $payment = &CRM_Core_Payment::singleton($test, $paymentProcessor);
       $paymentClass = get_class($payment);
@@ -216,7 +214,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $processorId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'processor_id');
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'is_test');
     if (!empty($processorId)) {
-      $test = $isTest ? 'test':'live';
+      $test = $isTest ? 'test' : 'live';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($processorId, $test);
       $payment = &CRM_Core_Payment::singleton($test, $paymentProcessor);
       $paymentClass = get_class($payment);
@@ -455,12 +453,12 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     if ($isUpdate) {
       // If there has update.
       // Update contribution recur
-      
+
       $ids = [];
 
       CRM_Contribute_BAO_ContributionRecur::add($params, $ids);
       CRM_Core_Session::setStatus(ts('Your recurring contribution has been saved.'));
-    
+
       CRM_Contribute_BAO_ContributionRecur::addNote($this->_id, $params['note_title'], $params['note_body']);
     }
     $urlParams = http_build_query([

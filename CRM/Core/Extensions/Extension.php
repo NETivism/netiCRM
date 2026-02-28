@@ -34,8 +34,6 @@
  *
  */
 
-
-
 class CRM_Core_Extensions_Extension {
 
   public $key;
@@ -150,7 +148,6 @@ class CRM_Core_Extensions_Extension {
     $this->_setActiveByType(0);
     CRM_Core_DAO::setFieldValue('CRM_Core_DAO_OptionValue', $this->id, 'is_active', 0);
   }
-
 
   private function _setActiveByType($state) {
     $hcName = "CRM_Core_Extensions_" . ucwords($this->type);

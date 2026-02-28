@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * State machine for managing different states of the Import process.
  *

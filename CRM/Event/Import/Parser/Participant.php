@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * class to parse membership csv files
  */
@@ -192,7 +190,6 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
       $index = $this->_eventIndex;
     }
     $params = &$this->getActiveFieldParams();
-
 
     if (!(($index < 0) || ($this->_participantStatusIndex < 0))) {
       $errorRequired = !CRM_Utils_Array::value($this->_participantStatusIndex, $values);
@@ -550,7 +547,6 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
 
     $dateKey = 'date';
     $dateParams = [$dateKey => $date];
-
 
     CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);
     return $dateParams[$dateKey];

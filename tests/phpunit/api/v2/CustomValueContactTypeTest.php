@@ -230,8 +230,6 @@ class api_v2_CustomValueContactTypeTest extends CiviUnitTestCase {
     $this->assertEquals($contact['error_message'], 'Invalid Custom Field Contact Type: Individual or Mismatched SubType: Parent');
   }
 
-
-
   // Retrieve Methods
 
   /**

@@ -49,7 +49,6 @@ class CRM_Contact_BAO_Contact_Location {
       $primaryClause = " AND civicrm_email.is_primary = 1";
     }
 
-
     $locationClause = NULL;
     if ($locationTypeID) {
       $locationClause = " AND civicrm_email.location_type_id = $locationTypeID";
@@ -90,7 +89,6 @@ WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
     if ($type) {
       $cond = " AND civicrm_phone.phone_type = '$type'";
     }
-
 
     $sql = "
    SELECT civicrm_contact.display_name, civicrm_phone.phone

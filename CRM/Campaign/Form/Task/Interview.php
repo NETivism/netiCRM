@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to record voter's interview.
  */
@@ -378,7 +376,7 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     //process survey.
 
-    foreach ($params['field'] as $voterId => & $values) {
+    foreach ($params['field'] as $voterId => &$values) {
       $values['voter_id'] = $voterId;
       $values['interviewer_id'] = $this->_interviewerId;
       $values['activity_type_id'] = $this->_surveyTypeId;

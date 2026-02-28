@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *  Access Control List
  */
@@ -104,7 +102,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     $acl_id = NULL,
     $acl_role = FALSE
   ) {
-    $dao = new CRM_ACL_DAO_ACL;
+    $dao = new CRM_ACL_DAO_ACL();
 
     $t = [
       'ACL' => self::getTableName(),
@@ -218,7 +216,6 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
                     WHERE       ($where)
                         AND     {$t['GroupContact']}.contact_id = $contact_id
                         AND     {$t['GroupContact']}.status     = 'Added')";
-
 
     /* Query for permissions granted through an ACL group to a Contact
          * group */
@@ -395,10 +392,6 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
 
     $rule = new CRM_ACL_BAO_ACL();
 
-
-
-
-
     $acl = self::getTableName();
     $contact = CRM_Contact_BAO_Contact::getTableName();
     $c2g = CRM_Contact_BAO_GroupContact::getTableName();
@@ -456,7 +449,6 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     }
 
     $rule = new CRM_ACL_BAO_ACL();
-
 
     $acl = self::getTableName();
     $aclRole = 'civicrm_acl_role';
@@ -520,9 +512,6 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
 
     $rule = new CRM_ACL_BAO_ACL();
 
-
-
-
     $acl = self::getTableName();
     $c2g = CRM_Contact_BAO_GroupContact::getTableName();
     $group = CRM_Contact_BAO_Group::getTableName();
@@ -569,8 +558,6 @@ INNER JOIN  $c2g
 
     $acl = self::getTableName();
     $aclRole = 'civicrm_acl_role';
-
-
 
     $aclER = CRM_ACL_DAO_EntityRole::getTableName();
     $c2g = CRM_Contact_BAO_GroupContact::getTableName();
@@ -679,7 +666,6 @@ SELECT $acl.*
 
   public static function check($str, $contactID) {
 
-
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
 
     $aclKeys = array_keys($acls);
@@ -688,7 +674,6 @@ SELECT $acl.*
     if (empty($aclKeys)) {
       return FALSE;
     }
-
 
     $query = "
 SELECT count( a.id )
@@ -705,7 +690,6 @@ SELECT count( a.id )
   }
 
   public static function whereClause($type, &$tables, &$whereTables, $contactID = NULL) {
-
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
     //CRM_Core_Error::debug( "a: $contactID", $acls );

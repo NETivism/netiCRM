@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 /**
  * This class provides the functionality to email a group of
  * contacts.

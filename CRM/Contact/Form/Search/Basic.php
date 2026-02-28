@@ -37,19 +37,6 @@
  * Files required
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Base Search / View form for *all* listing of multiple
  * contacts
@@ -77,7 +64,6 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     // text for sort_name or email criteria
     $this->add('text', 'sort_name', ts('Name, Phone or Email'));
     $this->add('text', 'legal_identifier', ts('Legal Identifier'));
-
 
     $searchOptions = CRM_Core_BAO_Preferences::valueOptions('advanced_search_options');
 

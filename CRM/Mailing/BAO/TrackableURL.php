@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
 
   public $N;

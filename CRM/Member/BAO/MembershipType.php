@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
 
   /**
@@ -449,7 +448,6 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    */
   public static function getRenewalDatesForMembershipType($membershipId, $changeToday = NULL) {
 
-
     $params = ['id' => $membershipId];
 
     $membership = new CRM_Member_BAO_Membership();
@@ -668,7 +666,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     // or reminder later will be sent after end date (originally, we expect sent before end date)
     if (CRM_REQUEST_TIME <= $endTimestamp) {
       if ($renewalReminderDay != 0) {
-        $reminderDate = date('Y-m-d', $endTimestamp - 86400*($renewalReminderDay));
+        $reminderDate = date('Y-m-d', $endTimestamp - 86400 * ($renewalReminderDay));
       }
       else {
         $reminderDate = date('Y-m-d', $endTimestamp);

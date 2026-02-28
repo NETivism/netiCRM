@@ -28,7 +28,7 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Contribute/BAO/ManagePremiums.php';
 
 class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
-    
+
   public function get_info() {
     return [
                  'name'        => 'ManagePremiums BAOs',
@@ -36,12 +36,11 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
-    
- 
+
   /**
    * check method add()
    */
@@ -67,10 +66,10 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
       'id',
       'Database check on updated product record.'
     );
-        
+
     $this->assertEquals($result, 'TP-10', 'Verify products sku.');
   }
-    
+
   /**
    * check method retrieve( )
    */
@@ -92,7 +91,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
     $result  = CRM_Contribute_BAO_ManagePremiums::retrieve($params, $default);
     $this->assertEquals(empty($result), FALSE, 'Verify products record.');
   }
-   
+
   /**
    * check method setIsActive( )
    */
@@ -110,7 +109,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
 
     $product = CRM_Contribute_BAO_ManagePremiums::add($params, $ids);
     CRM_Contribute_BAO_ManagePremiums::setIsActive($product->id, 0);
-        
+
     $isActive = $this->assertDBNotNull(
       'CRM_Contribute_BAO_ManagePremiums',
       $product->id,
@@ -118,7 +117,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
       'id',
       'Database check on updated for product records is_active.'
     );
-        
+
     $this->assertEquals($isActive, 0, 'Verify product records is_active.');
 
   }
@@ -139,7 +138,7 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
                     ];
 
     $product = CRM_Contribute_BAO_ManagePremiums::add($params, $ids);
-        
+
     CRM_Contribute_BAO_ManagePremiums::del($product->id);
 
     $params  = ['id' => $product->id ];
@@ -147,6 +146,6 @@ class CRM_Contribute_BAO_ManagePremiumsTest extends CiviUnitTestCase {
     $result  = CRM_Contribute_BAO_ManagePremiums::retrieve($params, $defaults);
 
     $this->assertEquals(empty($result), TRUE, 'Verify product record deletion.');
-         
+
   }
 }

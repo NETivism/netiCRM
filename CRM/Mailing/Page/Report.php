@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page to display / edit the header / footer of a mailing
  *
@@ -82,7 +80,6 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
     // check that the user has permission to access mailing id
 
     CRM_Mailing_BAO_Mailing::checkPermission($this->_mailing_id);
-
 
     $report = CRM_Mailing_BAO_Mailing::report($this->_mailing_id);
 

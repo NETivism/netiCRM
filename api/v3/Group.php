@@ -121,7 +121,6 @@ function civicrm_api3_group_get($params) {
     _civicrm_api3_custom_data_get($groups[$group->id], 'Group', $group->id);
   }
 
-
   return civicrm_api3_create_success($groups, $params, 'group', 'create');
 }
 

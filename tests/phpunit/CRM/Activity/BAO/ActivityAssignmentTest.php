@@ -33,7 +33,6 @@ require_once 'CRM/Activity/BAO/ActivityAssignment.php';
  *  @package   CiviCRM
  */
 
-
 class CRM_Activity_BAO_ActivityAssignmentTest extends CiviUnitTestCase {
 
   /**
@@ -93,7 +92,7 @@ class CRM_Activity_BAO_ActivityAssignmentTest extends CiviUnitTestCase {
     $activityId = CRM_Activity_BAO_ActivityAssignment::retrieveAssigneeIdsByActivityId($activity['id']);
 
     $this->assertEquals(count($activityId), 1, 'One record retrieved');
-    
+
   }
 
   /**
@@ -104,7 +103,7 @@ class CRM_Activity_BAO_ActivityAssignmentTest extends CiviUnitTestCase {
     $assignees = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames(0);
 
     $this->assertEquals(count($assignees), 0, '0 assignee names retrieved');
-        
+
   }
 
   /**
@@ -115,9 +114,9 @@ class CRM_Activity_BAO_ActivityAssignmentTest extends CiviUnitTestCase {
     $assignees = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames(NULL);
 
     $this->assertEquals(count($assignees), 0, '0 assignee names retrieved');
-        
+
   }
-    
+
   /**
   *  Pass a known activity id as an id and make sure 1 Assignees is retrieved
   */
@@ -125,8 +124,7 @@ class CRM_Activity_BAO_ActivityAssignmentTest extends CiviUnitTestCase {
     $activity = $this-> activityCreate();
     $assignees = CRM_Activity_BAO_ActivityAssignment::getAssigneeNames($activity['id']);
     $this->assertEquals(count($assignees), 1, '1 assignee names retrieved');
-        
+
   }
-    
 
 }

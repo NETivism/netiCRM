@@ -87,7 +87,6 @@ class CRM_Admin_Form_Setting_Security extends CRM_Admin_Form_Setting {
       $params['decryptExcelPwd'] = '';
     }
 
-
     if (!empty($params['cspRules'])) {
       $csp = new CRM_Utils_CSP($params['cspRules']);
       $params['cspRules'] = (string) $csp;

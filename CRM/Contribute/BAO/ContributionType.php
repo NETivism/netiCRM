@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_ContributionType {
 
   /**

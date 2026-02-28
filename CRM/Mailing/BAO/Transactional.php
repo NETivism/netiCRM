@@ -371,7 +371,6 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $this->_job->find(TRUE);
   }
 
-
   /**
    * Compose transactional mailing
    *
@@ -422,7 +421,6 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     if ($replyToEmail && ($fromEmail != $replyToEmail) && CRM_Utils_Mail::checkRFC822Email($fromEmail)) {
       $headers['Reply-To'] = "{$replyToEmail}";
     }
-
 
     // refs #32614, disable smarty evaluation functions
 
@@ -629,7 +627,6 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     return $message;
   }
-
 
   /**
    * Get transactional details for an email

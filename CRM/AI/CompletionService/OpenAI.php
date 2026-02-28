@@ -60,7 +60,6 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    */
   private $_responseData = '';
 
-
   /**
    * Abstract function for setting the model name
    *

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_Form extends CRM_Core_Form {
 
   protected $_config;
@@ -87,7 +86,6 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     // latest ver in 2.1 series
     $this->latestVersion = '2.1.6';
 
-
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
 
@@ -116,7 +114,7 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
 
     if (!CRM_Utils_Array::arrayKeyExists($versionName, $incrementalPhpObject)) {
       $className = "CRM_Upgrade_Incremental_php_{$versionName}";
-      $incrementalPhpObject[$versionName] = new $className;
+      $incrementalPhpObject[$versionName] = new $className();
     }
     return $incrementalPhpObject[$versionName];
   }
@@ -148,7 +146,6 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
   }
 
   public function source($fileName, $isQueryString = FALSE) {
-
 
     CRM_Utils_File::sourceSQLFile(
       $this->_config->dsn,
@@ -234,7 +231,6 @@ SET    version = '$version'
     if ($newVersion) {
       $oldVersion = CRM_Core_BAO_Domain::version();
 
-
       $session = CRM_Core_Session::singleton();
       $logParams = [
         'entity_table' => 'civicrm_domain',
@@ -282,7 +278,6 @@ SET    version = '$version'
     /*         $revList = array('2.1.0', '2.2.beta2', '2.2.beta1', '2.2.alpha1', */
 
     /*                          '2.2.alpha3', '2.2.0', '2.2.2', '2.1.alpha1', '2.1.3'); */
-
 
     usort($revList, 'version_compare');
     return $revList;

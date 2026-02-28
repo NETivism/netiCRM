@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
 
   /**
@@ -68,7 +62,6 @@ class CRM_Mailing_Event_BAO_Subscribe extends CRM_Mailing_Event_DAO_Subscribe {
     $defaults = [];
     $contact_id = NULL;
     $success = NULL;
-
 
     $bao = CRM_Contact_BAO_Group::retrieve($params, $defaults);
     if ($bao && substr($bao->visibility, 0, 6) != 'Public' && $context != 'profile') {
@@ -105,10 +98,7 @@ LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
 
     if (!$contact_id) {
 
-
-
       /* If the contact does not exist, create one. */
-
 
       $formatted = [
         'contact_type' => 'Individual',
@@ -122,7 +112,6 @@ LEFT JOIN civicrm_email ON contact_a.id = civicrm_email.contact_id
       ];
       require_once 'api/v3/DeprecatedUtils.php';
       _civicrm_api3_deprecated_add_formatted_param($value, $formatted);
-
 
       $formatted['onDuplicate'] = CRM_Import_Parser::DUPLICATE_SKIP;
       $formatted['fixAddress'] = TRUE;
@@ -225,16 +214,13 @@ SELECT     civicrm_email.id as email_id
   public function send_confirm_request($email) {
     $config = CRM_Core_Config::singleton();
 
-
     $domain = CRM_Core_BAO_Domain::getDomain();
 
     //get the default domain email address.
     list($domainEmailName, $domainEmailAddress) = CRM_Core_BAO_Domain::getNameAndEmail();
 
-
     $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
-
 
     $confirm = CRM_Utils_Array::implode(
       $config->verpSeparator,
@@ -246,11 +232,9 @@ SELECT     civicrm_email.id as email_id
       ]
     ) . "@$emailDomain";
 
-
     $group = new CRM_Contact_BAO_Group();
     $group->id = $this->group_id;
     $group->find(TRUE);
-
 
     $component = new CRM_Mailing_BAO_Component();
     $component->is_default = 1;
@@ -281,7 +265,6 @@ SELECT     civicrm_email.id as email_id
     else {
       $text = CRM_Utils_String::htmlToText($component->body_html);
     }
-
 
     $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;
@@ -315,7 +298,6 @@ SELECT     civicrm_email.id as email_id
     CRM_Mailing_BAO_Mailing::addMessageIdHeader($h, 's', $this->contact_id, $this->id, $this->hash);
 
     $mailer = &$config->getMailer();
-
 
     if (is_object($mailer)) {
       $mailer->send($email, $h, $b);
@@ -417,7 +399,6 @@ SELECT     civicrm_email.id as email_id
         $groupAdded[] = $title;
 
         /* Ask the contact for confirmation */
-
 
         $se->send_confirm_request($params['email']);
       }

@@ -37,8 +37,6 @@ class CRM_Case_XMLProcessor {
   protected static $_xml;
   public function retrieve($caseType) {
 
-
-
     // trim all spaces from $caseType
     $caseType = str_replace('_', ' ', $caseType);
     $caseType = CRM_Utils_String::munge(ucwords($caseType), '', 0);

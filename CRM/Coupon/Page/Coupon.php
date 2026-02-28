@@ -108,7 +108,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     }
     parent::run();
   }
-  
+
   public function browse() {
     // get all coupon
     $coupon = [];
@@ -274,7 +274,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         }
       }
       $coupon['discount'] = $coupon['coupon_type'] == 'percentage' ? $coupon['discount'].'%' : (int)$coupon['discount'];
-      -     $coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
+      -$coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
 
       $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed([$coupon['id']]);
       $coupon['count_max'] = $couponUses[$coupon['id']]." / ".$coupon['count_max'];
@@ -297,7 +297,6 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $controller->process();
     $controller->run();
   }
-
 
   /**
    * This function is to make a copy of a coupon, including

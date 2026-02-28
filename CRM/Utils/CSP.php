@@ -74,7 +74,6 @@ class CRM_Utils_CSP {
       'VAL_SCHEME_FS' => 'filesystem:',
     ];
 
-
   /**
    * Parsed Policies for CSP
    *

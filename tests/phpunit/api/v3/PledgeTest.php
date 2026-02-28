@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_PledgeTest extends CiviUnitTestCase {
 
@@ -109,7 +106,6 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
   }
 
   public function testGetPledge() {
-
 
     $this->_pledge = civicrm_api('pledge', 'create', $this->_params);
     $params = [
@@ -194,7 +190,6 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
     $this->assertEquals(1, $result['count']);
     $this->assertEquals(0, $emptyResult['count']);
   }
-
 
   /*
    * create 2 pledges - see if we can get by status id
@@ -339,7 +334,6 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
 
   public function testCreateCancelPledge() {
 
-
     $result = civicrm_api('pledge', 'create', $this->_params);
     $this->assertEquals(0, $result['is_error'], "in line " . __LINE__);
     $this->assertEquals(2, $result['values'][0]['status_id'], "in line " . __LINE__);
@@ -383,7 +377,6 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
     $old_frequency_unit = $original['values'][0]['pledge_frequency_unit'];
     $old_frequency_interval = $original['values'][0]['pledge_frequency_interval'];
     $old_status_id = $original['values'][0]['pledge_status'];
-
 
     //check against values in CiviUnitTestCase::createPledge()
     $this->assertEquals($old_contact_id, $this->_individualId, 'In line ' . __LINE__);

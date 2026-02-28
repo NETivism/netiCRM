@@ -34,7 +34,6 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     $this->_contactID = $this->individualCreate();
     $this->_membershipTypeID = $this->membershipTypeCreate($this->_contactID);
 
-
     require_once 'CRM/Member/PseudoConstant.php';
     CRM_Member_PseudoConstant::membershipType(NULL, TRUE);
     CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'name', TRUE);
@@ -363,7 +362,6 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_override'], 1, "In line " . __LINE__);
   }
 
-
   /**
    * Test civicrm_membership_get with proper params.
    * Memberships expected.
@@ -425,7 +423,6 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     $result = $membership['values'][$this->_membershipID];
     $this->assertEquals($membership['values'][$this->_membershipID]['status_id'], $this->_membershipStatusID, "In line " . __LINE__);
     $this->assertEquals($membership['values'][$this->_membershipID]['contact_id'], $this->_contactID, "In line " . __LINE__);
-
 
     $result = civicrm_api('Membership', 'Delete', [
       'id' => $this->_membershipID,

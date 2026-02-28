@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public $_includeGroups;
@@ -69,7 +67,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $this->_groups = FALSE;
     $this->_tags = FALSE;
     $this->_andOr = $this->_formValues['andOr'];
-
 
     //make easy to check conditions for groups and tags are
     //selected or it is empty search
@@ -338,7 +335,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         }
       }
 
-
       $sql = "CREATE TEMPORARY TABLE Ig_{$this->_tableName} ( id int PRIMARY KEY AUTO_INCREMENT,
                                                                    contact_id int,
                                                                    group_names varchar(64)) ENGINE=HEAP";
@@ -359,7 +355,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
                  SELECT              civicrm_contact.id as contact_id, ''
                  FROM                civicrm_contact";
       }
-
 
       //used only when exclude group is selected
       $includeGroup .= " LEFT JOIN Xg_{$this->_tableName} ON civicrm_contact.id = Xg_{$this->_tableName}.contact_id";

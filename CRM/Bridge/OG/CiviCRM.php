@@ -92,7 +92,6 @@ class CRM_Bridge_OG_CiviCRM {
       return;
     }
 
-
     foreach ($contactIDs as $contactID) {
       $drupalID = civicrm_uf_id_get($contactID);
       if ($drupalID) {

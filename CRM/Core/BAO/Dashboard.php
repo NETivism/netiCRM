@@ -352,7 +352,6 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
       $dashboardID = CRM_Core_DAO::singleValueQuery($query);
     }
 
-
     $dashlet = new CRM_Core_DAO_Dashboard();
 
     if (!$dashboardID) {

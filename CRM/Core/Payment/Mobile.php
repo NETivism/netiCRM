@@ -23,7 +23,6 @@
   +--------------------------------------------------------------------+
 */
 
-
 /*
  * PxPay Functionality Copyright (C) 2008 Lucas Baker, Logistic Information Systems Limited (Logis)
  * PxAccess Functionality Copyright (C) 2008 Eileen McNaughton
@@ -32,8 +31,6 @@
  * Grateful acknowledgements go to Donald Lobo for invaluable assistance
  * in creating this payment processor module
  */
-
-
 
 class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   /**
@@ -221,13 +218,13 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
       CRM_Utils_System::civiExit();
     }
     elseif ($this->_instrumentType == 'googlepay' && $provider_name == 'spgateway') {
-      $mode = $is_test ? 'test':'';
+      $mode = $is_test ? 'test' : '';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_paymentProcessor['user_name'], $mode);
       $payment = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
       $payment->doTransferCheckout($params, $component);
     }
     elseif ($this->_instrumentType == 'applepayfront' && $provider_name == 'spgateway') {
-      $mode = $is_test ? 'test':'';
+      $mode = $is_test ? 'test' : '';
       $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_paymentProcessor['user_name'], $mode);
       $payment = new CRM_Core_Payment_SPGATEWAY($mode, $paymentProcessor);
       $payment->doTransferCheckout($params, $component);
@@ -259,7 +256,6 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     $mobile_paymentProcessor_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'payment_processor_id');
     $merchantIdentifier = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor', $mobile_paymentProcessor_id, 'signature');
-
 
     if ($arg[2] == 'applepay') {
       // Refs: Document: [Requesting an Apple Pay Payment Session] https://goo.gl/CJAe4M

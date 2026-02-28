@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Logging_Schema {
   private $logs = [];
   private $tables = [];
@@ -164,15 +163,14 @@ class CRM_Logging_Schema {
 
     // add report instances
 
-
-    $bao = new CRM_Report_BAO_Instance;
+    $bao = new CRM_Report_BAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->title = ts('Contact Logging Report (Summary)');
     $bao->report_id = 'logging/contact/summary';
     $bao->permission = 'administer CiviCRM';
     $bao->insert();
 
-    $bao = new CRM_Report_BAO_Instance;
+    $bao = new CRM_Report_BAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->title = ts('Contact Logging Report (Detail)');
     $bao->report_id = 'logging/contact/detail';
@@ -258,7 +256,7 @@ class CRM_Logging_Schema {
       $queries[] = $query;
     }
 
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->executeQuery($query);
     }
@@ -279,13 +277,12 @@ class CRM_Logging_Schema {
 
     // delete report instances
 
-
-    $bao = new CRM_Report_DAO_Instance;
+    $bao = new CRM_Report_DAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->report_id = 'logging/contact/summary';
     $bao->delete();
 
-    $bao = new CRM_Report_DAO_Instance;
+    $bao = new CRM_Report_DAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->report_id = 'logging/contact/details';
     $bao->delete();
@@ -295,7 +292,7 @@ class CRM_Logging_Schema {
    * Drop triggers for all logged tables.
    */
   private function dropTriggers() {
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($this->tables as $table) {
       $dao->executeQuery("DROP TRIGGER IF EXISTS {$table}_after_insert");
       $dao->executeQuery("DROP TRIGGER IF EXISTS {$table}_after_update");

@@ -465,7 +465,7 @@ class CRM_Core_Payment_BackerTest extends CiviUnitTestCase {
         'backerFounderRelationship' => $rtypeId,
       ];
       CRM_Core_BAO_ConfigSetting::add($params);
-      $config =& CRM_Core_Config::singleton();
+      $config = &CRM_Core_Config::singleton();
       $config->backerFounderRelationship = $rtypeId;
     }
     $this->_rtypeId = $rtypeId;

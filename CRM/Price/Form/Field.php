@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * form to process actions on the field aspect of Price
  */
@@ -87,7 +84,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $this->assign('cdType', TRUE);
       return CRM_Custom_Form_CustomData::preProcess($this);
     }
-
 
     $this->_sid = CRM_Utils_Request::retrieve('sid', 'Positive', $this);
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
@@ -148,7 +144,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       // if text, retrieve price
       if ($defaults['html_type'] == 'Text') {
         $valueParams = ['price_field_id' => $this->_fid];
-
 
         CRM_Price_BAO_FieldValue::retrieve($valueParams, $fieldValues);
         foreach ($fieldValues as $key => $value) {
@@ -216,7 +211,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     // html_type
     $javascript = 'onchange="option_html_type(this.form)";';
 
-
     $htmlTypes = CRM_Price_BAO_Field::htmlTypes();
 
     $sel = $this->add(
@@ -240,7 +234,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
       $this->addElement('checkbox', 'allow_count', ts('Allow Changing Count'), NULL, ['onclick' => 'onChangeAllowCount();']);
 
-      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value']+['min' => 0]);
+      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value'] + ['min' => 0]);
       $this->addRule('max_value', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
       $this->add('textArea', 'description', ts('Description'), $attributes['description']);
@@ -602,7 +596,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
     // need the FKEY - price set id
     $params['price_set_id'] = $this->_sid;
-
 
     if ($this->_action & (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD)) {
       $fieldValues = ['price_set_id' => $this->_sid];

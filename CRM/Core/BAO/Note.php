@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * BAO object for crm_note table
  */
@@ -524,7 +522,6 @@ ORDER BY modified_date desc";
         CRM_Core_DAO::storeValues($note, $tree[$note->id]);
 
         // get name of user that created this note
-
 
         $contact = new CRM_Contact_DAO_Contact();
         $createdById = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $parentId, 'entity_id');

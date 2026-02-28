@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class contains the funtions for Case Management
  *
@@ -147,8 +144,6 @@ class CRM_Case_BAO_Case extends CRM_Case_DAO_Case {
     $caseContact->save();
 
     // add to recently viewed
-
-
 
     $caseType = CRM_Case_PseudoConstant::caseTypeName($caseContact->case_id, 'label');
     $url = CRM_Utils_System::url(
@@ -660,7 +655,6 @@ AND civicrm_case.status_id != $closedId";
     $queryParams = [];
     $result = CRM_Core_DAO::executeQuery($query, $queryParams);
 
-
     $caseStatus = CRM_Core_OptionGroup::values('case_status', FALSE, FALSE, FALSE, " AND v.name = 'Urgent' ");
 
     $resultFields = ['contact_id',
@@ -694,8 +688,6 @@ AND civicrm_case.status_id != $closedId";
     // we're going to use the usual actions, so doesn't make sense to duplicate definitions
 
     $actions = CRM_Case_Selector_Search::links();
-
-
 
     // check is the user has view/edit signer permission
     $permissions = [CRM_Core_Permission::VIEW];
@@ -777,7 +769,6 @@ AND civicrm_case.status_id != $closedId";
     if ($allCases && !CRM_Core_Permission::check('access all cases and activities')) {
       $allCases = FALSE;
     }
-
 
     $caseTypes = CRM_Case_PseudoConstant::caseType();
     $caseStatuses = CRM_Case_PseudoConstant::caseStatus();
@@ -948,7 +939,6 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
       $where .= " AND ca.is_deleted = 0";
     }
 
-
     if (CRM_Utils_Array::value('activity_type_id', $params)) {
       $where .= " AND ca.activity_type_id = " . CRM_Utils_Type::escape($params['activity_type_id'], 'Integer');
     }
@@ -1019,10 +1009,6 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
     $query .= $limit;
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
 
-
-
-
-
     $activityTypes = CRM_Case_PseudoConstant::caseActivityType(FALSE, TRUE);
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
     $activityPriority = CRM_Core_PseudoConstant::priority();
@@ -1044,7 +1030,6 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
     $restoreUrl = "{$url}&action=renew{$contextUrl}";
     $viewTitle = ts('View this activity.');
 
-
     $emailActivityTypeIDs = ['Email' => CRM_Core_OptionGroup::getValue(
       'activity_type',
       'Email',
@@ -1057,7 +1042,6 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
       ),
     ];
 
-
     $emailActivityTypeIDs = ['Email' => CRM_Core_OptionGroup::getValue(
       'activity_type',
       'Email',
@@ -1069,7 +1053,6 @@ WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id A
         'name'
       ),
     ];
-
 
     $caseDeleted = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $caseID, 'is_deleted');
 
@@ -1267,8 +1250,6 @@ GROUP BY cc.id';
       return;
     }
 
-
-
     $tplParams = $activityInfo = [];
     //if its a case activity
     if ($caseId) {
@@ -1286,10 +1267,8 @@ GROUP BY cc.id';
       $anyActivity = TRUE;
     }
 
-
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isRedact = $xmlProcessorProcess->getRedactActivityEmail();
-
 
     $xmlProcessorReport = new CRM_Case_XMLProcessor_Report();
 
@@ -1343,7 +1322,6 @@ GROUP BY cc.id';
       if (!$activitySubject) {
         $tplParams['activitySubject'] = ts('Activity') . ": " . ts("Assigned to") . " - " . $displayName;
       }
-
 
       list($result[$info['contact_id']], $subject, $message, $html) = CRM_Core_BAO_MessageTemplates::sendTemplate(
         [
@@ -1430,7 +1408,6 @@ AND        ca.is_deleted = 0";
         [1 => $file]
       ));
     }
-
 
     $result = CRM_Utils_Mail_Incoming::parse($file);
     if ($result['is_error']) {
@@ -1564,7 +1541,6 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
         self::$_exportableFields = [];
       }
 
-
       $fields = CRM_Case_DAO_Case::export();
       $fields['case_role'] = ['title' => ts('Role in Case')];
       $fields['case_type'] = ['title' => ts('Case Type'),
@@ -1609,9 +1585,6 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
   public static function getGlobalContacts(&$groupInfo) {
     $globalContacts = [];
 
-
-
-
     $settingsProcessor = new CRM_Case_XMLProcessor_Settings();
     $settings = $settingsProcessor->run();
     if (!empty($settings)) {
@@ -1648,7 +1621,7 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
     $globalContacts = self::getGlobalContacts($groupInfo);
 
     //unset values which are not required.
-    foreach ($globalContacts as $k => & $v) {
+    foreach ($globalContacts as $k => &$v) {
       unset($v['email_id']);
       unset($v['group_contact_id']);
       unset($v['status']);
@@ -1746,7 +1719,6 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
                   LEFT JOIN civicrm_contact cca ON cca.id = civicrm_relationship.contact_id_a
                   WHERE civicrm_relationship.relationship_type_id = civicrm_relationship_type.id AND {$relationshipClause}";
 
-
     $dao = CRM_Core_DAO::executeQuery($query, $queryParam);
 
     while ($dao->fetch()) {
@@ -1761,7 +1733,6 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
         $assigneContactName = $dao->assigneeContactName;
       }
     }
-
 
     $session = &CRM_Core_Session::singleton();
     $activityParams = ['source_contact_id' => $session->get('userID'),
@@ -1790,14 +1761,12 @@ AND civicrm_case.is_deleted     = {$cases['case_deleted']}";
 
     $activityParams['activity_type_id'] = $activityTypeID;
 
-
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
 
     //create case_activity record.
     $caseParams = ['activity_id' => $activity->id,
       'case_id' => $caseId,
     ];
-
 
     CRM_Case_BAO_Case::processCaseActivity($caseParams);
   }
@@ -2016,7 +1985,6 @@ INNER JOIN  civicrm_case_contact ON ( civicrm_case.id = civicrm_case_contact.cas
       return $relatedCases;
     }
 
-
     $linkActType = array_search(
       'Link Cases',
       CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name')
@@ -2058,7 +2026,6 @@ INNER JOIN  civicrm_activity relAct           ON (relCaseAct.activity_id = relAc
     if ($excludeDeleted) {
       $whereClause .= " AND ( relCase.is_deleted = 0 OR relCase.is_deleted IS NULL )";
     }
-
 
     //filter for permissioned cases.
     $filterCases = [];
@@ -2151,7 +2118,6 @@ INNER JOIN  civicrm_contact      client         ON ( client.id = relCaseContact.
       return $mainCaseIds;
     }
 
-
     $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name');
     $activityStatuses = CRM_Core_PseudoConstant::activityStatus('name');
 
@@ -2168,14 +2134,6 @@ INNER JOIN  civicrm_contact      client         ON ( client.id = relCaseContact.
         return;
       }
     }
-
-
-
-
-
-
-
-
 
     $session = CRM_Core_Session::singleton();
     $currentUserId = $session->get('userID');
@@ -2628,10 +2586,6 @@ WHERE id IN (' . CRM_Utils_Array::implode(',', $copiedActivityIds) . ')';
               //edit - contact must be source or assignee
               //view - contact must be source/assignee/target
               $isTarget = $isAssignee = $isSource = FALSE;
-
-
-
-
 
               $target = new CRM_Activity_DAO_ActivityTarget();
               $target->activity_id = $activityId;

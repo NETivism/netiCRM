@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components generic to all the contact types.
  *

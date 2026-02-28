@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -87,7 +84,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       $this->_mappingObject = $this->get('mappingObject');
     }
 
-    if (! $this->_exportColumnCount) {
+    if (!$this->_exportColumnCount) {
       if ($this->_mappingId) {
         $mapping = CRM_Core_BAO_Mapping::getMappingFields($this->_mappingId);
         $mappingFields = $mapping[0][1];
@@ -202,7 +199,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
 
     $mapperKeysOrigin = $params['mapper'][1];
     $mapperWeight = $params['weight'][1];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
 
@@ -324,6 +321,5 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       CRM_Core_BAO_Mapping::saveMappingFields($params, $saveMapping->id);
     }
   }
-
 
 }

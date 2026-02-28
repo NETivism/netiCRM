@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * Page for displaying Campaigns
  */
@@ -165,7 +158,6 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
       //CRM_Core_Action::PROFILE is used because there isn't a specific action for sign
       ];
     }
-
 
     if ($activityType == "Petition") {
       return self::$_petitionActionLinks;

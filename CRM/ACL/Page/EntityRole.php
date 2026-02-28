@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  * @package CRM
@@ -169,12 +167,10 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
    */
   public function browse() {
 
-
     // get all acl's sorted by weight
     $entityRoles = [];
     $dao = new CRM_ACL_DAO_EntityRole();
     $dao->find();
-
 
     $aclRoles = CRM_Core_OptionGroup::values('acl_role');
     $groups = CRM_Core_PseudoConstant::staticGroup();

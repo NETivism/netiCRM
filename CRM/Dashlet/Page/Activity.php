@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Main page for activity dashlet
  *
@@ -63,7 +61,6 @@ class CRM_Dashlet_Page_Activity extends CRM_Core_Page {
     }
 
     $admin = CRM_Core_Permission::check('view all activities') || CRM_Core_Permission::check('administer CiviCRM');
-
 
     $output = CRM_Core_Selector_Controller::SESSION;
 

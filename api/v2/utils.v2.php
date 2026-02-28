@@ -187,10 +187,7 @@ function _civicrm_add_formatted_param(&$values, &$params) {
      *      Custom
      */
 
-
-
   /* Cache the various object fields */
-
 
   static $fields = NULL;
 
@@ -336,7 +333,6 @@ function _civicrm_add_formatted_param(&$values, &$params) {
   if (isset($values['note'])) {
     /* add a note field */
 
-
     if (!isset($params['note'])) {
       $params['note'] = [];
     }
@@ -362,7 +358,6 @@ function _civicrm_add_formatted_param(&$values, &$params) {
 
   /* Check for custom field values */
 
-
   if (!CRM_Utils_Array::value('custom', $fields)) {
     $fields['custom'] = CRM_Core_BAO_CustomField::getFields(CRM_Utils_Array::value('contact_type', $values));
   }
@@ -370,7 +365,6 @@ function _civicrm_add_formatted_param(&$values, &$params) {
   foreach ($values as $key => $value) {
     if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
       /* check if it's a valid custom field id */
-
 
       if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $fields['custom'])) {
         return civicrm_create_error('Invalid custom field ID');
@@ -411,7 +405,7 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
 
     if (!CRM_Utils_Array::arrayKeyExists($block, $fields)) {
       $daoName = 'CRM_Core_DAO_' . $block;
-      $fields[$block] =& $daoName::fields();
+      $fields[$block] = &$daoName::fields();
     }
 
     $blockCnt = count($params[$name]);
@@ -476,7 +470,6 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
   foreach ($values as $key => $value) {
     if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
       /* check if it's a valid custom field id */
-
 
       if (CRM_Utils_Array::arrayKeyExists($customFieldID, $fields['address_custom'])) {
         $type = $fields['address_custom'][$customFieldID]['html_type'];
@@ -618,7 +611,6 @@ function _civicrm_duplicate_formatted_contact(
 function _civicrm_validate_formatted_contact(&$params) {
   /* Look for offending email addresses */
 
-
   if (CRM_Utils_Array::arrayKeyExists('email', $params)) {
     foreach ($params['email'] as $count => $values) {
       if (!is_array($values)) {
@@ -639,7 +631,6 @@ function _civicrm_validate_formatted_contact(&$params) {
   }
 
   /* Validate custom data fields */
-
 
   if (CRM_Utils_Array::arrayKeyExists('custom', $params) && is_array($params['custom'])) {
     foreach ($params['custom'] as $key => $custom) {
@@ -1605,7 +1596,6 @@ function civicrm_api_check_permission($api, $params, $throw = FALSE) {
   }
   return TRUE;
 }
-
 
 // at some point we should unify this with
 // _civicrm_custom_format_params

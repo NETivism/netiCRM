@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Component
  */
@@ -93,7 +91,6 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     return $errors;
   }
 
-
   private function _getComponentSelectValues() {
     $ret = [];
 
@@ -107,7 +104,6 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
 
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
-
 
     $params['enableComponentIDs'] = [];
     foreach ($params['enableComponents'] as $name) {

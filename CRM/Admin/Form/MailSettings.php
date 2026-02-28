@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class handles mail account settings.
  *
@@ -108,7 +105,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->add('select', 'is_default', ts('Used For?'), $usedFor);
     $this->addFormRule(['CRM_Admin_Form_MailSettings', 'formRule'], $this);
   }
-  
+
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($fields['is_default'] != 1 && !empty($fields['localpart'])) {
@@ -139,7 +136,6 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
     return $defaults;
   }
-  
 
   /**
    * Function to process the form

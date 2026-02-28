@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Main page for viewing activities
  *
@@ -57,7 +55,6 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
    * @access public
    */
   public function browse() {
-
 
     $output = CRM_Core_Selector_Controller::SESSION;
 
@@ -140,7 +137,7 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
         $wrapper = new CRM_Utils_Wrapper();
         $arguments = ['attachUpload' => 1];
         return $wrapper->run('CRM_Contact_Form_Task_PDF', ts('Create PDF Letter'), $arguments);
-      
+
       case $SMSTypeValue:
         $wrapper = new CRM_Utils_Wrapper();
         $arguments = [];

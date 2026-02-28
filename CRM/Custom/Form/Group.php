@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form to process actions on the set aspect of Custom Data
  */
@@ -220,11 +218,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
 
     //Fix for code alignment, CRM-3058
 
-
-
-
-
-
     $contactTypes = ['Contact', 'Individual', 'Household', 'Organization'];
     $this->assign('contactTypes', json_encode($contactTypes));
     $extends = CRM_Core_SelectValues::customGroupExtends();
@@ -338,7 +331,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
         }
       }
     }
-
 
     $cSubTypes = CRM_Core_Component::contactSubTypes();
 
@@ -514,7 +506,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
         $defaults['extends'][1] = [0 => ''];
       }
 
-
       $subName = CRM_Utils_Array::value('extends_entity_column_id', $defaults);
 
       if ($extends == 'Relationship' && !empty($this->_subtypes)) {
@@ -547,7 +538,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       if ($this->_defaults['extends'][0] != $params['extends'][0]) {
         $params['overrideFKConstraint'] = 1;
       }
-      
+
       // refs #30705, special case for participant
       if ($params['extends'][0] === 'Participant') {
         $params['extends_entity_column_id'] = 'null';

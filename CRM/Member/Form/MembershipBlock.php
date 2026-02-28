@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * form to process actions on Membership
  */
@@ -88,7 +85,6 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    * @access public
    */
   public function buildQuickForm() {
-
 
     $membershipTypes = CRM_Member_BAO_MembershipType::getMembershipTypes();
 

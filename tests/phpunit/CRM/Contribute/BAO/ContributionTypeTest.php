@@ -28,7 +28,7 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Contribute/BAO/ContributionType.php';
 
 class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase {
-    
+
   public function get_info() {
     return [
                  'name'        => 'ContributionType BAOs',
@@ -36,12 +36,11 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
-    
- 
+
   /**
    * check method add()
    */
@@ -60,7 +59,7 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase {
       'id',
       'Database check on updated contribution type record.'
     );
-        
+
     $this->assertEquals($result, 'Donations', 'Verify contribution type name.');
   }
 
@@ -93,7 +92,7 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase {
     $contributionType = CRM_Contribute_BAO_ContributionType::add($params, $ids);
     $result = CRM_Contribute_BAO_ContributionType::setIsActive($contributionType->id, 0);
     $this->assertEquals($result, TRUE, 'Verify contribution type record updation for is_active.');
-        
+
     $isActive = $this->assertDBNotNull(
       'CRM_Contribute_BAO_ContributionType',
       $contributionType->id,
@@ -114,12 +113,12 @@ class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase {
                      ];
     $ids = [];
     $contributionType = CRM_Contribute_BAO_ContributionType::add($params, $ids);
-        
+
     CRM_Contribute_BAO_ContributionType::del($contributionType->id);
     $params = ['id' => $contributionType->id ];
     $result = CRM_Contribute_BAO_ContributionType::retrieve($params, $defaults);
     $this->assertEquals(empty($result), TRUE, 'Verify contribution types record deletion.');
-        
+
   }
 
 }

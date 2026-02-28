@@ -1,6 +1,6 @@
 <?php
 class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
-  
+
   public $_batch;
   public $_prefix;
   public $_defaults;
@@ -213,10 +213,10 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
       $plus = mt_rand(1, 100);
       $try = 0;
       while (count($generated) < $numGenerate) {
-        $seed = $seed+mt_rand(1, 10);
-        for ($i = 10000; $i < 10000+$numGenerate; $i++) {
+        $seed = $seed + mt_rand(1, 10);
+        for ($i = 10000; $i < 10000 + $numGenerate; $i++) {
           $code = '';
-          $n = $i*$seed+$plus;
+          $n = $i * $seed + $plus;
           $code = str_replace(['=','+','/'], '', base64_encode($n));
           $code  = str_shuffle($code);
           $generated[$code] = 1;

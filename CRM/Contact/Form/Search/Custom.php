@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
 
   public $selector;
@@ -44,7 +43,6 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     $this->set('searchFormName', 'Custom');
 
     $this->set('context', 'custom');
-
 
     $csID = CRM_Utils_Request::retrieve('csid', 'Integer', $this);
     $ssID = CRM_Utils_Request::retrieve('ssID', 'Integer', $this);
@@ -75,7 +73,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     parent::preProcess();
 
     if (!empty($this->selector->_search)) {
-      $this->_customClass =& $this->selector->_search;
+      $this->_customClass = &$this->selector->_search;
     }
     else {
       $objectName = $this->_customSearchClass;
@@ -134,7 +132,6 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
   }
 
   public function getTemplateFileName() {
-
 
     $ext = new CRM_Core_Extensions();
 

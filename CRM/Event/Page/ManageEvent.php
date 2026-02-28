@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of events
  */
@@ -203,7 +200,6 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
 
     $this->search();
 
-
     $params = [];
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
     $this->_searchResult = CRM_Utils_Request::retrieve('searchResult', 'Boolean', $this);
@@ -276,12 +272,10 @@ ORDER BY start_date desc
           TRUE
         );
 
-
         $manageEvent[$dao->id]['friend'] = CRM_Friend_BAO_Friend::getValues($params);
       }
     }
     $this->assign('rows', $manageEvent);
-
 
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1', 'label');
     $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 0', 'label');
@@ -384,7 +378,6 @@ ORDER BY start_date desc
   }
 
   public function pager($whereClause, $whereParams) {
-
 
     $params['status'] = ts('Event %%StatusMessage%%');
     $params['csvString'] = NULL;

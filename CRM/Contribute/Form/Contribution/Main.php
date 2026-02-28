@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for processing a ontribution
  *
@@ -300,8 +297,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       $fields["email-{$this->_bltID}"] = 1;
       $fields["email-Primary"] = 1;
 
-
-
       CRM_Core_BAO_UFGroup::setProfileDefaults($contactID, $fields, $this->_defaults);
       // refs #29618, add mask on default personal data
       if (!empty($this->_originalId) && empty($this->_ppType)) {
@@ -343,7 +338,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         if (!is_numeric($payment_processor)) {
           $this->set('type', CRM_Utils_Array::value('payment_processor', $_POST));
           $this->set('mode', $this->_mode);
-
 
           CRM_Core_Payment_ProcessorForm::preProcess($this);
           CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
@@ -532,7 +526,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         $returnProperties
       );
 
-
       $paymentStatusTypes = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
       $duePayment = FALSE;
       foreach ($statuses as $payId => $value) {
@@ -670,7 +663,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
           $isTest = 1;
         }
 
-
         $this->_separateMembershipPayment = CRM_Member_BAO_Membership::buildMembershipBlock(
           $this,
           $this->_id,
@@ -699,7 +691,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     ) {
       $this->buildAmount($this->_separateMembershipPayment);
       if ($this->_values['is_monetary'] &&
-        $this->_values['is_recur']&&
+        $this->_values['is_recur'] &&
         !empty($this->_paymentProcessors) &&
         is_array($this->_paymentProcessors)
       ) {
@@ -1073,7 +1065,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
       CRM_Core_BAO_Location::getValues($entityBlock, $this->_defaults);
     }
 
-
     if ($this->_values['is_for_organization'] != 2) {
       $attributes = ['onclick' =>
         "return showHideByValue('is_for_organization','true','for_organization','block','radio',false);",
@@ -1273,7 +1264,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
         $errors['_qf_default'] = ts("Select at least one option from Contribution(s).");
       }
 
-
       CRM_Price_BAO_Set::processAmount(
         $self->_values['fee'],
         $fields,
@@ -1418,7 +1408,6 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     if (CRM_Utils_Array::value('selectMembership', $fields) &&
       $fields['selectMembership'] != 'no_thanks'
     ) {
-
 
       $memTypeDetails = CRM_Member_BAO_MembershipType::getMembershipTypeDetails($fields['selectMembership']);
       if ($self->_values['amount_block_is_active'] &&

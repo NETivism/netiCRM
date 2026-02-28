@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -296,7 +289,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-
     //to save the current mappings
     if (!$this->get('savedMapping')) {
       $saveDetailsName = ts('Save this field mapping');
@@ -443,7 +435,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $softCreditFields['contact_id'] = ts('Contact ID');
     $softCreditFields['external_identifier'] = ts('External Identifier');
     $sel2['soft_credit'] = $softCreditFields;
-
 
     $pcpCreatorFields['pcp_contact_id'] = ts('Contact ID');
     $pcpCreatorFields['pcp_external_identifier'] = ts('External Identifier');
@@ -720,7 +711,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         'contribution_type' => ts('Contribution Type'),
       ];
 
-
       foreach ($requiredFields as $field => $title) {
         if (!in_array($field, $importKeys)) {
           if ($field == 'contribution_contact_id') {
@@ -818,7 +808,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $pcpCreatorFieldsWords = $this->get('pcpCreatorFieldsWords');
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);

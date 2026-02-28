@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'api/v2/Participant.php';
 
 require_once 'CiviTest/CiviUnitTestCase.php';
@@ -466,7 +464,6 @@ class api_v2_ParticipantTest extends CiviUnitTestCase {
     $participant = &civicrm_participant_update($params);
     $this->assertNotEquals($participant['is_error'], 1);
 
-
     if (!$participant['is_error']) {
       $params['id'] = CRM_Utils_Array::value('id', $participant);
 
@@ -480,8 +477,6 @@ class api_v2_ParticipantTest extends CiviUnitTestCase {
     // Cleanup created participant records.
     $result = $this->participantDelete($params['id']);
   }
-
-
 
   ///////////////// civicrm_participant_delete methods
 
@@ -662,7 +657,6 @@ class api_v2_ParticipantTest extends CiviUnitTestCase {
     // delete created contribution type
     $this->contributionTypeDelete();
   }
-
 
   ///////////////// civicrm_participant_payment_update methods
 

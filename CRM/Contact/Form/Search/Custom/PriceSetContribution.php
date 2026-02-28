@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public static $_primaryIDName = 'entity_id';

@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 abstract class CRM_Contribute_Import_Parser {
   /**
    * @var mixed[]
@@ -373,7 +368,6 @@ abstract class CRM_Contribute_Import_Parser {
       $this->_activeFieldCount = count($this->_activeFields);
     }
 
-
     // this is for import progress indicator
     if ($statusID) {
       $skip = 50;
@@ -387,7 +381,7 @@ abstract class CRM_Contribute_Import_Parser {
 
       $startTimestamp = $currTimestamp = $prevTimestamp = time();
     }
-    
+
     // get the contents of the temp. import table
     $query = "SELECT * FROM $tableName";
     if ($mode == self::MODE_IMPORT) {

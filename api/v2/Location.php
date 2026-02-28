@@ -1,7 +1,6 @@
 <?php
 // $Id: Location.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -141,7 +140,7 @@ function civicrm_location_update($params) {
     foreach ([
       'email', 'phone', 'im', 'address', 'openid'] as $name) {
       if (isset($params[$name]) && is_array($params[$name])) {
-        foreach ($params[$name] as $count => & $values) {
+        foreach ($params[$name] as $count => &$values) {
           $locName = CRM_Utils_Array::value('location_type', $values);
           $LocTypeId = CRM_Utils_Array::value('location_type_id', $values);
           if ($locName && !in_array($locName, $locationTypes)) {
@@ -405,7 +404,7 @@ function _civicrm_location_add(&$params, $locationTypeId = NULL) {
       return civicrm_create_error($errorMsg);
     }
 
-    foreach ($contact[$name] as $count => & $values) {
+    foreach ($contact[$name] as $count => &$values) {
       if ($primaryBlockIndex && ($count != $primaryBlockIndex)) {
         $values['is_primary'] = FALSE;
       }
@@ -544,7 +543,7 @@ function _civicrm_location_update($params, $locations) {
       return civicrm_create_error($errorMsg);
     }
 
-    foreach ($contact[$name] as $count => & $values) {
+    foreach ($contact[$name] as $count => &$values) {
       if ($primaryBlockIndex && ($count != $primaryBlockIndex)) {
         $values['is_primary'] = FALSE;
       }
@@ -654,7 +653,6 @@ function &_civicrm_location_get($contact, $locationTypes = [
   else {
     $locValues = $locations;
   }
-
 
   // CRM-4800
   if ('2.0' == CRM_Utils_Array::value('location_format', $contact)) {
@@ -805,7 +803,7 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
   $firstBlockCount = NULL;
   foreach ($blocks as $block) {
     $daoName = 'CRM_Core_DAO_' . $block;
-    $fields =& $daoName::fields();
+    $fields = &$daoName::fields();
     $name = strtolower($block);
     $blockCount = 0;
     if (CRM_Utils_Array::value($name, $params)) {
@@ -956,7 +954,7 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
       return civicrm_create_error($errorMsg);
     }
 
-    foreach ($params[$name] as $count => & $values) {
+    foreach ($params[$name] as $count => &$values) {
       if ($primaryBlockIndex && ($count != $primaryBlockIndex)) {
         $values['is_primary'] = FALSE;
       }

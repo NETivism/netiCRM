@@ -142,7 +142,6 @@ GROUP BY contact.id
     }
   }
 
-
   public function tempFrom() {
     $sub_where_clauses = [];
     $sub_where_clauses[] = 'co.is_test = 0';
@@ -192,7 +191,7 @@ GROUP BY contact.id
 
   public function setDefaultValues() {
     return [
-      'receive_date_from' => date('Y-m-01', time() - 86400*90),
+      'receive_date_from' => date('Y-m-01', time() - 86400 * 90),
       'recurring' => 2,
     ];
   }
@@ -235,7 +234,6 @@ GROUP BY contact.id
     );
     return $dao->N;
   }
-
 
   /**
    * Construct the search query

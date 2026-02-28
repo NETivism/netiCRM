@@ -76,7 +76,6 @@ function civicrm_api3_activity_create($params) {
     return $errors;
   }
 
-
   // processing for custom data
   $values = [];
   _civicrm_api3_custom_format_params($params, $values, 'Activity');
@@ -321,7 +320,6 @@ function _civicrm_api3_activity_check_params(&$params) {
       }
     }
 
-
     $sql = '
 SELECT  count(*)
   FROM  civicrm_contact
@@ -330,7 +328,6 @@ SELECT  count(*)
       return civicrm_api3_create_error('Invalid ' .  ' Contact Id');
     }
   }
-
 
   $activityIds = ['activity' => CRM_Utils_Array::value('id', $params),
     'parent' => CRM_Utils_Array::value('parent_id', $params),
@@ -344,7 +341,6 @@ SELECT  count(*)
       return civicrm_api3_create_error('Invalid ' . ucfirst($id) . ' Id');
     }
   }
-
 
   require_once 'CRM/Core/PseudoConstant.php';
   $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
@@ -392,13 +388,10 @@ SELECT  count(*)
     }
   }
 
-
-
   // check for activity duration minutes
   if (isset($params['duration_minutes']) && !is_numeric($params['duration_minutes'])) {
     return civicrm_api3_create_error('Invalid Activity Duration (in minutes)');
   }
-
 
   //if adding a new activity & date_time not set make it now
   if (!CRM_Utils_Array::value('id', $params) &&

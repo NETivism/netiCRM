@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Tag
  *
@@ -80,7 +78,6 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
         $this->_isTagSet = TRUE;
       }
 
-
       $allTag = ['' => '- ' . ts('select') . ' -'] + CRM_Core_BAO_Tag::getTagsNotInTagset();
 
       if ($this->_id) {
@@ -115,7 +112,6 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
       $this->add('checkbox', 'is_selectable', ts("If it's a tag or a category"));
 
       $isReserved = $this->add('checkbox', 'is_reserved', ts('Reserved?'));
-
 
       $usedFor = $this->add(
         'select',

@@ -31,7 +31,7 @@ class PaypalPro extends PHPUnit_Framework_Testcase {
     $paymentProcessor->save();
     return $paymentProcessor->id;
   }
-  
+
   /*
    * Helper function to delete a PayPal Pro
    * payment processor

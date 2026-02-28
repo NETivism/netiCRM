@@ -61,7 +61,6 @@ class CRM_Activity_BAO_ActivityTargetTest extends CiviUnitTestCase {
     $this->assertSame($target, [ ], 'No targets returned');
   }
 
-
   public function testRetrieveTargetIdsByActivityIdOneID() {
     $activity = $this->activityCreate();
 

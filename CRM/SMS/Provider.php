@@ -113,7 +113,6 @@ abstract class CRM_SMS_Provider {
       $providerClass = $providerName;
       $providerFile = str_replace('_', '/', $providerName);
 
-
       self::$_singleton[$cacheKey] = $providerClass::singleton($providerParams, $force);
     }
     return self::$_singleton[$cacheKey];

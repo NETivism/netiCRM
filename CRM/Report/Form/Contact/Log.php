@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
 
   public $activityTypes;

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Grant extends CRM_Report_Form {
 
   /**

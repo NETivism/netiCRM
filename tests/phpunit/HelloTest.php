@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /**
  * @file HelloTest.php
  *
@@ -43,7 +42,6 @@
 class HelloTest extends PHPUnit_Framework_TestCase {
   // contains the object handle of the string class
   public $abc;
-
 
   public function __construct($name = NULL) {
     parent::__construct($name);

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Used for displaying results
  *

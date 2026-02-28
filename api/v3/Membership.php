@@ -112,7 +112,6 @@ function civicrm_api3_membership_create($params) {
     }
   }
 
-
   $values = [];
   $error = _civicrm_api3_membership_format_params($params, $values);
 
@@ -121,7 +120,6 @@ function civicrm_api3_membership_create($params) {
   }
   _civicrm_api3_custom_format_params($params, $values, 'Membership');
   $params = array_merge($params, $values);
-
 
   $action = CRM_Core_Action::ADD;
   // we need user id during add mode
@@ -137,7 +135,6 @@ function civicrm_api3_membership_create($params) {
 
   //need to pass action to handle related memberships.
   $params['action'] = $action;
-
 
   $membershipBAO = CRM_Member_BAO_Membership::create($params, $ids, TRUE);
 
@@ -208,7 +205,6 @@ function civicrm_api3_membership_get($params) {
     $membershipValues = _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params, FALSE);
   }
 
-
   if (empty($membershipValues)) {
     # No results is NOT an error!
     return civicrm_api3_create_success($membershipValues, $params);
@@ -260,7 +256,6 @@ function civicrm_api3_membership_get($params) {
   return civicrm_api3_create_success($members, $params, 'membership', 'get');
 
 }
-
 
 /**
  * @deprecated

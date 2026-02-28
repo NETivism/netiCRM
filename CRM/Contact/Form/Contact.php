@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components generic to all the contact types.
  *
@@ -388,7 +383,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       $defaults['current_employer_id'] = CRM_Utils_Array::value('org_id', $currentEmployer[$this->_contactId]);
       $this->assign('currentEmployer', $defaults['current_employer_id']);
 
-      foreach ($defaults['email'] as $dontCare => & $val) {
+      foreach ($defaults['email'] as $dontCare => &$val) {
         if (isset($val['signature_text'])) {
           $val['signature_text_hidden'] = $val['signature_text'];
         }
@@ -440,7 +435,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       // build street address, CRM-5450.
       if ($this->_parseStreetAddress) {
         $parseFields = ['street_address', 'street_number', 'street_name', 'street_unit'];
-        foreach ($defaults['address'] as $cnt => & $address) {
+        foreach ($defaults['address'] as $cnt => &$address) {
           $streetAddress = NULL;
           foreach (['street_number', 'street_number_suffix', 'street_name', 'street_unit'] as $fld) {
             if (in_array($fld, ['street_name', 'street_unit'])) {
@@ -511,7 +506,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     sort($locationTypeKeys);
 
     // get the default location type
-
 
     $locationType = CRM_Core_BAO_LocationType::getDefault();
 
@@ -777,7 +771,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
         if (!empty($invalidStreetNumbers)) {
           $first = $invalidStreetNumbers[0];
-          foreach ($invalidStreetNumbers as & $num) {
+          foreach ($invalidStreetNumbers as &$num) {
             $num = CRM_Contact_Form_Contact::ordinalNumber($num);
           }
           $errors["address[$first][street_number]"] = ts('The street number you entered for the %1 address block(s) is not in an expected format. Street numbers may include numeric digit(s) followed by other characters. You can still enter the complete street address (unparsed) by clicking "Edit Complete Street Address".', [1 => CRM_Utils_Array::implode(', ', $invalidStreetNumbers)]);
@@ -974,7 +968,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       CRM_Utils_Hook::pre('create', $params['contact_type'], NULL, $params);
     }
 
-
     $customFields = CRM_Core_BAO_CustomField::getFields($params['contact_type'], FALSE, TRUE);
 
     //CRM-5143
@@ -1039,7 +1032,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // Allow un-setting of location info, CRM-5969
     $params['updateBlankLocInfo'] = TRUE;
 
-
     $contact = &CRM_Contact_BAO_Contact::create($params, TRUE, FALSE, TRUE);
 
     // set the contact ID
@@ -1075,10 +1067,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     CRM_Core_Session::setStatus($statusMsg);
 
-
     // add the recently viewed contact
     $displayName = CRM_Contact_BAO_Contact::displayName($contact->id);
-
 
     $recentOther = [];
 
@@ -1190,11 +1180,9 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // if this is a forced save, ignore find duplicate rule
     if (!CRM_Utils_Array::value('_qf_Contact_upload_duplicate', $fields)) {
 
-
       $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, $contactType);
       $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $contactType, 'Fuzzy', [$contactID]);
       if ($ids) {
-
 
         $contactLinks = CRM_Contact_BAO_Contact_Utils::formatContactIDSToLinks($ids, TRUE, TRUE, $contactID);
 
@@ -1235,8 +1223,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
         $errors['_qf_default'] = $duplicateContactsLinks;
 
-
-
         // let smarty know that there are duplicates
         $template = CRM_Core_Smarty::singleton();
         $template->assign('isDuplicate', 1);
@@ -1276,10 +1262,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       return $parseSuccess;
     }
 
-
-
     $buildStreetAddress = FALSE;
-    foreach ($params['address'] as $instance => & $address) {
+    foreach ($params['address'] as $instance => &$address) {
       $parseFieldName = 'street_address';
       foreach (['street_number', 'street_name', 'street_unit'] as $fld) {
         if (CRM_Utils_Array::value($fld, $address)) {
@@ -1437,11 +1421,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         $userId = $contactId;
       }
 
-
-
-
-
-
       // get deceased status id
       $allStatus = CRM_Member_PseudoConstant::membershipStatus();
       $deceasedStatusId = array_search('Deceased', $allStatus);
@@ -1479,7 +1458,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
           'modified_id' => $userId,
           'modified_date' => date('Ymd'),
         ];
-
 
         CRM_Member_BAO_MembershipLog::add($membershipLog, CRM_Core_DAO::$_nullArray);
 

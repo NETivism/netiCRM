@@ -25,10 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
-
 class CRM_Core_Session {
 
   /**
@@ -96,7 +92,7 @@ class CRM_Core_Session {
    * @static  */
   public static function &singleton() {
     if (self::$_singleton === NULL) {
-      self::$_singleton = new CRM_Core_Session;
+      self::$_singleton = new CRM_Core_Session();
     }
     return self::$_singleton;
   }
@@ -118,13 +114,13 @@ class CRM_Core_Session {
       // CRM-9483
       if (php_sapi_name() !== 'cli') {
         CRM_Core_Config::singleton()->userSystem->sessionStart();
-        $this->_session =& $_SESSION;
+        $this->_session = &$_SESSION;
         if ($isRead) {
           return;
         }
       }
       else {
-        $this->_session =& $_SESSION;
+        $this->_session = &$_SESSION;
       }
     }
 
@@ -328,13 +324,13 @@ class CRM_Core_Session {
     }
 
     if (empty($prefix)) {
-      $session =& $this->_session[$this->_key];
+      $session = &$this->_session[$this->_key];
     }
     else {
       if (empty($this->_session[$this->_key][$prefix])) {
         return NULL;
       }
-      $session =& $this->_session[$this->_key][$prefix];
+      $session = &$this->_session[$this->_key][$prefix];
     }
 
     return CRM_Utils_Array::value($name, $session);
@@ -552,7 +548,6 @@ class CRM_Core_Session {
       self::$_managedNames = array_merge(self::$_managedNames, $names);
     }
 
-
     CRM_Core_BAO_Cache::restoreSessionFromCache($names);
   }
 
@@ -566,7 +561,6 @@ class CRM_Core_Session {
       return;
     }
     $ran++;
-
 
     CRM_Core_BAO_Cache::storeSessionToCache(self::$_managedNames, $reset);
 

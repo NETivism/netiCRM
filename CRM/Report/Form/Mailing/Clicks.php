@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
 
   /**
@@ -357,7 +356,6 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -367,7 +365,6 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
   }
 
   public function mailing_select() {
-
 
     $data = [];
     $mailing = new CRM_Mailing_BAO_Mailing();

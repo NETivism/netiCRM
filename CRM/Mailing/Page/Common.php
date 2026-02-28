@@ -33,12 +33,9 @@
  *
  */
 
-
-
-
 class CRM_Mailing_Page_Common extends CRM_Core_Page {
   protected $_type = NULL;
-  
+
   public function run() {
 
     $job_id = CRM_Utils_Request::retrieve('jid', 'Integer', CRM_Core_DAO::$_nullObject);
@@ -52,8 +49,6 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     ) {
       CRM_Core_Error::fatal(ts("Missing input parameters"));
     }
-
-
 
     // verify that the three numbers above match
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
@@ -88,7 +83,6 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     $this->assign('display_name', $displayName);
     $this->assign('email', $email);
     $this->assign('confirm', $confirm);
-
 
     $groups = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_mailing($job_id, $queue_id, $hash, TRUE);
     $this->assign('groups', $groups);

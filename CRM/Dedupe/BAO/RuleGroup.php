@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * The CiviCRM duplicate discovery engine is based on an
  * algorithm designed by David Strauss <david@fourkitchens.com>.
@@ -94,8 +92,6 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
       $supportedTables = ['civicrm_address', 'civicrm_contact', 'civicrm_email',
         'civicrm_im', 'civicrm_note', 'civicrm_openid', 'civicrm_phone',
       ];
-
-
 
       foreach (['Individual', 'Organization', 'Household'] as $ctype) {
         // take the table.field pairs and their titles from importableFields() if the table is supported
@@ -207,7 +203,6 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     // create temp table
     $dao = new CRM_Core_DAO();
     $dao->query($tempTableQuery);
-
 
     CRM_Utils_Hook::dupeQuery($this, 'table', $tableQueries);
 

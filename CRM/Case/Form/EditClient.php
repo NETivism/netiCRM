@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class assigns the current case to another client
  *

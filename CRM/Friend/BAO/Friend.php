@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains the funtions for Friend
  *
@@ -119,8 +117,6 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
     $frndParams['entity_table'] = $params['entity_table'];
     self::getValues($frndParams);
 
-
-
     $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', 'Tell a Friend', 'value', 'name');
 
     //create activity
@@ -139,7 +135,6 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
 
     //friend contacts creation
-
 
     foreach ($contactParams as $key => $value) {
 
@@ -309,7 +304,6 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
     if (!CRM_Utils_Array::value('email_from', $values)) {
       $values['email_from'] = $email;
     }
-
 
     foreach ($values['email'] as $displayName => $emailTo) {
       if ($emailTo) {

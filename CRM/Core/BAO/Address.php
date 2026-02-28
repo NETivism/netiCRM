@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This is class to handle address related functions
  */
@@ -174,7 +172,6 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     if ($address->id) {
       if (!$customFields) {
 
-
         $customFields = CRM_Core_BAO_CustomField::getFields('Address', FALSE, TRUE);
       }
       if (!empty($customFields)) {
@@ -301,7 +298,6 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       }
     }
 
-
     // currently copy values populates empty fields with the string "null"
     // and hence need to check for the string null
     if (isset($params['state_province_id']) &&
@@ -353,7 +349,6 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     }
 
     $config = CRM_Core_Config::singleton();
-
 
     $asp = CRM_Core_BAO_Preferences::value('address_standardization_provider');
     // clean up the address via USPS web services if enabled
@@ -741,7 +736,6 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     	 *  default is en_US
          */
 
-
     $supportedLocalesForParsing = ['en_US', 'en_CA', 'fr_CA'];
     if (!$locale) {
       $locale = $config->lcMessages;
@@ -978,7 +972,6 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
       'contact_check' => [$sharedContactId => TRUE],
     ];
 
-
     list($valid, $invalid, $duplicate,
       $saved, $relationshipIds
     ) = CRM_Contact_BAO_Relationship::create($relationshipParams, $cid);
@@ -1099,7 +1092,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
         }
       }
       if (count($values) > 2 || !empty($values['street_address'])) {
-        $dao = new CRM_Core_BAO_Address;
+        $dao = new CRM_Core_BAO_Address();
         $dao->copyValues($values);
         if ($dao->find(TRUE)) {
           $params['id'] = $dao->id;

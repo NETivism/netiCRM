@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Business objects for managing price fields.
  *
@@ -83,8 +81,6 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    */
   public static function create(&$params, $ids) {
 
-
-
     $transaction = new CRM_Core_Transaction();
 
     $priceField = &self::add($params, $ids);
@@ -100,7 +96,6 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
     if ($priceField->html_type == 'Text') {
       $maxIndex = 1;
-
 
       $fieldValue = new CRM_Price_DAO_FieldValue();
       $fieldValue->price_field_id = $priceField->id;
@@ -589,7 +584,6 @@ WHERE
       // reorder the weight before delete
       $fieldValues = ['price_set_id' => $field->price_set_id];
 
-
       CRM_Utils_Weight::delWeight('CRM_Price_DAO_Field', $field->id, $fieldValues);
 
       // now delete the field
@@ -653,7 +647,6 @@ WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
       }
 
       $selectedAmounts = [];
-
 
       foreach ($htmlTypes as $fieldId => $type) {
         $options = [];
@@ -776,7 +769,6 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
     ];
     $copy = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_Field', ['id' => $fid], NULL, $fieldsFix);
     $fieldValues = &CRM_Core_DAO::copyGeneric('CRM_Price_DAO_FieldValue', ['price_field_id' => $fid], ['price_field_id' => $copy->id]);
-
 
     CRM_Utils_Hook::copy('PriceField', $copy);
     return $copy;

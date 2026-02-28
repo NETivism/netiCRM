@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the common functionality for sending email to
  * one or a group of contact ids. This class is reused by all the search
@@ -165,8 +163,6 @@ class CRM_Contact_Form_Task_EmailCommon {
         'preferred_mail_format' => 1,
       ];
 
-
-
       list($form->_contactDetails) = CRM_Mailing_BAO_Mailing::getDetails($form->_contactIds, $returnProperties, FALSE, FALSE);
 
       // make a copy of all contact details
@@ -208,7 +204,6 @@ class CRM_Contact_Form_Task_EmailCommon {
     $form->add('text', 'subject', ts('Subject'), 'size=50 maxlength=254', TRUE);
 
     $form->add('select', 'fromEmailAddress', ts('From'), $form->_fromEmails, TRUE);
-
 
     CRM_Mailing_BAO_Mailing::commonCompose($form);
 

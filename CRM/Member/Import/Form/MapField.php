@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -248,7 +241,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-
     //to save the current mappings
     if (!$this->get('savedMapping')) {
       $saveDetailsName = ts('Save this field mapping');
@@ -315,7 +307,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     $dataPatterns = $this->get('dataPatterns');
     $hasLocationTypes = $this->get('fieldTypes');
 
-
     /* Initialize all field usages to false */
 
     $this->_location_types = &CRM_Core_PseudoConstant::locationType();
@@ -359,7 +350,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       unset($sel1['membership_id']);
     }
 
-    
     // start of soft credit section
     // get contact type for this import
     $contactTypeId = $this->get('contactType');
@@ -627,7 +617,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       }
     }
 
-
     if (CRM_Utils_Array::value('saveMapping', $fields)) {
       $nameField = CRM_Utils_Array::value('saveMappingName', $fields);
       if (empty($nameField)) {
@@ -685,7 +674,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     $mapperPhoneType = [];
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);
@@ -819,7 +808,6 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
         $saveMappingFields->column_number = $i;
         $saveMappingFields->name = $mapper[$i];
 
-        
         if (CRM_Utils_Array::value('0', $mapperKeys[$i]) == 'url') {
           $saveMappingFields->website_type_id = $mapperKeys[$i][1] ?? NULL;
         }

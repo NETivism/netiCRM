@@ -38,11 +38,11 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
   }
-    
+
   /**
    * add() method (create and update modes)
    */
@@ -55,10 +55,10 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase {
                      'location_type_id' => 1,
                      'phone_type'       => 'Mobile',
                      'contact_id'       => $contactId ];
-        
+
     require_once 'CRM/Core/BAO/Phone.php';
     CRM_Core_BAO_Phone::add($params);
-        
+
     $phoneId = $this->assertDBNotNull(
       'CRM_Core_DAO_Phone',
       $contactId,
@@ -82,9 +82,9 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase {
     $params = [ 'id'           => $phoneId,
                      'contact_id'   => $contactId,
                      'phone'        => '(415) 222-5432' ];
-        
+
     CRM_Core_BAO_Phone::add($params);
-        
+
     $this->assertDBCompareValue(
       'CRM_Core_DAO_Phone',
       $phoneId,
@@ -97,7 +97,6 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase {
     Contact::delete($contactId);
   }
 
-
   /**
    * allPhones() method - get all Phones for our contact, with primary Phone first
    */
@@ -107,21 +106,21 @@ class CRM_Core_BAO_PhoneTest extends CiviUnitTestCase {
                              'last_name'  => 'Smith',
                              'phone-1'    => '(415) 222-1011 x 221',
                              'phone-2'    => '(415) 222-5432' ];
-        
+
     $contactId = Contact::createIndividual($contactParams);
 
     require_once 'CRM/Core/BAO/Phone.php';
     $Phones = CRM_Core_BAO_Phone::allPhones($contactId);
 
     $this->assertEquals(count($Phones), 2, 'Checking number of returned Phones.');
-        
+
     $firstPhoneValue = array_slice($Phones, 0, 1);
 
     // Since we're not passing in a location type to createIndividual above, CRM_Contact_BAO_Contact::createProfileContact uses default location
     // type for first phone and sets that to primary.
     $this->assertEquals('(415) 222-1011 x 221', $firstPhoneValue[0]['phone'], "Confirm primary Phone value ( {$firstPhoneValue[0]['phone']} ).");
     $this->assertEquals(1, $firstPhoneValue[0]['is_primary'], 'Confirm first Phone is primary.');
-        
+
     Contact::delete($contactId);
   }
 

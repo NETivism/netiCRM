@@ -296,10 +296,10 @@ class CRM_Mailing_BAO_Query {
         if (!empty($subWhere)) {
           // Use a more efficient subquery approach to filter by mailing date
           $subQuery = "SELECT cmj.mailing_id FROM civicrm_mailing_job as cmj WHERE cmj.is_test != 1 AND cmj.parent_id IS NULL AND ".implode(' AND ', $subWhere)." GROUP BY cmj.mailing_id";
-          
+
           // Set the query directly on mailing_id for better performance
           $query->_where[$grouping]['mailing_date'] = "civicrm_mailing.id IN ($subQuery)";
-          
+
           // Ensure necessary tables are included
           $query->_tables['civicrm_mailing_event_queue'] = $query->_whereTables['civicrm_mailing_event_queue'] = 1;
           $query->_tables['civicrm_mailing_job'] = $query->_whereTables['civicrm_mailing_job'] = 1;

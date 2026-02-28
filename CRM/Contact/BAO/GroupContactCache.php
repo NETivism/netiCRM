@@ -267,7 +267,6 @@ WHERE  id = %1
         }
 */
 
-
       $returnProperties = [];
       if (CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch', $savedSearchID, 'mapping_id')) {
         $fv = CRM_Contact_BAO_SavedSearch::getFormValues($savedSearchID);

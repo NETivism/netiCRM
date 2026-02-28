@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
 
   public $_columnHeaders;

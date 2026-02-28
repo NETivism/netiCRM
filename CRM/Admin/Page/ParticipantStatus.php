@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
   public function getBAOName() {
     return 'CRM_Event_BAO_ParticipantStatusType';
@@ -76,7 +74,7 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
   public function browse() {
     $statusTypes = [];
 
-    $dao = new CRM_Event_DAO_ParticipantStatusType;
+    $dao = new CRM_Event_DAO_ParticipantStatusType();
     $dao->orderBy('weight');
     $dao->find();
 

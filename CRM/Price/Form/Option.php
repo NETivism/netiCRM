@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form to process actions on the field aspect of Custom
  */
@@ -90,7 +88,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   public function setDefaultValues() {
     $defaults = [];
 
-
     if (isset($this->_oid)) {
       $params = ['id' => $this->_oid];
 
@@ -100,9 +97,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
 
       $defaults['value'] = CRM_Utils_Money::format($defaults['value'], NULL, '%a');
     }
-
-
-
 
     if (!isset($defaults['weight']) || !$defaults['weight']) {
       $fieldValues = ['price_field_id' => $this->_fid];
@@ -155,7 +149,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
                             'optionExists',
                             array( 'CRM_Core_DAO_OptionValue', $this->_oid, $this->_ogId, 'label' ) );
             */
-
 
       // value
       $this->add('text', 'amount', ts('Option Amount'), NULL, TRUE);

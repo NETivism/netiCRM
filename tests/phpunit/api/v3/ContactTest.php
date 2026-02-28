@@ -33,7 +33,6 @@
  */
 require_once 'CiviTest/CiviUnitTestCase.php';
 
-
 /**
  *  Test APIv3 civicrm_activity_* functions
  *
@@ -132,7 +131,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
     $contact = civicrm_api('contact', 'create', $params);
     $cid = $contact['id'];
-    
+
     $params = [
       'id' => $cid,
       'middle_name' => 'foo',
@@ -140,9 +139,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
     civicrm_api('contact', 'create', $params);
     unset($params['middle_name']);
-    
+
     $contact = civicrm_api('contact', 'get', $params);
-    
+
     $this->assertEquals(['Student', 'Staff'], $contact['values'][$cid]['contact_sub_type'], "In line " . __LINE__);
   }
 
@@ -558,7 +557,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       'api.group_contact.create' => ['group_id' => $groupId],
     ];
 
-
     $contact = civicrm_api('contact', 'create', $params);
     // testing as integer
     $params = [
@@ -881,7 +879,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->assertNull($contact, "In line " . __LINE__);
   }
 
-
   /**
    *  Verify successful update of individual contact
    */
@@ -1042,8 +1039,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
         dirname(__FILE__) . '/dataset/contact_ind.xml'
       )
     );
-
-
 
     $params = [
       'id' => 23,
@@ -1383,7 +1378,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       ],
     ];
 
-
     $result = civicrm_api('Contact', 'create', $params);
     $params = [
       'id' => $result['id'], 'version' => $this->_apiversion,
@@ -1451,7 +1445,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
         ],
       ],
     ];
-
 
     $result = civicrm_api('Contact', 'create', $params);
     $this->assertAPISuccess($result, 'in line ' . __LINE__);
@@ -1541,7 +1534,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       'custom_' . $moreids['custom_field_id'][1] => "warm beer",
       'custom_' . $andmoreids['custom_field_id'][1] => "vegemite",
     ];
-
 
     $result = civicrm_api('Contact', 'create', $params);
     $result = civicrm_api('Contact', 'create', [

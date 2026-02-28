@@ -45,7 +45,6 @@ class CRM_Utils_String {
    */
   public const ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
-
   /**
    * Allowed HTML Tags
    */
@@ -73,7 +72,6 @@ class CRM_Utils_String {
    */
   public static function titleToVar($title, $maxLength = 31) {
     $variable = self::munge($title, '_', $maxLength);
-
 
     if (CRM_Utils_Rule::title($variable, $maxLength)) {
       return $variable;
@@ -123,7 +121,6 @@ class CRM_Utils_String {
       return $mungedName;
     }
   }
-
 
   /*
      * Takes a variable name and munges it randomly into another variable name
@@ -219,7 +216,6 @@ class CRM_Utils_String {
       /* FIXME:  This is a pretty brutal hack to make utf8 and 8859-1 work.
              */
 
-
       /* match low- or high-ascii characters */
 
       if (preg_match('/[\x00-\x20]|[\x7F-\xFF]/', $str)) {
@@ -277,7 +273,7 @@ class CRM_Utils_String {
     }
 
     if (!empty($match)) {
-      foreach ($match as $matchKey => & $dontCare) {
+      foreach ($match as $matchKey => &$dontCare) {
         foreach ($regexRules as $pattern => $replacement) {
           if (preg_match($pattern, $matchKey)) {
             $dontCare = $replacement . substr(md5($matchKey), 0, 5);
@@ -639,7 +635,6 @@ class CRM_Utils_String {
       ];
       $_replaceChar = '_';
     }
-
 
     if ($search == NULL) {
       $search = $_searchChars;

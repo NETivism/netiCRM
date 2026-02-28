@@ -426,7 +426,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       }
     }
 
-
     // send welcome mail to Draft user or Waiting for review user
     if (!$this->_pageId) {
       // whatever button they press, send welcome mail to them

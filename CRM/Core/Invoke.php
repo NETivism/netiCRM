@@ -174,7 +174,6 @@ class CRM_Core_Invoke {
     CRM_Utils_System::setUserContext(['civicrm/contact/search/basic', 'civicrm/contact/view']);
     $wrapper = new CRM_Utils_Wrapper();
 
-
     $properties = &CRM_Core_Component::contactSubTypeProperties($contact_sub_type, 'Edit');
     if ($properties) {
       $wrapper->run($properties['class'], ts('New %1', [1 => $contact_sub_type]), $action, TRUE);
@@ -332,7 +331,6 @@ class CRM_Core_Invoke {
         }
       }
     }
-
 
     $page = new CRM_Profile_Page_Listings();
     return $page->run();

@@ -95,8 +95,6 @@ class CRM_Core_Permission_Drupal {
         self::$_viewPermissionedGroups = $groups;
       }
 
-
-
       $ids = CRM_ACL_API::group(CRM_Core_Permission::VIEW, NULL, 'civicrm_saved_search', $groups);
       foreach (array_values($ids) as $id) {
         $title = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $id, 'title');
@@ -180,7 +178,6 @@ class CRM_Core_Permission_Drupal {
         $clauses[] = ' ( civicrm_group_contact.group_id IN (' . CRM_Utils_Array::implode(', ', array_keys(self::$_viewPermissionedGroups)) . " ) ) ";
         $tables['civicrm_group_contact'] = 1;
         $whereTables['civicrm_group_contact'] = 1;
-
 
         // foreach group that is potentially a saved search, add the saved search clause
         if ($context == 'contact') {

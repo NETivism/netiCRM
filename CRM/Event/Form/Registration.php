@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -194,7 +192,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    */
   public $_participantInfo;
 
-
   public $_action;
 
   /* Is event already full.
@@ -313,7 +310,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       CRM_Event_BAO_Event::retrieve($params, $this->_values['event']);
       $this->_values['event']['event_type'] = CRM_Event_PseudoConstant::eventType($this->_values['event']['event_type_id']);
 
-
       //check for additional participants.
       if ($this->_allowConfirmation && $this->_values['event']['is_multiple_registrations']) {
         $additionalParticipantIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($this->_participantId);
@@ -390,7 +386,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
         return CRM_Core_Error::statusBounce(ts('Registration for this event ended on %1', [1 => CRM_Utils_Date::customFormat(CRM_Utils_Array::value('registration_end_date', $this->_values['event']))]), $infoUrl);
       }
 
-
       // check for is_monetary status
       $isMonetary = CRM_Utils_Array::value('is_monetary', $this->_values['event']);
 
@@ -411,7 +406,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
           return CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this event registration page, or the event must be configured to give users the option to pay later.'), $infoUrl);
         }
         $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
-
 
         $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments($ppIds, $this->_mode);
         $this->set('paymentProcessors', $this->_paymentProcessors);
@@ -630,7 +624,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
       }
     }
 
-
     $this->assign('address', CRM_Utils_Address::format($addressFields));
 
     if ($this->_contributeMode == 'direct' &&
@@ -672,7 +665,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
     if ($id) {
       $button = substr($this->controller->getButtonName(), -4);
-
 
       $session = CRM_Core_Session::singleton();
       $contactID = $session->get('userID');
@@ -816,7 +808,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
       CRM_Core_OptionGroup::getAssoc("civicrm_event.amount.{$eventID}", $form->_values['fee'], TRUE);
 
-
       $discountedEvent = CRM_Core_BAO_Discount::getOptionGroup($eventID, "civicrm_event");
       if (is_array($discountedEvent)) {
         foreach ($discountedEvent as $key => $optionGroupId) {
@@ -920,7 +911,7 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
     ) {
       $createPayment = TRUE;
     }
-    
+
     $coupon = $this->get('coupon');
     if (!$createPayment && $contribution->id
     && ($this->_params['amount'] == 0)
@@ -1001,7 +992,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
           }
         }
 
-
         $this->fixLocationFields($value, $fields);
 
         $contactID = $this->updateContactFields($contactID, $value, $fields);
@@ -1041,7 +1031,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
 
     // update status and send mail to cancelled additonal participants, CRM-4320
     if ($this->_allowConfirmation && is_array($cancelledIds) && !empty($cancelledIds)) {
-
 
       $cancelledId = array_search(
         'Cancelled',
@@ -1146,7 +1135,6 @@ class CRM_Event_Form_Registration extends CRM_Core_Form {
    */
   public function addParticipant($params, $contactID) {
 
-
     $transaction = new CRM_Core_Transaction();
 
     $groupName = "participant_role";
@@ -1238,7 +1226,6 @@ WHERE  v.option_group_id = g.id
     if (!$participantParams['discount_id']) {
       $participantParams['discount_id'] = "null";
     }
-
 
     $participant = CRM_Event_BAO_Participant::create($participantParams);
 
@@ -1359,7 +1346,7 @@ WHERE  v.option_group_id = g.id
     }
     $priceSetDetails = $form->get('priceSet');
 
-    foreach ($params as $key => & $value) {
+    foreach ($params as $key => &$value) {
       $vals = [];
       if (strpos($key, 'price_') !== FALSE) {
         $fieldId = substr($key, 6);
@@ -1666,7 +1653,6 @@ WHERE  v.option_group_id = g.id
         }
       }
     }
-
 
     $params['log_data'] = !empty($params['log_data']) ? $params['log_data'] : ts('Event').' - '.$this->_eventId;
     if ($contactID) {

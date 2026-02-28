@@ -49,7 +49,6 @@ abstract class CRM_AI_CompletionService {
    */
   abstract public function request($params);
 
-
   /**
    * Format parameters before sending via request
    *

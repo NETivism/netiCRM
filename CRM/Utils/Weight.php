@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 class CRM_Utils_Weight {
 
   /**
@@ -266,10 +264,9 @@ class CRM_Utils_Weight {
     $groupBy = NULL
   ) {
 
-
     require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
 
-    $dao = new $daoName;
+    $dao = new $daoName();
     $table = $dao->getTablename();
     $fields = &$dao->fields();
     $fieldlist = array_keys($fields);

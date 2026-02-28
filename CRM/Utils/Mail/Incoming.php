@@ -333,7 +333,6 @@ class CRM_Utils_Mail_Incoming {
       'email-Primary' => $email,
     ];
 
-
     CRM_Utils_String::extractName($name, $params);
 
     return CRM_Contact_BAO_Contact::createProfileContact(

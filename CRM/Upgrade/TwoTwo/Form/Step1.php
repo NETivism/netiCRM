@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
   public function verifyPreDBState(&$errorMessage) {
     // check if log file is writable
@@ -143,7 +142,6 @@ class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
       $errorMessage = ts('Database check failed - it looks like you have already upgraded to the latest version (v2.2) of the database.');
       return FALSE;
     }
-
 
     // check tables which should not exist for v2.x
     if (CRM_Core_DAO::checkTableExists('civicrm_custom_option') ||

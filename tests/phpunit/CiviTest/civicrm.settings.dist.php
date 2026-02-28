@@ -42,11 +42,10 @@ if ($drupal_root && is_dir($drupal_root)) {
   }
 }
 
-if (!defined('CIVICRM_DSN')&&!empty($GLOBALS['mysql_user'])) {
+if (!defined('CIVICRM_DSN') && !empty($GLOBALS['mysql_user'])) {
   $dbName = !empty($GLOBALS['mysql_db']) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
   define('CIVICRM_DSN', "mysqli://{$GLOBALS['mysql_user']}:{$GLOBALS['mysql_pass']}@{$GLOBALS['mysql_host']}/{$dbName}?new_link=true");
 }
-
 
 if (!defined("CIVICRM_DSN")) {
   $dsn = getenv("CIVICRM_TEST_DSN");
@@ -93,14 +92,12 @@ $GLOBALS['mysql_user'] = $dsninfo['username'];
 $GLOBALS['mysql_pass'] = $dsninfo['password'];
 $GLOBALS['mysql_db'] = $dsninfo['database'];
 
-
 /**
  * Content Management System (CMS) Host:
  *
  * CiviCRM can be hosted in either Drupal, Joomla or WordPress.
 */
 define('CIVICRM_UF', 'Drupal');
-
 
 // set this to a temporary directory. it defaults to /tmp/civi on linux
 //define( 'CIVICRM_TEMPLATE_COMPILEDIR', 'the/absolute/path/' );
@@ -116,7 +113,6 @@ if (!defined("CIVICRM_TEMPLATE_COMPILEDIR")) {
 
 define('CIVICRM_SITE_KEY', 'phpunittestfakekey');
 define('CIVICRM_UF_BASEURL', 'http://FIX ME');
-
 
 if (function_exists('variable_get') && variable_get('clean_url', '0') != '0') {
   define('CIVICRM_CLEANURL', 1);

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * form to process actions on the field aspect of Custom
  */
@@ -862,7 +859,6 @@ AND    option_group_id = %2";
       }
     }
 
-
     $assignError = new CRM_Core_Page();
     if ($_rowError) {
       $_showHide->addToTemplate();
@@ -910,7 +906,6 @@ AND    option_group_id = %2";
     ) {
       $errors['is_view'] = ts('Can not set this field Required and View Only at the same time.');
     }
-
 
     if (CRM_Utils_Array::value('is_searchable', $fields)) {
       $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $self->_gid, 'table_name');
@@ -1024,7 +1019,6 @@ SELECT id
       }
     }
 
-
     // need the FKEY - custom group id
     $params['custom_group_id'] = $this->_gid;
 
@@ -1064,7 +1058,8 @@ SELECT id
       ));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field',
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/admin/custom/group/field',
         'reset=1&action=browse&gid=' . $this->_gid
       ));
     }

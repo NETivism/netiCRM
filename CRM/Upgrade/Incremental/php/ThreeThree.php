@@ -52,8 +52,6 @@ class CRM_Upgrade_Incremental_php_ThreeThree {
     $colQuery = 'ALTER TABLE `civicrm_custom_field` ADD `name` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `custom_group_id` ';
     CRM_Core_DAO::executeQuery($colQuery, CRM_Core_DAO::$_nullArray, TRUE, NULL, FALSE, FALSE);
 
-
-
     $customFldCntQuery = 'select count(*) from civicrm_custom_field where name like %1 and id != %2';
     $customField = new CRM_Core_DAO_CustomField();
     $customField->selectAdd();
@@ -84,7 +82,6 @@ WHERE id = %2
     }
     $customField->free();
 
-
     $customGrpCntQuery = 'select count(*) from civicrm_custom_group where name like %1 and id != %2';
     $customGroup = new CRM_Core_DAO_CustomGroup();
     $customGroup->selectAdd();
@@ -104,7 +101,6 @@ WHERE id = %2
       CRM_Core_DAO::setFieldValue('CRM_Core_DAO_CustomGroup', $customGroup->id, 'name', $name);
     }
     $customGroup->free();
-
 
     $ufGrpCntQuery = 'select count(*) from civicrm_uf_group where name like %1 and id != %2';
     $ufGroup = new CRM_Core_DAO_UFGroup();
@@ -145,12 +141,6 @@ WHERE id = %2
     // update line items.
     $updateLineItem1 = "ALTER TABLE civicrm_line_item ADD COLUMN price_field_value_id int(10) unsigned default NULL;";
     CRM_Core_DAO::executeQuery($updateLineItem1);
-
-
-
-
-
-
 
     $priceFieldDAO = new CRM_Price_DAO_Field();
     $priceFieldDAO->find();

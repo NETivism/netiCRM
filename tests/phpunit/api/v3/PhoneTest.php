@@ -8,7 +8,6 @@
  * @docmaker_intro_end
  */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_PhoneTest extends CiviUnitTestCase {
   protected $_apiversion;
@@ -309,8 +308,6 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
    *
    * If is_primary is not set then it should become is_primary is no others exist
    */
-
-
 
   public function testCreatePhonePrimaryHandlingChangeToPrimary() {
     $params = $this->_params;

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying custom data
  *

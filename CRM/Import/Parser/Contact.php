@@ -147,7 +147,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
    */
   public function init() {
 
-
     $contactFields = CRM_Contact_BAO_Contact::importableFields($this->_contactType);
     // exclude the address options disabled in the Address Settings
     $fields = CRM_Core_BAO_Address::validateAddressOptions($contactFields);
@@ -253,7 +252,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     ) {
       $this->_updateWithId = TRUE;
     }
-
 
     $this->_parseStreetAddress = CRM_Utils_Array::value(
       'street_address_parsing',
@@ -389,7 +387,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       //otherwise, count it and move on
       $this->_allExternalIdentifiers[$externalID] = $this->_lineCount;
     }
-    
+
     //check for duplicate internal Identifier
     $internalID = CRM_Utils_Array::value($this->_internalIdentifierIndex, $values);
     if ($internalID) {
@@ -515,7 +513,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         in_array($onDuplicate, [CRM_Import_Parser::DUPLICATE_SKIP, CRM_Import_Parser::DUPLICATE_NOCHECK])
       )
     ) {
-
 
       if ($internalCid = CRM_Core_DAO::getFieldValue(
         'CRM_Contact_DAO_Contact',
@@ -1249,7 +1246,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
         }
         /* validate the data against the CF type */
 
-
         if ($value) {
           if ($customFields[$customFieldID]['data_type'] == 'Date') {
             if (CRM_Utils_Date::convertToDefaultDate($params, $dateType, $key)) {
@@ -1913,7 +1909,6 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
       $modeFill = TRUE;
     }
 
-
     $groupTree = CRM_Core_BAO_CustomGroup::getTree(
       $params['contact_type'],
       CRM_Core_DAO::$_nullObject,
@@ -1991,7 +1986,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
             }
           }
         }
-        if (count($params[$locKeys])== 0) {
+        if (count($params[$locKeys]) == 0) {
           unset($params[$locKeys]);
         }
       }
@@ -2269,7 +2264,7 @@ class CRM_Import_Parser_Contact extends CRM_Import_Parser {
     if ($this->_parseStreetAddress) {
 
       if (CRM_Utils_Array::arrayKeyExists('address', $formatted) && is_array($formatted['address'])) {
-        foreach ($formatted['address'] as $instance => & $address) {
+        foreach ($formatted['address'] as $instance => &$address) {
           $streetAddress = CRM_Utils_Array::value('street_address', $address);
           if (empty($streetAddress)) {
             continue;

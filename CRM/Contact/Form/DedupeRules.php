@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for DedupeRules
  *
@@ -57,7 +53,6 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    */
   public function preProcess() {
     // Ensure user has permission to be here
-
 
     if (!CRM_Core_Permission::check('administer dedupe rules')) {
       CRM_Utils_System::permissionDenied();

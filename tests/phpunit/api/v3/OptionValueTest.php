@@ -1,6 +1,5 @@
 <?php
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 
 class api_v3_OptionValueTest extends CiviUnitTestCase {
@@ -122,8 +121,6 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
   /*
      * test that using option_group_name returns more than 1 & less than all
      */
-
-
 
   public function testGetOptionGroupByName() {
     $activityTypesParams = ['option_group_name' => 'activity_type', 'version' => $this->_apiversion, 'option.limit' => 100];

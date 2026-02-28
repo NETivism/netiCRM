@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Format the given monetary amount (and currency) for display
  *

@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This page displays the list of extensions registered in the system.
  */

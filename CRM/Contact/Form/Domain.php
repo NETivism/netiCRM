@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is to build the form for adding Group
  */
@@ -89,8 +86,6 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
      */
   public function setDefaultValues() {
 
-
-
     $defaults = [];
     $params = [];
     $locParams = [];
@@ -100,7 +95,6 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
       CRM_Core_BAO_Domain::retrieve($params, $domainDefaults);
 
       //get the default domain from email address. fix CRM-3552
-
 
       $optionValues = [];
       $grpParams['name'] = 'from_email_address';
@@ -225,15 +219,12 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
   public function postProcess() {
 
-
-
     $params = [];
 
     $params = $this->exportValues();
     $params['entity_id'] = $this->_id;
     $params['entity_table'] = CRM_Core_BAO_Domain::getTableName();
     $domain = CRM_Core_BAO_Domain::edit($params, $this->_id);
-
 
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
 
@@ -245,7 +236,6 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
     $location = CRM_Core_BAO_Location::create($params, TRUE, 'domain');
 
     $params['loc_block_id'] = $location['id'];
-
 
     CRM_Core_BAO_Domain::edit($params, $this->_id);
 

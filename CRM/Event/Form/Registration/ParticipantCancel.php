@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -174,7 +172,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
       $this->assign('mapKey', $config->mapAPIKey);
       $sumLat = $sumLng = 0;
       $maxLat = $maxLng = -400;
-      $minLat = $minLng = + 400;
+      $minLat = $minLng = +400;
       foreach ($locations as $location) {
         $sumLat += $location['lat'];
         $sumLng += $location['lng'];
@@ -247,7 +245,6 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
 
     if ($buttonName == '_qf_ParticipantCancel_next') {
       //need to registration status to 'cancelled'.
-
 
       $cancelledId = array_search('Cancelled', CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'"));
       $additionalParticipantIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId);

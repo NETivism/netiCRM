@@ -37,7 +37,6 @@
  *  this file contains functions for synchronizing cms users with CiviCRM contacts
  */
 
-
 class CRM_Core_BAO_CMSUser {
 
   /**

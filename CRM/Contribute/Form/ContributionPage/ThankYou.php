@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form to configure thank-you messages and receipting features for an online contribution page
  */
@@ -210,7 +208,6 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     if (!$params['is_send_sms']) {
       $params['sms_text'] = NULL;
     }
-
 
     $dao = CRM_Contribute_BAO_ContributionPage::create($params);
   }

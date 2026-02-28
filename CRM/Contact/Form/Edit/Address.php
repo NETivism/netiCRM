@@ -98,8 +98,6 @@ class CRM_Contact_Form_Edit_Address {
     // hidden element to store master address id
     $form->addElement('hidden', "address[$blockId][master_id]");
 
-
-
     $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_Address');
 
@@ -192,8 +190,6 @@ class CRM_Contact_Form_Edit_Address {
       }
     }
 
-
-
     CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
 
     $entityId = NULL;
@@ -256,7 +252,6 @@ class CRM_Contact_Form_Edit_Address {
     if (!$profileId) {
       return CRM_Core_Error::statusBounce(ts('Your install is missing required "Shared Address" profile.'));
     }
-
 
     CRM_Contact_Form_NewContact::buildQuickForm($form, $blockId, [$profileId]);
   }

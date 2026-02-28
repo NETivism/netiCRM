@@ -113,7 +113,6 @@ class CRM_Core_Payment_BaseIPN {
     $objects['participant'] = NULL;
     $objects['pledge_payment'] = NULL;
 
-
     $contributionType = new CRM_Contribute_DAO_ContributionType();
     $contributionType->id = $contribution->contribution_type_id;
     if (!$contributionType->find(TRUE)) {
@@ -174,7 +173,6 @@ class CRM_Core_Payment_BaseIPN {
 
       if (isset($ids['pledge_payment'])) {
 
-
         $objects['pledge_payment'] = [];
         foreach ($ids['pledge_payment'] as $key => $paymentID) {
           $payment = new CRM_Pledge_DAO_Payment();
@@ -228,7 +226,6 @@ class CRM_Core_Payment_BaseIPN {
       }
 
       $objects['event'] = &$event;
-
 
       $participant = new CRM_Event_DAO_Participant();
       $participant->id = $ids['participant'];
@@ -400,7 +397,6 @@ class CRM_Core_Payment_BaseIPN {
       }
     }
 
-
     $transaction->commit();
     CRM_Utils_Hook::ipnPost('cancelled', $objects);
     CRM_Core_Error::debug_log_message("Setting contribution status to cancelled");
@@ -444,7 +440,6 @@ class CRM_Core_Payment_BaseIPN {
 
       if ($membership) {
         $format = '%Y%m%d';
-
 
         $currentMembership = CRM_Member_BAO_Membership::getContactMembership(
           $membership->contact_id,
@@ -525,7 +520,6 @@ class CRM_Core_Payment_BaseIPN {
         $membershipLog['modified_id'] = $membership->contact_id;
         $membershipLog['modified_date'] = date('Ymd');
 
-
         CRM_Member_BAO_MembershipLog::add($membershipLog, CRM_Core_DAO::$_nullArray);
 
         //update related Memberships.
@@ -537,21 +531,17 @@ class CRM_Core_Payment_BaseIPN {
       $eventParams = ['id' => $objects['event']->id];
       $values['event'] = [];
 
-
       CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
       $eventParams = ['id' => $objects['event']->id];
       $values['event'] = [];
-
 
       CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
       //get location details
       $locationParams = ['entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event'];
 
-
       $values['location'] = CRM_Core_BAO_Location::getValues($locationParams);
-
 
       $ufJoinParams = [
         'entity_table' => 'civicrm_event',
@@ -833,15 +823,12 @@ class CRM_Core_Payment_BaseIPN {
         $eventParams = ['id' => $objects['event']->id];
         $values['event'] = [];
 
-
         CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
         //get location details
         $locationParams = ['entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event'];
 
-
         $values['location'] = CRM_Core_BAO_Location::getValues($locationParams);
-
 
         $ufJoinParams = ['entity_table' => 'civicrm_event',
           'entity_id' => $ids['event'],
@@ -904,9 +891,7 @@ class CRM_Core_Payment_BaseIPN {
 
       $idParams = ['id' => $honarID, 'contact_id' => $honarID];
 
-
       CRM_Contact_BAO_Contact::retrieve($idParams, $honorDefault, $honorIds);
-
 
       $honorType = CRM_Core_PseudoConstant::honor();
       $prefix = CRM_Core_PseudoConstant::individualPrefix();
@@ -918,7 +903,6 @@ class CRM_Core_Payment_BaseIPN {
       $template->assign('honor_email', CRM_Utils_Array::value("email", $honorDefault["email"][1]));
       $template->assign('honor_type', $honorType[$contribution->honor_type_id]);
     }
-
 
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contribution->id;
@@ -1065,7 +1049,6 @@ class CRM_Core_Payment_BaseIPN {
       $template->assign('is_recur', 0);
     }
 
-
     $template->assign('address', CRM_Utils_Address::format($input));
     if ($input['component'] == 'event') {
 
@@ -1166,7 +1149,6 @@ class CRM_Core_Payment_BaseIPN {
           $values['onbehalf_dupe_alert'] = $ids['onbehalf_dupe_alert'];
         }
 
-
         $entityBlock = ['contact_id' => $ids['contact'],
           'location_type_id' => CRM_Core_DAO::getFieldValue(
             'CRM_Core_DAO_LocationType',
@@ -1187,7 +1169,6 @@ class CRM_Core_Payment_BaseIPN {
 
       $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionPage", $template, $values['id'], 0, $values['contribution_type_id']);
       $values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($template, $groupTree);
-
 
       if (!empty($contribution->amount_level)) {
         $values['amount_level'] = $contribution->amount_level;
@@ -1251,9 +1232,6 @@ class CRM_Core_Payment_BaseIPN {
     $ids['contributionRecur'] = NULL;
     $input['component'] = $name;
 
-
-
-
     $baseIPN = new CRM_Core_Payment_BaseIPN();
     $transaction = new CRM_Core_Transaction();
 
@@ -1266,7 +1244,6 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     $contribution = &$objects['contribution'];
-
 
     $contributionStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 

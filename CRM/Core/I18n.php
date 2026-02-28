@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_I18n {
 
   /**
@@ -356,7 +355,7 @@ class CRM_Core_I18n {
       return;
     }
 
-    foreach ($array as & $value) {
+    foreach ($array as &$value) {
       if ($value) {
         $value = ts($value, $params);
       }

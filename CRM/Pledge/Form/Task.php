@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates task actions for CiviEvent
  *

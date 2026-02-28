@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Activity_Import_Controller extends CRM_Core_Controller {
 
   /**
@@ -41,7 +40,6 @@ class CRM_Activity_Import_Controller extends CRM_Core_Controller {
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);
-
 
     $this->_stateMachine = new CRM_Activity_Import_StateMachine($this, $action);
 

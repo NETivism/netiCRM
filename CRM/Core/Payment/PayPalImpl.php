@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
   /**
    * @var mixed

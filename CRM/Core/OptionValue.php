@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Core_OptionValue {
 
   /**
@@ -104,7 +102,6 @@ class CRM_Core_OptionValue {
     if ($optionGroupID) {
       $dao->option_group_id = $optionGroupID;
 
-
       if (in_array($groupName, CRM_Core_OptionGroup::$_domainIDGroups)) {
         $dao->domain_id = CRM_Core_Config::domainID();
       }
@@ -113,14 +110,12 @@ class CRM_Core_OptionValue {
       $dao->find();
     }
 
-
     if ($groupName == 'case_type') {
       $caseTypeIds = CRM_Case_BAO_Case::getUsedCaseType();
     }
     elseif ($groupName == 'case_status') {
       $caseStatusIds = CRM_Case_BAO_Case::getUsedCaseStatuses();
     }
-
 
     $componentNames = CRM_Core_Component::getNames();
     $visibilityLabels = CRM_Core_PseudoConstant::visibility();
@@ -235,7 +230,6 @@ class CRM_Core_OptionValue {
     }
     $params['option_group_id'] = $optionGroupID;
 
-
     if (($action & CRM_Core_Action::ADD) && !CRM_Utils_Array::value('value', $params)) {
       $fieldValues = ['option_group_id' => $optionGroupID];
       // use the next available value
@@ -306,7 +300,6 @@ class CRM_Core_OptionValue {
     $key = "$mode $contactType";
     if (empty(self::$_fields[$key]) || !self::$_fields[$key]) {
       self::$_fields[$key] = [];
-
 
       $option = CRM_Core_DAO_OptionValue::import();
 
@@ -469,7 +462,6 @@ FROM
       $where .= " AND option_group.name = %2";
       $params[2] = [$groupName, 'String'];
     }
-
 
     if (in_array($groupName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $where .= " AND option_value.domain_id = " . CRM_Core_Config::domainID();

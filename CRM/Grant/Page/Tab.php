@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class handle grant related functions
  *

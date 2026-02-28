@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality to add contacts for
  * voter reservation.
@@ -199,8 +196,6 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
     }
 
     $campaignId = CRM_Utils_Array::value('campaign_id', $this->_surveyDetails);
-
-
 
     $campGrps = CRM_Campaign_BAO_Campaign::getCampaignGroups($campaignId);
     foreach ($campGrps as $grpId => $grpVals) {

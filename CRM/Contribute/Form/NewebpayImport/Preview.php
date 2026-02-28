@@ -91,7 +91,6 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
       $header = $this->get('tableHeader');
     }
 
-
     if (!empty($this->_statusContent)) {
       $this->_statusHeader = $header;
       $this->_statusHeader[] = ts('Contribution Status');

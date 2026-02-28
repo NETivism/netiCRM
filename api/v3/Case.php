@@ -37,7 +37,6 @@
  *
  */
 
-
 /**
  * Open a new case, add client and manager roles, and add standard timeline
  *

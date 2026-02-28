@@ -63,7 +63,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
         3 => [$params['page_type'], 'String'],
         4 => [$params['page_id'], 'Integer']
       ]);
-      
+
       if ($sameSession->fetch()) {
         CRM_Utils_Hook::pre('edit', 'Track', $sameSession->id, $params);
         $track->id = $sameSession->id;
@@ -167,7 +167,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $start = $end = 0;
     while ($dao->fetch()) {
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
-      $total = $total+$dao->count;
+      $total = $total + $dao->count;
       if (!$start && !$end) {
         $start = strtotime($dao->start);
         $end = strtotime($dao->end);

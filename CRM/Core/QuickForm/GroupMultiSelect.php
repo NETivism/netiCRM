@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_QuickForm_GroupMultiSelect extends CRM_Core_QuickForm_NestedAdvMultiSelect {
   public $_flagFrozen;
   public $_elementTemplate;

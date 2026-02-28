@@ -53,7 +53,7 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
    */
   protected function tearDown() {
   }
-    
+
   /**
    *  Test for Add/Update Pledge Payment.
    */
@@ -66,13 +66,13 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
                      'reminder_date'    => '20100520000000',
                      'reminder_count'   => 5,
                      'status_id'        => 1 ];
-        
+
     //do test for normal add.
     $payment = CRM_Pledge_BAO_Payment::add($params);
     foreach ($params as $param => $value) {
       $this->assertEquals($value, $payment->$param);
     }
-        
+
     //do test for update mode.
     $params = [ 'id'               => $payment->id,
                      'pledge_id'        => $pledge->id,
@@ -82,14 +82,14 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
                      'reminder_date'    => '20100425000000',
                      'reminder_count'   => 10,
                      'status_id'        => 2 ];
-        
+
     $payment = CRM_Pledge_BAO_Payment::add($params);
     foreach ($params as $param => $value) {
       $this->assertEquals($value, $payment->$param);
     }
     $result = CRM_Pledge_BAO_Pledge::deletePledge($pledge->id);
   }
-    
+
   /**
    *  Retrieve a payment based on a pledge id = 0
    */
@@ -98,11 +98,11 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
     $params = 	['pledge_id' => 0 ];
     $defaults = [];
     $paymentid = CRM_Pledge_BAO_Payment::retrieve($params, $defaults);
-        
+
     $this->assertEquals(count($paymentid), 0, "Pledge Id must be greater than 0");
     $result = CRM_Pledge_BAO_Pledge::deletePledge($payment->pledge_id);
   }
-    
+
   /**
    *  Retrieve a payment based on a Null pledge id
    */
@@ -111,11 +111,11 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
     $params = 	['pledge_id' => 'Test' ];
     $defaults = [];
     $paymentid = CRM_Pledge_BAO_Payment::retrieve($params, $defaults);
-        
+
     $this->assertEquals(count($paymentid), 0, "Pledge Id cannot be a string");
     $result = CRM_Pledge_BAO_Pledge::deletePledge($payment->pledge_id);
   }
-    
+
   /**
    *  Test that payment retrieve wrks based on known pledge id
    */
@@ -125,11 +125,11 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
     $params = 	['pledge_id' => $pledgeId ];
     $defaults = [];
     $paymentid = CRM_Pledge_BAO_Payment::retrieve($params, $defaults);
-        
+
     $this->assertEquals(count($paymentid), 1, "Pledge was retrieved");
     $result = CRM_Pledge_BAO_Pledge::deletePledge($pledgeId);
   }
-    
+
   /**
    *  Delete Payments payments for one pledge
    */
@@ -139,7 +139,7 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
     $this->assertEquals(count($paymentid), 1, "Deleted one payment");
     $result = CRM_Pledge_BAO_Pledge::deletePledge($payment->pledge_id);
   }
-    
+
   /**
    *  Pass Null Id for a payment deletion for one pledge
    */
@@ -149,7 +149,7 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
     $this->assertEquals(count($paymentid), 1, "No payments deleted");
     $result = CRM_Pledge_BAO_Pledge::deletePledge($payment->pledge_id);
   }
-    
+
   /**
    *  Pass Zero Id for a payment deletion for one pledge
    */
@@ -176,7 +176,7 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
 
   }
   */
-    
+
   /**
   *  Test calculateBaseScheduleDate - should give original date
   */
@@ -193,7 +193,7 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
       $this->assertEquals('20110510000000',$date);
   }
   */
-    
+
   /**
   * Test calculateBaseScheduleDateWeek - should give the day in the week as indicated
   * testing each day as this is really the only unit that does anything
@@ -247,7 +247,7 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
       $this->assertEquals('20110510000000',$date);
   }
   */
-    
+
   /**
   *  Test calculateNextScheduledDate - no date provided
   */
@@ -264,7 +264,7 @@ class CRM_Pledge_BAO_PaymentTest extends CiviUnitTestCase {
       $this->assertEquals('20130510000000',$date);
   }
   */
-    
+
   /**
   *  Test calculateNextScheduledDate - no date provided
   */

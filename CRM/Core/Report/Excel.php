@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'Spout/Autoloader/autoload.php';
 
 use Box\Spout\Writer\WriterFactory;
@@ -258,7 +257,7 @@ class CRM_Core_Report_Excel {
     }
     return NULL;
   }
-  
+
   public static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $writer = self::singleton($type);

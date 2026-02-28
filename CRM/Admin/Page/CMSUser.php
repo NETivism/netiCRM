@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for synchronizing CMS users
  */

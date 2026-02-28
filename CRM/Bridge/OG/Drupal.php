@@ -36,8 +36,6 @@ class CRM_Bridge_OG_Drupal {
 
   public static function nodeapi(&$params, $op) {
 
-
-
     $transaction = new CRM_Core_Transaction();
 
     // first create or update the CiviCRM group
@@ -103,7 +101,6 @@ class CRM_Bridge_OG_Drupal {
   }
 
   public static function updateCiviACLRole(&$params, $op) {
-
 
     $optionGroupID = CRM_Core_DAO::getFieldValue(
       'CRM_Core_DAO_OptionGroup',
@@ -209,7 +206,6 @@ SELECT v.id
     $groupParams = ['contact_id' => $contactID,
       'group_id' => $groupID,
     ];
-
 
     if ($op == 'add') {
       $groupParams['status'] = $params['is_active'] ? 'Added' : 'Pending';

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to add contact(s) to Household
  */
@@ -121,7 +119,6 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
    * @return None
    */
   public function postProcess() {
-
 
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);

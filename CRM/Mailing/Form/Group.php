@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Choose include / exclude groups and mailings
  *
@@ -141,7 +138,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $defaults['campaign_id'] = $mailing->campaign_id;
       $defaults['dedupe_email'] = $mailing->dedupe_email;
 
-
       $dao = new CRM_Mailing_DAO_Group();
 
       $mailingGroups = [];
@@ -202,7 +198,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    */
   public function buildQuickForm() {
 
-
     //get the context
     $context = $this->get('context');
     if (!empty($this->_searchBasedMailing)) {
@@ -228,7 +223,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
     CRM_Campaign_BAO_Campaign::addCampaign($this, $campaignId);
 */
-
 
     //dedupe on email option
     $this->addElement('checkbox', 'dedupe_email', ts('Remove duplicate emails?'));
@@ -267,7 +261,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     // mailing
     $this->addSelect('includeMailings', ts('INCLUDE Recipients of These Mailing(s)'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
     $this->addSelect('excludeMailings', ts('EXCLUDE Recipients of These Mailing(s)'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
-    
+
     // open
     $this->addSelect('includeOpened', ts('INCLUDE Recipients who opened these mailing'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
     $this->addSelect('excludeOpened', ts('EXCLUDE Recipients who opened these mailing'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
@@ -325,7 +319,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $rules = [];
     if ($this->_searchBasedMailing && $this->_contactIds) {
       $session = CRM_Core_Session::singleton();
-
 
       if ($this->_resultSelectOption == 'ts_sel') {
         // create a static grp if only a subset of result set was selected:
@@ -387,7 +380,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       }
     }
 
-
     $qf_Group_submit = $this->controller->exportValue($this->_name, '_qf_Group_submit');
     $this->set('name', $params['name']);
 
@@ -438,7 +430,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $params['created_date'] = date('YmdHis');
     }
 
-
     $mailing = CRM_Mailing_BAO_Mailing::create($params, $ids);
     $this->set('mailing_id', $mailing->id);
 
@@ -456,7 +447,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       TRUE,
       $dedupeEmail
     );
-
 
     $count = CRM_Mailing_BAO_Recipients::mailingSize($mailing->id);
     $this->set('count', $count);

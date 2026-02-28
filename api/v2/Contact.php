@@ -1,7 +1,6 @@
 <?php
 // $Id: Contact.php 43419 2012-11-05 12:33:14Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -856,7 +855,6 @@ function civicrm_contact_check_custom_params($params, $csType = NULL) {
   foreach ($params as $key => $value) {
     if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($key)) {
       /* check if it's a valid custom field id */
-
 
       if (!CRM_Utils_Array::arrayKeyExists($customFieldID, $customFields)) {
 

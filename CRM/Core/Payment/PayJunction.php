@@ -16,7 +16,6 @@
  *
  */
 
-
 class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   /**
    * @var string
@@ -48,7 +47,6 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    */
   public function __construct($mode, &$paymentProcessor) {
     //require PayJunction API library
-
 
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
@@ -121,7 +119,6 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
     // set customer info (level 3 data) for the transaction
     $pjpgTxn->setCustInfo($pjpgCustInfo);
 
-
     // empty installments convert to 999 because PayJunction do not allow open end donation
     if ($params['installments'] == "") {
       $params['installments'] = "999";
@@ -189,7 +186,6 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   }
   // end function doDirectPayment
 
-
   /*
     * This function checks the PayJunction response code
     */
@@ -203,7 +199,6 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
       return TRUE;
     }
   }
-
 
   // ignore for now, more elaborate error handling later.
   public function &checkResult(&$response) {

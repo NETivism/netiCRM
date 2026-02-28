@@ -33,10 +33,7 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
-
 
   public $_columnHeaders;
   public $_from;
@@ -169,7 +166,6 @@ class CRM_Report_Form_Contribute_Lybunt extends CRM_Report_Form {
     $this->_columnHeaders = $select = [];
     $current_year = $this->_params['yid_value'];
     $previous_year = $current_year - 1;
-
 
     foreach ($this->_columns as $tableName => $table) {
 

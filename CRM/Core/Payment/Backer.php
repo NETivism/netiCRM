@@ -50,7 +50,6 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       $error[] = ts('Password is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
 
-
     if (!empty($error)) {
       return CRM_Utils_Array::implode('<br>', $error);
     }
@@ -617,7 +616,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     ];
     $addName = self::explodeName(trim($json['recipient']['recipient_name']));
     if ($addName === FALSE) {
-      $addName= [
+      $addName = [
         '',    // sure name
         $json['recipient']['recipient_name'], // given name
       ];

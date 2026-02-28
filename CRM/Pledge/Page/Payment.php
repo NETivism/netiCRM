@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Pledge_Page_Payment extends CRM_Core_Page {
 
   public $_action;
@@ -54,7 +53,6 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
 
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
-
     $this->setContext();
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
@@ -65,7 +63,6 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     }
     else {
       $pledgeId = CRM_Utils_Request::retrieve('pledgeId', 'Positive', $this);
-
 
       $paymentDetails = CRM_Pledge_BAO_Payment::getPledgePayments($pledgeId);
 

@@ -291,7 +291,6 @@ class CRM_Pledge_BAO_Query {
           $status = $value;
         }
 
-
         $statusValues = CRM_Core_OptionGroup::values("contribution_status");
 
         $names = [];
@@ -333,7 +332,6 @@ class CRM_Pledge_BAO_Query {
           $op = '=';
           $status = $value;
         }
-
 
         $statusValues = CRM_Core_OptionGroup::values("contribution_status");
 
@@ -555,13 +553,11 @@ class CRM_Pledge_BAO_Query {
 
     $form->addElement('checkbox', 'pledge_test', ts('Find Test Pledges?'));
 
-
     $form->add('text', 'pledge_amount_low', ts('From'), ['size' => 8, 'maxlength' => 8]);
     $form->addRule('pledge_amount_low', ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('9.99', ' ')]), 'money');
 
     $form->add('text', 'pledge_amount_high', ts('To'), ['size' => 8, 'maxlength' => 8]);
     $form->addRule('pledge_amount_high', ts('Please enter a valid money value (e.g. %1).', [1 => CRM_Utils_Money::format('99.99', ' ')]), 'money');
-
 
     $statusValues = CRM_Contribute_PseudoConstant::contributionStatus();
 
@@ -582,7 +578,6 @@ class CRM_Pledge_BAO_Query {
     }
 
     $form->addGroup($paymentStatus, 'pledge_payment_status_id', ts('Pledge Payment Status'));
-
 
     $form->add(
       'select',

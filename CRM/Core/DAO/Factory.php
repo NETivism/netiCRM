@@ -1,6 +1,5 @@
 <?php
 
-
 class CRM_Core_DAO_Factory {
 
   public static $_classes = [
@@ -31,7 +30,6 @@ class CRM_Core_DAO_Factory {
     'business' => '',
     'data' => '',
   ];
-
 
   public static function &create($className) {
     $type = CRM_Utils_Array::value($className, self::$_classes);

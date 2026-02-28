@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * Dummy page for details of SMS
  *
@@ -75,7 +70,6 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
       $cid = $dao->entity_id;
     }
 
-
     $dao = new CRM_SMS_DAO_History();
     $dao->id = $id;
 
@@ -103,7 +97,6 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
       list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->contact_id);
 
       CRM_Utils_System::setTitle($contactImage . ' ' . $displayName);
-
 
       // also add the cid params to the Menu array
       CRM_Core_Menu::addParam('cid', $cid);

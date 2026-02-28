@@ -25,10 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
@@ -44,7 +40,6 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
   // docs inherited from interface
   protected $keyword = 'mailing';
 
-
   // docs inherited from interface
   public function getInfo() {
     return [
@@ -55,7 +50,6 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
       'showActivitiesInCore' => 1,
     ];
   }
-
 
   public static function workflowEnabled() {
     $config = CRM_Core_Config::singleton();
@@ -91,7 +85,6 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
 
     return $permissions;
   }
-
 
   // docs inherited from interface
   public function getUserDashboardElement() {

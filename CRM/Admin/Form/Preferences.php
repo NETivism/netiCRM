@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -75,7 +73,6 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
     }
 
     $session = CRM_Core_Session::singleton();
-
 
     $this->_config = new CRM_Core_DAO_Preferences();
     $this->_config->domain_id = CRM_Core_Config::domainID();
@@ -134,7 +131,6 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
-
 
     foreach ($this->_cbs as $name => $title) {
       $options = array_flip(CRM_Core_OptionGroup::values($name, FALSE, FALSE, TRUE));

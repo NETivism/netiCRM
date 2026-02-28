@@ -48,7 +48,6 @@ if (!empty($language)) {
   $tsLocale = $language;
 }
 
-
 if (!CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Widget', $cpageId, 'is_active', 'contribution_page_id')) {
   CRM_Utils_System::civiExit();
 }

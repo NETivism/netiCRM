@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form to process actions on the group aspect of Custom Data
  */
@@ -47,7 +45,6 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
    * @access public
    */
   public function buildQuickForm() {
-
 
     $types = array_merge(
       ['Contact', 'Individual', 'Contribution', 'Membership'],
@@ -88,8 +85,6 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
       CRM_Utils_System::setTitle(ts('Include Profiles (%1)', [1 => $title]));
     }
 
-
-
     $ufJoinParams = ['entity_table' => 'civicrm_contribution_page',
       'entity_id' => $this->_id,
     ];
@@ -114,7 +109,6 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
       $params['id'] = $this->_id;
     }
 
-
     $transaction = new CRM_Core_Transaction();
 
     // also update uf join table
@@ -123,7 +117,6 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
       'entity_table' => 'civicrm_contribution_page',
       'entity_id' => $this->_id,
     ];
-
 
     // first delete all past entries
     CRM_Core_BAO_UFJoin::deleteAll($ufJoinParams);
@@ -179,7 +172,6 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
     if ($dao->find(TRUE) && $dao->is_active) {
       $membershipEnable = TRUE;
     }
-
 
     if ($fields['custom_pre_id']) {
       $preProfileType = CRM_Core_BAO_UFField::getProfileType($fields['custom_pre_id']);

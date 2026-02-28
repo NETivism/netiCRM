@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
 
   /**
@@ -232,7 +231,6 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
       }
     }
 
-
     if (CRM_Utils_Array::value('charts', $this->_params)) {
       $select[] = "COUNT({$this->_aliases['civicrm_mailing_event_bounce']}.id) as civicrm_mailing_bounce_count";
       $this->_columnHeaders["civicrm_mailing_bounce_count"]['title'] = ts('Bounce Count');
@@ -279,17 +277,12 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     // {$this->_aliases['civicrm_email']}.is_primary = 1) ";
     // }
 
-
-
-
     // if ( $this->_phoneField ) {
     // $this->_from .= "
     // LEFT JOIN civicrm_phone {$this->_aliases['civicrm_phone']}
     // ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_phone']}.contact_id AND
     // {$this->_aliases['civicrm_phone']}.is_primary = 1 ";
     // }
-
-
 
     //print_r($this->_from);
   }
@@ -423,7 +416,6 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -433,7 +425,6 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
   }
 
   public function mailing_select() {
-
 
     $data = [];
 
@@ -449,7 +440,6 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
   }
 
   public function bounce_type() {
-
 
     $data = ['' => '--Please Select--'];
 

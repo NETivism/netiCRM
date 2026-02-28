@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains payment processor related functions.
  */
@@ -171,7 +169,6 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
       return self::buildPayment($dao);
     }
   }
-
 
   public static function getPayments($paymentProcessorIDs, $mode) {
     if (!$paymentProcessorIDs) {

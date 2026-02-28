@@ -126,7 +126,6 @@ class CRM_Utils_Geocode_Google {
       $query = 'https://' . self::$_server . self::$_uri . $add;
     }
 
-
     $request = new HTTP_Request($query);
     $request->sendRequest();
     $string = $request->getResponseBody();

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for voting tab interface.
  */

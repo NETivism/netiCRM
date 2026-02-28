@@ -20,12 +20,11 @@ class Event extends PHPUnit_Framework_Testcase {
                     'is_active'                => 1,
                     'contact_id'               => $this->_contactId,
                     ];
-        
-        
+
     $event = CRM_Event_BAO_Event::create($params);
     return $event->id;
   }
- 
+
   /*
    * Helper function to delete an Event
    *

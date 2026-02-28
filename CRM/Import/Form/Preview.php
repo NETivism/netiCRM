@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class previews the uploaded file and returns summary
  * statistics
@@ -570,7 +567,6 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $errors = $errorStack->getErrors();
 
     $errorMessage = [];
-
 
     if (is_array($errors)) {
       foreach ($errors as $key => $value) {

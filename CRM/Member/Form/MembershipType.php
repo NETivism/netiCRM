@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Membership Type
  *
@@ -175,14 +173,12 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     // required in form rule
     $this->add('hidden', 'action', $this->_action);
 
-
     $this->add(
       'select',
       'contribution_type_id',
       ts('Contribution Type'),
       ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType()
     );
-
 
     $relTypeInd = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, NULL, TRUE);
     if (is_array($relTypeInd)) {
@@ -199,7 +195,6 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'weight')
     );
     $this->add('checkbox', 'is_active', ts('Enabled?'));
-
 
     $msgTemplates = CRM_Core_BAO_MessageTemplates::getMessageTemplates(FALSE);
     if (!empty($msgTemplates)) {

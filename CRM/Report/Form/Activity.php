@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Activity extends CRM_Report_Form {
 
   /**
@@ -423,7 +422,6 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $activityType = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'label', TRUE);
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
     $viewLinks = FALSE;
-
 
     if (CRM_Core_Permission::check('access CiviCRM')) {
       $viewLinks = TRUE;

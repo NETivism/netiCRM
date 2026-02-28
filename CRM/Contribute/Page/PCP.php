@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of contribution types
  */
@@ -244,7 +241,6 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         $action = array_sum(array_keys($this->links()));
 
         CRM_Core_DAO::storeValues($dao, $pcpSummary[$dao->id]);
-
 
         $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->contact_id);
 

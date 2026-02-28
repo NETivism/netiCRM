@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying CiviCRM Profile Fields.
  *
@@ -145,7 +143,6 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
       $config = CRM_Core_Config::singleton();
       if ($limitListingsGroupsID) {
 
-
         if (!CRM_Contact_BAO_GroupContact::isContactInGroup(
           $this->_id,
           $limitListingsGroupsID
@@ -154,7 +151,6 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
           return CRM_Core_Session::setStatus(ts('You do not have permission to view this contact record. Contact the site administrator if you need assistance.'));
         }
       }
-
 
       $values = [];
       $fields = CRM_Core_BAO_UFGroup::getFields(
@@ -169,9 +165,6 @@ class CRM_Profile_Page_Dynamic extends CRM_Core_Page {
         NULL,
         CRM_Core_Permission::VIEW
       );
-
-
-
 
       // make sure we dont expose all fields based on permission
       $admin = FALSE;

@@ -1,7 +1,6 @@
 <?php
 // $Id$
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ParticipantStatusTypeTest extends CiviUnitTestCase {
   protected $_apiversion;

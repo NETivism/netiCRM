@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  *
  */
@@ -193,7 +190,6 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       );
       $preview['viewURL'] = CRM_Utils_System::url('civicrm/mailing/view', "reset=1&id={$this->_mailingID}");
 
-
       $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo(
         'civicrm_mailing',
         $this->_mailingID
@@ -342,7 +338,6 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
         $mailing->approval_date = CRM_Utils_Date::isoToMysql($mailing->approval_date);
       }
       */
-
 
       // also set the scheduled_id
       $session = CRM_Core_Session::singleton();

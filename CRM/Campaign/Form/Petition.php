@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for adding a petition
  *
@@ -74,7 +71,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
-
     $ufJoinParams = ['entity_table' => 'civicrm_survey',
       'entity_id' => $this->_surveyId,
       'weight' => 2,
@@ -86,7 +82,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
 
     return $defaults;
   }
-
 
   public function buildQuickForm() {
 
@@ -105,10 +100,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
       );
       return;
     }
-
-
-
-
 
     $this->add('text', 'title', ts('Petition Title'), CRM_Core_DAO::getAttribute('CRM_Campaign_DAO_Survey', 'title'), TRUE);
 
@@ -174,7 +165,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $this->addFormRule(['CRM_Campaign_Form_Survey', 'formRule'], $this);
   }
 
-
   public function postProcess() {
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
@@ -204,8 +194,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $params['is_default'] = CRM_Utils_Array::value('is_default', $params, 0);
 
     $surveyId = CRM_Campaign_BAO_Survey::create($params);
-
-
 
     // also update the ProfileModule tables
     $ufJoinParams = ['is_active' => 1,

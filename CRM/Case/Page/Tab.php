@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class handle case related functions
  *
@@ -128,7 +125,6 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
 
     $this->assign('caseId', $this->_id);
 
-
     $output = CRM_Core_Selector_Controller::SESSION;
     $selector = new CRM_Activity_Selector_Activity($this->_contactId, $this->_permission, FALSE, 'case');
     $controller = new CRM_Core_Selector_Controller(
@@ -141,7 +137,6 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
       NULL,
       $this->_id
     );
-
 
     $controller->setEmbedded(TRUE);
 

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search_Interface {
 
   protected $_formValues;
@@ -128,7 +127,6 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
     }
     return $value;
   }
-
 
   public function __destruct() {
   }
@@ -270,7 +268,6 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
     if (!$contactID) {
       $contactID = 0;
     }
-
 
     CRM_Contact_BAO_Contact_Permission::cache($contactID);
 
@@ -726,7 +723,6 @@ WHERE      c.sort_name LIKE {$this->_text}
       'Participant' => [],
       'Membership' => [],
     ];
-
 
     // now iterate through the table and add entries to the relevant section
     $sql = "SELECT * FROM {$this->_tableName}";

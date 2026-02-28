@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
 
   /**

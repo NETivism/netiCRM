@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is to build the form for Deleting Group
  */
@@ -108,7 +106,6 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
    * @access public
    */
   public function postProcess() {
-
 
     if (CRM_Price_BAO_Field::deleteField($this->_fid)) {
       CRM_Core_Session::setStatus(ts('The Price Field \'%1\' has been deleted.', [1 => $this->_title]));

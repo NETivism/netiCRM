@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class provides the functionality to print activity records
  */

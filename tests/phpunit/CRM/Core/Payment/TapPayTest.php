@@ -229,7 +229,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
-    
+
     // these data should be null when one-time payment
     $this->assertEquals(NULL, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals(NULL, $dao->card_key, "In line " . __LINE__);
@@ -378,7 +378,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     ### 2nd contribution of recurring
     $now = strtotime(date('Y-m-05', strtotime('+1 month', $basemonth))) + 80000; // later of that 5th of month
-    $microtime = ($now + 5)*1000;
+    $microtime = ($now + 5) * 1000;
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -447,11 +447,11 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals($this->_cardToken, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
-    
+
     ### 3rd contribution, change amount
     $amount = 333;
     $now = strtotime(date('Y-m-05', strtotime('+2 month', $basemonth))) + 80000; // later of that 5th of month
-    $microtime = ($now + 5)*1000;
+    $microtime = ($now + 5) * 1000;
     CRM_Core_DAO::setFieldValue("CRM_Contribute_DAO_ContributionRecur", $recurring->id, 'amount', $amount);
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
@@ -524,7 +524,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     ### 4th contribution, this should be latest contribution, end recurring
     $now = strtotime(date('Y-m-05', strtotime('+3 month', $basemonth))) + 65000; // later of that 5th of month
-    $microtime = ($now + 6)*1000;
+    $microtime = ($now + 6) * 1000;
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -597,7 +597,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     ### 5th contribution, no further contributions should executed this time
     $now = strtotime(date('Y-m-05', strtotime('+4 month', $basemonth))) + 65000; // later of that 5th of month
-    $microtime = ($now + 7)*1000;
+    $microtime = ($now + 7) * 1000;
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -747,7 +747,7 @@ HAVING MAX(t.expiry_date) < %2";
       $this->_refundContributionId,
       'cancel_date',
       'id',
-      $expectedValue = date('Y-m-d H:i:s', $microtime/1000),
+      $expectedValue = date('Y-m-d H:i:s', $microtime / 1000),
       "In line " . __LINE__
     );
 

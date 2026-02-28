@@ -576,7 +576,6 @@ class CRM_Utils_Date {
       }
     }
 
-
     if ($dateType == 2 || $dateType == 4) {
       $formattedDate = explode("/", $value);
       if (count($formattedDate) != 3) {
@@ -1486,7 +1485,6 @@ class CRM_Utils_Date {
       $format = $config->dateInputFormat;
     }
 
-
     // get actual format
     $actualPHPFormats = CRM_Core_SelectValues::datePluginToPHPFormats();
     $dateFormat = $actualPHPFormats[$format];
@@ -1579,7 +1577,7 @@ class CRM_Utils_Date {
       if ($direction === 'last') {
         $startDate = (clone $endReference)->modify("-{$amount} {$unit}")->format('Y-m-d');
         $endDate = $endReference->format('Y-m-d');
-        
+
         // Adjust start date by +1 day
         $startDate = (new DateTime($startDate))->modify('+1 day')->format('Y-m-d');
       }

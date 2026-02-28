@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Participant
  *
@@ -48,7 +46,6 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-
 
     $values = $ids = [];
     $participantID = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
@@ -102,8 +99,6 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $noteValue = CRM_Core_BAO_Note::getNote($participantID, 'civicrm_participant');
 
     $values[$participantID]['note'] = array_values($noteValue);
-
-
 
     // Get Line Items
     $lineItem = CRM_Price_BAO_LineItem::getLineItems($participantID);
@@ -193,7 +188,6 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
 
     // add viewed participant to recent items list
 
-
     $url = CRM_Utils_System::url(
       'civicrm/contact/view/participant',
       "action=view&reset=1&id={$values[$participantID]['id']}&cid={$values[$participantID]['contact_id']}&context=home"
@@ -228,7 +222,6 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $this->assign('displayName', $displayName);
 
     $title = $displayName . ' (' . $participantRoles[$values[$participantID]['role_id']] . ' - ' . $eventTitle . ')';
-
 
     $sep = CRM_Core_DAO::VALUE_SEPARATOR;
     $viewRoles = [];

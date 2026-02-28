@@ -1,7 +1,6 @@
 <?php
 // $Id: Participant.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -124,7 +123,6 @@ function &civicrm_participant_get(&$params) {
   }
 
   $participant = &civicrm_participant_search($params);
-
 
   if (count($participant) != 1 &&
     !CRM_Utils_Array::value('returnFirst', $params)

@@ -158,7 +158,7 @@ class CRM_Utils_SqlParser {
           if (!empty($fromClause->alias)) {
             $this->addToAllowlist('table', $fromClause->alias);
           }
-          
+
           if (!empty($fromClause->expr) && $fromClause->subquery) {
             $this->collectSubqueryAliases($fromClause->expr);
           }
@@ -552,17 +552,17 @@ class CRM_Utils_SqlParser {
    */
   private function parseIdentifier(string $identifier): array {
     $identifier = $this->normalizeIdentifier($identifier);
-    
+
     // Remove operators by cutting at first space
     if (strpos($identifier, ' ') !== FALSE) {
       $identifier = trim(substr($identifier, 0, strpos($identifier, ' ')));
     }
-    
+
     if (strpos($identifier, '.') !== FALSE) {
       $parts = explode('.', $identifier, 2);
       return ['table' => trim($parts[0]), 'field' => trim($parts[1])];
     }
-    
+
     return ['table' => NULL, 'field' => $identifier];
   }
 

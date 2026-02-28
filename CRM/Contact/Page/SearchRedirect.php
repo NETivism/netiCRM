@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This is a dummy class that does nothing at the moment.
  * the template is used primarily for displaying result page

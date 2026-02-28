@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * a page for mailing preview
  */
@@ -97,10 +95,8 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
       $this->_contactID = $session->get('userID');
     }
 
-
     $this->_mailing = new CRM_Mailing_BAO_Mailing();
     $this->_mailing->id = $this->_mailingID;
-
 
     if (!$this->_mailing->find(TRUE) ||
       !$this->checkPermission()
@@ -112,7 +108,6 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     $this->_mailing->url_tracking = 0;
 
     CRM_Mailing_BAO_Mailing::tokenReplace($this->_mailing);
-
 
     // refs #32614, disable smarty evaluation functions
 

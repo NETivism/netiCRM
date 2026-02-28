@@ -37,7 +37,6 @@
  * Class to retrieve information about a contribution page
  */
 
-
 class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
 
   /**
@@ -61,7 +60,6 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
       CRM_Core_Error::debug_log_message("$contributionPageID is not set");
       return $data;
     }
-
 
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->contribution_page_id = $contributionPageID;
@@ -147,7 +145,6 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
       $data['is_active'] = FALSE;
     }
 
-
     $data['money_raised_percentage'] = 0;
     if ($achievement['goal'] > 0) {
       $data['goal_type'] = $achievement['type'];
@@ -188,7 +185,6 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
     $data['colors']["main_bg"] = $widget->color_main_bg;
     $data['colors']["bg"] = $widget->color_bg;
     $data['colors']["about_link"] = $widget->color_about_link;
-
 
     return $data;
   }

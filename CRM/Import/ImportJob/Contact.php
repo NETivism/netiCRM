@@ -203,7 +203,6 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       }
     }
 
-
     $this->_parser = new CRM_Import_Parser_Contact(
       $this->_mapperKeys,
       $this->_mapperLocTypes,
@@ -468,7 +467,6 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
     return FALSE;
   }
-
 
   public function tagImportedContactsWithNewTag($contactIds, $newTagName, $newTagDesc) {
     static $newTagId;

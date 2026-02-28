@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * State machine for managing different states of the Import process.
  *
@@ -58,7 +56,6 @@ class CRM_Mailing_StateMachine_Send extends CRM_Core_StateMachine {
       'CRM_Mailing_Form_Upload' => NULL,
       'CRM_Mailing_Form_Test' => NULL,
     ];
-
 
     if (CRM_Mailing_Info::workflowEnabled()) {
       if (CRM_Core_Permission::check('schedule mailings')) {

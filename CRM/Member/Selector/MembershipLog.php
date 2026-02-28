@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -207,7 +199,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     if (!empty($orderBy) && !preg_match('/^id/i', $orderBy)) {
       $orderBy .= ', id DESC';
     }
-    $order = empty($orderBy)?"":"ORDER BY $orderBy";
+    $order = empty($orderBy) ? "" : "ORDER BY $orderBy";
 
     $offsetClause = !empty($offset) ? "OFFSET $offset" : "";
     $limit = !empty($this->_limit) ? "LIMIT $this->_limit" : "";

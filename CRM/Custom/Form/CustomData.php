@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * this class builds custom data
  */

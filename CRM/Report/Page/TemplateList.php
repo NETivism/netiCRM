@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Reprot templates available
  */

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of categories
  */
@@ -136,7 +134,6 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
       $adminTagSet = TRUE;
     }
     $this->assign('adminTagSet', $adminTagSet);
-
 
     $usedFor = CRM_Core_OptionGroup::values('tag_used_for');
 

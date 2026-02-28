@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is to build the form for Deleting Group
  */
@@ -63,7 +61,6 @@ class CRM_Event_Form_ManageEvent_Delete extends CRM_Event_Form_ManageEvent {
     else {
       $this->_title = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $this->_id, 'title');
     }
-
 
     if (!CRM_Event_BAO_Event::checkPermission($this->_id, CRM_Core_Permission::DELETE)) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));

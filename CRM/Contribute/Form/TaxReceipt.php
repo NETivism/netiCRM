@@ -22,7 +22,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     $this->_name = 'taxreceipt_'.$this->_id;
     $this->_type = CRM_Utils_Request::retrieve('type', 'String', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
- 
+
     $breadcrumb = [
       [
                 'title' => ts('View Contribution'),
@@ -117,7 +117,7 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
     if (!empty($button)) {
       $this->addButtons($button);
     }
-    
+
     return;
   }
 

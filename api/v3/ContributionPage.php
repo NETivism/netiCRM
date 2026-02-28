@@ -26,7 +26,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /**
  * File for the CiviCRM APIv3 group functions
  *
@@ -107,7 +106,6 @@ function civicrm_api3_contribution_page_get($params) {
 function civicrm_api3_contribution_page_delete($params) {
   return _civicrm_api3_basic_delete(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
-
 
 function _civicrm_api3_contribution_page_getamount(&$page, $pageId) {
   if ($pageId) {

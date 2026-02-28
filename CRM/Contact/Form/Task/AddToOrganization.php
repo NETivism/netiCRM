@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to add contact(s) to Organization
  */
@@ -96,13 +94,11 @@ class CRM_Contact_Form_Task_AddToOrganization extends CRM_Contact_Form_Task {
       $this->assign('searchRows', $searchRows);
     }
 
-
     $this->assign('searchCount', $searchCount);
     $this->assign('searchDone', $this->get('searchDone'));
     $this->assign('contact_type_display', ts('Organization'));
     $this->addElement('submit', $this->getButtonName('refresh'), ts('Search'), ['class' => 'form-submit']);
     $this->addElement('submit', $this->getButtonName('cancel'), ts('Cancel'), ['class' => 'form-submit']);
-
 
     $this->addButtons(
       [

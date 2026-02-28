@@ -37,10 +37,6 @@
  * Files required
  */
 
-
-
-
-
 /**
  * This file is for civigrant search
  */
@@ -203,7 +199,6 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       );
     }
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $selector = new CRM_Grant_Selector_Search(
       $this->_queryParams,
@@ -246,14 +241,12 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
   public function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('Name or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-
     CRM_Grant_BAO_Query::buildSearchForm($this);
 
     /*
          * add form checkboxes for each row. This is needed out here to conform to QF protocol
          * of all elements being declared in builQuickForm
          */
-
 
     $rows = $this->get('rows');
     if (is_array($rows)) {
@@ -267,9 +260,7 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-
       $permission = CRM_Core_Permission::getPermission();
-
 
       $tasks = ['' => ts('- actions -')];
       $permissionedTask = CRM_Grant_Task::permissionedTaskTitles($permission);
@@ -345,7 +336,6 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       $this->_formValues = CRM_Contact_BAO_SavedSearch::getFormValues($this->_ssID);
     }
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $this->set('formValues', $this->_formValues);
@@ -369,8 +359,6 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
-
-
 
     $selector = new CRM_Grant_Selector_Search(
       $this->_queryParams,

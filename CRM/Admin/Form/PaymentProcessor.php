@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -53,7 +51,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   protected $_isTestFreezed = NULL;
 
   protected $_isTypeFreezed = NULL;
-  
+
   protected $_ppDAO;
   public function preProcess() {
     parent::preProcess();
@@ -61,7 +59,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
 
     // get the payment processor meta information
-    
+
     if ($this->_id) {
       $this->_ppType = CRM_Utils_Request::retrieve('pp', 'String', $this, FALSE, NULL);
       if (!$this->_ppType) {
@@ -119,7 +117,6 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     $this->assign('is_recur', $this->_ppDAO->is_recur);
 
-
     $class = $this->_ppDAO->class_name;
     $class = 'CRM_Core_'.$class;
     if (method_exists($class, 'getAdminFields')) {
@@ -176,7 +173,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if ($haveActiveRecur) {
         $this->_isFreezed = TRUE;
       }
-      $haveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND is_test = 1 AND contribution_status_id = 5", [ 1 => [ $this->_id+1 , 'Positive']]);
+      $haveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND is_test = 1 AND contribution_status_id = 5", [ 1 => [ $this->_id + 1 , 'Positive']]);
       if ($haveActiveRecur) {
         $this->_isTestFreezed = TRUE;
       }

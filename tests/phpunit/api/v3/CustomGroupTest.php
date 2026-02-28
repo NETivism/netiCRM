@@ -394,8 +394,6 @@ class api_v3_CustomGroupTest extends CiviUnitTestCase {
      * main success get function
      */
 
-
-
   public function testGetCustomGroupSuccess() {
 
     civicrm_api($this->_entity, 'create', $this->_params);

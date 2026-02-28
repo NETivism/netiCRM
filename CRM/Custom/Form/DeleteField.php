@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is to build the form for deleting a field
  */
@@ -65,7 +62,6 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_id = $this->get('id');
-
 
     $defaults = [];
     $params = ['id' => $this->_id];

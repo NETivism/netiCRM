@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * form to process actions on the field aspect of Custom
  */
@@ -160,7 +158,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
       $defaults['is_active'] = 1;
     }
 
-
     if ($this->_action & CRM_Core_Action::ADD) {
       $fieldValues = ['option_group_id' => $this->_optionGroupID];
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
@@ -240,7 +237,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
           ],
         ]
       );
-
 
       // if view mode pls freeze it with the done button.
       if ($this->_action & CRM_Core_Action::VIEW) {
@@ -423,7 +419,6 @@ SELECT count(*)
     $params = $this->controller->exportValues('Option');
 
     // set values for custom field properties and save
-
 
     $customOption = new CRM_Core_DAO_OptionValue();
     $customOption->label = $params['label'];

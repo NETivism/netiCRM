@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class contains all campaign related functions that are called using AJAX (jQuery)
  */
@@ -69,13 +67,11 @@ class CRM_Campaign_Page_AJAX {
       }
     }
 
-
     $activityId = CRM_Campaign_Form_Task_Interview::registerInterview($params);
     $result = ['status' => ($activityId) ? 'success' : 'fail',
       'voter_id' => $voterId,
       'activity_id' => $params['interviewer_id'],
     ];
-
 
     echo json_encode($result);
 
@@ -224,7 +220,6 @@ class CRM_Campaign_Page_AJAX {
       }
     }
 
-
     $queryParams = CRM_Contact_BAO_Query::convertFormValues($params);
     $query = new CRM_Contact_BAO_Query(
       $queryParams,
@@ -266,7 +261,6 @@ class CRM_Campaign_Page_AJAX {
       if ($searchCount < $offset) {
         $offset = 0;
       }
-
 
       $config = CRM_Core_Config::singleton();
 
@@ -320,7 +314,6 @@ class CRM_Campaign_Page_AJAX {
         $searchRows[$contactID][$extraVoterColName] = $voterExtraColHtml;
       }
     }
-
 
     $selectorElements = array_merge($selectorCols, [$extraVoterColName]);
 
@@ -407,7 +400,6 @@ class CRM_Campaign_Page_AJAX {
           $activityParams['skipRecentView'] = 1;
           $activityParams['activity_date_time'] = date('YmdHis');
           $activityParams['activity_type_id'] = $activityTypeId;
-
 
           $activity = CRM_Activity_BAO_Activity::create($activityParams);
           if ($activity->id) {

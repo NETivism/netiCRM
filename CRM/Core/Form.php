@@ -36,16 +36,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
 class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
@@ -325,7 +315,6 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   public function validate() {
     $error = parent::validate();
-
 
     $hookErrors = CRM_Utils_Hook::validate(
       get_class($this),
@@ -1061,7 +1050,6 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       $this->addRule("{$locationName}[$locationId][address][country_id]", ts("Please select the Country for %1.", [1 => $title]), 'required');
     }
 
-
     if ($phone) {
       $location[$locationId]['phone'][1]['phone'] = $this->addElement(
         'text',
@@ -1281,7 +1269,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     $currencies = CRM_Core_OptionGroup::values('currencies_enabled');
     if (!$required) {
-      $currencies = [ ''=> ts('- select -') ] + $currencies;
+      $currencies = [ '' => ts('- select -') ] + $currencies;
     }
     $ele = $this->add('select', $name, $label, $currencies, $required);
     if (!$defaultCurrency) {
@@ -1312,7 +1300,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
             if ($data_type == 'File') {
               $customFieldID = CRM_Core_BAO_CustomField::getKeyID($name);
               $file = CRM_Core_BAO_CustomField::getFileURL($this->_id, $customFieldID);
-              $file = $file['file_id']??FALSE;
+              $file = $file['file_id'] ?? FALSE;
             }
             if ($name == 'image_URL') {
               $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id, 'image_URL');

@@ -2080,7 +2080,7 @@ GROUP BY civicrm_primary_id ";
    *
    */
   public static function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
-    foreach ($headerRows as & $header) {
+    foreach ($headerRows as &$header) {
       $split = explode('-', $header);
       if ($relationTypeName = CRM_Utils_Array::value($split[0], $contactRelationshipTypes)) {
         $split[0] = $relationTypeName;

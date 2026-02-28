@@ -17,7 +17,7 @@ function run_contact_greeting_update($limit = 100) {
      'Household' =>  [ 'email_greeting', 'postal_greeting', 'addressee' ],
      'Organization' =>  [ 'addressee' ],
   ];
-    
+
   foreach ($process as $contactType => $greetings) {
     foreach ($greetings as $greeting) {
       // if valueID is not passed use default value
@@ -88,7 +88,7 @@ function run_contact_greeting_update($limit = 100) {
           $cacheFieldQuery .= " WHEN {$contactID} THEN '{$greetingString}' ";
         }
       }
-      
+
       if (!empty($allContactIds)) {
         $cacheFieldQuery .= " ELSE {$greeting}_display END;";
         if (!empty($contactIds)) {

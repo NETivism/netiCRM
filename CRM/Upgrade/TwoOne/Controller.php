@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Controller extends CRM_Upgrade_Controller {
   public function &getPages() {
     $pages = ['CRM_Upgrade_TwoOne_Form_Step1' => NULL,

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
 
   /**
@@ -117,7 +116,6 @@ class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
     $defaultOnly = FALSE
   ) {
 
-
     $petitionTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'petition', 'name');
 
     $survey = [];
@@ -150,7 +148,6 @@ class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @static
    */
   public static function getSurveyList($all = FALSE) {
-
 
     $survey = [];
     $dao = new CRM_Campaign_DAO_Survey();
@@ -532,7 +529,6 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       return $isSurveyActivity;
     }
 
-
     $activity = new CRM_Activity_DAO_Activity();
     $activity->id = $activityId;
     $activity->selectAdd('source_record_id, activity_type_id');
@@ -616,7 +612,6 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
         ];
       }
     }
-
 
     $ids = ['id' => $surveyId];
     foreach ($voterLinks as $link) {

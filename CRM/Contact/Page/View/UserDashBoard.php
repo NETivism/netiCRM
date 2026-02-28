@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * CMS User Dashboard
  * This class is used to build User Dashboard
@@ -60,7 +57,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    * @static
    */
   public static $_links = NULL;
-  
+
   public function __construct() {
     parent::__construct();
 
@@ -124,7 +121,6 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
     $dashboardElements = [];
     $config = CRM_Core_Config::singleton();
 
-
     $this->_userOptions = CRM_Core_BAO_Preferences::valueOptions('user_dashboard_options');
 
     $components = CRM_Core_Component::getEnabledComponents();
@@ -183,7 +179,6 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       $this->assign('pcpInfo', $pcpInfo);
     }
 
-
     usort($dashboardElements, ['CRM_Utils_Sort', 'cmpFunc']);
     $this->assign('dashboardElements', $dashboardElements);
 
@@ -238,7 +233,6 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
           'title' => ts('View Relationship'),
         ],
       ];
-
 
       if (CRM_Core_Permission::check('access CiviCRM')) {
         self::$_links = array_merge(self::$_links, [CRM_Core_Action::DISABLE => [

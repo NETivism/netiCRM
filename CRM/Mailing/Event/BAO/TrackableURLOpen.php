@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_TrackableURLOpen {
 
   /**
@@ -57,15 +55,10 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
    */
   public static function track($queue_id, $url_id) {
 
-
-
-
     $search = new CRM_Mailing_BAO_TrackableURL();
 
     /* To find the url, we also join on the queue and job tables.  This
          * prevents foreign key violations. */
-
-
 
     $job = CRM_Mailing_BAO_Job::getTableName();
     $eq = CRM_Mailing_Event_BAO_Queue::getTableName();

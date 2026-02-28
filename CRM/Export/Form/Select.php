@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -144,7 +142,6 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       }
     }
 
-
     $componentMode = $this->get('component_mode');
     switch ($componentMode) {
       case 2:
@@ -176,12 +173,10 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
         break;
     }
 
-
     $this->_task = $values['task'];
     if ($this->_exportMode == self::CONTACT_EXPORT) {
       $contactTasks = CRM_Contact_Task::taskTitles();
       $taskName = $contactTasks[$this->_task];
-
 
       CRM_Contact_Form_Task::preProcessCommon($this);
     }
@@ -417,7 +412,6 @@ FROM   {$this->_componentTable}
         $exportType = 'Export Activity';
         break;
     }
-
 
     $mappingTypeId = CRM_Core_OptionGroup::getValue('mapping_type', $exportType, 'name');
     $this->set('mappingTypeId', $mappingTypeId);

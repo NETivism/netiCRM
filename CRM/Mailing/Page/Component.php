@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page to display / edit the header / footer of a mailing
  *

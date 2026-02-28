@@ -62,7 +62,6 @@ class CRM_ACL_API {
       $contactID = 0;
     }
 
-
     return CRM_ACL_BAO_ACL::check($str, $contactID);
   }
 
@@ -111,7 +110,6 @@ class CRM_ACL_API {
       // anonymous user
       $contactID = 0;
     }
-
 
     $whereACL = CRM_ACL_BAO_ACL::whereClause($type, $tables, $whereTables, $contactID);
     if (!$skipDeleteClause) {

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Pledge_Page_Tab extends CRM_Core_Page {
   public $_action;
   public $_id;
@@ -160,7 +159,6 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
       $this->edit();
     }
     elseif ($this->_action & CRM_Core_Action::DETACH) {
-
 
       CRM_Pledge_BAO_Payment::updatePledgePaymentStatus(
         $this->_id,

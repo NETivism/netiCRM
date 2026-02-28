@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for Membership Renewal
  *
@@ -90,7 +87,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $this->_memTypeDetails = CRM_Member_BAO_MembershipType::getMembershipTypeDetails($this->_memType);
     }
 
-    
     $this->_endDate = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $this->_id, "end_date");
     $this->assign("endDate", $this->_endDate);
     $this->assign(
@@ -131,7 +127,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
       foreach ($processors as $ppID => $label) {
 
-
         $paymentProcessor = &CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $this->_mode);
         if ($paymentProcessor['payment_processor_type'] == 'PayPal' && !$paymentProcessor['user_name']) {
           continue;
@@ -165,7 +160,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $this->assign('bltID', $this->_bltID);
 
       $this->_fields = [];
-
 
       CRM_Core_Payment_Form::setCreditCardFields($this);
 
@@ -220,7 +214,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $contributionParams = ['id' => $defaults['record_contribution']];
       $contributionIds = [];
 
-
       CRM_Contribute_BAO_Contribution::getValues($contributionParams, $defaults, $contributionIds);
     }
 
@@ -255,7 +248,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $fields["country-{$this->_bltID}"] = 1;
       $fields["email-{$this->_bltID}"] = 1;
       $fields["email-Primary"] = 1;
-
 
       CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactID, $fields, $this->_defaults);
 
@@ -370,13 +362,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       CRM_Core_Payment_Form::buildCreditCard($this, TRUE);
     }
 
-
     // Retrieve the name and email of the contact - this will be the TO for receipt email
     list($this->_contributorDisplayName,
       $this->_contributorEmail
     ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactID);
     $this->assign('email', $this->_contributorEmail);
-
 
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $this->assign('outBound_option', $mailingInfo['outBound_option']);
@@ -417,9 +407,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
    * @return None
    */
   public function postProcess() {
-
-
-
 
     // get the submitted form values.
     $this->_params = $formValues = $this->controller->exportValues($this->_name);
@@ -501,7 +488,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         $paymentParams['email'] = $this->_contributorEmail;
       }
 
-
       CRM_Core_Payment_Form::mapParams($this->_bltID, $this->_params, $paymentParams, TRUE);
 
       $payment = &CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
@@ -559,7 +545,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     $endDate = CRM_Utils_Date::processDate($renewMembership->end_date);
 
-
     // Retrieve the name and email of the current user - this will be the FROM for the receipt email
     list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($userID);
 
@@ -587,10 +572,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         $contributionParams[$f] = CRM_Utils_Array::value($f, $formValues);
       }
 
-
       $contribution = &CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);
-
-
 
       $mpDAO = new CRM_Member_DAO_MembershipPayment();
       $mpDAO->membership_id = $renewMembership->id;
@@ -752,7 +734,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     $statusMsg = ts('%1 membership for %2 has been renewed.', [1 => $memType, 2 => $this->_contributorDisplayName]);
 
-    $endDate = $endDate ?  CRM_Utils_Date::customFormat($endDate) : CRM_Utils_Date::customFormat($renewMembership->end_date);
+    $endDate = $endDate ? CRM_Utils_Date::customFormat($endDate) : CRM_Utils_Date::customFormat($renewMembership->end_date);
     if ($endDate) {
       $statusMsg .= ' ' . ts('The new membership End Date is %1.', [1 => $endDate]);
     }

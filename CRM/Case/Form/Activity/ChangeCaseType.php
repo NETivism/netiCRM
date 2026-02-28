@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for OpenCase Activity
  *
@@ -139,7 +137,6 @@ class CRM_Case_Form_Activity_ChangeCaseType {
       // always expecting a change, so case-id is a must.
       return;
     }
-
 
     $caseTypes = CRM_Case_PseudoConstant::caseType('name');
     $allCaseTypes = CRM_Case_PseudoConstant::caseType('label', FALSE);

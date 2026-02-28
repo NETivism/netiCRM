@@ -112,7 +112,6 @@ class api_v3_MailingTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'Queue event could not be found', 'In line ' . __LINE__);
   }
 
-
   //----------- civicrm_mailing_event_forward methods ----------
 
   /**

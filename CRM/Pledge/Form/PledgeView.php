@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for Pledge
  *
@@ -49,7 +46,6 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
    * @access public
    */
   public function preProcess() {
-
 
     $values = $ids = [];
     $params = ['id' => $this->get('id')];
@@ -87,8 +83,6 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
       $values['pledge_status'] = CRM_Utils_Array::value($values['status_id'], CRM_Contribute_PseudoConstant::contributionStatus());
     }
 
-
-
     $url = CRM_Utils_System::url(
       'civicrm/contact/view/pledge',
       "action=view&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
@@ -107,7 +101,6 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
         "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
-
 
     $displayName = CRM_Contact_BAO_Contact::displayName($values['contact_id']);
     $this->assign('displayName', $displayName);

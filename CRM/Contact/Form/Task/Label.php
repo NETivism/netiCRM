@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class helps to print the labels for contacts
  *
@@ -75,7 +73,6 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     ];
 
     $this->add('select', 'label_id', ts('Select Label'), ['' => ts('- select label -')] + $label, TRUE);
-
 
     // add select for Location Type
     $this->addElement(
@@ -122,7 +119,6 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     $config = CRM_Core_Config::singleton();
     $locName = NULL;
     //get the address format sequence from the config file
-
 
     $sequence = CRM_Core_BAO_Preferences::value('mailing_sequence');
     foreach ($sequence as $v) {
@@ -375,8 +371,6 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @access  public
    */
   public function createLabel(&$contactRows, &$format) {
-
-
 
     $pdf = new CRM_Utils_PDF_Label($format, 'mm');
     $pdf->Open();

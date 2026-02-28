@@ -40,11 +40,6 @@
  *
  */
 
-
-
-
-
-
 class CRM_Core_Selector_Controller {
 
   public $_case;
@@ -362,7 +357,6 @@ class CRM_Core_Selector_Controller {
         self::$_template->assign("{$this->_prefix}qill", $qill);
         self::$_template->assign("{$this->_prefix}summary", $summary);
       }
-
 
       // always store the current pageID and sortID
       $this->_store->set(

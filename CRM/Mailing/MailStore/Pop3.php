@@ -76,7 +76,7 @@ class CRM_Mailing_MailStore_Pop3 extends CRM_Mailing_MailStore {
       print "fetching message $nr and putting it in the ignored mailbox\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_ignored);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_transport->delete($nr);
   }
@@ -93,7 +93,7 @@ class CRM_Mailing_MailStore_Pop3 extends CRM_Mailing_MailStore {
       print "fetching message $nr and putting it in the processed mailbox\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_processed);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_transport->delete($nr);
   }

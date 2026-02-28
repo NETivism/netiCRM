@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to support Proximity Searches
  */

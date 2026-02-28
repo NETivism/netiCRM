@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
 
   public $bounces;
@@ -61,7 +58,6 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     if (!$q) {
       return $success;
     }
-
 
     $transaction = new CRM_Core_Transaction();
     $bounce = new CRM_Mailing_Event_BAO_Bounce();

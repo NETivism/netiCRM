@@ -87,7 +87,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $error[] = ts('Password is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
 
-
     if (!empty($error)) {
       return CRM_Utils_Array::implode('<br>', $error);
     }
@@ -132,7 +131,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         2 => [0, 'Integer'],
       ];
       $paramsTest = [
-        1 => [$ppid+1, 'Positive'],
+        1 => [$ppid + 1, 'Positive'],
         2 => [1, 'Integer'],
       ];
       $sql = 'SELECT count(id) FROM civicrm_contribution WHERE payment_processor_id = %1 AND is_test = %2';
@@ -154,7 +153,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       $processorOptionsTest = ['' => ts('-- Select --')];
       foreach ($paymentProcessorsTest as $id => $processor) {
-        if ($id != $ppid+1 && !empty($processor['user_name']) && empty($processor['url_site'])) {
+        if ($id != $ppid + 1 && !empty($processor['user_name']) && empty($processor['url_site'])) {
           $processorOptionsTest[$id] = $processor['user_name']." ({$processor['name']}, ID:{$processor['id']})";
         }
       }
@@ -162,7 +161,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
     return $fields;
   }
-
 
   public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
@@ -299,8 +297,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'currency' => $contribution['currency'],
         'order_number' => $contribution['trxn_id'],
         'details' => mb_substr($details, 0, 98), // item name
-        'cardholder'=> [
-          'phone_number'=> '', #required
+        'cardholder' => [
+          'phone_number' => '', #required
           'name' => '', #required but use empty
           'name_en' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '',
           'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '',
@@ -336,7 +334,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       // Allow further manipulation of the arguments via custom hooks ..
       $mode = $paymentProcessor['is_test'] ? 'test' : 'live';
       $null = NULL;
-      
+
       $paymentClass = self::singleton($mode, $paymentProcessor, $null);
       CRM_Utils_Hook::alterPaymentProcessorParams($paymentClass, $payment, $data);
 
@@ -420,7 +418,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     // Update new trxn_id
     $c->trxn_id = self::getContributionTrxnID($c->id);
-
 
     $ppid = $firstContribution->payment_processor_id;
     $mode = $firstContribution->is_test ? 'test' : 'live';
@@ -532,7 +529,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
 
     $isTest = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribId, 'is_test');
-    $mode = $isTest?'test':'live';
+    $mode = $isTest ? 'test' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $mode);
     if (empty($paymentProcessor)) {
       CRM_Core_Error::fatal(ts('Missing input parameters').':getPayment');
@@ -554,7 +551,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     // Prepare tappay api post data
     $details = !empty($contribution['amount_level']) ? $contribution['source'].'-'.$contribution['amount_level'] : $contribution['source'];
     $tappayData = new CRM_Contribute_DAO_TapPay();
-    $tappayData->contribution_id =$contribId;
+    $tappayData->contribution_id = $contribId;
     $tappayData->card_key = $tokenParams['card_key'];
     $tappayData->card_token = $tokenParams['card_token'];
     $tappayData->save();
@@ -633,8 +630,8 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         'partner_key' => $paymentProcessor['password'],
         'merchant_id' => $paymentProcessor['user_name'],
         'currency' => $contribution['currency'],
-        'cardholder'=> [
-          'phone_number'=> '', #required #TODO
+        'cardholder' => [
+          'phone_number' => '', #required #TODO
           'name' => '', #required but use empty
           'name_en' => !empty($payment['cardholder_name']) ? $payment['cardholder_name'] : '',
           'email' => !empty($payment['cardholder_email']) ? $payment['cardholder_email'] : '',
@@ -850,7 +847,6 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
   }
 
-
   public static function doExecuteAllRecur($time = NULL) {
     // Check sequence;
     $seq = new CRM_Core_DAO_Sequence();
@@ -926,7 +922,7 @@ LIMIT 0, 100
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       // Check payment processor
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
         CRM_Core_Error::debug_log_message(ts("Payment processor of recur is not %1.", [1 => 'TapPay']));
         continue;
@@ -1156,7 +1152,7 @@ LIMIT 0, 100
     }
 
     $resultNote = self::doSyncRecord($contributionId);
-    
+
     // redirect to contribution view page
     $query = http_build_query($get);
     $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
@@ -1326,7 +1322,7 @@ LIMIT 0, 100
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       // Check payment processor
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
       if (strtolower($paymentProcessor['payment_processor_type']) != 'tappay') {
         CRM_Core_Error::debug_log_message($resultNote.ts("Payment processor of recur is not %1.", [1 => 'TapPay']));
         continue;
@@ -1346,7 +1342,7 @@ LIMIT 0, 100
       1 => [$currentDay, 'String'],
     ]);
     while ($dao->fetch()) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
       if ($dao->id && strtolower($paymentProcessor['payment_processor_type']) == 'tappay') {
         $params = [
           'id' => $dao->id,

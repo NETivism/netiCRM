@@ -73,16 +73,16 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase {
                     'currency'             => 'USD',
                     'amount'               => 300
                     ];
-        
+
     //do test for normal add.
     require_once "CRM/Pledge/BAO/Pledge.php";
     $pledge = CRM_Pledge_BAO_Pledge::add($params);
-        
+
     foreach ($params as $param => $value) {
       $this->assertEquals($value, $pledge->$param);
     }
   }
- 
+
   /**
    *  Retrieve a pledge based on a pledge id = 0
    */
@@ -91,10 +91,10 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase {
     $params   = [ 'pledge_id' => 0 ];
     require_once 'CRM/Pledge/BAO/Pledge.php';
     $pledgeId = CRM_Pledge_BAO_Pledge::retrieve($params, $defaults);
-        
+
     $this->assertEquals(count($pledgeId), 0, "Pledge Id must be greater than 0");
   }
-    
+
   /**
    *  Retrieve a payment based on a Null pledge id random string
    */
@@ -103,7 +103,7 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase {
     $params   = [ 'pledge_id' => 'random text' ];
     require_once 'CRM/Pledge/BAO/Pledge.php';
     $pledgeId = CRM_Pledge_BAO_Pledge::retrieve($params, $defaults);
-        
+
     $this->assertEquals(count($pledgeId), 0, "Pledge Id must be a string");
   }
 
@@ -126,15 +126,15 @@ class CRM_Pledge_BAO_PledgeTest extends CiviUnitTestCase {
                     'currency'             => 'USD',
                     'amount'               => 300
                     ];
-        
+
     require_once "CRM/Pledge/BAO/Pledge.php";
     $pledge = CRM_Pledge_BAO_Pledge::add($params);
-        
+
     $defaults     = [];
     $pledgeParams = [ 'pledge_id' => $pledge->id ];
-        
+
     $pledgeId = CRM_Pledge_BAO_Pledge::retrieve($pledgeParams, $defaults);
-        
+
     $this->assertEquals(count($pledgeId), 1, "Pledge was retrieved");
   }
 

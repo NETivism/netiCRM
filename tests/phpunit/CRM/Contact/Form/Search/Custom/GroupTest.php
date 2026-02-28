@@ -68,17 +68,17 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM Custom Search Tests',
                  ];
   }
-    
+
   public function dataProvider() {
-    return new CRM_Contact_Form_Search_Custom_GroupTestDataProvider;
+    return new CRM_Contact_Form_Search_Custom_GroupTestDataProvider();
   }
 
   public function setUp() {
     parent::setUp();
   }
-    
+
   public function tearDown() {
-        
+
   }
 
   /**
@@ -96,7 +96,6 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
         dirname(__FILE__) . '/../../../../../CiviTest/truncate-option.xml'
       )
     );
-
 
     // echo "testCount\n";
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
@@ -122,7 +121,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
       $obj->count(),
       'In line ' . __LINE__
     );
-        
+
     // Truncate affected tables
     $tablesToTruncate = [ 'civicrm_group_contact',
                                'civicrm_group',
@@ -160,7 +159,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
     $obj = new CRM_Contact_Form_Search_Custom_Group($fv);
     $sql = $obj->all();
     $this->assertTrue(is_string($sql), 'In line ' . __LINE__);
-    $dao =& CRM_Core_DAO::executeQuery($sql);
+    $dao = &CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
       $all[] = [ 'contact_id'   => $dao->contact_id,
                       'contact_type' => $dao->contact_type,
@@ -169,7 +168,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
     }
     asort($all);
     $this->assertEquals($full, $all, 'In line ' . __LINE__);
-        
+
     // Truncate affected tables
     $tablesToTruncate = [ 'civicrm_group_contact',
                                'civicrm_group',
@@ -179,7 +178,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
                                'civicrm_contact'
                                ];
     $this->quickCleanup($tablesToTruncate);
-        
+
   }
 
   /**
@@ -196,7 +195,6 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
       )
     );
 
-
     // echo "testContactIDs\n";
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute(
@@ -209,7 +207,7 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
     $obj = new CRM_Contact_Form_Search_Custom_Group($fv);
     $sql = $obj->contactIDs();
     $this->assertTrue(is_string($sql), 'In line ' . __LINE__);
-    $dao =& CRM_Core_DAO::executeQuery($sql);
+    $dao = &CRM_Core_DAO::executeQuery($sql);
     $contacts = [ ];
     while ($dao->fetch()) {
       $contacts[] = $dao->contact_id;
@@ -227,7 +225,6 @@ class CRM_Contact_Form_Search_Custom_GroupTest extends CiviUnitTestCase {
                                ];
     $this->quickCleanup($tablesToTruncate);
   }
-
 
   /**
    *  Test something

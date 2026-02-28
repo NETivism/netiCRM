@@ -351,7 +351,6 @@ SELECT label, value
             // for checkboxes the value is already in the right format and is NOT an array
             if (empty($field['is_search_range']) && is_array($value)) {
 
-
               //ignoring $op value for checkbox and multi select
               $sqlValue = [];
               $innerOP = 'LIKE';

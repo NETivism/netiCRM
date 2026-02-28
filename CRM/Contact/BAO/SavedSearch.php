@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Business object for Saved searches
  *

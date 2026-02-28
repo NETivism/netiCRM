@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Auxilary class to provide support to the Contact Form class. Does this by implementing
  * a small set of static methods
@@ -99,7 +96,6 @@ class CRM_Contact_Form_Edit_Individual {
 
     $checkSimilar = defined('CIVICRM_CONTACT_AJAX_CHECK_SIMILAR') ? CIVICRM_CONTACT_AJAX_CHECK_SIMILAR : TRUE;
     $form->assign('checkSimilar', $checkSimilar);
-
 
     //External Identifier Element
     $form->add(

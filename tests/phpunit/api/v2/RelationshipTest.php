@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'api/v2/Relationship.php';
 require_once 'api/v2/RelationshipType.php';
 require_once 'api/v2/CustomGroup.php';
@@ -529,7 +527,6 @@ class api_v2_RelationshipTest extends CiviUnitTestCase {
     $result = civicrm_relationship_delete($params);
     $this->assertEquals($result['is_error'], 0);
   }
-
 
   ///////////////// civicrm_relationship_get methods
 

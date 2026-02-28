@@ -45,7 +45,6 @@ class CRM_Mailing_Page_AJAX {
 
     $templateId = CRM_Utils_Type::escape($_POST['tid'], 'Integer');
 
-
     $messageTemplate = new CRM_Core_DAO_MessageTemplates();
     $messageTemplate->id = $templateId;
     $messageTemplate->selectAdd();

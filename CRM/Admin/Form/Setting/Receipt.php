@@ -253,7 +253,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $heightNew = $heightOrig;
     }
     $image = imagecreatetruecolor($widthNew, $heightNew);
-    
+
     if ($imageInfo['mime'] == 'image/gif') {
       $source = imagecreatefromgif($filename);
     }
@@ -264,7 +264,6 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       $source = imagecreatefromjpeg($filename);
     }
 
-    
     // resize
     ImageAlphaBlending($image, TRUE);
     ImageSaveAlpha($image, TRUE);

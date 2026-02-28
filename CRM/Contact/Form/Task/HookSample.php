@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to save a search
  * Saved Searches are used for saving frequently used queries
@@ -60,7 +58,6 @@ FROM   civicrm_contact c, civicrm_email e
 WHERE  e.contact_id = c.id
 AND    e.is_primary = 1
 AND    c.id IN ( $contactIDs )";
-
 
     $rows = [];
     $dao = CRM_Core_DAO::executeQuery($query);

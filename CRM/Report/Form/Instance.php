@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Instance {
 
   public static function buildForm(&$form) {
@@ -233,7 +232,6 @@ class CRM_Report_Form_Instance {
       unset($params['addToDashboard']);
     }
 
-
     $dao = new CRM_Report_DAO_Instance();
     $dao->copyValues($params);
 
@@ -254,7 +252,6 @@ class CRM_Report_Form_Instance {
     if ($instanceID) {
       $dao->id = $instanceID;
     }
-
 
     $dao->report_id = CRM_Report_Utils_Report::getValueFromUrl($instanceID);
 

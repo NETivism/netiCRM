@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This implements the profile page for all contacts. It uses a selector
  * object to do the actual dispay. The fields displayd are controlled by
@@ -136,7 +132,6 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
       $this
     );
 
-
     if (strtolower($this->_sortByCharacter) == 'all' ||
       !empty($_POST)
     ) {
@@ -190,7 +185,6 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
         if (!CRM_Core_Permission::checkActionPermission('CiviMail', $this->_action)) {
           return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
         }
-
 
         CRM_Mailing_BAO_Mailing::del($this->_mailingId);
         CRM_Utils_System::redirect($context);

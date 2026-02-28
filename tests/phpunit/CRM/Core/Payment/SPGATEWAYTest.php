@@ -429,7 +429,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         'PaymentType' => 'CREDIT',
         'CreateTime' => date('Y-m-d H:i:s'),
         'PayTime' => date('Y-m-d H:i:s'),
-        'FundTime' => date('Y-m-d', $now + 86400*7),
+        'FundTime' => date('Y-m-d', $now + 86400 * 7),
         'RespondCode' => '00',
         'Auth' => '12345',
         'ECI' => NULL,
@@ -644,7 +644,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     ];
     $ppid = $this->_processor['id'];
     $get['ppid'] = $ppid;
-    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test?'test':'live');
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test ? 'test' : 'live');
     $post = ['Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $paymentProcessor)];
     $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
 
@@ -733,7 +733,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // Check if first time data is recovered by second post.
     $this->assertDBQuery($first_data, "SELECT data FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
 
-
     /**
      * Failed
      */
@@ -806,7 +805,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         'PaymentType' => 'CREDIT',
         'CreateTime' => date('Y-m-d H:i:s'),
         'PayTime' => date('Y-m-d H:i:s'),
-        'FundTime' => date('Y-m-d', $now + 86400*7),
+        'FundTime' => date('Y-m-d', $now + 86400 * 7),
         'RespondCode' => '00',
         'Auth' => '12345',
         'ECI' => NULL,
@@ -896,10 +895,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($data, "In line " . __LINE__);
   }
 
-
   public function testNonCreditNotifyMGP12() {
     // BARCODE : 11
-    $now = time()+300;
+    $now = time() + 300;
     $trxn_id = 'nonCreditUtMGP12'.substr($now, -5);
     $amount = 111;
 
@@ -1037,7 +1035,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   public function testNonCreditNotifyMGP23() {
     // BARCODE : 11
-    $now = time()+305;
+    $now = time() + 305;
     $trxn_id = 'nonCreditUtMGP23'.substr($now, -5);
     $amount = 111;
 

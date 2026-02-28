@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  *  This class is for UF Group
  */
@@ -276,11 +273,11 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
           $ufJoinChecked[$value] = 1;
         }
       }
-      $defaults['uf_group_type'] = $ufJoinChecked?? "";
+      $defaults['uf_group_type'] = $ufJoinChecked ?? "";
       if (!empty($ufJoinChecked['Profile'])) {
         $this->assign('onlineProfile', 1);
       }
-      $defaults['uf_group_type_user'] = $ufJoinCheckedUser?? "";
+      $defaults['uf_group_type_user'] = $ufJoinCheckedUser ?? "";
 
       $showAdvanced = 0;
       $advFields = ['group', 'post_URL', 'cancel_URL',
@@ -313,7 +310,6 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     return $defaults;
   }
 
-
   /**
    * Process the form
    *
@@ -329,7 +325,6 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     elseif ($this->_action & CRM_Core_Action::DISABLE) {
       $ufJoinParams = ['uf_group_id' => $this->_id];
       CRM_Core_BAO_UFGroup::delUFJoin($ufJoinParams);
-
 
       CRM_Core_BAO_UFGroup::setIsActive($this->_id, 0);
     }

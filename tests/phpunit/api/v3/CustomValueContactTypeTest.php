@@ -1,7 +1,6 @@
 <?php
 // $Id$
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 //require_once 'CiviTest/Contact.php';
 //require_once 'CiviTest/Custom.php';
@@ -246,8 +245,6 @@ class api_v3_CustomValueContactTypeTest extends CiviUnitTestCase {
     $this->assertTrue(in_array("custom_{$this->IndiStudentField[id]}", $contact['undefined_fields']), __LINE__);
   }
 
-
-
   // Retrieve Methods
 
   /**
@@ -302,7 +299,6 @@ class api_v3_CustomValueContactTypeTest extends CiviUnitTestCase {
     ];
 
     $getContact = civicrm_api('contact', 'get', $params);
-
 
     $this->assertEquals($getContact['values'][$this->individualStudent]["custom_{$this->IndiStudentField[id]}"], 'Test String', 'In line ' . __LINE__);
   }

@@ -147,7 +147,6 @@ class api_v3_ParticipantPaymentTest extends CiviUnitTestCase {
     $this->contributionDelete($contributionID);
   }
 
-
   ///////////////// civicrm_participant_payment_create methods
 
   /**

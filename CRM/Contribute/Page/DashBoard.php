@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Payment-Instrument
  */
@@ -116,7 +114,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $count_date_stamp = strtotime($this->start_date);
     while ($count_date_stamp <= strtotime($this->end_date)) {
       $duration_array[] = date('Y-m-d', $count_date_stamp);
-      $count_date_stamp+=86400;
+      $count_date_stamp += 86400;
     }
     $this->duration_array = $duration_array;
 
@@ -151,18 +149,17 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     $filter_recur = ['contribution_recur_id' => TRUE];
     $filter_not_recur = ['contribution_recur_id' => FALSE];
 
+    $summary_contrib['LastDurationContrib']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'DAY'], ['contribution' => $filter_time + $filter_recur]);
+    $summary_contrib['LastDurationContrib']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'DAY'], ['contribution' => $filter_time + $filter_not_recur]);
 
-    $summary_contrib['LastDurationContrib']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'DAY'], ['contribution' => $filter_time+$filter_recur]);
-    $summary_contrib['LastDurationContrib']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'DAY'], ['contribution' => $filter_time+$filter_not_recur]);
-
-    $summary_contrib['LastDurationProvince']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, ['contribution' => 1, 'seperate_other' => 1], ['contribution' => $filter_time+$filter_recur]);
-    $summary_contrib['LastDurationProvince']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, ['contribution' => 1, 'seperate_other' => 1], ['contribution' => $filter_time+$filter_not_recur]);
+    $summary_contrib['LastDurationProvince']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, ['contribution' => 1, 'seperate_other' => 1], ['contribution' => $filter_time + $filter_recur]);
+    $summary_contrib['LastDurationProvince']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, ['contribution' => 1, 'seperate_other' => 1], ['contribution' => $filter_time + $filter_not_recur]);
 
     if (empty($this->is_custom_date)) {
-      $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'MONTH'], ['contribution' => $filter_all_year+$filter_recur]);
-      $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'MONTH'], ['contribution' => $filter_all_year+$filter_not_recur]);
+      $summary_contrib['ContribThisYear']['recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'MONTH'], ['contribution' => $filter_all_year + $filter_recur]);
+      $summary_contrib['ContribThisYear']['not_recur'] = CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::CONTRIBUTION_RECEIVE_DATE, ['interval' => 'MONTH'], ['contribution' => $filter_all_year + $filter_not_recur]);
       $one_year_label = $year_month_label = [];
-      for ($month=1; $month <= 12 ; $month++) {
+      for ($month = 1; $month <= 12 ; $month++) {
         $one_year_label[] = $month.'月';
         $year_month = date('Y').'-'.sprintf('%02d', $month);
         $year_month_label[] = $year_month;
@@ -177,10 +174,10 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       $this->assign('this_year_people_recur', $contrib_this_year['recur']['people'] ? array_sum($contrib_this_year['recur']['people']) : 0);
       $recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['recur']);
       $not_recur_year_sum = self::getDataForChart($year_month_label, $contrib_this_year['not_recur']);
-      for ($i=1; $i < 12; $i++) {
+      for ($i = 1; $i < 12; $i++) {
         if ($i <= date('m')) {
-          $recur_year_sum[$i] += $recur_year_sum[$i-1];
-          $not_recur_year_sum[$i] += $not_recur_year_sum[$i-1];
+          $recur_year_sum[$i] += $recur_year_sum[$i - 1];
+          $not_recur_year_sum[$i] += $not_recur_year_sum[$i - 1];
         }
         else {
           unset($recur_year_sum[$i]);
@@ -195,7 +192,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
         'labels' => json_encode($one_year_label),
         'series' => json_encode([$recur_year_sum, $not_recur_year_sum]),
         'seriesUnit' => '$ ',
-        'seriesUnitPosition'=> 'prefix',
+        'seriesUnitPosition' => 'prefix',
         'withToolTip' => TRUE,
         'withVerticalHint' => TRUE,
         'legends' => json_encode([ts("Recurring Contribution"), ts("Non-Recurring Contribution")]),
@@ -214,7 +211,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'labels' => json_encode($this->duration_array),
       'series' => json_encode([$recur_duration_sum, $not_recur_duration_sum]),
       'seriesUnit' => '$ ',
-      'seriesUnitPosition'=> 'prefix',
+      'seriesUnitPosition' => 'prefix',
       'withVerticalHint' => TRUE,
       'legends' => json_encode([ts("Recurring Contribution"), ts("Non-Recurring Contribution")]),
       'withToolTip' => TRUE,
@@ -222,7 +219,6 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'withLegend' => TRUE,
     ];
     $this->assign('chart_duration_sum', $chart);
-
 
     $referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
     $referrerTypesIdx = array_values($referrerTypes);
@@ -285,7 +281,7 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
       'labels' => json_encode(array_values($duration_province_label)), // array_values to let key to integer not string
       'series' => json_encode([$duration_province_recur_sum, $duration_province_not_recur_sum]),
       'seriesUnit' => '$ ',
-      'seriesUnitPosition'=> 'prefix',
+      'seriesUnitPosition' => 'prefix',
       'withToolTip' => TRUE,
       'stackBars' => TRUE,
       'withLegend' => TRUE,
@@ -325,7 +321,7 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
 
     $this->assign('duration_count', $duration_count);
     if ($last_duration_count > 0) {
-      $duration_count_growth = ($duration_count / $last_duration_count) -1;
+      $duration_count_growth = ($duration_count / $last_duration_count) - 1;
       $this->assign('duration_count_growth', number_format($duration_count_growth * 100, 2));
     }
 
@@ -347,7 +343,7 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
 
     $this->assign('duration_sum', $duration_sum);
     if ($last_duration_sum > 0) {
-      $duration_sum_growth = ($duration_sum / $last_duration_sum) -1;
+      $duration_sum_growth = ($duration_sum / $last_duration_sum) - 1;
       $this->assign('duration_sum_growth', number_format($duration_sum_growth * 100, 2));
     }
 
@@ -396,7 +392,6 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
     else {
       $this->assign('page_col_n', (12 / 3));
     }
-
 
     // last 30 days count
     $instrument_option_group_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_group WHERE name LIKE 'payment_instrument'");
@@ -559,7 +554,7 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
     return $return;
   }
 
-  private static function getDataForChart($label_array, $summary_array, $type='sum') {
+  private static function getDataForChart($label_array, $summary_array, $type = 'sum') {
     $return_array = [];
     if (!is_array($summary_array['label'])) {
       $summary_array['label'] = [];

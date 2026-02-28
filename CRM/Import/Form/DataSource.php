@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class delegates to the chosen DataSource to grab the data to be
  *  imported.
@@ -67,7 +64,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
     //Test database user privilege to create table(Temporary) CRM-4725
     CRM_Core_Error::ignoreException();
-    $daoTestPrivilege = new CRM_Core_DAO;
+    $daoTestPrivilege = new CRM_Core_DAO();
     $daoTestPrivilege->query("CREATE TEMPORARY TABLE import_job_permission_one(test int) ENGINE=InnoDB");
     $daoTestPrivilege->query("CREATE TEMPORARY TABLE import_job_permission_two(test int) ENGINE=InnoDB");
     $daoTestPrivilege->query("DROP TABLE IF EXISTS import_job_permission_one, import_job_permission_two");
@@ -212,8 +209,6 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
       ts('For Duplicate Contacts')
     );
 
-
-
     $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue(
       'mapping_type',
       'Import Contact',
@@ -260,7 +255,6 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     if ($dedupeRuleGroupId = $this->get('dedupeRuleGroupId')) {
       $this->setDefaults(['dedupeRuleGroupId' => $dedupeRuleGroupId]);
     }
-
 
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 

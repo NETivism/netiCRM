@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for Options
  *
@@ -100,7 +96,6 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       $this->assign('default_from_target', 'label');
       $this->assign('default_from_value', '"'.$config->domain->name.'" <'.$defaultFromMail.'>');
     }
-
 
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');

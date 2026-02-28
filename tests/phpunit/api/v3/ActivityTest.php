@@ -13,7 +13,6 @@
  */
 require_once 'CiviTest/CiviUnitTestCase.php';
 
-
 /**
  *  Test APIv3 civicrm_activity_* functions
  *
@@ -658,7 +657,6 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
    */
   public function testActivityCreateTextStatus() {
 
-
     $params = [
       'source_contact_id' => 17,
       'subject' => 'Make-it-Happen Meeting',
@@ -707,7 +705,7 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
 
     $contact = civicrm_api('Contact', 'Create', [
       'first_name' => "The Rock",
-       'last_name' =>'roccky',
+       'last_name' => 'roccky',
         'contact_type' => 'Individual',
         'version' => 3,
         'api.activity.create' => [
@@ -798,7 +796,6 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
      'status_id' => '2']);
     $this->assertEquals(0, $result['count'], 'No activities of status 1 should exist');
 
-
   }
 
   /*
@@ -876,7 +873,6 @@ class api_v3_ActivityTest extends CiviUnitTestCase {
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
     $this->assertEquals("custom string", $result['values'][0]['custom_' . $ids['custom_field_id']], ' in line ' . __LINE__);
-
 
     $this->assertEquals(17, $result['values'][0]['source_contact_id'], 'In line ' . __LINE__);
     $this->assertEquals($this->test_activity_type_value, $result['values'][0]['activity_type_id'], 'In line ' . __LINE__);

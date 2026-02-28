@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is used by the Search functionality.
  *
@@ -54,9 +51,7 @@ class CRM_Contribute_Controller_ContributionPage extends CRM_Core_Controller {
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
-
     parent::__construct($title, $modal);
-
 
     $this->_stateMachine = new CRM_Contribute_StateMachine_ContributionPage($this, $action);
 

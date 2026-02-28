@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Error Handling and Debugging
  *

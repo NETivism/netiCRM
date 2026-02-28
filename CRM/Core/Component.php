@@ -78,7 +78,6 @@ class CRM_Core_Component {
     if (!$_cache || $force) {
       $_cache = [];
 
-
       $cr = new CRM_Core_DAO_Component();
       $cr->find(FALSE);
       while ($cr->fetch()) {
@@ -323,7 +322,6 @@ class CRM_Core_Component {
     }
     return self::$_contactSubTypes;
   }
-
 
   public static function &contactSubTypeProperties($subType, $op) {
     $properties = &self::contactSubTypes();

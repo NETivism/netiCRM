@@ -49,7 +49,6 @@ class CRM_Utils_Address_USPS {
       return FALSE;
     }
 
-
     $userID = CRM_Core_BAO_Preferences::value('address_standardization_userid');
     $url = CRM_Core_BAO_Preferences::value('address_standardization_url');
 
@@ -62,7 +61,6 @@ class CRM_Utils_Address_USPS {
     $address2 = str_replace(',', '', $values['street_address']);
 
     $XMLQuery = '<AddressValidateRequest USERID="' . $userID . '"><Address ID="0"><Address1>' . $values['supplemental_address_1'] . '</Address1><Address2>' . $address2 . '</Address2><City>' . $values['city'] . '</City><State>' . $values['state_province'] . '</State><Zip5>' . $values['postal_code'] . '</Zip5><Zip4>' . $values['postal_code_suffix'] . '</Zip4></Address></AddressValidateRequest>';
-
 
     $request = new HTTP_Request();
 

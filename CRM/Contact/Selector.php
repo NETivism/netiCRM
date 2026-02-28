@@ -33,16 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -359,7 +349,6 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
   //end of function
   public function &getColHeads($action = NULL, $output = NULL) {
 
-
     $colHeads = self::_getColumnHeaders();
 
     $colHeads[] = ['desc' => ts('Actions'), 'name' => ts('Action')];
@@ -420,7 +409,6 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
             'direction' => CRM_Utils_Sort::ASCENDING,
           ],
         ];
-
 
         $locationTypes = CRM_Core_PseudoConstant::locationType();
 
@@ -651,7 +639,6 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
       $multipleSelectFields = CRM_Quest_BAO_Student::$multipleSelectFields;
     }
 
-
     $links = &self::links($this->_context, $this->_contextMenu, $this->_key);
 
     //check explicitly added contact to a Smart Group.
@@ -824,8 +811,6 @@ class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Se
 
         // allow components to add more actions
         CRM_Core_Component::searchAction($row, $result->contact_id);
-
-
 
         $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
           $result->contact_sub_type ?

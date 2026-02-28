@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 /**
  * This class generates view mode for CiviCase
  *
@@ -66,8 +60,6 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
    */
   public function preProcess() {
     $this->_showRelatedCases = CRM_Utils_Array::value('relatedCases', $_GET);
-
-
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
@@ -133,7 +125,6 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
       CRM_Utils_Array::value('case_type_id', $values)
     );
 
-
     $statuses = CRM_Case_PseudoConstant::caseStatus('label', FALSE);
     $caseTypeName = CRM_Case_BAO_Case::getCaseType($this->_caseID, 'name');
     $caseType = CRM_Case_BAO_Case::getCaseType($this->_caseID);
@@ -176,8 +167,6 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
 
     // add to recently viewed
 
-
-
     $url = CRM_Utils_System::url(
       'civicrm/contact/view/case',
       "action=view&reset=1&id={$this->_caseID}&cid={$this->_contactID}&context=home"
@@ -206,7 +195,6 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
       NULL,
       $recentOther
     );
-
 
     //get the related cases for given case.
     $relatedCases = $this->get('relatedCases');
@@ -254,7 +242,6 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     }
 
     $aTypes = $xmlProcessor->get($this->_caseType, 'ActivityTypes', TRUE);
-
 
     $allActTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name');
 
@@ -356,7 +343,6 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     $this->addDate('activity_date_low', ts('Activity Dates - From'), FALSE, ['formatType' => 'searchDate']);
     $this->addDate('activity_date_high', ts('To'), FALSE, ['formatType' => 'searchDate']);
 
-
     if (CRM_Core_Permission::check('administer CiviCRM')) {
       $this->add('checkbox', 'activity_deleted', ts('Deleted Activities'));
     }
@@ -366,7 +352,7 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
 
     //build reporter select
     $reporters = ["" => ts(' - any reporter - ')];
-    foreach ($caseRelationships as $key => & $value) {
+    foreach ($caseRelationships as $key => &$value) {
       $reporters[$value['cid']] = $value['name'] . " ( {$value['relation']} )";
 
       if ($managerRoleId == $value['relation_type']) {
@@ -432,14 +418,10 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     }
     $this->add('select', 'role_type', ts('Relationship Type'), ['' => ts('- select type -')] + $roleTypes);
 
-
     $hookCaseSummary = CRM_Utils_Hook::caseSummary($this->_caseID);
     if (is_array($hookCaseSummary)) {
       $this->assign('hookCaseSummary', $hookCaseSummary);
     }
-
-
-
 
     $allTags = CRM_Core_BAO_Tag::getTags('civicrm_case');
 
@@ -469,7 +451,6 @@ class CRM_Case_Form_CaseView extends CRM_Core_Form {
     }
 
     // build tagset widget
-
 
     // see if we have any tagsets which can be assigned to cases
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_case');

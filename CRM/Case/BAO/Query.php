@@ -272,7 +272,6 @@ class CRM_Case_BAO_Query {
           $names[] = $caseTypes[$caseTypeId];
         }
 
-
         $value = CRM_Case_BAO_Case::VALUE_SEPERATOR . CRM_Utils_Array::implode(
           CRM_Case_BAO_Case::VALUE_SEPERATOR . "%' OR civicrm_case.case_type_id LIKE '%" .
           CRM_Case_BAO_Case::VALUE_SEPERATOR,
@@ -610,7 +609,6 @@ case_relation_type.id = case_relationship.relationship_type_id )";
     $configured = CRM_Case_BAO_Case::isCaseConfigured();
     $form->assign('notConfigured', !$configured['configured']);
 
-
     $caseTypes = CRM_Case_PseudoConstant::caseType('label', FALSE);
     foreach ($caseTypes as $id => $Name) {
       $form->addElement('checkbox', "case_type_id[$id]", NULL, $Name);
@@ -640,14 +638,12 @@ case_relation_type.id = case_relationship.relationship_type_id )";
     $form->addRadio('case_owner', ts('Cases'), $caseOwner);
     $form->setDefaults(['case_owner' => 1]);
 
-
     $caseTags = CRM_Core_BAO_Tag::getTagsUsedFor(['civicrm_case']);
     if ($caseTags) {
       foreach ($caseTags as $tagID => $tagName) {
         $form->_tagElement = &$form->addElement('checkbox', "case_tags[$tagID]", NULL, $tagName);
       }
     }
-
 
     if (CRM_Core_Permission::check('administer CiviCRM')) {
       $form->addElement('checkbox', 'case_deleted', ts('Deleted Cases'));

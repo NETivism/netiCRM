@@ -27,8 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 /*
 *DRAFT CODE WRITTEN BY EILEEN still dev version
 *Starting point was Contribute API. I tried to use the format params from
@@ -163,8 +161,6 @@ function &civicrm_pledge_get(&$params) {
     return civicrm_create_error('Input parameters is not an array');
   }
 
-
-
   $inputParams      = [];
   $returnProperties = [];
   $otherVars        = ['sort', 'offset', 'rowCount'];
@@ -203,7 +199,6 @@ function &civicrm_pledge_get(&$params) {
   $query = new CRM_Contact_BAO_Query($newParams, $returnProperties, NULL);
   list($select, $from, $where) = $query->query();
 
-
   $sql = "$select $from $where";
 
   if (!empty($sort)) {
@@ -211,8 +206,6 @@ function &civicrm_pledge_get(&$params) {
   }
   $sql .= " LIMIT $offset, $rowCount ";
   $dao = CRM_Core_DAO::executeQuery($sql);
-
-
 
   $pledge = [];
   while ($dao->fetch()) {
@@ -332,7 +325,6 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
   // even though they are 'generally' what is returned in the GET - implying they should
   $fields = CRM_Pledge_DAO_Pledge::fields();
   _civicrm_store_values($fields, $params, $values);
-
 
   //add back the fields we know of that got dropped by the previous function
   if ($params['pledge_create_date']) {
@@ -467,7 +459,6 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
 
   //format the parameters
   _civicrm_custom_format_params($params, $values, 'Pledge');
-
 
   return [];
 }

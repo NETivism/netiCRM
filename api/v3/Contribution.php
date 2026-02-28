@@ -217,7 +217,7 @@ function _civicrm_api3_contribute_format_params($params, &$values, $create = FAL
 
     switch ($key) {
       case 'financial_type_id' :
-        if (! CRM_Utils_Array::value($value, CRM_Contribute_PseudoConstant::financialType())) {
+        if (!CRM_Utils_Array::value($value, CRM_Contribute_PseudoConstant::financialType())) {
           throw new Exception("Invalid Financial Type Id");
         }
         break;
@@ -332,7 +332,7 @@ function civicrm_api3_contribution_transact($params) {
 function civicrm_api3_contribution_sendconfirmation($params) {
   $contribution = new CRM_Contribute_BAO_Contribution();
   $contribution->id = $params['id'];
-  if (! $contribution->find(TRUE)) {
+  if (!$contribution->find(TRUE)) {
     throw new Exception('Contribution does not exist');
   }
   $input = $ids = $cvalues = [];

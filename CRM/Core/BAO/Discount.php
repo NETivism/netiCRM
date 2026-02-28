@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
 
   /**
@@ -123,12 +122,10 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
       return NULL;
     }
 
-
     $dao = new CRM_Core_DAO_Discount();
     $dao->entity_id = $entityID;
     $dao->entity_table = $entityTable;
     $dao->find();
-
 
     while ($dao->fetch()) {
       $endDate = $dao->end_date;

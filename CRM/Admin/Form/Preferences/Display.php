@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for the display preferences
  *
@@ -94,7 +92,6 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
 
     $this->addElement('textarea', 'display_name_format', ts('Individual Display Name Format'));
     $this->addElement('textarea', 'sort_name_format', ts('Individual Sort Name Format'));
-
 
     $editOptions = CRM_Core_OptionGroup::values('contact_edit_options', FALSE, FALSE, FALSE, 'AND v.filter = 0');
     $this->assign('editOptions', $editOptions);

@@ -34,9 +34,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -129,7 +126,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       CRM_Core_Payment_ProcessorForm::buildQuickForm($this);
     }
 
-
     // Prepare params used for meta.
     $params = [];
     $siteName = CRM_Utils_System::siteName();
@@ -173,7 +169,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $params['image'] = $image;
     CRM_Utils_System::setPageMetaInfo($params);
 
-
   }
 
   /**
@@ -192,7 +187,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     if ($contactID) {
       $options = [];
       $fields = [];
-
 
       if (!empty($this->_fields)) {
         $removeCustomFieldTypes = ['Participant'];
@@ -224,7 +218,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $fields["country-{$this->_bltID}"] = 1;
       $fields["email-{$this->_bltID}"] = 1;
       $fields["email-Primary"] = 1;
-
 
       CRM_Core_BAO_UFGroup::setProfileDefaults($contactID, $fields, $this->_defaults);
 
@@ -427,7 +420,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           $maxAdditionalParticipant = 10;
         }
         for ($i = 2; $i <= $maxAdditionalParticipant; $i++) {
-          $additionalOptions[$i-1] = $i;
+          $additionalOptions[$i - 1] = $i;
         }
         $element = $this->add(
           'select',
@@ -539,7 +532,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $this->_paymentProcessors = $this->get('paymentProcessors');
       if (!empty($this->_paymentProcessors)) {
         $pps = $this->_paymentProcessors;
-        foreach ($pps as $key => & $name) {
+        foreach ($pps as $key => &$name) {
           $pps[$key] = $name['name'];
         }
       }
@@ -836,9 +829,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       return;
     }
 
-
-
-
     $skipParticipants = $formattedPriceSetDefaults = [];
     if ($form->_allowConfirmation && (isset($form->_pId) || isset($form->_additionalParticipantId))) {
 
@@ -866,14 +856,14 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
 
     $activeOptionIds = [];
     $allOptions = [];
-    foreach ($form->_feeBlock as & $field) {
+    foreach ($form->_feeBlock as &$field) {
       $optionFullIds = [];
       $fieldId = $field['id'];
       if (!is_array($field['options'])) {
         continue;
       }
       $sumCount = 0;
-      foreach ($field['options'] as & $option) {
+      foreach ($field['options'] as &$option) {
         $optId = $option['id'];
         $activeOptionIds[$optId] = $optId;
         $allOptions[$optId] = $option;
@@ -914,7 +904,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
 
       if (!empty($field['max_value']) && $field['max_value'] <= $sumCount) {
-        foreach ($field['options'] as & $option) {
+        foreach ($field['options'] as &$option) {
           $optId = $option['id'];
           $optionFullIds[$optId] = $optId;
           unset($activeOptionIds[$optId]);
@@ -1259,7 +1249,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $this->_params[] = $params;
       $this->set('params', $this->_params);
 
-
       CRM_Coupon_BAO_Coupon::countAmount($this, $params);
       if (!empty($this->_usedOptionsDiscount)) {
         foreach ($this->_usedOptionsDiscount as $key => $value) {
@@ -1269,7 +1258,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
       $this->set('totalDiscount', $this->_totalDiscount);
       $this->set('couponDescription', $this->_coupon['description']);
-
 
       if ($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
         //get the button name
@@ -1403,7 +1391,6 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           return ['email-5' => ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', [1 => $url])];
         }
       }
-
 
       $participant = new CRM_Event_BAO_Participant();
       $participant->contact_id = $contactID;

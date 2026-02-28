@@ -33,7 +33,6 @@
  *
  */
 
-
 #require_once 'CRM/Import/Parser/Contact.php';
 
 /**

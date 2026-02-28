@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 /**
  * This class generates form components for previewing custom data
  *
@@ -111,7 +105,6 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
   public function &setDefaultValues() {
     $defaults = [];
 
-
     CRM_Core_BAO_CustomGroup::setDefaults($this->_groupTree, $defaults, FALSE, FALSE);
 
     return $defaults;
@@ -127,7 +120,7 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if (is_array($this->_groupTree[$this->_groupId])) {
-      foreach ($this->_groupTree[$this->_groupId]['fields'] as & $field) {
+      foreach ($this->_groupTree[$this->_groupId]['fields'] as &$field) {
         //add the form elements
         CRM_Core_BAO_CustomField::addQuickFormElement($this, $field['element_name'], $field['id'], FALSE, $field['is_required']);
       }

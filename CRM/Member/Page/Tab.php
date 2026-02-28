@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Member_Page_Tab extends CRM_Core_Page {
 
   public $_isPaymentProcessor;
@@ -185,7 +183,6 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $controller->set('id', $this->_id);
     $controller->set('cid', $this->_contactId);
     $controller->run();
-
 
     $search_values = [
       'membership_id' => $this->_id,

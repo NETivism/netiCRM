@@ -124,7 +124,6 @@ class CRM_Utils_System_UnitTests {
   public static function getUserID($user) {
     //FIXME: look here a bit closer when testing UFMatch
 
-
     // this puts the appropriate values in the session, so
     // no need to return anything
     CRM_Core_BAO_UFMatch::synchronize($user, TRUE, 'Standalone', 'Individual');

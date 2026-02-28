@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This file is for Case search
  */
@@ -211,8 +207,6 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
       );
     }
 
-
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $selector = new CRM_Case_Selector_Search(
       $this->_queryParams,
@@ -256,7 +250,6 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
   public function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('Client Name or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-
     CRM_Case_BAO_Query::buildSearchForm($this);
 
     /*
@@ -277,9 +270,7 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-
       $permission = CRM_Core_Permission::getPermission();
-
 
       $tasks = ['' => ts('- actions -')] + CRM_Case_Task::permissionedTaskTitles($permission);
 
@@ -355,7 +346,6 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
 
     $this->fixFormValues();
 
-
     if (isset($this->_ssID) && empty($_POST)) {
       // if we are editing / running a saved search and the form has not been posted
       $this->_formValues = CRM_Contact_BAO_SavedSearch::getFormValues($this->_ssID);
@@ -382,7 +372,6 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
 
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $this->set('formValues', $this->_formValues);
@@ -406,7 +395,6 @@ class CRM_Case_Form_Search extends CRM_Core_Form {
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
-
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 

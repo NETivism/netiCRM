@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Option Value
  *
@@ -98,7 +96,6 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     $session->pushUserContext($url);
     $this->assign('id', $this->_id);
     $this->assign('gid', $this->_gid);
-
 
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');

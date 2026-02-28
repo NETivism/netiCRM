@@ -126,7 +126,6 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     );
     $this->addTextfield('bcc', ts('BCC'));
 
-
     $buttons = [
       [
         'type' => 'back',

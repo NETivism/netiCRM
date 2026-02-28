@@ -27,10 +27,6 @@
  +--------------------------------------------------------------------+
  */
 
-
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_AddressTest extends CiviUnitTestCase {
   protected $_apiversion;
@@ -99,8 +95,6 @@ class api_v3_AddressTest extends CiviUnitTestCase {
      * is_primary should be set as a default
      */
 
-
-
   public function testCreateAddressTestDefaults() {
     $params = $this->_params;
     unset($params['is_primary']);
@@ -123,8 +117,6 @@ class api_v3_AddressTest extends CiviUnitTestCase {
      * is_primary should be 0 before & after the update. ie - having no other address
      * is_primary is invalid
      */
-
-
 
   public function testCreateAddressTestDefaultWithID() {
     $params = $this->_params;

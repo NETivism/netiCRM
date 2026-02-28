@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
 
   /**
@@ -67,7 +64,6 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
 
       // helper variable for nicer formatting
       $links = [];
-
 
       if (CRM_Core_Permission::check('merge duplicate contacts')) {
         $links[CRM_Core_Action::VIEW] = [

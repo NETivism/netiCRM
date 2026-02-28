@@ -33,12 +33,6 @@
  *
  */
 
-
-
-
-
-
-
 /**
  * A Page is basically data in a nice pretty format.
  *
@@ -137,7 +131,7 @@ class CRM_Core_Page {
   public function __construct($title = NULL, $mode = NULL) {
     // #16953, hack for page key
     global $pageKey;
-    
+
     $this->_name = CRM_Utils_System::getClassName($this);
     $this->_title = $title;
     $this->_mode = $mode;

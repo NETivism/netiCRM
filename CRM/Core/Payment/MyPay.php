@@ -189,7 +189,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       $contribValues['payment_instrument_id'] = $params['civicrm_instrument_id'];
     }
     $contribValues['trxn_id'] = self::getContributionTrxnID($params['contributionID'], $isTest, $params['contribution_recur_id']);
-    $contribution =& CRM_Contribute_BAO_Contribution::create($contribValues, $contribIds);
+    $contribution = &CRM_Contribute_BAO_Contribution::create($contribValues, $contribIds);
 
     // Inject in quickform sessions
     // Special hacking for display trxn_id after thank you page.
@@ -418,7 +418,6 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
               break;
           }
 
-
           if (!empty($vars['installments']) && $vars['installments'] > 0) {
             if ($vars['frequency_unit'] == 'year') {
               $args['encry_data']['regular_total'] = $vars['installments'] >= 9 ? 9 : $vars['installments'];
@@ -457,7 +456,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
     $result = curl_exec($ch);
-    
+
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $errno = curl_errno($ch);
     // Record all data
@@ -518,7 +517,7 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
       $actionUrl .= '?locale=en';
     }
     $o = '<form action="'.$actionUrl.'" name="redirect" method="post" id="redirect-form">';
-    foreach ($redirectVars as $k=>$p) {
+    foreach ($redirectVars as $k => $p) {
       if ($k[0] != '#') {
         $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
       }

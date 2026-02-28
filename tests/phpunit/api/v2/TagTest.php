@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/Tag.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_TagTest extends CiviUnitTestCase {
@@ -85,7 +84,6 @@ class api_v2_TagTest extends CiviUnitTestCase {
     //$this->assertEquals( $tag['description'], $result['description'], 'In line ' . __LINE__ );
     $this->assertEquals($tag['values'][$tag['id']]['name'], $result['name'], 'In line ' . __LINE__);
   }
-
 
   ///////////////// civicrm_tag_create methods
 

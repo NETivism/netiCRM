@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Main page for viewing Notes.
  *
@@ -185,7 +183,6 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
 
   public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-
 
     if ($this->_id && CRM_Core_BAO_Note::getNotePrivacyHidden($this->_id)) {
       return CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));

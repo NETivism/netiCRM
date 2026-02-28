@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'api/v2/Pledge.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_PledgeTest extends CiviUnitTestCase {
@@ -152,7 +150,6 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $pledge = &civicrm_pledge_delete($pledgeID);
   }
 
-
   //To Update Pledge
   public function testCreateUpdatePledge() {
     // we test 'sequential' param here too
@@ -171,7 +168,6 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $old_frequency_unit = $original[0]['pledge_frequency_unit'];
     $old_frequency_interval = $original[0]['pledge_frequency_interval'];
     $old_status_id = $original[0]['pledge_status'];
-
 
     //check against values in CiviUnitTestCase::createPledge()
     $this->assertEquals($old_contact_id, $this->_individualId, 'In line ' . __LINE__);

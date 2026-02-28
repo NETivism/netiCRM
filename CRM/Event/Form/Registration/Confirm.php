@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -73,7 +71,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
    */
   public $_preventMultipleSubmission;
 
-
   public $_contributionID;
 
   /**
@@ -93,7 +90,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     if (!($this->_paymentProcessor = $this->get('paymentProcessor')) && !empty($this->_params[0]['payment_processor'])) {
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($this->_params[0]['payment_processor'], $this->_mode);
     }
-
 
     CRM_Utils_Hook::eventDiscount($this, $this->_params);
 
@@ -126,7 +122,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
         $params['payer'] = $expressParams['payer'];
         $params['payer_id'] = $expressParams['payer_id'];
         $params['payer_status'] = $expressParams['payer_status'];
-
 
         CRM_Core_Payment_Form::mapParams($this->_bltID, $expressParams, $params, FALSE);
 
@@ -702,7 +697,7 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
           $baseTime = CRM_REQUEST_TIME;
           $plusDay = CRM_Core_Payment::PAY_LATER_DEFAULT_EXPIRED_DAY;
           if (!empty($this->_values['event']['expiration_time'])) {
-            $plusDay = ceil($this->_values['event']['expiration_time']/24);
+            $plusDay = ceil($this->_values['event']['expiration_time'] / 24);
           }
           if ($this->_allowConfirmation) {
             if (!empty($this->_values['event']['expiration_time'])) {
@@ -856,7 +851,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
     // create line items, CRM-5313
     if ($this->_priceSetId && !empty($this->_lineItem)) {
 
-
       // take all processed participant ids.
       $allParticipantIds = $this->_participantIDS;
 
@@ -888,7 +882,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
 
     //update status and send mail to cancelled additonal participants, CRM-4320
     if ($this->_allowConfirmation && is_array($cancelledIds) && !empty($cancelledIds)) {
-
 
       $cancelledId = array_search(
         'Cancelled',
@@ -1085,7 +1078,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       ];
     }
 
-
     $allStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $contribParams["contribution_status_id"] = array_search('Completed', $allStatuses);
     if ($pending) {
@@ -1112,7 +1104,6 @@ class CRM_Event_Form_Registration_Confirm extends CRM_Event_Form_Registration {
       $ids['contribution'] = $contribID;
       $contribParams['id'] = $contribID;
     }
-
 
     //create an contribution address
     if ($form->_contributeMode != 'notify' && !CRM_Utils_Array::value('is_pay_later', $params)) {

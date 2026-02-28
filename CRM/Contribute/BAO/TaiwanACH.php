@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
 
   public static $_txtFormat = [];
@@ -371,7 +370,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     $table = [];
     $achDatas = self::getTaiwanACHDatas($recurringIds);
 
-
     $firstAch = reset($achDatas);
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($firstAch['processor_id'], '');
     $params['paymentProcessor'] = $paymentProcessor;
@@ -427,7 +425,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       foreach ($achDatas as $key => $achData) {
         $bankName = preg_replace('/^\d{7} (.+)$/', '$1', $bankCode[$achData['bank_code']]);
         $row = [
-          'Order Number' => $key+1,
+          'Order Number' => $key + 1,
           'Contact Id' => $achData['contact_id'],
           'Display Name' => CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $achData['contact_id'], 'display_name'),
           'Bank Code' => $achData['bank_code'],
@@ -450,7 +448,6 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
     // $table = $bodyTable = array();
     $table = [];
     $achDatas = self::getTaiwanACHDatas($recurringIds);
-
 
     $firstAch = reset($achDatas);
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($firstAch['processor_id'], '');
@@ -516,7 +513,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       foreach ($achDatas as $key => $achData) {
         $bankName = preg_replace('/^\d{7} (.+)$/', '$1', $bankCode[$achData['bank_code']]);
         $row = [
-          'Order Number' => $key+1,
+          'Order Number' => $key + 1,
           'Contact Id' => $achData['contact_id'],
           'Display Name' => CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $achData['contact_id'], 'display_name'),
           'Bank Code' => $achData['bank_code'],
@@ -645,7 +642,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         '001',
         str_pad($i, 6, '0', STR_PAD_LEFT),
         '1',
-        ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
+        ($achData['postoffice_acc_type'] == 1) ? 'P' : 'G',
         $bankAccount,
         str_pad($orderNumber, 20, ' ', STR_PAD_LEFT),
         str_pad($achData['identifier_number'], 10, ' ', STR_PAD_LEFT),
@@ -776,11 +773,11 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'invoice_id', $invoice_id);
       $params['contribution_ids'][] = $contribution->id;
       $bankAccount = str_pad($achData['bank_account'], 14, '0', STR_PAD_RIGHT);
-      $totalAmount += (INT) $achData['amount'];
+      $totalAmount += (int) $achData['amount'];
       $orderNumber = !empty($achData['order_number']) ? $achData['order_number'] : $contribution->contribution_recur_id;
       $row = [
         1,
-        ($achData['postoffice_acc_type'] == 1)? 'P' : 'G',
+        ($achData['postoffice_acc_type'] == 1) ? 'P' : 'G',
         $paymentProcessor['subject'],
         str_repeat(' ', 4),
         $date,
@@ -788,7 +785,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         str_repeat(' ', 2),
         $bankAccount,
         str_repeat(' ', 10),
-        str_pad((INT) $achData['amount'], 9, '0', STR_PAD_LEFT).'00',
+        str_pad((int) $achData['amount'], 9, '0', STR_PAD_LEFT).'00',
         str_pad($orderNumber, 20, ' ', STR_PAD_LEFT),
         1,
         ' ',
@@ -882,8 +879,8 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       $rows = explode("\n", $content);
     }
     $lines = count($rows);
-    if (strlen($rows[$lines-1]) == 0) {
-      unset($rows[$lines-1]);
+    if (strlen($rows[$lines - 1]) == 0) {
+      unset($rows[$lines - 1]);
       $lines = count($rows);
     }
     $instrumentType = '';
@@ -930,7 +927,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $bodyLine = self::doCheckParseRow($row, $instrumentType, $processType, 'body');
         }
       }
-      elseif ($i == ($lines -1)) {
+      elseif ($i == ($lines - 1)) {
         $footer = self::doCheckParseRow($row, $instrumentType, $processType, 'footer');
         if (!empty($footer['is_error'])) {
           $isError = TRUE;
@@ -947,7 +944,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
         if (!empty($bodyLine['is_error'])) {
           $isError = TRUE;
           foreach ($bodyLine['messages'] as $message) {
-            $lineOrder = ($instrumentType == self::POST) ? $i+1 : $i;
+            $lineOrder = ($instrumentType == self::POST) ? $i + 1 : $i;
             $messages[] = ts('The data of order %1 have wrong value.', $lineOrder).' : '.$message;
           }
         }
@@ -1073,7 +1070,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
             $isError = TRUE;
             $msg[] = ts("In %1, row %2 is not correct, input value is %3, format should be %4", [
               1 => $headerOrFooter,
-              2 => $i+1,
+              2 => $i + 1,
               3 => str_replace(' ', "_", $row[$i]),
               4 => $format[$wordCount],
             ]);
@@ -1091,7 +1088,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
           $str = substr($row, $wordCount - 1);
         }
         else {
-          $len = $formatKeys[$i+1] - $wordCount;
+          $len = $formatKeys[$i + 1] - $wordCount;
           $str = substr($row, $wordCount - 1, $len);
         }
 
@@ -1393,7 +1390,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       1 => [$currentDay, 'String'],
     ]);
     while ($dao->fetch()) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
       if ($dao->id && strtolower($paymentProcessor['payment_processor_type']) == 'taiwanach') {
         $params = [
           'id' => $dao->id,

@@ -376,7 +376,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
               if (isset($this->_mitakeStatuses[$val])) {
                 $result[$msgIndex]['status'] = $this->_mitakeStatuses[$val];
               }
-              if ($val <=4) {
+              if ($val <= 4) {
                 $result[$msgIndex]['success'] = 1;
               }
               else {

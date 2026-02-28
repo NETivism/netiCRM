@@ -531,7 +531,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     // Save combination details
     $this->_saveCombinationDetails($params, $premiumID);
-    
+
     $urlParams = 'civicrm/admin/contribute/premium';
     $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
     CRM_Utils_System::redirect($url);
@@ -641,7 +641,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       foreach ($params['product'] as $index => $productId) {
         if ($productId) {
           $quantity = CRM_Utils_Array::value($index, $params['quantity'], 1);
-          
+
           $productDao = new CRM_Contribute_DAO_PremiumsCombinationProducts();
           $productDao->combination_id = $combinationId;
           $productDao->product_id = $productId;

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Selector_Controller extends CRM_Core_Selector_Controller {
   public function getQill() {
     return $this->_object->getQILL();

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
   /**
    * @var never[]
@@ -555,7 +554,6 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
     if (CRM_Utils_Array::value('relationship_civireport', $this->_selectComponent)) {
 
-
       $relTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, NULL, TRUE);
 
       $val = 'relationship_civireport';
@@ -764,7 +762,6 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
         }
         $entryFound = TRUE;
       }
-
 
       // skip looking further in rows, if first row itself doesn't
       // have the column we need

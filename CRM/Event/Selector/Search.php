@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -236,7 +228,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       $extraParams .= "&key={$qfKey}";
     }
 
-
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::VIEW => [
@@ -342,8 +333,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     }
     $mask = CRM_Core_Action::mask($permissions);
 
-
-
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
     $statusContribution = CRM_Contribute_PseudoConstant::contributionStatus();
     $statusClasses = CRM_Event_PseudoConstant::participantStatusClass();
@@ -383,8 +372,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
           'cxt' => $this->_context,
         ]
       );
-
-
 
       $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
         $result->contact_sub_type ?

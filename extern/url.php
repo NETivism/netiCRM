@@ -12,7 +12,7 @@ else {
 }
 $url_id = CRM_Utils_Array::value('u', $_GET);
 
-if (! $queue_id || ! $url_id) {
+if (!$queue_id || !$url_id) {
   http_response_code(400);
   exit;
 }

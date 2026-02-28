@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
 
   /**

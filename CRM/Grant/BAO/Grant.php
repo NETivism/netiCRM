@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
 
   /**
@@ -76,7 +75,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
 
     $dao = &CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray);
 
-
     $status = [];
     $summary = [];
     $summary['total_grants'] = NULL;
@@ -108,7 +106,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    */
   public static function getGrantStatusOptGroup() {
 
-
     $params = [];
     $params['name'] = CRM_Grant_BAO_Grant::$statusGroupName;
 
@@ -126,7 +123,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
 
   public static function getGrantStatuses() {
     $og = CRM_Grant_BAO_Grant::getGrantStatusOptGroup();
-
 
     $dao = new CRM_Core_DAO_OptionValue();
 
@@ -202,7 +198,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
    */
   public static function add(&$params, &$ids) {
 
-
     if (CRM_Utils_Array::value('grant', $ids)) {
       CRM_Utils_Hook::pre('edit', 'Grant', $ids['grant_id'], $params);
     }
@@ -232,9 +227,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     }
 
     $result = $grant->save();
-
-
-
 
     $url = CRM_Utils_System::url(
       'civicrm/contact/view/grant',
@@ -432,7 +424,6 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
           'data_type' => CRM_Utils_Type::T_DATE,
         ],
       ];
-
 
       $fields = CRM_Grant_DAO_Grant::export();
       $grantNote = ['grant_note' => ['title' => ts('Grant Note'),

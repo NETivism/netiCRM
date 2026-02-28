@@ -71,12 +71,12 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     }
 
     // now, retrieve full object by validateData, or false fallback
-    if (! $this->validateData($input, $ids, $objects, FALSE)) {
+    if (!$this->validateData($input, $ids, $objects, FALSE)) {
       return FALSE;
     }
 
     // set global variable for paymentProcessor
-    self::$_payment_processor =& $objects['paymentProcessor'];
+    self::$_payment_processor = &$objects['paymentProcessor'];
     self::$_input = $input;
     $updateStatus = TRUE;
     if ($objects['contribution']->contribution_status_id == 1 && empty($input['nois']) && CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
@@ -100,7 +100,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       // start validation
       $note = '';
       if ($this->validateOthers($input, $ids, $objects, $note, $instrument)) {
-        $contribution =& $objects['contribution'];
+        $contribution = &$objects['contribution'];
         if (empty($contribution->receive_date)) {
           if (!empty($input['finishtime'])) {
             $contribution->receive_date = date('YmdHis', strtotime($input['finishtime']));

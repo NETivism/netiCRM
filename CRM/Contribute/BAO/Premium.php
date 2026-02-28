@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
 
   /**
@@ -104,7 +103,6 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    * @static
    */
   public static function buildPremiumBlock(&$form, $pageID, $formItems = FALSE, $selectedProductID = NULL, $selectedOption = NULL) {
-
 
     $dao = new CRM_Contribute_DAO_Premium();
     $dao->entity_table = 'civicrm_contribution_page';
@@ -271,7 +269,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       $productAttr['data-calculate-mode'] = $products[$productDAO->id]['calculate_mode'];
       $productAttr['data-installments'] = $products[$productDAO->id]['installments'];
       $productAttr['data-out-of-stock'] = $products[$productDAO->id]['out_of_stock'];
-      
+
       $radio[$productDAO->id] = $form->createElement('radio', NULL, NULL, ' ', $productDAO->id, $productAttr);
       $options = $temp = [];
       $temp = explode(',', $productDAO->options);
@@ -308,7 +306,6 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
    */
   public static function buildPremiumPreviewBlock($form, $productID, $premiumProductID = NULL) {
 
-
     if ($premiumProductID) {
 
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
@@ -332,7 +329,6 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     if ($temp[0] != '') {
       $form->add('select', 'options_' . $productDAO->id, NULL, $options);
     }
-
 
     $form->addGroup($radio, 'selectProduct', NULL);
 
@@ -384,8 +380,6 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     //need to delete entries from civicrm_premiums
     //as well as from civicrm_premiums_product, CRM-4586
 
-
-
     $params = ['entity_id' => $contributionPageID,
       'entity_table' => 'civicrm_contribution_page',
     ];
@@ -414,13 +408,13 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
 
     // Get contributions that need to be processed for restocking
     $contributionsToRestock = self::getExpiredOnlineContributions($config->premiumIRCreditCardDays, $config->premiumIRNonCreditCardDays, $config->premiumIRConvenienceStoreDays, $config->premiumIRCheckStatuses);
-    
+
     if (empty($contributionsToRestock)) {
       return [];
     }
 
     $restockedContributions = [];
-    
+
     foreach ($contributionsToRestock as $contribution) {
       try {
         // Update contribution status only if statusChangeStyle is 'cancelled'
@@ -491,18 +485,18 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       }
     }
     $statusList = implode(',', array_map('intval', $statusIds));
-    
+
     // Get payment instrument IDs based on names
     $creditCardInstruments = self::getPaymentInstrumentIdsByNames(['Credit Card', 'Web ATM', 'LinePay', 'ApplePay', 'ApplePayFront', 'GooglePay']);
     $nonCreditCardInstruments = self::getPaymentInstrumentIdsByNames(['ATM', 'Convenient Store (Code)']);
     $barcodeInstruments = self::getPaymentInstrumentIdsByNames(['Convenient Store']);
-    
+
     $creditCardIds = implode(',', array_map('intval', $creditCardInstruments));
     $nonCreditCardIds = implode(',', array_map('intval', $nonCreditCardInstruments));
     $barcodeIds = implode(',', array_map('intval', $barcodeInstruments));
-    
+
     $results = [];
-    
+
     // Credit card transactions (immediate)
     if (!empty($creditCardIds)) {
       $creditCardSql = "
@@ -518,7 +512,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           )
           AND cp.restock <= 0
       ";
-      
+
       $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
@@ -618,12 +612,12 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       WHERE cp.contribution_id = %1 
         AND (cp.restock IS NULL OR cp.restock <= 0)
     ";
-    
+
     $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$contributionId, 'Integer']]);
-    
+
     $productsToRestock = [];
     $invalidProducts = [];
-    
+
     // Pre-validate all products before starting transaction
     while ($dao->fetch()) {
       $quantity = $dao->quantity ?: 1;
@@ -633,14 +627,14 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         FROM civicrm_product 
         WHERE id = %1 AND send_qty IS NOT NULL AND send_qty >= %2 AND stock_status > 0 AND stock_qty > %2
       ";
-      
+
       $checkParams = [
         1 => [$dao->product_id, 'Integer'],
         2 => [$quantity, 'Integer']
       ];
-      
+
       $productDao = CRM_Core_DAO::executeQuery($checkSql, $checkParams);
-      
+
       if ($productDao->fetch()) {
         $productsToRestock[] = [
           'contribution_product_id' => $dao->id,
@@ -653,7 +647,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         // Get product details for error message
         $productDetailSql = "SELECT id, name, send_qty, stock_status, stock_qty FROM civicrm_product WHERE id = %1";
         $productDetailDao = CRM_Core_DAO::executeQuery($productDetailSql, [1 => [$dao->product_id, 'Integer']]);
-        
+
         if ($productDetailDao->fetch()) {
           $invalidProducts[] = [
             'id' => $productDetailDao->id,
@@ -676,7 +670,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         }
       }
     }
-    
+
     // If any products don't meet conditions, throw error
     if (!empty($invalidProducts)) {
       $errorMessages = [];
@@ -695,22 +689,22 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         if ($product['stock_qty'] <= 0) {
           $reasons[] = "stock_qty ({$product['stock_qty']}) <= 0";
         }
-        
+
         $errorMessages[] = "Product '{$product['name']}' (ID: {$product['id']}): " . implode(', ', $reasons);
       }
       if (!empty($errorMessages)) {
         throw new Exception("Restock failed - the following products do not meet restock conditions: " . implode('; ', $errorMessages));
       }
     }
-    
+
     // If no products to restock, return early
     if (empty($productsToRestock)) {
       return;
     }
-    
+
     // Start transaction only after validation passes
     $transaction = new CRM_Core_Transaction();
-    
+
     // Process validated products for restocking
     foreach ($productsToRestock as $productInfo) {
       // Update product send_qty by reducing the quantity (restock)
@@ -719,14 +713,14 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         SET send_qty = send_qty - %1
         WHERE id = %2 AND send_qty IS NOT NULL AND send_qty >= %1 AND stock_status > 0 AND stock_qty > 0
       ";
-      
+
       $params = [
         1 => [$productInfo['quantity'], 'Integer'],
         2 => [$productInfo['product_id'], 'Integer']
       ];
-      
+
       $resultDao = CRM_Core_DAO::executeQuery($updateSql, $params);
-      
+
       // Verify that the update actually affected a row
       if ($resultDao->affectedRows() == 0) {
         $transaction->rollback();
@@ -745,17 +739,17 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         }
         CRM_Core_BAO_Log::add($logParams);
       }
-      
+
       // Mark the contribution product as restocked
       $restockSql = "
         UPDATE civicrm_contribution_product 
         SET restock = 1
         WHERE id = %1
       ";
-      
+
       CRM_Core_DAO::executeQuery($restockSql, [1 => [$productInfo['contribution_product_id'], 'Integer']]);
     }
-    
+
     $transaction->commit();
   }
 

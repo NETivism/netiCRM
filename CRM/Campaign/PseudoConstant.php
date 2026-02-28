@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class holds all the Pseudo constants those
  * are specific to Campaign and Survey.

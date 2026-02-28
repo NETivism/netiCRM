@@ -43,7 +43,6 @@ class CRM_Pledge_Page_AJAX {
    */
   public static function pledgeName(&$config) {
 
-
     $getRecords = FALSE;
     if (isset($_GET['name']) && $_GET['name']) {
       $name = CRM_Utils_Type::escape($_GET['name'], 'String');
@@ -83,7 +82,6 @@ WHERE {$whereClause}
         'value' => trim($name, '*'),
       ];
     }
-
 
     echo CRM_Utils_JSON::encode($elements, 'value');
     CRM_Utils_System::civiExit();

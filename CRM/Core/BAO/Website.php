@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contain function for Website handling
  */

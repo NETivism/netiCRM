@@ -10,7 +10,7 @@ function run_participant_processor() {
 class CRM_ParticipantProcessor {
   public function __construct() {
   }
-    
+
   public function updateParticipantStatus() {
     require_once 'CRM/Event/PseudoConstant.php';
     $participantRole = CRM_Event_PseudoConstant::participantRole();
@@ -19,16 +19,16 @@ class CRM_ParticipantProcessor {
     $waitingStatuses = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Waiting'");
 
     $pendingPayLater = array_search('Pending from pay later', $pendingStatuses);
-        
+
     //build the required status ids.
     $statusIds =  '(' . implode(',', array_merge(array_keys($pendingStatuses), array_keys($waitingStatuses))) . ')';
-        
+
     $participantDetails = $fullEvents = [ ];
     $expiredParticipantCount = $waitingConfirmCount = $waitingApprovalCount = 0;
-        
+
     //get all participant who's status in class pending and waiting
     $query = "SELECT * FROM civicrm_participant WHERE status_id IN {$statusIds} ORDER BY register_date";
-        
+
     $query = "
    SELECT  participant.id,
            participant.contact_id,
@@ -50,7 +50,7 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
 ";
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
-            
+
       $participantDetails[$dao->id] = [ 'id'               => $dao->id,
                                              'event_id'         => $dao->event_id,
                                              'status_id'        => $dao->status_id,
@@ -59,10 +59,10 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
                                              'registered_by_id' => $dao->registered_by_id,
                                              'eventTitle'       => $dao->eventTitle,
                                              'expiration_time'  => $dao->expiration_time,
-                                             'requires_approval'=> $dao->requires_approval
+                                             'requires_approval' => $dao->requires_approval
                                              ];
     }
-        
+
     if (!empty($participantDetails)) {
       //cron 1. move participant from pending to expire if needed
       foreach ($participantDetails as $participantId => $values) {
@@ -71,7 +71,7 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
         if (CRM_Utils_Array::value('registered_by_id', $values)) {
           continue;
         }
-                
+
         $expirationTime = CRM_Utils_Array::value('expiration_time', $values);
         if ($expirationTime && array_key_exists($values['status_id'], $pendingStatuses)) {
           // By #22714, Only check expire_date, ignore checking instrument.
@@ -85,34 +85,34 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
           else {
             //get the expiration and registration pending time.
             $baseTime = strtotime($values['register_date']);
-            $plusDay = ceil($expirationTime/24);
+            $plusDay = ceil($expirationTime / 24);
             $expirationSeconds = CRM_Core_Payment::calcExpirationDate($baseTime, $plusDay);
             $expirationDay = date('Y-m-d', $expirationSeconds + $paymentOffsetSeconds).' 23:59:59';
           }
           if (strtotime($expirationDay) < strtotime('-3 days')) {
             continue;
           }
-                    
+
           // expired registration since registration cross allow confirmation time.
           if (strtotime($expirationDay) < time()) {
-                        
+
             //lets get the transaction mechanism.
             require_once 'CRM/Core/Transaction.php';
             $transaction = new CRM_Core_Transaction();
-                        
+
             require_once 'CRM/Event/BAO/Participant.php';
             $ids = [ $participantId ];
             $expiredId = array_search('Expired', $expiredStatuses);
             $results = CRM_Event_BAO_Participant::transitionParticipants($ids, $expiredId, $values['status_id'], TRUE, TRUE);
             $transaction->commit();
-                        
+
             if (!empty($results)) {
               //diaplay updated participants
               if (is_array($results['updatedParticipantIds']) && !empty($results['updatedParticipantIds'])) {
                 foreach ($results['updatedParticipantIds'] as $processedId) {
                   $expiredParticipantCount += 1;
                   echo "\n\n- status updated to: Expired";
-                                    
+
                   //mailed participants.
                   if (is_array($results['mailedParticipants']) &&
                        array_key_exists($processedId, $results['mailedParticipants'])) {
@@ -124,7 +124,7 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
           }
         }
       }//cron 1 end.
-            
+
       //cron 2. lets move participants from waiting list to pending status
       foreach ($participantDetails as $participantId => $values) {
         //process the additional participant at the time of
@@ -132,21 +132,21 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
         if (CRM_Utils_Array::value('registered_by_id', $values)) {
           continue;
         }
-                
+
         if (array_key_exists($values['status_id'], $waitingStatuses) &&
              !array_key_exists($values['event_id'], $fullEvents)) {
-                    
+
           if ($waitingStatuses[$values['status_id']] == 'On waitlist') {
-                        
+
             //check the target event having space.
             require_once 'CRM/Event/BAO/Participant.php';
             $eventOpenSpaces = CRM_Event_BAO_Participant::eventFull($values['event_id'], TRUE, FALSE);
-                        
+
             if ($eventOpenSpaces && is_numeric($eventOpenSpaces) ||  ($eventOpenSpaces === NULL)) {
-                            
+
               //get the additional participant if any.
               $additionalIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId);
-                            
+
               $allIds = [ $participantId ];
               if (!empty($additionalIds)) {
                 $allIds = array_merge($allIds, $additionalIds);
@@ -157,11 +157,11 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
               if (($requiredSpaces <= $eventOpenSpaces) || ($eventOpenSpaces === NULL)) {
                 require_once 'CRM/Core/Transaction.php';
                 $transaction = new CRM_Core_Transaction();
-                                
+
                 require_once 'CRM/Event/BAO/Participant.php';
                 $ids = [ $participantId ];
                 $updateStatusId = array_search('Pending from waitlist', $pendingStatuses);
-                                
+
                 //lets take a call to make pending or need approval
                 if ($values['requires_approval']) {
                   $updateStatusId = array_search('Awaiting approval', $waitingStatuses);
@@ -175,7 +175,7 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
                 );
                 //commit the transaction.
                 $transaction->commit();
-                                
+
                 if (!empty($results)) {
                   //diaplay updated participants
                   if (is_array($results['updatedParticipantIds']) &&
@@ -211,7 +211,7 @@ INNER JOIN civicrm_contact contact ON ( contact.id = participant.contact_id )
         }
       }//cron 2 ends.
     }
-        
+
     echo "\n\nNumber of Expired registration(s) = {$expiredParticipantCount}";
     echo "\nNumber of registration(s) require approval =  {$waitingApprovalCount}";
     echo "\nNumber of registration changed to Pending from waitlist = {$waitingConfirmCount}\n\n";

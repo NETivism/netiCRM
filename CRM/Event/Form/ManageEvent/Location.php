@@ -34,11 +34,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for processing Event Location
  * civicrm_event_page.
@@ -87,7 +82,6 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
       parent::preProcess();
     }
 
-
     $this->_values = $this->get('values');
     if ($this->_id && empty($this->_values)) {
 
@@ -131,7 +125,6 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     if (!isset($defaults['address'][1]['country_id'])) {
       $defaults['address'][1]['country_id'] = $config->defaultContactCountry;
     }
-
 
     if (!empty($defaults['address'])) {
       foreach ($defaults['address'] as $key => $value) {
@@ -301,13 +294,12 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     $params['entity_table'] = 'civicrm_event';
     $params['entity_id'] = $this->_id;
 
-
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
     foreach (['address', 'phone', 'email'] as $block) {
       if (!CRM_Utils_Array::value($block, $params) || !is_array($params[$block])) {
         continue;
       }
-      foreach ($params[$block] as $count => & $values) {
+      foreach ($params[$block] as $count => &$values) {
         if ($count == 1) {
           $values['is_primary'] = 1;
         }

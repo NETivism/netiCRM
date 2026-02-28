@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
   public $_columnHeaders;
@@ -337,7 +335,6 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     $this->groupBy();
 
     $this->limit();
-
 
     //set the variable value rank, rows = 0
     $setVariable = " SET @rows:=0, @rank=0 ";

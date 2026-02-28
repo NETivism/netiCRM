@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Core_I18n_Schema {
 
   /**
@@ -123,7 +120,7 @@ class CRM_Core_I18n_Schema {
    * @return void
    */
   public static function makeSinglelingual($retain) {
-    $domain = new CRM_Core_DAO_Domain;
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
@@ -169,7 +166,7 @@ class CRM_Core_I18n_Schema {
     }
 
     // execute the queries without i18n rewriting
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->query($query, FALSE);
     }
@@ -271,10 +268,10 @@ class CRM_Core_I18n_Schema {
       $class = 'CRM_Core_I18n_SchemaStructure';
 
     }
-    $indices =& $class::indices();
-    $tables  =& $class::tables();
+    $indices = &$class::indices();
+    $tables  = &$class::tables();
     $queries = [];
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
 
     // get all of the already existing indices
     $existing = [];
@@ -347,8 +344,8 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE INDEX queries
    */
   private static function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $indices =& $class::indices();
-    $columns =& $class::columns();
+    $indices = &$class::indices();
+    $columns = &$class::columns();
     if (!isset($indices[$table])) {
       return [];
     }
@@ -382,7 +379,7 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE TRIGGER queries
    */
   private static function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $columns =& $class::columns();
+    $columns = &$class::columns();
     $queries = [];
     $namesTrigger = [];
     $individualNamesTrigger = [];
@@ -467,7 +464,7 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE INDEX queries
    */
   private static function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $columns =& $class::columns();
+    $columns = &$class::columns();
     $cols = [];
     $dao->query("DESCRIBE {$table}", FALSE);
     while ($dao->fetch()) {

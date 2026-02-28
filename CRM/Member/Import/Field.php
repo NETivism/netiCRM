@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Member_Import_Field {
 
   /**#@+

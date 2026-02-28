@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for processing a pledge
  *
@@ -124,7 +119,6 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
     }
-
 
     $this->userDisplayName = $this->userEmail = NULL;
     if ($this->_contactID) {
@@ -503,7 +497,6 @@ class CRM_Pledge_Form_Pledge extends CRM_Core_Form {
       ts('Self-service Payments Page'),
       ['' => ts('- select -')] + $pledgePages
     );
-
 
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $this->assign('outBound_option', $mailingInfo['outBound_option']);

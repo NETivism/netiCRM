@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Utils_Sunlight {
   public static $_apiURL = 'http://api.sunlightlabs.com/';
   public static $_apiKey = NULL;

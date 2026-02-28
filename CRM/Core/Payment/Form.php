@@ -143,7 +143,6 @@ class CRM_Core_Payment_Form {
       'is_required' => TRUE,
     ];
 
-
     $creditCardType = ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::creditCard();
     $form->_fields['credit_card_type'] = ['htmlType' => 'select',
       'name' => 'credit_card_type',
@@ -205,7 +204,6 @@ class CRM_Core_Payment_Form {
    */
   public static function buildCreditCard(&$form, $useRequired = FALSE) {
 
-
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
       self::setCreditCardFields($form);
       foreach ($form->_fields as $name => $field) {
@@ -262,7 +260,6 @@ class CRM_Core_Payment_Form {
    * @access public
    */
   public static function buildDirectDebit(&$form, $useRequired = FALSE) {
-
 
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM) {
       self::setDirectDebitFields($form);

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying Parent Information Section tabs
  */
@@ -112,7 +110,6 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
       $this->assign('editClass', TRUE);
       $permission = TRUE;
     }
-
 
     $daoResult = new CRM_Core_DAO_Persistent();
     $daoResult->find();

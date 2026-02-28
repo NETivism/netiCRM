@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 class CRM_Report_Form_Event_Income extends CRM_Report_Form {
   public $_setVariable;
   public $_outputMode;
@@ -84,8 +80,6 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument();
 
     $rows = $eventSummary = $roleRows = $statusRows = $instrumentRows = $count = [];
-
-
 
     $optionGroupDAO = new CRM_Core_DAO_OptionGroup();
     $optionGroupDAO->name = 'event_type';

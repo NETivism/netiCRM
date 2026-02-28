@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
   /**
@@ -483,7 +480,6 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
       $this->_relField = TRUE;
     }
     $sql = $this->buildQuery(TRUE);
-
 
     $rows = $graphRows = [];
     $this->buildRows($sql, $rows);

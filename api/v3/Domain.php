@@ -53,7 +53,7 @@ function civicrm_api3_domain_get($params) {
     $domainBAO = CRM_Core_Config::domainID();
     $params['id'] = $domainBAO;
   }
-  
+
   _civicrm_api3_dao_set_filter($bao, $params, TRUE, 'domain');
   $domains = _civicrm_api3_dao_to_array($bao, $params, TRUE, 'domain');
 
@@ -71,9 +71,9 @@ function civicrm_api3_domain_get($params) {
       'city', 'state_province_id', 'postal_code', 'country_id',
       'geo_code_1', 'geo_code_2',
     ];
-    
+
     require_once 'CRM/Core/OptionGroup.php';
-    
+
     if (!empty($values['location']['email'])) {
       $domain['domain_email'] = CRM_Utils_Array::value('email', $values['location']['email'][1]);
     }
@@ -108,7 +108,6 @@ function civicrm_api3_domain_get($params) {
     ) = CRM_Core_BAO_Domain::getNameAndEmail(TRUE);
     $domains[$domain['id']] = array_merge($domains[$domain['id']], $domain);
   }
-
 
   return civicrm_api3_create_success($domains, $params, 'domain', 'get', $bao);
 }

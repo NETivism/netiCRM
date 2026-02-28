@@ -873,7 +873,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         $formatted['contribution_id']
       );
 
-
       CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($formatted['pledge_id'], [$formatted['pledge_payment_id']], $completeStatusID, NULL, $formatted['total_amount']);
 
       $importRecordParams = [$statusFieldName => CRM_Contribute_Import_Parser::PLEDGE_PAYMENT, "{$statusFieldName}Msg" => ''];
@@ -940,7 +939,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     // process pledge payment assoc w/ the contribution
     return $this->processPledgePayments($formatted);
   }
-
 
   /**
    * the initializer code, called before the processing

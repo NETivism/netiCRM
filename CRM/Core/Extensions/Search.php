@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_Extensions_Search {
 
   public $ext;
@@ -55,7 +54,6 @@ class CRM_Core_Extensions_Search {
     );
     $this->customSearches = CRM_Core_OptionGroup::values(self::CUSTOM_SEARCH_GROUP_NAME, TRUE, FALSE, FALSE, NULL, 'name', FALSE);
   }
-
 
   public function install() {
     if (CRM_Utils_Array::arrayKeyExists($this->ext->key, $this->customSearches)) {

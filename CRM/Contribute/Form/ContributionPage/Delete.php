@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is to build the form for Deleting Group
  */
@@ -60,7 +58,6 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
    */
   protected $_defaulRenwaltPage;
 
-
   /**
    * Function to set variables up before form is built
    *
@@ -76,7 +73,6 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
-
 
     $dao = new CRM_Contribute_DAO_Contribution();
     $dao->contribution_page_id = $this->_id;
@@ -142,7 +138,6 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
     ];
     $dao->copyValues($params);
     $dao->delete();
-
 
     $groupName = "civicrm_contribution_page.amount.{$this->_id}";
     CRM_Core_OptionGroup::deleteAssoc($groupName);

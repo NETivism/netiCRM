@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
   public function verifyPreDBState(&$errorMessage) {
     $config = CRM_Core_Config::singleton();
@@ -57,7 +56,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
       if ($config->userFramework == 'Joomla') {
         $defaults['userFrameworkVersion'] = '1.5';
         if (class_exists('JVersion')) {
-          $version = new JVersion;
+          $version = new JVersion();
           $defaults['userFrameworkVersion'] = $version->getShortVersion();
         }
       }
@@ -254,7 +253,6 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
       [$currentDir, '../sql', 'domain_ids.mysql']
     );
     $this->source($sqlFile);
-
 
     // 2. remove domain ids from custom tables
     $query = "SELECT table_name FROM civicrm_custom_group";

@@ -63,7 +63,7 @@ class CRM_Contact_BAO_ProximityQuery {
       self::$_earthFlattening = 1.0 / 298.257223563;
       self::$_earthRadiusSemiMajor = 6378137.0;
       self::$_earthRadiusSemiMinor = self::$_earthRadiusSemiMajor * (1.0 - self::$_earthFlattening);
-      self::$_earthEccentricitySQ = 2 * self::$_earthFlattening - self::$_earthFlattening** 2;
+      self::$_earthEccentricitySQ = 2 * self::$_earthFlattening - self::$_earthFlattening ** 2;
     }
   }
 
@@ -150,7 +150,7 @@ class CRM_Contact_BAO_ProximityQuery {
     $minLong = $long - $diff;
     $maxLong = $long + $diff;
 
-    if ($minLong < - pi()) {
+    if ($minLong < -pi()) {
       $minLong = $minLong + pi() * 2;
     }
 
@@ -177,7 +177,7 @@ class CRM_Contact_BAO_ProximityQuery {
     $rightangle = pi() / 2.0;
 
     // wrapped around the south pole
-    if ($minLat < - $rightangle) {
+    if ($minLat < -$rightangle) {
       $overshoot = -$minLat - $rightangle;
       $minLat = -$rightangle + $overshoot;
       if ($minLat > $maxLat) {
@@ -309,7 +309,6 @@ $earthDistanceSQL  <= $distance
     ) {
       return;
     }
-
 
     if (isset($proximityAddress['distance_unit']) &&
       $proximityAddress['distance_unit'] == 'miles'

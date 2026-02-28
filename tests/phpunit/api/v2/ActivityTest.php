@@ -1409,13 +1409,19 @@ class api_v2_ActivityTest extends CiviUnitTestCase {
       4,
       "In line " . __LINE__
     );
-    $this->assertEquals($result['source_contact_id'], 17,
+    $this->assertEquals(
+      $result['source_contact_id'],
+      17,
       "In line " . __LINE__
     );
-    $this->assertEquals($result['subject'], 'Hurry update works',
+    $this->assertEquals(
+      $result['subject'],
+      'Hurry update works',
       "In line " . __LINE__
     );
-    $this->assertEquals($result['status_id'], 1,
+    $this->assertEquals(
+      $result['status_id'],
+      1,
       "In line " . __LINE__
     );
   }

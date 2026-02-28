@@ -16,7 +16,7 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase {
   public function setUp() {
     parent::setUp();
   }
-   
+
   public function testCreateCustomfield() {
     $customGroup = Custom::createGroup([], 'Individual');
     $fields = [
@@ -41,14 +41,14 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase {
                     'html_type'        => 'Text',
                     'custom_group_id'  => $customGroup->id,
                     ];
-           
+
     $customField = CRM_Core_BAO_CustomField::create($fields);
     $this->assertDBNotNull('CRM_Core_DAO_CustomField', 1, 'id', 'is_active', 'Database check for edited CustomField.');
     $this->assertDBNotNull('CRM_Core_DAO_CustomField', $fields['label'], 'id', 'label', 'Database check for edited CustomField.');
-        
+
     Custom::deleteGroup($customGroup);
   }
-    
+
   public function testGetFields() {
     $customGroup = Custom::createGroup([], 'Individual');
     $fields = [
@@ -81,16 +81,15 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase {
       'custom_group_id',
       'Database check for created CustomField.'
     );
-    $getCustomFields=[];
+    $getCustomFields = [];
     $getCustomFields = CRM_Core_BAO_CustomField::getFields('Individual', TRUE, TRUE);
     //CRM_Core_Error::debug('fdf',$getCustomFields);
     //$this->assertEquals( 'testFld1',  $getCustomFields[$customFieldID1][0], 'Confirm First Custom field label' );
     //$this->assertEquals( 'testFld2',  $getCustomFields[$customFieldID2][0], 'Confirm Second Custom field label' );
-        
-       
+
     Custom::deleteGroup($customGroup);
   }
-    
+
   public function testGetDisplayedValues() {
     $customGroup = Custom::createGroup([], 'Individual');
     $fields = [
@@ -109,16 +108,16 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase {
       'custom_group_id',
       'Database check for created CustomField.'
     );
-    $options=[];
-    $options[$customFieldID1]['attributes']=  [
+    $options = [];
+    $options[$customFieldID1]['attributes'] =  [
                     'label'            => 'testCountryFld1',
                     'data_type'        => 'Country',
                     'html_type'        => 'Select Country',
                     ];
     $display = CRM_Core_BAO_CustomField::getDisplayValue($fields['default_value'], $customFieldID1, $options);
-       
+
     $this->assertEquals('United States', $display, 'Confirm Country display Name');
-              
+
     Custom::deleteGroup($customGroup);
   }
   public function testDeleteCustomfield() {
@@ -128,7 +127,7 @@ class CRM_Core_BAO_CustomFieldTest extends CiviUnitTestCase {
                           'dataType' => 'Memo',
                           'htmlType' => 'TextArea'
                           ];
-                              
+
     $customField = Custom::createField([], $fields);
     $this->assertNotNull($customField);
     CRM_Core_BAO_CustomField::deleteField($customField);

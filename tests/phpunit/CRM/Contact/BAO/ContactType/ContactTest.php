@@ -4,21 +4,20 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Contact/BAO/Contact.php';
 require_once 'CRM/Contact/BAO/ContactType.php';
 
-
 class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase {
-    
+
   public function get_info() {
     return [
                  'name'        => 'Contact Subtype',
                  'description' => 'Test Contact for subtype.',
                  'group'       => 'CiviCRM BAO Tests',
                  ];
-        
+
   }
-    
+
   public function setUp() {
     parent::setUp();
-        
+
     $params = [ 'label'     => 'indiv_student',
                      'name'      => 'indiv_student',
                      'parent_id' => 1,//Individual
@@ -26,7 +25,7 @@ class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase {
                      ];
     $result = CRM_Contact_BAO_ContactType::add($params);
     $this->student = $params['name'];
-        
+
     $params = [ 'label'     => 'indiv_parent',
                      'name'      => 'indiv_parent',
                      'parent_id' => 1,//Individual
@@ -35,7 +34,6 @@ class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase {
     $result = CRM_Contact_BAO_ContactType::add($params);
     $this->parent = $params['name'];
 
-
     $params = [ 'label'     => 'org_sponsor',
                      'name'      => 'org_sponsor',
                      'parent_id' => 3,//Organization
@@ -43,7 +41,7 @@ class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase {
                      ];
     $result = CRM_Contact_BAO_ContactType::add($params);
     $this->sponsor =  $params['name'];
-        
+
     $params = [ 'label'     => 'org_team',
                      'name'      => 'org_team',
                      'parent_id' => 3,//Organization
@@ -51,9 +49,9 @@ class CRM_Contact_BAO_ContactType_ContactTest extends CiviUnitTestCase {
                      ];
     $result = CRM_Contact_BAO_ContactType::add($params);
     $this->team = $params['name'];
-        
+
   }
-    
+
   public function tearDown() {
     $this->quickCleanup([ 'civicrm_contact' ]);
     $query = "
@@ -62,7 +60,7 @@ DELETE FROM civicrm_contact_type
     require_once 'CRM/Core/DAO.php';
     CRM_Core_DAO::executeQuery($query);
   }
-    
+
   /**
    * methods create Contact with valid data
    * success expected
@@ -95,7 +93,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($contact->organization_name, 'Compumentor', 'In line '. __LINE__);
     $this->assertEquals($contact->contact_type, 'Organization', 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
-        
+
     //check for Type:Household
     $params = [ 'household_name' => 'John Does home',
                      'contact_type'   => 'Household'
@@ -108,7 +106,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($contact->household_name, 'John Does home', 'In line '. __LINE__);
     $this->assertEquals($contact->contact_type, 'Household', 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
-        
+
     //check for Type:Individual, Subtype:Student
     $params = [ 'first_name'       => 'Bill',
                      'last_name'        => 'Adams',
@@ -124,7 +122,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($contact->contact_type, 'Individual', 'In line '. __LINE__);
     $this->assertEquals($contact->contact_sub_type, $this->student, 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
-        
+
     //check for Type:Organization, Subtype:Sponsor
     $params = [ 'organization_name' => 'Conservation Corp' ,
                      'contact_type'      => 'Organization',
@@ -140,7 +138,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($contact->contact_sub_type, $this->sponsor, 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
   }
-    
+
   /**
    * update the contact with no subtype to a valid subtype
    * success expected
@@ -168,7 +166,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($updatedContact->contact_type, 'Individual', 'In line '. __LINE__);
     $this->assertEquals($updatedContact->contact_sub_type, $this->student, 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
-        
+
     $params = [ 'organization_name' => 'Compumentor' ,
                      'contact_type'      => 'Organization'
                      ];
@@ -177,7 +175,7 @@ DELETE FROM civicrm_contact_type
     }
     catch (Exception $expected) {
     }
-        
+
     $updateParams = [ 'contact_sub_type'  => $this->sponsor,
                            'contact_type'      => 'Organization',
                            'contact_id'        => $contact->id
@@ -192,7 +190,7 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($updatedContact->contact_sub_type, $this->sponsor, 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
   }
-    
+
   /**
    * update the contact with subtype to another valid subtype
    * success expected
@@ -208,7 +206,7 @@ DELETE FROM civicrm_contact_type
     }
     catch (Exception $expected) {
     }
-        
+
     $updateParams = [ 'contact_sub_type'  => $this->parent,
                            'contact_type'      => 'Individual',
                            'contact_id'        => $contact->id
@@ -222,7 +220,6 @@ DELETE FROM civicrm_contact_type
     $this->assertEquals($updatedContact->contact_type, 'Individual', 'In line '. __LINE__);
     $this->assertEquals($updatedContact->contact_sub_type, $this->parent, 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
-        
 
     $params = [ 'organization_name' => 'Compumentor' ,
                      'contact_type'      => 'Organization',
@@ -233,7 +230,7 @@ DELETE FROM civicrm_contact_type
     }
     catch (Exception $expected) {
     }
-        
+
     $updateParams = [ 'contact_sub_type'  => $this->team,
                            'contact_type'      => 'Organization',
                            'contact_id'        => $contact->id
@@ -243,12 +240,11 @@ DELETE FROM civicrm_contact_type
     }
     catch (Exception $expected) {
     }
-        
+
     $this->assertEquals($updatedContact->id, $contact->id, 'In line '. __LINE__);
     $this->assertEquals($updatedContact->contact_type, 'Organization', 'In line '. __LINE__);
     $this->assertEquals($updatedContact->contact_sub_type, $this->team, 'In line '. __LINE__);
     CRM_Contact_BAO_Contact::deleteContact($contact->id);
-
 
     $params  =  [ 'first_name'       => 'Anne',
                        'last_name'        => 'Grant',
@@ -260,7 +256,7 @@ DELETE FROM civicrm_contact_type
     }
     catch (Exception $expected) {
     }
-        
+
     $updateParams = [ 'contact_sub_type'  => NULL,
                            'contact_type'      => 'Individual',
                            'contact_id'        => $contact->id
@@ -270,7 +266,7 @@ DELETE FROM civicrm_contact_type
     }
     catch (Exception $expected) {
     }
-        
+
     $this->assertEquals($updatedContact->id, $contact->id, 'In line '. __LINE__);
     $this->assertEquals($updatedContact->contact_type, 'Individual', 'In line '. __LINE__);
     $this->assertEquals($updatedContact->contact_sub_type, NULL, 'In line '. __LINE__);

@@ -12,7 +12,7 @@ class CRM_Contact_Form_Search_Custom_AttendeeNotDonor extends CRM_Contact_Form_S
     'Registered',
     'Attended'
   ];
-  
+
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
@@ -115,11 +115,10 @@ $having
     }
   }
 
-
   public function tempFrom() {
     $attendeeStatus = CRM_Event_PseudoConstant::participantStatus(NULL);
     $statuses = array_intersect($attendeeStatus, $this->_participantStatuses);
-    
+
     $attendeeStatusId = array_keys($statuses);
     $from = "civicrm_contact AS contact INNER JOIN civicrm_participant p ON p.contact_id = contact.id AND p.is_test = 0 AND p.status_id IN (".CRM_Utils_Array::implode(',', $attendeeStatusId).") 
     LEFT JOIN (SELECT cc.* FROM civicrm_contribution cc LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = cc.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = cc.id WHERE cc.is_test = 0 AND cc.contribution_status_id = 1 AND pp.id IS NULL AND mp.id IS NULL ORDER BY cc.created_date DESC) c ON c.contact_id = contact.id
@@ -201,7 +200,6 @@ $having
     return $dao->N;
   }
 
-
   /**
    * Construct the search query
    */
@@ -258,7 +256,7 @@ $having
   public function &columns() {
     return $this->_columns;
   }
-  
+
   public function summary() {
     // return $summary;
   }

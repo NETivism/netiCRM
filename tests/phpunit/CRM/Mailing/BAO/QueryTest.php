@@ -21,15 +21,15 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase {
                  'group'       => 'CiviMail BAO Query Tests',
                  ];
   }
-    
+
   public function dataProvider() {
-    return new CRM_Mailing_BAO_QueryTestDataProvider;
+    return new CRM_Mailing_BAO_QueryTestDataProvider();
   }
 
   public function setUp() {
     parent::setUp();
   }
-    
+
   public function tearDown() {
     $tablesToTruncate = [
                                'civicrm_mailing_event_bounce',
@@ -46,7 +46,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase {
                                ];
     $this->quickCleanup($tablesToTruncate);
   }
-    
+
   /**
    *  Test CRM_Contact_BAO_Query::searchQuery()
    *  @dataProvider dataProvider
@@ -62,7 +62,7 @@ class CRM_Mailing_BAO_QueryTest extends CiviUnitTestCase {
     while ($dao->fetch()) {
       $contacts[] = $dao->contact_id;
     }
-        
+
     sort($contacts, SORT_NUMERIC);
 
     $this->assertEquals($ids, $contacts, 'In line ' . __LINE__);

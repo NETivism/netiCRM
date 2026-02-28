@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Core_BAO_Navigation extends CRM_Core_DAO_Navigation {
 
   /**
@@ -67,7 +66,6 @@ class CRM_Core_BAO_Navigation extends CRM_Core_DAO_Navigation {
    */
   public static function getMenus() {
     $menus = [];
-
 
     $menu = new CRM_Core_DAO_Menu();
     $menu->domain_id = CRM_Core_Config::domainID();
@@ -612,7 +610,6 @@ ORDER BY parent_id, weight";
   public static function resetNavigation() {
     $query = "UPDATE civicrm_preferences SET navigation = NULL WHERE contact_id IS NOT NULL";
     CRM_Core_DAO::executeQuery($query);
-
 
     CRM_Core_BAO_Cache::deleteGroup('navigation');
   }

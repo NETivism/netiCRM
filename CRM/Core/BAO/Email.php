@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains functions for email handling
  */
@@ -180,7 +178,6 @@ ORDER BY
 
     $entityId = $entityElements['entity_id'];
     $entityTable = $entityElements['entity_table'];
-
 
     $sql = " SELECT email, ltype.name as locationType, e.is_primary as is_primary, e.on_hold as on_hold,e.id as email_id, e.location_type_id as locationTypeId 
 FROM civicrm_loc_block loc, civicrm_email e, civicrm_location_type ltype, {$entityTable} ev

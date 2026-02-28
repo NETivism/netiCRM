@@ -52,7 +52,6 @@ require_once 'CRM/Core/BAO/EntityTag.php';
  */
 function civicrm_api3_entity_tag_get($params) {
 
-
   $values = CRM_Core_BAO_EntityTag::getTag($params['entity_id'], $params['entity_table']);
   $result = [];
   foreach ($values as $v) {
@@ -91,7 +90,6 @@ function civicrm_api3_entity_tag_display($params) {
     $entityID = CRM_Utils_Array::value('contact_id', $params);
   }
 
-
   if (CRM_Utils_Array::value('entity_table', $params)) {
     $entityTable = $params['entity_table'];
   }
@@ -115,7 +113,6 @@ function civicrm_api3_entity_tag_display($params) {
  * @example EntityTagCreate.php
  */
 function civicrm_api3_entity_tag_create($params) {
-
 
   return _civicrm_api3_entity_tag_common($params, 'add');
 }

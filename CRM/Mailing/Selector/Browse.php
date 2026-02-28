@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * This class is used to browse past mailings.
  */
@@ -113,7 +106,6 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    * @access public
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
-
 
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
     $job = CRM_Mailing_BAO_Job::getTableName();
@@ -208,7 +200,6 @@ class CRM_Mailing_Selector_Browse extends CRM_Core_Selector_Base implements CRM_
    */
   public function getTotalCount($action) {
 
-
     $job = CRM_Mailing_BAO_Job::getTableName();
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
     $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL();
@@ -289,7 +280,7 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
           'extra' => 'onclick="if (confirm(\'' . $publicExtra. '\')) {  this.href+=\'&amp;confirmed=1\'; } else { return false;}"',
           'title' => ts('Public Pages'),
         ],
-        CRM_Core_Action::CLOSE=> [
+        CRM_Core_Action::CLOSE => [
           'name' => ts('un-publish'),
           'url' => 'civicrm/mailing/browse',
           'qs' => 'action=close&mid=%%mid%%&reset=1',
@@ -486,7 +477,6 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
       }
     }
 
-
     $from = $this->_parent->get('mailing_from');
     if (!CRM_Utils_System::isNull($from)) {
       $dateClause1[] = 'civicrm_mailing_job.start_date >= %2';
@@ -568,7 +558,6 @@ LEFT JOIN  civicrm_contact scheduledContact ON ( $mailing.scheduled_id = schedul
   }
 
   public function pagerAtoZ() {
-
 
     $params = [];
     $whereClause = $this->whereClause($params, FALSE);

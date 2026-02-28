@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Campaign_Page_Petition_ThankYou extends CRM_Core_Page {
   public function run() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -49,7 +48,6 @@ class CRM_Campaign_Page_Petition_ThankYou extends CRM_Core_Page {
              * 	 	login using fb connect - thank you + click to add msg to fb wall
              * 2 = send a confirmation request email
              */
-
 
     parent::run();
   }

@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/Relationship.php';
 require_once 'api/v2/RelationshipType.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
@@ -331,7 +330,6 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
         $retr[$secondRelTypeId] = $res;
       }
     }
-
 
     foreach ($firstRelTypeParams as $key => $val) {
       $this->assertEquals(

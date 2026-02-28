@@ -29,7 +29,7 @@ class AuthorizeNet extends PHPUnit_Framework_Testcase {
     $paymentProcessor->save();
     return $paymentProcessor;
   }
-  
+
   /*
    * Helper function to delete a PayPal Pro
    * payment processor

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  * @package CRM
@@ -59,7 +57,6 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_ACL_DAO_EntityRole');
 
-
     $aclRoles = ['' => ts('- select -')] + CRM_Core_OptionGroup::values('acl_role');
     $this->add(
       'select',
@@ -68,9 +65,6 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
       $aclRoles,
       TRUE
     );
-
-
-
 
     $label = ts('Assigned To');
     $group = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::staticGroup(FALSE, 'Access');
@@ -87,7 +81,6 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
    * @return None
    */
   public function postProcess() {
-
 
     CRM_ACL_BAO_Cache::resetCache();
 

@@ -27,7 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_EventTest extends CiviUnitTestCase {
   /**
@@ -127,7 +126,6 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $this->eventDelete($this->_event['id']);
     */
 
-
     $tablesToTruncate = [
       'civicrm_participant',
       'civicrm_event',
@@ -209,7 +207,6 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $result = civicrm_api('Event', 'Get', $params);
     $this->assertEquals(1, $result['id'], ' in line ' . __LINE__);
 
-
   }
   /*
    * Getting the id back of an event.
@@ -227,7 +224,6 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $result = civicrm_api('Event', 'Get', $params);
   }
   */
-
 
   /*
      * Test 'is.Current' option. Existing event is 'old' so only current should be returned
@@ -259,7 +255,7 @@ class api_v3_EventTest extends CiviUnitTestCase {
   public function testGetPaymentProcessorId() {
     $params = $this->_params[0];
     $params['payment_processor_id'] = 1;
-    $params['sequential'] =1;
+    $params['sequential'] = 1;
     $result = civicrm_api('event', 'create', $params);
     $this->assertEquals(1, $result['values'][0]['payment_processor'][0], "handing of payment processor compatibility");
     $result = civicrm_api('event', 'get', $params);
@@ -268,8 +264,8 @@ class api_v3_EventTest extends CiviUnitTestCase {
 
   public function testInvalidData() {
     $params = $this->_params[0];
-    $params['sequential'] =1;
-    $params['loc_block_id'] =100;
+    $params['sequential'] = 1;
+    $params['loc_block_id'] = 100;
     $result = civicrm_api('event', 'create', $params);
     $this->assertEquals(1, $result['is_error']);
 

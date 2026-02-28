@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for case activity
  *
@@ -173,7 +169,6 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       $this->assign('clientName', $contact->display_name);
     }
 
-
     $session = CRM_Core_Session::singleton();
     $this->_currentUserId = $session->get('userID');
 
@@ -202,7 +197,6 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
@@ -243,7 +237,6 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       array_merge($s, ['maxlength' => '128']),
       TRUE
     );
-
 
     $tags = CRM_Core_BAO_Tag::getTags('civicrm_case');
     if (!empty($tags)) {
@@ -346,8 +339,6 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
     $params['now'] = date("Ymd");
-
-
 
     // 1. call begin post process
     if ($this->_activityTypeFile) {

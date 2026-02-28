@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Option Groups
  */
@@ -187,7 +185,6 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
       $object->orderBy($key . ' asc');
     }
 
-
     // find all objects
     $object->find();
     while ($object->fetch()) {
@@ -202,7 +199,6 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
         if ($permission) {
           $values[$object->id] = [];
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
-
 
           CRM_Contact_DAO_RelationshipType::addDisplayEnums($values[$object->id]);
 

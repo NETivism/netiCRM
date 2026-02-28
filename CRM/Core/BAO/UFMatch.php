@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * The basic class that interfaces with the external user framework
  */
@@ -268,7 +265,6 @@ AND    domain_id    = %4
         4 => [$ufmatch->domain_id, 'Integer'],
       ];
 
-
       $conflict = CRM_Core_DAO::singleValueQuery($sql, $params);
 
       if (!$conflict) {
@@ -359,7 +355,6 @@ AND    domain_id    = %4
     $ufmatch->uf_name = $ufName;
     $ufmatch->save();
 
-
     $config->userSystem->updateCMSName($ufmatch->uf_id, $ufName);
   }
 
@@ -411,7 +406,6 @@ AND    domain_id    = %4
         $email->save();
         $emailID = $email->id;
       }
-
 
       CRM_Core_BAO_Log::register(
         $contactId,

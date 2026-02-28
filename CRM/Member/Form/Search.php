@@ -37,8 +37,6 @@
  * Files required
  */
 
-
-
 /**
  * This file is for civimember search
  */
@@ -194,7 +192,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       );
     }
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $selector = new CRM_Member_Selector_Search(
       $this->_queryParams,
@@ -238,7 +235,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   public function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('Member Name, Phone or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-
     CRM_Member_BAO_Query::buildSearchForm($this);
 
     /*
@@ -257,9 +253,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-
       $permission = CRM_Core_Permission::getPermission();
-
 
       $tasks = ['' => ts('- actions -')] + CRM_Member_Task::permissionedTaskTitles($permission);
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
@@ -282,7 +276,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
         ]
       );
 
-
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
       $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
@@ -290,7 +283,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
       $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
-
 
     // add buttons
     $this->addButtons([
@@ -338,9 +330,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $this->_formValues["member_test"] = 0;
     }
 
-
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
-
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
@@ -366,9 +356,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       );
     }
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-
 
     $selector = new CRM_Member_Selector_Search(
       $this->_queryParams,
@@ -449,7 +437,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $this->_formValues['member_membership_type_id'] = $membershipType;
       $this->_defaults['member_membership_type_id'] = $membershipType;
     }
-
 
     $cid = CRM_Utils_Request::retrieve(
       'cid',

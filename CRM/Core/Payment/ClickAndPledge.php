@@ -13,7 +13,6 @@
  * @author Irfan Ahmed <irfan.ahmed@v-empower.com>
  **/
 
-
 class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
   /**
    * @var mixed

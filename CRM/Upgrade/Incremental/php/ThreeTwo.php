@@ -78,7 +78,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
   }
 
   public function upgrade_3_2_beta4($rev) {
-    $upgrade = new CRM_Upgrade_Form;
+    $upgrade = new CRM_Upgrade_Form();
 
     $config = &CRM_Core_Config::singleton();
     $seedLocale = $config->lcMessages;
@@ -88,7 +88,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
 
     // CRM-6451: for multilingual sites we need to find the optimal
     // locale to use as the final civicrm_membership_status.name column
-    $domain = new CRM_Core_DAO_Domain;
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     $locales = [];
     if ($domain->locales) {
@@ -199,11 +199,10 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
       ],
     ];
 
-
     $statusIds = [];
     $insertedNewRecord = FALSE;
     foreach ($statuses as $status) {
-      $dao = new CRM_Member_DAO_MembershipStatus;
+      $dao = new CRM_Member_DAO_MembershipStatus();
 
       // try to find an existing English status
       $dao->name = $status['name'];
@@ -262,7 +261,7 @@ UPDATE  civicrm_membership_status
 
     CRM_Utils_File::restrictAccess($config->uploadDir);
     CRM_Utils_File::restrictAccess($config->configAndLogDir);
-    $upgrade = new CRM_Upgrade_Form;
+    $upgrade = new CRM_Upgrade_Form();
     $upgrade->assign('addActivityTypeIndex', $addActivityTypeIndex);
     $upgrade->processSQL($rev);
   }

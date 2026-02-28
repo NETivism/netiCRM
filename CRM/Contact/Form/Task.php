@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for relationship
  *
@@ -130,7 +127,6 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     $url = CRM_Utils_System::url('civicrm/contact/' . $fragment, $urlParams);
     $session = CRM_Core_Session::singleton();
     $session->replaceUserContext($url);
-
 
     $form->_task = CRM_Utils_Array::value('task', $values);
     $crmContactTaskTasks = CRM_Contact_Task::taskTitles();

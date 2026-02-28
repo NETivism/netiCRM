@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
@@ -57,7 +56,6 @@ class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_For
     /**
      * Define the search form fields here
      */
-
 
     $form->addDate('start_date', ts('Contribution Date From'), FALSE, ['formatType' => 'custom']);
     $form->addDate('end_date', ts('...through'), FALSE, ['formatType' => 'custom']);
@@ -187,7 +185,6 @@ GROUP BY civicrm_contact.id
     }
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
-
 
   /*
      * Functions below generally don't need to be modified

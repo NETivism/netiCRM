@@ -35,7 +35,6 @@
  *
  */
 
-
 class CRM_Core_Payment_IATS extends CRM_Core_Payment {
   /**
    * @var mixed
@@ -92,11 +91,11 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
 
     if ($isRecur) {
       include_once('Services/IATS/iats_reoccur.php');
-      $iatslink1 = new iatslinkReoccur;
+      $iatslink1 = new iatslinkReoccur();
     }
     else {
       include_once('Services/IATS/iatslink.php');
-      $iatslink1 = new iatslink;
+      $iatslink1 = new iatslink();
     }
 
     $iatslink1->setTestMode($this->_profile['mode'] != 'live');

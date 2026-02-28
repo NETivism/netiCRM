@@ -125,7 +125,7 @@ class Audit {
           // If there are any fields with ifBlank specified, replace their values.
           // We need to do this as a second pass because if we do it while looping through fields we might not have come across the field we need yet.
           foreach ($regionList as $region) {
-            foreach ($retval[$activityindex][$region] as & $v) {
+            foreach ($retval[$activityindex][$region] as &$v) {
               $vlabel = $v['label'];
               if (trim($v['value']) == '' && !empty($ifBlanks[$region][$vlabel])) {
                 if (!empty($ifBlankReplacements[$ifBlanks[$region][$vlabel]])) {
@@ -180,7 +180,7 @@ class Audit {
     }
 
     if ($aval < $bval) {
-      return - 1;
+      return -1;
     }
     elseif ($aval > $bval) {
       return 1;

@@ -44,10 +44,10 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase {
                  'group'       => 'CiviCRM BAO Tests',
                  ];
   }
-    
+
   public function setUp() {
     parent::setUp();
-        
+
     $params = [ 'contact_type_a' => 'Individual',
                      'contact_type_b' => 'Organization',
                      'name_a_b'       => 'Test Employee of',
@@ -56,7 +56,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase {
     $this->_relationshipTypeId  = $this->relationshipTypeCreate($params);
     $this->_orgContactID        = $this->organizationCreate() ;
     $this->_contributionTypeId  = $this->contributionTypeCreate();
-        
+
     $ids    = [ 'memberOfContact' => $this->_orgContactID ];
     $params = [ 'name'                 => 'test type',
                      'description'          => NULL,
@@ -73,7 +73,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase {
     $this->_membershipTypeID    = $membershipType->id;
     $this->_mebershipStatusID  = $this->membershipStatusCreate('test status');
   }
-    
+
   /**
    * Tears down the fixture, for example, closes a network connection.
    * This method is called after a test is executed.
@@ -92,7 +92,7 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase {
    */
   public function testadd() {
     $contactId = Contact::createIndividual();
-        
+
     $params = [
                     'contact_id'         => $contactId,
                     'membership_type_id' => $this->_membershipTypeID,
@@ -116,13 +116,13 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase {
     $this->membershipDelete($membership->id);
     $this->contactDelete($contactId);
   }
-    
+
   /**
    *  Test del()
    */
   public function testdel() {
     $contactId = Contact::createIndividual();
-        
+
     $params = [
                     'contact_id'         => $contactId,
                     'membership_type_id' => $this->_membershipTypeID,
@@ -149,13 +149,13 @@ class CRM_Member_BAO_MembershipLogTest extends CiviUnitTestCase {
     $this->membershipDelete($membership->id);
     $this->contactDelete($contactId);
   }
-    
+
   /**
    *  Test resetmodified()
    */
   public function testresetmodifiedId() {
     $contactId = Contact::createIndividual();
-        
+
     $params = [
                     'contact_id'         => $contactId,
                     'membership_type_id' => $this->_membershipTypeID,

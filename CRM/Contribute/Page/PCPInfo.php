@@ -33,7 +33,6 @@
  *
  */
 
-
 /**
  * PCP Info Page - Summary about the PCP
  */
@@ -306,7 +305,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
       'display' => $pcpInfo['is_thermometer'],
       'current' => $totalAmount,
       'achieved_percent' => floor($achieved),
-      'achieved_status'=> floor($achieved) >= 100 ? TRUE : FALSE,
+      'achieved_status' => floor($achieved) >= 100 ? TRUE : FALSE,
       'contribution_page_is_active' => $contributionPageInfo['is_active']
     ];
 
@@ -321,7 +320,6 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
 
     // we do not want to display recently viewed items, so turn off
     $this->assign('displayRecent', FALSE);
-
 
     $single = $permission = FALSE;
     switch ($action) {

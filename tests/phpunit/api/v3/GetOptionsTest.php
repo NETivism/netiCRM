@@ -8,7 +8,6 @@
  * @docmaker_intro_end
  */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_GetOptionsTest extends CiviUnitTestCase {
   protected $_apiversion = 3;
@@ -22,7 +21,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
 
     global $tsLocale;
     $tsLocale = 'zh_TW';
-    $config =& CRM_Core_Config::singleton();
+    $config = &CRM_Core_Config::singleton();
     $config->countryLimit = [1208, 1228];
     $config->provinceLimit = [1208]; // Taiwan
     $config->defaultContactCountry = 1208; // Taiwan
@@ -57,9 +56,9 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('Contact', 'getoptions', $params);
     foreach ($result['values'] as $k => &$v) {
-      $a = $k+1;
+      $a = $k + 1;
       $v['label'] = 'example label '.$a;
-      $v['value'] = $a+1000;
+      $v['value'] = $a + 1000;
     }
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
@@ -277,7 +276,6 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertNotEmpty($result['count'], "In line " . __LINE__);
   }
-
 
   /**
    * @docmaker_start

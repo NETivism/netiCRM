@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Utils_VersionCheck {
   // timeout for when the connection or the server is slow
   public const LATEST_VERSION_AT = '',

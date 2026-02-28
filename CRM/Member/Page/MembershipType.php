@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of membership types
  */
@@ -157,8 +154,6 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
 
     $dao->orderBy('weight');
     $dao->find();
-
-
 
     while ($dao->fetch()) {
       $membershipType[$dao->id] = [];

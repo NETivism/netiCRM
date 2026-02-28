@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to Mobile provider
  *
@@ -55,7 +53,7 @@ class CRM_Member_Form extends CRM_Core_Form {
    * @var string
    */
   protected $_BAOName;
- 
+
   public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
@@ -77,7 +75,7 @@ class CRM_Member_Form extends CRM_Core_Form {
    */
   public function setDefaultValues() {
     if (!empty($this->_defaults)) {
-      $defaults =& $this->_defaults;
+      $defaults = &$this->_defaults;
     }
     else {
       $defaults = [];
@@ -87,7 +85,6 @@ class CRM_Member_Form extends CRM_Core_Form {
 
       $defaults['minimum_fee'] = CRM_Utils_Money::format($defaults['minimum_fee'], NULL, '%a');
     }
-
 
     if (isset($defaults['status'])) {
       $this->assign('membershipStatus', $defaults['status']);

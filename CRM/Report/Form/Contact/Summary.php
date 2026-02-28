@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
 
   /**
@@ -260,7 +259,6 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
         }
         $entryFound = TRUE;
       }
-
 
       // skip looking further in rows, if first row itself doesn't
       // have the column we need

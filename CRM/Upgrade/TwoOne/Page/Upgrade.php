@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
   public function run() {
     $upgrade = new CRM_Upgrade_Form();
