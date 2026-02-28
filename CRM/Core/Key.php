@@ -36,14 +36,17 @@
 /**
  * Prevent PHP 5.5 broken
  */
-if(!function_exists('hash_equals')) {
+if (!function_exists('hash_equals')) {
   function hash_equals($str1, $str2) {
-    if(strlen($str1) != strlen($str2)) {
-      return false;
-    } else {
+    if (strlen($str1) != strlen($str2)) {
+      return FALSE;
+    }
+    else {
       $res = $str1 ^ $str2;
       $ret = 0;
-      for($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+      for ($i = strlen($res) - 1; $i >= 0; $i--) {
+        $ret |= ord($res[$i]);
+      }
       return !$ret;
     }
   }
@@ -198,4 +201,3 @@ class CRM_Core_Key {
     return hash_hmac(self::HASH_ALGO, $sessionID . $delim . $name, $privateKey);
   }
 }
-

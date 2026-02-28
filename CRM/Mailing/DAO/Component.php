@@ -31,8 +31,7 @@
  * $Id$
  *
  */
-class CRM_Mailing_DAO_Component extends CRM_Core_DAO
-{
+class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
@@ -46,14 +45,14 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  public static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    *
    * @var int unsigned
    */
@@ -124,30 +123,28 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_mailing_component
-   */
-  public function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_mailing_component
+  */
+  public function __construct() {
     parent::__construct();
   }
-    /**
+  /**
    * returns all the column names of this table
    *
    * @access public
    * @return array
    */
-  public static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'name' => [
           'name' => 'name',
@@ -201,19 +198,17 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  public static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  public function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -222,21 +217,21 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @access public
    * return array
    */
-  public static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_component'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
@@ -245,21 +240,21 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @access public
    * return array
    */
-  public static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_component'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
   /**
@@ -267,8 +262,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {
+  public static function &getEnums() {
     static $enums = [
                                             'component_type',
                                                                             ];
@@ -282,9 +276,8 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    *
    * @return string  the display value of the enum
    */
-  public static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
                                             'component_type' => [
@@ -307,8 +300,7 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  public static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Mailing_DAO_Component::getEnums();
     foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {

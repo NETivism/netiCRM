@@ -1,29 +1,29 @@
 <?php
 
-/* 
- +--------------------------------------------------------------------+ 
- | CiviCRM version 3.3                                                | 
- +--------------------------------------------------------------------+ 
- | Copyright CiviCRM LLC (c) 2004-2010                                | 
- +--------------------------------------------------------------------+ 
- | This file is a part of CiviCRM.                                    | 
- |                                                                    | 
- | CiviCRM is free software; you can copy, modify, and distribute it  | 
- | under the terms of the GNU Affero General Public License           | 
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   | 
- |                                                                    | 
- | CiviCRM is distributed in the hope that it will be useful, but     | 
- | WITHOUT ANY WARRANTY; without even the implied warranty of         | 
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               | 
- | See the GNU Affero General Public License for more details.        | 
- |                                                                    | 
+/*
+ +--------------------------------------------------------------------+
+ | CiviCRM version 3.3                                                |
+ +--------------------------------------------------------------------+
+ | Copyright CiviCRM LLC (c) 2004-2010                                |
+ +--------------------------------------------------------------------+
+ | This file is a part of CiviCRM.                                    |
+ |                                                                    |
+ | CiviCRM is free software; you can copy, modify, and distribute it  |
+ | under the terms of the GNU Affero General Public License           |
+ | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
+ |                                                                    |
+ | CiviCRM is distributed in the hope that it will be useful, but     |
+ | WITHOUT ANY WARRANTY; without even the implied warranty of         |
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
+ | See the GNU Affero General Public License for more details.        |
+ |                                                                    |
  | You should have received a copy of the GNU Affero General Public   |
  | License and the CiviCRM Licensing Exception along                  |
  | with this program; if not, contact CiviCRM LLC                     |
  | at info[AT]civicrm[DOT]org. If you have questions about the        |
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+ 
+ +--------------------------------------------------------------------+
 */
 
 /**
@@ -35,7 +35,7 @@
  *
  */
 class CRM_Core_BAO_CustomQuery {
-  public CONST PREFIX = 'custom_value_';
+  public const PREFIX = 'custom_value_';
 
   /**
    * the set of custom field ids
@@ -198,7 +198,8 @@ SELECT f.id, f.label, f.data_type,
           $optionGroupID = $dao->option_group_id;
         }
         elseif ($dao->data_type != 'Boolean') {
-          $errorMessage = ts("The custom field %1 is corrupt. Please delete and re-build the field",
+          $errorMessage = ts(
+            "The custom field %1 is corrupt. Please delete and re-build the field",
             [1 => $dao->label]
           );
           CRM_Core_Error::fatal($errorMessage);
@@ -423,7 +424,8 @@ SELECT label, value
             }
             else {
               if ($field['is_search_range'] && is_array($value)) {
-                $this->searchRange($field['id'],
+                $this->searchRange(
+                  $field['id'],
                   $field['label'],
                   $field['data_type'],
                   $fieldName,
@@ -658,4 +660,3 @@ SELECT label, value
     }
   }
 }
-

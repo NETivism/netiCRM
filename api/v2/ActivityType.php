@@ -110,4 +110,3 @@ function civicrm_activity_type_delete($params) {
 
   return CRM_Core_BAO_OptionValue::del($activityTypeId);
 }
-

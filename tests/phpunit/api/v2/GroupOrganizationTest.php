@@ -242,5 +242,3 @@ class api_v2_GroupOrganizationTest extends CiviUnitTestCase {
     $this->assertEquals($result['error_message'], 'Invalid or no value for Group Organization ID');
   }
 }
-
-

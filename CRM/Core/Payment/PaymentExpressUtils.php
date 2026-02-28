@@ -75,4 +75,3 @@ function &_initCURL($query, $url) {
   }
   return $curl;
 }
-

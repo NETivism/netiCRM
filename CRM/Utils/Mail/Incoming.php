@@ -69,9 +69,10 @@ class CRM_Utils_Mail_Incoming {
       return self::formatMailMultipart($part, $attachments);
     }
 
-    CRM_Core_Error::fatal(ts("No clue about the %1",
-        [1 => get_class($part)]
-      ));
+    CRM_Core_Error::fatal(ts(
+      "No clue about the %1",
+      [1 => get_class($part)]
+    ));
   }
 
   public function formatMailMultipart($part, &$attachments) {
@@ -96,9 +97,10 @@ class CRM_Utils_Mail_Incoming {
       return self::formatMailMultipartReport($part, $attachments);
     }
 
-    CRM_Core_Error::fatal(ts("No clue about the %1",
-        [1 => get_class($part)]
-      ));
+    CRM_Core_Error::fatal(ts(
+      "No clue about the %1",
+      [1 => get_class($part)]
+    ));
   }
 
   public function formatMailMultipartMixed($part, &$attachments) {
@@ -198,9 +200,10 @@ class CRM_Utils_Mail_Incoming {
     if (!file_exists($file) ||
       !trim(file_get_contents($file))
     ) {
-      return CRM_Core_Error::createAPIError(ts('%1 does not exists or is empty',
-          [1 => $file]
-        ));
+      return CRM_Core_Error::createAPIError(ts(
+        '%1 does not exists or is empty',
+        [1 => $file]
+      ));
     }
 
     require_once 'ezc/Base/src/ezc_bootstrap.php';
@@ -212,9 +215,10 @@ class CRM_Utils_Mail_Incoming {
     $mail = $parser->parseMail($set);
 
     if (!$mail) {
-      return CRM_Core_Error::createAPIError(ts('%1 could not be parsed',
-          [1 => $file]
-        ));
+      return CRM_Core_Error::createAPIError(ts(
+        '%1 could not be parsed',
+        [1 => $file]
+      ));
     }
 
     // since we only have one fileset
@@ -248,7 +252,8 @@ class CRM_Utils_Mail_Incoming {
 
     // define other parameters
     $params['subject'] = $mail->subject;
-    $params['date'] = date("YmdHi00",
+    $params['date'] = date(
+      "YmdHi00",
       strtotime($mail->getHeader("Date"))
     );
     $attachments = [];
@@ -285,12 +290,14 @@ class CRM_Utils_Mail_Incoming {
     $subParam['email'] = $address->email;
     $subParam['name'] = $address->name;
 
-    $subParam['id'] = self::getContactID($subParam['email'],
+    $subParam['id'] = self::getContactID(
+      $subParam['email'],
       $subParam['name']
     );
     if (empty($subParam['id'])) {
       $params['is_error'] = 1;
-      $params['error_message'] = ts("Contact with address %1 was not found / created",
+      $params['error_message'] = ts(
+        "Contact with address %1 was not found / created",
         [1 => $subParam['email']]
       );
     }
@@ -329,9 +336,9 @@ class CRM_Utils_Mail_Incoming {
 
     CRM_Utils_String::extractName($name, $params);
 
-    return CRM_Contact_BAO_Contact::createProfileContact($params,
+    return CRM_Contact_BAO_Contact::createProfileContact(
+      $params,
       CRM_Core_DAO::$_nullArray
     );
   }
 }
-

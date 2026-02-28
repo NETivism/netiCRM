@@ -42,11 +42,13 @@ class CRM_Event_Page_ParticipantListing_Simple extends CRM_Core_Page {
 
   protected $_eventTitle;
 
-  protected $_pager; public function preProcess() {
+  protected $_pager;
+  public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
 
     // retrieve Event Title and include it in page title
-    $this->_eventTitle = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $this->_eventTitle = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $this->_id,
       'title'
     );
@@ -145,21 +147,23 @@ SELECT count( civicrm_contact.id )
     }
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
     $sort = new CRM_Utils_Sort($headers, $sortID);
     $this->assign_by_ref('headers', $headers);
     $this->assign_by_ref('sort', $sort);
-    $this->set(CRM_Utils_Sort::SORT_ID,
+    $this->set(
+      CRM_Utils_Sort::SORT_ID,
       $sort->getCurrentSortID()
     );
-    $this->set(CRM_Utils_Sort::SORT_DIRECTION,
+    $this->set(
+      CRM_Utils_Sort::SORT_DIRECTION,
       $sort->getCurrentSortDirection()
     );
 
     return $sort->orderBy();
   }
 }
-

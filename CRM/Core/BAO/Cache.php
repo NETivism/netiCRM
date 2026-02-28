@@ -277,7 +277,8 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     // CRM_Core_Error::debug_var( 'names in restore', $names );
     foreach ($names as $key => $sessionName) {
       if (is_array($sessionName)) {
-        $value = self::getItem('CiviCRM Session',
+        $value = self::getItem(
+          'CiviCRM Session',
           "{$sessionName[0]}_{$sessionName[1]}"
         );
         if ($value) {
@@ -289,7 +290,8 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
         }
       }
       else {
-        $value = self::getItem('CiviCRM Session',
+        $value = self::getItem(
+          'CiviCRM Session',
           $sessionName
         );
         if ($value) {
@@ -347,4 +349,3 @@ class CRM_Core_BAO_Cache extends CRM_Core_DAO_Cache {
     }
   }
 }
-

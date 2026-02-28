@@ -39,7 +39,7 @@ class CRM_ACL_API {
    *
    * @var int
    */
-  public CONST EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6;
+  public const EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6;
 
   /**
    * given a permission string, check for access requirements
@@ -83,7 +83,8 @@ class CRM_ACL_API {
   public static function whereClause($type, &$tables, &$whereTables, $contactID = NULL, $onlyDeleted = FALSE, $skipDeleteClause = FALSE) {
     // first see if the contact has edit / view all contacts
     if (CRM_Core_Permission::check('edit all contacts') ||
-      ($type == self::VIEW &&
+      (
+        $type == self::VIEW &&
         CRM_Core_Permission::check('view all contacts')
       )
     ) {
@@ -135,7 +136,9 @@ class CRM_ACL_API {
    * @return array the ids of the groups for which the user has permissions
    * @access public
    */
-  public static function group($type, $contactID = NULL,
+  public static function group(
+    $type,
+    $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
     $includedGroups = NULL
@@ -167,7 +170,10 @@ class CRM_ACL_API {
    * @return array the ids of the groups for which the user has permissions
    * @access public
    */
-  public static function groupPermission($type, $groupID, $contactID = NULL,
+  public static function groupPermission(
+    $type,
+    $groupID,
+    $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
     $includedGroups = NULL
@@ -186,4 +192,3 @@ class CRM_ACL_API {
     return in_array($groupID, $groups) ? TRUE : FALSE;
   }
 }
-

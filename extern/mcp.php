@@ -23,7 +23,7 @@
 
 // Check if this is a .well-known request routed here
 $requestUri = $_SERVER['REQUEST_URI'] ?? '';
-if (strpos($requestUri, '.well-known/oauth-') !== false) {
+if (strpos($requestUri, '.well-known/oauth-') !== FALSE) {
   require_once __DIR__ . '/oauth-discovery.php';
   exit;
 }
@@ -41,12 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
   header('Access-Control-Max-Age: 86400');
   http_response_code(200);
   exit;
-} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+}
+elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
   // Handle session termination (MCP spec)
   header('Access-Control-Allow-Origin: *');
   http_response_code(204);
   exit;
-} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+}
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
   // Handle GET request for MCP backwards compatibility detection
   // For Claude Desktop connector, we need to handle GET requests with query parameters
 
@@ -69,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     ]) . "\n\n";
 
     // Keep connection alive for SSE
-    while (true) {
+    while (TRUE) {
       echo "event: ping\n";
       echo "data: " . json_encode(['timestamp' => time()]) . "\n\n";
 
@@ -80,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
       sleep(30); // Send ping every 30 seconds
     }
     exit;
-  } else {
+  }
+  else {
     // Handle GET with query parameters (like Claude Desktop)
     // Convert GET parameters to a simple JSON-RPC initialize request
     header('Content-Type: application/json; charset=utf-8');
@@ -105,7 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     $_POST = $mockRequest;
     // Continue processing as if it was a POST request
   }
-} elseif ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+}
+elseif ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   // Reject other methods
   http_response_code(405);
   header('Allow: GET, POST, DELETE, OPTIONS');
@@ -115,21 +119,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
       'code' => -32600,
       'message' => 'Invalid Request - Only GET, POST, DELETE, OPTIONS methods allowed for MCP'
     ],
-    'id' => null
+    'id' => NULL
   ]);
   exit;
 }
 
 // Check if client requests streaming response (Streamable HTTP transport)
-$isStreamable = false;
+$isStreamable = FALSE;
 $acceptHeader = $_SERVER['HTTP_ACCEPT'] ?? '';
-if (strpos($acceptHeader, 'text/event-stream') !== false) {
-  $isStreamable = true;
+if (strpos($acceptHeader, 'text/event-stream') !== FALSE) {
+  $isStreamable = TRUE;
   header('Content-Type: text/event-stream; charset=utf-8');
   header('Cache-Control: no-cache');
   header('Connection: keep-alive');
   header('X-Accel-Buffering: no'); // Disable nginx buffering for real-time streaming
-} else {
+}
+else {
   header('Content-Type: application/json; charset=utf-8');
 }
 header('Access-Control-Allow-Origin: *');
@@ -144,12 +149,13 @@ if (!defined('CIVICRM_MCP_ENABLED') || !CIVICRM_MCP_ENABLED) {
       'code' => -32600,
       'message' => 'MCP Server not available'
     ],
-    'id' => null
+    'id' => NULL
   ];
 
   if ($isStreamable) {
     echo "data: " . json_encode($errorResponse) . "\n\n";
-  } else {
+  }
+  else {
     echo json_encode($errorResponse);
   }
   exit;
@@ -166,7 +172,8 @@ try {
 
   $result = $mcp->run();
   echo $result;
-} catch (Exception $e) {
+}
+catch (Exception $e) {
   http_response_code(500);
   $errorResponse = [
     'jsonrpc' => '2.0',
@@ -174,12 +181,13 @@ try {
       'code' => -32603,
       'message' => 'Internal error: ' . $e->getMessage()
     ],
-    'id' => null
+    'id' => NULL
   ];
 
   if ($isStreamable) {
     echo "data: " . json_encode($errorResponse) . "\n\n";
-  } else {
+  }
+  else {
     echo json_encode($errorResponse);
   }
 }

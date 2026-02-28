@@ -158,11 +158,15 @@ class CRM_Utils_PDF_Label extends TCPDF {
       if ($averyLabels['lMargin'] > 1) {
         $averyLabels['lMargin']--;
       }
-      else $averyLabels['lMargin'] = 0;
+      else {
+        $averyLabels['lMargin'] = 0;
+      }
       if ($averyLabels['tMargin'] > 1) {
         $averyLabels['tMargin']--;
       }
-      else $averyLabels['tMargin'] = 0;
+      else {
+        $averyLabels['tMargin'] = 0;
+      }
       if ($averyLabels['lMargin'] >= $this->xNumber) {
         $averyLabels['lMargin'] = $this->xNumber - 1;
       }
@@ -243,7 +247,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
   /*
      * Method to change font name
      *
-     * $fontname name of font 
+     * $fontname name of font
      */
   public function SetFontName($fontname) {
     if ($fontname != '') {
@@ -296,4 +300,3 @@ class CRM_Utils_PDF_Label extends TCPDF {
     }
   }
 }
-

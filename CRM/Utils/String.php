@@ -38,7 +38,7 @@
  *
  */
 class CRM_Utils_String {
-  public CONST COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r", MASK = '*';
+  public const COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r", MASK = '*';
 
   /**
    * List of all letters and numbers
@@ -107,7 +107,7 @@ class CRM_Utils_String {
 
     // any chinese appear, should go transliteration (to prevent duplication)
     if (!empty($matches) && trim($matches[0])) {
-			$mungedName = self::transliteration($name);
+      $mungedName = self::transliteration($name);
     }
 
     if (empty($mungedName)) {
@@ -125,14 +125,14 @@ class CRM_Utils_String {
   }
 
 
-  /* 
+  /*
      * Takes a variable name and munges it randomly into another variable name
-     *  
+     *
      * @param  string $name    Initial Variable Name
      * @param int     $len  length of valid variables
      *
      * @return string  Randomized Variable Name
-     * @access public 
+     * @access public
      * @static
      */
 
@@ -527,14 +527,14 @@ class CRM_Utils_String {
     $config = CRM_Core_Config::singleton();
     $smarty = CRM_Core_Smarty::singleton();
     $buffer = $smarty->fetch('CRM/common/jquery.files.tpl');
-    $lines  = preg_split( '/\s+/', $buffer );
+    $lines  = preg_split('/\s+/', $buffer);
     $jquery = '';
     $css = '';
-    foreach ( $lines as $line ) {
-      if ( strpos( $line, '.js' ) !== false ) {
+    foreach ($lines as $line) {
+      if (strpos($line, '.js') !== FALSE) {
         $jquery .= '<script type="text/javascript" src="'.$config->resourceBase.$line.'"></script>'."\n";
       }
-      else if ( strpos( $line, '.css' ) !== false ) {
+      elseif (strpos($line, '.css') !== FALSE) {
         $css .= '<link crossorigin="anonymous" media="all" rel="stylesheet" href="'.$config->resourceBase.$line.'" itemprop="url" />';
       }
     }
@@ -618,7 +618,8 @@ class CRM_Utils_String {
    * @access public
    * @static
    */
-  public static function stripPathChars($string,
+  public static function stripPathChars(
+    $string,
     $search = NULL,
     $replace = NULL
   ) {
@@ -651,11 +652,11 @@ class CRM_Utils_String {
     return str_replace($search, $replace, $string);
   }
 
-  public static function removeImageHeight($html){
-    $html = preg_replace('/(<img[^>]+)(line-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
-    $html = preg_replace('/(<img[^>]+)(min-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
-    $html = preg_replace('/(<img[^>]+)(height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
-    $html = preg_replace('/(<img[^>]+)(height=[\'"][^\'"]+[\'"])([^>]+>)/i', '$1 $3', $html); 
+  public static function removeImageHeight($html) {
+    $html = preg_replace('/(<img[^>]+)(line-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html);
+    $html = preg_replace('/(<img[^>]+)(min-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html);
+    $html = preg_replace('/(<img[^>]+)(height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html);
+    $html = preg_replace('/(<img[^>]+)(height=[\'"][^\'"]+[\'"])([^>]+>)/i', '$1 $3', $html);
     return $html;
   }
 
@@ -693,7 +694,7 @@ class CRM_Utils_String {
       $query = str_replace('&amp;', '&', $original['query']);
       $get = [];
       parse_str($query, $get);
-      foreach($get as $queryKey => $queryValue) {
+      foreach ($get as $queryKey => $queryValue) {
         if (stristr($queryKey, 'utm_')) {
           $utms[$queryKey] = $queryValue;
         }
@@ -703,15 +704,15 @@ class CRM_Utils_String {
   }
 
   public static function buildUrl($parts) {
-    return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') . 
-      ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') . 
-      (isset($parts['user']) ? "{$parts['user']}" : '') . 
-      (isset($parts['pass']) ? ":{$parts['pass']}" : '') . 
-      (isset($parts['user']) ? '@' : '') . 
-      (isset($parts['host']) ? "{$parts['host']}" : '') . 
-      (isset($parts['port']) ? ":{$parts['port']}" : '') . 
-      (isset($parts['path']) ? "{$parts['path']}" : '') . 
-      (isset($parts['query']) ? "?{$parts['query']}" : '') . 
+    return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') .
+      ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
+      (isset($parts['user']) ? "{$parts['user']}" : '') .
+      (isset($parts['pass']) ? ":{$parts['pass']}" : '') .
+      (isset($parts['user']) ? '@' : '') .
+      (isset($parts['host']) ? "{$parts['host']}" : '') .
+      (isset($parts['port']) ? ":{$parts['port']}" : '') .
+      (isset($parts['path']) ? "{$parts['path']}" : '') .
+      (isset($parts['query']) ? "?{$parts['query']}" : '') .
       (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
   }
 
@@ -756,9 +757,10 @@ class CRM_Utils_String {
       $str = mb_substr($str, 0, $start) . str_repeat(self::MASK, $repeat) . mb_substr($str, -1 * $end, $end);
     }
     else {
-      switch($length) {
+      switch ($length) {
         case 2:
           $str = mb_substr($str, 0, 1) . self::MASK;
+          // no break
         case 3:
         case 4:
           $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, $length - 2) . mb_substr($str, -1, 1);
@@ -850,7 +852,7 @@ class CRM_Utils_String {
       // Counting down is faster. I'm *so* sorry.
       $len = $chunk + 1;
 
-      for ($i = -1; --$len; ) {
+      for ($i = -1; --$len;) {
         $c = $str[++$i];
         if ($remaining = $tail_bytes[$c]) {
           // UTF-8 head byte!
@@ -878,7 +880,8 @@ class CRM_Utils_String {
                 continue 2;
               }
             }
-          } while (--$remaining);
+          }
+          while (--$remaining);
 
           $n = ord($head);
           if ($n <= 0xdf) {
@@ -989,4 +992,3 @@ class CRM_Utils_String {
     }
   }
 }
-

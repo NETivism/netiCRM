@@ -69,7 +69,8 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $defaults['test_email'] = $session->get('ufUniqID');
     $qfKey = $this->get('qfKey');
 
-    $this->add('select',
+    $this->add(
+      'select',
       'test_group',
       ts('Send to This Group'),
       ['' => ts('- none -')] + CRM_Core_PseudoConstant::group('Mailing')
@@ -144,7 +145,8 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     }
 
 
-    $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_mailing',
+    $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo(
+      'civicrm_mailing',
       $mailingID
     );
     $this->assign('preview', $preview);
@@ -167,7 +169,8 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $replyToEmail = $mailing->replyto_email;
 
 
-    $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_mailing',
+    $attachments = &CRM_Core_BAO_File::getEntityFile(
+      'civicrm_mailing',
       $mailing->id
     );
 
@@ -175,14 +178,20 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     $userID = $session->get('userID');
     $params = ['contact_id' => $userID];
 
-    $details = CRM_Utils_Token::getTokenDetails($params,
+    $details = CRM_Utils_Token::getTokenDetails(
+      $params,
       $returnProperties,
-      TRUE, TRUE, NULL,
+      TRUE,
+      TRUE,
+      NULL,
       $mailing->getFlattenedTokens(),
       get_class($this)
     );
 
-    $allDetails = &$mailing->compose(NULL, NULL, NULL,
+    $allDetails = &$mailing->compose(
+      NULL,
+      NULL,
+      NULL,
       $userID,
       $fromEmail,
       $fromEmail,
@@ -374,9 +383,10 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
 
       $status = 'Your test message has been sent.';
       if (CRM_Mailing_Info::workflowEnabled()) {
-        if ((CRM_Core_Permission::check('schedule mailings') &&
+        if ((
+          CRM_Core_Permission::check('schedule mailings') &&
             CRM_Core_Permission::check('create mailings')
-          ) ||
+        ) ||
           CRM_Core_Permission::check('access CiviMail')
         ) {
           $status .= " Click 'Next' when you are ready to Schedule or Send your live mailing (you will still have a chance to confirm or cancel sending this mailing on the next page).";
@@ -405,6 +415,6 @@ class CRM_Mailing_Form_Test extends CRM_Core_Form {
     return ts('Test');
   }
 
-  public function postProcess() {}
+  public function postProcess() {
+  }
 }
-

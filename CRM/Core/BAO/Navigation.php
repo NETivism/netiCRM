@@ -756,4 +756,3 @@ ORDER BY parent_id, weight";
     }
   }
 }
-

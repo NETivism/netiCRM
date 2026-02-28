@@ -50,7 +50,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    */
   public $_fields;
   public $thankyou;
-  public CONST EMAIL_THANK = 1, EMAIL_CONFIRM = 2, MODE_CREATE = 4;
+  public const EMAIL_THANK = 1, EMAIL_CONFIRM = 2, MODE_CREATE = 4;
 
   protected $_mode;
 
@@ -150,7 +150,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
   protected $_image_URL;
 
-  protected $_defaults = NULL; public function __construct() {
+  protected $_defaults = NULL;
+  public function __construct() {
     parent::__construct();
     // this property used by civicrm_fb module and if true, forces thank you email to be sent
     // for users signing in via Facebook connect; also sets Fb email to check against
@@ -246,7 +247,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
         $htmlType = $field['html_type'];
 
         if (!isset($this->_defaults[$name])) {
-          CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID,
+          CRM_Core_BAO_CustomField::setProfileDefaults(
+            $customFieldID,
             $name,
             $this->_defaults,
             $this->_contactId,
@@ -262,7 +264,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
           $htmlType = $field['html_type'];
 
           if (!isset($this->_defaults[$name])) {
-            CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID,
+            CRM_Core_BAO_CustomField::setProfileDefaults(
+              $customFieldID,
               $name,
               $this->_defaults,
               $this->_contactId,
@@ -296,7 +299,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
       $this->buildCustom($this->_activityProfileId, 'petitionActivityProfile');
     }
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Sign the Petition'),
           'isDefault' => TRUE,
@@ -466,25 +470,39 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
     $transaction = new CRM_Core_Transaction();
 
-    $this->_contactId = CRM_Contact_BAO_Contact::createProfileContact($params, $this->_contactProfileFields,
-      $this->_contactId, $this->_addToGroupID,
-      $this->_contactProfileId, $this->_ctype,
+    $this->_contactId = CRM_Contact_BAO_Contact::createProfileContact(
+      $params,
+      $this->_contactProfileFields,
+      $this->_contactId,
+      $this->_addToGroupID,
+      $this->_contactProfileId,
+      $this->_ctype,
       TRUE
     );
 
     // get additional custom activity profile field data
     // to save with new signature activity record
     $surveyInfo = $this->bao->getSurveyInfo($this->_surveyId);
-    $customActivityFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
+    $customActivityFields = CRM_Core_BAO_CustomField::getFields(
+      'Activity',
+      FALSE,
+      FALSE,
       $surveyInfo['activity_type_id']
     );
-    $customActivityFields = CRM_Utils_Array::arrayMerge($customActivityFields,
-      CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
-        NULL, NULL, TRUE
+    $customActivityFields = CRM_Utils_Array::arrayMerge(
+      $customActivityFields,
+      CRM_Core_BAO_CustomField::getFields(
+        'Activity',
+        FALSE,
+        FALSE,
+        NULL,
+        NULL,
+        TRUE
       )
     );
 
-    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customActivityFields,
       NULL,
       'Activity'
@@ -610,7 +628,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     if ($this->thankyou) {
       return ('CRM/Campaign/Page/Petition/ThankYou.tpl');
     }
-    else {}
+    else {
+    }
     return parent::getTemplateFileName();
   }
 
@@ -635,6 +654,3 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     }
   }
 }
-
-
-

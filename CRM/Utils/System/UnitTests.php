@@ -143,7 +143,7 @@ class CRM_Utils_System_UnitTests {
   }
 
   public static function permissionDenied() {
-     return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+    return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
   }
 
   public static function logout() {
@@ -204,7 +204,7 @@ class CRM_Utils_System_UnitTests {
     return 0;
   }
 
-  public function notFound(){
+  public function notFound() {
     return;
   }
 
@@ -215,27 +215,28 @@ class CRM_Utils_System_UnitTests {
       $version = 7;
     }
     if (function_exists('file_directory_temp') && function_exists('variable_get')) {
-      switch($type) {
+      switch ($type) {
         case 'temp':
           return file_directory_temp();
         case 'public':
-          if ($version >= 6 && $version < 7){
+          if ($version >= 6 && $version < 7) {
             return file_directory_path();
           }
           if ($version >= 7 && $version < 8) {
             return variable_get('file_public_path', 'sites/default/files');
           }
-          if ($version >= 8 ) {
+          if ($version >= 8) {
             return \Drupal\Core\StreamWrapper\PublicStream::basePath();
           }
+          // no break
         case 'private':
-          if ($version >= 6 && $version < 7){
+          if ($version >= 6 && $version < 7) {
             return FALSE;
           }
           if ($version >= 7 && $version < 8) {
             return variable_get('file_private_path', '');
           }
-          if ($version >= 8 ) {
+          if ($version >= 8) {
             return \Drupal\Core\StreamWrapper\PrivateStream::basePath();
           }
       }
@@ -243,4 +244,3 @@ class CRM_Utils_System_UnitTests {
     return FALSE;
   }
 }
-

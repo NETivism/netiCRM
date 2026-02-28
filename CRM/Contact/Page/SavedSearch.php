@@ -124,15 +124,22 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    * @return void
    */
   public function run() {
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'browse'
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'browse'
     );
 
     $this->assign('action', $action);
 
     if ($action & CRM_Core_Action::DELETE) {
-      $id = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, TRUE
+      $id = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        TRUE
       );
       $this->delete($id);
     }
@@ -169,4 +176,3 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
     return self::$_links;
   }
 }
-

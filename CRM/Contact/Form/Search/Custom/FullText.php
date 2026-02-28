@@ -67,7 +67,7 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
     $formValues['text'] = trim($this->getFieldValue($formValues, 'text', 'String', ''));
     $this->_text = $formValues['text'];
 
-    if(empty($formValues['text'])){
+    if (empty($formValues['text'])) {
       return;
     }
     $this->_formValues = &$formValues;
@@ -130,7 +130,8 @@ class CRM_Contact_Form_Search_Custom_FullText implements CRM_Contact_Form_Search
   }
 
 
-  public function __destruct() {}
+  public function __destruct() {
+  }
 
   public function buildTempTable() {
     $randomNum = md5(uniqid());
@@ -211,41 +212,47 @@ CREATE TEMPORARY TABLE {$this->_entityIDTableName} (
 
     $config = CRM_Core_Config::singleton();
 
-    if ((!$this->_table ||
+    if ((
+      !$this->_table ||
         $this->_table == 'Contact'
-      )) {
+    )) {
       $this->fillContact();
     }
 
-    if ((!$this->_table ||
+    if ((
+      !$this->_table ||
         $this->_table == 'Activity'
-      ) && CRM_Core_Permission::check('view all activities')) {
+    ) && CRM_Core_Permission::check('view all activities')) {
       $this->fillActivity();
     }
 
-    if ((!$this->_table ||
+    if ((
+      !$this->_table ||
         $this->_table == 'Case'
-      ) && in_array('CiviCase', $config->enableComponents)) {
+    ) && in_array('CiviCase', $config->enableComponents)) {
       $this->fillCase();
     }
 
-    if ((!$this->_table ||
+    if ((
+      !$this->_table ||
         $this->_table == 'Contribution'
-      ) && in_array('CiviContribute', $config->enableComponents)) {
+    ) && in_array('CiviContribute', $config->enableComponents)) {
       $this->fillContribution();
     }
 
-    if ((!$this->_table ||
+    if ((
+      !$this->_table ||
         $this->_table == 'Participant'
-      ) &&
+    ) &&
       (in_array('CiviEvent', $config->enableComponents) && CRM_Core_Permission::check('view event participants'))
     ) {
       $this->fillParticipant();
     }
 
-    if ((!$this->_table ||
+    if ((
+      !$this->_table ||
         $this->_table == 'Membership'
-      ) && in_array('CiviMember', $config->enableComponents)) {
+    ) && in_array('CiviMember', $config->enableComponents)) {
       $this->fillMembership();
     }
 
@@ -299,7 +306,8 @@ WHERE      t.table_name = 'Activity' AND
     CRM_Core_DAO::executeQuery($sql, $params);
   }
 
-  public function fillCustomInfo(&$tables,
+  public function fillCustomInfo(
+    &$tables,
     $extends
   ) {
 
@@ -316,9 +324,10 @@ AND        cf.html_type IN ( 'Text', 'TextArea', 'RichTextEditor' )
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
-      if (!CRM_Utils_Array::arrayKeyExists($dao->table_name,
-          $tables
-        )) {
+      if (!CRM_Utils_Array::arrayKeyExists(
+        $dao->table_name,
+        $tables
+      )) {
         $tables[$dao->table_name] = ['id' => 'entity_id',
           'fields' => [],
         ];
@@ -418,7 +427,8 @@ AND     {$tableValues['id']} IS NOT NULL
     ];
 
     // get the custom data info
-    $this->fillCustomInfo($tables,
+    $this->fillCustomInfo(
+      $tables,
       "( 'Contact', 'Individual', 'Organization', 'Household' )"
     );
 
@@ -662,7 +672,8 @@ WHERE      c.sort_name LIKE {$this->_text}
     $config = CRM_Core_Config::singleton();
 
     $form->applyFilter('__ALL__', 'trim');
-    $form->add('text',
+    $form->add(
+      'text',
       'text',
       ts('Find'),
       TRUE
@@ -689,7 +700,8 @@ WHERE      c.sort_name LIKE {$this->_text}
       $tables['Membership'] = ts('Memberships');
     }
 
-    $form->add('select',
+    $form->add(
+      'select',
       'table',
       ts('Tables'),
       $tables
@@ -733,7 +745,8 @@ WHERE      c.sort_name LIKE {$this->_text}
           $row[$name] = $dao->$name;
         }
         else {
-          $row['activity_type'] = CRM_Utils_Array::value($dao->$name,
+          $row['activity_type'] = CRM_Utils_Array::value(
+            $dao->$name,
             $activityTypes
           );
         }
@@ -774,7 +787,10 @@ WHERE      c.sort_name LIKE {$this->_text}
     return CRM_Core_DAO::singleValueQuery("SELECT contact_id FROM {$this->_tableName}");
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $sql = "
@@ -804,7 +820,8 @@ FROM
     return [];
   }
 
-  public function alterRow(&$row) {}
+  public function alterRow(&$row) {
+  }
 
   /**
    * get entity id retrieve related data from db and move all data to detail table.
@@ -908,4 +925,3 @@ LEFT JOIN  civicrm_membership_status cms ON cms.id = cm.status_id
     }
   }
 }
-

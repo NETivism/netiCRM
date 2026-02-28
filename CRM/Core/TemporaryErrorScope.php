@@ -63,4 +63,3 @@ class CRM_Core_TemporaryErrorScope {
     CRM_Core_Error::$modeException = $frame['modeException'];
   }
 }
-

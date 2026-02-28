@@ -273,8 +273,10 @@ class CRM_Case_BAO_Query {
         }
 
 
-        $value = CRM_Case_BAO_Case::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Case_BAO_Case::VALUE_SEPERATOR . "%' OR civicrm_case.case_type_id LIKE '%" .
-          CRM_Case_BAO_Case::VALUE_SEPERATOR, $val
+        $value = CRM_Case_BAO_Case::VALUE_SEPERATOR . CRM_Utils_Array::implode(
+          CRM_Case_BAO_Case::VALUE_SEPERATOR . "%' OR civicrm_case.case_type_id LIKE '%" .
+          CRM_Case_BAO_Case::VALUE_SEPERATOR,
+          $val
         ) . CRM_Case_BAO_Case::VALUE_SEPERATOR;
 
         $query->_where[$grouping][] = "(civicrm_case.case_type_id LIKE '%{$value}%')";
@@ -425,7 +427,7 @@ class CRM_Case_BAO_Query {
         $query->_tables['civicrm_case_contact'] = $query->_whereTables['civicrm_case_contact'] = 1;
         return;
 
-      // adding where clause for case_role
+        // adding where clause for case_role
 
       case 'case_role':
         $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("case_relation_type.name_b_a", $op, $value, 'String');
@@ -615,7 +617,10 @@ case_relation_type.id = case_relationship.relationship_type_id )";
     }
 
     $statuses = CRM_Case_PseudoConstant::caseStatus('label', FALSE);
-    $form->add('select', 'case_status_id', ts('Case Status'),
+    $form->add(
+      'select',
+      'case_status_id',
+      ts('Case Status'),
       ['' => ts('- any status -')] + $statuses
     );
 
@@ -649,11 +654,11 @@ case_relation_type.id = case_relationship.relationship_type_id )";
     }
   }
 
-  public static function searchAction(&$row, $id) {}
+  public static function searchAction(&$row, $id) {
+  }
 
   public static function addShowHide(&$showHide) {
     $showHide->addHide('caseForm');
     $showHide->addShow('caseForm_show');
   }
 }
-

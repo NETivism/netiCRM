@@ -44,7 +44,8 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
       $captcha->add($this);
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Optout'),
@@ -69,4 +70,3 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 }
-

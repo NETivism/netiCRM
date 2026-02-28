@@ -40,7 +40,7 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
 
     if (!isset($formValues['year'])) {
       $this->_year = CRM_Utils_Request::retrieve('year', 'Integer', CRM_Core_DAO::$_nullObject);
-      if ($this->_year ) {
+      if ($this->_year) {
         $formValues['year'] = $this->_year;
       }
     }
@@ -54,7 +54,7 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
 
   public function buildForm(&$form) {
     $years = [];
-    for($year = date('Y'); $year < date('Y') + 10; $year++) {
+    for ($year = date('Y'); $year < date('Y') + 10; $year++) {
       $years[$year - 9] = $year - 9;
     }
     $form->addElement('select', 'year', ts('Receipt Year'), $years);
@@ -65,7 +65,7 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
 
     // reset session when visit first selection
     $session = CRM_Core_Session::singleton();
-    if(!empty($_GET['csid'])){
+    if (!empty($_GET['csid'])) {
       $session->resetScope('AnnualReceipt');
     }
   }
@@ -89,11 +89,11 @@ SUM(contribution.total_amount) as total_amount
     $groupby = "GROUP BY contribution.contact_id";
     $sql = $this->sql($select, $offset, $rowcount, $sort, $includeContactIDs, $groupby);
     $year = CRM_Utils_Array::value('year', $this->_formValues);
-    if(!empty($year)){
+    if (!empty($year)) {
       $session = CRM_Core_Session::singleton();
       $session->set('year', $year, 'AnnualReceipt');
     }
-    else{
+    else {
       $session->set('year', $year, 'AnnualReceipt');
     }
     return $sql;
@@ -113,7 +113,7 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
       'contact_a.is_deleted = 0',
     ];
     $year = CRM_Utils_Array::value('year', $this->_formValues);
-    if(!empty($year)){
+    if (!empty($year)) {
       $start = $year.'-01-01 00:00:00';
       $end = $year.'-12-31 23:59:59';
       $where[] = "contribution.receipt_date >= '$start' AND contribution.receipt_date <= '$end'";
@@ -134,4 +134,3 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
   public function alterRow(&$row) {
   }
 }
-

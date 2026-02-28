@@ -9,7 +9,8 @@ class api_v3_ParticipantStatusTypeTest extends CiviUnitTestCase {
   protected $id;
   public $_eNoticeCompliant = TRUE;
 
-  public $DBResetRequired = FALSE; public function setUp() {
+  public $DBResetRequired = FALSE;
+  public function setUp() {
     $this->_apiversion = 3;
     $this->params = [
       'version' => 3,
@@ -25,7 +26,8 @@ class api_v3_ParticipantStatusTypeTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   public function testCreateParticipantStatusType() {
     $result = civicrm_api('participant_status_type', 'create', $this->params);
@@ -58,4 +60,3 @@ class api_v3_ParticipantStatusTypeTest extends CiviUnitTestCase {
     $this->assertEquals($entity['count'] - 1, $checkDeleted['count'], 'In line ' . __LINE__);
   }
 }
-

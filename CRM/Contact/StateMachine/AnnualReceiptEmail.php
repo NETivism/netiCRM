@@ -25,4 +25,3 @@ class CRM_Contact_StateMachine_AnnualReceiptEmail extends CRM_Core_StateMachine 
     $this->addSequentialPages($this->_pages);
   }
 }
-

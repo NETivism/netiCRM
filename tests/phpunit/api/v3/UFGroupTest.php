@@ -287,4 +287,3 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
     $this->assertAPISuccess($result, "in line " . __LINE__);
   }
 }
-

@@ -58,7 +58,10 @@ class CRM_Contact_Form_Search_Custom_PostalMailing extends CRM_Contact_Form_Sear
     $form->assign('elements', ['group_id']);
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -68,9 +71,13 @@ contact_a.sort_name     as sort_name,
 address.street_address  as address,
 state_province.name     as state_province
 ";
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
@@ -89,7 +96,8 @@ LEFT JOIN civicrm_state_province state_province ON  state_province.id = address.
 
     $count = 1;
     $clause = [];
-    $groupID = CRM_Utils_Array::value('group_id',
+    $groupID = CRM_Utils_Array::value(
+      'group_id',
       $this->_formValues
     );
     if ($groupID) {
@@ -114,4 +122,3 @@ LEFT JOIN civicrm_state_province state_province ON  state_province.id = address.
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 }
-

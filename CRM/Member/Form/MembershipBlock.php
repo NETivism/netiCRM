@@ -123,7 +123,8 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
     $session = CRM_Core_Session::singleton();
     $single = $session->get('singleForm');
     if ($single) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -256,4 +257,3 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
     return ts('Memberships');
   }
 }
-

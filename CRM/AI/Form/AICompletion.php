@@ -68,7 +68,8 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
     $this->addCbx('is_template', ts('Enable this message template'));
     $this->addTextfield('template_title', ts('Template Title'), ['size' => 100]);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -106,4 +107,3 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
 
   }
 }
-

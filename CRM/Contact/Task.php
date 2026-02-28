@@ -40,7 +40,7 @@
  */
 
 class CRM_Contact_Task {
-  public CONST GROUP_CONTACTS = 1, REMOVE_CONTACTS = 2, TAG_CONTACTS = 3, REMOVE_TAGS = 4, EXPORT_CONTACTS = 5, EMAIL_CONTACTS = 6, SMS_CONTACTS = 7, DELETE_CONTACTS = 8, HOUSEHOLD_CONTACTS = 9, ORGANIZATION_CONTACTS = 10, RECORD_CONTACTS = 11, MAP_CONTACTS = 12, SAVE_SEARCH = 13, SAVE_SEARCH_UPDATE = 14, PRINT_CONTACTS = 15, LABEL_CONTACTS = 16, BATCH_UPDATE = 17, ADD_EVENT = 18, PRINT_FOR_CONTACTS = 19, EMAIL_UNHOLD = 22, RESTORE = 23, DELETE_PERMANENTLY = 24;
+  public const GROUP_CONTACTS = 1, REMOVE_CONTACTS = 2, TAG_CONTACTS = 3, REMOVE_TAGS = 4, EXPORT_CONTACTS = 5, EMAIL_CONTACTS = 6, SMS_CONTACTS = 7, DELETE_CONTACTS = 8, HOUSEHOLD_CONTACTS = 9, ORGANIZATION_CONTACTS = 10, RECORD_CONTACTS = 11, MAP_CONTACTS = 12, SAVE_SEARCH = 13, SAVE_SEARCH_UPDATE = 14, PRINT_CONTACTS = 15, LABEL_CONTACTS = 16, BATCH_UPDATE = 17, ADD_EVENT = 18, PRINT_FOR_CONTACTS = 19, EMAIL_UNHOLD = 22, RESTORE = 23, DELETE_PERMANENTLY = 24;
 
   /**
    * the task array
@@ -166,18 +166,20 @@ class CRM_Contact_Task {
 
       if (CRM_Contact_BAO_ContactType::isActive('Household')) {
         $label = CRM_Contact_BAO_ContactType::getLabel('Household');
-        self::$_tasks[9] = ['title' => ts('Add Contacts to %1',
-            [1 => $label]
-          ),
+        self::$_tasks[9] = ['title' => ts(
+          'Add Contacts to %1',
+          [1 => $label]
+        ),
           'class' => 'CRM_Contact_Form_Task_AddToHousehold',
           'optgroup' => 'Contact Information',
         ];
       }
       if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
         $label = CRM_Contact_BAO_ContactType::getLabel('Organization');
-        self::$_tasks[10] = ['title' => ts('Add Contacts to %1',
-            [1 => $label]
-          ),
+        self::$_tasks[10] = ['title' => ts(
+          'Add Contacts to %1',
+          [1 => $label]
+        ),
           'class' => 'CRM_Contact_Form_Task_AddToOrganization',
           'optgroup' => 'Contact Information',
         ];
@@ -235,7 +237,7 @@ class CRM_Contact_Task {
       asort(self::$_tasks);
     }
     if ($addTask) {
-      foreach($addTask as $idx => $add) {
+      foreach ($addTask as $idx => $add) {
         self::$_tasks[$idx] = $add;
       }
     }
@@ -368,4 +370,3 @@ class CRM_Contact_Task {
     ];
   }
 }
-

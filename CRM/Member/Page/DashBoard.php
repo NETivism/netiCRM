@@ -88,7 +88,9 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
     //$membership = new CRM_Member_BAO_Membership;
     foreach ($membershipTypes as $key => $value) {
       $membershipSummary[$key]['premonth'] = [
-        'count' => CRM_Member_BAO_Membership::getMembershipStarts($key, $preMonth,
+        'count' => CRM_Member_BAO_Membership::getMembershipStarts(
+          $key,
+          $preMonth,
           $preMonthEnd
         ),
         'name' => $value,
@@ -136,12 +138,14 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
 
           case 'total':
             if (!$isCurrentMonth) {
-              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url('civicrm/member/search',
+              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url(
+                'civicrm/member/search',
                 "reset=1&force=1&start=&end=$ymd&status=$status&type=$typeID"
               );
             }
             else {
-              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url('civicrm/member/search',
+              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url(
+                'civicrm/member/search',
                 "reset=1&force=1&status=$status"
               );
             }
@@ -162,33 +166,39 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
 
 
     $totalCount['premonth'] = ["count" => $totalCountPreMonth,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status&start=$preMonth&end=$preMonthEnd"
       ),
     ];
     $totalCount['month'] = ["count" => $totalCountMonth,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status&start=$monthStart&end=$ymd"
       ),
     ];
     $totalCount['year'] = ["count" => $totalCountYear,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status&start=$yearStart&end=$ymd"
       ),
     ];
     $totalCount['current'] = ["count" => $totalCountCurrent,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status"
       ),
     ];
     $totalCount['total'] = ["count" => $totalCountTotal,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status"
       ),
     ];
     if (!$isCurrentMonth) {
       $totalCount['total'] = ["count" => $totalCountTotal,
-        "url" => CRM_Utils_System::url('civicrm/member/search',
+        "url" => CRM_Utils_System::url(
+          'civicrm/member/search',
           "reset=1&force=1&status=$status&start=&end=$ymd"
         ),
       ];
@@ -227,4 +237,3 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

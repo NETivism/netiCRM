@@ -91,33 +91,39 @@ class CRM_Upgrade_Page_Upgrade extends CRM_Core_Page {
     }
     // end of hack
 
-    CRM_Utils_System::setTitle(ts('Upgrade CiviCRM to Version %1',
-        [1 => $latestVer]
-      ));
+    CRM_Utils_System::setTitle(ts(
+      'Upgrade CiviCRM to Version %1',
+      [1 => $latestVer]
+    ));
 
     $upgrade = new CRM_Upgrade_Form();
 
     $template = CRM_Core_Smarty::singleton();
-    $template->assign('pageTitle', ts('Upgrade CiviCRM to Version %1',
-        [1 => $latestVer]
-      ));
-    $template->assign('menuRebuildURL',
+    $template->assign('pageTitle', ts(
+      'Upgrade CiviCRM to Version %1',
+      [1 => $latestVer]
+    ));
+    $template->assign(
+      'menuRebuildURL',
       CRM_Utils_System::url('civicrm/menu/rebuild', 'reset=1')
     );
-    $template->assign('cancelURL',
+    $template->assign(
+      'cancelURL',
       CRM_Utils_System::url('civicrm/dashboard', 'reset=1')
     );
 
     if (version_compare($currentVer, $latestVer) > 0) {
       // DB version number is higher than codebase being upgraded to. This is unexpected condition-fatal error.
       $dbToolsLink = CRM_Utils_System::docURL2("Database Troubleshooting Tools", TRUE);
-      $error = ts('Your database is marked with an unexpected version number: %1. The automated upgrade to version %2 can not be run - and the %2 codebase may not be compatible with your database state. You will need to determine the correct version corresponding to your current database state. The database tools utility at %3 may be helpful. You may want to revert to the codebase you were using prior to beginning this upgrade until you resolve this problem.',
+      $error = ts(
+        'Your database is marked with an unexpected version number: %1. The automated upgrade to version %2 can not be run - and the %2 codebase may not be compatible with your database state. You will need to determine the correct version corresponding to your current database state. The database tools utility at %3 may be helpful. You may want to revert to the codebase you were using prior to beginning this upgrade until you resolve this problem.',
         [1 => $currentVer, 2 => $latestVer, 3 => $dbToolsLink]
       );
       CRM_Core_Error::fatal($error);
     }
     elseif (version_compare($currentVer, $latestVer) == 0) {
-      $message = ts('Your database has already been upgraded to CiviCRM %1',
+      $message = ts(
+        'Your database has already been upgraded to CiviCRM %1',
         [1 => $latestVer]
       );
       $template->assign('upgraded', TRUE);
@@ -173,9 +179,10 @@ SELECT  count( id ) as statusCount
 
       $template->assign('currentVersion', $currentVer);
       $template->assign('newVersion', $latestVer);
-      $template->assign('upgradeTitle', ts('Upgrade CiviCRM from v %1 To v %2',
-          [1 => $currentVer, 2 => $latestVer]
-        ));
+      $template->assign('upgradeTitle', ts(
+        'Upgrade CiviCRM from v %1 To v %2',
+        [1 => $currentVer, 2 => $latestVer]
+      ));
       $template->assign('upgraded', FALSE);
 
       if (CRM_Utils_Array::value('upgrade', $_POST)) {
@@ -262,7 +269,7 @@ SELECT  count( id ) as statusCount
   public function upgrade_2_2_alpha1($rev) {
     for ($stepID = 1; $stepID <= 4; $stepID++) {
       $formName = "CRM_Upgrade_TwoTwo_Form_Step{$stepID}";
-      $form = new $formName( );
+      $form = new $formName();
 
       $error = NULL;
       if (!$form->verifyPreDBState($error)) {
@@ -300,7 +307,7 @@ SELECT  count( id ) as statusCount
 
   public function upgrade_2_1_2($rev) {
     $formName = "CRM_Upgrade_TwoOne_Form_TwoOneTwo";
-    $form = new $formName( $rev );
+    $form = new $formName($rev);
 
     $error = NULL;
     if (!$form->verifyPreDBState($error)) {
@@ -345,14 +352,20 @@ SELECT  count( id ) as statusCount
 
   public function upgrade_2_2_beta2($rev) {
     $template = CRM_Core_Smarty::singleton();
-    if (!CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue',
-        'CRM_Contact_Form_Search_Custom_ZipCodeRange', 'id', 'name'
-      )) {
+    if (!CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionValue',
+      'CRM_Contact_Form_Search_Custom_ZipCodeRange',
+      'id',
+      'name'
+    )) {
       $template->assign('customSearchAbsentAll', TRUE);
     }
-    elseif (!CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue',
-        'CRM_Contact_Form_Search_Custom_MultipleValues', 'id', 'name'
-      )) {
+    elseif (!CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionValue',
+      'CRM_Contact_Form_Search_Custom_MultipleValues',
+      'id',
+      'name'
+    )) {
       $template->assign('customSearchAbsent', TRUE);
     }
     $upgrade = new CRM_Upgrade_Form();
@@ -505,4 +518,3 @@ SELECT  count( id ) as statusCount
     $upgrade->processSQL($rev);
   }
 }
-

@@ -91,10 +91,14 @@ SELECT object_table
 
 
     $permissions = array_flip(CRM_Core_Permission::basicPermissions());
-    $this->addCheckBox('object_table',
+    $this->addCheckBox(
+      'object_table',
       ts('ACL Type'),
       $permissions,
-      NULL, NULL, TRUE, NULL,
+      NULL,
+      NULL,
+      TRUE,
+      NULL,
       ['</td><td>', '</td></tr><tr><td>']
     );
 
@@ -171,4 +175,3 @@ DELETE
     }
   }
 }
-

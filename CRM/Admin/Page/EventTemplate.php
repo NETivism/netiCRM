@@ -127,16 +127,19 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic {
       $action = array_sum(array_keys($this->links()));
 
       //add action links.
-      $allEventTemplates[$eventTemplate->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $allEventTemplates[$eventTemplate->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $eventTemplate->id]
       );
     }
     $this->assign('rows', $allEventTemplates);
 
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
-        'reset=1&action=browse'
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      CRM_Utils_System::currentPath(),
+      'reset=1&action=browse'
+    ));
   }
 
   /**
@@ -166,4 +169,3 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic {
     return 'civicrm/admin/eventTemplate';
   }
 }
-

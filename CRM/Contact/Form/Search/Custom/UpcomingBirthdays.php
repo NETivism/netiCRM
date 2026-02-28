@@ -29,7 +29,8 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
 
   public $_columns;
   protected $_formValues;
-  protected $_tableName = NULL; public function __construct(&$formValues) {
+  protected $_tableName = NULL;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -169,8 +170,8 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
 
     $limit_group = $this->_formValues['limit_groups'];
     if (!empty($limit_group) && is_array($limit_group)) {
-      foreach($limit_group as $idx => $g) {
-        if (!is_numeric($g)){
+      foreach ($limit_group as $idx => $g) {
+        if (!is_numeric($g)) {
           unset($limit_group[$idx]);
         }
       }
@@ -200,7 +201,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     return $partial_where_clause;
   }
 
-  /* 
+  /*
    * Functions below generally don't need to be modified
    */
   public function count() {
@@ -218,7 +219,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     return $this->_columns;
   }
 
-  public function summary(){
+  public function summary() {
     $summary = [];
     return $summary;
   }
@@ -227,4 +228,3 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     $row['birth'] = str_replace('.', '/', $row['birth']);
   }
 }
-

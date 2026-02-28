@@ -99,7 +99,8 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
     self::$_GName = ucwords(str_replace('_', ' ', self::$_gName));
 
     $this->assign('GName', self::$_GName);
-    $newReportURL = CRM_Utils_System::url("civicrm/admin/report/register",
+    $newReportURL = CRM_Utils_System::url(
+      "civicrm/admin/report/register",
       'reset=1'
     );
     $this->assign('newReport', $newReportURL);
@@ -176,7 +177,8 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
     $groupParams = ['name' => self::$_gName];
     $optionValue = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'weight');
     $gName = self::$_gName;
-    $returnURL = CRM_Utils_System::url("civicrm/admin/report/options/$gName",
+    $returnURL = CRM_Utils_System::url(
+      "civicrm/admin/report/options/$gName",
       "reset=1"
     );
     $filter = "option_group_id = " . self::$_gId;
@@ -184,8 +186,12 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
     $session = new CRM_Core_Session();
     $session->replaceUserContext($returnURL);
 
-    CRM_Utils_Weight::addOrder($optionValue, 'CRM_Core_DAO_OptionValue',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $optionValue,
+      'CRM_Core_DAO_OptionValue',
+      'id',
+      $returnURL,
+      $filter
     );
     $this->assign('rows', $optionValue);
   }
@@ -229,4 +235,3 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
     return 'reset=1&action=browse';
   }
 }
-

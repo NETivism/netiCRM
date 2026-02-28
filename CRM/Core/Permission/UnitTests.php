@@ -58,4 +58,3 @@ class CRM_Core_Permission_UnitTests {
     return is_array(self::$permissions) ? in_array($str, self::$permissions) : TRUE;
   }
 }
-

@@ -2,7 +2,7 @@
 
 /**
  * RFM Analysis Class
- * 
+ *
  * Used for calculating and analyzing RFM (Recency, Frequency, Monetary) metrics
  */
 class CRM_Contact_BAO_RFM {
@@ -15,18 +15,18 @@ class CRM_Contact_BAO_RFM {
    * @var array Stores threshold values for R, F, M
    */
   protected $_thresholds = [
-    'r' => null,
-    'f' => null,
-    'm' => null
+    'r' => NULL,
+    'f' => NULL,
+    'm' => NULL
   ];
   
   /**
    * @var array Stores whether metrics should use reverse comparison
    */
   protected $_reverse = [
-    'r' => false,
-    'f' => false,
-    'm' => false
+    'r' => FALSE,
+    'f' => FALSE,
+    'm' => FALSE
   ];
   
   /**
@@ -43,15 +43,15 @@ class CRM_Contact_BAO_RFM {
    * @var array Temporary table names
    */
   protected $_tables = [
-    'r' => null,
-    'f' => null,
-    'm' => null,
-    'rfm' => null
+    'r' => NULL,
+    'f' => NULL,
+    'm' => NULL,
+    'rfm' => NULL
   ];
   
   /**
    * Constructor
-   * 
+   *
    * @param string $suffix temp table suffix of RFM
    * @param string $dateString Date filter string
    * @param float|int|null $rThreshold R threshold value, null means don't process
@@ -65,7 +65,7 @@ class CRM_Contact_BAO_RFM {
    *                                   If zero, include all data without threshold
    * @param string $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
    */
-  public function __construct(string $suffix, string $dateString = '', $rThreshold = null, $fThreshold = null, $mThreshold = null, string $thresholdType = 'all') {
+  public function __construct(string $suffix, string $dateString = '', $rThreshold = NULL, $fThreshold = NULL, $mThreshold = NULL, string $thresholdType = 'all') {
     if (empty($suffix)) {
       // Generate random suffix
       $this->_suffix = CRM_Utils_String::createRandom(6);
@@ -75,29 +75,32 @@ class CRM_Contact_BAO_RFM {
     }
     
     // Set thresholds and reverse flags
-    if ($rThreshold !== null) {
+    if ($rThreshold !== NULL) {
       if ($rThreshold < 0) {
         $this->_thresholds['r'] = abs($rThreshold);
-        $this->_reverse['r'] = true;
-      } else {
+        $this->_reverse['r'] = TRUE;
+      }
+      else {
         $this->_thresholds['r'] = $rThreshold;
       }
     }
     
-    if ($fThreshold !== null) {
+    if ($fThreshold !== NULL) {
       if ($fThreshold < 0) {
         $this->_thresholds['f'] = abs($fThreshold);
-        $this->_reverse['f'] = true;
-      } else {
+        $this->_reverse['f'] = TRUE;
+      }
+      else {
         $this->_thresholds['f'] = $fThreshold;
       }
     }
     
-    if ($mThreshold !== null) {
+    if ($mThreshold !== NULL) {
       if ($mThreshold < 0) {
         $this->_thresholds['m'] = abs($mThreshold);
-        $this->_reverse['m'] = true;
-      } else {
+        $this->_reverse['m'] = TRUE;
+      }
+      else {
         $this->_thresholds['m'] = $mThreshold;
       }
     }
@@ -111,13 +114,13 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Calculate R (Recency) metric
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
   public function calcR($position = 0.5, bool $reverse = FALSE) {
-    if ($this->_thresholds['r'] !== null) {
+    if ($this->_thresholds['r'] !== NULL) {
       $position = $this->_thresholds['r'];
       $reverse = $this->_reverse['r'];
     }
@@ -131,13 +134,13 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Calculate F (Frequency) metric
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
   public function calcF($position = 0.5, bool $reverse = FALSE) {
-    if ($this->_thresholds['f'] !== null) {
+    if ($this->_thresholds['f'] !== NULL) {
       $position = $this->_thresholds['f'];
       $reverse = $this->_reverse['f'];
     }
@@ -147,13 +150,13 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Calculate M (Monetary) metric
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
   public function calcM($position = 0.5, bool $reverse = FALSE) {
-    if ($this->_thresholds['m'] !== null) {
+    if ($this->_thresholds['m'] !== NULL) {
       $position = $this->_thresholds['m'];
       $reverse = $this->_reverse['m'];
     }
@@ -163,7 +166,7 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Generic metric calculation function
-   * 
+   *
    * @param string $metricType Metric type (r, f, m)
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
@@ -214,7 +217,8 @@ class CRM_Contact_BAO_RFM {
       ";
 
       $threshold = 0; // Set threshold to 0 for reporting purposes
-    } else {
+    }
+    else {
       // Calculate threshold value for non-zero position
       $threshold = $this->calculateThreshold($position, $metricType, $aggregateFunc, $dateFilterSQL, $recurFilterSQL);
 
@@ -252,7 +256,7 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Calculate threshold value
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param string $metricType Metric type (r, f, m)
    * @param string $aggregateFunc Aggregate function expression
@@ -310,20 +314,20 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Calculate RFM intersection
-   * 
+   *
    * @return array Array containing temporary table name and record data
    */
   public function calcRFM(): array {
     // Check if R, F, M have been calculated
     if (!$this->_tables['r'] || !$this->_tables['f'] || !$this->_tables['m']) {
       // If not calculated but thresholds are set, calculate automatically
-      if ($this->_thresholds['r'] !== null && !$this->_tables['r']) {
+      if ($this->_thresholds['r'] !== NULL && !$this->_tables['r']) {
         $this->calcR();
       }
-      if ($this->_thresholds['f'] !== null && !$this->_tables['f']) {
+      if ($this->_thresholds['f'] !== NULL && !$this->_tables['f']) {
         $this->calcF();
       }
-      if ($this->_thresholds['m'] !== null && !$this->_tables['m']) {
+      if ($this->_thresholds['m'] !== NULL && !$this->_tables['m']) {
         $this->calcM();
       }
       
@@ -383,17 +387,17 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Export RFM data to CSV
-   * 
+   *
    * @param string $filename Custom filename (optional)
    * @param  bool $download Bool to indicate print to browser or not
    * @return string Path to the exported CSV file
    */
-  public function exportToCSV(?string $filename = null, bool $download = TRUE): string {
+  public function exportToCSV(?string $filename = NULL, bool $download = TRUE): string {
     if (!$this->_tables['rfm']) {
       $this->calcRFM();
     }
     
-    if ($filename === null) {
+    if ($filename === NULL) {
       // Generate filename based on threshold values
       $rLabel = 'R' . ($this->_reverse['r'] ? 'n' : 'p') . '_' . abs($this->_thresholds['r']);
       $fLabel = 'F' . ($this->_reverse['f'] ? 'n' : 'p') . '_' . abs($this->_thresholds['f']);
@@ -428,7 +432,7 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Generate date filter SQL
-   * 
+   *
    * @param string $dateFilter Date filter string
    * @return string Date filter SQL statement
    */
@@ -445,7 +449,7 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Get end date from date filter string
-   * 
+   *
    * @return string End date string for SQL usage, defaults to current date if no filter
    */
   protected function getEndDate(): string {
@@ -462,7 +466,7 @@ class CRM_Contact_BAO_RFM {
   
   /**
    * Get default thresholds based on date range and threshold type
-   * 
+   *
    * @param string $rangeString Date range string
    * @param string $thresholdType Threshold type (recurring, non-recurring, all)
    * @return array Array containing r, f, m thresholds

@@ -405,11 +405,12 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     $git_revision = trim($git_revision);
 
     // Check if we're exactly on a tag (no -count-hash suffix)
-    if (strpos($git_tag, '-') !== false) {
+    if (strpos($git_tag, '-') !== FALSE) {
       // Not on a tag, format as: tag+commits
       list($git_tag, $subver) = explode('-', $git_tag);
       $version_string = $git_tag . '+' . $subver;
-    } else {
+    }
+    else {
       // Exactly on a tag, use tag name as-is
       $version_string = $git_tag;
     }
@@ -947,4 +948,3 @@ Alternatively you can get a version of CiviCRM that matches your PHP version
     return 'CRM_Utils_Type::HUGE';
   }
 }
-

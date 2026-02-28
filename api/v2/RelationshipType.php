@@ -61,13 +61,13 @@ function civicrm_relationship_type_update($params) {
 }
 /*
  * Deprecated function to create relationship type
- * 
+ *
  * @param  array $params   Associative array of property name/value pairs to insert in new relationship type.
  *
  * @return Newly created Relationship_type object
  *
  * @access public
- * 
+ *
  * @deprecated
  */
 function civicrm_relationship_type_add($params) {
@@ -192,4 +192,3 @@ function civicrm_relationship_type_delete(&$params) {
 function civicrm_relationshipType_get($params = NULL) {
   return civicrm_relationship_types_get($params);
 }
-

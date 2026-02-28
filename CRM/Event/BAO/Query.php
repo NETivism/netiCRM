@@ -248,15 +248,23 @@ class CRM_Event_BAO_Query {
     switch ($name) {
       case 'event_start_date_low':
       case 'event_start_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_event', 'event_start_date', 'start_date', 'Start Date'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_event',
+          'event_start_date',
+          'start_date',
+          'Start Date'
         );
         return;
 
       case 'event_end_date_low':
       case 'event_end_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_event', 'event_end_date', 'end_date', 'End Date'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_event',
+          'event_end_date',
+          'end_date',
+          'End Date'
         );
         return;
 
@@ -284,7 +292,8 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'participant_test':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_participant.is_test",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_participant.is_test",
           $op,
           $value,
           "Integer"
@@ -305,9 +314,9 @@ class CRM_Event_BAO_Query {
                 // refs #25295, price option can search by id
                 $priceValues[] = $priceOption;
               }
-              elseif (strstr($priceOption, ',')){
+              elseif (strstr($priceOption, ',')) {
                 $commaSeperated = explode(',', $priceOption);
-                foreach($commaSeperated as $cval) {
+                foreach ($commaSeperated as $cval) {
                   if (CRM_Utils_Rule::positiveInteger($cval)) {
                     $priceValues[] = $cval;
                   }
@@ -339,7 +348,8 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'participant_fee_amount':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_participant.fee_amount",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_participant.fee_amount",
           $op,
           $value,
           "Money"
@@ -352,13 +362,18 @@ class CRM_Event_BAO_Query {
 
       case 'participant_fee_amount_high':
       case 'participant_fee_amount_low':
-        $query->numberRangeBuilder($values,
-          'civicrm_participant', 'participant_fee_amount', 'fee_amount', 'Fee Amount'
+        $query->numberRangeBuilder(
+          $values,
+          'civicrm_participant',
+          'participant_fee_amount',
+          'fee_amount',
+          'Fee Amount'
         );
         return;
 
       case 'participant_pay_later':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_participant.is_pay_later",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_participant.is_pay_later",
           $op,
           $value,
           "Integer"
@@ -370,8 +385,12 @@ class CRM_Event_BAO_Query {
         return;
       case 'participant_register_date_low':
       case 'participant_register_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_participant', 'participant_register_date', 'register_date', 'Registered'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_participant',
+          'participant_register_date',
+          'register_date',
+          'Registered'
         );
         return;
       case 'participant_status':
@@ -417,7 +436,8 @@ class CRM_Event_BAO_Query {
 
         $query->_qill[$grouping][] = ts('Participant Status %1', [1 => ts($op)]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
 
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_participant.status_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_participant.status_id",
           $op,
           $status,
           "Integer"
@@ -458,7 +478,8 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'participant_source':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_participant.source",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_participant.source",
           $op,
           $value,
           "String"
@@ -468,8 +489,12 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'participant_register_date':
-        $query->dateQueryBuilder($values,
-          'civicrm_participant', 'participant_register_date', 'register_date', 'Register Date'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_participant',
+          'participant_register_date',
+          'register_date',
+          'Register Date'
         );
         return;
 
@@ -479,7 +504,8 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'event_id':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_event.id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_event.id",
           $op,
           $value,
           "Integer"
@@ -490,7 +516,8 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'participant_contact_id':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_participant.contact_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_participant.contact_id",
           $op,
           $value,
           "Integer"
@@ -499,7 +526,8 @@ class CRM_Event_BAO_Query {
         return;
 
       case 'event_is_public':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_event.is_public",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_event.is_public",
           $op,
           $value,
           "Integer"
@@ -616,17 +644,26 @@ class CRM_Event_BAO_Query {
   }
 
   public static function buildSearchForm(&$form) {
-    $dataURLEvent = CRM_Utils_System::url('civicrm/ajax/event',
+    $dataURLEvent = CRM_Utils_System::url(
+      'civicrm/ajax/event',
       "reset=1",
-      FALSE, NULL, FALSE
+      FALSE,
+      NULL,
+      FALSE
     );
-    $dataURLEventType = CRM_Utils_System::url('civicrm/ajax/eventType',
+    $dataURLEventType = CRM_Utils_System::url(
+      'civicrm/ajax/eventType',
       "reset=1",
-      FALSE, NULL, FALSE
+      FALSE,
+      NULL,
+      FALSE
     );
-    $dataURLEventFee = CRM_Utils_System::url('civicrm/ajax/eventFee',
+    $dataURLEventFee = CRM_Utils_System::url(
+      'civicrm/ajax/eventFee',
       "reset=1",
-      FALSE, NULL, FALSE
+      FALSE,
+      NULL,
+      FALSE
     );
 
     $form->assign('dataURLEvent', $dataURLEvent);
@@ -644,8 +681,8 @@ class CRM_Event_BAO_Query {
       $levels = CRM_Price_BAO_Field::getPriceLevels($where);
       $eventFeeBlock = [];
       CRM_Core_OptionGroup::getAssoc("civicrm_event.amount.{$form->_eventId}", $eventFeeBlock, TRUE);
-      if (!empty($eventFeeBlock)){
-        foreach($eventFeeBlock as $amount_id => $detail) {
+      if (!empty($eventFeeBlock)) {
+        foreach ($eventFeeBlock as $amount_id => $detail) {
           $levels[$amount_id] = $detail['label'] . ' - ' . $detail['value'];
         }
       }
@@ -692,10 +729,13 @@ class CRM_Event_BAO_Query {
         foreach ($group['fields'] as $field) {
           $fieldId = $field['id'];
           $elementName = 'custom_' . $fieldId;
-          CRM_Core_BAO_CustomField::addQuickFormElement($form,
+          CRM_Core_BAO_CustomField::addQuickFormElement(
+            $form,
             $elementName,
             $fieldId,
-            FALSE, FALSE, TRUE
+            FALSE,
+            FALSE,
+            TRUE
           );
         }
       }
@@ -704,7 +744,8 @@ class CRM_Event_BAO_Query {
     $form->assign('validCiviEvent', TRUE);
   }
 
-  public static function searchAction(&$row, $id) {}
+  public static function searchAction(&$row, $id) {
+  }
 
   public static function tableNames(&$tables) {
     //add participant table
@@ -713,4 +754,3 @@ class CRM_Event_BAO_Query {
     }
   }
 }
-

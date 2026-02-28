@@ -42,10 +42,15 @@
  */
 class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
   // which (and whether) mailing workflow this template belongs to
-  protected $_workflow_id = NULL; public function preProcess() {
+  protected $_workflow_id = NULL;
+  public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'add'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'add'
     );
     $this->assign('action', $this->_action);
 
@@ -72,9 +77,10 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       //set the context for redirection after form submit or cancel
 
       $session = CRM_Core_Session::singleton();
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/messageTemplates',
-          'selectedChild=user&reset=1'
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/admin/messageTemplates',
+        'selectedChild=user&reset=1'
+      ));
     }
 
     // FIXME: we need to fix the Cancel button here as we don’t know whether it’s a workflow template in buildQuickForm()
@@ -119,7 +125,8 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       // currently, the above action is used solely for previewing default workflow templates
       $cancelURL = CRM_Utils_System::url('civicrm/admin/messageTemplates', 'selectedChild=workflow&reset=1');
       $cancelURL = str_replace('&amp;', '&', $cancelURL);
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'cancel',
             'name' => ts('Done'),
             'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
@@ -138,7 +145,8 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
 
 
     $breadCrumb = [['title' => ts('Message Templates'),
-        'url' => CRM_Utils_System::url('civicrm/admin/messageTemplates',
+        'url' => CRM_Utils_System::url(
+          'civicrm/admin/messageTemplates',
           'action=browse&reset=1'
         ),
       ]];
@@ -147,7 +155,9 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'msg_title', ts('Message Title'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_MessageTemplates', 'msg_title'), TRUE);
 
-    $this->add('text', 'msg_subject',
+    $this->add(
+      'text',
+      'msg_subject',
       ts('Message Subject'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_MessageTemplates', 'msg_subject')
     );
@@ -159,8 +169,12 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
     natcasesort($tokens);
     $this->assign('tokens', json_encode($tokens));
 
-    $this->add('select', 'token1', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $this->add(
+      'select',
+      'token1',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -168,8 +182,12 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       ]
     );
 
-    $this->add('select', 'token2', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $this->add(
+      'select',
+      'token2',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -177,8 +195,12 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       ]
     );
 
-    $this->add('select', 'token3', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $this->add(
+      'select',
+      'token3',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -186,23 +208,32 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
       ]
     );
 
-    $this->add('textarea', 'msg_text', ts('Text Message'),
+    $this->add(
+      'textarea',
+      'msg_text',
+      ts('Text Message'),
       "cols=50 rows=6 style='width:98%'"
     );
 
     // if not a system message use a wysiwyg editor, CRM-5971
     if ($this->_id &&
-      CRM_Core_DAO::getFieldValue('CRM_Core_DAO_MessageTemplates',
+      CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_MessageTemplates',
         $this->_id,
         'workflow_id'
       )
     ) {
-      $this->add('textarea', 'msg_html', ts('HTML Message'),
+      $this->add(
+        'textarea',
+        'msg_html',
+        ts('HTML Message'),
         "cols=50 rows=6 style='width:98%'"
       );
     }
     else {
-      $this->addWysiwyg('msg_html', ts('HTML Message'),
+      $this->addWysiwyg(
+        'msg_html',
+        ts('HTML Message'),
         [
           'cols' => '80',
           'rows' => '8',
@@ -264,4 +295,3 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
     }
   }
 }
-

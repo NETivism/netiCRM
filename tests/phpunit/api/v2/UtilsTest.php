@@ -44,7 +44,8 @@ class api_v2_UtilsTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  protected function tearDown() {}
+  protected function tearDown() {
+  }
 
   public function testAddFormattedParam() {
     $values = ['contact_type' => 'Individual'];
@@ -77,7 +78,7 @@ class api_v2_UtilsTest extends CiviUnitTestCase {
       CRM_Core_Permission_UnitTests::$permissions = ['access CiviCRM'];
       civicrm_api_check_permission('civicrm_contact_create', $check, TRUE);
     }
-    catch(Exception$e) {
+    catch (Exception$e) {
       $message = $e->getMessage();
     }
     $this->assertEquals($message, 'API permission check failed for civicrm_contact_create call; missing permission: add contacts.', 'lacking permissions should throw an exception');
@@ -92,4 +93,3 @@ class api_v2_UtilsTest extends CiviUnitTestCase {
     $this->assertTrue(civicrm_api_check_permission('civicrm_contact_create', ['check_permissions' => FALSE]), 'permission check should be skippable');
   }
 }
-

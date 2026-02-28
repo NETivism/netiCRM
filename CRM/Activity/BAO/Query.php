@@ -289,8 +289,12 @@ class CRM_Activity_BAO_Query {
       case 'activity_date':
       case 'activity_date_low':
       case 'activity_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_activity', 'activity_date', 'activity_date_time', ts('Activity Date')
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_activity',
+          'activity_date',
+          'activity_date_time',
+          ts('Activity Date')
         );
         break;
 
@@ -467,4 +471,3 @@ class CRM_Activity_BAO_Query {
     return $properties;
   }
 }
-

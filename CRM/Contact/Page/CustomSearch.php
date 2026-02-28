@@ -59,7 +59,8 @@ AND    g.name = 'custom_search'
 AND    v.is_active = 1
 ORDER By  v.weight
 ";
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -93,13 +94,15 @@ ORDER By  v.weight
    * @return void
    */
   public function run() {
-    $action = CRM_Utils_Request::retrieve('action',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
       'String',
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     $this->assign('action', $action);
     $this->browse();
   }
 }
-

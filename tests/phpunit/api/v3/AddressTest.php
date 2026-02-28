@@ -38,7 +38,8 @@ class api_v3_AddressTest extends CiviUnitTestCase {
   protected $_locationType;
   protected $_params;
   public $_eNoticeCompliant = TRUE;
-  protected $_entity; public function setUp() {
+  protected $_entity;
+  public function setUp() {
     $this->_apiversion = 3;
     $this->_entity = 'Address';
     parent::setUp();
@@ -182,7 +183,7 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     civicrm_api('Address', 'delete', ['version' => 3, 'id' => $result['id']]);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertEquals($address['values'][$address['id']]['location_type_id'], $result['values'][$address['id']]['location_type_id'], 'In line ' . __LINE__);
-   $this->assertEquals($address['values'][$address['id']]['is_primary'], $result['values'][$address['id']]['is_primary'], 'In line ' . __LINE__);
+    $this->assertEquals($address['values'][$address['id']]['is_primary'], $result['values'][$address['id']]['is_primary'], 'In line ' . __LINE__);
     $this->assertEquals($address['values'][$address['id']]['street_address'], $result['values'][$address['id']]['street_address'], 'In line ' . __LINE__);
   }
 
@@ -296,4 +297,3 @@ class api_v3_AddressTest extends CiviUnitTestCase {
     $this->assertEquals(1, $check);
   }
 }
-

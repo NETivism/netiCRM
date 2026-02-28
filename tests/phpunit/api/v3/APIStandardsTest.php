@@ -95,7 +95,7 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
   }
 
   /*
-     * test checks that all v3 API return a standardised error message when 
+     * test checks that all v3 API return a standardised error message when
      * the $params passed in is not an array.
      */
   public function testParamsNotArray() {
@@ -121,10 +121,10 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
 
             $this->assertEquals(1,
                                 $result['is_error'],
-                                $function . " does not return error in line " . __LINE__); 
+                                $function . " does not return error in line " . __LINE__);
             $this->assertEquals('Input variable `params` is not an array',
                                 $result['error_message'],
-                                "$function does not return correct error when a non-array is submitted in line " . __LINE__ );      
+                                "$function does not return correct error when a non-array is submitted in line " . __LINE__ );
         }*/
   }
 
@@ -178,4 +178,3 @@ class api_v3_APIStandardsTest extends CiviUnitTestCase {
     return $functions;
   }
 }
-

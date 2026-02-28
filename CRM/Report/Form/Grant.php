@@ -50,7 +50,8 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
   public $_groupBy;
   protected $_addressField = FALSE;
 
-  protected $_customGroupExtends = ['Grant']; public function __construct() {
+  protected $_customGroupExtends = ['Grant'];
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -277,7 +278,8 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -349,4 +351,3 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 }
-

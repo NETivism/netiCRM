@@ -332,10 +332,10 @@ class CRM_Utils_Array {
    * Use one array value to search another array's value. Then padding retrieved value back to original array
    *
    * @param array $defaults the referenced array that retrive needle value from property
-   * @param string $property array key name of defaults array. Will using retrieved value to 
+   * @param string $property array key name of defaults array. Will using retrieved value to
    * @param array $lookup haystack. Value found here will padding back to defaults
    * @param boolean $reverse will flip lookup before search
-   * @return void 
+   * @return void
    */
   public static function lookupValue(&$defaults, $property, $lookup, $reverse) {
     $id = $property . '_id';
@@ -525,4 +525,3 @@ class CRM_Utils_Array {
     return self::isEmpty($array);
   }
 }
-

@@ -209,4 +209,3 @@ function civicrm_membership_type_delete(&$params) {
 
   return $memberDelete ? civicrm_create_success("Given Membership Type have been deleted") : civicrm_create_error('Error while deleting membership type');
 }
-

@@ -49,7 +49,8 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
   public function buildQuickForm() {
 
 
-    $types = array_merge(['Contact', 'Individual', 'Contribution', 'Membership'],
+    $types = array_merge(
+      ['Contact', 'Individual', 'Contribution', 'Membership'],
       CRM_Contact_BAO_ContactType::subTypes('Individual')
     );
 
@@ -201,4 +202,3 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
     return empty($errors) ? TRUE : $errors;
   }
 }
-

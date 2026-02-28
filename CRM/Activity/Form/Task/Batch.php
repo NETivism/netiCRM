@@ -77,17 +77,25 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
     //get the contact read only fields to display.
 
-    $readOnlyFields = array_merge(['sort_name' => ts('Name')],
-      CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
-        TRUE, NULL, FALSE, 'name', TRUE
+    $readOnlyFields = array_merge(
+      ['sort_name' => ts('Name')],
+      CRM_Core_BAO_Preferences::valueOptions(
+        'contact_autocomplete_options',
+        TRUE,
+        NULL,
+        FALSE,
+        'name',
+        TRUE
       )
     );
 
     //get the read only field data.
     $returnProperties = array_fill_keys(array_keys($readOnlyFields), 1);
 
-    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_activityHolderIds,
-      'Activity', $returnProperties
+    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails(
+      $this->_activityHolderIds,
+      'Activity',
+      $returnProperties
     );
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
@@ -135,7 +143,8 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Update Activities'),
           'isDefault' => TRUE,
@@ -161,7 +170,8 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
         if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
           $customValue = CRM_Utils_Array::value($customFieldID, $customFields);
           if (CRM_Utils_Array::value('extends_entity_column_value', $customValue)) {
-            $entityColumnValue = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+            $entityColumnValue = explode(
+              CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
               $customValue['extends_entity_column_value']
             );
           }
@@ -224,9 +234,11 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     if (isset($params['field'])) {
       foreach ($params['field'] as $key => $value) {
 
-        $value['custom'] = CRM_Core_BAO_CustomField::postProcess($value,
+        $value['custom'] = CRM_Core_BAO_CustomField::postProcess(
+          $value,
           CRM_Core_DAO::$_nullObject,
-          $key, 'Activity'
+          $key,
+          'Activity'
         );
         $value['id'] = $key;
 
@@ -287,4 +299,3 @@ WHERE  id = %1";
   }
   //end of function
 }
-

@@ -227,4 +227,3 @@ function civicrm_entity_tag_common(&$params, $op = 'add') {
   }
   return $values;
 }
-

@@ -98,14 +98,14 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $participantDAO->selectAdd(); // clear *
     $participantDAO->selectAdd('id as participant_id');
     $participantDAO->find();
-    while($participantDAO->fetch()) {
+    while ($participantDAO->fetch()) {
       $contactDetails[$participantDAO->participant_id]['participant_id'] = $participantDAO->participant_id;
     }
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
 
     $suppressEmail = [];
-    foreach($contactDetails as $detail) {
+    foreach ($contactDetails as $detail) {
       if (!empty($detail['do_not_notify'])) {
         $suppressEmail[] = $detail['contact_id'];
       }
@@ -163,7 +163,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Update Participant(s)'),
           'isDefault' => TRUE,
@@ -189,7 +190,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     $customFieldsRole = CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, $this->_roleCustomDataTypeID);
 
     $customFieldsEvent = CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, $this->_eventNameCustomDataTypeID);
-    $customFields = CRM_Utils_Array::arrayMerge($customFieldsRole,
+    $customFields = CRM_Utils_Array::arrayMerge(
+      $customFieldsRole,
       CRM_Core_BAO_CustomField::getFields('Participant', FALSE, FALSE, NULL, NULL, TRUE)
     );
     $this->_customFields = CRM_Utils_Array::arrayMerge($customFieldsEvent, $customFields);
@@ -201,7 +203,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
         if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
           $customValue = CRM_Utils_Array::value($customFieldID, $this->_customFields);
           if (CRM_Utils_Array::value('extends_entity_column_value', $customValue)) {
-            $entityColumnValue = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+            $entityColumnValue = explode(
+              CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
               $customValue['extends_entity_column_value']
             );
           }
@@ -293,7 +296,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
       foreach ($params['field'] as $key => $value) {
 
         //check for custom data
-        $value['custom'] = CRM_Core_BAO_CustomField::postProcess($value,
+        $value['custom'] = CRM_Core_BAO_CustomField::postProcess(
+          $value,
           CRM_Core_DAO::$_nullObject,
           $key,
           'Participant'
@@ -359,7 +363,8 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     }
 
 
-    $contributionId = CRM_Contribute_BAO_Contribution::checkOnlinePendingContribution($participantId,
+    $contributionId = CRM_Contribute_BAO_Contribution::checkOnlinePendingContribution(
+      $participantId,
       'Event'
     );
     if (!$contributionId) {
@@ -401,4 +406,3 @@ class CRM_Event_Form_Task_Batch extends CRM_Event_Form_Task {
     return $updatedStatusId;
   }
 }
-

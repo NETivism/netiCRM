@@ -48,4 +48,3 @@ class CRM_Admin_Page_Access extends CRM_Core_Page {
     return parent::run();
   }
 }
-

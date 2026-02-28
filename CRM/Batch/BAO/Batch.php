@@ -110,7 +110,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
    * Function get batch statuses.
    *
    * @return array
-   *   array of statuses 
+   *   array of statuses
    */
   public static function batchStatus() {
     self::$_batchStatus = CRM_Core_OptionGroup::values('batch_status', TRUE, FALSE, FALSE, NULL, 'name');
@@ -196,7 +196,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
       1 => [$type['Auto'], 'Integer'],
     ]);
     $expires = [];
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $params = [
         'id' => $dao->id,
       ];
@@ -253,7 +253,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
             ]);
           }
         }
-        elseif(!empty($meta['processed'])){
+        elseif (!empty($meta['processed'])) {
           if (!empty($dao->description)) {
             $processHistories = explode(':', $dao->description);
           }
@@ -261,7 +261,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
             $processHistories = [];
           }
           $stuck = 0;
-          foreach($processHistories as $lastProcessed) {
+          foreach ($processHistories as $lastProcessed) {
             if ((int)$meta['processed'] == (int)$lastProcessed) {
               $stuck++;
             }
@@ -290,10 +290,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
   /**
    * Constructor
-   * 
+   *
    * @param int
    *   batch id to load whole batch object
-   * 
+   *
    * @return object
    */
   public function __construct($batchId = NULL) {
@@ -308,11 +308,11 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
   }
 
   /**
-   * Create and start a batch process 
-   * 
+   * Create and start a batch process
+   *
    * @param array
    *   information that batch process needed.
-   * 
+   *
    * @return object
    *   batch object that just insert into db
    */
@@ -332,7 +332,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     }
     $currentContact = $session->get('userID');
     $params = [
-      'name' => 'batch-'.date('YmdHis').'.'.mt_rand(1,100),
+      'name' => 'batch-'.date('YmdHis').'.'.mt_rand(1, 100),
       'label' => $arguments['label'],
       'description' => $arguments['description'],
       'created_id' => $currentContact,
@@ -355,7 +355,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     if (isset($this->_batch->data['startCallback'])) {
       $args = [];
       if (!empty($this->_batch->data['startCallbackArgs'])) {
-        foreach($this->_batch->data['startCallbackArgs'] as $idx => &$arg) {
+        foreach ($this->_batch->data['startCallbackArgs'] as $idx => &$arg) {
           $args[$idx] = &$arg;
         }
       }
@@ -375,10 +375,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
   /**
    * Process part of batch each run
-   * 
+   *
    * @param int   $batchId
-   *   an id of batch process to load 
-   * 
+   *   an id of batch process to load
+   *
    * @return null
    */
   public function process($force = FALSE) {
@@ -392,12 +392,12 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     global $civicrm_batch;
     $civicrm_batch = $this->_batch;
 
-    // real processing logic 
+    // real processing logic
     $beforeProcessed = $this->_batch->data['processed'];
     if (isset($this->_batch->data['processCallback'])) {
       $args = [];
       if (!empty($this->_batch->data['processCallbackArgs'])) {
-        foreach($this->_batch->data['processCallbackArgs'] as $idx => &$arg) {
+        foreach ($this->_batch->data['processCallbackArgs'] as $idx => &$arg) {
           $args[$idx] = &$arg;
         }
       }
@@ -425,10 +425,10 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
   /**
    * Finish batch
-   * 
+   *
    * @param int   $batchId
-   *   an id of batch process to load 
-   * 
+   *   an id of batch process to load
+   *
    * @return null
    */
   public function finish() {
@@ -438,7 +438,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
     if (isset($this->_batch->data['finishCallback'])) {
       $args = [];
       if (!empty($this->_batch->data['finishCallbackArgs'])) {
-        foreach($this->_batch->data['finishCallbackArgs'] as $idx => &$arg) {
+        foreach ($this->_batch->data['finishCallbackArgs'] as $idx => &$arg) {
           $args[$idx] = &$arg;
         }
       }
@@ -505,7 +505,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
   /**
    * Duplicate running process check
-   * 
+   *
    * @return object|bool
    */
   public function dupeCheck() {
@@ -519,19 +519,19 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
   /**
    * Duplicate running object insert
-   * 
+   *
    * @return object
    */
   public function dupeInsert() {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
-      $dao->timestamp = microtime(true);
+      $dao->timestamp = microtime(TRUE);
       $dao->value = $this->_id;
       $dao->update();
     }
     else {
-      $dao->timestamp = microtime(true);
+      $dao->timestamp = microtime(TRUE);
       $dao->value = $this->_id;
       $dao->insert();
     }
@@ -540,7 +540,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
   /**
    * Duplicate running object delete
-   * 
+   *
    * @return bool
    */
   public function dupeDelete() {
@@ -554,7 +554,7 @@ class CRM_Batch_BAO_Batch extends CRM_Batch_DAO_Batch {
 
   public function saveBatch() {
     $params = [];
-    foreach($this->_batch as $key => $val) {
+    foreach ($this->_batch as $key => $val) {
       $params[$key] = $val;
     }
     $params['id'] = $this->_id;

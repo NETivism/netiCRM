@@ -171,13 +171,18 @@ class CRM_Campaign_Page_SurveyType extends CRM_Core_Page_Basic {
       }
     }
 
-    $returnURL = CRM_Utils_System::url("civicrm/admin/campaign/surveyType",
+    $returnURL = CRM_Utils_System::url(
+      "civicrm/admin/campaign/surveyType",
       "reset=1"
     );
     $filter = "option_group_id = " . $this->_gid;
 
-    CRM_Utils_Weight::addOrder($optionValues, 'CRM_Core_DAO_OptionValue',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $optionValues,
+      'CRM_Core_DAO_OptionValue',
+      'id',
+      $returnURL,
+      $filter
     );
     $this->assign('rows', $optionValues);
   }
@@ -221,4 +226,3 @@ class CRM_Campaign_Page_SurveyType extends CRM_Core_Page_Basic {
     return 'reset=1';
   }
 }
-

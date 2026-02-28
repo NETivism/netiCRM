@@ -141,7 +141,8 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
       $reset = CRM_Utils_Array::value('reset', $_GET) ? 'reset=1&' : '';
 
       foreach ($tabs as $key => $value) {
-        $tabs[$key]['link'] = CRM_Utils_System::url("civicrm/admin/contribute/{$key}",
+        $tabs[$key]['link'] = CRM_Utils_System::url(
+          "civicrm/admin/contribute/{$key}",
           "{$reset}action=update&snippet=4&id={$contribPageId}&qfKey={$qfKey}"
         );
         $tabs[$key]['active'] = $tabs[$key]['valid'] = TRUE;
@@ -183,4 +184,3 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     return $current;
   }
 }
-

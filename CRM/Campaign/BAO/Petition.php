@@ -35,7 +35,7 @@
 
 
 
-Class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
+class CRM_Campaign_BAO_Petition extends CRM_Campaign_BAO_Survey {
   public $cookieExpire;
   public function __construct() {
     parent::__construct();
@@ -190,7 +190,7 @@ WHERE
   a.activity_type_id = civicrm_survey.activity_type_id AND
   civicrm_survey.id =  $surveyId AND  
 	a.source_record_id =  $surveyId  ";
-    if ($status_id){ 
+    if ($status_id) {
       $sql .= " AND status_id = " . (int) $status_id;
     }
     $sql .= " GROUP BY civicrm_address.country_id";
@@ -391,12 +391,12 @@ WHERE 	a.source_record_id = " . $surveyId . "
     /* sendEmailMode
      * CRM_Campaign_Form_Petition_Signature::EMAIL_THANK
      * 		connected user via login/pwd - thank you
-	 * 	 	or dedupe contact matched who doesn't have a tag CIVICRM_TAG_UNCONFIRMED - thank you
-	 *  	or login using fb connect - thank you + click to add msg to fb wall
-	 *
-	 * CRM_Campaign_Form_Petition_Signature::EMAIL_CONFIRM
-	 *		send a confirmation request email     
-	 */
+     * 	 	or dedupe contact matched who doesn't have a tag CIVICRM_TAG_UNCONFIRMED - thank you
+     *  	or login using fb connect - thank you + click to add msg to fb wall
+     *
+     * CRM_Campaign_Form_Petition_Signature::EMAIL_CONFIRM
+     *		send a confirmation request email
+     */
 
 
 
@@ -479,7 +479,8 @@ WHERE 	a.source_record_id = " . $surveyId . "
         // create mailing event subscription record for this contact
         // this will allow using a hash key to confirm email address by sending a url link
 
-        $se = CRM_Mailing_Event_BAO_Subscribe::subscribe($group_id[0],
+        $se = CRM_Mailing_Event_BAO_Subscribe::subscribe(
+          $group_id[0],
           $params['email-Primary'],
           $params['contactId']
         );
@@ -490,7 +491,8 @@ WHERE 	a.source_record_id = " . $surveyId . "
         $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
 
 
-        $replyTo = CRM_Utils_Array::implode($config->verpSeparator,
+        $replyTo = CRM_Utils_Array::implode(
+          $config->verpSeparator,
           [$localpart . 'c',
             $se->contact_id,
             $se->id,
@@ -499,11 +501,13 @@ WHERE 	a.source_record_id = " . $surveyId . "
         ) . "@$emailDomain";
 
 
-        $confirmUrl = CRM_Utils_System::url('civicrm/petition/confirm',
+        $confirmUrl = CRM_Utils_System::url(
+          'civicrm/petition/confirm',
           "reset=1&cid={$se->contact_id}&sid={$se->id}&h={$se->hash}&a={$params['activityId']}&p={$params['sid']}",
           TRUE
         );
-        $confirmUrlPlainText = CRM_Utils_System::url('civicrm/petition/confirm',
+        $confirmUrlPlainText = CRM_Utils_System::url(
+          'civicrm/petition/confirm',
           "reset=1&cid={$se->contact_id}&sid={$se->id}&h={$se->hash}&a={$params['activityId']}&p={$params['sid']}",
           TRUE,
           NULL,
@@ -537,4 +541,3 @@ WHERE 	a.source_record_id = " . $surveyId . "
     }
   }
 }
-

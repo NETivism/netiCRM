@@ -39,7 +39,8 @@ class CRM_Report_Utils_Get {
     if ($value === NULL) {
       return NULL;
     }
-    return CRM_Utils_Type::escape($value,
+    return CRM_Utils_Type::escape(
+      $value,
       CRM_Utils_Type::typeToString($type),
       FALSE
     );
@@ -251,4 +252,3 @@ class CRM_Report_Utils_Get {
     }
   }
 }
-

@@ -68,7 +68,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     if ($instrument == ts('Check')) {
       $this->assign('payment_instrument_name', 'Check');
     }
-    if($values['payment_instrument_id'] != 1 && $instrument != 'Web ATM'){
+    if ($values['payment_instrument_id'] != 1 && $instrument != 'Web ATM') {
       $this->assign('has_expire_date', TRUE);
       $this->assign('expire_date', $values['expire_date']);
     }
@@ -164,7 +164,7 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
         $this->assign('combination_content', $premiumDetails['product_content']);
 
         if (!empty($values['contribution_page_id'])) {
-          $editUrl = CRM_Utils_System::url('civicrm/admin/contribute/premium',"action=update&id={$values['contribution_page_id']}&reset=1");
+          $editUrl = CRM_Utils_System::url('civicrm/admin/contribute/premium', "action=update&id={$values['contribution_page_id']}&reset=1");
           $this->assign('combination_edit_url', $editUrl);
         }
       }
@@ -199,13 +199,17 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     //get soft credit record if exists.
     if ($softContribution = CRM_Contribute_BAO_Contribution::getSoftContribution($softParams)) {
 
-      $softContribution['softCreditToName'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-        $softContribution['soft_credit_to'], 'display_name'
+      $softContribution['softCreditToName'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
+        $softContribution['soft_credit_to'],
+        'display_name'
       );
       //hack to avoid dispalyName conflict
       //for viewing softcredit record.
-      $softContribution['displayName'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-        $values['contact_id'], 'display_name'
+      $softContribution['displayName'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
+        $values['contact_id'],
+        'display_name'
       );
       $values = array_merge($values, $softContribution);
     }
@@ -237,7 +241,8 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
 
 
-    $url = CRM_Utils_System::url('civicrm/contact/view/contribution',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/contribution',
       "action=view&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
     );
 
@@ -248,14 +253,16 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
 
     $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviContribute', CRM_Core_Action::UPDATE)) {
-      $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/contribution',
+      $recentOther['editUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/contribution',
         "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
     $pdfTypes = CRM_Contribute_Form_Task_PDF::getPrintingTypes();
     $this->assign('pdfTypes', $pdfTypes);
 
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $values['id'],
       'Contribution',
@@ -281,7 +288,8 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
       ];
       $queryParams = CRM_Contact_BAO_Query::convertFormValues($filter);
       $selector = new CRM_Activity_Selector_Search($queryParams, $this->_action);
-      $controller2 = new CRM_Core_Selector_Controller($selector,
+      $controller2 = new CRM_Core_Selector_Controller(
+        $selector,
         $this->get(CRM_Utils_Pager::PAGE_ID),
         $sortID,
         CRM_Core_Action::VIEW,
@@ -300,7 +308,8 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -310,4 +319,3 @@ class CRM_Contribute_Form_ContributionView extends CRM_Core_Form {
     );
   }
 }
-

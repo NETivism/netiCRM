@@ -69,14 +69,18 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     }
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
-      CRM_Core_Action::VIEW, $this, $output
+      CRM_Core_Action::VIEW,
+      $this,
+      $output
     );
     $controller->setEmbedded(TRUE);
     $controller->run();
@@ -108,17 +112,20 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
 
     // Email and Create Letter activities use a different form class
 
-    $emailTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+    $emailTypeValue = CRM_Core_OptionGroup::getValue(
+      'activity_type',
       'Email',
       'name'
     );
 
-    $letterTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+    $letterTypeValue = CRM_Core_OptionGroup::getValue(
+      'activity_type',
       'Print PDF Letter',
       'name'
     );
 
-    $SMSTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+    $SMSTypeValue = CRM_Core_OptionGroup::getValue(
+      'activity_type',
       'SMS',
       'name'
     );
@@ -140,10 +147,14 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
         return $wrapper->run('CRM_Contact_Form_Task_SMS', ts('Send SMS'), $arguments);
 
       default:
-        $controller = new CRM_Core_Controller_Simple('CRM_Activity_Form_Activity',
+        $controller = new CRM_Core_Controller_Simple(
+          'CRM_Activity_Form_Activity',
           ts('Contact Activities'),
           $this->_action,
-          FALSE, FALSE, FALSE, TRUE
+          FALSE,
+          FALSE,
+          FALSE,
+          TRUE
         );
     }
 
@@ -183,15 +194,18 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $this->assign('action', $this->_action);
 
     // also create the form element for the activity links box
-    $controller = new CRM_Core_Controller_Simple('CRM_Activity_Form_ActivityLinks',
-      ts('Activity Links'), NULL
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Activity_Form_ActivityLinks',
+      ts('Activity Links'),
+      NULL
     );
     $controller->setEmbedded(TRUE);
     $controller->run();
   }
 
   public function delete() {
-    $controller = new CRM_Core_Controller_Simple('CRM_Activity_Form_Activity',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Activity_Form_Activity',
       ts('Activity Record'),
       $this->_action
     );
@@ -242,17 +256,20 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
 
       // Email and Create Letter activities use a different form class
 
-      $emailTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+      $emailTypeValue = CRM_Core_OptionGroup::getValue(
+        'activity_type',
         'Email',
         'name'
       );
 
-      $letterTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+      $letterTypeValue = CRM_Core_OptionGroup::getValue(
+        'activity_type',
         'Print PDF Letter',
         'name'
       );
 
-      $SMSTypeValue = CRM_Core_OptionGroup::getValue('activity_type',
+      $SMSTypeValue = CRM_Core_OptionGroup::getValue(
+        'activity_type',
         'SMS',
         'name'
       );
@@ -269,7 +286,8 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
         ];
         $queryParams = CRM_Contact_BAO_Query::convertFormValues($filter);
         $selector = new CRM_Activity_Selector_Search($queryParams, $this->_action);
-        $controller2 = new CRM_Core_Selector_Controller($selector,
+        $controller2 = new CRM_Core_Selector_Controller(
+          $selector,
           $this->get(CRM_Utils_Pager::PAGE_ID),
           $sortID,
           CRM_Core_Action::VIEW,
@@ -290,4 +308,3 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 }
-

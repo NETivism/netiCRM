@@ -127,7 +127,8 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -241,4 +242,3 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $importJob->isComplete();
   }
 }
-

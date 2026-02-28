@@ -199,4 +199,3 @@ class CRM_Core_QuickForm_Action_Display extends CRM_Core_QuickForm_Action {
     self::$_errorTemplate = file_get_contents($templateDir . '/CRM/Form/error.tpl');
   }
 }
-

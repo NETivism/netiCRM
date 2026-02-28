@@ -153,7 +153,8 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @return CRM_Contact_Selector
    * @access public
    */
-  public function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $grantClause = NULL,
     $single = FALSE,
@@ -173,7 +174,12 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_GRANT
     );
   }
@@ -258,9 +264,14 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @access public
    */
   public function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_grantClause
     );
@@ -278,9 +289,14 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @return int   the total number of rows for this action
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_grantClause
     );
@@ -311,7 +327,8 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->grant_id;
       }
 
-      $row['action'] = CRM_Core_Action::formLink(self::links($this->_key),
+      $row['action'] = CRM_Core_Action::formLink(
+        self::links($this->_key),
         $mask,
         ['id' => $result->grant_id,
           'cid' => $result->contact_id,
@@ -320,8 +337,11 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       );
 
 
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
 
       $rows[] = $row;
@@ -423,4 +443,3 @@ class CRM_Grant_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   }
 }
 //end of class
-

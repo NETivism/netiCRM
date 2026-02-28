@@ -65,7 +65,8 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     if ($this->_id) {
       $this->_ppType = CRM_Utils_Request::retrieve('pp', 'String', $this, FALSE, NULL);
       if (!$this->_ppType) {
-        $this->_ppType = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor',
+        $this->_ppType = CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_PaymentProcessor',
           $this->_id,
           'payment_processor_type'
         );
@@ -81,7 +82,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->_ppDAO = new CRM_Core_DAO_PaymentProcessorType();
     $this->_ppDAO->name = $this->_ppType;
 
-    if(empty($this->_ppDAO->name)){
+    if (empty($this->_ppDAO->name)) {
       $this->_ppDAO->is_active = 1;
     }
     if (!$this->_ppDAO->find(TRUE)) {
@@ -89,15 +90,21 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     }
 
     if ($this->_id) {
-      $refreshURL = CRM_Utils_System::url('civicrm/admin/paymentProcessor',
+      $refreshURL = CRM_Utils_System::url(
+        'civicrm/admin/paymentProcessor',
         "reset=1&action=update&id={$this->_id}",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
     else {
-      $refreshURL = CRM_Utils_System::url('civicrm/admin/paymentProcessor',
+      $refreshURL = CRM_Utils_System::url(
+        'civicrm/admin/paymentProcessor',
         "reset=1&action=add",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
 
@@ -118,7 +125,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     if (method_exists($class, 'getAdminFields')) {
       $this->_fields = $class::getAdminFields($this->_ppDAO, $this);
     }
-    else{
+    else {
       $this->_fields = [
         ['name' => 'user_name',
           'label' => $this->_ppDAO->user_name_label,
@@ -208,13 +215,20 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_PaymentProcessor');
 
-    $this->add('text', 'name', ts('Name'),
-      $attributes['name'], TRUE
+    $this->add(
+      'text',
+      'name',
+      ts('Name'),
+      $attributes['name'],
+      TRUE
     );
 
     $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_PaymentProcessor', $this->_id]);
 
-    $this->add('text', 'description', ts('Description'),
+    $this->add(
+      'text',
+      'description',
+      ts('Description'),
       $attributes['description']
     );
 
@@ -228,7 +242,12 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     if (empty($id) || $currentType !== 'Neweb') {
       unset($types['Neweb']);
     }
-    $processorTypeEle = $this->add('select', 'payment_processor_type', ts('Payment Processor Type'), $types, TRUE,
+    $processorTypeEle = $this->add(
+      'select',
+      'payment_processor_type',
+      ts('Payment Processor Type'),
+      $types,
+      TRUE,
       ['onchange' => "reload(true)"]
     );
     if ($this->_isTypeFreezed) {
@@ -251,7 +270,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       }
       if ($this->_isFreezed) {
         if ($field['name'] == 'user_name') {
-          if($currentType !== 'TapPay') {
+          if ($currentType !== 'TapPay') {
             $fieldAttributes = $attributes[$field['name']] + ['readonly' => 'readonly'];
           }
         }
@@ -270,7 +289,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       }
       if (!empty($field['type'])) {
 
-        switch($field['type']) {
+        switch ($field['type']) {
           case 'select':
             $this->addSelect($field['name'], $field['label'], $field['options']);
             $this->addSelect('test_'.$field['name'], $field['label'], $field['options']);
@@ -339,7 +358,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       $allPresent = TRUE;
       $isAllEmpty = FALSE;
       $requiredFieldsCount = 0;
-      foreach(['user_name', 'password', 'signature', 'subject'] as $name) {
+      foreach (['user_name', 'password', 'signature', 'subject'] as $name) {
         $label = $name.'_label';
         if ($section) {
           $name = "{$section}_$name";

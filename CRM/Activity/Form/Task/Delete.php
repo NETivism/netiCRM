@@ -96,4 +96,3 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
     CRM_Core_Session::setStatus($status);
   }
 }
-

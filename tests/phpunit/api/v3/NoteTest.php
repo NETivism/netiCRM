@@ -92,7 +92,9 @@ class api_v3_NoteTest extends CiviUnitTestCase {
   public function testGetWithWrongParamsType() {
     $params = 'a string';
     $result = civicrm_api('note', 'get', $params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -145,7 +147,9 @@ class api_v3_NoteTest extends CiviUnitTestCase {
   public function testCreateWithWrongParamsType() {
     $params = 'a string';
     $result = civicrm_api('note', 'create', $params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
     $this->assertEquals($result['error_message'], 'Input variable `params` is not an array');
@@ -252,7 +256,9 @@ class api_v3_NoteTest extends CiviUnitTestCase {
   public function testUpdateWithWrongParamsType() {
     $params = 'a string';
     $result = civicrm_api('note', 'create', $params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -314,7 +320,9 @@ class api_v3_NoteTest extends CiviUnitTestCase {
   public function testDeleteWithWrongParamsType() {
     $params = 'a string';
     $result = civicrm_api('note', 'delete', $params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -372,8 +380,8 @@ function testNoteCreateExample() {
 }
 
 
-function note_create_example(){
-  $params = [ 
+function note_create_example() {
+  $params = [
     'entity_table' => 'civicrm_contact',
     'entity_id' => 1,
     'note' => 'Hello!!! m testing Note',
@@ -384,7 +392,7 @@ function note_create_example(){
   ];
 
   require_once 'api/api.php';
-  $result = civicrm_api( 'note','create',$params );
+  $result = civicrm_api('note', 'create', $params);
 
   return $result;
 }
@@ -392,15 +400,15 @@ function note_create_example(){
 /*
  * Function returns array of result expected from previous function
  */
-function note_create_expectedresult(){
+function note_create_expectedresult() {
 
-  $expectedResult = [ 
+  $expectedResult = [
     'is_error' => 0,
     'version' => 3,
     'count' => 1,
     'id' => 2,
-    'values' => [ 
-      '2' => [ 
+    'values' => [
+      '2' => [
           'id' => 2,
           'entity_table' => 'civicrm_contact',
           'entity_id' => 1,
@@ -415,4 +423,3 @@ function note_create_expectedresult(){
 
   return $expectedResult  ;
 }
-

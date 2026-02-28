@@ -182,4 +182,3 @@ SELECT  id, website_type_id
     return $websites;
   }
 }
-

@@ -53,7 +53,8 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
    * @return object
    * @access public
    */
-  public function __construct($path,
+  public function __construct(
+    $path,
     $title,
     $mode = NULL,
     $imageUpload = FALSE,
@@ -94,7 +95,8 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
       // always allow a single upload file with same name
       if ($attachUpload) {
 
-        $this->addActions($config->uploadDir,
+        $this->addActions(
+          $config->uploadDir,
           CRM_Core_BAO_File::uploadNames()
         );
       }
@@ -129,4 +131,3 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
     return $pageTemplateFile;
   }
 }
-

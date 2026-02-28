@@ -30,7 +30,8 @@ require_once 'api/v2/Membership.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_MembershipTypeTest extends CiviUnitTestCase {
   protected $_contactID;
-  protected $_contributionTypeID; public function get_info() {
+  protected $_contributionTypeID;
+  public function get_info() {
     return [
       'name' => 'MembershipType Create',
       'description' => 'Test all Membership Type Create API methods.',
@@ -52,7 +53,9 @@ class api_v2_MembershipTypeTest extends CiviUnitTestCase {
   public function testGetWithWrongParamsType() {
     $params = 'a string';
     $membershiptype = &civicrm_membership_type_create($params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -105,7 +108,9 @@ class api_v2_MembershipTypeTest extends CiviUnitTestCase {
   public function testCreateWithWrongParamsType() {
     $params = 'a string';
     $membershiptype = &civicrm_membership_type_create($params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -221,7 +226,9 @@ class api_v2_MembershipTypeTest extends CiviUnitTestCase {
   public function testUpdateWithWrongParamsType() {
     $params = 'a string';
     $membershiptype = &civicrm_membership_type_update($params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -285,7 +292,9 @@ class api_v2_MembershipTypeTest extends CiviUnitTestCase {
 
     $params = 'a string';
     $membershiptype = &civicrm_membership_type_delete($params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -313,6 +322,3 @@ class api_v2_MembershipTypeTest extends CiviUnitTestCase {
     $this->contactDelete($orgID);
   }
 }
-
-
-

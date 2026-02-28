@@ -64,8 +64,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * System default language(fallback language)
    */
-  public CONST SYSTEM_LANG = 'en_US';
-  public CONST SYSTEM_FILEDIR = 'civicrm';
+  public const SYSTEM_LANG = 'en_US';
+  public const SYSTEM_FILEDIR = 'civicrm';
 
   /**
    * the dsn of the database connection
@@ -129,7 +129,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
   /**
    * Shut down callbacks
-   * 
+   *
    * The elements of this array will be called before / after civicrm shutdown
    * The format will be array(
    *   'before' => array(
@@ -141,7 +141,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * ))
    * The $callback must be static method or function. The session may not exists.
    * In after shutdown, callback will be called after fastcgi_finish_request
-   * 
+   *
    * @var array
    */
   public static $_shutdownCallbacks = [];
@@ -207,7 +207,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @return void
    * @access private
    */
-  private function __construct() {}
+  private function __construct() {
+  }
 
   /**
    * Singleton function used to manage this object.
@@ -322,7 +323,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     $class = $this->userFrameworkClass;
     $this->userSystem = new $class();
-    if(isset($this->userSystem->version)){
+    if (isset($this->userSystem->version)) {
       $this->userFrameworkVersion = $this->userSystem->version;
     }
 
@@ -450,7 +451,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $dirName = CRM_Utils_Type::escape($_SERVER['HTTP_HOST'], 'DirectoryName');
       $this->templateCompileDir = $temp . DIRECTORY_SEPARATOR . 'smarty' . php_sapi_name() . DIRECTORY_SEPARATOR . $dirName . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR;
     }
-    elseif(defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
+    elseif (defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
       $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR).CRM_Utils_File::addTrailingSlash($tsLocale);
     }
 
@@ -513,7 +514,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
 
     // we need to do this here so all blocks also load from an ssl server
-    if(CRM_Utils_System::isSSL()) {
+    if (CRM_Utils_System::isSSL()) {
       CRM_Utils_System::mapConfigToSSL();
     }
 
@@ -539,7 +540,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * retrieve a mailer to send any mail from the applciation
    *
-   * @param int $mailerType 
+   * @param int $mailerType
    * @access private
    *
    * @return object
@@ -554,7 +555,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         if (count($mailSettings)) {
           self::$_mail[$mailerType] = [];
           $filters = [];
-          foreach($mailSettings as $setting) {
+          foreach ($mailSettings as $setting) {
             $params['host'] = $setting['server'];
             $params['port'] = !empty($setting['port']) ? $setting['port'] : 25;
             $params['username'] = $setting['username'];
@@ -574,8 +575,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
               }
             }
           }
-          foreach($filters as &$setting) {
-            foreach(self::$_mail[$mailerType] as $sid => &$mailSetting) {
+          foreach ($filters as &$setting) {
+            foreach (self::$_mail[$mailerType] as $sid => &$mailSetting) {
               $mailSetting->_filters[] = &$setting;
             }
           }
@@ -594,7 +595,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     // always fallback to default mailer
     if (!isset(self::$_mail[$mailerType]) || empty(self::$_mail[$mailerType])) {
-      $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();;
+      $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
+      ;
 
       if (defined('CIVICRM_MAILER_SPOOL') &&
         CIVICRM_MAILER_SPOOL
@@ -741,7 +743,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear up session
    */
-  public function sessionReset(){
+  public function sessionReset() {
     $session = CRM_Core_Session::singleton();
     $session->reset(2);
   }
@@ -832,4 +834,3 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 }
 // end CRM_Core_Config
-

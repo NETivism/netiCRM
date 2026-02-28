@@ -147,13 +147,14 @@ class CRM_Core_Permission_Drupal {
         $whereTables['civicrm_group_contact'] = 1;
 
         // foreach group that is potentially a saved search, add the saved search clause
-        if($context == 'contact'){
+        if ($context == 'contact') {
           foreach (array_keys(self::$_editPermissionedGroups) as $id) {
             $group = new CRM_Contact_DAO_Group();
             $group->id = $id;
             if ($group->find(TRUE) && $group->saved_search_id) {
 
-              $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
+              $clause = CRM_Contact_BAO_SavedSearch::whereClause(
+                $group->saved_search_id,
                 $tables,
                 $whereTables
               );
@@ -182,13 +183,14 @@ class CRM_Core_Permission_Drupal {
 
 
         // foreach group that is potentially a saved search, add the saved search clause
-        if($context == 'contact'){
+        if ($context == 'contact') {
           foreach (array_keys(self::$_viewPermissionedGroups) as $id) {
             $group = new CRM_Contact_DAO_Group();
             $group->id = $id;
             if ($group->find(TRUE) && $group->saved_search_id) {
 
-              $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
+              $clause = CRM_Contact_BAO_SavedSearch::whereClause(
+                $group->saved_search_id,
                 $tables,
                 $whereTables
               );
@@ -255,4 +257,3 @@ class CRM_Core_Permission_Drupal {
     return CRM_Core_Config::$_userSystem->permissionCheck($permission, $ufID);
   }
 }
-

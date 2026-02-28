@@ -36,7 +36,8 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
    */
   protected $_individualId;
   protected $_contribution;
-  protected $_contributionTypeId; public function setUp() {
+  protected $_contributionTypeId;
+  public function setUp() {
     parent::setUp();
 
     $this->_contributionTypeId = $this->contributionTypeCreate();
@@ -468,4 +469,3 @@ class api_v2_ContributionTest extends CiviUnitTestCase {
     $this->assertEquals($values['contribution_status_id'], 1, 'In line ' . __LINE__);
   }
 }
-

@@ -68,10 +68,10 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $query = "SELECT c.payment_processor_id FROM civicrm_contribution c WHERE c.contribution_recur_id = %1 AND c.payment_processor_id IS NOT NULL && c.payment_processor_id > 0";
     $sqlParams = [1 => [$this->_id, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $sqlParams);
-    if($dao->N){
+    if ($dao->N) {
       $this->_online = TRUE;
     }
-    else{
+    else {
       $this->_online = FALSE;
     }
     $dao->free();
@@ -232,7 +232,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       if (isset($paymentClass::$_editableFields) && is_array($paymentClass::$_editableFields)) {
         $activeFields = $paymentClass::$_editableFields;
       }
-      else if(method_exists($paymentClass, 'getEditableFields')) {
+      elseif (method_exists($paymentClass, 'getEditableFields')) {
         $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
       }
     }
@@ -241,7 +241,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       if (substr($name, -5) == '_date') {
         $this->addDateTime($name, $label, FALSE, ['formatType' => 'activityDateTime']);
       }
-      else if( $name == 'contribution_status_id') {
+      elseif ($name == 'contribution_status_id') {
         $statuses = CRM_Contribute_PseudoConstant::contributionStatus();
         $statusId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur', $this->_id, 'contribution_status_id');
         // Only exclude status if it's not the current status
@@ -256,7 +256,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
           'data-origin-status' => $statusId,
         ]);
       }
-      else if (in_array($name, ['installments', 'cycle_day', 'amount'])) {
+      elseif (in_array($name, ['installments', 'cycle_day', 'amount'])) {
         if ($name == 'cycle_day') {
           $attr = ['max' => 28, 'min' => 1];
         }
@@ -273,7 +273,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
         $ele = $this->add('text', $name, $label, ['size' => 20]);
       }
 
-      if (empty($activeFields) || !in_array($name, $activeFields) ) {
+      if (empty($activeFields) || !in_array($name, $activeFields)) {
         if (substr($name, -5) == '_date') {
           $ele = $this->getElement($name);
           $ele->freeze();
@@ -301,7 +301,8 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     }
 
     // define the buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -338,30 +339,35 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       $params['id'] = $this->_id;
     }
 
-    $params['create_date'] = CRM_Utils_Date::processDate($params['create_date'],
+    $params['create_date'] = CRM_Utils_Date::processDate(
+      $params['create_date'],
       $params['create_date_time'],
       TRUE
     );
-    $params['start_date'] = CRM_Utils_Date::processDate($params['start_date'],
+    $params['start_date'] = CRM_Utils_Date::processDate(
+      $params['start_date'],
       $params['start_date_time'],
       TRUE
     );
-    $params['modified_date'] = CRM_Utils_Date::processDate($params['modified_date'],
+    $params['modified_date'] = CRM_Utils_Date::processDate(
+      $params['modified_date'],
       $params['modified_date_time'],
       TRUE
     );
-    $params['cancel_date'] = CRM_Utils_Date::processDate($params['cancel_date'],
+    $params['cancel_date'] = CRM_Utils_Date::processDate(
+      $params['cancel_date'],
       $params['cancel_date_time'],
       TRUE
     );
-    $params['end_date'] = CRM_Utils_Date::processDate($params['end_date'],
+    $params['end_date'] = CRM_Utils_Date::processDate(
+      $params['end_date'],
       $params['end_date_time'],
       TRUE
     );
 
     // refs #17486. Date format should be YmdHis.
     foreach (['create_date', 'start_date', 'modified_date', 'cancel_date', 'end_date', 'next_sched_contribution', 'failure_retry_date', 'last_execute_date'] as $idx) {
-      if(preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $params[$idx])){
+      if (preg_match('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $params[$idx])) {
         $params[$idx] = preg_replace('/-| |:/', '', $params[$idx]);
       }
     }
@@ -381,7 +387,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
       if (!empty($paymentClass::$_editableFields)) {
         $activeFields = $paymentClass::$_editableFields;
       }
-      else if(method_exists($paymentClass, 'getEditableFields')) {
+      elseif (method_exists($paymentClass, 'getEditableFields')) {
         $activeFields = $paymentClass::getEditableFields($paymentProcessor, $this);
       }
       if (method_exists($paymentClass, 'doUpdateRecur') && !empty($activeFields)) {
@@ -409,7 +415,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
             $isUpdate = TRUE;
 
             /*
-             * Compare doUpdateRecur result and edit params. 
+             * Compare doUpdateRecur result and edit params.
              */
             if (!empty($resultParams['next_sched_contribution'])) {
               $params['next_sched_contribution'] = $resultParams['next_sched_contribution'];
@@ -420,7 +426,7 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
                 if ($field == 'note_title' && !empty($params[$field])) {
                   $params[$field] .= $value;
                 }
-                else if ($field == 'note_body' && !empty($params[$field])) {
+                elseif ($field == 'note_body' && !empty($params[$field])) {
                   $params[$field] .= "\n" . $value;
                 }
                 else {
@@ -466,4 +472,3 @@ class CRM_Contribute_Form_ContributionRecur extends CRM_Core_Form {
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/contributionrecur', $urlParams));
   }
 }
-

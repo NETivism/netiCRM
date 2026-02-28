@@ -105,7 +105,8 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
 
     // action is taken depending upon the mode
     $contributionType = new CRM_Contribute_DAO_ContributionType();
-    $contributionType->copyValues($params);;
+    $contributionType->copyValues($params);
+    ;
 
     $contributionType->id = CRM_Utils_Array::value('contributionType', $ids);
     $contributionType->save();
@@ -144,8 +145,8 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
     if ($check) {
       $session = CRM_Core_Session::singleton();
       CRM_Core_Session::setStatus(ts(
-          'This contribution type cannot be deleted because it is being referenced by one or more of the following types of records: Contributions, Contribution Pages, or Membership Types. Consider disabling this type instead if you no longer want it used.'
-        ));
+        'This contribution type cannot be deleted because it is being referenced by one or more of the following types of records: Contributions, Contribution Pages, or Membership Types. Consider disabling this type instead if you no longer want it used.'
+      ));
       return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/contribute/contributionType', "reset=1&action=browse"));
     }
 
@@ -162,8 +163,8 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * Function to see if contritbution type is deductible
    *
    * @param int $contributionTypeId contribution type id to retrieve
-   * @param boolean $all default FALSE. TRUE will return type even type is not active. 
-   * 
+   * @param boolean $all default FALSE. TRUE will return type even type is not active.
+   *
    * @return numeric when contribution type found. FALSE when not found.
    */
   public static function deductible($contributionTypeId, $all = FALSE) {
@@ -175,4 +176,3 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
     return FALSE;
   }
 }
-

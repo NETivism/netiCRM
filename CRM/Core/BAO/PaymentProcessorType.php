@@ -133,4 +133,3 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
     CRM_Core_Session::setStatus(ts('Selected Payment Processor type has been deleted.'));
   }
 }
-

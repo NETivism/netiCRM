@@ -138,7 +138,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     $fields = &CRM_Contribute_BAO_Contribution::importableFields($this->_contactType, FALSE);
     $this->_importableContactFields = $fields;
 
-    $fields = array_merge($fields,
+    $fields = array_merge(
+      $fields,
       [
         'soft_credit' => [
           'title' => ts('Soft Credit'),
@@ -249,13 +250,13 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         $this->_externalIdentifierIndex = $index;
         $this->_allExternalIdentifiers = [];
       }
-      elseif($key == 'contribution_contact_id'){
+      elseif ($key == 'contribution_contact_id') {
         $this->_contactIdIndex = $index;
       }
-      elseif($key == 'total_amount'){
+      elseif ($key == 'total_amount') {
         $this->_totalAmountIndex = $index;
       }
-      elseif($key == 'contribution_type') {
+      elseif ($key == 'contribution_type') {
         $this->_contributionTypeIndex = $index;
       }
 
@@ -402,8 +403,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             break;
           case 'contribution_contact_id':
             if ($this->_createContactOption == self::CONTACT_NOIDCREATE) {
-							$contactExists = CRM_Import_Parser_Contact::checkContactById(['contribution_contact_id' => $params['contribution_contact_id']], 'contribution_contact_id');
-							if (!$contactExists) {
+              $contactExists = CRM_Import_Parser_Contact::checkContactById(['contribution_contact_id' => $params['contribution_contact_id']], 'contribution_contact_id');
+              if (!$contactExists) {
                 CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', [1 => ts('Contact ID').'-'.$val]), $errorMessage);
               }
             }
@@ -469,8 +470,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $csType = CRM_Utils_Array::value('contact_sub_type', $params);
     }
     $contactFields = CRM_Core_BAO_CustomField::getFields($this->_contactType, FALSE, FALSE, $csType);
-    if(!empty($contactFields)){
-      foreach(array_keys($contactFields) as $customKey) {
+    if (!empty($contactFields)) {
+      foreach (array_keys($contactFields) as $customKey) {
         if (isset($params['custom_'.$customKey])) {
           $contactParams['custom_'.$customKey] = $params['custom_'.$customKey];
         }
@@ -775,7 +776,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             }
             elseif (is_array($params[$dupeFieldName])) {
               $hasValue = FALSE;
-              foreach($params[$dupeFieldName] as $email) {
+              foreach ($params[$dupeFieldName] as $email) {
                 if ($dupeFieldName === 'email' && !empty($email['email'])) {
                   $hasValue = TRUE;
                 }
@@ -797,7 +798,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         }
 
         if ($doCreateContact && count($noValueFields) >= count($fieldsArray)) {
-          foreach($noValueFields as $fieldTitle) {
+          foreach ($noValueFields as $fieldTitle) {
             $dispArray[] = $fieldTitle;
           }
         }
@@ -865,8 +866,11 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $completeStatusID = CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');
 
       //need to update payment record to map contribution_id
-      CRM_Core_DAO::setFieldValue('CRM_Pledge_DAO_Payment', $formatted['pledge_payment_id'],
-        'contribution_id', $formatted['contribution_id']
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Pledge_DAO_Payment',
+        $formatted['pledge_payment_id'],
+        'contribution_id',
+        $formatted['contribution_id']
       );
 
 
@@ -944,6 +948,6 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return void
    * @access public
    */
-  public function fini() {}
+  public function fini() {
+  }
 }
-

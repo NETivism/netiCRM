@@ -100,4 +100,3 @@ class CRM_Custom_Form_DeleteFile extends CRM_Core_Form {
     CRM_Utils_System::redirect($toUrl);
   }
 }
-

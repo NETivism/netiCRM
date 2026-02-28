@@ -148,8 +148,13 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * @return CRM_Contact_Selector_Profile
    * @access public
    */
-  public function __construct(&$params, &$customFields, $ufGroupIds = NULL, $map = FALSE,
-    $editLink = FALSE, $linkToUF = FALSE
+  public function __construct(
+    &$params,
+    &$customFields,
+    $ufGroupIds = NULL,
+    $map = FALSE,
+    $editLink = FALSE,
+    $linkToUF = FALSE
   ) {
     $this->_params = $params;
 
@@ -168,8 +173,10 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
 
     //get the details of the uf group
     if ($this->_gid) {
-      $groupId = CRM_Core_DAO::getFieldValue('CRM_Core_BAO_UFGroup',
-        $this->_gid, 'limit_listings_group_id'
+      $groupId = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_BAO_UFGroup',
+        $this->_gid,
+        'limit_listings_group_id'
       );
     }
 
@@ -183,10 +190,12 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
       }
     }
 
-    $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(CRM_Core_Action::VIEW,
+    $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(
+      CRM_Core_Action::VIEW,
       CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY |
       CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,
-      FALSE, $this->_profileIds
+      FALSE,
+      $this->_profileIds
     );
     $this->_customFields = &$customFields;
 
@@ -531,7 +540,8 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
       }
       $row = [];
       $empty = TRUE;
-      $row[] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
+      $row[] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
         $result->contact_sub_type : $result->contact_type,
         FALSE,
         $result->contact_id
@@ -546,7 +556,8 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
 
       foreach ($names as $name) {
         if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name)) {
-          $row[] = CRM_Core_BAO_CustomField::getDisplayValue($result->$name,
+          $row[] = CRM_Core_BAO_CustomField::getDisplayValue(
+            $result->$name,
             $cfID,
             $this->_options,
             $result->contact_id
@@ -630,7 +641,8 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
         }
       }
 
-      $row[] = CRM_Core_Action::formLink($newLinks,
+      $row[] = CRM_Core_Action::formLink(
+        $newLinks,
         $mask,
         $params
       );
@@ -654,4 +666,3 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
   }
 }
 //end of class
-

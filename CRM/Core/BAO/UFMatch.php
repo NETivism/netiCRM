@@ -144,7 +144,8 @@ class CRM_Core_BAO_UFMatch extends CRM_Core_DAO_UFMatch {
         'editUrl' => CRM_Utils_System::url('civicrm/contact/add', "reset=1&action=update&cid={$ufmatch->contact_id}"),
       ];
 
-      CRM_Utils_Recent::add($displayName,
+      CRM_Utils_Recent::add(
+        $displayName,
         CRM_Utils_System::url('civicrm/contact/view', "reset=1&cid={$ufmatch->contact_id}"),
         $ufmatch->contact_id,
         $contactType,
@@ -278,7 +279,8 @@ AND    domain_id    = %4
         $transaction->commit();
       }
       else {
-        $msg = ts("Contact ID %1 is a match for %2 user %3 but has already been matched to %4",
+        $msg = ts(
+          "Contact ID %1 is a match for %2 user %3 but has already been matched to %4",
           [1 => $ufmatch->contact_id,
             2 => $uf,
             3 => $ufmatch->uf_id,
@@ -411,7 +413,8 @@ AND    domain_id    = %4
       }
 
 
-      CRM_Core_BAO_Log::register($contactId,
+      CRM_Core_BAO_Log::register(
+        $contactId,
         'civicrm_email',
         $emailID
       );
@@ -594,4 +597,3 @@ AND    domain_id    = %4
     return $ufValues[$ufID];
   }
 }
-

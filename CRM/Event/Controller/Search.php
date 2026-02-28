@@ -67,7 +67,8 @@ class CRM_Event_Controller_Search extends CRM_Core_Controller {
     $session = CRM_Core_Session::singleton();
     $uploadNames = $session->get('uploadNames');
     if (!empty($uploadNames)) {
-      $uploadNames = array_merge($uploadNames,
+      $uploadNames = array_merge(
+        $uploadNames,
         CRM_Core_BAO_File::uploadNames()
       );
     }
@@ -82,4 +83,3 @@ class CRM_Event_Controller_Search extends CRM_Core_Controller {
     $this->addActions($uploadDir, $uploadNames);
   }
 }
-

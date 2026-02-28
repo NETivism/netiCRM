@@ -44,7 +44,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
   /**
    * max number of contacts we will display for membership-organisation
    */
-  public CONST MAX_CONTACTS = 50;
+  public const MAX_CONTACTS = 50;
 
   /**
    * This function sets the default values for the form. MobileProvider that in edit/view mode
@@ -110,45 +110,76 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'name'), TRUE);
 
-    $this->addRule('name', ts('A membership type with this name already exists. Please select another name.'),
-      'objectExists', ['CRM_Member_DAO_MembershipType', $this->_id]
+    $this->addRule(
+      'name',
+      ts('A membership type with this name already exists. Please select another name.'),
+      'objectExists',
+      ['CRM_Member_DAO_MembershipType', $this->_id]
     );
-    $this->add('text', 'description', ts('Description'),
+    $this->add(
+      'text',
+      'description',
+      ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'description')
     );
-    $this->add('text', 'minimum_fee', ts('Minimum Fee'),
+    $this->add(
+      'text',
+      'minimum_fee',
+      ts('Minimum Fee'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'minimum_fee')
     );
     $this->addRule('minimum_fee', ts('Please enter a monetary value for the Minimum Fee.'), 'money');
 
-    $this->addElement('select', 'duration_unit', ts('Duration') . ' ',
-      CRM_Core_SelectValues::unitList('duration'), ['onchange' => 'showHidePeriodSettings()']
+    $this->addElement(
+      'select',
+      'duration_unit',
+      ts('Duration') . ' ',
+      CRM_Core_SelectValues::unitList('duration'),
+      ['onchange' => 'showHidePeriodSettings()']
     );
     //period type
-    $this->addElement('select', 'period_type', ts('Period Type'),
-      CRM_Core_SelectValues::periodType(), ['onchange' => 'showHidePeriodSettings()']
+    $this->addElement(
+      'select',
+      'period_type',
+      ts('Period Type'),
+      CRM_Core_SelectValues::periodType(),
+      ['onchange' => 'showHidePeriodSettings()']
     );
 
-    $this->add('text', 'duration_interval', ts('Duration Interval'),
+    $this->add(
+      'text',
+      'duration_interval',
+      ts('Duration Interval'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'duration_interval')
     );
 
     $memberOrg = &$this->add('text', 'member_org', ts('Membership Organization'), 'size=30 maxlength=120');
     //start day
-    $this->add('date', 'fixed_period_start_day', ts('Fixed Period Start Day'),
-      CRM_Core_SelectValues::date(NULL, 'M d'), FALSE
+    $this->add(
+      'date',
+      'fixed_period_start_day',
+      ts('Fixed Period Start Day'),
+      CRM_Core_SelectValues::date(NULL, 'M d'),
+      FALSE
     );
 
     //rollover day
-    $this->add('date', 'fixed_period_rollover_day', ts('Fixed Period Rollover Day'),
-      CRM_Core_SelectValues::date(NULL, 'M d'), FALSE
+    $this->add(
+      'date',
+      'fixed_period_rollover_day',
+      ts('Fixed Period Rollover Day'),
+      CRM_Core_SelectValues::date(NULL, 'M d'),
+      FALSE
     );
 
     // required in form rule
     $this->add('hidden', 'action', $this->_action);
 
 
-    $this->add('select', 'contribution_type_id', ts('Contribution Type'),
+    $this->add(
+      'select',
+      'contribution_type_id',
+      ts('Contribution Type'),
       ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType()
     );
 
@@ -161,7 +192,10 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $memberRel->setMultiple(TRUE);
 
     $this->add('select', 'visibility', ts('Visibility'), CRM_Core_SelectValues::memberVisibility());
-    $this->add('text', 'weight', ts('Order'),
+    $this->add(
+      'text',
+      'weight',
+      ts('Order'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType', 'weight')
     );
     $this->add('checkbox', 'is_active', ts('Enabled?'));
@@ -177,7 +211,8 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     $reminderDay = &$this->addNumber(
       'renewal_reminder_day',
       ts('Renewal Reminder Day'),
-      CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipType',
+      CRM_Core_DAO::getAttribute(
+        'CRM_Member_DAO_MembershipType',
         'renewal_reminder_day'
       )
     );
@@ -238,7 +273,10 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
         CRM_Utils_Array::value('renewal_reminder_day', $renewMessage[$this->_id]) &&
         $membershipRecords
       ) {
-        $reminderMsg = $this->add('select', 'renewal_msg_id', ts('Renewal Reminder Message'),
+        $reminderMsg = $this->add(
+          'select',
+          'renewal_msg_id',
+          ts('Renewal Reminder Message'),
           ['' => ts('- select -')] + $msgTemplates
         );
       }
@@ -462,12 +500,17 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       $ids['memberOfContact'] = CRM_Utils_Array::value('contact_check', $submitted);
 
       if ($this->_id) {
-        $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-          $this->_id, 'weight', 'id'
+        $oldWeight = CRM_Core_DAO::getFieldValue(
+          'CRM_Member_DAO_MembershipType',
+          $this->_id,
+          'weight',
+          'id'
         );
       }
-      $params['weight'] = CRM_Utils_Weight::updateOtherWeights('CRM_Member_DAO_MembershipType',
-        $oldWeight, $params['weight']
+      $params['weight'] = CRM_Utils_Weight::updateOtherWeights(
+        'CRM_Member_DAO_MembershipType',
+        $oldWeight,
+        $params['weight']
       );
 
       if ($this->_action & CRM_Core_Action::UPDATE) {
@@ -479,11 +522,11 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
 
       $originReminder = $this->get('origin_reminder_day');
       $memberCount = $this->get('memberCount');
-      if ( (!empty($originReminder) || $originReminder == 0) && $originReminder != $params['renewal_reminder_day'] && $memberCount > 0 && $this->_id) {
+      if ((!empty($originReminder) || $originReminder == 0) && $originReminder != $params['renewal_reminder_day'] && $memberCount > 0 && $this->_id) {
         $dao = CRM_Core_DAO::executeQuery("SELECT id, end_date, reminder_date FROM civicrm_membership WHERE membership_type_id = %1 AND end_date IS NOT NULL", [
           1 => [$this->_id, 'Integer']
         ]);
-        while($dao->fetch()) {
+        while ($dao->fetch()) {
           if ($params['renewal_reminder_day'] != '' && !empty($dao->reminder_date)) {
             // we should trust reminder date exists means no notification sent recently
             $reminderDate = CRM_Member_BAO_MembershipType::calcReminderDate($dao->end_date, $params['renewal_reminder_day']);
@@ -505,7 +548,7 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
               if (empty($lastRemindSentDate)) {
                 CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
               }
-              else if ($lastRemindSentDate && (CRM_REQUEST_TIME - strtotime($lastRemindSentDate)) / 86400 > 30) {
+              elseif ($lastRemindSentDate && (CRM_REQUEST_TIME - strtotime($lastRemindSentDate)) / 86400 > 30) {
                 CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id, 'reminder_date', $reminderDate);
               }
             }
@@ -518,9 +561,10 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
       }
       $session = CRM_Core_Session::singleton();
       if ($buttonName == $this->getButtonName('upload', 'new')) {
-        $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/member/membershipType',
-            'action=add&reset=1'
-          ));
+        $session->replaceUserContext(CRM_Utils_System::url(
+          'civicrm/admin/member/membershipType',
+          'action=add&reset=1'
+        ));
       }
     }
   }
@@ -580,4 +624,3 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
     }
   }
 }
-

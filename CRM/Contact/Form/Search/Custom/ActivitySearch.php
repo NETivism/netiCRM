@@ -38,7 +38,8 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
 
   public $_columns;
   public $_groupId;
-  protected $_formValues; public function __construct(&$formValues) {
+  protected $_formValues;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -60,7 +61,8 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
       ts('Assignee') => 'assignee',
     ];
 
-    $this->_groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+    $this->_groupId = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
       'activity_status',
       'id',
       'name'
@@ -68,8 +70,13 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
 
     //Add custom fields to columns array for inclusion in export
 
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Activity', $form, NULL,
-      NULL, '', NULL
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+      'Activity',
+      $form,
+      NULL,
+      NULL,
+      '',
+      NULL
     );
 
 
@@ -94,7 +101,8 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     $form->add('select', 'contact_type', ts('Find...'), CRM_Core_SelectValues::contactType());
 
     // Text box for Activity Subject
-    $form->add('text',
+    $form->add(
+      'text',
       'activity_subject',
       ts('Activity Subject')
     );
@@ -102,7 +110,10 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     // Select box for Activity Type
     $activityType = ['' => ' - select activity - '] + CRM_Core_PseudoConstant::activityType();
 
-    $form->add('select', 'activity_type_id', ts('Activity Type'),
+    $form->add(
+      'select',
+      'activity_type_id',
+      ts('Activity Type'),
       $activityType,
       FALSE
     );
@@ -110,7 +121,10 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     // textbox for Activity Status
     $activityStatus = ['' => ' - select status - '] + CRM_Core_PseudoConstant::activityStatus();
 
-    $form->add('select', 'activity_status_id', ts('Activity Status'),
+    $form->add(
+      'select',
+      'activity_status_id',
+      ts('Activity Status'),
       $activityStatus,
       FALSE
     );
@@ -142,8 +156,12 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
   /**
    * Construct the search query
    */
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE, $onlyIDs = FALSE
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
+    $includeContactIDs = FALSE,
+    $onlyIDs = FALSE
   ) {
 
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
@@ -299,7 +317,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     if ($includeContactIDs) {
       $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
-        list($id, $additionalID) = CRM_Core_Form::cbExtract($id); 
+        list($id, $additionalID) = CRM_Core_Form::cbExtract($id);
         if ($value && !empty($id)) {
           $contactIDs[] = $id;
         }
@@ -314,13 +332,14 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /* 
+  /*
      * Functions below generally don't need to be modified
      */
   public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
@@ -338,4 +357,3 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     return NULL;
   }
 }
-

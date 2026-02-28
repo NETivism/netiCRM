@@ -134,7 +134,8 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     $do->fetch();
     $mailing_id = $do->mailing_id;
 
-    $do->query("
+    $do->query(
+      "
             SELECT      $mg.entity_table as entity_table,
                         $mg.entity_id as entity_id,
                         $mg.group_type as group_type
@@ -149,7 +150,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
             ORDER BY    $mg.id ASC"
     );
 
-    /* Make a list of groups and a list of prior mailings that received 
+    /* Make a list of groups and a list of prior mailings that received
          * this mailing */
 
 
@@ -203,7 +204,7 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     $base_group_ids = array_keys($base_groups);
 
     // If you doesn't choose any group as receiver and send test email. You will see this message when unsubscribing mailing group.
-    if ( empty($group_ids) && empty($base_group_ids) ) {
+    if (empty($group_ids) && empty($base_group_ids)) {
       CRM_Core_Error::fatal(ts('This mailing event doesn\'t include any group.'));
     }
 
@@ -408,7 +409,9 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
    * @access public
    * @static
    */
-  public static function getTotalCount($mailing_id, $job_id = NULL,
+  public static function getTotalCount(
+    $mailing_id,
+    $job_id = NULL,
     $is_distinct = FALSE
   ) {
     $dao = new CRM_Core_DAO();
@@ -462,8 +465,13 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
    * @access public
    * @static
    */
-  public static function &getRows($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $is_distinct = FALSE,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -525,7 +533,8 @@ class CRM_Mailing_Event_BAO_Unsubscribe extends CRM_Mailing_Event_DAO_Unsubscrib
     $results = [];
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
@@ -562,4 +571,3 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
     return [$displayName, $email];
   }
 }
-

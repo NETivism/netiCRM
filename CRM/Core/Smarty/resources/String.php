@@ -46,13 +46,16 @@ function civicrm_smarty_resource_string_get_secure($tpl_name, &$smarty_obj) {
   return TRUE;
 }
 
-function civicrm_smarty_resource_string_get_trusted($tpl_name, &$smarty_obj) {}
+function civicrm_smarty_resource_string_get_trusted($tpl_name, &$smarty_obj) {
+}
 
 function civicrm_smarty_register_string_resource(&$template = NULL) {
   if (empty($template)) {
     $template = &CRM_Core_Smarty::singleton();
   }
-  $template->register_resource('string', [
+  $template->register_resource(
+    'string',
+    [
       'civicrm_smarty_resource_string_get_template',
       'civicrm_smarty_resource_string_get_timestamp',
       'civicrm_smarty_resource_string_get_secure',
@@ -60,4 +63,3 @@ function civicrm_smarty_register_string_resource(&$template = NULL) {
     ]
   );
 }
-

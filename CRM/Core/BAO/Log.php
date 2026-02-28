@@ -137,7 +137,7 @@ UPDATE civicrm_log
    * Write audit log on specific entity
    *
    * @param int $entityId       entity id that associate the table
-   * @param string $auditType the given string will be auto prepend 'audit.' 
+   * @param string $auditType the given string will be auto prepend 'audit.'
    * @param string $data
    * @return void
    */
@@ -172,4 +172,3 @@ UPDATE civicrm_log
     return CRM_Core_DAO::singleValueQuery($query);
   }
 }
-

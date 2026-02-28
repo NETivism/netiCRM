@@ -19,7 +19,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  public CONST CHARSET = 'iso-8859-1';
+  public const CHARSET = 'iso-8859-1';
 
   protected $_mode = NULL;
 
@@ -170,13 +170,19 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
 
     $url = ($component == 'event') ? 'civicrm/event/register' : 'civicrm/contribute/transact';
     $cancel = ($component == 'event') ? '_qf_Register_display' : '_qf_Main_display';
-    $returnURL = CRM_Utils_System::url($url,
+    $returnURL = CRM_Utils_System::url(
+      $url,
       "_qf_ThankYou_display=1&qfKey={$params['qfKey']}",
-      TRUE, NULL, FALSE
+      TRUE,
+      NULL,
+      FALSE
     );
-    $cancelURL = CRM_Utils_System::url($url,
+    $cancelURL = CRM_Utils_System::url(
+      $url,
       "$cancel=1&cancel=1&qfKey={$params['qfKey']}",
-      TRUE, NULL, FALSE
+      TRUE,
+      NULL,
+      FALSE
     );
 
     // ensure that the returnURL is absolute.
@@ -274,4 +280,3 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
     CRM_Utils_System::redirect($clickandpledgeURL);
   }
 }
-

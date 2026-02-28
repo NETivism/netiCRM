@@ -59,16 +59,19 @@ class CRM_Campaign_Form_Task_Print extends CRM_Campaign_Form_Task {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
-    $selector = new CRM_Campaign_Selector_Search($queryParams,
+    $selector = new CRM_Campaign_Selector_Search(
+      $queryParams,
       $this->_action,
       $this->_componentClause
     );
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       NULL,
       $sortID,
       CRM_Core_Action::VIEW,
@@ -92,7 +95,8 @@ class CRM_Campaign_Form_Task_Print extends CRM_Campaign_Form_Task {
     //
     // just need to add a javacript to popup the window for printing
     //
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Print Respondents'),
           'js' => ['onclick' => 'window.print()'],
@@ -116,4 +120,3 @@ class CRM_Campaign_Form_Task_Print extends CRM_Campaign_Form_Task {
     // redirect to the main search page after printing is over
   }
 }
-

@@ -37,7 +37,8 @@
 class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
-  protected $_formValues; public function __construct(&$formValues) {
+  protected $_formValues;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -54,13 +55,15 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
     /**
      * Define the search form fields here
      */
-    $form->add('text',
+    $form->add(
+      'text',
       'min_amount',
       ts('Aggregate Total Between $')
     );
     $form->addRule('min_amount', ts('Please enter a valid amount (numbers and decimal point only).'), 'money');
 
-    $form->add('text',
+    $form->add(
+      'text',
       'max_amount',
       ts('...and $')
     );
@@ -83,7 +86,7 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign( 'elements', [ 'min_amount', 'max_amount', 'start_date', 'end_date','top_contributors','contribution_recurring'] );
+    $form->assign('elements', [ 'min_amount', 'max_amount', 'start_date', 'end_date','top_contributors','contribution_recurring']);
   }
 
   /**
@@ -96,8 +99,12 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
   /**
    * Construct the search query
    */
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE, $onlyIDs = FALSE
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
+    $includeContactIDs = FALSE,
+    $onlyIDs = FALSE
   ) {
 
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
@@ -116,9 +123,10 @@ count(contrib.id) AS donation_count
 
     $where = $this->where($includeContactIDs);
 
-    if($this->_formValues['contribution_recurring'] == 'recur'){
+    if ($this->_formValues['contribution_recurring'] == 'recur') {
       $where .= ' AND contrib.contribution_recur_id IS NOT NULL';
-    }else if($this->_formValues['contribution_recurring'] == 'not_recur'){
+    }
+    elseif ($this->_formValues['contribution_recurring'] == 'not_recur') {
       $where .= ' AND contrib.contribution_recur_id IS NULL';
     }
 
@@ -136,7 +144,7 @@ $having
 ";
     //for only contact ids ignore order.
     if (!$onlyIDs) {
-      if(!empty($this->_formValues['top_contributors'])){
+      if (!empty($this->_formValues['top_contributors'])) {
         $top_amount = $this->_formValues['top_contributors'];
         $sql .= "ORDER BY donation_amount DESC LIMIT $top_amount ";
         $sql = "SELECT * FROM ($sql) orig ";
@@ -155,7 +163,7 @@ $having
       }
     }
     else {
-      if(!empty($this->_formValues['top_contributors'])){
+      if (!empty($this->_formValues['top_contributors'])) {
         $top_amount = $this->_formValues['top_contributors'];
         $sql .= "ORDER BY sum(contrib.total_amount) DESC LIMIT $top_amount ";
       }
@@ -231,13 +239,14 @@ civicrm_contact AS contact_a
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /* 
+  /*
      * Functions below generally don't need to be modified
      */
   public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;

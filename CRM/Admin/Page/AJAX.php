@@ -72,7 +72,7 @@ class CRM_Admin_Page_AJAX {
     else {
       switch ($recordBAO) {
         case 'CRM_Core_BAO_UFGroup':
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $method = 'getUFJoinRecord';
           $result = [$recordBAO, $method];
           $ufJoin = call_user_func_array(($result), [$recordID, TRUE]);
@@ -85,7 +85,7 @@ class CRM_Admin_Page_AJAX {
           break;
 
         case 'CRM_Price_BAO_Set':
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $usedBy = CRM_Price_BAO_Set::getUsedBy($recordID);
           $priceSet = CRM_Price_BAO_Set::getTitle($recordID);
 
@@ -203,7 +203,7 @@ class CRM_Admin_Page_AJAX {
           break;
 
         case 'CRM_Core_BAO_OptionValue':
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $label = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $recordID, 'label');
           $status = ts('Are you sure you want to disable this \'%1\' record ?', [1 => $label]);
           break;
@@ -224,10 +224,10 @@ class CRM_Admin_Page_AJAX {
           }
           if (empty($processor_id)) {
             $ccid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution cc WHERE cc.contribution_recur_id = %1", $params);
-            $contrib = new CRM_Contribute_DAO_Contribution( );
+            $contrib = new CRM_Contribute_DAO_Contribution();
             $contrib->id = $ccid;
 
-            if($contrib->find(true)){
+            if ($contrib->find(TRUE)) {
               $processor_id = $contrib->payment_processor_id;
               $is_test = $contrib->is_test;
             }
@@ -235,11 +235,11 @@ class CRM_Admin_Page_AJAX {
 
           if (!empty($processor_id)) {
             $pp = CRM_Core_BAO_PaymentProcessor::getPayment($processor_id, $is_test);
-            if($pp['class_name']){
-              $classname = 'CRM_Core_'.$pp['class_name']; 
+            if ($pp['class_name']) {
+              $classname = 'CRM_Core_'.$pp['class_name'];
               $payment = new $classname($is_test, $processor_id);
-              if(method_exists($payment, 'cancelRecuringMessage')){
-                $status = $payment->cancelRecuringMessage($recordID);  
+              if (method_exists($payment, 'cancelRecuringMessage')) {
+                $status = $payment->cancelRecuringMessage($recordID);
               }
             }
           }
@@ -368,4 +368,3 @@ class CRM_Admin_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 }
-

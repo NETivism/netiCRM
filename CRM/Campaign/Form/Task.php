@@ -111,7 +111,12 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
         $sortOrder = $this->get(CRM_Utils_Sort::SORT_ORDER);
       }
 
-      $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
+      $query = new CRM_Contact_BAO_Query(
+        $queryParams,
+        NULL,
+        NULL,
+        FALSE,
+        FALSE,
         CRM_Contact_BAO_Query::MODE_CAMPAIGN
       );
       $result = $query->searchQuery(0, 0, $sortOrder);
@@ -144,9 +149,10 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
       $session->replaceUserContext(CRM_Utils_System::url('civicrm/survey/search', $urlParams));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
-          $urlParams
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        "civicrm/contact/search/$searchFormName",
+        $urlParams
+      ));
     }
   }
 
@@ -168,8 +174,9 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -181,4 +188,3 @@ class CRM_Campaign_Form_Task extends CRM_Core_Form {
     );
   }
 }
-

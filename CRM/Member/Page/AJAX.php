@@ -45,12 +45,14 @@ class CRM_Member_Page_AJAX {
 
     $memType = CRM_Utils_Type::escape($_POST['mtype'], 'Integer');
 
-    $contributionType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+    $contributionType = CRM_Core_DAO::getFieldValue(
+      'CRM_Member_DAO_MembershipType',
       $memType,
       'contribution_type_id'
     );
 
-    $totalAmount = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+    $totalAmount = CRM_Core_DAO::getFieldValue(
+      'CRM_Member_DAO_MembershipType',
       $memType,
       'minimum_fee'
     );
@@ -67,4 +69,3 @@ class CRM_Member_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 }
-

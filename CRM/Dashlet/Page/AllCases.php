@@ -52,7 +52,7 @@ class CRM_Dashlet_Page_AllCases extends CRM_Core_Page {
 
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-       return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
 
 
@@ -66,4 +66,3 @@ class CRM_Dashlet_Page_AllCases extends CRM_Core_Page {
     return parent::run();
   }
 }
-

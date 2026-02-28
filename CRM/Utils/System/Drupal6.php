@@ -29,7 +29,7 @@ class CRM_Utils_System_Drupal6 {
     // explicitly setting error reporting, since we cannot handle drupal related notices
     // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
     // causes grief with debugging scripts
-		global $user;
+    global $user;
     if (empty($user)) {
       if ($throwError) {
         throw new Exception('Sorry, could not load drupal bootstrap.');
@@ -38,7 +38,7 @@ class CRM_Utils_System_Drupal6 {
     }
 
     // we have user to load
-		if (!empty($params)) {
+    if (!empty($params)) {
       $config = CRM_Core_Config::singleton();
       $version = $config->userSystem->version;
       $uid = CRM_Utils_Array::value('uid', $params);
@@ -125,12 +125,14 @@ class CRM_Utils_System_Drupal6 {
       $dbName = CRM_Utils_Array::value(0, $row);
       $dbEmail = CRM_Utils_Array::value(1, $row);
       if (strtolower($dbName) == strtolower($name)) {
-        $errors['cms_name'] = ts('The username %1 is already taken. Please select another username.',
+        $errors['cms_name'] = ts(
+          'The username %1 is already taken. Please select another username.',
           [1 => $name]
         );
       }
       if (strtolower($dbEmail) == strtolower($email)) {
-        $errors[$emailName] = ts('This email %1 is already registered. Please select another email.',
+        $errors[$emailName] = ts(
+          'This email %1 is already registered. Please select another email.',
           [1 => $email]
         );
       }
@@ -186,7 +188,7 @@ class CRM_Utils_System_Drupal6 {
 
   /**
    *  Change user name in host CMS
-   *  
+   *
    *  @param integer $ufID User ID in CMS
    *  @param string $ufName User name
    */

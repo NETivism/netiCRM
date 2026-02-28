@@ -38,7 +38,8 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
 
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/../../CiviTest/truncate-option.xml'
       )
@@ -46,7 +47,8 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
 
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_17.xml'
       )
@@ -55,7 +57,8 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
     //  Insert a row in civicrm_option_group creating
     //  an activity_status option group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/dataset/option_group_activity.xml'
       )
@@ -64,7 +67,8 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
     //  Insert rows in civicrm_option_value defining activity status
     //  values of 'Scheduled', 'Completed', 'Cancelled'
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/option_value_activity.xml'
       )
@@ -73,7 +77,8 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
     //  Insert rows in civicrm_activity creating activities 4 and
     //  13
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/activity_4_13.xml'
       )
@@ -103,20 +108,28 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
     //  Get activities associated with contact 17
     $params = ['contact_id' => 17];
     $result = civicrm_activity_contact_get($params);
-    $this->assertEquals(0, $result['is_error'],
+    $this->assertEquals(
+      0,
+      $result['is_error'],
       "Error message: " . CRM_Utils_Array::value('error_message', $result)
     );
-    $this->assertEquals(2, count($result['result']),
+    $this->assertEquals(
+      2,
+      count($result['result']),
       'In line ' . __LINE__
     );
-    $this->assertEquals(1, $result['result'][4]['activity_type_id'],
+    $this->assertEquals(
+      1,
+      $result['result'][4]['activity_type_id'],
       'In line ' . __LINE__
     );
-    $this->assertEquals('Test activity type',
+    $this->assertEquals(
+      'Test activity type',
       $result['result'][4]['activity_name'],
       'In line ' . __LINE__
     );
-    $this->assertEquals('Test activity type',
+    $this->assertEquals(
+      'Test activity type',
       $result['result'][13]['activity_name'],
       'In line ' . __LINE__
     );
@@ -128,7 +141,9 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   public function testActivityContactGetEmpty() {
     $params = [];
     $result = civicrm_activity_contact_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -139,7 +154,9 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   public function testActivitiesContactGetWithInvalidParameter() {
     $params = NULL;
     $result = civicrm_activity_contact_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -150,19 +167,25 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
   public function testActivitiesContactGetWithInvalidContactId() {
     $params = ['contact_id' => NULL];
     $result = civicrm_activity_contact_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
 
     $params = ['contact_id' => 'contact'];
     $result = civicrm_activity_contact_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
 
     $params = ['contact_id' => 2.4];
     $result = civicrm_activity_contact_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -182,10 +205,10 @@ class api_v2_ActivityContactTest extends CiviUnitTestCase {
     $params  = ['contact_id' => $contact['contact_id']];
     $result  = civicrm_activity_contact_get($params);
     $this->assertEquals($result['is_error'], 0);
-    $this->assertEquals($result['result'],
+    $this->assertEquals(
+      $result['result'],
       '0 activity record matching input params'
     );
     $this->contactDelete($contact['contact_id']);
   }
 }
-

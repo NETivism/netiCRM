@@ -2,7 +2,8 @@
 require_once 'api/v2/Group.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_GroupTest extends CiviUnitTestCase {
-  protected $_groupID; public function get_info() {
+  protected $_groupID;
+  public function get_info() {
     return [
       'name' => 'Group Get',
       'description' => 'Test all Group Get API methods.',
@@ -129,4 +130,3 @@ class api_v2_GroupTest extends CiviUnitTestCase {
     $this->assertEquals($group['error_message'], 'Required parameter missing');
   }
 }
-

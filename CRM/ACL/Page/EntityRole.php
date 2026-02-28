@@ -111,20 +111,29 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // set breadcrumb to append to admin/access
     $breadCrumb = [['title' => ts('Access Control'),
-        'url' => CRM_Utils_System::url('civicrm/admin/access',
+        'url' => CRM_Utils_System::url(
+          'civicrm/admin/access',
           'reset=1'
         ),
       ]];
@@ -186,7 +195,9 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::DISABLE;
       }
 
-      $entityRoles[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $entityRoles[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $dao->id]
       );
     }
@@ -220,4 +231,3 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
     return 'civicrm/acl/entityrole';
   }
 }
-

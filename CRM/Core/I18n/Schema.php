@@ -260,7 +260,8 @@ class CRM_Core_I18n_Schema {
       // find the latest schema structure older than (or equal to) $version
       do {
         $latest = array_pop($schemas);
-      } while (version_compare($latest, $version, '>'));
+      }
+      while (version_compare($latest, $version, '>'));
       $latest = str_replace('.', '_', $latest);
 
       $class = "CRM_Core_I18n_SchemaStructure_{$latest}";
@@ -484,4 +485,3 @@ class CRM_Core_I18n_Schema {
     return "CREATE OR REPLACE VIEW {$table}_{$locale} AS SELECT " . CRM_Utils_Array::implode(', ', $cols) . " FROM {$table}";
   }
 }
-

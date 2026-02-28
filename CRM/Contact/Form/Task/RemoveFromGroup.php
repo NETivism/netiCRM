@@ -109,4 +109,3 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

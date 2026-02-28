@@ -49,7 +49,8 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
   public $_groupBy;
   public $_absoluteUrl;
   protected $_emailField = FALSE;
-  protected $_customGroupExtends = ['Activity']; public function __construct() {
+  protected $_customGroupExtends = ['Activity'];
+  public function __construct() {
     $config = CRM_Core_Config::singleton();
     $campaignEnabled = in_array("CiviCampaign", $config->enableComponents);
     $this->_columns = [
@@ -333,7 +334,8 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -400,7 +402,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         CRM_Contact_BAO_Contact_Permission::cache( $contactID );
         $clauses = array();
         foreach( $tableAlias as $k => $alias ) {
-            $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON ( {$alias}.id = aclContactCache_{$k}.contact_id OR {$alias}.id IS NULL ) AND aclContactCache_{$k}.user_id = $contactID ";  
+            $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON ( {$alias}.id = aclContactCache_{$k}.contact_id OR {$alias}.id IS NULL ) AND aclContactCache_{$k}.user_id = $contactID ";
         }
 
         $this->_aclFrom  = CRM_Utils_Array::implode(" ", $clauses );
@@ -433,7 +435,8 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_contact_source', $row)) {
         if ($value = $row['civicrm_contact_source_contact_id']) {
           if ($viewLinks) {
-            $url = CRM_Utils_System::url("civicrm/contact/view",
+            $url = CRM_Utils_System::url(
+              "civicrm/contact/view",
               'reset=1&cid=' . $value,
               $this->_absoluteUrl
             );
@@ -488,14 +491,16 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
           if ($viewLinks) {
             // case activities get a special view link
             if ($rows[$rowNum]['civicrm_case_activity_case_id']) {
-              $url = CRM_Utils_System::url("civicrm/case/activity/view",
+              $url = CRM_Utils_System::url(
+                "civicrm/case/activity/view",
                 'reset=1&cid=' . $rows[$rowNum]['civicrm_contact_source_contact_id'] .
                 '&aid=' . $rows[$rowNum]['civicrm_activity_id'] . '&caseID=' . $rows[$rowNum]['civicrm_case_activity_case_id'],
                 $this->_absoluteUrl
               );
             }
             else {
-              $url = CRM_Utils_System::url("civicrm/contact/view/activity",
+              $url = CRM_Utils_System::url(
+                "civicrm/contact/view/activity",
                 'action=view&reset=1&cid=' . $rows[$rowNum]['civicrm_contact_source_contact_id'] .
                 '&id=' . $rows[$rowNum]['civicrm_activity_id'] . '&atype=' . $value,
                 $this->_absoluteUrl
@@ -521,4 +526,3 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
   }
 }
-

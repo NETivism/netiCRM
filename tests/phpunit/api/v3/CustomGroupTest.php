@@ -16,7 +16,8 @@ class api_v3_CustomGroupTest extends CiviUnitTestCase {
   protected $_apiversion;
   protected $_entity;
   protected $_params;
-  public $DBResetRequired = TRUE; public function get_info() {
+  public $DBResetRequired = TRUE;
+  public function get_info() {
     return [
       'name' => 'Custom Group Create',
       'description' => 'Test all Custom Group Create API methods.',
@@ -59,8 +60,10 @@ class api_v3_CustomGroupTest extends CiviUnitTestCase {
     ];
     $customGroup = civicrm_api('custom_group', 'create', $params);
     $this->assertEquals($customGroup['is_error'], 1, 'In line ' . __LINE__);
-    $this->assertEquals($customGroup['error_message'],
-      'Mandatory key(s) missing from params array: title, extends', 'In line ' . __LINE__
+    $this->assertEquals(
+      $customGroup['error_message'],
+      'Mandatory key(s) missing from params array: title, extends',
+      'In line ' . __LINE__
     );
   }
 
@@ -409,4 +412,3 @@ class api_v3_CustomGroupTest extends CiviUnitTestCase {
     }
   }
 }
-

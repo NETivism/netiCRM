@@ -35,7 +35,8 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
    * Assume empty database with just civicrm_data
    */
   protected $_individualId;
-  protected $_pledge; public function setUp() {
+  protected $_pledge;
+  public function setUp() {
     parent::setUp();
 
     $this->_individualId = $this->individualCreate();
@@ -228,4 +229,3 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $this->assertEquals($pledge['is_error'], 0);
   }
 }
-

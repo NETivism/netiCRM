@@ -59,7 +59,8 @@ class CRM_Member_Form_Task_Print extends CRM_Member_Form_Task {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -83,7 +84,8 @@ class CRM_Member_Form_Task_Print extends CRM_Member_Form_Task {
     //
     // just need to add a javacript to popup the window for printing
     //
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Print Members'),
           'js' => ['onclick' => 'window.print()'],
@@ -107,4 +109,3 @@ class CRM_Member_Form_Task_Print extends CRM_Member_Form_Task {
     // redirect to the main search page after printing is over
   }
 }
-

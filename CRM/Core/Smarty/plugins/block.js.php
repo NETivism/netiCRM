@@ -44,7 +44,7 @@
  * @param string $text    {js} block contents from the template
  * @param object $smarty  the Smarty object
  *
- * @return string  
+ * @return string
  */
 function smarty_block_js($params, $text, &$smarty) {
   $params['smarty_block_js'] = TRUE;

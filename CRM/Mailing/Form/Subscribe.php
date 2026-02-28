@@ -39,8 +39,13 @@ class CRM_Mailing_Form_Subscribe extends CRM_Core_Form {
   protected $_groupID = NULL;
   public function preProcess() {
     parent::preProcess();
-    $this->_groupID = CRM_Utils_Request::retrieve('gid', 'Integer', $this,
-      FALSE, NULL, 'REQUEST'
+    $this->_groupID = CRM_Utils_Request::retrieve(
+      'gid',
+      'Integer',
+      $this,
+      FALSE,
+      NULL,
+      'REQUEST'
     );
 
     // ensure that there is a destination, if not set the destination to the
@@ -68,7 +73,7 @@ SELECT   title, description
         CRM_Utils_System::setTitle(ts('Subscribe to Mailing List - %1', [1 => $dao->title]));
       }
       else {
-         return CRM_Core_Error::statusBounce("The specified group is not configured for this action OR The group doesn't exist.");
+        return CRM_Core_Error::statusBounce("The specified group is not configured for this action OR The group doesn't exist.");
       }
 
       $this->assign('single', TRUE);
@@ -88,7 +93,7 @@ SELECT   title, description
 
   public function buildQuickForm() {
     // add the email address
-    $this->add('text', 'email', ts('Email'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email' ), TRUE);
+    $this->add('text', 'email', ts('Email'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'), TRUE);
     $this->addRule('email', ts("Please enter a valid email address (e.g. 'yourname@example.com')."), 'email');
     $this->add('text', 'last_name', ts('Last Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'last_name'), TRUE);
     $this->add('text', 'first_name', ts('First Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'first_name'), TRUE);
@@ -118,11 +123,11 @@ ORDER BY title";
         $rows[] = $row;
       }
       if (empty($rows)) {
-         return CRM_Core_Error::statusBounce(ts('There are no public mailing list groups to display.'));
+        return CRM_Core_Error::statusBounce(ts('There are no public mailing list groups to display.'));
       }
       if (count($rows) == 1) {
         $row = reset($rows);
-        $default[CRM_Core_Form::CB_PREFIX.$row['id']] = 1; 
+        $default[CRM_Core_Form::CB_PREFIX.$row['id']] = 1;
         $this->setDefaults($default);
       }
       $this->assign('rows', $rows);
@@ -147,7 +152,8 @@ ORDER BY title";
     }
 
     $this->assign('browserPrint', TRUE);
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Subscribe'),
@@ -222,7 +228,7 @@ ORDER BY title";
       if (!civicrm_error($contact)) {
         $contactId = $contact['id'];
       }
-      else{
+      else {
         $contactId = NULL;
       }
     }
@@ -230,7 +236,8 @@ ORDER BY title";
     $config = CRM_Core_Config::singleton();
     if ($config->profileDoubleOptIn) {
       CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($groups, $params, $contactId);
-    } else {
+    }
+    else {
       foreach ($groups as $groupID) {
         $se = CRM_Mailing_Event_BAO_Subscribe::subscribe($groupID, $params['email'], $contactId);
         $confirm = CRM_Mailing_Event_BAO_Confirm::confirm($contactId, $se->id, $se->hash);
@@ -239,4 +246,3 @@ ORDER BY title";
     CRM_Core_Session::setStatus(ts('Thank you. Your information has been saved.'));
   }
 }
-

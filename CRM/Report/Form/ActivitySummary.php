@@ -50,7 +50,8 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
   public $_groupBy;
   public $_outputMode;
   protected $_emailField = FALSE;
-  protected $_phoneField = FALSE; public function __construct() {
+  protected $_phoneField = FALSE;
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -329,7 +330,8 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -374,9 +376,10 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
               ) {
 
                 $append = "YEAR({$field['dbAlias']}),";
-                if (in_array(strtolower($this->_params['group_bys_freq'][$fieldName]),
-                    ['year']
-                  )) {
+                if (in_array(
+                  strtolower($this->_params['group_bys_freq'][$fieldName]),
+                  ['year']
+                )) {
                   $append = '';
                 }
                 $this->_groupBy[] = "$append {$this->_params['group_bys_freq'][$fieldName]}({$field['dbAlias']})";
@@ -474,7 +477,8 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
             }
           }
           else {
-            $url = CRM_Utils_System::url('civicrm/contact/view',
+            $url = CRM_Utils_System::url(
+              'civicrm/contact/view',
               'reset=1&cid=' . $value
             );
 
@@ -503,4 +507,3 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     }
   }
 }
-

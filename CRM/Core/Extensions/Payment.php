@@ -151,4 +151,3 @@ class CRM_Core_Extensions_Payment {
     return $ppt;
   }
 }
-

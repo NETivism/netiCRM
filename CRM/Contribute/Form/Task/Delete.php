@@ -60,7 +60,7 @@ class CRM_Contribute_Form_Task_Delete extends CRM_Contribute_Form_Task {
   public function preProcess() {
     //check for delete
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', CRM_Core_Action::DELETE)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
     parent::preProcess();
   }
@@ -98,4 +98,3 @@ class CRM_Contribute_Form_Task_Delete extends CRM_Contribute_Form_Task {
     CRM_Core_Session::setStatus($status);
   }
 }
-

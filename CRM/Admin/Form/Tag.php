@@ -57,7 +57,8 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
         return TRUE;
       }
       else {
-        $this->addButtons([
+        $this->addButtons(
+          [
             ['type' => 'next',
               'name' => ts('Delete'),
               'isDefault' => TRUE,
@@ -94,12 +95,19 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
 
       $this->applyFilter('__ALL__', 'trim');
 
-      $this->add('text', 'name', ts('Name'),
-        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Tag', 'name'), TRUE
+      $this->add(
+        'text',
+        'name',
+        ts('Name'),
+        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Tag', 'name'),
+        TRUE
       );
       $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_Tag', $this->_id]);
 
-      $this->add('text', 'description', ts('Description'),
+      $this->add(
+        'text',
+        'description',
+        ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Tag', 'description')
       );
 
@@ -109,7 +117,10 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
       $isReserved = $this->add('checkbox', 'is_reserved', ts('Reserved?'));
 
 
-      $usedFor = $this->add('select', 'used_for', ts('Used For'),
+      $usedFor = $this->add(
+        'select',
+        'used_for',
+        ts('Used For'),
         CRM_Core_OptionGroup::values('tag_used_for')
       );
       $usedFor->setMultiple(TRUE);
@@ -178,4 +189,3 @@ class CRM_Admin_Form_Tag extends CRM_Admin_Form {
   }
   //end of function
 }
-

@@ -152,7 +152,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
           $action -= CRM_Core_Action::DISABLE;
           $action -= CRM_Core_Action::ADD;
         }
-        $rows[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $rows[$id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $id,
             'key' => $obj->key,
           ]
@@ -170,7 +172,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::DISABLE;
         $action -= CRM_Core_Action::ENABLE;
         $action -= CRM_Core_Action::DELETE;
-        $rowsUpl[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $rowsUpl[$id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $id,
             'key' => $obj->key,
           ]
@@ -219,4 +223,3 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
     return 'reset=1&action=browse';
   }
 }
-

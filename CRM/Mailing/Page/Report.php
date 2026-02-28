@@ -101,7 +101,8 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
       $atype = CRM_Utils_Request::retrieve('atype', 'Positive', $this);
       $aid = CRM_Utils_Request::retrieve('aid', 'Positive', $this);
 
-      $backUrl = CRM_Utils_System::url('civicrm/activity/view',
+      $backUrl = CRM_Utils_System::url(
+        'civicrm/activity/view',
         "atype={$atype}&action=view&reset=1&id={$aid}&cid={$cid}&context=activity"
       );
       $backUrlTitle = ts('Back to Activity');
@@ -114,11 +115,11 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
     $this->assign('backUrlTitle', $backUrlTitle);
 
     $this->assign('report', $report);
-    CRM_Utils_System::setTitle(ts('CiviMail Report: %1',
-        [1 => $report['mailing']['name']]
-      ));
+    CRM_Utils_System::setTitle(ts(
+      'CiviMail Report: %1',
+      [1 => $report['mailing']['name']]
+    ));
 
     return parent::run();
   }
 }
-

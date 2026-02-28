@@ -40,4 +40,3 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
     parent::buildQuickForm($check);
   }
 }
-

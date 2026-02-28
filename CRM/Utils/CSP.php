@@ -92,7 +92,7 @@ class CRM_Utils_CSP {
   public function __construct($encPolicy) {
     $rawDirectives = explode(";", $encPolicy);
 
-    foreach($rawDirectives as $rawDirective) {
+    foreach ($rawDirectives as $rawDirective) {
       $parts = array_map('trim', explode(" ", trim($rawDirective), 2));
 
       $name = $this->parseName($parts[0]);
@@ -123,7 +123,7 @@ class CRM_Utils_CSP {
       return '';
     }
     $policies = [];
-    foreach($this->policies as $directive => $sources) {
+    foreach ($this->policies as $directive => $sources) {
       array_unshift($sources, $directive);
       $policies[] = implode(' ', $sources);
     }
@@ -158,13 +158,13 @@ class CRM_Utils_CSP {
     }
 
     $sources = [];
-    foreach($sl as $sle) {
+    foreach ($sl as $sle) {
       $val = strtolower(trim($sle));
       if (in_array($val, self::SOURCES)) {
         $sources[] = $val;
       }
       else {
-        switch (true) {
+        switch (TRUE) {
           case strpos($val, self::SOURCES['VAL_NONCE_PRFX']) === 0:
           case strpos($val, self::SOURCES['VAL_HASH_SHA256']) === 0:
           case strpos($val, self::SOURCES['VAL_HASH_SHA384']) === 0:

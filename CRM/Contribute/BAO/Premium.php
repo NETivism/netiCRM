@@ -155,7 +155,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         $combinationData['stock_status'] = FALSE;
         $combinationData['out_of_stock'] = FALSE;
         $combinationData['out_of_stock_products'] = [];
-        foreach($combinationData['products'] as $productInfo) {
+        foreach ($combinationData['products'] as $productInfo) {
           if (!empty($productInfo['stock_status']) && $productInfo['stock_qty'] > 0) {
             $combinationData['stock_status'] = TRUE;
           }
@@ -438,7 +438,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         self::restockPremiumInventory($contribution['id'], $contribution['reason']);
 
         $restockedContributions[] = $contribution['id'];
-      } catch (Exception $e) {
+      }
+      catch (Exception $e) {
         $errorMessage = "Failed to restock contribution ID {$contribution['id']}: " . $e->getMessage();
         CRM_Core_Error::debug_log_message($errorMessage);
         // Continue processing other contributions
@@ -647,7 +648,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           'quantity' => $quantity,
           'contribution_id' => $contributionId,
         ];
-      } else {
+      }
+      else {
         // Get product details for error message
         $productDetailSql = "SELECT id, name, send_qty, stock_status, stock_qty FROM civicrm_product WHERE id = %1";
         $productDetailDao = CRM_Core_DAO::executeQuery($productDetailSql, [1 => [$dao->product_id, 'Integer']]);
@@ -661,13 +663,14 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
             'stock_qty' => $productDetailDao->stock_qty,
             'required_quantity' => $quantity
           ];
-        } else {
+        }
+        else {
           $invalidProducts[] = [
             'id' => $dao->product_id,
             'name' => 'Unknown Product',
-            'send_qty' => null,
-            'stock_status' => null,
-            'stock_qty' => null,
+            'send_qty' => NULL,
+            'stock_status' => NULL,
+            'stock_qty' => NULL,
             'required_quantity' => $quantity
           ];
         }
@@ -685,7 +688,8 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         $reasons = [];
         if (is_null($product['send_qty'])) {
           $reasons[] = 'send_qty is NULL';
-        } elseif ($product['send_qty'] < $product['required_quantity']) {
+        }
+        elseif ($product['send_qty'] < $product['required_quantity']) {
           $reasons[] = "send_qty ({$product['send_qty']}) < required quantity ({$product['required_quantity']})";
         }
         if ($product['stock_qty'] <= 0) {
@@ -841,7 +845,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
       $details['product_name'] = $details['combination_name'] . ' (' . $details['product_content'] . ')';
     }
     // Handle single product premium
-    else if (!empty($dao->product_id)) {
+    elseif (!empty($dao->product_id)) {
       $productDAO = new CRM_Contribute_DAO_Product();
       $productDAO->id = $dao->product_id;
       if ($productDAO->find(TRUE)) {
@@ -1009,8 +1013,10 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     $remainQty = $product->stock_qty - $product->send_qty;
 
     if ($remainQty < $quantity) {
-      throw new CRM_Core_Exception(ts('Insufficient stock. Available quantity: %1, Requested: %2',
-        [1 => $remainQty, 2 => $quantity]));
+      throw new CRM_Core_Exception(ts(
+        'Insufficient stock. Available quantity: %1, Requested: %2',
+        [1 => $remainQty, 2 => $quantity]
+      ));
     }
 
     $transaction = new CRM_Core_Transaction();
@@ -1039,4 +1045,3 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
     return TRUE;
   }
 }
-

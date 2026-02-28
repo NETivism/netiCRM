@@ -69,7 +69,7 @@ class CRM_Admin_Form extends CRM_Core_Form {
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
-      $baoName::retrieve( $params, $this->_values );
+      $baoName::retrieve($params, $this->_values);
     }
   }
 
@@ -86,7 +86,7 @@ class CRM_Admin_Form extends CRM_Core_Form {
       $this->_values = [];
       $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
-      $baoName::retrieve( $params, $this->_values );
+      $baoName::retrieve($params, $this->_values);
     }
     $defaults = $this->_values;
 
@@ -112,7 +112,8 @@ class CRM_Admin_Form extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -125,7 +126,8 @@ class CRM_Admin_Form extends CRM_Core_Form {
     }
     else {
       $js = ['data' => 'click-once'];
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
@@ -139,4 +141,3 @@ class CRM_Admin_Form extends CRM_Core_Form {
     }
   }
 }
-

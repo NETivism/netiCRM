@@ -402,7 +402,7 @@ WHERE     ct.id = cp.contribution_type_id AND
       'is_active',
       'visibility_id',
       'max_value',
-      'active_on', 
+      'active_on',
       'expire_on',
     ];
     if ($required == TRUE) {
@@ -449,7 +449,7 @@ WHERE price_set_id = %1
       
 
       $inactiveNeeded = FALSE;
-      if(!$isActive) {
+      if (!$isActive) {
         // also get in-active options
         $inactiveNeeded = TRUE;
       }
@@ -586,7 +586,8 @@ WHERE  id = %1";
           $params['amount_priceset_level_radio'] = [];
           $params['amount_priceset_level_radio'][$optionValueId] = $optionLabel;
           if (isset($radioLevel)) {
-            $radioLevel = array_merge($radioLevel,
+            $radioLevel = array_merge(
+              $radioLevel,
               array_keys($params['amount_priceset_level_radio'])
             );
           }
@@ -666,7 +667,7 @@ WHERE  id = %1";
 
     CRM_Utils_Hook::buildAmount('contribution', $form, $feeBlock);
 
-    $hasField = false;
+    $hasField = FALSE;
     foreach ($feeBlock as $field) {
       if (CRM_Utils_Array::value('visibility', $field) == 'public' || $className == 'CRM_Contribute_Form_Contribution') {
         $options = CRM_Utils_Array::value('options', $field);
@@ -675,13 +676,13 @@ WHERE  id = %1";
         }
 
         $element = CRM_Price_BAO_Field::addQuickFormElement($form, 'price_' . $field['id'], $field['id'], FALSE, CRM_Utils_Array::value('is_required', $field, FALSE), NULL, $options);
-        if(!empty($element)){
+        if (!empty($element)) {
           $hasField = TRUE;
         }
 
       }
     }
-    if(!$hasField){
+    if (!$hasField) {
       $status = ts('There are no active field in the price set.');
       $session = CRM_Core_Session::singleton();
       $session->setStatus($status);
@@ -771,7 +772,7 @@ WHERE  id = %1";
     if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
       $domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domain_id) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
     }
     return TRUE;
@@ -835,4 +836,3 @@ WHERE  pset.id = %1 $where";
     return CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
   }
 }
-

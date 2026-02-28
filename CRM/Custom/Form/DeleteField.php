@@ -87,7 +87,8 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Delete Custom Field'),
           'isDefault' => TRUE,
@@ -122,4 +123,3 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
     CRM_Utils_Weight::correctDuplicateWeights('CRM_Core_DAO_CustomField');
   }
 }
-

@@ -74,7 +74,7 @@ function civicrm_api3_participant_create($params) {
 
   $participantBAO = CRM_Event_BAO_Participant::create($params);
  
-  if(empty($params['price_set_id']) && empty($params['id']) && CRM_Utils_Array::value('fee_level', $params)){
+  if (empty($params['price_set_id']) && empty($params['id']) && CRM_Utils_Array::value('fee_level', $params)) {
     _civicrm_api3_participant_createlineitem($params, $participantBAO);
   }
   _civicrm_api3_object_to_array($participantBAO, $participant[$participantBAO->id]);
@@ -85,7 +85,7 @@ function civicrm_api3_participant_create($params) {
 /*
  * Create a default participant line item
  */
-function _civicrm_api3_participant_createlineitem(&$params, $participant){
+function _civicrm_api3_participant_createlineitem(&$params, $participant) {
   $sql = "
 SELECT      ps.id AS setID, pf.id AS priceFieldID, pfv.id AS priceFieldValueID
 FROM  civicrm_price_set_entity cpse
@@ -109,7 +109,7 @@ where ps.id is not null
       'unit_price' => $amount,
       'line_total' => $amount,
       'version' => 3,
-    ]; 
+    ];
     civicrm_api('line_item', 'create', $lineItemparams);
   }
 }
@@ -117,7 +117,7 @@ where ps.id is not null
 
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -141,7 +141,7 @@ function _civicrm_api3_participant_create_spec(&$params) {
  */
 function civicrm_api3_participant_get($params) {
 
-  $options          = _civicrm_api3_get_options_from_params($params, TRUE,'participant','get');
+  $options          = _civicrm_api3_get_options_from_params($params, TRUE, 'participant', 'get');
   $sort             = CRM_Utils_Array::value('sort', $options, NULL);
   $offset           = CRM_Utils_Array::value('offset', $options);
   $rowCount         = CRM_Utils_Array::value('limit', $options);
@@ -153,8 +153,13 @@ function civicrm_api3_participant_get($params) {
     $returnProperties = CRM_Event_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_EVENT);
   }
   $newParams = CRM_Contact_BAO_Query::convertFormValues($inputParams);
-  $query = new CRM_Contact_BAO_Query($newParams, $returnProperties, NULL,
-    FALSE, FALSE, CRM_Contact_BAO_Query::MODE_EVENT
+  $query = new CRM_Contact_BAO_Query(
+    $newParams,
+    $returnProperties,
+    NULL,
+    FALSE,
+    FALSE,
+    CRM_Contact_BAO_Query::MODE_EVENT
   );
   list($select, $from, $where, $having) = $query->query();
 
@@ -177,7 +182,7 @@ function civicrm_api3_participant_get($params) {
 
 /*
  * Adjust Metadata for Get action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -206,4 +211,3 @@ function &civicrm_api3_participant_delete($params) {
     return civicrm_api3_create_error('Error while deleting participant');
   }
 }
-

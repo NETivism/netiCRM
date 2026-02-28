@@ -72,7 +72,9 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->add('text', 'return_path', ts('Return-Path'), $attributes['return_path']);
     $this->addRule('return_path', ts('Return-Path must use a valid email address format.'), 'email');
 
-    $this->add('select', 'protocol',
+    $this->add(
+      'select',
+      'protocol',
       ts('Protocol'),
       ['' => ts('- select -')] + CRM_Core_PseudoConstant::mailProtocol() + ['smtp' => 'SMTP'],
       TRUE
@@ -90,7 +92,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
     $this->add('checkbox', 'is_ssl', ts('Use SSL?'));
     $usedFor = CRM_Core_BAO_MailSettings::$_mailerTypes;
-    foreach($usedFor as $k => $v) {
+    foreach ($usedFor as $k => $v) {
       $usedFor[$k] = ts($v);
     }
     // remove bounce process when exists
@@ -99,7 +101,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
       if ($this->_action & CRM_Core_Action::UPDATE && $this->_id != $bounceExists) {
         unset($usedFor[1]);
       }
-      elseif($this->_action & CRM_Core_Action::ADD ) {
+      elseif ($this->_action & CRM_Core_Action::ADD) {
         unset($usedFor[1]);
       }
     }
@@ -126,7 +128,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
       $mailSettings->id = $this->_id;
       $mailSettings->find(TRUE);
       if ($mailSettings->domain) {
-        foreach($defaults as $eleName => $val) {
+        foreach ($defaults as $eleName => $val) {
           if ($mailSettings->$eleName == $val && $this->_elementIndex[$eleName]) {
             $this->getElement($eleName)->freeze();
           }
@@ -200,4 +202,3 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     }
   }
 }
-

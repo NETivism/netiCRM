@@ -17,7 +17,7 @@ class CRM_Utils_SqlParser {
   private $allowlist;
   private $parser;
   private $errors = [];
-  private $isValid = true;
+  private $isValid = TRUE;
 
   /**
    * Parse and validate query
@@ -36,7 +36,7 @@ class CRM_Utils_SqlParser {
     $this->parser = new Parser($query);
 
     if (!empty($this->parser->errors)) {
-      $this->isValid = false;
+      $this->isValid = FALSE;
       $this->errors = array_merge($this->errors, $this->parser->errors);
       return;
     }
@@ -72,7 +72,7 @@ class CRM_Utils_SqlParser {
    */
   public function getQuery($format = FALSE): ?string {
     if (empty($this->parser->statements)) {
-      return null;
+      return NULL;
     }
 
     $sql = $this->parser->statements[0]->build();
@@ -138,7 +138,7 @@ class CRM_Utils_SqlParser {
       if ($condition instanceof Condition && !$condition->isOperator) {
         if (is_string($condition->expr)) {
           $subquery = $this->extractSubquery($condition->expr);
-          if ($subquery !== null) {
+          if ($subquery !== NULL) {
             $this->collectSubqueryAliases($subquery);
           }
         }
@@ -162,7 +162,8 @@ class CRM_Utils_SqlParser {
           if (!empty($fromClause->expr) && $fromClause->subquery) {
             $this->collectSubqueryAliases($fromClause->expr);
           }
-        } else {
+        }
+        else {
           // Collect table alias (like 'cc' from 'civicrm_contribution cc')
           if (!empty($fromClause->alias)) {
             $this->addToAllowlist('table', $fromClause->alias);
@@ -185,7 +186,8 @@ class CRM_Utils_SqlParser {
         if (!empty($join->expr)) {
           if ($join->expr instanceof Expression && !empty($join->expr->alias)) {
             $this->addToAllowlist('table', $join->expr->alias);
-          } elseif (!empty($join->expr->alias)) {
+          }
+          elseif (!empty($join->expr->alias)) {
             $this->addToAllowlist('table', $join->expr->alias);
           }
         }
@@ -229,7 +231,7 @@ class CRM_Utils_SqlParser {
     }
 
     $value = $this->normalizeIdentifier($value);
-    if (!in_array($value, $this->allowlist[$type], true)) {
+    if (!in_array($value, $this->allowlist[$type], TRUE)) {
       $this->allowlist[$type][] = $value;
     }
   }
@@ -259,7 +261,8 @@ class CRM_Utils_SqlParser {
 
     if ($statement instanceof SelectStatement) {
       $this->validateSelectStatement($statement);
-    } else {
+    }
+    else {
       $this->addError("Statement type '{$statementType}' is not in the allowlist");
     }
   }
@@ -274,7 +277,8 @@ class CRM_Utils_SqlParser {
       foreach ($statement->from as $fromClause) {
         if ($fromClause instanceof Expression) {
           $this->validateExpression($fromClause, 'select');
-        } else {
+        }
+        else {
           $this->validateTable($fromClause->table);
         }
       }
@@ -325,11 +329,11 @@ class CRM_Utils_SqlParser {
     $tableName = $this->normalizeIdentifier($tableName);
 
     if (isset($this->allowlist['table'])) {
-      $allowedTables = is_array($this->allowlist['table']) 
-        ? $this->allowlist['table'] 
+      $allowedTables = is_array($this->allowlist['table'])
+        ? $this->allowlist['table']
         : [$this->allowlist['table']];
 
-      if (!in_array($tableName, $allowedTables, true)) {
+      if (!in_array($tableName, $allowedTables, TRUE)) {
         $this->addError("Table '{$tableName}' is not in the allowlist");
       }
     }
@@ -351,11 +355,11 @@ class CRM_Utils_SqlParser {
     $fieldName = $this->normalizeIdentifier($fieldName);
 
     if (isset($this->allowlist['field'])) {
-      $allowedFields = is_array($this->allowlist['field']) 
-        ? $this->allowlist['field'] 
+      $allowedFields = is_array($this->allowlist['field'])
+        ? $this->allowlist['field']
         : [$this->allowlist['field']];
 
-      if (!in_array($fieldName, $allowedFields, true)) {
+      if (!in_array($fieldName, $allowedFields, TRUE)) {
         $this->addError("Field '{$fieldName}' is not in the allowlist");
       }
     }
@@ -375,7 +379,8 @@ class CRM_Utils_SqlParser {
       // If it's a SQL function, validate the function; otherwise validate as field
       if ($this->isSqlFunction($expression->column)) {
         $this->validateSqlFunction($expression->column);
-      } else {
+      }
+      else {
         $this->validateField($expression->column);
       }
     }
@@ -407,7 +412,7 @@ class CRM_Utils_SqlParser {
     if (!empty($condition->expr)) {
       if (is_string($condition->expr)) {
         $subquery = $this->extractSubquery($condition->expr);
-        if ($subquery !== null) {
+        if ($subquery !== NULL) {
           // Validate left operand against outer query allowlist
           if (!empty($condition->leftOperand)) {
             $this->validateOperand($condition->leftOperand);
@@ -490,14 +495,14 @@ class CRM_Utils_SqlParser {
    */
   private function extractSubquery(string $expr): ?string {
     $pos = stripos($expr, 'SELECT');
-    if ($pos === false) {
-      return null;
+    if ($pos === FALSE) {
+      return NULL;
     }
 
     // Find the opening parenthesis before SELECT
     $parenStart = strrpos(substr($expr, 0, $pos), '(');
-    if ($parenStart === false) {
-      return null;
+    if ($parenStart === FALSE) {
+      return NULL;
     }
 
     // Match balanced parentheses from parenStart
@@ -506,7 +511,8 @@ class CRM_Utils_SqlParser {
     for ($i = $parenStart; $i < $len; $i++) {
       if ($expr[$i] === '(') {
         $depth++;
-      } elseif ($expr[$i] === ')') {
+      }
+      elseif ($expr[$i] === ')') {
         $depth--;
         if ($depth === 0) {
           return substr($expr, $parenStart + 1, $i - $parenStart - 1);
@@ -514,7 +520,7 @@ class CRM_Utils_SqlParser {
       }
     }
 
-    return null;
+    return NULL;
   }
 
   /**
@@ -530,7 +536,7 @@ class CRM_Utils_SqlParser {
       $identifier = $matches[1];
     }
 
-    if (strpos($identifier, ' AS ') !== false) {
+    if (strpos($identifier, ' AS ') !== FALSE) {
       $parts = explode(' AS ', $identifier, 2);
       $identifier = trim($parts[0]);
     }
@@ -548,16 +554,16 @@ class CRM_Utils_SqlParser {
     $identifier = $this->normalizeIdentifier($identifier);
     
     // Remove operators by cutting at first space
-    if (strpos($identifier, ' ') !== false) {
+    if (strpos($identifier, ' ') !== FALSE) {
       $identifier = trim(substr($identifier, 0, strpos($identifier, ' ')));
     }
     
-    if (strpos($identifier, '.') !== false) {
+    if (strpos($identifier, '.') !== FALSE) {
       $parts = explode('.', $identifier, 2);
       return ['table' => trim($parts[0]), 'field' => trim($parts[1])];
     }
     
-    return ['table' => null, 'field' => $identifier];
+    return ['table' => NULL, 'field' => $identifier];
   }
 
   /**
@@ -644,13 +650,13 @@ class CRM_Utils_SqlParser {
     ];
 
     // First check if it's in the blocked list
-    if (in_array($functionName, $blockedFunctions, true)) {
+    if (in_array($functionName, $blockedFunctions, TRUE)) {
       $this->addError("SQL function '{$functionName}' is not allowed (blocked for security)");
       return;
     }
 
     // Then check if it's in the allowed list
-    if (!in_array($functionName, $allowedFunctions, true)) {
+    if (!in_array($functionName, $allowedFunctions, TRUE)) {
       $this->addError("SQL function '{$functionName}' is not in the allowed function list");
       return;
     }
@@ -667,20 +673,20 @@ class CRM_Utils_SqlParser {
 
     // Check for quoted strings
     if (preg_match('/^["\'].*["\']$/', $value)) {
-      return true;
+      return TRUE;
     }
 
     // Check for numbers
     if (is_numeric($value)) {
-      return true;
+      return TRUE;
     }
 
     // Check for date/timestamp literals
     if (preg_match('/^\d{4}-\d{2}-\d{2}/', $value)) {
-      return true;
+      return TRUE;
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
@@ -692,13 +698,17 @@ class CRM_Utils_SqlParser {
   private function getStatementType($statement): string {
     if ($statement instanceof SelectStatement) {
       return 'SELECT';
-    } elseif ($statement instanceof InsertStatement) {
+    }
+    elseif ($statement instanceof InsertStatement) {
       return 'INSERT';
-    } elseif ($statement instanceof UpdateStatement) {
+    }
+    elseif ($statement instanceof UpdateStatement) {
       return 'UPDATE';
-    } elseif ($statement instanceof DeleteStatement) {
+    }
+    elseif ($statement instanceof DeleteStatement) {
       return 'DELETE';
-    } else {
+    }
+    else {
       $className = get_class($statement);
       $parts = explode('\\', $className);
       $shortName = end($parts);
@@ -713,13 +723,13 @@ class CRM_Utils_SqlParser {
    */
   private function validateStatementType(string $statementType): void {
     if (isset($this->allowlist['statement'])) {
-      $allowedStatements = is_array($this->allowlist['statement']) 
-        ? $this->allowlist['statement'] 
+      $allowedStatements = is_array($this->allowlist['statement'])
+        ? $this->allowlist['statement']
         : [$this->allowlist['statement']];
 
       $allowedStatements = array_map('strtoupper', $allowedStatements);
 
-      if (!in_array(strtoupper($statementType), $allowedStatements, true)) {
+      if (!in_array(strtoupper($statementType), $allowedStatements, TRUE)) {
         $this->addError("Statement type '{$statementType}' is not in the allowlist");
       }
     }
@@ -732,6 +742,6 @@ class CRM_Utils_SqlParser {
    */
   private function addError(string $message): void {
     $this->errors[] = $message;
-    $this->isValid = false;
+    $this->isValid = FALSE;
   }
 }

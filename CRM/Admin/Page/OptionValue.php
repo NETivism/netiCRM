@@ -116,8 +116,12 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
    *
    */
   public function run() {
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this, FALSE, 0
+    $this->_gid = CRM_Utils_Request::retrieve(
+      'gid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('gid', $this->_gid);
 
@@ -208,7 +212,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
         }
       }
 
-      $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $dao->id, 'gid' => $this->_gid]
       );
     }
@@ -255,11 +261,10 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
     $groupName = $args[3] ?? NULL;
     $value = $args[4] ?? NULL;
     if (isset($groupName) && isset($value)) {
-      if(is_numeric($value)) {
+      if (is_numeric($value)) {
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/optionValue', "action=update&group={$groupName}&value={$value}&reset=1"));
       }
     }
     CRM_Utils_System::civiExit();
   }
 }
-

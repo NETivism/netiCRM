@@ -40,7 +40,7 @@
  *
  */
 class CRM_Member_Task {
-  public CONST DELETE_MEMBERS = 1, PRINT_MEMBERS = 2, EXPORT_MEMBERS = 3, EMAIL_CONTACTS = 4, BATCH_MEMBERS = 5;
+  public const DELETE_MEMBERS = 1, PRINT_MEMBERS = 2, EXPORT_MEMBERS = 3, EMAIL_CONTACTS = 4, BATCH_MEMBERS = 5;
 
   /**
    * the task array
@@ -176,4 +176,3 @@ class CRM_Member_Task {
     ];
   }
 }
-

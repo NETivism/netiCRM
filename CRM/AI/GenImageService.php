@@ -72,12 +72,12 @@ abstract class CRM_AI_GenImageService {
    * Generate image using AI service
    *
    * Main entry point for image generation process
-   * 
+   *
    * @param array $params Standardized parameters:
    *   - prompt: string - Main description for image generation
    *   - negative_prompt: string (optional) - What to avoid
    *   - width: int (optional) - Image width
-   *   - height: int (optional) - Image height  
+   *   - height: int (optional) - Image height
    *   - style_params: array (optional) - Service-specific parameters
    *
    * @return array Standard response format:
@@ -148,7 +148,7 @@ abstract class CRM_AI_GenImageService {
       throw new InvalidArgumentException('Height must be a positive integer');
     }
 
-    return true;
+    return TRUE;
   }
 
   /**
@@ -159,16 +159,16 @@ abstract class CRM_AI_GenImageService {
    * @param mixed $details Additional error details (optional)
    * @return array Error response format
    */
-  protected function createErrorResponse($code, $message, $details = null) {
+  protected function createErrorResponse($code, $message, $details = NULL) {
     $error = [
-      'success' => false,
+      'success' => FALSE,
       'error' => [
         'code' => $code,
         'message' => $message
       ]
     ];
 
-    if ($details !== null) {
+    if ($details !== NULL) {
       $error['error']['details'] = $details;
     }
 
@@ -183,7 +183,7 @@ abstract class CRM_AI_GenImageService {
    */
   protected function createSuccessResponse($data) {
     return [
-      'success' => true,
+      'success' => TRUE,
       'data' => $data
     ];
   }

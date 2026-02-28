@@ -152,4 +152,3 @@ function civicrm_group_nesting_remove(&$params) {
   }
   return $result;
 }
-

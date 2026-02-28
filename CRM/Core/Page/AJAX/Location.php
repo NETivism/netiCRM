@@ -168,4 +168,3 @@ class CRM_Core_Page_AJAX_Location {
     exit();
   }
 }
-

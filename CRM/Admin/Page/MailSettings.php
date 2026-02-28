@@ -108,7 +108,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
     //find all mail settings.
     $mailSetting->find();
     $usedFor = CRM_Core_BAO_MailSettings::$_mailerTypes;
-    foreach($usedFor as $k => $v) {
+    foreach ($usedFor as $k => $v) {
       $usedFor[$k] = ts($v);
     }
     while ($mailSetting->fetch()) {
@@ -126,7 +126,9 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
       }
 
       //add action links.
-      $allMailSettings[$mailSetting->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $allMailSettings[$mailSetting->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $mailSetting->id]
       );
     }
@@ -161,4 +163,3 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
     return 'civicrm/admin/mailSettings';
   }
 }
-

@@ -61,8 +61,10 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
         'modified_date' => $log['modified_date'],
         'stock_change' => $this->formatStockChange($log['type'], $log['quantity']),
         'contribution_id' => $log['contribution_id'],
-        'contribution_url' => CRM_Utils_System::url('civicrm/contact/view/contribution',
-          "action=view&reset=1&id={$log['contribution_id']}&cid={$contactId}&context=search"),
+        'contribution_url' => CRM_Utils_System::url(
+          'civicrm/contact/view/contribution',
+          "action=view&reset=1&id={$log['contribution_id']}&cid={$contactId}&context=search"
+        ),
         'reason' => $log['reason'] ?: '-',
         'modified_by' => $log['modified_by'] ?: '',
       ];

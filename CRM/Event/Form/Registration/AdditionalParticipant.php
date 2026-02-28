@@ -126,8 +126,11 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
 
       $discountId = CRM_Core_BAO_Discount::findSet($this->_eventId, 'civicrm_event');
       if ($discountId && CRM_Utils_Array::value('default_discount_fee_id', $this->_values['event'])) {
-        $discountKey = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_OptionValue", $this->_values['event']['default_discount_fee_id']
-          , 'weight', 'id'
+        $discountKey = CRM_Core_DAO::getFieldValue(
+          "CRM_Core_DAO_OptionValue",
+          $this->_values['event']['default_discount_fee_id'],
+          'weight',
+          'id'
         );
         $defaults['amount'] = key(array_slice($this->_values['discount'][$discountId], $discountKey - 1, $discountKey, TRUE));
       }
@@ -221,12 +224,14 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       }
     }
 
-    $required = ($button == 'skip' ||
+    $required = (
+      $button == 'skip' ||
       $this->_values['event']['allow_same_participant_emails'] == 1 &&
       ($first_name && $last_name)
     ) ? FALSE : TRUE;
 
-    $this->add('text',
+    $this->add(
+      'text',
       "email-{$this->_bltID}",
       ts('Email Address'),
       ['size' => 30, 'maxlength' => 60],
@@ -256,7 +261,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
       $processedCnt = self::getParticipantCount($this, $this->_params, TRUE);
     }
 
-    if (!$this->_allowConfirmation && CRM_Utils_Array::value('bypass_payment', $this->_params[0]) && $this->_lastParticipant ) {
+    if (!$this->_allowConfirmation && CRM_Utils_Array::value('bypass_payment', $this->_params[0]) && $this->_lastParticipant) {
 
       //get the event spaces.
       $spaces = $this->_availableRegistrations;
@@ -369,7 +374,9 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
 
       //CRM-4320
       if ($allowToProceed) {
-        $buttons = array_merge($buttons, [[
+        $buttons = array_merge(
+          $buttons,
+          [[
               'type' => 'upload',
               'name' => ts('Continue >>'),
               'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -379,7 +386,9 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
           ]
         );
         if ($includeSkipButton) {
-          $buttons = array_merge($buttons, [['type' => 'next',
+          $buttons = array_merge(
+            $buttons,
+            [['type' => 'next',
                 'name' => ts('Skip participant %1 and continue to register >>|', [1 => $currentParticipantNum]),
                 'subName' => 'skip',
                 'js' => $js,
@@ -427,8 +436,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
         $errors['_qf_default'] = ts('A person is already registered for this event.');
       }
 
-      // check when event is full 
-      if($self->_isEventFull){
+      // check when event is full
+      if ($self->_isEventFull) {
         if (!$self->_allowWaitlist && !$self->_allowConfirmation) {
           $errors['qfKey'] = $self->_values['event']['event_full_text'] ? $self->_values['event']['event_full_text'] : ts('This event is currently full.');
           return $errors;
@@ -800,4 +809,3 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     return ts('Additional Participant');
   }
 }
-

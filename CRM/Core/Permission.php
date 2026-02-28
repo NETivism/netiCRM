@@ -44,14 +44,14 @@ class CRM_Core_Permission {
    * @const
    * @var string
    */
-  public CONST EDIT_GROUPS = 'edit contacts in ', VIEW_GROUPS = 'view contacts in ';
+  public const EDIT_GROUPS = 'edit contacts in ', VIEW_GROUPS = 'view contacts in ';
 
   /**
    * The various type of permissions
    *
    * @var int
    */
-  public CONST EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6, ADMIN = 7;
+  public const EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6, ADMIN = 7;
 
   /**
    * get the current permission of this user
@@ -61,7 +61,7 @@ class CRM_Core_Permission {
   public static function getPermission() {
     $config = CRM_Core_Config::singleton();
     $className = $config->userPermissionClass;
-    return $className::getPermission( );
+    return $className::getPermission();
   }
 
   /**
@@ -91,7 +91,7 @@ class CRM_Core_Permission {
   public static function whereClause($type, &$tables, &$whereTables, $context = 'contact') {
     $config = CRM_Core_Config::singleton();
     $className = $config->userPermissionClass;
-    return $className::whereClause( $type, $tables, $whereTables, $context );
+    return $className::whereClause($type, $tables, $whereTables, $context);
   }
 
   /**
@@ -110,7 +110,7 @@ class CRM_Core_Permission {
   public static function group($groupType, $excludeHidden = TRUE) {
     $config = CRM_Core_Config::singleton();
     $className = $config->userPermissionClass;
-    return $className::group( $groupType, $excludeHidden );
+    return $className::group($groupType, $excludeHidden);
   }
 
   public static function customGroup($type = CRM_Core_Permission::VIEW, $reset = FALSE) {
@@ -325,7 +325,8 @@ class CRM_Core_Permission {
     ) {
       $config = CRM_Core_Config::singleton();
       if (is_array($config->enableComponentIDs) &&
-        in_array($item['component_id'],
+        in_array(
+          $item['component_id'],
           $config->enableComponentIDs
         )
       ) {
@@ -358,12 +359,14 @@ class CRM_Core_Permission {
       $item['access_callback'][1] == 'checkMenu'
     ) {
       $op = CRM_Utils_Array::value(1, $item['access_arguments'], 'and');
-      return self::checkMenu($item['access_arguments'][0],
+      return self::checkMenu(
+        $item['access_arguments'][0],
         $op
       );
     }
     else {
-      return call_user_func_array($item['access_callback'],
+      return call_user_func_array(
+        $item['access_callback'],
         $item['access_arguments']
       );
     }
@@ -423,7 +426,7 @@ class CRM_Core_Permission {
       else {
         $components = CRM_Core_Component::getComponents();
       }
-      foreach($permissions as $p => $title) {
+      foreach ($permissions as $p => $title) {
         if ($p != $title) {
           $permissions[$p] .= ' ('.$p.')';
         }
@@ -511,4 +514,3 @@ class CRM_Core_Permission {
     return $componentName;
   }
 }
-

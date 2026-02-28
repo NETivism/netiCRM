@@ -48,15 +48,15 @@ class CRM_Core_DAO extends DB_DataObject {
   public static $_nullObject = NULL;
   public static $_nullArray = [];
   public static $_dbColumnValueCache = NULL;
-  public CONST 
-  NOT_NULL = 1,
-  IS_NULL = 2, 
-  DB_DAO_NOTNULL = 128, 
-  VALUE_SEPARATOR = "", // equal to SQL Query: SELECT CHAR(1) or PHP chr(1)
-  BULK_INSERT_COUNT = 200, 
-  BULK_INSERT_HIGH_COUNT = 200,
-  BULK_MAIL_INSERT_COUNT = 10,
-  MAX_KEYS_PER_TABLE = 64; // mariadb - innodb max keys per table
+  public const
+    NOT_NULL = 1,
+    IS_NULL = 2,
+    DB_DAO_NOTNULL = 128,
+    VALUE_SEPARATOR = "", // equal to SQL Query: SELECT CHAR(1) or PHP chr(1)
+    BULK_INSERT_COUNT = 200,
+    BULK_INSERT_HIGH_COUNT = 200,
+    BULK_MAIL_INSERT_COUNT = 10,
+    MAX_KEYS_PER_TABLE = 64; // mariadb - innodb max keys per table
 
   public const PROFILE_RESULT_COLUMNS = 'QUERY_ID,SEQ,STATE,DURATION,CPU_USER,CPU_SYSTEM,CONTEXT_VOLUNTARY,CONTEXT_INVOLUNTARY,BLOCK_OPS_IN,BLOCK_OPS_OUT,MESSAGES_SENT,MESSAGES_RECEIVED,PAGE_FAULTS_MAJOR,PAGE_FAULTS_MINOR,SWAPS,SOURCE_FUNCTION,SOURCE_FILE,SOURCE_LINE';
 
@@ -134,7 +134,8 @@ class CRM_Core_DAO extends DB_DataObject {
       $pdo = new PDO($pdoDsn, $username, $password, $options);
       //$pdo->exec("SET SESSION read_only = 1");
       return $pdo;
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       return FALSE;
     }
   }
@@ -324,13 +325,12 @@ class CRM_Core_DAO extends DB_DataObject {
 
   /**
    * find result from dao
-   * 
+   *
    * We need this because we need trigger hook to alter data when we found something
-   * 
+   *
    * @param   boolean $n Whether to fetch first result
    */
-  public function find($n = false)
-  {
+  public function find($n = FALSE) {
     $ret = parent::find($n);
     CRM_Utils_Hook::get($n, $this, $ret);
     return $ret;
@@ -505,7 +505,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @static
    */
   public static function getAttribute($class, $fieldName = NULL) {
-    $object = new $class( );
+    $object = new $class();
     $fields = &$object->fields();
     if ($fieldName != NULL) {
       $field = CRM_Utils_Array::value($fieldName, $fields);
@@ -544,7 +544,7 @@ class CRM_Core_DAO extends DB_DataObject {
    * @static
    */
   public static function objectExists($value, $daoName, $daoID, $fieldName = 'name') {
-    $object = new $daoName( );
+    $object = new $daoName();
     $object->$fieldName = $value;
 
     $config = CRM_Core_Config::singleton();
@@ -910,7 +910,8 @@ FROM   civicrm_domain
    * @static
    * @access public
    */
-  public static function &executeQuery($query,
+  public static function &executeQuery(
+    $query,
     $params = [],
     $abort = TRUE,
     $daoName = NULL,
@@ -947,7 +948,8 @@ FROM   civicrm_domain
    * @static
    * @access public
    */
-  public static function &singleValueQuery($query,
+  public static function &singleValueQuery(
+    $query,
     $params = [],
     $abort = TRUE,
     $i18nRewrite = TRUE
@@ -1215,7 +1217,8 @@ SELECT contact_id
     CRM_Core_I18n_Schema::dropAllViews();
 
 
-    CRM_Utils_File::sourceSQLFile(CIVICRM_DSN,
+    CRM_Utils_File::sourceSQLFile(
+      CIVICRM_DSN,
       dirname(__FILE__) . DIRECTORY_SEPARATOR .
       '..' . DIRECTORY_SEPARATOR .
       '..' . DIRECTORY_SEPARATOR .
@@ -1243,9 +1246,10 @@ SELECT contact_id
     // ensure we escape the single characters % and _ which are mysql wild
     // card characters and could come in via sortByCharacter
     // note that mysql does not escape these characters
-    if ($string && in_array($string,
-        ['%', '_', '%%', '_%']
-      )) {
+    if ($string && in_array(
+      $string,
+      ['%', '_', '%%', '_%']
+    )) {
       return '\\' . $string;
     }
 
@@ -1260,7 +1264,7 @@ SELECT contact_id
     static $counter = 0;
 
 
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
 
     for ($i = 0; $i < $numObjects; ++$i) {
 
@@ -1286,7 +1290,8 @@ SELECT contact_id
             }
 
             //if it is required we need to generate the dependency object first
-            $depObject = CRM_Core_DAO::createTestObject($FKClassName,
+            $depObject = CRM_Core_DAO::createTestObject(
+              $FKClassName,
               CRM_Utils_Array::value($dbName, $params, 1)
             );
             $object->$dbName = $depObject->id;
@@ -1313,6 +1318,7 @@ SELECT contact_id
               CRM_Core_Error::fatal('T_TIME shouldnt be used.');
               //$object->$dbName='000000';
               //break;
+              // no break
             case CRM_Utils_Type::T_CCNUM:
               $object->$dbName = '4111 1111 1111 1111';
               break;
@@ -1332,7 +1338,9 @@ SELECT contact_id
                 if (isset($value['default'])) {
                   $object->$dbName = $value['default'];
                 }
-                else $object->$dbName = $value['enumValues'][0];
+                else {
+                  $object->$dbName = $value['enumValues'][0];
+                }
               }
               else {
                 $object->$dbName = $dbName . '_' . $counter;
@@ -1352,7 +1360,9 @@ SELECT contact_id
         $objects[$i] = $object;
 
       }
-      else unset($object);
+      else {
+        unset($object);
+      }
     }
 
     if ($createOnly) {
@@ -1363,7 +1373,9 @@ SELECT contact_id
     elseif ($numObjects == 1) {
       return $objects[0];
     }
-    else return $objects;
+    else {
+      return $objects;
+    }
   }
 
   //deletes the this object plus any dependent objects that are associated with it
@@ -1403,7 +1415,7 @@ SELECT contact_id
   }
 
   public static function getNextId($tableName) {
-    if($tableName) {
+    if ($tableName) {
       $query = CRM_Core_DAO::executeQuery("SHOW TABLE STATUS LIKE %1", [1 => [$tableName, 'String']]);
       $query->fetch();
       if (!empty($query->Auto_increment)) {
@@ -1599,7 +1611,7 @@ SELECT contact_id
     global $_DB_PROFILING;
     if (CRM_Core_Config::singleton()->debugDatabaseProfiling) {
       $dao = CRM_Core_DAO::executeQuery("SHOW PROFILES");
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $_DB_PROFILING[] = [
           'id' => $dao->Query_ID,
           'duration' => $dao->Duration,
@@ -1627,9 +1639,9 @@ SELECT contact_id
       ]);
       $columnName = explode(',', self::PROFILE_RESULT_COLUMNS);
       $count = 0;
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $count++;
-        foreach($columnName as $col) {
+        foreach ($columnName as $col) {
           $details[$count][$col] = $dao->$col;
         }
       }
@@ -1637,4 +1649,3 @@ SELECT contact_id
     return $details;
   }
 }
-

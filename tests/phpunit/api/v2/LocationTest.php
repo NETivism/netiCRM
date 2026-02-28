@@ -32,7 +32,8 @@ require_once 'api/v2/Location.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_LocationTest extends CiviUnitTestCase {
   protected $_contactID;
-  protected $_locationType; public function get_info() {
+  protected $_locationType;
+  public function get_info() {
     return [
       'name' => 'Location Add',
       'description' => 'Test all Location Add API methods.',
@@ -271,7 +272,8 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     ];
     $locationDelete = &civicrm_location_delete($params);
     $this->assertNull($locationDelete);
-    $this->assertDBNull('CRM_Core_DAO_Address',
+    $this->assertDBNull(
+      'CRM_Core_DAO_Address',
       $location['result']['address'][0],
       'contact_id',
       'id',
@@ -472,4 +474,3 @@ class api_v2_LocationTest extends CiviUnitTestCase {
     }
   }
 }
-

@@ -162,65 +162,65 @@ class api_v3_UFFieldTest extends CiviUnitTestCase {
     $this->getAndCheck($this->_params, $result['id'], $this->_entity);
   }
 
-/*
- *  FIXME: something NULLs $GLOBALS['_HTML_QuickForm_registered_rules'] when the tests are ran all together
- * (NB unclear if this is still required)
- */
+  /*
+   *  FIXME: something NULLs $GLOBALS['_HTML_QuickForm_registered_rules'] when the tests are ran all together
+   * (NB unclear if this is still required)
+   */
   public function _sethtmlGlobals() {
-   $GLOBALS['_HTML_QuickForm_registered_rules'] = [
-      'required' => [
-        'html_quickform_rule_required',
-        'HTML/QuickForm/Rule/Required.php'
-      ],
-      'maxlength' => [
-        'html_quickform_rule_range',
-        'HTML/QuickForm/Rule/Range.php'
-      ],
-      'minlength' => [
-        'html_quickform_rule_range',
-        'HTML/QuickForm/Rule/Range.php'
-      ],
-      'rangelength' => [
-        'html_quickform_rule_range',
-        'HTML/QuickForm/Rule/Range.php'
-      ],
-      'email' => [
-        'html_quickform_rule_email',
-        'HTML/QuickForm/Rule/Email.php'
-      ],
-      'regex' => [
-        'html_quickform_rule_regex',
-        'HTML/QuickForm/Rule/Regex.php'
-      ],
-      'lettersonly' => [
-        'html_quickform_rule_regex',
-        'HTML/QuickForm/Rule/Regex.php'
-      ],
-      'alphanumeric' => [
-        'html_quickform_rule_regex',
-        'HTML/QuickForm/Rule/Regex.php'
-      ],
-      'numeric' => [
-        'html_quickform_rule_regex',
-        'HTML/QuickForm/Rule/Regex.php'
-      ],
-      'nopunctuation' => [
-        'html_quickform_rule_regex',
-        'HTML/QuickForm/Rule/Regex.php'
-      ],
-      'nonzero' => [
-        'html_quickform_rule_regex',
-        'HTML/QuickForm/Rule/Regex.php'
-      ],
-      'callback' => [
-        'html_quickform_rule_callback',
-        'HTML/QuickForm/Rule/Callback.php'
-      ],
-      'compare' => [
-        'html_quickform_rule_compare',
-        'HTML/QuickForm/Rule/Compare.php'
-      ]
-    ];
+    $GLOBALS['_HTML_QuickForm_registered_rules'] = [
+       'required' => [
+         'html_quickform_rule_required',
+         'HTML/QuickForm/Rule/Required.php'
+       ],
+       'maxlength' => [
+         'html_quickform_rule_range',
+         'HTML/QuickForm/Rule/Range.php'
+       ],
+       'minlength' => [
+         'html_quickform_rule_range',
+         'HTML/QuickForm/Rule/Range.php'
+       ],
+       'rangelength' => [
+         'html_quickform_rule_range',
+         'HTML/QuickForm/Rule/Range.php'
+       ],
+       'email' => [
+         'html_quickform_rule_email',
+         'HTML/QuickForm/Rule/Email.php'
+       ],
+       'regex' => [
+         'html_quickform_rule_regex',
+         'HTML/QuickForm/Rule/Regex.php'
+       ],
+       'lettersonly' => [
+         'html_quickform_rule_regex',
+         'HTML/QuickForm/Rule/Regex.php'
+       ],
+       'alphanumeric' => [
+         'html_quickform_rule_regex',
+         'HTML/QuickForm/Rule/Regex.php'
+       ],
+       'numeric' => [
+         'html_quickform_rule_regex',
+         'HTML/QuickForm/Rule/Regex.php'
+       ],
+       'nopunctuation' => [
+         'html_quickform_rule_regex',
+         'HTML/QuickForm/Rule/Regex.php'
+       ],
+       'nonzero' => [
+         'html_quickform_rule_regex',
+         'HTML/QuickForm/Rule/Regex.php'
+       ],
+       'callback' => [
+         'html_quickform_rule_callback',
+         'HTML/QuickForm/Rule/Callback.php'
+       ],
+       'compare' => [
+         'html_quickform_rule_compare',
+         'HTML/QuickForm/Rule/Compare.php'
+       ]
+     ];
     // FIXME: …ditto for $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES']
     $GLOBALS['HTML_QUICKFORM_ELEMENT_TYPES'] = [
       'group' => [

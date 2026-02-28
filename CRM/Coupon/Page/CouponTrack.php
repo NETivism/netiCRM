@@ -13,7 +13,7 @@ class CRM_Coupon_Page_CouponTrack extends CRM_Core_Page {
 
     while ($dao->fetch()) {
       $used[$dao->id] = [];
-      foreach($dao as $field => $value) {
+      foreach ($dao as $field => $value) {
         if ($field[0] == '_') {
           continue;
         }

@@ -246,10 +246,10 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
     $availableEmails = [];
-    foreach($fromEmails as $emailType => $emails) {
+    foreach ($fromEmails as $emailType => $emails) {
       if (!empty($emails)) {
         array_keys($emails);
-        foreach($emails as $header => $display) {
+        foreach ($emails as $header => $display) {
           $availableEmails[$header] = $display;
         }
       }
@@ -281,7 +281,10 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     // Added code to add custom field as Reply-To on form when it is enabled from Mailer settings
     if ($config->replyTo && !CRM_Utils_Array::value('override_verp', $options)) {
-      $this->add('select', 'reply_to_address', ts('Reply-To'),
+      $this->add(
+        'select',
+        'reply_to_address',
+        ts('Reply-To'),
         [
           '' => ts('- select -'),
         ] + $availableEmails
@@ -292,8 +295,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $this->assign('trackReplies', $trackReplies);
     }
 
-    $this->add('text', 'subject', ts('Mailing Subject'),
-      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'subject'), TRUE
+    $this->add(
+      'text',
+      'subject',
+      ts('Mailing Subject'),
+      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'subject'),
+      TRUE
     );
 
     $attributes = ['onclick' => "showHideUpload();"];
@@ -311,8 +318,10 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
 
     $this->addElement('file', 'htmlFile', ts('Upload HTML Message'), 'size=30 maxlength=60');
     $this->setMaxFileSize(1024 * 1024);
-    $this->addRule('htmlFile',
-      ts('File size should be less than %1 MByte(s)',
+    $this->addRule(
+      'htmlFile',
+      ts(
+        'File size should be less than %1 MByte(s)',
         [1 => 1]
       ),
       'maxfilesize',
@@ -330,17 +339,24 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     }
 
 
-    CRM_Core_BAO_File::buildAttachment($this,
+    CRM_Core_BAO_File::buildAttachment(
+      $this,
       'civicrm_mailing',
       $this->_mailingID
     );
 
 
-    $this->add('select', 'header_id', ts('Mailing Header'),
+    $this->add(
+      'select',
+      'header_id',
+      ts('Mailing Header'),
       ['' => ts('- none -')] + CRM_Mailing_PseudoConstant::component('Header')
     );
 
-    $this->add('select', 'footer_id', ts('Mailing Footer'),
+    $this->add(
+      'select',
+      'footer_id',
+      ts('Mailing Footer'),
       ['' => ts('- none -')] + CRM_Mailing_PseudoConstant::component('Footer')
     );
 
@@ -404,7 +420,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       'updateTemplate', 'saveTemplateName',
     ];
     foreach ($uploadParams as $key) {
-      if (CRM_Utils_Array::value($key, $formValues) || in_array($key, ['header_id', 'footer_id']) ) {
+      if (CRM_Utils_Array::value($key, $formValues) || in_array($key, ['header_id', 'footer_id'])) {
         $params[$key] = $formValues[$key];
         $this->set($key, $formValues[$key]);
       }
@@ -428,7 +444,7 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       }
     }
     else {
-      if($formValues['upload_type'] == 2 && !empty($formValues['body_json'])){
+      if ($formValues['upload_type'] == 2 && !empty($formValues['body_json'])) {
         $params['body_json'] = $formValues['body_json'];
       }
       else {
@@ -518,7 +534,8 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       $this->set('justSavedTemplate', $params['msg_template_id']);
     }
 
-    CRM_Core_BAO_File::formatAttachment($formValues,
+    CRM_Core_BAO_File::formatAttachment(
+      $formValues,
       $params,
       'civicrm_mailing',
       $this->_mailingID
@@ -715,11 +732,12 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
       /* First look for missing tokens */
 
       // refs #14980, on specific way to skip check. Use carefully
-      if(empty($params['skip_unsubscribe_check'])){
+      if (empty($params['skip_unsubscribe_check'])) {
         $err = CRM_Utils_Token::requiredTokens($str);
         if ($err !== TRUE) {
           foreach ($err as $token => $desc) {
-            $dataErrors[] = '<li>' . ts('This message is missing a required token - {%1}: %2',
+            $dataErrors[] = '<li>' . ts(
+              'This message is missing a required token - {%1}: %2',
               [1 => $token, 2 => $desc]
             ) . '</li>';
           }
@@ -799,4 +817,3 @@ class CRM_Mailing_Form_Upload extends CRM_Core_Form {
     return $tokens;
   }
 }
-

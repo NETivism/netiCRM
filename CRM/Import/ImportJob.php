@@ -42,9 +42,9 @@ class CRM_Import_ImportJob {
   /**
    * default segementation of import job
    */
-  public CONST BATCH_THRESHOLD = 2000, BATCH_LIMIT = 2000;
+  public const BATCH_THRESHOLD = 2000, BATCH_LIMIT = 2000;
 
-  public CONST TABLE_PREFIX = 'civicrm_import_job';
+  public const TABLE_PREFIX = 'civicrm_import_job';
 
   protected $_tableName;
   protected $_primaryKeyName;

@@ -91,8 +91,11 @@ class CRM_Core_OptionValue {
 
     $groupName = CRM_Utils_Array::value('name', $groupParams);
     if (!$groupName && $optionGroupID) {
-      $groupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-        $optionGroupID, 'name', 'id'
+      $groupName = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_OptionGroup',
+        $optionGroupID,
+        'name',
+        'id'
       );
     }
 
@@ -130,7 +133,7 @@ class CRM_Core_OptionValue {
       // update enable/disable links depending on if it is is_reserved or is_active
       if ($dao->is_reserved) {
         $action = CRM_Core_Action::UPDATE;
-        if(CRM_Core_Permission::check('administer Reserved Option')){
+        if (CRM_Core_Permission::check('administer Reserved Option')) {
           $action += CRM_Core_Action::ENABLE;
           $action += CRM_Core_Action::DISABLE;
           if ($dao->is_active) {
@@ -166,7 +169,9 @@ class CRM_Core_OptionValue {
 
       $optionValue[$dao->id]['label'] = htmlspecialchars($optionValue[$dao->id]['label']);
       $optionValue[$dao->id]['order'] = $optionValue[$dao->id]['weight'];
-      $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink($links, $action,
+      $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(
+        $links,
+        $action,
         ['id' => $dao->id,
           'gid' => $optionGroupID,
           'value' => $dao->value,
@@ -237,7 +242,8 @@ class CRM_Core_OptionValue {
       /* CONVERT(value, DECIMAL) is used to convert varchar
                field 'value' to decimal->integer                    */
 
-      $params['value'] = (int) CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+      $params['value'] = (int) CRM_Utils_Weight::getDefaultWeight(
+        'CRM_Core_DAO_OptionValue',
         $fieldValues,
         'CONVERT(value, DECIMAL)'
       );
@@ -450,8 +456,11 @@ FROM
       $where .= " AND option_group.id = %1";
       $params[1] = [$groupId, 'Integer'];
       if (!$groupName) {
-        $groupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-          $groupId, 'name', 'id'
+        $groupName = CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_OptionGroup',
+          $groupId,
+          'name',
+          'id'
         );
       }
     }
@@ -483,4 +492,3 @@ FROM
     }
   }
 }
-

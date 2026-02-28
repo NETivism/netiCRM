@@ -25,18 +25,18 @@ class CRM_Contribute_Form_TaxReceipt extends CRM_Core_Form {
  
     $breadcrumb = [
       [
-				'title' => ts('View Contribution'),
-				'url' => CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&action=view&context=$context&selectedChild=contribute&cid=$this->_contactId&id=$this->_id"),
+                'title' => ts('View Contribution'),
+                'url' => CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&action=view&context=$context&selectedChild=contribute&cid=$this->_contactId&id=$this->_id"),
       ]
-		];
+        ];
     CRM_Utils_System::appendBreadCrumb($breadcrumb);
 
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $this->_id;
-    if($contribution->find(TRUE)) {
+    if ($contribution->find(TRUE)) {
       $this->_contribution = $contribution;
       if ($contribution->total_amount <= 0) {
-         return CRM_Core_Error::statusBounce(ts('Contribution amount must be greater than %1', [1 => 0]));
+        return CRM_Core_Error::statusBounce(ts('Contribution amount must be greater than %1', [1 => 0]));
       }
       $this->assign('trxn_id', $contribution->trxn_id);
       CRM_Utils_Hook::prepareTaxReceipt($this->_id, $this->_tplParams, $this->_taxReceipt, $contribution);

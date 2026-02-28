@@ -31,8 +31,7 @@
  * $Id$
  *
  */
-              class CRM_Event_DAO_Event extends CRM_Core_DAO
-{
+class CRM_Event_DAO_Event extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
@@ -46,14 +45,14 @@
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@
    * @var boolean
    * @static
    */
-  public static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Event
    *
    * @var int unsigned
@@ -419,14 +418,13 @@
    * @var string
    */
   public $currency;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_event
-   */
-  public function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_event
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -435,8 +433,7 @@
    * @access public
    * @return array
    */
-  public function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'loc_block_id' => 'civicrm_loc_block:id',
@@ -445,35 +442,33 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'loc_block_id', 'civicrm_loc_block', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'created_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'loc_block_id', 'civicrm_loc_block', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'created_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  public static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'event_title' => [
           'name' => 'title',
@@ -481,11 +476,11 @@
           'title' => ts('Event Title') ,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_event.title',
           'headerPattern' => '/(event.)?title$/i',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'summary' => [
           'name' => 'summary',
@@ -521,21 +516,21 @@
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Event Start Date') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_event.start_date',
           'headerPattern' => '/^start|(s(tart\s)?date)$/i',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'event_end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Event End Date') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_event.end_date',
           'headerPattern' => '/^end|(e(nd\s)?date)$/i',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'is_online_registration' => [
           'name' => 'is_online_registration',
@@ -606,11 +601,11 @@
           'title' => ts('Fee Label') ,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_event.fee_label',
           'headerPattern' => '/^fee|(f(ee\s)?label)$/i',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'is_show_location' => [
           'name' => 'is_show_location',
@@ -627,11 +622,11 @@
           'name' => 'default_role_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant Role') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_event.default_role_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             'default' => '',
           ] ,
         'intro_text' => [
@@ -807,11 +802,11 @@
           'title' => ts('Event Template Title') ,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_event.template_title',
           'headerPattern' => '/(template.)?title$/i',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'created_id' => [
           'name' => 'created_id',
@@ -829,11 +824,11 @@
           'title' => ts('Currency') ,
            'maxlength' => 3,
            'size' => CRM_Utils_Type::FOUR,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_event.currency',
           'headerPattern' => '/cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/i',
-           'export' => true,
+           'export' => TRUE,
             ] ,
       ];
     }
@@ -845,19 +840,17 @@
    * @access public
    * @return string
    */
-  public static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  public function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -866,21 +859,21 @@
    * @access public
    * return array
    */
-  public static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['event'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_import;
   }
   /**
@@ -889,21 +882,21 @@
    * @access public
    * return array
    */
-  public static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['event'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_export;
   }
 }

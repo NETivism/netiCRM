@@ -2,7 +2,8 @@
 
 class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_Interface {
   public $_columns;
-  protected $_formValues; public function __construct(&$formValues) {
+  protected $_formValues;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     $this->_columns = [ts('Contact Id') => 'contact_id',
@@ -67,4 +68,3 @@ class CRM_Contact_Form_Search_Custom_LegalId implements CRM_Contact_Form_Search_
     return NULL;
   }
 }
-

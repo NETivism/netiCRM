@@ -36,7 +36,8 @@ class CRM_Report_Utils_Report {
 
   public static function getValueFromUrl($instanceID = NULL) {
     if ($instanceID) {
-      $optionVal = CRM_Core_DAO::getFieldValue('CRM_Report_DAO_Instance',
+      $optionVal = CRM_Core_DAO::getFieldValue(
+        'CRM_Report_DAO_Instance',
         $instanceID,
         'report_id'
       );
@@ -104,8 +105,10 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
       $instanceID = self::getInstanceIDForValue($urlValue);
 
       if ($instanceID) {
-        return CRM_Utils_System::url("civicrm/report/instance/{$instanceID}",
-          "{$query}", $absolute
+        return CRM_Utils_System::url(
+          "civicrm/report/instance/{$instanceID}",
+          "{$query}",
+          $absolute
         );
       }
       else {
@@ -113,8 +116,10 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
       }
     }
     else {
-      return CRM_Utils_System::url("civicrm/report/" . trim($urlValue, '/'),
-        $query, $absolute
+      return CRM_Utils_System::url(
+        "civicrm/report/" . trim($urlValue, '/'),
+        $query,
+        $absolute
       );
     }
   }
@@ -136,8 +141,10 @@ WHERE  inst.report_id = %1";
       return FALSE;
     }
 
-    $url = CRM_Utils_System::url("civicrm/report/instance/{$instanceID}",
-      "reset=1", TRUE
+    $url = CRM_Utils_System::url(
+      "civicrm/report/instance/{$instanceID}",
+      "reset=1",
+      TRUE
     );
     $url = "Report Url: {$url} ";
     $fileContent = $url . $fileContent;
@@ -149,7 +156,8 @@ WHERE  inst.report_id = %1";
 
     $params = ['id' => $instanceID];
     $instanceInfo = [];
-    CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
+    CRM_Core_DAO::commonRetrieve(
+      'CRM_Report_DAO_Instance',
       $params,
       $instanceInfo
     );
@@ -181,7 +189,7 @@ WHERE  inst.report_id = %1";
     // Replace internal header names with friendly ones, where available.
     foreach ($columnHeaders as $header) {
       if (isset($form->_columnHeaders[$header])) {
-        if(CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024){
+        if (CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024) {
           $headers[] = $form->_columnHeaders[$header]['title'] . ':' . ts('Currency');
         }
         $headers[] = html_entity_decode(strip_tags($form->_columnHeaders[$header]['title']));
@@ -317,15 +325,17 @@ WHERE  inst.report_id = %1";
 
     $instanceValues = [];
     $params = ['id' => $instanceId];
-    CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
+    CRM_Core_DAO::commonRetrieve(
+      'CRM_Report_DAO_Instance',
       $params,
       $instanceValues
     );
 
     if (!empty($instanceValues['permission']) &&
-      (!(CRM_Core_Permission::check($instanceValues['permission']) ||
+      (!(
+        CRM_Core_Permission::check($instanceValues['permission']) ||
           CRM_Core_Permission::check('administer Reports')
-        ))
+      ))
     ) {
       return FALSE;
     }
@@ -333,4 +343,3 @@ WHERE  inst.report_id = %1";
     return TRUE;
   }
 }
-

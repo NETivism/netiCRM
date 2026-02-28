@@ -56,7 +56,8 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    */
   public static $_links = NULL;
   public $_permission = NULL;
-  public $_contactId = NULL; public function preProcess() {
+  public $_contactId = NULL;
+  public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
 
@@ -115,7 +116,8 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
    * @access public
    */
   public function view() {
-    $controller = new CRM_Core_Controller_Simple('CRM_Case_Form_CaseView',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Case_Form_CaseView',
       'View Case',
       $this->_action
     );
@@ -129,8 +131,15 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
 
     $output = CRM_Core_Selector_Controller::SESSION;
     $selector = new CRM_Activity_Selector_Activity($this->_contactId, $this->_permission, FALSE, 'case');
-    $controller = new CRM_Core_Selector_Controller($selector, $this->get(CRM_Utils_Pager::PAGE_ID),
-      NULL, CRM_Core_Action::VIEW, $this, $output, NULL, $this->_id
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
+      $this->get(CRM_Utils_Pager::PAGE_ID),
+      NULL,
+      CRM_Core_Action::VIEW,
+      $this,
+      $output,
+      NULL,
+      $this->_id
     );
 
 
@@ -175,7 +184,8 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
   public function edit() {
     $config = CRM_Core_Config::singleton();
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Case_Form_Case',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Case_Form_Case',
       'Open Case',
       $this->_action
     );
@@ -211,11 +221,13 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->view();
     }
-    elseif (($this->_action &
-        (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD |
+    elseif ((
+      $this->_action &
+        (
+          CRM_Core_Action::UPDATE | CRM_Core_Action::ADD |
           CRM_Core_Action::DELETE | CRM_Core_Action::RENEW
         )
-      ) ||
+    ) ||
       !empty($_POST)
     ) {
       $this->edit();
@@ -270,7 +282,8 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     switch ($context) {
       case 'activity':
         if ($this->_contactId) {
-          $url = CRM_Utils_System::url('civicrm/contact/view',
+          $url = CRM_Utils_System::url(
+            'civicrm/contact/view',
             "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
           );
         }
@@ -316,7 +329,8 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
 
       default:
         if ($this->_contactId) {
-          $url = CRM_Utils_System::url('civicrm/contact/view',
+          $url = CRM_Utils_System::url(
+            'civicrm/contact/view',
             "reset=1&force=1&cid={$this->_contactId}&selectedChild=case"
           );
         }
@@ -329,4 +343,3 @@ class CRM_Case_Page_Tab extends CRM_Core_Page {
     }
   }
 }
-

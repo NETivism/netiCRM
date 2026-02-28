@@ -57,7 +57,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     // check for visibility, if visibility is Public Pages and they have the permission
     // return true
 
-    if ($this->_mailing->visibility == 'Public Pages' && CRM_Core_Permission::check('view public CiviMail content' )) {
+    if ($this->_mailing->visibility == 'Public Pages' && CRM_Core_Permission::check('view public CiviMail content')) {
       return TRUE;
     }
 
@@ -118,7 +118,8 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
 
     // get and format attachments
 
-    $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_mailing',
+    $attachments = &CRM_Core_BAO_File::getEntityFile(
+      'civicrm_mailing',
       $this->_mailing->id
     );
 
@@ -127,9 +128,12 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
       //get details of contact with token value including Custom Field Token Values.CRM-3734
       $returnProperties = $this->_mailing->getReturnProperties();
       $params = ['contact_id' => $this->_contactID];
-      $details = CRM_Utils_Token::getTokenDetails($params,
+      $details = CRM_Utils_Token::getTokenDetails(
+        $params,
         $returnProperties,
-        TRUE, TRUE, NULL,
+        TRUE,
+        TRUE,
+        NULL,
         $this->_mailing->getFlattenedTokens(),
         get_class($this)
       );
@@ -139,10 +143,16 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
 
       $details = ['test'];
     }
-    $mime = &$this->_mailing->compose(NULL, NULL, NULL, 0,
+    $mime = &$this->_mailing->compose(
+      NULL,
+      NULL,
+      NULL,
+      0,
       $this->_mailing->from_email,
       $this->_mailing->from_email,
-      TRUE, $details, $attachments
+      TRUE,
+      $details,
+      $attachments
     );
 
     if (isset($this->_mailing->body_html)) {
@@ -173,4 +183,3 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     }
   }
 }
-

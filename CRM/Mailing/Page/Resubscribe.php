@@ -1,5 +1,5 @@
 <?php
-class CRM_Mailing_Page_Resubscribe extends CRM_Core_Page{
+class CRM_Mailing_Page_Resubscribe extends CRM_Core_Page {
   public function run() {
     $form = new CRM_Core_Controller_Simple('CRM_Mailing_Form_Resubscribe', ts('Resubscribe'), CRM_Core_Action::ADD);
     $form->setEmbedded(TRUE);

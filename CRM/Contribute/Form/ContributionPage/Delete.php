@@ -74,7 +74,7 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
 
     //check for delete
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
 
@@ -180,4 +180,3 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
     CRM_Core_Session::setStatus(ts('The contribution page \'%1\' has been deleted.', [1 => $this->_title]));
   }
 }
-

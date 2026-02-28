@@ -92,10 +92,9 @@ class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment 
     while ($participantPayment->fetch()) {
       $participantPayment->delete();
     }
-    if($participantPayment){
+    if ($participantPayment) {
       return $participantPayment;
     }
     return FALSE;
   }
 }
-

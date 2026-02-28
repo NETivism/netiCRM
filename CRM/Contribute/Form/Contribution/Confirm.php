@@ -69,8 +69,13 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     if ($this->_contributeMode == 'express') {
       // rfp == redirect from paypal
-      $rfp = CRM_Utils_Request::retrieve('rfp', 'Boolean',
-        CRM_Core_DAO::$_nullObject, FALSE, NULL, 'GET'
+      $rfp = CRM_Utils_Request::retrieve(
+        'rfp',
+        'Boolean',
+        CRM_Core_DAO::$_nullObject,
+        FALSE,
+        NULL,
+        'GET'
       );
       if ($rfp) {
 
@@ -143,10 +148,10 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       }
       $this->_params['amount'] = $this->get('amount');
 
-      if($this->get('amount_level')){
+      if ($this->get('amount_level')) {
         $this->_params['amount_level'] = $this->get('amount_level');
       }
-      else if ($this->_params['amount']) {
+      elseif ($this->_params['amount']) {
         CRM_Contribute_Form_Contribution_Main::computeAmount($this->_params, $this);
       }
 
@@ -238,7 +243,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $honor_block_is_active = $this->get('honor_block_is_active');
     // make sure we have values for it
     if ($honor_block_is_active &&
-      ((!empty($params["honor_first_name"]) && !empty($params["honor_last_name"])) ||
+      (
+        (!empty($params["honor_first_name"]) && !empty($params["honor_last_name"])) ||
         (!empty($params["honor_email"]))
       )
     ) {
@@ -261,8 +267,12 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     if (CRM_Utils_Array::value('selectProduct', $params) && $params['selectProduct'] != 'no_thanks') {
       $option = CRM_Utils_Array::value('options_' . $params['selectProduct'], $params);
       $productID = $params['selectProduct'];
-      CRM_Contribute_BAO_Premium::buildPremiumBlock($this, $this->_id, FALSE,
-        $productID, $option
+      CRM_Contribute_BAO_Premium::buildPremiumBlock(
+        $this,
+        $this->_id,
+        FALSE,
+        $productID,
+        $option
       );
       $this->set('productID', $productID);
       $this->set('option', $option);
@@ -272,11 +282,13 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       if (isset($params['selectMembership']) &&
         $params['selectMembership'] != 'no_thanks'
       ) {
-        CRM_Member_BAO_Membership::buildMembershipBlock($this,
+        CRM_Member_BAO_Membership::buildMembershipBlock(
+          $this,
           $this->_id,
           FALSE,
           $params['selectMembership'],
-          FALSE, NULL,
+          FALSE,
+          NULL,
           $this->_membershipContactID
         );
       }
@@ -289,9 +301,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     // donate from oid should remove some rule
     if (!empty($this->_originalId)) {
-      foreach($this->_rules as $fieldName => &$qfField) {
+      foreach ($this->_rules as $fieldName => &$qfField) {
         if (preg_match('/^custom_\d+/', $fieldName) && isset($this->_originalValues[$fieldName]) && strstr($params[$fieldName], CRM_Utils_String::MASK)) {
-          foreach($qfField as $idx => $rule) {
+          foreach ($qfField as $idx => $rule) {
             if ($rule['type'] != 'xssString') {
               unset($qfField[$idx]);
             }
@@ -310,13 +322,15 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       && !$this->_params['is_pay_later']
     ) {
       $this->_checkoutButtonName = $this->getButtonName('next', 'checkout');
-      $this->add('image',
+      $this->add(
+        'image',
         $this->_checkoutButtonName,
         $this->_paymentProcessor['url_button'],
         ['class' => 'form-submit']
       );
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'back',
             'name' => ts('<< Go Back'),
           ],
@@ -335,7 +349,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $contribButton = ts('Make Contribution');
         $this->assign('button', ts('Make Contribution'));
       }
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'back',
             'name' => ts('Go Back'),
           ],
@@ -426,7 +441,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         'qfKey',
       ];
       if (!empty($params) && is_array($params)) {
-        foreach($params as $k => $v) {
+        foreach ($params as $k => $v) {
           if (in_array($k, $ignores)) {
             unset($params[$k]);
           }
@@ -458,7 +473,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     if (!empty($self->_params['selectProduct'])) {
       $fields['selectProduct'] = $self->_params['selectProduct'];
     }
-    if (isset($fields['selectProduct']) && $fields['selectProduct'] != 'no_thanks' ) {
+    if (isset($fields['selectProduct']) && $fields['selectProduct'] != 'no_thanks') {
       $premiumTitle = $self->_values['premiums_intro_title'];
       // Check stock status for selected product
       $premiumDAO = new CRM_Contribute_DAO_Premium();
@@ -468,7 +483,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
       if ($premiumDAO->premiums_combination == 1) {
         $daoClassName = 'CRM_Contribute_DAO_PremiumsCombination';
-      } else {
+      }
+      else {
         $daoClassName = 'CRM_Contribute_DAO_Product';
       }
       $premiumItemDAO = new $daoClassName();
@@ -492,7 +508,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
               }
             }
           }
-        } else {
+        }
+        else {
           // For single products, check stock status
           if ($premiumItemDAO->stock_status > 0) {
             $remainQty = $premiumItemDAO->stock_qty - $premiumItemDAO->send_qty;
@@ -531,7 +548,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    *
    * @return void
    */
-  public function setDefaultValues() {}
+  public function setDefaultValues() {
+  }
 
   /**
    * Process the form
@@ -542,11 +560,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   public function postProcess() {
     $config = CRM_Core_Config::singleton();
     if (!empty($this->_originalValues) && !empty($this->get('originalId'))) {
-      foreach($this->_originalValues as $key => $val) {
+      foreach ($this->_originalValues as $key => $val) {
         if (strstr($this->_params[$key], CRM_Utils_String::MASK) && !empty($val) && $val !== $this->_params[$key]) {
           $this->_params[$key] = $val;
         }
-      } 
+      }
     }
 
     $contactID = $this->_userID;
@@ -555,7 +573,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     $this->_params['description'] = ts('Online Contribution') . ': ' . (($this->_pcpInfo['title']) ? $this->_pcpInfo['title'] : $this->_values['title']);
 
     // also add accounting code
-    $this->_params['accountingCode'] = CRM_Utils_Array::value('accountingCode',
+    $this->_params['accountingCode'] = CRM_Utils_Array::value(
+      'accountingCode',
       $this->_values
     );
 
@@ -683,8 +702,13 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     }
     else {
       $ctype = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'contact_type');
-      $contactID = &CRM_Contact_BAO_Contact::createProfileContact($params, $fields, $contactID, $addToGroups,
-        NULL, $ctype
+      $contactID = &CRM_Contact_BAO_Contact::createProfileContact(
+        $params,
+        $fields,
+        $contactID,
+        $addToGroups,
+        NULL,
+        $ctype
       );
     }
     $this->set('contactID', $contactID);
@@ -765,8 +789,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         $membershipParams['cms_contactID'] = $contactID;
       }
 
-      CRM_Member_BAO_Membership::postProcessMembership($membershipParams, $contactID,
-        $this, $premiumParams
+      CRM_Member_BAO_Membership::postProcessMembership(
+        $membershipParams,
+        $contactID,
+        $this,
+        $premiumParams
       );
     }
     else {
@@ -777,8 +804,11 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       $contributionTypeId = $this->_values['contribution_type_id'];
 
 
-      CRM_Contribute_BAO_Contribution_Utils::processConfirm($this, $paymentParams,
-        $premiumParams, $contactID,
+      CRM_Contribute_BAO_Contribution_Utils::processConfirm(
+        $this,
+        $paymentParams,
+        $premiumParams,
+        $contactID,
         $contributionTypeId,
         'contribution'
       );
@@ -800,7 +830,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
       if ($premiumType == 'combination') {
         $this->processPremiumCombination($selectProduct, $contribution, $premiumParams);
-      } else {
+      }
+      else {
         $this->processSingleProduct($selectProduct, $contribution, $premiumParams);
       }
     }
@@ -1095,7 +1126,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     $ids = [];
     if (isset($contribParams['invoice_id'])) {
-      $contribID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',
+      $contribID = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_Contribution',
         $contribParams['invoice_id'],
         'id',
         'invoice_id'
@@ -1143,7 +1175,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       //if its due to pcp
       if (CRM_Utils_Array::value('pcp_made_through_id', $params)) {
         $contribSoftParams['pcp_id'] = $params['pcp_made_through_id'];
-        $contribSoftParams['contact_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCP',
+        $contribSoftParams['contact_id'] = CRM_Core_DAO::getFieldValue(
+          'CRM_Contribute_DAO_PCP',
           $params['pcp_made_through_id'],
           'contact_id'
         );
@@ -1158,7 +1191,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     //handle pledge stuff.
     if (!CRM_Utils_Array::value('separate_membership_payment', $form->_params) &&
       CRM_Utils_Array::value('pledge_block_id', $form->_values) &&
-      (CRM_Utils_Array::value('is_pledge', $form->_params) ||
+      (
+        CRM_Utils_Array::value('is_pledge', $form->_params) ||
         CRM_Utils_Array::value('pledge_id', $form->_values)
       )
     ) {
@@ -1169,7 +1203,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
         //update the schedule when payment(s) are made
 
         foreach ($form->_params['pledge_amount'] as $paymentId => $dontCare) {
-          $scheduledAmount = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
+          $scheduledAmount = CRM_Core_DAO::getFieldValue(
+            'CRM_Pledge_DAO_Payment',
             $paymentId,
             'scheduled_amount',
             'id'
@@ -1236,7 +1271,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
 
     if ($online) {
 
-      CRM_Core_BAO_CustomValueTable::postProcess($form->_params,
+      CRM_Core_BAO_CustomValueTable::postProcess(
+        $form->_params,
         CRM_Core_DAO::$_nullArray,
         'civicrm_contribution',
         $contribution->id,
@@ -1264,7 +1300,8 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       $contactID = $params['cms_contactID'];
     }
 
-    CRM_Contribute_BAO_Contribution_Utils::createCMSUser($params,
+    CRM_Contribute_BAO_Contribution_Utils::createCMSUser(
+      $params,
       $contactID,
       'email-' . $form->_bltID
     );
@@ -1430,7 +1467,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
       $locTypeId = $locType->id;
       if (!empty($behalfOrganization[$locFld][1]['id']) && !empty($behalfOrganization['contact_id'])) {
         $BAOString = 'CRM_Core_BAO_' . ucfirst($locFld);
-        $block = new $BAOString( );
+        $block = new $BAOString();
         $block->id = $behalfOrganization[$locFld][1]['id'];
         $block->contact_id = $behalfOrganization['contact_id'];
         $blockValues = CRM_Core_BAO_Block::retrieveBlock($block, $locFld);
@@ -1526,4 +1563,3 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
     }
   }
 }
-

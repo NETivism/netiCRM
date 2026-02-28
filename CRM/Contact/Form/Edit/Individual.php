@@ -77,7 +77,10 @@ class CRM_Contact_Form_Edit_Individual {
     }
 
     // nick_name
-    $form->addElement('text', 'nick_name', ts('Nick Name'),
+    $form->addElement(
+      'text',
+      'nick_name',
+      ts('Nick Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'nick_name')
     );
 
@@ -99,11 +102,16 @@ class CRM_Contact_Form_Edit_Individual {
 
 
     //External Identifier Element
-    $form->add('text', 'external_identifier', ts('External Id'),
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'), FALSE
+    $form->add(
+      'text',
+      'external_identifier',
+      ts('External Id'),
+      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'),
+      FALSE
     );
 
-    $form->addRule('external_identifier',
+    $form->addRule(
+      'external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
       ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
@@ -138,4 +146,3 @@ class CRM_Contact_Form_Edit_Individual {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

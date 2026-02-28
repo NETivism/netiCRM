@@ -70,7 +70,7 @@ class CRM_Core_BAO_Location extends CRM_Core_DAO {
     // create location blocks.
     foreach (self::$blocks as $block) {
       if ($block != 'address') {
-        $location[$block] = CRM_Core_BAO_Block::create( $block, $params, $entity );
+        $location[$block] = CRM_Core_BAO_Block::create($block, $params, $entity);
       }
       else {
         $location[$block] = CRM_Core_BAO_Address::create($params, $fixAddress, $entity);
@@ -266,7 +266,7 @@ WHERE e.id = %1";
       else {
         $name = 'CRM_Core_BAO_'.ucfirst($block);
       }
-      $blocks[$block] = $name::getValues( $entityBlock, $microformat );
+      $blocks[$block] = $name::getValues($entityBlock, $microformat);
     }
     return $blocks;
   }
@@ -306,7 +306,7 @@ WHERE e.id = %1";
     }
   }
 
-  /* Function to copy or update location block. 
+  /* Function to copy or update location block.
      *
      * @param  int  $locBlockId  location block id.
      * @param  int  $updateLocBlockId update location block id
@@ -345,7 +345,8 @@ WHERE e.id = %1";
       }
     }
 
-    $copyLocation = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_LocBlock',
+    $copyLocation = &CRM_Core_DAO::copyGeneric(
+      'CRM_Core_DAO_LocBlock',
       ['id' => $locBlock['id']],
       $copyLocationParams
     );
@@ -388,8 +389,11 @@ WHERE e.id = %1";
         !CRM_Utils_System::isNull($nonPrimaryBlockIds[$name])
       ) {
         // data exists and no primary block - make one primary.
-        CRM_Core_DAO::setFieldValue("CRM_Core_DAO_" . $block,
-          array_pop($nonPrimaryBlockIds[$name]), 'is_primary', 1
+        CRM_Core_DAO::setFieldValue(
+          "CRM_Core_DAO_" . $block,
+          array_pop($nonPrimaryBlockIds[$name]),
+          'is_primary',
+          1
         );
       }
     }
@@ -446,4 +450,3 @@ WHERE e.id = %1";
     }
   }
 }
-

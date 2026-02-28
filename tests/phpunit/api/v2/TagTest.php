@@ -33,7 +33,8 @@ class api_v2_TagTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   ///////////////// civicrm_tag_get methods
 
@@ -188,4 +189,3 @@ class api_v2_TagTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
   }
 }
-

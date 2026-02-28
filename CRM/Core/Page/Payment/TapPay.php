@@ -8,8 +8,8 @@ class CRM_Core_Page_Payment_TapPay extends CRM_Core_Page {
     if ($component == 'contribute') {
       $className = 'CRM_Contribute_Controller_Contribution';  // these class use to store session variable name
     }
-    elseif($component == 'event') {
-      $className = 'CRM_Event_Controller_Registration'; 
+    elseif ($component == 'event') {
+      $className = 'CRM_Event_Controller_Registration';
     }
     else {
       $className = $component;

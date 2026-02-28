@@ -9,4 +9,3 @@ function civicrm_api3_generic_example_action2($apiRequest) {
     $apiRequest['action']
   );
 }
-

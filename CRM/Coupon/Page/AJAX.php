@@ -37,23 +37,23 @@
  * This is base class for all ajax calls
  */
 class CRM_Coupon_Page_AJAX {
-  public static function validEventFromCode(){
-    $code = CRM_Utils_Request::retrieve('code', 'Text', $object, False, '', 'Post');
-    $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, False, '', 'Post');
-    if(empty($event_id)){
-      $qfKey = CRM_Utils_Request::retrieve('qfKey', 'Text', $object, False, '', 'Post');
+  public static function validEventFromCode() {
+    $code = CRM_Utils_Request::retrieve('code', 'Text', $object, FALSE, '', 'Post');
+    $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, FALSE, '', 'Post');
+    if (empty($event_id)) {
+      $qfKey = CRM_Utils_Request::retrieve('qfKey', 'Text', $object, FALSE, '', 'Post');
       $session = CRM_Core_Session::singleton();
       $event_id = $session->get('id', 'CRM_Event_Controller_Registration_'.$qfKey);
     }
 
-    $activeOptionIdsText = CRM_Utils_Request::retrieve('activePriceOptionIds', 'Text', $object, False, '', 'Post');
-    if(!empty($activeOptionIdsText)){
+    $activeOptionIdsText = CRM_Utils_Request::retrieve('activePriceOptionIds', 'Text', $object, FALSE, '', 'Post');
+    if (!empty($activeOptionIdsText)) {
       $activeOptionIds = explode(',', $activeOptionIdsText);
     }
 
     if (!empty($event_id) && CRM_Utils_Rule::positiveInteger($event_id)) {
       $coupon = CRM_Coupon_BAO_Coupon::validEventFromCode($code, $event_id);
-      if($coupon){
+      if ($coupon) {
         // this coupon doesn't specify any event, check price field value
         if (empty($coupon['used_for']['civicrm_event']) && !empty($coupon['used_for']['civicrm_price_field_value'])) {
           $matches = array_intersect($coupon['used_for']['civicrm_price_field_value'], $activeOptionIds);
@@ -88,7 +88,7 @@ class CRM_Coupon_Page_AJAX {
       $fields = [];
       $sql = "SELECT price_field_id, id FROM civicrm_price_field_value WHERE id IN(".CRM_Utils_Array::implode(',', $fvids).")";
       $dao = CRM_Core_DAO::executeQuery($sql);
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $fieldName = 'price_'.$dao->price_field_id;
         $fields[] = [
           'fieldName' => $fieldName,

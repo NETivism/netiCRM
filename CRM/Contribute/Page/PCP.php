@@ -135,8 +135,11 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE,
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
       'browse'
     );
     $statusApprovedId = intval(CRM_Core_OptionGroup::getValue('pcp_status', 'Approved', 'name'));
@@ -164,7 +167,8 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1&action=browse'));
-      $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_PCP_PCP',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Contribute_Form_PCP_PCP',
         'Personal Campaign Page',
         CRM_Core_Action::DELETE
       );
@@ -271,7 +275,8 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
             $action -= CRM_Core_Action::DELETE;
             if ($dao->active == 1) {
               $action -= CRM_Core_Action::ENABLE;
-            } else {
+            }
+            else {
               $action -= CRM_Core_Action::DISABLE;
             }
             break;
@@ -297,7 +302,9 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
         $pcpSummary[$dao->id]['status_id'] = $status[$dao->status_id];
         $pcpSummary[$dao->id]['contribution_page_id'] = $dao->contribution_page_id;
         $pcpSummary[$dao->id]['contribution_page_title'] = $contribution_page[$dao->contribution_page_id];
-        $pcpSummary[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $pcpSummary[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $dao->id, 'qfKey' => $qfKey]
         );
         $pcpSummary[$dao->id]['class'] = $class;
@@ -358,4 +365,3 @@ class CRM_Contribute_Page_PCP extends CRM_Core_Page_Basic {
   }
 
 }
-

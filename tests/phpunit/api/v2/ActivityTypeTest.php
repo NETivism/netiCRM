@@ -51,7 +51,8 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   /**
    *  Test civicrm_activity_type_get()
@@ -108,4 +109,3 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
     $this->assertEquals($activityTypeDelete, 1, 'In line ' . __LINE__);
   }
 }
-

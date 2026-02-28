@@ -133,7 +133,9 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     // name
     $this->add('text', 'title', ts('Title'), $attributes['title'], TRUE);
 
-    $this->add('select', 'contribution_type_id',
+    $this->add(
+      'select',
+      'contribution_type_id',
       ts('Contribution Type'),
       CRM_Contribute_PseudoConstant::contributionType(NULL, FALSE, TRUE),
       TRUE,
@@ -251,7 +253,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     }
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
-    if($params['is_active'] && $params['is_special']){
+    if ($params['is_active'] && $params['is_special']) {
       $params['is_active'] = 3;
     }
     if ($this->get('internalExists')) {
@@ -297,16 +299,16 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     unset($params['deleteBackgroundImage']);
     unset($params['deleteMobileBackgroundImage']);
 
-    if(!empty($deleteBackgroundImage)){
+    if (!empty($deleteBackgroundImage)) {
       $params['background_URL'] = '';
     }
-    if(!empty($deleteMobileBackgroundImage)){
+    if (!empty($deleteMobileBackgroundImage)) {
       $params['mobile_background_URL'] = '';
     }
-    if(!empty($params['uploadBackgroundImage']['name'])){
+    if (!empty($params['uploadBackgroundImage']['name'])) {
       $params['background_URL'] = $config->customFileUploadURL.basename($params['uploadBackgroundImage']['name']);
     }
-    if(!empty($params['uploadMobileBackgroundImage']['name'])){
+    if (!empty($params['uploadMobileBackgroundImage']['name'])) {
       $params['mobile_background_URL'] = $config->customFileUploadURL.basename($params['uploadMobileBackgroundImage']['name']);
     }
 
@@ -327,4 +329,3 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     return ts('Title and Settings');
   }
 }
-

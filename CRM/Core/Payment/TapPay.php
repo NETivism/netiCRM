@@ -13,7 +13,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   // Used for contribution recurring form ( /CRM/Contribute/Form/ContributionRecur.php ).
   public static $_editableFields = ['amount', 'installments', 'end_date', 'cycle_day', 'contribution_status_id', 'note_title', 'note_body'];
 
- // Expired Status cannot be selected when editing a contribution.
+  // Expired Status cannot be selected when editing a contribution.
   public static $_excludedStatuses = [6];
 
   public static $_hideFields = ['invoice_id', 'trxn_id'];
@@ -96,7 +96,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
-  public static function getAdminFields($ppDAO, $form){
+  public static function getAdminFields($ppDAO, $form) {
     $fields = [
       [
         'name' => 'user_name',
@@ -199,7 +199,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       if (isset($this->_paymentForm->_params[0]) && !empty($this->_paymentForm->_params[0]['email-5'])) {
         $cardholderEmail = $this->_paymentForm->_params[0]['email-5'];
       }
-      else if(!empty($this->_paymentForm->_params['email-5'])){
+      elseif (!empty($this->_paymentForm->_params['email-5'])) {
         $cardholderEmail = $this->_paymentForm->_params['email-5'];
       }
       $this->_paymentForm->assign('cardholder_email', $cardholderEmail);
@@ -271,7 +271,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   public static function payByPrime($payment) {
     if ($payment && !empty($payment['payment_processor_id'])) {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
-      if(empty($trxn_id)){
+      if (empty($trxn_id)) {
         $trxn_id = self::getContributionTrxnID($payment['contributionID']);
         CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id', $trxn_id);
       }
@@ -371,7 +371,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
   public static function payByToken($recurringId = NULL, $referContributionId = NULL, $sendMail = TRUE) {
-    if(empty($recurringId)){
+    if (empty($recurringId)) {
       $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
     }
 
@@ -518,7 +518,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     // Check required parameters
     // Check token.
     $requiredTokenParams = ['card_key', 'card_token'];
-    foreach($requiredTokenParams as $paramsKey) {
+    foreach ($requiredTokenParams as $paramsKey) {
       if (empty($tokenParams[$paramsKey])) {
         CRM_Core_Error::fatal(ts('Missing required field: %1', [1 => $paramsKey]));
       }
@@ -608,9 +608,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     if ($payment && !empty($payment['payment_processor_id'])) {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'contribution_recur_id');
-      if(empty($trxn_id)){
+      if (empty($trxn_id)) {
         $rand = base_convert(strval(rand(16, 255)), 10, 16);
-        $recurringId = 
+        $recurringId =
         $trxn_id = 'b_'.$recurringId.'_'.$payment['contributionID'].'_'.$rand;
         CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id', $trxn_id);
       }
@@ -668,7 +668,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // update token status after transaction completed
       if ($result->status === 0 && !empty($contribution['contribution_recur_id'])) {
-        self::cardMetadata($payment['contributionID']); 
+        self::cardMetadata($payment['contributionID']);
       }
 
       $response = ['status' => $result->status, 'msg' => $result->msg];
@@ -678,7 +678,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
   public static function cardMetadata($contributionId, $data = NULL) {
-    if (empty($contributionId))  {
+    if (empty($contributionId)) {
       return FALSE;
     }
     $tappayData = new CRM_Contribute_DAO_TapPay();
@@ -689,7 +689,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       if (!empty($tappayData->card_token) && !empty($tappayData->card_key)) {
         $contribution = new CRM_Contribute_DAO_Contribution();
         $contribution->id = $contributionId;
-        if($contribution->find(TRUE)) {
+        if ($contribution->find(TRUE)) {
           $ppid = $contribution->payment_processor_id;
           $mode = $contribution->is_test ? 'test' : 'live';
           if ($ppid) {
@@ -730,14 +730,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
             return $result;
           }
         }
-      } 
+      }
     }
     return FALSE;
   }
 
   /**
    * Make Transaction for certainly contribution.
-   * 
+   *
    * @param Object $result The result object.
    * @param Integer $contributionId The ID of contribution.
    * @param Boolean $sendMail If TRUE, send mail for contact after finished.
@@ -759,10 +759,10 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
     // prepare input
     $input = (array)$result;
-    if(!empty($ids['event'])){
+    if (!empty($ids['event'])) {
       $input['component'] = 'event';
     }
-    else{
+    else {
       $input['component'] = 'contribute';
     }
     /* TODO: remove this because this should be done in TapPayAPI
@@ -785,7 +785,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
       // check trxn_id when pay_by_prime
       // result->order_id is only used in payByBindCard
-      if ( empty($result->order_id) && !empty($result->card_secret) && !strstr($contribution->trxn_id, $result->order_number)) {
+      if (empty($result->order_id) && !empty($result->card_secret) && !strstr($contribution->trxn_id, $result->order_number)) {
         $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request.").$contribution->trxn_id.": ".$result->order_number."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
@@ -800,7 +800,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       }
 
       // check amount
-      if (!empty($result->amount) && $amount != $result->amount ) {
+      if (!empty($result->amount) && $amount != $result->amount) {
         $msgText = ts("Failuare: Amount values dont match between database and IPN request. Trxn_id is %1, Data from payment : %2, Data in CRM : %3", [1 => $contribution->trxn_id, 2 => $result->amount, 3 => $amount])."\n";
         CRM_Core_Error::debug_log_message($msgText);
         $note .= $msgText;
@@ -816,7 +816,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       if (isset($result->status)) {
         $status = $result->status;
       }
-      else if (!empty($result->record_status)) {
+      elseif (!empty($result->record_status)) {
         // recordAPI use record_status
         $status = $result->record_status;
       }
@@ -841,7 +841,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
         }
       }
-      else{
+      else {
         // Failed
         $ipn->failed($objects, $transaction, $note);
       }
@@ -857,7 +857,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     $seq->name = self::QUEUE_NAME;
 
     if ($seq->find(TRUE)) {
-      if ( $seq->value && (CRM_REQUEST_TIME - $seq->timestamp) < 1800) {
+      if ($seq->value && (CRM_REQUEST_TIME - $seq->timestamp) < 1800) {
         // last process is executing.
         $error = "Last process is still executing. Interupt now.";
         CRM_Core_Error::debug_log_message($error, TRUE);
@@ -886,7 +886,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
       $cycleDayFilter = 'r.cycle_day = '.$today.' ';
     }
     else {
-      for($i = $today; $i <= 31 ; $i++) {
+      for ($i = $today; $i <= 31 ; $i++) {
         $days[] = $i;
       }
       $cycleDayFilter = 'r.cycle_day IN ('.CRM_Utils_Array::implode(',', $days).')';
@@ -1075,7 +1075,7 @@ LIMIT 0, 100
       $changeStatus = TRUE;
     }
     elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($new_expiry_date) && date('Ym', $time) == date('Ym', strtotime($new_expiry_date))) {
-      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", [1 => date('Y/m',strtotime($new_expiry_date))]);
+      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", [1 => date('Y/m', strtotime($new_expiry_date))]);
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
       $isExpired = TRUE;
@@ -1097,7 +1097,7 @@ LIMIT 0, 100
       $isExpired = TRUE;
     }
 
-    if ( $changeStatus ) {
+    if ($changeStatus) {
       $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
       $statusNote .= ' '.ts("Auto renews status");
       $resultNote .= "\n".$statusNoteTitle;
@@ -1141,15 +1141,17 @@ LIMIT 0, 100
 
   public static function queryRecord($url_params, $get = []) {
     // apply $_GET to $get , and filted params 'q'
-    if(empty($get)){
+    if (empty($get)) {
       foreach ($_GET as $key => $value) {
-        if($key == 'q')continue;
+        if ($key == 'q') {
+          continue;
+        }
         $get[$key] = $value;
       }
     }
 
     // retrieve contribution_id from $_GET
-    if(empty($contributionId)){
+    if (empty($contributionId)) {
       $contributionId = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     }
 
@@ -1158,7 +1160,7 @@ LIMIT 0, 100
     // redirect to contribution view page
     $query = http_build_query($get);
     $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
-     return CRM_Core_Error::statusBounce($resultNote, $redirect);
+    return CRM_Core_Error::statusBounce($resultNote, $redirect);
   }
 
   public static function doSyncRecord($contributionId, $data = NULL) {
@@ -1209,10 +1211,10 @@ LIMIT 0, 100
     }
 
     // check there are record in return list
-    if(!empty($record)){
+    if (!empty($record)) {
 
       // The status means refund
-      if($record->record_status == 3) {
+      if ($record->record_status == 3) {
 
         // Call trade history api to get refund date.
         $tappayParams['apiType'] = 'trade_history';
@@ -1234,7 +1236,7 @@ LIMIT 0, 100
           $result = $api_history->request($params);
           // Get the refund type history from history list.
           foreach ($result->trade_history as $history) {
-            if($history->action == 3){
+            if ($history->action == 3) {
               break;
             }
           }
@@ -1248,7 +1250,7 @@ LIMIT 0, 100
       if (in_array($record->record_status, ["1", "0"]) && $contribution->contribution_status_id != 1) {
         self::doTransaction($record, $contributionId);
       }
-      else if($record->record_status == 3 && $contribution->contribution_status_id != 3) {
+      elseif ($record->record_status == 3 && $contribution->contribution_status_id != 3) {
         // record original cancel_date, status_id data.
         $origin_cancel_date = $contribution->cancel_date;
         $origin_cancel_date = date('YmdHis', strtotime($origin_cancel_date));
@@ -1256,7 +1258,7 @@ LIMIT 0, 100
 
         // check data
         $pass = TRUE;
-        if($record->order_number != $contribution->trxn_id) {
+        if ($record->order_number != $contribution->trxn_id) {
           // order number is not correct.
           $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request.").$contribution->trxn_id.": ".$result->order_number."\n";
           $resultNote .= $msgText;
@@ -1264,7 +1266,7 @@ LIMIT 0, 100
         }
 
         // check refund
-        if($record->refunded_amount == $contribution->total_amount && $pass) {
+        if ($record->refunded_amount == $contribution->total_amount && $pass) {
           // find refund, check original status
           $cancelDate = date('Y-m-d H:i:s', $record->refund_date / 1000);
           $contribution->cancel_date = $cancelDate;
@@ -1273,7 +1275,7 @@ LIMIT 0, 100
           $resultNote .= "\n".ts('The contribution has been canceled.');
         }
       }
-      else if ($record->record_status == 2) {
+      elseif ($record->record_status == 2) {
 
         // record original cancel_date, status_id data.
         $origin_cancel_date = $contribution->cancel_date;
@@ -1282,7 +1284,7 @@ LIMIT 0, 100
 
         // check data
         $pass = TRUE;
-        if($record->order_number != $contribution->trxn_id) {
+        if ($record->order_number != $contribution->trxn_id) {
           // order number is not correct.
           $msgText = ts("Failuare: OrderNumber values doesn't match between database and IPN request.").$contribution->trxn_id.": ".$result->order_number."\n";
           $resultNote .= $msgText;
@@ -1290,7 +1292,7 @@ LIMIT 0, 100
         }
 
         // check refund
-        if($record->amount != $contribution->total_amount && $pass) {
+        if ($record->amount != $contribution->total_amount && $pass) {
           // find refund, check original status
           $contribution->total_amount = $record->amount;
           $contribution->contribution_status_id = 1;
@@ -1302,7 +1304,7 @@ LIMIT 0, 100
         }
 
       }
-      else{
+      else {
         $resultNote .= "\n".ts('There are no any change.');
       }
     }
@@ -1382,10 +1384,10 @@ LIMIT 0, 100
   }
 
   public static function getAssociatedSession($qfKey, $class) {
-    if(!$qfKey){
+    if (!$qfKey) {
       return FALSE;
     }
-    if(empty($class)){
+    if (empty($class)) {
       return FALSE;
     }
 
@@ -1410,7 +1412,7 @@ LIMIT 0, 100
       $input = file_get_contents('php://input');
       $data = json_decode($input);
     }
-    elseif (is_string($request)){
+    elseif (is_string($request)) {
       $input = $request;
       $data = json_decode($request);
     }
@@ -1451,7 +1453,7 @@ LIMIT 0, 100
         if ($data->card_info->expiry_date) {
           $year = substr($data->card_info->expiry_date, 0, 4);
           $month = substr($data->card_info->expiry_date, 4, 2);
-					$expiryDate = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
+          $expiryDate = date('Y-m-d', strtotime('last day of this month', strtotime($year.'-'.$month.'-01')));
 
           // update status
           if (strtolower($data->card_info->token_status) !== 'active') {
@@ -1473,7 +1475,7 @@ LIMIT 0, 100
             }
             break;
           }
-          elseif ($expiryDate != $dao->expiry_date  && strtotime($expiryDate ) > strtotime($dao->expiry_date)) {
+          elseif ($expiryDate != $dao->expiry_date  && strtotime($expiryDate) > strtotime($dao->expiry_date)) {
             // check token_status
             $sql = "UPDATE civicrm_contribution_tappay SET expiry_date = %1 WHERE card_token = %2";
             CRM_Core_DAO::executeQuery($sql, [
@@ -1575,7 +1577,7 @@ LIMIT 0, 100
       $input = file_get_contents('php://input');
       $data = json_decode($input);
     }
-    elseif (is_string($request)){
+    elseif (is_string($request)) {
       $input = $request;
       $data = json_decode($request);
     }
@@ -1640,7 +1642,7 @@ LIMIT 0, 100
   /**
    * Get the message as pressing "Sync Now" button.
    * Called by MakingTransaction form.
-   * 
+   *
    * @param int $contributionId The contribution id of the page.
    * @param int $recurId The recurring id of the page.
    * @return string The message
@@ -1651,7 +1653,7 @@ LIMIT 0, 100
 
   /**
    * Behavior after pressed "Sync now" button.
-   * 
+   *
    * @param int $id The contribution recurring ID
    * @param string $idType Means the type of the ID, value as "Contribution" or "recur"
    * @param object $form The MakingTransaction form object
@@ -1678,7 +1680,7 @@ LIMIT 0, 100
     $contributionId = CRM_Core_DAO::singleValueQuery($sql, $paramsRecurId);
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
-    if($contribution->find(TRUE)) {
+    if ($contribution->find(TRUE)) {
       $ppid = $contribution->payment_processor_id;
       $mode = $contribution->is_test ? 'test' : 'live';
       if ($ppid) {
@@ -1741,9 +1743,9 @@ LIMIT 0, 100
 
   /**
    * Function called from contributionRecur page to show tappay detail information
-   * 
+   *
    * @param int @contributionId the contribution id
-   * 
+   *
    * @return array The label as the key to value.
    */
   public static function getRecordDetail($contributionId) {
@@ -1775,7 +1777,7 @@ LIMIT 0, 100
     else {
       $newestExpiryDate = $tappayDAO->expiry_date;
     }
-    $returnData[ts('Card Expiry Date')] = date('Y/m',strtotime($newestExpiryDate)).$updateCardmetaButton;
+    $returnData[ts('Card Expiry Date')] = date('Y/m', strtotime($newestExpiryDate)).$updateCardmetaButton;
     $returnData[ts('Response Code')] = $tappayObject->status;
     $returnData[ts('Response Message')] = $tappayObject->msg;
 
@@ -1795,10 +1797,10 @@ LIMIT 0, 100
       if (empty($autoRenew)) {
         $returnData[ts('Support 3JTSP')] = ts("No");
       }
-      else if($autoRenew == 1) {
+      elseif ($autoRenew == 1) {
         $returnData[ts('Support 3JTSP')] = ts("Yes");
       }
-      else if($autoRenew == 2) {
+      elseif ($autoRenew == 2) {
         $sql = "SELECT MAX(tl.date) FROM civicrm_contribution_tappay_log tl INNER JOIN civicrm_contribution c ON tl.contribution_id = c.id WHERE c.contribution_recur_id = %1 AND tl.url LIKE '%civicrm/tappay/cardnotify' GROUP BY tl.contribution_id";
         $params = [1 => [$tappayDAO->contribution_recur_id, 'Positive']];
         $updatedDate = CRM_Core_DAO::singleValueQuery($sql, $params);
@@ -1821,13 +1823,14 @@ LIMIT 0, 100
 
   public static function getContributionTrxnID($contributionId, $recurringId = NULL) {
     $rand = base_convert(strval(rand(16, 255)), 10, 16);
-    if(empty($recurringId)){
+    if (empty($recurringId)) {
       $recurringId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'contribution_recur_id');
     }
 
-    if(!empty($recurringId)){
+    if (!empty($recurringId)) {
       $trxnId = 'r_'.$recurringId.'_'.$contributionId.'_'.$rand;
-    }else{
+    }
+    else {
       $trxnId = 'c_'.$contributionId.'_'.$rand;
     }
     return $trxnId;
@@ -1844,22 +1847,22 @@ LIMIT 0, 100
   /**
    * Function to add note into CRM log
    */
-  public static function addNoteToLog($note, &$contribution){
+  public static function addNoteToLog($note, &$contribution) {
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
-    CRM_Core_Error::debug_log_message( $note );
+    CRM_Core_Error::debug_log_message($note);
   }
 
   /**
    * Function to add note into contribution
    */
-  public static function addNote($note, &$contribution){
+  public static function addNote($note, &$contribution) {
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
-    $noteExists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
-    if(count($noteExists)){
+    $noteExists = CRM_Core_BAO_Note::getNote($contribution->id, 'civicrm_contribution');
+    if (count($noteExists)) {
       $noteId = [ 'id' => reset(array_keys($noteExists)) ];
       $note = $note . reset($noteExists);
     }
-    else{
+    else {
       $noteId = NULL;
     }
 

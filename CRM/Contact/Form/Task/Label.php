@@ -78,8 +78,12 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
 
 
     // add select for Location Type
-    $this->addElement('select', 'location_type_id', ts('Select Location'),
-      ['' => ts('Primary')] + CRM_Core_PseudoConstant::locationType(), TRUE
+    $this->addElement(
+      'select',
+      'location_type_id',
+      ts('Select Location'),
+      ['' => ts('Primary')] + CRM_Core_PseudoConstant::locationType(),
+      TRUE
     );
 
     // checkbox for SKIP contacts with Do Not Mail privacy option
@@ -307,7 +311,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
         if (empty($contact['addressee_display']) && empty($contact['addressee_id'])) {
           $contactDAO = new CRM_Contact_DAO_Contact();
           $contactDAO->id = $value;
-          $contactDAO->find(true);
+          $contactDAO->find(TRUE);
           $contactDAO->addressee_id = $defaultAddressee;
           CRM_Contact_BAO_Contact::processGreetings($contactDAO);
           $contactDAO->free();
@@ -404,7 +408,8 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
   public function getReturnProperties(&$format) {
     $returnProperties = [];
     $matches = [];
-    preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
+    preg_match_all(
+      '/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
       $format,
       $matches,
       PREG_PATTERN_ORDER
@@ -501,4 +506,3 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     return $rows;
   }
 }
-

@@ -58,7 +58,8 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
   protected $_add2groupSupported = FALSE;
 
   protected $_customGroupExtends = ['Membership'];
-  protected $_customGroupGroupBy = FALSE; public function __construct() {
+  protected $_customGroupGroupBy = FALSE;
+  public function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
 
@@ -298,7 +299,8 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -338,9 +340,10 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
               ) {
 
                 $append = "YEAR({$field['dbAlias']}),";
-                if (in_array(strtolower($this->_params['group_bys_freq'][$fieldName]),
-                    ['year']
-                  )) {
+                if (in_array(
+                  strtolower($this->_params['group_bys_freq'][$fieldName]),
+                  ['year']
+                )) {
                   $append = '';
                 }
                 $groupBy[] = "$append {$this->_params['group_bys_freq'][$fieldName]}({$field['dbAlias']})";
@@ -412,9 +415,10 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     $isJoiningDate = CRM_Utils_Array::value('join_date', $this->_params['group_bys']);
     if (CRM_Utils_Array::value('charts', $this->_params)) {
       foreach ($rows as $key => $row) {
-        if (!($row['civicrm_membership_join_date_subtotal'] &&
+        if (!(
+          $row['civicrm_membership_join_date_subtotal'] &&
             $row['civicrm_membership_membership_type_id']
-          )) {
+        )) {
           continue;
         }
         if ($isMembershipType) {
@@ -491,27 +495,47 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
 
         switch (strtolower($this->_params['group_bys_freq']['join_date'])) {
           case 'month':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'] + 1,
-                $dateEnd['d'] - 1, $dateEnd['Y']
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'] + 1,
+              $dateEnd['d'] - 1,
+              $dateEnd['Y']
+            ));
             break;
 
           case 'year':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'],
-                $dateEnd['d'] - 1, $dateEnd['Y'] + 1
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'],
+              $dateEnd['d'] - 1,
+              $dateEnd['Y'] + 1
+            ));
             break;
 
           case 'yearweek':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'],
-                $dateEnd['d'] + 6, $dateEnd['Y']
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'],
+              $dateEnd['d'] + 6,
+              $dateEnd['Y']
+            ));
             break;
 
           case 'quarter':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'] + 3,
-                $dateEnd['d'] - 1, $dateEnd['Y']
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'] + 3,
+              $dateEnd['d'] - 1,
+              $dateEnd['Y']
+            ));
             break;
         }
         $typeUrl = '';
@@ -524,9 +548,11 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
         if (!empty($this->_params['status_id_value'])) {
           $statusUrl = "&sid_op=in&sid_value=" . CRM_Utils_Array::implode(",", $this->_params['status_id_value']);
         }
-        $url = CRM_Report_Utils_Report::getNextUrl('member/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'member/detail',
           "reset=1&force=1&join_date_from={$dateStart}&join_date_to={$dateEnd}{$typeUrl}{$statusUrl}",
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $row['civicrm_membership_join_date_start'] = CRM_Utils_Date::format($row['civicrm_membership_join_date_start']);
         $rows[$rowNum]['civicrm_membership_join_date_start_link'] = $url;
@@ -571,4 +597,3 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     }
   }
 }
-

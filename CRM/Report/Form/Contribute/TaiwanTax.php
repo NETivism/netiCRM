@@ -62,7 +62,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   public function __construct() {
     $config = CRM_Core_Config::singleton();
     $contactTypes = CRM_Contact_BAO_ContactType::basicTypePairs();
-    foreach($contactTypes as $key => $name) {
+    foreach ($contactTypes as $key => $name) {
       if ($key !== 'Individual') {
         unset($contactTypes[$key]);
       }
@@ -107,7 +107,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             'no_repeat' => FALSE,
           ],
         ],
-        'filters' => 
+        'filters' =>
         [
           'contact_type' =>
           ['title' => ts('Contact Type'),
@@ -115,7 +115,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             'options' => $contactTypes,
             'default' => ['Individual'],
           ],
-          'legal_identifier' => 
+          'legal_identifier' =>
           [
             'title' => ts('Legal Identifier'),
             'operationPair' => [
@@ -183,13 +183,13 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
       $this->_receiptTitle,
       $this->_receiptSerial,
     ];
-    foreach($this->_columns as $key => $column){
-      if(isset($column['extends']) && $column['extends'] == 'Contribution' && !empty($column['fields'])){
-        foreach($column['fields'] as $field_name => $values){
-          if(in_array($field_name, $allowedFields)){
+    foreach ($this->_columns as $key => $column) {
+      if (isset($column['extends']) && $column['extends'] == 'Contribution' && !empty($column['fields'])) {
+        foreach ($column['fields'] as $field_name => $values) {
+          if (in_array($field_name, $allowedFields)) {
             $this->_columns[$key]['fields'][$field_name]['required'] = TRUE;
           }
-          else{
+          else {
             unset($this->_columns[$key]['fields'][$field_name]);
           }
         }
@@ -302,7 +302,7 @@ END)
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  public function modifyColumnHeaders(){
+  public function modifyColumnHeaders() {
     $this->_columnHeaders["civicrm_contribution_total_amount"]['type'] = 1;
     $this->_columnHeaders["civicrm_contribution_receive_date"]['type'] = 1;
     $this->_columnHeaders["receipt_title"]['type'] = 1;
@@ -343,7 +343,7 @@ ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribut
     }
   }
 
-  public function groupBy(){
+  public function groupBy() {
     $this->_groupBy = "
 GROUP BY receipt_title, receipt_serial";
   }
@@ -378,9 +378,9 @@ GROUP BY receipt_title, receipt_serial";
       'total_amount' => '捐款金額',
       'other1' => '受捐贈單位統一編號',
     ];
-    foreach($this->_columnSort as $c => $name){
-      foreach($columnHeaders as $header => $value){
-        if(preg_match('/'.$c.'$/', $header)){
+    foreach ($this->_columnSort as $c => $name) {
+      foreach ($columnHeaders as $header => $value) {
+        if (preg_match('/'.$c.'$/', $header)) {
           $value['title'] = $name;
           $this->_columnHeaders[$header] = $value;
           $this->_receiptColumn[$c] = $header;
@@ -399,30 +399,29 @@ GROUP BY receipt_title, receipt_serial";
     if (!empty($rows)) {
       foreach ($rows as $n => $row) {
         // chinese year
-        if(!empty($row['civicrm_contribution_receive_date'])){
+        if (!empty($row['civicrm_contribution_receive_date'])) {
           $rows[$n]['civicrm_contribution_receive_date'] = $this->_chineseYear($row['civicrm_contribution_receive_date']);
         }
 
-        if(!empty($row['receipt_title'])) {
+        if (!empty($row['receipt_title'])) {
           $rows[$n]['receipt_title'] = mb_strtoupper($row['receipt_title']);
         }
 
-        if(!empty($row['receipt_serial'])) {
+        if (!empty($row['receipt_serial'])) {
           $rows[$n]['receipt_serial'] = mb_strtoupper($row['receipt_serial']);
         }
 
         // donor's name when not enough personal id
-        if(!empty($row['civicrm_contribution_total_amount'])){
+        if (!empty($row['civicrm_contribution_total_amount'])) {
           $rows[$n]['civicrm_contribution_total_amount'] = round($row['civicrm_contribution_total_amount']);
         }
       }
     }
   }
 
-  public function _chineseYear($date){
+  public function _chineseYear($date) {
     $year = (int) date('Y', strtotime($date));
     $year -= 1911;
     return sprintf('%03s', $year);
   }
 }
-

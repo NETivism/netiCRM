@@ -77,7 +77,8 @@ class api_v3_PaymentProcessorTypeTest extends CiviUnitTestCase {
     $result = civicrm_api('payment_processor_type', 'create', $payProcParams);
 
     $this->assertEquals($result['is_error'], 1);
-    $this->assertEquals($result['error_message'],
+    $this->assertEquals(
+      $result['error_message'],
       'Mandatory key(s) missing from params array: name, title, class_name, billing_mode'
     );
   }
@@ -317,4 +318,3 @@ class api_v3_PaymentProcessorTypeTest extends CiviUnitTestCase {
     $this->assertEquals('CRM_Core_Payment_APITest_12', $results['values'][$results['id']]['class_name'], ' in line ' . __LINE__);
   }
 }
-

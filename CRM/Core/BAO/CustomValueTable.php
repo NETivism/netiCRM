@@ -87,12 +87,18 @@ class CRM_Core_BAO_CustomValueTable {
                   $states = [];
                   $states['state_province'] = trim($stateVal);
 
-                  CRM_Utils_Array::lookupValue($states, 'state_province',
-                    CRM_Core_PseudoConstant::stateProvince(), TRUE
+                  CRM_Utils_Array::lookupValue(
+                    $states,
+                    'state_province',
+                    CRM_Core_PseudoConstant::stateProvince(),
+                    TRUE
                   );
                   if (!$states['state_province_id']) {
-                    CRM_Utils_Array::lookupValue($states, 'state_province',
-                      CRM_Core_PseudoConstant::stateProvinceAbbreviation(), TRUE
+                    CRM_Utils_Array::lookupValue(
+                      $states,
+                      'state_province',
+                      CRM_Core_PseudoConstant::stateProvinceAbbreviation(),
+                      TRUE
                     );
                   }
                   $validStates[] = $states['state_province_id'];
@@ -122,12 +128,18 @@ class CRM_Core_BAO_CustomValueTable {
                 foreach ($mulValues as $key => $countryVal) {
                   $countries = [];
                   $countries['country'] = trim($countryVal);
-                  CRM_Utils_Array::lookupValue($countries, 'country',
-                    CRM_Core_PseudoConstant::country(), TRUE
+                  CRM_Utils_Array::lookupValue(
+                    $countries,
+                    'country',
+                    CRM_Core_PseudoConstant::country(),
+                    TRUE
                   );
                   if (!$countries['country_id']) {
-                    CRM_Utils_Array::lookupValue($countries, 'country',
-                      CRM_Core_PseudoConstant::countryIsoCode(), TRUE
+                    CRM_Utils_Array::lookupValue(
+                      $countries,
+                      'country',
+                      CRM_Core_PseudoConstant::countryIsoCode(),
+                      TRUE
                     );
                   }
                   $validCountries[] = $countries['country_id'];
@@ -233,7 +245,8 @@ class CRM_Core_BAO_CustomValueTable {
 
           $dao->free();
 
-          CRM_Utils_Hook::custom($hookOP,
+          CRM_Utils_Hook::custom(
+            $hookOP,
             $hookID,
             $entityID,
             $fields
@@ -252,7 +265,8 @@ class CRM_Core_BAO_CustomValueTable {
    * @access public
    * @static
    */
-  public static function fieldToSQLType($type,
+  public static function fieldToSQLType(
+    $type,
     $maxLength = 255
   ) {
     if (!isset($maxLength) ||
@@ -272,7 +286,7 @@ class CRM_Core_BAO_CustomValueTable {
 
       case 'Int':
         return 'int';
-      // the below three are FK's, and have constraints added to them
+        // the below three are FK's, and have constraints added to them
 
       case 'ContactReference':
       case 'StateProvince':
@@ -344,7 +358,8 @@ class CRM_Core_BAO_CustomValueTable {
 
   public static function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
 
-    $customData = CRM_Core_BAO_CustomField::postProcess($params,
+    $customData = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customFields,
       $entityID,
       $customFieldExtends
@@ -458,8 +473,10 @@ AND    $cond
 
 
     if (!isset($params['entityID']) ||
-      CRM_Utils_Type::escape($params['entityID'],
-        'Integer', FALSE
+      CRM_Utils_Type::escape(
+        $params['entityID'],
+        'Integer',
+        FALSE
       ) === NULL
     ) {
       return CRM_Core_Error::createAPIError(ts('entityID needs to be set and of type Integer'));
@@ -473,12 +490,15 @@ AND    $cond
     foreach ($params as $n => $v) {
       if ($customFieldInfo = CRM_Core_BAO_CustomField::getKeyID($n, TRUE)) {
         $fieldID = (int) $customFieldInfo[0];
-        if (CRM_Utils_Type::escape($fieldID,
-            'Integer', FALSE
-          ) === NULL) {
-          return CRM_Core_Error::createAPIError(ts('field ID needs to be of type Integer for index %1',
-              [1 => $fieldID]
-            ));
+        if (CRM_Utils_Type::escape(
+          $fieldID,
+          'Integer',
+          FALSE
+        ) === NULL) {
+          return CRM_Core_Error::createAPIError(ts(
+            'field ID needs to be of type Integer for index %1',
+            [1 => $fieldID]
+          ));
         }
         if (!CRM_Utils_Array::arrayKeyExists($fieldID, $fieldValues)) {
           $fieldValues[$fieldID] = [];
@@ -494,7 +514,7 @@ AND    $cond
     }
 
     $keys = array_keys($fieldValues);
-    if(empty($keys)) {
+    if (empty($keys)) {
       return CRM_Core_Error::createAPIError(ts('Set custom value without necessery keys'));
     }
     $fieldIDList = CRM_Utils_Array::implode(',', $keys);
@@ -570,8 +590,10 @@ AND    cf.id IN ( $fieldIDList )
       return NULL;
     }
     if (!isset($params['entityID']) ||
-      CRM_Utils_Type::escape($params['entityID'],
-        'Integer', FALSE
+      CRM_Utils_Type::escape(
+        $params['entityID'],
+        'Integer',
+        FALSE
       ) === NULL
     ) {
       return CRM_Core_Error::createAPIError(ts('entityID needs to be set and of type Integer'));
@@ -584,12 +606,15 @@ AND    cf.id IN ( $fieldIDList )
       $key = $idx = NULL;
       if (substr($n, 0, 7) == 'custom_') {
         $idx = substr($n, 7);
-        if (CRM_Utils_Type::escape($idx,
-            'Integer', FALSE
-          ) === NULL) {
-          return CRM_Core_Error::createAPIError(ts('field ID needs to be of type Integer for index %1',
-              [1 => $idx]
-            ));
+        if (CRM_Utils_Type::escape(
+          $idx,
+          'Integer',
+          FALSE
+        ) === NULL) {
+          return CRM_Core_Error::createAPIError(ts(
+            'field ID needs to be of type Integer for index %1',
+            [1 => $idx]
+          ));
         }
         $fieldIDs[] = (int ) $idx;
       }
@@ -616,7 +641,8 @@ AND    cf.id IN ( $fieldIDList )
       }
     }
 
-    $values = self::getEntityValues($params['entityID'],
+    $values = self::getEntityValues(
+      $params['entityID'],
       $type,
       $fieldIDs
     );
@@ -724,4 +750,3 @@ AND    $cond
     return $result;
   }
 }
-

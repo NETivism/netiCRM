@@ -38,7 +38,7 @@ class CRM_Contact_Page_View_ContactSmartGroup extends CRM_Core_Page {
    * @var int contact id
    */
 
-   public $_contactId;
+  public $_contactId;
 
   /**
    * This function is called when action is browse
@@ -59,7 +59,7 @@ class CRM_Contact_Page_View_ContactSmartGroup extends CRM_Core_Page {
     }
 
     $allGroup = CRM_Contact_BAO_GroupContactCache::contactGroup($this->_contactId);
-    $this->assign('groupSmart'  , NULL);
+    $this->assign('groupSmart', NULL);
     $this->assign('groupParent', NULL);
 
     if (!empty($allGroup)) {

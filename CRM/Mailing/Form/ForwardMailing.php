@@ -37,14 +37,23 @@
 class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
   public $_fromEmail;
   public function preProcess() {
-    $job_id = CRM_Utils_Request::retrieve('jid', 'Positive',
-      $this, NULL
+    $job_id = CRM_Utils_Request::retrieve(
+      'jid',
+      'Positive',
+      $this,
+      NULL
     );
-    $queue_id = CRM_Utils_Request::retrieve('qid', 'Positive',
-      $this, NULL
+    $queue_id = CRM_Utils_Request::retrieve(
+      'qid',
+      'Positive',
+      $this,
+      NULL
     );
-    $hash = CRM_Utils_Request::retrieve('h', 'String',
-      $this, NULL
+    $hash = CRM_Utils_Request::retrieve(
+      'h',
+      'String',
+      $this,
+      NULL
     );
 
 
@@ -54,7 +63,7 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
 
       /** ERROR **/
       CRM_Core_Error::fatal(ts('Invalid form parameters.'));
-       return CRM_Core_Error::statusBounce(ts('Invalid form parameters.'));
+      return CRM_Core_Error::statusBounce(ts('Invalid form parameters.'));
     }
 
     CRM_Contact_BAO_Contact::redirectPreferredLanguage($q->contact_id);
@@ -96,7 +105,8 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
 
     //insert message Text by selecting "Select Template option"
     $this->add('textarea', 'forward_comment', ts('Comment'), ['cols' => '80', 'rows' => '8', 'style' => 'display:none']);
-    $this->addWysiwyg('html_comment',
+    $this->addWysiwyg(
+      'html_comment',
       ts('HTML Message'),
       ['cols' => '80', 'rows' => '8']
     );
@@ -175,4 +185,3 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
     $session->pushUserContext($config->userFrameworkBaseURL);
   }
 }
-

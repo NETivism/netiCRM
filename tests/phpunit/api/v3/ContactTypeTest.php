@@ -454,4 +454,3 @@ class api_v3_ContactTypeTest extends CiviUnitTestCase {
     civicrm_api('contact', 'delete', $params);
   }
 }
-

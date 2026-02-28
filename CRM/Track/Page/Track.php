@@ -51,8 +51,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       ];
       CRM_Utils_System::appendBreadCrumb($breadcrumbs);
     }
-    else
-    if ($params['pageType'] == 'civicrm_event' && $params['pageId']) {
+    elseif ($params['pageType'] == 'civicrm_event' && $params['pageId']) {
       // breadcrumb starter
       $breadcrumbs = [
         ['url' => CRM_Utils_System::url('civicrm/event', 'reset=1'), 'title' => ts('CiviEvent Dashboard')],
@@ -81,7 +80,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $dao = $statistics->getQuery("COUNT(id) as `count`, referrer_type, SUM(CASE WHEN state >= 4 THEN 1 ELSE 0 END) as goal, max(visit_date) as end, min(visit_date) as start, GROUP_CONCAT(entity_id) as entity_ids", 'GROUP BY referrer_type');
 
     $total = 0;
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
       $total = $total+$dao->count;
       $stat[$type] = [
@@ -91,18 +90,18 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
         'count_goal' => $dao->goal,
       ];
       if (!empty($params['pageType']) && !empty($dao->entity_ids)) {
-        switch($params['pageType']) {
+        switch ($params['pageType']) {
           case 'civicrm_contribution_page':
             $sql = "SELECT SUM(total_amount) FROM civicrm_contribution WHERE id IN($dao->entity_ids) AND contribution_status_id = 1 AND is_test = 0 GROUP BY is_test";
             $totalAmount = CRM_Core_DAO::singleValueQuery($sql);
-          break;
+            break;
           case 'civicrm_event':
-            $statusPending = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Pending'" );
-            $statusPositive = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Positive'" );
+            $statusPending = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Pending'");
+            $statusPositive = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
             $statues = $statusPending+$statusPositive;
-            $sql = "SELECT SUM(fee_amount) FROM civicrm_participant WHERE id IN($dao->entity_ids) AND is_test = 0 AND status_id IN (".CRM_Utils_Array::implode("," , array_keys($statues)).") GROUP BY is_test";
+            $sql = "SELECT SUM(fee_amount) FROM civicrm_participant WHERE id IN($dao->entity_ids) AND is_test = 0 AND status_id IN (".CRM_Utils_Array::implode(",", array_keys($statues)).") GROUP BY is_test";
             $totalAmount = CRM_Core_DAO::singleValueQuery($sql);
-          break;
+            break;
         }
         $stat[$type]['total_amount'] = $totalAmount;
       }
@@ -117,11 +116,11 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
 
     // sort by count
     uasort($stat, ['CRM_Core_BAO_Track', 'cmp']);
-    foreach($stat as $type => $data) {
-      $stat[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
-      $stat[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
+    foreach ($stat as $type => $data) {
+      $stat[$type]['percent'] = number_format(($data['count'] / $total) * 100);
+      $stat[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100);
     }
-    foreach($stat as &$st) {
+    foreach ($stat as &$st) {
       $amount = '$'.CRM_Utils_Money::format($st['total_amount'], NULL, NULL, TRUE);
       $st['display'] = '<div>'.ts("%1 achieved", [1 => "{$st['percent_goal']}% ({$st['count_goal']}".ts('People')." ".ts('for')." {$amount})"])."</div><div style='color:grey'>".ts("Total")." {$st['percent']}% ({$st['count']}".ts('People').")</div>";
     }
@@ -133,7 +132,8 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -153,8 +153,8 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       NULL,
       'visit_date ASC'
     );
-    while($dao->fetch()){
-      if(empty($dao->referrer_type)){
+    while ($dao->fetch()) {
+      if (empty($dao->referrer_type)) {
         continue;
       }
       $dates[$dao->visit_day] = 1;
@@ -177,11 +177,11 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     }
      
     // prepare series and label for chartist
-    $seriesNum = 0; 
-    foreach($dummy as $rtype => $d) {
+    $seriesNum = 0;
+    foreach ($dummy as $rtype => $d) {
       $legend[$seriesNum] = $referrerTypes[$rtype];
       $data[$seriesNum] = [];
-      foreach($label as $idx => $date) {
+      foreach ($label as $idx => $date) {
         if (!empty($d[$date])) {
           $data[$seriesNum][$idx] = $d[$date];
         }
@@ -199,12 +199,12 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'labels' => json_encode($label),
       'series' => json_encode($data),
       'seriesUnit' => ts("People"),
-      'withToolTip' => true,
-      'withVerticalHint' => true,
+      'withToolTip' => TRUE,
+      'withVerticalHint' => TRUE,
       'legends' => json_encode($legend),
-      'stackBars' => true,
-      'withLegend' => true,
-      'autoDateLabel' => true,
+      'stackBars' => TRUE,
+      'withLegend' => TRUE,
+      'autoDateLabel' => TRUE,
     ];
     if (is_array($chartParams)) {
       $chart += $chartParams;
@@ -212,4 +212,3 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $page->assign($chartName, $chart);
   }
 }
-

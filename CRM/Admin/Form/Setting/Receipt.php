@@ -61,10 +61,10 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $config = CRM_Core_Config::singleton();
     $this->controller->addActions($config->imageUploadDir, ['uploadBigStamp', 'uploadSmallStamp', 'receiptLogo']);
 
-    if($config->imageBigStampName){
+    if ($config->imageBigStampName) {
       $this->assign('imageBigStampUrl', $config->imageUploadURL . $config->imageBigStampName);
     }
-    if($config->imageSmallStampName){
+    if ($config->imageSmallStampName) {
       $this->assign('imageSmallStampUrl', $config->imageUploadURL . $config->imageSmallStampName);
     }
     $receiptLogo = $config->receiptLogo;
@@ -72,7 +72,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
       if (preg_match('/^https?:\/\//i', $receiptLogo)  || substr($receiptLogo, 0, 13) === '/var/www/html') {
         $this->assign('receiptLogoUrl', $receiptLogo);
       }
-      else if ($receiptLogo) {
+      elseif ($receiptLogo) {
         $this->assign('receiptLogoUrl', $config->imageUploadURL . $receiptLogo);
       }
     }
@@ -124,7 +124,8 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
         if ($forbidCustomDonorCredit == 0) {
           $defaults['customDonorCredit']['custom_name'] = 1;
         }
-      } else {
+      }
+      else {
         $defaults['customDonorCredit'] = [
           'full_name' => 1,
           'partial_name' => 1,
@@ -160,33 +161,34 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     unset($params['deleteSmallStamp']);
     unset($params['deleteReceiptLogo']);
 
-    if($deleteBigStamp){
+    if ($deleteBigStamp) {
       $params['imageBigStampName'] = '';
     }
-    if($deleteSmallStamp){
+    if ($deleteSmallStamp) {
       $params['imageSmallStampName'] = '';
     }
-    if($deleteReceiptLogo){
+    if ($deleteReceiptLogo) {
       $params['receiptLogo'] = '';
     }
 
     // to check wether GD is installed or not
     $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
-    if($gdSupport) {
+    if ($gdSupport) {
       if ($uploadBigStamp) {
-        $error = false;
+        $error = FALSE;
         $params['imageBigStampName'] = $this->_resizeImage($uploadBigStamp, "_full", 800, 350);
       }
       if ($uploadSmallStamp) {
-        $error = false;
+        $error = FALSE;
         $params['imageSmallStampName'] = $this->_resizeImage($uploadSmallStamp, "_full", 800, 200);
       }
       if ($uploadReceiptLogo) {
-        $error = false;
+        $error = FALSE;
         $params['receiptLogo'] = $this->_resizeImage($uploadReceiptLogo, "_full", 800, 200);
       }
-    }else{
-      $error = true;
+    }
+    else {
+      $error = TRUE;
     }
 
     // refs #42235, compatibility handling for old sites
@@ -215,9 +217,9 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if ((!empty($fields['receiptDisplayLegalID']) && $fields['receiptDisplayLegalID'] !== 'complete') && (!empty($fields['receiptEmailEncryption']) && $fields['receiptEmailEncryption'] === '1')) {
-        $errors['receiptEmailEncryption'] = ts('When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled.');
+      $errors['receiptEmailEncryption'] = ts('When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled.');
     }
-    return empty($errors) ? true : $errors;
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**
@@ -232,7 +234,7 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
    *
    * @return Path to image
    */
-  private function _resizeImage($filename, $resizedName, $width, $height ) {
+  private function _resizeImage($filename, $resizedName, $width, $height) {
     // figure out the new filename
     $pathParts = pathinfo($filename);
     $newFilename = $pathParts['dirname']."/".$pathParts['filename'].$resizedName.".".$pathParts['extension'];
@@ -242,19 +244,20 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $widthOrig = $imageInfo[0];
     $heightOrig = $imageInfo[1];
 
-    if($widthOrig > $width){
+    if ($widthOrig > $width) {
       $widthNew = $width;
       $heightNew = $heightOrig * $widthNew / $widthOrig;
-    }else{
+    }
+    else {
       $widthNew = $widthOrig;
       $heightNew = $heightOrig;
     }
     $image = imagecreatetruecolor($widthNew, $heightNew);
     
-    if($imageInfo['mime'] == 'image/gif') {
+    if ($imageInfo['mime'] == 'image/gif') {
       $source = imagecreatefromgif($filename);
     }
-    elseif($imageInfo['mime'] == 'image/png') {
+    elseif ($imageInfo['mime'] == 'image/png') {
       $source = imagecreatefrompng($filename);
     }
     else {
@@ -263,8 +266,8 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
 
     
     // resize
-    ImageAlphaBlending($image,true);
-    ImageSaveAlpha($image,true);
+    ImageAlphaBlending($image, TRUE);
+    ImageSaveAlpha($image, TRUE);
     $color = imagecolorallocatealpha($image, 0, 0, 0, 127);
     imagefill($image, 0, 0, $color);
 

@@ -33,7 +33,7 @@
  *
  */
 class CRM_Bridge_OG_Utils {
-  public CONST aclEnabled = 1, syncFromCiviCRM = 1;
+  public const aclEnabled = 1, syncFromCiviCRM = 1;
 
   public static function aclEnabled() {
     return self::aclEnabled;
@@ -53,7 +53,8 @@ class CRM_Bridge_OG_Utils {
   }
 
   public static function ogID($groupID, $abort = TRUE) {
-    $source = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group',
+    $source = CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_Group',
       $groupID,
       'source'
     );
@@ -113,4 +114,3 @@ SELECT id
     return $groupID;
   }
 }
-

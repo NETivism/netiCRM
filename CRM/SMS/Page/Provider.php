@@ -110,18 +110,27 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
     $breadCrumb = [
       [
         'title' => ts('SMS Provider'),
-        'url' => CRM_Utils_System::url('civicrm/admin/sms/provider',
+        'url' => CRM_Utils_System::url(
+          'civicrm/admin/sms/provider',
           'reset=1'
         ),
       ],
     ];
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
 
-    $this->_id = CRM_Utils_Request::retrieve('id', 'String',
-      $this, FALSE, 0
+    $this->_id = CRM_Utils_Request::retrieve(
+      'id',
+      'String',
+      $this,
+      FALSE,
+      0
     );
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 0
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      0
     );
 
     return parent::run();
@@ -151,10 +160,10 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
         $apiParams = json_decode($provider['api_params'], TRUE);
         if (is_array($apiParams)) {
           $provider['api_params'] = [];
-          foreach($apiParams as $key => $val) {
+          foreach ($apiParams as $key => $val) {
             if (is_array($val)) {
               $provider['api_params'][] = '<strong>'.$key.'</strong>';
-              foreach($val as $k => $v) {
+              foreach ($val as $k => $v) {
                 $provider['api_params'][] = $k.":" . CRM_Utils_String::mask($v);
               }
             }
@@ -166,7 +175,9 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
         }
       }
 
-      $provider['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $provider['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $provider['id']],
         ts('more'),
         FALSE,

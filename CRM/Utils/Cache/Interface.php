@@ -69,4 +69,3 @@ interface CRM_Utils_Cache_Interface {
    */
   public function flush();
 }
-

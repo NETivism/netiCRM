@@ -75,7 +75,8 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
     }
 
     // user context
-    $url = CRM_Utils_System::url('civicrm/contact/view/case',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/case',
       "reset=1&action=view&cid={$this->_clientID}&id={$this->_caseID}&show=1"
     );
     $session = CRM_Core_Session::singleton();
@@ -90,7 +91,8 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
     $includeActivites = [1 => ts('Include All Activities'),
       2 => ts('Include Missing Activities Only'),
     ];
-    $includeActivitesGroup = $this->addRadio('include_activities',
+    $includeActivitesGroup = $this->addRadio(
+      'include_activities',
       NULL,
       $includeActivites,
       NULL,
@@ -99,12 +101,14 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
     );
     $includeActivitesGroup->setValue(1);
 
-    $this->add('checkbox',
+    $this->add(
+      'checkbox',
       'is_redact',
       ts('Redact (hide) Client and Service Provider Data')
     );
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'refresh',
           'name' => ts('Generate Report'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -130,7 +134,8 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
 
 
     $xmlProcessor = new CRM_Case_XMLProcessor_Report();
-    $contents = $xmlProcessor->run($this->_clientID,
+    $contents = $xmlProcessor->run(
+      $this->_clientID,
       $this->_caseID,
       $this->_activitySetName,
       $params
@@ -138,4 +143,3 @@ class CRM_Case_Form_Report extends CRM_Core_Form {
     $this->set('report', $contents);
   }
 }
-

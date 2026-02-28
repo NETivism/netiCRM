@@ -64,7 +64,7 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
    * Business logic of create email
    *
    * @param array $params
-   * 
+   *
    * @return object CRM_Core_BAO_Email object on success, null otherwise
    * @access public
    * @static
@@ -247,7 +247,7 @@ ORDER BY e.is_primary DESC, email_id ASC ";
    * Get current exists id from value(email)
    *
    * Only effect when phone id not provided. Id will be added into params before add.
-   * 
+   *
    * @param array $params referenced array to be add exists phone id
    * @return void
    */
@@ -261,4 +261,3 @@ ORDER BY e.is_primary DESC, email_id ASC ";
     }
   }
 }
-

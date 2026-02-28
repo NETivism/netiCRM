@@ -93,7 +93,7 @@ function civicrm_api3_constant_get($params) {
   $name = $params['name'];
   //  require_once 'CRM/Core/PseudoConstant.php';
   $className = 'CRM_Core_PseudoConstant';
-  if (isset ($params['class']) && (($params['class'] == 'CRM_Event_PseudoConstant') || $params['class'] == 'CRM_Contribute_PseudoConstant') || $params['class'] == 'CRM_Member_PseudoConstant') {
+  if (isset($params['class']) && (($params['class'] == 'CRM_Event_PseudoConstant') || $params['class'] == 'CRM_Contribute_PseudoConstant') || $params['class'] == 'CRM_Member_PseudoConstant') {
     $className = $params['class'];
   }
   $callable = "$className::$name";
@@ -160,4 +160,3 @@ function _civicrm_api3_constant_get_spec(&$params) {
       ]]
   );
 }
-

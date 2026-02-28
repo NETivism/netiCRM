@@ -131,9 +131,11 @@ WHERE civicrm_case.id=  %1";
     $config = &CRM_Core_Config::singleton();
 
     // 1. save activity subject with new start date
-    $currentStartDate = CRM_Utils_Date::customFormat(CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',
-        $form->_caseId, 'start_date'
-      ), $config->dateformatFull);
+    $currentStartDate = CRM_Utils_Date::customFormat(CRM_Core_DAO::getFieldValue(
+      'CRM_Case_DAO_Case',
+      $form->_caseId,
+      'start_date'
+    ), $config->dateformatFull);
     $newStartDate = CRM_Utils_Date::customFormat(CRM_Utils_Date::mysqlToIso($params['start_date']), $config->dateformatFull);
     $subject = 'Change Case Start Date from ' . $currentStartDate . ' to ' . $newStartDate;
     $activity->subject = $subject;
@@ -158,4 +160,3 @@ WHERE civicrm_case.id=  %1";
     $params['statusMsg'] = ts('Case Start Date changed successfully.');
   }
 }
-

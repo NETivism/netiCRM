@@ -70,17 +70,22 @@ class CRM_Case_Form_Activity_ChangeCaseType {
   public static function buildQuickForm(&$form) {
 
     $form->_caseType = CRM_Case_PseudoConstant::caseType();
-    $caseTypeId = explode(CRM_Case_BAO_Case::VALUE_SEPARATOR, CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',
-        $form->_caseId,
-        'case_type_id'
-      ));
+    $caseTypeId = explode(CRM_Case_BAO_Case::VALUE_SEPARATOR, CRM_Core_DAO::getFieldValue(
+      'CRM_Case_DAO_Case',
+      $form->_caseId,
+      'case_type_id'
+    ));
     $form->_caseTypeId = $caseTypeId[1];
     if (!in_array($form->_caseTypeId, $form->_caseType)) {
       $form->_caseType[$form->_caseTypeId] = CRM_Core_OptionGroup::getLabel('case_type', $form->_caseTypeId, FALSE);
     }
 
-    $form->add('select', 'case_type_id', ts('New Case Type'),
-      $form->_caseType, TRUE
+    $form->add(
+      'select',
+      'case_type_id',
+      ts('New Case Type'),
+      $form->_caseType,
+      TRUE
     );
 
     // timeline
@@ -152,7 +157,8 @@ class CRM_Case_Form_Activity_ChangeCaseType {
     }
 
     if ($activity->subject == 'null') {
-      $activity->subject = ts('Case type changed from %1 to %2',
+      $activity->subject = ts(
+        'Case type changed from %1 to %2',
         [1 => CRM_Utils_Array::value($form->_defaults['case_type_id'], $allCaseTypes),
           2 => CRM_Utils_Array::value($params['case_type_id'], $allCaseTypes),
         ]
@@ -176,4 +182,3 @@ class CRM_Case_Form_Activity_ChangeCaseType {
     $params['statusMsg'] = ts('Case Type changed successfully.');
   }
 }
-

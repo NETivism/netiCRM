@@ -108,8 +108,12 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
       CRM_Utils_System::redirect($this->_userContext);
     }
 
-    $ufGroupElement = $this->add('select', 'uf_group_id', ts('Select Profile'),
-      ['' => ts('- select profile -')] + $profiles, TRUE
+    $ufGroupElement = $this->add(
+      'select',
+      'uf_group_id',
+      ts('Select Profile'),
+      ['' => ts('- select profile -')] + $profiles,
+      TRUE
     );
     $this->addDefaultButtons(ts('Continue >>'));
   }
@@ -155,4 +159,3 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
   }
   //end of function
 }
-

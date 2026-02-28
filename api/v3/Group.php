@@ -73,7 +73,7 @@ function civicrm_api3_group_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -105,7 +105,7 @@ function civicrm_api3_group_get($params) {
   if (!empty($returnProperties)) {
     $returnProperties[] = 'id';
   }
-  foreach($params as $key => $val) {
+  foreach ($params as $key => $val) {
     if (substr($key, 0, 4) === 'api.') {
       unset($params[$key]);
     }
@@ -146,4 +146,3 @@ function civicrm_api3_group_delete($params) {
   CRM_Contact_BAO_Group::discard($params['id']);
   return civicrm_api3_create_success(TRUE);
 }
-

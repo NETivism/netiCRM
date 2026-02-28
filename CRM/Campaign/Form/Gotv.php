@@ -144,13 +144,18 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
       $session = CRM_Core_Session::singleton();
       $userId = $session->get('userID');
       // get interviewer id
-      $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
-        CRM_Core_DAO::$_nullObject, FALSE, $userId
+      $cid = CRM_Utils_Request::retrieve(
+        'cid',
+        'Positive',
+        CRM_Core_DAO::$_nullObject,
+        FALSE,
+        $userId
       );
 
 
       $defaults['survey_interviewer_id'] = $cid;
-      $defaults['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $defaults['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
         $cid,
         'sort_name',
         'id'
@@ -192,4 +197,3 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
     $this->assign('errorMessages', empty($errorMessages) ? FALSE : $errorMessages);
   }
 }
-

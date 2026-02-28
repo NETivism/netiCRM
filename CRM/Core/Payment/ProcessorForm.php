@@ -70,7 +70,8 @@ class CRM_Core_Payment_ProcessorForm {
 
     // check if this is a paypal auto return and redirect accordingly
     if (CRM_Core_Payment::paypalRedirect($form->_paymentProcessor)) {
-      $url = CRM_Utils_System::url('civicrm/contribute/transact',
+      $url = CRM_Utils_System::url(
+        'civicrm/contribute/transact',
         "_qf_ThankYou_display=1&qfKey={$form->controller->_key}"
       );
       CRM_Utils_System::redirect($url);
@@ -86,14 +87,16 @@ class CRM_Core_Payment_ProcessorForm {
 
     if (!empty($form->_membershipBlock) &&
       CRM_Utils_Array::value('is_separate_payment', $form->_membershipBlock) &&
-      (CRM_Utils_Array::value('class_name', $form->_paymentProcessor) &&
+      (
+        CRM_Utils_Array::value('class_name', $form->_paymentProcessor) &&
         !(CRM_Utils_Array::value('billing_mode', $form->_paymentProcessor) & CRM_Core_Payment::BILLING_MODE_FORM)
       )
     ) {
 
-       return CRM_Core_Error::statusBounce(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments, or the option to "Execute real-time monetary transactions" is disabled. Please contact the site administrator and notify them of this error',
-          [1 => $form->_paymentProcessor['payment_processor_type']]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        'This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments, or the option to "Execute real-time monetary transactions" is disabled. Please contact the site administrator and notify them of this error',
+        [1 => $form->_paymentProcessor['payment_processor_type']]
+      ));
     }
 
     $profileAddressFields = $form->get('profileAddressFields');
@@ -105,14 +108,15 @@ class CRM_Core_Payment_ProcessorForm {
   public static function buildQuickform(&$form) {
     $form->addElement('hidden', 'hidden_processor', 1);
 
-    if (($form->_paymentProcessor['payment_type'] & CRM_Core_Payment::PAYMENT_TYPE_DIRECT_DEBIT
-      )) {
+    if ((
+      $form->_paymentProcessor['payment_type'] & CRM_Core_Payment::PAYMENT_TYPE_DIRECT_DEBIT
+    )) {
       CRM_Core_Payment_Form::buildDirectDebit($form);
     }
-    elseif (($form->_paymentProcessor['payment_type'] & CRM_Core_Payment::PAYMENT_TYPE_CREDIT_CARD
-      )) {
+    elseif ((
+      $form->_paymentProcessor['payment_type'] & CRM_Core_Payment::PAYMENT_TYPE_CREDIT_CARD
+    )) {
       CRM_Core_Payment_Form::buildCreditCard($form);
     }
   }
 }
-

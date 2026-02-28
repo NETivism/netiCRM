@@ -212,7 +212,8 @@ class CRM_Core_Payment_Form {
         if (isset($field['cc_field']) &&
           $field['cc_field']
         ) {
-          $form->add($field['htmlType'],
+          $form->add(
+            $field['htmlType'],
             $field['name'],
             $field['title'],
             $field['attributes'],
@@ -221,14 +222,17 @@ class CRM_Core_Payment_Form {
         }
       }
 
-      $form->addRule('cvv2',
+      $form->addRule(
+        'cvv2',
         ts('Please enter a valid value for your card security code. This is usually the last 3-4 digits on the card\'s signature panel.'),
         'integer'
       );
 
-      $form->addRule('credit_card_exp_date',
+      $form->addRule(
+        'credit_card_exp_date',
         ts('Credit card expiration date cannot be a past date.'),
-        'currentDate', TRUE
+        'currentDate',
+        TRUE
       );
 
       // also take care of state country widget
@@ -242,7 +246,8 @@ class CRM_Core_Payment_Form {
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
       $form->_expressButtonName = $form->getButtonName('upload', 'express');
       $form->assign('expressButtonName', $form->_expressButtonName);
-      $form->add('image',
+      $form->add(
+        'image',
         $form->_expressButtonName,
         $form->_paymentProcessor['url_button'],
         ['class' => 'form-submit']
@@ -265,7 +270,8 @@ class CRM_Core_Payment_Form {
         if (isset($field['cc_field']) &&
           $field['cc_field']
         ) {
-          $form->add($field['htmlType'],
+          $form->add(
+            $field['htmlType'],
             $field['name'],
             $field['title'],
             $field['attributes'],
@@ -274,12 +280,14 @@ class CRM_Core_Payment_Form {
         }
       }
 
-      $form->addRule('bank_identification_number',
+      $form->addRule(
+        'bank_identification_number',
         ts('Please enter a valid Bank Identification Number (value must not contain punctuation characters).'),
         'nopunctuation'
       );
 
-      $form->addRule('bank_account_number',
+      $form->addRule(
+        'bank_account_number',
         ts('Please enter a valid Bank Account Number (value must not contain punctuation characters).'),
         'nopunctuation'
       );
@@ -287,7 +295,8 @@ class CRM_Core_Payment_Form {
 
     if ($form->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_BUTTON) {
       $form->_expressButtonName = $form->getButtonName($form->buttonType(), 'express');
-      $form->add('image',
+      $form->add(
+        'image',
         $form->_expressButtonName,
         $form->_paymentProcessor['url_button'],
         ['class' => 'form-submit']
@@ -364,4 +373,3 @@ class CRM_Core_Payment_Form {
     return FALSE;
   }
 }
-

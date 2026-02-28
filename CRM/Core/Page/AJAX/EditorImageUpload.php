@@ -48,7 +48,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
     // Get filename information from POST data
     $originalFilename = isset($_POST['original_filename']) ? trim($_POST['original_filename']) : '';
     $suggestedFilename = isset($_POST['suggested_filename']) ? trim($_POST['suggested_filename']) : '';
-    $timestamp = $_POST['timestamp'] ?? null;
+    $timestamp = $_POST['timestamp'] ?? NULL;
 
     // Validate file information
     $fileInfo = [
@@ -66,7 +66,8 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
     if (!empty($originalFilename)) {
       $displayName = $originalFilename;
       $fileInfo['source'] = 'file_drop';
-    } else {
+    }
+    else {
       $displayName = $suggestedFilename;
       $fileInfo['source'] = 'clipboard_paste';
     }
@@ -102,7 +103,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
 
     // Additional security check: verify it's actually an image
     $imageInfo = getimagesize($uploadedFile['tmp_name']);
-    if ($imageInfo === false) {
+    if ($imageInfo === FALSE) {
       self::responseError([
         'status' => 0,
         'message' => 'Invalid image file'
@@ -160,9 +161,9 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
 
       // Ensure temp directory exists and is writable
       if (!is_dir($tempDir)) {
-        if (!mkdir($tempDir, 0755, true)) {
+        if (!mkdir($tempDir, 0755, TRUE)) {
           return [
-            'success' => false,
+            'success' => FALSE,
             'message' => 'Cannot create temp directory: ' . $tempDir
           ];
         }
@@ -170,7 +171,7 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
 
       if (!is_writable($tempDir)) {
         return [
-          'success' => false,
+          'success' => FALSE,
           'message' => 'Temp directory not writable: ' . $tempDir
         ];
       }
@@ -187,22 +188,24 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
         chmod($filepath, 0644);
 
         return [
-          'success' => true,
+          'success' => TRUE,
           'filename' => $filename,
           'filepath' => $filepath,
           'temp_dir' => $tempDir,
           'message' => 'File saved to backend temp directory'
         ];
-      } else {
+      }
+      else {
         return [
-          'success' => false,
+          'success' => FALSE,
           'message' => 'Failed to move uploaded file to: ' . $filepath
         ];
       }
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       return [
-        'success' => false,
+        'success' => FALSE,
         'message' => 'Error saving file: ' . $e->getMessage()
       ];
     }

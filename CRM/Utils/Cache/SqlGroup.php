@@ -116,4 +116,3 @@ class CRM_Utils_Cache_SqlGroup implements CRM_Utils_Cache_Interface {
     $this->frontCache = CRM_Core_BAO_Cache::getItems($this->group, $this->componentID);
   }
 }
-

@@ -104,19 +104,19 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
 
     // action is taken depending upon the mode
     $relationshipType = new CRM_Contact_DAO_RelationshipType();
-    if(CRM_Utils_Array::value('relationshipType', $ids)) {
+    if (CRM_Utils_Array::value('relationshipType', $ids)) {
       $relationshipType->id = CRM_Utils_Array::value('relationshipType', $ids);
-      $relationshipType->find(true);
+      $relationshipType->find(TRUE);
     }
 
     // set label to name if it's not set - but *only* for
     // ADD action. CRM-3336 as part from (CRM-3522)
-    // Modify by junsuwhy in NetiCRM, refs #15343 
+    // Modify by junsuwhy in NetiCRM, refs #15343
     if ($relationshipType->id && ($relationshipType->is_reserved || !preg_match('/[^A-Za-z0-9 ]/', $relationshipType->name_a_b))) {
       $params['name_a_b'] = $relationshipType->name_a_b;
       $params['name_b_a'] = $relationshipType->name_b_a;
     }
-    else{
+    else {
       if (!CRM_Utils_Array::value('name_a_b', $params) && CRM_Utils_Array::value('label_a_b', $params)) {
         $params['name_a_b'] = $params['label_a_b'];
       }
@@ -180,4 +180,3 @@ UPDATE civicrm_membership_type
     return $relationshipType->delete();
   }
 }
-

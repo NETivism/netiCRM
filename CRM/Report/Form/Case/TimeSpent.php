@@ -181,7 +181,8 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
-            (CRM_Utils_Array::value($fieldName, $this->_params['fields'])
+            (
+              CRM_Utils_Array::value($fieldName, $this->_params['fields'])
               && ((!$this->has_grouping) || !in_array($fieldName, ['case_id', 'subject', 'status_id']))
             )
           ) {
@@ -259,7 +260,8 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
                 }
               }
               else {
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -352,4 +354,3 @@ GROUP BY {$this->_aliases['civicrm_contact']}.id,
     }
   }
 }
-

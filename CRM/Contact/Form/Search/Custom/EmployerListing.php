@@ -37,7 +37,8 @@
 class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
-  protected $_formValues; public function __construct(&$formValues) {
+  protected $_formValues;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -55,7 +56,8 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     /**
      * Define the search form fields here
      */
-    $form->add('text',
+    $form->add(
+      'text',
       'sort_name',
       ts('Individual\'s Name (last, first)')
     );
@@ -89,7 +91,10 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
   /**
    * Construct the search query
    */
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
 
@@ -171,7 +176,8 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     $clauses[] = "cR.is_active = 1";
 
     // These are conditional filters based on user input
-    $name = CRM_Utils_Array::value('sort_name',
+    $name = CRM_Utils_Array::value(
+      'sort_name',
       $this->_formValues
     );
     if ($name != NULL) {
@@ -181,7 +187,8 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
       $clauses[] = "cInd.sort_name LIKE '$name'";
     }
 
-    $state = CRM_Utils_Array::value('state_province_id',
+    $state = CRM_Utils_Array::value(
+      'state_province_id',
       $this->_formValues
     );
     if ($state) {
@@ -211,13 +218,14 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /* 
+  /*
      * Functions below generally don't need to be modified
      */
   public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
@@ -235,4 +243,3 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     return NULL;
   }
 }
-

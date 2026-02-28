@@ -137,9 +137,9 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
       $n++;
     }
   }
-/*
- * Can't figure out the point of this?
- */
+  /*
+   * Can't figure out the point of this?
+   */
   public function _loopingCustomFieldCreateTest($params) {
     $customField = civicrm_api('custom_field', 'create', $params);
     $this->assertEquals(0, $customField['is_error'], var_export($customField, TRUE));
@@ -287,4 +287,3 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
     $this->assertEquals($customField['is_error'], 0);
   }
 }
-

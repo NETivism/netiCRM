@@ -45,7 +45,7 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  public CONST AUTH_APPROVED = '00';
+  public const AUTH_APPROVED = '00';
 
   protected static $_mode = NULL;
 
@@ -284,7 +284,8 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
         $result['#return'] = $this->_xml_parse($input);
       }
       else {
-        $result['#error'] = ts('Error parsing XML result - error code = %1 at line %2 char %3',
+        $result['#error'] = ts(
+          'Error parsing XML result - error code = %1 at line %2 char %3',
           [
             1 => xml_get_error_code($xmlparser),
             2 => xml_get_current_line_number($xmlparser),
@@ -516,4 +517,3 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
     }
   }
 }
-

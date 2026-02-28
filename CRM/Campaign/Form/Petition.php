@@ -92,7 +92,8 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -129,13 +130,20 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
 
     $customContactProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Individual']);
     // custom group id
-    $this->add('select', 'contact_profile_id', ts('Contact Profile'),
-      ['' => ts('- select -')] + $customContactProfiles, TRUE
+    $this->add(
+      'select',
+      'contact_profile_id',
+      ts('Contact Profile'),
+      ['' => ts('- select -')] + $customContactProfiles,
+      TRUE
     );
 
     $customProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Activity']);
     // custom group id
-    $this->add('select', 'profile_id', ts('Activity Profile'),
+    $this->add(
+      'select',
+      'profile_id',
+      ts('Activity Profile'),
       ['' => ts('- select -')] + $customProfiles
     );
 
@@ -146,7 +154,8 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $this->add('checkbox', 'is_default', ts('Is Default?'));
 
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -235,7 +244,3 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     }
   }
 }
-
-
-
-

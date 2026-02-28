@@ -64,11 +64,11 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     ];
     foreach ($this->_contactTypes as $type) {
       $supportFields = &CRM_Dedupe_BAO_RuleGroup::supportedFields($type);
-      foreach($supportFields as $array) {
-        foreach($array as $name => $label){
+      foreach ($supportFields as $array) {
+        foreach ($array as $name => $label) {
           if (!isset($this->_dedupeRuleFields[$name])) {
             $this->_dedupeRuleFields[$name] = $label;
-          }  
+          }
         }
       }
     }
@@ -103,7 +103,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
 
     //contact types option
     $contactOptions = [];
-    foreach($this->_contactTypes as $type) {
+    foreach ($this->_contactTypes as $type) {
       if (CRM_Contact_BAO_ContactType::isActive($type)) {
         $contactOptions[$type] = ts($type);
       }
@@ -112,7 +112,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
 
     foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
       $fields = [];
-      foreach($groupValues['fields'] as $name){
+      foreach ($groupValues['fields'] as $name) {
         if (isset($this->_dedupeRuleFields[$name])) {
           $fields[] = $this->_dedupeRuleFields[$name];
         }
@@ -134,7 +134,8 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     //build date formats
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -147,7 +148,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     );
   }
 
-  public function setDefaultValues(){
+  public function setDefaultValues() {
     $defaults = $this->_submitValues;
     if (!$defaults['createContactOption']) {
       $defaults['createContactOption'] = CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE;
@@ -191,10 +192,10 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     $this->set('skipColumnHeader', $skipColumnHeader);
 
     if ($onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
-      $createContactOption = CRM_Contribute_Import_Parser::CONTACT_DONTCREATE; 
+      $createContactOption = CRM_Contribute_Import_Parser::CONTACT_DONTCREATE;
       $this->set('createContactOption', $createContactOption);
     }
-    else{
+    else {
       $this->set('createContactOption', $createContactOption);
     }
 
@@ -225,7 +226,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
       $primaryKeyName,
       $statusFieldName,
       CRM_Contribute_Import_Parser::DUPLICATE_SKIP,
-      NULL, 
+      NULL,
       NULL,
       CRM_Contribute_Import_Parser::CONTACT_NOIDCREATE
     );
@@ -244,4 +245,3 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     return ts('Upload Data');
   }
 }
-

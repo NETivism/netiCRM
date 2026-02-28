@@ -148,9 +148,13 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    *
    */
-  public function __construct($title = NULL, $modal = TRUE,
-    $mode = NULL, $scope = NULL,
-    $addSequence = FALSE, $ignoreKey = FALSE
+  public function __construct(
+    $title = NULL,
+    $modal = TRUE,
+    $mode = NULL,
+    $scope = NULL,
+    $addSequence = FALSE,
+    $ignoreKey = FALSE
   ) {
     // this has to true for multiple tab session fix
     $addSequence = TRUE;
@@ -213,8 +217,13 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
 
 
     // also retrieve and store destination in session
-    $this->_destination = CRM_Utils_Request::retrieve('destination', 'String', $this,
-      FALSE, NULL, $_REQUEST
+    $this->_destination = CRM_Utils_Request::retrieve(
+      'destination',
+      'String',
+      $this,
+      FALSE,
+      NULL,
+      $_REQUEST
     );
   }
 
@@ -339,7 +348,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     // note that based on action, control might not come back!!
     // e.g. if action is a valid JUMP, u basically do a redirect
     // to the appropriate place
-    if($pageNames[$pageNameCorrect] > $pageNames[$pageNameOld]) {
+    if ($pageNames[$pageNameCorrect] > $pageNames[$pageNameOld]) {
       $redirect = '_qf_'.$pageNameCorrect.'_'.$action.'=true&qfKey='.$this->_key;
       return $redirect;
     }
@@ -431,11 +440,11 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
 
       $ext = new CRM_Core_Extensions();
       if ($ext->isExtensionClass($className)) {
-        require_once ($ext->classToPath($className));
+        require_once($ext->classToPath($className));
       }
       else {
         if (!class_exists($className)) {
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php');
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php');
         }
       }
       $$stateName = new $className($stateMachine->find($className), $action, 'post', $formName);
@@ -456,7 +465,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
 
   /**
    * Get current page
-   * 
+   *
    * Get current form object for further usage.
    * In most case, pages defined in statemachine and it's form object.
    *
@@ -468,7 +477,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return $this->getPage($pageName);
   }
 
-  public function nextPage(){
+  public function nextPage() {
     $this->_actionName = $this->getActionName();
     list($pageName, $action) = $this->_actionName;
     $this->resetPage($pageName, TRUE);
@@ -520,7 +529,8 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
    * @return void
    * @access public
    */
-  public function process() {}
+  public function process() {
+  }
 
   /**
    * Store the variable with the value in the form scope
@@ -743,7 +753,8 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     if (empty($uploadNames)) {
       $uploadNames = $this->get('uploadNames');
       if (!empty($uploadNames)) {
-        $uploadNames = array_merge($uploadNames,
+        $uploadNames = array_merge(
+          $uploadNames,
           CRM_Core_BAO_File::uploadNames()
         );
       }
@@ -752,12 +763,14 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
       }
     }
 
-    $action = new CRM_Core_QuickForm_Action_Upload($this->_stateMachine,
+    $action = new CRM_Core_QuickForm_Action_Upload(
+      $this->_stateMachine,
       $uploadDir,
       $uploadNames
     );
     $this->addAction('upload', $action);
-    $action = new CRM_Core_QuickForm_Action_Attach($this->_stateMachine,
+    $action = new CRM_Core_QuickForm_Action_Attach(
+      $this->_stateMachine,
       $uploadDir,
       $uploadNames
     );
@@ -808,7 +821,7 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     }
     foreach (array_keys($this->_pages) as $pageName) {
       if (isset($_SESSION[$containerName]['values'][$pageName])) {
-        if(isset($_SESSION[$containerName]['values'][$pageName][$name])) {
+        if (isset($_SESSION[$containerName]['values'][$pageName][$name])) {
           $_SESSION[$containerName]['values'][$pageName][$name] = $value;
           return TRUE;
         }
@@ -817,4 +830,3 @@ class CRM_Core_Controller extends HTML_QuickForm_Controller {
     return FALSE;
   }
 }
-

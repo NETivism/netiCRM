@@ -116,9 +116,9 @@ class CRM_Mailing_BAO_Component extends CRM_Mailing_DAO_Component {
 
     $component->save();
 
-    CRM_Core_Session::setStatus(ts('The mailing component \'%1\' has been saved.',
-        [1 => $component->name]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      'The mailing component \'%1\' has been saved.',
+      [1 => $component->name]
+    ));
   }
 }
-

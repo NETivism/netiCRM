@@ -43,7 +43,8 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
   protected $_orgContact;
   protected $_membershipTypeID;
   protected $_membershipStatusID;
-  protected $_membershipID; public function get_info() {
+  protected $_membershipID;
+  public function get_info() {
     return [
       'name' => 'Membership Contact',
       'description' => 'Test all Membership API methods.',
@@ -105,7 +106,9 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
   public function testGetWithEmptyParams() {
     $params = [];
     $result = &civicrm_contact_memberships_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -117,7 +120,9 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
   public function testGetWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_contact_memberships_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -245,17 +250,23 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
 
     $result = &civicrm_membership_contact_get($params);
 
-    $this->assertArrayHasKey($memberContactId, $result,
+    $this->assertArrayHasKey(
+      $memberContactId,
+      $result,
       "In line " . __LINE__
     );
 
     // extra one for the record county key
-    $this->assertEquals(2, count($result),
+    $this->assertEquals(
+      2,
+      count($result),
       "In line " . __LINE__
     );
 
     $membership = $result[$memberContactId][$membershipID];
-    $this->assertEquals($this->_membershipStatusID, $membership['status_id'],
+    $this->assertEquals(
+      $this->_membershipStatusID,
+      $membership['status_id'],
       "In line " . __LINE__
     );
 
@@ -285,7 +296,9 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
   public function testCreateWithParamsString() {
     $params = 'a string';
     $result = &civicrm_contact_membership_create($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -412,7 +425,9 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
   public function testDeleteWithParamsString() {
     $params = 'a string';
     $result = &civicrm_contact_membership_create($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -461,4 +476,3 @@ class api_v2_MembershipContactTest extends CiviUnitTestCase {
     $this->assertEquals($values['end_date'], '20061221');
   }
 }
-

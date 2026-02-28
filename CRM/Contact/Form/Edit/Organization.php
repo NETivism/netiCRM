@@ -59,7 +59,10 @@ class CRM_Contact_Form_Edit_Organization {
     $form->addElement('text', 'legal_name', ts('Legal Name'), $attributes['legal_name']);
 
     // nick_name
-    $form->addElement('text', 'nick_name', ts('Nick Name'),
+    $form->addElement(
+      'text',
+      'nick_name',
+      ts('Nick Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'nick_name')
     );
 
@@ -68,7 +71,8 @@ class CRM_Contact_Form_Edit_Organization {
 
     $form->addElement('text', 'contact_source', ts('Source'));
     $form->add('text', 'external_identifier', ts('External Id'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'), FALSE);
-    $form->addRule('external_identifier',
+    $form->addRule(
+      'external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
       ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
@@ -93,4 +97,3 @@ class CRM_Contact_Form_Edit_Organization {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

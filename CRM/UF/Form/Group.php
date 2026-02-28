@@ -79,7 +79,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'Profile');
 
     $this->assign('gid', $this->_id);
-    $this->assign('onlineProfile', 0); 
+    $this->assign('onlineProfile', 0);
     $this->_group = CRM_Core_PseudoConstant::group();
 
     // setting title for html page
@@ -128,7 +128,8 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       else {
         $display = ts('Delete Profile');
       }
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => $display,
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -205,7 +206,8 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     }
 
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -225,7 +227,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     }
 
     if ($this->_action & CRM_Core_Action::ADD) {
-      $this->assign('actionIsAdd', true);
+      $this->assign('actionIsAdd', TRUE);
     }
   }
 
@@ -367,7 +369,7 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
 
         if ($params['is_in_other_situation'] == '1') {
           $ufJoinRecords = CRM_Core_BAO_UFGroup::getUFJoinRecord($ufGroup->id);
-          if (!in_array("System",$ufJoinRecords)) {
+          if (!in_array("System", $ufJoinRecords)) {
             $joinParams = [];
             $joinParams['uf_group_id'] = $ufGroup->id;
             $joinParams['module'] = "System";
@@ -387,9 +389,10 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
       }
       else {
         $url = CRM_Utils_System::url('civicrm/admin/uf/group/field/add', 'reset=1&action=add&gid=' . $ufGroup->id);
-        CRM_Core_Session::setStatus(ts('Your CiviCRM Profile \'%1\' has been added. You can add fields to this profile now.',
-            [1 => $ufGroup->title]
-          ));
+        CRM_Core_Session::setStatus(ts(
+          'Your CiviCRM Profile \'%1\' has been added. You can add fields to this profile now.',
+          [1 => $ufGroup->title]
+        ));
       }
       $session = CRM_Core_Session::singleton();
       $session->replaceUserContext($url);
@@ -400,4 +403,3 @@ class CRM_UF_Form_Group extends CRM_Core_Form {
     CRM_Utils_System::updateCategories();
   }
 }
-

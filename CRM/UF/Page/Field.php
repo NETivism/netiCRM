@@ -190,7 +190,8 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
         $action -= CRM_Core_Action::DELETE;
       }
       $ufField[$ufFieldBAO->id]['order'] = $ufField[$ufFieldBAO->id]['weight'];
-      $ufField[$ufFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
+      $ufField[$ufFieldBAO->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
         $action,
         ['id' => $ufFieldBAO->id,
           'gid' => $this->_gid,
@@ -202,13 +203,18 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
       $this->assign('skipBrowse', TRUE);
     }
 
-    $returnURL = CRM_Utils_System::url('civicrm/admin/uf/group/field',
+    $returnURL = CRM_Utils_System::url(
+      'civicrm/admin/uf/group/field',
       "reset=1&action=browse&gid={$this->_gid}"
     );
     $filter = "uf_group_id = {$this->_gid}";
 
-    CRM_Utils_Weight::addOrder($ufField, 'CRM_Core_DAO_UFField',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $ufField,
+      'CRM_Core_DAO_UFField',
+      'id',
+      $returnURL,
+      $filter
     );
 
     $this->assign('ufField', $ufField);
@@ -236,8 +242,10 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
 
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/uf/group/field', 'reset=1&action=browse&gid=' . $this->_gid
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      'civicrm/admin/uf/group/field',
+      'reset=1&action=browse&gid=' . $this->_gid
+    ));
     $controller->set('gid', $this->_gid);
     $controller->setEmbedded(TRUE);
     $controller->process();
@@ -256,8 +264,12 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
    */
   public function run() {
     // get the group id
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this, FALSE, 0
+    $this->_gid = CRM_Utils_Request::retrieve(
+      'gid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     if ($this->_gid) {
 
@@ -271,16 +283,24 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
     }
 
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
 
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -311,9 +331,10 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
   public function preview($fieldId, $groupId) {
     $controller = new CRM_Core_Controller_Simple('CRM_UF_Form_Preview', ts('Preview Custom Data'), CRM_Core_Action::PREVIEW);
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/uf/group/field',
-        'reset=1&action=browse&gid=' . $this->_gid
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      'civicrm/admin/uf/group/field',
+      'reset=1&action=browse&gid=' . $this->_gid
+    ));
     $controller->set('fieldId', $fieldId);
     $controller->set('id', $groupId);
     $controller->setEmbedded(TRUE);
@@ -321,4 +342,3 @@ class CRM_UF_Page_Field extends CRM_Core_Page {
     $controller->run();
   }
 }
-

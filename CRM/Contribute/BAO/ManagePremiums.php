@@ -236,4 +236,3 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
     ];
   }
 }
-

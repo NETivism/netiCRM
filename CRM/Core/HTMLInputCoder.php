@@ -218,4 +218,3 @@ class CRM_Core_HTMLInputCoder implements API_Wrapper {
     return (FALSE !== strpos($key, '.'));
   }
 }
-

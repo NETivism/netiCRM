@@ -67,7 +67,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     if (self::checkDuplicate($params, $duplicates)) {
       $error = &CRM_Core_Error::singleton();
       $d = CRM_Utils_Array::implode(', ', $duplicates);
-      $error->push(CRM_Core_Error::DUPLICATE_CONTRIBUTION,
+      $error->push(
+        CRM_Core_Error::DUPLICATE_CONTRIBUTION,
         'Fatal',
         [$d],
         "Found matching recurring contribution(s): $d"
@@ -171,10 +172,10 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     $params = [1 => [$id, 'Integer']];
     $query = CRM_Core_DAO::executeQuery($sql, $params);
     $query->fetch();
-    if(empty($query->payment_processor_id) && empty($query->processor_id)){
+    if (empty($query->payment_processor_id) && empty($query->processor_id)) {
       return NULL;
     }
-    else{
+    else {
       $pid = $query->processor_id ? $query->processor_id : $query->payment_processor_id;
     }
 
@@ -393,14 +394,14 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       foreach ($children as $cid) {
         $params = ['entityID' => $cid];
         $params = array_merge($params, $params_parent);
-        foreach($exclude as $e){
-          if(isset($params['custom_'.$e])) {
+        foreach ($exclude as $e) {
+          if (isset($params['custom_'.$e])) {
             unset($params['custom_'.$e]);
           }
         }
         $exists = CRM_Core_BAO_CustomValueTable::getValues($params);
-        foreach($exists as $k => $e){
-          if(!empty($e) && strstr($k, 'custom_') && isset($params[$k])) {
+        foreach ($exists as $k => $e) {
+          if (!empty($e) && strstr($k, 'custom_') && isset($params[$k])) {
             unset($params[$k]);
           }
         }
@@ -409,11 +410,11 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     }
 
     // Duplicate contribution soft .For #22323
-    if(!empty($parent_soft->id) && !empty($children)){
+    if (!empty($parent_soft->id) && !empty($children)) {
       foreach ($children as $cid) {
         $cs = new CRM_Contribute_DAO_ContributionSoft();
         $cs->contribution_id = $cid;
-        if(!$cs->find(TRUE)){
+        if (!$cs->find(TRUE)) {
           $cs = clone $parent_soft;
           unset($cs->id);
           $cs->contribution_id = $cid;
@@ -428,7 +429,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       foreach ($children as $cid) {
         $mp = new CRM_Member_DAO_MembershipPayment();
         $mp->contribution_id = $cid;
-        if(!$mp->find(TRUE)){
+        if (!$mp->find(TRUE)) {
           $mp = clone $membership_payment;
           unset($mp->id);
           $mp->contribution_id = $cid;
@@ -439,17 +440,17 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     }
   }
 
-  public static function calculateRecurDay($id, $today = NULL, $base = 'start_date'){
+  public static function calculateRecurDay($id, $today = NULL, $base = 'start_date') {
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $id;
-    if($recur->find(TRUE) && !empty($recur->$base)){
+    if ($recur->find(TRUE) && !empty($recur->$base)) {
       $result = CRM_Utils_Date::intervalAdd($recur->frequency_unit, $recur->frequency_interval, $recur->$base);
       return $result;
     }
     return FALSE;
   }
 
-  public static function currentRunningSummary(){
+  public static function currentRunningSummary() {
     $sql = " SELECT SUM( c.contributions ) AS contributions, SUM( c.amount ) AS amount, SUM( c.groupby ) AS contacts, c.currency
 FROM (
   SELECT COUNT( r.id ) AS contributions, SUM( r.amount ) AS amount,  '1' AS groupby, r.currency
@@ -461,7 +462,7 @@ FROM (
 GROUP BY c.currency";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $summary = [];
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $summary[$dao->currency] = [
         'contacts' => $dao->contacts,
         'contributions' => $dao->contributions,
@@ -471,24 +472,24 @@ GROUP BY c.currency";
     return $summary;
   }
 
-  public static function chartEstimateMonthly($limit = 12){
+  public static function chartEstimateMonthly($limit = 12) {
     $frequency_unit = 'month';
     $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, CAST(r.installments AS SIGNED) - CAST(count(c.id) AS SIGNED) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = 'month' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result WHERE result.installments > 0 OR result.installments IS NULL GROUP BY result.installments DESC";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $unlimit = $over = NULL;
     $slot = array_fill(1, $limit, 0);
     krsort($slot);
-    while($dao ->fetch()){
-      if(empty($dao->installments)){
+    while ($dao ->fetch()) {
+      if (empty($dao->installments)) {
         $unlimit = $dao->amount;
       }
-      elseif($dao->installments > $limit) {
+      elseif ($dao->installments > $limit) {
         $over += $dao->amount;
       }
-      elseif(isset($slot[$dao->installments])){
+      elseif (isset($slot[$dao->installments])) {
         $slot[$dao->installments] = $dao->amount;
       }
-      else{
+      else {
         break;
       }
     }
@@ -501,7 +502,7 @@ GROUP BY c.currency";
       'year' => 'Y',
       'day' => 'd',
     ];
-    foreach($slot as $installment => $amount){
+    foreach ($slot as $installment => $amount) {
       $increment += $amount;
       $amount = $unlimit + $over + $increment;
       $labels[$installment] = strftime('%b', strtotime('+'.$installment.' '.$frequency_unit));
@@ -526,7 +527,7 @@ GROUP BY c.currency";
     if (empty($params->id)) {
       CRM_Core_Error::debug_log_message(ts('Lack of ID in parameters when saving log data.'), TRUE);
     }
-    else if (!empty($before)) {
+    elseif (!empty($before)) {
       $recurDAO = (object) $before;
     }
     else {
@@ -543,7 +544,7 @@ GROUP BY c.currency";
       $after[$field] = empty($params->$field) ? NULL : $params->$field;
       // $params Only save modified value, So copy from before.
       if (!empty($recurDAO->$field) && $after[$field] === NULL) {
-        $after[$field] = $recurDAO->$field; 
+        $after[$field] = $recurDAO->$field;
       }
     }
     $data = ['before' => $before, 'after' => $after];
@@ -562,7 +563,7 @@ GROUP BY c.currency";
     if (!empty($logId)) {
       $logParams['id'] = $logId;
     }
-    $log = CRM_Core_BAO_Log::add( $logParams );
+    $log = CRM_Core_BAO_Log::add($logParams);
   }
 
   public static function addNote($recurringId, $title, $body = NULL) {
@@ -579,7 +580,6 @@ GROUP BY c.currency";
       'contact_id'    => $userId,
       'modified_date' => date('YmdHis', CRM_REQUEST_TIME),
     ];
-    $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
+    $note = CRM_Core_BAO_Note::add($noteParams, NULL);
   }
 }
-

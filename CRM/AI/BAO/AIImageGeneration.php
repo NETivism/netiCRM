@@ -92,7 +92,8 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
     try {
       self::create($data);
       return TRUE;
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       CRM_Core_Error::debug_log_message("Failed to update image generation status: " . $e->getMessage());
       return FALSE;
     }

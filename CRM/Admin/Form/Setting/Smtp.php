@@ -261,4 +261,3 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
     return $this->_defaults;
   }
 }
-

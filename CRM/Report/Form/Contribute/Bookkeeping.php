@@ -58,7 +58,8 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
 
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Membership']; public function __construct() {
+  protected $_customGroupExtends = ['Membership'];
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -245,7 +246,8 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
         CRM_Utils_Array::value('civicrm_contact_display_name', $rows[$rowNum]) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -283,4 +285,3 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     }
   }
 }
-

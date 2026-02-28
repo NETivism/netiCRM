@@ -41,4 +41,3 @@ WHERE on_hold = 1 AND hold_date is not null AND contact_id in (" . CRM_Utils_Arr
     CRM_Core_Session::setStatus($status);
   }
 }
-

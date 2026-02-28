@@ -64,8 +64,10 @@ class CRM_Price_Form_DeleteSet extends CRM_Core_Form {
   public function preProcess() {
     $this->_sid = $this->get('sid');
 
-    $this->_title = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set',
-      $this->_sid, 'title'
+    $this->_title = CRM_Core_DAO::getFieldValue(
+      'CRM_Price_DAO_Set',
+      $this->_sid,
+      'title'
     );
   }
 
@@ -77,7 +79,8 @@ class CRM_Price_Form_DeleteSet extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     $this->assign('title', $this->_title);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Delete Price Set'),
           'isDefault' => TRUE,
@@ -97,15 +100,16 @@ class CRM_Price_Form_DeleteSet extends CRM_Core_Form {
    */
   public function postProcess() {
     if (CRM_Price_BAO_Set::deleteSet($this->_sid)) {
-      CRM_Core_Session::setStatus(ts('The Price Set \'%1\' has been deleted.',
-          [1 => $this->_title]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'The Price Set \'%1\' has been deleted.',
+        [1 => $this->_title]
+      ));
     }
     else {
-      CRM_Core_Session::setStatus(ts('The Price Set \'%1\' has not been deleted! You must delete all price fields in this set prior to deleting the set.',
-          [1 => $this->_title]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'The Price Set \'%1\' has not been deleted! You must delete all price fields in this set prior to deleting the set.',
+        [1 => $this->_title]
+      ));
     }
   }
 }
-

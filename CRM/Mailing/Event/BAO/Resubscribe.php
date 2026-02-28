@@ -85,7 +85,8 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     $do->fetch();
     $mailing_id = $do->mailing_id;
 
-    $do->query("
+    $do->query(
+      "
             SELECT      $mg.entity_table as entity_table,
                         $mg.entity_id as entity_id
             FROM        $mg
@@ -98,7 +99,7 @@ class CRM_Mailing_Event_BAO_Resubscribe {
                 AND     $group.is_hidden = 0"
     );
 
-    /* Make a list of groups and a list of prior mailings that received 
+    /* Make a list of groups and a list of prior mailings that received
          * this mailing */
 
 
@@ -297,4 +298,3 @@ class CRM_Mailing_Event_BAO_Resubscribe {
     }
   }
 }
-

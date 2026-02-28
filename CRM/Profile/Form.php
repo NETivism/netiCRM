@@ -48,7 +48,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
   public $_disallowed;
   public $_fieldset;
   public $_mail;
-  public CONST MODE_REGISTER = 1, MODE_SEARCH = 2, MODE_CREATE = 4, MODE_EDIT = 8;
+  public const MODE_REGISTER = 1, MODE_SEARCH = 2, MODE_CREATE = 4, MODE_EDIT = 8;
 
   protected $_mode;
 
@@ -176,7 +176,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
       // check if we are rendering mixed profiles
       if (CRM_Core_BAO_UFGroup::checkForMixProfiles($this->_profileIds)) {
-         return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
+        return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
       }
 
       // for now consider 1'st profile as primary profile and validate it
@@ -231,19 +231,26 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $this->_fields = CRM_Core_BAO_UFGroup::getRegistrationFields($this->_action, $this->_mode, $this->_ctype);
     }
     elseif ($this->_mode == self::MODE_SEARCH) {
-      $this->_fields = CRM_Core_BAO_UFGroup::getListingFields($this->_action,
+      $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(
+        $this->_action,
         CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY | CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,
         FALSE,
         $gids,
-        TRUE, NULL,
+        TRUE,
+        NULL,
         $this->_skipPermission,
         CRM_Core_Permission::SEARCH
       );
     }
     else {
-      $this->_fields = CRM_Core_BAO_UFGroup::getFields($gids, FALSE, NULL,
-        NULL, NULL,
-        FALSE, NULL,
+      $this->_fields = CRM_Core_BAO_UFGroup::getFields(
+        $gids,
+        FALSE,
+        NULL,
+        NULL,
+        NULL,
+        FALSE,
+        NULL,
         $this->_skipPermission,
         NULL,
         ($this->_action == CRM_Core_Action::ADD) ? CRM_Core_Permission::CREATE : CRM_Core_Permission::EDIT
@@ -300,7 +307,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
         }
 
         if (($profileType != 'Contact') &&
-          (($profileSubType && $contactSubType && ($profileSubType != $contactSubType)) ||
+          (
+            ($profileSubType && $contactSubType && ($profileSubType != $contactSubType)) ||
             ($profileType != $contactType)
           )
         ) {
@@ -309,7 +317,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
           if ($orgId && $profileType == 'Organization') {
             $this->_id = $orgId;
           }
-          else{
+          else {
             $disallowed = TRUE;
             if (!$statusMessage) {
               $statusMessage = ts("This profile is configured for contact type '%1'. It cannot be used to edit contacts of other types.", [1 => $profileSubType ? $profileSubType : $profileType]);
@@ -352,7 +360,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     if ($this->_id) {
       CRM_Core_BAO_UFGroup::setProfileDefaults($this->_id, $this->_fields, $this->_defaults, TRUE);
     }
-    else{
+    else {
       if (isset($this->_fields['group'])) {
         CRM_Contact_BAO_Group::publicDefaultGroups($this->_defaults);
       }
@@ -365,7 +373,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
         $htmlType = $field['html_type'];
 
         if (!isset($this->_defaults[$name]) || $htmlType == 'File') {
-          CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID,
+          CRM_Core_BAO_CustomField::setProfileDefaults(
+            $customFieldID,
             $name,
             $this->_defaults,
             $this->_id,
@@ -382,10 +391,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
             $deleteExtra = ts("Are you sure you want to delete attached file.");
             $fileId = $url['file_id'];
             if (empty($field['is_view'])) {
-              $deleteURL = CRM_Utils_System::url('civicrm/file',
+              $deleteURL = CRM_Utils_System::url(
+                'civicrm/file',
                 "reset=1&id={$fileId}&eid=$this->_id&fid={$customFieldID}&action=delete&stay=1"
               );
-              $customFiles[$field['name']]['deleteURL'] = "<a href=\"{$deleteURL}\" onclick = \"if (confirm( ' $deleteExtra ' )) this.href+='&confirmed=1'; else return false;\">".ts("Delete Attached File")."</a>"; 
+              $customFiles[$field['name']]['deleteURL'] = "<a href=\"{$deleteURL}\" onclick = \"if (confirm( ' $deleteExtra ' )) this.href+='&confirmed=1'; else return false;\">".ts("Delete Attached File")."</a>";
             }
           }
         }
@@ -445,8 +455,10 @@ class CRM_Profile_Form extends CRM_Core_Form {
         $this->_id == $session->get('userID') ||
         $this->_id == $this->get('orgId') ||
         $this->_isPermissionedChecksum ||
-        in_array($this->_gid,
-          CRM_ACL_API::group(CRM_Core_Permission::EDIT,
+        in_array(
+          $this->_gid,
+          CRM_ACL_API::group(
+            CRM_Core_Permission::EDIT,
             NULL,
             'civicrm_uf_group',
             CRM_Core_PseudoConstant::ufGroup()
@@ -580,7 +592,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
     }
 
     if ($this->_context == 'dialog') {
-      $this->addElement('submit',
+      $this->addElement(
+        'submit',
         $this->_duplicateButtonName,
         ts('Save Matching Contact')
       );
@@ -613,10 +626,12 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
     $profileActivityTypes = CRM_Core_BAO_UFGroup::groupTypeValues($gid, 'Activity');
 
-    if ((CRM_Utils_Array::value('Activity', $profileActivityTypes) &&
+    if ((
+      CRM_Utils_Array::value('Activity', $profileActivityTypes) &&
         !in_array($activityDetails['activity_type_id'], $profileActivityTypes['Activity'])
-      ) ||
-      (!in_array($contactId, $activityDetails['assignee_contact']) &&
+    ) ||
+      (
+        !in_array($contactId, $activityDetails['assignee_contact']) &&
         !in_array($contactId, $activityDetails['target_contact'])
       )
     ) {
@@ -656,7 +671,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $register = TRUE;
     }
 
-    $form->addFieldRequiredRule($errors, $fields ,$files);
+    $form->addFieldRequiredRule($errors, $fields, $files);
 
     // dont check for duplicates during registration validation: CRM-375
     if (!$register && !CRM_Utils_Array::value('_qf_Edit_upload_duplicate', $fields)) {
@@ -698,7 +713,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
       }
 
       $dedupeParams['check_permission'] = FALSE;
-      $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams,
+      $ids = CRM_Dedupe_Finder::dupesByParams(
+        $dedupeParams,
         $ctype,
         $ruleType,
         $exceptions
@@ -812,7 +828,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
         if ($customizedValue == $greetingType &&
           !CRM_Utils_Array::value($customizedGreeting, $fields)
         ) {
-          $errors[$customizedGreeting] = ts('Custom  %1 is a required field if %1 is of type Customized.',
+          $errors[$customizedGreeting] = ts(
+            'Custom  %1 is a required field if %1 is of type Customized.',
             [1 => ucwords(str_replace('_', " ", $greeting))]
           );
         }
@@ -841,15 +858,17 @@ class CRM_Profile_Form extends CRM_Core_Form {
       'postal_greeting' => 'postal_greeting_id',
     ];
     if ($this->_id) {
-      $contactDetails = CRM_Contact_BAO_Contact::getHierContactDetails($this->_id,
+      $contactDetails = CRM_Contact_BAO_Contact::getHierContactDetails(
+        $this->_id,
         $greetingTypes
       );
       $details = $contactDetails[0][$this->_id];
     }
-    if (!(CRM_Utils_Array::value('addressee_id', $details) ||
+    if (!(
+      CRM_Utils_Array::value('addressee_id', $details) ||
         CRM_Utils_Array::value('email_greeting_id', $details) ||
         CRM_Utils_Array::value('postal_greeting_id', $details)
-      )) {
+    )) {
 
       $profileType = CRM_Core_BAO_UFField::getProfileType($this->_gid);
       //Though Profile type is contact we need
@@ -872,8 +891,11 @@ class CRM_Profile_Form extends CRM_Core_Form {
       if ($filter) {
         foreach ($greetingTypes as $key => $value) {
           if (!CRM_Utils_Array::arrayKeyExists($key, $params)) {
-            $defaultGreetingTypeId = CRM_Core_OptionGroup::values($key, NULL,
-              NULL, NULL,
+            $defaultGreetingTypeId = CRM_Core_OptionGroup::values(
+              $key,
+              NULL,
+              NULL,
+              NULL,
               "AND is_default =1
                                                                                AND (filter = 
                                                                                {$filter} OR 
@@ -896,7 +918,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
     if (!empty($params['log_data'])) {
       $params['log_data'] .= ' ('.ts('Profile').' - '.$this->_gid.')';
     }
-    else{
+    else {
       $params['log_data'] = ts('Profile').' - '.$this->_gid;
     }
 
@@ -905,7 +927,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
 
     // first, trying to add contact from profile without group
     $submittedGroup = !empty($params['group']) ? $params['group'] : [];
-    $fieldGroup = !empty($this->_fields['group']) ? $this->_fields['group'] : []; 
+    $fieldGroup = !empty($this->_fields['group']) ? $this->_fields['group'] : [];
     unset($params['group']);
     unset($this->_fields['group']);
     $this->_id = CRM_Contact_BAO_Contact::createProfileContact(
@@ -956,7 +978,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
               unset($submittedGroup[$key]);
             }
           }
-          else{
+          else {
             unset($submittedGroup[$key]);
           }
         }
@@ -976,7 +998,7 @@ class CRM_Profile_Form extends CRM_Core_Form {
       $method = 'Web';
       $visibility = TRUE;
 
-      foreach($groupSubscribed as $key => $val){
+      foreach ($groupSubscribed as $key => $val) {
         $submittedGroup[$key] = 1;
       }
       CRM_Contact_BAO_GroupContact::create($submittedGroup, $this->_id, $visibility, $method);
@@ -986,7 +1008,8 @@ class CRM_Profile_Form extends CRM_Core_Form {
     $toSubscribe = array_keys($mailingType);
     if ($config->profileDoubleOptIn) {
       CRM_Mailing_Event_BAO_Subscribe::commonSubscribe($toSubscribe, $profile, $this->_id);
-    } else {
+    }
+    else {
       foreach ($toSubscribe as $groupID) {
         $se = CRM_Mailing_Event_BAO_Subscribe::subscribe($groupID, $profile['email'], $this->_id);
         $confirm = CRM_Mailing_Event_BAO_Confirm::confirm($this->_id, $se->id, $se->hash);
@@ -1020,9 +1043,10 @@ class CRM_Profile_Form extends CRM_Core_Form {
       if (!CRM_Core_BAO_CMSUser::create($params, $this->_mail)) {
         CRM_Core_Session::setStatus(ts('Your profile is not saved and Account is not created.'));
         $transaction->rollback();
-        return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/profile/create',
-            'reset=1&gid=' . $this->_gid
-          ));
+        return CRM_Utils_System::redirect(CRM_Utils_System::url(
+          'civicrm/profile/create',
+          'reset=1&gid=' . $this->_gid
+        ));
       }
     }
 
@@ -1065,4 +1089,3 @@ class CRM_Profile_Form extends CRM_Core_Form {
     $track = CRM_Core_BAO_Track::add($params);
   }
 }
-

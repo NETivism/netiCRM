@@ -126,4 +126,3 @@ function civicrm_membership_types_get(&$params) {
 function civicrm_membership_statuses_get(&$params) {
   return civicrm_membership_status_get($params);
 }
-

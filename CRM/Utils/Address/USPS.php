@@ -40,7 +40,8 @@ class CRM_Utils_Address_USPS {
 
   public static function checkAddress(&$values) {
     if (!isset($values['street_address']) ||
-      (!isset($values['city']) &&
+      (
+        !isset($values['city']) &&
         !isset($values['state_province']) &&
         !isset($values['postal_code'])
       )
@@ -76,9 +77,10 @@ class CRM_Utils_Address_USPS {
 
     $code = $request->getResponseCode();
     if ($code != 200) {
-      $session->setStatus(ts('USPS Address Lookup Failed with HTTP status code: %1',
-          [1 => $code]
-        ));
+      $session->setStatus(ts(
+        'USPS Address Lookup Failed with HTTP status code: %1',
+        [1 => $code]
+      ));
       return FALSE;
     }
 
@@ -114,4 +116,3 @@ class CRM_Utils_Address_USPS {
     return TRUE;
   }
 }
-

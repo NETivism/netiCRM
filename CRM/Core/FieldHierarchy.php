@@ -110,23 +110,23 @@ class CRM_Core_FieldHierarchy {
     ],
   ];
 
-  public static function arrange($fields){
+  public static function arrange($fields) {
     $priority = self::$hierarchy;
     $names = array_keys($fields);
     $copy = $fields;
     $new = [];
-    foreach($priority as $group => $values){
-      if(is_array($values)) {
-        foreach($values as $key => $value) {
-          if($key[0] === '/') {
-            foreach($names as $n){
+    foreach ($priority as $group => $values) {
+      if (is_array($values)) {
+        foreach ($values as $key => $value) {
+          if ($key[0] === '/') {
+            foreach ($names as $n) {
               if (preg_match($key, $n)) {
                 $new[$n] = $fields[$n];
                 unset($copy[$n]);
               }
             }
           }
-          else{
+          else {
             if (isset($fields[$key])) {
               $new[$key] = $fields[$key];
               unset($copy[$key]);
@@ -135,7 +135,7 @@ class CRM_Core_FieldHierarchy {
         }
       }
     }
-    foreach($copy as $k => $v){
+    foreach ($copy as $k => $v) {
       $new[$k] = $v;
     }
     return $new;

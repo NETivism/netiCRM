@@ -74,7 +74,7 @@ class CRM_Core_State {
    * bring in more complexity to the framework. For now, lets keep it simple
    * @var int
    */
-  public CONST START = 1, FINISH = 2, SIMPLE = 4;
+  public const START = 1, FINISH = 2, SIMPLE = 4;
 
   /**
    * constructor
@@ -212,4 +212,3 @@ class CRM_Core_State {
     return $this->_type;
   }
 }
-

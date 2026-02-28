@@ -80,4 +80,3 @@ class CRM_Grant_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

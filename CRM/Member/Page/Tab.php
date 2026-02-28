@@ -106,7 +106,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
           $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
         }
 
-        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(self::links('all'),
+        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links('all'),
           $currentMask,
           ['id' => $dao->id,
             'cid' => $this->_contactId,
@@ -114,7 +115,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
         );
       }
       else {
-        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(self::links('view'),
+        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links('view'),
           $mask,
           ['id' => $dao->id,
             'cid' => $this->_contactId,
@@ -128,7 +130,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     include_once 'CRM/Member/BAO/MembershipType.php';
     $membershipTypes = CRM_Member_BAO_MembershipType::getMembershipTypesByOrg($this->_contactId);
     foreach ($membershipTypes as $key => $value) {
-      $membershipTypes[$key]['action'] = CRM_Core_Action::formLink(self::membershipTypeslinks(),
+      $membershipTypes[$key]['action'] = CRM_Core_Action::formLink(
+        self::membershipTypeslinks(),
         $mask,
         ['id' => $value['id'],
           'cid' => $this->_contactId,
@@ -173,7 +176,9 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $this->associatedContribution();
 
     // membership controller here
-    $controller = new CRM_Core_Controller_Simple('CRM_Member_Form_MembershipView', 'View Membership',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Member_Form_MembershipView',
+      'View Membership',
       $this->_action
     );
     $controller->setEmbedded(TRUE);
@@ -195,15 +200,18 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
 
     $sortID = NULL;
     if ($this->get($prefix.CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get($prefix.CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get($prefix.CRM_Utils_Sort::SORT_ID),
         $this->get($prefix.CRM_Utils_Sort::SORT_DIRECTION)
       );
-    }else{
+    }
+    else {
       $sortID = CRM_Utils_Sort::sortIDValue(5, CRM_Utils_Sort::DESCENDING);
     }
 
     // Use another controller
-    $memberLogController = new CRM_Core_Selector_Controller($selector,
+    $memberLogController = new CRM_Core_Selector_Controller(
+      $selector,
       $pageID,
       $sortID,
       CRM_Core_Action::VIEW,
@@ -292,7 +300,9 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     $this->preProcess();
 
     // check if we can process credit card membership
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(
+      FALSE,
+      FALSE,
       "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
@@ -331,8 +341,12 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   public function setContext($contactId = NULL) {
-    $context = CRM_Utils_Request::retrieve('context',
-      'String', $this, FALSE, 'search'
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
@@ -348,13 +362,15 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
 
     switch ($context) {
       case 'dashboard':
-        $url = CRM_Utils_System::url('civicrm/member',
+        $url = CRM_Utils_System::url(
+          'civicrm/member',
           'reset=1'
         );
         break;
 
       case 'membership':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$contactId}&selectedChild=member"
         );
         break;
@@ -374,7 +390,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$contactId}&selectedChild=activity"
         );
         break;
@@ -408,7 +425,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
         if ($contactId) {
           $cid = '&cid=' . $contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/member/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/member/search',
           'force=1' . $cid
         );
         break;
@@ -551,4 +569,3 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     return 'CRM_Member_BAO_Membership';
   }
 }
-

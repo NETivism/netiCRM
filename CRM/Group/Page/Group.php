@@ -52,7 +52,8 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    *
    * @var array
    */
-  public static $_savedSearchLinks = NULL; public function getBAOName() {
+  public static $_savedSearchLinks = NULL;
+  public function getBAOName() {
     return 'CRM_Contact_BAO_Group';
   }
 
@@ -217,7 +218,8 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    */
   public function browse($action = NULL) {
 
-    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
+    $this->_sortByCharacter = CRM_Utils_Request::retrieve(
+      'sortByCharacter',
       'String',
       $this
     );
@@ -292,7 +294,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
     $links = &$this->links();
     $allTypes = CRM_Core_OptionGroup::values('group_type');
     $smartMarketingTypes = [];
-    foreach($allTypes as $typeId => $typeName) {
+    foreach ($allTypes as $typeId => $typeName) {
       if (strstr($typeName, 'Smart Marketing')) {
         $smartMarketingTypes[$typeId] = $typeName;
       }
@@ -329,7 +331,7 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
           }
         }
         if (!empty($smartMarketingTypes)) {
-          foreach($smartMarketingTypes as $typeId => $typeName) {
+          foreach ($smartMarketingTypes as $typeId => $typeName) {
             if (strstr($object->group_type, CRM_Core_DAO::VALUE_SEPARATOR.$typeId.CRM_Core_DAO::VALUE_SEPARATOR)) {
               $action -= CRM_Core_Action::DELETE;
             }
@@ -338,16 +340,18 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
         $action = $action & CRM_Core_Action::mask($groupPermissions);
 
-        $values[$object->id]['visibility'] = CRM_Contact_DAO_Group::tsEnum('visibility',
+        $values[$object->id]['visibility'] = CRM_Contact_DAO_Group::tsEnum(
+          'visibility',
           $values[$object->id]['visibility']
         );
         $values[$object->id]['is_public'] = $object->visibility == 'Public Pages' ? TRUE : FALSE;
 
         if (strstr($object->group_type, CRM_Core_DAO::VALUE_SEPARATOR.'2'.CRM_Core_DAO::VALUE_SEPARATOR) && $object->visibility == 'Public Pages') {
-          $values[$object->id]['subscription'] = true;
+          $values[$object->id]['subscription'] = TRUE;
         }
         if (isset($values[$object->id]['group_type'])) {
-          $groupTypes = explode(CRM_Core_DAO::VALUE_SEPARATOR,
+          $groupTypes = explode(
+            CRM_Core_DAO::VALUE_SEPARATOR,
             substr($values[$object->id]['group_type'], 1, -1)
           );
           $types = $tsTypes = [];
@@ -357,7 +361,8 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
           }
           $values[$object->id]['group_type'] = CRM_Utils_Array::implode(', ', $tsTypes);
         }
-        $values[$object->id]['action'] = CRM_Core_Action::formLink($newLinks,
+        $values[$object->id]['action'] = CRM_Core_Action::formLink(
+          $newLinks,
           $action,
           ['id' => $object->id,
             'ssid' => $object->saved_search_id,
@@ -389,7 +394,8 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
 
   public function search() {
     if ($this->_action &
-      (CRM_Core_Action::ADD |
+      (
+        CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE
       )
@@ -541,4 +547,3 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
     $this->assign('aToZ', $aToZBar);
   }
 }
-

@@ -96,4 +96,3 @@ class CRM_Admin_Page_Admin extends CRM_Core_Page {
     return parent::run();
   }
 }
-

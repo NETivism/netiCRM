@@ -341,8 +341,12 @@ INNER JOIN ( SELECT id, contact_id FROM civicrm_openid WHERE is_primary = 1 GROU
     if ($isMoneris) {
       $template = &CRM_Core_Smarty::singleton();
       $afterUpgradeMessage = $template->get_template_vars('afterUpgradeMessage');
-      $docURL = CRM_Utils_System::docURL2('Moneris Configuration Guide', FALSE, 'download and install',
-        NULL, 'color: white; text-decoration: underline;'
+      $docURL = CRM_Utils_System::docURL2(
+        'Moneris Configuration Guide',
+        FALSE,
+        'download and install',
+        NULL,
+        'color: white; text-decoration: underline;'
       );
 
       $afterUpgradeMessage .= "<br/>" . ts("Please %1 mpgClasses.php in packages/Services in order to continue using Moneris payment processor. That file is no longer included in the CiviCRM distribution.", [1 => $docURL]);
@@ -350,4 +354,3 @@ INNER JOIN ( SELECT id, contact_id FROM civicrm_openid WHERE is_primary = 1 GROU
     }
   }
 }
-

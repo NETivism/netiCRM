@@ -100,4 +100,3 @@ class CRM_Core_Permission_Joomla {
     return TRUE;
   }
 }
-

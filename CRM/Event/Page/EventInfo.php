@@ -59,10 +59,11 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     $config = CRM_Core_Config::singleton();
 
     // ensure that the user has permission to see this page
-    if (!CRM_Core_Permission::event(CRM_Core_Permission::VIEW,
-        $this->_id
-      )) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to view this event'));
+    if (!CRM_Core_Permission::event(
+      CRM_Core_Permission::VIEW,
+      $this->_id
+    )) {
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to view this event'));
     }
 
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
@@ -85,12 +86,12 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     }
     elseif (!$values['event']['is_active']) {
       // form is inactive, die a fatal death
-       return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+      return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
     }
 
     if (!empty($values['event']['is_template'])) {
       // form is an Event Template
-       return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+      return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
     }
 
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
@@ -145,16 +146,22 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
 
         // we always generate urls for the front end in joomla
         if ($action == CRM_Core_Action::PREVIEW) {
-          $url = CRM_Utils_System::url('civicrm/event/register',
+          $url = CRM_Utils_System::url(
+            'civicrm/event/register',
             "id={$this->_id}&reset=1&action=preview",
-            TRUE, NULL, TRUE,
+            TRUE,
+            NULL,
+            TRUE,
             TRUE
           );
         }
         else {
-          $url = CRM_Utils_System::url('civicrm/event/register',
+          $url = CRM_Utils_System::url(
+            'civicrm/event/register',
             "id={$this->_id}&reset=1",
-            TRUE, NULL, TRUE,
+            TRUE,
+            NULL,
+            TRUE,
             TRUE
           );
         }
@@ -225,7 +232,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
         foreach ($ufg_inner['fields'] as $uffield) {
           if (is_array($uffield)) {
             if ($uffield['data_type'] == 'File') {
-              if (!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])) {
+              if (!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['customValue'][1]['data'])) {
                 $image = $config->customFileUploadURL . $uffield['customValue'][1]['data'];
                 break;
                 break;
@@ -340,4 +347,3 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return $feeBlock;
   }
 }
-

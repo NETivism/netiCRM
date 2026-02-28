@@ -29,7 +29,8 @@
 require_once 'api/v2/Event.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_EventTest extends CiviUnitTestCase {
-  protected $_params; public function get_info() {
+  protected $_params;
+  public function get_info() {
     return [
       'name' => 'Event Create',
       'description' => 'Test all Event Create API methods.',
@@ -265,4 +266,3 @@ class api_v2_EventTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['is_error'], 'overfluous permissions should be enough to create an event');
   }
 }
-

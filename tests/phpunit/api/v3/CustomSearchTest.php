@@ -10,7 +10,8 @@ class api_v3_CustomSearchTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   public function testCustomSearch() {
     $result = civicrm_api('CustomSearch', 'create', [

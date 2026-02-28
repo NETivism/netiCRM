@@ -102,7 +102,7 @@ function civicrm_api3_custom_group_create($params) {
 
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_custom_group_create_spec(&$params) {
@@ -144,4 +144,3 @@ function civicrm_api3_custom_group_delete($params) {
 function civicrm_api3_custom_group_get($params) {
   return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
-

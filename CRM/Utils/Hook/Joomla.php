@@ -37,14 +37,25 @@
 
 class CRM_Utils_Hook_Joomla extends CRM_Utils_Hook {
 
-  public static function invoke($numParams,
-    &$arg1, &$arg2, &$arg3, &$arg4, &$arg5,
+  public static function invoke(
+    $numParams,
+    &$arg1,
+    &$arg2,
+    &$arg3,
+    &$arg4,
+    &$arg5,
     $fnSuffix,
     $fnPrefix = ''
   ) {
-    return parent::invoke($numParams, $arg1, $arg2, $arg3, $arg4, $arg5,
-      $fnSuffix, 'joomla'
+    return parent::invoke(
+      $numParams,
+      $arg1,
+      $arg2,
+      $arg3,
+      $arg4,
+      $arg5,
+      $fnSuffix,
+      'joomla'
     );
   }
 }
-

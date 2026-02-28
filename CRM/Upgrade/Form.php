@@ -74,7 +74,9 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
     7 => 'Seven',
     8 => 'Eight',
     9 => 'Nine',
-  ]; public function __construct($state = NULL,
+  ];
+  public function __construct(
+    $state = NULL,
     $action = CRM_Core_Action::NONE,
     $method = 'post',
     $name = NULL
@@ -148,8 +150,11 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
   public function source($fileName, $isQueryString = FALSE) {
 
 
-    CRM_Utils_File::sourceSQLFile($this->_config->dsn,
-      $fileName, NULL, $isQueryString
+    CRM_Utils_File::sourceSQLFile(
+      $this->_config->dsn,
+      $fileName,
+      NULL,
+      $isQueryString
     );
   }
 
@@ -165,7 +170,8 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    $this->addDefaultButtons($this->getButtonTitle(),
+    $this->addDefaultButtons(
+      $this->getButtonTitle(),
       'next',
       NULL,
       TRUE
@@ -185,10 +191,12 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
   }
 
   public function getTemplateFileName() {
-    $this->assign('title',
+    $this->assign(
+      'title',
       $this->getFieldsetTitle()
     );
-    $this->assign('message',
+    $this->assign(
+      'message',
       $this->getTemplateMessage()
     );
     return 'CRM/Upgrade/Base.tpl';
@@ -206,7 +214,8 @@ class CRM_Upgrade_Form extends CRM_Core_Form {
   }
 
   public function runQuery($query) {
-    return CRM_Core_DAO::executeQuery($query,
+    return CRM_Core_DAO::executeQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
   }
@@ -243,8 +252,10 @@ SET    version = '$version'
   }
 
   public function checkVersion($version) {
-    $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Domain',
-      $version, 'id',
+    $domainID = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_Domain',
+      $version,
+      'id',
       'version'
     );
     return $domainID ? TRUE : FALSE;
@@ -252,7 +263,8 @@ SET    version = '$version'
 
   public function getRevisionSequence() {
     $revList = [];
-    $sqlDir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlDir = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [dirname(__FILE__), 'Incremental', 'sql']
     );
     $sqlFiles = scandir($sqlDir);
@@ -289,7 +301,8 @@ SET    version = '$version'
   }
 
   public function processSQL($rev) {
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [dirname(__FILE__), 'Incremental',
         'sql', $rev . '.mysql',
       ]
@@ -307,4 +320,3 @@ SET    version = '$version'
     }
   }
 }
-

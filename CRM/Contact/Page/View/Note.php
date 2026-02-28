@@ -114,7 +114,8 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
       if (!CRM_Core_BAO_Note::getNotePrivacyHidden($note)) {
         CRM_Core_DAO::storeValues($note, $values[$note->id]);
 
-        $values[$note->id]['action'] = CRM_Core_Action::formLink($links,
+        $values[$note->id]['action'] = CRM_Core_Action::formLink(
+          $links,
           $action,
           ['id' => $note->id,
             'cid' => $this->_contactId,
@@ -135,7 +136,8 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
 
     $action = array_sum(array_keys($commentLinks)) & $mask;
 
-    $commentAction = CRM_Core_Action::formLink($commentLinks,
+    $commentAction = CRM_Core_Action::formLink(
+      $commentLinks,
       $action,
       ['id' => $note->id,
         'pid' => $note->entity_id,
@@ -157,14 +159,17 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
 
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
-    $url = CRM_Utils_System::url('civicrm/contact/view',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view',
       'action=browse&selectedChild=note&cid=' . $this->_contactId
     );
     $session->pushUserContext($url);
 
-    if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-        CRM_Core_DAO::$_nullObject
-      )) {
+    if (CRM_Utils_Request::retrieve(
+      'confirmed',
+      'Boolean',
+      CRM_Core_DAO::$_nullObject
+    )) {
       CRM_Core_BAO_Note::del($this->_id);
       CRM_Utils_System::redirect($url);
     }
@@ -183,7 +188,7 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
 
 
     if ($this->_id && CRM_Core_BAO_Note::getNotePrivacyHidden($this->_id)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
+      return CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
     }
 
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
@@ -310,4 +315,3 @@ class CRM_Contact_Page_View_Note extends CRM_Core_Page {
     return self::$_commentLinks;
   }
 }
-

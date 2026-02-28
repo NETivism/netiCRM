@@ -97,7 +97,8 @@ class CRM_Core_BAO_OptionGroup extends CRM_Core_DAO_OptionGroup {
 
     // action is taken depending upon the mode
     $optionGroup = new CRM_Core_DAO_OptionGroup();
-    $optionGroup->copyValues($params);;
+    $optionGroup->copyValues($params);
+    ;
 
     if ($params['is_default']) {
       $query = "UPDATE civicrm_option_group SET is_default = 0";
@@ -181,24 +182,28 @@ class CRM_Core_BAO_OptionGroup extends CRM_Core_DAO_OptionGroup {
     $fromGroupName = 'civicrm_' . $component . $page . '.amount.' . $fromId . $discountSuffix;
     $toGroupName = 'civicrm_' . $component . $page . '.amount.' . $toId . $discountSuffix;
 
-    $optionGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+    $optionGroupId = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
       $fromGroupName,
       'id',
       'name'
     );
     if ($optionGroupId) {
-      $copyOptionGroup = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_OptionGroup',
+      $copyOptionGroup = &CRM_Core_DAO::copyGeneric(
+        'CRM_Core_DAO_OptionGroup',
         ['name' => $fromGroupName],
         ['name' => $toGroupName]
       );
 
-      $copyOptionValue = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_OptionValue',
+      $copyOptionValue = &CRM_Core_DAO::copyGeneric(
+        'CRM_Core_DAO_OptionValue',
         ['option_group_id' => $optionGroupId],
         ['option_group_id' => $copyOptionGroup->id]
       );
 
       if ($discountSuffix) {
-        $copyDiscount = &CRM_Core_DAO::copyGeneric('CRM_Core_DAO_Discount',
+        $copyDiscount = &CRM_Core_DAO::copyGeneric(
+          'CRM_Core_DAO_Discount',
           ['entity_id' => $fromId,
             'entity_table' => 'civicrm_' . $component,
             'option_group_id' => $optionGroupId,
@@ -234,4 +239,3 @@ AND first.id =%3
     }
   }
 }
-

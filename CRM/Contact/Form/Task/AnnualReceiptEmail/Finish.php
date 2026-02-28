@@ -12,8 +12,8 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_Finish extends CRM_Contact_Form_T
    * @var boolean
    */
 
-  public CONST GENERATE_COUNT_EACH_TIME = 100;
-  public CONST BATCH_THRESHOLD = 100;
+  public const GENERATE_COUNT_EACH_TIME = 100;
+  public const BATCH_THRESHOLD = 100;
 
   protected static $_tmpreceipt = NULL;
   protected static $_exportFileName = NULL;
@@ -49,7 +49,8 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_Finish extends CRM_Contact_Form_T
    * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'done',
           'name' => ts('Done'),
@@ -74,4 +75,3 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_Finish extends CRM_Contact_Form_T
   public function postProcess() {
   }
 }
-

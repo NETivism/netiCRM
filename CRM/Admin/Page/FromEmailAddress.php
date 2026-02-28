@@ -12,7 +12,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
 
   /**
    * The option group id of from_email_address
-   * 
+   *
    * @var int
    * @static
    */
@@ -137,7 +137,7 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
     $returnURL = CRM_Utils_System::url("civicrm/admin/from_email_address", "reset=1");
     $filter = "option_group_id = " . self::$_optionGroupId;
     CRM_Utils_Weight::addOrder($optionValues, 'CRM_Core_DAO_OptionValue', 'id', $returnURL, $filter);
-    foreach($optionValues as $idx => $val) {
+    foreach ($optionValues as $idx => $val) {
       $email = CRM_Utils_Mail::pluckEmailFromHeader($val['name']);
       $pageCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution_page WHERE receipt_from_email LIKE %1", [
         1 => [$email, 'String'],

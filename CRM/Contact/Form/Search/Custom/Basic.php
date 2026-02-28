@@ -36,7 +36,8 @@
 
 class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
-  protected $_query; public function __construct(&$formValues) {
+  protected $_query;
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     $this->normalize();
@@ -58,8 +59,15 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
       $returnProperties[$field] = 1;
     }
 
-    $this->_query = new CRM_Contact_BAO_Query($params, $returnProperties, NULL,
-      FALSE, FALSE, 1, FALSE, FALSE
+    $this->_query = new CRM_Contact_BAO_Query(
+      $params,
+      $returnProperties,
+      NULL,
+      FALSE,
+      FALSE,
+      1,
+      FALSE,
+      FALSE
     );
   }
 
@@ -115,12 +123,21 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     return $this->_query->searchQuery(0, 0, NULL, TRUE);
   }
 
-  public function all($offset = 0, $rowCount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowCount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
-    return $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, $includeContactIDs,
-      FALSE, FALSE, TRUE
+    return $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      $includeContactIDs,
+      FALSE,
+      FALSE,
+      TRUE
     );
   }
 
@@ -139,4 +156,3 @@ class CRM_Contact_Form_Search_Custom_Basic extends CRM_Contact_Form_Search_Custo
     return 'CRM/Contact/Form/Search/Basic.tpl';
   }
 }
-

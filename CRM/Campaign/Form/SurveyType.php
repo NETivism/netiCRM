@@ -134,7 +134,8 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'label', ts('Title'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'label'), TRUE);
 
-    $this->addWysiwyg('description',
+    $this->addWysiwyg(
+      'description',
       ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
     );
@@ -188,4 +189,3 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     }
   }
 }
-

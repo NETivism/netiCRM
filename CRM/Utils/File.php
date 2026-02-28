@@ -348,7 +348,7 @@ class CRM_Utils_File {
     else {
       $basename = CRM_Utils_String::safeFilename($basename);
       if ($basename && mb_strlen($basename) <= 225) {
-      // do not use munge to preserve original filename
+        // do not use munge to preserve original filename
         return "{$basename}_{$uniqID}".".".CRM_Utils_Array::value('extension', $info);
       }
       else {
@@ -457,39 +457,40 @@ class CRM_Utils_File {
   public static function existsRename($destination) {
     $basename = basename($destination);
     $directory = str_replace($basename, '', $destination);
-		// Strip control characters (ASCII value < 32). Though these are allowed in
-		// some filesystems, not many applications handle them well.
-		$basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
-		if (substr(PHP_OS, 0, 3) == 'WIN') {
-			// These characters are not allowed in Windows filenames
-			$basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
-		}
+    // Strip control characters (ASCII value < 32). Though these are allowed in
+    // some filesystems, not many applications handle them well.
+    $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
+    if (substr(PHP_OS, 0, 3) == 'WIN') {
+      // These characters are not allowed in Windows filenames
+      $basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
+    }
 
-		if (file_exists($destination)) {
-			// Destination file already exists, generate an alternative.
-			$pos = strrpos($basename, '.');
-			if ($pos !== FALSE) {
-				$name = substr($basename, 0, $pos);
-				$ext = substr($basename, $pos);
-			}
-			else {
-				$name = $basename;
-				$ext = '';
-			}
+    if (file_exists($destination)) {
+      // Destination file already exists, generate an alternative.
+      $pos = strrpos($basename, '.');
+      if ($pos !== FALSE) {
+        $name = substr($basename, 0, $pos);
+        $ext = substr($basename, $pos);
+      }
+      else {
+        $name = $basename;
+        $ext = '';
+      }
 
-			$counter = 0;
-			do {
-				$destination = $directory . $name . '_' . $counter++ . $ext;
-			} while (file_exists($destination));
-		}
+      $counter = 0;
+      do {
+        $destination = $directory . $name . '_' . $counter++ . $ext;
+      }
+      while (file_exists($destination));
+    }
 
-		return $destination;
+    return $destination;
   }
 
   /**
    * Encrypt Xlsx content or file.
    * @param String $filePath file absolute path in the file system
-   * 
+   *
    * @return Void
    */
   public static function encryptXlsxFile($filePath = NULL) {
@@ -552,7 +553,7 @@ class CRM_Utils_File {
           unlink($filePath);
           rename($outputFile, $filePath);
         }
-        else if ($config->decryptExcelOption == 2) {
+        elseif ($config->decryptExcelOption == 2) {
           // Use SecureSpreadsheet to decrypt the file by custom password
           $encrypt = new \Nick\SecureSpreadsheet\Encrypt();
           $encrypt->input($filePath)
@@ -599,7 +600,9 @@ class CRM_Utils_File {
       [{}^\~`]|            # URL unsafe characters
       \.\.                 # Double dot for path traversal
       ~xu',
-      '', $name);
+      '',
+      $name
+    );
 
     // avoids ".", ".." or ".hiddenFiles"
     $filename = ltrim($filename, '.-');
@@ -614,4 +617,3 @@ class CRM_Utils_File {
     return $filename;
   }
 }
-

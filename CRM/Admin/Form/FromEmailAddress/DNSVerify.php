@@ -135,7 +135,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     $spfRecord = CRM_Utils_Mail::getSPF($this->_values['email']);
     if (!empty($spfRecord)) {
       $record = [];
-      foreach($spfRecord as $spf) {
+      foreach ($spfRecord as $spf) {
         $record[] = $spf['host'].' '.$spf['type'].' '.$spf['txt'];
       }
       $this->assign('spf_record', CRM_Utils_Array::implode("\n", $record));
@@ -154,7 +154,8 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     }
 
     if ($this->_spfStatus && $this->_dkimStatus) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'back',
             'name' => ts('<< Previous'),
@@ -174,7 +175,8 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     }
     else {
       $this->addButton('refresh', ts('Refresh'));
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'cancel',
             'name' => ts('Cancel'),

@@ -43,12 +43,15 @@ class CRM_Core_Extensions_Search {
   /**
    *
    */
-  public CONST CUSTOM_SEARCH_GROUP_NAME = 'custom_search';
+  public const CUSTOM_SEARCH_GROUP_NAME = 'custom_search';
 
   public function __construct($ext) {
     $this->ext = $ext;
-    $this->groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-      self::CUSTOM_SEARCH_GROUP_NAME, 'id', 'name'
+    $this->groupId = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
+      self::CUSTOM_SEARCH_GROUP_NAME,
+      'id',
+      'name'
     );
     $this->customSearches = CRM_Core_OptionGroup::values(self::CUSTOM_SEARCH_GROUP_NAME, TRUE, FALSE, FALSE, NULL, 'name', FALSE);
   }
@@ -59,7 +62,8 @@ class CRM_Core_Extensions_Search {
       CRM_Core_Error::fatal('This custom search is already registered.');
     }
 
-    $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+    $weight = CRM_Utils_Weight::getDefaultWeight(
+      'CRM_Core_DAO_OptionValue',
       ['option_group_id' => $this->groupId]
     );
 
@@ -98,4 +102,3 @@ class CRM_Core_Extensions_Search {
     $optionValue = CRM_Core_BAO_OptionValue::setIsActive($id, 1);
   }
 }
-

@@ -53,14 +53,14 @@ require_once 'CRM/Core/BAO/Website.php';
  */
 function civicrm_api3_website_create($params) {
   $websiteBAO = CRM_Core_BAO_Website::add($params);
-    $values = [];
-    _civicrm_api3_object_to_array($websiteBAO, $values[$websiteBAO->id]);
-    return civicrm_api3_create_success($values, $params, 'website', 'get');
+  $values = [];
+  _civicrm_api3_object_to_array($websiteBAO, $values[$websiteBAO->id]);
+  return civicrm_api3_create_success($values, $params, 'website', 'get');
 
-  }
+}
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -74,7 +74,7 @@ function _civicrm_api3_website_create_spec(&$params) {
  * @param  array  $params
  * {@getfields website_delete}
  * @example WebsiteDelete.php Std Delete Example
- * 
+ *
  * @return array API result Array
  * @access public
  * @todo convert to using Basic delete - BAO function non standard
@@ -112,4 +112,3 @@ function civicrm_api3_website_delete($params) {
 function civicrm_api3_website_get($params) {
   return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
-

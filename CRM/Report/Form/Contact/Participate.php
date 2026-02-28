@@ -55,7 +55,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Participant']; public function __construct() {
+  protected $_customGroupExtends = ['Participant'];
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -288,10 +289,11 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
             }
 
             if ($op) {
-              if($field['name'] == 'participant_count') {
+              if ($field['name'] == 'participant_count') {
                 continue;
               }
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -339,8 +341,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 
     $op = CRM_Utils_Array::value("participant_count_op", $this->_params);
     $value = CRM_Utils_Array::value("participant_count_value", $this->_params);
-    if(!empty($op) && !empty($value) && is_numeric($value)) {
-      if(!empty($this->_columns['civicrm_participant']['filters']['participant_count'])) {
+    if (!empty($op) && !empty($value) && is_numeric($value)) {
+      if (!empty($this->_columns['civicrm_participant']['filters']['participant_count'])) {
         $pcount = $this->_columns['civicrm_participant']['filters']['participant_count'];
         $pcount['dbAlias'] = "COUNT({$pcount['alias']}.id)";
         $clause = $this->whereClause($pcount, $op, $value, NULL, NULL);
@@ -390,7 +392,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         if ($value = $row['civicrm_contact_sort_name']) {
-          $url = CRM_Utils_System::url("civicrm/contact/view",
+          $url = CRM_Utils_System::url(
+            "civicrm/contact/view",
             'reset=1&cid=' . $row['civicrm_contact_id'],
             $this->_absoluteUrl
           );
@@ -405,7 +408,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         if ($value = $row['civicrm_participant_participant_id']) {
-          $url = CRM_Utils_System::url("civicrm/contact/view/participant",
+          $url = CRM_Utils_System::url(
+            "civicrm/contact/view/participant",
             'reset=1&id=' . $row['civicrm_participant_participant_id'] . '&cid=' . $row['civicrm_contact_id'] . '&action=view',
             $this->_absoluteUrl
           );
@@ -419,9 +423,11 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_event_id', $row)) {
         if ($value = $row['civicrm_participant_event_id']) {
           $rows[$rowNum]['civicrm_participant_event_id'] = CRM_Event_PseudoConstant::event($value, FALSE);
-          $url = CRM_Report_Utils_Report::getNextUrl('event/Income',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'event/Income',
             'reset=1&force=1&event_id_op=eq&event_id_value=' . $value,
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_participant_event_id_link'] = $url;
           $rows[$rowNum]['civicrm_participant_event_id_hover'] = ts("View Event Income Details for this Event");
@@ -467,4 +473,3 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     }
   }
 }
-

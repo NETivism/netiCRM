@@ -96,9 +96,13 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
    * @access public
    * @static
    */
-  public static function permissionClause(&$tables, $operation,
-    $object_table = NULL, $object_id = NULL,
-    $acl_id = NULL, $acl_role = FALSE
+  public static function permissionClause(
+    &$tables,
+    $operation,
+    $object_table = NULL,
+    $object_id = NULL,
+    $acl_id = NULL,
+    $acl_role = FALSE
   ) {
     $dao = new CRM_ACL_DAO_ACL;
 
@@ -257,8 +261,10 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
              */
 
       if (empty($dao->object_table) ||
-        ($dao->object_table == $object_table
-          && (empty($dao->object_id)
+        (
+          $dao->object_table == $object_table
+          && (
+            empty($dao->object_id)
             || $dao->object_id == $object_id
           )
         )
@@ -269,7 +275,9 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
         /* Otherwise try to generate a clause for this rule */
 
         $clause = self::getClause(
-          $dao->object_table, $dao->object_id, $tables
+          $dao->object_table,
+          $dao->object_id,
+          $tables
         );
 
         /* If the clause returned is null, then the rule is a blanket
@@ -345,7 +353,7 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
    * @return array    - Assoc. array of the ACL rule's properties
    * @access public
    */
-  public function toArray($format = '%s', $hideEmpty = null) {
+  public function toArray($format = '%s', $hideEmpty = NULL) {
     $result = [];
 
     if (!self::$_fieldKeys) {
@@ -762,21 +770,24 @@ SELECT g.*
           if ($dao->where_clause) {
             $clauses[] = $dao->where_clause;
             if ($dao->select_tables) {
-              $tables = array_merge($tables,
+              $tables = array_merge(
+                $tables,
                 unserialize($dao->select_tables)
               );
             }
             if ($dao->where_tables) {
-              $whereTables = array_merge($whereTables,
+              $whereTables = array_merge(
+                $whereTables,
                 unserialize($dao->where_tables)
               );
             }
           }
 
-          if (($dao->saved_search_id ||
+          if ((
+            $dao->saved_search_id ||
               $dao->children ||
               $dao->parents
-            ) &&
+          ) &&
             $dao->cache_date == NULL
           ) {
 
@@ -800,21 +811,24 @@ SELECT g.*
           if ($dao->where_clause) {
             $denyClauses[] = $dao->where_clause;
             if ($dao->select_tables) {
-              $tables = array_merge($tables,
+              $tables = array_merge(
+                $tables,
                 unserialize($dao->select_tables)
               );
             }
             if ($dao->where_tables) {
-              $whereTables = array_merge($whereTables,
+              $whereTables = array_merge(
+                $whereTables,
                 unserialize($dao->where_tables)
               );
             }
           }
 
-          if (($dao->saved_search_id ||
+          if ((
+            $dao->saved_search_id ||
               $dao->children ||
               $dao->parents
-            ) &&
+          ) &&
             $dao->cache_date == NULL
           ) {
 
@@ -846,7 +860,8 @@ SELECT g.*
     return $whereClause;
   }
 
-  public static function group($type,
+  public static function group(
+    $type,
     $contactID = NULL,
     $tableName = 'civicrm_uf_group',
     $allGroups = NULL,
@@ -903,7 +918,8 @@ ORDER BY a.object_id
     return $ids;
   }
 
-  public static function groupSavedSearch($type,
+  public static function groupSavedSearch(
+    $type,
     $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
@@ -1084,13 +1100,13 @@ ORDER BY a.object_id
     return $ids;
   }
 
-  private static function searchChildrenGroup($start_id, $is_visited){
-    if(!in_array($start_id, $is_visited)){
+  private static function searchChildrenGroup($start_id, $is_visited) {
+    if (!in_array($start_id, $is_visited)) {
       $is_visited[] = $start_id;
       $query_children = "SELECT children FROM civicrm_group WHERE id = %1";
       $params_children = [1 => [$start_id, 'Integer']];
       $children = CRM_Core_DAO::singleValueQuery($query_children, $params_children);
-      if(!empty($children)){
+      if (!empty($children)) {
         $children = explode(',', $children);
         foreach ($children as $child_id) {
           $is_visited = self::searchChildrenGroup($child_id, $is_visited);
@@ -1158,4 +1174,3 @@ ORDER BY a.object_id
     $acl->delete();
   }
 }
-

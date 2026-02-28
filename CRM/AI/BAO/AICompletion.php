@@ -443,7 +443,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array Result data array.
    */
   public static function setTemplate($data) {
-    foreach($data as $key => $val) {
+    foreach ($data as $key => $val) {
       if (!in_array($key, ['id', 'is_template', 'template_title'])) {
         unset($data[$key]);
       }
@@ -556,13 +556,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     $path = 'CRM/AI/shared/'.$component.$suffix.$locale.'.tpl';
     $shared = $smarty->fetch($path);
-    $decodedShared = json_decode($shared, true);
+    $decodedShared = json_decode($shared, TRUE);
 
     if (!$decodedShared) {
       // fallback to non-locale template
       $path = 'CRM/AI/shared/'.$component.$suffix.'.tpl';
       $shared = $smarty->fetch($path);
-      $decodedShared = json_decode($shared, true);
+      $decodedShared = json_decode($shared, TRUE);
     }
 
     return $decodedShared;

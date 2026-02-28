@@ -11,7 +11,8 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   public function testGetOptionValueByID() {
     $result = civicrm_api('option_value', 'get', ['id' => 1, 'version' => $this->_apiversion]);
@@ -139,4 +140,3 @@ class api_v3_OptionValueTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['count'], 'In line ' . __LINE__);
   }
 }
-

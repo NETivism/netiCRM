@@ -110,7 +110,8 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
     // set title and breadcrumb
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
     $breadCrumb = [['title' => ts('Global Settings'),
-        'url' => CRM_Utils_System::url('civicrm/admin/setting',
+        'url' => CRM_Utils_System::url(
+          'civicrm/admin/setting',
           'reset=1'
         ),
       ]];
@@ -154,7 +155,9 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
         $isShowMessage = TRUE;
       }
 
-      $paymentProcessor[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $paymentProcessor[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $dao->id]
       );
     }
@@ -206,4 +209,3 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
     return 'civicrm/admin/paymentProcessor';
   }
 }
-

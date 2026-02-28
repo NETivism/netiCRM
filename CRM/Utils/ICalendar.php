@@ -66,9 +66,9 @@ class CRM_Utils_ICalendar {
 
   public static function formatHTML($html) {
     $html = html_entity_decode($html, ENT_QUOTES);
-    $html = preg_replace( "/\r|\n/", "", $html);
+    $html = preg_replace("/\r|\n/", "", $html);
     return '<html><body>'.$html.'</body></html>';
-  } 
+  }
 
   /**
    * Escape date elements for safe ICalendar use
@@ -81,12 +81,14 @@ class CRM_Utils_ICalendar {
   public static function formatDate($date, $gdata = FALSE) {
 
     if ($gdata) {
-      return date("Y-m-d\TH:i:s.000",
+      return date(
+        "Y-m-d\TH:i:s.000",
         strtotime($date)
       );
     }
     else {
-      return date("Ymd\THis",
+      return date(
+        "Ymd\THis",
         strtotime($date)
       );
     }
@@ -145,4 +147,3 @@ class CRM_Utils_ICalendar {
     return $ar[0];
   }
 }
-

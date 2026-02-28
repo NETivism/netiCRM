@@ -109,13 +109,18 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     $session = CRM_Core_Session::singleton();
     // disable anon user for access profile
     $ufid = $session->get("ufID");
-    if(empty($ufid)){
-       return CRM_Core_Error::statusBounce(ts("You must be logged in to view this page."));
+    if (empty($ufid)) {
+      return CRM_Core_Error::statusBounce(ts("You must be logged in to view this page."));
       return;
     }
 
-    $search = CRM_Utils_Request::retrieve('search', 'Boolean',
-      $this, FALSE, 0, 'GET'
+    $search = CRM_Utils_Request::retrieve(
+      'search',
+      'Boolean',
+      $this,
+      FALSE,
+      0,
+      'GET'
     );
     if (isset($search) && $search == 0) {
       $this->_search = FALSE;
@@ -136,7 +141,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       // check if we are rendering mixed profiles
 
       if (CRM_Core_BAO_UFGroup::checkForMixProfiles($this->_profileIds)) {
-         return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
+        return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
       }
 
       $this->_gid = $this->_profileIds[0];
@@ -163,7 +168,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       else {
         $gidsCheck = $gids;
       }
-      foreach($gidsCheck as $gid) {
+      foreach ($gidsCheck as $gid) {
         $ufGroup = [];
         $ufGRoupParams = ['id' => $gid];
         CRM_Core_BAO_UFGroup::retrieve($ufGRoupParams, $ufGroup);
@@ -182,9 +187,13 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       $gids = $gidsCheck;
     }
 
-    $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(CRM_Core_Action::UPDATE,
+    $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(
+      CRM_Core_Action::UPDATE,
       CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY | CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,
-      FALSE, $gids, FALSE, 'Profile',
+      FALSE,
+      $gids,
+      FALSE,
+      'Profile',
       CRM_Core_Permission::SEARCH
     );
 
@@ -197,11 +206,21 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
 
     foreach ($this->_fields as $name => $field) {
       if ((substr($name, 0, 6) == 'custom') && CRM_Utils_Array::value('is_search_range', $field)) {
-        $from = CRM_Utils_Request::retrieve($name . '_from', 'String',
-          $this, FALSE, NULL, 'REQUEST'
+        $from = CRM_Utils_Request::retrieve(
+          $name . '_from',
+          'String',
+          $this,
+          FALSE,
+          NULL,
+          'REQUEST'
         );
-        $to = CRM_Utils_Request::retrieve($name . '_to', 'String',
-          $this, FALSE, NULL, 'REQUEST'
+        $to = CRM_Utils_Request::retrieve(
+          $name . '_to',
+          'String',
+          $this,
+          FALSE,
+          NULL,
+          'REQUEST'
         );
         $value = [];
         if ($from && $to) {
@@ -216,15 +235,23 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         }
       }
       elseif ((substr($name, 0, 7) == 'custom_') &&
-        (CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
-            substr($name, 7), 'html_type'
-          ) == 'TextArea')
+        (CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_CustomField',
+          substr($name, 7),
+          'html_type'
+        ) == 'TextArea')
       ) {
-        $value = trim(CRM_Utils_Request::retrieve($name, 'String',
-            $this, FALSE, NULL, 'REQUEST'
-          ));
+        $value = trim(CRM_Utils_Request::retrieve(
+          $name,
+          'String',
+          $this,
+          FALSE,
+          NULL,
+          'REQUEST'
+        ));
         if (!empty($value) &&
-          !((substr($value, 0, 1) == '%') &&
+          !(
+            (substr($value, 0, 1) == '%') &&
             (substr($value, -1, 1) == '%')
           )
         ) {
@@ -240,8 +267,13 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         }
       }
       else {
-        $value = CRM_Utils_Request::retrieve($name, 'String',
-          $this, FALSE, NULL, 'REQUEST'
+        $value = CRM_Utils_Request::retrieve(
+          $name,
+          'String',
+          $this,
+          FALSE,
+          NULL,
+          'REQUEST'
         );
       }
 
@@ -258,9 +290,10 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       if (!empty($_POST) && !CRM_Utils_Array::value($name, $_POST)) {
         if ($customField) {
           // reset checkbox/radio because a form does not send null checkbox values
-          if (in_array($customField['html_type'],
-              ['Multi-Select', 'CheckBox', 'Multi-Select State/Province', 'Multi-Select Country', 'Radio']
-            )) {
+          if (in_array(
+            $customField['html_type'],
+            ['Multi-Select', 'CheckBox', 'Multi-Select State/Province', 'Multi-Select Country', 'Radio']
+          )) {
             // only reset on a POST submission if we dont see any value
             $value = NULL;
             $this->set($name, $value);
@@ -286,9 +319,13 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       'country_id', 'distance', 'distance_unit',
     ];
     foreach ($proximityVars as $var) {
-      $value = CRM_Utils_Request::retrieve("prox_{$var}",
+      $value = CRM_Utils_Request::retrieve(
+        "prox_{$var}",
         'String',
-        $this, FALSE, NULL, 'REQUEST'
+        $this,
+        FALSE,
+        NULL,
+        'REQUEST'
       );
       if ($value) {
         $this->_params["prox_{$var}"] = $value;
@@ -327,7 +364,8 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     $this->assign('isReset', TRUE);
 
 
-    $formController = new CRM_Core_Controller_Simple('CRM_Profile_Form_Search',
+    $formController = new CRM_Core_Controller_Simple(
+      'CRM_Profile_Form_Search',
       ts('Search Profile'),
       CRM_Core_Action::ADD
     );
@@ -349,9 +387,10 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     $this->assign('search', $this->_search);
 
     // search if search returned a form error?
-    if ((!CRM_Utils_Array::value('reset', $_GET) ||
+    if ((
+      !CRM_Utils_Array::value('reset', $_GET) ||
         CRM_Utils_Array::value('force', $_GET)
-      ) &&
+    ) &&
       !$searchError
     ) {
       $this->assign('isReset', FALSE);
@@ -375,8 +414,10 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       }
 
       if ($map) {
-        $this->assign('mapURL',
-          CRM_Utils_System::url('civicrm/profile/map',
+        $this->assign(
+          'mapURL',
+          CRM_Utils_System::url(
+            'civicrm/profile/map',
             "map=1&gid={$gidString}&reset=1"
           )
         );
@@ -397,11 +438,17 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
         $editLink = FALSE;
       }
 
-      $selector = new CRM_Profile_Selector_Listings($this->_params, $this->_customFields, $gids,
-        $map, $editLink, $linkToUF
+      $selector = new CRM_Profile_Selector_Listings(
+        $this->_params,
+        $this->_customFields,
+        $gids,
+        $map,
+        $editLink,
+        $linkToUF
       );
 
-      $controller = new CRM_Core_Selector_Controller($selector,
+      $controller = new CRM_Core_Selector_Controller(
+        $selector,
         $this->get(CRM_Utils_Pager::PAGE_ID),
         $this->get(CRM_Utils_Sort::SORT_ID),
         CRM_Core_Action::VIEW,
@@ -437,7 +484,7 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
 
     // make sure this group can be mapped
     if (!$details['is_map']) {
-       return CRM_Core_Error::statusBounce(ts('This profile does not have the map feature turned on.'));
+      return CRM_Core_Error::statusBounce(ts('This profile does not have the map feature turned on.'));
     }
 
     $groupId = CRM_Utils_Array::value('limit_listings_group_id', $details);
@@ -452,10 +499,12 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
       }
     }
 
-    $fields = CRM_Core_BAO_UFGroup::getListingFields(CRM_Core_Action::VIEW,
+    $fields = CRM_Core_BAO_UFGroup::getListingFields(
+      CRM_Core_Action::VIEW,
       CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY |
       CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,
-      FALSE, $gid
+      FALSE,
+      $gid
     );
 
     $returnProperties = &CRM_Contact_BAO_Contact::makeHierReturnProperties($fields);
@@ -465,9 +514,15 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     $queryParams = &CRM_Contact_BAO_Query::convertFormValues($params, 1);
     $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties, $fields);
 
-    $ids = $query->searchQuery(0, 0, NULL,
-      FALSE, FALSE, FALSE,
-      TRUE, FALSE
+    $ids = $query->searchQuery(
+      0,
+      0,
+      NULL,
+      FALSE,
+      FALSE,
+      FALSE,
+      TRUE,
+      FALSE
     );
 
     $contactIds = explode(',', $ids);
@@ -495,4 +550,3 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     return parent::getTemplateFileName();
   }
 }
-

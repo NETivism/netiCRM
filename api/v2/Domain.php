@@ -104,4 +104,3 @@ function civicrm_domain_create($params) {
   _civicrm_object_to_array($domain, $domain_array);
   return $domain_array;
 }
-

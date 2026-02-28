@@ -205,7 +205,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
       }
     }
     if (!empty($orderBy) && !preg_match('/^id/i', $orderBy)) {
-      $orderBy .= ', id DESC'; 
+      $orderBy .= ', id DESC';
     }
     $order = empty($orderBy)?"":"ORDER BY $orderBy";
 
@@ -215,15 +215,16 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     $fields = CRM_Utils_Array::implode(', ', self::$_properties);
     $sql = "SELECT $fields FROM civicrm_membership_log WHERE $this->_where $order $limit $offsetClause";
     $dao = CRM_Core_DAO::executeQuery($sql);
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $row = [];
       foreach (self::$_properties as $field) {
-        if($field == 'status_id' && !empty($dao->status_id)){
+        if ($field == 'status_id' && !empty($dao->status_id)) {
           $status = new CRM_Member_DAO_MembershipStatus();
           $status->id = $dao->status_id;
           $status->find(TRUE);
           $row['status'] = $status->label;
-        }else if($field == 'modified_id' && !empty($dao->modified_id)){
+        }
+        elseif ($field == 'modified_id' && !empty($dao->modified_id)) {
           $contact = new CRM_Contact_DAO_Contact();
           $contact->id = $dao->modified_id;
           $contact->find(TRUE);
@@ -300,4 +301,3 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
   }
 }
 //end of class
-

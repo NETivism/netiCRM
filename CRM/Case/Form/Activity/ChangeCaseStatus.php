@@ -68,13 +68,18 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
     $form->_defaultCaseStatus = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $form->_caseId, 'status_id');
 
     if (!CRM_Utils_Array::arrayKeyExists($form->_defaultCaseStatus, $form->_caseStatus)) {
-      $form->_caseStatus[$form->_defaultCaseStatus] = CRM_Core_OptionGroup::getLabel('case_status',
+      $form->_caseStatus[$form->_defaultCaseStatus] = CRM_Core_OptionGroup::getLabel(
+        'case_status',
         $form->_defaultCaseStatus,
         FALSE
       );
     }
-    $form->add('select', 'case_status_id', ts('Case Status'),
-      $form->_caseStatus, TRUE
+    $form->add(
+      'select',
+      'case_status_id',
+      ts('Case Status'),
+      $form->_caseStatus,
+      TRUE
     );
   }
 
@@ -123,7 +128,9 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
     }
 
     if ($activity->subject == 'null') {
-      $activity->subject = ts('Case status changed from %1 to %2', [1 => CRM_Utils_Array::value($form->_defaults['case_status_id'], $form->_caseStatus),
+      $activity->subject = ts(
+        'Case status changed from %1 to %2',
+        [1 => CRM_Utils_Array::value($form->_defaults['case_status_id'], $form->_caseStatus),
           2 => CRM_Utils_Array::value($params['case_status_id'], $form->_caseStatus),
         ]
       );
@@ -134,4 +141,3 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
     $params['statusMsg'] = ts('Case Status changed successfully.');
   }
 }
-

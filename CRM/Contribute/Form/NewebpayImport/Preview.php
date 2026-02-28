@@ -18,7 +18,7 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   protected $_errorFileName = 'NewebpayImportPreviewError.xlsx';
 
   public function preProcess() {
-    $downloadErrorType = CRM_Utils_Request::retrieve( 'downloadType', 'String', CRM_Core_DAO::$_nullObject);
+    $downloadErrorType = CRM_Utils_Request::retrieve('downloadType', 'String', CRM_Core_DAO::$_nullObject);
 
     $this->_result = $this->get('parseResult');
     $this->_successedContribution = [];
@@ -158,7 +158,8 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Import'),
           'isDefault' => TRUE,
@@ -211,14 +212,14 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
 
   /**
    * Process the contribution, which is array type.
-   * 
+   *
    * @param Array $contributionRow
    */
   private function processImportData(&$contributionRow, $isChangeStatus = FALSE) {
     $contributionRow[ts('Result')] = "";
     $id = $contributionRow['id'];
     if (!empty($contributionRow['id']) && !empty($contributionRow['手續費'])) {
-    $feeAmount = $contributionRow['手續費'];
+      $feeAmount = $contributionRow['手續費'];
       CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $id, 'fee_amount', $feeAmount);
       $contributionRow[ts('Result')] .= ts('Add fee to contribution.');
     }
@@ -275,15 +276,15 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
     self::addNote($contributionRow[ts('Result')], $contributionRow);
   }
 
-  private static function addNote($note, &$contributionRow){
+  private static function addNote($note, &$contributionRow) {
 
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
-    $note_exists = CRM_Core_BAO_Note::getNote( $contributionRow['id'], 'civicrm_contribution' );
-    if(count($note_exists)){
+    $note_exists = CRM_Core_BAO_Note::getNote($contributionRow['id'], 'civicrm_contribution');
+    if (count($note_exists)) {
       $note_id = [ 'id' => reset(array_keys($note_exists)) ];
       $note = $note . reset($note_exists);
     }
-    else{
+    else {
       $note_id = NULL;
     }
     $noteParams = [
@@ -293,6 +294,6 @@ class CRM_Contribute_Form_NewebpayImport_Preview extends CRM_Core_Form {
       'contact_id'    => $contributionRow['contact_id'],
       'modified_date' => date('Ymd')
     ];
-    CRM_Core_BAO_Note::add( $noteParams, $note_id );
+    CRM_Core_BAO_Note::add($noteParams, $note_id);
   }
 }

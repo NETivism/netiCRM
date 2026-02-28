@@ -25,4 +25,3 @@ class CRM_Contribute_StateMachine_TaiwanACHImport extends CRM_Core_StateMachine 
     $this->addSequentialPages($this->_pages);
   }
 }
-

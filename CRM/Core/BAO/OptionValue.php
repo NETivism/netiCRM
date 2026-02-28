@@ -100,7 +100,8 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
 
     // action is taken depending upon the mode
     $optionValue = new CRM_Core_DAO_OptionValue();
-    $optionValue->copyValues($params);;
+    $optionValue->copyValues($params);
+    ;
 
     if (CRM_Utils_Array::value('is_default', $params)) {
       $query = 'UPDATE civicrm_option_value SET is_default = 0 WHERE  option_group_id = %1';
@@ -118,8 +119,11 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
       CRM_Core_DAO::executeQuery($query, $p);
     }
 
-    $groupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-      $params['option_group_id'], 'name', 'id'
+    $groupName = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
+      $params['option_group_id'],
+      'name',
+      'id'
     );
 
     if (in_array($groupName, CRM_Core_OptionGroup::$_domainIDGroups)) {
@@ -431,4 +435,3 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
     return $options;
   }
 }
-

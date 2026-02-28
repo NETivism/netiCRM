@@ -1,5 +1,5 @@
 <?php
-class CRM_Mailing_Page_Unsubscribe extends CRM_Core_Page{
+class CRM_Mailing_Page_Unsubscribe extends CRM_Core_Page {
   public function run() {
     $form = new CRM_Core_Controller_Simple('CRM_Mailing_Form_Unsubscribe', ts('Unsubscribe'), CRM_Core_Action::ADD);
     $form->setEmbedded(TRUE);

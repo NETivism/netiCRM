@@ -116,4 +116,3 @@ class CRM_Member_Form_Task_Email extends CRM_Member_Form_Task {
     return $tokens;
   }
 }
-

@@ -67,7 +67,7 @@ class CRM_Member_Import_Form_Summary extends CRM_Core_Form {
     $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
     CRM_Import_Parser::setImportErrorFilenames($qfKey, ['error','conflict','duplicate','no_match'], 'CRM_Member_Import_Parser', $prefix, $this);
 
-    if ($duplicateRowCount <= 0 && !$mismatchCount){
+    if ($duplicateRowCount <= 0 && !$mismatchCount) {
       $duplicateRowCount = 0;
       $this->set('duplicateRowCount', $duplicateRowCount);
     }
@@ -89,7 +89,9 @@ class CRM_Member_Import_Form_Summary extends CRM_Core_Form {
 
       /* only subtract dupes from succesful import if we're skipping */
 
-      $this->set('validRowCount', $totalRowCount - $invalidRowCount -
+      $this->set(
+        'validRowCount',
+        $totalRowCount - $invalidRowCount -
         $conflictRowCount - $duplicateRowCount - $mismatchCount
       );
     }
@@ -108,7 +110,8 @@ class CRM_Member_Import_Form_Summary extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -127,4 +130,3 @@ class CRM_Member_Import_Form_Summary extends CRM_Core_Form {
     return ts('Summary');
   }
 }
-

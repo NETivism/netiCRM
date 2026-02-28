@@ -2,18 +2,18 @@
 
 class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
-  public CONST END_POINT_LIST = [
+  public const END_POINT_LIST = [
     CRM_AI_BAO_AICompletion::CHAT_COMPLETION => 'https://api.openai.com/v1/chat/completions',
   ];
 
-  public CONST MODEL_LIST = [
+  public const MODEL_LIST = [
     'gpt-3.5-turbo',
     'gpt-4o',
   ];
 
   /**
    * OpenAI API Key
-   * 
+   *
    * @var string
    */
   private $_apiKey = NULL;
@@ -41,21 +41,21 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
   /**
    * AICompletion ID
-   * 
+   *
    * @var int
    */
   private $_id = NULL;
 
   /**
    * Post data , json format.
-   * 
+   *
    * @var string
    */
   private $_postData = '';
 
   /**
    * Response data
-   * 
+   *
    * @var string
    */
   private $_responseData = '';
@@ -138,9 +138,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
     // Send the request to OpenAI
     $ch = curl_init($api_endpoint);
-    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_postData);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
       'Content-Type: application/json',
       'Authorization: Bearer ' . $this->_apiKey,
@@ -153,15 +153,15 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       }
       $responseData = &$this->_responseData;
       $responseData = [
-        'status_id' => 2, // 2: pending, 5: processing, 1: finished, 
+        'status_id' => 2, // 2: pending, 5: processing, 1: finished,
         'id' => $this->_id,
       ];
-      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData){
+      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData) {
         $chunks = explode("\n", $data);
         if (is_array($chunks)) {
           $chunks = array_filter($chunks);
         }
-        foreach($chunks as $resp) {
+        foreach ($chunks as $resp) {
           $json = preg_replace('/^data:\s/', '', $resp);
           $decoded = json_decode($json, TRUE);
           if ($decoded === FALSE) {
@@ -233,12 +233,12 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       // the common connection timeout
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-      curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+      curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
 
       curl_exec($ch);
       $curl_errno = curl_errno($ch);
-      $curl_error = curl_error($ch);  
+      $curl_error = curl_error($ch);
       if ($curl_errno > 0) {
         throw new CRM_Core_Exception("Curl Error. Error Number: {$curl_errno}. Error message: {$curl_error}");
       }
@@ -251,7 +251,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       // this will limit common connection timeout
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       $this->_responseData = curl_exec($ch);
-      if(curl_errno($ch)){
+      if (curl_errno($ch)) {
         throw new CRM_Core_Exception(curl_error($ch));
       }
       curl_close($ch);
@@ -262,24 +262,24 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
   /**
    * Return the fields array that API used.
-   * 
+   *
    * @param string $apiType field name
-   * @param boolean $is_required only return required fields or not  
+   * @param boolean $is_required only return required fields or not
    * @return array $fields An array contain needed fields.
    */
   private static function fields($apiType, $is_required = FALSE) {
     $fields = [];
-    switch($apiType){
+    switch ($apiType) {
       case 'CHAT_COMPLETION':
         // Refs: https://platform.openai.com/docs/api-reference/chat/create
         $fields = explode(',', 'model*,messages*,temperature,top_p,n,stream,stop,max_tokens,presence_penalty,frequency_penalty,logit_bias,user');
         break;
     }
     foreach ($fields as $key => &$value) {
-      if(!strstr($value, '*') && $is_required) {
+      if (!strstr($value, '*') && $is_required) {
         unset($fields[$key]);
       }
-      else{
+      else {
         $value = str_replace('*', '', $value);
       }
     }

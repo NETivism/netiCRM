@@ -52,8 +52,12 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     parent::preProcess();
 
 
-    $this->_key = CRM_Utils_Request::retrieve('key', 'String',
-      $this, FALSE, 0
+    $this->_key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      $this,
+      FALSE,
+      0
     );
 
     $session = CRM_Core_Session::singleton();
@@ -90,7 +94,8 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Uninstall'),
             'isDefault' => TRUE,
@@ -102,7 +107,8 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
       );
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Install'),
             'isDefault' => TRUE,
@@ -155,4 +161,3 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     }
   }
 }
-

@@ -90,7 +90,7 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     $contributionDAO->selectAdd(); // clear *
     $contributionDAO->selectAdd('id as contribution_id, trxn_id, receipt_id');
     $contributionDAO->find();
-    while($contributionDAO->fetch()) {
+    while ($contributionDAO->fetch()) {
       $contactDetails[$contributionDAO->contribution_id]['contribution_id'] = $contributionDAO->contribution_id;
       $contactDetails[$contributionDAO->contribution_id]['trxn_id'] = $contributionDAO->trxn_id;
       $contactDetails[$contributionDAO->contribution_id]['receipt_id'] = $contributionDAO->receipt_id;
@@ -142,7 +142,8 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Update Contribution(s)'),
           'isDefault' => TRUE,
@@ -167,7 +168,8 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
         if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
           $customValue = CRM_Utils_Array::value($customFieldID, $customFields);
           if (CRM_Utils_Array::value('extends_entity_column_value', $customValue)) {
-            $entityColumnValue = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+            $entityColumnValue = explode(
+              CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
               $customValue['extends_entity_column_value']
             );
           }
@@ -235,7 +237,8 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
     if (isset($params['field'])) {
       foreach ($params['field'] as $key => $value) {
 
-        $value['custom'] = CRM_Core_BAO_CustomField::postProcess($value,
+        $value['custom'] = CRM_Core_BAO_CustomField::postProcess(
+          $value,
           CRM_Core_DAO::$_nullObject,
           $key,
           'Contribution'
@@ -277,4 +280,3 @@ class CRM_Contribute_Form_Task_Batch extends CRM_Contribute_Form_Task {
   }
   //end of function
 }
-

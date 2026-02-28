@@ -105,7 +105,7 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     $this->docMakerResponse($contribution, __FILE__, __FUNCTION__);
 
     $this->assertAPISuccess($contribution, 'In line ' . __LINE__);
-    $this->assertEquals(1,$contribution['count']);
+    $this->assertEquals(1, $contribution['count']);
     $this->assertEquals($contribution['values'][$contribution['id']]['contact_id'], $this->_individualId, 'In line ' . __LINE__);
     $this->assertEquals($contribution['values'][$contribution['id']]['contribution_type_id'], $this->_contributionTypeId);
     $this->assertEquals($contribution['values'][$contribution['id']]['total_amount'], 100.00, 'In line ' . __LINE__);
@@ -139,9 +139,11 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
       'id' => $this->_contribution['id'],
       'format.only_id' => 1,
     ]);
-    $this->assertEquals($this->_contribution['id'], $contribution, print_r($contribution,true) . " in line " . __LINE__);
+    $this->assertEquals($this->_contribution['id'], $contribution, print_r($contribution, TRUE) . " in line " . __LINE__);
     //test id only format
-    $contribution = civicrm_api('contribution', 'get', 
+    $contribution = civicrm_api(
+      'contribution',
+      'get',
       ['version' => $this->_apiversion,
         'id' => $contribution2['id'],
         'format.only_id' => 1,
@@ -283,7 +285,10 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
     $value = reset($result['values']);
     $this->assertEquals($result['id'], $value['id']);
     $this->assertAPISuccess($result, ' in line ' . __LINE__);
-    $check = civicrm_api($this->_entity, 'get', [
+    $check = civicrm_api(
+      $this->_entity,
+      'get',
+      [
         'return.custom_' . $ids['custom_field_id'] => 1,
         'version' => 3,
         'id' => $result['id'],
@@ -678,4 +683,3 @@ class api_v3_ContributionTest extends CiviUnitTestCase {
   }
   */
 }
-

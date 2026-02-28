@@ -31,8 +31,7 @@
  * $Id$
  *
  */
-class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
-{
+class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
@@ -46,14 +45,14 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  public static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    * ID for internal usage
    *
    * @var int unsigned
@@ -138,30 +137,28 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_coupon
-   */
-  public function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_coupon
+  */
+  public function __construct() {
     parent::__construct();
   }
-    /**
+  /**
    * returns all the column names of this table
    *
    * @access public
    * @return array
    */
-  public static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'start_date' => [
           'name' => 'start_date',
@@ -177,7 +174,7 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
           'name' => 'code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Code') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
@@ -185,7 +182,7 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
           'name' => 'coupon_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Coupon Type') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 32,
            'size' => CRM_Utils_Type::MEDIUM,
                 ] ,
@@ -193,7 +190,7 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
           'name' => 'discount',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Discount') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'minimal_amount' => [
           'name' => 'minimal_amount',
@@ -204,13 +201,13 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
           'name' => 'count_max',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Count Max') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
@@ -228,18 +225,16 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  public static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  public function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -248,21 +243,21 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @access public
    * return array
    */
-  public static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['coupon'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
@@ -271,21 +266,21 @@ class CRM_Coupon_DAO_Coupon extends CRM_Core_DAO
    * @access public
    * return array
    */
-  public static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['coupon'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
 }

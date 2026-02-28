@@ -53,8 +53,10 @@ WHERE  mailing_id = %1
     return CRM_Core_DAO::singleValueQuery($sql, $params);
   }
 
-  public static function mailingQuery($mailingID,
-    $offset = NULL, $limit = NULL
+  public static function mailingQuery(
+    $mailingID,
+    $offset = NULL,
+    $limit = NULL
   ) {
     $limitString = NULL;
     if ($limit && $offset !== NULL) {
@@ -72,4 +74,3 @@ WHERE  mailing_id = %1
     return CRM_Core_DAO::executeQuery($sql, $params);
   }
 }
-

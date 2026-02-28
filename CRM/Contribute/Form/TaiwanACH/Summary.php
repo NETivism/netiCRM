@@ -17,7 +17,8 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
         ],

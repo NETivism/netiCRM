@@ -35,7 +35,8 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_MailingGroupTest extends CiviUnitTestCase {
   protected $_groupID;
   protected $_email;
-  protected $_apiversion; public function get_info() {
+  protected $_apiversion;
+  public function get_info() {
     return [
       'name' => 'Mailer Group',
       'description' => 'Test all Mailer Group methods.',
@@ -214,4 +215,3 @@ class api_v3_MailingGroupTest extends CiviUnitTestCase {
     $this->contactDelete($contactID);
   }
 }
-

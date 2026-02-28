@@ -90,7 +90,8 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
     $form->addSelect('contribution_type_id', ts('Contribution Type'), $this->_contribution_type_id, ['multiple' => 'multiple']);
 
     foreach ($this->_amounts as $name => $title) {
-      $form->add('text',
+      $form->add(
+        'text',
         $name,
         $title
       );
@@ -308,4 +309,3 @@ GROUP BY contact.id
     return NULL;
   }
 }
-

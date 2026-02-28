@@ -43,8 +43,13 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
 
   public static function retrieve($name, $type, $location = 'POST', $abort = TRUE) {
     static $store = NULL;
-    $value = CRM_Utils_Request::retrieve($name, $type, $store,
-      FALSE, NULL, $location
+    $value = CRM_Utils_Request::retrieve(
+      $name,
+      $type,
+      $store,
+      FALSE,
+      NULL,
+      $location
     );
     if ($abort && $value === NULL) {
       CRM_Core_Error::debug_log_message("Could not find an entry for $name in $location");
@@ -101,8 +106,10 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
         $recurParams['create_date'] = $now;
         //some times subscr_signup response come after the
         //subscr_payment and set to pending mode.
-        $statusID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionRecur',
-          $recur->id, 'contribution_status_id'
+        $statusID = CRM_Core_DAO::getFieldValue(
+          'CRM_Contribute_DAO_ContributionRecur',
+          $recur->id,
+          'contribution_status_id'
         );
         if ($statusID != 5) {
           $recurParams['contribution_status_id'] = 2;
@@ -159,8 +166,11 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     if ($sendNotification) {
       //send recurring Notification email for user
 
-      CRM_Contribute_BAO_ContributionPage::recurringNofify($subscriptionPaymentStatus, $ids['contact'],
-        $ids['contributionPage'], $recur
+      CRM_Contribute_BAO_ContributionPage::recurringNofify(
+        $subscriptionPaymentStatus,
+        $ids['contact'],
+        $ids['contributionPage'],
+        $recur
       );
     }
 
@@ -183,12 +193,19 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
       $objects['contribution'] = &$contribution;
     }
 
-    $this->single($input, $ids, $objects,
-      TRUE, $first
+    $this->single(
+      $input,
+      $ids,
+      $objects,
+      TRUE,
+      $first
     );
   }
 
-  public function single(&$input, &$ids, &$objects,
+  public function single(
+    &$input,
+    &$ids,
+    &$objects,
     $recur = FALSE,
     $first = FALSE
   ) {
@@ -335,4 +352,3 @@ class CRM_Core_Payment_PayPalIPN extends CRM_Core_Payment_BaseIPN {
     $input['trxn_id'] = self::retrieve('txn_id', 'String', 'POST', FALSE);
   }
 }
-

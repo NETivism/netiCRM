@@ -120,17 +120,25 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     if ($action & CRM_Core_Action::DELETE) {
       $session = &CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/', 'action=browse'));
       $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_DeleteGroup', "Delete Cutom Set", NULL);
-      $id = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, FALSE, 0
+      $id = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        FALSE,
+        0
       );
       $controller->set('id', $id);
       $controller->setEmbedded(TRUE);
@@ -139,8 +147,12 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     }
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -230,7 +242,9 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
         $action -= CRM_Core_Action::DISABLE;
       }
       $customGroup[$dao->id]['order'] = $customGroup[$dao->id]['weight'];
-      $customGroup[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $customGroup[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         ['id' => $dao->id]
       );
     }
@@ -254,7 +268,8 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     $subTypes['Membership'] = CRM_Member_BAO_MembershipType::getMembershipTypes(FALSE);
     $subTypes['Event'] = CRM_Core_OptionGroup::values('event_type');
     $subTypes['Participant'] = [];
-    $subTypes['ParticipantRole'] = CRM_Core_OptionGroup::values('participant_role');;
+    $subTypes['ParticipantRole'] = CRM_Core_OptionGroup::values('participant_role');
+    ;
     $subTypes['ParticipantEventName'] = CRM_Event_PseudoConstant::event();
     $subTypes['ParticipantEventType'] = CRM_Core_OptionGroup::values('event_type');
     $subTypes['Individual'] = CRM_Contact_BAO_ContactType::subTypePairs('Individual', FALSE, NULL);
@@ -274,8 +289,15 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     //adding subtype specific relationships CRM-5256
     $relSubType = CRM_Contact_BAO_ContactType::subTypeInfo();
     foreach ($relSubType as $subType => $val) {
-      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, $val['parent'],
-        FALSE, 'label', TRUE, $subType
+      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(
+        NULL,
+        NULL,
+        NULL,
+        $val['parent'],
+        FALSE,
+        'label',
+        TRUE,
+        $subType
       );
       $allRelationshipType = array_merge($allRelationshipType, $subTypeRelationshipTypes);
     }
@@ -332,11 +354,13 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
 
     $returnURL = CRM_Utils_System::url('civicrm/admin/custom/group', "reset=1&action=browse");
 
-    CRM_Utils_Weight::addOrder($customGroup, 'CRM_Core_DAO_CustomGroup',
-      'id', $returnURL
+    CRM_Utils_Weight::addOrder(
+      $customGroup,
+      'CRM_Core_DAO_CustomGroup',
+      'id',
+      $returnURL
     );
 
     $this->assign('rows', $customGroup);
   }
 }
-

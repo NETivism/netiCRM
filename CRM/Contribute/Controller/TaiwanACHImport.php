@@ -18,4 +18,3 @@ class CRM_Contribute_Controller_TaiwanACHImport extends CRM_Core_Controller {
     $this->addActions($config->uploadDir, ['uploadFile']);
   }
 }
-

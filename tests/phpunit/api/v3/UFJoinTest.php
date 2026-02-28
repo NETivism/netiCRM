@@ -280,4 +280,3 @@ class api_v3_UFJoinTest extends CiviUnitTestCase {
     $this->assertEquals($result['values'][0]['entity_id'], $params['entity_id'], 'In line ' . __LINE__);
   }
 }
-

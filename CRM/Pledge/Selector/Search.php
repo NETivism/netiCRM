@@ -152,7 +152,8 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * @return CRM_Contact_Selector
    * @access public
    */
-  public function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $additionalClause = NULL,
     $single = FALSE,
@@ -171,7 +172,12 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_PLEDGE
     );
 
@@ -264,9 +270,14 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * @access public
    */
   public function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_additionalClause
     );
@@ -284,9 +295,14 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * @return int   the total number of rows for this action
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_additionalClause
     );
@@ -294,8 +310,14 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     $rows = [];
 
     // get all pledge status
-    $pledgeStatuses = CRM_Core_OptionGroup::values('contribution_status',
-      FALSE, FALSE, FALSE, NULL, 'name', FALSE
+    $pledgeStatuses = CRM_Core_OptionGroup::values(
+      'contribution_status',
+      FALSE,
+      FALSE,
+      FALSE,
+      NULL,
+      'name',
+      FALSE
     );
 
     //4418 check for view, edit and delete
@@ -318,7 +340,8 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
       }
 
       // add pledge status name
-      $row['pledge_status_name'] = CRM_Utils_Array::value($row['pledge_status_id'],
+      $row['pledge_status_name'] = CRM_Utils_Array::value(
+        $row['pledge_status_id'],
         $pledgeStatuses
       );
       // append (test) to status label
@@ -335,7 +358,8 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->pledge_id;
 
-      $row['action'] = CRM_Core_Action::formLink(self::links($hideOption, $this->_key),
+      $row['action'] = CRM_Core_Action::formLink(
+        self::links($hideOption, $this->_key),
         $mask,
         ['id' => $result->pledge_id,
           'cid' => $result->contact_id,
@@ -345,8 +369,11 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
 
 
 
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
       $rows[] = $row;
     }
@@ -446,4 +473,3 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   }
 }
 //end of class
-

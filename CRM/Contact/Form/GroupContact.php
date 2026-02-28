@@ -55,7 +55,8 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    *
    * @var int
    */
-  protected $_contactId; public function preProcess() {
+  protected $_contactId;
+  public function preProcess() {
 
     $this->_contactId = $this->get('contactId');
     $this->_groupContactId = $this->get('groupContactId');
@@ -83,7 +84,8 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  public function addRules() {}
+  public function addRules() {
+  }
 
   /**
    * Function to build the form
@@ -126,7 +128,8 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
 
       $this->add('select', 'group_id', $msg, $groupList, TRUE);
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Add'),
             'isDefault' => TRUE,
@@ -163,4 +166,3 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   }
   //end of function
 }
-

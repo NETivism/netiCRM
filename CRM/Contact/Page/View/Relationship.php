@@ -101,7 +101,8 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $rType = CRM_Utils_Array::value('rtype', $viewRelationship[$this->_id]);
     // add viewed contribution to recent items list
 
-    $url = CRM_Utils_System::url('civicrm/contact/view/rel',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/rel',
       "action=view&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&context=home"
     );
 
@@ -114,10 +115,12 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     if (($session->get('userID') == $this->_contactId) ||
       CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)
     ) {
-      $recentOther = ['editUrl' => CRM_Utils_System::url('civicrm/contact/view/rel',
-          "action=update&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
-        ),
-        'deleteUrl' => CRM_Utils_System::url('civicrm/contact/view/rel',
+      $recentOther = ['editUrl' => CRM_Utils_System::url(
+        'civicrm/contact/view/rel',
+        "action=update&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
+      ),
+        'deleteUrl' => CRM_Utils_System::url(
+          'civicrm/contact/view/rel',
           "action=delete&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
         ),
       ];
@@ -127,7 +130,8 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $title = $displayName . ' (' . $viewRelationship[$this->_id]['relation'] . ' ' . CRM_Contact_BAO_Contact::displayName($viewRelationship[$this->_id]['cid']) . ')';
 
     // add the recently viewed Relationship
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $viewRelationship[$this->_id]['id'],
       'Relationship',
@@ -155,16 +159,24 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     }
     $mask = CRM_Core_Action::mask($permissions);
 
-    $currentRelationships = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId,
+    $currentRelationships = CRM_Contact_BAO_Relationship::getRelationship(
+      $this->_contactId,
       CRM_Contact_BAO_Relationship::CURRENT,
-      0, 0, 0,
-      $links, $mask
+      0,
+      0,
+      0,
+      $links,
+      $mask
     );
 
-    $inactiveRelationships = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId,
+    $inactiveRelationships = CRM_Contact_BAO_Relationship::getRelationship(
+      $this->_contactId,
       CRM_Contact_BAO_Relationship::INACTIVE,
-      0, 0, 0,
-      $links, $mask
+      0,
+      0,
+      0,
+      $links,
+      $mask
     );
 
     $this->assign('currentRelationships', $currentRelationships);
@@ -197,9 +209,11 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
 
     $session->pushUserContext($url);
 
-    if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-        CRM_Core_DAO::$_nullObject
-      )) {
+    if (CRM_Utils_Request::retrieve(
+      'confirmed',
+      'Boolean',
+      CRM_Core_DAO::$_nullObject
+    )) {
       if ($this->_caseId) {
         //create an activity for case role removal.CRM-4480
 
@@ -280,15 +294,23 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
   }
 
   public function setContext() {
-    $context = CRM_Utils_Request::retrieve('context', 'String',
-      $this, FALSE, 'search'
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
 
     if ($context == 'dashboard') {
-      $cid = CRM_Utils_Request::retrieve('cid', 'Integer',
-        $this, FALSE
+      $cid = CRM_Utils_Request::retrieve(
+        'cid',
+        'Integer',
+        $this,
+        FALSE
       );
-      $url = CRM_Utils_System::url('civicrm/user',
+      $url = CRM_Utils_System::url(
+        'civicrm/user',
         "reset=1&id={$cid}"
       );
     }
@@ -362,4 +384,3 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     return self::$_links;
   }
 }
-

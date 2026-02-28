@@ -377,7 +377,8 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     }
 
     if ($onDuplicate != CRM_Event_Import_Parser::DUPLICATE_UPDATE) {
-      $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
+      $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess(
+        $formatted,
         CRM_Core_DAO::$_nullObject,
         NULL,
         'Participant'
@@ -389,7 +390,8 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
         $dao = new CRM_Event_BAO_Participant();
         $dao->id = $formatValues['participant_id'];
 
-        $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
+        $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess(
+          $formatted,
           CRM_Core_DAO::$_nullObject,
           $formatValues['participant_id'],
           'Participant'
@@ -401,10 +403,10 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
           ];
           $newParticipant = civicrm_participant_check_params($formatted, FALSE);
           if ($newParticipant['error_message']) {
-            if(is_array($newParticipant['error_message'])){
+            if (is_array($newParticipant['error_message'])) {
               $errorMessage = $newParticipant['error_message']['message'];
             }
-            else{
+            else {
               $errorMessage = $newParticipant['error_message'];
             }
             array_unshift($values, $errorMessage);
@@ -484,8 +486,10 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
 
         $contactID = CRM_Utils_Array::value('contactID', $newParticipant['error_data']);
         $participantID = CRM_Utils_Array::value('participantID', $newParticipant['error_data']);
-        $url = CRM_Utils_System::url('civicrm/contact/view/participant',
-          "reset=1&id={$participantID}&cid={$contactID}&action=view", TRUE
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/participant',
+          "reset=1&id={$participantID}&cid={$contactID}&action=view",
+          TRUE
         );
         if (is_array($newParticipant['error_message']) &&
           ($participantID == $newParticipant['error_message']['params'][0])
@@ -494,10 +498,10 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
           return CRM_Event_Import_Parser::DUPLICATE;
         }
         elseif ($newParticipant['error_message']) {
-          if(is_array($newParticipant['error_message'])){
+          if (is_array($newParticipant['error_message'])) {
             $errorMessage = $newParticipant['error_message']['message'];
           }
-          else{
+          else {
             $errorMessage = $newParticipant['error_message'];
           }
           array_unshift($values, $errorMessage);
@@ -530,7 +534,8 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
    * @return void
    * @access public
    */
-  public function fini() {}
+  public function fini() {
+  }
 
   public static function formatDate($date, $dateType) {
     $formattedDate = NULL;
@@ -551,4 +556,3 @@ class CRM_Event_Import_Parser_Participant extends CRM_Event_Import_Parser {
     return $dateParams[$dateKey];
   }
 }
-

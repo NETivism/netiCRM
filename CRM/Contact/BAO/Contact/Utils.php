@@ -64,7 +64,8 @@ class CRM_Contact_BAO_Contact_Utils {
         $imageInfo[$contactType]['url'] = $imageUrl;
       }
       else {
-        $isSubtype = (CRM_Utils_Array::arrayKeyExists('parent_id', $typeInfo) &&
+        $isSubtype = (
+          CRM_Utils_Array::arrayKeyExists('parent_id', $typeInfo) &&
           $typeInfo['parent_id']
         ) ? TRUE : FALSE;
 
@@ -111,7 +112,8 @@ SELECT count( DISTINCT contact_type )
 FROM   civicrm_contact
 WHERE  id IN ( $idString )
 ";
-    $count = CRM_Core_DAO::singleValueQuery($query,
+    $count = CRM_Core_DAO::singleValueQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
     return $count > 1 ? TRUE : FALSE;
@@ -129,14 +131,18 @@ WHERE  id IN ( $idString )
    * @access public
    */
   public static function generateChecksum($contactID, $ts = NULL, $live = NULL) {
-    $hash = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-      $contactID, 'hash'
+    $hash = CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_Contact',
+      $contactID,
+      'hash'
     );
     if (!$hash) {
       $hash = md5(uniqid((string)rand(), TRUE));
-      CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Contact',
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Contact_DAO_Contact',
         $contactID,
-        'hash', $hash
+        'hash',
+        $hash
       );
     }
 
@@ -466,7 +472,7 @@ WHERE contact_a.employer_id=contact_b.id AND contact_b.id={$organizationId}; ";
    *
    */
   public static function clearCurrentEmployer($contactId, $employerId = NULL) {
-    if(empty($contactId)){
+    if (empty($contactId)) {
       return;
     }
     $query = "UPDATE civicrm_contact 
@@ -483,7 +489,7 @@ WHERE id={$contactId}; ";
       //get the relationship type id of "Employee of"
       $relTypeId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', 'Employee of', 'id', 'name_a_b');
       if (!$relTypeId) {
-         return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type 'Employee of'"));
+        return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type 'Employee of'"));
       }
       $relMembershipParams['relationship_type_id'] = $relTypeId . '_a_b';
       $relMembershipParams['contact_check'][$employerId] = 1;
@@ -498,8 +504,11 @@ WHERE id={$contactId}; ";
 
         if ($relationship->find(TRUE)) {
           CRM_Contact_BAO_Relationship::setIsActive($relationship->id, FALSE);
-          CRM_Contact_BAO_Relationship::relatedMemberships($contactId, $relMembershipParams,
-            $ids = [], CRM_Core_Action::DELETE
+          CRM_Contact_BAO_Relationship::relatedMemberships(
+            $contactId,
+            $relMembershipParams,
+            $ids = [],
+            CRM_Core_Action::DELETE
           );
         }
         $relationship->free();
@@ -518,7 +527,8 @@ WHERE id={$contactId}; ";
    * @static
    *
    */
-  public static function buildOnBehalfForm(&$form,
+  public static function buildOnBehalfForm(
+    &$form,
     $contactType = 'Individual',
     $countryID = NULL,
     $stateID = NULL,
@@ -551,14 +561,21 @@ WHERE id={$contactId}; ";
 
         if (!$contactEditMode && $contactID && (count($employers) >= 1)) {
 
-          $locDataURL = CRM_Utils_System::url('civicrm/ajax/permlocation', "cid=",
-            FALSE, NULL, FALSE
+          $locDataURL = CRM_Utils_System::url(
+            'civicrm/ajax/permlocation',
+            "cid=",
+            FALSE,
+            NULL,
+            FALSE
           );
           $form->assign('locDataURL', $locDataURL);
 
-          $dataURL = CRM_Utils_System::url('civicrm/ajax/employer',
+          $dataURL = CRM_Utils_System::url(
+            'civicrm/ajax/employer',
             "cid=" . $contactID,
-            FALSE, NULL, FALSE
+            FALSE,
+            NULL,
+            FALSE
           );
           $form->assign('employerDataURL', $dataURL);
 
@@ -588,26 +605,44 @@ WHERE id={$contactId}; ";
         break;
 
       case 'Household':
-        $form->add('text', 'household_name', ts('Household Name'),
+        $form->add(
+          'text',
+          'household_name',
+          ts('Household Name'),
           $attributes['household_name']
         );
         break;
 
       default:
         // individual
-        $form->addElement('select', 'prefix_id', ts('Prefix'),
+        $form->addElement(
+          'select',
+          'prefix_id',
+          ts('Prefix'),
           ['' => ts('- prefix -')] + CRM_Core_PseudoConstant::individualPrefix()
         );
-        $form->addElement('text', 'first_name', ts('First Name'),
+        $form->addElement(
+          'text',
+          'first_name',
+          ts('First Name'),
           $attributes['first_name']
         );
-        $form->addElement('text', 'middle_name', ts('Middle Name'),
+        $form->addElement(
+          'text',
+          'middle_name',
+          ts('Middle Name'),
           $attributes['middle_name']
         );
-        $form->addElement('text', 'last_name', ts('Last Name'),
+        $form->addElement(
+          'text',
+          'last_name',
+          ts('Last Name'),
           $attributes['last_name']
         );
-        $form->addElement('select', 'suffix_id', ts('Suffix'),
+        $form->addElement(
+          'select',
+          'suffix_id',
+          ts('Suffix'),
           ['' => ts('- suffix -')] + CRM_Core_PseudoConstant::individualSuffix()
         );
     }
@@ -616,18 +651,22 @@ WHERE id={$contactId}; ";
     $form->assign('addressSequence', array_fill_keys($addressSequence, 1));
 
     //Primary Phone
-    $form->addElement('text',
+    $form->addElement(
+      'text',
       "phone[1][phone]",
       ts('Phone'),
-      CRM_Core_DAO::getAttribute('CRM_Core_DAO_Phone',
+      CRM_Core_DAO::getAttribute(
+        'CRM_Core_DAO_Phone',
         'phone'
       )
     );
     //Primary Email
-    $form->addElement('text',
+    $form->addElement(
+      'text',
       "email[1][email]",
       ts('Email'),
-      CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email',
+      CRM_Core_DAO::getAttribute(
+        'CRM_Core_DAO_Email',
         'email'
       )
     );
@@ -636,7 +675,8 @@ WHERE id={$contactId}; ";
     CRM_Contact_Form_Edit_Address::buildQuickForm($form);
 
     // also fix the state country selector
-    CRM_Contact_Form_Edit_Address::fixStateSelect($form,
+    CRM_Contact_Form_Edit_Address::fixStateSelect(
+      $form,
       "address[1][country_id]",
       "address[1][state_province_id]",
       $countryID
@@ -785,9 +825,10 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
     if (empty($returnProperties)) {
 
       $autocompleteContactSearch = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
-      $returnProperties = array_fill_keys(array_merge(['sort_name'],
-          array_keys($autocompleteContactSearch)
-        ), 1);
+      $returnProperties = array_fill_keys(array_merge(
+        ['sort_name'],
+        array_keys($autocompleteContactSearch)
+      ), 1);
     }
 
     $compTable = NULL;
@@ -972,7 +1013,11 @@ Group By  componentId";
     }
     $filter = $contactTypeFilters[$contactType];
 
-    $id = CRM_Core_OptionGroup::values($greetingType, NULL, NULL, NULL,
+    $id = CRM_Core_OptionGroup::values(
+      $greetingType,
+      NULL,
+      NULL,
+      NULL,
       " AND is_default = 1 AND (filter = {$filter} OR filter = 0)",
       'value'
     );
@@ -981,7 +1026,7 @@ Group By  componentId";
     }
   }
 
-  public static function fromEmailAddress($contactId = NULL){
+  public static function fromEmailAddress($contactId = NULL) {
     $session = CRM_Core_Session::singleton();
     if (!$contactId) {
       $contactId = $session->get('userID');
@@ -1053,4 +1098,3 @@ Group By  componentId";
     ];
   }
 }
-

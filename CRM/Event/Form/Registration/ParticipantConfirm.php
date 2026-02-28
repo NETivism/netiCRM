@@ -66,7 +66,10 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
     if ($this->_participantId) {
 
       $params = ['id' => $this->_participantId];
-      CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Participant', $params, $values,
+      CRM_Core_DAO::commonRetrieve(
+        'CRM_Event_DAO_Participant',
+        $params,
+        $values,
         ['contact_id', 'event_id', 'status_id', 'register_date']
       );
       $this->_participant = $values;
@@ -90,7 +93,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
           $this->_csContactID = NULL;
           $config = CRM_Core_Config::singleton();
           $statusMessage = ts('Current logged in contact is not the same contact of participant. Please log out first and try again.');
-           return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1", FALSE, NULL, FALSE, TRUE));
+          return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1", FALSE, NULL, FALSE, TRUE));
         }
       }
       else {
@@ -105,7 +108,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
 
     if (!$this->_csContactID) {
       $config = CRM_Core_Config::singleton();
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this event registration. Contact the site administrator if you need assistance.'), $config->userFrameworkBaseURL);
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this event registration. Contact the site administrator if you need assistance.'), $config->userFrameworkBaseURL);
     }
   }
 
@@ -158,7 +161,7 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
           $statusMsg = '<div class="bold">' . ts('Your Credit Card transaction was not successful. No money has yet been charged to your card.') . '</div><div><br />' . ts('Click the "Confirm Registration" button to complete your registration in %1, or click "Cancel Registration" if you are no longer interested in attending this event.', [1 => $values['event']['title']]) . '</div>';
         }
         else {
-          $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",FALSE, NULL, FALSE, TRUE );
+          $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1", FALSE, NULL, FALSE, TRUE);
           $statusMsg = '<div class="bold">' . ts('Confirm your registration for %1.', [1 => "<a href='$url' target='_blank'>".$values['event']['title']."</a>"]) . '</div><div><br />' . ts('Click the "Confirm Registration" button to begin, or click "Cancel Registration" if you are no longer interested in attending this event.') . '</div>';
         }
         $buttons = array_merge($buttons, [['type' => 'next',
@@ -182,7 +185,8 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
       }
     }
     if (!$statusMsg) {
-      $statusMsg = ts("Oops, it looks like your registration for %1 has already been cancelled.",
+      $statusMsg = ts(
+        "Oops, it looks like your registration for %1 has already been cancelled.",
         [1 => $values['event']['title']]
       );
     }
@@ -254,10 +258,14 @@ class CRM_Event_Form_Registration_ParticipantConfirm extends CRM_Event_Form_Regi
         }
       }
 
-       return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
-          FALSE, NULL, FALSE, TRUE
-        ));
+      return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+        'civicrm/event/info',
+        "reset=1&id={$this->_eventId}&noFullMsg=1",
+        FALSE,
+        NULL,
+        FALSE,
+        TRUE
+      ));
     }
   }
 }
-

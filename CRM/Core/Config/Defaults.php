@@ -140,8 +140,10 @@ class CRM_Core_Config_Defaults {
 
         case 'g':
           $size *= 1024;
+          // no break
         case 'm':
           $size *= 1024;
+          // no break
         case 'k':
           $size *= 1024;
       }
@@ -165,10 +167,10 @@ class CRM_Core_Config_Defaults {
     $config = CRM_Core_Config::singleton();
 
     $scheme = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
-    if(!empty($_SERVER['HTTP_HOST'])){
+    if (!empty($_SERVER['HTTP_HOST'])) {
       $baseURL = CRM_Utils_File::addTrailingSlash($scheme.$_SERVER['HTTP_HOST'], '/');
     }
-    else{
+    else {
       $baseURL = $config->userFrameworkBaseURL;
     }
 
@@ -253,8 +255,8 @@ class CRM_Core_Config_Defaults {
       $defaults['customFileUploadDir'] = $customDir;
     }
 
-    /* FIXME: hack to bypass the step for generating defaults for components, 
-                  while running upgrade, to avoid any serious non-recoverable error 
+    /* FIXME: hack to bypass the step for generating defaults for components,
+                  while running upgrade, to avoid any serious non-recoverable error
                   which might hinder the upgrade process. */
 
 
@@ -274,4 +276,3 @@ class CRM_Core_Config_Defaults {
     }
   }
 }
-

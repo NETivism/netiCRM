@@ -96,7 +96,8 @@ WHERE  parent_id IS NULL
           $sql .= " AND is_active = 1";
         }
 
-        $dao = CRM_Core_DAO::executeQuery($sql,
+        $dao = CRM_Core_DAO::executeQuery(
+          $sql,
           CRM_Core_DAO::$_nullArray,
           FALSE,
           'CRM_Contact_DAO_ContactType'
@@ -184,8 +185,11 @@ WHERE  subtype.name IS NOT NULL AND subtype.parent_id IS NOT NULL {$ctWHERE}
         if ($all === FALSE) {
           $sql .= " AND subtype.is_active = 1 AND parent.is_active = 1 ORDER BY parent.id";
         }
-        $dao = CRM_Core_DAO::executeQuery($sql, [],
-          FALSE, 'CRM_Contact_DAO_ContactType'
+        $dao = CRM_Core_DAO::executeQuery(
+          $sql,
+          [],
+          FALSE,
+          'CRM_Contact_DAO_ContactType'
         );
         while ($dao->fetch()) {
           $value = [];
@@ -288,7 +292,8 @@ WHERE  type.name IS NOT NULL
           $sql .= " AND type.is_active = 1";
         }
 
-        $dao = CRM_Core_DAO::executeQuery($sql,
+        $dao = CRM_Core_DAO::executeQuery(
+          $sql,
           CRM_Core_DAO::$_nullArray,
           FALSE,
           'CRM_Contact_DAO_ContactType'
@@ -337,7 +342,8 @@ WHERE  type.name IS NOT NULL
     return NULL;
   }
 
-  public static function &getSelectElements($all = FALSE,
+  public static function &getSelectElements(
+    $all = FALSE,
     $isSeperator = TRUE,
     $seperator = CRM_Core_DAO::VALUE_SEPARATOR
   ) {
@@ -541,7 +547,8 @@ WHERE  subtype.name IN ('" . CRM_Utils_Array::implode("','", $subType) . "' )";
     $name = $typeInfo['name'];
     // check if any custom group
     $custom = new CRM_Core_DAO_CustomGroup();
-    $custom->whereAdd("extends_entity_column_value LIKE '%" .
+    $custom->whereAdd(
+      "extends_entity_column_value LIKE '%" .
       CRM_Core_DAO::VALUE_SEPARATOR .
       $name .
       CRM_Core_DAO::VALUE_SEPARATOR . "%'"
@@ -666,8 +673,11 @@ WHERE name = %1";
     $newParams = ['is_active' => $is_active];
     CRM_Core_BAO_Navigation::processUpdate($params, $newParams);
     CRM_Core_BAO_Navigation::resetNavigation();
-    return CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_ContactType', $id,
-      'is_active', $is_active
+    return CRM_Core_DAO::setFieldValue(
+      'CRM_Contact_DAO_ContactType',
+      $id,
+      'is_active',
+      $is_active
     );
   }
 
@@ -698,7 +708,8 @@ WHERE name = %1";
     }
 
     if (empty($subType)) {
-      $subType = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $subType = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
         $contactId,
         'contact_sub_type'
       );
@@ -770,4 +781,3 @@ LIMIT 1";
     return FALSE;
   }
 }
-

@@ -359,8 +359,12 @@ function civicrm_case_update(&$params) {
 
   // check for same contact id for edit Client
   if ($params['contact_id'] && !in_array($params['contact_id'], $origContactIds)) {
-    $mCaseId = CRM_Case_BAO_Case::mergeCases($params['contact_id'], $params['case_id'],
-      $origContactId, NULL, TRUE
+    $mCaseId = CRM_Case_BAO_Case::mergeCases(
+      $params['contact_id'],
+      $params['case_id'],
+      $origContactId,
+      NULL,
+      TRUE
     );
   }
 
@@ -623,4 +627,3 @@ function _civicrm_case_check_params(&$params, $mode = NULL) {
     }
   }
 }
-

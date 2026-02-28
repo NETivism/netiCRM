@@ -174,15 +174,21 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     $cart->SetMerchantPrivateData($privateData);
 
     if ($component == "event") {
-      $returnURL = CRM_Utils_System::url('civicrm/event/register',
+      $returnURL = CRM_Utils_System::url(
+        'civicrm/event/register',
         "_qf_ThankYou_display=1&qfKey={$params['qfKey']}",
-        TRUE, NULL, FALSE
+        TRUE,
+        NULL,
+        FALSE
       );
     }
     elseif ($component == "contribute") {
-      $returnURL = CRM_Utils_System::url('civicrm/contribute/transact',
+      $returnURL = CRM_Utils_System::url(
+        'civicrm/contribute/transact',
         "_qf_ThankYou_display=1&qfKey={$params['qfKey']}",
-        TRUE, NULL, FALSE
+        TRUE,
+        NULL,
+        FALSE
       );
     }
 
@@ -211,9 +217,10 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     }
 
     if ($request->getResponseCode() != 302) {
-      CRM_Core_Error::fatal(ts('Invalid response code received from Google Checkout: %1',
-          [1 => $request->getResponseCode()]
-        ));
+      CRM_Core_Error::fatal(ts(
+        'Invalid response code received from Google Checkout: %1',
+        [1 => $request->getResponseCode()]
+      ));
     }
     CRM_Utils_System::redirect($request->getResponseHeader('location'));
 
@@ -262,8 +269,10 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
 
     if (curl_errno($ch)) {
       $e = &CRM_Core_Error::singleton();
-      $e->push(curl_errno($ch),
-        0, NULL,
+      $e->push(
+        curl_errno($ch),
+        0,
+        NULL,
         curl_error($ch)
       );
       return $e;
@@ -317,4 +326,3 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     return [$root, $data];
   }
 }
-

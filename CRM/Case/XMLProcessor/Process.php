@@ -37,7 +37,8 @@
 
 class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
   public $_isMultiClient;
-  public function run($caseType,
+  public function run(
+    $caseType,
     &$params
   ) {
     $xml = $this->retrieve($caseType);
@@ -45,9 +46,10 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     if ($xml === FALSE) {
 
       $docLink = CRM_Utils_System::docURL2("CiviCase Configuration");
-      CRM_Core_Error::fatal(ts("Configuration file could not be retrieved for case type = '%1' %2.",
-          [1 => $caseType, 2 => $docLink]
-        ));
+      CRM_Core_Error::fatal(ts(
+        "Configuration file could not be retrieved for case type = '%1' %2.",
+        [1 => $caseType, 2 => $docLink]
+      ));
       return FALSE;
     }
 
@@ -58,16 +60,20 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     $this->process($xml, $params);
   }
 
-  public function get($caseType,
-    $fieldSet, $isLabel = FALSE, $maskAction = FALSE
+  public function get(
+    $caseType,
+    $fieldSet,
+    $isLabel = FALSE,
+    $maskAction = FALSE
   ) {
     $xml = $this->retrieve($caseType);
     if ($xml === FALSE) {
 
       $docLink = CRM_Utils_System::docURL2("CiviCase Configuration");
-      CRM_Core_Error::fatal(ts("Unable to load configuration file for the referenced case type: '%1' %2.",
-          [1 => $caseType, 2 => $docLink]
-        ));
+      CRM_Core_Error::fatal(ts(
+        "Unable to load configuration file for the referenced case type: '%1' %2.",
+        [1 => $caseType, 2 => $docLink]
+      ));
       return FALSE;
     }
 
@@ -83,7 +89,8 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     }
   }
 
-  public function process($xml,
+  public function process(
+    $xml,
     &$params
   ) {
 
@@ -98,9 +105,10 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
       foreach ($xml->CaseRoles as $caseRoleXML) {
         foreach ($caseRoleXML->RelationshipType as $relationshipTypeXML) {
           if ((int ) $relationshipTypeXML->creator == 1) {
-            if (!$this->createRelationships((string ) $relationshipTypeXML->name,
-                $params
-              )) {
+            if (!$this->createRelationships(
+              (string ) $relationshipTypeXML->name,
+              $params
+            )) {
               CRM_Core_Error::fatal();
               return FALSE;
             }
@@ -120,7 +128,8 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
       foreach ($activitySetsXML->ActivitySet as $activitySetXML) {
         if ($standardTimeline) {
           if ((bool ) $activitySetXML->timeline) {
-            return $this->processStandardTimeline($activitySetXML,
+            return $this->processStandardTimeline(
+              $activitySetXML,
               $params
             );
           }
@@ -128,7 +137,8 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
         elseif ($activitySetName) {
           $name = (string ) $activitySetXML->name;
           if ($name == $activitySetName) {
-            return $this->processActivitySet($activitySetXML,
+            return $this->processActivitySet(
+              $activitySetXML,
               $params
             );
           }
@@ -137,7 +147,8 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     }
   }
 
-  public function processStandardTimeline($activitySetXML,
+  public function processStandardTimeline(
+    $activitySetXML,
     &$params
   ) {
     if ('Change Case Type' ==
@@ -169,7 +180,8 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     foreach ($caseRolesXML as $caseRoleXML) {
       foreach ($caseRoleXML->RelationshipType as $relationshipTypeXML) {
         $relationshipTypeName = (string ) $relationshipTypeXML->name;
-        $relationshipTypeID = array_search($relationshipTypeName,
+        $relationshipTypeID = array_search(
+          $relationshipTypeName,
           $relationshipTypes
         );
         if ($relationshipTypeID === FALSE) {
@@ -187,13 +199,15 @@ class CRM_Case_XMLProcessor_Process extends CRM_Case_XMLProcessor {
     return $result;
   }
 
-  public function createRelationships($relationshipTypeName,
+  public function createRelationships(
+    $relationshipTypeName,
     &$params
   ) {
     $relationshipTypes = &$this->allRelationshipTypes();
 
     // get the relationship id
-    $relationshipTypeID = array_search($relationshipTypeName,
+    $relationshipTypeID = array_search(
+      $relationshipTypeName,
       $relationshipTypes
     );
     if ($relationshipTypeID === FALSE) {
@@ -315,7 +329,8 @@ AND        a.is_deleted = 0
     return $maxInstance ? ($count < $maxInstance ? FALSE : TRUE) : FALSE;
   }
 
-  public function createActivity($activityTypeXML,
+  public function createActivity(
+    $activityTypeXML,
     &$params
   ) {
 
@@ -326,9 +341,10 @@ AND        a.is_deleted = 0
     if (!$activityTypeInfo) {
 
       $docLink = CRM_Utils_System::docURL2("CiviCase Configuration");
-      CRM_Core_Error::fatal(ts('Activity type %1, found in case configuration file, is not present in the database %2',
-          [1 => $activityTypeName, 2 => $docLink]
-        ));
+      CRM_Core_Error::fatal(ts(
+        'Activity type %1, found in case configuration file, is not present in the database %2',
+        [1 => $activityTypeName, 2 => $docLink]
+      ));
       return FALSE;
     }
     $activityTypeID = $activityTypeInfo['id'];
@@ -354,7 +370,8 @@ AND        a.is_deleted = 0
         'is_auto' => FALSE,
         'is_current_revision' => 1,
         'subject' => CRM_Utils_Array::value('subject', $params) ? $params['subject'] : $activityTypeName,
-        'status_id' => CRM_Core_OptionGroup::getValue('activity_status',
+        'status_id' => CRM_Core_OptionGroup::getValue(
+          'activity_status',
           $statusName,
           'name'
         ),
@@ -370,7 +387,8 @@ AND        a.is_deleted = 0
         'source_contact_id' => $params['creatorID'],
         'is_auto' => TRUE,
         'is_current_revision' => 1,
-        'status_id' => CRM_Core_OptionGroup::getValue('activity_status',
+        'status_id' => CRM_Core_OptionGroup::getValue(
+          'activity_status',
           $statusName,
           'name'
         ),
@@ -427,7 +445,9 @@ AND        a.is_deleted = 0
       $activityDateTime = CRM_Utils_Date::processDate($activity_date, $activity_time);
       //add reference offset to date.
       if ((int) $activityTypeXML->reference_offset) {
-        $activityDateTime = CRM_Utils_Date::intervalAdd('day', (int) $activityTypeXML->reference_offset,
+        $activityDateTime = CRM_Utils_Date::intervalAdd(
+          'day',
+          (int) $activityTypeXML->reference_offset,
           $activityDateTime
         );
       }
@@ -508,4 +528,3 @@ AND        a.is_deleted = 0
     return ( string ) $xml->AllowMultipleCaseClients ? 1 : 0;
   }
 }
-

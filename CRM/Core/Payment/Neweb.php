@@ -1,5 +1,6 @@
 <?php
-date_default_timezone_set('Asia/Taipei'); require_once 'CRM/Core/Payment.php';
+date_default_timezone_set('Asia/Taipei');
+require_once 'CRM/Core/Payment.php';
 class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
 
   /**
@@ -120,12 +121,12 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
     }
   }
 
-  public function cancelRecuringMessage($recurID){
+  public function cancelRecuringMessage($recurID) {
     if (function_exists("_civicrm_neweb_cancel_recuring_message")) {
-      return _civicrm_neweb_cancel_recuring_message($recurID); 
-    }else{
+      return _civicrm_neweb_cancel_recuring_message($recurID);
+    }
+    else {
       CRM_Core_Error::fatal('Module civicrm_neweb doesn\'t exists.');
     }
   }
 }
-

@@ -231,7 +231,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
       // show 'edit' button depends on permission.
       if (CRM_Core_Permission::check('edit contributions')) {
-        $this->assign('is_editable', true);
+        $this->assign('is_editable', TRUE);
       }
 
     }
@@ -249,7 +249,8 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
-    $url = CRM_Utils_System::url('civicrm/contact/view',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view',
       'reset=1&selectedChild=contribute&cid=' . $this->_contactId
     );
     $session->pushUserContext($url);
@@ -306,7 +307,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     }
     elseif ($this->_action & CRM_Core_Action::UPDATE) {
       if (!CRM_Core_Permission::check('edit contributions')) {
-         return CRM_Core_Error::statusBounce(ts("You do not have permission to access this page."));
+        return CRM_Core_Error::statusBounce(ts("You do not have permission to access this page."));
       }
       $this->edit();
     }
@@ -343,7 +344,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
         if ($before[$field]) {
           // is hash:
           if (preg_match('/^[a-f0-9]{32}$/', $before[$field])) {
-            $before[$field] = null;
+            $before[$field] = NULL;
           }
           if (empty($value)) {
             $arrayReturnHtml[] = ts('Delete'). $allFields[$field]['title'] . ': <span class="disabled">'.$before[$field].'</span>';
@@ -352,7 +353,6 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
             $arrayReturnHtml[] = $allFields[$field]['title'] . ': <span class="disabled">'.$before[$field].'</span>→'.$value;
           }
         }
-
         else {
           $arrayReturnHtml[] = ts('Add'). $allFields[$field]['title'] . ': '.$value;
         }
@@ -361,4 +361,3 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return $arrayReturnHtml;
   }
 }
-

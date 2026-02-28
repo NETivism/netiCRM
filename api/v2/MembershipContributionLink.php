@@ -128,4 +128,3 @@ function &civicrm_membershipcontributionlink_get(&$params) {
 
   return $values;
 }
-

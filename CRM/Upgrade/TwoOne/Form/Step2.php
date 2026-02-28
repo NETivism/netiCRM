@@ -45,7 +45,8 @@ class CRM_Upgrade_TwoOne_Form_Step2 extends CRM_Upgrade_Form {
     $currentDir = dirname(__FILE__);
 
     // 1. remove domain_ids from the entire db
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'group_values.mysql']
     );
     $this->source($sqlFile);
@@ -150,4 +151,3 @@ AND    `label` IN ('html', 'htm')
     return ts('Upgrade & Continue');
   }
 }
-

@@ -54,7 +54,8 @@ class CRM_Mailing_Form_Unsubscribe extends CRM_Core_Form {
       $captcha->add($this);
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Unsubscribe'),
@@ -75,7 +76,7 @@ class CRM_Mailing_Form_Unsubscribe extends CRM_Core_Form {
     $groups = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_mailing($job_id, $queue_id, $hash);
 
     $sentNotification = $this->get($hash);
-    if (count($groups) && empty($sentNotification) ) {
+    if (count($groups) && empty($sentNotification)) {
       CRM_Mailing_Event_BAO_Unsubscribe::send_unsub_response($queue_id, $groups, FALSE, $job_id);
       // prevent double sent
       $this->set($hash, 1);
@@ -84,4 +85,3 @@ class CRM_Mailing_Form_Unsubscribe extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 }
-

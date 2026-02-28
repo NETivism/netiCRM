@@ -72,7 +72,7 @@ function civicrm_api3_participant_payment_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -112,4 +112,3 @@ function civicrm_api3_participant_payment_delete($params) {
 function civicrm_api3_participant_payment_get($params) {
   return _civicrm_api3_basic_get('CRM_Event_DAO_ParticipantPayment', $params);
 }
-

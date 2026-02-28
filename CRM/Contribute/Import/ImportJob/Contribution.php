@@ -119,7 +119,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       $this->_primaryKeyName,
       $this->_statusFieldName,
       $this->_onDuplicate,
-      $this->_statusID, 
+      $this->_statusID,
       $this->_totalRowCount,
       $this->_createContactOption,
       $this->_dedupeRuleGroupId
@@ -168,7 +168,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       $query = "SELECT $this->_statusFieldName as status, COUNT(*) as count FROM $this->_tableName WHERE 1 GROUP BY $this->_statusFieldName";
       $dao = CRM_Core_DAO::executeQuery($query);
       $statusCount = [];
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $name = CRM_Import_Parser::statusName($dao->status);
         $statusCount[$name] = $dao->count;
       }
@@ -194,7 +194,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, $fileName);
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR, $fileName);
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::PCP_ERROR, $fileName);
-        foreach($errorFiles as $idx => $fileName) {
+        foreach ($errorFiles as $idx => $fileName) {
           $filePath = $config->uploadDir.$fileName;
           if (is_file($filePath)) {
             $zip->addFile($filePath, $fileName);
@@ -206,7 +206,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
         $zip->close();
 
         // purge zipped files
-        foreach($errorFiles as $fileName) {
+        foreach ($errorFiles as $fileName) {
           unlink($config->uploadDir.$fileName);
         }
       }

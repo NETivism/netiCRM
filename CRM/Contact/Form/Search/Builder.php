@@ -277,7 +277,8 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
             elseif (trim($v[2])) {
               //else check value for rest of the Operators
               $error = CRM_Utils_Type::validate($v[2], $type, FALSE);
-              if ($type == 'Date' && $error) {}
+              if ($type == 'Date' && $error) {
+              }
               elseif ($error != $v[2]) {
                 $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter valid value.");
               }
@@ -294,13 +295,14 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     return TRUE;
   }
 
-  public function normalizeFormValues() {}
+  public function normalizeFormValues() {
+  }
 
   public function &convertFormValues(&$formValues, $wildcard = FALSE) {
     $fields = CRM_Core_BAO_Mapping::formattedFields($formValues);
-    if($wildcard){
-      foreach($fields as $k => $v){
-        if(isset($v[4]) && $v[1] == 'LIKE'){
+    if ($wildcard) {
+      foreach ($fields as $k => $v) {
+        if (isset($v[4]) && $v[1] == 'LIKE') {
           $fields[$k][4] = 1;
         }
       }
@@ -387,4 +389,3 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     parent::postProcess();
   }
 }
-

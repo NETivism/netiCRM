@@ -228,18 +228,21 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
 
 
 
-    $url = CRM_Utils_System::url('civicrm/contact/view/pledge',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/pledge',
       "action=view&reset=1&id={$pledge->id}&cid={$pledge->contact_id}&context=home"
     );
 
     $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviPledge', CRM_Core_Action::UPDATE)) {
-      $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/pledge',
+      $recentOther['editUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/pledge',
         "action=update&reset=1&id={$pledge->id}&cid={$pledge->contact_id}&context=home"
       );
     }
     if (CRM_Core_Permission::checkActionPermission('CiviPledge', CRM_Core_Action::DELETE)) {
-      $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/pledge',
+      $recentOther['deleteUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/pledge',
         "action=delete&reset=1&id={$pledge->id}&cid={$pledge->contact_id}&context=home"
       );
     }
@@ -250,7 +253,8 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
     $title = CRM_Contact_BAO_Contact::displayName($pledge->contact_id) . ' - (' . ts('Pledged') . ' ' . CRM_Utils_Money::format($pledge->amount) . ' - ' . $contributionTypes[$pledge->contribution_type_id] . ')';
 
     // add the recently created Pledge
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $pledge->id,
       'Pledge',
@@ -366,7 +370,8 @@ WHERE  $whereCond AND is_test=0
     if ($dao->fetch()) {
       $pledge_amount = ['pledge_amount' => $dao->pledge_amount,
         'pledge_count' => $dao->pledge_count,
-        'purl' => CRM_Utils_System::url('civicrm/pledge/search',
+        'purl' => CRM_Utils_System::url(
+          'civicrm/pledge/search',
           "reset=1&force=1&pstatus={$statusId}&pstart={$start}&pend={$end}&test=0"
         ),
       ];
@@ -424,7 +429,8 @@ WHERE  $whereCond
       if ($dao->fetch()) {
         return array_merge($pledge_amount, ['received_amount' => $dao->received_pledge,
             'received_count' => $dao->received_count,
-            'url' => CRM_Utils_System::url('civicrm/pledge/search',
+            'url' => CRM_Utils_System::url(
+              'civicrm/pledge/search',
               "reset=1&force=1&status={$statusId}&start={$start}&end={$end}&test=0"
             ),
           ]);
@@ -462,11 +468,15 @@ WHERE  $whereCond
         'status' => CRM_Contribute_PseudoConstant::contributionStatus($honorDAO->status_id),
         'create_date' => $honorDAO->create_date,
         'acknowledge_date' => $honorDAO->acknowledge_date,
-        'type' => CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
-          $honorDAO->contribution_type_id, 'name'
+        'type' => CRM_Core_DAO::getFieldValue(
+          'CRM_Contribute_DAO_ContributionType',
+          $honorDAO->contribution_type_id,
+          'name'
         ),
-        'display_name' => CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-          $honorDAO->contact_id, 'display_name'
+        'display_name' => CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
+          $honorDAO->contact_id,
+          'display_name'
         ),
       ];
     }
@@ -499,24 +509,29 @@ WHERE  $whereCond
         if (isset($values['contribution_id'])) {
           $contributionParams = ['id' => $values['contribution_id']];
           $returnProperties = ['contribution_status_id', 'receive_date'];
-          CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_Contribution',
-            $contributionParams, $contributionStatus, $returnProperties
+          CRM_Core_DAO::commonRetrieve(
+            'CRM_Contribute_DAO_Contribution',
+            $contributionParams,
+            $contributionStatus,
+            $returnProperties
           );
           $contributionValue = [
             'status' => CRM_Utils_Array::value('contribution_status_id', $contributionStatus),
             'receive_date' => CRM_Utils_Array::value('receive_date', $contributionStatus),
           ];
         }
-        $payments[$payID] = array_merge($contributionValue,
+        $payments[$payID] = array_merge(
+          $contributionValue,
           ['amount' => CRM_Utils_Array::value('scheduled_amount', $values),
             'due_date' => CRM_Utils_Array::value('scheduled_date', $values),
           ]
         );
 
         //get the first valid payment id.
-        if (!$form->paymentId && ($paymentStatusTypes[$values['status_id']] == 'Pending' ||
+        if (!$form->paymentId && (
+          $paymentStatusTypes[$values['status_id']] == 'Pending' ||
             $paymentStatusTypes[$values['status_id']] == 'Overdue'
-          )) {
+        )) {
           $form->paymentId = $values['id'];
         }
       }
@@ -542,7 +557,8 @@ WHERE  $whereCond
     $honor_block_is_active = FALSE;
     //make sure we have values for it
     if (CRM_Utils_Array::value('honor_type_id', $params) &&
-      ((!empty($params["honor_first_name"]) && !empty($params["honor_last_name"])) ||
+      (
+        (!empty($params["honor_first_name"]) && !empty($params["honor_last_name"])) ||
         (!empty($params["honor_email"]))
       )
     ) {
@@ -574,7 +590,8 @@ WHERE  $whereCond
 
 
     $ids = [$params['contact_id']];
-    $fields = array_merge(array_keys(CRM_Contact_BAO_Contact::importableFields()),
+    $fields = array_merge(
+      array_keys(CRM_Contact_BAO_Contact::importableFields()),
       ['display_name', 'checksum', 'contact_id']
     );
     foreach ($fields as $key => $val) {
@@ -651,7 +668,8 @@ WHERE  $whereCond
     $activityType = 'Pledge Acknowledgment';
     $activity = new CRM_Activity_DAO_Activity();
     $activity->source_record_id = $params['id'];
-    $activity->activity_type_id = CRM_Core_OptionGroup::getValue('activity_type',
+    $activity->activity_type_id = CRM_Core_OptionGroup::getValue(
+      'activity_type',
       $activityType,
       'name'
     );
@@ -663,7 +681,8 @@ WHERE  $whereCond
       $activityParams = ['subject' => $subject,
         'source_contact_id' => $params['contact_id'],
         'source_record_id' => $params['id'],
-        'activity_type_id' => CRM_Core_OptionGroup::getValue('activity_type',
+        'activity_type_id' => CRM_Core_OptionGroup::getValue(
+          'activity_type',
           $activityType,
           'name'
         ),
@@ -797,4 +816,3 @@ WHERE civicrm_pledge.status_id  {$statusClause}
     return CRM_Core_DAO::singleValueQuery($query);
   }
 }
-

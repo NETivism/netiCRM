@@ -59,7 +59,8 @@ class api_v3_APITest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  protected function tearDown() {}
+  protected function tearDown() {
+  }
 
   public function testAPIReplaceVariables() {
     $result = [];
@@ -170,4 +171,3 @@ class api_v3_APITest extends CiviUnitTestCase {
     }
   }
 }
-

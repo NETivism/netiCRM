@@ -141,7 +141,7 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
     $dao->entity_table = CRM_Utils_Array::value('entity_table', $params);
     $dao->entity_id = CRM_Utils_Array::value('entity_id', $params);
     $dao->weight = CRM_Utils_Array::value('weight', $params);
-    if(!empty($params['module'])){
+    if (!empty($params['module'])) {
       $dao->module = CRM_Utils_Array::value('module', $params);
     }
     if ($dao->find(TRUE)) {
@@ -190,4 +190,3 @@ class CRM_Core_BAO_UFJoin extends CRM_Core_DAO_UFJoin {
     return [$first, $second, $firstActive, $secondActive];
   }
 }
-

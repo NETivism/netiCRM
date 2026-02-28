@@ -54,7 +54,8 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
   public $_outputMode;
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Contact', 'Individual']; public function __construct() {
+  protected $_customGroupExtends = ['Contact', 'Individual'];
+  public function __construct() {
 
     $this->_columns = [
       'civicrm_employer' =>
@@ -240,7 +241,8 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -290,9 +292,11 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       if (CRM_Utils_Array::arrayKeyExists('civicrm_employer_organization_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_employer_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_employer_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_employer_organization_name_link'] = $url;
         $entryFound = TRUE;
@@ -327,9 +331,11 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $entryFound = TRUE;
@@ -358,4 +364,3 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
     }
   }
 }
-

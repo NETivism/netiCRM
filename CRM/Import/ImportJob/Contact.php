@@ -125,7 +125,9 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
     foreach ($mapper as $key => $value) {
       //set respective mapper value to null.
-      foreach (array_values($mapperPeroperties) as $perpertyVal)$$perpertyVal = NULL;
+      foreach (array_values($mapperPeroperties) as $perpertyVal) {
+        $$perpertyVal = NULL;
+      }
 
       $fldName = CRM_Utils_Array::value(0, $mapper[$key]);
       $selOne = CRM_Utils_Array::value(1, $mapper[$key]);
@@ -227,7 +229,9 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
     $this->_parser->_skipColumnHeader = $this->_skipColumnHeader ? $this->_skipColumnHeader : $form->get('skipColumnHeader');
     $this->_parser->_dateFormats = $this->_dateFormats ? $this->_dateFormats : $form->get('dateFormats');
-    $this->_parser->run($this->_tableName, $mapperFields,
+    $this->_parser->run(
+      $this->_tableName,
+      $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,
       $this->_contactType,
       $this->_primaryKeyName,
@@ -315,7 +319,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       $query = "SELECT $this->_statusFieldName as status, COUNT(*) as count FROM $this->_tableName WHERE 1 GROUP BY $this->_statusFieldName";
       $dao = CRM_Core_DAO::executeQuery($query);
       $statusCount = [];
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $name = CRM_Import_Parser::statusName($dao->status);
         $statusCount[$name] = $dao->count;
       }
@@ -338,7 +342,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::DUPLICATE, $fileName);
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::NO_MATCH, $fileName);
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
-        foreach($errorFiles as $idx => $fileName) {
+        foreach ($errorFiles as $idx => $fileName) {
           $filePath = $config->uploadDir.$fileName;
           if (is_file($filePath)) {
             $zip->addFile($filePath, $fileName);
@@ -350,7 +354,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         $zip->close();
 
         // purge zipped files
-        foreach($errorFiles as $fileName) {
+        foreach ($errorFiles as $fileName) {
           unlink($config->uploadDir.$fileName);
         }
       }
@@ -361,13 +365,13 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     static $existsGroups, $existsTag;
 
     $contactIds = [$contactId];
-    if(!empty($groups) && is_array($groups)) {
+    if (!empty($groups) && is_array($groups)) {
       foreach ($groups as $groupName) {
         $groupId = 0;
         if ($existsGroups[$groupName]) {
           $groupId = $existsGroups[$groupName];
         }
-        else{
+        else {
           $query = "SELECT id FROM civicrm_group WHERE title LIKE %1";
           $groupId = CRM_Core_DAO::singleValueQuery($query, [1 => [$groupName, 'String']]);
           if (empty($groupId)) {
@@ -385,7 +389,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       }
     }
 
-    if(!empty($tags) && is_array($tags)) {
+    if (!empty($tags) && is_array($tags)) {
       foreach ($tags as $tagName) {
         if ($existsTag[$tagName]) {
           $tagId = $existsTag[$tagName];

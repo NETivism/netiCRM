@@ -33,12 +33,14 @@ class api_v2_EntityTagTest extends CiviUnitTestCase {
   protected $_individualID;
   protected $_householdID;
   protected $_organizationID;
-  protected $_tagID; public function setUp() {
+  protected $_tagID;
+  public function setUp() {
     parent::setUp();
 
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/../../CiviTest/truncate-tag.xml'
       )
@@ -51,13 +53,16 @@ class api_v2_EntityTagTest extends CiviUnitTestCase {
     $this->_organizationID = $this->organizationCreate();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   ///////////////// civicrm_entity_tag_add methods
   public function testAddWrongParamsType() {
     $params = "some string";
     $individualEntity = civicrm_entity_tag_add($params);
-    $this->assertEquals($individualEntity['is_error'], 1,
+    $this->assertEquals(
+      $individualEntity['is_error'],
+      1,
       "In line " . __LINE__
     );
     $this->assertEquals($individualEntity['error_message'], 'contact_id is a required field');
@@ -137,7 +142,9 @@ class api_v2_EntityTagTest extends CiviUnitTestCase {
     $paramsEntity = "wrong params";
     $entity = civicrm_entity_tag_get($paramsEntity);
 
-    $this->assertEquals($entity['is_error'], 1,
+    $this->assertEquals(
+      $entity['is_error'],
+      1,
       "In line " . __LINE__
     );
     $this->assertEquals($entity['error_message'], 'params should be an array.');
@@ -357,7 +364,9 @@ class api_v2_EntityTagTest extends CiviUnitTestCase {
   public function testCommonAddWrongParamsType() {
     $params = "some string";
     $individualEntity = civicrm_entity_tag_common($params, 'add');
-    $this->assertEquals($individualEntity['is_error'], 1,
+    $this->assertEquals(
+      $individualEntity['is_error'],
+      1,
       "In line " . __LINE__
     );
     $this->assertEquals($individualEntity['error_message'], 'contact_id is a required field');
@@ -486,4 +495,3 @@ class api_v2_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['not_removed'], 1);
   }
 }
-

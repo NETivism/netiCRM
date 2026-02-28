@@ -45,17 +45,17 @@ class CRM_Core_Extensions {
   /**
    * The option group name
    */
-  public CONST OPTION_GROUP_NAME = 'system_extensions';
+  public const OPTION_GROUP_NAME = 'system_extensions';
 
   /**
    * Extension info file name
    */
-  public CONST EXT_INFO_FILENAME = 'info.xml';
+  public const EXT_INFO_FILENAME = 'info.xml';
 
   /**
    * Extension info file name
    */
-  public CONST EXT_TEMPLATES_DIRNAME = 'templates';
+  public const EXT_TEMPLATES_DIRNAME = 'templates';
 
   /**
    * Allows quickly verifying if extensions are enabled
@@ -223,8 +223,13 @@ class CRM_Core_Extensions {
     $links = [];
     $ov = CRM_Core_OptionValue::getRows($groupParams, $links);
     foreach ($ov as $id => $entry) {
-      $ext = new CRM_Core_Extensions_Extension($entry['value'], $entry['grouping'], $entry['name'],
-        $entry['label'], $entry['description'], $entry['is_active']
+      $ext = new CRM_Core_Extensions_Extension(
+        $entry['value'],
+        $entry['grouping'],
+        $entry['name'],
+        $entry['label'],
+        $entry['description'],
+        $entry['is_active']
       );
       $ext->setId($id);
       if ($fullInfo) {
@@ -451,4 +456,3 @@ class CRM_Core_Extensions {
     $ext->uninstall();
   }
 }
-

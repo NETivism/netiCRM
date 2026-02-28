@@ -39,7 +39,8 @@ class api_v3_GroupContactTest extends CiviUnitTestCase {
   protected $_contactId;
   protected $_contactId1;
   protected $_apiversion;
-  protected $_groupId1; public function get_info() {
+  protected $_groupId1;
+  public function get_info() {
     return [
       'name' => 'Group Contact Create',
       'description' => 'Test all Group Contact Create API methods.',
@@ -49,8 +50,8 @@ class api_v3_GroupContactTest extends CiviUnitTestCase {
 
   /*
      * Set up for group contact tests
-     * 
-     * @todo set up calls function that doesn't work @ the moment 
+     *
+     * @todo set up calls function that doesn't work @ the moment
      */
   public function setUp() {
     $this->_apiversion = 3;
@@ -154,7 +155,8 @@ class api_v3_GroupContactTest extends CiviUnitTestCase {
     $groups = civicrm_api('group_contact', 'create', $params);
 
     $this->assertEquals($groups['is_error'], 1);
-    $this->assertEquals($groups['error_message'],
+    $this->assertEquals(
+      $groups['error_message'],
       'Mandatory key(s) missing from params array: version, group_id, contact_id'
     );
   }
@@ -225,4 +227,3 @@ class api_v3_GroupContactTest extends CiviUnitTestCase {
     $this->assertEquals($result['total_count'], 1, "in line " . __LINE__);
   }
 }
-

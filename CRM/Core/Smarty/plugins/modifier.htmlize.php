@@ -49,4 +49,3 @@ function smarty_modifier_htmlize($text) {
   $text = nl2br($text);
   return $text;
 }
-

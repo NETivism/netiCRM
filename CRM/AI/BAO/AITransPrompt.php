@@ -36,7 +36,7 @@ class CRM_AI_BAO_AITransPrompt {
    * @param string $model Model name (default: gpt-4o)
    * @param int $maxTokens Maximum tokens (default: 4000)
    */
-  public function __construct($completionService = null, $model = 'gpt-4o', $maxTokens = 4000) {
+  public function __construct($completionService = NULL, $model = 'gpt-4o', $maxTokens = 4000) {
     $this->completionService = $completionService ?? new CRM_AI_CompletionService_OpenAI();
     $this->config = CRM_Core_Config::singleton();
 
@@ -60,7 +60,7 @@ class CRM_AI_BAO_AITransPrompt {
   public function translate($text, $options = []) {
     // Basic format validation first
     if (!$this->validatePromptFormat($text)) {
-      return false;
+      return FALSE;
     }
 
     // Build user prompt with input text and options
@@ -104,7 +104,7 @@ class CRM_AI_BAO_AITransPrompt {
       }
       
       // Add max_tokens parameter from completion service
-      if ($this->completionService->getMaxTokens() !== null) {
+      if ($this->completionService->getMaxTokens() !== NULL) {
         $chatParams['max_tokens'] = $this->completionService->getMaxTokens();
       }
       
@@ -118,9 +118,10 @@ class CRM_AI_BAO_AITransPrompt {
 
       return $response;
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       return [
-        'success' => false,
+        'success' => FALSE,
         'error' => $e->getMessage(),
         'message' => 'Translation failed: ' . $e->getMessage()
       ];
@@ -141,15 +142,15 @@ class CRM_AI_BAO_AITransPrompt {
 
     // Check empty content (including whitespace only)
     if (strlen($trimmed) === 0) {
-      return false;
+      return FALSE;
     }
 
     // Check for meaningless content (pure numbers or pure symbols)
     if ($this->isMeaninglessContent($trimmed)) {
-      return false;
+      return FALSE;
     }
 
-    return true;
+    return TRUE;
   }
 
   /**
@@ -162,15 +163,15 @@ class CRM_AI_BAO_AITransPrompt {
   private function isMeaninglessContent($text) {
     // Pure numbers only
     if (preg_match('/^\d+$/', $text)) {
-      return true;
+      return TRUE;
     }
 
     // Pure punctuation/symbols only
     if (preg_match('/^[\p{P}\p{S}]+$/u', $text)) {
-      return true;
+      return TRUE;
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
@@ -182,16 +183,17 @@ class CRM_AI_BAO_AITransPrompt {
    */
   public function parseJsonResponse($response) {
     if (empty($response)) {
-      return false;
+      return FALSE;
     }
 
-    $jsonString = null;
+    $jsonString = NULL;
 
     // Try to extract JSON content from markdown code blocks first
     $pattern = '/```json\s*\n(.*?)\n```/s';
     if (preg_match($pattern, $response, $matches)) {
       $jsonString = trim($matches[1]);
-    } else {
+    }
+    else {
       // If no markdown wrapper found, try to parse the response directly as JSON
       $trimmed = trim($response);
       // Check if the response looks like JSON (starts with { or [)
@@ -201,15 +203,15 @@ class CRM_AI_BAO_AITransPrompt {
     }
 
     if (empty($jsonString)) {
-      return false;
+      return FALSE;
     }
 
     // Parse JSON and return as associative array
-    $decoded = json_decode($jsonString, true);
+    $decoded = json_decode($jsonString, TRUE);
     
     // Check for JSON decode errors
     if (json_last_error() !== JSON_ERROR_NONE) {
-      return false;
+      return FALSE;
     }
 
     return $decoded;
@@ -417,8 +419,8 @@ Ensure each request is safe, accurate, and compliant with SD3.5 best practices, 
   private function buildUserPrompt($text, $options) {
     $userInput = [
       'description' => $text,
-      'style' => $options['style'] ?? null,
-      'ratio' => $options['ratio'] ?? null
+      'style' => $options['style'] ?? NULL,
+      'ratio' => $options['ratio'] ?? NULL
     ];
 
     return "Please process the following input according to the workflow above:\n\n" .

@@ -43,7 +43,8 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
       $eleDefault->freeze();
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'back',
           'name' => ts('<< Previous'),

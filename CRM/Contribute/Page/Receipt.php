@@ -1,5 +1,5 @@
 <?php
-class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
+class CRM_Contribute_Page_Receipt extends CRM_Core_Page {
 
   public $_id;
   public $_permission = NULL;
@@ -70,4 +70,3 @@ class CRM_Contribute_Page_Receipt extends CRM_Core_Page{
     }
   }
 }
-

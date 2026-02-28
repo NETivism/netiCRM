@@ -37,7 +37,8 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
   protected $_cId_a;
   protected $_cId_b;
-  protected $_relTypeID; public function get_info() {
+  protected $_relTypeID;
+  public function get_info() {
     return [
       'name' => 'RelationshipType Create',
       'description' => 'Test all RelationshipType Create API methods.',
@@ -95,7 +96,8 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
     $result = &civicrm_relationship_type_add($relTypeParams);
 
     $this->assertEquals($result['is_error'], 1);
-    $this->assertEquals($result['error_message'],
+    $this->assertEquals(
+      $result['error_message'],
       'Missing some required parameters (contact_types_a contact_types_b name_a_b name b_a)'
     );
   }
@@ -332,14 +334,18 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
 
 
     foreach ($firstRelTypeParams as $key => $val) {
-      $this->assertEquals(CRM_Utils_Array::value($key, $retr[$firstRelTypeId]),
-        $val, "Fail to retrieve {$key} in line " . __LINE__
+      $this->assertEquals(
+        CRM_Utils_Array::value($key, $retr[$firstRelTypeId]),
+        $val,
+        "Fail to retrieve {$key} in line " . __LINE__
       );
     }
 
     foreach ($secondRelTypeParams as $key => $val) {
-      $this->assertEquals(CRM_Utils_Array::value($key, $retr[$secondRelTypeId]),
-        $val, "Fail to retrieve {$key} in line " . __LINE__
+      $this->assertEquals(
+        CRM_Utils_Array::value($key, $retr[$secondRelTypeId]),
+        $val,
+        "Fail to retrieve {$key} in line " . __LINE__
       );
     }
 
@@ -366,6 +372,3 @@ class api_v2_RelationshipTypeTest extends CiviUnitTestCase {
     return $this->relationshipTypeCreate($params);
   }
 }
-
-
-

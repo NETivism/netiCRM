@@ -206,7 +206,7 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
    * Get current exists id from value(phone)
    *
    * Only effect when phone id not provided. Id will be added into params before add.
-   * 
+   *
    * @param array $params referenced array to be add exists phone id
    * @return void
    */
@@ -220,4 +220,3 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
     }
   }
 }
-

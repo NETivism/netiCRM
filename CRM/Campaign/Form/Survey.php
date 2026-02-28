@@ -79,7 +79,7 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  public CONST NUM_OPTION = 11;
+  public const NUM_OPTION = 11;
 
   public function preProcess() {
 
@@ -198,7 +198,8 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -228,7 +229,10 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
 
     $customProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Activity']);
     // custom group id
-    $this->add('select', 'profile_id', ts('Profile'),
+    $this->add(
+      'select',
+      'profile_id',
+      ts('Profile'),
       ['' => ts('- select -')] + $customProfiles
     );
 
@@ -241,18 +245,23 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
       $optionTypes = ['1' => ts('Create a new response set'),
         '2' => ts('Use existing response set'),
       ];
-      $this->add('select',
+      $this->add(
+        'select',
         'option_group_id',
         ts('Select Response Set'),
-        ['' => ts('- select -')] + $optionGroups, FALSE,
+        ['' => ts('- select -')] + $optionGroups,
+        FALSE,
         ['onChange' => 'loadOptionGroup( )']
       );
     }
 
-    $element = &$this->addRadio('option_type',
+    $element = &$this->addRadio(
+      'option_type',
       ts('Survey Responses'),
       $optionTypes,
-      ['onclick' => "showOptionSelect();"], '<br/>', TRUE
+      ['onclick' => "showOptionSelect();"],
+      '<br/>',
+      TRUE
     );
 
     if (empty($optionGroups) || !CRM_Utils_Array::value('result_id', $this->_values)) {
@@ -285,21 +294,33 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
         $_showHide->addShow($showBlocks);
       }
 
-      $this->add('text', 'option_label[' . $i . ']', ts('Label'),
+      $this->add(
+        'text',
+        'option_label[' . $i . ']',
+        ts('Label'),
         $optionAttributes['label']
       );
 
       // value
-      $this->add('text', 'option_value[' . $i . ']', ts('Value'),
+      $this->add(
+        'text',
+        'option_value[' . $i . ']',
+        ts('Value'),
         $optionAttributes['value']
       );
 
       // weight
-      $this->add('text', "option_weight[$i]", ts('Order'),
+      $this->add(
+        'text',
+        "option_weight[$i]",
+        ts('Order'),
         $optionAttributes['weight']
       );
 
-      $this->add('text', 'option_interval[' . $i . ']', ts('Recontact Interval'),
+      $this->add(
+        'text',
+        'option_interval[' . $i . ']',
+        ts('Recontact Interval'),
         CRM_Core_DAO::getAttribute('CRM_Campaign_DAO_Survey', 'release_frequency')
       );
 
@@ -347,7 +368,8 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
         ]);
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
@@ -637,4 +659,3 @@ class CRM_Campaign_Form_Survey extends CRM_Core_Form {
     }
   }
 }
-

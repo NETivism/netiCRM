@@ -54,7 +54,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
   protected $_summary = NULL;
   protected $_emailField_a = FALSE;
   protected $_emailField_b = FALSE;
-  protected $_customGroupExtends = ['Relationship']; public function __construct() {
+  protected $_customGroupExtends = ['Relationship'];
+  public function __construct() {
 
     $contact_type = CRM_Contact_BAO_ContactType::getSelectElements(FALSE, TRUE, '_');
 
@@ -339,7 +340,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
                 }
 
                 if (!empty($contactTypes)) {
-                  $clause = $this->whereClause($field,
+                  $clause = $this->whereClause(
+                    $field,
                     $op,
                     $contactTypes,
                     CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -355,7 +357,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
                     $field['name'] = 'contact_sub_type_b';
                   }
                   $field['dbAlias'] = $field['alias'] . '.' . $field['name'];
-                  $subTypeClause = $this->whereClause($field,
+                  $subTypeClause = $this->whereClause(
+                    $field,
                     $op,
                     $contactSubTypes,
                     CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -371,7 +374,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
               }
               else {
 
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -514,9 +518,11 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name_a', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_a_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_a_hover'] = ts("View Contact details for this contact.");
@@ -526,9 +532,11 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_b_display_name_b', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_b_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_b_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_b_display_name_b_link'] = $url;
         $rows[$rowNum]['civicrm_contact_b_display_name_b_hover'] = ts("View Contact details for this contact.");
@@ -543,4 +551,3 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 }
-

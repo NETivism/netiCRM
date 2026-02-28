@@ -130,7 +130,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     if ($this->_id) {
       $this->_gid = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFField', $this->_id, 'uf_group_id');
     }
-    else{
+    else {
       $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
     }
     $groupInfo = [];
@@ -148,7 +148,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
       $url = CRM_Utils_System::url('civicrm/admin/uf/group/field', "reset=1&action=browse&gid={$this->_gid}");
       CRM_Utils_System::resetBreadCrumb();
-			$breadcrumbs = [
+      $breadcrumbs = [
         ['title' => ts('Home'), 'url' => CRM_Utils_System::url()],
         ['title' => ts('Administer CiviCRM'), 'url' => CRM_Utils_System::url('civicrm/admin', 'reset=1')],
         ['title' => ts('Profile'), 'url' =>  CRM_Utils_System::url('civicrm/admin/uf/group', 'reset=1')],
@@ -223,7 +223,8 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete Profile Field'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -336,13 +337,13 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     if (strstr($this->_groupInfo['usage'], 'Profile') ||
       strstr($this->_groupInfo['usage'], 'CiviContribute') ||
       strstr($this->_groupInfo['usage'], 'CiviEvent')) {
-        // refs #36509 Don't show specific field.
-        foreach($fields['Contact'] as $key => $field) {
-          if ($field['usage'] == 'System') {
-            unset($fields['Contact'][$key]);
-          }
+      // refs #36509 Don't show specific field.
+      foreach ($fields['Contact'] as $key => $field) {
+        if ($field['usage'] == 'System') {
+          unset($fields['Contact'][$key]);
         }
       }
+    }
 
     // since we need a hierarchical list to display contact types & subtypes,
     // this is what we going to display in first selector
@@ -365,7 +366,8 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
     //group selected and unwanted fields list
 
-    $groupFieldList = array_merge(CRM_Core_BAO_UFGroup::getFields($this->_gid, FALSE, NULL, NULL, NULL, TRUE, NULL, TRUE),
+    $groupFieldList = array_merge(
+      CRM_Core_BAO_UFGroup::getFields($this->_gid, FALSE, NULL, NULL, NULL, TRUE, NULL, TRUE),
       ['note', 'email_greeting_custom', 'postal_greeting_custom', 'addressee_custom', 'id']
     );
     //unset selected fields
@@ -397,7 +399,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($contribFields['contribution_id']);
         // refs #36509 Don't show specific field.
         if (strstr($this->_groupInfo['usage'], 'CiviContribute')) {
-          foreach($contribFields as $key => $field) {
+          foreach ($contribFields as $key => $field) {
             if ($field['usage'] == 'System') {
               unset($contribFields[$key]);
             }
@@ -422,7 +424,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         unset($participantFields['participant_is_pay_later']);
         // refs #36509 Don't show specific field.
         if (strstr($this->_groupInfo['usage'], 'CiviEvent')) {
-          foreach($participantFields as $key => $field) {
+          foreach ($participantFields as $key => $field) {
             if ($field['usage'] == 'System') {
               unset($participantFields[$key]);
             }
@@ -449,7 +451,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
       unset($membershipFields['member_is_pay_later']);
       // refs #36509 Don't show specific field.
       if (strstr($this->_groupInfo['usage'], 'CiviContribute')) {
-        foreach($membershipFields as $key => $field) {
+        foreach ($membershipFields as $key => $field) {
           if ($field['usage'] == 'System') {
             unset($membershipFields[$key]);
           }
@@ -500,7 +502,8 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         // hide the 'is searchable' field for 'File' custom data
         if (isset($value1['data_type']) &&
           isset($value1['html_type']) &&
-          (($value1['data_type'] == 'File' && $value1['html_type'] == 'File')
+          (
+            ($value1['data_type'] == 'File' && $value1['html_type'] == 'File')
             || ($value1['data_type'] == 'Link' && $value1['html_type'] == 'Link')
           )
         ) {
@@ -532,7 +535,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
     $sel1 = ['' => ts('- select -')] + ['Contact' => ts('Contact info')];
     $contactTypes = !empty($contactTypes) ? $contactTypes : [];
-    foreach($contactTypes as $ctype => $label) {
+    foreach ($contactTypes as $ctype => $label) {
       if (!empty($fields[$ctype])) {
         $sel1[$ctype] = $label;
       }
@@ -566,7 +569,7 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
 
     $sel3[''] = NULL;
     $phoneTypes = CRM_Core_PseudoConstant::phoneType();
-    foreach($phoneTypes as $idx => $val) {
+    foreach ($phoneTypes as $idx => $val) {
       unset($phoneTypes[$idx]);
       // refs #30044, preserv order by weight of phone type
       // this is dirty because javascript object will order by number default
@@ -652,7 +655,8 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     $js .= "</script>\n";
     $this->assign('initHideBoxes', $js);
 
-    $this->add('select',
+    $this->add(
+      'select',
       'visibility',
       ts('Visibility'),
       CRM_Core_SelectValues::ufVisibility(),
@@ -690,7 +694,8 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     */
 
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -712,7 +717,10 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     // if view mode pls freeze it with the done button.
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
-      $this->addElement('button', 'done', ts('Done'),
+      $this->addElement(
+        'button',
+        'done',
+        ts('Done'),
         ['onclick' => "location.href='civicrm/admin/uf/group/field?reset=1&action=browse&gid=" . $this->_gid . "'"]
       );
     }
@@ -808,23 +816,26 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
         //set group type
         CRM_Core_DAO::setFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'group_type', $groupType);
       }
-      CRM_Core_Session::setStatus(ts('Your CiviCRM Profile Field \'%1\' has been saved to \'%2\'.',
-          [1 => $name, 2 => $this->_title]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'Your CiviCRM Profile Field \'%1\' has been saved to \'%2\'.',
+        [1 => $name, 2 => $this->_title]
+      ));
     }
     $buttonName = $this->controller->getButtonName();
 
     $session = CRM_Core_Session::singleton();
     if ($buttonName == $this->getButtonName('next', 'new')) {
       CRM_Core_Session::setStatus(ts(' You can add another profile field.'));
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/uf/group/field/add',
-          "reset=1&action=add&gid={$this->_gid}&sbr={$showBestResult}"
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/admin/uf/group/field/add',
+        "reset=1&action=add&gid={$this->_gid}&sbr={$showBestResult}"
+      ));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/uf/group/field',
-          "reset=1&action=browse&gid={$this->_gid}"
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/admin/uf/group/field',
+        "reset=1&action=browse&gid={$this->_gid}"
+      ));
       $session->set('showBestResult', $showBestResult);
     }
   }
@@ -863,7 +874,8 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
           $basicType = [$basicType];
         }
         if (!in_array($fieldType, $basicType)) {
-          $errors['field_name'] = ts('Cannot add or update profile field type "%1" with combination of subtype other than "%1".',
+          $errors['field_name'] = ts(
+            'Cannot add or update profile field type "%1" with combination of subtype other than "%1".',
             [1 => $fieldType]
           );
         }
@@ -1061,4 +1073,3 @@ class CRM_UF_Form_Field extends CRM_Core_Form {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

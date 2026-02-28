@@ -161,4 +161,3 @@ class CRM_Core_Page_AJAX {
     }
   }
 }
-

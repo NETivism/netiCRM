@@ -204,7 +204,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       $dataReferenceField = $this->get('dataReferenceField');
       $highlightedFields[] = $dataReferenceField;
       $this->_mapperFields[$dataReferenceField] .= " " . ts('(match to membership record)');
-      if($dataReferenceField != 'membership_id'){
+      if ($dataReferenceField != 'membership_id') {
         unset($this->_mapperFields['membership_id']);
       }
     }
@@ -213,10 +213,10 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
       $highlightedFields = array_merge($highlightedFields, ['membership_contact_id', 'external_identifier', 'membership_start_date', 'membership_type_id']);
 
       $dedupeRuleGroup = $this->get('dedupeRuleGroup');
-      if(!empty($dedupeRuleGroup)) {
+      if (!empty($dedupeRuleGroup)) {
         $ruleParams = ['id' => $dedupeRuleGroup];
       }
-      else{
+      else {
         $contactType = $self->get('contactType');
         // default rule group
         $ruleParams = [
@@ -397,7 +397,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
 
             // Prepare values and sub type values.
             // If the field have sub type but the subtype value is NULL, the subtype value would be 0.
-            // Otherwise, the field have no subtype, the subtype value should be NULL. 
+            // Otherwise, the field have no subtype, the subtype value should be NULL.
             $websiteTypeId = NULL;
             if ($mappingHeader == 'url') {
               $websiteTypeId = $mappingWebsiteType[$i] ?? 0;
@@ -483,7 +483,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
           $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
         if ($mappedLocationId) {
-          switch($mappedHeaderKey){
+          switch ($mappedHeaderKey) {
             case 'im':
               $mappedTypeId = key($imProviders);
               break;
@@ -496,7 +496,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
           }
         }
         if ($mappedHeaderKey == 'website') {
-          $mappedLocationId = key($websiteTypes); 
+          $mappedLocationId = key($websiteTypes);
         }
         if (!empty($mappedHeaderKey)) {
           $defaults["mapper[$i]"] = [$mappedHeaderKey, $mappedLocationId, $mappedTypeId];
@@ -531,7 +531,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
 
     $this->setDefaults($defaults);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -574,12 +575,12 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
 
       $importMode = $self->get('importMode');
 
-      if($importMode & CRM_Member_Import_Parser::IMPORT_CREATE){
+      if ($importMode & CRM_Member_Import_Parser::IMPORT_CREATE) {
         $dedupeRuleGroup = $self->get('dedupeRuleGroup');
-        if(!empty($dedupeRuleGroup)) {
+        if (!empty($dedupeRuleGroup)) {
           $ruleParams = ['id' => $dedupeRuleGroup];
         }
-        else{
+        else {
           // default rule group
           $contactType = $self->get('contactType');
           $ruleParams = [
@@ -595,7 +596,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             $weightSum += $ruleFields[$val];
           }
         }
-        if($weightSum < $threshold){
+        if ($weightSum < $threshold) {
           $daoContact = new CRM_Contact_DAO_Contact();
           $daoEmail = new CRM_Core_DAO_Email();
           $daoPhone = new CRM_Core_DAO_Phone();
@@ -609,9 +610,10 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
             $fieldLable = $fields[$field]['title'];
             $fieldMessage .= ' ' . $fieldLable . ' (' . ts('Weight') . ': ' . $weight . ')';
           }
-          $errors['_qf_default'] .= ts('Missing required contact matching fields.') . " $fieldMessage " . ts('(Sum of all weights should be greater than or equal to threshold: %1).', [1 => $threshold]) . '<br />'; 
+          $errors['_qf_default'] .= ts('Missing required contact matching fields.') . " $fieldMessage " . ts('(Sum of all weights should be greater than or equal to threshold: %1).', [1 => $threshold]) . '<br />';
         }
-      }else{
+      }
+      else {
         // $importMode is CRM_Member_Import_Parser::IMPORT_UPDATE AND not IMPORT_CREATE
         $dataReferenceField = $self->get('dataReferenceField');
         $referenceFieldOptions = $self->get('referenceFieldOptions');
@@ -706,7 +708,9 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     }
 
     for ($i = 0; $i < $this->_columnCount; $i++) {
-      foreach (array_values($mapperParams) as $mapperParam)$$mapperParam = NULL;
+      foreach (array_values($mapperParams) as $mapperParam) {
+        $$mapperParam = NULL;
+      }
 
       $fldName = CRM_Utils_Array::value(0, $mapperKeys[$i]);
       $selOne = CRM_Utils_Array::value(1, $mapperKeys[$i]);
@@ -800,7 +804,8 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = ['name' => $params['saveMappingName'],
         'description' => $params['saveMappingDesc'],
-        'mapping_type_id' => CRM_Core_OptionGroup::getValue('mapping_type',
+        'mapping_type_id' => CRM_Core_OptionGroup::getValue(
+          'mapping_type',
           'Import Membership',
           'name'
         ),
@@ -838,7 +843,7 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     $errorFilenamePrefix = CRM_Member_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
     $this->set('errorFilenamePrefix', $errorFilenamePrefix);
 
-    $parser = new CRM_Member_Import_Parser_Membership($mapperKeysMain, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
+    $parser = new CRM_Member_Import_Parser_Membership($mapperKeysMain, $mapperLocType, $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
     $parser->run(
       $fileName,
       $separator,
@@ -866,4 +871,3 @@ class CRM_Member_Import_Form_MapField extends CRM_Core_Form {
     return ts('Match Fields');
   }
 }
-

@@ -54,8 +54,8 @@ class CRM_Core_Selector_Controller {
    * @var int
    */
   // move the values from the session to the template
-  public CONST SESSION = 1, TEMPLATE = 2,
-  TRANSFER = 4, EXPORT = 8, SCREEN = 16, PDF = 32;
+  public const SESSION = 1, TEMPLATE = 2,
+    TRANSFER = 4, EXPORT = 8, SCREEN = 16, PDF = 32;
 
   /**
    * a CRM Object that implements CRM_Core_Selector_API
@@ -223,7 +223,7 @@ class CRM_Core_Selector_Controller {
     $this->_sort = new CRM_Utils_Sort($this->_sortOrder, $this->_sortID);
 
     /*
-         * if we are in transfer mode, do not goto database, use the 
+         * if we are in transfer mode, do not goto database, use the
          * session values instead
          */
 
@@ -365,19 +365,24 @@ class CRM_Core_Selector_Controller {
 
 
       // always store the current pageID and sortID
-      $this->_store->set($this->_prefix . CRM_Utils_Pager::PAGE_ID,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Pager::PAGE_ID,
         $this->_pager->getCurrentPageID()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_ID,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_ID,
         $this->_sort->getCurrentSortID()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_DIRECTION,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_DIRECTION,
         $this->_sort->getCurrentSortDirection()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_ORDER,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_ORDER,
         $this->_sort->orderBy()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Pager::PAGE_ROWCOUNT,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Pager::PAGE_ROWCOUNT,
         $this->_pager->_perPage
       );
     }
@@ -395,8 +400,13 @@ class CRM_Core_Selector_Controller {
       return $form->_object->getRows($form->_action, 0, 0, $form->_sort, $form->_output);
     }
     else {
-      return $form->_object->getRows($form->_action, $form->_pagerOffset, $form->_pagerRowCount,
-        $form->_sort, $form->_output, $form->_case
+      return $form->_object->getRows(
+        $form->_action,
+        $form->_pagerOffset,
+        $form->_pagerRowCount,
+        $form->_sort,
+        $form->_output,
+        $form->_case
       );
     }
   }
@@ -448,7 +458,8 @@ class CRM_Core_Selector_Controller {
     $rows = $this->_store->get("{$this->_prefix}rows");
 
     if ($rows) {
-      self::$_template->assign("{$this->_prefix}aToZ",
+      self::$_template->assign(
+        "{$this->_prefix}aToZ",
         $this->_store->get("{$this->_prefix}AToZBar")
       );
     }
@@ -519,4 +530,3 @@ class CRM_Core_Selector_Controller {
     return $this->_print;
   }
 }
-

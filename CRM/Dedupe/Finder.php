@@ -90,7 +90,8 @@ class CRM_Dedupe_Finder {
    *
    * @return array  matching contact ids
    */
-  public static function dupesByParams($params,
+  public static function dupesByParams(
+    $params,
     $ctype,
     $level = 'Strict',
     $except = [],
@@ -157,7 +158,7 @@ class CRM_Dedupe_Finder {
    * @param int    $threshold threshold that meet above rules
    * @return array  matching contact ids
    */
-  public static function dupesByRules($params, $ctype, $level = 'Strict', $except = [], $rules = [],     $threshold = 10) {
+  public static function dupesByRules($params, $ctype, $level = 'Strict', $except = [], $rules = [], $threshold = 10) {
     // If $params is empty there is zero reason to proceed.
     if (!$params) {
       return [];
@@ -329,7 +330,7 @@ class CRM_Dedupe_Finder {
           unset($flat[$flatKey]);
         }
         $hasResult = is_array($flat[$flatKey]) ? array_search($value, $flat[$flatKey]) : NULL;
-        if(!$hasResult) {
+        if (!$hasResult) {
           $flat[$flatKey][] = $value;
         }
         unset($flat[$key]);
@@ -356,7 +357,7 @@ class CRM_Dedupe_Finder {
         foreach ($fields as $field => $title) {
           if (CRM_Utils_Array::value($field, $flat)) {
             if (is_array($flat[$field])) {
-              foreach($flat[$field] as $val) {
+              foreach ($flat[$field] as $val) {
                 $params[$table][$field][] = $val;
               }
             }
@@ -373,11 +374,11 @@ class CRM_Dedupe_Finder {
     if (!empty($params['civicrm_contact']) && $ctype == 'Individual') {
       $contact = new stdClass(); // null class for pass into
       $formatParams = ['contact_type' => 'Individual'];
-      foreach($params['civicrm_contact'] as $field => $value) {
+      foreach ($params['civicrm_contact'] as $field => $value) {
         $contact->$field = $value;
         $formatParams[$field] = $value;
       }
-      foreach($params['civicrm_email'] as $field => $value) {
+      foreach ($params['civicrm_email'] as $field => $value) {
         $contact->$field = $value;
         $formatParams[$field][] = ['email' => $value];
       }
@@ -388,4 +389,3 @@ class CRM_Dedupe_Finder {
     return $params;
   }
 }
-

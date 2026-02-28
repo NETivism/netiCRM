@@ -9,7 +9,7 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
   protected $id = 0;
   protected $contactIds = [];
   protected $_entity = 'line_item';
-  protected $contribution_result = null;
+  protected $contribution_result = NULL;
   public $_eNoticeCompliant = TRUE;
   public $DBResetRequired = TRUE;
   public function setUp() {
@@ -28,7 +28,7 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
       'contribution_status_id' => 1,
       'version' => $this->_apiversion,
     ];
-    $contribution = civicrm_api('contribution','create', $contributionParams);
+    $contribution = civicrm_api('contribution', 'create', $contributionParams);
     $this->params = [
       'version' => $this->_apiversion,
       'price_field_value_id' => 1,
@@ -44,7 +44,7 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
       civicrm_api('contact', 'delete', ['version' => $this->_apiversion, 'id' => $id]);
     }
     $this->quickCleanup(
-        [
+      [
             'civicrm_contact',
             'civicrm_contribution',
             'civicrm_line_item',
@@ -55,7 +55,7 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
 
   public function testCreateLineItem() {
     $this->quickCleanup(
-        [
+      [
             'civicrm_line_item',
         ]
     );
@@ -101,7 +101,7 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
     $this->assertEquals(1, $result['values']['entity_id']['api.required']);
   }
 
-  public static function tearDownAfterClass(){
+  public static function tearDownAfterClass() {
     $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_contribution_type',
@@ -112,4 +112,3 @@ class api_v3_LineItemTest extends CiviUnitTestCase {
     $unitTest->quickCleanup($tablesToTruncate);
   }
 }
-

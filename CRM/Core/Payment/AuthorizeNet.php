@@ -26,10 +26,10 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  public CONST CHARSET = 'iso-8859-1';
-  public CONST AUTH_APPROVED = 1;
-  public CONST AUTH_DECLINED = 2;
-  public CONST AUTH_ERROR = 3;
+  public const CHARSET = 'iso-8859-1';
+  public const AUTH_APPROVED = 1;
+  public const AUTH_DECLINED = 2;
+  public const AUTH_ERROR = 3;
 
   protected static $_mode = NULL;
 
@@ -111,7 +111,8 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
 
     // Set up our call for hook_civicrm_paymentProcessor,
     // since we now have our parameters as assigned for the AIM back end.
-    CRM_Utils_Hook::alterPaymentProcessorParams($this,
+    CRM_Utils_Hook::alterPaymentProcessorParams(
+      $this,
       $params,
       $authorizeNetFields
     );
@@ -562,4 +563,3 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     return ($this->_mode == 'test') ? 'https://test.authorize.net' : 'https://authorize.net';
   }
 }
-

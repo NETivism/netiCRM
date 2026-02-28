@@ -29,7 +29,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportTransaction extends CRM_Contact_Form_
         $msgs[] = ts('All selected recurrings must be verified. There are %1 recurrings yet verified.', [1 => count($unverified)]);
       }
       $msg = CRM_Utils_Array::implode('<br/>', $msgs);
-       return CRM_Core_Error::statusBounce($msg);
+      return CRM_Core_Error::statusBounce($msg);
     }
   }
 

@@ -108,7 +108,8 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
   public function run() {
     $this->preProcess();
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Search',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Pledge_Form_Search',
       ts('Pledge'),
       NULL
     );
@@ -123,4 +124,3 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

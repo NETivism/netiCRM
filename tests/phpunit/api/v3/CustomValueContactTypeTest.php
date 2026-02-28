@@ -11,7 +11,8 @@ class api_v3_CustomValueContactTypeTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_apiversion;
   protected $CustomGroupIndividual;
-  protected $individualStudent; public function get_info() {
+  protected $individualStudent;
+  public function get_info() {
     return [
       'name' => 'Custom Data For Contact Subtype',
       'description' => 'Test Custom Data for Contact subtype.',
@@ -90,8 +91,8 @@ class api_v3_CustomValueContactTypeTest extends CiviUnitTestCase {
     $this->organizationSponsor = $this->organizationCreate($params);
     //refresh php cached variables
     CRM_Core_PseudoConstant::flush('customGroup');
-    CRM_Core_BAO_CustomField::getTableColumnGroup($this->IndividualField['id'], True);
-    CRM_Core_BAO_CustomField::getTableColumnGroup($this->IndiStudentField['id'], True);
+    CRM_Core_BAO_CustomField::getTableColumnGroup($this->IndividualField['id'], TRUE);
+    CRM_Core_BAO_CustomField::getTableColumnGroup($this->IndiStudentField['id'], TRUE);
   }
 
   public function tearDown() {
@@ -104,11 +105,13 @@ class api_v3_CustomValueContactTypeTest extends CiviUnitTestCase {
   public function testGetFields() {
     $result = civicrm_api('Contact', 'getfields', ['version' => 3]);
     $this->assertArrayHasKey("custom_{$this->IndividualField[id]}", $result['values'], 'If This fails there is probably a cachine issue - failure in line' . __LINE__ . print_r(array_keys($result['values']), TRUE));
-    $result = civicrm_api('Contact', 'getfields', ['version' => 3, 'action' => 'create', 'contact_type' => 'Individual'], 'in line' . __LINE__);;
+    $result = civicrm_api('Contact', 'getfields', ['version' => 3, 'action' => 'create', 'contact_type' => 'Individual'], 'in line' . __LINE__);
+    ;
     $this->assertArrayHasKey("custom_{$this->IndividualField[id]}", $result['values']);
     $result = civicrm_api('Contact', 'getfields', ['version' => 3, 'action' => 'create', 'contact_type' => 'Organization']);
     $this->assertArrayNotHasKey("custom_{$this->IndividualField[id]}", $result['values'], 'in line' . __LINE__ . print_r(array_keys($result['values']), TRUE));
-    $result = civicrm_api('Relationship', 'getfields', ['version' => 3, 'action' => 'create'], 'in line' . __LINE__);;
+    $result = civicrm_api('Relationship', 'getfields', ['version' => 3, 'action' => 'create'], 'in line' . __LINE__);
+    ;
     $this->assertArrayNotHasKey("custom_{$this->IndividualField[id]}", $result['values']);
   }
 
@@ -304,4 +307,3 @@ class api_v3_CustomValueContactTypeTest extends CiviUnitTestCase {
     $this->assertEquals($getContact['values'][$this->individualStudent]["custom_{$this->IndiStudentField[id]}"], 'Test String', 'In line ' . __LINE__);
   }
 }
-

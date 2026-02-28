@@ -33,7 +33,7 @@
  *
  */
 class CRM_Contact_BAO_Contact_Permission {
-  public CONST NUM_CONTACTS_TO_INSERT = 200;
+  public const NUM_CONTACTS_TO_INSERT = 200;
 
   /**
    * check if the logged in user has permissions for the operation type
@@ -237,9 +237,10 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
   public static function validateOnlyChecksum($contactID, &$form) {
     // check if this is of the format cs=XXX
 
-    if (!CRM_Contact_BAO_Contact_Utils::validChecksum($contactID,
-        CRM_Utils_Request::retrieve('cs', 'String', $form, FALSE)
-      )) {
+    if (!CRM_Contact_BAO_Contact_Utils::validChecksum(
+      $contactID,
+      CRM_Utils_Request::retrieve('cs', 'String', $form, FALSE)
+    )) {
       $message = !empty($form->_invalidChecksumMessage) ? $form->_invalidChecksumMessage : ts('You do not have permission to edit this contact record. Contact the site administrator if you need assistance.');
       $redirect = !empty($form->_invalidChecksumRedirect) ? $form->_invalidChecksumRedirect : NULL;
       return CRM_Core_Error::statusBounce($message, $redirect);
@@ -256,4 +257,3 @@ WHERE  (( contact_id_a = %1 AND contact_id_b = %2 AND is_permission_a_b = 1 ) OR
     return TRUE;
   }
 }
-

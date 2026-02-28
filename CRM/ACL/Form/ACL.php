@@ -134,10 +134,12 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
 
 
     $operations = ['' => ts('- select -')] + CRM_ACL_BAO_ACL::operation();
-    $this->add('select',
+    $this->add(
+      'select',
       'operation',
       ts('Operation'),
-      $operations, TRUE
+      $operations,
+      TRUE
     );
 
     $objTypes = ['1' => ts('A group of contacts'),
@@ -150,11 +152,13 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     }
 
     $extra = ['onclick' => "showObjectSelect();"];
-    $this->addRadio('object_type',
+    $this->addRadio(
+      'object_type',
       ts('Type of Data'),
       $objTypes,
       $extra,
-      '&nbsp;', TRUE
+      '&nbsp;',
+      TRUE
     );
 
 
@@ -320,4 +324,3 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     }
   }
 }
-

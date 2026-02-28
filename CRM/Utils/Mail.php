@@ -171,7 +171,8 @@ class CRM_Utils_Mail {
 
     if (!empty($attachments)) {
       foreach ($attachments as $fileID => $attach) {
-        $msg->addAttachment($attach['fullPath'],
+        $msg->addAttachment(
+          $attach['fullPath'],
           $attach['mime_type'],
           $attach['cleanName']
         );
@@ -263,7 +264,7 @@ class CRM_Utils_Mail {
    *   );
    * @return void
    */
-  public static function sendNonBlocking($mailer, $params){
+  public static function sendNonBlocking($mailer, $params) {
     $result = $mailer->send($params['to'], $params['headers'], $params['body']);
     CRM_Core_Error::setCallback();
     $error = 0;
@@ -316,7 +317,8 @@ class CRM_Utils_Mail {
       $dirName = $config->configAndLogDir . 'mail' . DIRECTORY_SEPARATOR;
       CRM_Utils_File::createDir($dirName);
       $fileName = md5(uniqid(CRM_Utils_String::munge($fileName))) . '.txt';
-      file_put_contents($dirName . $fileName,
+      file_put_contents(
+        $dirName . $fileName,
         $content
       );
     }
@@ -350,7 +352,7 @@ class CRM_Utils_Mail {
     $email = self::pluckEmailFromHeader($header);
     $name = str_replace("<{$email}>", '', $header);
     $name = trim($name, '" ');
-    return trim($name); 
+    return trim($name);
   }
 
   /**
@@ -420,7 +422,7 @@ class CRM_Utils_Mail {
       $mailArray = $mails;
     }
     $checked = [];
-    foreach($mailArray as $address) {
+    foreach ($mailArray as $address) {
       $address = trim($address);
       if (strstr($address, '<') && strstr($address, '>')) {
         $name = self::pluckNameFromHeader($address);
@@ -538,7 +540,7 @@ class CRM_Utils_Mail {
         if (!empty($explains)) {
           return CRM_Utils_Array::implode("\n", $explains);
         }
-        switch($result) {
+        switch ($result) {
           case SPFLib\Check\Result::CODE_NONE:
             return 'No SPF record found.';
           case SPFLib\Check\Result::CODE_NEUTRAL:
@@ -559,7 +561,7 @@ class CRM_Utils_Mail {
         if ($result === Mika56\SPFCheck\SPFCheck::RESULT_PASS) {
           return TRUE;
         }
-        switch($result) {
+        switch ($result) {
           case Mika56\SPFCheck\SPFCheck::RESULT_NONE:
             return 'No SPF record found.';
           case Mika56\SPFCheck\SPFCheck::RESULT_MULTIPLE:
@@ -609,7 +611,7 @@ class CRM_Utils_Mail {
 
     $records = self::getDKIM($email);
     if (!empty($records)) {
-      foreach($records as $r) {
+      foreach ($records as $r) {
         if (!empty($r['target']) && $r['target'] === $civicrm_conf['mailing_dkim_domain']) {
           return TRUE;
         }
@@ -655,7 +657,7 @@ class CRM_Utils_Mail {
     if (empty($email) || !CRM_Utils_Rule::email($email)) {
       return FALSE;
     }
-    foreach($domains as $domain) {
+    foreach ($domains as $domain) {
       if (strstr($email, '@'.$domain)) {
         return TRUE;
       }
@@ -688,7 +690,7 @@ class CRM_Utils_Mail {
 
     $validType = CRM_Admin_Form_FromEmailAddress::VALID_EMAIL | CRM_Admin_Form_FromEmailAddress::VALID_SPF | CRM_Admin_Form_FromEmailAddress::VALID_DKIM;
     $verifiedDomains = CRM_Admin_Form_FromEmailAddress::getVerifiedEmail($validType, 'domain');
-    foreach($verifiedDomains as $idx => $domain) {
+    foreach ($verifiedDomains as $idx => $domain) {
       if ($externalOnly && preg_match('/'.preg_quote($defaultDomain).'$/', $domain)) {
         unset($verifiedDomains[$idx]);
       }
@@ -762,8 +764,8 @@ class CRM_Utils_Mail {
       }
       $subs = explode('.', $domain);
       $sanitizedDomain = [];
-      foreach($subs as $sub) {
-        $sub = trim($sub, " \t\n\r\0\x0B-" );
+      foreach ($subs as $sub) {
+        $sub = trim($sub, " \t\n\r\0\x0B-");
         $sub = preg_replace('/[^a-z0-9-]+/i', '', $sub);
         if ($sub !== '') {
           $sanitizedDomain[] = strtolower($sub);
@@ -800,4 +802,3 @@ class CRM_Utils_Mail {
     return $string;
   }
 }
-

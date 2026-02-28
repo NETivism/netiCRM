@@ -170,7 +170,8 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
     // make this form an upload since we dont know if the custom data injected dynamically
     // is of type file etc
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -195,7 +196,8 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
       return $customDefaultValue;
     }
 
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree($this->_contactType,
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+      $this->_contactType,
       $this,
       $this->_tableID,
       $this->_groupID,
@@ -204,8 +206,12 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
 
     if (!CRM_Utils_Array::value("hidden_custom_group_count", $_POST)) {
       // custom data building in edit mode (required to handle multi-value)
-      $groupTree = &CRM_Core_BAO_CustomGroup::getTree($this->_contactType, $this, $this->_tableID,
-        $this->_groupID, $this->_contactSubType
+      $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+        $this->_contactType,
+        $this,
+        $this->_tableID,
+        $this->_groupID,
+        $this->_contactSubType
       );
       $customValueCount = CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree, TRUE, $this->_groupID);
     }
@@ -230,7 +236,8 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
     // Get the form values and groupTree
     $params = $this->controller->exportValues($this->_name);
 
-    CRM_Core_BAO_CustomValueTable::postProcess($params,
+    CRM_Core_BAO_CustomValueTable::postProcess(
+      $params,
       $this->_groupTree[$this->_groupID]['fields'],
       'civicrm_contact',
       $this->_tableID,
@@ -242,4 +249,3 @@ class CRM_Contact_Form_CustomData extends CRM_Core_Form {
     CRM_Contact_BAO_GroupContactCache::remove();
   }
 }
-

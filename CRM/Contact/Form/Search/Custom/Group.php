@@ -49,7 +49,8 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
 
   protected $_tableName = NULL;
 
-  protected $_where = ' (1) '; public function __construct(&$formValues) {
+  protected $_where = ' (1) ';
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
     $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Contact Type') => 'contact_type',
@@ -107,35 +108,51 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Utils_System::redirect($url);
     }
 
-    $inG = &$form->addElement('select', 'includeGroups',
-      ts('Include Group(s)') . ' ', $groups,
+    $inG = &$form->addElement(
+      'select',
+      'includeGroups',
+      ts('Include Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
       ]
     );
 
-    $outG = &$form->addElement('select', 'excludeGroups',
-      ts('Exclude Group(s)') . ' ', $groups,
+    $outG = &$form->addElement(
+      'select',
+      'excludeGroups',
+      ts('Exclude Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
       ]
     );
-    $andOr = &$form->addElement('checkbox', 'andOr', 'Search with tag (check for AND, uncheck For OR)', NULL,
+    $andOr = &$form->addElement(
+      'checkbox',
+      'andOr',
+      'Search with tag (check for AND, uncheck For OR)',
+      NULL,
       ['checked' => 'checked']
     );
 
-    $int = &$form->addElement('select', 'includeTags',
-      ts('Include Tag(s)') . ' ', $tags,
+    $int = &$form->addElement(
+      'select',
+      'includeTags',
+      ts('Include Tag(s)') . ' ',
+      $tags,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
       ]
     );
 
-    $outt = &$form->addElement('select', 'excludeTags',
-      ts('Exclude Tag(s)') . ' ', $tags,
+    $outt = &$form->addElement(
+      'select',
+      'excludeTags',
+      ts('Exclude Tag(s)') . ' ',
+      $tags,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
@@ -154,8 +171,12 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $form->assign('elements', ['includeGroups', 'excludeGroups', 'andOr', 'includeTags', 'excludeTags']);
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE, $justIDs = FALSE
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
+    $includeContactIDs = FALSE,
+    $justIDs = FALSE
   ) {
     if ($justIDs) {
       $selectClause = "DISTINCT(contact_a.id)  as contact_id";
@@ -776,7 +797,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $where;
   }
 
-  /* 
+  /*
      * Functions below generally don't need to be modified
      */
   public function count() {
@@ -802,4 +823,3 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 }
-

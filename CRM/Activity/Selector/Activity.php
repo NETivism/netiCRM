@@ -108,7 +108,8 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * @access public
    *
    */
-  public function actionLinks($activityTypeId,
+  public function actionLinks(
+    $activityTypeId,
     $sourceRecordId = NULL,
     $accessMailingReport = FALSE,
     $activityId = NULL,
@@ -139,11 +140,13 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
       }
     }
-    elseif (in_array($activityTypeId, [
+    elseif (in_array(
+      $activityTypeId,
+      [
       $activityTypeIds['Contribution'],
       $activityTypeIds['Email Receipt'],
       $activityTypeIds['Contribution Notification Email']]
-      )) {
+    )) {
       if ($sourceRecordId) {
         $url = 'civicrm/contact/view/contribution';
         $text = 'View Contribution';
@@ -397,7 +400,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $row = &$rows[$k];
 
       if (in_array($row['activity_type_id'], $showDetails)) {
-        $row['details'] = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $row['activity_id'], 'details'); 
+        $row['details'] = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $row['activity_id'], 'details');
       }
 
       // add class to this row if overdue
@@ -434,7 +437,8 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         }
       }
 
-      $actionLinks = $this->actionLinks(CRM_Utils_Array::value('activity_type_id', $row),
+      $actionLinks = $this->actionLinks(
+        CRM_Utils_Array::value('activity_type_id', $row),
         CRM_Utils_Array::value('source_record_id', $row),
         $accessMailingReport,
         CRM_Utils_Array::value('activity_id', $row),
@@ -444,7 +448,8 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $actionMask = array_sum(array_keys($actionLinks)) & $mask;
 
       if ($output != CRM_Core_Selector_Controller::EXPORT && $output != CRM_Core_Selector_Controller::SCREEN) {
-        $row['action'] = CRM_Core_Action::formLink($actionLinks,
+        $row['action'] = CRM_Core_Action::formLink(
+          $actionLinks,
           $actionMask,
           ['id' => $row['activity_id'],
             'cid' => $this->_contactId,
@@ -520,4 +525,3 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     return self::$_columnHeaders;
   }
 }
-

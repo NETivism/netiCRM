@@ -72,7 +72,9 @@ class civicrm_api3 {
       if (isset($config['path'])) {
         $this->uri .= "/" . $config['path'];
       }
-      else $this->uri .= '/sites/all/modules/civicrm/extern/rest.php';
+      else {
+        $this->uri .= '/sites/all/modules/civicrm/extern/rest.php';
+      }
       $this->uri .= '?json=1';
       if (isset($config['key'])) {
         $this->key = $config['key'];
@@ -141,7 +143,7 @@ class civicrm_api3 {
       //execute post
       $result = curl_exec($ch);
       curl_close($ch);
-      return json_decode($result, true);
+      return json_decode($result, TRUE);
       // not good, all in get when should be in post.
     }
     else {
@@ -271,7 +273,9 @@ class civicrm_api3 {
     if (is_array($this->lastResult)) {
       return $this->lastResult['values'];
     }
-    else return $this->lastResult->values;
+    else {
+      return $this->lastResult->values;
+    }
   }
 
   // or use $api->result
@@ -279,4 +283,3 @@ class civicrm_api3 {
     return $this->lastResult;
   }
 }
-

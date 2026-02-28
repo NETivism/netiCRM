@@ -89,4 +89,3 @@ WHERE {$whereClause}
     CRM_Utils_System::civiExit();
   }
 }
-

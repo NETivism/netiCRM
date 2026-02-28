@@ -42,7 +42,8 @@ class api_v2_RelationshipTest extends CiviUnitTestCase {
   protected $_relTypeID;
   protected $_ids = [];
   protected $_customGroupId = NULL;
-  protected $_customFieldId = NULL; public function get_info() {
+  protected $_customFieldId = NULL;
+  public function get_info() {
     return [
       'name' => 'Relationship Create',
       'description' => 'Test all Relationship Create API methods.',
@@ -659,6 +660,3 @@ class api_v2_RelationshipTest extends CiviUnitTestCase {
     $result = civicrm_relationship_delete($params);
   }
 }
-
-
-

@@ -37,7 +37,8 @@
 
 class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
-  protected $_formValues; public function __construct(&$formValues) {
+  protected $_formValues;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -90,7 +91,10 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
   /**
    * Construct the search query
    */
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     // SELECT clause must include contact_id as an alias for civicrm_contact.id if you are going to use "tasks" like export etc.
@@ -106,7 +110,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
 
     $from = $this->from();
 
-    $onLine = CRM_Utils_Array::value('paid_online',
+    $onLine = CRM_Utils_Array::value(
+      'paid_online',
       $this->_formValues
     );
     if ($onLine) {
@@ -115,7 +120,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
         on (civicrm_entity_financial_trxn.entity_id = civicrm_participant_payment.contribution_id and civicrm_entity_financial_trxn.entity_type='contribution')";
     }
 
-    $showPayees = CRM_Utils_Array::value('show_payees',
+    $showPayees = CRM_Utils_Array::value(
+      'show_payees',
       $this->_formValues
     );
     if ($showPayees) {
@@ -187,7 +193,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
 
     $clauses[] = "civicrm_participant.status_id in ( 1 )";
     $clauses[] = "civicrm_contribution.is_test = 0";
-    $onLine = CRM_Utils_Array::value('paid_online',
+    $onLine = CRM_Utils_Array::value(
+      'paid_online',
       $this->_formValues
     );
     if ($onLine) {
@@ -240,7 +247,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
 
     $from = $this->from();
 
-    $onLine = CRM_Utils_Array::value('paid_online',
+    $onLine = CRM_Utils_Array::value(
+      'paid_online',
       $this->_formValues
     );
     if ($onLine) {
@@ -259,7 +267,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
         ";
 
     //CRM_Core_Error::debug('sql',$sql);
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     $totals = [];
@@ -272,13 +281,14 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return $totals;
   }
 
-  /* 
+  /*
      * Functions below generally don't need to be modified
      */
   public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
@@ -292,4 +302,3 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return $this->_columns;
   }
 }
-

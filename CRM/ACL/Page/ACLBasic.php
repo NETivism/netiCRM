@@ -99,15 +99,23 @@ class CRM_ACL_Page_ACLBasic extends CRM_Core_Page_Basic {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // set breadcrumb to append to admin/access
@@ -145,7 +153,8 @@ class CRM_ACL_Page_ACLBasic extends CRM_Core_Page_Basic {
    WHERE ( object_table NOT IN ( 'civicrm_saved_search', 'civicrm_uf_group', 'civicrm_custom_group' ) )
 ORDER BY entity_id
 ";
-    $dao = CRM_Core_DAO::executeQuery($query,
+    $dao = CRM_Core_DAO::executeQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -173,7 +182,9 @@ ORDER BY entity_id
         // form all action links
         $action = array_sum(array_keys($this->links()));
 
-        $acl[$dao->entity_id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $acl[$dao->entity_id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $dao->entity_id]
         );
       }
@@ -211,4 +222,3 @@ ORDER BY entity_id
     return 'civicrm/acl/basic';
   }
 }
-

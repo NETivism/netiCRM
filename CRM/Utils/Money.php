@@ -148,7 +148,7 @@ class CRM_Utils_Money {
       return $amount;
     }
     $formatted = $amount;
-    switch($valueFormat) {
+    switch ($valueFormat) {
       case '%!i':
         $formatted = number_format((float)$amount, 2);
         break;
@@ -241,4 +241,3 @@ class CRM_Utils_Money {
     return $output;
   }
 }
-

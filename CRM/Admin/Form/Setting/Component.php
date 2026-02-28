@@ -51,8 +51,11 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     CRM_Utils_System::setTitle(ts('Settings - Enable Components'));
 
     $components = $this->_getComponentSelectValues();
-    $include = &$this->addElement('advmultiselect', 'enableComponents',
-      ts('Components') . ' ', $components,
+    $include = &$this->addElement(
+      'advmultiselect',
+      'enableComponents',
+      ts('Components') . ' ',
+      $components,
       ['size' => 5,
         'style' => 'width:150px',
         'class' => 'advmultiselect',
@@ -118,4 +121,3 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     CRM_Core_BAO_Navigation::resetNavigation();
   }
 }
-

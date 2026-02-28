@@ -42,7 +42,8 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
   /**
    * This is a contructor of the class.
    */
-  public function __construct() {}
+  public function __construct() {
+  }
 
   /**
    * Function is used to format the individual contact values
@@ -243,7 +244,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
           $displayName = $sortName;
         }
       }
-      else{
+      else {
         // use western style
         $default_format = "{first_name}{ }{last_name}";
         $sortName = CRM_Utils_Address::format($formatted, $default_format, FALSE, FALSE, TRUE, $tokenFields);
@@ -424,4 +425,3 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
     return FALSE;
   }
 }
-

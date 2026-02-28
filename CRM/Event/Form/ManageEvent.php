@@ -115,15 +115,19 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       // its an update mode, do a permission check
 
       if (!CRM_Event_BAO_Event::checkPermission($this->_id, CRM_Core_Permission::EDIT)) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
 
       $participantListingID = CRM_Utils_Array::value('participant_listing_id', $eventInfo);
       //CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $this->_id, 'participant_listing_id' );
       if ($participantListingID) {
-        $participantListingURL = CRM_Utils_System::url('civicrm/event/participant',
+        $participantListingURL = CRM_Utils_System::url(
+          'civicrm/event/participant',
           "reset=1&id={$this->_id}",
-          TRUE, NULL, TRUE, TRUE
+          TRUE,
+          NULL,
+          TRUE,
+          TRUE
         );
         $this->assign('participantListingURL', $participantListingURL);
       }
@@ -184,7 +188,8 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     $breadCrumb = [];
     if (!$this->_isTemplate) {
       if ($this->_id) {
-        $this->_doneUrl = CRM_Utils_System::url(CRM_Utils_System::currentPath(),
+        $this->_doneUrl = CRM_Utils_System::url(
+          CRM_Utils_System::currentPath(),
           "action=update&reset=1&id={$this->_id}"
         );
         if (!empty($eventInfo['event_title'])) {
@@ -197,7 +202,8 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
         }
       }
       else {
-        $this->_doneUrl = CRM_Utils_System::url('civicrm/event/manage',
+        $this->_doneUrl = CRM_Utils_System::url(
+          'civicrm/event/manage',
           'reset=1'
         );
         $breadCrumb = [['title' => ts('Manage Events'),
@@ -263,12 +269,14 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
 
     if (!$this->_cancelURL) {
       if ($this->_isTemplate) {
-        $this->_cancelURL = CRM_Utils_System::url('civicrm/admin/eventTemplate',
+        $this->_cancelURL = CRM_Utils_System::url(
+          'civicrm/admin/eventTemplate',
           'reset=1'
         );
       }
       else {
-        $this->_cancelURL = CRM_Utils_System::url('civicrm/event/manage',
+        $this->_cancelURL = CRM_Utils_System::url(
+          'civicrm/event/manage',
           'reset=1'
         );
       }
@@ -377,4 +385,3 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     */
   }
 }
-

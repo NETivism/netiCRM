@@ -52,8 +52,12 @@ class CRM_Campaign_Page_Petition extends CRM_Core_Page {
   }
 
   public function run() {
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 0
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('action', $action);
     $this->browse();
@@ -61,4 +65,3 @@ class CRM_Campaign_Page_Petition extends CRM_Core_Page {
     parent::run();
   }
 }
-

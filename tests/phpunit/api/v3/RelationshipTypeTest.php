@@ -78,7 +78,8 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     $result = civicrm_api('relationship_type', 'create', $relTypeParams);
 
     $this->assertEquals($result['is_error'], 1);
-    $this->assertEquals($result['error_message'],
+    $this->assertEquals(
+      $result['error_message'],
       'Mandatory key(s) missing from params array: name_a_b, name_b_a'
     );
   }
@@ -95,7 +96,8 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     $result = civicrm_api('relationship_type', 'create', $relTypeParams);
 
     $this->assertEquals($result['is_error'], 1);
-    $this->assertEquals($result['error_message'],
+    $this->assertEquals(
+      $result['error_message'],
       'Mandatory key(s) missing from params array: contact_type_a, contact_type_b'
     );
   }
@@ -393,4 +395,3 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     return $this->relationshipTypeCreate($params);
   }
 }
-

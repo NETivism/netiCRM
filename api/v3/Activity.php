@@ -58,7 +58,8 @@ function civicrm_api3_activity_create($params) {
 
   if (!CRM_Utils_Array::value('id', $params)) {
     // an update does not require any mandatory parameters
-    civicrm_api3_verify_one_mandatory($params,
+    civicrm_api3_verify_one_mandatory(
+      $params,
       NULL,
       [
         'activity_name', 'activity_type_id', 'activity_label',
@@ -295,7 +296,8 @@ function civicrm_api3_activity_delete($params) {
  */
 function _civicrm_api3_activity_check_params(&$params) {
 
-  $contactIDFields = array_intersect_key($params,
+  $contactIDFields = array_intersect_key(
+    $params,
     [
       'source_contact_id' => 1,
       'assignee_contact_id' => 1,
@@ -407,4 +409,3 @@ SELECT  count(*)
 
   return NULL;
 }
-

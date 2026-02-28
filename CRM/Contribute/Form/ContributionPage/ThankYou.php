@@ -79,7 +79,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     );
     $selectableEmail = [];
     $hasVerified = FALSE;
-    foreach($availableFrom as $fromAddr) {
+    foreach ($availableFrom as $fromAddr) {
       $email = htmlspecialchars($fromAddr['email']);
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
         $email = ts('%1 Verified', [1 => '🛡️ '.htmlspecialchars($fromAddr['email'])]);
@@ -124,8 +124,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     $tokens = array_merge(CRM_Core_SelectValues::contributionTokens(), $tokens);
     $this->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
-    $this->add('select', 'token1', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $this->add(
+      'select',
+      'token1',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -133,8 +137,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       ]
     );
 
-    $this->add('select', 'token2', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $this->add(
+      'select',
+      'token2',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -168,7 +176,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       }
       else {
         if (!CRM_Utils_Rule::email($email)) {
-          $errors['receipt_from_email'] = ts('Please enter the valid email address.'); 
+          $errors['receipt_from_email'] = ts('Please enter the valid email address.');
         }
         if (!CRM_Utils_Mail::checkMailProviders($email)) {
           $errors['receipt_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', [1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)]);
@@ -217,4 +225,3 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     return ts('Thanks and Receipt');
   }
 }
-

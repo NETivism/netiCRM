@@ -43,7 +43,7 @@ class CRM_Utils_Recent {
    *
    * @int
    */
-  public CONST MAX_ITEMS = 10, STORE_NAME = 'CRM_Utils_Recent';
+  public const MAX_ITEMS = 10, STORE_NAME = 'CRM_Utils_Recent';
 
   /**
    * The list of recently viewed items
@@ -94,7 +94,8 @@ class CRM_Utils_Recent {
    * @access public
    * @static
    */
-  public static function add($title,
+  public static function add(
+    $title,
     $url,
     $id,
     $type,
@@ -118,7 +119,8 @@ class CRM_Utils_Recent {
       $others = [];
     }
 
-    array_unshift(self::$_recent,
+    array_unshift(
+      self::$_recent,
       ['title' => $title,
         'url' => $url,
         'id' => $id,
@@ -159,9 +161,10 @@ class CRM_Utils_Recent {
 
     // rebuild recent array excluding the matching item
     for ($i = 0; $i < count($tempRecent); $i++) {
-      if (!($tempRecent[$i]['id'] == $recentItem['id'] &&
+      if (!(
+        $tempRecent[$i]['id'] == $recentItem['id'] &&
           $tempRecent[$i]['type'] == $recentItem['type']
-        )) {
+      )) {
         self::$_recent[] = $tempRecent[$i];
       }
     }
@@ -199,4 +202,3 @@ class CRM_Utils_Recent {
     $session->set(self::STORE_NAME, self::$_recent);
   }
 }
-

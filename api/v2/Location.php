@@ -202,9 +202,10 @@ function civicrm_location_update($params) {
   }
 
   if (CRM_Utils_System::isNull($locations)) {
-    return civicrm_create_error(ts("Invalid Location Type(s) : %1",
-        [1 => CRM_Utils_Array::implode(', ', CRM_Utils_Array::value('location_type', $params))]
-      ));
+    return civicrm_create_error(ts(
+      "Invalid Location Type(s) : %1",
+      [1 => CRM_Utils_Array::implode(', ', CRM_Utils_Array::value('location_type', $params))]
+    ));
   }
 
   $location = &_civicrm_location_update($params, $locations);
@@ -365,7 +366,7 @@ function _civicrm_location_add(&$params, $locationTypeId = NULL) {
         is_numeric($contact['address'][$addressCount][$field])
       ) {
         $fValue = &$contact['address'][$addressCount][$field];
-        $fValue = CRM_Core_PseudoConstant::$fName( $fValue );
+        $fValue = CRM_Core_PseudoConstant::$fName($fValue);
 
         //kill the reference.
         unset($fValue);
@@ -505,7 +506,7 @@ function _civicrm_location_update($params, $locations) {
         is_numeric($contact['address'][$addressCount][$field])
       ) {
         $fValue = &$contact['address'][$addressCount][$field];
-        $fValue = CRM_Core_PseudoConstant::$fName( $fValue );
+        $fValue = CRM_Core_PseudoConstant::$fName($fValue);
 
         //kill the reference.
         unset($fValue);
@@ -766,7 +767,9 @@ function _civicrm_location_get_v3_to_v2(&$locations) {
 
   foreach ([
     'email', 'phone', 'im', 'address', 'openid'] as $field) {
-    if (CRM_Utils_Array::arrayKeyExists($field, $locations))unset($locations[$field]);
+    if (CRM_Utils_Array::arrayKeyExists($field, $locations)) {
+      unset($locations[$field]);
+    }
   }
   $locations = $locValues;
 
@@ -802,7 +805,7 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
   $firstBlockCount = NULL;
   foreach ($blocks as $block) {
     $daoName = 'CRM_Core_DAO_' . $block;
-    $fields =& $daoName::fields( );
+    $fields =& $daoName::fields();
     $name = strtolower($block);
     $blockCount = 0;
     if (CRM_Utils_Array::value($name, $params)) {
@@ -829,15 +832,19 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
           'im', 'phone'])) {
           require_once 'CRM/Core/PseudoConstant.php';
           if ($name == 'im') {
-            CRM_Utils_Array::lookupValue($params,
+            CRM_Utils_Array::lookupValue(
+              $params,
               'provider',
-              CRM_Core_PseudoConstant::IMProvider(), TRUE
+              CRM_Core_PseudoConstant::IMProvider(),
+              TRUE
             );
           }
           else {
-            CRM_Utils_Array::lookupValue($params,
+            CRM_Utils_Array::lookupValue(
+              $params,
               'phone_type',
-              CRM_Core_PseudoConstant::phoneType(), TRUE
+              CRM_Core_PseudoConstant::phoneType(),
+              TRUE
             );
           }
         }
@@ -894,7 +901,7 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
       is_numeric($params['address'][$addressCount][$field])
     ) {
       $fValue = &$params['address'][$addressCount][$field];
-      $fValue = CRM_Core_PseudoConstant::$fName( $fValue );
+      $fValue = CRM_Core_PseudoConstant::$fName($fValue);
 
       //kill the reference.
       unset($fValue);
@@ -970,9 +977,10 @@ function _civicrm_format_params_v2_to_v3(&$params, $locationTypeId = NULL) {
   // finally unset location_type and location type id.
   foreach ([
     'location_type', 'location_type_id'] as $f) {
-    if (isset($params[$f]))unset($params[$f]);
+    if (isset($params[$f])) {
+      unset($params[$f]);
+    }
   }
 
   return $params;
 }
-

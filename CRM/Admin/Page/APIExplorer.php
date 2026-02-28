@@ -39,7 +39,7 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
   public const PUBLIC_API = 'Activity,Contact,Contribution,ContributionPage,Event,Participant,Membership,Address,Email,Phone,CustomValue,Group,GroupContact,Tag,EntityTag';
 
   public function run() {
-    if($this->allowVisit()){
+    if ($this->allowVisit()) {
       $config = CRM_Core_Config::singleton();
       CRM_Utils_System::setTitle(ts('API explorer and generator'));
       $publicAPI = explode(',', self::PUBLIC_API);
@@ -60,7 +60,7 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
   }
 
   public function allowVisit() {
-    if(defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1){
+    if (defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1) {
       return TRUE;
     }
     return FALSE;

@@ -55,18 +55,26 @@ class CRM_Admin_Form_Setting_Date extends CRM_Admin_Form_Setting {
     $this->addElement('text', 'dateformatPartial', ts('Month and Year'));
     $this->addElement('text', 'dateformatYear', ts('Year Only'));
     $this->addElement('text', 'dateformatTime', ts('Time Only'));
-    $this->add('select', 'dateInputFormat', ts('Complete Date'),
+    $this->add(
+      'select',
+      'dateInputFormat',
+      ts('Complete Date'),
       CRM_Core_SelectValues::getDatePluginInputFormats()
     );
-    $this->add('select', 'timeInputFormat', ts('Time'),
+    $this->add(
+      'select',
+      'timeInputFormat',
+      ts('Time'),
       CRM_Core_SelectValues::getTimeFormats()
     );
 
-    $this->add('date', 'fiscalYearStart', ts('Fiscal Year Start'),
+    $this->add(
+      'date',
+      'fiscalYearStart',
+      ts('Fiscal Year Start'),
       CRM_Core_SelectValues::date(NULL, 'M d')
     );
 
     parent::buildQuickForm();
   }
 }
-

@@ -41,34 +41,34 @@
 
 abstract class CRM_Member_Import_Parser {
   public $_dataReferenceField;
-  public CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
+  public const MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
 
   /**
    * import mode
-   */ 
-  public CONST IMPORT_CREATE = 1, IMPORT_UPDATE = 2;
+   */
+  public const IMPORT_CREATE = 1, IMPORT_UPDATE = 2;
 
   /**
    * import contact when import member
    */
-  public CONST CONTACT_NOIDCREATE = 1, CONTACT_AUTOCREATE = 2, CONTACT_DONTCREATE = 4;
+  public const CONTACT_NOIDCREATE = 1, CONTACT_AUTOCREATE = 2, CONTACT_DONTCREATE = 4;
 
   /**
    * various parser modes
    */
-  public CONST MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
+  public const MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
 
   /**
    * codes for duplicate record handling
    */
-  public CONST DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
+  public const DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
 
   /**
    * various Contact types
    */
-  public CONST CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
+  public const CONTACT_INDIVIDUAL = 'Individual', CONTACT_HOUSEHOLD = 'Household', CONTACT_ORGANIZATION = 'Organization';
 
-  public CONST ERROR_FILE_PREFIX = 'member';
+  public const ERROR_FILE_PREFIX = 'member';
 
   protected $_fileName;
 
@@ -239,7 +239,7 @@ abstract class CRM_Member_Import_Parser {
   /**
    * Dedupe group id for contact matching
    *
-   * @var integer 
+   * @var integer
    */
   protected $_dedupeRuleGroupId;
 
@@ -256,13 +256,15 @@ abstract class CRM_Member_Import_Parser {
    * @var int
    */
 
-  public $_contactType; public function __construct() {
+  public $_contactType;
+  public function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
   abstract public function init();
-  public function run($fileName,
+  public function run(
+    $fileName,
     $seperator,
     &$mapper,
     $skipColumnHeader = FALSE,
@@ -443,7 +445,8 @@ abstract class CRM_Member_Import_Parser {
       }
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('Reason'),
           ],
           $customHeaders
@@ -452,7 +455,8 @@ abstract class CRM_Member_Import_Parser {
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('Reason'),
           ],
           $customHeaders
@@ -461,7 +465,8 @@ abstract class CRM_Member_Import_Parser {
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('View Membership URL'),
           ],
           $customHeaders
@@ -529,18 +534,18 @@ abstract class CRM_Member_Import_Parser {
     return $valid;
   }
 
-  public function setActiveFieldLocationTypes( $elements ) {
+  public function setActiveFieldLocationTypes($elements) {
     if (!empty($elements)) {
-      for ($i = 0; $i < count( $elements ); $i++) {
-          $this->_activeFields[$i]->_hasLocationType = $elements[$i];
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_hasLocationType = $elements[$i];
       }
     }
   }
 
-  public function setActiveFieldPhoneTypes( $elements ) {
+  public function setActiveFieldPhoneTypes($elements) {
     if (!empty($elements)) {
-      for ($i = 0; $i < count( $elements ); $i++) {
-          $this->_activeFields[$i]->_phoneType = $elements[$i];
+      for ($i = 0; $i < count($elements); $i++) {
+        $this->_activeFields[$i]->_phoneType = $elements[$i];
       }
     }
   }
@@ -658,19 +663,19 @@ abstract class CRM_Member_Import_Parser {
       'phone' => '',
     ];
     foreach ($this->_fields as $name => $field) {
-      if(isset($priority_fields[$name])){
+      if (isset($priority_fields[$name])) {
         $priority_fields[$name] = $field->_dataPattern;
       }
-      elseif(preg_match('/_date$/', $name)){
+      elseif (preg_match('/_date$/', $name)) {
         $priority_fields[$name] = $field->_dataPattern;
       }
-      elseif(isset($secondary_fields[$name])){
+      elseif (isset($secondary_fields[$name])) {
         $secondary_fields[$name] = $field->_dataPattern;
       }
-      elseif(preg_match('/^'.ts('Contact').'::/', $field->_title)){
+      elseif (preg_match('/^'.ts('Contact').'::/', $field->_title)) {
         $contact_fields[$name] = $field->_dataPattern;
       }
-      else{
+      else {
         $member_fields[$name] = $field->_dataPattern;
       }
     }
@@ -799,4 +804,3 @@ abstract class CRM_Member_Import_Parser {
     return CRM_Import_Parser::saveFileName($type, $prefix);
   }
 }
-

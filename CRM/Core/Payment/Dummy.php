@@ -26,7 +26,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  public CONST CHARSET = 'iso-8859-1';
+  public const CHARSET = 'iso-8859-1';
 
   protected static $_mode = NULL;
 
@@ -88,7 +88,8 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
 
     // no translation in Dummy processor
     $cookedParams = $params;
-    CRM_Utils_Hook::alterPaymentProcessorParams($this,
+    CRM_Utils_Hook::alterPaymentProcessorParams(
+      $this,
       $params,
       $cookedParams
     );
@@ -135,4 +136,3 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
     return NULL;
   }
 }
-

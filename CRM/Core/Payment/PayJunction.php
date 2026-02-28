@@ -28,7 +28,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   public $_processorName;
   public $_params;
   # (not used, implicit in the API, might need to convert?)
-  public CONST CHARSET = 'UFT-8';
+  public const CHARSET = 'UFT-8';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -73,7 +73,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   }
 
   /*
-    * This function sends request and receives response from 
+    * This function sends request and receives response from
     * PayJunction payment process
     */
   public function doDirectPayment(&$params) {
@@ -230,8 +230,10 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   public function &error($error = NULL) {
     $e = &CRM_Core_Error::singleton();
     if ($error) {
-      $e->push($error['dc_response_code'],
-        0, NULL,
+      $e->push(
+        $error['dc_response_code'],
+        0,
+        NULL,
         $error['dc_response_message']
       );
     }
@@ -288,4 +290,3 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   }
 }
 // end class CRM_Core_Payment_PayJunction
-

@@ -53,4 +53,3 @@ class CRM_Activity_Import_Controller extends CRM_Core_Controller {
     $this->addActions($config->uploadDir, ['uploadFile']);
   }
 }
-

@@ -106,7 +106,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   public static function del($messageTemplatesID) {
     // make sure messageTemplatesID is an integer
     if (!CRM_Utils_Rule::positiveInteger($messageTemplatesID)) {
-       return CRM_Core_Error::statusBounce(ts('Invalid Message template'));
+      return CRM_Core_Error::statusBounce(ts('Invalid Message template'));
     }
 
     // set membership_type to null
@@ -140,9 +140,10 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->is_active = 1;
-    if($isSMS){
+    if ($isSMS) {
       $messageTemplates->is_sms = $isSMS;
-    }else{
+    }
+    else {
       unset($messageTemplates->is_sms);
     }
 
@@ -289,7 +290,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     $diverted->find(1);
 
     if ($diverted->N != 1) {
-       return CRM_Core_Error::statusBounce(ts('Did not find a message template with id of %1.', [1 => $id]));
+      return CRM_Core_Error::statusBounce(ts('Did not find a message template with id of %1.', [1 => $id]));
     }
 
     $orig = new self;
@@ -419,7 +420,8 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
       $contactArray = [$contactID => $contact];
       $contactIDArray = [$contactID];
-      CRM_Utils_Hook::tokenValues($contactArray,
+      CRM_Utils_Hook::tokenValues(
+        $contactArray,
         $contactIDArray,
         NULL,
         CRM_Utils_Token::flattenTokens($tokens),
@@ -464,7 +466,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     $params['html'] = $html;
 
     if ($params['toEmail']) {
-      $contactParams = [ 
+      $contactParams = [
         'email' => $params['toEmail'],
         'version' => 3,
       ];
@@ -497,7 +499,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_mailerTypes);
       if (!empty($params['activityId']) && $config->enableTransactionalEmail) {
         $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $params['activityId'], 'activity_type_id');
-        if(in_array(CRM_Core_OptionGroup::getName('activity_type', $activityTypeId), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
+        if (in_array(CRM_Core_OptionGroup::getName('activity_type', $activityTypeId), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
           $sent = CRM_Mailing_BAO_Transactional::send($params, $callback);
         }
       }
@@ -537,4 +539,3 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     return [];
   }
 }
-

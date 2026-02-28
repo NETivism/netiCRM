@@ -88,4 +88,3 @@ class CRM_Core_Permission_Soap {
     return TRUE;
   }
 }
-

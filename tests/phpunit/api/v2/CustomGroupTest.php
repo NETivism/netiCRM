@@ -720,4 +720,3 @@ class api_v2_CustomGroupTest extends CiviUnitTestCase {
     $this->customGroupDelete($customGroup['id']);
   }
 }
-

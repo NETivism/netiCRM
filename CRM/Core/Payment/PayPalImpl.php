@@ -40,7 +40,7 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  public CONST CHARSET = 'iso-8859-1';
+  public const CHARSET = 'iso-8859-1';
 
   protected $_mode = NULL;
 
@@ -311,7 +311,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     $args['countryCode'] = $params['country'];
     $args['zip'] = $params['postal_code'];
     $args['desc'] = $params['description'];
-    $args['custom'] = CRM_Utils_Array::value('accountingCode',
+    $args['custom'] = CRM_Utils_Array::value(
+      'accountingCode',
       $params
     );
     if ($params['is_recur'] == 1) {
@@ -444,7 +445,8 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       'invoice' => $params['invoiceID'],
       'lc' => substr($config->lcMessages, -2),
       'charset' => function_exists('mb_internal_encoding') ? mb_internal_encoding() : 'UTF-8',
-      'custom' => CRM_Utils_Array::value('accountingCode',
+      'custom' => CRM_Utils_Array::value(
+        'accountingCode',
         $params
       ),
     ];
@@ -591,8 +593,10 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
 
     if (curl_errno($ch)) {
       $e = &CRM_Core_Error::singleton();
-      $e->push(curl_errno($ch),
-        0, NULL,
+      $e->push(
+        curl_errno($ch),
+        0,
+        NULL,
         curl_error($ch)
       );
       return $e;
@@ -605,8 +609,10 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
       strtolower($result['ack']) != 'successwithwarning'
     ) {
       $e = &CRM_Core_Error::singleton();
-      $e->push($result['l_errorcode0'],
-        0, NULL,
+      $e->push(
+        $result['l_errorcode0'],
+        0,
+        NULL,
         "{$result['l_shortmessage0']} {$result['l_longmessage0']}"
       );
       return $e;
@@ -644,4 +650,3 @@ class CRM_Core_Payment_PayPalImpl extends CRM_Core_Payment {
     return $result;
   }
 }
-

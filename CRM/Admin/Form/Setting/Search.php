@@ -57,7 +57,10 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
     $this->addYesNo('includeAlphabeticalPager', ts('Include Alphabetical Pager'));
     $this->addYesNo('includeOrderByClause', ts('Include Order By Clause'));
 
-    $this->addElement('text', 'smartGroupCacheTimeout', ts('Smart group cache timeout'),
+    $this->addElement(
+      'text',
+      'smartGroupCacheTimeout',
+      ts('Smart group cache timeout'),
       ['size' => 3, 'maxlength' => 5]
     );
 
@@ -65,7 +68,10 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
     $types = ['Contact', 'Individual', 'Organization', 'Household'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
 
-    $this->add('select', 'defaultSearchProfileID', ts('Default Contact Search Profile'),
+    $this->add(
+      'select',
+      'defaultSearchProfileID',
+      ts('Default Contact Search Profile'),
       ['' => ts('- select -')] + $profiles
     );
 
@@ -76,4 +82,3 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 }
-

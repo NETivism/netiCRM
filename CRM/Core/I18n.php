@@ -85,7 +85,7 @@ class CRM_Core_I18n {
 
         $this->_phpgettext = new CRM_Core_I18n_NativeGettext();
       }
-      else{
+      else {
         // Otherwise, use PHP-gettext
         $streamer = new FileReader($gettextResourceDir . $locale . DIRECTORY_SEPARATOR . 'LC_MESSAGES' . DIRECTORY_SEPARATOR . 'civicrm.mo');
         $this->_phpgettext = new gettext_reader($streamer);
@@ -150,7 +150,9 @@ class CRM_Core_I18n {
         if ($code == CRM_Core_Config::SYSTEM_LANG) {
           continue;
         }
-        if (!in_array($code, $codes))unset($all[$code]);
+        if (!in_array($code, $codes)) {
+          unset($all[$code]);
+        }
       }
     }
 
@@ -265,7 +267,7 @@ class CRM_Core_I18n {
       }
     }
 
-    if (!$exactMatch && isset($stringTable['enabled']['wildcardMatch']) ) {
+    if (!$exactMatch && isset($stringTable['enabled']['wildcardMatch'])) {
       $search = array_keys($stringTable['enabled']['wildcardMatch']);
       $replace = array_values($stringTable['enabled']['wildcardMatch']);
       $text = str_replace($search, $replace, $text);
@@ -426,4 +428,3 @@ class CRM_Core_I18n {
     return (bool) $domain->locales;
   }
 }
-

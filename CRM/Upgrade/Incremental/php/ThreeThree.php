@@ -61,10 +61,13 @@ class CRM_Upgrade_Incremental_php_ThreeThree {
     $customField->find();
     while ($customField->fetch()) {
       $name = CRM_Utils_String::munge($customField->label, '_', 64);
-      $fldCnt = CRM_Core_DAO::singleValueQuery($customFldCntQuery,
+      $fldCnt = CRM_Core_DAO::singleValueQuery(
+        $customFldCntQuery,
         [1 => [$name, 'String'],
           2 => [$customField->id, 'Integer'],
-        ], TRUE, FALSE
+        ],
+        TRUE,
+        FALSE
       );
       if ($fldCnt) {
         $name = CRM_Utils_String::munge("{$name}_" . rand(), '_', 64);
@@ -89,7 +92,8 @@ WHERE id = %2
     $customGroup->find();
     while ($customGroup->fetch()) {
       $name = CRM_Utils_String::munge($customGroup->title, '_', 64);
-      $grpCnt = CRM_Core_DAO::singleValueQuery($customGrpCntQuery,
+      $grpCnt = CRM_Core_DAO::singleValueQuery(
+        $customGrpCntQuery,
         [1 => [$name, 'String'],
           2 => [$customGroup->id, 'Integer'],
         ]
@@ -109,7 +113,8 @@ WHERE id = %2
     $ufGroup->find();
     while ($ufGroup->fetch()) {
       $name = CRM_Utils_String::munge($ufGroup->title, '_', 64);
-      $ufGrpCnt = CRM_Core_DAO::singleValueQuery($ufGrpCntQuery,
+      $ufGrpCnt = CRM_Core_DAO::singleValueQuery(
+        $ufGrpCntQuery,
         [1 => [$name, 'String'],
           2 => [$ufGroup->id, 'Integer'],
         ]
@@ -258,7 +263,9 @@ WHERE id = %2
     $mainLineItem->find(TRUE);
     while ($mainLineItem->fetch()) {
       $dupeLineItem = new CRM_Price_BAO_LineItem();
-      foreach ($fields as $fld) $dupeLineItem->$fld = $mainLineItem->$fld;
+      foreach ($fields as $fld) {
+        $dupeLineItem->$fld = $mainLineItem->$fld;
+      }
       $dupeLineItem->find(TRUE);
       $dupeLineItem->addWhere("id != $mainLineItem->id");
       while ($dupeLineItem->fetch()) {
@@ -308,11 +315,14 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id )
      WHERE  grp.name = %1
        AND  val.name IN ( ' . "'" . CRM_Utils_Array::implode("', '", $locales) . "' )";
 
-      CRM_Core_DAO::executeQuery($sql,
+      CRM_Core_DAO::executeQuery(
+        $sql,
         [1 => ['languages', 'String']],
-        TRUE, NULL, FALSE, FALSE
+        TRUE,
+        NULL,
+        FALSE,
+        FALSE
       );
     }
   }
 }
-

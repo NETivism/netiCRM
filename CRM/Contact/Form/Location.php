@@ -84,7 +84,7 @@ class CRM_Contact_Form_Location {
 
     //build 1 instance of all blocks, without using ajax ...
     foreach ($form->_blocks as $blockName => $label) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $blockName) . ".php");
+      require_once(str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $blockName) . ".php");
       $name = strtolower($blockName);
 
       $instances = [1];
@@ -108,7 +108,7 @@ class CRM_Contact_Form_Location {
 
         $form->set($blockName . "_Block_Count", $instance);
         $formName = 'CRM_Contact_Form_Edit_' . $blockName;
-        $formName::buildQuickForm( $form );
+        $formName::buildQuickForm($form);
       }
     }
 
@@ -117,4 +117,3 @@ class CRM_Contact_Form_Location {
     $form->assign('ajaxRequestBlocks', $ajaxRequestBlocks);
   }
 }
-

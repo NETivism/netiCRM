@@ -115,7 +115,7 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
 
 
       $modeValue = CRM_Contact_Form_Search::getModeValueCommon($componentMode);
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $modeValue['taskClassName']) . '.php');
+      require_once(str_replace('_', DIRECTORY_SEPARATOR, $modeValue['taskClassName']) . '.php');
       $taskClassName = $modeValue['taskClassName'];
 
       // build tasks for custom class
@@ -128,7 +128,7 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
           }
         }
       }
-      return $taskClassName::getTask( $value );
+      return $taskClassName::getTask($value);
     }
     else {
       return CRM_Contact_Task::getTask($value);
@@ -151,4 +151,3 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
     }
   }
 }
-

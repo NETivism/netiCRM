@@ -113,4 +113,3 @@ class CRM_Utils_Verp {
     return ["$slocal@$sdomain", "$rlocal@$rdomain"];
   }
 }
-

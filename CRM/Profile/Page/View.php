@@ -67,18 +67,21 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
 
     // disable anon user for access some profile
     $ufid = $session->get("ufID");
-    if(empty($ufid)){
-       return CRM_Core_Error::statusBounce(ts("You must be logged in to view this page."));
+    if (empty($ufid)) {
+      return CRM_Core_Error::statusBounce(ts("You must be logged in to view this page."));
       return;
     }
 
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE
+    $this->_id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE
     );
     if (!$this->_id) {
       $this->_id = $session->get('userID');
       if (!$this->_id) {
-         return CRM_Core_Error::statusBounce(ts('Could not find the required contact id parameter (id=) for viewing a contact record with a Profile.'));
+        return CRM_Core_Error::statusBounce(ts('Could not find the required contact id parameter (id=) for viewing a contact record with a Profile.'));
       }
     }
     $this->assign('cid', $this->_id);
@@ -96,7 +99,7 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
       // check if we are rendering mixed profiles
 
       if (CRM_Core_BAO_UFGroup::checkForMixProfiles($profileIds)) {
-         return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
+        return CRM_Core_Error::statusBounce(ts('You cannot combine profiles of multiple types.'));
       }
 
       $this->_gid = $profileIds[0];
@@ -122,11 +125,14 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
       if (!empty($profileIds)) {
         $gidString = CRM_Utils_Array::implode(',', $profileIds);
       }
-      if (CRM_Core_Permission::ufGroupValid($this->_gid,
-          CRM_Core_Permission::SEARCH
-        )) {
-        $this->assign('listingURL',
-          CRM_Utils_System::url("civicrm/profile",
+      if (CRM_Core_Permission::ufGroupValid(
+        $this->_gid,
+        CRM_Core_Permission::SEARCH
+      )) {
+        $this->assign(
+          'listingURL',
+          CRM_Utils_System::url(
+            "civicrm/profile",
             "force=1&gid={$gidString}"
           )
         );
@@ -148,8 +154,10 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
         }
         $profileGroups[] = $profileGroup;
       }
-      $this->assign('listingURL',
-        CRM_Utils_System::url("civicrm/profile",
+      $this->assign(
+        'listingURL',
+        CRM_Utils_System::url(
+          "civicrm/profile",
           "force=1"
         )
       );
@@ -199,4 +207,3 @@ class CRM_Profile_Page_View extends CRM_Core_Page {
     return parent::getTemplateFileName();
   }
 }
-

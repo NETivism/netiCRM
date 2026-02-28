@@ -105,7 +105,8 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
       CRM_Utils_System::setTitle(ts('Manage ACL Roles'));
       // set breadcrumb to append to admin/access
       $breadCrumb = [['title' => ts('Access Control'),
-          'url' => CRM_Utils_System::url('civicrm/admin/access',
+          'url' => CRM_Utils_System::url(
+            'civicrm/admin/access',
             'reset=1'
           ),
         ]];
@@ -217,13 +218,18 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
     $groupParams = ['name' => self::$_gName];
     $optionValue = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'component_id,weight');
     $gName = self::$_gName;
-    $returnURL = CRM_Utils_System::url("civicrm/admin/options/$gName",
+    $returnURL = CRM_Utils_System::url(
+      "civicrm/admin/options/$gName",
       "reset=1&group=$gName"
     );
     $filter = "option_group_id = " . self::$_gId;
 
-    CRM_Utils_Weight::addOrder($optionValue, 'CRM_Core_DAO_OptionValue',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $optionValue,
+      'CRM_Core_DAO_OptionValue',
+      'id',
+      $returnURL,
+      $filter
     );
     $this->assign('rows', $optionValue);
   }
@@ -267,4 +273,3 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
     return 'group=' . self::$_gName . '&reset=1&action=browse';
   }
 }
-

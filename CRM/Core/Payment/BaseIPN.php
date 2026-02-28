@@ -134,23 +134,23 @@ class CRM_Core_Payment_BaseIPN {
           $daoLastContribution = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date DESC", [
               1 => [$ids['contributionRecur'], 'Integer'],
             ]);
-            if ($daoLastContribution->N > 1) {
-              $daoLastContribution->fetch();
-              $ids['contribution'] = $daoLastContribution->id;
-              $lastContribution = new CRM_Contribute_DAO_Contribution();
-              $lastContribution->id = $ids['contribution'];
-              if ($lastContribution->find(TRUE)) {
-                // not sure why we need this anymore.
-                // $lastContribution->receive_date = CRM_Utils_Date::isoToMysql($lastContribution->receive_date);
-                // $lastContribution->created_date = CRM_Utils_Date::isoToMysql($lastContribution->created_date);
-                unset($contribution);
-                unset($objects['contribution']);
-                $objects['contribution'] = $lastContribution;
-                $contribution = &$objects['contribution'];
-              }
+          if ($daoLastContribution->N > 1) {
+            $daoLastContribution->fetch();
+            $ids['contribution'] = $daoLastContribution->id;
+            $lastContribution = new CRM_Contribute_DAO_Contribution();
+            $lastContribution->id = $ids['contribution'];
+            if ($lastContribution->find(TRUE)) {
+              // not sure why we need this anymore.
+              // $lastContribution->receive_date = CRM_Utils_Date::isoToMysql($lastContribution->receive_date);
+              // $lastContribution->created_date = CRM_Utils_Date::isoToMysql($lastContribution->created_date);
+              unset($contribution);
+              unset($objects['contribution']);
+              $objects['contribution'] = $lastContribution;
+              $contribution = &$objects['contribution'];
             }
           }
         }
+      }
 
       // retrieve the other optional objects first so
       // stuff down the line can use this info and do things
@@ -306,7 +306,7 @@ class CRM_Core_Payment_BaseIPN {
     }
     // it's contribution, maybe have premium
     else {
-      try{
+      try {
         CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, ts('Transaction failed or batch action'));
       }
       catch (Exception $e) {
@@ -320,7 +320,7 @@ class CRM_Core_Payment_BaseIPN {
     CRM_Core_Error::debug_log_message("Setting contribution status to failed");
 
     // Send notify email as
-    if(!empty($contribution->contribution_recur_id)){
+    if (!empty($contribution->contribution_recur_id)) {
       $sql = "SELECT COUNT(id) FROM civicrm_contribution WHERE contribution_recur_id = {$contribution->contribution_recur_id}";
       $crcount = CRM_Core_DAO::singleValueQuery($sql);
 
@@ -330,7 +330,7 @@ class CRM_Core_Payment_BaseIPN {
       if (!empty($recur_fail_notify)) {
         CRM_Core_Error::debug_log_message("Prepare to send failed notify. CR_count: {$crcount}, Id: {$contribution->id}, Status: {$contribution->contribution_status_id} Mail to: {$recur_fail_notify}");
       }
-      if($crcount >= 2 && $contribution->contribution_status_id == 4 && !empty($recur_fail_notify)){
+      if ($crcount >= 2 && $contribution->contribution_status_id == 4 && !empty($recur_fail_notify)) {
         $values = [
           'contribution_id' => $contribution->id,
           'currency' => $contribution->currency,
@@ -391,7 +391,7 @@ class CRM_Core_Payment_BaseIPN {
     }
     // it's contribution, maybe have premium
     else {
-      try{
+      try {
         CRM_Contribute_BAO_Premium::restockPremiumInventory($contribution->id, ts('Transaction failed or batch action'));
       }
       catch (Exception $e) {
@@ -430,7 +430,7 @@ class CRM_Core_Payment_BaseIPN {
       $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
 
       if ($sendMail && empty($input['do_not_email']) && empty($input['do_not_receipt']) &&
-        ($values['is_email_receipt'] || $values['is_send_sms']) ) {
+        ($values['is_email_receipt'] || $values['is_send_sms'])) {
         // only override receipt_date when necessary
         if (empty($contribution->receipt_date)) {
           $contribution->receipt_date = self::$_now;
@@ -446,15 +446,17 @@ class CRM_Core_Payment_BaseIPN {
         $format = '%Y%m%d';
 
 
-        $currentMembership = CRM_Member_BAO_Membership::getContactMembership($membership->contact_id,
+        $currentMembership = CRM_Member_BAO_Membership::getContactMembership(
+          $membership->contact_id,
           $membership->membership_type_id,
-          $membership->is_test, $membership->id
+          $membership->is_test,
+          $membership->id
         );
         if ($currentMembership) {
           /**
            * Fixed FOR CRM-4433
-           * In BAO/Membership.php(renewMembership function), we skip the extend membership date and status 
-           * when Contribution mode is notify and membership is for renewal ) 
+           * In BAO/Membership.php(renewMembership function), we skip the extend membership date and status
+           * when Contribution mode is notify and membership is for renewal )
            */
 
           if (!empty($membership->end_date_as_start_date)) {
@@ -481,7 +483,8 @@ class CRM_Core_Payment_BaseIPN {
 
         //get the status for membership.
 
-        $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($dates['start_date'],
+        $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate(
+          $dates['start_date'],
           $dates['end_date'],
           $dates['join_date'],
           'today',
@@ -647,9 +650,13 @@ class CRM_Core_Payment_BaseIPN {
     //update corresponding pledge payment record
 
     $returnProperties = ['id', 'pledge_id'];
-    if (CRM_Core_DAO::commonRetrieveAll('CRM_Pledge_DAO_Payment', 'contribution_id', $contribution->id,
-        $paymentDetails, $returnProperties
-      )) {
+    if (CRM_Core_DAO::commonRetrieveAll(
+      'CRM_Pledge_DAO_Payment',
+      'contribution_id',
+      $contribution->id,
+      $paymentDetails,
+      $returnProperties
+    )) {
       $paymentIDs = [];
       foreach ($paymentDetails as $key => $value) {
         $paymentIDs[] = $value['id'];
@@ -746,7 +753,7 @@ class CRM_Core_Payment_BaseIPN {
   }
 
   public static function copyContribution(&$contrib, $rid, $trxn_id) {
-    if(is_object($contrib)){
+    if (is_object($contrib)) {
       $c = clone $contrib;
       unset($c->id);
       unset($c->receive_date);
@@ -812,7 +819,8 @@ class CRM_Core_Payment_BaseIPN {
           $values['priceSetID'] = $pId;
         }
 
-        $relatedContact = CRM_Contribute_BAO_Contribution::getOnbehalfIds($contribID,
+        $relatedContact = CRM_Contribute_BAO_Contribution::getOnbehalfIds(
+          $contribID,
           $contribution->contact_id
         );
         // if this is onbehalf of contribution then set related contact
@@ -885,10 +893,11 @@ class CRM_Core_Payment_BaseIPN {
     $template->clearTemplateVars();
     // CRM_Core_Error::debug('tpl',$template);
     //assign honor infomation to receiptmessage
-    if ($honarID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',
-        $contribution->id,
-        'honor_contact_id'
-      )) {
+    if ($honarID = CRM_Core_DAO::getFieldValue(
+      'CRM_Contribute_DAO_Contribution',
+      $contribution->id,
+      'honor_contact_id'
+    )) {
       $honorDefault = [];
       $honorIds = [];
       $honorIds['contribution'] = $contribution->id;
@@ -939,7 +948,7 @@ class CRM_Core_Payment_BaseIPN {
         $template->assign('price', $totalPrice);
         $template->assign('sku', implode(', ', $skuArray));
       }
-      else if (!empty($premiumDetails['products'])) {
+      elseif (!empty($premiumDetails['products'])) {
         // Single product premium
         $product = $premiumDetails['products'][0];
         $productDAO = new CRM_Contribute_DAO_Product();
@@ -991,13 +1000,16 @@ class CRM_Core_Payment_BaseIPN {
     }
 
     $template->assign('trxn_id', $contribution->trxn_id);
-    $template->assign('receive_date',
+    $template->assign(
+      'receive_date',
       CRM_Utils_Date::mysqlToIso($contribution->receive_date)
     );
     $template->assign('contributeMode', 'notify');
     $template->assign('action', $contribution->is_test ? 1024 : 1);
-    $template->assign('receipt_text',
-      CRM_Utils_Array::value('receipt_text',
+    $template->assign(
+      'receipt_text',
+      CRM_Utils_Array::value(
+        'receipt_text',
         $values
       )
     );
@@ -1014,7 +1026,8 @@ class CRM_Core_Payment_BaseIPN {
     if ($recur && !empty($objects['contributionRecur'])) {
       $template->assign('is_recur', 1);
 
-      $paymentObject = &CRM_Core_Payment::singleton($contribution->is_test ? 'test' : 'live',
+      $paymentObject = &CRM_Core_Payment::singleton(
+        $contribution->is_test ? 'test' : 'live',
         $objects['paymentProcessor']
       );
       $url = $paymentObject->cancelSubscriptionURL();
@@ -1024,7 +1037,7 @@ class CRM_Core_Payment_BaseIPN {
         $template->assign('contributeMode', 'directIPN');
       }
 
-      if(!empty($objects['contributionRecur'])){
+      if (!empty($objects['contributionRecur'])) {
         $recurring = [
           'frequency_unit' => NULL,
           'frequency_interval' => NULL,
@@ -1032,14 +1045,14 @@ class CRM_Core_Payment_BaseIPN {
           'start_date' => NULL,
           'end_date' => NULL,
         ];
-        foreach($recurring as $k => $v){
-          if(isset($objects['contributionRecur']->$k)){
+        foreach ($recurring as $k => $v) {
+          if (isset($objects['contributionRecur']->$k)) {
             $value = $objects['contributionRecur']->$k;
-            if(!empty($value)){
-              if(strstr($k, '_date')){
+            if (!empty($value)) {
+              if (strstr($k, '_date')) {
                 $recurring[$k] = CRM_Utils_Date::customFormat($value, $config->dateformatFull);
               }
-              else{
+              else {
                 $recurring[$k] = $value;
               }
             }
@@ -1133,7 +1146,8 @@ class CRM_Core_Payment_BaseIPN {
         // need to set the membership values here
         $template->assign('membership_assign', 1);
 
-        $template->assign('membership_name',
+        $template->assign(
+          'membership_name',
           CRM_Member_PseudoConstant::membershipType($membership->membership_type_id)
         );
         $template->assign('mem_start_date', $membership->start_date);
@@ -1154,8 +1168,11 @@ class CRM_Core_Payment_BaseIPN {
 
 
         $entityBlock = ['contact_id' => $ids['contact'],
-          'location_type_id' => CRM_Core_DAO::getFieldValue('CRM_Core_DAO_LocationType',
-            'Home', 'id', 'name'
+          'location_type_id' => CRM_Core_DAO::getFieldValue(
+            'CRM_Core_DAO_LocationType',
+            'Home',
+            'id',
+            'name'
           ),
         ];
         $address = CRM_Core_BAO_Address::getValues($entityBlock);
@@ -1172,15 +1189,16 @@ class CRM_Core_Payment_BaseIPN {
       $values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($template, $groupTree);
 
 
-      if(!empty($contribution->amount_level)){
+      if (!empty($contribution->amount_level)) {
         $values['amount_level'] = $contribution->amount_level;
-      }else{
+      }
+      else {
         $values['amount_level'] = FALSE;
       }
       $template->assign('amount_level', $values['amount_level']);
       // 2015.1.30 End
 
-      $template->assign('paymentProcessor',$objects['paymentProcessor']);
+      $template->assign('paymentProcessor', $objects['paymentProcessor']);
 
       // CRM_Core_Error::debug('val',$values);
 
@@ -1205,7 +1223,8 @@ class CRM_Core_Payment_BaseIPN {
     $ids['contribution'] = $contributionId;
 
     if (!$ids['contact'] = CRM_Utils_Array::value('contact_id', $params)) {
-      $ids['contact'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution',
+      $ids['contact'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_Contribution',
         $contributionId,
         'contact_id'
       );
@@ -1216,7 +1235,8 @@ class CRM_Core_Payment_BaseIPN {
       $ids['participant'] = $componentId;
 
       if (!$ids['event'] = CRM_Utils_Array::value('event_id', $params)) {
-        $ids['event'] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant',
+        $ids['event'] = CRM_Core_DAO::getFieldValue(
+          'CRM_Event_DAO_Participant',
           $componentId,
           'event_id'
         );
@@ -1294,4 +1314,3 @@ class CRM_Core_Payment_BaseIPN {
     return $statusId;
   }
 }
-

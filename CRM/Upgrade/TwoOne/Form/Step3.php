@@ -44,7 +44,8 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
   public function upgrade() {
     $currentDir = dirname(__FILE__);
 
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'misc.mysql']
     );
     $this->source($sqlFile);
@@ -125,4 +126,3 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
     return ts('Upgrade & Continue');
   }
 }
-

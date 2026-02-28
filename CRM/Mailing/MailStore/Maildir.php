@@ -126,4 +126,3 @@ class CRM_Mailing_MailStore_Maildir extends CRM_Mailing_MailStore {
     }
   }
 }
-

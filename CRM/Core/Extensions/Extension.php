@@ -48,11 +48,12 @@ class CRM_Core_Extensions_Extension {
   /**
    *
    */
-  public CONST OPTION_GROUP_NAME = 'system_extensions';
+  public const OPTION_GROUP_NAME = 'system_extensions';
 
   public $type = NULL;
 
-  public $path = NULL; public function __construct($key, $type = NULL, $name = NULL, $label = NULL, $file = NULL, $is_active = 0) {
+  public $path = NULL;
+  public function __construct($key, $type = NULL, $name = NULL, $label = NULL, $file = NULL, $is_active = 0) {
     $this->key = $key;
     $this->type = $type;
     $this->name = $name;
@@ -118,8 +119,10 @@ class CRM_Core_Extensions_Extension {
 
   private function _parseXMLFile($file) {
     if (file_exists($file)) {
-      return simplexml_load_file($file,
-        'SimpleXMLElement', LIBXML_NOCDATA
+      return simplexml_load_file(
+        $file,
+        'SimpleXMLElement',
+        LIBXML_NOCDATA
       );
     }
     else {
@@ -151,21 +154,21 @@ class CRM_Core_Extensions_Extension {
 
   private function _setActiveByType($state) {
     $hcName = "CRM_Core_Extensions_" . ucwords($this->type);
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $hcName) . '.php');
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $hcName) . '.php');
     $ext = new $hcName($this);
     $state ? $ext->enable() : $ext->disable();
   }
 
   private function _registerExtensionByType() {
     $hcName = "CRM_Core_Extensions_" . ucwords($this->type);
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $hcName) . '.php');
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $hcName) . '.php');
     $ext = new $hcName($this);
     $ext->install();
   }
 
   private function _removeExtensionByType() {
     $hcName = "CRM_Core_Extensions_" . ucwords($this->type);
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $hcName) . '.php');
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $hcName) . '.php');
     $ext = new $hcName($this);
     $ext->uninstall();
   }
@@ -193,4 +196,3 @@ class CRM_Core_Extensions_Extension {
     $optionValue = CRM_Core_BAO_OptionValue::add($params, $ids);
   }
 }
-

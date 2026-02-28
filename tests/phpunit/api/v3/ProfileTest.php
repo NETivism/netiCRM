@@ -12,7 +12,7 @@ require_once 'tests/phpunit/CiviTest/CiviUnitTestCase.php';
  *  @package   CiviCRM
  */
 class api_v3_ProfileTest extends CiviUnitTestCase {
-  protected $_apiversion; 
+  protected $_apiversion;
   public function get_info() {
     return [
       'name' => 'Profile Test',
@@ -86,11 +86,17 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     $result = civicrm_api('profile', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
 
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
 
     foreach ($expected as $profileField => $value) {
-      $this->assertEquals($value, CRM_Utils_Array::value($profileField, $result['values']), "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
+      $this->assertEquals(
+        $value,
+        CRM_Utils_Array::value($profileField, $result['values']),
+        "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
       );
     }
 
@@ -148,7 +154,10 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     ];
 
     $activity = civicrm_api('activity', 'create', $activityparams);
-    $this->assertEquals(0, $activity['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $activity)
+    $this->assertEquals(
+      0,
+      $activity['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $activity)
     );
 
     $activityValues = array_pop($activity['values']);
@@ -172,11 +181,17 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
 
     $result = civicrm_api('profile', 'get', $params);
 
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
 
     foreach ($expected as $profileField => $value) {
-      $this->assertEquals($value, CRM_Utils_Array::value($profileField, $result['values']), "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
+      $this->assertEquals(
+        $value,
+        CRM_Utils_Array::value($profileField, $result['values']),
+        "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
       );
     }
 
@@ -236,7 +251,8 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
       'state_province-1' => '1000',
     ];
 
-    $params = array_merge(['profile_id' => 25, 'contact_id' => $contactId, 'version' => 3],
+    $params = array_merge(
+      ['profile_id' => 25, 'contact_id' => $contactId, 'version' => 3],
       $updateParams
     );
 
@@ -274,7 +290,10 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     $result = civicrm_api('profile', 'set', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
 
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
 
     $getParams = [
@@ -283,11 +302,17 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
       'version' => 3,
     ];
     $profileDetails = civicrm_api('profile', 'get', $getParams);
-    $this->assertEquals(0, $profileDetails['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $profileDetails)
+    $this->assertEquals(
+      0,
+      $profileDetails['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $profileDetails)
     );
 
     foreach ($updateParams as $profileField => $value) {
-      $this->assertEquals($value, CRM_Utils_Array::value($profileField, $profileDetails['values']), "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
+      $this->assertEquals(
+        $value,
+        CRM_Utils_Array::value($profileField, $profileDetails['values']),
+        "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
       );
     }
   }
@@ -347,7 +372,10 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     ];
 
     $activity = civicrm_api('activity', 'create', $activityparams);
-    $this->assertEquals(0, $activity['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $activity)
+    $this->assertEquals(
+      0,
+      $activity['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $activity)
     );
 
     $activityValues = array_pop($activity['values']);
@@ -383,15 +411,22 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     $profileParams = array_merge($params, $updateParams);
     $profile       = civicrm_api('profile', 'set', $profileParams);
     $result        = civicrm_api('profile', 'get', $params);
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
 
     foreach ($updateParams as $profileField => $value) {
-      $this->assertEquals($value, CRM_Utils_Array::value($profileField, $result['values']), "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
+      $this->assertEquals(
+        $value,
+        CRM_Utils_Array::value($profileField, $result['values']),
+        "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$profileField}"
       );
     }
 
-    $this->quickCleanup([
+    $this->quickCleanup(
+      [
       'civicrm_uf_field',
         'civicrm_uf_join',
         'civicrm_uf_group',
@@ -454,7 +489,10 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     $result = civicrm_api('profile', 'apply', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
 
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
 
     // Expected field values
@@ -484,7 +522,10 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     ];
 
     foreach ($expected['contact'] as $field => $value) {
-      $this->assertEquals($value, CRM_Utils_Array::value($field, $result['values']), "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$field}"
+      $this->assertEquals(
+        $value,
+        CRM_Utils_Array::value($field, $result['values']),
+        "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$field}"
       );
     }
 
@@ -492,7 +533,10 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
       'email', 'phone', 'address'] as $fieldType) {
       $typeValues = array_pop($result['values'][$fieldType]);
       foreach ($expected[$fieldType] as $field => $value) {
-        $this->assertEquals($value, CRM_Utils_Array::value($field, $typeValues), "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$field} ({$fieldType})"
+        $this->assertEquals(
+          $value,
+          CRM_Utils_Array::value($field, $typeValues),
+          "In line " . __LINE__ . " error message: " . "missing/mismatching value for {$field} ({$fieldType})"
         );
       }
     }
@@ -528,26 +572,37 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
 
     $contact = civicrm_api('contact', 'create', $contactParams);
 
-    $this->assertEquals(0, $contact['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertEquals(
+      0,
+      $contact['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
 
     $contactId = array_pop(array_keys($contact['values']));
 
-    $this->assertEquals(0, $contact['values'][$contactId]['api.address.create']['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact['values'][$contactId]['api.address.create'])
+    $this->assertEquals(
+      0,
+      $contact['values'][$contactId]['api.address.create']['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact['values'][$contactId]['api.address.create'])
     );
-    $this->assertEquals(0, $contact['values'][$contactId]['api.phone.create']['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact['values'][$contactId]['api.phone.create'])
+    $this->assertEquals(
+      0,
+      $contact['values'][$contactId]['api.phone.create']['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact['values'][$contactId]['api.phone.create'])
     );
 
     // Create new profile having group_type: Contact,Individual
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . "/dataset/uf_group_25.xml"
       )
     );
     // Create Contact + Idividual fields for profile
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . "/dataset/uf_field_uf_group_25.xml"
       )
@@ -570,7 +625,8 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
   public function _createContactWithActivity() {
     // @TODO: Create profile with custom fields
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/dataset/uf_group_contact_activity_26.xml'
       )
@@ -599,12 +655,18 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
 
     $contact = civicrm_api('contact', 'create', $contactParams);
 
-    $this->assertEquals(0, $contact['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertEquals(
+      0,
+      $contact['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
 
     $contactId = array_pop(array_keys($contact['values']));
 
-    $this->assertEquals(0, $contact['values'][$contactId]['api.address.create']['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact['values'][$contactId]['api.address.create'])
+    $this->assertEquals(
+      0,
+      $contact['values'][$contactId]['api.address.create']['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact['values'][$contactId]['api.address.create'])
     );
 
     $activityParams = [
@@ -621,7 +683,10 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
       'priority_id' => '1',
     ];
     $activity = civicrm_api('activity', 'create', $activityParams);
-    $this->assertEquals(0, $activity['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $activity)
+    $this->assertEquals(
+      0,
+      $activity['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $activity)
     );
 
     $activityValues = array_pop($activity['values']);
@@ -650,4 +715,3 @@ class api_v3_ProfileTest extends CiviUnitTestCase {
     return [$profileParams, $expected];
   }
 }
-

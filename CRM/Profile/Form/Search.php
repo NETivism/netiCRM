@@ -111,9 +111,11 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
   public function buildQuickForm() {
     // Is proximity search enabled for this profile?
 
-    $proxSearch = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup',
+    $proxSearch = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_UFGroup',
       $this->get('gid'),
-      'is_proximity_search', 'id'
+      'is_proximity_search',
+      'id'
     );
     if ($proxSearch) {
 
@@ -137,6 +139,6 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
    *
    * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
 }
-

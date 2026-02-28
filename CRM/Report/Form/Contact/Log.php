@@ -54,7 +54,8 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
    */
   public $_orderBy;
   public $_absoluteUrl;
-  protected $_summary = NULL; public function __construct() {
+  protected $_summary = NULL;
+  public function __construct() {
 
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
@@ -197,7 +198,8 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -228,13 +230,13 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         $this->beginPostProcess( );
 
         $sql  = $this->buildQuery( true );
-//CRM_Core_Error::debug('sql', $sql);             
+//CRM_Core_Error::debug('sql', $sql);
         $rows = $graphRows = array();
         $this->buildRows ( $sql, $rows );
-        
+
         $this->formatDisplay( $rows );
         $this->doTemplateAssignment( $rows );
-        $this->endPostProcess( $rows );	
+        $this->endPostProcess( $rows );
     }
 */
   public function alterDisplay(&$rows) {
@@ -245,7 +247,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -258,7 +261,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_touched_id', $row) &&
         $row['civicrm_contact_touched_display_name_touched'] !== ''
       ) {
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           'reset=1&cid=' . $row['civicrm_contact_touched_id'],
           $this->_absoluteUrl
         );
@@ -271,7 +275,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         CRM_Utils_Array::arrayKeyExists('civicrm_activity_id', $row) &&
         $row['civicrm_activity_subject'] !== ''
       ) {
-        $url = CRM_Utils_System::url('civicrm/contact/view/activity',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/activity',
           'reset=1&action=view&id=' . $row['civicrm_activity_id'] . '&cid=' . $row['civicrm_activity_source_contact_id'] . '&atype=' . $row['civicrm_activity_activity_type_id'],
           $this->_absoluteUrl
         );
@@ -295,4 +300,3 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
     }
   }
 }
-

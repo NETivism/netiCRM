@@ -6,7 +6,8 @@ class api_v2_CustomValueContactTypeTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_apiversion;
   protected $CustomGroupIndividual;
-  protected $individualStudent; public function get_info() {
+  protected $individualStudent;
+  public function get_info() {
     return [
       'name' => 'Custom Data For Conatct Subtype',
       'description' => 'Test Custom Data for Contact subtype.',
@@ -277,4 +278,3 @@ class api_v2_CustomValueContactTypeTest extends CiviUnitTestCase {
     $this->assertEquals($getContact[$this->individualStudent]["custom_{$this->IndiStudentField[id]}"], 'Test String', 'In line ' . __LINE__);
   }
 }
-

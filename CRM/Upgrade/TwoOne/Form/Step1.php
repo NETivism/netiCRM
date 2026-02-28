@@ -75,7 +75,8 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
 
     // check if log file is writable
     if (!is_writable($config->uploadDir . 'CiviCRM.log')) {
-      $errorMessage = ts('Log file CiviCRM.log is not writable. Make sure files directory is writable.',
+      $errorMessage = ts(
+        'Log file CiviCRM.log is not writable. Make sure files directory is writable.',
         [1 => $config->uploadDir]
       );
       return FALSE;
@@ -248,7 +249,8 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
     $currentDir = dirname(__FILE__);
 
     // 1. remove domain_ids from the entire db
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'domain_ids.mysql']
     );
     $this->source($sqlFile);
@@ -260,14 +262,16 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
     while ($dao->fetch()) {
       $query = "ALTER TABLE {$dao->table_name}";
       $constraint = FALSE;
-      if ($constraint = CRM_Core_DAO::checkConstraintExists($dao->table_name,
-          "FK_{$dao->table_name}_domain_id"
-        )) {
+      if ($constraint = CRM_Core_DAO::checkConstraintExists(
+        $dao->table_name,
+        "FK_{$dao->table_name}_domain_id"
+      )) {
         $query .= " DROP FOREIGN KEY FK_{$dao->table_name}_domain_id";
       }
-      if (CRM_Core_DAO::checkConstraintExists($dao->table_name,
-          "unique_domain_id_entity_id"
-        )) {
+      if (CRM_Core_DAO::checkConstraintExists(
+        $dao->table_name,
+        "unique_domain_id_entity_id"
+      )) {
         if ($constraint) {
           $query .= ", ";
         }
@@ -307,4 +311,3 @@ DROP domain_id;";
     return ts('Begin Upgrade');
   }
 }
-

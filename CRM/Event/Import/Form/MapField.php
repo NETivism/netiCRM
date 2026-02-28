@@ -341,7 +341,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
         if ($hasHeaders) {
           // Infer the default from the skipped headers if we have them
           $defaults["mapper[$i]"] = [
-            $this->defaultFromHeader($this->_columnHeaders[$i],
+            $this->defaultFromHeader(
+              $this->_columnHeaders[$i],
               $headerPatterns
             ),
             //                     $defaultLocationType->id
@@ -375,7 +376,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
 
     $this->setDefaults($defaults);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -462,7 +464,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
             }
           }
           elseif (!in_array('event_title', $importKeys)) {
-            $errors['_qf_default'] .= ts('Missing required field: Provide %1 or %2',
+            $errors['_qf_default'] .= ts(
+              'Missing required field: Provide %1 or %2',
               [1 => $title, 2 => 'Event Title']
             ) . '<br />';
           }
@@ -577,7 +580,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = ['name' => $params['saveMappingName'],
         'description' => $params['saveMappingDesc'],
-        'mapping_type_id' => CRM_Core_OptionGroup::getValue('mapping_type',
+        'mapping_type_id' => CRM_Core_OptionGroup::getValue(
+          'mapping_type',
           'Import Participant',
           'name'
         ),
@@ -626,4 +630,3 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     return ts('Match Fields');
   }
 }
-

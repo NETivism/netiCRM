@@ -232,4 +232,3 @@ WHERE     %2.id = %1";
     return $result;
   }
 }
-

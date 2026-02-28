@@ -2,13 +2,13 @@
 $drupal_root = getenv("DRUPAL_ROOT");
 $drupal_version = getenv("DRUPAL");
 if (empty($drupal_root)) {
-  $drupal_root = '/var/www/html';  
+  $drupal_root = '/var/www/html';
   if (!file_exists($drupal_root.'/CHANGELOG.txt')) {
     die('No drupal installed or no environment variable drupal_root');
   }
 }
 
-if($drupal_root && is_dir($drupal_root)){
+if ($drupal_root && is_dir($drupal_root)) {
   // detect drupal version via env
   if ($drupal_version && $drupal_version >= 8) {
     chdir($drupal_root);
@@ -42,16 +42,16 @@ if($drupal_root && is_dir($drupal_root)){
   }
 }
 
-if(!defined('CIVICRM_DSN')&&!empty($GLOBALS['mysql_user'])){
+if (!defined('CIVICRM_DSN')&&!empty($GLOBALS['mysql_user'])) {
   $dbName = !empty($GLOBALS['mysql_db']) ? $GLOBALS['mysql_db'] : 'civicrm_tests_dev';
   define('CIVICRM_DSN', "mysqli://{$GLOBALS['mysql_user']}:{$GLOBALS['mysql_pass']}@{$GLOBALS['mysql_host']}/{$dbName}?new_link=true");
 }
 
 
-if(!defined("CIVICRM_DSN")) {
+if (!defined("CIVICRM_DSN")) {
   $dsn = getenv("CIVICRM_TEST_DSN");
-  if (!empty ($dsn)) {
-    define("CIVICRM_DSN",$dsn);
+  if (!empty($dsn)) {
+    define("CIVICRM_DSN", $dsn);
   }
   else {
     echo "\nFATAL: no DB connection configured (CIVICRM_DSN). \nYou can either create/edit " . __DIR__ . "/civicrm.settings.local.php\n";
@@ -68,21 +68,21 @@ mysql -uroot -p
 create database civicrm_tests_dev;
 grant ALL on civicrm_tests_dev.* to db_username@localhost identified by 'db_password';
 grant SUPER on *.* to db_username@localhost identified by 'db_password';\n";
-    die ("");
+    die("");
   }
 }
 
 global $civicrm_root;
-$civicrm_root = dirname( __FILE__, 4);
+$civicrm_root = dirname(__FILE__, 4);
 
 $include_path = '.' . PATH_SEPARATOR .
               $civicrm_root . PATH_SEPARATOR .
               $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR .
               $civicrm_root . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'phpunit'. DIRECTORY_SEPARATOR . 'dbunit' . PATH_SEPARATOR .
               get_include_path();
-if ( set_include_path( $include_path ) === false ) {
-   echo "Could not set the include path<p>";
-   exit();
+if (set_include_path($include_path) === FALSE) {
+  echo "Could not set the include path<p>";
+  exit();
 }
 
 require_once "DB.php";
@@ -107,21 +107,22 @@ define('CIVICRM_UF', 'Drupal');
 
 if (!defined("CIVICRM_TEMPLATE_COMPILEDIR")) {
   if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-    define( 'CIVICRM_TEMPLATE_COMPILEDIR', getenv ('TMP') . DIRECTORY_SEPARATOR . 'civi' . DIRECTORY_SEPARATOR );
-  } else {
-    define( 'CIVICRM_TEMPLATE_COMPILEDIR', '/tmp/civi/' );
+    define('CIVICRM_TEMPLATE_COMPILEDIR', getenv('TMP') . DIRECTORY_SEPARATOR . 'civi' . DIRECTORY_SEPARATOR);
+  }
+  else {
+    define('CIVICRM_TEMPLATE_COMPILEDIR', '/tmp/civi/');
   }
 }
 
-define( 'CIVICRM_SITE_KEY', 'phpunittestfakekey' );
-define( 'CIVICRM_UF_BASEURL' , 'http://FIX ME' );
+define('CIVICRM_SITE_KEY', 'phpunittestfakekey');
+define('CIVICRM_UF_BASEURL', 'http://FIX ME');
 
 
-if ( function_exists( 'variable_get' ) && variable_get('clean_url', '0') != '0' ) {
-  define( 'CIVICRM_CLEANURL', 1 );
+if (function_exists('variable_get') && variable_get('clean_url', '0') != '0') {
+  define('CIVICRM_CLEANURL', 1);
 }
 else {
-  define( 'CIVICRM_CLEANURL', 0 );
+  define('CIVICRM_CLEANURL', 0);
 }
 
 // make sure the memory_limit is at least 64 MB
@@ -130,10 +131,12 @@ $memLimitUnit   = strtolower(substr($memLimitString, -1));
 $memLimit       = (int) $memLimitString;
 switch ($memLimitUnit) {
   case 'g': $memLimit *= 1024;
+    // no break
   case 'm': $memLimit *= 1024;
+    // no break
   case 'k': $memLimit *= 1024;
 }
-if($memLimit >= 0 and $memLimit < 67108864) {
+if ($memLimit >= 0 and $memLimit < 67108864) {
   ini_set('memory_limit', '64M');
 }
 

@@ -77,7 +77,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     $is_test = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $this->_id, 'is_test', 'id');
     $this->associatedContribution($is_test);
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_ParticipantView',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Event_Form_ParticipantView',
       'View Participant',
       $this->_action
     );
@@ -106,7 +107,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
       $this->associatedContribution();
     }
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Participant',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Event_Form_Participant',
       'Create Participation',
       $this->_action
     );
@@ -157,7 +159,9 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     $this->preProcess();
 
     // check if we can process credit card registration
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(
+      FALSE,
+      FALSE,
       "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
@@ -191,11 +195,17 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   }
 
   public function setContext() {
-    $context = CRM_Utils_Request::retrieve('context',
-      'String', $this, FALSE, 'search'
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
-    $compContext = CRM_Utils_Request::retrieve('compContext',
-      'String', $this
+    $compContext = CRM_Utils_Request::retrieve(
+      'compContext',
+      'String',
+      $this
     );
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
@@ -231,7 +241,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'participant':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=participant"
         );
         break;
@@ -241,7 +252,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
         );
         break;
@@ -274,7 +286,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
         if ($this->_contactId) {
           $cid = '&cid=' . $this->_contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/event/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/event/search',
           'force=1' . $cid
         );
         break;
@@ -308,4 +321,3 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     }
   }
 }
-

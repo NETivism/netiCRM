@@ -103,11 +103,17 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     //get the contact read only fields to display.
 
-    $readOnlyFields = array_merge(['contact_type' => '',
+    $readOnlyFields = array_merge(
+      ['contact_type' => '',
         'sort_name' => ts('Name'),
       ],
-      CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
-        TRUE, NULL, FALSE, 'name', TRUE
+      CRM_Core_BAO_Preferences::valueOptions(
+        'contact_autocomplete_options',
+        TRUE,
+        NULL,
+        FALSE,
+        'name',
+        TRUE
       )
     );
 
@@ -126,7 +132,8 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     //validate all voters for required activity.
     //get the survey activities for given voters.
 
-    $this->_surveyActivityIds = CRM_Campaign_BAO_Survey::voterActivityDetails($this->_surveyId,
+    $this->_surveyActivityIds = CRM_Campaign_BAO_Survey::voterActivityDetails(
+      $this->_surveyId,
       $this->_contactIds,
       $this->_interviewerId
     );
@@ -155,7 +162,8 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
     $this->_allowAjaxReleaseButton = FALSE;
     if ($this->_votingTab &&
-      (CRM_Core_Permission::check('manage campaign') ||
+      (
+        CRM_Core_Permission::check('manage campaign') ||
         CRM_Core_Permission::check('administer CiviCampaign') ||
         CRM_Core_Permission::check('release campaign contacts')
       )
@@ -247,8 +255,10 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     $this->_surveyFields = [];
     if ($this->_ufGroupId) {
 
-      $this->_surveyFields = CRM_Core_BAO_UFGroup::getFields($this->_ufGroupId,
-        FALSE, CRM_Core_Action::VIEW
+      $this->_surveyFields = CRM_Core_BAO_UFGroup::getFields(
+        $this->_ufGroupId,
+        FALSE,
+        CRM_Core_Action::VIEW
       );
     }
 
@@ -271,7 +281,10 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
       //build the result field.
       if (!empty($this->_resultOptions)) {
-        $this->add('select', "field[$contactId][result]", ts('Result'),
+        $this->add(
+          'select',
+          "field[$contactId][result]",
+          ts('Result'),
           ['' => ts('- select -')] +
           array_combine($this->_resultOptions, $this->_resultOptions)
         );
@@ -281,8 +294,10 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
 
       //need to keep control for release/reserve.
       if ($this->_allowAjaxReleaseButton) {
-        $this->addElement('hidden',
-          "field[{$contactId}][is_release_or_reserve]", 0,
+        $this->addElement(
+          'hidden',
+          "field[{$contactId}][is_release_or_reserve]",
+          0,
           ['id' => "field_{$contactId}_is_release_or_reserve"]
         );
       }
@@ -382,7 +397,8 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     static $surveyFields;
     if (!is_array($surveyFields)) {
 
-      $surveyFields = CRM_Core_BAO_CustomField::getFields('Activity',
+      $surveyFields = CRM_Core_BAO_CustomField::getFields(
+        'Activity',
         FALSE,
         FALSE,
         $surveyTypeId,
@@ -399,7 +415,8 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
     }
 
     //format custom fields.
-    $customParams = CRM_Core_BAO_CustomField::postProcess($params,
+    $customParams = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $surveyFields,
       $activityId,
       'Activity'
@@ -464,14 +481,16 @@ class CRM_Campaign_Form_Task_Interview extends CRM_Campaign_Form_Task {
         $statusIds[] = $statusId;
       }
 
-      $surveyActivities = CRM_Campaign_BAO_Survey::getSurveyVoterInfo($this->_surveyId,
+      $surveyActivities = CRM_Campaign_BAO_Survey::getSurveyVoterInfo(
+        $this->_surveyId,
         $this->_interviewerId,
         $statusIds
       );
       $this->_contactIds = [];
-      foreach ($surveyActivities as $val) $this->_contactIds[$val['voter_id']] = $val['voter_id'];
+      foreach ($surveyActivities as $val) {
+        $this->_contactIds[$val['voter_id']] = $val['voter_id'];
+      }
       $this->set('contactIds', $this->_contactIds);
     }
   }
 }
-

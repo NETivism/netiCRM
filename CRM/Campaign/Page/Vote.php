@@ -42,7 +42,8 @@
 class CRM_Campaign_Page_Vote extends CRM_Core_Page {
   public $_tabs;
   private $_surveyId;
-  private $_interviewerId; public function reserve() {
+  private $_interviewerId;
+  public function reserve() {
     //build ajax voter search and selector.
     $controller = new CRM_Core_Controller_Simple('CRM_Campaign_Form_Gotv', ts('Reserve Respondents'));
     $controller->set('votingTab', TRUE);
@@ -96,9 +97,10 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     $this->assign('subPageType', $subPageType);
 
     //give focus to proper tab.
-    $this->assign('selectedTabIndex', array_search(CRM_Utils_Array::value('subPage', $_GET, 'reserve'),
-        array_keys($this->_tabs)
-      ));
+    $this->assign('selectedTabIndex', array_search(
+      CRM_Utils_Array::value('subPage', $_GET, 'reserve'),
+      array_keys($this->_tabs)
+    ));
   }
 
   public function run() {
@@ -133,7 +135,8 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
       }
       $allTabs[] = ['id' => $name,
         'title' => $title,
-        'url' => CRM_Utils_System::url('civicrm/campaign/vote',
+        'url' => CRM_Utils_System::url(
+          'civicrm/campaign/vote',
           $urlParams
         ),
       ];
@@ -142,4 +145,3 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     $this->assign('allTabs', empty($allTabs) ? FALSE : $allTabs);
   }
 }
-

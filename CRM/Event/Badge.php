@@ -195,7 +195,8 @@ class CRM_Event_Badge {
     $this->pdf->MultiCell($this->pdf->width, $this->pdf->lineHeight, $txt);
   }
 
-  public function pdfExtraFormat() {}
+  public function pdfExtraFormat() {
+  }
 
   /**
    * function to create labels (pdf)
@@ -225,4 +226,3 @@ class CRM_Event_Badge {
     $this->pdf->Output($this->event->title . '.pdf', 'I');
   }
 }
-

@@ -100,7 +100,7 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
    */
   public $_processorName;
   # (not used, implicit in the API, might need to convert?)
-  public CONST CHARSET = 'UTF-8';
+  public const CHARSET = 'UTF-8';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -180,12 +180,12 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     }
 
     /*
-        //-------------------------------------------------------------                                                         
-        // NOTE: eWAY Doesn't use the following at the moment:                                                                  
-        //-------------------------------------------------------------                                                        
-       $creditCardType = $params['credit_card_type'];                                                                          
-       $currentcyID    = $params['currencyID'];                                                                                
-       $country        = $params['country'];                                                                                   
+        //-------------------------------------------------------------
+        // NOTE: eWAY Doesn't use the following at the moment:
+        //-------------------------------------------------------------
+       $creditCardType = $params['credit_card_type'];
+       $currentcyID    = $params['currencyID'];
+       $country        = $params['country'];
        */
 
 
@@ -316,12 +316,14 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
       $errorDesc = curl_error($submit);
 
       // Paranoia - in the unlikley event that 'curl' errno fails
-      if ($errorNum == 0)
-      $errorNum = 9005;
+      if ($errorNum == 0) {
+        $errorNum = 9005;
+      }
 
       // Paranoia - in the unlikley event that 'curl' error fails
-      if (strlen($errorDesc) == 0)
-      $errorDesc = "Connection to eWAY payment gateway failed";
+      if (strlen($errorDesc) == 0) {
+        $errorDesc = "Connection to eWAY payment gateway failed";
+      }
 
       return self::errorExit($errorNum, $errorDesc);
     }
@@ -384,17 +386,21 @@ class CRM_Core_Payment_eWAY extends CRM_Core_Payment {
     if ($eWayTrxnReference_IN != $eWayTrxnReference_OUT) {
       // return self::errorExit( 9009, "Error: Unique Trxn code was not returned by eWAY Gateway. This is extremely unusual! Please contact the administrator of this site immediately with details of this transaction.");
 
-      self::send_alert_email($eWAYResponse->TransactionNumber(),
-        $eWayTrxnReference_OUT, $eWayTrxnReference_IN, $requestxml, $responseData
+      self::send_alert_email(
+        $eWAYResponse->TransactionNumber(),
+        $eWayTrxnReference_OUT,
+        $eWayTrxnReference_IN,
+        $requestxml,
+        $responseData
       );
     }
 
-    /*      
+    /*
         //----------------------------------------------------------------------------------------------------
         // Test mode always returns trxn_id = 0 - so we fix that here
         //
         // NOTE: This code was taken from the AuthorizeNet payment processor, however it now appears
-        //       unecessary for the eWAY gateway - Left here in case it proves useful 
+        //       unecessary for the eWAY gateway - Left here in case it proves useful
         //----------------------------------------------------------------------------------------------------
        if ( $this->_mode == 'test' ) {
            $query = "SELECT MAX(trxn_id) FROM civicrm_contribution WHERE trxn_id LIKE 'test%'";
@@ -557,4 +563,3 @@ The CiviCRM eWAY Payment Processor Module
   }
 }
 // end class CRM_Core_Payment_eWAY
-

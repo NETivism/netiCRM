@@ -134,4 +134,3 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
     return $tokens;
   }
 }
-

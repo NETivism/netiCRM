@@ -76,33 +76,52 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
     $this->applyFilter('__ALL__', 'trim');
 
     if ($this->_id) {
-      $name = $this->add('text', 'name', ts('Name'),
+      $name = $this->add(
+        'text',
+        'name',
+        ts('Name'),
         CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipStatus', 'name')
       );
       $name->freeze();
       $this->assign('id', $this->_id);
     }
-    $this->add('text', 'label', ts('Label'),
-      CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipStatus', 'label'), TRUE
+    $this->add(
+      'text',
+      'label',
+      ts('Label'),
+      CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipStatus', 'label'),
+      TRUE
     );
-    $this->addRule('label', ts('A membership status with this label already exists. Please select another label.'),
-      'objectExists', ['CRM_Member_DAO_MembershipStatus', $this->_id, 'name']
+    $this->addRule(
+      'label',
+      ts('A membership status with this label already exists. Please select another label.'),
+      'objectExists',
+      ['CRM_Member_DAO_MembershipStatus', $this->_id, 'name']
     );
 
     $this->add('select', 'start_event', ts('Start Event'), CRM_Core_SelectValues::eventDate(), TRUE);
     $this->add('select', 'start_event_adjust_unit', ts('Start Event Adjustment'), CRM_Core_SelectValues::unitList());
-    $this->add('text', 'start_event_adjust_interval', ts('Start Event Adjust Interval'),
+    $this->add(
+      'text',
+      'start_event_adjust_interval',
+      ts('Start Event Adjust Interval'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipStatus', 'start_event_adjust_interval')
     );
     $this->add('select', 'end_event', ts('End Event'), CRM_Core_SelectValues::eventDate(), FALSE);
     $this->add('select', 'end_event_adjust_unit', ts('End Event Adjustment'), CRM_Core_SelectValues::unitList());
-    $this->add('text', 'end_event_adjust_interval', ts('End Event Adjust Interval'),
+    $this->add(
+      'text',
+      'end_event_adjust_interval',
+      ts('End Event Adjust Interval'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipStatus', 'end_event_adjust_interval')
     );
     $this->add('checkbox', 'is_current_member', ts('Current Membership?'));
     $this->add('checkbox', 'is_admin', ts('Administrator Only?'));
 
-    $this->add('text', 'weight', ts('Weight'),
+    $this->add(
+      'text',
+      'weight',
+      ts('Weight'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_MembershipStatus', 'weight')
     );
     $this->add('checkbox', 'is_default', ts('Default?'));
@@ -142,10 +161,10 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
       }
 
       $membershipStatus = CRM_Member_BAO_MembershipStatus::add($params, $ids);
-      CRM_Core_Session::setStatus(ts('The membership status \'%1\' has been saved.',
-          [1 => $membershipStatus->label]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'The membership status \'%1\' has been saved.',
+        [1 => $membershipStatus->label]
+      ));
     }
   }
 }
-

@@ -145,7 +145,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
           'markup' => $dataLayer."\n",
         ];
         CRM_Utils_System::addHTMLHead($obj);
-        $this->set('dataLayerAdded', true);
+        $this->set('dataLayerAdded', TRUE);
       }
     }
   }
@@ -175,7 +175,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
   public function buildQuickForm() {
     $this->assignToTemplate();
     // change pay later option if needed
-    if(isset($this->_params['is_pay_later'])){
+    if (isset($this->_params['is_pay_later'])) {
       $this->assign('is_pay_later', $this->_params['is_pay_later']);
     }
 
@@ -253,12 +253,14 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
       $friendText = $data['title'];
       $this->assign('friendText', $friendText);
       if ($this->_action & CRM_Core_Action::PREVIEW) {
-        $url = CRM_Utils_System::url("civicrm/friend",
+        $url = CRM_Utils_System::url(
+          "civicrm/friend",
           "eid={$this->_eventId}&reset=1&action=preview&page=event"
         );
       }
       else {
-        $url = CRM_Utils_System::url("civicrm/friend",
+        $url = CRM_Utils_System::url(
+          "civicrm/friend",
           "eid={$this->_eventId}&reset=1&page=event"
         );
       }
@@ -298,7 +300,8 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
    *
    * @return None
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
   //end of function
 
   /**
@@ -311,4 +314,3 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
     return ts('Complete');
   }
 }
-

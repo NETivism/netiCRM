@@ -63,9 +63,14 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &membershipType($id = NULL, $force = FALSE) {
     if (!self::$membershipType || $force) {
-      CRM_Core_PseudoConstant::populate(self::$membershipType,
+      CRM_Core_PseudoConstant::populate(
+        self::$membershipType,
         'CRM_Member_DAO_MembershipType',
-        FALSE, 'name', 'is_active', NULL, 'weight'
+        FALSE,
+        'name',
+        'is_active',
+        NULL,
+        'weight'
       );
     }
     if ($id) {
@@ -98,9 +103,14 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
       $cacheKey .= "_{$cond}";
     }
     if (!isset(self::$membershipStatus[$cacheKey])) {
-      CRM_Core_PseudoConstant::populate(self::$membershipStatus[$cacheKey],
+      CRM_Core_PseudoConstant::populate(
+        self::$membershipStatus[$cacheKey],
         'CRM_Member_DAO_MembershipStatus',
-        FALSE, $column, 'is_active', $cond, 'weight'
+        FALSE,
+        $column,
+        'is_active',
+        $cond,
+        'weight'
       );
     }
 
@@ -127,4 +137,3 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
     return self::membershipStatus($id, $cond, $column);
   }
 }
-

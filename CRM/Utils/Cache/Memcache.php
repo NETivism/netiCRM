@@ -33,10 +33,10 @@
  *
  */
 class CRM_Utils_Cache_Memcache {
-  public CONST DEFAULT_HOST = 'localhost';
-  public CONST DEFAULT_PORT = 11211;
-  public CONST DEFAULT_TIMEOUT = 3600;
-  public CONST DEFAULT_PREFIX = '';
+  public const DEFAULT_HOST = 'localhost';
+  public const DEFAULT_PORT = 11211;
+  public const DEFAULT_TIMEOUT = 3600;
+  public const DEFAULT_PREFIX = '';
 
   /**
    * The host name of the memcached server
@@ -127,4 +127,3 @@ class CRM_Utils_Cache_Memcache {
     return $this->_cache->flush();
   }
 }
-

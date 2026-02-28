@@ -50,7 +50,8 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ]; public function __construct() {
+  ];
+  public function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
     $this->_columns = ['civicrm_contact' =>
@@ -149,7 +150,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
     parent::preProcess();
   }
 
-  public function setDefaultValues($freeze = null) {
+  public function setDefaultValues($freeze = NULL) {
     return parent::setDefaultValues();
   }
 
@@ -229,7 +230,8 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -398,7 +400,8 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url('civicrm/report/member/detail',
+        $url = CRM_Utils_System::url(
+          'civicrm/report/member/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id']
         );
         $rows[$rowNum]['civicrm_contact_display_name'] = "<a href='$url'>" . $row["civicrm_contact_display_name"] . '</a>';
@@ -413,4 +416,3 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     }
   }
 }
-

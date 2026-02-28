@@ -62,7 +62,7 @@ function civicrm_api3_entity_tag_get($params) {
 }
 /*
  * Adjust Metadata for Get action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -195,4 +195,3 @@ function _civicrm_api3_entity_tag_common($params, $op = 'add') {
   }
   return $values;
 }
-

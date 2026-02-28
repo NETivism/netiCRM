@@ -127,8 +127,11 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    * @static
    */
   public static function hasGroupAssociated($contactID) {
-    $orgID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_GroupOrganization',
-      $contactID, 'group_id', 'organization_id'
+    $orgID = CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_GroupOrganization',
+      $contactID,
+      'group_id',
+      'organization_id'
     );
     if ($orgID) {
       return TRUE;
@@ -155,4 +158,3 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
     return $results;
   }
 }
-

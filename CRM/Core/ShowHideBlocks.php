@@ -39,7 +39,8 @@ class CRM_Core_ShowHideBlocks {
    *
    * @var string
    */
-  public static $_showIcon, $_hideIcon;
+  public static $_showIcon;
+  public static $_hideIcon;
 
   /**
    * The array of ids of blocks that will be shown
@@ -240,21 +241,40 @@ class CRM_Core_ShowHideBlocks {
 
     self::setIcons();
     if ($elementType) {
-      $form->addElement('link', "{$prefix}[{$index}][show]", NULL, "#{$prefix}_{$index}", self::$_showIcon . $showLinkText,
+      $form->addElement(
+        'link',
+        "{$prefix}[{$index}][show]",
+        NULL,
+        "#{$prefix}_{$index}",
+        self::$_showIcon . $showLinkText,
         ['onclick' => "hide('{$prefix}_{$index}_show'); show('{$prefix}_{$index}','table-row');" . $showCode]
       );
-      $form->addElement('link', "{$prefix}[{$index}][hide]", NULL, "#{$prefix}_{$index}", self::$_hideIcon . $hideLinkText,
+      $form->addElement(
+        'link',
+        "{$prefix}[{$index}][hide]",
+        NULL,
+        "#{$prefix}_{$index}",
+        self::$_hideIcon . $hideLinkText,
         ['onclick' => "hide('{$prefix}_{$index}'); show('{$prefix}_{$index}_show');" . $hideCode]
       );
     }
     else {
-      $form->addElement('link', "{$prefix}[{$index}][show]", NULL, "#{$prefix}_{$index}", self::$_showIcon . $showLinkText,
+      $form->addElement(
+        'link',
+        "{$prefix}[{$index}][show]",
+        NULL,
+        "#{$prefix}_{$index}",
+        self::$_showIcon . $showLinkText,
         ['onclick' => "hide('{$showHidePrefix}_{$index}_show'); show('{$showHidePrefix}_{$index}');" . $showCode]
       );
-      $form->addElement('link', "{$prefix}[{$index}][hide]", NULL, "#{$prefix}_{$index}", self::$_hideIcon . $hideLinkText,
+      $form->addElement(
+        'link',
+        "{$prefix}[{$index}][hide]",
+        NULL,
+        "#{$prefix}_{$index}",
+        self::$_hideIcon . $hideLinkText,
         ['onclick' => "hide('{$showHidePrefix}_{$index}'); show('{$showHidePrefix}_{$index}_show');" . $hideCode]
       );
     }
   }
 }
-

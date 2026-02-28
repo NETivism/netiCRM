@@ -48,7 +48,8 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
    */
   public $_groups;
   public $_tableName;
-  protected $_debug = 0; public function __construct(&$formValues) {
+  protected $_debug = 0;
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     $this->_columns = [ts('Contact Id') => 'contact_id',
@@ -82,23 +83,30 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
   }
 
   public function buildForm(&$form) {
-    $form->add('text',
+    $form->add(
+      'text',
       'segmentSize',
       ts('Segment Size'),
       TRUE
     );
 
     $groups = &CRM_Core_PseudoConstant::group();
-    $inG = &$form->addElement('advmultiselect', 'includeGroups',
-      ts('Include Group(s)') . ' ', $groups,
+    $inG = &$form->addElement(
+      'advmultiselect',
+      'includeGroups',
+      ts('Include Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
       ]
     );
 
-    $outG = &$form->addElement('advmultiselect', 'excludeGroups',
-      ts('Exclude Group(s)') . ' ', $groups,
+    $outG = &$form->addElement(
+      'advmultiselect',
+      'excludeGroups',
+      ts('Exclude Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
@@ -123,7 +131,10 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     return NULL;
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "contact_a.id   as contact_id,
@@ -131,9 +142,13 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
                          contact_a.sort_name    as sort_name,
                          civicrm_email.email    as email";
 
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
@@ -338,4 +353,3 @@ class CRM_Contact_Form_Search_Custom_RandomSegment extends CRM_Contact_Form_Sear
     return;
   }
 }
-

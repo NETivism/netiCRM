@@ -79,8 +79,9 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
       if ($entry->isDot()) {
         continue;
       }
-      if (count($mails) >= $count)
-      break;
+      if (count($mails) >= $count) {
+        break;
+      }
 
       $file = $path . DIRECTORY_SEPARATOR . $entry->getFilename();
       if ($this->_debug) {
@@ -95,9 +96,10 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
       $mail = $parser->parseMail($set);
 
       if (!$mail) {
-        return CRM_Core_Error::createAPIError(ts('%1 could not be parsed',
-            [1 => $file]
-          ));
+        return CRM_Core_Error::createAPIError(ts(
+          '%1 could not be parsed',
+          [1 => $file]
+        ));
       }
       $mails[$file] = $mail[0];
     }
@@ -144,4 +146,3 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
     }
   }
 }
-

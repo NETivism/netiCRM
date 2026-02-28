@@ -44,9 +44,12 @@ class CRM_Admin_Page_ConfigTaskList extends CRM_Core_Page {
     CRM_Utils_System::setTitle(ts("Configuration Checklist"));
     $this->assign('recentlyViewed', FALSE);
 
-    $destination = CRM_Utils_System::url('civicrm/admin/configtask',
+    $destination = CRM_Utils_System::url(
+      'civicrm/admin/configtask',
       'reset=1',
-      FALSE, NULL, FALSE
+      FALSE,
+      NULL,
+      FALSE
     );
 
     $destination = urlencode($destination);
@@ -62,4 +65,3 @@ class CRM_Admin_Page_ConfigTaskList extends CRM_Core_Page {
     parent::run();
   }
 }
-

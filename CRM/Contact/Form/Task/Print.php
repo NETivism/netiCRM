@@ -61,7 +61,8 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -72,18 +73,20 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
     }
 
     $selectorName = $this->controller->selectorName();
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $selectorName) . '.php');
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $selectorName) . '.php');
 
     $returnP = $returnPropeties ?? "";
     $customSearchClass = $this->get('customSearchClass');
-        $selector   = new $selectorName( $customSearchClass,
-                 $fv,
-                 $params,
-                 $returnP,
-                 $this->_action,
-                 $includeContactIds
-      );
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $selector   = new $selectorName(
+      $customSearchClass,
+      $fv,
+      $params,
+      $returnP,
+      $this->_action,
+      $includeContactIds
+    );
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       NULL,
       $sortID,
       CRM_Core_Action::VIEW,
@@ -107,7 +110,8 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
     //
     // just need to add a javacript to popup the window for printing
     //
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Print Contact List'),
           'js' => ['onclick' => 'window.print()'],
@@ -131,4 +135,3 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
     // redirect to the main search page after printing is over
   }
 }
-

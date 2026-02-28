@@ -10,7 +10,8 @@ class api_v3_ReportTemplateTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   public function testReportTemplate() {
     $result = civicrm_api('ReportTemplate', 'create', [

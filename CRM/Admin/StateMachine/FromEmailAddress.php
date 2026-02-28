@@ -30,4 +30,3 @@ class CRM_Admin_StateMachine_FromEmailAddress extends CRM_Core_StateMachine {
     $this->addSequentialPages($this->_pages);
   }
 }
-

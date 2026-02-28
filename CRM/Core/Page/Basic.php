@@ -122,7 +122,8 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  public function addValues($controller) {}
+  public function addValues($controller) {
+  }
 
   /**
    * class constructor
@@ -148,26 +149,35 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     $pageArgs = $thisArgs[1] ?? NULL;
     $sort = $thisArgs[2] ?? NULL;
 
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'browse'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'browse'
     );
     $this->assign('action', $this->_action);
 
     // get 'id' if present
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $this->getBAOName()) . ".php");
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $this->getBAOName()) . ".php");
 
     if ($id) {
       if (!$this->checkPermission($id, NULL)) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to make changes to the record'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to make changes to the record'));
       }
     }
 
     if ($this->_action &
-      (CRM_Core_Action::VIEW |
+      (
+        CRM_Core_Action::VIEW |
         CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE
@@ -371,4 +381,3 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     $controller->run();
   }
 }
-

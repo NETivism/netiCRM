@@ -142,7 +142,7 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
       ) {
         $errors["prox_state_province_id"] = ts("Country AND State/Province are required to search by distance.");
       }
-      if (!CRM_Utils_Array::value('prox_postal_code', $fields) AND
+      if (!CRM_Utils_Array::value('prox_postal_code', $fields) and
         !CRM_Utils_Array::value('prox_city', $fields)
       ) {
         $errors["prox_distance"] = ts("City OR Postal Code are required to search by distance.");
@@ -177,4 +177,3 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
     $form->setDefaults($defaults);
   }
 }
-

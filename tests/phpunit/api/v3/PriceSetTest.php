@@ -102,7 +102,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     $this->assertEquals(16, $result['values']['is_quick_config']['type']);
   }
 
-  public static function tearDownAfterClass(){
+  public static function tearDownAfterClass() {
     $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_contribution',
@@ -111,4 +111,3 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     $unitTest->quickCleanup($tablesToTruncate);
   }
 }
-

@@ -50,9 +50,10 @@ class CRM_Utils_Sunlight {
       CRM_Core_Error::fatal($result->getMessage());
     }
     if ($request->getResponseCode() != 200) {
-      CRM_Core_Error::fatal(ts('Invalid response code received from Sunlight servers: %1',
-          [1 => $request->getResponseCode()]
-        ));
+      CRM_Core_Error::fatal(ts(
+        'Invalid response code received from Sunlight servers: %1',
+        [1 => $request->getResponseCode()]
+      ));
     }
     $string = $request->getResponseBody();
     return simplexml_load_string($string);
@@ -145,4 +146,3 @@ class CRM_Utils_Sunlight {
     return $result;
   }
 }
-

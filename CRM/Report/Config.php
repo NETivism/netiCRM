@@ -38,5 +38,5 @@
  */
 
 
-class CRM_Report_Config extends CRM_Core_Component_Config {}
-
+class CRM_Report_Config extends CRM_Core_Component_Config {
+}

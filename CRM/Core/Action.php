@@ -205,7 +205,8 @@ class CRM_Core_Action {
    * @access public
    * @static
    */
-  public static function formLink(&$links,
+  public static function formLink(
+    &$links,
     $mask,
     $values,
     $extraULName = 'more',
@@ -233,8 +234,13 @@ class CRM_Core_Action {
 
         $urlPath = NULL;
         if (CRM_Utils_Array::value('qs', $link) && !CRM_Utils_System::isNull($link['qs'])) {
-          $urlPath = CRM_Utils_System::url(self::replace($link['url'], $values),
-            self::replace($link['qs'], $values), TRUE, NULL, TRUE, $frontend
+          $urlPath = CRM_Utils_System::url(
+            self::replace($link['url'], $values),
+            self::replace($link['qs'], $values),
+            TRUE,
+            NULL,
+            TRUE,
+            $frontend
           );
         }
         else {
@@ -265,7 +271,8 @@ class CRM_Core_Action {
           if ($frontend) {
             $extra .= "target=_blank";
           }
-          $url[] = sprintf('<a href="%s" %s title="%s"' . $extra . '>%s</a>',
+          $url[] = sprintf(
+            '<a href="%s" %s title="%s"' . $extra . '>%s</a>',
             $urlPath,
             $linkClasses,
             CRM_Utils_Array::value('title', $link),
@@ -273,7 +280,8 @@ class CRM_Core_Action {
           );
         }
         else {
-          $url[] = sprintf('<a title="%s"  %s ' . $extra . '>%s</a>',
+          $url[] = sprintf(
+            '<a title="%s"  %s ' . $extra . '>%s</a>',
             CRM_Utils_Array::value('title', $link),
             $linkClasses,
             $link['name']
@@ -363,4 +371,3 @@ class CRM_Core_Action {
     return $mask;
   }
 }
-

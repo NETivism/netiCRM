@@ -49,7 +49,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
   /**
    * max number of contacts we will display for a relationship
    */
-  public CONST MAX_RELATIONSHIPS = 50;
+  public const MAX_RELATIONSHIPS = 50;
 
   /**
    * The relationship id, used when editing the relationship
@@ -111,7 +111,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
   /**
    * casid if it called from case context
    */
-  protected $_caseId; public function preProcess() {
+  protected $_caseId;
+  public function preProcess() {
     //custom data related code
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
     $this->assign('cdType', FALSE);
@@ -287,7 +288,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -327,14 +329,18 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     $this->assign('callAjax', $callAjax);
     $this->_callAjax = $callAjax;
 
-    $this->addElement('select',
+    $this->addElement(
+      'select',
       'relationship_type_id',
       ts('Relationship Type'),
       ['' => ts('- Select Relationship Type -')] +
-      CRM_Contact_BAO_Relationship::getContactRelationshipType($this->_contactId,
+      CRM_Contact_BAO_Relationship::getContactRelationshipType(
+        $this->_contactId,
         $this->_rtype,
         $this->_relationshipId,
-        NULL, FALSE, 'label'
+        NULL,
+        FALSE,
+        'label'
       )
     );
 
@@ -448,7 +454,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
       $buttonParams['js'] = ['onclick' => ' submitAjaxData();'];
     }
 
-    $this->addButtons([$buttonParams
+    $this->addButtons(
+      [$buttonParams
         ,
         ['type' => 'cancel',
           'name' => ts('Cancel'),
@@ -543,7 +550,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
 
     //special case to handle if all checkboxes are unchecked
     $customFields = CRM_Core_BAO_CustomField::getFields('Relationship', FALSE, FALSE, $relationshipTypeId);
-    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customFields,
       $this->_relationshipId,
       'Relationship'
@@ -592,8 +600,10 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
 
     // Membership for related contacts CRM-1657
     if (CRM_Core_Permission::access('CiviMember') && (!$duplicate)) {
-      CRM_Contact_BAO_Relationship::relatedMemberships($this->_contactId,
-        $params, $ids,
+      CRM_Contact_BAO_Relationship::relatedMemberships(
+        $this->_contactId,
+        $params,
+        $ids,
         $this->_action
       );
     }
@@ -765,7 +775,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
         $contact_type = '<img src="' . $config->resourceBase . 'i/contact_';
 
 
-        $searchRows[$contactID]['type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
+        $searchRows[$contactID]['type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+          $result->contact_sub_type ?
           $result->contact_sub_type : $result->contact_type
         );
       }
@@ -913,4 +924,3 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     }
   }
 }
-

@@ -118,7 +118,8 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
       }
     }
     //fetch the target survey activities.
-    $this->_surveyActivities = CRM_Campaign_BAO_Survey::voterActivityDetails($this->_surveyId,
+    $this->_surveyActivities = CRM_Campaign_BAO_Survey::voterActivityDetails(
+      $this->_surveyId,
       $this->_contactIds,
       $this->_interviewerId,
       $statusIds
@@ -167,7 +168,8 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
 
       $status = [ts("%1 respondent(s) have been released.", [1 => count($deleteActivityIds)])];
       if (count($this->_contactIds) > count($deleteActivityIds)) {
-        $status[] = ts("%1 respondents did not release.",
+        $status[] = ts(
+          "%1 respondents did not release.",
           [1 => (count($this->_contactIds) - count($deleteActivityIds))]
         );
       }
@@ -175,4 +177,3 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
     }
   }
 }
-

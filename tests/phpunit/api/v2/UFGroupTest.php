@@ -40,11 +40,13 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   // ids from the uf_group_test.xml fixture
   protected $_ufGroupId = 11;
   protected $_ufFieldId;
-  protected $_contactId = 69; public function tearDown() {
+  protected $_contactId = 69;
+  public function tearDown() {
 
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/../../CiviTest/truncate-ufgroup.xml'
       )
@@ -585,4 +587,3 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 }
-

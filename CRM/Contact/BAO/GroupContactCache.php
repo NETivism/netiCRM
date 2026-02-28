@@ -155,12 +155,12 @@ WHERE      g.id IN ( {$groupID} ) AND g.saved_search_id IS NOT NULL AND
     if ($groupID == NULL) {
       $invoked = TRUE;
     }
-    else if (is_array($groupID)) {
+    elseif (is_array($groupID)) {
       foreach ($groupID as $gid) {
         unset(self::$_alreadyLoaded[$gid]);
       }
     }
-    else if ($groupID && CRM_Utils_Array::arrayKeyExists($groupID, self::$_alreadyLoaded)) {
+    elseif ($groupID && CRM_Utils_Array::arrayKeyExists($groupID, self::$_alreadyLoaded)) {
       unset(self::$_alreadyLoaded[$groupID]);
     }
 
@@ -188,11 +188,11 @@ SET    cache_date = null
       }
       else {
         // #30818, we have serious deadlock issue
-        // purge cache is not a big deal 
+        // purge cache is not a big deal
         // so we get ids first then purge in next execution
         $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_group WHERE TIMESTAMPDIFF(MINUTE, cache_date, $now) >= $smartGroupCacheTimeout");
         $ids = [];
-        while($dao->fetch()) {
+        while ($dao->fetch()) {
           $ids[] = $dao->id;
         }
         $query = "
@@ -296,20 +296,31 @@ WHERE  id = %1
         $formValues = CRM_Contact_BAO_SavedSearch::getFormValues($savedSearchID);
 
         $query = new CRM_Contact_BAO_Query(
-          $ssParams, $returnProperties, NULL,
-          FALSE, FALSE, 1,
-          TRUE, TRUE,
+          $ssParams,
+          $returnProperties,
+          NULL,
+          FALSE,
+          FALSE,
+          1,
+          TRUE,
+          TRUE,
           FALSE,
           CRM_Utils_Array::value('display_relationship_type', $formValues),
         );
         $query->_useDistinct = FALSE;
         $query->_useGroupBy = TRUE;
         $searchSQL = $query->searchQuery(
-          0, 0, NULL,
-          FALSE, FALSE,
-          FALSE, TRUE,
+          0,
+          0,
+          NULL,
+          FALSE,
+          FALSE,
+          FALSE,
           TRUE,
-          $additionalWhereClause, NULL, NULL,
+          TRUE,
+          $additionalWhereClause,
+          NULL,
+          NULL,
           TRUE
         );
       }
@@ -404,27 +415,28 @@ WHERE  id = %1
   SET    cache_date = $now
   WHERE  id IN ( $groupIDs )
   ";
-    CRM_Core_DAO::executeQuery($sql,
+    CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
   }
 
-/**
-   * Check to see if we have cache entries for this group
-   * if not, regenerate, else return
-   *
-   * @param int/array $groupID groupID of group that we are checking against
-   *                           if empty, all groups are checked
-   * @param int       $limit   limits the number of groups we evaluate
-   *
-   * @return boolean true if we did not regenerate, false if we did
-   */
-  public static function loadAll($groupIDs = null, $limit = 0) {
+  /**
+     * Check to see if we have cache entries for this group
+     * if not, regenerate, else return
+     *
+     * @param int/array $groupID groupID of group that we are checking against
+     *                           if empty, all groups are checked
+     * @param int       $limit   limits the number of groups we evaluate
+     *
+     * @return boolean true if we did not regenerate, false if we did
+     */
+  public static function loadAll($groupIDs = NULL, $limit = 0) {
     // ensure that all the smart groups are loaded
     // this function is expensive and should be sparingly used if groupIDs is empty
 
     if (empty($groupIDs)) {
-      $groupIDClause = null;
+      $groupIDClause = NULL;
       $groupIDs = [ ];
     }
     else {
@@ -546,7 +558,7 @@ ORDER BY   gc.contact_id, g.children
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     $contactGroup = [];
-    $prevContactID = null;
+    $prevContactID = NULL;
     while ($dao->fetch()) {
       if (
         $prevContactID &&
@@ -583,4 +595,3 @@ ORDER BY   gc.contact_id, g.children
   }
 
 }
-

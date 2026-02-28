@@ -60,7 +60,8 @@ class CRM_Report_Page_Instance extends CRM_Core_Page {
     if ($action & CRM_Core_Action::DELETE) {
       if (!CRM_Core_Permission::check('administer Reports')) {
         $statusMessage = ts('Your do not have permission to Delete Report.');
-         return CRM_Core_Error::statusBounce($statusMessage,
+        return CRM_Core_Error::statusBounce(
+          $statusMessage,
           $reportUrl
         );
       }
@@ -114,4 +115,3 @@ class CRM_Report_Page_Instance extends CRM_Core_Page {
     return CRM_Utils_System::redirect($reportUrl);
   }
 }
-

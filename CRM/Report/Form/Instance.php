@@ -39,49 +39,60 @@ class CRM_Report_Form_Instance {
   public static function buildForm(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Report_DAO_Instance');
 
-    $form->add('text',
+    $form->add(
+      'text',
       'title',
       ts('Report Title'),
       $attributes['title']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'description',
       ts('Report Description'),
       $attributes['description']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'email_subject',
       ts('Subject'),
       $attributes['email_subject']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'email_to',
       ts('To'),
       $attributes['email_to']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'email_cc',
       ts('CC'),
       $attributes['email_subject']
     );
 
-    $form->add('textarea',
+    $form->add(
+      'textarea',
       'report_header',
       ts('Report Header'),
       $attributes['header']
     );
 
-    $form->add('textarea',
+    $form->add(
+      'textarea',
       'report_footer',
       ts('Report Footer'),
       $attributes['footer']
     );
 
-    $form->addElement('checkbox', 'is_navigation', ts('Include Report in Navigation Menu?'), NULL,
+    $form->addElement(
+      'checkbox',
+      'is_navigation',
+      ts('Include Report in Navigation Menu?'),
+      NULL,
       ['onclick' => "return showHideByValue('is_navigation','','navigation_menu','table-row','radio',false);"]
     );
 
@@ -89,7 +100,8 @@ class CRM_Report_Form_Instance {
 
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework != 'Joomla') {
-      $form->addElement('select',
+      $form->addElement(
+        'select',
         'permission',
         ts('Permission'),
         ['0' => '- Any One -'] + CRM_Core_Permission::basicPermissions()
@@ -100,7 +112,8 @@ class CRM_Report_Form_Instance {
 
     $form->add('select', 'parent_id', ts('Parent Menu'), ['' => ts('-- select --')] + $parentMenu);
 
-    $form->addButtons([
+    $form->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Save Report'),
           'isDefault' => TRUE,
@@ -285,20 +298,25 @@ class CRM_Report_Form_Instance {
       $instanceDefaults = [];
       $cmpName = "Contact";
       $statusMsg = "null";
-      CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_OptionValue',
+      CRM_Core_DAO::commonRetrieve(
+        'CRM_Core_DAO_OptionValue',
         $instanceParams,
         $instanceDefaults
       );
 
       if ($cmpID = CRM_Utils_Array::value('component_id', $instanceDefaults)) {
-        $cmpName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Component', $cmpID,
-          'name', 'id'
+        $cmpName = CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_Component',
+          $cmpID,
+          'name',
+          'id'
         );
         $cmpName = substr($cmpName, 4);
       }
 
       // Url to view this report and others created FROM this template
-      $instanceUrl = CRM_Utils_System::url('civicrm/report/list',
+      $instanceUrl = CRM_Utils_System::url(
+        'civicrm/report/list',
         "reset=1&ovid={$instanceDefaults['id']}"
       );
       $statusMsg = ts('Report "%1" has been created and is now available in the <a href="%3">report listings under "%2" Reports</a>.', [1 => $dao->title, 2 => $cmpName, 3 => $instanceUrl]);
@@ -314,4 +332,3 @@ class CRM_Report_Form_Instance {
     }
   }
 }
-

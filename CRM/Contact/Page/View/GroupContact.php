@@ -67,7 +67,8 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
    * @access public
    */
   public function edit($groupId = NULL) {
-    $controller = new CRM_Core_Controller_Simple('CRM_Contact_Form_GroupContact',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Contact_Form_GroupContact',
       ts('Contact\'s Groups'),
       $this->_action
     );
@@ -76,7 +77,9 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
 
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/contact/view',
+    $session->pushUserContext(
+      CRM_Utils_System::url(
+        'civicrm/contact/view',
         "action=browse&selectedChild=group&cid={$this->_contactId}"
       ),
       FALSE
@@ -114,11 +117,17 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     $this->preProcess();
 
     if ($this->_action == CRM_Core_Action::DELETE) {
-      $groupContactId = CRM_Utils_Request::retrieve('gcid', 'Positive',
-        CRM_Core_DAO::$_nullObject, TRUE
+      $groupContactId = CRM_Utils_Request::retrieve(
+        'gcid',
+        'Positive',
+        CRM_Core_DAO::$_nullObject,
+        TRUE
       );
-      $status = CRM_Utils_Request::retrieve('st', 'String',
-        CRM_Core_DAO::$_nullObject, TRUE
+      $status = CRM_Utils_Request::retrieve(
+        'st',
+        'String',
+        CRM_Core_DAO::$_nullObject,
+        TRUE
       );
       if (is_numeric($groupContactId) && $status) {
         $this->del($groupContactId, $status, $this->_contactId);
@@ -180,4 +189,3 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     CRM_Contact_BAO_GroupContact::removeContactsFromGroup($ids, $groupId, $method, $groupStatus);
   }
 }
-

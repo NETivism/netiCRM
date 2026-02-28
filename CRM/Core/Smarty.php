@@ -47,7 +47,7 @@ if (!class_exists('Smarty')) {
  *
  */
 class CRM_Core_Smarty extends Smarty {
-  public CONST PRINT_PAGE = 1, PRINT_SNIPPET = 2, PRINT_PDF = 3, PRINT_NOFORM = 4;
+  public const PRINT_PAGE = 1, PRINT_SNIPPET = 2, PRINT_PDF = 3, PRINT_NOFORM = 4;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -70,7 +70,8 @@ class CRM_Core_Smarty extends Smarty {
     $config = CRM_Core_Config::singleton();
 
     if (isset($config->customTemplateDir) && $config->customTemplateDir) {
-      $this->template_dir = array_merge([$config->customTemplateDir],
+      $this->template_dir = array_merge(
+        [$config->customTemplateDir],
         $config->templateDir
       );
     }
@@ -148,7 +149,7 @@ class CRM_Core_Smarty extends Smarty {
 
     $this->register_function('crmURL', ['CRM_Utils_System', 'crmURL']);
 
-    if(CRM_Utils_System::isUserLoggedIn() || $this->isAssigned('browserPrint')) {
+    if (CRM_Utils_System::isUserLoggedIn() || $this->isAssigned('browserPrint')) {
       $printerFriendly = CRM_Utils_System::makeURL('snippet', FALSE, FALSE) . '2';
       $printerFriendly = str_replace(['&#60;', '&#62;', '#gt;', '&lt;', '<', '>'], '', $printerFriendly);
     }
@@ -227,15 +228,15 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 
-  public function isAssigned($var, $value = NULL) { 
-    if(isset($this->_tpl_vars[$var])) {
+  public function isAssigned($var, $value = NULL) {
+    if (isset($this->_tpl_vars[$var])) {
       $exists = $this->_tpl_vars[$var];
-      if($value) {
+      if ($value) {
         if ($value === $exits) {
           return TRUE;
-        } 
+        }
       }
-      else{
+      else {
         return TRUE;
       }
     }
@@ -248,4 +249,3 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 }
-

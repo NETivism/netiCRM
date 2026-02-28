@@ -41,7 +41,10 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    $this->add('text', 'mailing_name', ts('Mailing Name'),
+    $this->add(
+      'text',
+      'mailing_name',
+      ts('Mailing Name'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'title')
     );
     $this->add('text', 'mailing_subject', ts('Mailing Subject'), CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'subject'));
@@ -111,4 +114,3 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
     }
   }
 }
-

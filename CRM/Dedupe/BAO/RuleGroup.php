@@ -59,7 +59,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    *   array(
    *     array('table'=>'civicrm_contact', 'field'=>'external_identifier', 'weight'=>10),
    *   )
-   * ``` 
+   * ```
    */
   public $rules = [];
 
@@ -124,8 +124,8 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
 
         // add special field only for contact table to speed up name dedupe
         $special_contact_field = ['sort_name' => ts('Sort Name'), 'display_name' => ts('Display Name')];
-        foreach($special_contact_field as $value => $name){
-          foreach($fields as $ctype => $table){
+        foreach ($special_contact_field as $value => $name) {
+          foreach ($fields as $ctype => $table) {
             $fields[$ctype]['civicrm_contact'][$value] = $name;
           }
         }
@@ -148,7 +148,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     $queries = [];
     $idx = 0;
     if ($this->rules) {
-      foreach($this->rules as $rule) {
+      foreach ($this->rules as $rule) {
         $bao = new CRM_Dedupe_BAO_Rule();
         $bao->contactIds = $this->contactIds;
         $bao->params = $this->params;
@@ -389,7 +389,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];
     }
-    else{
+    else {
       // find default
       $rgBao->level = $params['level'];
       $rgBao->contact_type = $params['contact_type'];
@@ -451,7 +451,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     $ruleGroups = [];
     $dao = new CRM_Dedupe_DAO_RuleGroup();
     $dao->orderBy('contact_type,level,is_default DESC');
-    foreach($params as $k => $v) {
+    foreach ($params as $k => $v) {
       $dao->{$k} = $v;
     }
     $dao->find();
@@ -466,4 +466,3 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     return $ruleGroups;
   }
 }
-

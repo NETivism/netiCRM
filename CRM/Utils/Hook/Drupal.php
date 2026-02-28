@@ -45,7 +45,7 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
     static $functions = [];
     $config = CRM_Core_Config::singleton();
     $result = [];
-    if ($config->userSystem->version < 8 ){
+    if ($config->userSystem->version < 8) {
       // copied from user_module_invoke
       if (function_exists('module_list')) {
         $procceed = FALSE;
@@ -106,4 +106,3 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
     return $fResult;
   }
 }
-

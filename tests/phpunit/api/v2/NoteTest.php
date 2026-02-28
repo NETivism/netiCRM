@@ -37,7 +37,8 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_params;
   protected $_note;
-  protected $_noteID; public function __construct() {
+  protected $_noteID;
+  public function __construct() {
     parent::__construct();
   }
 
@@ -82,7 +83,9 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   public function testGetWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -132,7 +135,9 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   public function testCreateWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_create($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
     $this->assertEquals($result['error_message'], 'Params is not an array');
@@ -181,7 +186,9 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   public function testUpdateWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_update($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -241,7 +248,9 @@ class api_v2_NoteTest extends CiviUnitTestCase {
   public function testDeleteWithWrongParamsType() {
     $params = 'a string';
     $result = &civicrm_note_delete($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -285,4 +294,3 @@ class api_v2_NoteTest extends CiviUnitTestCase {
     $this->assertEquals($deleteNote['result'], 1);
   }
 }
-

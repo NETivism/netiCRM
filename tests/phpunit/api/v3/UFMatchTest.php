@@ -128,4 +128,3 @@ class api_v3_UFMatchTest extends CiviUnitTestCase {
   }
   */
 }
-

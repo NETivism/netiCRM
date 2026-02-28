@@ -33,7 +33,8 @@ require_once 'api/v2/Contact.php';
 class api_v2_ContactTypeTest extends CiviUnitTestCase {
   protected $_subTypeIndividualId;
   protected $_subTypeOrganizationId;
-  protected $_subTypeHouseholdId; public function setUp() {
+  protected $_subTypeHouseholdId;
+  public function setUp() {
     parent::setUp();
 
     $params = [
@@ -407,4 +408,3 @@ class api_v2_ContactTypeTest extends CiviUnitTestCase {
     civicrm_contact_delete($params);
   }
 }
-

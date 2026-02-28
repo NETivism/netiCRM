@@ -199,7 +199,8 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
         else {
           $action -= CRM_Core_Action::DISABLE;
         }
-        $campaignsData[$cmpid]['action'] = CRM_Core_Action::formLink(self::campaignActionLinks(),
+        $campaignsData[$cmpid]['action'] = CRM_Core_Action::formLink(
+          self::campaignActionLinks(),
           $action,
           ['id' => $campaign['id']]
         );
@@ -234,7 +235,8 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
         else {
           $action -= CRM_Core_Action::DISABLE;
         }
-        $surveysData[$sid]['action'] = CRM_Core_Action::formLink($this->surveyActionLinks($surveysData[$sid]['activity_type']),
+        $surveysData[$sid]['action'] = CRM_Core_Action::formLink(
+          $this->surveyActionLinks($surveysData[$sid]['activity_type']),
           $action,
           ['id' => $sid]
         );
@@ -272,7 +274,8 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
         else {
           $action -= CRM_Core_Action::DISABLE;
         }
-        $surveysData[$sid]['action'] = CRM_Core_Action::formLink($this->surveyActionLinks($surveysData[$sid]['activity_type']),
+        $surveysData[$sid]['action'] = CRM_Core_Action::formLink(
+          $this->surveyActionLinks($surveysData[$sid]['activity_type']),
           $action,
           ['id' => $sid]
         );
@@ -305,9 +308,10 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     $this->assign('subPageType', $subPageType);
 
     //give focus to proper tab.
-    $this->assign('selectedTabIndex', array_search(CRM_Utils_Array::value('subPage', $_GET, 'campaign'),
-        array_keys($this->_tabs)
-      ));
+    $this->assign('selectedTabIndex', array_search(
+      CRM_Utils_Array::value('subPage', $_GET, 'campaign'),
+      array_keys($this->_tabs)
+    ));
   }
 
   public function run() {
@@ -333,4 +337,3 @@ class CRM_Campaign_Page_DashBoard extends CRM_Core_Page {
     $this->assign('allTabs', $allTabs);
   }
 }
-

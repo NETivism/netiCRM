@@ -59,7 +59,7 @@ future.
 class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   public $_mode;
   # (not used, implicit in the API, might need to convert?)
-  public CONST CHARSET = 'UFT-8';
+  public const CHARSET = 'UFT-8';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -249,12 +249,14 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
       $errorDesc = curl_error($ch);
 
       // Paranoia - in the unlikley event that 'curl' errno fails
-      if ($errorNum == 0)
-      $errorNum = 9005;
+      if ($errorNum == 0) {
+        $errorNum = 9005;
+      }
 
       // Paranoia - in the unlikley event that 'curl' error fails
-      if (strlen($errorDesc) == 0)
-      $errorDesc = "Connection to payment gateway failed";
+      if (strlen($errorDesc) == 0) {
+        $errorDesc = "Connection to payment gateway failed";
+      }
       if ($errorNum = 60) {
         return self::errorExit($errorNum, "Curl error - " . $errorDesc . " Try this link for more information http://curl.haxx.se/docs/sslcerts.html");
       }
@@ -392,6 +394,3 @@ class CRM_Core_Payment_FirstData extends CRM_Core_Payment {
   }
 }
 // end class CRM_Core_Payment_FirstData
-
-
-

@@ -71,7 +71,8 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
   protected $_worldRegionField = FALSE;
 
-  protected $_activityField = FALSE; public function __construct() {
+  protected $_activityField = FALSE;
+  public function __construct() {
     $this->case_statuses = CRM_Case_PseudoConstant::caseStatus();
     $this->case_types = CRM_Case_PseudoConstant::caseType();
     $rels = CRM_Core_PseudoConstant::relationshipType();
@@ -379,7 +380,11 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
               $field['dbAlias'] = date('YmdHis', strtotime(CRM_Core_DAO::singleValueQuery($sql)));
             }
 
-            $clause = $this->dateClause($field['dbAlias'], $relative, $from, $to,
+            $clause = $this->dateClause(
+              $field['dbAlias'],
+              $relative,
+              $from,
+              $to,
               CRM_Utils_Array::value('type', $field)
             );
           }
@@ -393,7 +398,8 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
               }
             }
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -439,8 +445,11 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     if (CRM_Utils_Array::arrayKeyExists('filters', $statistics)) {
       foreach ($statistics['filters'] as $id => $value) {
         if ($value['title'] == 'Case Type') {
-          $statistics['filters'][$id]['value'] = 'Is ' . $this->case_types[substr($statistics['filters'][$id]
-            ['value'], -3, -2
+          $statistics['filters'][$id]['value'] = 'Is ' . $this->case_types[substr(
+            $statistics['filters'][$id]
+            ['value'],
+            -3,
+            -2
           )];
         }
       }
@@ -481,7 +490,8 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
     $this->formatDisplay($rows);
     if ($this->_params['activity_date_time_relative']) {
-      $this->_columnHeaders = array_merge($this->_columnHeaders,
+      $this->_columnHeaders = array_merge(
+        $this->_columnHeaders,
         ['civicrm_activity_activity_subject' =>
           ['type' => '2', 'title' => 'Last Action Activity Subject'],
         ]
@@ -552,4 +562,3 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     }
   }
 }
-

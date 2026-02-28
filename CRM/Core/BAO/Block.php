@@ -65,7 +65,7 @@ class CRM_Core_BAO_Block {
       return NULL;
     }
     $BAOString = 'CRM_Core_BAO_' . $blockName;
-    $block = new $BAOString( );
+    $block = new $BAOString();
 
     $blocks = [];
     if (!isset($params['entity_table'])) {
@@ -84,7 +84,7 @@ class CRM_Core_BAO_Block {
 
       $count = 1;
       foreach ($blockIds as $blockId) {
-        $block = new $BAOString( );
+        $block = new $BAOString();
         $block->id = $blockId['id'];
         $getBlocks = self::retrieveBlock($block, $blockName);
         $blocks[$count++] = array_pop($getBlocks);
@@ -224,11 +224,11 @@ class CRM_Core_BAO_Block {
       // e.g $bao = new $baoString;
       // $bao->getAllBlocks()
       $baoFunction = 'all' . $name . 's';
-      $allBlocks = $baoString::$baoFunction( $contactId, $updateBlankLocInfo );
+      $allBlocks = $baoString::$baoFunction($contactId, $updateBlankLocInfo);
     }
     elseif (!empty($entityElements) && $blockName != 'openid') {
       $baoFunction = 'allEntity' . $name . 's';
-      $allBlocks = $baoString::$baoFunction( $entityElements );
+      $allBlocks = $baoString::$baoFunction($entityElements);
     }
 
     return $allBlocks;
@@ -293,7 +293,7 @@ class CRM_Core_BAO_Block {
         }
         if ($resetPrimaryId) {
           $baoString = 'CRM_Core_BAO_' . $blockName;
-          $block = new $baoString( );
+          $block = new $baoString();
           $block->selectAdd();
           $block->selectAdd("id, is_primary");
           $block->id = $resetPrimaryId;
@@ -324,24 +324,24 @@ class CRM_Core_BAO_Block {
               unset($blockIds[$count]);
             }
           }
-          else if($blockName == 'phone') {
+          elseif ($blockName == 'phone') {
             if ($blockValue['locationTypeId'] == $value['location_type_id'] && $blockValue['phone_type_id'] == $value['phone_type_id'] && empty($value['append'])) {
               $value['id'] = $blockValue['id'];
               unset($blockIds[$blockId]);
               break;
             }
-            elseif(!empty($value['append'])) {
+            elseif (!empty($value['append'])) {
               $value['contact_id'] = $contactId;
               self::blockValueExists($blockName, $value);
             }
           }
-          else if($blockName == 'im') {
+          elseif ($blockName == 'im') {
             if ($blockValue['locationTypeId'] == $value['location_type_id'] && $blockValue['provider_id'] == $value['provider_id'] && empty($value['append'])) {
               $value['id'] = $blockValue['id'];
               unset($blockIds[$blockId]);
               break;
             }
-            elseif(!empty($value['append'])) {
+            elseif (!empty($value['append'])) {
               $value['contact_id'] = $contactId;
               self::blockValueExists($blockName, $value);
             }
@@ -353,7 +353,7 @@ class CRM_Core_BAO_Block {
               unset($blockIds[$blockId]);
               break;
             }
-            elseif(!empty($value['append'])) {
+            elseif (!empty($value['append'])) {
               $value['contact_id'] = $contactId;
               self::blockValueExists($blockName, $value);
             }
@@ -394,10 +394,10 @@ class CRM_Core_BAO_Block {
       $blockFields = array_merge($value, $contactFields);
       $baoString = 'CRM_Core_BAO_' . $name;
       if (method_exists($baoString, 'create')) {
-        $blocks[] = $baoString::create( $blockFields );
+        $blocks[] = $baoString::create($blockFields);
       }
       else {
-        $blocks[] = $baoString::add( $blockFields );
+        $blocks[] = $baoString::add($blockFields);
       }
     }
 
@@ -425,7 +425,7 @@ class CRM_Core_BAO_Block {
    */
   public static function blockDelete($blockName, $params) {
     $baoString = 'CRM_Core_DAO_' . $blockName;
-    $block = new $baoString( );
+    $block = new $baoString();
 
     $block->copyValues($params);
 
@@ -434,7 +434,7 @@ class CRM_Core_BAO_Block {
 
   /**
    * Handling for is_primary.
-   * 
+   *
    * $params is_primary could be
    *  #  1 - find other entries with is_primary = 1 &  reset them to 0
    *  #  0 - make sure at least one entry is set to 1
@@ -521,4 +521,3 @@ class CRM_Core_BAO_Block {
     }
   }
 }
-

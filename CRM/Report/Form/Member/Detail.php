@@ -59,7 +59,8 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
   protected $_summary = NULL;
 
   protected $_customGroupExtends = ['Membership'];
-  protected $_customGroupGroupBy = FALSE; public function __construct() {
+  protected $_customGroupGroupBy = FALSE;
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -270,7 +271,8 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -377,7 +379,8 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
         $rows[$rowNum]['civicrm_contact_display_name'] &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -392,4 +395,3 @@ class CRM_Report_Form_Member_Detail extends CRM_Report_Form {
     }
   }
 }
-

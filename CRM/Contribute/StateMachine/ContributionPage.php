@@ -76,4 +76,3 @@ class CRM_Contribute_StateMachine_ContributionPage extends CRM_Core_StateMachine
     $this->addSequentialPages($this->_pages);
   }
 }
-

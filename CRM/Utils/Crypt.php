@@ -146,4 +146,3 @@ class CRM_Utils_Crypt {
     }
   }
 }
-

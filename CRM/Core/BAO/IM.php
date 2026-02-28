@@ -166,7 +166,7 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
    * Get current exists id from value(IM)
    *
    * Only effect when phone id not provided. Id will be added into params before add.
-   * 
+   *
    * @param array $params referenced array to be add exists phone id
    * @return void
    */
@@ -180,4 +180,3 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
     }
   }
 }
-

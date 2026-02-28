@@ -103,9 +103,14 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
     }
 
     if (!self::$event[$key]) {
-      CRM_Core_PseudoConstant::populate(self::$event[$key],
+      CRM_Core_PseudoConstant::populate(
+        self::$event[$key],
         'CRM_Event_DAO_Event',
-        $all, 'title', 'is_active', $condition, NULL
+        $all,
+        'title',
+        'is_active',
+        $condition,
+        NULL
       );
     }
 
@@ -139,9 +144,14 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
     $index = "{$index}_{$retColumn}";
     if (!CRM_Utils_Array::value($index, self::$participantStatus)) {
       self::$participantStatus[$index] = [];
-      CRM_Core_PseudoConstant::populate(self::$participantStatus[$index],
+      CRM_Core_PseudoConstant::populate(
+        self::$participantStatus[$index],
         'CRM_Event_DAO_ParticipantStatusType',
-        FALSE, $retColumn, 'is_active', $cond, 'weight'
+        FALSE,
+        $retColumn,
+        'is_active',
+        $cond,
+        'weight'
       );
     }
 
@@ -186,8 +196,12 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
         $condition = "AND $cond";
       }
 
-      self::$participantRole[$index] = CRM_Core_OptionGroup::values("participant_role", FALSE, FALSE,
-        FALSE, $condition
+      self::$participantRole[$index] = CRM_Core_OptionGroup::values(
+        "participant_role",
+        FALSE,
+        FALSE,
+        FALSE,
+        $condition
       );
     }
 
@@ -248,7 +262,8 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &eventTemplates($id = NULL) {
     if (!self::$eventTemplates) {
-      CRM_Core_PseudoConstant::populate(self::$eventTemplates,
+      CRM_Core_PseudoConstant::populate(
+        self::$eventTemplates,
         'CRM_Event_DAO_Event',
         FALSE,
         'template_title',
@@ -262,4 +277,3 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
     return self::$eventTemplates;
   }
 }
-

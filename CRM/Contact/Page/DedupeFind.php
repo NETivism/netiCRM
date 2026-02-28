@@ -75,7 +75,8 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  public function &links() {}
+  public function &links() {
+  }
 
   /**
    * Browse all rule groups
@@ -99,7 +100,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $session = CRM_Core_Session::singleton();
     if ($this->_context == 'search') {
       $this->_contactIds = $session->get('selectedSearchContactIds');
-      $str = CRM_Utils_Array::implode('|',$this->_contactIds);
+      $str = CRM_Utils_Array::implode('|', $this->_contactIds);
       $this->_cachePath = 'search:'.md5($str);
       $backURL = $session->readUserContext();
       $renewURL = CRM_Utils_System::url('civicrm/contact/dedupefind', "reset=1&action=renew&context=search");
@@ -143,7 +144,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
       CRM_Utils_System::redirect($url);
     }
     elseif ($action & CRM_Core_Action::MAP) {
-      $result = $this->batchMergeDupes(); 
+      $result = $this->batchMergeDupes();
       $this->purgeFoundDupes();
       $session->setStatus(ts("Merged %1 pairs of contacts.", [1 => count($result['merged'])]).' '.ts('Skipped %1 pairs of contacts', [1 => count($result['skipped'])]));
       $url = str_replace("action=renew", 'action=update', $renewURL);
@@ -158,7 +159,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
         $datetime = CRM_Core_BAO_Cache::getItemCreatedDate('Dedupe Found Dupes', $this->_cachePath, NULL);
         $session->setStatus(ts("This list is cached result, generated at %1.", [1 => CRM_Utils_Date::customFormat($datetime)]).' '.ts('You can renew this list by click "Refresh" button.'));
       }
-      else{
+      else {
         if ($this->dedupeRunning()) {
           CRM_Core_Error::fatal(ts('You have another running dedupe job. For system performance concern, we can only allow one dedupe job concurrently. Please try again later.'));
           return;
@@ -340,7 +341,7 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $merged = $skipped = [];
     if (!empty($foundDupes)) {
       // skip conflict pairs
-      foreach($foundDupes as $idx => $pair) {
+      foreach ($foundDupes as $idx => $pair) {
         $dupePairs = [
           0 => [
             'dstID' => $pair[0],
@@ -415,12 +416,12 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     $dao = new CRM_Core_DAO_Sequence();
     $dao->name = self::QUEUE_NAME;
     if ($dao->find(TRUE)) {
-      $dao->timestamp = microtime(true);
+      $dao->timestamp = microtime(TRUE);
       $dao->value = $this->_cachePath;
       $dao->update();
     }
     else {
-      $dao->timestamp = microtime(true);
+      $dao->timestamp = microtime(TRUE);
       $dao->value = $this->_cachePath;
       $dao->insert();
     }
@@ -436,4 +437,3 @@ class CRM_Contact_Page_DedupeFind extends CRM_Core_Page_Basic {
     return FALSE;
   }
 }
-

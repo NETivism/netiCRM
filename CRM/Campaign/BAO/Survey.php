@@ -34,7 +34,7 @@
  */
 
 
-Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
+class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
@@ -111,7 +111,8 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @param int $id
    * @static
    */
-  public static function getSurvey($all = FALSE,
+  public static function getSurvey(
+    $all = FALSE,
     $id = NULL,
     $defaultOnly = FALSE
   ) {
@@ -272,12 +273,13 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
     if (empty($returnProperties)) {
 
       $autocompleteContactSearch = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
-      $returnProperties = array_fill_keys(array_merge(['contact_type',
+      $returnProperties = array_fill_keys(array_merge(
+        ['contact_type',
             'contact_sub_type',
             'sort_name',
           ],
-          array_keys($autocompleteContactSearch)
-        ), 1);
+        array_keys($autocompleteContactSearch)
+      ), 1);
     }
 
     $select = $from = [];
@@ -329,7 +331,8 @@ Group By  contact.id";
         foreach ($returnProperties as $property => $ignore) {
           $voterDetails[$contact->contactId][$property] = $contact->$property;
         }
-        $image = CRM_Contact_BAO_Contact_Utils::getImage($contact->contact_sub_type ?
+        $image = CRM_Contact_BAO_Contact_Utils::getImage(
+          $contact->contact_sub_type ?
           $contact->contact_sub_type : $contact->contact_type,
           FALSE,
           $contact->contactId
@@ -497,7 +500,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
   }
 
   /*
-     * This function retrieve all option groups which are created as a result set 
+     * This function retrieve all option groups which are created as a result set
      *
      * @return $resultSets an array of option groups.
      * @static
@@ -515,7 +518,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
   }
 
   /*
-     * This function is to check survey activity.  
+     * This function is to check survey activity.
      *
      * @param int $activityId activity id.
      * @param int $activityTypeId activity type id.
@@ -620,10 +623,12 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       if (CRM_Utils_Array::value('qs', $link) &&
         !CRM_Utils_System::isNull($link['qs'])
       ) {
-        $urlPath = CRM_Utils_System::url(CRM_Core_Action::replace($link['url'], $ids),
+        $urlPath = CRM_Utils_System::url(
+          CRM_Core_Action::replace($link['url'], $ids),
           CRM_Core_Action::replace($link['qs'], $ids)
         );
-        $menuLinks[] = sprintf('<a href="%s" class="action-item" title="%s">%s</a>',
+        $menuLinks[] = sprintf(
+          '<a href="%s" class="action-item" title="%s">%s</a>',
           $urlPath,
           CRM_Utils_Array::value('title', $link),
           $link['title']
@@ -634,4 +639,3 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
     return $menuLinks;
   }
 }
-

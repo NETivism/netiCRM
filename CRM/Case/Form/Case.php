@@ -119,9 +119,10 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
       foreach ($caseAttributes as $key => $values) {
         if (empty($values)) {
-          return CRM_Core_Error::statusBounce(ts('You do not have any active %1',
-              [1 => str_replace('_', ' ', $key)]
-            ));
+          return CRM_Core_Error::statusBounce(ts(
+            'You do not have any active %1',
+            [1 => str_replace('_', ' ', $key)]
+          ));
           break;
         }
       }
@@ -129,7 +130,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
 
     if ($this->_action & CRM_Core_Action::ADD) {
 
-      $this->_activityTypeId = CRM_Core_OptionGroup::getValue('activity_type',
+      $this->_activityTypeId = CRM_Core_OptionGroup::getValue(
+        'activity_type',
         'Open Case',
         'name'
       );
@@ -146,7 +148,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
 
     if ($this->_activityTypeFile =
-      CRM_Activity_BAO_Activity::getFileForActivityTypeId($this->_activityTypeId,
+      CRM_Activity_BAO_Activity::getFileForActivityTypeId(
+        $this->_activityTypeId,
         'Case'
       )
     ) {
@@ -177,7 +180,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     //when custom data is included in this page
     CRM_Custom_Form_CustomData::preProcess($this, NULL, $this->_activityTypeId, 1, 'Activity');
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
-    $className::preProcess( $this );
+    $className::preProcess($this);
   }
 
   /**
@@ -210,7 +213,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
       if ($this->_action & CRM_Core_Action::RENEW) {
         $title = 'Restore';
       }
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => $title,
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -232,14 +236,23 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     if (!is_array($s)) {
       $s = [];
     }
-    $this->add('text', 'activity_subject', ts('Subject'),
-      array_merge($s, ['maxlength' => '128']), TRUE
+    $this->add(
+      'text',
+      'activity_subject',
+      ts('Subject'),
+      array_merge($s, ['maxlength' => '128']),
+      TRUE
     );
 
 
     $tags = CRM_Core_BAO_Tag::getTags('civicrm_case');
     if (!empty($tags)) {
-      $this->add('select', 'tag', ts('Select Tags'), $tags, FALSE,
+      $this->add(
+        'select',
+        'tag',
+        ts('Select Tags'),
+        $tags,
+        FALSE,
         ['id' => 'tags', 'multiple' => 'multiple', 'title' => ts('- select -')]
       );
     }
@@ -249,7 +262,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_case');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_case', NULL, FALSE, TRUE);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -262,7 +276,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     );
 
     $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
-    $className::buildQuickForm( $this );
+    $className::buildQuickForm($this);
   }
 
   /**
@@ -338,7 +352,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     // 1. call begin post process
     if ($this->_activityTypeFile) {
       $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
-      $className::beginPostProcess( $this, $params );
+      $className::beginPostProcess($this, $params);
     }
 
     // 2. create/edit case
@@ -374,7 +388,8 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     }
 
     // user context
-    $url = CRM_Utils_System::url('civicrm/contact/view/case',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/case',
       "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$caseObj->id}"
     );
     $session = CRM_Core_Session::singleton();
@@ -383,12 +398,19 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     // 3. format activity custom data
     if (CRM_Utils_Array::value('hidden_custom', $params)) {
       $customFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE, $this->_activityTypeId);
-      $customFields = CRM_Utils_Array::arrayMerge($customFields,
-        CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
-          NULL, NULL, TRUE
+      $customFields = CRM_Utils_Array::arrayMerge(
+        $customFields,
+        CRM_Core_BAO_CustomField::getFields(
+          'Activity',
+          FALSE,
+          FALSE,
+          NULL,
+          NULL,
+          TRUE
         )
       );
-      $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+      $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+        $params,
         $customFields,
         $this->_activityId,
         'Activity'
@@ -398,7 +420,7 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     // 4. call end post process
     if ($this->_activityTypeFile) {
       $className = "CRM_Case_Form_Activity_{$this->_activityTypeFile}";
-      $className::endPostProcess( $this, $params );
+      $className::endPostProcess($this, $params);
     }
 
     // 5. auto populate activites
@@ -407,4 +429,3 @@ class CRM_Case_Form_Case extends CRM_Core_Form {
     CRM_Core_Session::setStatus("{$params['statusMsg']}");
   }
 }
-

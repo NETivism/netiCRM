@@ -97,7 +97,7 @@ function civicrm_api3_custom_field_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_custom_field_create_spec(&$params) {
@@ -138,11 +138,11 @@ function civicrm_api3_custom_field_get($params) {
 }
 
 /*
- * Helper function to validate custom field values 
- * 
+ * Helper function to validate custom field values
+ *
  * @params Array   $params             Custom fields with values
- * @params Array   $errors             Reference fields to be check with 
- * @params Boolean $checkForDisallowed Check for disallowed elements 
+ * @params Array   $errors             Reference fields to be check with
+ * @params Boolean $checkForDisallowed Check for disallowed elements
  *                                     in params
  * @params Boolean $checkForRequired   Check for non present required elements
  *                                     in params
@@ -151,7 +151,7 @@ function civicrm_api3_custom_field_get($params) {
 
 /*
  * Helper function to validate custom field value
- * 
+ *
  * @params String $fieldName    Custom field name (eg: custom_8 )
  * @params Mixed  $value        Field value to be validate
  * @params Array  $fieldDetails Field Details
@@ -163,8 +163,8 @@ function civicrm_api3_custom_field_get($params) {
  */
 function _civicrm_api3_custom_field_validate_field($fieldName, $value, $fieldDetails, &$errors = [
   ]) {
-    return;
-    //see comment block
+  return;
+  //see comment block
   if (!$value) {
     return $errors;
   }
@@ -268,4 +268,3 @@ SELECT count(*)
 
   return $errors;
 }
-

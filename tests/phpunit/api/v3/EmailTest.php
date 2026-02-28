@@ -112,7 +112,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertApiSuccess($result, 'In line ' . __LINE__);
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['id'], 'In line ' . __LINE__);
-    foreach($reuslt['values'] as $value) {
+    foreach ($reuslt['values'] as $value) {
       $this->assertNotNull($value, 'In line ' . __LINE__);
     }
   }
@@ -188,7 +188,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
     $this->assertApiSuccess($created, 'In line ' . __LINE__);
     $this->assertEquals(1, $created['count'], 'In line ' . __LINE__);
     $this->assertNotNull($created['id'], 'In line ' . __LINE__);
-    foreach($created['values'] as $value) {
+    foreach ($created['values'] as $value) {
       $this->assertNotNull($value, 'In line ' . __LINE__);
     }
 
@@ -203,7 +203,7 @@ class api_v3_EmailTest extends CiviUnitTestCase {
 
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['id'], 'In line ' . __LINE__);
-    foreach($result['values'] as $value) {
+    foreach ($result['values'] as $value) {
       $this->assertNotNull($value, 'In line ' . __LINE__);
     }
   }

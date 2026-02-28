@@ -43,12 +43,12 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
   /**
    * various Contact types
    */
-  public CONST EXPORT_ALL = 1, EXPORT_SELECTED = 2;
+  public const EXPORT_ALL = 1, EXPORT_SELECTED = 2;
 
   /**
    * export modes
    */
-  public CONST CONTACT_EXPORT = 1, CONTRIBUTE_EXPORT = 2, MEMBER_EXPORT = 3, EVENT_EXPORT = 4, PLEDGE_EXPORT = 5, CASE_EXPORT = 6, GRANT_EXPORT = 7, ACTIVITY_EXPORT = 8;
+  public const CONTACT_EXPORT = 1, CONTRIBUTE_EXPORT = 2, MEMBER_EXPORT = 3, EVENT_EXPORT = 4, PLEDGE_EXPORT = 5, CASE_EXPORT = 6, GRANT_EXPORT = 7, ACTIVITY_EXPORT = 8;
 
   /**
    * current export mode
@@ -99,10 +99,11 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       if (property_exists($customSearchClass, '_primaryIDName')) {
         $primaryIDName = $customSearchClass::$_primaryIDName;
       }
-      $exportCustomResult = CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+      $exportCustomResult = CRM_Export_BAO_Export::exportCustom(
+        $this->get('customSearchClass'),
         $this->get('formValues'),
-        $this->get(CRM_Utils_Sort::SORT_ORDER), 
-        $primaryIDName, 
+        $this->get(CRM_Utils_Sort::SORT_ORDER),
+        $primaryIDName,
         FALSE,
         FALSE,
         $this->_exportMode
@@ -110,7 +111,7 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
       $header = $exportCustomResult['header'];
       foreach ($header as $i => $headerName) {
         if ($headerName == ts('CiviCRM Contact ID')) {
-          $customHeader['contact_id'] = $headerName;  
+          $customHeader['contact_id'] = $headerName;
         }
         else {
           $customHeader["column{$i}"] = $headerName;
@@ -225,7 +226,7 @@ FROM   {$this->_componentTable}
       else {
         $entityTable = CRM_Utils_Request::retrieve('entityTable', 'String', $this);
         $entityId = CRM_Utils_Request::retrieve('entityId', 'Integer', $this);
-        if($entityTable && $entityId) {
+        if ($entityTable && $entityId) {
           $mappingObject = CRM_Core_BAO_Mapping::getMappingFieldsUfJoin($entityTable, $entityId);
           $this->set('mappingObject', $mappingObject);
         }
@@ -246,22 +247,26 @@ FROM   {$this->_componentTable}
   public function buildQuickForm() {
     //export option
     $exportOptions = $mergeHousehold = $mergeAddress = [];
-    foreach(['customHeader', 'taskName', 'totalSelectedRecords'] as $name) {
+    foreach (['customHeader', 'taskName', 'totalSelectedRecords'] as $name) {
       $this->assign($name, $this->get($name));
     }
-    $exportOptions[] = $this->createElement('radio',
-      NULL, NULL,
+    $exportOptions[] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
       ts('Select fields for export'),
       self::EXPORT_SELECTED,
       ['onClick' => 'showMappingOption( );']
     );
 
-    $mergeAddress[] = $this->createElement('advcheckbox',
+    $mergeAddress[] = $this->createElement(
+      'advcheckbox',
       'merge_same_address',
       NULL,
       ts('Merge Contacts with the Same Address')
     );
-    $mergeHousehold[] = $this->createElement('advcheckbox',
+    $mergeHousehold[] = $this->createElement(
+      'advcheckbox',
       'merge_same_household',
       NULL,
       ts('Merge Household Members into their Households')
@@ -283,7 +288,8 @@ FROM   {$this->_componentTable}
 
     $this->setDefaults(['exportOption' => self::EXPORT_SELECTED]);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -342,7 +348,8 @@ FROM   {$this->_componentTable}
 
     if ($exportOption == self::EXPORT_ALL) {
 
-      CRM_Export_BAO_Export::exportComponents($this->_selectAll,
+      CRM_Export_BAO_Export::exportComponents(
+        $this->_selectAll,
         $this->_componentIds,
         $this->get('queryParams'),
         $this->get(CRM_Utils_Sort::SORT_ORDER),
@@ -421,4 +428,3 @@ FROM   {$this->_componentTable}
     }
   }
 }
-

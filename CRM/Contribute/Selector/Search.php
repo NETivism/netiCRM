@@ -176,7 +176,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    * @return CRM_Contact_Selector
    * @access public
    */
-  public function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $contributionClause = NULL,
     $single = FALSE,
@@ -204,7 +205,12 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     $this->_action = $action;
 
     // refs #32894, custom default properties for performance reason
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, self::returnProperties($this->_queryParams), NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      self::returnProperties($this->_queryParams),
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_CONTRIBUTE
     );
 
@@ -299,9 +305,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    * @access public
    */
   public function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_contributionClause
     );
@@ -319,9 +330,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    * @return int   the total number of rows for this action
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_contributionClause
     );
@@ -417,29 +433,32 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
       }
       $row['action'] = CRM_Core_Action::formLink($links, $mask, $actions);
 
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
 
       if (CRM_Utils_Array::value('amount_level', $row)) {
         CRM_Event_BAO_Participant::fixEventLevel($row['amount_level']);
       }
 
-      if(!empty($row['payment_instrument'])){
+      if (!empty($row['payment_instrument'])) {
         $invoiceLink = CRM_Contribute_BAO_Contribution_Utils::invoiceLink($row['contribution_id'], TRUE);
-        if($invoiceLink){
+        if ($invoiceLink) {
           $row['payment_instrument'] .= '<br>(<a href="'.$invoiceLink.'" target="_blank">'.ts('Invoice').'</a>)';
         }
       }
 
       $rows[] = $row;
     }
-    if(!empty($ids)){
+    if (!empty($ids)) {
       $details = CRM_Contribute_BAO_Contribution::getComponentDetails($ids);
       $premiums = self::getContributionPremiums($ids);
       $referrers = self::getContributionReferrers($ids);
-      foreach($rows as $k => $r){
-        if (!empty($details[$r['id']])){
+      foreach ($rows as $k => $r) {
+        if (!empty($details[$r['id']])) {
           $rows[$k]['ids'] = $details[$r['id']];
         }
         if (!empty($referrers[$r['id']])) {
@@ -611,7 +630,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     $includeProduct = FALSE;
     $includeReferrer = FALSE;
     $includedCustoms = [];
-    foreach($queryParams as $query) {
+    foreach ($queryParams as $query) {
       if ($query[0] === 'product_name') {
         $includeProduct = TRUE;
       }
@@ -631,7 +650,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     if (!$includeReferrer) {
       unset($returnProperties['contribution_referrer_type']);
     }
-    foreach($returnProperties as $field => $return) {
+    foreach ($returnProperties as $field => $return) {
       if (preg_match('/^custom_\d+/', $field)) {
         if (!in_array($field, $includedCustoms)) {
           unset($returnProperties[$field]);
@@ -652,7 +671,7 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     ]);
 
     $contributionIds = [];
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $contributionIds[] = $dao->contribution_id;
     }
     foreach ($contributionIds as $contributionId) {
@@ -674,11 +693,10 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     $selector = new CRM_Track_Selector_Track($params);
     $dao = $selector->getQuery("entity_id, referrer_type", 'GROUP BY entity_table, entity_id');
     $referrer = [];
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $referrer[$dao->entity_id] = $dao->referrer_type;
     }
     return $referrer;
   }
 }
 //end of class
-

@@ -113,4 +113,3 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

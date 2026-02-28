@@ -55,7 +55,10 @@ class CRM_Contact_Form_Edit_OpenID {
 
     $form->applyFilter('__ALL__', 'trim');
 
-    $form->addElement('text', "openid[$blockId][openid]", ts('OpenID'),
+    $form->addElement(
+      'text',
+      "openid[$blockId][openid]",
+      ts('OpenID'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OpenID', 'openid')
     );
     $form->addRule("openid[$blockId][openid]", ts('OpenID is not a valid URL.'), 'url');
@@ -74,4 +77,3 @@ class CRM_Contact_Form_Edit_OpenID {
     $form->addElement('radio', "openid[$blockId][is_primary]", '', '', '1', $js);
   }
 }
-

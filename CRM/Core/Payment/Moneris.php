@@ -47,7 +47,7 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
   public $_processorName;
   public $_profile;
   # (not used, implicit in the API, might need to convert?)
-  public CONST CHARSET = 'UFT-8';
+  public const CHARSET = 'UFT-8';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -271,15 +271,19 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
 
     $e = &CRM_Core_Error::singleton();
     if (is_a($errors, 'ErrorType')) {
-      $e->push($errors->getErrorCode(),
-        0, NULL,
+      $e->push(
+        $errors->getErrorCode(),
+        0,
+        NULL,
         $errors->getShortMessage() . ' ' . $errors->getLongMessage()
       );
     }
     else {
       foreach ($errors as $error) {
-        $e->push($error->getErrorCode(),
-          0, NULL,
+        $e->push(
+          $error->getErrorCode(),
+          0,
+          NULL,
           $error->getShortMessage() . ' ' . $error->getLongMessage()
         );
       }
@@ -290,14 +294,18 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
   public function &error($error = NULL) {
     $e = &CRM_Core_Error::singleton();
     if (is_object($error)) {
-      $e->push($error->getResponseCode(),
-        0, NULL,
+      $e->push(
+        $error->getResponseCode(),
+        0,
+        NULL,
         $error->getMessage()
       );
     }
     elseif (is_string($error)) {
-      $e->push(9002,
-        0, NULL,
+      $e->push(
+        9002,
+        0,
+        NULL,
         $error
       );
     }
@@ -332,4 +340,3 @@ class CRM_Core_Payment_Moneris extends CRM_Core_Payment {
     }
   }
 }
-

@@ -171,4 +171,3 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
     $this->set('contacts', $this->_contacts);
   }
 }
-

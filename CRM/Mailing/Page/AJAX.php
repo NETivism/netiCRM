@@ -85,7 +85,7 @@ class CRM_Mailing_Page_AJAX {
       }
       elseif (!empty($syncResult['result']['#count']) && !empty($syncResult['result']['#report'])) {
         $report = ts('Successful synced');
-        foreach($syncResult['result']['#report'] as $rep) {
+        foreach ($syncResult['result']['#report'] as $rep) {
           $report .= "<p>$rep</p>";
         }
         $remoteResult = [
@@ -102,7 +102,7 @@ class CRM_Mailing_Page_AJAX {
       else {
         $report = ts('Synchronize error').': ';
         if (!empty($syncResult['result']['#report']) && is_array($syncResult['result']['#report'])) {
-          foreach($syncResult['result']['#report'] as $rep) {
+          foreach ($syncResult['result']['#report'] as $rep) {
             $report .= "<span>$rep</span>";
           }
         }
@@ -115,7 +115,7 @@ class CRM_Mailing_Page_AJAX {
         ];
       }
     }
-    catch(CRM_Core_Exception $e) {
+    catch (CRM_Core_Exception $e) {
       $remoteResult = ['success' => FALSE, 'message' => $e->getMessage()];
     }
     $output = json_encode($remoteResult);
@@ -123,4 +123,3 @@ class CRM_Mailing_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 }
-

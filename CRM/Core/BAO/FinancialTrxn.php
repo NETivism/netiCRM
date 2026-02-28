@@ -172,4 +172,3 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
     }
   }
 }
-

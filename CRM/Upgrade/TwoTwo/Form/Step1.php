@@ -40,11 +40,13 @@ class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
     $config = CRM_Core_Config::singleton();
 
     if (!is_writable($config->uploadDir . 'CiviCRM.log') &&
-      !is_writable($config->uploadDir . 'CiviCRM.log.' .
+      !is_writable(
+        $config->uploadDir . 'CiviCRM.log.' .
         md5($config->dsn . $config->userFrameworkResourceURL)
       )
     ) {
-      $errorMessage = ts('Log file CiviCRM.log is not writable. Make sure files directory is writable.',
+      $errorMessage = ts(
+        'Log file CiviCRM.log is not writable. Make sure files directory is writable.',
         [1 => $config->uploadDir]
       );
       return FALSE;
@@ -195,4 +197,3 @@ class CRM_Upgrade_TwoTwo_Form_Step1 extends CRM_Upgrade_Form {
     return ts('Begin Upgrade');
   }
 }
-

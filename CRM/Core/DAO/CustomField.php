@@ -31,8 +31,7 @@
  * $Id$
  *
  */
-        class CRM_Core_DAO_CustomField extends CRM_Core_DAO
-{
+class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
@@ -46,14 +45,14 @@
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@
    * @var boolean
    * @static
    */
-  public static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Unique Custom Field ID
    *
    * @var int unsigned
@@ -199,13 +198,13 @@
    */
   public $text_length;
   /**
-   * Date may be up to start_date_years years prior to tcurrent date  
+   * Date may be up to start_date_years years prior to tcurrent date
    *
    * @var int unsigned
    */
   public $start_date_years;
   /**
-   * Date may be up to end_date_years years after to tcurrent date 
+   * Date may be up to end_date_years years after to tcurrent date
    *
    * @var int unsigned
    */
@@ -223,13 +222,13 @@
    */
   public $time_format;
   /**
-   *  Number of columns in Note Field 
+   *  Number of columns in Note Field
    *
    * @var int unsigned
    */
   public $note_columns;
   /**
-   *  Number of rows in Note Field 
+   *  Number of rows in Note Field
    *
    * @var int unsigned
    */
@@ -246,14 +245,13 @@
    * @var int unsigned
    */
   public $option_group_id;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_custom_field
-   */
-  public function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_custom_field
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -262,8 +260,7 @@
    * @access public
    * @return array
    */
-  public function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'custom_group_id' => 'civicrm_custom_group:id',
@@ -271,39 +268,37 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'custom_group_id', 'civicrm_custom_group', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'custom_group_id', 'civicrm_custom_group', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  public static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'custom_group_id' => [
           'name' => 'custom_group_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                     'FKClassName' => 'CRM_Core_DAO_CustomGroup',
         ] ,
         'name' => [
@@ -324,14 +319,14 @@
           'name' => 'data_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Data Type') ,
-          'required' => true,
+          'required' => TRUE,
                    'enumValues' => 'String, Int, Float, Money, Memo, Date, Boolean, StateProvince, Country, File, Link, ContactReference',
          ] ,
         'html_type' => [
           'name' => 'html_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Html Type') ,
-          'required' => true,
+          'required' => TRUE,
                    'enumValues' => 'Text, TextArea, Select, Multi-Select, AdvMulti-Select, Radio, CheckBox, Select Date, Select State/Province, Select Country, Multi-Select Country, Multi-Select State/Province, File, Link, RichTextEditor, Autocomplete-Select',
          ] ,
         'default_value' => [
@@ -357,7 +352,7 @@
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-          'required' => true,
+          'required' => TRUE,
                   'default' => '',
           ] ,
         'help_pre' => [
@@ -462,19 +457,17 @@
    * @access public
    * @return string
    */
-  public static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  public function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -483,21 +476,21 @@
    * @access public
    * return array
    */
-  public static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['custom_field'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_import;
   }
   /**
@@ -506,21 +499,21 @@
    * @access public
    * return array
    */
-  public static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['custom_field'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_export;
   }
   /**
@@ -528,8 +521,7 @@
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {
+  public static function &getEnums() {
     static $enums = [
                                                                     'data_type',
                           'html_type',
@@ -544,9 +536,8 @@
    *
    * @return string  the display value of the enum
    */
-  public static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
                                                                     'data_type' => [
@@ -591,8 +582,7 @@
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  public static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Core_DAO_CustomField::getEnums();
     foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {

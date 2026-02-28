@@ -54,7 +54,8 @@ class CRM_Core_BAO_ConfigSetting {
     // also set a template url so js files can use this
     // CRM-6194
     $params['civiRelativeURL'] = CRM_Utils_System::url('CIVI_BASE_TEMPLATE');
-    $params['civiRelativeURL'] = str_replace('CIVI_BASE_TEMPLATE',
+    $params['civiRelativeURL'] = str_replace(
+      'CIVI_BASE_TEMPLATE',
       '',
       $params['civiRelativeURL']
     );
@@ -404,7 +405,8 @@ class CRM_Core_BAO_ConfigSetting {
             $$var = NULL;
           }
         }
-        $$var = CRM_Utils_Request::retrieve($var,
+        $$var = CRM_Utils_Request::retrieve(
+          $var,
           'String',
           CRM_Core_DAO::$_nullArray,
           FALSE,
@@ -440,7 +442,8 @@ WHERE  id = %1
     }
     $configBackend = unserialize($configBackend);
 
-    $configBackend = str_replace($from,
+    $configBackend = str_replace(
+      $from,
       $to,
       $configBackend
     );
@@ -466,7 +469,8 @@ WHERE  id = %1
     CRM_Core_Config::clearDBCache();
     $moveStatus .= ts('Database cache tables cleared.') . '<br />';
 
-    $resetSessionTable = CRM_Utils_Request::retrieve('resetSessionTable',
+    $resetSessionTable = CRM_Utils_Request::retrieve(
+      'resetSessionTable',
       'Boolean',
       CRM_Core_DAO::$_nullArray,
       FALSE,
@@ -474,9 +478,9 @@ WHERE  id = %1
       'REQUEST'
     );
     if ($config->userFramework == 'Drupal' && $resetSessionTable) {
-			$dbUf = CRM_Core_BAO_CMSUser::dbHandle($config);
-			$dbUf->query("DELETE FROM sessions WHERE 1");
-			$dbUf->disconnect();
+      $dbUf = CRM_Core_BAO_CMSUser::dbHandle($config);
+      $dbUf->query("DELETE FROM sessions WHERE 1");
+      $dbUf->disconnect();
       $moveStatus .= ts('Drupal session table cleared.') . '<br />';
     }
     else {
@@ -509,4 +513,3 @@ WHERE  id = %1
     ];
   }
 }
-

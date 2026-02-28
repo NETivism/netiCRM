@@ -43,7 +43,7 @@
  */
 class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   public $_contactTypeDisplay;
-  public CONST RULES_COUNT = 5;
+  public const RULES_COUNT = 5;
   protected $_contactType;
   protected $_defaults = [];
   protected $_fields = [];
@@ -162,7 +162,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
     $total = 0;
     for ($count = 0; $count < self::RULES_COUNT; $count++) {
       if (!empty($fields['weight_'.$count])) {
-        $total += $fields['weight_'.$count]; 
+        $total += $fields['weight_'.$count];
       }
     }
     if ($total < $fields['threshold']) {
@@ -260,4 +260,3 @@ UPDATE civicrm_dedupe_rule_group
     CRM_Core_BAO_SchemaHandler::createIndexes($tables, 'dedupe_index', $substrLenghts);
   }
 }
-

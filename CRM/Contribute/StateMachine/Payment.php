@@ -58,4 +58,3 @@ class CRM_Contribute_StateMachine_Payment extends CRM_Core_StateMachine {
     $this->addSequentialPages($this->_pages);
   }
 }
-

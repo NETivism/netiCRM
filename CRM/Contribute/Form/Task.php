@@ -110,14 +110,19 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     }
     else {
       $queryParams = $form->get('queryParams');
-      $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
+      $query = new CRM_Contact_BAO_Query(
+        $queryParams,
+        NULL,
+        NULL,
+        FALSE,
+        FALSE,
         CRM_Contact_BAO_Query::MODE_CONTRIBUTE
       );
 
       $sortOrder = $form->controller->get('sortOrder');
 
-      if ( $form->get( CRM_Utils_Sort::SORT_ID  ) ) {
-        $sortID = CRM_Utils_Sort::sortIDValue( $form->get( CRM_Utils_Sort::SORT_ID  ),$form->get( CRM_Utils_Sort::SORT_DIRECTION ) );
+      if ($form->get(CRM_Utils_Sort::SORT_ID)) {
+        $sortID = CRM_Utils_Sort::sortIDValue($form->get(CRM_Utils_Sort::SORT_ID), $form->get(CRM_Utils_Sort::SORT_DIRECTION));
         $form->_sort = new CRM_Utils_Sort($sortOrder, $sortID);
       }
 
@@ -126,7 +131,7 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
       $jobSize = 50000;
       if (is_numeric($rowCount) && $rowCount / $jobSize > 1) {
         $jobs = $rowCount / $jobSize;
-        for($i = 0; $i < $jobs; $i++) {
+        for ($i = 0; $i < $jobs; $i++) {
           $offset = $i*$jobSize;
           $result = $query->searchQuery($offset, $jobSize, $form->_sort);
           while ($result->fetch()) {
@@ -168,9 +173,10 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
       $session->replaceUserContext(CRM_Utils_System::url('civicrm/contribute/search', $urlParams));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
-          $urlParams
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        "civicrm/contact/search/$searchFormName",
+        $urlParams
+      ));
     }
   }
 
@@ -179,7 +185,8 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
    * since its used for things like send email
    */
   public function setContactIDs() {
-    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent($this->_contributionIds,
+    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent(
+      $this->_contributionIds,
       'civicrm_contribution'
     );
   }
@@ -194,8 +201,9 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -207,4 +215,3 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     );
   }
 }
-

@@ -61,7 +61,7 @@ class CRM_Core_Menu {
   ];
 
   public static $_menuCache = NULL;
-  public CONST MENU_ITEM = 1;
+  public const MENU_ITEM = 1;
 
   public static function &xmlItems() {
     if (!self::$_items) {
@@ -74,7 +74,8 @@ class CRM_Core_Menu {
       $files = CRM_Utils_File::getFilesByExtension(rtrim($civicrm_root, '/') . DIRECTORY_SEPARATOR . $coreMenuFilesPath, 'xml');
 
       // Grab component menu files
-      $files = array_merge($files,
+      $files = array_merge(
+        $files,
         CRM_Core_Component::xmlMenu()
       );
 
@@ -209,7 +210,8 @@ class CRM_Core_Menu {
     $messages = [];
     foreach ($fieldsToPropagate as $field) {
       if (!$fieldsPresent[$field]) {
-        $messages[] = ts("Could not find %1 in path tree",
+        $messages[] = ts(
+          "Could not find %1 in path tree",
           [1 => $field]
         );
       }
@@ -292,7 +294,9 @@ class CRM_Core_Menu {
 
       $value = ['title' => $item['title'],
         'desc' => CRM_Utils_Array::value('desc', $item),
-        'id' => strtr($item['title'], ['(' => '_', ')' => '', ' ' => '',
+        'id' => strtr(
+          $item['title'],
+          ['(' => '_', ')' => '', ' ' => '',
             ',' => '_', '/' => '_',
           ]
         ),
@@ -350,9 +354,10 @@ class CRM_Core_Menu {
     $values = &$nav['breadcrumb'];
     $config = CRM_Core_Config::singleton();
     foreach ($values as $index => $item) {
-      if (strpos(CRM_Utils_Array::value($config->userFrameworkURLVar, $_REQUEST),
-          $item['path']
-        ) === 0) {
+      if (strpos(
+        CRM_Utils_Array::value($config->userFrameworkURLVar, $_REQUEST),
+        $item['path']
+      ) === 0) {
         $values[$index]['active'] = 'class="active"';
       }
       else {
@@ -497,10 +502,12 @@ class CRM_Core_Menu {
       return self::getReturnUrl($menu, $newPath);
     }
     else {
-      return [CRM_Utils_Array::value('return_url',
-          $menu[$path]
-        ),
-        CRM_Utils_Array::value('return_url_args',
+      return [CRM_Utils_Array::value(
+        'return_url',
+        $menu[$path]
+      ),
+        CRM_Utils_Array::value(
+          'return_url_args',
           $menu[$path]
         ),
       ];
@@ -530,9 +537,11 @@ class CRM_Core_Menu {
     }
     else {
       if (CRM_Utils_Array::value('component', $menu[$compPath])) {
-        $componentId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Component',
+        $componentId = CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_Component',
           $menu[$compPath]['component'],
-          'id', 'name'
+          'id',
+          'name'
         );
       }
       $menu[$path]['component_id'] = $componentId ? $componentId : NULL;
@@ -654,8 +663,7 @@ UNION (
     return $arr;
   }
 
-  public static function buildMenuUrl($url, $query){
+  public static function buildMenuUrl($url, $query) {
     return $url.'?'.$query;
   }
 }
-

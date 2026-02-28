@@ -43,8 +43,10 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
    * @return null|string
    */
   public static function activeProviderCount() {
-    $activeProviders = CRM_Core_DAO::singleValueQuery('SELECT count(id) FROM civicrm_sms_provider WHERE is_active = 1 AND (domain_id = %1 OR domain_id IS NULL)',
-       [1 => [CRM_Core_Config::domainID(), 'Positive']]);
+    $activeProviders = CRM_Core_DAO::singleValueQuery(
+      'SELECT count(id) FROM civicrm_sms_provider WHERE is_active = 1 AND (domain_id = %1 OR domain_id IS NULL)',
+      [1 => [CRM_Core_Config::domainID(), 'Positive']]
+    );
     return $activeProviders;
   }
 
@@ -148,7 +150,7 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
    */
   public static function del($providerID) {
     if (!$providerID) {
-       return CRM_Core_Error::statusBounce(ts('Invalid value passed to delete function.'));
+      return CRM_Core_Error::statusBounce(ts('Invalid value passed to delete function.'));
     }
 
     $dao = new CRM_SMS_DAO_Provider();

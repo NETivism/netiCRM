@@ -127,7 +127,8 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    * @return CRM_Contact_Selector
    * @access public
    */
-  public function __construct($customSearchClass,
+  public function __construct(
+    $customSearchClass,
     &$formValues = NULL,
     $params = NULL,
     $returnProperties = NULL,
@@ -146,18 +147,18 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
     if (!$ext->isExtensionKey($customSearchClass)) {
       if ($ext->isExtensionClass($customSearchClass)) {
         $customSearchFile = $ext->classToPath($customSearchClass);
-        require_once ($customSearchFile);
+        require_once($customSearchFile);
       }
       else {
-        if(!class_exists($customSearchClass)){
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
+        if (!class_exists($customSearchClass)) {
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
         }
       }
       $this->_search = new $customSearchClass($formValues);
     }
     else {
       $customSearchFile = $ext->keyToPath($customSearchClass);
-      require_once ($customSearchFile);
+      require_once($customSearchFile);
       $className = $ext->keyToClass($customSearchClass, 'search');
       $this->_search = new $className($formValues);
     }
@@ -235,7 +236,7 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     $columns = $this->_search->columns();
-    foreach($columns as $key => $value){
+    foreach ($columns as $key => $value) {
       if (is_numeric($key)) {
         unset($columns[$key]);
       }
@@ -286,9 +287,10 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
     $includeContactIDs = FALSE;
-    if (($output == CRM_Core_Selector_Controller::EXPORT ||
+    if ((
+      $output == CRM_Core_Selector_Controller::EXPORT ||
         $output == CRM_Core_Selector_Controller::SCREEN
-      ) &&
+    ) &&
       $this->_formValues['radio_ts'] == 'ts_sel'
     ) {
       $includeContactIDs = TRUE;
@@ -309,9 +311,10 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
     $mask = CRM_Core_Action::mask($permissions);
 
     $alterRow = FALSE;
-    if (method_exists($this->_customSearchClass,
-        'alterRow'
-      )) {
+    if (method_exists(
+      $this->_customSearchClass,
+      'alterRow'
+    )) {
       $alterRow = TRUE;
     }
     $image = FALSE;
@@ -341,7 +344,8 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
         $contactID = is_numeric($dao->contact_id) ? $dao->contact_id : (is_numeric($dao->id) ? $dao->id : NULL);
 
         $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $cbID;
-        $row['action'] = CRM_Core_Action::formLink($links,
+        $row['action'] = CRM_Core_Action::formLink(
+          $links,
           $mask,
           ['id' => $contactID]
         );
@@ -354,8 +358,11 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
 
         if ($image) {
 
-          $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($dao->contact_sub_type ?
-            $dao->contact_sub_type : $dao->contact_type, FALSE, $contactID
+          $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+            $dao->contact_sub_type ?
+            $dao->contact_sub_type : $dao->contact_type,
+            FALSE,
+            $contactID
           );
         }
         $rows[] = $row;
@@ -422,4 +429,3 @@ class CRM_Contact_Selector_Custom extends CRM_Core_Selector_Base implements CRM_
   }
 }
 //end of class
-

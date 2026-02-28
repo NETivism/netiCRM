@@ -55,7 +55,8 @@ trait CRMTraits_Mailing_MailingTrait {
               $values[] = is_numeric($value) ? $value : "'{$value}'";
             }
           }
-          CRM_Core_DAO::executeQuery("
+          CRM_Core_DAO::executeQuery(
+            "
             INSERT INTO $tableName (" . implode(',', $keys) . ') VALUES(' . implode(',', $values) . ')'
           );
         }

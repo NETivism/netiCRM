@@ -259,7 +259,7 @@ class CRM_Utils_Date {
    * @return int Unix timestamp
    *
    */
-  public static function unixTime($string, $useEndOfMinute = false) {
+  public static function unixTime($string, $useEndOfMinute = FALSE) {
     if (empty($string)) {
       return 0;
     }
@@ -267,11 +267,13 @@ class CRM_Utils_Date {
 
     if (isset($parsedDate['second']) && $parsedDate['second'] > 0) {
       $second = CRM_Utils_Array::value('second', $parsedDate, 0);
-    } else {
+    }
+    else {
       $second = $useEndOfMinute ? 59 : 0;
     }
 
-    return mktime(CRM_Utils_Array::value('hour', $parsedDate),
+    return mktime(
+      CRM_Utils_Array::value('hour', $parsedDate),
       CRM_Utils_Array::value('minute', $parsedDate),
       $second,
       CRM_Utils_Array::value('month', $parsedDate),
@@ -383,20 +385,26 @@ class CRM_Utils_Date {
       elseif ($day % 10 == 3 and $day != 13) {
         $suffix = 'rd';
       }
-      else $suffix = 'th';
+      else {
+        $suffix = 'th';
+      }
 
       if ($hour24 < 12) {
         if ($hour24 == 00) {
           $hour12 = 12;
         }
-        else $hour12 = $hour24;
+        else {
+          $hour12 = $hour24;
+        }
         $type = 'AM';
       }
       else {
         if ($hour24 == 12) {
           $hour12 = 12;
         }
-        else $hour12 = $hour24 - 12;
+        else {
+          $hour12 = $hour24 - 12;
+        }
         $type = 'PM';
       }
 
@@ -497,13 +505,13 @@ class CRM_Utils_Date {
     if (CRM_Utils_Array::value($dateParam, $params)) {
       //suppress hh:mm:ss if it exists
       preg_match("/(\s(([01]\d)|[2][0-3]):([0-5]\d):?([0-5]\d)?)$/", $params[$dateParam], $matches);
-      if(!empty($matches[1])) {
+      if (!empty($matches[1])) {
         $value = str_replace($matches[0], '', $params[$dateParam]);
         $time = preg_replace('/[^\d]/i', '', $matches[1]);
-        if(strlen($time) == 4) {
+        if (strlen($time) == 4) {
           $time .= '00';
         }
-        if(strlen($time) != 6) {
+        if (strlen($time) != 6) {
           return FALSE;
         }
       }
@@ -729,11 +737,14 @@ class CRM_Utils_Date {
       $today = date($format);
     }
     else {
-      $today = date($format, mktime(0, 0, 0,
-          $dayParams['month'],
-          $dayParams['day'],
-          $dayParams['year']
-        ));
+      $today = date($format, mktime(
+        0,
+        0,
+        0,
+        $dayParams['month'],
+        $dayParams['day'],
+        $dayParams['year']
+      ));
     }
 
     return $today;
@@ -1203,7 +1214,8 @@ class CRM_Utils_Date {
 
           case 'greater':
             $from['d'] = 1;
-            $from['M'] = $now['mon'];;
+            $from['M'] = $now['mon'];
+            ;
             $from['Y'] = $now['year'];
             unset($to);
             break;
@@ -1327,7 +1339,8 @@ class CRM_Utils_Date {
 
           case 'greater':
             $from['d'] = $now['mday'];
-            $from['M'] = $now['mon'];;
+            $from['M'] = $now['mon'];
+            ;
             $from['Y'] = $now['year'];
             unset($to);
             break;
@@ -1405,7 +1418,7 @@ class CRM_Utils_Date {
     if (trim($date)) {
       // Modify when hour is over 12 and use 'pm' (Contains AM, in spite of rarely wrong using.)
       $pregTest = '/(?<pmam>(?:pm)|(?:am))? ?(?<hr>\d{1,2}):(?<min>\d{1,2})(?::(?<sec>\d{1,2}))? ?((?:pm)|(?:am))?$/i';
-      if(preg_match($pregTest, $date, $matches)) {
+      if (preg_match($pregTest, $date, $matches)) {
         if (empty($time)) {
           $date = preg_replace($pregTest, '', $date);
           $time = $matches[0];
@@ -1426,9 +1439,12 @@ class CRM_Utils_Date {
 
       $timeStamp = strtotime($date . ' ' . $time);
       if (empty($timeStamp)) {
-        CRM_Core_Session::setStatus(ts("%1 has error on format.", [
+        CRM_Core_Session::setStatus(
+          ts("%1 has error on format.", [
             1 => ts('Time')
-          ]), TRUE, 'error'
+          ]),
+          TRUE,
+          'error'
         );
       }
       $mysqlDate = date($format, $timeStamp);
@@ -1508,8 +1524,11 @@ class CRM_Utils_Date {
   public static function getDateFormat($formatType = NULL) {
     $format = NULL;
     if ($formatType) {
-      $format = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PreferencesDate',
-        $formatType, 'date_format', 'name'
+      $format = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_PreferencesDate',
+        $formatType,
+        'date_format',
+        'name'
       );
     }
 
@@ -1545,8 +1564,8 @@ class CRM_Utils_Date {
    */
   public static function strtodate(string $dateFilter): array {
     $today = new DateTime();
-    $startDate = null;
-    $endDate = null;
+    $startDate = NULL;
+    $endDate = NULL;
 
     // Parse `last/next N days/weeks/months/years to today/yesterday`
     if (preg_match('/^(last|next) (\d+) (days|weeks|months|years) to (today|yesterday)$/', strtolower($dateFilter), $matches)) {
@@ -1563,7 +1582,8 @@ class CRM_Utils_Date {
         
         // Adjust start date by +1 day
         $startDate = (new DateTime($startDate))->modify('+1 day')->format('Y-m-d');
-      } else {
+      }
+      else {
         $startDate = $endReference->format('Y-m-d');
         $endDate = (clone $endReference)->modify("+{$amount} {$unit}")->format('Y-m-d');
       }
@@ -1577,7 +1597,8 @@ class CRM_Utils_Date {
       if ($direction === 'last') {
         $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
         $endDate = $today->format('Y-m-d');
-      } else {
+      }
+      else {
         $startDate = $today->format('Y-m-d');
         $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
       }
@@ -1591,23 +1612,28 @@ class CRM_Utils_Date {
         if ($modifier === 'this') {
           $startDate = (clone $today)->modify('monday this week')->format('Y-m-d');
           $endDate = $today->format('Y-m-d');
-        } else {
+        }
+        else {
           $startDate = (clone $today)->modify('monday last week')->format('Y-m-d');
           $endDate = (clone $today)->modify('sunday last week')->format('Y-m-d');
         }
-      } elseif ($unit === 'month') {
+      }
+      elseif ($unit === 'month') {
         if ($modifier === 'this') {
           $startDate = (clone $today)->modify('first day of this month')->format('Y-m-d');
           $endDate = $today->format('Y-m-d');
-        } else {
+        }
+        else {
           $startDate = (clone $today)->modify('first day of last month')->format('Y-m-d');
           $endDate = (clone $today)->modify('last day of last month')->format('Y-m-d');
         }
-      } elseif ($unit === 'year') {
+      }
+      elseif ($unit === 'year') {
         if ($modifier === 'this') {
           $startDate = (clone $today)->modify('first day of January this year')->format('Y-m-d');
           $endDate = $today->format('Y-m-d');
-        } else {
+        }
+        else {
           $startDate = (clone $today)->modify('first day of January last year')->format('Y-m-d');
           $endDate = (clone $today)->modify('last day of December last year')->format('Y-m-d');
         }
@@ -1617,7 +1643,8 @@ class CRM_Utils_Date {
     elseif ($dateFilter === 'today') {
       $startDate = $today->format('Y-m-d');
       $endDate = $today->format('Y-m-d');
-    } elseif ($dateFilter === 'yesterday') {
+    }
+    elseif ($dateFilter === 'yesterday') {
       $startDate = (clone $today)->modify('-1 day')->format('Y-m-d');
       $endDate = $startDate;
     }
@@ -1648,4 +1675,3 @@ class CRM_Utils_Date {
     ];
   }
 }
-

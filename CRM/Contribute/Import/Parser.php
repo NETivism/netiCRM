@@ -46,19 +46,19 @@ abstract class CRM_Contribute_Import_Parser {
   public $_tableName;
   public $_primaryKeyName;
   public $_statusFieldName;
-  public CONST MAX_ERRORS = 250, MAX_WARNINGS = 25;
-  public CONST PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256, SOFT_CREDIT_ERROR = 512, PLEDGE_PAYMENT_ERROR = 1024, PCP_ERROR = 2048;
-  public CONST SOFT_CREDIT = 65536, PLEDGE_PAYMENT = 131072, PCP = 262144; 
+  public const MAX_ERRORS = 250, MAX_WARNINGS = 25;
+  public const PENDING = 0, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128, UNPARSED_ADDRESS_WARNING = 256, SOFT_CREDIT_ERROR = 512, PLEDGE_PAYMENT_ERROR = 1024, PCP_ERROR = 2048;
+  public const SOFT_CREDIT = 65536, PLEDGE_PAYMENT = 131072, PCP = 262144;
 
   /**
    * import contact when import contribution
    */
-  public CONST CONTACT_NOIDCREATE = 100, CONTACT_AUTOCREATE = 101, CONTACT_DONTCREATE = 102;
+  public const CONTACT_NOIDCREATE = 100, CONTACT_AUTOCREATE = 101, CONTACT_DONTCREATE = 102;
 
   /**
    * various parser modes
    */
-  public CONST
+  public const
     MODE_MAPFIELD = CRM_Import_Parser::MODE_MAPFIELD,
     MODE_PREVIEW = CRM_Import_Parser::MODE_PREVIEW,
     MODE_SUMMARY = CRM_Import_Parser::MODE_SUMMARY,
@@ -67,7 +67,7 @@ abstract class CRM_Contribute_Import_Parser {
   /**
    * codes for duplicate record handling
    */
-  public CONST
+  public const
     DUPLICATE_SKIP = CRM_Import_Parser::DUPLICATE_SKIP,
     DUPLICATE_REPLACE = CRM_Import_Parser::DUPLICATE_REPLACE,
     DUPLICATE_UPDATE = CRM_Import_Parser::DUPLICATE_UPDATE,
@@ -77,7 +77,7 @@ abstract class CRM_Contribute_Import_Parser {
   /**
    * various Contact types
    */
-  public CONST
+  public const
     CONTACT_INDIVIDUAL = CRM_Import_Parser::CONTACT_INDIVIDUAL,
     CONTACT_HOUSEHOLD = CRM_Import_Parser::CONTACT_HOUSEHOLD,
     CONTACT_ORGANIZATION = CRM_Import_Parser::CONTACT_ORGANIZATION;
@@ -292,7 +292,7 @@ abstract class CRM_Contribute_Import_Parser {
   /**
    * Dedupe group id for contact matching
    *
-   * @var integer 
+   * @var integer
    */
   public $_dedupeRuleGroupId;
 
@@ -319,13 +319,15 @@ abstract class CRM_Contribute_Import_Parser {
    * @var int
    */
 
-  public $_contactType; public function __construct() {
+  public $_contactType;
+  public function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
   abstract public function init();
-  public function run($tableName,
+  public function run(
+    $tableName,
     &$mapper,
     $mode = self::MODE_PREVIEW,
     $contactType = self::CONTACT_INDIVIDUAL,
@@ -440,7 +442,8 @@ abstract class CRM_Contribute_Import_Parser {
           }
           $timeFormatted .= round($estimatedTime) . ' ' . ts('seconds');
           $processedPercent = (int )(($this->_rowCount * 100) / $totalRowCount);
-          $statusMsg = ts('%1 of %2 records - %3 remaining',
+          $statusMsg = ts(
+            '%1 of %2 records - %3 remaining',
             [1 => $this->_rowCount, 2 => $totalRowCount, 3 => $timeFormatted]
           );
           $status = "
@@ -807,19 +810,19 @@ abstract class CRM_Contribute_Import_Parser {
       'phone' => '',
     ];
     foreach ($this->_fields as $name => $field) {
-      if(isset($priority_fields[$name])){
+      if (isset($priority_fields[$name])) {
         $priority_fields[$name] = $field->_dataPattern;
       }
-      elseif(preg_match('/_date$/', $name)){
+      elseif (preg_match('/_date$/', $name)) {
         $priority_fields[$name] = $field->_dataPattern;
       }
-      elseif(isset($secondary_fields[$name])){
+      elseif (isset($secondary_fields[$name])) {
         $secondary_fields[$name] = $field->_dataPattern;
       }
-      elseif(preg_match('/^'.ts('Contact').'::/', $field->_title)){
+      elseif (preg_match('/^'.ts('Contact').'::/', $field->_title)) {
         $contact_fields[$name] = $field->_dataPattern;
       }
-      else{
+      else {
         $contribute_fields[$name] = $field->_dataPattern;
       }
     }
@@ -1020,4 +1023,3 @@ abstract class CRM_Contribute_Import_Parser {
     return $fileName;
   }
 }
-

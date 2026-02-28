@@ -127,7 +127,7 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
         }
 
         if ($page['end_date']) {
-          $endDate = CRM_Utils_Date::unixTime($page['end_date'], true);
+          $endDate = CRM_Utils_Date::unixTime($page['end_date'], TRUE);
           if ($endDate && $endDate < $now) {
             $data['is_active'] = FALSE;
           }
@@ -193,4 +193,3 @@ class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
     return $data;
   }
 }
-

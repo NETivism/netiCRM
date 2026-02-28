@@ -142,7 +142,8 @@ class CRM_Utils_System_Soap {
    * @return void
    * @access public
    */
-  public function setEmail(&$user) {}
+  public function setEmail(&$user) {
+  }
 
   /**
    * Authenticate a user against the real UF
@@ -190,4 +191,3 @@ class CRM_Utils_System_Soap {
     return NULL;
   }
 }
-

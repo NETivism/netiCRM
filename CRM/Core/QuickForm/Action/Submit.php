@@ -78,4 +78,3 @@ class CRM_Core_QuickForm_Action_Submit extends CRM_Core_QuickForm_Action {
     return $page->handle('display');
   }
 }
-

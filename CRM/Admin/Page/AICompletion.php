@@ -89,7 +89,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
         'selector' => '#chart-pie-with-legend-aicompletion-usage',
         'type' => 'Pie',
         'series' => json_encode([$quota['used'], $quota['max']]),
-        'isFillDonut' => true,
+        'isFillDonut' => TRUE,
       ]);
       $stats = $this->getStats();
       $this->assign('chartAICompletionUsedfor', [
@@ -100,8 +100,8 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
         'series' => json_encode(array_values($stats['component'])),
         'labels' => json_encode(array_keys($stats['component'])),
         'labelType' => 'percent',
-        'withLegend' => true,
-        'withToolTip' => true,
+        'withLegend' => TRUE,
+        'withToolTip' => TRUE,
       ]);
     }
 
@@ -153,7 +153,7 @@ DESC
       if (mb_strlen($dao->output_text) > 30) {
         $output = mb_substr($dao->output_text, 0, 30). ' ...';
       }
-      else{
+      else {
         $output = $dao->output_text;
       }
 
@@ -231,7 +231,7 @@ DESC
   }
 
   public function pager($total) {
-    $params = []; 
+    $params = [];
     $params['status'] = '';
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';
@@ -243,7 +243,7 @@ DESC
   }
 
   public function buildWhere($filters, &$where, &$params) {
-    foreach($filters as $ele => $filterValue) {
+    foreach ($filters as $ele => $filterValue) {
       if ($ele == 'is_template') {
         $where[] = 'is_template = 1';
       }
@@ -273,7 +273,7 @@ DESC
     $available['component'] = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(component) FROM civicrm_aicompletion GROUP BY component");
 
     $unset = [];
-    foreach(['role', 'tone', 'components'] as $ele) {
+    foreach (['role', 'tone', 'components'] as $ele) {
       if (!empty($available[$ele])) {
         $elements = explode(',', $available[$ele]);
         if (!in_array($filters['role'], $elements)) {
@@ -284,7 +284,7 @@ DESC
         $unset[$ele] = TRUE;
       }
     }
-    foreach($unset as $ele) {
+    foreach ($unset as $ele) {
       unset($filters[$ele]);
     }
   }
@@ -294,7 +294,7 @@ DESC
       'component' => []
     ];
     $dao = CRM_Core_DAO::executeQuery("SELECT component, count(*) as count FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00') GROUP BY component");
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $stats['component'][ts($dao->component)] = $dao->count;
     }
     return $stats;

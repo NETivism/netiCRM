@@ -140,7 +140,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
             ],
           'city' =>
           ['default' => TRUE],
-          'postal_code' => 
+          'postal_code' =>
           ['default' => TRUE],
           'street_address' =>
           ['default' => TRUE],
@@ -217,7 +217,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
             }
           }
 
-          if($tableName == 'civicrm_phone') {
+          if ($tableName == 'civicrm_phone') {
             $this->_phoneField = TRUE;
           }
         }
@@ -281,7 +281,8 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -402,27 +403,29 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
         if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name', $row) &&
           CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
         ) {
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
           $entryFound = TRUE;
         }
 
         // handle country
-      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
-        if ($value = $row['civicrm_address_country_id']) {
-          $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
+          if ($value = $row['civicrm_address_country_id']) {
+            $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+          }
+          $entryFound = TRUE;
         }
-        $entryFound = TRUE;
-      }
-      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
-        if ($value = $row['civicrm_address_state_province_id']) {
-          $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
+          if ($value = $row['civicrm_address_state_province_id']) {
+            $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+          }
+          $entryFound = TRUE;
         }
-        $entryFound = TRUE;
-      }
 
         // skip looking further in rows, if first row itself doesn't
         // have the column we need
@@ -433,4 +436,3 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 }
-

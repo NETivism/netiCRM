@@ -71,7 +71,8 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     $event_type = CRM_Core_OptionGroup::values('event_type', FALSE);
     $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'event_type_id', 'Event Type', $event_type, $attrs);
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'refresh',
           'name' => ts('Search'),
@@ -106,4 +107,3 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     }
   }
 }
-

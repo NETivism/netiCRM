@@ -251,12 +251,12 @@ class CRM_Core_Page {
     return self::$_session->get($name, $this->_scope);
   }
 
-  public function changeScope($qfKey = NULL){
+  public function changeScope($qfKey = NULL) {
     $qfKey = $qfKey ? $qfKey : $this->_qfKey;
     $this->_qfKey = $qfKey;
 
     $newScope = $this->_name . '_'. $qfKey;
-    if($newScope != $this->_scope && $qfKey) {
+    if ($newScope != $this->_scope && $qfKey) {
       self::$_session->changeScope($this->_scope, $newScope);
       $this->_scope = $newScope;
     }
@@ -306,7 +306,8 @@ class CRM_Core_Page {
    * @access public
    */
   public function getTemplateFileName() {
-    return str_replace('_',
+    return str_replace(
+      '_',
       DIRECTORY_SEPARATOR,
       CRM_Utils_System::getClassName($this)
     ) . '.tpl';
@@ -378,4 +379,3 @@ class CRM_Core_Page {
     $this->$name = $value;
   }
 }
-

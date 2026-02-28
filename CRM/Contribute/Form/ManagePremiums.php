@@ -107,7 +107,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
       CRM_Contribute_BAO_Premium::buildPremiumPreviewBlock($this, $this->_id);
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Done with Preview'),
             'isDefault' => TRUE,
@@ -119,7 +120,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     }
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -195,7 +197,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->addFormRule(['CRM_Contribute_Form_ManagePremiums', 'formRule']);
 
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'upload',
           'name' => ts('Save'),
@@ -307,13 +310,13 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
             $ext = str_replace($imageFileName, '', $imageFile);
             // to check wether GD is installed or not
             $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
-            if($gdSupport) {
-              $error = false;
+            if ($gdSupport) {
+              $error = FALSE;
               $params['image'] = $this->_resizeImage($imageFile, $imageFileName."_full".$ext, 1200, 1200);
               $params['thumbnail'] = $this->_resizeImage($imageFile, $imageFileName."_thumb".$ext, 480, 480);
             }
             else {
-              $error = true;
+              $error = TRUE;
               $params['image'] = $config->resourceBase . 'i/contribute/default_premium.jpg';
               $params['thumbnail'] = $config->resourceBase . 'i/contribute/default_premium_thumb.jpg';
             }
@@ -372,4 +375,3 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
   }
 
 }
-

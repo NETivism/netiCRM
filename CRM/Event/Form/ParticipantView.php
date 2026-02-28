@@ -55,17 +55,18 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $contactID = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
     $statusAttended = array_search('Attended', $statusTypes);
-    $statusPositive = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Positive'" );
+    $statusPositive = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
     $params = ['id' => $participantID];
 
-    CRM_Event_BAO_Participant::getValues($params,
+    CRM_Event_BAO_Participant::getValues(
+      $params,
       $values,
       $ids
     );
 
     if (empty($values)) {
 
-       return CRM_Core_Error::statusBounce(ts('The requested participant record does not exist (possibly the record was deleted).'));
+      return CRM_Core_Error::statusBounce(ts('The requested participant record does not exist (possibly the record was deleted).'));
     }
     $contactID = $values[$participantID]['contact_id'];
 
@@ -83,7 +84,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       $checksumLife = 'inf';
       $endDate = CRM_Utils_Array::value('end_date', $eventDetails);
       if ($endDate) {
-        $checksumLife = (CRM_Utils_Date::unixTime($endDate, true) - time()) / (60 * 60);
+        $checksumLife = (CRM_Utils_Date::unixTime($endDate, TRUE) - time()) / (60 * 60);
       }
       $checksumValue = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactID, NULL, $checksumLife);
       $values[$participantID]['checksum'] = $checksumValue;
@@ -113,7 +114,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $dao->participant_id = $participantID;
     $ids = [];
     if ($dao->find()) {
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $ids[] = $dao->contribution_id;
       }
     }
@@ -122,7 +123,7 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
       $dao->fetch();
       if ($dao->N > 0) {
         $coupon = [];
-        foreach($dao as $idx => $value) {
+        foreach ($dao as $idx => $value) {
           if ($idx[0] != '_') {
             $coupon[$idx] = $value;
           }
@@ -140,9 +141,11 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
 
     // Get registered_by contact ID and display_name if participant was registered by someone else (CRM-4859)
     if (CRM_Utils_Array::value('participant_registered_by_id', $values[$participantID])) {
-      $values[$participantID]['registered_by_contact_id'] = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Participant",
+      $values[$participantID]['registered_by_contact_id'] = CRM_Core_DAO::getFieldValue(
+        "CRM_Event_DAO_Participant",
         $values[$participantID]['participant_registered_by_id'],
-        'contact_id', 'id'
+        'contact_id',
+        'id'
       );
 
       $values[$participantID]['registered_by_display_name'] = CRM_Contact_BAO_Contact::displayName($values[$participantID]['registered_by_contact_id']);
@@ -163,8 +166,13 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
 
     foreach ($allRoleIDs as $k => $v) {
       $roleGroupTree = &CRM_Core_BAO_CustomGroup::getTree('Participant', $this, $participantID, NULL, $v, $roleCustomDataTypeID);
-      $eventGroupTree = &CRM_Core_BAO_CustomGroup::getTree('Participant', $this, $participantID, NULL,
-        $values[$participantID]['event_id'], $eventNameCustomDataTypeID
+      $eventGroupTree = &CRM_Core_BAO_CustomGroup::getTree(
+        'Participant',
+        $this,
+        $participantID,
+        NULL,
+        $values[$participantID]['event_id'],
+        $eventNameCustomDataTypeID
       );
       $eventTypeID = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event", $values[$participantID]['event_id'], 'event_type_id', 'id');
       $eventTypeGroupTree = &CRM_Core_BAO_CustomGroup::getTree('Participant', $this, $participantID, NULL, $eventTypeID, $eventTypeCustomDataTypeID);
@@ -186,18 +194,21 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     // add viewed participant to recent items list
 
 
-    $url = CRM_Utils_System::url('civicrm/contact/view/participant',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/participant',
       "action=view&reset=1&id={$values[$participantID]['id']}&cid={$values[$participantID]['contact_id']}&context=home"
     );
 
     $recentOther = [];
     if (CRM_Core_Permission::check('edit event participants')) {
-      $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/participant',
+      $recentOther['editUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/participant',
         "action=update&reset=1&id={$values[$participantID]['id']}&cid={$values[$participantID]['contact_id']}&context=home"
       );
     }
     if (CRM_Core_Permission::check('delete in CiviEvent')) {
-      $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/participant',
+      $recentOther['deleteUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/participant',
         "action=delete&reset=1&id={$values[$participantID]['id']}&cid={$values[$participantID]['contact_id']}&context=home"
       );
     }
@@ -227,7 +238,8 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     $values[$participantID]['role_id'] = CRM_Utils_Array::implode(', ', $viewRoles);
     $this->assign('role', $values[$participantID]['role_id']);
     // add Participant to Recent Items
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $values[$participantID]['id'],
       'Participant',
@@ -244,7 +256,8 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -254,4 +267,3 @@ class CRM_Event_Form_ParticipantView extends CRM_Core_Form {
     );
   }
 }
-

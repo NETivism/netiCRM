@@ -236,7 +236,8 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
 
 
 
-    $url = CRM_Utils_System::url('civicrm/contact/view/grant',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/grant',
       "action=view&reset=1&id={$grant->id}&cid={$grant->contact_id}&context=home"
     );
 
@@ -245,18 +246,21 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
 
     $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviGrant', CRM_Core_Action::UPDATE)) {
-      $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/grant',
+      $recentOther['editUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/grant',
         "action=update&reset=1&id={$grant->id}&cid={$grant->contact_id}&context=home"
       );
     }
     if (CRM_Core_Permission::checkActionPermission('CiviGrant', CRM_Core_Action::DELETE)) {
-      $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/grant',
+      $recentOther['deleteUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/grant',
         "action=delete&reset=1&id={$grant->id}&cid={$grant->contact_id}&context=home"
       );
     }
 
     // add the recently created Grant
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $grant->id,
       'Grant',
@@ -332,7 +336,8 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
 
     // check and attach and files as needed
 
-    CRM_Core_BAO_File::processAttachment($params,
+    CRM_Core_BAO_File::processAttachment(
+      $params,
       'civicrm_grant',
       $grant->id
     );
@@ -434,7 +439,10 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
           'name' => 'grant_note',
           'data_type' => CRM_Utils_Type::T_TEXT,
         ]];
-      $fields = array_merge($fields, $grantFields, $grantNote,
+      $fields = array_merge(
+        $fields,
+        $grantFields,
+        $grantNote,
         CRM_Core_BAO_CustomField::getFieldsForImport('Grant')
       );
       self::$_exportableFields = $fields;
@@ -457,4 +465,3 @@ class CRM_Grant_BAO_Grant extends CRM_Grant_DAO_Grant {
     return CRM_Core_DAO::singleValueQuery($query);
   }
 }
-

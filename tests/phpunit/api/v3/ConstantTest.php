@@ -93,7 +93,8 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Completed', $result['values'], "In line " . __LINE__);
     $this->assertContains('Cancelled', $result['values'], "In line " . __LINE__);
 
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -111,7 +112,8 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
       ]);
     $this->assertTrue($result['count'] > 2, "In line " . __LINE__);
     $this->assertContains('Meeting', $result['values'], "In line " . __LINE__);
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -136,7 +138,8 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Work', $result['values'], "In line " . __LINE__);
     $this->assertContains('Main', $result['values'], "In line " . __LINE__);
     $this->assertContains('Billing', $result['values'], "In line " . __LINE__);
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -158,7 +161,8 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Pager', $result['values'], "In line " . __LINE__);
     $this->assertContains('Voicemail', $result['values'], "In line " . __LINE__);
 
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -181,7 +185,8 @@ class api_v3_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Maildir', $result['values'], "In line " . __LINE__);
     $this->assertContains('POP3', $result['values'], "In line " . __LINE__);
     $this->assertContains('Localdir', $result['values'], "In line " . __LINE__);
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }

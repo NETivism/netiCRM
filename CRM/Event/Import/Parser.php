@@ -33,24 +33,24 @@
 
 
 abstract class CRM_Event_Import_Parser {
-  public CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
+  public const MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
 
   /**
    * various parser modes
    */
-  public CONST MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
+  public const MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
 
   /**
    * codes for duplicate record handling
    */
-  public CONST DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
+  public const DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
 
   /**
    * various Contact types
    */
-  public CONST CONTACT_INDIVIDUAL = 1, CONTACT_HOUSEHOLD = 2, CONTACT_ORGANIZATION = 4;
+  public const CONTACT_INDIVIDUAL = 1, CONTACT_HOUSEHOLD = 2, CONTACT_ORGANIZATION = 4;
 
-  public CONST ERROR_FILE_PREFIX = 'event';
+  public const ERROR_FILE_PREFIX = 'event';
 
   protected $_fileName;
 
@@ -204,13 +204,15 @@ abstract class CRM_Event_Import_Parser {
    * @var int
    */
 
-  public $_contactType; public function __construct() {
+  public $_contactType;
+  public function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
   abstract public function init();
-  public function run($fileName,
+  public function run(
+    $fileName,
     $seperator,
     &$mapper,
     $skipColumnHeader = FALSE,
@@ -394,7 +396,8 @@ abstract class CRM_Event_Import_Parser {
 
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('Reason'),
           ],
           $customHeaders
@@ -403,7 +406,8 @@ abstract class CRM_Event_Import_Parser {
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('Reason'),
           ],
           $customHeaders
@@ -412,7 +416,8 @@ abstract class CRM_Event_Import_Parser {
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('View Participant URL'),
           ],
           $customHeaders
@@ -460,7 +465,7 @@ abstract class CRM_Event_Import_Parser {
             $this->_activeFields[$i]->_hasLocationType = $elements[$i];
         }
     }
-    
+
     function setActiveFieldPhoneTypes( $elements )
     {
         for ($i = 0; $i < count( $elements ); $i++) {
@@ -560,7 +565,12 @@ abstract class CRM_Event_Import_Parser {
       }
       else {
 
-        $this->_fields[$name] = new CRM_Import_Field($name, $title, $type, $headerPattern, $dataPattern,
+        $this->_fields[$name] = new CRM_Import_Field(
+          $name,
+          $title,
+          $type,
+          $headerPattern,
+          $dataPattern,
           CRM_Utils_Array::value('hasLocationType', $tempField[$name])
         );
       }
@@ -672,4 +682,3 @@ abstract class CRM_Event_Import_Parser {
     return CRM_Import_Parser::saveFileName($type, $prefix);
   }
 }
-

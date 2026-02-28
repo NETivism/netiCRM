@@ -210,8 +210,12 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
       //get all payments required details.
       $allPayments = [];
       $returnProperties = ['status_id', 'scheduled_date', 'scheduled_amount'];
-      CRM_Core_DAO::commonRetrieveAll('CRM_Pledge_DAO_Payment', 'pledge_id',
-        $form->_values['pledge_id'], $allPayments, $returnProperties
+      CRM_Core_DAO::commonRetrieveAll(
+        'CRM_Pledge_DAO_Payment',
+        'pledge_id',
+        $form->_values['pledge_id'],
+        $allPayments,
+        $returnProperties
       );
       //get all status
 
@@ -225,7 +229,8 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
         if ($allStatus[$value['status_id']] == 'Overdue') {
           $overduePayments[$payID] = ['id' => $payID,
             'scheduled_amount' => CRM_Utils_Rule::cleanMoney($value['scheduled_amount']),
-            'scheduled_date' => CRM_Utils_Date::customFormat($value['scheduled_date'],
+            'scheduled_date' => CRM_Utils_Date::customFormat(
+              $value['scheduled_date'],
               '%B %d'
             ),
           ];
@@ -236,7 +241,8 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
           //get the next payment.
           $nextPayment = ['id' => $payID,
             'scheduled_amount' => CRM_Utils_Rule::cleanMoney($value['scheduled_amount']),
-            'scheduled_date' => CRM_Utils_Date::customFormat($value['scheduled_date'],
+            'scheduled_date' => CRM_Utils_Date::customFormat(
+              $value['scheduled_date'],
               '%B %d'
             ),
           ];
@@ -278,8 +284,12 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
       $pledgeOptions = ['0' => ts('I want to make a one-time contribution'),
         '1' => ts('I pledge to contribute this amount every'),
       ];
-      $form->addRadio('is_pledge', ts('Pledge Frequency Interval'), $pledgeOptions,
-        NULL, ['<br/>']
+      $form->addRadio(
+        'is_pledge',
+        ts('Pledge Frequency Interval'),
+        $pledgeOptions,
+        NULL,
+        ['<br/>']
       );
       $form->addElement('text', 'pledge_installments', ts('Installments'), ['size' => 3]);
 
@@ -303,4 +313,3 @@ class CRM_Pledge_BAO_PledgeBlock extends CRM_Pledge_DAO_PledgeBlock {
     }
   }
 }
-

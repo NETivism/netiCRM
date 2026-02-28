@@ -121,14 +121,19 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
       //Custom Groups Inline
       $entityType = CRM_Contact_BAO_Contact::getContactType($this->_contactId);
       $entitySubType = CRM_Contact_BAO_Contact::getContactSubType($this->_contactId);
-      $groupTree = &CRM_Core_BAO_CustomGroup::getTree($entityType, $this, $this->_contactId,
-        $this->_groupId, $entitySubType
+      $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+        $entityType,
+        $this,
+        $this->_contactId,
+        $this->_groupId,
+        $entitySubType
       );
       CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
     }
     else {
 
-      $controller = new CRM_Core_Controller_Simple('CRM_Contact_Form_CustomData',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Contact_Form_CustomData',
         ts('Custom Data'),
         $this->_action
       );
@@ -144,4 +149,3 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
     return parent::run();
   }
 }
-

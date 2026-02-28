@@ -11,7 +11,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $this->_get = $get;
   }
 
-  public function main($component, $instrument){
+  public function main($component, $instrument) {
     // get the contribution and contact ids from the GET params
 
     $objects = $ids = $input = [];
@@ -26,36 +26,36 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     $qfKey = CRM_Utils_Array::value('qfKey', $this->_get);
     $civi_base_url = $component == 'event' ? 'civicrm/event/register' : 'civicrm/contribute/transact';
 
-    if(empty($this->_get['is_recur'])){
+    if (empty($this->_get['is_recur'])) {
       self::doRecordData($ids['contribution'], $this->_post);
     }
-    if(empty($ids['contributionRecur'])){
+    if (empty($ids['contributionRecur'])) {
       // we will save record later if this is recurring
       $recur = FALSE;
     }
-    else{
+    else {
       $recur = TRUE;
     }
 
     // now, retrieve full object by validateData, or false fallback
-    if ( ! $this->validateData( $input, $ids, $objects, FALSE ) ) {
-      return false;
+    if (! $this->validateData($input, $ids, $objects, FALSE)) {
+      return FALSE;
     }
 
     // set global variable for paymentProcessor
     self::$_payment_processor =& $objects['paymentProcessor'];
     self::$_input = $input;
 
-    if($objects['contribution']->contribution_status_id == 1 && empty($this->_get['is_recur'])){
+    if ($objects['contribution']->contribution_status_id == 1 && empty($this->_get['is_recur'])) {
       // already completed, skip
       return '1|OK';
     }
-    else{
+    else {
       // start validation
       $note = '';
-      if( $this->validateOthers($input, $ids, $objects, $note) ){
+      if ($this->validateOthers($input, $ids, $objects, $note)) {
         $contribution =& $objects['contribution'];
-        if(empty($contribution->receive_date)){
+        if (empty($contribution->receive_date)) {
           if (!empty($input['PaymentDate'])) {
             $contribution->receive_date = date('YmdHis', strtotime($input['PaymentDate']));
           }
@@ -70,12 +70,12 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         // assign trxn_id before complete transaction
         $input['trxn_id'] = $objects['contribution']->trxn_id;
         $transaction = new CRM_Core_Transaction();
-        $this->completeTransaction( $input, $ids, $objects, $transaction, $recur );
+        $this->completeTransaction($input, $ids, $objects, $transaction, $recur);
         $note .= ts('Completed')."\n";
         $this->addNote($note, $contribution);
         return '1|OK';
       }
-      else{
+      else {
         $note .= ts('Failed')."\n";
         $note .= ts("Payment Information").": ".ts("Failed").' - '.$input['RtnMsg']."({$input['RtnCode']})";
         $this->addNote($note, $objects['contribution']);
@@ -86,7 +86,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     // never for front-end user.
   }
 
-  public function getIds(&$ids){
+  public function getIds(&$ids) {
     $contribId = CRM_Utils_Array::value('cid', $this->_get);
     if (!empty($contribId) && CRM_Utils_Type::escape($contribId, 'Integer')) {
       $ids = CRM_Contribute_BAO_Contribution::buildIds($contribId, FALSE);
@@ -105,7 +105,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  public function validateOthers( &$input, &$ids, &$objects, &$note){
+  public function validateOthers(&$input, &$ids, &$objects, &$note) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
     
@@ -115,11 +115,11 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       CRM_Core_Error::debug_log_message($msg);
       $note .= ts("Failuare: $msg")."\n";
       $pass = FALSE;
-    } 
+    }
 
     // check amount
     $amount = $input['TradeAmt'] ? $input['TradeAmt'] : $input['Amount'];
-    if ( round($contribution->total_amount) != $amount && $input['RtnCode'] == 1 ) {
+    if (round($contribution->total_amount) != $amount && $input['RtnCode'] == 1) {
       $msg = "AllPay: Amount values dont match between database and IPN request. {$contribution->trxn_id}-{$input['Gwsr']} : {$input['amount']}";
       CRM_Core_Error::debug_log_message($msg);
       $note .= ts("Failuare: $msg")."\n";
@@ -128,9 +128,9 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
 
     // allpay validation
     // only validate this when not test.
-    if(!empty($input['CheckMacValue'])){
+    if (!empty($input['CheckMacValue'])) {
       $mac = CRM_Core_Payment_ALLPAY::generateMacValue($this->_post, self::$_payment_processor);
-      if(strtolower($input['CheckMacValue']) != strtolower($mac)) {
+      if (strtolower($input['CheckMacValue']) != strtolower($mac)) {
         $note .= ts("Failuare: CheckMacValue not match. Contact system admin.")."\n";
         $msg = "AllPay: Failuare: CheckMacValue not match. Should be '{$mac}', but '{$input['CheckMacValue']}' displayed.";
         CRM_Core_Error::debug_log_message($msg);
@@ -140,7 +140,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
 
     // recurring validation
     // certainly this is recurring contribution
-    if($ids['contributionRecur']){
+    if ($ids['contributionRecur']) {
       $recur = &$objects['contributionRecur'];
       $params = $null = [];
       // see if we are first time, if not first time, save new contribution
@@ -152,14 +152,14 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       // 1 - completed
 
       // not the first time (PeriodReturnURL)
-      if($this->_get['is_recur']){
+      if ($this->_get['is_recur']) {
         $trxn_id = CRM_Core_Payment_ALLPAY::generateRecurTrxn($input['MerchantTradeNo'], $input['Gwsr']);
         $local_succ_times = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution WHERE contribution_recur_id = %1 AND contribution_status_id = 1", [1 => [$recur->id, 'Integer']]);
-        if($input['RtnCode'] != 1){
+        if ($input['RtnCode'] != 1) {
           $contribution->contribution_status_id = 4; // Failed
           $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
         }
-        elseif($input['RtnCode'] == 1){
+        elseif ($input['RtnCode'] == 1) {
           if ($local_succ_times >= $input['TotalSuccessTimes']) {
             // Possible over charged. Record on the contribtion
             $local_succ_times++;
@@ -170,18 +170,18 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
           $contribution->contribution_status_id = 1; // Completed
           $c = self::copyContribution($contribution, $ids['contributionRecur'], $trxn_id);
         }
-        if(!empty($c)){
+        if (!empty($c)) {
           unset($objects['contribution']);
           self::doRecordData($c->id, $this->_post);
           // Set expire time
           $data = $this->_post;
-          if(!empty($data['#info']['ExpireDate'])){
+          if (!empty($data['#info']['ExpireDate'])) {
             $expire_date = $data['#info']['ExpireDate'];
           }
-          if(!empty($data['ExpireDate'])){
+          if (!empty($data['ExpireDate'])) {
             $expire_date = $data['ExpireDate'];
           }
-          if(!empty($expire_date)){
+          if (!empty($expire_date)) {
             if (strlen($expire_date) < 11) {
               $expire_date = str_replace('/', '-', $expire_date).' 23:59:59';
             }
@@ -196,7 +196,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
 
           // update recurring object
           // never end if TotalSuccessTimes not excceed the ExecTimes
-          if($input['TotalSuccessTimes'] == $recur->installments){
+          if ($input['TotalSuccessTimes'] == $recur->installments) {
             $params['id'] = $recur->id;
             $params['modified_date'] = date('YmdHis');
             $params['end_date'] = date('YmdHis');
@@ -205,23 +205,23 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
           }
         }
       }
-      else{
+      else {
         // is first time
-        if($input['RtnCode'] == 1){
+        if ($input['RtnCode'] == 1) {
           $params['id'] = $recur->id;
           $params['start_date'] = date('YmdHis', strtotime($input['PaymentDate']));
           $params['contribution_status_id'] = 5; // from pending to processing
           $params['modified_date'] = date('YmdHis');
           CRM_Contribute_BAO_ContributionRecur::add($params, $null);
         }
-        else{
+        else {
           CRM_Contribute_BAO_ContributionRecur::cancelRecurContribution($recur->id, CRM_Core_DAO::$_nullObject, 4);
         }
       }
     }
       
     // process fail response
-    if($input['RtnCode'] != 1 && $pass){
+    if ($input['RtnCode'] != 1 && $pass) {
       if (!empty($input['ProcessDate'])) {
         $time = strtotime($input['ProcessDate']);
         $objects['contribution']->cancel_date = date('YmdHis', $time);
@@ -239,15 +239,15 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     return $pass;
   }
 
-  public function addNote($note, &$contribution){
+  public function addNote($note, &$contribution) {
 
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
-    $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
-    if(count($note_exists)){
+    $note_exists = CRM_Core_BAO_Note::getNote($contribution->id, 'civicrm_contribution');
+    if (count($note_exists)) {
       $note_id = [ 'id' => reset(array_keys($note_exists)) ];
       $note = $note . reset($note_exists);
     }
-    else{
+    else {
       $note_id = NULL;
     }
     
@@ -258,36 +258,36 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
       'contact_id'    => $contribution->contact_id,
       'modified_date' => date('Ymd')
     ];
-    CRM_Core_BAO_Note::add( $noteParams, $note_id );
+    CRM_Core_BAO_Note::add($noteParams, $note_id);
   }
 
   /**
    * Save data to database. Original civicrm_allpay_record.
-   * 
+   *
    * @param integer|array $cid Contribution ID or Array of Contribution IDs.
    * @param array $data The data need to write in database.
-   * 
+   *
    * @return void
    */
-  public static function doRecordData($cid, $data = null){
+  public static function doRecordData($cid, $data = NULL) {
     if (is_array($cid)) {
       // from civicrm route, first parameter is array.
       // for example: as allpay/record/1, $var1 = ['allpay', 'record', '1']
       $params = $cid;
       $cid = end($params);
     }
-    if(is_numeric($cid)){
+    if (is_numeric($cid)) {
       $billing_notify = FALSE;
-      if(empty($data) && !empty($_POST)){
-        if(!empty($params) && $params[1] == 'record'){
+      if (empty($data) && !empty($_POST)) {
+        if (!empty($params) && $params[1] == 'record') {
           $billing_notify = TRUE;
           $data['#info'] = $_POST;
         }
-        else{
+        else {
           $data = $_POST;
         }
       }
-      if(!empty($data['MerchantID']) || !empty($data['#info']['MerchantID'])){
+      if (!empty($data['MerchantID']) || !empty($data['#info']['MerchantID'])) {
         $allpayDAO = new CRM_Contribute_DAO_AllPay();
         $allpayDAO->cid = $cid;
         if ($allpayDAO->find(TRUE)) {
@@ -307,7 +307,7 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
           ]);
         }
 
-        if($billing_notify && function_exists('civicrm_allpay_notify_generate')){
+        if ($billing_notify && function_exists('civicrm_allpay_notify_generate')) {
           $maybeSent = CRM_Core_DAO::singleValueQuery("SELECT expire_date FROM civicrm_contribution WHERE id = %1", [
             1 => [ $cid, 'Integer'],
           ]);
@@ -320,13 +320,13 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
         }
 
         // Set expire time
-        if(!empty($data['#info']['ExpireDate'])){
+        if (!empty($data['#info']['ExpireDate'])) {
           $expire_date = $data['#info']['ExpireDate'];
         }
-        if(!empty($data['ExpireDate'])){
+        if (!empty($data['ExpireDate'])) {
           $expire_date = $data['ExpireDate'];
         }
-        if(!empty($expire_date)){
+        if (!empty($expire_date)) {
           if (strlen($expire_date) < 11) {
             $expire_date = str_replace('/', '-', $expire_date).' 23:59:59';
           }

@@ -56,7 +56,7 @@ class CRM_Contact_Page_SearchRedirect extends CRM_Core_Page {
         1 => ['CRM_Contact_Form_Search_Custom_'.$custom, 'String']
       ];
       $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE name LIKE %1", $find);
-      if(!empty($exists)){
+      if (!empty($exists)) {
         $args = $_GET;
         unset($args['q']);
         $args['reset'] = 1;

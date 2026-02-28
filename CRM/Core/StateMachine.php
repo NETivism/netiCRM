@@ -272,7 +272,8 @@ class CRM_Core_StateMachine {
     foreach ($pages as $tempName => $value) {
       $name = $this->_pageNames[$i];
 
-      $className = CRM_Utils_Array::value('className',
+      $className = CRM_Utils_Array::value(
+        'className',
         $value,
         $tempName
       );
@@ -360,4 +361,3 @@ class CRM_Core_StateMachine {
     return $this->_controller->fini();
   }
 }
-

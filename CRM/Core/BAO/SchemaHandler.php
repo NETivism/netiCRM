@@ -403,11 +403,10 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
 
     // in case no N return
     $count = 1;
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $count++;
     }
     return $count;
   }
 
 }
-

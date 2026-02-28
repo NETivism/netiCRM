@@ -36,7 +36,8 @@ class api_v2_ParticipantTest extends CiviUnitTestCase {
   protected $_participantID;
   protected $_eventID;
   protected $_individualId;
-  protected $_contactID2; public function get_info() {
+  protected $_contactID2;
+  public function get_info() {
     return [
       'name' => 'Participant Create',
       'description' => 'Test all Participant Create API methods.',
@@ -125,16 +126,24 @@ class api_v2_ParticipantTest extends CiviUnitTestCase {
     ];
     $participant = &civicrm_participant_get($params);
 
-    $this->assertEquals($this->_participantID, $participant['participant_id'],
+    $this->assertEquals(
+      $this->_participantID,
+      $participant['participant_id'],
       "In line " . __LINE__
     );
-    $this->assertEquals($this->_eventID, $participant['event_id'],
+    $this->assertEquals(
+      $this->_eventID,
+      $participant['event_id'],
       "In line " . __LINE__
     );
-    $this->assertEquals('2007-02-19 00:00:00', $participant['participant_register_date'],
+    $this->assertEquals(
+      '2007-02-19 00:00:00',
+      $participant['participant_register_date'],
       "In line " . __LINE__
     );
-    $this->assertEquals('Wimbeldon', $participant['participant_source'],
+    $this->assertEquals(
+      'Wimbeldon',
+      $participant['participant_source'],
       "In line " . __LINE__
     );
   }
@@ -775,4 +784,3 @@ class api_v2_ParticipantTest extends CiviUnitTestCase {
     $this->contributionTypeDelete();
   }
 }
-

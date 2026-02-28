@@ -149,16 +149,23 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE,
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
       // default to 'browse'
       'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -199,8 +206,13 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    * @access public
    */
   public function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -208,8 +220,13 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the profile list and try again.'));
     }
 
-    $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this, TRUE, 0, 'GET'
+    $gid = CRM_Utils_Request::retrieve(
+      'gid',
+      'Positive',
+      $this,
+      TRUE,
+      0,
+      'GET'
     );
 
 
@@ -366,7 +383,9 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         $action -= CRM_Core_Action::REOPEN;
       }
 
-      $ufGroup[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $ufGroup[$id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         [
           'id' => $id,
           'key' => $key
@@ -425,7 +444,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
         break;
 
       case 'field':
-        $url = CRM_Utils_System::url('civicrm/admin/uf/group/field',
+        $url = CRM_Utils_System::url(
+          'civicrm/admin/uf/group/field',
           "reset=1&action=browse&gid={$id}"
         );
         break;
@@ -527,4 +547,3 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     return $profile;
   }
 }
-

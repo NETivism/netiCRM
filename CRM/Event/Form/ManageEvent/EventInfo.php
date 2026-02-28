@@ -73,7 +73,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
     if ($this->_id) {
       $this->assign('entityID', $this->_id);
-      $eventType = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+      $eventType = CRM_Core_DAO::getFieldValue(
+        'CRM_Event_DAO_Event',
         $this->_id,
         'event_type_id'
       );
@@ -198,8 +199,13 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
         $this->assign('noEventTemplates', TRUE);
       }
       else {
-        $this->add('select', 'template_id', ts('From Template'), ['' => ts('- select -')] + $eventTemplates,
-          FALSE, ['onchange' => "reloadWindow( this.value );"]
+        $this->add(
+          'select',
+          'template_id',
+          ts('From Template'),
+          ['' => ts('- select -')] + $eventTemplates,
+          FALSE,
+          ['onchange' => "reloadWindow( this.value );"]
         );
       }
     }
@@ -210,7 +216,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
     $event = CRM_Core_OptionGroup::values('event_type');
 
-    $this->add('select',
+    $this->add(
+      'select',
       'event_type_id',
       ts('Event Type'),
       ['' => ts('- select -')] + $event,
@@ -219,7 +226,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     );
 
     $participantRole = CRM_Core_OptionGroup::values('participant_role');
-    $this->add('select',
+    $this->add(
+      'select',
       'default_role_id',
       ts('Participant Role'),
       $participantRole,
@@ -227,7 +235,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     );
 
     $participantListing = CRM_Core_OptionGroup::values('participant_listing');
-    $this->add('select',
+    $this->add(
+      'select',
       'participant_listing_id',
       ts('Participant Listing'),
       ['' => ts('Disabled')] + $participantListing,
@@ -242,7 +251,10 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     $this->addDateTime('start_date', ts('Start Date'), FALSE, ['formatType' => 'activityDateTime']);
     $this->addDateTime('end_date', ts('End Date / Time'), FALSE, ['formatType' => 'activityDateTime']);
 
-    $this->add('text', 'max_participants', ts('Max Number of Participants'),
+    $this->add(
+      'text',
+      'max_participants',
+      ts('Max Number of Participants'),
       ['onchange' => "if (this.value != '') {show('id-waitlist','table-row'); showHideByValue('has_waitlist','0','id-waitlist-text','table-row','radio',false); showHideByValue('has_waitlist','0','id-event_full','table-row','radio',true); return;} else {hide('id-event_full','table-row'); hide('id-waitlist','table-row'); hide('id-waitlist-text','table-row');cj('#has_waitlist').attr('checked',false); return;}"]
     );
     $this->addRule('max_participants', ts('Max participants should be a positive number'), 'positiveInteger');
@@ -330,10 +342,14 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       $params['created_date'] = date('YmdHis');
     }
 
-    $customFields = CRM_Core_BAO_CustomField::getFields('Event', FALSE, FALSE,
+    $customFields = CRM_Core_BAO_CustomField::getFields(
+      'Event',
+      FALSE,
+      FALSE,
       CRM_Utils_Array::value('event_type_id', $params)
     );
-    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customFields,
       $this->_id,
       'Event'
@@ -377,11 +393,13 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
 
         $optionGroupIds = CRM_Core_BAO_Discount::getOptionGroup($params['template_id'], "civicrm_event");
         foreach ($optionGroupIds as $id) {
-          $discountSuffix = '.discount.' . CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+          $discountSuffix = '.discount.' . CRM_Core_DAO::getFieldValue(
+            'CRM_Core_DAO_OptionGroup',
             $id,
             'label'
           );
-          CRM_Core_BAO_OptionGroup::copyValue('event',
+          CRM_Core_BAO_OptionGroup::copyValue(
+            'event',
             $params['template_id'],
             $event->id,
             FALSE,
@@ -401,7 +419,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       $ufParams = ['entity_table' => 'civicrm_event', 'entity_id' => $event->id];
 
       if (!CRM_Core_BAO_UFJoin::findUFGroupId($ufParams)) {
-        CRM_Core_DAO::copyGeneric('CRM_Core_DAO_UFJoin',
+        CRM_Core_DAO::copyGeneric(
+          'CRM_Core_DAO_UFJoin',
           ['entity_id' => $params['template_id'], 'entity_table' => 'civicrm_event'],
           ['entity_id' => $event->id]
         );
@@ -428,9 +447,10 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       if ($this->controller->getButtonName('submit') == "_qf_EventInfo_upload_done") {
         $url = 'civicrm/event/manage';
         $urlParams = 'reset=1';
-        CRM_Core_Session::setStatus(ts("'%1' information has been saved.",
-            [1 => $this->getTitle()]
-          ));
+        CRM_Core_Session::setStatus(ts(
+          "'%1' information has been saved.",
+          [1 => $this->getTitle()]
+        ));
       }
 
       CRM_Utils_System::redirect(CRM_Utils_System::url($url, $urlParams));
@@ -478,4 +498,3 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     return $defaults;
   }
 }
-

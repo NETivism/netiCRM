@@ -107,7 +107,8 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -180,7 +181,9 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     $errorFilenamePrefix = CRM_Event_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
     $this->set('errorFilenamePrefix', $errorFilenamePrefix);
 
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $fileName,
+      $seperator,
       $mapperFields,
       $skipColumnHeader,
       CRM_Event_Import_Parser::MODE_IMPORT,
@@ -214,4 +217,3 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     }
   }
 }
-

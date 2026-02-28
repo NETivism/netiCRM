@@ -145,7 +145,8 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
     if (!$element->getAttribute('id')) {
       $name = $element->getAttribute('name');
       if ($name) {
-        $attributes['id'] = str_replace([']', '['],
+        $attributes['id'] = str_replace(
+          [']', '['],
           ['', '_'],
           $name
         );
@@ -191,4 +192,3 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   }
 }
 // end CRM_Core_Form_Renderer
-

@@ -51,7 +51,8 @@ class CRM_Contact_Form_Task_HookSample extends CRM_Contact_Form_Task {
     parent::preProcess();
 
     // display name and email of all contact ids
-    $contactIDs = CRM_Utils_Array::implode(',', $this->_contactIds);;
+    $contactIDs = CRM_Utils_Array::implode(',', $this->_contactIds);
+    ;
     $query = "
 SELECT c.id as contact_id, c.display_name as name,
        c.contact_type as contact_type, e.email as email
@@ -92,6 +93,6 @@ AND    c.id IN ( $contactIDs )";
    *
    * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
 }
-

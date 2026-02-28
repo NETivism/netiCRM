@@ -7,7 +7,8 @@ class api_v3_SurveyTest extends CiviUnitTestCase {
   protected $_apiversion;
   protected $params;
   protected $id;
-  public $DBResetRequired = FALSE; public function setUp() {
+  public $DBResetRequired = FALSE;
+  public function setUp() {
     $this->_apiversion = 3;
     $phoneBankActivity = civicrm_api('Option_value', 'Get', ['label' => 'PhoneBank', 'version' => $this->_apiversion, 'sequential' => 1]);
     $phoneBankActivityTypeID = $phoneBankActivity['values'][0]['value'];
@@ -21,7 +22,8 @@ class api_v3_SurveyTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   public function testCreateSurvey() {
     $result = civicrm_api('survey', 'create', $this->params);
@@ -67,4 +69,3 @@ class api_v3_SurveyTest extends CiviUnitTestCase {
     $this->assertEquals(0, civicrm_api('survey', 'getcount', ['version' => 3]), 'In line ' . __LINE__);
   }
 }
-

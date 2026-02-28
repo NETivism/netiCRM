@@ -40,7 +40,7 @@ class CRM_Core_Report_Excel {
   }
 
   public static function writer($type) {
-    switch($type) {
+    switch ($type) {
       case 'csv':
         $writer = WriterFactory::create(Type::CSV);
         $writer->setShouldAddBOM(TRUE); // this is default
@@ -54,7 +54,7 @@ class CRM_Core_Report_Excel {
   }
 
   public static function reader($type) {
-    switch($type) {
+    switch ($type) {
       case 'csv':
         $reader = ReaderFactory::create(Type::CSV);
         break;
@@ -90,7 +90,7 @@ class CRM_Core_Report_Excel {
 
     $bom = "\xEF\xBB\xBF";
     $result = $bom;
-    if($print){
+    if ($print) {
       echo $bom;
     }
 
@@ -197,7 +197,8 @@ class CRM_Core_Report_Excel {
   public function writeHTMLFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE) {
     if ($outputHeader) {
 
-      CRM_Utils_System::download(CRM_Utils_String::munge($fileName),
+      CRM_Utils_System::download(
+        CRM_Utils_String::munge($fileName),
         'application/vnd.ms-excel',
         CRM_Core_DAO::$_nullObject,
         'xls',
@@ -315,10 +316,10 @@ class CRM_Core_Report_Excel {
     $writer = CRM_Core_Report_Excel::singleton('excel');
     $writer->openToFile($filePath.'.new');
 
-    if (!is_file($filePath)){
+    if (!is_file($filePath)) {
       $writer->addRow($header);
     }
-    else{
+    else {
       $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
       $reader = CRM_Core_Report_Excel::reader('excel');
       $reader->setTempFolder($tmpDir);
@@ -339,10 +340,9 @@ class CRM_Core_Report_Excel {
       ->addRows($rows)
       ->close();
 
-    if (is_file($filePath)){
+    if (is_file($filePath)) {
       unlink($filePath);
     }
     rename($filePath.'.new', $filePath);
   }
 }
-

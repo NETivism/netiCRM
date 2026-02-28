@@ -32,7 +32,7 @@
  * $Id$
  *
  */
-Class CRM_Contact_Form_Edit_Notes {
+class CRM_Contact_Form_Edit_Notes {
 
   /**
    * This function is to build form elements
@@ -48,4 +48,3 @@ Class CRM_Contact_Form_Edit_Notes {
     $form->add('textarea', 'note', ts('Notes'), ['cols' => '60', 'rows' => '3']);
   }
 }
-

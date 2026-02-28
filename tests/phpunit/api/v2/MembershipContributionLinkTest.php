@@ -38,7 +38,8 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_contributionTypeID;
   protected $_membershipTypeID;
-  protected $_membershipStatusID; public function get_info() {
+  protected $_membershipStatusID;
+  public function get_info() {
     return [
       'name' => 'Membership Contribution Link',
       'description' => 'Test all Membership API methods.',
@@ -193,4 +194,3 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
     $this->contactDelete($contactId);
   }
 }
-

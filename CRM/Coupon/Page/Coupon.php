@@ -103,7 +103,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         }
       }
 
-      // finally browse 
+      // finally browse
       $this->browse();
     }
     parent::run();
@@ -120,14 +120,14 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
 
     $priceSets = CRM_Price_BAO_Field::getPriceLevels();
     $priceOptions = [];
-    foreach($priceSets as $set => &$field) {
-      foreach($field as $key => $val) {
+    foreach ($priceSets as $set => &$field) {
+      foreach ($field as $key => $val) {
         $field_id = str_replace('priceset:', '', $key);
         if (is_numeric($field_id)) {
           $priceOptions[$field_id] = $val;
         }
       }
-      if(is_string($field)){
+      if (is_string($field)) {
         $field_id = str_replace('priceset:', '', $set);
         if (is_numeric($field_id)) {
           $priceOptions[$field_id] = $field;
@@ -144,8 +144,8 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
     $filter['description'] = CRM_Utils_Request::retrieve('description', 'String', $this);
     $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-    foreach($filter as $f => $v) {
-      if(empty($v)) {
+    foreach ($filter as $f => $v) {
+      if (empty($v)) {
         unset($filter[$f]);
       }
     }
@@ -165,21 +165,21 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
     while ($dao->fetch()) {
       if (!empty($coupon[$dao->id]) && !empty($dao->entity_table)) {
-        if($dao->entity_table == 'civicrm_event'){
+        if ($dao->entity_table == 'civicrm_event') {
           $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $dao->entity_id, 'title');
         }
-        elseif($dao->entity_table == 'civicrm_price_field_value'){
+        elseif ($dao->entity_table == 'civicrm_price_field_value') {
           $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = $priceOptions[$dao->entity_id];
         }
         continue;
       }
       $coupon[$dao->id] = [];
-      foreach($dao as $field => $value) {
+      foreach ($dao as $field => $value) {
         if ($field == 'entity_table') {
-          if($dao->entity_table == 'civicrm_event'){
+          if ($dao->entity_table == 'civicrm_event') {
             $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $dao->entity_id, 'title');
           }
-          elseif($dao->entity_table == 'civicrm_price_field_value'){
+          elseif ($dao->entity_table == 'civicrm_price_field_value') {
             $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = $priceOptions[$dao->entity_id];
           }
         }
@@ -217,7 +217,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     }
     $couponIds = array_keys($coupon);
     $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed($couponIds);
-    foreach($couponUses as $couponId => $count) {
+    foreach ($couponUses as $couponId => $count) {
       $coupon[$couponId]['count_max'] = $count." / ".$coupon[$couponId]['count_max'];
     }
     $this->assign('rows', $coupon);
@@ -231,8 +231,8 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
     $filter['description'] = CRM_Utils_Request::retrieve('description', 'String', $this);
     $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-    foreach($filter as $f => $v) {
-      if(empty($v)) {
+    foreach ($filter as $f => $v) {
+      if (empty($v)) {
         unset($filter[$f]);
       }
     }
@@ -265,7 +265,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       }
       $exists[$dao->id] = 1;
       $coupon = [];
-      foreach($dao as $field => $value) {
+      foreach ($dao as $field => $value) {
         if ($field == 'entity_table' || $field == 'entity_id' || $field[0] == '_' || $field == 'N') {
           continue;
         }
@@ -274,7 +274,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         }
       }
       $coupon['discount'] = $coupon['coupon_type'] == 'percentage' ? $coupon['discount'].'%' : (int)$coupon['discount'];
--     $coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
+      -     $coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
 
       $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed([$coupon['id']]);
       $coupon['count_max'] = $couponUses[$coupon['id']]." / ".$coupon['count_max'];
@@ -307,8 +307,13 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
    * @access public
    */
   public function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -316,8 +321,13 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the coupon list and try again.'));
     }
 
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, TRUE, 0, 'GET'
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      TRUE,
+      0,
+      'GET'
     );
 
     CRM_Coupon_BAO_Coupon::copy($id);
@@ -326,7 +336,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   }
 
   public function pager($total) {
-    $params = []; 
+    $params = [];
     $params['status'] = '';
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';

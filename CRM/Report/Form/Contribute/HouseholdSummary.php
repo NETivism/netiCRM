@@ -67,7 +67,8 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
 
   protected $_emailField = FALSE;
 
-  protected $_summary = NULL; public function __construct() {
+  protected $_summary = NULL;
+  public function __construct() {
 
     $this->validRelationships();
 
@@ -266,7 +267,8 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
                 $clause = "{$this->_aliases['civicrm_relationship']}.relationship_type_id=" . $this->relationshipId;
               }
               else {
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -337,7 +339,7 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
   }
 
   public function validRelationships() {
-    require_once ("api/v2/RelationshipType.php");
+    require_once("api/v2/RelationshipType.php");
     $this->relationTypes = $relationTypes = [];
 
     $params = ['contact_type_b' => 'Household'];
@@ -398,7 +400,8 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
             $rows[$rowNum]['civicrm_contact_household_household_name'] = "";
           }
           else {
-            $url = CRM_Utils_System::url('civicrm/contact/view',
+            $url = CRM_Utils_System::url(
+              'civicrm/contact/view',
               'reset=1&cid=' . $rows[$rowNum]['civicrm_contact_household_id']
             );
 
@@ -461,9 +464,11 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
         $rows[$rowNum]['civicrm_contact_sort_name'] &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
 
@@ -478,4 +483,3 @@ class CRM_Report_Form_Contribute_HouseholdSummary extends CRM_Report_Form {
     }
   }
 }
-

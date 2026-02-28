@@ -267,4 +267,3 @@ UPDATE  civicrm_membership_status
     $upgrade->processSQL($rev);
   }
 }
-

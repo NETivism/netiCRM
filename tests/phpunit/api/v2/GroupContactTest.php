@@ -31,7 +31,8 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_GroupContactTest extends CiviUnitTestCase {
 
   protected $_contactId;
-  protected $_contactId1; public function get_info() {
+  protected $_contactId1;
+  public function get_info() {
     return [
       'name' => 'Group Contact Create',
       'description' => 'Test all Group Contact Create API methods.',
@@ -244,4 +245,3 @@ class api_v2_GroupContactTest extends CiviUnitTestCase {
     $this->assertEquals($groups['total_count'], 1);
   }
 }
-

@@ -61,15 +61,20 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @var int
    * @const
    */
-  public CONST LOCATION_BLOCKS = 1; public function preProcess() {
+  public const LOCATION_BLOCKS = 1;
+  public function preProcess() {
 
     CRM_Utils_System::setTitle(ts('Domain Information'));
     $breadCrumbPath = CRM_Utils_System::url('civicrm/admin', 'reset=1');
     CRM_Utils_System::appendBreadCrumb(ts('Administer CiviCRM'), $breadCrumbPath);
 
     $this->_id = CRM_Core_Config::domainID();
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'view'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'view'
     );
     //location blocks.
     CRM_Contact_Form_Location::preProcess($this);
@@ -121,10 +126,13 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
       if (!empty($defaults['address'])) {
         foreach ($defaults['address'] as $key => $value) {
-          CRM_Contact_Form_Edit_Address::fixStateSelect($this,
+          CRM_Contact_Form_Edit_Address::fixStateSelect(
+            $this,
             "address[$key][country_id]",
             "address[$key][state_province_id]",
-            CRM_Utils_Array::value('country_id', $value,
+            CRM_Utils_Array::value(
+              'country_id',
+              $value,
               $config->defaultContactCountry
             )
           );
@@ -246,4 +254,3 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
   }
 }
-

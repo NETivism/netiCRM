@@ -13,8 +13,8 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
    * @var boolean
    */
 
-  public CONST GENERATE_COUNT_EACH_TIME = 100;
-  public CONST BATCH_THRESHOLD = 100;
+  public const GENERATE_COUNT_EACH_TIME = 100;
+  public const BATCH_THRESHOLD = 100;
 
   protected static $_tmpreceipt = NULL;
   protected static $_exportFileName = NULL;
@@ -36,7 +36,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       parent::preProcess();
       $session = CRM_Core_Session::singleton();
       $year = $session->get('year', 'AnnualReceipt');
-      if(!empty($year)){
+      if (!empty($year)) {
         $this->_year = $year;
       }
     }
@@ -65,12 +65,12 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
 
     $years = [];
-    if(!empty($this->_year)){
+    if (!empty($this->_year)) {
       $years[$this->_year] = $this->_year;
       $ele = $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
-    else{
-      for($year = date('Y'); $year < date('Y') + 10; $year++) {
+    else {
+      for ($year = date('Y'); $year < date('Y') + 10; $year++) {
         $years[$year - 9] = $year - 9;
       }
       $this->addElement('select', 'year', ts('Receipt Year'), $years);
@@ -90,7 +90,8 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     ];
     $this->addElement('select', 'is_recur', ts('Find Recurring Contributions?'), $is_recur);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Download Receipt(s)'),
@@ -116,14 +117,14 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     set_time_limit(1800);
-    if(!empty($params['year'])){
+    if (!empty($params['year'])) {
       $session = CRM_Core_Session::singleton();
       $session->resetScope('AnnualReceipt');
       $this->_year = $params['year'];
 
       $this->option = [];
-      foreach($params as $k => $p){
-        if($k != 'qfKey' && !empty($p)){
+      foreach ($params as $k => $p) {
+        if ($k != 'qfKey' && !empty($p)) {
           $this->option[$k] = $p;
         }
       }
@@ -183,7 +184,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     $pages = $template->fetch('CRM/common/AnnualReceipt.tpl');
     $filename = 'AnnualReceipt'.$this->_year.'.pdf';
     $pdf_real_filename = CRM_Utils_PDF_Utils::html2pdf($pages, $filename, 'portrait', 'a4', $download);
-    if(!$download){
+    if (!$download) {
       return $pdf_real_filename;
     }
   }
@@ -225,7 +226,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       if ($i) {
         $html = '<div class="page-break" style="page-break-after: always;"></div>';
       }
-      if (!empty($config->imageBigStampName)){
+      if (!empty($config->imageBigStampName)) {
         $template->assign('imageBigStampUrl', $config->imageUploadDir . $config->imageBigStampName);
       }
       if (!empty($config->imageSmallStampName)) {
@@ -241,7 +242,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
     }
     $filePath = $this->makePDF($download);
     if ($civicrm_batch) {
-      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed']+1); 
+      $filenameNum = sprintf("%'.07d", $civicrm_batch->data['processed']+1);
       $dest = str_replace('.zip', '', $civicrm_batch->data['download']['file']);
       $dest .= '_'.$filenameNum.'.pdf';
       rename($filePath, $dest);
@@ -263,7 +264,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
       $zip = new ZipArchive();
       $files = [];
       if ($zip->open($zipFile, ZipArchive::CREATE) == TRUE) {
-        foreach(glob($prefix."*.pdf") as $fileName) {
+        foreach (glob($prefix."*.pdf") as $fileName) {
           if (is_file($fileName)) {
             $files[] = $fileName;
             $fname = end(explode('-', basename($fileName)));
@@ -271,7 +272,7 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
           }
         }
         $zip->close();
-        foreach($files as $fileName) {
+        foreach ($files as $fileName) {
           unlink($fileName);
         }
       }
@@ -281,4 +282,3 @@ class CRM_Contact_Form_Task_AnnualReceipt extends CRM_Contact_Form_Task {
 
 
 }
-

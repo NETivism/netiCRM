@@ -74,7 +74,10 @@ interface CRM_Contact_Form_Search_Interface {
    * Retrieve all the values that match the current input parameters
    * Used by the selector
    */
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   );
 
@@ -108,4 +111,3 @@ interface CRM_Contact_Form_Search_Interface {
    */
   public function &columns();
 }
-

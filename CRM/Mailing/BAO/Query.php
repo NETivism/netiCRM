@@ -185,7 +185,7 @@ class CRM_Mailing_BAO_Query {
       case 'civicrm_mailing_event_forward':
       case 'civicrm_mailing_event_trackable_url_open':
         // Use LEFT JOIN for better performance on "NOT IN" type queries
-        $joinType = ($side == 'LEFT' || strpos($name, '_delivered') !== false) ? 'LEFT' : $side;
+        $joinType = ($side == 'LEFT' || strpos($name, '_delivered') !== FALSE) ? 'LEFT' : $side;
         $from = " $joinType JOIN $name ON $name.event_queue_id = civicrm_mailing_event_queue.id";
         break;
 
@@ -278,19 +278,19 @@ class CRM_Mailing_BAO_Query {
       case 'mailing_date_low':
       case 'mailing_date_high':
         $subWhere = [];
-        foreach($query->_params as $param) {
+        foreach ($query->_params as $param) {
           $value = $param[2];
           if ($param[0] == 'mailing_date_low') {
             $date = CRM_Utils_Date::processDate($value.' 00:00:00');
             $dateFormat = CRM_Utils_Date::customFormat($date);
             $subWhere[] = "cmj.start_date >= '{$date}'";
-            $query->_qill[$grouping][$param[0]] = ts('Date of delivery') . " - " . ts('greater than or equal to \'%1\'' ,[1 => "$dateFormat"]);
+            $query->_qill[$grouping][$param[0]] = ts('Date of delivery') . " - " . ts('greater than or equal to \'%1\'', [1 => "$dateFormat"]);
           }
           if ($param[0] == 'mailing_date_high') {
             $date = CRM_Utils_Date::processDate($value.' 23:59:59');
             $dateFormat = CRM_Utils_Date::customFormat($date);
             $subWhere[] = "cmj.start_date <= '{$date}'";
-            $query->_qill[$grouping][$param[0]] = ts('Date of delivery') . " - " . ts('less than or equal to \'%1\'' ,[1 => "$dateFormat"]);
+            $query->_qill[$grouping][$param[0]] = ts('Date of delivery') . " - " . ts('less than or equal to \'%1\'', [1 => "$dateFormat"]);
           }
         }
         if (!empty($subWhere)) {
@@ -312,7 +312,9 @@ class CRM_Mailing_BAO_Query {
 
         list($name, $op, $value, $grouping, $wildcard) = $values;
         if ($value == 'Y') {
-          self::mailingEventQueryBuilder($query, $values,
+          self::mailingEventQueryBuilder(
+            $query,
+            $values,
             'civicrm_mailing_event_delivered',
             'mailing_delivery_status',
             ts('Delivery Status'),
@@ -322,7 +324,9 @@ class CRM_Mailing_BAO_Query {
         elseif ($value == 'N') {
           $options['Y'] = $options['N'];
           $values = [$name, $op, 'Y', $grouping, $wildcard];
-          self::mailingEventQueryBuilder($query, $values,
+          self::mailingEventQueryBuilder(
+            $query,
+            $values,
             'civicrm_mailing_event_bounce',
             'mailing_delivery_status',
             ts('Delivery Status'),
@@ -334,7 +338,9 @@ class CRM_Mailing_BAO_Query {
       case 'mailing_bounce_types':
         $op = 'IN';
         $values = [$name, $op, $value, $grouping, $wildcard];
-        self::mailingEventQueryBuilder($query, $values,
+        self::mailingEventQueryBuilder(
+          $query,
+          $values,
           'civicrm_mailing_event_bounce',
           'bounce_type_id',
           ts('Bounce Type'),
@@ -343,14 +349,24 @@ class CRM_Mailing_BAO_Query {
         return;
 
       case 'mailing_open_status':
-        self::mailingEventQueryBuilder($query, $values,
-          'civicrm_mailing_event_opened', 'mailing_open_status', ts('Trackable Open'), CRM_Mailing_PseudoConstant::yesNoOptions('open')
+        self::mailingEventQueryBuilder(
+          $query,
+          $values,
+          'civicrm_mailing_event_opened',
+          'mailing_open_status',
+          ts('Trackable Open'),
+          CRM_Mailing_PseudoConstant::yesNoOptions('open')
         );
         return;
 
       case 'mailing_click_status':
-        self::mailingEventQueryBuilder($query, $values,
-          'civicrm_mailing_event_trackable_url_open', 'mailing_click_status', ts('Trackable URL Click'), CRM_Mailing_PseudoConstant::yesNoOptions('click')
+        self::mailingEventQueryBuilder(
+          $query,
+          $values,
+          'civicrm_mailing_event_trackable_url_open',
+          'mailing_click_status',
+          ts('Trackable URL Click'),
+          CRM_Mailing_PseudoConstant::yesNoOptions('click')
         );
         return;
 
@@ -370,8 +386,13 @@ class CRM_Mailing_BAO_Query {
         return;
 
       case 'mailing_reply_status':
-        self::mailingEventQueryBuilder($query, $values,
-          'civicrm_mailing_event_reply', 'mailing_reply_status', ts('Trackable Reply'), CRM_Mailing_PseudoConstant::yesNoOptions('reply')
+        self::mailingEventQueryBuilder(
+          $query,
+          $values,
+          'civicrm_mailing_event_reply',
+          'mailing_reply_status',
+          ts('Trackable Reply'),
+          CRM_Mailing_PseudoConstant::yesNoOptions('reply')
         );
         return;
 
@@ -379,9 +400,13 @@ class CRM_Mailing_BAO_Query {
         $valueTitle = [1 => ts('Opt-out Requests')];
         // include opt-out events only
         $query->_where[$grouping][] = "civicrm_mailing_event_unsubscribe.org_unsubscribe = 1";
-        self::mailingEventQueryBuilder($query, $values,
-          'civicrm_mailing_event_unsubscribe', 'mailing_unsubscribe',
-          ts('Mailing').":", $valueTitle
+        self::mailingEventQueryBuilder(
+          $query,
+          $values,
+          'civicrm_mailing_event_unsubscribe',
+          'mailing_unsubscribe',
+          ts('Mailing').":",
+          $valueTitle
         );
         return;
 
@@ -389,9 +414,13 @@ class CRM_Mailing_BAO_Query {
         $valueTitle = [1 => ts('Unsubscribe Requests')];
         // exclude opt-out events
         $query->_where[$grouping][] = "civicrm_mailing_event_unsubscribe.org_unsubscribe = 0";
-        self::mailingEventQueryBuilder($query, $values,
-          'civicrm_mailing_event_unsubscribe', 'mailing_unsubscribe',
-          ts('Mailing').': ', $valueTitle
+        self::mailingEventQueryBuilder(
+          $query,
+          $values,
+          'civicrm_mailing_event_unsubscribe',
+          'mailing_unsubscribe',
+          ts('Mailing').': ',
+          $valueTitle
         );
         return;
 
@@ -399,9 +428,13 @@ class CRM_Mailing_BAO_Query {
         $valueTitle = ['Y' => ts('Forwards')];
         // since its a checkbox
         $values[2] = 'Y';
-        self::mailingEventQueryBuilder($query, $values,
-          'civicrm_mailing_event_forward', 'mailing_forward',
-          ts('Mailing').': ', $valueTitle
+        self::mailingEventQueryBuilder(
+          $query,
+          $values,
+          'civicrm_mailing_event_forward',
+          'mailing_forward',
+          ts('Mailing').': ',
+          $valueTitle
         );
         return;
 
@@ -451,7 +484,7 @@ class CRM_Mailing_BAO_Query {
 
     $mailingBounceTypes = CRM_Mailing_PseudoConstant::bounceType();
     $mailingBounceTypesDesc = CRM_Mailing_PseudoConstant::bounceType('id', 'description');
-    foreach($mailingBounceTypes as $bid => $type) {
+    foreach ($mailingBounceTypes as $bid => $type) {
       $mailingBounceTypes[$bid] = $type." ({$mailingBounceTypesDesc[$bid]})";
     }
     $form->addSelect('mailing_bounce_types', ts('Bounce Type'), $mailingBounceTypes, ['multiple' => 'multiple']);
@@ -548,7 +581,7 @@ class CRM_Mailing_BAO_Query {
       return TRUE;
     }
     if (!empty($fields['mailing_date_high']) && !empty($fields['mailing_date_low'])) {
-      if(strtotime($fields['mailing_date_high']) - strtotime($fields['mailing_date_low']) < 0) {
+      if (strtotime($fields['mailing_date_high']) - strtotime($fields['mailing_date_low']) < 0) {
         $errors['mailing_date_high'] = ts('End date should be after Start date');
       }
     }

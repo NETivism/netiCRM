@@ -34,7 +34,8 @@ require_once 'api/v2/Mailer.php';
  */
 class api_v2_MailerTest extends CiviUnitTestCase {
   protected $_groupID;
-  protected $_email; public function get_info() {
+  protected $_email;
+  public function get_info() {
     return [
       'name' => 'Mailer',
       'description' => 'Test all Mailer methods.',
@@ -452,4 +453,3 @@ class api_v2_MailerTest extends CiviUnitTestCase {
     $this->contactDelete($params['contact_id']);
   }
 }
-

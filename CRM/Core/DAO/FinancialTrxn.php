@@ -31,8 +31,7 @@
  * $Id$
  *
  */
-              class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO
-{
+class CRM_Core_DAO_FinancialTrxn extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
@@ -46,14 +45,14 @@
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@
    * @var boolean
    * @static
    */
-  public static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Gift ID
    *
    * @var int unsigned
@@ -148,14 +147,13 @@
    * @var string
    */
   public $trxn_result_code;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_financial_trxn
-   */
-  public function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_financial_trxn
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -164,8 +162,7 @@
    * @access public
    * @return array
    */
-  public function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'from_account_id' => 'civicrm_financial_account:id',
@@ -174,35 +171,33 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'from_account_id', 'civicrm_financial_account', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'to_account_id', 'civicrm_financial_account', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'from_account_id', 'civicrm_financial_account', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'to_account_id', 'civicrm_financial_account', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  public static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'from_account_id' => [
           'name' => 'from_account_id',
@@ -218,20 +213,20 @@
           'name' => 'trxn_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Trxn Date') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'trxn_type' => [
           'name' => 'trxn_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Trxn Type') ,
-          'required' => true,
+          'required' => TRUE,
                    'enumValues' => 'Debit,Credit',
          ] ,
         'total_amount' => [
           'name' => 'total_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Total Amount') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'fee_amount' => [
           'name' => 'fee_amount',
@@ -249,25 +244,25 @@
           'title' => ts('Currency') ,
            'maxlength' => 3,
            'size' => CRM_Utils_Type::FOUR,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_financial_trxn.currency',
           'headerPattern' => '/cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/',
-           'export' => true,
+           'export' => TRUE,
             'default' => 'UL',
           ] ,
         'payment_processor' => [
           'name' => 'payment_processor',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 64,
            'size' => CRM_Utils_Type::BIG,
                 ] ,
         'trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
@@ -288,18 +283,16 @@
    * @access public
    * @return string
    */
-  public static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  public function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -308,21 +301,21 @@
    * @access public
    * return array
    */
-  public static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['financial_trxn'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_import;
   }
   /**
@@ -331,21 +324,21 @@
    * @access public
    * return array
    */
-  public static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['financial_trxn'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_export;
   }
   /**
@@ -353,8 +346,7 @@
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {
+  public static function &getEnums() {
     static $enums = [
                                                                     'trxn_type',
                                                                                                     ];
@@ -368,9 +360,8 @@
    *
    * @return string  the display value of the enum
    */
-  public static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
                                                                     'trxn_type' => [
@@ -387,8 +378,7 @@
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  public static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Core_DAO_FinancialTrxn::getEnums();
     foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {

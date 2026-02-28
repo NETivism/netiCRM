@@ -21,16 +21,16 @@
 function civicrm_api($entity, $action, $params, $extra = NULL) {
   $apiWrappers = [CRM_Core_HTMLInputCoder::singleton()];
   try {
-    require_once ('api/v3/utils.php');
+    require_once('api/v3/utils.php');
     require_once 'api/Exception.php';
 
     $fields = [];
     foreach ($params as $key => $value) {
-      if(preg_match('/id$/', $key) && is_null($value)){
+      if (preg_match('/id$/', $key) && is_null($value)) {
         $fields[] = $key;
       }
     }
-    if(count($fields) > 0){
+    if (count($fields) > 0) {
       return civicrm_api3_create_error(ts("This can't be empty, please provide a value"), ["error_code" => "required", "field" => $fields]);
     }
 
@@ -116,7 +116,7 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
 
     return $result;
   }
-  catch(PEAR_Exception $e) {
+  catch (PEAR_Exception $e) {
     if (CRM_Utils_Array::value('format.is_success', $apiRequest['params']) == 1) {
       return 0;
     }
@@ -133,24 +133,24 @@ function civicrm_api($entity, $action, $params, $extra = NULL) {
     }
     return $err;
   }
-  catch (API_Exception $e){
-    if(!isset($apiRequest)){
+  catch (API_Exception $e) {
+    if (!isset($apiRequest)) {
       $apiRequest = [];
     }
-    if (CRM_Utils_Array::value('format.is_success', CRM_Utils_Array::value('params',$apiRequest)) == 1) {
+    if (CRM_Utils_Array::value('format.is_success', CRM_Utils_Array::value('params', $apiRequest)) == 1) {
       return 0;
     }
     $data = $e->getExtraParams();
     $err = civicrm_api3_create_error($e->getMessage(), $data, $apiRequest);
-    if (CRM_Utils_Array::value('debug', CRM_Utils_Array::value('params',$apiRequest))) {
+    if (CRM_Utils_Array::value('debug', CRM_Utils_Array::value('params', $apiRequest))) {
       $err['trace'] = $e->getTraceAsString();
     }
-    if (CRM_Utils_Array::value('is_transactional', CRM_Utils_Array::value('params',$apiRequest))) {
+    if (CRM_Utils_Array::value('is_transactional', CRM_Utils_Array::value('params', $apiRequest))) {
       $transaction->rollback();
     }
     return $err;
   }
-  catch(Exception $e) {
+  catch (Exception $e) {
     if (CRM_Utils_Array::value('format.is_success', $apiRequest['params']) == 1) {
       return 0;
     }
@@ -335,7 +335,7 @@ function _civicrm_api_loadEntity($entity, $version = 3) {
       }
 
       $parts = explode(".", $file);
-      if (end($parts) == "php" && !preg_match('/Tests?\.php$/', $file) ) {
+      if (end($parts) == "php" && !preg_match('/Tests?\.php$/', $file)) {
         require_once $action_dir . DIRECTORY_SEPARATOR . $file;
         $loaded_files[$file] = TRUE;
       }
@@ -461,7 +461,7 @@ function _civicrm_api_get_constant_camel_name($name) {
  */
 function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $version) {
   $entity = _civicrm_api_get_entity_name_from_camel($entity);
-  if(strtolower($action) == 'getsingle'){
+  if (strtolower($action) == 'getsingle') {
     // I don't understand the protocol here, but we don't want
     // $result to be a recursive array
     // $result['values'][0] = $result;
@@ -526,7 +526,7 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
 
 
         $enforcedSubParams['version'] = $version;
-        if(!empty($params['check_permissions'])){
+        if (!empty($params['check_permissions'])) {
           $enforcedSubParams['check_permissions'] = $params['check_permissions'];
         }
         else {
@@ -558,7 +558,7 @@ function _civicrm_api_call_nested_api(&$params, &$result, $action, $entity, $ver
       }
     }
   }
-  if(strtolower($action) == 'getsingle'){
+  if (strtolower($action) == 'getsingle') {
     $result = $result['values'][0];
   }
 }
@@ -629,11 +629,12 @@ function _civicrm_api_get_entity_name_from_camel($entity) {
     return $entity;
   }
   else {
-    $entity = ltrim(strtolower(str_replace('U_F',
-          'uf',
-          // That's CamelCase, beside an odd UFCamel that is expected as uf_camel
-          preg_replace('/(?=[A-Z])/', '_$0', $entity)
-        )), '_');
+    $entity = ltrim(strtolower(str_replace(
+      'U_F',
+      'uf',
+      // That's CamelCase, beside an odd UFCamel that is expected as uf_camel
+      preg_replace('/(?=[A-Z])/', '_$0', $entity)
+    )), '_');
   }
   return $entity;
 }
@@ -641,12 +642,11 @@ function _civicrm_api_get_entity_name_from_camel($entity) {
  * Having a DAO object find the entity name
  * @param object $bao DAO being passed in
  */
-function _civicrm_api_get_entity_name_from_dao($bao){
+function _civicrm_api_get_entity_name_from_dao($bao) {
   $daoName = str_replace("BAO", "DAO", get_class($bao));
   $dao = [];
-  require ('CRM/Core/DAO/.listAll.php');
+  require('CRM/Core/DAO/.listAll.php');
   $daos = array_flip($dao);
   return _civicrm_api_get_entity_name_from_camel($daos[$daoName]);
 
 }
-

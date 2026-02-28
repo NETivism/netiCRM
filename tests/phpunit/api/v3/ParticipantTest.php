@@ -30,7 +30,8 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
   protected $_participantID;
   protected $_eventID;
   protected $_individualId;
-  protected $_params; public function get_info() {
+  protected $_params;
+  public function get_info() {
     return [
       'name' => 'Participant Create',
       'description' => 'Test all Participant Create API methods.',
@@ -210,10 +211,10 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     $this->assertEquals($result['values'][$this->_participantID]['event_id'], $this->_eventID, "in line " . __LINE__);
     $this->assertEquals($result['values'][$this->_participantID]['participant_register_date'], '2007-02-19 00:00:00', "in line " . __LINE__);
     $this->assertEquals($result['values'][$this->_participantID]['participant_source'], 'Wimbeldon', "in line " . __LINE__);
-      $params = [
-      'id' => $this->_participantID,
-      'version' => $this->_apiversion,
-      'return' => 'id,participant_register_date,event_id',
+    $params = [
+    'id' => $this->_participantID,
+    'version' => $this->_apiversion,
+    'return' => 'id,participant_register_date,event_id',
 
     ];
     $result = civicrm_api('participant', 'get', $params);
@@ -288,19 +289,29 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
     ];
     $participant = civicrm_api('participant', 'get', $params);
 
-    $this->assertEquals($this->_participantID, $participant['id'],
+    $this->assertEquals(
+      $this->_participantID,
+      $participant['id'],
       "In line " . __LINE__
     );
-    $this->assertEquals($this->_eventID, $participant['values'][$participant['id']]['event_id'],
+    $this->assertEquals(
+      $this->_eventID,
+      $participant['values'][$participant['id']]['event_id'],
       "In line " . __LINE__
     );
-    $this->assertEquals('2007-02-19 00:00:00', $participant['values'][$participant['id']]['participant_register_date'],
+    $this->assertEquals(
+      '2007-02-19 00:00:00',
+      $participant['values'][$participant['id']]['participant_register_date'],
       "In line " . __LINE__
     );
-    $this->assertEquals('Wimbeldon', $participant['values'][$participant['id']]['participant_source'],
+    $this->assertEquals(
+      'Wimbeldon',
+      $participant['values'][$participant['id']]['participant_source'],
       "In line " . __LINE__
     );
-    $this->assertEquals($participant['id'], $participant['values'][$participant['id']]['id'],
+    $this->assertEquals(
+      $participant['id'],
+      $participant['values'][$participant['id']]['id'],
       "In line " . __LINE__
     );
   }
@@ -538,7 +549,8 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
       'status_id' => 2,
     ];
     civicrm_api('participant', 'create', $update);
-    $this->assertEquals($participant['values'][$participant['id']]['participant_fee_level'],
+    $this->assertEquals(
+      $participant['values'][$participant['id']]['participant_fee_level'],
       $update['values'][$participant['id']]['participant_fee_level']
     );
 
@@ -560,7 +572,8 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
       'status_id' => 2,
     ];
     civicrm_api('participant', 'create', $update);
-    $this->assertEquals($participant['values'][$participant['id']]['participant_fee_level'],
+    $this->assertEquals(
+      $participant['values'][$participant['id']]['participant_fee_level'],
       $update['values'][$participant['id']]['participant_fee_level']
     );
     $this->getAndCheck($update, $participant['id'], 'participant');
@@ -894,4 +907,3 @@ class api_v3_ParticipantTest extends CiviUnitTestCase {
    }
    */
 }
-

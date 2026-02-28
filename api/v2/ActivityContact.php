@@ -114,4 +114,3 @@ function &_civicrm_activities_get($contactID, $type = 'all') {
 
   return $activities;
 }
-

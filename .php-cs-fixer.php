@@ -10,7 +10,7 @@ $finder = PhpCsFixer\Finder::create()
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([
-    # php migration
+      # php migration
         '@PHP8x5Migration' => true,
         'array_syntax' => ['syntax' => 'short'],
         'heredoc_indentation' => ['indentation' => 'same_as_start'],
@@ -23,7 +23,7 @@ return $config->setRules([
         'assign_null_coalescing_to_coalesce_equal' => false, // 7.3 backward compatibility
         'octal_notation' => false, // 8.0 backward compatibility
         'nullable_type_declaration_for_default_null_value' => true, // 7.1+ compatibility, ?string nullable type declaration
-    # php migration risky, shouldn't use ruleset
+      # php migration risky, shouldn't use ruleset
         'pow_to_exponentiation' => true,
         'combine_nested_dirname' => true,
         'implode_call' => true,
@@ -35,8 +35,55 @@ return $config->setRules([
         'no_unreachable_default_argument_value' => true,
         'phpdoc_readonly_class_comment_to_keyword' => true,
         'modern_serialization_methods' => true,
-    # psr rules
+      # psr rules
         '@PSR1' => true,
+        '@PSR2' => true,
+        'braces_position' => [
+          'allow_single_line_anonymous_functions' => true,
+          'allow_single_line_empty_anonymous_classes' => true,
+          'anonymous_classes_opening_brace' => 'same_line',
+          'anonymous_functions_opening_brace' => 'same_line',
+          'classes_opening_brace' => 'same_line',
+          'control_structures_opening_brace' => 'same_line',
+          'functions_opening_brace' => 'same_line',
+        ],
+        'class_definition' => [
+          'inline_constructor_arguments' => true,
+          'multi_line_extends_each_single_line' => false,
+          'single_item_single_line' => true,
+          'single_line' => true,
+          'space_before_parenthesis' => true,
+        ],
+        'constant_case' => [
+          'case' => 'upper',
+        ],
+        'control_structure_continuation_position' => [
+          'position' => 'next_line',
+        ],
+        'function_declaration' => [
+          'closure_fn_spacing' => 'one',
+          'closure_function_spacing' => 'one',
+          'trailing_comma_single_line' => false,
+        ],
+        'method_argument_space' => [
+          'after_heredoc' => true,
+          'attribute_placement' => 'ignore',
+          'keep_multiple_spaces_after_comma'=> false,
+          'on_multiline' => 'ensure_fully_multiline',
+        ],
+        'modifier_keywords' => [
+          'elements' => ['const', 'method', 'property'],
+        ],
+        'single_class_element_per_statement' => [
+          'elements' => ['property'],
+        ],
+        'single_space_around_construct' => [
+          'constructs_followed_by_a_single_space' => ['abstract', 'as', 'case', 'catch', 'class', 'do', 'else', 'elseif', 'final', 'for', 'foreach', 'function', 'if', 'interface', 'namespace', 'private', 'protected', 'public', 'static', 'switch', 'trait', 'try', 'use_lambda', 'while'],
+          'constructs_preceded_by_a_single_space' => ['as', 'else', 'elseif', 'use_lambda'],
+        ],
+        'spaces_inside_parentheses' => [
+          'space' => 'none',
+        ],
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

@@ -77,4 +77,3 @@ class CRM_Event_Badge_Simple extends CRM_Event_Badge {
     $this->pdf->MultiCell($this->pdf->width, 0, $participant['current_employer'], $this->border, "C", 0, 1, $x, $this->pdf->getY());
   }
 }
-

@@ -68,7 +68,8 @@ class CRM_Event_Import_Field {
    * value of this field
    * @var object
    */
-  public $_value; public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
+  public $_value;
+  public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
     $this->_name = $name;
     $this->_title = $title;
     $this->_type = $type;
@@ -103,19 +104,19 @@ class CRM_Event_Import_Field {
 
       case 'register_date':
         return CRM_Utils_Rule::date($this->_value);
-      /*
-        case 'event_id':
-            static $events = null;
-            if (!$events) {
-                $events =& CRM_Event_PseudoConstant::event();
-            }
-            if (in_array($this->_value, $events)) {
-                return true;
-            } else {
-                return false;
-            }
-            break;
-            */
+        /*
+          case 'event_id':
+              static $events = null;
+              if (!$events) {
+                  $events =& CRM_Event_PseudoConstant::event();
+              }
+              if (in_array($this->_value, $events)) {
+                  return true;
+              } else {
+                  return false;
+              }
+              break;
+              */
 
       default:
         break;
@@ -136,4 +137,3 @@ class CRM_Event_Import_Field {
     return TRUE;
   }
 }
-

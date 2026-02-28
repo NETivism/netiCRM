@@ -39,7 +39,8 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
   protected $_organizationID;
   protected $_tagID;
   protected $_apiversion;
-  protected $_tag; public function setUp() {
+  protected $_tag;
+  public function setUp() {
     parent::setUp();
     $this->_apiversion = 3;
 
@@ -52,7 +53,8 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->_organizationID = $this->organizationCreate(NULL);
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   public function testAddEmptyParams() {
     $params = ['version' => $this->_apiversion];
@@ -140,7 +142,9 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $paramsEntity = "wrong params";
     $entity = civicrm_api('entity_tag', 'get', $paramsEntity);
 
-    $this->assertEquals($entity['is_error'], 1,
+    $this->assertEquals(
+      $entity['is_error'],
+      1,
       "In line " . __LINE__
     );
     $this->assertEquals($entity['error_message'], 'Input variable `params` is not an array');
@@ -471,4 +475,3 @@ class api_v3_EntityTagTest extends CiviUnitTestCase {
     $this->assertEquals($result['not_removed'], 1);
   }
 }
-

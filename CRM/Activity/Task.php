@@ -38,7 +38,7 @@
  *
  */
 class CRM_Activity_Task {
-  public CONST DELETE_ACTIVITIES = 1, PRINT_ACTIVITIES = 2, EXPORT_ACTIVITIES = 3, BATCH_ACTIVITIES = 4, EMAIL_CONTACTS = 5;
+  public const DELETE_ACTIVITIES = 1, PRINT_ACTIVITIES = 2, EXPORT_ACTIVITIES = 3, BATCH_ACTIVITIES = 4, EMAIL_CONTACTS = 5;
 
   /**
    * the task array
@@ -174,4 +174,3 @@ class CRM_Activity_Task {
     ];
   }
 }
-

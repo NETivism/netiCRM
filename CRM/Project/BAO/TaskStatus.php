@@ -41,9 +41,12 @@
 
 class CRM_Project_BAO_TaskStatus {
 
-  public static function &getTaskStatusInitial(&$controller,
-    $ret, $reid,
-    $tet, $teid,
+  public static function &getTaskStatusInitial(
+    &$controller,
+    $ret,
+    $reid,
+    $tet,
+    $teid,
     $taskID,
     $prefix = 'taskStatus',
     $statusDetail = TRUE
@@ -87,7 +90,8 @@ class CRM_Project_BAO_TaskStatus {
     return [$taskStatusID, $taskStatus];
   }
 
-  public static function updateTaskStatus(&$form,
+  public static function updateTaskStatus(
+    &$form,
     $prefix = 'taskStatus',
     $statusDetail = TRUE
   ) {
@@ -123,7 +127,8 @@ class CRM_Project_BAO_TaskStatus {
     $dao->save();
   }
 
-  public static function updateTaskStatusWithValue(&$form,
+  public static function updateTaskStatusWithValue(
+    &$form,
     $value = 'In Progress',
     $prefix = 'taskStatus'
   ) {
@@ -190,4 +195,3 @@ class CRM_Project_BAO_TaskStatus {
     return $dao->save();
   }
 }
-

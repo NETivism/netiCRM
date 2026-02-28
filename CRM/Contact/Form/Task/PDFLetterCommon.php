@@ -84,12 +84,16 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
 
     CRM_Mailing_BAO_Mailing::commonLetterCompose($form);
     if ($form->_single) {
-      $cancelURL = CRM_Utils_System::url('civicrm/contact/view',
+      $cancelURL = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$form->_cid}&selectedChild=activity",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
       if ($form->get('action') == CRM_Core_Action::VIEW) {
-        $form->addButtons([
+        $form->addButtons(
+          [
             ['type' => 'cancel',
               'name' => ts('Done'),
               'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
@@ -98,7 +102,8 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
         );
       }
       else {
-        $form->addButtons([
+        $form->addButtons(
+          [
             ['type' => 'submit',
               'name' => ts('Make PDF Letter'),
               'isDefault' => TRUE,
@@ -291,4 +296,3 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $message = CRM_Utils_String::htmlPurifier($message);
   }
 }
-

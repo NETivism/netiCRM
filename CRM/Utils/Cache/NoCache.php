@@ -50,7 +50,8 @@ class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
    *
    * @return void
    */
-  public function __construct($config) {}
+  public function __construct($config) {
+  }
 
   public function set($key, &$value) {
     return FALSE;
@@ -68,4 +69,3 @@ class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
     return FALSE;
   }
 }
-

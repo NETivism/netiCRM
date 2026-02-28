@@ -61,10 +61,10 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
         $errors['code'] = ts('Name already exists in Database.');
       }
     }
-    if(!empty($fields['start_date']) && !empty($fields['end_date'])){
+    if (!empty($fields['start_date']) && !empty($fields['end_date'])) {
       $start_date = CRM_Utils_Date::processDate($fields['start_date'], $fields['start_date_time']);
       $end_date = CRM_Utils_Date::processDate($fields['end_date'], $fields['end_date_time']);
-      if(strtotime($start_date) >= strtotime($end_date)){
+      if (strtotime($start_date) >= strtotime($end_date)) {
         $errors["start_date_time"] = ts('The discount end date cannot be prior to the start date.');
       }
     }
@@ -76,7 +76,7 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
 
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::UPDATE) {
-      $attr = ['readonly' => $readonly]; 
+      $attr = ['readonly' => $readonly];
     }
     else {
       $attr = [];
@@ -89,8 +89,8 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
       $this->add('text', 'code', ts('Coupon Code'), $attr, TRUE);
     }
     $this->add('text', 'description', ts('Description'), NULL, TRUE);
-    $this->addDateTime('start_date', ts('Start Date'), false);
-    $this->addDateTime('end_date', ts('End Date'), false);
+    $this->addDateTime('start_date', ts('Start Date'), FALSE);
+    $this->addDateTime('end_date', ts('End Date'), FALSE);
     $this->addSelect('coupon_type', ts('Coupon Type'), [
       'monetary' => ts('Monetary'),
       'percentage' => ts('Percentage'),
@@ -112,8 +112,8 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
 
     $priceSets = CRM_Price_BAO_Field::getPriceLevels();
     $priceOptions = [];
-    foreach($priceSets as $set => &$field) {
-      foreach($field as $key => $val) {
+    foreach ($priceSets as $set => &$field) {
+      foreach ($field as $key => $val) {
         $key = str_replace('priceset:', '', $key);
         if (is_numeric($key)) {
           $priceOptions[$set][$key] = $val;
@@ -124,7 +124,8 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $this->addSelect('civicrm_price_field_value', ts('Limited on Price Option'), $priceOptions, ['multiple' => 'multiple'], FALSE);
 
     $this->add('checkbox', 'is_active', ts('Active?'));
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => $this->_batch ? ts('Bulk').' '.ts('Create') : ts('Save'),
           'isDefault' => TRUE,
@@ -142,16 +143,16 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $defaults = [];
     if (isset($this->_id)) {
       $defaults = $this->_defaults;
-      if(!empty($defaults['start_date'])){
+      if (!empty($defaults['start_date'])) {
         list($defaults['start_date'], $defaults['start_date_time']) = CRM_Utils_Date::setDateDefaults(CRM_Utils_Array::value('start_date', $defaults), 'activityDateTime');
       }
-      if(!empty($defaults['end_date'])){
+      if (!empty($defaults['end_date'])) {
         list($defaults['end_date'], $defaults['end_date_time']) = CRM_Utils_Date::setDateDefaults(CRM_Utils_Array::value('end_date', $defaults), 'activityDateTime');
       }
 
       $filter = ['id' => $this->_id];
       $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         if (!empty($dao->entity_table) && !empty($dao->entity_id)) {
           $defaults[$dao->entity_table][$dao->entity_id] = $dao->entity_id;
         }
@@ -179,17 +180,17 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     }
 
     $params['start_date'] = CRM_Utils_Date::processDate($params['start_date'], $params['start_date_time']);
-    if(empty($params['start_date'])){
+    if (empty($params['start_date'])) {
       $params['start_date'] = 'NULL';
     }
     $params['end_date'] = CRM_Utils_Date::processDate($params['end_date'], $params['end_date_time']);
-    if(empty($params['end_date'])){
+    if (empty($params['end_date'])) {
       $params['end_date'] = 'NULL';
     }
 
     $additional = [];
     $coupon = [];
-    foreach($params as $key => $value) {
+    foreach ($params as $key => $value) {
       if (isset($fields[$key])) {
         $coupon[$key] = $value;
       }
@@ -211,15 +212,15 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
       $seed = mt_rand(101, 200);
       $plus = mt_rand(1, 100);
       $try = 0;
-      while(count($generated) < $numGenerate) {
-        $seed = $seed+mt_rand(1,10);
-        for($i = 10000; $i < 10000+$numGenerate; $i++) {
+      while (count($generated) < $numGenerate) {
+        $seed = $seed+mt_rand(1, 10);
+        for ($i = 10000; $i < 10000+$numGenerate; $i++) {
           $code = '';
           $n = $i*$seed+$plus;
-          $code = str_replace(['=','+','/'],'',base64_encode($n));
+          $code = str_replace(['=','+','/'], '', base64_encode($n));
           $code  = str_shuffle($code);
           $generated[$code] = 1;
-          if($try) {
+          if ($try) {
             if (count($generated) >= $numGenerate) {
               break;
             }
@@ -230,7 +231,7 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
           break;
         }
       }
-      foreach($generated as $code => $dontcare) {
+      foreach ($generated as $code => $dontcare) {
         $code = $batchPrefix.'-'.$code;
         $coupon['code'] = $code;
         CRM_Coupon_BAO_Coupon::create($coupon);

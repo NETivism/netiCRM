@@ -156,7 +156,8 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @return CRM_Contact_Selector
    * @access public
    */
-  public function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $surveyClause = NULL,
     $single = FALSE,
@@ -175,8 +176,12 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams,
-      NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_CAMPAIGN
     );
   }
@@ -220,9 +225,14 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @access public
    */
   public function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_campaignClause
     );
@@ -241,9 +251,14 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_campaignClause
     );
@@ -253,7 +268,7 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
     // process the result of the query
     $rows = [];
 
-    While ($result->fetch()) {
+    while ($result->fetch()) {
       $row = [];
       // the columns we are interested in
       foreach (self::$_properties as $property) {
@@ -340,4 +355,3 @@ class CRM_Campaign_Selector_Search extends CRM_Core_Selector_Base implements CRM
   }
 }
 //end of class
-

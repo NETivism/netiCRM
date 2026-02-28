@@ -76,4 +76,3 @@ class CRM_Core_Joomla {
     $template->assign_by_ref('sidebarLeft', $sidebarLeft);
   }
 }
-

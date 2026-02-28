@@ -54,7 +54,8 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ]; public function __construct() {
+  ];
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -421,9 +422,11 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id_constituent', $row)
       ) {
 
-        $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id_constituent'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_sort_name_constituent_link'] = $url;
         $rows[$rowNum]['civicrm_contact_sort_name_constituent_hover'] = ts("List all direct contribution(s) from this contact.");
@@ -451,9 +454,11 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
             unset($rows[$rowNum]['civicrm_contact_sort_name_creditor']);
           }
           else {
-            $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+            $url = CRM_Report_Utils_Report::getNextUrl(
+              'contribute/detail',
               'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id_creditor'],
-              $this->_absoluteUrl, $this->_id
+              $this->_absoluteUrl,
+              $this->_id
             );
             $rows[$rowNum]['civicrm_contact_sort_name_creditor_link'] = $url;
             $rows[$rowNum]['civicrm_contact_sort_name_creditor_hover'] = ts("List direct contribution(s) from this contact.");
@@ -543,4 +548,3 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     }
   }
 }
-

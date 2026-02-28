@@ -63,7 +63,8 @@ class CRM_Admin_Page_Navigation extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  public function &links() {}
+  public function &links() {
+  }
 
   /**
    * Get name of edit form
@@ -101,4 +102,3 @@ class CRM_Admin_Page_Navigation extends CRM_Core_Page_Basic {
     $this->assign('homeMenuId', $homeMenuId);
   }
 }
-

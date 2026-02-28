@@ -109,15 +109,23 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
   public function run() {
 
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -171,8 +179,10 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
           if ($membershipType[$dao->id]['relationshipTypeName']) {
             $membershipType[$dao->id]['relationshipTypeName'] .= ", ";
           }
-          $membershipType[$dao->id]['relationshipTypeName'] .= CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType',
-            $value, $relationshipName
+          $membershipType[$dao->id]['relationshipTypeName'] .= CRM_Core_DAO::getFieldValue(
+            'CRM_Contact_DAO_RelationshipType',
+            $value,
+            $relationshipName
           );
         }
       }
@@ -188,7 +198,9 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
           $action -= CRM_Core_Action::DISABLE;
         }
         $membershipType[$dao->id]['order'] = $membershipType[$dao->id]['weight'];
-        $membershipType[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $membershipType[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $dao->id]
         );
       }
@@ -196,8 +208,11 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
 
     $returnURL = CRM_Utils_System::url('civicrm/admin/member/membershipType', "reset=1&action=browse");
 
-    CRM_Utils_Weight::addOrder($membershipType, 'CRM_Member_DAO_MembershipType',
-      'id', $returnURL
+    CRM_Utils_Weight::addOrder(
+      $membershipType,
+      'CRM_Member_DAO_MembershipType',
+      'id',
+      $returnURL
     );
 
     CRM_Member_BAO_MembershipType::convertDayFormat($membershipType);
@@ -231,4 +246,3 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
     return 'civicrm/admin/member/membershipType';
   }
 }
-

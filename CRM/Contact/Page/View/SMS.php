@@ -55,10 +55,16 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
    */
   public function run() {
     // get the callback, module and activity id
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'browse'
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'browse'
     );
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
       $this
     );
 
@@ -74,14 +80,18 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
     $dao->id = $id;
 
     if ($dao->find(TRUE)) {
-      $this->assign('fromName',
-        CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $this->assign(
+        'fromName',
+        CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
           $dao->contact_id,
           'display_name'
         )
       );
-      $this->assign('toName',
-        CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $this->assign(
+        'toName',
+        CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
           $cid,
           'display_name'
         )
@@ -101,4 +111,3 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
     parent::run();
   }
 }
-

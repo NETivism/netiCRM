@@ -110,7 +110,8 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
       $this->setDefaults(['supporter_profile_id' => $defaultProfile]);
     }
 
-    $this->add('text',
+    $this->add(
+      'text',
       'link_text',
       ts("'Create Personal Campaign Page' link text"),
       CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PCPBlock', 'pcp_link_text')
@@ -194,4 +195,3 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
     return ts('Enable Personal Campaign Pages');
   }
 }
-

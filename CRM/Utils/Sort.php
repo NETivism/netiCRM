@@ -53,14 +53,14 @@ class CRM_Utils_Sort {
    *
    * @var int
    */
-  public CONST ASCENDING = 1, DESCENDING = 2, DONTCARE = 4,
+  public const ASCENDING = 1, DESCENDING = 2, DONTCARE = 4,
 
-  /**
-   * the name for the sort GET/POST param
-   *
-   * @var string
-   */
-  SORT_ID = 'crmSID', SORT_DIRECTION = 'crmSortDirection', SORT_ORDER = 'crmSortOrder';
+    /**
+     * the name for the sort GET/POST param
+     *
+     * @var string
+     */
+    SORT_ID = 'crmSID', SORT_DIRECTION = 'crmSortDirection', SORT_ORDER = 'crmSortOrder';
 
   /**
    * name of the sort function. Used to isolate session variables
@@ -284,4 +284,3 @@ class CRM_Utils_Sort {
     return ($a['weight'] <= $b['weight']) ? -1 : 1;
   }
 }
-

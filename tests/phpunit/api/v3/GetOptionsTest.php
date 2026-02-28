@@ -30,7 +30,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     $config->lcMessages = 'zh_TW';
     $this->_params = [
       'version' => $this->_apiversion,
-      'sequential' => true,
+      'sequential' => TRUE,
     ];
   }
 
@@ -56,7 +56,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
       'field' => 'contact_type',
     ];
     $result = civicrm_api('Contact', 'getoptions', $params);
-    foreach($result['values'] as $k => &$v) {
+    foreach ($result['values'] as $k => &$v) {
       $a = $k+1;
       $v['label'] = 'example label '.$a;
       $v['value'] = $a+1000;
@@ -420,7 +420,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
   /**
    * @docmaker_start
    *
-   * @api_entity payment_instrument_id 
+   * @api_entity payment_instrument_id
    * @api_action options
    * @http_method GET
    * @request_url <entrypoint>?entity=contribution&action=getoptions&json={$request_body_inline}

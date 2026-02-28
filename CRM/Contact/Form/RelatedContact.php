@@ -75,8 +75,12 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
    */
   public function preProcess() {
     // reset action from the session
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'update'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'update'
     );
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
 
@@ -131,13 +135,16 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
     $params['id'] = $params['contact_id'] = $this->_contactId;
     $contact = CRM_Contact_BAO_Contact::retrieve($params, $this->_defaults);
 
-    $countryID = CRM_Utils_Array::value('country_id',
+    $countryID = CRM_Utils_Array::value(
+      'country_id',
       $this->_defaults['address'][1]
     );
-    $stateID = CRM_Utils_Array::value('state_province_id',
+    $stateID = CRM_Utils_Array::value(
+      'state_province_id',
       $this->_defaults['address'][1]
     );
-    CRM_Contact_BAO_Contact_Utils::buildOnBehalfForm($this,
+    CRM_Contact_BAO_Contact_Utils::buildOnBehalfForm(
+      $this,
       $this->_contactType,
       $countryID,
       $stateID,
@@ -192,9 +199,9 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
     }
 
     // set status message.
-    CRM_Core_Session::setStatus(ts('Your %1 contact record has been saved.',
-        [1 => $contact->contact_type_display]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      'Your %1 contact record has been saved.',
+      [1 => $contact->contact_type_display]
+    ));
   }
 }
-

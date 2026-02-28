@@ -75,7 +75,7 @@ class CRM_Contact_BAO_ProximityQuery {
 
   /*
     /**
-     * Estimate the Earth's radius at a given latitude. 
+     * Estimate the Earth's radius at a given latitude.
      * Default to an approximate average radius for the United States.
      */
 
@@ -119,8 +119,11 @@ class CRM_Contact_BAO_ProximityQuery {
   /**
    * Estimate the earth-surface distance between two locations.
    */
-  public static function earthDistance($longitudeSrc, $latitudeSrc,
-    $longitudeDst, $latitudeDst
+  public static function earthDistance(
+    $longitudeSrc,
+    $latitudeSrc,
+    $longitudeDst,
+    $latitudeDst
   ) {
 
     $longSrc = deg2rad($longitudeSrc);
@@ -203,7 +206,7 @@ class CRM_Contact_BAO_ProximityQuery {
      * to a query that includes the location table
      *
      * @param $longitude
-     * @param $latitude 
+     * @param $latitude
      */
 
   public static function earthDistanceSQL($longitude, $latitude) {
@@ -230,11 +233,13 @@ IFNULL( ACOS( $cosLat * COS( RADIANS( $latitude ) ) *
     $params = [];
     $clause = [];
 
-    list($minLongitude, $maxLongitude) = self::earthLongitudeRange($longitude,
+    list($minLongitude, $maxLongitude) = self::earthLongitudeRange(
+      $longitude,
       $latitude,
       $distance
     );
-    list($minLatitude, $maxLatitude) = self::earthLatitudeRange($longitude,
+    list($minLatitude, $maxLatitude) = self::earthLatitudeRange(
+      $longitude,
       $latitude,
       $distance
     );
@@ -298,7 +303,7 @@ $earthDistanceSQL  <= $distance
     }
 
     $className = $config->geocodeMethod;
-    $className::format( $proximityAddress );
+    $className::format($proximityAddress);
     if (!isset($proximityAddress['geo_code_1']) ||
       !isset($proximityAddress['geo_code_2'])
     ) {
@@ -317,14 +322,16 @@ $earthDistanceSQL  <= $distance
       $distance = $distance * 1000.00;
     }
 
-    $qill = ts('Proximity search to a distance of %1 from %2',
+    $qill = ts(
+      'Proximity search to a distance of %1 from %2',
       [1 => $qillUnits,
         2 => CRM_Utils_Array::implode(', ', $qill),
       ]
     );
 
     $query->_tables['civicrm_address'] = $query->_whereTables['civicrm_address'] = 1;
-    $query->_where[$grouping][] = self::where($proximityAddress['geo_code_1'],
+    $query->_where[$grouping][] = self::where(
+      $proximityAddress['geo_code_1'],
       $proximityAddress['geo_code_2'],
       $distance
     );
@@ -332,4 +339,3 @@ $earthDistanceSQL  <= $distance
     return;
   }
 }
-

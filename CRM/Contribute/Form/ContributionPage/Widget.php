@@ -71,7 +71,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->assign('cpageId', $this->_id);
 
     $config = CRM_Core_Config::singleton();
-    $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+    $title = CRM_Core_DAO::getFieldValue(
+      'CRM_Contribute_DAO_ContributionPage',
       $this->_id,
       'title'
     );
@@ -154,7 +155,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       foreach ($this->_colorFields as $name => $val) {
         $defaults[$name] = $val[3];
       }
-      $defaults['about'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $defaults['about'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_ContributionPage',
         $this->_id,
         'intro_text'
       );
@@ -170,7 +172,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   public function buildQuickForm() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Widget');
 
-    $this->addElement('checkbox',
+    $this->addElement(
+      'checkbox',
       'is_active',
       ts('Enable Widget?'),
       NULL,
@@ -180,7 +183,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->addWysiwyg('about', ts('About'), $attributes['about']);
 
     foreach ($this->_fields as $name => $val) {
-      $this->add($val[1],
+      $this->add(
+        $val[1],
         $name,
         $val[0],
         $attributes[$name],
@@ -188,7 +192,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       );
     }
     foreach ($this->_colorFields as $name => $val) {
-      $this->add($val[1],
+      $this->add(
+        $val[1],
         $name,
         $val[0],
         $attributes[$name],
@@ -200,7 +205,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->assign_by_ref('colorFields', $this->_colorFields);
 
     $this->_refreshButtonName = $this->getButtonName('refresh');
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->_refreshButtonName,
       ts('Save and Preview')
     );
@@ -273,4 +279,3 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return ts('Widget Settings');
   }
 }
-

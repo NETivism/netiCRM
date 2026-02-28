@@ -204,7 +204,9 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
   public function testMembershipDeleteWithInvalidMembershipId() {
     $membershipId = 'membership';
     $result = civicrm_api('membership', 'delete', $membershipId);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -318,7 +320,7 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
 
     $result = civicrm_api($this->_entity, 'create', $params);
 
-    $this->assertAPISuccess($result,  ' in line ' . __LINE__);
+    $this->assertAPISuccess($result, ' in line ' . __LINE__);
     $getParams = ['version' => 3, 'membership_type_id' => $params['membership_type_id']];
     $check = civicrm_api($this->_entity, 'get', $getParams);
     $this->documentMe($getParams, $check, __FUNCTION__, __FILE__);
@@ -502,7 +504,9 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     $result = civicrm_api('membership', 'get', $params);
 
     $membership = $result['values'][$membershipID];
-    $this->assertEquals($this->_membershipStatusID, $membership['status_id'],
+    $this->assertEquals(
+      $this->_membershipStatusID,
+      $membership['status_id'],
       "In line " . __LINE__
     );
     $result = civicrm_api('Membership', 'Delete', [
@@ -534,7 +538,9 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
   public function testCreateWithParamsString() {
     $params = 'a string';
     $result = civicrm_api('membership', 'create', $params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -545,8 +551,10 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
     $params = $this->_params;
     unset($params['status_id']);
     $result = civicrm_api('membership', 'create', $params);
-    $this->assertEquals($result['is_error'], 1,
-        "In line " . __LINE__
+    $this->assertEquals(
+      $result['is_error'],
+      1,
+      "In line " . __LINE__
     );
   }
 
@@ -869,4 +877,3 @@ class api_v3_MembershipTest extends CiviUnitTestCase {
 
   ///////////////// civicrm_membership_delete methods
 }
-

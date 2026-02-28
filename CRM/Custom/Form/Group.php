@@ -246,7 +246,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $newExtends = [ ts('Common') => $extendsTop , ts('Other') => $extendsBottom];
       if ($this->_action & CRM_Core_Action::UPDATE) {
         if (strstr($this->_defaults['extends'], 'Participant')) {
-          foreach($extends as $ext => $dontcare) {
+          foreach ($extends as $ext => $dontcare) {
             if (strpos($ext, $this->_defaults['extends']) === FALSE) {
               unset($newExtends[ts('Common')][$ext]);
               unset($newExtends[ts('Other')][$ext]);
@@ -254,7 +254,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
           }
         }
         else {
-          foreach($extends as $ext => $dontcare) {
+          foreach ($extends as $ext => $dontcare) {
             if ($this->_defaults['extends'] != $ext) {
               unset($newExtends[ts('Common')][$ext]);
               unset($newExtends[ts('Other')][$ext]);
@@ -289,8 +289,15 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $subTypes = CRM_Contact_BAO_ContactType::subTypeInfo();
 
     foreach ($subTypes as $subType => $val) {
-      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, $val['parent'],
-        FALSE, 'label', TRUE, $subType
+      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(
+        NULL,
+        NULL,
+        NULL,
+        $val['parent'],
+        FALSE,
+        'label',
+        TRUE,
+        $subType
       );
       $allRelationshipType = array_merge($allRelationshipType, $subTypeRelationshipTypes);
     }
@@ -315,7 +322,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
 
     $priceSets = CRM_Price_BAO_Set::getAssoc();
     $priceFields = [];
-    foreach($priceSets as $sid => $dontcare) {
+    foreach ($priceSets as $sid => $dontcare) {
       $priceFields += CRM_Price_BAO_Set::getFields($sid);
     }
     $sel2['PriceField'] = $priceFields;
@@ -353,7 +360,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       }
     }
 
-    $sel = &$this->add('hierselect',
+    $sel = &$this->add(
+      'hierselect',
       'extends',
       ts('Used For'),
       ['onClick' => 'showHideStyle();',
@@ -386,7 +394,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $this->_isGroupEmpty = CRM_Core_BAO_CustomGroup::isGroupEmpty($this->_id);
       if (!$this->_isGroupEmpty) {
         if (!empty($this->_subtypes) &&
-          (count(array_intersect($this->_subtypes, $sel2[$this->_defaults['extends']])) <
+          (
+            count(array_intersect($this->_subtypes, $sel2[$this->_defaults['extends']])) <
             count($sel2[$this->_defaults['extends']])
           )
         ) {
@@ -423,7 +432,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $this->addElement('checkbox', 'is_active', ts('Is this Custom Data Set active?'));
 
     // does this set have multiple record?
-    $multiple = $this->addElement('checkbox',
+    $multiple = $this->addElement(
+      'checkbox',
       'is_multiple',
       ts('Does this Custom Field Set allow multiple records?'),
       NULL,
@@ -447,7 +457,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $this->assign('showStyle', FALSE);
     $this->assign('showMultiple', FALSE);
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -561,9 +572,10 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     }
     else {
       $url = CRM_Utils_System::url('civicrm/admin/custom/group/field/add', 'reset=1&action=add&gid=' . $group->id);
-      CRM_Core_Session::setStatus(ts('Your custom field set \'%1\' has been added. You can add it custom fields now.',
-          [1 => $group->title]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'Your custom field set \'%1\' has been added. You can add it custom fields now.',
+        [1 => $group->title]
+      ));
       $session = CRM_Core_Session::singleton();
       $session->replaceUserContext($url);
     }
@@ -572,7 +584,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
   /*
      * Function to return a formatted list of relationship name.
      * @param $list array array of relationship name.
-     * @static 
+     * @static
      * return array array of relationship name.
      */
 
@@ -601,4 +613,3 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     return $relName;
   }
 }
-

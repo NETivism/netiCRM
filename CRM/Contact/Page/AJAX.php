@@ -153,7 +153,7 @@ class CRM_Contact_Page_AJAX {
             )";
     }
 
-    if(!empty($select)){
+    if (!empty($select)) {
       $field_data_name = ', data';
       $field_data = ", CONCAT_WS( ' :: ', {$select} ) as data";
     }
@@ -174,7 +174,8 @@ class CRM_Contact_Page_AJAX {
 
     // send query to hook to be modified if needed
 
-    CRM_Utils_Hook::contactListQuery($query,
+    CRM_Utils_Hook::contactListQuery(
+      $query,
       $name,
       CRM_Utils_Array::value('context', $_GET),
       CRM_Utils_Array::value('id', $_GET)
@@ -295,8 +296,10 @@ class CRM_Contact_Page_AJAX {
     if ($relationshipID && $relationshipID != 'null') {
       // we should return phone and email
 
-      $caseRelationship = CRM_Case_BAO_Case::getCaseRoles($sourceContactID,
-        $caseID, $relationshipID
+      $caseRelationship = CRM_Case_BAO_Case::getCaseRoles(
+        $sourceContactID,
+        $caseID,
+        $relationshipID
       );
 
       //create an activity for case role assignment.CRM-4480
@@ -316,7 +319,8 @@ class CRM_Contact_Page_AJAX {
   public static function customField() {
     $fieldId = CRM_Utils_Type::escape($_POST['id'], 'Integer');
 
-    $helpPost = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+    $helpPost = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_CustomField',
       $fieldId,
       'help_post'
     );
@@ -534,9 +538,9 @@ ORDER BY sort_name ";
     CRM_Utils_System::civiExit();
   }
 
-  /*                                                                                                                                                                                            
-     * Function to check how many contact exits in db for given criteria, 
-     * if one then return contact id else null                                                                                  
+  /*
+     * Function to check how many contact exits in db for given criteria,
+     * if one then return contact id else null
      */
 
   public static function contact() {
@@ -603,11 +607,12 @@ WHERE sort_name LIKE '%$name%'";
       if ($recordClass[0] == 'CRM' &&
         count($recordClass) >= 3
       ) {
-        require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
         $method = 'setIsActive';
 
         if (method_exists($recordBAO, $method)) {
-          $updated = call_user_func_array([$recordBAO, $method],
+          $updated = call_user_func_array(
+            [$recordBAO, $method],
             [$recordID, $isActive]
           );
           if ($updated) {
@@ -678,7 +683,7 @@ WHERE sort_name LIKE '%$name%'";
       $doNotNotify = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $contactID, 'do_not_notify');
       if ($userEmail) {
         if ($checkCanNotify && $doNotNotify) {
-           // do not notify
+          // do not notify
         }
         else {
           echo $userEmail;
@@ -710,7 +715,7 @@ WHERE sort_name LIKE '%$name%'";
         else {
           if (strstr($cid, ',')) {
             $cids = explode(',', $cid);
-            foreach($cids as $idx => $c) {
+            foreach ($cids as $idx => $c) {
               if (!CRM_Utils_Rule::PositiveInteger($c)) {
                 unset($cids[$idx]);
               }
@@ -850,6 +855,7 @@ WHERE sort_name LIKE '%$name%'";
 
         CRM_Core_BAO_Dashboard::saveDashletChanges($_POST['columns']);
         CRM_Utils_System::civiExit();
+        // no break
       case 'delete_dashlet':
         $dashletID = CRM_Utils_Type::escape($_POST['dashlet_id'], 'Positive');
 
@@ -939,8 +945,17 @@ WHERE sort_name LIKE '%$name%'";
 
     if ($searchCount > 0) {
       // get the result of the search
-      $result = $query->searchQuery($offset, $rowCount, $sort, FALSE, FALSE,
-        FALSE, FALSE, FALSE, NULL, $sortOrder
+      $result = $query->searchQuery(
+        $offset,
+        $rowCount,
+        $sort,
+        FALSE,
+        FALSE,
+        FALSE,
+        FALSE,
+        FALSE,
+        NULL,
+        $sortOrder
       );
 
       $config = &CRM_Core_Config::singleton();
@@ -959,9 +974,11 @@ WHERE sort_name LIKE '%$name%'";
 
         $contact_type = '<img src="' . $config->resourceBase . 'i/contact_';
 
-        $typeImage = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
+        $typeImage = CRM_Contact_BAO_Contact_Utils::getImage(
+          $result->contact_sub_type ?
           $result->contact_sub_type : $result->contact_type,
-          FALSE, $contactID
+          FALSE,
+          $contactID
         );
 
         $searchRows[$contactID]['id'] = $contactID;
@@ -1154,4 +1171,3 @@ WHERE sort_name LIKE '%$name%'";
     }
   }
 }
-

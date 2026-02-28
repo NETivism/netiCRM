@@ -35,7 +35,7 @@
 class CRM_Utils_PDF_Utils {
 
   /**
-   * @param string $text        
+   * @param string $text
    * @param string $fileName
    * @param string $orientation landscape or portrait
    * @param string $paperSize spcific page size when generate pdf file, default is 'a4'
@@ -282,8 +282,8 @@ class CRM_Utils_PDF_Utils {
     do {
       $next = $sibling->nextSibling;
       $from->parentNode->insertBefore($sibling, $from);
-    } while ($sibling = $next);
+    }
+    while ($sibling = $next);
     $from->parentNode->removeChild($from);
   }
 }
-

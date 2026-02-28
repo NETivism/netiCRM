@@ -41,7 +41,8 @@
  */
 class CRM_Campaign_Page_Survey extends CRM_Core_Page {
 
-  private static $_actionLinks; public function &actionLinks() {
+  private static $_actionLinks;
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
 
@@ -112,8 +113,12 @@ class CRM_Campaign_Page_Survey extends CRM_Core_Page {
       CRM_Utils_System::permissionDenied();
     }
 
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 0
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('action', $action);
     $this->browse();
@@ -121,4 +126,3 @@ class CRM_Campaign_Page_Survey extends CRM_Core_Page {
     parent::run();
   }
 }
-

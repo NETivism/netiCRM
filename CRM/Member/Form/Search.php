@@ -160,9 +160,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
     $this->defaults = [];
 
-    /* 
-         * we allow the controller to set force/reset externally, useful when we are being 
-         * driven by the wizard framework 
+    /*
+         * we allow the controller to set force/reset externally, useful when we are being
+         * driven by the wizard framework
          */
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
@@ -188,14 +188,16 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-    $selector = new CRM_Member_Selector_Search($this->_queryParams,
+    $selector = new CRM_Member_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -210,7 +212,8 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -238,9 +241,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
     CRM_Member_BAO_Query::buildSearchForm($this);
 
-    /* 
-         * add form checkboxes for each row. This is needed out here to conform to QF protocol 
-         * of all elements being declared in builQuickForm 
+    /*
+         * add form checkboxes for each row. This is needed out here to conform to QF protocol
+         * of all elements being declared in builQuickForm
          */
 
     $rows = $this->get('rows');
@@ -260,14 +263,20 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
       $tasks = ['' => ts('- actions -')] + CRM_Member_Task::permissionedTaskTitles($permission);
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
-      $this->add('submit', $this->_actionButtonName, ts('Go'),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Go'),
         ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
         ]
       );
 
-      $this->add('submit', $this->_printButtonName, ts('Print'),
+      $this->add(
+        'submit',
+        $this->_printButtonName,
+        ts('Print'),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
         ]
@@ -322,9 +331,10 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
     // we don't show test memberships in Contact Summary / User Dashboard
     // in Search mode by default we hide test memberships
-    if (!CRM_Utils_Array::value('member_test',
-        $this->_formValues
-      )) {
+    if (!CRM_Utils_Array::value(
+      'member_test',
+      $this->_formValues
+    )) {
       $this->_formValues["member_test"] = 0;
     }
 
@@ -350,7 +360,8 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -359,7 +370,8 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
 
-    $selector = new CRM_Member_Selector_Search($this->_queryParams,
+    $selector = new CRM_Member_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -373,7 +385,8 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $prefix = $this->_prefix;
     }
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -425,7 +438,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $this->_defaults['member_status_id'] = $tempStatus;
     }
 
-    $membershipType = CRM_Utils_Request::retrieve('type', 'String',
+    $membershipType = CRM_Utils_Request::retrieve(
+      'type',
+      'String',
       CRM_Core_DAO::$_nullObject
     );
 
@@ -436,7 +451,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     }
 
 
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
+    $cid = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
       CRM_Core_DAO::$_nullObject
     );
 
@@ -446,7 +463,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
         $this->_formValues['contact_id'] = $cid;
 
         list($display, $image) = CRM_Contact_BAO_Contact::getDisplayAndImage($cid);
-        $this->_defaults['sort_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $cid,
+        $this->_defaults['sort_name'] = CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
+          $cid,
           'sort_name'
         );
         // also assign individual mode to the template
@@ -454,7 +473,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       }
     }
 
-    $fromDate = CRM_Utils_Request::retrieve('start', 'Date',
+    $fromDate = CRM_Utils_Request::retrieve(
+      'start',
+      'Date',
       CRM_Core_DAO::$_nullObject
     );
     if ($fromDate) {
@@ -462,14 +483,18 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $this->_formValues['member_start_date_low'] = $this->_defaults['member_start_date_low'] = $date;
     }
 
-    $toDate = CRM_Utils_Request::retrieve('end', 'Date',
+    $toDate = CRM_Utils_Request::retrieve(
+      'end',
+      'Date',
       CRM_Core_DAO::$_nullObject
     );
     if ($toDate) {
       list($date) = CRM_Utils_Date::setDateDefaults($toDate);
       $this->_formValues['member_start_date_high'] = $this->_defaults['member_start_date_high'] = $date;
     }
-    $joinDate = CRM_Utils_Request::retrieve('join', 'Date',
+    $joinDate = CRM_Utils_Request::retrieve(
+      'join',
+      'Date',
       CRM_Core_DAO::$_nullObject
     );
     if ($joinDate) {
@@ -477,7 +502,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
       $this->_formValues['member_join_date_low'] = $this->_defaults['member_join_date_low'] = $date;
     }
 
-    $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive',
+    $this->_limit = CRM_Utils_Request::retrieve(
+      'limit',
+      'Positive',
       $this
     );
   }
@@ -492,4 +519,3 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     return ts('Find Members');
   }
 }
-

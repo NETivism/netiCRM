@@ -162,7 +162,7 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       echo "Success: Contribution has already been handled<p>";
     }
     else {
-      /* Since trxn_id hasn't got any use here, 
+      /* Since trxn_id hasn't got any use here,
              * lets make use of it by passing the eventID/membershipTypeID to next level.
              * And change trxn_id to google-order-number before finishing db update */
 
@@ -221,12 +221,14 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
     $ids['contributionRecur'] = $ids['contributionPage'] = NULL;
 
     if ($input['component'] == "event") {
-      list($ids['event'], $ids['participant']) = explode(CRM_Core_DAO::VALUE_SEPARATOR,
+      list($ids['event'], $ids['participant']) = explode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         $contribution->trxn_id
       );
     }
     else {
-      list($ids['membership'], $ids['related_contact'], $ids['onbehalf_dupe_alert']) = explode(CRM_Core_DAO::VALUE_SEPARATOR,
+      list($ids['membership'], $ids['related_contact'], $ids['onbehalf_dupe_alert']) = explode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         $contribution->trxn_id
       );
 
@@ -357,7 +359,8 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
       }
 
       // get the payment processor id from contribution page
-      $paymentProcessorID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $paymentProcessorID = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_ContributionPage',
         $contribution->contribution_page_id,
         'payment_processor_id'
       );
@@ -367,7 +370,8 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         $eventID = $privateData['eventID'];
       }
       else {
-        list($eventID, $participantID) = explode(CRM_Core_DAO::VALUE_SEPARATOR,
+        list($eventID, $participantID) = explode(
+          CRM_Core_DAO::VALUE_SEPARATOR,
           $contribution->trxn_id
         );
       }
@@ -441,7 +445,8 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
     $mode = $mode ? 'test' : 'live';
 
 
-    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorID,
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment(
+      $paymentProcessorID,
       $mode
     );
 
@@ -452,8 +457,11 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
     $merchant_key = $paymentProcessor['password'];
     $server_type = ($mode == 'test') ? "sandbox" : '';
 
-    $response = new GoogleResponse($merchant_id, $merchant_key,
-      $xml_response, $server_type
+    $response = new GoogleResponse(
+      $merchant_id,
+      $merchant_key,
+      $xml_response,
+      $server_type
     );
     if (GOOGLE_DEBUG_PP) {
       CRM_Core_Error::debug_var('RESPONSE-ROOT', $response->root, TRUE, TRUE, 'Google');
@@ -471,90 +479,92 @@ class CRM_Core_Payment_GoogleIPN extends CRM_Core_Payment_BaseIPN {
         break;
 
       case "new-order-notification": {
-          $response->SendAck();
-          $ipn->newOrderNotify($data[$root], $privateData, $module);
-          break;
-        }
+        $response->SendAck();
+        $ipn->newOrderNotify($data[$root], $privateData, $module);
+        break;
+      }
       case "order-state-change-notification": {
-          $response->SendAck();
-          $new_financial_state = $data[$root]['new-financial-order-state']['VALUE'];
-          $new_fulfillment_order = $data[$root]['new-fulfillment-order-state']['VALUE'];
+        $response->SendAck();
+        $new_financial_state = $data[$root]['new-financial-order-state']['VALUE'];
+        $new_fulfillment_order = $data[$root]['new-fulfillment-order-state']['VALUE'];
 
-          switch ($new_financial_state) {
-            case 'CHARGEABLE':
-              $amount = $ipn->getAmount($orderNo);
-              if ($amount) {
-                  $response->SendChargeOrder($data[$root]['google-order-number']['VALUE'],
-                    $amount, $message_log
-                  );
-                  $response->SendProcessOrder($data[$root]['google-order-number']['VALUE'],
-                    $message_log
-                  );
-                }
-                break;
-
-              case 'CHARGED':
-              case 'PAYMENT_DECLINED':
-              case 'CANCELLED':
-                $ipn->orderStateChange($new_financial_state, $data[$root], $module);
-                break;
-
-              case 'REVIEWING':
-              case 'CHARGING':
-              case 'CANCELLED_BY_GOOGLE':
-                break;
-
-              default:
-                break;
+        switch ($new_financial_state) {
+          case 'CHARGEABLE':
+            $amount = $ipn->getAmount($orderNo);
+            if ($amount) {
+              $response->SendChargeOrder(
+                $data[$root]['google-order-number']['VALUE'],
+                $amount,
+                $message_log
+              );
+              $response->SendProcessOrder(
+                $data[$root]['google-order-number']['VALUE'],
+                $message_log
+              );
             }
-          }
-        case "charge-amount-notification":
-        case "chargeback-amount-notification":
-        case "refund-amount-notification":
-        case "risk-information-notification":
-          $response->SendAck();
-          break;
+            break;
 
-        default:
-          break;
+          case 'CHARGED':
+          case 'PAYMENT_DECLINED':
+          case 'CANCELLED':
+            $ipn->orderStateChange($new_financial_state, $data[$root], $module);
+            break;
+
+          case 'REVIEWING':
+          case 'CHARGING':
+          case 'CANCELLED_BY_GOOGLE':
+            break;
+
+          default:
+            break;
+        }
       }
-    }
+      case "charge-amount-notification":
+      case "chargeback-amount-notification":
+      case "refund-amount-notification":
+      case "risk-information-notification":
+        $response->SendAck();
+        break;
 
-    public function getInput(&$input, &$ids) {
-      if (!$this->getBillingID($ids)) {
-        return FALSE;
-      }
-
-      $billingID = $ids['billing'];
-      $lookup = ["first_name" => 'contact-name',
-        // "last-name" not available with google (every thing in contact-name)
-        "last_name" => 'last_name',
-        "street_address-{$billingID}" => 'address1',
-        "city-{$billingID}" => 'city',
-        "state-{$billingID}" => 'region',
-        "postal_code-{$billingID}" => 'postal-code',
-        "country-{$billingID}" => 'country-code',
-      ];
-
-      foreach ($lookup as $name => $googleName) {
-        $value = $dataRoot['buyer-billing-address'][$googleName]['VALUE'];
-        $input[$name] = $value ? $value : NULL;
-      }
-      return TRUE;
-    }
-
-    /**
-     * Converts the comma separated name-value pairs in <merchant-private-data>
-     * to an array of name-value pairs.
-     */
-    public static function stringToArray($str) {
-      $vars = $labels = [];
-      $labels = explode(',', $str);
-      foreach ($labels as $label) {
-        $terms = explode('=', $label);
-        $vars[$terms[0]] = $terms[1];
-      }
-      return $vars;
+      default:
+        break;
     }
   }
 
+  public function getInput(&$input, &$ids) {
+    if (!$this->getBillingID($ids)) {
+      return FALSE;
+    }
+
+    $billingID = $ids['billing'];
+    $lookup = ["first_name" => 'contact-name',
+      // "last-name" not available with google (every thing in contact-name)
+      "last_name" => 'last_name',
+      "street_address-{$billingID}" => 'address1',
+      "city-{$billingID}" => 'city',
+      "state-{$billingID}" => 'region',
+      "postal_code-{$billingID}" => 'postal-code',
+      "country-{$billingID}" => 'country-code',
+    ];
+
+    foreach ($lookup as $name => $googleName) {
+      $value = $dataRoot['buyer-billing-address'][$googleName]['VALUE'];
+      $input[$name] = $value ? $value : NULL;
+    }
+    return TRUE;
+  }
+
+  /**
+   * Converts the comma separated name-value pairs in <merchant-private-data>
+   * to an array of name-value pairs.
+   */
+  public static function stringToArray($str) {
+    $vars = $labels = [];
+    $labels = explode(',', $str);
+    foreach ($labels as $label) {
+      $terms = explode('=', $label);
+      $vars[$terms[0]] = $terms[1];
+    }
+    return $vars;
+  }
+}

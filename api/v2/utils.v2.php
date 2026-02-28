@@ -46,7 +46,7 @@ require_once 'api/api.php';
 function _civicrm_initialize() {
   require_once 'CRM/Core/Config.php';
   $config = CRM_Core_Config::singleton();
-  }
+}
 
 function civicrm_verify_mandatory(&$params, $daoName = NULL, $keys = [
   ]) {
@@ -173,18 +173,18 @@ function _civicrm_object_to_array(&$dao, &$values) {
  * @access public
  */
 function _civicrm_add_formatted_param(&$values, &$params) {
-  /* Crawl through the possible classes: 
-     * Contact 
-     *      Individual 
+  /* Crawl through the possible classes:
+     * Contact
+     *      Individual
      *      Household
      *      Organization
-     *          Location 
-     *              Address 
-     *              Email 
-     *              Phone 
-     *              IM 
+     *          Location
+     *              Address
+     *              Email
+     *              Phone
+     *              IM
      *      Note
-     *      Custom 
+     *      Custom
      */
 
 
@@ -318,7 +318,9 @@ function _civicrm_add_formatted_param(&$values, &$params) {
     }
 
     $websiteCount = count($params['website']);
-    _civicrm_store_values($websiteFields, $values,
+    _civicrm_store_values(
+      $websiteFields,
+      $values,
       $params['website'][++$websiteCount]
     );
 
@@ -409,7 +411,7 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
 
     if (!CRM_Utils_Array::arrayKeyExists($block, $fields)) {
       $daoName = 'CRM_Core_DAO_' . $block;
-      $fields[$block] =& $daoName::fields( );
+      $fields[$block] =& $daoName::fields();
     }
 
     $blockCnt = count($params[$name]);
@@ -419,7 +421,9 @@ function _civicrm_add_formatted_location_blocks(&$values, &$params) {
       $values['name'] = $values[$name];
     }
 
-    _civicrm_store_values($fields[$block], $values,
+    _civicrm_store_values(
+      $fields[$block],
+      $values,
       $params[$name][++$blockCnt]
     );
 
@@ -546,7 +550,8 @@ function _civicrm_required_formatted_contact(&$params) {
  * @param int   $dedupeRuleGroupID - the dedupe rule ID to use if present
  *
  */
-function _civicrm_duplicate_formatted_contact(&$params,
+function _civicrm_duplicate_formatted_contact(
+  &$params,
   $dedupeRuleGroupID = NULL
 ) {
   $id = CRM_Utils_Array::value('id', $params);
@@ -565,9 +570,11 @@ function _civicrm_duplicate_formatted_contact(&$params,
         return civicrm_create_error("Found contact have external id or contact id already deleted");
       }
 
-      $error = CRM_Core_Error::createError("Found matching contacts: $contact->id",
+      $error = CRM_Core_Error::createError(
+        "Found matching contacts: $contact->id",
         CRM_Core_Error::DUPLICATE_CONTACT,
-        'Fatal', $contact->id
+        'Fatal',
+        $contact->id
       );
       return civicrm_create_error($error->pop());
     }
@@ -578,7 +585,8 @@ function _civicrm_duplicate_formatted_contact(&$params,
     if (isset($params['check_permission'])) {
       $dedupeParams['check_permission'] = $params['check_permission'];
     }
-    $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams,
+    $ids = CRM_Dedupe_Finder::dupesByParams(
+      $dedupeParams,
       $params['contact_type'],
       'Strict',
       [],
@@ -587,9 +595,11 @@ function _civicrm_duplicate_formatted_contact(&$params,
 
     if (!empty($ids)) {
       $ids = CRM_Utils_Array::implode(',', $ids);
-      $error = CRM_Core_Error::createError("Found matching contacts: $ids",
+      $error = CRM_Core_Error::createError(
+        "Found matching contacts: $ids",
         CRM_Core_Error::DUPLICATE_CONTACT,
-        'Fatal', $ids
+        'Fatal',
+        $ids
       );
       return civicrm_create_error($error->pop());
     }
@@ -635,10 +645,12 @@ function _civicrm_validate_formatted_contact(&$params) {
     foreach ($params['custom'] as $key => $custom) {
       if (is_array($custom)) {
         $valid = CRM_Core_BAO_CustomValue::typecheck(
-          $custom['type'], $custom['value']
+          $custom['type'],
+          $custom['value']
         );
         if (!$valid) {
-          return civicrm_create_error('Invalid value for custom field \'' .
+          return civicrm_create_error(
+            'Invalid value for custom field \'' .
             $custom['name'] . '\''
           );
         }
@@ -666,8 +678,13 @@ function _civicrm_custom_format_params(&$params, &$values, $extends, $entityId =
   foreach ($params as $key => $value) {
     list($customFieldID, $customValueID) = CRM_Core_BAO_CustomField::getKeyID($key, TRUE);
     if ($customFieldID) {
-      CRM_Core_BAO_CustomField::formatCustomField($customFieldID, $values['custom'],
-        $value, $extends, $customValueID, $entityId
+      CRM_Core_BAO_CustomField::formatCustomField(
+        $customFieldID,
+        $values['custom'],
+        $value,
+        $extends,
+        $customValueID,
+        $entityId
       );
     }
   }
@@ -688,19 +705,20 @@ function _civicrm_custom_format_params(&$params, &$values, $extends, $entityId =
  */
 function _civicrm_check_required_fields(&$params, $daoName, $throwException = FALSE) {
   if (isset($params['extends'])) {
-    if (($params['extends'] == 'Activity' ||
+    if ((
+      $params['extends'] == 'Activity' ||
         $params['extends'] == 'Phonecall' ||
         $params['extends'] == 'Meeting' ||
         $params['extends'] == 'Group' ||
         $params['extends'] == 'Contribution'
-      ) &&
+    ) &&
       ($params['style'] == 'Tab')
     ) {
       return civicrm_create_error(ts("Can not create Custom Group in Tab for " . $params['extends']));
     }
   }
 
-  require_once (str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
+  require_once(str_replace('_', DIRECTORY_SEPARATOR, $daoName) . ".php");
 
   $dao = new $daoName();
   $fields = $dao->fields();
@@ -764,7 +782,8 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -791,7 +810,8 @@ function _civicrm_participant_formatted_param(&$params, &$values, $create = FALS
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_event WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_event WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -916,7 +936,8 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -1006,15 +1027,15 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
         }
         break;
 
-      case 'contribution_type':            
-        $contriTypes = CRM_Contribute_PseudoConstant::contributionType( );
-        foreach ( $contriTypes as $val => $type ) {
-          if ( strtolower( $value ) == strtolower( $type ) ) {
+      case 'contribution_type':
+        $contriTypes = CRM_Contribute_PseudoConstant::contributionType();
+        foreach ($contriTypes as $val => $type) {
+          if (strtolower($value) == strtolower($type)) {
             $values['contribution_type_id'] = $val;
             break;
           }
         }
-        if ( !CRM_Utils_Array::value( 'contribution_type_id', $values ) ) {
+        if (!CRM_Utils_Array::value('contribution_type_id', $values)) {
           $errorMsg = ts('Invalid value for field(s)').': '. ts("Contribution Types").'('.$value.')';
           return civicrm_create_error($errorMsg);
         }
@@ -1252,7 +1273,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
           else {
             // get the contact id from dupicate contact rule, if more than one contact is returned
             // we should return error, since current interface allows only one-one mapping
-            foreach($params['pcp_creator'] as $k => $v) {
+            foreach ($params['pcp_creator'] as $k => $v) {
               $newk = preg_replace('/^pcp_/i', '', $k);
               $pcpParams[$newk] = $v;
             }
@@ -1280,7 +1301,7 @@ function _civicrm_contribute_formatted_param(&$params, &$values, $create = FALSE
               // multiple pcp found
               return civicrm_create_error(ts("Multiple matching contact records detected for this row. The contribution was not imported"), 'pcp_creator');
             }
-            elseif(!empty($dao->id)) {
+            elseif (!empty($dao->id)) {
               $values['pcp_id'] = $dao->id;
             }
           }
@@ -1364,7 +1385,8 @@ function _civicrm_membership_formatted_param(&$params, &$values, $create = FALSE
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -1716,4 +1738,3 @@ function _civicrm_add_custom_formatted_param($customFieldID, $key, $field, &$for
       break;
   }
 }
-

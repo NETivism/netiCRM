@@ -31,8 +31,7 @@
  * $Id$
  *
  */
-              class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO
-{
+class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
@@ -46,14 +45,14 @@
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@
    * @var boolean
    * @static
    */
-  public static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Unique Contribution Recur ID
    *
    * @var int unsigned
@@ -222,14 +221,13 @@
    * @var datetime
    */
   public $last_execute_date;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_contribution_recur
-   */
-  public function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_contribution_recur
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -238,8 +236,7 @@
    * @access public
    * @return array
    */
-  public function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'contact_id' => 'civicrm_contact:id',
@@ -248,47 +245,45 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'processor_id', 'civicrm_payment_processor', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'processor_id', 'civicrm_payment_processor', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  public static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                     'FKClassName' => 'CRM_Contact_DAO_Contact',
         ] ,
         'amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Amount') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'currency' => [
           'name' => 'currency',
@@ -309,7 +304,7 @@
           'name' => 'frequency_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Frequency Interval') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'installments' => [
           'name' => 'installments',
@@ -320,13 +315,13 @@
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'create_date' => [
           'name' => 'create_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Create Date') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'modified_date' => [
           'name' => 'modified_date',
@@ -372,28 +367,28 @@
           'name' => 'contribution_status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Recurring Contribution Status') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_contribution_recur.contribution_status_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             'default' => '',
           ] ,
         'is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_contribution_recur.is_test',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'cycle_day' => [
           'name' => 'cycle_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Cycle Day') ,
-          'required' => true,
+          'required' => TRUE,
                   'default' => '',
           ] ,
         'next_sched_contribution' => [
@@ -415,7 +410,7 @@
           'name' => 'auto_renew',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Auto Renew') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'last_execute_date' => [
           'name' => 'last_execute_date',
@@ -432,18 +427,16 @@
    * @access public
    * @return string
    */
-  public static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  public function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -452,21 +445,21 @@
    * @access public
    * return array
    */
-  public static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution_recur'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_import;
   }
   /**
@@ -475,21 +468,21 @@
    * @access public
    * return array
    */
-  public static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution_recur'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_export;
   }
   /**
@@ -497,8 +490,7 @@
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {
+  public static function &getEnums() {
     static $enums = [
                                                                     'frequency_unit',
                                                                                                                                                                                                                                                     ];
@@ -512,9 +504,8 @@
    *
    * @return string  the display value of the enum
    */
-  public static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
                                                                     'frequency_unit' => [
@@ -533,8 +524,7 @@
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  public static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Contribute_DAO_ContributionRecur::getEnums();
     foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {

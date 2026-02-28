@@ -106,7 +106,9 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
     ];
 
     // make sure a malicious POST does not change these on reserved statuses
-    if ($this->_isReserved)unset($params['name'], $params['class'], $params['is_active']);
+    if ($this->_isReserved) {
+      unset($params['name'], $params['class'], $params['is_active']);
+    }
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
 
@@ -138,4 +140,3 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
     }
   }
 }
-

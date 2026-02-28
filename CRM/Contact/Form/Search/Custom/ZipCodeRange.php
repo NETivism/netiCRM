@@ -46,13 +46,15 @@ class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Searc
   }
 
   public function buildForm(&$form) {
-    $form->add('text',
+    $form->add(
+      'text',
       'postal_code_low',
       ts('Postal Code Start'),
       TRUE
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'postal_code_high',
       ts('Postal Code End'),
       TRUE
@@ -75,7 +77,10 @@ class CRM_Contact_Form_Search_Custom_ZipCodeRange extends CRM_Contact_Form_Searc
     return $summary;
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -84,9 +89,13 @@ contact_a.sort_name    as sort_name  ,
 email.email            as email   ,
 address.postal_code    as postal_code
 ";
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
@@ -103,17 +112,24 @@ LEFT JOIN civicrm_email   email   ON ( email.contact_id = contact_a.id AND
   public function where($includeContactIDs = FALSE) {
     $params = [];
 
-    $low = CRM_Utils_Array::value('postal_code_low',
+    $low = CRM_Utils_Array::value(
+      'postal_code_low',
       $this->_formValues
     );
-    $high = CRM_Utils_Array::value('postal_code_high',
+    $high = CRM_Utils_Array::value(
+      'postal_code_high',
       $this->_formValues
     );
     if ($low == NULL || $high == NULL) {
-      return CRM_Core_Error::statusBounce(ts('Please provide start and end postal codes'),
-        CRM_Utils_System::url('civicrm/contact/search/custom',
+      return CRM_Core_Error::statusBounce(
+        ts('Please provide start and end postal codes'),
+        CRM_Utils_System::url(
+          'civicrm/contact/search/custom',
           "reset=1&csid={$this->_formValues['customSearchID']}",
-          FALSE, NULL, FALSE, TRUE
+          FALSE,
+          NULL,
+          FALSE,
+          TRUE
         )
       );
     }
@@ -134,4 +150,3 @@ LEFT JOIN civicrm_email   email   ON ( email.contact_id = contact_a.id AND
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 }
-

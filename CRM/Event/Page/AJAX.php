@@ -147,7 +147,8 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
       CRM_Utils_System::civiExit();
     }
 
-    $defaultRoleId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $defaultRoleId = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $eventID,
       'default_role_id',
       'id'
@@ -172,4 +173,3 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
     CRM_Utils_System::civiExit();
   }
 }
-

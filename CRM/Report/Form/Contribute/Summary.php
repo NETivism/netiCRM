@@ -465,9 +465,10 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
               ) {
 
                 $append = "YEAR({$field['dbAlias']}),";
-                if (in_array(strtolower($this->_params['group_bys_freq'][$fieldName]),
-                    ['year']
-                  )) {
+                if (in_array(
+                  strtolower($this->_params['group_bys_freq'][$fieldName]),
+                  ['year']
+                )) {
                   $append = '';
                 }
                 $groupBy[] = "$append {$this->_params['group_bys_freq'][$fieldName]}({$field['dbAlias']})";
@@ -574,27 +575,47 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
 
         switch (strtolower($this->_params['group_bys_freq']['receive_date'])) {
           case 'month':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'] + 1,
-                $dateEnd['d'] - 1, $dateEnd['Y']
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'] + 1,
+              $dateEnd['d'] - 1,
+              $dateEnd['Y']
+            ));
             break;
 
           case 'year':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'],
-                $dateEnd['d'] - 1, $dateEnd['Y'] + 1
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'],
+              $dateEnd['d'] - 1,
+              $dateEnd['Y'] + 1
+            ));
             break;
 
           case 'yearweek':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'],
-                $dateEnd['d'] + 6, $dateEnd['Y']
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'],
+              $dateEnd['d'] + 6,
+              $dateEnd['Y']
+            ));
             break;
 
           case 'quarter':
-            $dateEnd = date("Ymd", mktime(0, 0, 0, $dateEnd['M'] + 3,
-                $dateEnd['d'] - 1, $dateEnd['Y']
-              ));
+            $dateEnd = date("Ymd", mktime(
+              0,
+              0,
+              0,
+              $dateEnd['M'] + 3,
+              $dateEnd['d'] - 1,
+              $dateEnd['Y']
+            ));
             break;
         }
         $query = "reset=1&force=1&receive_date_from={$dateStart}&receive_date_to={$dateEnd}";
@@ -607,7 +628,8 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
           }
           $query .= "&contribution_status_id_op={$this->_params['contribution_status_id_op']}&contribution_status_id_value={$status_id_value}";
         }
-        $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contribute/detail',
           $query,
           $this->_absoluteUrl,
           $this->_id
@@ -630,9 +652,11 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
 
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&state_province_id_op=in&state_province_id_value={$value}",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_address_state_province_id_link'] = $url;
           $rows[$rowNum]['civicrm_address_state_province_id_hover'] = ts('List all contribution(s) for this state.');
@@ -644,10 +668,12 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&" .
             "country_id_op=in&country_id_value={$value}",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_address_country_id_link'] = $url;
           $rows[$rowNum]['civicrm_address_country_id_hover'] = ts('List all contribution(s) for this country.');
@@ -672,14 +698,17 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
         if (!empty($this->_params['contribution_status_id_op']) && !empty($this->_params['contribution_status_id_value'])) {
           if (is_array($this->_params['contribution_status_id_value'])) {
             $status_id_value = CRM_Utils_Array::implode(',', $this->_params['contribution_status_id_value']);
-          } else {
+          }
+          else {
             $status_id_value = $this->_params['contribution_status_id_value'];
           }
           $query .= "&contribution_status_id_op={$this->_params['contribution_status_id_op']}&contribution_status_id_value={$status_id_value}";
         }
-        $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contribute/detail',
           $query,
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("Lists detailed contribution(s) for this record.");
@@ -700,4 +729,3 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     }
   }
 }
-

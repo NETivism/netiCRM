@@ -44,7 +44,12 @@ class CRM_Contact_Form_Search_Criteria {
       $contactTypes = CRM_Contact_BAO_ContactType::getSelectElements();
 
       if ($contactTypes) {
-        $form->add('select', 'contact_type', ts('Contact Type(s)'), $contactTypes, FALSE,
+        $form->add(
+          'select',
+          'contact_type',
+          ts('Contact Type(s)'),
+          $contactTypes,
+          FALSE,
           ['id' => 'contact_type', 'multiple' => 'multiple', 'title' => ts('- select -')]
         );
       }
@@ -53,7 +58,12 @@ class CRM_Contact_Form_Search_Criteria {
     if ($form->_searchOptions['groups']) {
       // multiselect for groups
       if ($form->_group) {
-        $form->add('select', 'group', ts('Groups'), $form->_group, FALSE,
+        $form->add(
+          'select',
+          'group',
+          ts('Groups'),
+          $form->_group,
+          FALSE,
           ['id' => 'group', 'multiple' => 'multiple', 'title' => ts('- select -')]
         );
       }
@@ -65,7 +75,12 @@ class CRM_Contact_Form_Search_Criteria {
       $contactTags = CRM_Core_BAO_Tag::getTags();
 
       if ($contactTags) {
-        $form->add('select', 'contact_tags', ts('Tags'), $contactTags, FALSE,
+        $form->add(
+          'select',
+          'contact_tags',
+          ts('Tags'),
+          $contactTags,
+          FALSE,
           ['id' => 'contact_tags', 'multiple' => 'multiple', 'title' => ts('- select -'), 'style' => 'width:160px']
         );
       }
@@ -136,7 +151,8 @@ class CRM_Contact_Form_Search_Criteria {
       }
     }
 
-    $form->addElement('select',
+    $form->addElement(
+      'select',
       'uf_group_id',
       ts('Search Views'),
       ['0' => ts('- default view -')] + $searchProfiles
@@ -146,14 +162,16 @@ class CRM_Contact_Form_Search_Criteria {
     $componentModes = $form->getModeSelect();
 
     if (count($componentModes) > 1) {
-      $form->addElement('select',
+      $form->addElement(
+        'select',
         'component_mode',
         ts('Display Results As'),
         $componentModes
       );
     }
 
-    $form->addElement('select',
+    $form->addElement(
+      'select',
       'operator',
       ts('Search Operator'),
       ['AND' => ts('AND'),
@@ -174,7 +192,8 @@ class CRM_Contact_Form_Search_Criteria {
       }
     }
 
-    $form->addElement('select',
+    $form->addElement(
+      'select',
       'display_relationship_type',
       ts('Display Results as Relationship'),
       $rSelect
@@ -183,7 +202,8 @@ class CRM_Contact_Form_Search_Criteria {
     // checkboxes for DO NOT phone, email, mail
     // we take labels from SelectValues
     $t = CRM_Core_SelectValues::privacy();
-    $form->add('select',
+    $form->add(
+      'select',
       'privacy_options',
       ts('Privacy'),
       $t,
@@ -195,7 +215,8 @@ class CRM_Contact_Form_Search_Criteria {
       ]
     );
 
-    $form->addElement('select',
+    $form->addElement(
+      'select',
       'privacy_operator',
       ts('Operator'),
       ['OR' => ts('OR'),
@@ -303,10 +324,16 @@ class CRM_Contact_Form_Search_Criteria {
       }
 
       if ($addressOptions['postal_code']) {
-        $form->addElement('text', 'postal_code_low', ts('Range-From'),
+        $form->addElement(
+          'text',
+          'postal_code_low',
+          ts('Range-From'),
           CRM_Utils_Array::value('postal_code', $attributes)
         );
-        $form->addElement('text', 'postal_code_high', ts('To'),
+        $form->addElement(
+          'text',
+          'postal_code_high',
+          ts('To'),
           CRM_Utils_Array::value('postal_code', $attributes)
         );
       }
@@ -342,10 +369,13 @@ class CRM_Contact_Form_Search_Criteria {
       foreach ($groupDetails as $group) {
         foreach ($group['fields'] as $field) {
           $elementName = 'custom_' . $field['id'];
-          CRM_Core_BAO_CustomField::addQuickFormElement($form,
+          CRM_Core_BAO_CustomField::addQuickFormElement(
+            $form,
             $elementName,
             $field['id'],
-            FALSE, FALSE, TRUE
+            FALSE,
+            FALSE,
+            TRUE
           );
         }
       }
@@ -407,10 +437,13 @@ class CRM_Contact_Form_Search_Criteria {
         foreach ($group['fields'] as $field) {
           $fieldId = $field['id'];
           $elementName = 'custom_' . $fieldId;
-          CRM_Core_BAO_CustomField::addQuickFormElement($form,
+          CRM_Core_BAO_CustomField::addQuickFormElement(
+            $form,
             $elementName,
             $fieldId,
-            FALSE, FALSE, TRUE
+            FALSE,
+            FALSE,
+            TRUE
           );
         }
       }
@@ -454,10 +487,13 @@ class CRM_Contact_Form_Search_Criteria {
    */
   public static function custom(&$form) {
     $form->add('hidden', 'hidden_custom', 1);
-    $extends = array_merge(['Contact', 'Individual', 'Household', 'Organization'],
+    $extends = array_merge(
+      ['Contact', 'Individual', 'Household', 'Organization'],
       CRM_Contact_BAO_ContactType::subTypes()
     );
-    $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE,
+    $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(
+      NULL,
+      TRUE,
       $extends
     );
 
@@ -472,10 +508,13 @@ class CRM_Contact_Form_Search_Criteria {
         $fieldId = $field['id'];
         $elementName = 'custom_' . $fieldId;
 
-        CRM_Core_BAO_CustomField::addQuickFormElement($form,
+        CRM_Core_BAO_CustomField::addQuickFormElement(
+          $form,
           $elementName,
           $fieldId,
-          FALSE, FALSE, TRUE
+          FALSE,
+          FALSE,
+          TRUE
         );
       }
     }
@@ -490,4 +529,3 @@ class CRM_Contact_Form_Search_Criteria {
     CRM_Case_BAO_Query::buildSearchForm($form);
   }
 }
-

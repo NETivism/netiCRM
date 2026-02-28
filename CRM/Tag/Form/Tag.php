@@ -50,7 +50,8 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
    * @var int
    */
   protected $_entityID;
-  protected $_entityTable; public function preProcess() {
+  protected $_entityTable;
+  public function preProcess() {
     if ($this->get('entityID')) {
       $this->_entityID = $this->get('entityID');
     }
@@ -117,7 +118,8 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
       $this->freeze();
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Update Tags'),
             'isDefault' => TRUE,
@@ -150,4 +152,3 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
   }
   //end of function
 }
-

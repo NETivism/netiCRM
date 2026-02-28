@@ -94,7 +94,8 @@ class CRM_Case_Info extends CRM_Core_Component_Info {
       CRM_Core_Permission::check('add contacts')
     ) {
 
-      $atype = CRM_Core_OptionGroup::getValue('activity_type',
+      $atype = CRM_Core_OptionGroup::getValue(
+        'activity_type',
         'Open Case',
         'name'
       );
@@ -108,4 +109,3 @@ class CRM_Case_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

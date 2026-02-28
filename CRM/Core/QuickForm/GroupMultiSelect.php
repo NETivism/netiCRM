@@ -295,4 +295,3 @@ class CRM_Core_QuickForm_GroupMultiSelect extends CRM_Core_QuickForm_NestedAdvMu
     return $strHtml;
   }
 }
-

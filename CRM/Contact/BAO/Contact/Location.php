@@ -182,9 +182,9 @@ WHERE civicrm_contact.id IN $idString ";
           $dao->longitude = $reverseGeoDecode['geo_code_2'];
         }
       }
-      if (empty($dao->latitude) || empty($dao->longitude)){
+      if (empty($dao->latitude) || empty($dao->longitude)) {
         continue;
-      } 
+      }
       $location['contactID'] = $dao->contact_id;
       $location['displayName'] = $dao->display_name;
       $location['photo'] = $dao->image_url;
@@ -208,11 +208,13 @@ WHERE civicrm_contact.id IN $idString ";
       $location['url'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $dao->contact_id);
       $location['location_type'] = $dao->location_type;
 
-      $location['image'] = CRM_Contact_BAO_Contact_Utils::getImage($dao->contact_sub_type ?? $dao->contact_type, $imageUrlOnly, $dao->contact_id
+      $location['image'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $dao->contact_sub_type ?? $dao->contact_type,
+        $imageUrlOnly,
+        $dao->contact_id
       );
       $locations[] = $location;
     }
     return $locations;
   }
 }
-

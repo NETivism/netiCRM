@@ -40,7 +40,9 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     parent::__construct($formValues);
 
     if (!isset($formValues['state_province_id'])) {
-      $this->_stateID = CRM_Utils_Request::retrieve('stateID', 'Integer',
+      $this->_stateID = CRM_Utils_Request::retrieve(
+        'stateID',
+        'Integer',
         CRM_Core_DAO::$_nullObject
       );
       if ($this->_stateID) {
@@ -57,7 +59,8 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
 
   public function buildForm(&$form) {
 
-    $form->add('text',
+    $form->add(
+      'text',
       'household_name',
       ts('Household Name'),
       TRUE
@@ -85,7 +88,10 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     return $summary;
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -94,9 +100,13 @@ contact_a.contact_type as contact_type,
 contact_a.sort_name    as sort_name,
 state_province.name    as state_province
 ";
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
@@ -117,7 +127,8 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
 
     $count = 1;
     $clause = [];
-    $name = CRM_Utils_Array::value('household_name',
+    $name = CRM_Utils_Array::value(
+      'household_name',
       $this->_formValues
     );
     if ($name != NULL) {
@@ -129,7 +140,8 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
       $count++;
     }
 
-    $state = CRM_Utils_Array::value('state_province_id',
+    $state = CRM_Utils_Array::value(
+      'state_province_id',
       $this->_formValues
     );
     if (!$state &&
@@ -163,4 +175,3 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
     $row['sort_name'] .= ' ( altered )';
   }
 }
-

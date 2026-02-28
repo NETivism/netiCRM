@@ -70,7 +70,7 @@ function civicrm_api3_membership_type_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -118,4 +118,3 @@ function civicrm_api3_membership_type_delete($params) {
   $memberDelete = CRM_Member_BAO_MembershipType::del($params['id']);
   return $memberDelete ? civicrm_api3_create_success($memberDelete) : civicrm_api3_create_error('Error while deleting membership type. id : ' . $params['id']);
 }
-

@@ -87,7 +87,8 @@ class CRM_Case_Form_EditClient extends CRM_Core_Form {
   public function buildQuickForm() {
     $this->add('text', 'change_client_id', ts('Select Contact'));
     $this->add('hidden', 'contact_id', '', ['id' => 'contact_id']);
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->getButtonName('next', 'edit_client'),
       ts('Reassign Case'),
       ['class' => 'form-submit-inline',
@@ -95,7 +96,8 @@ class CRM_Case_Form_EditClient extends CRM_Core_Form {
       ]
     );
 
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->getButtonName('cancel', 'edit_client'),
       ts('Cancel'),
       ['class' => 'form-submit-inline']
@@ -117,11 +119,11 @@ class CRM_Case_Form_EditClient extends CRM_Core_Form {
     $mainCaseId = CRM_Case_BAO_Case::mergeCases($params['contact_id'], $this->_caseId, $this->_contactId, NULL, TRUE);
 
     // user context
-    $url = CRM_Utils_System::url('civicrm/contact/view/case',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/case',
       "reset=1&action=view&cid={$params['contact_id']}&id={$mainCaseId[0]}&show=1"
     );
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext($url);
   }
 }
-

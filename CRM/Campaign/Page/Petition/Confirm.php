@@ -110,8 +110,11 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
 
 
 
-    CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus($contact_id, $se->group_id,
-      'Email', $ce->id
+    CRM_Contact_BAO_GroupContact::updateGroupMembershipStatus(
+      $contact_id,
+      $se->group_id,
+      'Email',
+      $ce->id
     );
 
 
@@ -119,4 +122,3 @@ class CRM_Campaign_Page_Petition_Confirm extends CRM_Core_Page {
     $bao->confirmSignature($activity_id, $contact_id, $petition_id);
   }
 }
-

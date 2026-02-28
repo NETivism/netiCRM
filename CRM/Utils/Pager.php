@@ -49,7 +49,7 @@ class CRM_Utils_Pager extends Pager_Sliding {
   /**
    * constants for static parameters of the pager
    */
-  public CONST ROWCOUNT = 50, PAGE_ID = 'crmPID', PAGE_ID_TOP = 'crmPID', PAGE_ID_BOTTOM = 'crmPID_B', PAGE_ROWCOUNT = 'crmRowCount';
+  public const ROWCOUNT = 50, PAGE_ID = 'crmPID', PAGE_ID_TOP = 'crmPID', PAGE_ID_BOTTOM = 'crmPID_B', PAGE_ROWCOUNT = 'crmRowCount';
 
   /**
    * the output of the pager. This is a name/value array with various keys
@@ -279,7 +279,8 @@ class CRM_Utils_Pager extends Pager_Sliding {
   public function getPerPageLink($perPage) {
     if ($perPage != $this->_perPage) {
       $href = CRM_Utils_System::makeURL(self::PAGE_ROWCOUNT) . $perPage;
-      $link = sprintf('<a href="%s" %s>%s</a>',
+      $link = sprintf(
+        '<a href="%s" %s>%s</a>',
         $href,
         $this->_classString,
         $perPage
@@ -303,7 +304,7 @@ class CRM_Utils_Pager extends Pager_Sliding {
   public function _renderLink($altText, $linkText) {
     if ($this->_httpMethod == 'GET') {
       $query = [];
-      foreach($this->_linkData as $key => $val) {
+      foreach ($this->_linkData as $key => $val) {
         $val = CRM_Utils_String::xssFilter($val);
         $key = CRM_Utils_String::xssFilter($key);
         if ($key === 'q') {
@@ -319,7 +320,8 @@ class CRM_Utils_Pager extends Pager_Sliding {
       if (CRM_Utils_Array::arrayKeyExists($this->_urlVar, $this->_linkData)) {
         $onclick = str_replace('%d', $this->_linkData[$this->_urlVar], $this->_onclick);
       }
-      return sprintf('<a href="%s"%s%s%s%s title="%s">%s</a>',
+      return sprintf(
+        '<a href="%s"%s%s%s%s title="%s">%s</a>',
         htmlentities($this->_url . $href, ENT_COMPAT, 'UTF-8'),
         empty($this->_classString) ? '' : ' '.$this->_classString,
         empty($this->_attributes)  ? '' : ' '.$this->_attributes,
@@ -334,7 +336,8 @@ class CRM_Utils_Pager extends Pager_Sliding {
       if (!empty($_GET)) {
         $href .= '?' . $this->_http_build_query_wrapper($_GET);
       }
-      return sprintf("<a href='javascript:void(0)' onclick='%s'%s%s%s title='%s'>%s</a>",
+      return sprintf(
+        "<a href='javascript:void(0)' onclick='%s'%s%s%s title='%s'>%s</a>",
         $this->_generateFormOnClick($href, $this->_linkData),
         empty($this->_classString) ? '' : ' '.$this->_classString,
         empty($this->_attributes)  ? '' : ' '.$this->_attributes,
@@ -346,4 +349,3 @@ class CRM_Utils_Pager extends Pager_Sliding {
     return '';
   }
 }
-

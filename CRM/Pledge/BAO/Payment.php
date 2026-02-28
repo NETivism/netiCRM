@@ -118,9 +118,14 @@ WHERE     pledge_id = %1
         $dayOfWeek = date('w', mktime(0, 0, 0, $date['month'], $date['day'], $date['year']));
         $frequencyDay = $params['frequency_day'] - $dayOfWeek;
 
-        $scheduleDate = explode("-", date('n-j-Y', mktime(0, 0, 0, $date['month'],
-              $date['day'] + $frequencyDay, $date['year']
-            )));
+        $scheduleDate = explode("-", date('n-j-Y', mktime(
+          0,
+          0,
+          0,
+          $date['month'],
+          $date['day'] + $frequencyDay,
+          $date['year']
+        )));
         $date['month'] = $scheduleDate[0];
         $date['day'] = $scheduleDate[1];
         $date['year'] = $scheduleDate[2];
@@ -141,9 +146,11 @@ WHERE     pledge_id = %1
     $newDate = date('YmdHis', mktime(0, 0, 0, $date['month'], $date['day'], $date['year']));
 
     for ($i = 1; $i < $params['installments']; $i++) {
-      $prevScheduledDate[$i + 1] = CRM_Utils_Date::format(CRM_Utils_Date::intervalAdd($params['frequency_unit'],
-          $i * ($params['frequency_interval']), $newDate
-        ));
+      $prevScheduledDate[$i + 1] = CRM_Utils_Date::format(CRM_Utils_Date::intervalAdd(
+        $params['frequency_unit'],
+        $i * ($params['frequency_interval']),
+        $newDate
+      ));
       if (CRM_Utils_Date::overdue($prevScheduledDate[$i + 1], $now)) {
         $statues[$i + 1] = array_search('Overdue', $contributionStatus);
       }
@@ -321,7 +328,8 @@ WHERE     pledge_id = %1
    *
    * @return int $newStatus, updated status id (or 0)
    */
-  public static function updatePledgePaymentStatus($pledgeID,
+  public static function updatePledgePaymentStatus(
+    $pledgeID,
     $paymentIDs = NULL,
     $paymentStatusID = NULL,
     $pledgeStatusID = NULL,
@@ -336,7 +344,8 @@ WHERE     pledge_id = %1
     // if we get do not get contribution id means we are editing the scheduled payment.
     if (!empty($paymentIDs)) {
       $payments = CRM_Utils_Array::implode(',', $paymentIDs);
-      $paymentContributionId = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
+      $paymentContributionId = CRM_Core_DAO::getFieldValue(
+        'CRM_Pledge_DAO_Payment',
         $payments,
         'contribution_id',
         'id'
@@ -356,7 +365,8 @@ WHERE     pledge_id = %1
     }
     if (!empty($paymentIDs) && $actualAmount) {
       $payments = CRM_Utils_Array::implode(',', $paymentIDs);
-      $pledgeScheduledAmount = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
+      $pledgeScheduledAmount = CRM_Core_DAO::getFieldValue(
+        'CRM_Pledge_DAO_Payment',
         $payments,
         'scheduled_amount',
         'id'
@@ -364,7 +374,8 @@ WHERE     pledge_id = %1
 
       $pledgeStatusId = self::calculatePledgeStatus($pledgeID);
       // Actual Pledge Amount
-      $actualPledgeAmount = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Pledge',
+      $actualPledgeAmount = CRM_Core_DAO::getFieldValue(
+        'CRM_Pledge_DAO_Pledge',
         $pledgeID,
         'amount',
         'id'
@@ -390,9 +401,11 @@ WHERE     pledge_id = %1
           $date['month'] = (int) substr($scheduled_date, 4, 2);
           $date['day'] = (int) substr($scheduled_date, 6, 2);
           $newDate = date('YmdHis', mktime(0, 0, 0, $date['month'], $date['day'], $date['year']));
-          $ScheduledDate = CRM_Utils_Date::format(CRM_Utils_Date::intervalAdd($pledgeFrequencyUnit,
-              $pledgeFrequencyInterval, $newDate
-            ));
+          $ScheduledDate = CRM_Utils_Date::format(CRM_Utils_Date::intervalAdd(
+            $pledgeFrequencyUnit,
+            $pledgeFrequencyInterval,
+            $newDate
+          ));
           $pledgeParams = [
             'status_id' => array_search('Pending', $allStatus),
             'pledge_id' => $pledgeID,
@@ -411,7 +424,8 @@ WHERE     pledge_id = %1
       }
       elseif (!$adjustTotalAmount) {
         // not last schedule amount and also not selected to adjust Total
-        $paymentContributionId = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
+        $paymentContributionId = CRM_Core_DAO::getFieldValue(
+          'CRM_Pledge_DAO_Payment',
           $payments,
           'contribution_id',
           'id'
@@ -664,4 +678,3 @@ LIMIT 0, %2
     }
   }
 }
-

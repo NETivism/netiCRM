@@ -42,20 +42,23 @@ class CRM_Event_Page_ParticipantListing extends CRM_Core_Page {
 
   protected $_eventTitle;
 
-  protected $_pager; public function preProcess() {
+  protected $_pager;
+  public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
 
     // ensure that there is a particpant type for this
-    $this->_participantListingID = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $this->_participantListingID = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $this->_id,
       'participant_listing_id'
     );
     if (!$this->_participantListingID) {
-       return CRM_Core_Error::statusBounce(ts("The Participant Listing feature is not currently enabled for this event."));
+      return CRM_Core_Error::statusBounce(ts("The Participant Listing feature is not currently enabled for this event."));
     }
 
     // retrieve Event Title and include it in page title
-    $this->_eventTitle = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $this->_eventTitle = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $this->_id,
       'title'
     );
@@ -70,7 +73,8 @@ class CRM_Event_Page_ParticipantListing extends CRM_Core_Page {
 
     // get the class name from the participantListingID
 
-    $className = CRM_Core_OptionGroup::getValue('participant_listing',
+    $className = CRM_Core_OptionGroup::getValue(
+      'participant_listing',
       $this->_participantListingID,
       'value',
       'Integer',
@@ -78,16 +82,18 @@ class CRM_Event_Page_ParticipantListing extends CRM_Core_Page {
     );
 
     if ($className == 'CRM_Event_Page_ParticipantListing') {
-       return CRM_Core_Error::statusBounce(ts("Participant listing code file cannot be '%1'",
-          [1 => $className]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        "Participant listing code file cannot be '%1'",
+        [1 => $className]
+      ));
     }
 
-    $classFile = str_replace('_',
+    $classFile = str_replace(
+      '_',
       DIRECTORY_SEPARATOR,
       $className
     ) . '.php';
-    $error = include_once ($classFile);
+    $error = include_once($classFile);
     if ($error == FALSE) {
       CRM_Core_Error::fatal('Participant listing code file: ' . $classFile . ' does not exist. Please verify your custom particpant listing settings in CiviCRM administrative panel.');
     }
@@ -98,4 +104,3 @@ class CRM_Event_Page_ParticipantListing extends CRM_Core_Page {
     $participantListingClass->run();
   }
 }
-

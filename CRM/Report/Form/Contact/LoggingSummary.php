@@ -52,7 +52,8 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
    */
   public $_orderBy;
   public $_where;
-  private $loggingDB; public function __construct() {
+  private $loggingDB;
+  public function __construct() {
     // don’t display the ‘Add these Contacts to Group’ button
     $this->_add2groupSupported = FALSE;
 
@@ -189,4 +190,3 @@ class CRM_Report_Form_Contact_LoggingSummary extends CRM_Report_Form {
     $this->_where .= " AND (log_action != 'Initialization')";
   }
 }
-

@@ -55,7 +55,8 @@ class CRM_Utils_Request {
   /**
    * class constructor
    */
-  public function __construct() {}
+  public function __construct() {
+  }
 
   /**
    * get the variable information from the request (GET/POST/SESSION
@@ -107,7 +108,7 @@ class CRM_Utils_Request {
     }
 
     if (!isset($value) && $abort) {
-       return CRM_Core_Error::statusBounce(ts("Could not find valid value for %1", [1 => $name]));
+      return CRM_Core_Error::statusBounce(ts("Could not find valid value for %1", [1 => $name]));
     }
 
     if (!isset($value) && $default !== NULL) {
@@ -132,7 +133,7 @@ class CRM_Utils_Request {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $redirect = curl_exec($ch);
     curl_close($ch);
-    if(preg_match('/<a href="([^"]*)"/i', $redirect, $match)) {
+    if (preg_match('/<a href="([^"]*)"/i', $redirect, $match)) {
       $redirect = $match[1];
       if ($redirect) {
         return $redirect;
@@ -141,4 +142,3 @@ class CRM_Utils_Request {
     return '';
   }
 }
-

@@ -43,7 +43,7 @@ class CRM_SMS_Provider_Flydove extends CRM_SMS_Provider {
    * ]
    * @return array response of self::doRequest
    */
-  public function send(&$messages){
+  public function send(&$messages) {
     $response = [];
     return $response;
   }

@@ -74,4 +74,3 @@ class CRM_Core_Standalone {
     $template->assign_by_ref('sidebarLeft', $sidebarLeft);
   }
 }
-

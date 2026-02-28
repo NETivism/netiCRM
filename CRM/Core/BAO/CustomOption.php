@@ -38,7 +38,7 @@
  *
  */
 class CRM_Core_BAO_CustomOption {
-  public CONST VALUE_SEPERATOR = "";
+  public const VALUE_SEPERATOR = "";
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
@@ -74,7 +74,8 @@ class CRM_Core_BAO_CustomOption {
    * @return array $customOption all active options for fieldId
    * @static
    */
-  public static function getCustomOption($fieldID,
+  public static function getCustomOption(
+    $fieldID,
     $inactiveNeeded = FALSE
   ) {
     $options = [];
@@ -83,7 +84,8 @@ class CRM_Core_BAO_CustomOption {
     }
 
     // get the option group id
-    $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+    $optionGroupID = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_CustomField',
       $fieldID,
       'option_group_id'
     );
@@ -149,7 +151,8 @@ WHERE  id = %1
     }
 
 
-    return CRM_Core_BAO_CustomField::getDisplayValueCommon($value,
+    return CRM_Core_BAO_CustomField::getDisplayValueCommon(
+      $value,
       $options,
       $htmlType,
       $dataType
@@ -177,9 +180,10 @@ AND    g.id    = v.option_group_id";
     $params = [1 => [$optionId, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if ($dao->fetch()) {
-      if (in_array($dao->dataType,
-          ['Int', 'Float', 'Money', 'Boolean']
-        )) {
+      if (in_array(
+        $dao->dataType,
+        ['Int', 'Float', 'Money', 'Boolean']
+      )) {
         $value = 0;
       }
       else {
@@ -271,7 +275,8 @@ SET    {$dao->columnName} = REPLACE( {$dao->columnName}, %1, %2 )";
   public static function &valuesByID($customFieldID, $optionGroupID = NULL) {
     $options = [];
     if (!$optionGroupID) {
-      $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+      $optionGroupID = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_CustomField',
         $customFieldID,
         'option_group_id'
       );
@@ -288,4 +293,3 @@ SET    {$dao->columnName} = REPLACE( {$dao->columnName}, %1, %2 )";
     return $options;
   }
 }
-

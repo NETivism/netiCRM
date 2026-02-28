@@ -39,7 +39,7 @@
  *
  */
 class CRM_Grant_Task {
-  public CONST DELETE_GRANTS = 1, PRINT_GRANTS = 2, EXPORT_GRANTS = 3;
+  public const DELETE_GRANTS = 1, PRINT_GRANTS = 2, EXPORT_GRANTS = 3;
 
   /**
    * the task array
@@ -159,4 +159,3 @@ class CRM_Grant_Task {
     ];
   }
 }
-

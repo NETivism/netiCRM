@@ -104,7 +104,8 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
     }
 
 
-    $values['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_activity',
+    $values['attachment'] = CRM_Core_BAO_File::attachmentInfo(
+      'civicrm_activity',
       $activityId
     );
     $this->assign('values', $values);
@@ -126,7 +127,8 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -136,4 +138,3 @@ class CRM_Activity_Form_ActivityView extends CRM_Core_Form {
     );
   }
 }
-

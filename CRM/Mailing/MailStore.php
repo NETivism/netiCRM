@@ -46,12 +46,12 @@ class CRM_Mailing_MailStore {
    * @return object        mail store implementation for processing CiviMail-bound emails
    */
   public static function getStore($name = NULL) {
-    if($name) {
+    if ($name) {
       $params = [
         'name' => $name,
       ];
     }
-    else{
+    else {
       $params = [
         'is_default' => 1,
       ];
@@ -75,8 +75,8 @@ class CRM_Mailing_MailStore {
 
         return new CRM_Mailing_MailStore_Localdir($setting['source']);
 
-      // DO NOT USE the mbox transport for anything other than testing
-      // in particular, it does not clear the mbox afterwards
+        // DO NOT USE the mbox transport for anything other than testing
+        // in particular, it does not clear the mbox afterwards
 
       case 'mbox':
 
@@ -99,7 +99,8 @@ class CRM_Mailing_MailStore {
   /**
    * Expunge the messages marked for deletion; stub function to be redefined by IMAP store
    */
-  public function expunge() {}
+  public function expunge() {
+  }
 
   /**
    * Return the next X messages from the mail store
@@ -124,7 +125,7 @@ class CRM_Mailing_MailStore {
         print "fetching $count messages\n";
       }
     }
-    catch(ezcMailOffsetOutOfRangeException$e) {
+    catch (ezcMailOffsetOutOfRangeException$e) {
       if ($this->_debug) {
         print "got to the end of the mailbox\n";
       }
@@ -170,4 +171,3 @@ class CRM_Mailing_MailStore {
     return $dir . DIRECTORY_SEPARATOR . 'cur';
   }
 }
-

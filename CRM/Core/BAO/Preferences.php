@@ -59,7 +59,7 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
   public static function mailingPreferences() {
     global $civicrm_conf;
     if (!self::$_mailingPref) {
-      if(isset($civicrm_conf['mailing_backend'])){
+      if (isset($civicrm_conf['mailing_backend'])) {
         self::$_mailingPref = $civicrm_conf['mailing_backend'];
         return $civicrm_conf['mailing_backend'];
       }
@@ -139,8 +139,14 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return $newSequence;
   }
 
-  public static function valueOptions($name, $system = TRUE, $userID = NULL, $localize = FALSE,
-    $returnField = 'name', $returnNameANDLabels = FALSE, $condition = NULL
+  public static function valueOptions(
+    $name,
+    $system = TRUE,
+    $userID = NULL,
+    $localize = FALSE,
+    $returnField = 'name',
+    $returnNameANDLabels = FALSE,
+    $condition = NULL
   ) {
     if ($system) {
       $object = self::systemObject();
@@ -173,7 +179,8 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
     if ($optionValue && !empty($groupValues)) {
 
-      $dbValues = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $dbValues = explode(
+        CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
         substr($optionValue, 1, -1)
       );
 
@@ -215,7 +222,8 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
       }
 
       if (!empty($cbValues)) {
-        $object->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $object->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           array_keys($cbValues)
         ) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
@@ -331,4 +339,3 @@ AND    v.is_active = 1
     }
   }
 }
-

@@ -170,7 +170,9 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $customFieldDataType = CRM_Core_BAO_CustomField::dataType();
       $customField[$customFieldBAO->id]['data_type'] = $customFieldDataType[$customField[$customFieldBAO->id]['data_type']];
       $customField[$customFieldBAO->id]['order'] = $customField[$customFieldBAO->id]['weight'];
-      $customField[$customFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $customField[$customFieldBAO->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         ['id' => $customFieldBAO->id,
           'gid' => $this->_gid,
         ]
@@ -180,8 +182,12 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
     $returnURL = CRM_Utils_System::url('civicrm/admin/custom/group/field', "reset=1&action=browse&gid={$this->_gid}");
     $filter = "custom_group_id = {$this->_gid}";
 
-    CRM_Utils_Weight::addOrder($customField, 'CRM_Core_DAO_CustomField',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $customField,
+      'CRM_Core_DAO_CustomField',
+      'id',
+      $returnURL,
+      $filter
     );
 
     $this->assign('customField', $customField);
@@ -226,12 +232,18 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
 
 
     // get the group id
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
+    $this->_gid = CRM_Utils_Request::retrieve(
+      'gid',
+      'Positive',
       $this
     );
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     if ($action & CRM_Core_Action::DELETE) {
@@ -239,8 +251,12 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $session = &CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field', 'reset=1&action=browse&gid=' . $this->_gid));
       $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_DeleteField', "Delete Custom Field", '');
-      $id = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, FALSE, 0
+      $id = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        FALSE,
+        0
       );
       $controller->set('id', $id);
       $controller->setEmbedded(TRUE);
@@ -260,8 +276,12 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
     // assign vars to templates
     $this->assign('action', $action);
 
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -301,4 +321,3 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
     $controller->run();
   }
 }
-

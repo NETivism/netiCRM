@@ -398,14 +398,14 @@ class CRM_Core_BAO_UFField extends CRM_Core_DAO_UFField {
     return TRUE;
   }
 
-  /* Function to find out whether given profile group uses $required 
+  /* Function to find out whether given profile group uses $required
    * and/or $optionalprofile types
-   *  
+   *
    * @param integer $ufGroupId  profile id
    * @param array   $required   array of types those are required
    * @param array   $optional   array of types those are optional
    *
-   * @return boolean $valid  
+   * @return boolean $valid
    * @static
    */
   public static function checkValidProfileType($ufGroupId, $required, $optional = NULL) {
@@ -702,4 +702,3 @@ SELECT  id
     CRM_Core_DAO::executeQuery($query);
   }
 }
-

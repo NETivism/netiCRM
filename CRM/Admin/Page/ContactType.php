@@ -129,7 +129,9 @@ class CRM_Admin_Page_ContactType extends CRM_Core_Page_Basic {
           $mask -= CRM_Core_Action::DISABLE;
         }
       }
-      $rows[$key]['action'] = CRM_Core_Action::formLink(self::links(), $mask,
+      $rows[$key]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $mask,
         ['id' => $value['id']]
       );
     }
@@ -163,4 +165,3 @@ class CRM_Admin_Page_ContactType extends CRM_Core_Page_Basic {
     return 'civicrm/admin/options/subtype';
   }
 }
-

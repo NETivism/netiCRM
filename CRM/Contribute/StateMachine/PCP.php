@@ -63,4 +63,3 @@ class CRM_Contribute_StateMachine_PCP extends CRM_Core_StateMachine {
     $this->addSequentialPages($this->_pages);
   }
 }
-

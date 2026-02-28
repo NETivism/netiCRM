@@ -172,7 +172,7 @@ class CRM_Core_BAO_CMSUser {
     // if cms is drupal having version greater than equal to 5.1
     // we also need email verification enabled, else we dont do it
     // then showCMS will true
-    if ($isDrupal OR $isJoomla) {
+    if ($isDrupal or $isJoomla) {
       if ($gid) {
         $isCMSUser = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'is_cms_user');
       }
@@ -215,7 +215,7 @@ class CRM_Core_BAO_CMSUser {
             $form->assign('cmsQfKey', $qfKey);
             $form->assign('cmsCtrName', $controllerName);
             $form->add('text', 'cms_name', ts('Username'), NULL, $required);
-            if (($isDrupal && !CRM_Utils_System::userEmailVerification()) OR ($isJoomla)) {
+            if (($isDrupal && !CRM_Utils_System::userEmailVerification()) or ($isJoomla)) {
               $form->add('password', 'cms_pass', ts('Password'));
               $form->add('password', 'cms_confirm_pass', ts('Confirm Password'));
             }
@@ -264,7 +264,8 @@ class CRM_Core_BAO_CMSUser {
 
       if (!empty($args)) {
         // append destination so user is returned to form they came from after login
-        $destination = CRM_Utils_System::currentPath() . "?" . http_build_query($args, '', '&');;
+        $destination = CRM_Utils_System::currentPath() . "?" . http_build_query($args, '', '&');
+        ;
         $loginUrl .= '?destination=' . urlencode($destination);
       }
     }
@@ -312,7 +313,7 @@ class CRM_Core_BAO_CMSUser {
         $errors[$emailName] = ts('Please specify a valid email address.');
       }
 
-      if (($isDrupal && !CRM_Utils_System::userEmailVerification()) OR ($isJoomla)) {
+      if (($isDrupal && !CRM_Utils_System::userEmailVerification()) or ($isJoomla)) {
         if (empty($fields['cms_pass']) ||
           empty($fields['cms_confirm_pass'])
         ) {
@@ -328,7 +329,7 @@ class CRM_Core_BAO_CMSUser {
       }
 
       // now check that the cms db does not have the user name and/or email
-      if ($isDrupal OR $isJoomla) {
+      if ($isDrupal or $isJoomla) {
         $params = ['name' => $fields['cms_name'],
           'mail' => $fields[$emailName],
         ];
@@ -404,12 +405,12 @@ class CRM_Core_BAO_CMSUser {
     ) {
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
-       return CRM_Core_Error::statusBounce(ts("Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
-          [1 => $db_uf->getMessage()]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        "Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
+        [1 => $db_uf->getMessage()]
+      ));
     }
     $db_uf->query('/*!40101 SET NAMES utf8mb4 */');
     return $db_uf;
   }
 }
-

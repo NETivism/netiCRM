@@ -80,8 +80,13 @@ class CRM_Utils_System_Joomla {
         if (stripos($crumbs['url'], 'id%%')) {
           $args = ['cid', 'mid'];
           foreach ($args as $a) {
-            $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
-              FALSE, NULL, $_GET
+            $val = CRM_Utils_Request::retrieve(
+              $a,
+              'Positive',
+              CRM_Core_DAO::$_nullObject,
+              FALSE,
+              NULL,
+              $_GET
             );
             if ($val) {
               $crumbs['url'] = str_ireplace("%%{$a}%%", $val, $crumbs['url']);
@@ -175,8 +180,12 @@ class CRM_Utils_System_Joomla {
    * @access public
    *
    */
-  public function url($path = NULL, $query = NULL, $absolute = TRUE,
-    $fragment = NULL, $htmlize = TRUE,
+  public function url(
+    $path = NULL,
+    $query = NULL,
+    $absolute = TRUE,
+    $fragment = NULL,
+    $htmlize = TRUE,
     $frontend = FALSE
   ) {
     $config = CRM_Core_Config::singleton();
@@ -241,8 +250,12 @@ class CRM_Utils_System_Joomla {
       return $action;
     }
 
-    return self::url(CRM_Utils_Array::value('task', $_GET),
-      NULL, TRUE, NULL, FALSE
+    return self::url(
+      CRM_Utils_Array::value('task', $_GET),
+      NULL,
+      TRUE,
+      NULL,
+      FALSE
     );
   }
 
@@ -321,7 +334,7 @@ class CRM_Utils_System_Joomla {
   }
 
   public static function permissionDenied() {
-     return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+    return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
   }
 
   public static function logout() {
@@ -343,7 +356,7 @@ class CRM_Utils_System_Joomla {
     return NULL;
   }
 
-  /* 
+  /*
      * load joomla bootstrap
      *
      * @param $name string  optional username for login
@@ -374,4 +387,3 @@ class CRM_Utils_System_Joomla {
     return ($user->guest) ? NULL : $user->id;
   }
 }
-

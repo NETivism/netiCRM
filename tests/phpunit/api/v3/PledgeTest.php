@@ -42,7 +42,8 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
   protected $_params;
   protected $_entity;
   protected $scheduled_date;
-  public $DBResetRequired = True; public function setUp() {
+  public $DBResetRequired = TRUE;
+  public function setUp() {
     $this->_apiversion = 3;
     parent::setUp();
     $this->quickCleanup(['civicrm_pledge', 'civicrm_pledge_payment']);
@@ -270,8 +271,8 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
     $pledge = civicrm_api('Pledge', 'Create', $params);
     //ensure that correct number of payments created & last payment has the right date
     $payments = civicrm_api('PledgePayment', 'Get', [
-      'version' => 3, 
-      'pledge_id' => $pledge['id'], 
+      'version' => 3,
+      'pledge_id' => $pledge['id'],
       'sequential' => 1]);
     $this->assertEquals($payments['is_error'], 0, 'In line ' . __LINE__);
     $this->assertEquals($payments['count'], 5, 'In line ' . __LINE__);
@@ -303,8 +304,8 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
     $pledge = civicrm_api('Pledge', 'Create', $params);
     //ensure that correct number of payments created & last payment has the right date
     $payments = civicrm_api('PledgePayment', 'Get', [
-      'version' => 3, 
-      'pledge_id' => $pledge['id'], 
+      'version' => 3,
+      'pledge_id' => $pledge['id'],
       'sequential' => 1
     ]);
     $this->assertEquals($payments['is_error'], 0, 'In line ' . __LINE__);
@@ -482,4 +483,3 @@ class api_v3_PledgeTest extends CiviUnitTestCase {
     $pledge = civicrm_api('pledge', 'delete', $pledgeID);
   }
 }
-

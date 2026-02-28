@@ -79,7 +79,7 @@ ORDER BY $orderBy
 LIMIT    $offset, $rowCount";
     $object = CRM_Core_DAO::executeQuery($query, $params);
     $summary_item = [];
-    while($object->fetch()){
+    while ($object->fetch()) {
       $summary_item[] = $roles[$object->role_id] . ": ". $object->role_count;
     }
     $this->assign_by_ref('summary', $summary_item);
@@ -147,5 +147,3 @@ SELECT count( civicrm_contact.id )
     return $sort->orderBy();
   }
 }
-
-

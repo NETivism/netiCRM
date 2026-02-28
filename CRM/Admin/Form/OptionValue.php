@@ -73,8 +73,8 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
       CRM_Core_Error::fatal(ts('Missing required fields').': '.ts('Option Group Name'));
     }
     // get id from value
-    if ($this->_action & CRM_Core_Action::UPDATE){
-      if(empty($this->_id) || !is_numeric($this->_id)) {
+    if ($this->_action & CRM_Core_Action::UPDATE) {
+      if (empty($this->_id) || !is_numeric($this->_id)) {
         $value = CRM_Utils_Request::retrieve('value', 'String', $this, TRUE);
         $optionId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = %1 AND value = %2", [
           1 => [$this->_gid, 'Integer'],
@@ -155,14 +155,16 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     $this->add('text', 'value', ts('Value'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'value'), TRUE);
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'name'));
     if ($this->_gName == 'custom_search') {
-      $this->add('text',
+      $this->add(
+        'text',
         'description',
         ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
       );
     }
     else {
-      $this->addWysiwyg('description',
+      $this->addWysiwyg(
+        'description',
         ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
       );
@@ -285,4 +287,3 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     }
   }
 }
-

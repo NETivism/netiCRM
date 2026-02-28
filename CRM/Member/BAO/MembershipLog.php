@@ -81,4 +81,3 @@ UPDATE civicrm_membership_log
     CRM_Core_DAO::executeQuery($query, $params);
   }
 }
-

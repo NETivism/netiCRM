@@ -71,9 +71,10 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
 
       // also set the user context to send back to view page
       $session = &CRM_Core_Session::singleton();
-      $session->pushUserContext(CRM_Utils_System::url('civicrm/contact/view/participant',
-          "reset=1&action=view&id={$participantID}&cid={$contactID}"
-        ));
+      $session->pushUserContext(CRM_Utils_System::url(
+        'civicrm/contact/view/participant',
+        "reset=1&action=view&id={$participantID}&cid={$contactID}"
+      ));
     }
     else {
       parent::preProcess();
@@ -94,10 +95,12 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
 
     $label = CRM_Core_OptionGroup::values('event_badge');
 
-    $this->add('select',
+    $this->add(
+      'select',
       'badge_id',
       ts('Name Badge Format'),
-      ['' => ts('- select -')] + $label, TRUE
+      ['' => ts('- select -')] + $label,
+      TRUE
     );
 
     $next = 'next';
@@ -132,7 +135,12 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
       $queryParams = $this->get('queryParams');
     }
 
-    $query = new CRM_Contact_BAO_Query($queryParams, $returnProperties, NULL, FALSE, FALSE,
+    $query = new CRM_Contact_BAO_Query(
+      $queryParams,
+      $returnProperties,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_EVENT
     );
 
@@ -157,18 +165,20 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
 
     // get the class name from the participantListingID
 
-    $className = CRM_Core_OptionGroup::getValue('event_badge',
+    $className = CRM_Core_OptionGroup::getValue(
+      'event_badge',
       $params['badge_id'],
       'value',
       'Integer',
       'name'
     );
 
-    $classFile = str_replace('_',
+    $classFile = str_replace(
+      '_',
       DIRECTORY_SEPARATOR,
       $className
     ) . '.php';
-    $error = include_once ($classFile);
+    $error = include_once($classFile);
     if ($error == FALSE) {
       CRM_Core_Error::fatal('Event Badge code file: ' . $classFile . ' does not exist. Please verify your custom event badge settings in CiviCRM administrative panel.');
     }
@@ -179,4 +189,3 @@ class CRM_Event_Form_Task_Badge extends CRM_Event_Form_Task {
     $eventBadgeClass->run($rows);
   }
 }
-

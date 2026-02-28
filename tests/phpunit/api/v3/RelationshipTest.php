@@ -318,7 +318,7 @@ class api_v3_RelationshipTest extends CiviUnitTestCase {
       if ($key == 'version' || $key == 'note') {
         continue;
       }
-      if($key == 'end_date'){
+      if ($key == 'end_date') {
         $this->assertTrue(empty($values[$key]));
         continue;
       }
@@ -801,14 +801,20 @@ class api_v3_RelationshipTest extends CiviUnitTestCase {
 
     $rel1 = civicrm_api('relationship', 'create', $this->_params);
     $this->assertAPISuccess($rel1);
-    $rel2 = civicrm_api('relationship', 'create', array_merge($this->_params,
-      ['relationship_type_id' => $relationType2,]));
+    $rel2 = civicrm_api('relationship', 'create', array_merge(
+      $this->_params,
+      ['relationship_type_id' => $relationType2,]
+    ));
     $this->assertAPISuccess($rel2);
-    $rel3 = civicrm_api('relationship', 'create', array_merge($this->_params,
-        ['relationship_type_id' => $relationType3,]));
+    $rel3 = civicrm_api('relationship', 'create', array_merge(
+      $this->_params,
+      ['relationship_type_id' => $relationType3,]
+    ));
     $this->assertAPISuccess($rel3);
-    $rel4 = civicrm_api('relationship', 'create', array_merge($this->_params,
-        ['relationship_type_id' => $relationType4,]));
+    $rel4 = civicrm_api('relationship', 'create', array_merge(
+      $this->_params,
+      ['relationship_type_id' => $relationType4,]
+    ));
     $this->assertAPISuccess($rel4);
 
     $getParams = [
@@ -955,4 +961,3 @@ class api_v3_RelationshipTest extends CiviUnitTestCase {
     $this->relationshipTypeDelete($this->_relTypeID);
   }
 }
-

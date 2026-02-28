@@ -120,15 +120,23 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
   public function run() {
 
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -183,7 +191,8 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::BROWSE;
       }
 
-      $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
+      $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
         $action,
         ['id' => $dao->id]
       );
@@ -218,4 +227,3 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
     return 'civicrm/admin/contribute/managePremiums';
   }
 }
-

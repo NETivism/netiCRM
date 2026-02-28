@@ -67,9 +67,12 @@ class CRM_Core_Form_Tag {
         $tagset[$tagsetItem]['parentID'] = $parentId;
 
         //tokeninput url
-        $tagUrl = CRM_Utils_System::url('civicrm/ajax/taglist',
+        $tagUrl = CRM_Utils_System::url(
+          'civicrm/ajax/taglist',
           "parentId={$parentId}",
-          FALSE, NULL, FALSE
+          FALSE,
+          NULL,
+          FALSE
         );
 
         $tagset[$tagsetItem]['tagUrl'] = $tagUrl;
@@ -168,4 +171,3 @@ class CRM_Core_Form_Tag {
     }
   }
 }
-

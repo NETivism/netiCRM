@@ -35,7 +35,7 @@
 
 
 
-Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
+class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
 
   /**
    * takes an associative array and creates a campaign object
@@ -243,4 +243,3 @@ WHERE c.title IS NOT NULL" . $whereClause;
     return $isEnable;
   }
 }
-

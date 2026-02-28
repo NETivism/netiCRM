@@ -43,6 +43,6 @@ class CRM_Core_Base {
   /**
    * constructor
    */
-  public function __construct() {}
+  public function __construct() {
+  }
 }
-

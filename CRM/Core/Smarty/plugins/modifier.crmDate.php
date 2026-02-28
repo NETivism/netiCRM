@@ -57,4 +57,3 @@ function smarty_modifier_crmDate($dateString, $dateFormat = NULL, $onlyTime = FA
   }
   return '';
 }
-

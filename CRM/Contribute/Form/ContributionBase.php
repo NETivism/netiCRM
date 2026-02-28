@@ -216,7 +216,9 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
 
     // current contribution page id
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive',
+    $this->_id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
       $this
     );
     if (!$this->_id) {
@@ -226,23 +228,23 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       }
       else {
         return CRM_Core_Error::statusBounce(ts('This contribution has already been submitted. Click <a href=\'%1\'>here</a> if you want to make another contribution.', [1 => CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $pastContributionID)]));
-      } 
+      }
     }
     else {
       $session->set('pastContributionID', $this->_id);
     }
 
-    // #25950, do not force userID to current logged user. 
+    // #25950, do not force userID to current logged user.
     // this will cause user data being overwrite by some admin
     // instead use session based data storage to check main state contact id
     $this->_userID = $this->get('csContactID') ? $this->get('csContactID') : $this->get('userID');
     $this->_mid = NULL;
     if ($this->_userID) {
       $this->assign('contact_id', $this->_userID);
-      if(CRM_Core_Permission::check('edit all contacts')){
+      if (CRM_Core_Permission::check('edit all contacts')) {
         $this->assign('is_contact_admin', 1);
       }
-      else{
+      else {
         $this->assign('is_contact_admin', 0);
       }
       if ($this->get('originalId')) {
@@ -287,8 +289,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $this->assign('browserPrint', TRUE);
 
     // action
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'add'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'add'
     );
     $this->assign('action', $this->_action);
 
@@ -343,7 +349,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
             $queryParts[] = 'id=' . $pageId;
             $queryString = implode('&', $queryParts);
             CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', $queryString));
-          } else {
+          }
+          else {
             return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
           }
         }
@@ -360,14 +367,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
             $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
             if ($contactType == 'Individual') {
               $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
-              CRM_Utils_System::redirect( CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs",true));
+              CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs", TRUE));
             }
           }
           return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
         }
       }
 
-      if (($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL ) && empty($this->_values['custom_post_id']) && empty($this->_values['custom_pre_id'])) {
+      if (($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL) && empty($this->_values['custom_post_id']) && empty($this->_values['custom_pre_id'])) {
         return CRM_Core_Error::statusBounce(ts("You may want to collect information from contributors beyond what is required to make a contribution. For example, you may want to inquire about volunteer availability and skills. Add any number of fields to your contribution form by selecting CiviCRM Profiles (collections of fields) to include at the beginning of the page, and/or at the bottom."));
       }
 
@@ -387,7 +394,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if ($isMonetary && (!$isPayLater || CRM_Utils_Array::value('payment_processor', $this->_values))) {
         $ppID = CRM_Utils_Array::value('payment_processor', $this->_values);
         if (!$ppID) {
-           return CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.'));
+          return CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.'));
         }
 
         $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
@@ -414,14 +421,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
           foreach ($this->_paymentProcessors as $eachPaymentProcessor) {
             // check selected payment processor is active
             if (empty($eachPaymentProcessor)) {
-               return CRM_Core_Error::statusBounce(ts('A payment processor configured for this page might be disabled (contact the site administrator for assistance).'));
+              return CRM_Core_Error::statusBounce(ts('A payment processor configured for this page might be disabled (contact the site administrator for assistance).'));
             }
 
             // ensure that processor has a valid config
             $this->_paymentObject = &CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
             $error = $this->_paymentObject->checkConfig();
             if (!empty($error)) {
-               return CRM_Core_Error::statusBounce($error);
+              return CRM_Core_Error::statusBounce($error);
             }
           }
         }
@@ -465,12 +472,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       ) {
         $this->_values['cancelSubscriptionUrl'] = $this->_paymentObject->cancelSubscriptionURL();
       }
-      if (((isset($postProfileType) && $postProfileType == 'Membership') ||
+      if ((
+        (isset($postProfileType) && $postProfileType == 'Membership') ||
           (isset($preProfileType) && $preProfileType == 'Membership')
-        ) &&
+      ) &&
         !$this->_membershipBlock['is_active']
       ) {
-         return CRM_Core_Error::statusBounce(ts('This page includes a Profile with Membership fields - but the Membership Block is NOT enabled. Please notify the site administrator.'));
+        return CRM_Core_Error::statusBounce(ts('This page includes a Profile with Membership fields - but the Membership Block is NOT enabled. Please notify the site administrator.'));
       }
 
 
@@ -496,7 +504,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->_values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
       $customValues = CRM_Core_BAO_CustomValueTable::getEntityValues($this->_id, 'ContributionPage');
       if (!empty($customValues)) {
-        foreach($customValues as $customFieldId => $val) {
+        foreach ($customValues as $customFieldId => $val) {
           $this->_values['custom_'.$customFieldId] = $val;
         }
       }
@@ -504,8 +512,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $this->set('values', $this->_values);
       $this->set('fields', $this->_fields);
     }
-    else{
-      // assign tempalte 
+    else {
+      // assign tempalte
       $this->assign_by_ref("viewCustomData", $this->_values['custom_data_view']);
     }
 
@@ -520,7 +528,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       ];
 
       $pcpStatus = CRM_Contribute_PseudoConstant::pcpStatus();
-      CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_PCPBlock',
+      CRM_Core_DAO::commonRetrieve(
+        'CRM_Contribute_DAO_PCPBlock',
         $prms,
         $pcpBlock
       );
@@ -529,62 +538,91 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
       //start and end date of the contribution page
       $startDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('start_date', $this->_values));
-      $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('end_date', $this->_values), true);
+      $endDate = CRM_Utils_Date::unixTime(CRM_Utils_Array::value('end_date', $this->_values), TRUE);
       $now = time();
 
       if ($pcpInfo['contribution_page_id'] != $this->_values['id']) {
         $statusMessage = ts('This contribution page is not related to the Personal Campaign Page you have just visited. However you can still make a contribution here.');
-         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-            "reset=1&id={$this->_values['id']}",
-            FALSE, NULL, FALSE, TRUE
-          ));
+        return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+          'civicrm/contribute/transact',
+          "reset=1&id={$this->_values['id']}",
+          FALSE,
+          NULL,
+          FALSE,
+          TRUE
+        ));
       }
       elseif ($pcpInfo['status_id'] != $approvedId) {
         $statusMessage = ts('The Personal Campaign Page you have just visited is currently %1. However you can still support the campaign by making a contribution here.', [1 => $pcpStatus[$pcpInfo['status_id']]]);
-         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-            "reset=1&id={$pcpInfo['contribution_page_id']}",
-            FALSE, NULL, FALSE, TRUE
-          ));
+        return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+          'civicrm/contribute/transact',
+          "reset=1&id={$pcpInfo['contribution_page_id']}",
+          FALSE,
+          NULL,
+          FALSE,
+          TRUE
+        ));
       }
       elseif (!CRM_Utils_Array::value('is_active', $pcpBlock)) {
         $statusMessage = ts('Personal Campaign Pages are currently not enabled for this contribution page. However you can still support the campaign by making a contribution here.');
-         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-            "reset=1&id={$pcpInfo['contribution_page_id']}",
-            FALSE, NULL, FALSE, TRUE
-          ));
+        return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+          'civicrm/contribute/transact',
+          "reset=1&id={$pcpInfo['contribution_page_id']}",
+          FALSE,
+          NULL,
+          FALSE,
+          TRUE
+        ));
       }
       elseif (!CRM_Utils_Array::value('is_active', $pcpInfo)) {
         $statusMessage = ts('The Personal Campaign Page you have just visited is current inactive. However you can still make a contribution here.');
-         return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-            "reset=1&id={$pcpInfo['contribution_page_id']}",
-            FALSE, NULL, FALSE, TRUE
-          ));
+        return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+          'civicrm/contribute/transact',
+          "reset=1&id={$pcpInfo['contribution_page_id']}",
+          FALSE,
+          NULL,
+          FALSE,
+          TRUE
+        ));
       }
       elseif (($startDate && $startDate > $now) || ($endDate && $endDate < $now)) {
         $customStartDate = CRM_Utils_Date::customFormat(CRM_Utils_Array::value('start_date', $this->_values));
         $customEndDate = CRM_Utils_Date::customFormat(CRM_Utils_Array::value('end_date', $this->_values));
         if ($startDate && $endDate) {
-          $statusMessage = ts('The Personal Campaign Page you have just visited is only active between %1 to %2. However you can still support the campaign by making a contribution here.',
+          $statusMessage = ts(
+            'The Personal Campaign Page you have just visited is only active between %1 to %2. However you can still support the campaign by making a contribution here.',
             [1 => $customStartDate, 2 => $customEndDate]
           );
-           return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-              "reset=1&id={$pcpInfo['contribution_page_id']}",
-              FALSE, NULL, FALSE, TRUE
-            ));
+          return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+            'civicrm/contribute/transact',
+            "reset=1&id={$pcpInfo['contribution_page_id']}",
+            FALSE,
+            NULL,
+            FALSE,
+            TRUE
+          ));
         }
         elseif ($startDate) {
           $statusMessage = ts('The Personal Campaign Page you have just visited will be active beginning on %1. However you can still support the campaign by making a contribution here.', [1 => $customStartDate]);
-           return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-              "reset=1&id={$pcpInfo['contribution_page_id']}",
-              FALSE, NULL, FALSE, TRUE
-            ));
+          return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+            'civicrm/contribute/transact',
+            "reset=1&id={$pcpInfo['contribution_page_id']}",
+            FALSE,
+            NULL,
+            FALSE,
+            TRUE
+          ));
         }
         elseif ($endDate) {
           $statusMessage = ts('The Personal Campaign Page you have just visited is not longer active (as of %1). However you can still support the campaign by making a contribution here.', [1 => $customEndDate]);
-           return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/contribute/transact',
-              "reset=1&id={$pcpInfo['contribution_page_id']}",
-              FALSE, NULL, FALSE, TRUE
-            ));
+          return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+            'civicrm/contribute/transact',
+            "reset=1&id={$pcpInfo['contribution_page_id']}",
+            FALSE,
+            NULL,
+            FALSE,
+            TRUE
+          ));
         }
       }
 
@@ -595,9 +633,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
     // Link (button) for users to create their own Personal Campaign page
     if ($linkText = CRM_Contribute_BAO_PCP::getPcpBlockStatus($this->_id)) {
-      $linkTextUrl = CRM_Utils_System::url('civicrm/contribute/campaign',
+      $linkTextUrl = CRM_Utils_System::url(
+        'civicrm/contribute/campaign',
         "action=add&reset=1&pageId={$this->_id}",
-        FALSE, NULL, TRUE
+        FALSE,
+        NULL,
+        TRUE
       );
       $this->assign('linkTextUrl', $linkTextUrl);
       $this->assign('linkText', $linkText);
@@ -618,7 +659,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       !$this->_membershipBlock['is_active'] &&
       !$this->_priceSetId
     ) {
-       return CRM_Core_Error::statusBounce(ts('The requested online contribution page is missing a required Contribution Amount section or Membership section or Price Set. Please check with the site administrator for assistance.'));
+      return CRM_Core_Error::statusBounce(ts('The requested online contribution page is missing a required Contribution Amount section or Membership section or Price Set. Please check with the site administrator for assistance.'));
     }
 
     if ($this->_values['amount_block_is_active']) {
@@ -629,9 +670,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       CRM_Utils_Array::value('is_separate_payment', $this->_membershipBlock) &&
       (!($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM))
     ) {
-       return CRM_Core_Error::statusBounce(ts('This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments. Please contact the site administrator and notify them of this error',
-          [1 => $this->_paymentProcessor['payment_processor_type']]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        'This contribution page is configured to support separate contribution and membership payments. This %1 plugin does not currently support multiple simultaneous payments. Please contact the site administrator and notify them of this error',
+        [1 => $this->_paymentProcessor['payment_processor_type']]
+      ));
     }
 
     $this->_contributeMode = $this->get('contributeMode');
@@ -644,7 +686,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     $this->assign('bltID', $this->_bltID);
 
     //assign cancelSubscription URL to templates
-    $this->assign('cancelSubscriptionUrl',
+    $this->assign(
+      'cancelSubscriptionUrl',
       CRM_Utils_Array::value('cancelSubscriptionUrl', $this->_values)
     );
 
@@ -663,7 +706,8 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
     //CRM-6907
     $config = CRM_Core_Config::singleton();
-    $config->defaultCurrency = CRM_Utils_Array::value('currency',
+    $config->defaultCurrency = CRM_Utils_Array::value(
+      'currency',
       $this->_values,
       $config->defaultCurrency
     );
@@ -673,10 +717,10 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       self::cancelRecurring();
     }
 
-    if($_GET['style'] == 'origin'){
+    if ($_GET['style'] == 'origin') {
       $this->set('style', 'origin');
     }
-    if($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL && $_GET['snippet'] != 4 && $this->get('style') != 'origin'){
+    if ($this->_values['is_active'] & CRM_Contribute_BAO_ContributionPage::IS_SPECIAL && $_GET['snippet'] != 4 && $this->get('style') != 'origin') {
       $bgFile = basename($this->_values['background_URL']);
       $bgFileMobile = basename($this->_values['mobile_background_URL']);
       $this->assign('intro_text', $this->_values['intro_text']);
@@ -830,13 +874,15 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         $date = CRM_Utils_Date::format($this->_params['credit_card_exp_date']);
         $date = CRM_Utils_Date::mysqlToIso($date);
         $this->assign('credit_card_exp_date', $date);
-        $this->assign('credit_card_number',
+        $this->assign(
+          'credit_card_number',
           CRM_Utils_System::mungeCreditCard($this->_params['credit_card_number'])
         );
       }
     }
 
-    $this->assign('email',
+    $this->assign(
+      'email',
       $this->controller->exportValue('Main', "email-{$this->_bltID}")
     );
 
@@ -899,7 +945,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
         // unset any email-* fields since we already collect it, CRM-2888
         foreach (array_keys($fields) as $fieldName) {
           if (substr($fieldName, 0, 6) == 'email-') {
-            if(!$this->isAssigned('moveEmail')){
+            if (!$this->isAssigned('moveEmail')) {
               $this->assign('moveEmail', 'profile-group-'.$fields[$fieldName]['group_id']);
             }
             unset($fields[$fieldName]);
@@ -1073,9 +1119,9 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
   /**
    * Load custom field default value from original contribution id
-   * 
+   *
    * @id  int
-   *   original contribution id 
+   *   original contribution id
    */
   public function loadDefaultFromOriginalId($id = NULL) {
     $this->_originalId = NULL;
@@ -1088,17 +1134,27 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       $original->id = $id;
       if ($original->find(TRUE)) {
         // double check oid is from same contact
-        if($original->contact_id == $this->_userID) {
+        if ($original->contact_id == $this->_userID) {
           $this->set('originalId', $id);
           $this->assign('originalId', $id);
           $this->_originalId = $id;
-          $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $id, 'product_id', 'contribution_id' );
+          $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $id, 'product_id', 'contribution_id');
           $defaultFromRequest = $this->get('defaultFromRequest');
-          if (!isset($defaultFromRequest['amt'])) $defaultFromRequest['amt'] = (int) $original->total_amount;
-          if (!isset($defaultFromRequest['grouping'])) $defaultFromRequest['grouping'] = $original->contribution_recur_id ? 'recurring' : 'non-recurring';
-          if (!isset($defaultFromRequest['instrument'])) $defaultFromRequest['instrument'] = $original->payment_instrument_id;
-          if (!isset($defaultFromRequest['ppid'])) $defaultFromRequest['ppid'] = $original->payment_processor_id;
-          if (!isset($defaultFromRequest['gift']) && !empty($selectedProductId)) $defaultFromRequest['gift'] = $selectedProductId;
+          if (!isset($defaultFromRequest['amt'])) {
+            $defaultFromRequest['amt'] = (int) $original->total_amount;
+          }
+          if (!isset($defaultFromRequest['grouping'])) {
+            $defaultFromRequest['grouping'] = $original->contribution_recur_id ? 'recurring' : 'non-recurring';
+          }
+          if (!isset($defaultFromRequest['instrument'])) {
+            $defaultFromRequest['instrument'] = $original->payment_instrument_id;
+          }
+          if (!isset($defaultFromRequest['ppid'])) {
+            $defaultFromRequest['ppid'] = $original->payment_processor_id;
+          }
+          if (!isset($defaultFromRequest['gift']) && !empty($selectedProductId)) {
+            $defaultFromRequest['gift'] = $selectedProductId;
+          }
           if (!isset($defaultFromRequest['membership'])) {
             $memberId = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipPayment', $id, 'membership_id', 'contribution_id');
             if ($memberId) {
@@ -1113,7 +1169,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
           // set custom default values
           $originalCustom = CRM_Core_BAO_CustomValueTable::getEntityValues($id, 'Contribution');
-          foreach($originalCustom as $customId => $customValue) {
+          foreach ($originalCustom as $customId => $customValue) {
             if (isset($customValue)) {
               $this->_defaults['custom_'.$customId] = $customValue;
             }
@@ -1123,4 +1179,3 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
   }
 }
-

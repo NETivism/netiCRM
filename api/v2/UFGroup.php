@@ -461,4 +461,3 @@ function civicrm_uf_group_weight($params) {
   }
   return $result;
 }
-

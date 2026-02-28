@@ -95,14 +95,23 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
     if (!$this->_id) {
       $this->addRadio('group_option', ts('Group Options'), $options, ['onclick' => "return showElements();"]);
 
-      $this->add('text', 'title', ts('Group Name:') . ' ',
+      $this->add(
+        'text',
+        'title',
+        ts('Group Name:') . ' ',
         CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title')
       );
-      $this->addRule('title', ts('Name already exists in Database.'),
-        'objectExists', ['CRM_Contact_DAO_Group', $this->_id, 'title']
+      $this->addRule(
+        'title',
+        ts('Name already exists in Database.'),
+        'objectExists',
+        ['CRM_Contact_DAO_Group', $this->_id, 'title']
       );
 
-      $this->add('textarea', 'description', ts('Description:') . ' ',
+      $this->add(
+        'textarea',
+        'description',
+        ts('Description:') . ' ',
         CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
       );
 
@@ -113,10 +122,15 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
       }
 
       if (!empty($groupTypes)) {
-        $this->addCheckBox('group_type',
+        $this->addCheckBox(
+          'group_type',
           ts('Group Type'),
           $groupTypes,
-          NULL, NULL, NULL, NULL, '&nbsp;&nbsp;&nbsp;'
+          NULL,
+          NULL,
+          NULL,
+          NULL,
+          '&nbsp;&nbsp;&nbsp;'
         );
       }
     }
@@ -214,7 +228,8 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
       $groupParams['description'] = $params['description'];
       $groupParams['visibility'] = "User and User Admin Only";
       if (is_array($params['group_type'])) {
-        $groupParams['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
+        $groupParams['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(
+          CRM_Core_DAO::VALUE_SEPARATOR,
           array_keys($params['group_type'])
         ) . CRM_Core_DAO::VALUE_SEPARATOR;
       }
@@ -251,4 +266,3 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

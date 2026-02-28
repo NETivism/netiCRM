@@ -34,7 +34,8 @@
  */
 class CRM_Case_XMLProcessor {
 
-  protected static $_xml; public function retrieve($caseType) {
+  protected static $_xml;
+  public function retrieve($caseType) {
 
 
 
@@ -54,7 +55,8 @@ class CRM_Case_XMLProcessor {
         $config->customTemplateDir
       ) {
         // check if the file exists in the custom templates directory
-        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(
+          DIRECTORY_SEPARATOR,
           [$config->customTemplateDir,
             'CRM',
             'Case',
@@ -69,7 +71,8 @@ class CRM_Case_XMLProcessor {
         !file_exists($fileName)
       ) {
         // check if file exists locally
-        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(
+          DIRECTORY_SEPARATOR,
           [dirname(__FILE__),
             'xml',
             'configuration',
@@ -115,4 +118,3 @@ class CRM_Case_XMLProcessor {
     return $relationshipTypes;
   }
 }
-

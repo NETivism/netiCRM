@@ -79,7 +79,9 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
     }
 
     if ($id = CRM_Utils_Array::value('id', $ids)) {
-      if (isset($params['name']))unset($params['name']);
+      if (isset($params['name'])) {
+        unset($params['name']);
+      }
 
       $oldWeight = NULL;
       if ($id) {
@@ -200,4 +202,3 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
     return $fieldValueDAO->delete();
   }
 }
-

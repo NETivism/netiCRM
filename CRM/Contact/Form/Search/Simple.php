@@ -51,7 +51,8 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
 
-    $this->add('select',
+    $this->add(
+      'select',
       'country_id',
       ts('Country'),
       ['' => ts('- select -')] + CRM_Core_PseudoConstant::country()
@@ -62,14 +63,16 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
       $countryID = $this->_params['country_id'] ?? NULL;
     }
     if ($countryID) {
-      $this->add('select',
+      $this->add(
+        'select',
         'state_province_id',
         ts('State'),
         ['' => ts('- select a state -')] + CRM_Core_PseudoConstant::stateProvinceForCountry($countryID)
       );
     }
     else {
-      $this->add('select',
+      $this->add(
+        'select',
         'state_province_id',
         ts('State'),
         ['' => ts('- select a country first -')]
@@ -78,7 +81,8 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
 
     $stateCountryURL = CRM_Utils_System::url('civicrm/ajax/jqState');
     $this->assign('stateCountryURL', $stateCountryURL);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
@@ -96,4 +100,3 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
     CRM_Utils_System::civiExit();
   }
 }
-

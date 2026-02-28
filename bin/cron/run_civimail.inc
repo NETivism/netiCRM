@@ -5,12 +5,12 @@
  */
 function run_civimail() {
   $cmspath = $_SERVER['DOCUMENT_ROOT'];
-  if($cmspath){
+  if ($cmspath) {
     chdir($cmspath);
   }
   require_once 'CRM/Mailing/BAO/Job.php';
-  $config =& CRM_Core_Config::singleton(); 
-  if(!$config->mailerJobSize){
+  $config =& CRM_Core_Config::singleton();
+  if (!$config->mailerJobSize) {
     $config->mailerJobSize = 200;
   }
     

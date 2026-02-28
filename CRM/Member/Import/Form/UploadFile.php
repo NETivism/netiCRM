@@ -62,8 +62,8 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     ];
     foreach ($this->_contactTypes as $type) {
       $supportFields = &CRM_Dedupe_BAO_RuleGroup::supportedFields($type);
-      foreach($supportFields as $array) {
-        foreach($array as $name => $label){
+      foreach ($supportFields as $array) {
+        foreach ($array as $name => $label) {
           if (!isset($this->_dedupeRuleFields[$name])) {
             $this->_dedupeRuleFields[$name] = $label;
           }
@@ -118,7 +118,7 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     //contact types option
     $contactOptions = [];
-    foreach($this->_contactTypes as $type) {
+    foreach ($this->_contactTypes as $type) {
       if (CRM_Contact_BAO_ContactType::isActive($type)) {
         $contactOptions[$type] = ts($type);
       }
@@ -129,11 +129,11 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     foreach ($this->_dedupeRuleGroups as $dedupegroup_id => $groupValues) {
       $contentType = $groupValues['contact_type'];
       $fields = [];
-      foreach($groupValues['fields'] as $name){
+      foreach ($groupValues['fields'] as $name) {
         $name = preg_replace('/.*(_\d+)$/', 'custom$1', $name);
         // If selection has field like 'sort_name', dont add it.
-        if(!CRM_Utils_Array::arrayKeyExists($name, $selectableFields[$contentType])){
-          $dontAdd = true;
+        if (!CRM_Utils_Array::arrayKeyExists($name, $selectableFields[$contentType])) {
+          $dontAdd = TRUE;
           break;
         }
 
@@ -142,8 +142,8 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
         }
       }
 
-      if($dontAdd){
-        $dontAdd = false;
+      if ($dontAdd) {
+        $dontAdd = FALSE;
         continue;
       }
 
@@ -155,11 +155,11 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     }
     $this->add('select', 'dedupeRuleGroup', ts('Dedupe Rule of Contact'), $dedupeRule);
 
-    if(!empty($config->externalMembershipIdFieldId)){
+    if (!empty($config->externalMembershipIdFieldId)) {
       $sql = "SELECT f.label AS field_label, g.title AS group_title FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
       $param = [1 => [$config->externalMembershipIdFieldId, 'Integer']];
       $dao = CRM_Core_DAO::executeQuery($sql, $param);
-      if($dao->fetch()){
+      if ($dao->fetch()) {
         $referenceFieldOptions['custom_'.$config->externalMembershipIdFieldId] = ts('Custom Field')." - ".$dao->group_title.": ".$dao->field_label;
       }
     }
@@ -171,10 +171,11 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     //get the saved mapping details
 
 
-    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue('mapping_type',
-        'Import Membership',
-        'name'
-      ));
+    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue(
+      'mapping_type',
+      'Import Membership',
+      'name'
+    ));
     $this->assign('savedMapping', $mappingArray);
     $this->add('select', 'savedMapping', ts('Mapping Option'), ['' => ts('- select -')] + $mappingArray);
     $this->addElement('submit', 'loadMapping', ts('Load Mapping'), NULL, ['onclick' => 'checkSelect()']);
@@ -183,7 +184,8 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -196,9 +198,9 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     );
   }
 
-  public function setDefaultValues(){
+  public function setDefaultValues() {
     $defaults = $this->_submitValues;
-    if (!$defaults['createContactMode']){
+    if (!$defaults['createContactMode']) {
       $defaults['createContactMode']['createMembership'] = 1;
       $defaults['createContactMode']['updateMembership'] = 1;
     }
@@ -235,16 +237,16 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     $dedupeRuleGroup = $this->controller->exportValue($this->_name, 'dedupeRuleGroup');
     $dataReferenceField = $this->controller->exportValue($this->_name, 'dataReferenceField');
 
-    if(!empty($createContactMode['updateMembership'])){
+    if (!empty($createContactMode['updateMembership'])) {
       $importMode += CRM_Member_Import_Parser::IMPORT_UPDATE;
       $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_UPDATE;
       $this->set('dataReferenceField', $dataReferenceField);
     }
-    else{
+    else {
       $onDuplicate = CRM_Member_Import_Parser::DUPLICATE_SKIP;
     }
 
-    if(!empty($createContactMode['createMembership'])){
+    if (!empty($createContactMode['createMembership'])) {
       $importMode += CRM_Member_Import_Parser::IMPORT_CREATE;
       $this->set('createContactOption', $createContactOption);
     }
@@ -266,10 +268,13 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
 
     $parser = new CRM_Member_Import_Parser_Membership($mapper);
     $parser->setMaxLinesToProcess(100);
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $fileName,
+      $seperator,
       $mapper,
       $skipColumnHeader,
-      CRM_Member_Import_Parser::MODE_MAPFIELD, $contactType
+      CRM_Member_Import_Parser::MODE_MAPFIELD,
+      $contactType
     );
 
     // add all the necessary variables to the form
@@ -286,4 +291,3 @@ class CRM_Member_Import_Form_UploadFile extends CRM_Core_Form {
     return ts('Upload Data');
   }
 }
-

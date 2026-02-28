@@ -178,7 +178,8 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
     if ($params['entity_table'] == 'civicrm_contribution_page') {
 
       $returnProperties = ['receipt_from_email', 'is_email_receipt'];
-      CRM_Core_DAO::commonRetrieve('CRM_Contribute_DAO_ContributionPage',
+      CRM_Core_DAO::commonRetrieve(
+        'CRM_Contribute_DAO_ContributionPage',
         $findProperties,
         $default,
         $returnProperties
@@ -195,7 +196,8 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
     elseif ($params['entity_table'] == 'civicrm_event') {
 
       $returnProperties = ['confirm_from_email', 'is_email_confirm'];
-      CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Event',
+      CRM_Core_DAO::commonRetrieve(
+        'CRM_Event_DAO_Event',
         $findProperties,
         $default,
         $returnProperties
@@ -213,8 +215,11 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
       $mailParams['module'] = 'event';
     }
     elseif ($params['entity_table'] == 'civicrm_pcp') {
-      $mailParams['email_from'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Email', $params['source_contact_id'],
-        'email', 'contact_id'
+      $mailParams['email_from'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_Email',
+        $params['source_contact_id'],
+        'email',
+        'contact_id'
       );
       $urlPath = 'civicrm/contribute/pcp/info';
       $mailParams['module'] = 'contribute';
@@ -242,8 +247,12 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
     // intro-text and thank-you text
     $form->addWysiwyg('intro', ts('Introduction'), CRM_Core_DAO::getAttribute('CRM_Friend_DAO_Friend', 'intro'));
 
-    $form->add('textarea', 'suggested_message', ts('Suggested Message'),
-      CRM_Core_DAO::getAttribute('CRM_Friend_DAO_Friend', 'suggested_message'), FALSE
+    $form->add(
+      'textarea',
+      'suggested_message',
+      ts('Suggested Message'),
+      CRM_Core_DAO::getAttribute('CRM_Friend_DAO_Friend', 'suggested_message'),
+      FALSE
     );
 
     $form->add('text', 'general_link', ts('Info Page Link'), CRM_Core_DAO::getAttribute('CRM_Friend_DAO_Friend', 'general_link'));
@@ -352,4 +361,3 @@ class CRM_Friend_BAO_Friend extends CRM_Friend_DAO_Friend {
     return $friendDAO;
   }
 }
-

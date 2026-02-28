@@ -60,7 +60,8 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
 
   protected $_add2groupSupported = FALSE;
 
-  protected $_customGroupExtends = ['Event']; public function __construct() {
+  protected $_customGroupExtends = ['Event'];
+  public function __construct() {
 
     $this->_columns = [
       'civicrm_event' =>
@@ -228,7 +229,8 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -379,9 +381,11 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
         if (CRM_Utils_Array::arrayKeyExists('civicrm_event_title', $row)) {
           if ($value = $row['civicrm_event_id']) {
             CRM_Event_PseudoConstant::event($value, FALSE);
-            $url = CRM_Report_Utils_Report::getNextUrl('event/participantlist',
+            $url = CRM_Report_Utils_Report::getNextUrl(
+              'event/participantlist',
               'reset=1&force=1&event_id_op=eq&event_id_value=' . $value,
-              $this->_absoluteUrl, $this->_id
+              $this->_absoluteUrl,
+              $this->_id
             );
             $rows[$rowNum]['civicrm_event_title_link'] = $url;
             $rows[$rowNum]['civicrm_event_title_hover'] = ts("View Event Participants For this Event");
@@ -398,4 +402,3 @@ class CRM_Report_Form_Event_IncomeCountSummary extends CRM_Report_Form {
     }
   }
 }
-

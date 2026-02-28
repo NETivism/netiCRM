@@ -37,7 +37,8 @@
 class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
-  protected $_formValues; public function __construct(&$formValues) {
+  protected $_formValues;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -80,8 +81,12 @@ class CRM_Contact_Form_Search_Custom_TagContributions implements CRM_Contact_For
   /**
    * Construct the search query
    */
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE, $onlyIDs = FALSE
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
+    $includeContactIDs = FALSE,
+    $onlyIDs = FALSE
   ) {
 
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
@@ -190,7 +195,8 @@ GROUP BY civicrm_contact.id
   public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
@@ -208,4 +214,3 @@ GROUP BY civicrm_contact.id
     return NULL;
   }
 }
-

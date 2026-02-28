@@ -187,7 +187,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $this->applyFilter('__ALL__', 'trim');
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
 
-    $this->addElement('checkbox',
+    $this->addElement(
+      'checkbox',
       'is_online_registration',
       ts('Allow Online Registration?'),
       NULL,
@@ -209,7 +210,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
     $this->addElement('checkbox', 'is_multiple_registrations', ts('Register multiple participants?'), NULL, ['onclick' => "return showHideByValue('is_multiple_registrations', '', 'allow_same_emails|additional_profile_pre|additional_profile_post|is_multiple_registrations_limit', 'table-row', 'radio', false);"]);
 
-    for($i = 2; $i <= 10; $i++) {
+    for ($i = 2; $i <= 10; $i++) {
       $maxLimit[$i]  = $i;
     }
     $this->addSelect('is_multiple_registrations_max', ts('Maximum per registration'), $maxLimit);
@@ -222,7 +223,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         in_array('Pending from approval', $participantStatuses) &&
         in_array('Rejected', $participantStatuses) &&
         !$this->_eventInfo['has_waitlist']) {
-      $this->addElement('checkbox',
+      $this->addElement(
+        'checkbox',
         'requires_approval',
         ts('Require participant approval?'),
         NULL,
@@ -257,7 +259,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
 
 
-    $types = array_merge(['Contact', 'Individual', 'Participant'],
+    $types = array_merge(
+      ['Contact', 'Individual', 'Participant'],
       CRM_Contact_BAO_ContactType::subTypes('Individual')
     );
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
@@ -317,7 +320,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     );
     $selectableEmail = [];
     $hasVerified = FALSE;
-    foreach($availableFrom as $fromAddr) {
+    foreach ($availableFrom as $fromAddr) {
       $email = htmlspecialchars($fromAddr['email']);
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
         $email = ts('%1 Verified', [1 => '🛡️ '.htmlspecialchars($fromAddr['email'])]);
@@ -336,10 +339,12 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     $form->addRule("confirm_from_email", ts('Email is not valid.'), 'email');
 
-    $form->addElement('checkbox',
+    $form->addElement(
+      'checkbox',
       'allow_cancel_by_link',
       ts('Attach cancel registration link'),
-      NULL);
+      NULL
+    );
 
     $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $form->assign('default_from_target', 'confirm_from_email');
@@ -350,8 +355,12 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $tokens = CRM_Core_SelectValues::contactTokens();
     $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
-    $form->add('select', 'token2', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $form->add(
+      'select',
+      'token2',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -407,7 +416,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
           $errorMsg['confirm_from_email'] = ts('Please enter Confirmation Email FROM Email Address.');
         }
         else {
-          if(!CRM_Utils_Rule::email($email)) {
+          if (!CRM_Utils_Rule::email($email)) {
             $errorMsg['confirm_from_email'] = ts('Please enter the valid email address.');
           }
           if (!CRM_Utils_Mail::checkMailProviders($email)) {
@@ -453,11 +462,13 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     }
 
     if (!$this->_isTemplate) {
-      $params['registration_start_date'] = CRM_Utils_Date::processDate($params['registration_start_date'],
+      $params['registration_start_date'] = CRM_Utils_Date::processDate(
+        $params['registration_start_date'],
         $params['registration_start_date_time'],
         TRUE
       );
-      $params['registration_end_date'] = CRM_Utils_Date::processDate($params['registration_end_date'],
+      $params['registration_end_date'] = CRM_Utils_Date::processDate(
+        $params['registration_end_date'],
         $params['registration_end_date_time'],
         TRUE
       );
@@ -530,4 +541,3 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     return ts('Online Registration');
   }
 }
-

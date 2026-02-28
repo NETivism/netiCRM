@@ -178,7 +178,8 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
         $customFields = CRM_Core_BAO_CustomField::getFields('Address', FALSE, TRUE);
       }
       if (!empty($customFields)) {
-        $addressCustom = CRM_Core_BAO_CustomField::postProcess($params,
+        $addressCustom = CRM_Core_BAO_CustomField::postProcess(
+          $params,
           $customFields,
           $address->id,
           'Address',
@@ -241,7 +242,8 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     /* Split the zip and +4, if it's in US format */
 
     if (CRM_Utils_Array::value('postal_code', $params) &&
-      preg_match('/^(\d{4,5})[+-](\d{4})$/',
+      preg_match(
+        '/^(\d{4,5})[+-](\d{4})$/',
         $params['postal_code'],
         $match
       )
@@ -308,7 +310,8 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     ) {
       // since state id present and country id not present, hence lets populate it
       // jira issue http://issues.civicrm.org/jira/browse/CRM-56
-      $params['country_id'] = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_StateProvince',
+      $params['country_id'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_StateProvince',
         $params['state_province_id'],
         'country_id'
       );
@@ -362,7 +365,7 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
     // add latitude and longitude and format address if needed
     if (!empty($config->geocodeMethod)) {
       $className = $config->geocodeMethod;
-      $className::format( $params );
+      $className::format($params);
     }
   }
 
@@ -464,7 +467,9 @@ class CRM_Core_BAO_Address extends CRM_Core_DAO_Address {
       // deprecate reference.
       if ($count > 1) {
         foreach (['state', 'state_name', 'country', 'world_region'] as $fld) {
-          if (isset($address->$fld))unset($address->$fld);
+          if (isset($address->$fld)) {
+            unset($address->$fld);
+          }
         }
       }
       $stree = $address->street_address;
@@ -637,7 +642,8 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     return $addresses;
   }
 
-  public static function addStateCountryMap(&$stateCountryMap,
+  public static function addStateCountryMap(
+    &$stateCountryMap,
     $defaults = NULL
   ) {
     // first fix the statecountry map if needed
@@ -650,7 +656,8 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
       $config->stateCountryMap = [];
     }
 
-    $config->stateCountryMap = array_merge($config->stateCountryMap,
+    $config->stateCountryMap = array_merge(
+      $config->stateCountryMap,
       $stateCountryMap
     );
   }
@@ -664,10 +671,12 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
           CRM_Utils_Array::arrayKeyExists('country', $match)
         ) {
 
-          CRM_Contact_Form_Edit_Address::fixStateSelect($form,
+          CRM_Contact_Form_Edit_Address::fixStateSelect(
+            $form,
             $match['country'],
             $match['state_province'],
-            CRM_Utils_Array::value($match['country'],
+            CRM_Utils_Array::value(
+              $match['country'],
               $defaults
             )
           );
@@ -960,7 +969,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     $relTypeId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', $relationshipType, 'id', 'name_a_b');
 
     if (!$relTypeId) {
-       return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type '%1'", [1 => $relationshipType]));
+      return CRM_Core_Error::statusBounce(ts("You seem to have deleted the relationship type '%1'", [1 => $relationshipType]));
     }
 
     // create relationship
@@ -1047,7 +1056,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
     $billingLocationTypeId = array_search('Billing', $locationTypes);
     $billingLocationAddr = NULL;
     if (is_array($addresses)) {
-      foreach($addresses as $addr) {
+      foreach ($addresses as $addr) {
         if ($addr['location_type_id'] == $billingLocationTypeId) {
           $billingLocationAddr = $addr;
         }
@@ -1069,7 +1078,7 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
    * Get current exists id from value
    *
    * Only effect when id not provided. Id will be added into params.
-   * 
+   *
    * @param array $params referenced array to be add exists id
    * @return void
    */
@@ -1084,8 +1093,8 @@ ORDER BY civicrm_address.is_primary DESC, civicrm_address.location_type_id DESC,
         'name',
         'contact_id',
       ];
-      foreach($checkFields as $key) {
-        if(!empty($params[$key])) {
+      foreach ($checkFields as $key) {
+        if (!empty($params[$key])) {
           $values[$key] = $params[$key];
         }
       }

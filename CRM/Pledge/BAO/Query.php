@@ -214,30 +214,47 @@ class CRM_Pledge_BAO_Query {
       case 'pledge_create_date_low':
       case 'pledge_create_date_high':
         // process to / from date
-        $query->dateQueryBuilder($values,
-          'civicrm_pledge', 'pledge_create_date', 'create_date', 'Pledge Made'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_pledge',
+          'pledge_create_date',
+          'create_date',
+          'Pledge Made'
         );
+        // no break
       case 'pledge_start_date_low':
       case 'pledge_start_date_high':
         // process to / from date
-        $query->dateQueryBuilder($values,
-          'civicrm_pledge', 'pledge_start_date', 'start_date', 'Pledge Start Date'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_pledge',
+          'pledge_start_date',
+          'start_date',
+          'Pledge Start Date'
         );
         return;
 
       case 'pledge_end_date_low':
       case 'pledge_end_date_high':
         // process to / from date
-        $query->dateQueryBuilder($values,
-          'civicrm_pledge', 'pledge_end_date', 'end_date', 'Pledge End Date'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_pledge',
+          'pledge_end_date',
+          'end_date',
+          'Pledge End Date'
         );
         return;
 
       case 'pledge_payment_date_low':
       case 'pledge_payment_date_high':
         // process to / from date
-        $query->dateQueryBuilder($values,
-          'civicrm_pledge_payment', 'pledge_payment_date', 'scheduled_date', 'Payment Scheduled'
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_pledge_payment',
+          'pledge_payment_date',
+          'scheduled_date',
+          'Payment Scheduled'
         );
         return;
 
@@ -245,8 +262,12 @@ class CRM_Pledge_BAO_Query {
       case 'pledge_amount_low':
       case 'pledge_amount_high':
         // process min/max amount
-        $query->numberRangeBuilder($values,
-          'civicrm_pledge', 'pledge_amount', 'amount', 'Pledge Amount'
+        $query->numberRangeBuilder(
+          $values,
+          'civicrm_pledge',
+          'pledge_amount',
+          'amount',
+          'Pledge Amount'
         );
         return;
 
@@ -284,7 +305,8 @@ class CRM_Pledge_BAO_Query {
         }
 
         $query->_qill[$grouping][] = ts('Pledge Status %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge.status_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_pledge.status_id",
           $op,
           $status,
           "Integer"
@@ -326,7 +348,8 @@ class CRM_Pledge_BAO_Query {
         }
 
         $query->_qill[$grouping][] = ts('Pledge Payment Status %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge_payment.status_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_pledge_payment.status_id",
           $op,
           $status,
           "Integer"
@@ -335,7 +358,8 @@ class CRM_Pledge_BAO_Query {
         return;
 
       case 'pledge_test':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge.is_test",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_pledge.is_test",
           $op,
           $value,
           "Integer"
@@ -349,7 +373,8 @@ class CRM_Pledge_BAO_Query {
       case 'pledge_contribution_type_id':
 
         $type = CRM_Contribute_PseudoConstant::contributionType($value);
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge.contribution_type_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_pledge.contribution_type_id",
           $op,
           $value,
           "Integer"
@@ -361,7 +386,8 @@ class CRM_Pledge_BAO_Query {
       case 'pledge_contribution_page_id':
 
         $page = CRM_Contribute_PseudoConstant::contributionPage($value);
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_pledge.contribution_page_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_pledge.contribution_page_id",
           $op,
           $value,
           "Integer"
@@ -558,13 +584,17 @@ class CRM_Pledge_BAO_Query {
     $form->addGroup($paymentStatus, 'pledge_payment_status_id', ts('Pledge Payment Status'));
 
 
-    $form->add('select', 'pledge_contribution_type_id',
+    $form->add(
+      'select',
+      'pledge_contribution_type_id',
       ts('Contribution Type'),
       ['' => ts('- select -')] +
       CRM_Contribute_PseudoConstant::contributionType()
     );
 
-    $form->add('select', 'pledge_contribution_page_id',
+    $form->add(
+      'select',
+      'pledge_contribution_page_id',
       ts('Contribution Page'),
       ['' => ts('- select -')] +
       CRM_Contribute_PseudoConstant::contributionPage()
@@ -581,7 +611,9 @@ class CRM_Pledge_BAO_Query {
       $freqUnitsDisplay["'{$val}'"] = ts('%1(s)', [1 => $label]);
     }
 
-    $form->add('select', 'pledge_frequency_unit',
+    $form->add(
+      'select',
+      'pledge_frequency_unit',
       ts('Pledge Frequency'),
       ['' => ts('- select -')] + $freqUnitsDisplay
     );
@@ -597,10 +629,13 @@ class CRM_Pledge_BAO_Query {
         foreach ($group['fields'] as $field) {
           $fieldId = $field['id'];
           $elementName = 'custom_' . $fieldId;
-          CRM_Core_BAO_CustomField::addQuickFormElement($form,
+          CRM_Core_BAO_CustomField::addQuickFormElement(
+            $form,
             $elementName,
             $fieldId,
-            FALSE, FALSE, TRUE
+            FALSE,
+            FALSE,
+            TRUE
           );
         }
       }
@@ -609,7 +644,8 @@ class CRM_Pledge_BAO_Query {
     $form->assign('validCiviPledge', TRUE);
   }
 
-  public static function searchAction(&$row, $id) {}
+  public static function searchAction(&$row, $id) {
+  }
 
   public static function tableNames(&$tables) {
     //add status table
@@ -620,4 +656,3 @@ class CRM_Pledge_BAO_Query {
     }
   }
 }
-

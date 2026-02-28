@@ -163,7 +163,8 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @return CRM_Contact_Selector
    * @access public
    */
-  public function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $activityClause = NULL,
     $single = FALSE,
@@ -183,7 +184,12 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
 
     // type of selector
     $this->_action = $action;
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_ACTIVITY
     );
     $this->_query->_distinctComponentClause = 'DISTINCT ( civicrm_activity.id )';
@@ -216,9 +222,14 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @access public
    */
   public function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_activityClause
     );
@@ -236,9 +247,14 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
    * @return array  rows in the given offset and rowCount
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_activityClause
     );
@@ -277,8 +293,11 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
         $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->activity_id;
       }
 
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
       $accessMailingReport = FALSE;
       $activityType = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
@@ -288,7 +307,8 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
       }
       $bulkActivityTypeID = CRM_Utils_Array::key('Bulk Email', $activityType);
       if ($accessCiviMail && in_array($result->source_record_id, $mailingIDs) && ($bulkActivityTypeID == $activityTypeId)) {
-        $row['mailingId'] = CRM_Utils_System::url('civicrm/mailing/report',
+        $row['mailingId'] = CRM_Utils_System::url(
+          'civicrm/mailing/report',
           "mid={$result->source_record_id}&reset=1&cid={$result->source_contact_id}&context=activitySelector"
         );
         $row['recipients'] = ts('(recipients)');
@@ -298,14 +318,17 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
       }
 
       $activityActions = new CRM_Activity_Selector_Activity($result->contact_id, NULL);
-      $actionLinks = $activityActions->actionLinks($activityTypeId,
+      $actionLinks = $activityActions->actionLinks(
+        $activityTypeId,
         CRM_Utils_Array::value('source_record_id', $row),
         $accessMailingReport,
         CRM_Utils_Array::value('activity_id', $row),
         $this->_key,
         $this->_compContext
       );
-      $row['action'] = CRM_Core_Action::formLink($actionLinks, NULL,
+      $row['action'] = CRM_Core_Action::formLink(
+        $actionLinks,
+        NULL,
         ['id' => $result->activity_id,
           'cid' => $contactId,
           'cxt' => $this->_context,
@@ -400,4 +423,3 @@ class CRM_Activity_Selector_Search extends CRM_Core_Selector_Base implements CRM
   }
 }
 //end of class
-

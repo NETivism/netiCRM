@@ -82,7 +82,7 @@ class CRM_Utils_Rule {
     }
 
     // Ensure it only contains valid characters (alphanumeric and underscores).
-   if (!preg_match('/^\w{1,64}(\.\w{1,64})?$/i', $str)) {
+    if (!preg_match('/^\w{1,64}(\.\w{1,64})?$/i', $str)) {
       return FALSE;
     }
 
@@ -159,7 +159,7 @@ class CRM_Utils_Rule {
    * @param string $url
    * @param string $checkDomain check url has matching domain name
    * @param bool $checkHTTPS to check if has https
-   * @return bool 
+   * @return bool
    */
   public static function url($url, $checkDomain = '', $checkHTTPS = NULL) {
     if (!$url) {
@@ -491,7 +491,8 @@ class CRM_Utils_Rule {
 
   public static function boolean($value) {
     return preg_match(
-      '/(^(1|0)$)|(^(Y(es)?|N(o)?)$)|(^(T(rue)?|F(alse)?)$)/i', $value
+      '/(^(1|0)$)|(^(Y(es)?|N(o)?)$)|(^(T(rue)?|F(alse)?)$)/i',
+      $value
     ) ? TRUE : FALSE;
   }
 
@@ -532,7 +533,7 @@ class CRM_Utils_Rule {
   public static function asciiFile($elementValue) {
     $valid = TRUE;
     if (is_array($elementValue['tmp_name'])) {
-      foreach($elementValue['tmp_name'] as $idx => $tmpName){
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
           (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
         ) {
@@ -564,7 +565,7 @@ class CRM_Utils_Rule {
   public static function utf8File($elementValue) {
     $success = FALSE;
     if (is_array($elementValue['tmp_name'])) {
-      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
           (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
         ) {
@@ -614,7 +615,7 @@ class CRM_Utils_Rule {
   public static function htmlFile($elementValue) {
     if (is_array($elementValue['tmp_name'])) {
       $valid = FALSE;
-      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
           (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
         ) {
@@ -658,7 +659,7 @@ class CRM_Utils_Rule {
     $skip = !empty($skip) ? TRUE : FALSE;
     $valid = TRUE;
     if (is_array($elementValue['tmp_name'])) {
-      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if (!empty($tmpName)) {
           list($width, $height) = getimagesize($tmpName);
           if ($width && $height) {
@@ -744,7 +745,8 @@ class CRM_Utils_Rule {
 
   public static function xssString($value) {
     if (is_string($value)) {
-      return preg_match('!<(vb)?script[^>]*>.*</(vb)?script.*>!ims',
+      return preg_match(
+        '!<(vb)?script[^>]*>.*</(vb)?script.*>!ims',
         $value
       ) ? FALSE : TRUE;
     }
@@ -885,8 +887,8 @@ class CRM_Utils_Rule {
    * @return bool
    */
   public static function checkIp($requestIp, $ips) {
-    if (null === $requestIp) {
-      return false;
+    if (NULL === $requestIp) {
+      return FALSE;
     }
     if (!is_array($ips)) {
       $ips = [
@@ -896,10 +898,10 @@ class CRM_Utils_Rule {
     $method = substr_count($requestIp, ':') > 1 ? 'checkIp6' : 'checkIp4';
     foreach ($ips as $ip) {
       if (self::$method($requestIp, $ip)) {
-        return true;
+        return TRUE;
       }
     }
-    return false;
+    return FALSE;
   }
 
   /**
@@ -915,15 +917,15 @@ class CRM_Utils_Rule {
    */
   public static function checkIp4($requestIp, $ip) {
     if (!filter_var($requestIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-      return false;
+      return FALSE;
     }
-    if (false !== strpos($ip, '/')) {
+    if (FALSE !== strpos($ip, '/')) {
       list($address, $netmask) = explode('/', $ip, 2);
       if ($netmask === '0') {
         return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
       }
       if ($netmask < 0 || $netmask > 32) {
-        return false;
+        return FALSE;
       }
     }
     else {
@@ -948,10 +950,10 @@ class CRM_Utils_Rule {
     if (!(extension_loaded('sockets') && defined('AF_INET6') || @inet_pton('::1'))) {
       throw new \RuntimeException('Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".');
     }
-    if (false !== strpos($ip, '/')) {
+    if (FALSE !== strpos($ip, '/')) {
       list($address, $netmask) = explode('/', $ip, 2);
       if ($netmask < 1 || $netmask > 128) {
-        return false;
+        return FALSE;
       }
     }
     else {
@@ -965,10 +967,10 @@ class CRM_Utils_Rule {
       $left = $left <= 16 ? $left : 16;
       $mask = ~(0xffff >> $left) & 0xffff;
       if (($bytesAddr[$i] & $mask) != ($bytesTest[$i] & $mask)) {
-        return false;
+        return FALSE;
       }
     }
-    return true;
+    return TRUE;
   }
 
   /**
@@ -999,4 +1001,3 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 }
-

@@ -75,7 +75,8 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     asort($groupList);
 
     $this->add('select', 'group_id', ts('Select Group'), $groupList);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
@@ -137,4 +138,3 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     CRM_Utils_System::redirect($url);
   }
 }
-

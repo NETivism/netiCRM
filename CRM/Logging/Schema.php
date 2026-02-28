@@ -158,7 +158,9 @@ class CRM_Logging_Schema {
     $templates = CRM_Core_OptionGroup::values('report_template');
     if (!isset($templates['logging/contact/summary']) or
       !isset($templates['logging/contact/detail'])
-    ) return;
+    ) {
+      return;
+    }
 
     // add report instances
 
@@ -323,4 +325,3 @@ class CRM_Logging_Schema {
     return (bool) CRM_Core_DAO::singleValueQuery("SHOW TRIGGERS LIKE 'civicrm_contact'");
   }
 }
-

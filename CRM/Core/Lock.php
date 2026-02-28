@@ -36,11 +36,12 @@ class CRM_Core_Lock {
 
   public $_timeout;
   // lets have a 1 second timeout for now
-  public CONST TIMEOUT = 1;
+  public const TIMEOUT = 1;
 
   protected $_hasLock = FALSE;
 
-  protected $_name; public function __construct($name, $timeout = NULL) {
+  protected $_name;
+  public function __construct($name, $timeout = NULL) {
     $config = CRM_Core_Config::singleton();
     $dsnArray = DB::parseDSN($config->dsn);
     $database = $dsnArray['database'];
@@ -117,4 +118,3 @@ class CRM_Core_Lock {
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 }
-

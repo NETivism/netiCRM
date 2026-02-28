@@ -81,7 +81,8 @@ WHERE cs.id IN ( {$caseIDs} )";
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -90,4 +91,3 @@ WHERE cs.id IN ( {$caseIDs} )";
     );
   }
 }
-

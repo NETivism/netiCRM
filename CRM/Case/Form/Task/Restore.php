@@ -94,4 +94,3 @@ class CRM_Case_Form_Task_Restore extends CRM_Case_Form_Task {
     CRM_Core_Session::setStatus($status);
   }
 }
-

@@ -176,7 +176,8 @@ WHERE p.extends LIKE '%2%'
       $sql .= " AND p.id = $price_set_id";
     }
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       $params
     );
     return $dao;
@@ -196,7 +197,8 @@ WHERE p.extends LIKE '%2%'
       return;
     }
 
-    $form->add('select',
+    $form->add(
+      'select',
       'price_set_id',
       ts('Price Set'),
       $price_set,
@@ -269,8 +271,8 @@ WHERE p.extends LIKE '%2%'
     return NULL;
   }
 
-  public function count(){
-    if(!$this->_filled){
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -292,9 +294,13 @@ contact_a.display_name   as display_name";
       $selectClause .= ",\ntempTable.{$fieldName} as {$fieldName}";
     }
 
-    $sql = $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    $sql = $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
     return $sql;
   }
@@ -320,10 +326,9 @@ contact_a.display_name   as display_name";
     $action = [
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=view").'" class="action-item" target="_blank">'.ts('View').'</a>',
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=update").'" class="action-item" target="_blank">'.ts('Edit').'</a>',
-    ];                                      
-    if(isset($row['action'])){
+    ];
+    if (isset($row['action'])) {
       $row['action'] = CRM_Utils_Array::implode('<br>', $action);
     }
-  } 
+  }
 }
-

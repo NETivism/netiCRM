@@ -42,20 +42,23 @@ class CRM_Event_Page_ParticipantListing_NameStatusAndDate extends CRM_Core_Page 
 
   protected $_eventTitle;
 
-  protected $_pager; public function preProcess() {
+  protected $_pager;
+  public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
 
     // ensure that there is a particpant type for this
-    $this->_participantListingID = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $this->_participantListingID = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $this->_id,
       'participant_listing_id'
     );
     if (!$this->_participantListingID) {
-       return CRM_Core_Error::statusBounce(ts("The Participant Listing feature is not currently enabled for this event."));
+      return CRM_Core_Error::statusBounce(ts("The Participant Listing feature is not currently enabled for this event."));
     }
 
     // retrieve Event Title and include it in page title
-    $this->_eventTitle = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $this->_eventTitle = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $this->_id,
       'title'
     );
@@ -104,7 +107,8 @@ LIMIT    $offset, $rowCount";
         'participantID' => $object->participant_id,
         'name' => $object->name,
         'email' => $object->email,
-        'status' => ts(CRM_Utils_Array::value($object->status_id,
+        'status' => ts(CRM_Utils_Array::value(
+          $object->status_id,
           $statusLookup
         )),
         'date' => $object->register_date,
@@ -160,21 +164,23 @@ SELECT count( civicrm_contact.id )
     }
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
     $sort = new CRM_Utils_Sort($headers, $sortID);
     $this->assign_by_ref('headers', $headers);
     $this->assign_by_ref('sort', $sort);
-    $this->set(CRM_Utils_Sort::SORT_ID,
+    $this->set(
+      CRM_Utils_Sort::SORT_ID,
       $sort->getCurrentSortID()
     );
-    $this->set(CRM_Utils_Sort::SORT_DIRECTION,
+    $this->set(
+      CRM_Utils_Sort::SORT_DIRECTION,
       $sort->getCurrentSortDirection()
     );
 
     return $sort->orderBy();
   }
 }
-

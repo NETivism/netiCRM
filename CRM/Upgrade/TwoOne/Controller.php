@@ -44,4 +44,3 @@ class CRM_Upgrade_TwoOne_Controller extends CRM_Upgrade_Controller {
     return $pages;
   }
 }
-

@@ -84,7 +84,9 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     if (CRM_Utils_Array::value('contactType', $searchOptions)) {
 
       $contactTypes = ['' => ts('- any contact type -')] + CRM_Contact_BAO_ContactType::getSelectElements();
-      $this->add('select', 'contact_type',
+      $this->add(
+        'select',
+        'contact_type',
         ts('is...'),
         $contactTypes
       );
@@ -315,4 +317,3 @@ class CRM_Contact_Form_Search_Basic extends CRM_Contact_Form_Search {
     return ts('Find Contacts');
   }
 }
-

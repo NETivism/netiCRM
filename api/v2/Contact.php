@@ -69,7 +69,7 @@ function civicrm_contact_create(&$params) {
     $create_new = TRUE;
     return civicrm_contact_update($params, $create_new);
   }
-  catch(Exception$e) {
+  catch (Exception$e) {
     return civicrm_create_error($e->getMessage());
   }
 }
@@ -83,7 +83,7 @@ function civicrm_contact_update(&$params, $create_new = FALSE) {
   try {
     civicrm_api_check_permission(__FUNCTION__, $params, TRUE);
   }
-  catch(Exception$e) {
+  catch (Exception$e) {
     return civicrm_create_error($e->getMessage());
   }
   require_once 'CRM/Utils/Array.php';
@@ -267,9 +267,10 @@ function _civicrm_greeting_format_params(&$params) {
 
     // format params
     if (CRM_Utils_Array::value('contact_type', $params) == 'Organization' && $key != 'addressee') {
-      return civicrm_create_error(ts('You cannot use email/postal greetings for contact type %1.',
-          [1 => $params['contact_type']]
-        ));
+      return civicrm_create_error(ts(
+        'You cannot use email/postal greetings for contact type %1.',
+        [1 => $params['contact_type']]
+      ));
     }
 
     $nullValue = FALSE;
@@ -290,17 +291,19 @@ function _civicrm_greeting_format_params(&$params) {
     if ($customGreeting && $greetingId &&
       ($greetingId != array_search('Customized', $greetings))
     ) {
-      return civicrm_create_error(ts('Provide either %1 greeting id and/or %1 greeting or custom %1 greeting',
-          [1 => $key]
-        ));
+      return civicrm_create_error(ts(
+        'Provide either %1 greeting id and/or %1 greeting or custom %1 greeting',
+        [1 => $key]
+      ));
     }
 
     if ($greetingVal && $greetingId &&
       ($greetingId != CRM_Utils_Array::key($greetingVal, $greetings))
     ) {
-      return civicrm_create_error(ts('Mismatch in %1 greeting id and %1 greeting',
-          [1 => $key]
-        ));
+      return civicrm_create_error(ts(
+        'Mismatch in %1 greeting id and %1 greeting',
+        [1 => $key]
+      ));
     }
 
     if ($greetingId) {
@@ -310,9 +313,10 @@ function _civicrm_greeting_format_params(&$params) {
       }
 
       if (!$customGreeting && ($greetingId == array_search('Customized', $greetings))) {
-        return civicrm_create_error(ts('Please provide a custom value for %1 greeting',
-            [1 => $key]
-          ));
+        return civicrm_create_error(ts(
+          'Please provide a custom value for %1 greeting',
+          [1 => $key]
+        ));
       }
     }
     elseif ($greetingVal) {
@@ -328,7 +332,8 @@ function _civicrm_greeting_format_params(&$params) {
       $greetingId = CRM_Utils_Array::key('Customized', $greetings);
     }
 
-    $customValue = $params['contact_id'] ? CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+    $customValue = $params['contact_id'] ? CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_Contact',
       $params['contact_id'],
       "{$key}{$greeting}_custom"
     ) : FALSE;
@@ -419,7 +424,8 @@ function civicrm_contact_get(&$params, $deprecated_behavior = FALSE) {
 
   require_once 'CRM/Contact/BAO/Query.php';
   $newParams = CRM_Contact_BAO_Query::convertFormValues($inputParams);
-  list($contacts, $options) = CRM_Contact_BAO_Query::apiQuery($newParams,
+  list($contacts, $options) = CRM_Contact_BAO_Query::apiQuery(
+    $newParams,
     $returnProperties,
     NULL,
     $sort,
@@ -547,7 +553,8 @@ function &civicrm_contact_search(&$params) {
 
   require_once 'CRM/Contact/BAO/Query.php';
   $newParams = CRM_Contact_BAO_Query::convertFormValues($inputParams);
-  list($contacts, $options) = CRM_Contact_BAO_Query::apiQuery($newParams,
+  list($contacts, $options) = CRM_Contact_BAO_Query::apiQuery(
+    $newParams,
     $returnProperties,
     NULL,
     $sort,
@@ -576,7 +583,8 @@ function &civicrm_contact_search(&$params) {
  * @return null on success, error message otherwise
  * @access public
  */
-function civicrm_contact_check_params(&$params,
+function civicrm_contact_check_params(
+  &$params,
   $dupeCheck         = TRUE,
   $dupeErrorArray    = FALSE,
   $requiredCheck     = TRUE,
@@ -660,8 +668,10 @@ function civicrm_contact_check_params(&$params,
       $dedupeParams['check_permission'] = $params['check_permission'];
     }
 
-    $ids = CRM_Utils_Array::implode(',',
-      CRM_Dedupe_Finder::dupesByParams($dedupeParams,
+    $ids = CRM_Utils_Array::implode(
+      ',',
+      CRM_Dedupe_Finder::dupesByParams(
+        $dedupeParams,
         $params['contact_type'],
         'Strict',
         [],
@@ -671,9 +681,11 @@ function civicrm_contact_check_params(&$params,
 
     if ($ids != NULL) {
       if ($dupeErrorArray) {
-        $error = CRM_Core_Error::createError("Found matching contacts: $ids",
+        $error = CRM_Core_Error::createError(
+          "Found matching contacts: $ids",
           CRM_Core_Error::DUPLICATE_CONTACT,
-          'Fatal', $ids
+          'Fatal',
+          $ids
         );
         return civicrm_create_error($error->pop());
       }
@@ -723,8 +735,12 @@ function civicrm_replace_contact_formatted($contactId, &$params, &$fields) {
 
   civicrm_contact_delete($delContact);
 
-  $cid = CRM_Contact_BAO_Contact::createProfileContact($params, $fields,
-    NULL, NULL, NULL,
+  $cid = CRM_Contact_BAO_Contact::createProfileContact(
+    $params,
+    $fields,
+    NULL,
+    NULL,
+    NULL,
     $params['contact_type']
   );
   return civicrm_create_success($cid);
@@ -794,7 +810,8 @@ function civicrm_contact_format_create(&$params) {
     }
   }
 
-  $contact = CRM_Contact_BAO_Contact::create($params,
+  $contact = CRM_Contact_BAO_Contact::create(
+    $params,
     CRM_Utils_Array::value('fixAddress', $params)
   );
 
@@ -852,4 +869,3 @@ function civicrm_contact_check_custom_params($params, $csType = NULL) {
     }
   }
 }
-

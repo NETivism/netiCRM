@@ -211,8 +211,13 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
       //else compare individual name format with default individual addressee.
       $individualNameFormat = CRM_Core_BAO_Preferences::value('individual_name_format');
 
-      $defaultAddressee = CRM_Core_OptionGroup::values('addressee', FALSE, FALSE, FALSE,
-        " AND v.filter = 1 AND v.is_default =  1", 'label'
+      $defaultAddressee = CRM_Core_OptionGroup::values(
+        'addressee',
+        FALSE,
+        FALSE,
+        FALSE,
+        " AND v.filter = 1 AND v.is_default =  1",
+        'label'
       );
 
       if (array_search($individualNameFormat, $defaultAddressee) !== FALSE) {
@@ -225,7 +230,8 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
 
     if ($addNewAddressee) {
       //otherwise insert new token in addressee and set as a default
-      $addresseeGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+      $addresseeGroupId = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_OptionGroup',
         'addressee',
         'id',
         'name'
@@ -245,8 +251,11 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
       $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
 
       $optionValueParams['weight'] = $weight;
-      $addresseeToken = CRM_Core_OptionValue::addOptionValue($optionValueParams, $addresseeGroupParams,
-        $action, $optionId = NULL
+      $addresseeToken = CRM_Core_OptionValue::addOptionValue(
+        $optionValueParams,
+        $addresseeGroupParams,
+        $action,
+        $optionId = NULL
       );
 
       $afterUpgradeMessage = ts("During this upgrade, Postal Addressee values have been stored for each contact record using the system default format - %2.You will need to run the included command-line script to update your Individual contact records to use the \"Individual Name Format\" previously specified for your site %1", [1 => $docURL, 2 => array_pop($defaultAddressee)]);
@@ -275,4 +284,3 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
     $template->assign('afterUpgradeMessage', $afterUpgradeMessage);
   }
 }
-

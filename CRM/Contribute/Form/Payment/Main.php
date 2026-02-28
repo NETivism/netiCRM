@@ -52,13 +52,13 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
    * @return void
    * @access public
    */
-  public function preProcess(){
+  public function preProcess() {
     parent::preProcess();
-    if(!$this->_pass){
+    if (!$this->_pass) {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();
     }
-    else{
+    else {
       $this->assign('ppType', FALSE);
       $this->_ppType = CRM_Utils_Array::value('type', $_GET);
       if ($this->_ppType) {
@@ -101,7 +101,8 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $this->addRadio('payment_processor', ts('Payment Method'), $pps, NULL, "&nbsp;", TRUE);
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Change Payment Method'),
@@ -137,21 +138,22 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $params = $this->controller->exportValues($this->_name);
     $processor = $this->_paymentProcessors[$params['payment_processor']];
     $contrib = CRM_Contribute_BAO_Contribution::copy($this->_id);
-    if(!empty($params['payment_processor'])){
+    if (!empty($params['payment_processor'])) {
       $contrib->payment_processor_id = $params['payment_processor'];
     }
-    if(!empty($params['payment_instrument_id'])){
+    if (!empty($params['payment_instrument_id'])) {
       $contrib->payment_instrument_id = $params['payment_instrument_id'];
     }
-    if(!empty($contrib->source)){
+    if (!empty($contrib->source)) {
       $contrib->source = str_replace(' '. ts('Change Payment Method'), '', $contrib->source).' '.ts('Change Payment Method');
     }
-    else{
+    else {
       $contrib->source = ' '.ts('Change Payment Method');
     }
-    if(!empty($contrib->invoice_id)){
+    if (!empty($contrib->invoice_id)) {
       $invoice_id = md5(uniqid((string)rand(), TRUE));
-      $contrib->invoice_id = $invoice_id;;
+      $contrib->invoice_id = $invoice_id;
+      ;
       $this->set('invoiceID', $invoiceID);
     }
     $contrib->save();
@@ -160,7 +162,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $this->set('contrib', $values);
     $ids = $this->getVar('_ids');
     $pid = $ids['participant'];
-    if(!empty($pid)) {
+    if (!empty($pid)) {
       $this->payLaterProcessor($pid);
     }
     if (!empty($params['payment_processor'])) {
@@ -171,7 +173,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     // before leave to transfercheckout, call hook
     CRM_Utils_Hook::postProcess(get_class($this), $this);
 
-    // TODO: we have to redirect to correct thank you page 
+    // TODO: we have to redirect to correct thank you page
     // maybe create own controller for that
     if (!empty($params['payment_processor'])) {
       $payment->doTransferCheckout($vars, $this->_component);

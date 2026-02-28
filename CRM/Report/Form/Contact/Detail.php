@@ -49,7 +49,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
   public $_columnHeadersComponent;
   public $_absoluteUrl;
   public $_absoluteUr;
-  public CONST ROW_COUNT_LIMIT = 1;
+  public const ROW_COUNT_LIMIT = 1;
 
   protected $_summary = NULL;
 
@@ -371,7 +371,7 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     parent::buildQuickForm();
 
     $idOperator = $this->getElement('id_op');
-    foreach($idOperator->_options as $idx => $opt) {
+    foreach ($idOperator->_options as $idx => $opt) {
       if (!empty($opt['attr']['value']) && $opt['attr']['value'] != 'eq') {
         unset($idOperator->_options[$idx]);
       }
@@ -492,7 +492,8 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           $clause = NULL;
           $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
           if ($op) {
-            $clause = $this->whereClause($field,
+            $clause = $this->whereClause(
+              $field,
               $op,
               CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
               CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -812,9 +813,11 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
             if ($val = CRM_Utils_Array::value('civicrm_participant_event_id', $row)) {
               $componentRows[$contactID][$component][$rowNum]['civicrm_participant_event_id'] = CRM_Event_PseudoConstant::event($val, FALSE);
-              $url = CRM_Report_Utils_Report::getNextUrl('event/income',
+              $url = CRM_Report_Utils_Report::getNextUrl(
+                'event/income',
                 'reset=1&force=1&id_op=in&id_value=' . $val,
-                $this->_absoluteUrl, $this->_id
+                $this->_absoluteUrl,
+                $this->_id
               );
               $componentRows[$contactID][$component][$rowNum]['civicrm_participant_event_id_link'] = $url;
               $componentRows[$contactID][$component][$rowNum]['civicrm_participant_event_id_hover'] = ts("View Event Income details for this Event.");
@@ -863,4 +866,3 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
   }
 }
-

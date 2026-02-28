@@ -118,13 +118,21 @@ class CRM_Case_Form_Activity_OpenCase {
 
 
     $caseType = CRM_Case_PseudoConstant::caseType();
-    $form->add('select', 'case_type_id', ts('Case Type'),
-      $caseType, TRUE
+    $form->add(
+      'select',
+      'case_type_id',
+      ts('Case Type'),
+      $caseType,
+      TRUE
     );
 
     $caseStatus = CRM_Case_PseudoConstant::caseStatus();
-    $form->add('select', 'status_id', ts('Case Status'),
-      $caseStatus, TRUE
+    $form->add(
+      'select',
+      'status_id',
+      ts('Case Status'),
+      $caseStatus,
+      TRUE
     );
 
     $form->add('text', 'duration', ts('Duration'), ['size' => 4, 'maxlength' => 8]);
@@ -138,18 +146,26 @@ class CRM_Case_Form_Activity_OpenCase {
 
     $form->addDate('start_date', ts('Case Start Date'), TRUE, ['formatType' => 'activityDate']);
 
-    $form->add('select', 'medium_id', ts('Medium'),
-      CRM_Case_PseudoConstant::encounterMedium(), TRUE
+    $form->add(
+      'select',
+      'medium_id',
+      ts('Medium'),
+      CRM_Case_PseudoConstant::encounterMedium(),
+      TRUE
     );
 
     // calling this field activity_location to prevent conflict with contact location fields
     $form->add('text', 'activity_location', ts('Location'), CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity', 'location'));
 
-    $form->add('textarea', 'activity_details', ts('Details'),
+    $form->add(
+      'textarea',
+      'activity_details',
+      ts('Details'),
       CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity', 'details')
     );
 
-    $form->addButtons([
+    $form->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -307,16 +323,17 @@ class CRM_Case_Form_Activity_OpenCase {
     $session = CRM_Core_Session::singleton();
     if ($buttonName == $this->getButtonName('upload', 'new')) {
       if ($this->_context == 'standalone') {
-        $session->replaceUserContext(CRM_Utils_System::url('civicrm/case/add',
-            'reset=1&action=add&context=standalone'
-          ));
+        $session->replaceUserContext(CRM_Utils_System::url(
+          'civicrm/case/add',
+          'reset=1&action=add&context=standalone'
+        ));
       }
       else {
-        $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/case',
-            "reset=1&action=add&context=case&cid={$form->_contactID}"
-          ));
+        $session->replaceUserContext(CRM_Utils_System::url(
+          'civicrm/contact/view/case',
+          "reset=1&action=add&context=case&cid={$form->_contactID}"
+        ));
       }
     }
   }
 }
-

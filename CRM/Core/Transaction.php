@@ -153,4 +153,3 @@ class CRM_Core_Transaction {
     return self::$_doCommit;
   }
 }
-

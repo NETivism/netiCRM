@@ -39,7 +39,8 @@ class api_v3_EventTest extends CiviUnitTestCase {
   public $_eventIds;
   protected $_params;
   protected $_apiversion;
-  protected $_entity; public function get_info() {
+  protected $_entity;
+  public function get_info() {
     return [
       'name' => 'Event Create',
       'description' => 'Test all Event Create API methods.',
@@ -180,7 +181,7 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['count']);
   }
   public function testGetEventByIdSort() {
-  	$params = [
+    $params = [
       'return.sort' => 'id ASC',
       'return.max_results' => 1,
       'version' => $this->_apiversion,
@@ -252,17 +253,17 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $this->assertEquals(3, $allEvents['count'], 'confirm three events exist (ie. two not found) ' . __LINE__);
     $this->assertEquals($currentEvent['id'], $result['id'], '');
   }
-/*
- * There has been a schema change & the api needs to buffer developers from it
- */
+  /*
+   * There has been a schema change & the api needs to buffer developers from it
+   */
   public function testGetPaymentProcessorId() {
     $params = $this->_params[0];
     $params['payment_processor_id'] = 1;
     $params['sequential'] =1;
     $result = civicrm_api('event', 'create', $params);
-    $this->assertEquals( 1,$result['values'][0]['payment_processor'][0], "handing of payment processor compatibility");
+    $this->assertEquals(1, $result['values'][0]['payment_processor'][0], "handing of payment processor compatibility");
     $result = civicrm_api('event', 'get', $params);
-    $this->assertEquals($result['values'][0]['payment_processor_id'], 1,"handing get payment processor compatibility");
+    $this->assertEquals($result['values'][0]['payment_processor_id'], 1, "handing get payment processor compatibility");
   }
 
   public function testInvalidData() {
@@ -596,4 +597,3 @@ class api_v3_EventTest extends CiviUnitTestCase {
     $this->assertEquals(1, $result['values']['id']['api.required']);
   }
 }
-

@@ -36,13 +36,13 @@
 
 class CRM_Utils_VersionCheck {
   // timeout for when the connection or the server is slow
-  public CONST LATEST_VERSION_AT = '',
-  // relative to $civicrm_root
-  CHECK_TIMEOUT = 5, LOCALFILE_NAME = 'civicrm-version.txt',
-  // relative to $config->uploadDir
-  CACHEFILE_NAME = 'latest-version-cache.txt',
-  // cachefile expiry time (in seconds) - a week
-  CACHEFILE_EXPIRE = 604800;
+  public const LATEST_VERSION_AT = '',
+    // relative to $civicrm_root
+    CHECK_TIMEOUT = 5, LOCALFILE_NAME = 'civicrm-version.txt',
+    // relative to $config->uploadDir
+    CACHEFILE_NAME = 'latest-version-cache.txt',
+    // cachefile expiry time (in seconds) - a week
+    CACHEFILE_EXPIRE = 604800;
 
   /**
    * We only need one instance of this object, so we use the
@@ -106,4 +106,3 @@ class CRM_Utils_VersionCheck {
     return;
   }
 }
-

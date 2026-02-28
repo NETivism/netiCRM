@@ -47,11 +47,12 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
       $dateLabel = ts('Start Date');
     }
 
-    $this->addDateTime('receive_date', $dateLabel, False, ['formatType' => 'activityDateTime']);
+    $this->addDateTime('receive_date', $dateLabel, FALSE, ['formatType' => 'activityDateTime']);
 
     if (!empty($this->_parseResult)) {
       if (is_null($result['process_id'])) {
-        $this->addButtons([
+        $this->addButtons(
+          [
             ['type' => 'refresh',
               'name' => ts('Refresh'),
               'isDefault' => TRUE,
@@ -63,7 +64,8 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
         );
       }
       else {
-        $this->addButtons([
+        $this->addButtons(
+          [
             ['type' => 'back',
               'name' => ts('<< Previous'),
             ],
@@ -80,7 +82,8 @@ class CRM_Contribute_Form_TaiwanACH_Preview extends CRM_Core_Form {
     }
     else {
       CRM_Core_Session::setStatus(ts('Invalid file being import, abort.'), FALSE, 'error');
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'back',
             'name' => ts('<< Previous'),
           ],

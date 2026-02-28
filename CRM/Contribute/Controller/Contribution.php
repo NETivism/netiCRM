@@ -72,4 +72,3 @@ class CRM_Contribute_Controller_Contribution extends CRM_Core_Controller {
     }
   }
 }
-

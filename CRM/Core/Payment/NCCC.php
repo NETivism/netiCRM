@@ -125,4 +125,3 @@ class CRM_Core_Payment_NCCC extends CRM_Core_Payment {
     }
   }
 }
-

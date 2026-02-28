@@ -37,7 +37,7 @@ class CRM_Core_OptionGroup {
   public static $_cache = [];
 
   /*
-     * $_domainIDGroups array maintains the list of option groups for whom 
+     * $_domainIDGroups array maintains the list of option groups for whom
      * domainID is to be considered.
      *
      */
@@ -46,8 +46,13 @@ class CRM_Core_OptionGroup {
     'grant_type',
   ];
 
-  public static function &valuesCommon($dao, $flip = FALSE, $grouping = FALSE,
-    $localize = FALSE, $labelColumnName = 'label', $keyColumnName = 'value'
+  public static function &valuesCommon(
+    $dao,
+    $flip = FALSE,
+    $grouping = FALSE,
+    $localize = FALSE,
+    $labelColumnName = 'label',
+    $keyColumnName = 'value'
   ) {
     self::$_values = [];
     if ($keyColumnName !== 'value' && !CRM_Utils_Rule::alphanumeric($keyColumnName)) {
@@ -82,9 +87,16 @@ class CRM_Core_OptionGroup {
     return self::$_values;
   }
 
-  public static function &values($name, $flip = FALSE, $grouping = FALSE,
-    $localize = FALSE, $condition = NULL,
-    $labelColumnName = 'label', $onlyActive = TRUE, $fresh = FALSE, $keyColumnName = 'value'
+  public static function &values(
+    $name,
+    $flip = FALSE,
+    $grouping = FALSE,
+    $localize = FALSE,
+    $condition = NULL,
+    $labelColumnName = 'label',
+    $onlyActive = TRUE,
+    $fresh = FALSE,
+    $keyColumnName = 'value'
   ) {
     $cache = CRM_Utils_Cache::singleton();
     $cacheKey = self::createCacheKey($name, $flip, $grouping, $localize, $condition, $labelColumnName, $onlyActive, $keyColumnName);
@@ -328,7 +340,8 @@ WHERE  v.option_group_id = g.id
     return NULL;
   }
 
-  public static function getValue($groupName,
+  public static function getValue(
+    $groupName,
     $label,
     $labelField = 'label',
     $labelType = 'String',
@@ -474,8 +487,12 @@ SELECT v.label
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
-  public static function getRowValues($groupName, $fieldValue, $field = 'name',
-    $fieldType = 'String', $active = TRUE
+  public static function getRowValues(
+    $groupName,
+    $fieldValue,
+    $field = 'name',
+    $fieldType = 'String',
+    $active = TRUE
   ) {
     $query = "
 SELECT v.id, v.label, v.value, v.name, v.weight, v.description 
@@ -553,4 +570,3 @@ WHERE  v.option_group_id = g.id
     CRM_Utils_Cache::singleton()->flush();
   }
 }
-

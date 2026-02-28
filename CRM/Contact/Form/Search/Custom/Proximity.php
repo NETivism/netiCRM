@@ -40,7 +40,8 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
   public $_tag;
   protected $_latitude = NULL;
   protected $_longitude = NULL;
-  protected $_distance = NULL; public function __construct(&$formValues) {
+  protected $_distance = NULL;
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     // unset search profile if set
@@ -100,17 +101,20 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
     $proxUnits = ['km' => ts('km'), 'miles' => ts('miles')];
     $form->add('select', 'prox_distance_unit', ts('Units'), $proxUnits, TRUE);
 
-    $form->add('text',
+    $form->add(
+      'text',
       'street_address',
       ts('Street Address')
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'city',
       ts('City')
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'postal_code',
       ts('Postal Code')
     );
@@ -164,7 +168,10 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
       ]);
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
 
@@ -178,9 +185,13 @@ state_province.name    as state_province,
 country.name           as country       
 ";
 
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
@@ -213,7 +224,8 @@ LEFT JOIN civicrm_group_contact cgc ON ( cgc.contact_id = contact_a.id AND cgc.s
     $clause = [];
 
 
-    $where = CRM_Contact_BAO_ProximityQuery::where($this->_latitude,
+    $where = CRM_Contact_BAO_ProximityQuery::where(
+      $this->_latitude,
       $this->_longitude,
       $this->_distance,
       'address'
@@ -255,6 +267,6 @@ AND cgc.group_id = {$this->_group}
     return NULL;
   }
 
-  public function alterRow(&$row) {}
+  public function alterRow(&$row) {
+  }
 }
-

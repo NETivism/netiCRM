@@ -301,7 +301,8 @@ class CRM_Utils_Token {
    * @static
    */
   public static function &replaceOrgTokens($str, &$org, $html = FALSE, $escapeSmarty = FALSE) {
-    self::$_tokens['org'] = array_merge(array_keys(CRM_Contact_BAO_Contact::importableFields('Organization')),
+    self::$_tokens['org'] = array_merge(
+      array_keys(CRM_Contact_BAO_Contact::importableFields('Organization')),
       ['address', 'display_name', 'checksum', 'contact_id', 'state_province_name']
     );
 
@@ -418,23 +419,35 @@ class CRM_Utils_Token {
         break;
 
       case 'viewUrl':
-        $value = CRM_Utils_System::url('civicrm/mailing/view',
+        $value = CRM_Utils_System::url(
+          'civicrm/mailing/view',
           "reset=1&id={$mailing->id}",
-          TRUE, NULL, FALSE, TRUE
+          TRUE,
+          NULL,
+          FALSE,
+          TRUE
         );
         break;
 
       case 'editUrl':
-        $value = CRM_Utils_System::url('civicrm/mailing/send',
+        $value = CRM_Utils_System::url(
+          'civicrm/mailing/send',
           "reset=1&mid={$mailing->id}&continue=true",
-          TRUE, NULL, FALSE, TRUE
+          TRUE,
+          NULL,
+          FALSE,
+          TRUE
         );
         break;
 
       case 'scheduleUrl':
-        $value = CRM_Utils_System::url('civicrm/mailing/schedule',
+        $value = CRM_Utils_System::url(
+          'civicrm/mailing/schedule',
           "reset=1&mid={$mailing->id}",
-          TRUE, NULL, FALSE, TRUE
+          TRUE,
+          NULL,
+          FALSE,
+          TRUE
         );
         break;
 
@@ -455,9 +468,13 @@ class CRM_Utils_Token {
         break;
 
       case 'approveUrl':
-        $value = CRM_Utils_System::url('civicrm/mailing/approve',
+        $value = CRM_Utils_System::url(
+          'civicrm/mailing/approve',
           "reset=1&mid={$mailing->id}",
-          TRUE, NULL, FALSE, TRUE
+          TRUE,
+          NULL,
+          FALSE,
+          TRUE
         );
         break;
 
@@ -559,14 +576,20 @@ class CRM_Utils_Token {
    * @access public
    * @static
    */
-  public static function &replaceContactTokens($str, &$contact, $html = FALSE, $knownTokens = NULL,
-    $returnBlankToken = FALSE, $escapeSmarty = FALSE
+  public static function &replaceContactTokens(
+    $str,
+    &$contact,
+    $html = FALSE,
+    $knownTokens = NULL,
+    $returnBlankToken = FALSE,
+    $escapeSmarty = FALSE
   ) {
     $key = 'contact';
     if (self::$_tokens[$key] == NULL) {
       /* This should come from UF */
 
-      self::$_tokens[$key] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
+      self::$_tokens[$key] = array_merge(
+        array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
         ['checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link']
       );
     }
@@ -591,13 +614,18 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public static function getContactTokenReplacement($token, &$contact, $html = FALSE,
-    $returnBlankToken = FALSE, $escapeSmarty = FALSE
+  public static function getContactTokenReplacement(
+    $token,
+    &$contact,
+    $html = FALSE,
+    $returnBlankToken = FALSE,
+    $escapeSmarty = FALSE
   ) {
     if (self::$_tokens['contact'] == NULL) {
       /* This should come from UF */
 
-      self::$_tokens['contact'] = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
+      self::$_tokens['contact'] = array_merge(
+        array_keys(CRM_Contact_BAO_Contact::exportableFields('All')),
         ['checksum', 'contact_id', 'state_province_name', 'recurring_renewal_link']
       );
     }
@@ -625,7 +653,7 @@ class CRM_Utils_Token {
     elseif ($token == 'recurring_renewal_link') {
       $contactId = $contact['contact_id'];
       $oid = 0;
-      $pageId = null;
+      $pageId = NULL;
 
       $sql = "
       SELECT
@@ -648,7 +676,8 @@ class CRM_Utils_Token {
       if ($dao->fetch()) {
         $oid = $dao->contribution_id;
         $pageId = $dao->page_id;
-      } else {
+      }
+      else {
         $config = CRM_Core_Config::singleton();
         $pageId = $config->defaultRenewalPageId;
       }
@@ -659,7 +688,7 @@ class CRM_Utils_Token {
         $contactType = CRM_Core_DAO::singleValueQuery($contactTypeSql, $contactTypeParams);
         if ($contactType == 'Individual') {
           $cs = CRM_Contact_BAO_Contact_Utils::generateChecksum($contactId);
-          $value = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs",true);
+          $value = CRM_Utils_System::url('civicrm/contribute/transact', "reset=1&id=$pageId&cid=$contactId&oid=$oid&cs=$cs", TRUE);
         }
       }
     }
@@ -698,8 +727,14 @@ class CRM_Utils_Token {
    * @access public
    * @static
    */
-  public static function &replaceContributionTokens( $str, &$contribution, $html = FALSE, $knownTokens = NULL,
-  $returnBlankToken = FALSE, $escapeSmarty = FALSE ) {
+  public static function &replaceContributionTokens(
+    $str,
+    &$contribution,
+    $html = FALSE,
+    $knownTokens = NULL,
+    $returnBlankToken = FALSE,
+    $escapeSmarty = FALSE
+  ) {
     $key = 'contribution';
     if (self::$_tokens[$key] == NULL) {
       /* This should come from UF */
@@ -727,8 +762,12 @@ class CRM_Utils_Token {
     return $str;
   }
 
-  public static function getContributionTokenReplacement($token, &$contribution, $html = FALSE,
-    $returnBlankToken = FALSE, $escapeSmarty = FALSE
+  public static function getContributionTokenReplacement(
+    $token,
+    &$contribution,
+    $html = FALSE,
+    $returnBlankToken = FALSE,
+    $escapeSmarty = FALSE
   ) {
     if (self::$_tokens['contribution'] == NULL) {
       /* This should come from UF */
@@ -846,8 +885,13 @@ class CRM_Utils_Token {
    * @access public
    * @static
    */
-  public static function &replaceUnsubscribeTokens($str, &$domain, &$groups, $html,
-    $contact_id, $hash
+  public static function &replaceUnsubscribeTokens(
+    $str,
+    &$domain,
+    &$groups,
+    $html,
+    $contact_id,
+    $hash
   ) {
     if (self::token_match('unsubscribe', 'group', $str)) {
       if (!empty($groups)) {
@@ -877,8 +921,13 @@ class CRM_Utils_Token {
    * @access public
    * @static
    */
-  public static function &replaceResubscribeTokens($str, &$domain, &$groups, $html,
-    $contact_id, $hash
+  public static function &replaceResubscribeTokens(
+    $str,
+    &$domain,
+    &$groups,
+    $html,
+    $contact_id,
+    $hash
   ) {
     if (self::token_match('resubscribe', 'group', $str)) {
       if (!empty($groups)) {
@@ -928,9 +977,13 @@ class CRM_Utils_Token {
    */
   public static function &replaceSubscribeInviteTokens($str) {
     if (preg_match('/\{action\.subscribeUrl\}/', $str)) {
-      $url = CRM_Utils_System::url('civicrm/mailing/subscribe',
+      $url = CRM_Utils_System::url(
+        'civicrm/mailing/subscribe',
         'reset=1',
-        TRUE, NULL, TRUE, TRUE
+        TRUE,
+        NULL,
+        TRUE,
+        TRUE
       );
       $str = preg_replace('/\{action\.subscribeUrl\}/', $url, $str);
     }
@@ -938,9 +991,13 @@ class CRM_Utils_Token {
     if (preg_match('/\{action\.subscribeUrl.\d+\}/', $str, $matches)) {
       foreach ($matches as $key => $value) {
         $gid = substr($value, 21, -1);
-        $url = CRM_Utils_System::url('civicrm/mailing/subscribe',
+        $url = CRM_Utils_System::url(
+          'civicrm/mailing/subscribe',
           "reset=1&gid={$gid}",
-          TRUE, NULL, TRUE, TRUE
+          TRUE,
+          NULL,
+          TRUE,
+          TRUE
         );
         $url = str_replace('&amp;', '&', $url);
         $str = preg_replace('/' . preg_quote($value) . '/', $url, $str);
@@ -1041,7 +1098,8 @@ class CRM_Utils_Token {
   public static function getTokens($string) {
     $matches = [];
     $tokens = [];
-    preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
+    preg_match_all(
+      '/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
       $string,
       $matches,
       PREG_PATTERN_ORDER
@@ -1078,7 +1136,8 @@ class CRM_Utils_Token {
    * @access public
    * @static
    */
-  public static function getTokenDetails($contactIDs,
+  public static function getTokenDetails(
+    $contactIDs,
     $returnProperties = NULL,
     $skipOnHold = TRUE,
     $skipDeceased = TRUE,
@@ -1118,7 +1177,8 @@ class CRM_Utils_Token {
     // if return properties are not passed then get all return properties
     if (empty($returnProperties)) {
 
-      $fields = array_merge(array_keys(CRM_Contact_BAO_Contact::exportableFields()),
+      $fields = array_merge(
+        array_keys(CRM_Contact_BAO_Contact::exportableFields()),
         ['display_name', 'checksum', 'contact_id']
       );
       foreach ($fields as $key => $val) {
@@ -1156,7 +1216,8 @@ class CRM_Utils_Token {
 
           // communication Prefferance
 
-          $contactPcm = explode(CRM_Core_DAO::VALUE_SEPARATOR,
+          $contactPcm = explode(
+            CRM_Core_DAO::VALUE_SEPARATOR,
             $contactDetails[$contactID]['preferred_communication_method']
           );
           $result = [];
@@ -1170,8 +1231,10 @@ class CRM_Utils_Token {
 
         foreach ($custom as $cfID) {
           if (isset($contactDetails[$contactID]["custom_{$cfID}"])) {
-            $contactDetails[$contactID]["custom_{$cfID}"] = CRM_Core_BAO_CustomField::getDisplayValue($contactDetails[$contactID]["custom_{$cfID}"],
-              $cfID, $details[1]
+            $contactDetails[$contactID]["custom_{$cfID}"] = CRM_Core_BAO_CustomField::getDisplayValue(
+              $contactDetails[$contactID]["custom_{$cfID}"],
+              $cfID,
+              $details[1]
             );
           }
         }
@@ -1189,7 +1252,8 @@ class CRM_Utils_Token {
 
     // also call a hook and get token details
     if (empty($customHook)) {
-      CRM_Utils_Hook::tokenValues($details[0],
+      CRM_Utils_Hook::tokenValues(
+        $details[0],
         $contactIDs,
         NULL,
         $tokens,
@@ -1228,15 +1292,19 @@ class CRM_Utils_Token {
         $greetingsReturnProperties = array_fill_keys(array_keys($greetingsReturnProperties), 1);
         $contactParams = ['contact_id' => $contactId];
 
-        $greetingDetails = CRM_Utils_Token::getTokenDetails($contactParams,
+        $greetingDetails = CRM_Utils_Token::getTokenDetails(
+          $contactParams,
           $greetingsReturnProperties,
-          FALSE, FALSE, NULL,
+          FALSE,
+          FALSE,
+          NULL,
           $greetingTokens,
           $className
         );
 
         // again replace tokens
-        $tokenString = CRM_Utils_Token::replaceContactTokens($tokenString,
+        $tokenString = CRM_Utils_Token::replaceContactTokens(
+          $tokenString,
           $greetingDetails,
           TRUE,
           $greetingTokens
@@ -1316,9 +1384,11 @@ class CRM_Utils_Token {
     return $value;
   }
 
-  public function getPermissionEmails($permissionName) {}
+  public function getPermissionEmails($permissionName) {
+  }
 
-  public function getRoleEmails($roleName) {}
+  public function getRoleEmails($roleName) {
+  }
 
   /**
    * Formats a token list for the select2 widget
@@ -1330,4 +1400,3 @@ class CRM_Utils_Token {
     return json_encode($tokens);
   }
 }
-

@@ -218,4 +218,3 @@ class CRM_Contribute_Import_Field {
     return TRUE;
   }
 }
-

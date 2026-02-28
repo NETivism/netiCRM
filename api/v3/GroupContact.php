@@ -64,16 +64,16 @@ function civicrm_api3_group_contact_get($params) {
         if (CRM_Utils_Rule::positiveInteger($params['group_id'])) {
           $search['group'][$params['group_id']] = 1;
         }
-        elseif(strstr($params['group_id'], ',') && CRM_Utils_Rule::commaSeparatedIntegers($params['group_id'])) {
+        elseif (strstr($params['group_id'], ',') && CRM_Utils_Rule::commaSeparatedIntegers($params['group_id'])) {
           $groupIds = explode(',', $params['group_id']);
-          foreach($groupIds as $gid)  {
+          foreach ($groupIds as $gid) {
             $search['group'][$gid] = 1;
           }
         }
       }
-      elseif(is_array($params['group_id'])) {
-        foreach($params['group_id'] as $gid) {
-          if(CRM_Utils_Rule::positiveInteger($gid)) {
+      elseif (is_array($params['group_id'])) {
+        foreach ($params['group_id'] as $gid) {
+          if (CRM_Utils_Rule::positiveInteger($gid)) {
             $search['group'][$gid] = 1;
           }
         }
@@ -98,7 +98,7 @@ function civicrm_api3_group_contact_get($params) {
       $offset = $rowCount = 0;
       $result = $query->searchQuery($offset, $rowCount);
       $contactIds = [];
-      while($result->fetch()) {
+      while ($result->fetch()) {
         $contactIds[] = $result->contact_id;
       }
       return civicrm_api3_create_success($contactIds, $params);
@@ -151,7 +151,7 @@ function civicrm_api3_group_contact_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -197,7 +197,7 @@ function civicrm_api3_group_contact_pending($params) {
  * @param string $op
  *
  * @return Array
- * @todo behaviour is highly non-standard - need to figure out how to make this 'behave' 
+ * @todo behaviour is highly non-standard - need to figure out how to make this 'behave'
  * & at the very least return IDs & details of the groups created / changed
  */
 function _civicrm_api3_group_contact_common($params, $op = 'Added') {
@@ -233,7 +233,8 @@ function _civicrm_api3_group_contact_common($params, $op = 'Added') {
       'not_added' => 0
     ];
     foreach ($groupIDs as $groupID) {
-      list($tc, $a, $na) = CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIDs,
+      list($tc, $a, $na) = CRM_Contact_BAO_GroupContact::addContactsToGroup(
+        $contactIDs,
         $groupID,
         $method,
         $status,
@@ -257,8 +258,8 @@ function _civicrm_api3_group_contact_common($params, $op = 'Added') {
       $extraReturnValues['not_removed'] += $nr;
     }
   }
-  $dao = null;// can't pass this by reference
-  return civicrm_api3_create_success(1,$params,'group_contact','create',$dao,$extraReturnValues);
+  $dao = NULL;// can't pass this by reference
+  return civicrm_api3_create_success(1, $params, 'group_contact', 'create', $dao, $extraReturnValues);
 }
 /*
  * @deprecated - this should be part of create but need to know we aren't missing something
@@ -274,4 +275,3 @@ function civicrm_api3_group_contact_update_status($params) {
 
   return TRUE;
 }
-

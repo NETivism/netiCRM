@@ -132,7 +132,8 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     }
   }
 
-  public static function getTagsUsedFor($usedFor = ['civicrm_contact'],
+  public static function getTagsUsedFor(
+    $usedFor = ['civicrm_contact'],
     $buildSelect = TRUE,
     $all = FALSE,
     $parentId = NULL
@@ -185,7 +186,8 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     return $tags;
   }
 
-  public static function getTags($usedFor = 'civicrm_contact',
+  public static function getTags(
+    $usedFor = 'civicrm_contact',
     &$tags = [],
     $parentId = NULL,
     $separator = '&nbsp;&nbsp;',
@@ -339,7 +341,8 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
     // if we modify parent tag, then we need to update all children
     if ($tag->parent_id === 'null') {
-      CRM_Core_DAO::executeQuery("UPDATE civicrm_tag SET used_for=%1 WHERE parent_id = %2",
+      CRM_Core_DAO::executeQuery(
+        "UPDATE civicrm_tag SET used_for=%1 WHERE parent_id = %2",
         [1 => [$params['used_for'], 'String'],
           2 => [$tag->id, 'Integer'],
         ]
@@ -416,4 +419,3 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     return $tags;
   }
 }
-

@@ -55,13 +55,14 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
     }
-		$this->_defaultFrom = trim(CRM_Mailing_BAO_Mailing::defaultFromMail());
+    $this->_defaultFrom = trim(CRM_Mailing_BAO_Mailing::defaultFromMail());
   }
 
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->assign('email', $this->_values['email']);
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'next',
             'name' => ts('Delete Mail Settings'),
@@ -166,12 +167,12 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $hash->name = __FUNCTION__.':'.$id;
     if ($hash->find(TRUE)) {
       $hash->value = $email;
-      $hash->timestamp = microtime(true);
+      $hash->timestamp = microtime(TRUE);
       $hash->update();
     }
     else {
       $hash->value = $email;
-      $hash->timestamp = microtime(true);
+      $hash->timestamp = microtime(TRUE);
       $hash->insert();
     }
 
@@ -238,7 +239,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $all = [];
     CRM_Core_OptionGroup::getAssoc('from_email_address', $all);
     $verified = [];
-    foreach($all['filter'] as $idx => $filter) {
+    foreach ($all['filter'] as $idx => $filter) {
       if ($filter == $verifiedType) {
         $verified[$all['value'][$idx]] = CRM_Utils_Mail::pluckEmailFromHeader($all['label'][$idx]);
       }
@@ -246,7 +247,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $defaultFrom = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $verified['default'] = $defaultFrom;
     if ($returnType === 'domain') {
-      foreach($verified as $idx => $email) {
+      foreach ($verified as $idx => $email) {
         $domain = preg_replace('/^[^@]+@/', '', $email);
         $verified[$idx] = $domain;
       }
@@ -272,7 +273,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $results = [];
 
     $enableDMARC = FALSE;
-    foreach($emails as $val => $email) {
+    foreach ($emails as $val => $email) {
       if (!CRM_Utils_Array::arrayKeyExists($val, $fromEmailIds)) {
         continue;
       }
@@ -350,7 +351,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   public static function migrateEmailFromPages($fromName, $fromEmail) {
     $availableEmails = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
     $migrateEmail = TRUE;
-    foreach($availableEmails as $info) {
+    foreach ($availableEmails as $info) {
       if ($info['email'] === $fromEmail) {
         $migrateEmail = FALSE;
         return TRUE;
@@ -363,7 +364,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
       $existsFrom = [];
       list($dontcare, $domain) = explode('@', $fromEmail);
       CRM_Core_OptionGroup::getAssoc('from_email_address', $existsFrom);
-      foreach($existsFrom['filter'] as $idx => $filter) {
+      foreach ($existsFrom['filter'] as $idx => $filter) {
         $filterPassed = (self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM);
         if ($filter == $filterPassed) {
           $validAddr = $existsFrom['label'][$idx];

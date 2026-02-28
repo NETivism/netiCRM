@@ -46,8 +46,12 @@ class CRM_Event_Form_Task_ParticipantStatus extends CRM_Event_Form_Task_Batch {
 
 
     $statuses = &CRM_Event_PseudoConstant::participantStatus(NULL, NULL, 'label');
-    $this->add('select', 'status_change', ts('Change All Statuses'),
-      ['' => ts('- select status -')] + $statuses, NULL,
+    $this->add(
+      'select',
+      'status_change',
+      ts('Change All Statuses'),
+      ['' => ts('- select status -')] + $statuses,
+      NULL,
       ['onchange' => "if (this.value) {  setStatusesTo(this.value);}"]
     );
     $this->assign('context', 'statusChange');
@@ -56,7 +60,7 @@ class CRM_Event_Form_Task_ParticipantStatus extends CRM_Event_Form_Task_Batch {
 
     $notifyingStatuses = ['Pending from waitlist', 'Pending from approval', 'Expired', 'Cancelled'];
     $notifyingStatuses = array_intersect(CRM_Event_PseudoConstant::participantStatus(), $notifyingStatuses);
-    foreach($notifyingStatuses as $k => $v){
+    foreach ($notifyingStatuses as $k => $v) {
       $notifyingStatuses[$k] = ts($v);
     }
     $this->assign('notifyingStatusesIds', json_encode(array_keys($notifyingStatuses)));
@@ -65,4 +69,3 @@ class CRM_Event_Form_Task_ParticipantStatus extends CRM_Event_Form_Task_Batch {
     parent::buildQuickForm();
   }
 }
-

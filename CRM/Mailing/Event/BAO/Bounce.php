@@ -51,7 +51,8 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
    * Create a new bounce event, update the email address if necessary
    */
   public static function &create(&$params) {
-    $q = &CRM_Mailing_Event_BAO_Queue::verify($params['job_id'],
+    $q = &CRM_Mailing_Event_BAO_Queue::verify(
+      $params['job_id'],
       $params['event_queue_id'],
       $params['hash']
     );
@@ -133,7 +134,9 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
    * @access public
    * @static
    */
-  public static function getTotalCount($mailing_id, $job_id = NULL,
+  public static function getTotalCount(
+    $mailing_id,
+    $job_id = NULL,
     $is_distinct = FALSE
   ) {
     $dao = new CRM_Core_DAO();
@@ -186,8 +189,13 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
    * @access public
    * @static
    */
-  public static function &getRows($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $is_distinct = FALSE,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -254,14 +262,16 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     $bounceType['Spam'] = ts('Message caught by a content filter');
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
         'name' => "<a href=\"$url\">{$dao->display_name}</a>",
         'email' => $dao->email,
         // FIXME: translate this
-        'type' => (empty($dao->bounce_type)
+        'type' => (
+          empty($dao->bounce_type)
            ? ts('Unknown') : $bounceType[$dao->bounce_type]."($dao->bounce_type)"
         ),
         'reason' => $dao->reason,
@@ -309,4 +319,3 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     return [];
   }
 }
-

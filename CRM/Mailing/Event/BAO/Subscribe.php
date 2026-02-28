@@ -170,15 +170,21 @@ SELECT     civicrm_email.id as email_id
     $se->group_id = $group_id;
     $se->contact_id = $contact_id;
     $se->time_stamp = date('YmdHis');
-    $se->hash = substr(sha1("{$group_id}:{$contact_id}:{$dao->email_id}:" . time()),
-      0, 16
+    $se->hash = substr(
+      sha1("{$group_id}:{$contact_id}:{$dao->email_id}:" . time()),
+      0,
+      16
     );
     $se->save();
 
     $contacts = [$contact_id];
 
-    CRM_Contact_BAO_GroupContact::addContactsToGroup($contacts, $group_id,
-      'Email', 'Pending', $se->id
+    CRM_Contact_BAO_GroupContact::addContactsToGroup(
+      $contacts,
+      $group_id,
+      'Email',
+      'Pending',
+      $se->id
     );
 
     $transaction->commit();
@@ -230,7 +236,8 @@ SELECT     civicrm_email.id as email_id
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
 
-    $confirm = CRM_Utils_Array::implode($config->verpSeparator,
+    $confirm = CRM_Utils_Array::implode(
+      $config->verpSeparator,
       [
         $localpart . 'c',
         $this->contact_id,
@@ -260,7 +267,8 @@ SELECT     civicrm_email.id as email_id
       'Return-Path' => "do-not-reply@$emailDomain",
     ];
 
-    $url = CRM_Utils_System::url('civicrm/mailing/confirm',
+    $url = CRM_Utils_System::url(
+      'civicrm/mailing/confirm',
       "reset=1&cid={$this->contact_id}&sid={$this->id}&h={$this->hash}",
       TRUE
     );
@@ -281,15 +289,19 @@ SELECT     civicrm_email.id as email_id
     $tokens = $bao->getTokens();
 
     $html = CRM_Utils_Token::replaceDomainTokens($html, $domain, TRUE, $tokens['html']);
-    $html = CRM_Utils_Token::replaceSubscribeTokens($html,
+    $html = CRM_Utils_Token::replaceSubscribeTokens(
+      $html,
       $group->title,
-      $url, TRUE
+      $url,
+      TRUE
     );
 
     $text = CRM_Utils_Token::replaceDomainTokens($text, $domain, FALSE, $tokens['text']);
-    $text = CRM_Utils_Token::replaceSubscribeTokens($text,
+    $text = CRM_Utils_Token::replaceSubscribeTokens(
+      $text,
       $group->title,
-      $url, FALSE
+      $url,
+      FALSE
     );
     // render the &amp; entities in text mode, so that the links work
     $text = str_replace('&amp;', '&', $text);
@@ -425,4 +437,3 @@ SELECT     civicrm_email.id as email_id
   }
   //end of function
 }
-

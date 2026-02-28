@@ -162,14 +162,16 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     // add the preview elements
     $preview = [];
 
-    $preview['subject'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
+    $preview['subject'] = CRM_Core_DAO::getFieldValue(
+      'CRM_Mailing_DAO_Mailing',
       $this->_mailingID,
       'subject'
     );
     $preview['viewURL'] = CRM_Utils_System::url('civicrm/mailing/view', "reset=1&id={$this->_mailingID}");
     $preview['type'] = $this->_mailing->body_html ? 'html' : 'text';
 
-    $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_mailing',
+    $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo(
+      'civicrm_mailing',
       $this->_mailingID
     );
 
@@ -261,9 +263,10 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     }
 
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/mailing/browse/scheduled',
-        'reset=1&scheduled=true'
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      'civicrm/mailing/browse/scheduled',
+      'reset=1&scheduled=true'
+    ));
   }
 
   /**
@@ -277,4 +280,3 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     return ts('Approve/Reject Mailing');
   }
 }
-

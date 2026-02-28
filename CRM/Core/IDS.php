@@ -39,7 +39,7 @@ use IDS\Monitor;
 use IDS\Report;
 
 class CRM_Core_IDS {
-  public CONST CONFIG_FILE = 'Config.IDS.ini';
+  public const CONFIG_FILE = 'Config.IDS.ini';
 
   /**
    * @var array
@@ -182,7 +182,7 @@ class CRM_Core_IDS {
     // remove tracking parameters to prevent false positive
     $trackingG = ['fbclid', 'gclid', 'wbraid'];
     $trackingC = [ '__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gid', '_ga', '_gcl_au', '_fbp'];
-    foreach($trackingG as $g) {
+    foreach ($trackingG as $g) {
       if (isset($_GET[$g])) {
         unset($_GET[$g]);
       }
@@ -190,7 +190,7 @@ class CRM_Core_IDS {
         unset($_REQUEST[$g]);
       }
     }
-    foreach($trackingC as $c) {
+    foreach ($trackingC as $c) {
       if (isset($_COOKIE[$c])) {
         unset($_COOKIE[$c]);
       }
@@ -216,9 +216,9 @@ class CRM_Core_IDS {
 
     // dynamic definition of ids config
     // only apply exception when has certain permission
-    foreach(self::$definition as $perm => $permPath) {
+    foreach (self::$definition as $perm => $permPath) {
       if (CRM_Core_Permission::check($perm) || $perm === '*') {
-        foreach($permPath as $p => $epts) {
+        foreach ($permPath as $p => $epts) {
           if ($path == $p) {
             self::parseDefinitions($epts);
           }
@@ -237,7 +237,7 @@ class CRM_Core_IDS {
     }
 
     if (!empty(self::$exceptions)) {
-      foreach(self::$exceptions as $type => $epts) {
+      foreach (self::$exceptions as $type => $epts) {
         $epts = array_unique($epts);
         $init->config['General'][$type] = $epts;
       }
@@ -271,7 +271,7 @@ class CRM_Core_IDS {
       if ($temp) {
         $dirs = glob($temp.DIRECTORY_SEPARATOR.'smarty*');
         if (!empty($dirs)) {
-          foreach($dirs as $dir) {
+          foreach ($dirs as $dir) {
             $hostname = CRM_Utils_Type::escape($_SERVER['HTTP_HOST'], 'DirectoryName', FALSE);
             $configFile = $dir . DIRECTORY_SEPARATOR . $hostname . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR . 'ConfigAndLog' . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
             self::initConfig($configFile, $forceCreate);
@@ -348,7 +348,7 @@ class CRM_Core_IDS {
   }
 
   private function warn() {
-    if(CRM_Utils_System::isUserLoggedIn()) {
+    if (CRM_Utils_System::isUserLoggedIn()) {
       return TRUE;
     }
     else {
@@ -392,7 +392,7 @@ class CRM_Core_IDS {
     foreach ($result as $event) {
       $filters = $event->getFilters();
       $description = [];
-      foreach($filters as $filter) {
+      foreach ($filters as $filter) {
         $description[] = [
           'id' => $filter->getId(),
           'desc' => $filter->getDescription(),
@@ -418,7 +418,7 @@ class CRM_Core_IDS {
 
   public function parseDefinitions($definition) {
     if (is_array($definition)) {
-      foreach($definition as $def) {
+      foreach ($definition as $def) {
         list($field, $type, $condition) = explode(':', $def, 3);
         if (empty($type)) {
           $type = 'exceptions';
@@ -436,4 +436,3 @@ class CRM_Core_IDS {
     }
   }
 }
-

@@ -144,4 +144,3 @@ class CRM_Utils_Geocode_Yahoo {
     return FALSE;
   }
 }
-

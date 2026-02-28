@@ -70,8 +70,13 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
 
   public static function retrieve($name, $type, $method = 'POST', $abort = TRUE) {
     static $store = NULL;
-    $value = CRM_Utils_Request::retrieve($name, $type, $store,
-      FALSE, NULL, $method
+    $value = CRM_Utils_Request::retrieve(
+      $name,
+      $type,
+      $store,
+      FALSE,
+      NULL,
+      $method
     );
     if ($abort && $value === NULL) {
       $name = CRM_Utils_Type::escape($name, 'string', FALSE);
@@ -181,8 +186,11 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     if ($sendNotification) {
       //send recurring Notification email for user
 
-      CRM_Contribute_BAO_ContributionPage::recurringNofify($subscriptionPaymentStatus, $ids['contact'],
-        $ids['contributionPage'], $recur
+      CRM_Contribute_BAO_ContributionPage::recurringNofify(
+        $subscriptionPaymentStatus,
+        $ids['contact'],
+        $ids['contributionPage'],
+        $recur
       );
     }
 
@@ -205,8 +213,12 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
       $objects['contribution'] = &$contribution;
     }
 
-    $this->single($input, $ids, $objects,
-      TRUE, $first
+    $this->single(
+      $input,
+      $ids,
+      $objects,
+      TRUE,
+      $first
     );
   }
 
@@ -357,4 +369,3 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     $input['trxn_id'] = self::retrieve('txn_id', 'String', 'POST', FALSE);
   }
 }
-

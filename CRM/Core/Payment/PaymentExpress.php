@@ -40,7 +40,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
    * @var mixed
    */
   public $_processorName;
-  public CONST CHARSET = 'iso-8859-1';
+  public const CHARSET = 'iso-8859-1';
   protected static $_mode = NULL;
 
   protected static $_params = [];
@@ -141,20 +141,26 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
     $url = $config->userFrameworkResourceURL . "extern/pxIPN.php";
 
     if ($component == 'event') {
-      $cancelURL = CRM_Utils_System::url('civicrm/event/register',
+      $cancelURL = CRM_Utils_System::url(
+        'civicrm/event/register',
         "_qf_Confirm_display=true&qfKey={$params['qfKey']}",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
     elseif ($component == 'contribute') {
-      $cancelURL = CRM_Utils_System::url('civicrm/contribute/transact',
+      $cancelURL = CRM_Utils_System::url(
+        'civicrm/contribute/transact',
         "_qf_Confirm_display=true&qfKey={$params['qfKey']}",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
 
 
-    /*  
+    /*
          * Build the private data string to pass to DPS, which they will give back to us with the
          *
          * transaction result.  We are building this as a comma-separated list so as to avoid long URLs.
@@ -179,7 +185,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
     // Allow further manipulation of params via custom hooks
     CRM_Utils_Hook::alterPaymentProcessorParams($this, $params, $privateData);
 
-    /*  
+    /*
          *  determine whether method is pxaccess or pxpay by whether signature (mac key) is defined
          */
 
@@ -187,7 +193,7 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
 
     if (empty($this->_paymentProcessor['signature'])) {
       /*
-             * Processor is pxpay 
+             * Processor is pxpay
              *
              * This contains the XML/Curl functions we'll need to generate the XML request
              */
@@ -264,4 +270,3 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
     }
   }
 }
-

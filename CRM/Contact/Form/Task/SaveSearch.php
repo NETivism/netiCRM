@@ -95,12 +95,19 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     $this->assign('qill', $qill);
 
     // the name and description are actually stored with the group and not the saved search
-    $this->add('text', 'title', ts('Name'),
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title'), TRUE
+    $this->add(
+      'text',
+      'title',
+      ts('Name'),
+      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title'),
+      TRUE
     );
 
 
-    $this->addElement('textarea', 'description', ts('Description'),
+    $this->addElement(
+      'textarea',
+      'description',
+      ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
     );
 
@@ -112,17 +119,23 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     }
 
     if (!empty($groupTypes)) {
-      $this->addCheckBox('group_type',
+      $this->addCheckBox(
+        'group_type',
         ts('Group Type'),
         $groupTypes,
-        NULL, NULL, NULL, NULL, '&nbsp;&nbsp;&nbsp;'
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        '&nbsp;&nbsp;&nbsp;'
       );
     }
 
     // get the group id for the saved search
     $groupID = NULL;
     if (isset($this->_id)) {
-      $groupID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group',
+      $groupID = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Group',
         $this->_id,
         'id',
         'saved_search_id'
@@ -132,8 +145,11 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     else {
       $this->addDefaultButtons(ts('Save Smart Group'));
     }
-    $this->addRule('title', ts('Name already exists in Database.'),
-      'objectExists', ['CRM_Contact_DAO_Group', $groupID, 'title']
+    $this->addRule(
+      'title',
+      ts('Name already exists in Database.'),
+      'objectExists',
+      ['CRM_Contact_DAO_Group', $groupID, 'title']
     );
   }
 
@@ -194,7 +210,8 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     $params['title'] = $formValues['title'];
     $params['description'] = $formValues['description'];
     if (is_array($formValues['group_type'])) {
-      $params['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
+      $params['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         array_keys($formValues['group_type'])
       ) . CRM_Core_DAO::VALUE_SEPARATOR;
     }
@@ -219,4 +236,3 @@ class CRM_Contact_Form_Task_SaveSearch extends CRM_Contact_Form_Task {
     $group = &CRM_Contact_BAO_Group::create($params);
   }
 }
-

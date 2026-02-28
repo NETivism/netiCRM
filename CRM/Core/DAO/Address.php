@@ -31,11 +31,10 @@
  * $Id$
  *
  */
-            require_once 'CRM/Core/DAO/County.php';
-          require_once 'CRM/Core/DAO/StateProvince.php';
-          require_once 'CRM/Core/DAO/Country.php';
-            class CRM_Core_DAO_Address extends CRM_Core_DAO
-{
+require_once 'CRM/Core/DAO/County.php';
+require_once 'CRM/Core/DAO/StateProvince.php';
+require_once 'CRM/Core/DAO/Country.php';
+class CRM_Core_DAO_Address extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
@@ -49,14 +48,14 @@
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -64,7 +63,7 @@
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -72,7 +71,7 @@
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -80,8 +79,8 @@
    * @var boolean
    * @static
    */
-  public static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Unique Address ID
    *
    * @var int unsigned
@@ -248,14 +247,13 @@
    * @var int unsigned
    */
   public $master_id;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_address
-   */
-  public function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_address
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -264,8 +262,7 @@
    * @access public
    * @return array
    */
-  public function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'contact_id' => 'civicrm_contact:id',
@@ -277,38 +274,36 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'county_id', 'civicrm_county', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'state_province_id', 'civicrm_state_province', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'country_id', 'civicrm_country', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'master_id', 'civicrm_address', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'county_id', 'civicrm_county', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'state_province_id', 'civicrm_state_province', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'country_id', 'civicrm_country', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'master_id', 'civicrm_address', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  public static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'contact_id' => [
           'name' => 'contact_id',
@@ -333,17 +328,17 @@
           'title' => ts('Street Address') ,
            'maxlength' => 96,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_address.street_address',
           'headerPattern' => '/(street|address)/i',
           'dataPattern' => '/^(\d{1,5}( [0-9A-Za-z]+)+)$|^(P\.?O\.\? Box \d{1,5})$/i',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'street_number' => [
           'name' => 'street_number',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Street Number') ,
-                'export' => true,
+                'export' => TRUE,
           'where' => 'civicrm_address.street_number',
           'headerPattern' => '',
           'dataPattern' => '',
@@ -354,7 +349,7 @@
           'title' => ts('Street Number Suffix') ,
            'maxlength' => 8,
            'size' => CRM_Utils_Type::EIGHT,
-              'export' => true,
+              'export' => TRUE,
           'where' => 'civicrm_address.street_number_suffix',
           'headerPattern' => '',
           'dataPattern' => '',
@@ -372,7 +367,7 @@
           'title' => ts('Street Name') ,
            'maxlength' => 64,
            'size' => CRM_Utils_Type::BIG,
-              'export' => true,
+              'export' => TRUE,
           'where' => 'civicrm_address.street_name',
           'headerPattern' => '',
           'dataPattern' => '',
@@ -397,7 +392,7 @@
           'title' => ts('Street Unit') ,
            'maxlength' => 16,
            'size' => CRM_Utils_Type::TWELVE,
-              'export' => true,
+              'export' => TRUE,
           'where' => 'civicrm_address.street_unit',
           'headerPattern' => '',
           'dataPattern' => '',
@@ -408,11 +403,11 @@
           'title' => ts('Supplemental Address 1') ,
            'maxlength' => 96,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_address.supplemental_address_1',
           'headerPattern' => '/(supplemental(\s)?)?address(\s\d+)?/i',
           'dataPattern' => '/unit|ap(ar)?t(ment)?\s(\d|\w)+/i',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'supplemental_address_2' => [
           'name' => 'supplemental_address_2',
@@ -420,11 +415,11 @@
           'title' => ts('Supplemental Address 2') ,
            'maxlength' => 96,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_address.supplemental_address_2',
           'headerPattern' => '/(supplemental(\s)?)?address(\s\d+)?/i',
           'dataPattern' => '/unit|ap(ar)?t(ment)?\s(\d|\w)+/i',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'supplemental_address_3' => [
           'name' => 'supplemental_address_3',
@@ -439,11 +434,11 @@
           'title' => ts('City') ,
            'maxlength' => 64,
            'size' => CRM_Utils_Type::BIG,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_address.city',
           'headerPattern' => '/city/i',
           'dataPattern' => '/^[A-Za-z]+(\.?)(\s?[A-Za-z]+){0,2}$/',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'county_id' => [
           'name' => 'county_id',
@@ -461,11 +456,11 @@
           'title' => ts('Postal Code Suffix') ,
            'maxlength' => 12,
            'size' => CRM_Utils_Type::TWELVE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_address.postal_code_suffix',
           'headerPattern' => '/p(ostal)\sc(ode)\ss(uffix)/i',
           'dataPattern' => '/\d?\d{4}(-\d{4})?/',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'postal_code' => [
           'name' => 'postal_code',
@@ -473,11 +468,11 @@
           'title' => ts('Postal Code') ,
            'maxlength' => 12,
            'size' => CRM_Utils_Type::TWELVE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_address.postal_code',
           'headerPattern' => '/postal|zip/i',
           'dataPattern' => '/\d?\d{4}(-\d{4})?/',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'usps_adc' => [
           'name' => 'usps_adc',
@@ -495,21 +490,21 @@
           'name' => 'geo_code_1',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Geo Code 1') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_address.geo_code_1',
           'headerPattern' => '/geo/i',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'geo_code_2' => [
           'name' => 'geo_code_2',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Geo Code 2') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_address.geo_code_2',
           'headerPattern' => '/geo/i',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'timezone' => [
           'name' => 'timezone',
@@ -524,21 +519,21 @@
           'title' => ts('Address Name') ,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_address.name',
           'headerPattern' => '/^location|(l(ocation\s)?name)$/i',
           'dataPattern' => '/^\w+$/',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'master_id' => [
           'name' => 'master_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Master Address ID') ,
-               'import' => true,
+               'import' => TRUE,
           'where' => 'civicrm_address.master_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
               'FKClassName' => 'CRM_Core_DAO_Address',
         ] ,
       ];
@@ -551,19 +546,17 @@
    * @access public
    * @return string
    */
-  public static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  public function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -572,27 +565,33 @@
    * @access public
    * return array
    */
-  public static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['address'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                    self::$_import = array_merge( self::$_import,
-      CRM_Core_DAO_County::import( true ) );
-                        self::$_import = array_merge( self::$_import,
-      CRM_Core_DAO_StateProvince::import( true ) );
-                        self::$_import = array_merge( self::$_import,
-      CRM_Core_DAO_Country::import( true ) );
-                                  }
+      self::$_import = array_merge(
+        self::$_import,
+        CRM_Core_DAO_County::import(TRUE)
+      );
+      self::$_import = array_merge(
+        self::$_import,
+        CRM_Core_DAO_StateProvince::import(TRUE)
+      );
+      self::$_import = array_merge(
+        self::$_import,
+        CRM_Core_DAO_Country::import(TRUE)
+      );
+    }
     return self::$_import;
   }
   /**
@@ -601,27 +600,33 @@
    * @access public
    * return array
    */
-  public static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['address'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                    self::$_export = array_merge( self::$_export,
-      CRM_Core_DAO_County::export( true ) );
-                        self::$_export = array_merge( self::$_export,
-      CRM_Core_DAO_StateProvince::export( true ) );
-                        self::$_export = array_merge( self::$_export,
-      CRM_Core_DAO_Country::export( true ) );
-                                  }
+      self::$_export = array_merge(
+        self::$_export,
+        CRM_Core_DAO_County::export(TRUE)
+      );
+      self::$_export = array_merge(
+        self::$_export,
+        CRM_Core_DAO_StateProvince::export(TRUE)
+      );
+      self::$_export = array_merge(
+        self::$_export,
+        CRM_Core_DAO_Country::export(TRUE)
+      );
+    }
     return self::$_export;
   }
 }

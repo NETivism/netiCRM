@@ -67,7 +67,8 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
    */
   public $_groupBy;
   protected $_summary = NULL;
-  protected $_relField = FALSE; public function __construct() {
+  protected $_relField = FALSE;
+  public function __construct() {
     $this->case_statuses = CRM_Case_PseudoConstant::caseStatus();
     $rels = CRM_Core_PseudoConstant::relationshipType();
     foreach ($rels as $relid => $v) {
@@ -247,7 +248,11 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
             $from = CRM_Utils_Array::value("{$fieldName}_from", $this->_params);
             $to = CRM_Utils_Array::value("{$fieldName}_to", $this->_params);
 
-            $clause = $this->dateClause($field['dbAlias'], $relative, $from, $to,
+            $clause = $this->dateClause(
+              $field['dbAlias'],
+              $relative,
+              $from,
+              $to,
               CRM_Utils_Array::value('type', $field)
             );
           }
@@ -255,7 +260,8 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
 
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -321,4 +327,3 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     }
   }
 }
-

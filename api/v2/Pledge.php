@@ -30,16 +30,16 @@
 
 
 /*
-*DRAFT CODE WRITTEN BY EILEEN still dev version 
-*Starting point was Contribute API. I tried to use the format params from 
+*DRAFT CODE WRITTEN BY EILEEN still dev version
+*Starting point was Contribute API. I tried to use the format params from
 *contribute API to handle incorrect data prior to hitting core & help
 *prevent CORE errors (the bane of API users since there is a proper API
-*error format). However, I found many fields needed to be manipulated after 
+*error format). However, I found many fields needed to be manipulated after
 *doing the field rationalisation in the contribute module. The way I have done it
 *is cumbersome from a coding point of view in order to allow a lot of commenting / clarity
 * I concluded that in the absence
 *of a clear standard to say when the fields unique name & when it's table name should
-*be used I should facilitate both as much as possible as either would be a reasonable 
+*be used I should facilitate both as much as possible as either would be a reasonable
 *expectation from a developer and I know from experience what huge amounts of developer
 *time go into 'trial and error' & 'guessing' what the paramaters might be for the api
 *Also, the version of a variable that is returned is a bit variable - ie. pledge_ vs not so
@@ -240,7 +240,7 @@ function &civicrm_pledge_get(&$params) {
  * @access private
  */
 function _civicrm_pledge_check_params(&$params) {
-    static $required = [ 'contact_id', 'amount', 'financial_type_id' , 'installments','start_date'];
+  static $required = [ 'contact_id', 'amount', 'financial_type_id' , 'installments','start_date'];
   if ($params['pledge_amount']) {
     //can be in unique format or DB format but change to unique format here
     $params['amount'] = $params['pledge_amount'];
@@ -391,8 +391,8 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
   elseif (CRM_Utils_Array::arrayKeyExists('start_date', $params)) {
     $values['scheduled_date'] = $params['start_date'];
   }
-    if( CRM_Utils_Array::value( 'financial_type_id', $params ) ) {
-        $values['financial_type_id'] = $params['financial_type_id']; 
+  if (CRM_Utils_Array::value('financial_type_id', $params)) {
+    $values['financial_type_id'] = $params['financial_type_id'];
   }
   foreach ($values as $key => $value) {
     // ignore empty values or empty arrays etc
@@ -406,7 +406,8 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -423,7 +424,8 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_pledge WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_pledge WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -450,12 +452,14 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
         if (!CRM_Utils_Rule::currencyCode($value)) {
           return civicrm_create_error("currency not a valid code: $value");
         }
+        // no break
       case 'financial_type_id':
         require_once 'CRM/Contribute/PseudoConstant.php';
-            $typeId = CRM_Contribute_PseudoConstant::financialType( $value );
+        $typeId = CRM_Contribute_PseudoConstant::financialType($value);
         if (!CRM_Utils_Rule::integer($value) || !$typeId) {
-                return civicrm_create_error( "financial type id is not valid: $value" );
+          return civicrm_create_error("financial type id is not valid: $value");
         }
+        // no break
       default:
         break;
     }
@@ -467,4 +471,3 @@ function _civicrm_pledge_format_params(&$params, &$values, $create = FALSE) {
 
   return [];
 }
-

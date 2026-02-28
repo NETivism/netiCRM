@@ -56,7 +56,11 @@ class CRM_Contact_Form_Edit_CustomData {
       $form->assign("blockName", $form->_addBlockName);
     }
 
-    CRM_Custom_Form_CustomData::preProcess($form, NULL, $form->_subType, NULL,
+    CRM_Custom_Form_CustomData::preProcess(
+      $form,
+      NULL,
+      $form->_subType,
+      NULL,
       ($form->_type) ? $form->_type : $form->_contactType
     );
 
@@ -102,4 +106,3 @@ class CRM_Contact_Form_Edit_CustomData {
     $defaults += CRM_Custom_Form_CustomData::setDefaultValues($form);
   }
 }
-

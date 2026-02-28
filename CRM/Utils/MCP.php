@@ -16,7 +16,7 @@ class CRM_Utils_MCP {
   /**
    * @var bool Whether to output streaming responses
    */
-  private $_isStreamable = false;
+  private $_isStreamable = FALSE;
 
   /**
    * @var int User who use mcp
@@ -49,7 +49,8 @@ class CRM_Utils_MCP {
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_POST)) {
       // GET request was converted to mock POST request in extern/mcp.php
       $request = $_POST;
-    } else {
+    }
+    else {
       $input = $this->getRawInput();
       $request = json_decode($input, TRUE);
     }
@@ -223,7 +224,8 @@ class CRM_Utils_MCP {
 
     if ($this->_isStreamable) {
       return $this->formatSSE('message', $jsonResponse);
-    } else {
+    }
+    else {
       return $jsonResponse;
     }
   }
@@ -244,9 +246,9 @@ class CRM_Utils_MCP {
    * @param string|null $id Optional event ID
    * @return string SSE formatted string
    */
-  private function formatSSE($event, $data, $id = null) {
+  private function formatSSE($event, $data, $id = NULL) {
     $output = '';
-    if ($id !== null) {
+    if ($id !== NULL) {
       $output .= "id: {$id}\n";
     }
     $output .= "event: {$event}\n";
@@ -286,7 +288,7 @@ class CRM_Utils_MCP {
    * @param int $progress Current progress (0-100)
    * @param int|null $total Total items (optional)
    */
-  public function sendProgress($progressToken, $progress, $total = null) {
+  public function sendProgress($progressToken, $progress, $total = NULL) {
     if (!$this->_isStreamable || empty($progressToken)) {
       return;
     }
@@ -300,7 +302,7 @@ class CRM_Utils_MCP {
       ]
     ];
 
-    if ($total !== null) {
+    if ($total !== NULL) {
       $notification['params']['total'] = $total;
     }
 
@@ -321,7 +323,7 @@ class CRM_Utils_MCP {
     }
 
     // Disable implicit flush
-    ob_implicit_flush(true);
+    ob_implicit_flush(TRUE);
 
     // Set unlimited execution time for long-running streams
     set_time_limit(0);
@@ -349,11 +351,11 @@ class CRM_Utils_MCP {
         'protocolVersion' => '2025-03-26',
         'capabilities' => [
           'tools' => [
-            'listChanged' => false
+            'listChanged' => FALSE
           ],
           'resources' => [
-            'subscribe' => false,
-            'listChanged' => false
+            'subscribe' => FALSE,
+            'listChanged' => FALSE
           ]
         ],
         'serverInfo' => [
@@ -528,7 +530,7 @@ class CRM_Utils_MCP {
             $entityMap = [
               'Contact' => 'Contact',
               'Individual' => 'Contact',
-              'Organization' => 'Contact', 
+              'Organization' => 'Contact',
               'Household' => 'Contact',
               'Contribution' => 'Contribution',
               'Event' => 'Event',
@@ -581,7 +583,7 @@ class CRM_Utils_MCP {
       return $fieldInfo;
     }
     catch (Exception $e) {
-      return null;
+      return NULL;
     }
   }
 
@@ -866,14 +868,14 @@ class CRM_Utils_MCP {
   private function getBearerToken() {
     $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
     if (empty($authHeader)) {
-      return null;
+      return NULL;
     }
     
     if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
       return trim($matches[1]);
     }
     
-    return null;
+    return NULL;
   }
 
   /**
@@ -883,10 +885,10 @@ class CRM_Utils_MCP {
    */
   private function validateBearerToken($token) {
     if (empty($token)) {
-      return false;
+      return FALSE;
     }
     // TODO: implement bearer token validation
-    return false;
+    return FALSE;
   }
 
   /**

@@ -28,5 +28,5 @@ class CRM_Core_Page_AJAX_SaveShortenURL {
       }
     }
     CRM_Utils_System::civiExit();
-  }  
+  }
 }

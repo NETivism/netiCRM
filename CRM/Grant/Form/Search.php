@@ -21,7 +21,7 @@
  | with this program; if not, contact CiviCRM LLC                     |
  | at info[AT]civicrm[DOT]org. If you have questions about the        |
  | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing   
+ | see the CiviCRM license FAQ at http://civicrm.org/licensing
  +--------------------------------------------------------------------+
 */
 
@@ -163,9 +163,9 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
     $this->_done = FALSE;
     $this->defaults = [];
 
-    /* 
-         * we allow the controller to set force/reset externally, useful when we are being 
-         * driven by the wizard framework 
+    /*
+         * we allow the controller to set force/reset externally, useful when we are being
+         * driven by the wizard framework
          */
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
@@ -197,14 +197,16 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-    $selector = new CRM_Grant_Selector_Search($this->_queryParams,
+    $selector = new CRM_Grant_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -219,7 +221,8 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -246,9 +249,9 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
 
     CRM_Grant_BAO_Query::buildSearchForm($this);
 
-    /* 
-         * add form checkboxes for each row. This is needed out here to conform to QF protocol 
-         * of all elements being declared in builQuickForm 
+    /*
+         * add form checkboxes for each row. This is needed out here to conform to QF protocol
+         * of all elements being declared in builQuickForm
          */
 
 
@@ -275,13 +278,19 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       }
 
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
-      $this->add('submit', $this->_actionButtonName, ts('Go'),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Go'),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
         ]
       );
 
-      $this->add('submit', $this->_printButtonName, ts('Print'),
+      $this->add(
+        'submit',
+        $this->_printButtonName,
+        ts('Print'),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
         ]
@@ -355,14 +364,16 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
 
 
-    $selector = new CRM_Grant_Selector_Search($this->_queryParams,
+    $selector = new CRM_Grant_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -376,7 +387,8 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       $prefix = $this->_prefix;
     }
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -413,7 +425,9 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
       return;
     }
 
-    $status = CRM_Utils_Request::retrieve('status', 'String',
+    $status = CRM_Utils_Request::retrieve(
+      'status',
+      'String',
       CRM_Core_DAO::$_nullObject
     );
     if ($status) {
@@ -448,4 +462,3 @@ class CRM_Grant_Form_Search extends CRM_Core_Form {
     return ts('Find Grants');
   }
 }
-

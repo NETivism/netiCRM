@@ -84,7 +84,8 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
 
     $this->addTextarea('description', ts('Description'));
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Continue'),
@@ -121,6 +122,3 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
     }
   }
 }
-
-
-

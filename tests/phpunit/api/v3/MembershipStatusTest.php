@@ -35,7 +35,7 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
   protected $_membershipTypeID;
   protected $_membershipStatusID;
   public $_eNoticeCompliant = TRUE;
-  protected $_apiversion; 
+  protected $_apiversion;
   
   public function get_info() {
     return [
@@ -116,7 +116,9 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
   public function testMembershipStatusesGet() {
     $params = 'wrong type';
     $result = civicrm_api('membership_status', 'get', $params);
-    $this->assertEquals(1, $result['is_error'],
+    $this->assertEquals(
+      1,
+      $result['is_error'],
       "In line " . __LINE__
     );
   }
@@ -162,15 +164,15 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
   ///////////////// civicrm_membership_status_calc methods
   /*pending it being re-enabled
 
-    
+
     function testCalculateStatusWithNoMembershipID( )
     {
         $calcParams = array( 'title' => 'Does not make sense' );
-        
+
         $result = civicrm_api3_membership_status_calc( $calcParams );
         $this->assertEquals( $result['is_error'], 1,"In line " . __LINE__ );
     }
-    
+
     function testCalculateStatus( )
     {
 
@@ -182,13 +184,13 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
         $end_date->modify("+7 months");
 
         $params = array(
-           'contact_id'         => $this->_contactID, 
+           'contact_id'         => $this->_contactID,
                          'membership_type_id' => $this->_membershipTypeID,
                          'membership_status_id' => $this->_membershipStatusID,
                          'join_date'   => $join_date->format('Y-m-d'),
                          'start_date'  => $start_date->format('Y-m-d'),
                          'end_date'    => $end_date->format('Y-m-d') );
-                         
+
         $membershipID       = $this->contactMembershipCreate( $params );
         $membershipStatusID = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_Membership',$membershipID,'status_id');
         $calcParams         = array( 'membership_id' => $membershipID );
@@ -196,7 +198,7 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
         $this->assertEquals( $result['is_error'], 0 );
         $this->assertEquals( $membershipStatusID,$result['id'] );
         $this->assertNotNull( $result['id'] );
-        
+
         $this->membershipDelete( $membershipID );
     }
 */
@@ -269,4 +271,3 @@ class api_v3_MembershipStatusTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 0, 'In line ' . __LINE__);
   }
 }
-

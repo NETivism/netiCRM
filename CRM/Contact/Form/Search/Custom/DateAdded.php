@@ -44,7 +44,8 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
   public $_allSearch;
   public $_groups;
   public $_tableName;
-  protected $_debug = 0; public function __construct(&$formValues) {
+  protected $_debug = 0;
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     $this->_includeGroups = CRM_Utils_Array::value('includeGroups', $formValues, []);
@@ -62,16 +63,22 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     $form->addDate('end_date', ts('End Date'), FALSE, ['formatType' => 'custom']);
 
     $groups = &CRM_Core_PseudoConstant::group();
-    $inG = &$form->addElement('advmultiselect', 'includeGroups',
-      ts('Include Group(s)') . ' ', $groups,
+    $inG = &$form->addElement(
+      'advmultiselect',
+      'includeGroups',
+      ts('Include Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
       ]
     );
 
-    $outG = &$form->addElement('advmultiselect', 'excludeGroups',
-      ts('Exclude Group(s)') . ' ', $groups,
+    $outG = &$form->addElement(
+      'advmultiselect',
+      'excludeGroups',
+      ts('Exclude Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:240px',
         'class' => 'advmultiselect',
@@ -86,8 +93,10 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
 
     //redirect if group not available for search criteria
     if (count($groups) == 0) {
-      return CRM_Core_Error::statusBounce(ts("Atleast one Group must be present for search."),
-        CRM_Utils_System::url('civicrm/contact/search/custom/list',
+      return CRM_Core_Error::statusBounce(
+        ts("Atleast one Group must be present for search."),
+        CRM_Utils_System::url(
+          'civicrm/contact/search/custom/list',
           'reset=1'
         )
       );
@@ -104,7 +113,10 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     return NULL;
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
 
@@ -132,9 +144,13 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
 
     #$selectClause .= ", GROUP_CONCAT(DISTINCT group_names ORDER BY group_names ASC ) as gname";
     $groupBy = " GROUP BY contact_id ";
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, $groupBy
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      $groupBy
     );
   }
 
@@ -368,7 +384,8 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
   public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
@@ -387,4 +404,3 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     }
   }
 }
-

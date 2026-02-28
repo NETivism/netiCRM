@@ -44,7 +44,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * const the max number of notes we display at any given time
    * @var int
    */
-  public CONST MAX_NOTES = 3;
+  public const MAX_NOTES = 3;
 
   /**
    * given a note id, retrieve the note text
@@ -170,7 +170,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
         $note->contact_id = $params['entity_id'];
       }
       else {
-         return CRM_Core_Error::statusBounce(ts('We could not find your logged in user ID'));
+        return CRM_Core_Error::statusBounce(ts('We could not find your logged in user ID'));
       }
     }
 
@@ -182,7 +182,8 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
 
     if ($note->entity_table == 'civicrm_contact') {
 
-      CRM_Core_BAO_Log::register($note->entity_id,
+      CRM_Core_BAO_Log::register(
+        $note->entity_id,
         'civicrm_note',
         $note->id
       );
@@ -203,10 +204,12 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
 
       $recentOther = [];
       if ($noteActions) {
-        $recentOther = ['editUrl' => CRM_Utils_System::url('civicrm/contact/view/note',
-            "reset=1&action=update&cid={$note->entity_id}&id={$note->id}&context=home"
-          ),
-          'deleteUrl' => CRM_Utils_System::url('civicrm/contact/view/note',
+        $recentOther = ['editUrl' => CRM_Utils_System::url(
+          'civicrm/contact/view/note',
+          "reset=1&action=update&cid={$note->entity_id}&id={$note->id}&context=home"
+        ),
+          'deleteUrl' => CRM_Utils_System::url(
+            'civicrm/contact/view/note',
             "reset=1&action=delete&cid={$note->entity_id}&id={$note->id}&context=home"
           ),
         ];
@@ -214,8 +217,10 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
 
       // add the recently created Note
 
-      CRM_Utils_Recent::add($displayName . ' - ' . $note->subject,
-        CRM_Utils_System::url('civicrm/contact/view/note',
+      CRM_Utils_Recent::add(
+        $displayName . ' - ' . $note->subject,
+        CRM_Utils_System::url(
+          'civicrm/contact/view/note',
           "reset=1&action=view&cid={$note->entity_id}&id={$note->id}&context=home"
         ),
         $note->id,
@@ -575,4 +580,3 @@ ORDER BY modified_date desc";
     return $ids;
   }
 }
-

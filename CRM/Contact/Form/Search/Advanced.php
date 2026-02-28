@@ -95,10 +95,13 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
 
     //check if there are any custom data searchable fields
     $groupDetails = [];
-    $extends = array_merge(['Contact', 'Individual', 'Household', 'Organization'],
+    $extends = array_merge(
+      ['Contact', 'Individual', 'Household', 'Organization'],
       CRM_Contact_BAO_ContactType::subTypes()
     );
-    $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE,
+    $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(
+      NULL,
+      TRUE,
       $extends
     );
     // if no searchable fields unset panel
@@ -140,9 +143,10 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
         continue;
       }
 
-      $allPanes[$name] = ['url' => CRM_Utils_System::url('civicrm/contact/search/advanced',
-          "snippet=1&searchPane=$type&qfKey={$this->controller->_key}"
-        ),
+      $allPanes[$name] = ['url' => CRM_Utils_System::url(
+        'civicrm/contact/search/advanced',
+        "snippet=1&searchPane=$type&qfKey={$this->controller->_key}"
+      ),
         'open' => 'false',
         'id' => $type,
       ];
@@ -161,7 +165,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
           $this->_paneTemplatePath[$type] = $c->getAdvancedSearchPaneTemplatePath();
         }
         else {
-          CRM_Contact_Form_Search_Criteria::$type( $this );
+          CRM_Contact_Form_Search_Criteria::$type($this);
           $template = ucfirst($type);
           $this->_paneTemplatePath[$type] = "CRM/Contact/Form/Search/Criteria/{$template}.tpl";
         }
@@ -397,4 +401,3 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     return $defaults;
   }
 }
-

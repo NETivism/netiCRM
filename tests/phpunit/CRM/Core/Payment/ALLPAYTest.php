@@ -37,7 +37,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
-    if(empty($result['count'])){
+    if (empty($result['count'])) {
       $payment_processors = [];
       $params = [
         'version' => 3,
@@ -45,9 +45,9 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
       ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
-      if(!empty($result['count'])){
+      if (!empty($result['count'])) {
         $domain_id = CRM_Core_Config::domainID();
-        foreach($result['values'] as $type_id => $p){
+        foreach ($result['values'] as $type_id => $p) {
           $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
@@ -70,7 +70,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
           ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
-          if(is_numeric($result['id'])){
+          if (is_numeric($result['id'])) {
             $payment_processors[] = $result['id'];
           }
 
@@ -101,7 +101,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
-    if(!empty($result['count'])){
+    if (!empty($result['count'])) {
       $this->_cid = $result['id'];
     }
 
@@ -115,7 +115,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->_processor = NULL;
   }
 
-  public function testSinglePaymentNotify(){
+  public function testSinglePaymentNotify() {
     $now = time() - 60;
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
@@ -184,7 +184,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  public function testRecurringPaymentNotify(){
+  public function testRecurringPaymentNotify() {
     $now = time();
     $trxn_id = 'ut'.substr($now, -5);
     $amount = 111;
@@ -512,7 +512,7 @@ class CRM_Core_Payment_ALLPAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_ContributionRecur', $recurring->id, $params);
   }
 
-  public function testNonCreditNotify(){
+  public function testNonCreditNotify() {
     // update
     $cid = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_allpay ORDER BY cid DESC LIMIT 0,1");
     $_POST = [

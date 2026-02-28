@@ -123,15 +123,24 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0, 'REQUEST'
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0,
+      'REQUEST'
     );
 
     // figure out whether we’re handling an event or an event template
@@ -151,7 +160,8 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
     if ($action & CRM_Core_Action::DELETE) {
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1&action=browse'));
-      $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_ManageEvent_Delete',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Event_Form_ManageEvent_Delete',
         'Delete Event',
         $action
       );
@@ -176,7 +186,8 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * @return void
    */
   public function browse() {
-    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
+    $this->_sortByCharacter = CRM_Utils_Request::retrieve(
+      'sortByCharacter',
       'String',
       $this
     );
@@ -254,7 +265,8 @@ ORDER BY start_date desc
           $action -= CRM_Core_Action::UPDATE;
         }
 
-        $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
+        $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
           $action,
           [
             'id' => $dao->id,
@@ -286,8 +298,13 @@ ORDER BY start_date desc
    * @access public
    */
   public function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -312,7 +329,8 @@ ORDER BY start_date desc
 
   public function search() {
     if (isset($this->_action) &
-      (CRM_Core_Action::ADD |
+      (
+        CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE
       )
@@ -355,8 +373,8 @@ ORDER BY start_date desc
       }
       else {
         $value = explode(',', $value);
-        foreach($value as $v) {
-            $val[$v] = $v;
+        foreach ($value as $v) {
+          $val[$v] = $v;
         }
         $type = CRM_Utils_Array::implode(',', $val);
       }
@@ -388,4 +406,3 @@ SELECT count(id)
     $this->assign_by_ref('pager', $this->_pager);
   }
 }
-

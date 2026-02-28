@@ -48,7 +48,8 @@ class CRM_Pledge_Form_Task_Result extends CRM_Pledge_Form_Task {
    * @return void
    * @access public
    */
-  public function preProcess() {}
+  public function preProcess() {
+  }
 
   /**
    * Function to actually build the form
@@ -57,7 +58,8 @@ class CRM_Pledge_Form_Task_Result extends CRM_Pledge_Form_Task {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -66,4 +68,3 @@ class CRM_Pledge_Form_Task_Result extends CRM_Pledge_Form_Task {
     );
   }
 }
-

@@ -35,7 +35,8 @@ class api_v2_MembershipStatusTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_contributionTypeID;
   protected $_membershipTypeID;
-  protected $_membershipStatusID; public function get_info() {
+  protected $_membershipStatusID;
+  public function get_info() {
     return [
       'name' => 'MembershipStatus Calc',
       'description' => 'Test all MembershipStatus Calc API methods.',
@@ -227,4 +228,3 @@ class api_v2_MembershipStatusTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 0);
   }
 }
-

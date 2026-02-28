@@ -80,10 +80,10 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_CustomField', $params, $defaults);
 
       if (CRM_Utils_Array::value('is_view', $defaults)) {
-         return CRM_Core_Error::statusBounce(ts('This field is view only so it will not display on edit form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is view only so it will not display on edit form.'));
       }
       elseif (CRM_Utils_Array::value('is_active', $defaults) == 0) {
-         return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not display on edit form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not display on edit form.'));
       }
 
       $groupTree = [];
@@ -134,7 +134,8 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
 
       $this->assign('groupTree', $this->_groupTree);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
@@ -143,4 +144,3 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
     );
   }
 }
-

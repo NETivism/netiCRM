@@ -89,10 +89,10 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
 
   }
 
-  public static function addNote($note, &$contribution){
+  public static function addNote($note, &$contribution) {
 
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
-    CRM_Core_Error::debug_log_message( $note );
+    CRM_Core_Error::debug_log_message($note);
   }
 
   public static function checkSection(&$fields, &$errors, $section = NULL) {
@@ -117,7 +117,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
       }
     }
     if (count($errors) == 3) {
-      if(empty($fields["{$isTestPrefix}subject"])) {
+      if (empty($fields["{$isTestPrefix}subject"])) {
         $errors["{$isTestPrefix}subject"] = ts('Missing required field: Provide %1 or %2', [
           1 => $ppDAO->subject_label,
           2 => $ppDAO->user_name_label,

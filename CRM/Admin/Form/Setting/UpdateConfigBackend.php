@@ -88,7 +88,8 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
 
     $errors = [];
     if (!is_writable($tmpDir)) {
-      $errors['newBaseDir'] = ts('%1 directory does not exist or cannot be written by webserver',
+      $errors['newBaseDir'] = ts(
+        '%1 directory does not exist or cannot be written by webserver',
         [1 => $tmpDir]
       );
     }
@@ -120,7 +121,8 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
       $to[] = $params['newSiteName'];
     }
 
-    $newValues = str_replace($from,
+    $newValues = str_replace(
+      $from,
       $to,
       $this->_defaults
     );
@@ -130,4 +132,3 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     parent::rebuildMenu();
   }
 }
-

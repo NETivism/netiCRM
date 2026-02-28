@@ -59,7 +59,8 @@ class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
 
   protected $_emailField = FALSE;
 
-  protected $_phoneField = FALSE; public function __construct() {
+  protected $_phoneField = FALSE;
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -129,17 +130,17 @@ class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
           ],
         ],
         /*
-                          'filters'   =>             
-                          array( 'country_id' => 
+                          'filters'   =>
+                          array( 'country_id' =>
                                  array( 'title'   => ts( 'Country' ),
                                         'operatorType' => CRM_Report_Form::OP_MULTISELECT,
                                         'options' => CRM_Core_PseudoConstant::country( ),
-                                        ), 
-                                 'state_province_id' =>  
-                                 array( 'title'   => ts( 'State / Province' ), 
+                                        ),
+                                 'state_province_id' =>
+                                 array( 'title'   => ts( 'State / Province' ),
                                         'operatorType' => CRM_Report_Form::OP_MULTISELECT,
-                                        'options' => CRM_Core_PseudoConstant::stateProvince( ), ), 
-                                 ), 
+                                        'options' => CRM_Core_PseudoConstant::stateProvince( ), ),
+                                 ),
 */
       ],
       'civicrm_phone' =>
@@ -337,7 +338,8 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
                 }
               }
               else {
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -388,7 +390,8 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -452,4 +455,3 @@ SELECT v.label
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 }
-

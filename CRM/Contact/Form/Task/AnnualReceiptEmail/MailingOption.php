@@ -4,8 +4,7 @@
  * This
  * contacts.
  */
-class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact_Form_Task
-{
+class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact_Form_Task {
 
   /**
    * Are we operating in "single mode", i.e. updating the task of only
@@ -83,7 +82,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
       $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible', TRUE);
       $deductible = [ 0 => '"'.ts('All').' '.ts('Deductible').'"'];
       $contributionTypes = $deductible + $contributionTypes;
-      foreach($searchOption['contribution_type_id'] as $typeId) {
+      foreach ($searchOption['contribution_type_id'] as $typeId) {
         $searchOptionDisplay['contribution_types'][$typeId] = $contributionTypes[$typeId];
       }
     }
@@ -107,8 +106,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
    *
    * @return void
    */
-  public function buildQuickForm()
-  {
+  public function buildQuickForm() {
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
     $emails = [
       ts('Default') => $fromEmails['default'],
@@ -146,8 +144,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $this->addButtons($buttons);
   }
 
-  public function setDefaultValues()
-  {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }

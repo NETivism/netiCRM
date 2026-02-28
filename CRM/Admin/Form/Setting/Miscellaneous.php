@@ -56,16 +56,28 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
 
     $this->addYesNo('doNotAttachPDFReceipt', ts('Do not attach PDF copy to receipts'));
 
-    $this->addElement('text', 'maxAttachments', ts('Maximum Attachments'),
+    $this->addElement(
+      'text',
+      'maxAttachments',
+      ts('Maximum Attachments'),
       ['size' => 2, 'maxlength' => 8]
     );
-    $this->addElement('text', 'maxFileSize', ts('Maximum File Size'),
+    $this->addElement(
+      'text',
+      'maxFileSize',
+      ts('Maximum File Size'),
       ['size' => 2, 'maxlength' => 8]
     );
-    $this->addElement('text', 'recaptchaPublicKey', ts('Public Key'),
+    $this->addElement(
+      'text',
+      'recaptchaPublicKey',
+      ts('Public Key'),
       ['size' => 64, 'maxlength' => 64]
     );
-    $this->addElement('text', 'recaptchaPrivateKey', ts('Private Key'),
+    $this->addElement(
+      'text',
+      'recaptchaPrivateKey',
+      ts('Private Key'),
       ['size' => 64, 'maxlength' => 64]
     );
 
@@ -74,10 +86,16 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addYesNo('logging', ts('Logging'), NULL, NULL, $attribs);
       $this->addRule('maxAttachments', ts('Value should be a positive number'), 'positiveInteger');
       $this->addRule('maxFileSize', ts('Value should be a positive number'), 'positiveInteger');
-      $this->addElement('text', 'dashboardCacheTimeout', ts('Dashboard cache timeout'),
+      $this->addElement(
+        'text',
+        'dashboardCacheTimeout',
+        ts('Dashboard cache timeout'),
         ['size' => 3, 'maxlength' => 5]
       );
-      $this->addElement('text', 'wkhtmltopdfPath', ts('Path to wkhtmltopdf executable'),
+      $this->addElement(
+        'text',
+        'wkhtmltopdfPath',
+        ts('Path to wkhtmltopdf executable'),
         ['size' => 64, 'maxlength' => 256]
       );
       $this->addYesNo('versionCheck', ts('Version Check & Statistics Reporting'));
@@ -85,7 +103,10 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
       $this->addTextfield('docURLBase', ts('Documentation URL Base Path'));
 
       // Refs #38829, Add Path to qpdf executable field.
-      $this->addElement('text', 'qpdfPath', ts('Path to qpdf executable'),
+      $this->addElement(
+        'text',
+        'qpdfPath',
+        ts('Path to qpdf executable'),
         ['size' => 64, 'maxlength' => 256]
       );
     }
@@ -107,4 +128,3 @@ class CRM_Admin_Form_Setting_Miscellaneous extends CRM_Admin_Form_Setting {
     $values['logging'] ? $logging->enableLogging() : $logging->disableLogging();
   }
 }
-

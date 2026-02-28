@@ -118,4 +118,3 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 }
-

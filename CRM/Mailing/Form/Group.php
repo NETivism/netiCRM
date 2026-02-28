@@ -210,7 +210,10 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
     $this->assign('context', $context);
 
-    $this->add('text', 'name', ts('Name Your Mailing'),
+    $this->add(
+      'text',
+      'name',
+      ts('Name Your Mailing'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'name'),
       TRUE
     );
@@ -246,7 +249,9 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     if (!empty($this->_searchBasedMailing)) {
       //get the static groups
       $staticGroups = CRM_Core_PseudoConstant::staticGroup(FALSE, 'Mailing');
-      $this->add('select', 'baseGroup',
+      $this->add(
+        'select',
+        'baseGroup',
         ts('Unsubscription Group'),
         [
           '' => ts('- select -'),
@@ -386,13 +391,13 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $qf_Group_submit = $this->controller->exportValue($this->_name, '_qf_Group_submit');
     $this->set('name', $params['name']);
 
-    foreach($values as $key => $args){
-      if(preg_match('/^(include|exclude)/i', $key)){
+    foreach ($values as $key => $args) {
+      if (preg_match('/^(include|exclude)/i', $key)) {
         $rulekey = str_replace(['include', 'exclude'], '', $key);
         $rulekey = strtolower($rulekey);
         $ruletype = strstr($key, 'include') ? 'include' : 'exclude';
         if (!empty($args) && is_array($args)) {
-          foreach($args as $k => $id){
+          foreach ($args as $k => $id) {
             if (!empty($id)) {
               $rules[$rulekey][$ruletype][] = $id;
             }
@@ -443,7 +448,8 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
 
     // also compute the recipients and store them in the mailing recipients table
-    CRM_Mailing_BAO_Mailing::getRecipients($mailing->id,
+    CRM_Mailing_BAO_Mailing::getRecipients(
+      $mailing->id,
       $mailing->id,
       NULL,
       NULL,
@@ -455,7 +461,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $count = CRM_Mailing_BAO_Recipients::mailingSize($mailing->id);
     $this->set('count', $count);
     $this->assign('count', $count);
-    foreach($rules as $key => $rule){
+    foreach ($rules as $key => $rule) {
       $this->set($key, $rule);
     }
 
@@ -567,4 +573,3 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

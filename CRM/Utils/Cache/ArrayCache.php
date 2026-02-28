@@ -1,20 +1,20 @@
 <?php
 class CRM_Utils_Cache_Arraycache implements CRM_Utils_Cache_Interface {
 
-/**
- * The cache storage container, an in memory array by default
- */
-private $_cache;
+  /**
+   * The cache storage container, an in memory array by default
+   */
+  private $_cache;
 
-/**
- * Constructor
- *
- * @param array   $config  an array of configuration params
- *
- * @return void
- */
+  /**
+   * Constructor
+   *
+   * @param array   $config  an array of configuration params
+   *
+   * @return void
+   */
   public function __construct($config) {
-  $this->_cache = [];
+    $this->_cache = [];
   }
 
   public function set($key, &$value) {
@@ -34,4 +34,3 @@ private $_cache;
     $this->_cache = [];
   }
 }
-

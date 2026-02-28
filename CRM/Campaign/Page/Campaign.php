@@ -114,7 +114,9 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
         else {
           $action -= CRM_Core_Action::DISABLE;
         }
-        $campaigns[$cmpid]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+        $campaigns[$cmpid]['action'] = CRM_Core_Action::formLink(
+          self::actionLinks(),
+          $action,
           ['id' => $campaign['id']]
         );
       }
@@ -129,8 +131,12 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
       CRM_Utils_System::permissionDenied();
     }
 
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 0
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('action', $action);
     $this->browse();
@@ -138,4 +144,3 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
     parent::run();
   }
 }
-

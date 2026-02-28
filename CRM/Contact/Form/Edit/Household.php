@@ -59,7 +59,8 @@ class CRM_Contact_Form_Edit_Household {
     $form->addElement('text', 'nick_name', ts('Nick Name'), $attributes['nick_name']);
     $form->addElement('text', 'contact_source', ts('Source'), CRM_Utils_Array::value('source', $attributes));
     $form->add('text', 'external_identifier', ts('External Id'), $attributes['external_identifier'], FALSE);
-    $form->addRule('external_identifier',
+    $form->addRule(
+      'external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
       ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
@@ -91,4 +92,3 @@ class CRM_Contact_Form_Edit_Household {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

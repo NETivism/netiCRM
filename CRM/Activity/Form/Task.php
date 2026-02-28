@@ -108,7 +108,12 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
     }
     else {
       $queryParams = $form->get('queryParams');
-      $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
+      $query = new CRM_Contact_BAO_Query(
+        $queryParams,
+        NULL,
+        NULL,
+        FALSE,
+        FALSE,
         CRM_Contact_BAO_Query::MODE_ACTIVITY
       );
       $result = $query->searchQuery(0, 0, NULL);
@@ -139,9 +144,10 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
       $session->replaceUserContext(CRM_Utils_System::url('civicrm/activity/search', $urlParams));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
-          $urlParams
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        "civicrm/contact/search/$searchFormName",
+        $urlParams
+      ));
     }
   }
 
@@ -173,8 +179,9 @@ SELECT source_contact_id
    * @return void
    * @access public
    */
-  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -186,4 +193,3 @@ SELECT source_contact_id
     );
   }
 }
-

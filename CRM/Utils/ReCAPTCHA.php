@@ -70,10 +70,10 @@ class CRM_Utils_ReCAPTCHA {
   public function __construct() {
     $require_path = 'packages/recaptcha/src/ReCaptcha';
     $config = CRM_Core_Config::singleton();
-    if(CRM_Utils_System::moduleExists('recaptcha') && $config->userFramework == 'Drupal') {
+    if (CRM_Utils_System::moduleExists('recaptcha') && $config->userFramework == 'Drupal') {
       if ($config->userSystem->version < 8) {
         $possible_path = drupal_get_path('module', 'recaptcha').'/recaptcha-php/src/ReCaptcha';
-        if(is_file($possible_path.'/ReCaptcha.php')){
+        if (is_file($possible_path.'/ReCaptcha.php')) {
           $require_path = $possible_path;
         }
       }
@@ -126,7 +126,7 @@ class CRM_Utils_ReCAPTCHA {
       $previousResult = TRUE;
       return TRUE;
     }
-    elseif(empty($errors)){
+    elseif (empty($errors)) {
       $previousResult = TRUE;
       return TRUE;
     }
@@ -134,20 +134,19 @@ class CRM_Utils_ReCAPTCHA {
     return FALSE;
   }
 
-  public static function getHTML($pubkey){
+  public static function getHTML($pubkey) {
     $output = '<div class="g-recaptcha" data-sitekey="'.$pubkey.'"></div>';
     $output .= '<script src="//www.google.com/recaptcha/api.js"></script>';
     return $output;
   }
 
-  public static function checkAnswer($key, $response, $ip){
+  public static function checkAnswer($key, $response, $ip) {
     $recaptcha = new \ReCaptcha\ReCaptcha($key);
     $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $ip);
     return $resp;
   }
 
-  public static function getIp(){
+  public static function getIp() {
     return CRM_Utils_System::ipAddress();
   }
 }
-

@@ -211,9 +211,10 @@ class CRM_Dedupe_Merger {
           }
         }
         foreach ($sqls as $sql) {
-          if (CRM_Core_DAO::singleValueQuery($sql,
-              CRM_Core_DAO::$_nullArray
-            ) > 0) {
+          if (CRM_Core_DAO::singleValueQuery(
+            $sql,
+            CRM_Core_DAO::$_nullArray
+          ) > 0) {
             $groups[] = $group;
           }
         }
@@ -427,9 +428,12 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
 
     $transaction = new CRM_Core_Transaction();
     foreach ($sqls as $sql) {
-      CRM_Core_DAO::executeQuery($sql,
+      CRM_Core_DAO::executeQuery(
+        $sql,
         CRM_Core_DAO::$_nullArray,
-        TRUE, NULL, TRUE
+        TRUE,
+        NULL,
+        TRUE
       );
     }
     $transaction->commit();
@@ -503,7 +507,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         // check both contacts are not deleted
         $dao = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_contact WHERE is_deleted = 1 AND id IN ($mainId, $otherId)");
         if ($dao->N) {
-          while($dao->fetch()) {
+          while ($dao->fetch()) {
             $deleted[] = $dao->id;
           }
           $resultStats['skipped'][] = [
@@ -600,7 +604,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
 
     // skip these field for conflict detection
     $validFields = CRM_Dedupe_Merger::$validFields;
-    foreach(['do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_phone', 'do_not_trade', 'is_opt_out', 'preferred_communication_method']  as $fld) {
+    foreach (['do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_phone', 'do_not_trade', 'is_opt_out', 'preferred_communication_method'] as $fld) {
       $exists = array_search($fld, $validFields);
       if ($exists !== FALSE) {
         unset($validFields[$exists]);
@@ -737,11 +741,11 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         'preferred_communication_method' => $value,
       ];
 
-      if (CRM_Utils_array::value('preferred_communication_method', $contact)){
-      // api 3 returns pref_comm_method as an array, which breaks the lookup; so we reconstruct
-      $prefCommList = is_array($specialValues[$moniker]['preferred_communication_method']) ?
-        CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $specialValues[$moniker]['preferred_communication_method']) :
-        $specialValues[$moniker]['preferred_communication_method'];
+      if (CRM_Utils_array::value('preferred_communication_method', $contact)) {
+        // api 3 returns pref_comm_method as an array, which breaks the lookup; so we reconstruct
+        $prefCommList = is_array($specialValues[$moniker]['preferred_communication_method']) ?
+          CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $specialValues[$moniker]['preferred_communication_method']) :
+          $specialValues[$moniker]['preferred_communication_method'];
         $specialValues[$moniker]['preferred_communication_method'] = CRM_Core_DAO::VALUE_SEPARATOR . $prefCommList . CRM_Core_DAO::VALUE_SEPARATOR;
       }
       $names = [
@@ -790,11 +794,13 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
           if ($label === '1') {
             $label = '<i class="zmdi zmdi-check-square"></i>'.ts('Yes').'';
           }
-        } elseif ($field == 'individual_prefix' || $field == 'prefix_id') {
+        }
+        elseif ($field == 'individual_prefix' || $field == 'prefix_id') {
           $label = CRM_Utils_Array::value('prefix', $contact);
           $value = CRM_Utils_Array::value('prefix_id', $contact);
           $field = 'prefix_id';
-        } elseif ($field == 'individual_suffix' || $field == 'suffix_id') {
+        }
+        elseif ($field == 'individual_suffix' || $field == 'suffix_id') {
           $label = CRM_Utils_Array::value('suffix', $contact);
           $value = CRM_Utils_Array::value('suffix_id', $contact);
           $field = 'suffix_id';
@@ -899,12 +905,14 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
             if ($name == 'address') {
               $fldName = 'display';
             }
-            $locLabel[$moniker][$name][$count] = CRM_Utils_Array::value($fldName,
+            $locLabel[$moniker][$name][$count] = CRM_Utils_Array::value(
+              $fldName,
               $blkValues
             );
             $locTypes[$moniker][$name][$count] = $locTypeId;
             if ($moniker == 'main' && CRM_Utils_Array::arrayKeyExists($name, self::$locationBlocks)) {
-              $mainLocBlock["main_$name$locTypeId"] = CRM_Utils_Array::value($fldName,
+              $mainLocBlock["main_$name$locTypeId"] = CRM_Utils_Array::value(
+                $fldName,
                 $blkValues
               );
               $locBlockIds['main'][$name][$locTypeId] = $blkValues['id'];
@@ -920,10 +928,12 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         foreach ($locLabel['other'][$name] as $count => $value) {
           $locTypeId = $locTypes['other'][$name][$count];
           $rows["move_location_{$name}_$count"]['other'] = $value;
-          $rows["move_location_{$name}_$count"]['main'] = CRM_Utils_Array::value($count,
+          $rows["move_location_{$name}_$count"]['main'] = CRM_Utils_Array::value(
+            $count,
             $locLabel['main'][$name]
           );
-          $rows["move_location_{$name}_$count"]['title'] = ts('%1:%2:%3',
+          $rows["move_location_{$name}_$count"]['title'] = ts(
+            '%1:%2:%3',
             [
               1 => $block,
               2 => $count,
@@ -1023,10 +1033,18 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     }
 
     // handle custom fields
-    $mainTree = CRM_Core_BAO_CustomGroup::getTree($main['contact_type'], CRM_Core_DAO::$_nullObject, $mainId, -1,
+    $mainTree = CRM_Core_BAO_CustomGroup::getTree(
+      $main['contact_type'],
+      CRM_Core_DAO::$_nullObject,
+      $mainId,
+      -1,
       CRM_Utils_Array::value('contact_sub_type', $main)
     );
-    $otherTree = CRM_Core_BAO_CustomGroup::getTree($main['contact_type'], CRM_Core_DAO::$_nullObject, $otherId, -1,
+    $otherTree = CRM_Core_BAO_CustomGroup::getTree(
+      $main['contact_type'],
+      CRM_Core_DAO::$_nullObject,
+      $otherId,
+      -1,
       CRM_Utils_Array::value('contact_sub_type', $other)
     );
     CRM_Core_DAO::freeResult();
@@ -1045,22 +1063,26 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
           }
           if (CRM_Utils_Array::value('customValue', $mainTree[$gid]['fields'][$fid])) {
             foreach ($mainTree[$gid]['fields'][$fid]['customValue'] as $valueId => $values) {
-              $rows["move_custom_$fid"]['main'] = CRM_Core_BAO_CustomGroup::formatCustomValues($values,
-                $field, TRUE
+              $rows["move_custom_$fid"]['main'] = CRM_Core_BAO_CustomGroup::formatCustomValues(
+                $values,
+                $field,
+                TRUE
               );
             }
           }
           $value = NULL;
           if (CRM_Utils_Array::value('customValue', $otherTree[$gid]['fields'][$fid])) {
             foreach ($otherTree[$gid]['fields'][$fid]['customValue'] as $valueId => $values) {
-              $rows["move_custom_$fid"]['other'] = CRM_Core_BAO_CustomGroup::formatCustomValues($values,
-                $field, TRUE
+              $rows["move_custom_$fid"]['other'] = CRM_Core_BAO_CustomGroup::formatCustomValues(
+                $values,
+                $field,
+                TRUE
               );
               if ($values['data'] === 0 || $values['data'] === '0') {
                 $values['data'] = $qfZeroBug;
-            }
+              }
               $value = ($values['data']) ? $values['data'] : $value;
-          }
+            }
           }
           $rows["move_custom_$fid"]['title'] = $field['label'];
 
@@ -1178,7 +1200,8 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         foreach ($block as $blkCount => $values) {
           $locTypeId = CRM_Utils_Array::value('locTypeId', $values, 1);
           $operation = CRM_Utils_Array::value('operation', $values, 2);
-          $otherBlockId = CRM_Utils_Array::value($blkCount,
+          $otherBlockId = CRM_Utils_Array::value(
+            $blkCount,
             $migrationInfo['other_details']['loc_block_ids'][$name]
           );
 
@@ -1256,8 +1279,11 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     // fix custom fields so they're edible by createProfileContact()
     static $treeCache = [];
     if (!CRM_Utils_Array::arrayKeyExists($migrationInfo['main_details']['contact_type'], $treeCache)) {
-      $treeCache[$migrationInfo['main_details']['contact_type']] = CRM_Core_BAO_CustomGroup::getTree($migrationInfo['main_details']['contact_type'],
-        CRM_Core_DAO::$_nullObject, NULL, -1
+      $treeCache[$migrationInfo['main_details']['contact_type']] = CRM_Core_BAO_CustomGroup::getTree(
+        $migrationInfo['main_details']['contact_type'],
+        CRM_Core_DAO::$_nullObject,
+        NULL,
+        -1
       );
     }
     $cgTree = &$treeCache[$migrationInfo['main_details']['contact_type']];
@@ -1318,7 +1344,8 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
                 //for checkbox and m-select format w/ VALUE_SEPARATOR
                 if (in_array($htmlType, [
                   'CheckBox', 'Multi-Select', 'AdvMulti-Select'])) {
-                  $submitted[$key] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
+                  $submitted[$key] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(
+                    CRM_Core_DAO::VALUE_SEPARATOR,
                     $mergeValue
                   ) . CRM_Core_DAO::VALUE_SEPARATOR;
                 }
@@ -1423,7 +1450,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
 
     // **** After migrate, check email on-hold data on other contact when email is duplicated
     $dao = CRM_Core_DAO::executeQuery("SELECT email, on_hold, hold_date FROM civicrm_email WHERE on_hold = 1 AND contact_id = %1", [1 => [$otherId, 'Integer']]);
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       if (empty($dao->hold_date)) {
         $dao->hold_date = 'NULL';
       }
@@ -1432,7 +1459,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         2 => [$mainId, 'Integer'],
         3 => [$dao->email, 'String']
       ]);
-    }    
+    }
 
     // **** Delete other contact & update prev-next caching
     if (CRM_Core_Permission::check('merge duplicate contacts') &&
@@ -1442,7 +1469,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     }
     // FIXME: else part
     else {
-      CRM_Core_Session::setStatus( ts('Do not have sufficient permission to delete duplicate contact.') );
+      CRM_Core_Session::setStatus(ts('Do not have sufficient permission to delete duplicate contact.'));
 
     }
 
@@ -1458,13 +1485,13 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     }
     if (empty($customFields)) {
       $cfields = CRM_Core_BAO_CustomField::getFields();
-      foreach($cfields as $fld) {
+      foreach ($cfields as $fld) {
         $customFields[$fld['name']]['title'] = $fld['groupTitle'].'::'.$fld['label'];
       }
     }
     $needToFind = array_diff_key($conflicts, $labels);
     $fields = array_merge(CRM_Contact_DAO_Contact::fields(), $customFields);
-    foreach($needToFind as $conflict => $dontcare) {
+    foreach ($needToFind as $conflict => $dontcare) {
       $field = str_replace('move_', '', $conflict);
       if (isset($fields[$field])) {
         $labels[$conflict] = $fields[$field]['title'];
@@ -1497,7 +1524,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
         $referenced[$child] = 1;
       }
     }
-    foreach($tree as $parent => &$child) {
+    foreach ($tree as $parent => &$child) {
       if (empty($child)) {
         unset($tree[$parent]);
       }
@@ -1521,8 +1548,8 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
     return self::$dupePairsSorted;
   }
   public function recursiveIterator($iterator) {
-    while ( $iterator -> valid() ) {
-      if ( $iterator->hasChildren() ) {
+    while ($iterator -> valid()) {
+      if ($iterator->hasChildren()) {
         self::recursiveIterator($iterator->getChildren());
         $children = $iterator->current();
         if (empty($children)) {
@@ -1532,7 +1559,7 @@ INNER JOIN  civicrm_participant participant ON ( participant.id = payment.partic
       }
       $parent = $iterator->key();
       $pair = $iterator->current();
-      foreach ($pair as $child => $dontcare){
+      foreach ($pair as $child => $dontcare) {
         self::$dupePairsSorted[] = [$parent, $child];
       }
       $iterator->next();

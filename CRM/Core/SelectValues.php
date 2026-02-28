@@ -529,13 +529,13 @@ class CRM_Core_SelectValues {
       $customFields = [];
       $customFields = CRM_Core_BAO_CustomField::getFields('Individual');
       $structure = CRM_Core_FieldHierarchy::$hierarchy;
-      foreach($structure as $component => $fields) {
-        foreach($fields as $fieldName => $dontcare) {
+      foreach ($structure as $component => $fields) {
+        foreach ($fields as $fieldName => $dontcare) {
           if (in_array($fieldName, $skipTokens)) {
             continue;
           }
           $tokenField = array_search($fieldName, $values);
-          if (!$tokenField){
+          if (!$tokenField) {
             continue;
           }
           $tokens["{contact.$fieldName}"] = $exportFields[$fieldName]['title'];
@@ -798,4 +798,3 @@ class CRM_Core_SelectValues {
     return $timeFormats;
   }
 }
-

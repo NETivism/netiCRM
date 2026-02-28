@@ -61,7 +61,8 @@ class CRM_Contribute_Form_Task_SearchTaskHookSample extends CRM_Contribute_Form_
 INNER JOIN civicrm_contact ct ON ( co.contact_id = ct.id )      
      WHERE co.id IN ( $contribIDs )";
 
-    $dao = CRM_Core_DAO::executeQuery($query,
+    $dao = CRM_Core_DAO::executeQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -83,7 +84,8 @@ INNER JOIN civicrm_contact ct ON ( co.contact_id = ct.id )
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -92,4 +94,3 @@ INNER JOIN civicrm_contact ct ON ( co.contact_id = ct.id )
     );
   }
 }
-

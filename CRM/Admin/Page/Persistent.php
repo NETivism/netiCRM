@@ -121,7 +121,8 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
       $values[$daoResult->id] = [];
       CRM_Core_DAO::storeValues($daoResult, $values[$daoResult->id]);
       if ($daoResult->is_config == 1) {
-        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(self::customizeActionLinks(),
+        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(
+          self::customizeActionLinks(),
           NULL,
           ['id' => $daoResult->id]
         );
@@ -129,7 +130,8 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
         $configCustomization[$daoResult->id] = $values[$daoResult->id];
       }
       if ($daoResult->is_config == 0) {
-        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(self::stringActionLinks(),
+        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(
+          self::stringActionLinks(),
           NULL,
           ['id' => $daoResult->id]
         );
@@ -142,4 +144,3 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
     $this->assign('rows', $rows);
   }
 }
-

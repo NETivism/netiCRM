@@ -99,4 +99,3 @@ class CRM_Core_Permission_Standalone {
     return ($isAdmin) ? TRUE : CRM_ACL_API::check($str, NULL);
   }
 }
-

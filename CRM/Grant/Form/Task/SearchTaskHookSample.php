@@ -81,7 +81,8 @@ INNER JOIN civicrm_contact ct ON ( grt.contact_id = ct.id )
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -90,4 +91,3 @@ INNER JOIN civicrm_contact ct ON ( grt.contact_id = ct.id )
     );
   }
 }
-

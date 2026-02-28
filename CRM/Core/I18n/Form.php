@@ -114,4 +114,3 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
     CRM_Utils_System::civiExit();
   }
 }
-

@@ -115,7 +115,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $fields = $track->fields();
     $params = (array) $json;
     $params = array_filter($params);
-    foreach($params as $key => $value) {
+    foreach ($params as $key => $value) {
       if (isset($fields[$key])) {
         $field = $fields[$key];
         switch ($field['type']) {
@@ -153,10 +153,10 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       'pageType' => $pageType,
       'pageId' => $pageId,
     ];
-    if($start){
+    if ($start) {
       $params['visitDateStart'] = $start;
     }
-    if($end){
+    if ($end) {
       $params['visitDateEnd'] = $end;
     }
     $selector = new CRM_Track_Selector_Track($params);
@@ -165,7 +165,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $return = [];
     $total = 0;
     $start = $end = 0;
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
       $total = $total+$dao->count;
       if (!$start && !$end) {
@@ -185,9 +185,9 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     }
     // sort by count
     uasort($return, [__CLASS__, 'cmp']);
-    foreach($return as $type => $data) {
-      $return[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
-      $return[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
+    foreach ($return as $type => $data) {
+      $return[$type]['percent'] = number_format(($data['count'] / $total) * 100);
+      $return[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100);
       $return[$type]['start'] = date('Y-m-d H:i:s', $start);
       $return[$type]['end'] = date('Y-m-d H:i:s', $end);
     }
@@ -204,22 +204,22 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       $dao = $selector->getQuery();
       $dao->fetch();
       if ($dao->N) {
-				$track = new CRM_Core_DAO_Track();
+        $track = new CRM_Core_DAO_Track();
         $fields = $track->fields();
         $values = [];
-				foreach ($fields as $name => $value) {
-					$dbName = $value['name'];
-					if (isset($dao->$dbName) && $dao->$dbName !== 'null') {
-						$values[$dbName] = $dao->$dbName;
-						if ($name != $dbName) {
-							$values[$name] = $dao->$dbName;
-						}
-					}
-				}
+        foreach ($fields as $name => $value) {
+          $dbName = $value['name'];
+          if (isset($dao->$dbName) && $dao->$dbName !== 'null') {
+            $values[$dbName] = $dao->$dbName;
+            if ($name != $dbName) {
+              $values[$name] = $dao->$dbName;
+            }
+          }
+        }
         return $values;
       }
       return [];
-    } 
+    }
   }
 
   public static function cmp($a, $b) {

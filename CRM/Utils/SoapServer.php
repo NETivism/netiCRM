@@ -224,4 +224,3 @@ class CRM_Utils_SoapServer {
     return civicrm_contact_get($params);
   }
 }
-

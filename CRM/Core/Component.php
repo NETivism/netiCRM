@@ -37,10 +37,10 @@
 class CRM_Core_Component {
 
   /*
-     * End part (filename) of the component information class'es name 
+     * End part (filename) of the component information class'es name
      * that needs to be present in components main directory.
      */
-  public CONST COMPONENT_INFO_CLASS = 'Info';
+  public const COMPONENT_INFO_CLASS = 'Info';
 
   private static $_info = NULL;
 
@@ -83,7 +83,7 @@ class CRM_Core_Component {
       $cr->find(FALSE);
       while ($cr->fetch()) {
         $infoClass = $cr->namespace . '_' . self::COMPONENT_INFO_CLASS;
-        require_once (str_replace('_', DIRECTORY_SEPARATOR, $infoClass) . '.php');
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $infoClass) . '.php');
         $infoObject = new $infoClass($cr->name, $cr->namespace, $cr->id);
         if ($infoObject->info['name'] !== $cr->name) {
           CRM_Core_Error::fatal("There is a discrepancy between name in component registry and in info file ({$cr->name}).");
@@ -123,7 +123,8 @@ class CRM_Core_Component {
     $secondArg = CRM_Utils_Array::value(2, $args, '');
     foreach ($info as $name => $comp) {
       if (in_array($name, $config->enableComponents) &&
-        (($comp->info['url'] === $firstArg && $type == 'main') ||
+        (
+          ($comp->info['url'] === $firstArg && $type == 'main') ||
           ($comp->info['url'] === $secondArg && $type == 'admin')
         )
       ) {
@@ -160,7 +161,8 @@ class CRM_Core_Component {
 
     $files = [];
     foreach ($info as $name => $comp) {
-      $files = array_merge($files,
+      $files = array_merge(
+        $files,
         $comp->menuFiles()
       );
     }
@@ -365,4 +367,3 @@ class CRM_Core_Component {
     }
   }
 }
-

@@ -104,7 +104,8 @@ class CRM_Upgrade_TwoOne_Form_TwoOneTwo extends CRM_Upgrade_Form {
   public function upgrade() {
     $currentDir = dirname(__FILE__);
 
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'two_one_two.mysql']
     );
     $this->source($sqlFile);
@@ -145,4 +146,3 @@ AND civicrm_option_value.label = civicrm_participant.fee_level
     return $this->checkVersion($this->latestVersion);
   }
 }
-

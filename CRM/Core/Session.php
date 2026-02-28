@@ -47,10 +47,10 @@ class CRM_Core_Session {
    * @var string
    */
   protected $_key = 'CiviCRM';
-  public CONST KEY = 'CiviCRM';
-  public CONST USER_CONTEXT = 'userContext';
-  public CONST EXPIRED_TIME = 32400; // second
-  public CONST EXPIRED_TIME_LONG = 86400; // second
+  public const KEY = 'CiviCRM';
+  public const USER_CONTEXT = 'userContext';
+  public const EXPIRED_TIME = 32400; // second
+  public const EXPIRED_TIME_LONG = 86400; // second
 
   /**
    * This is just a reference to the real session. Allows us to
@@ -250,13 +250,13 @@ class CRM_Core_Session {
    */
   public function lookupScope($lookup, $name, $value) {
     $this->initialize();
-    foreach($this->_session[$this->_key] as $prefix => $v){
+    foreach ($this->_session[$this->_key] as $prefix => $v) {
       if (strstr($prefix, $lookup)) {
-        if(is_array($v) && isset($v[$name]) && $v[$name] == $value) {
+        if (is_array($v) && isset($v[$name]) && $v[$name] == $value) {
           return $prefix;
         }
-        else{
-          if($v === $value) {
+        else {
+          if ($v === $value) {
             return $prefix;
           }
         }
@@ -324,7 +324,7 @@ class CRM_Core_Session {
     $this->createScope($prefix, TRUE);
 
     if (empty($this->_session) || empty($this->_session[$this->_key])) {
-      return null;
+      return NULL;
     }
 
     if (empty($prefix)) {
@@ -332,7 +332,7 @@ class CRM_Core_Session {
     }
     else {
       if (empty($this->_session[$this->_key][$prefix])) {
-        return null;
+        return NULL;
       }
       $session =& $this->_session[$this->_key][$prefix];
     }
@@ -510,7 +510,7 @@ class CRM_Core_Session {
       unset(self::$_singleton->_session[self::$_singleton->_key]['status'][$type]);
     }
     if (empty($status)) {
-      return; 
+      return;
     }
     $session = self::singleton();
     $session->initialize();
@@ -574,4 +574,3 @@ class CRM_Core_Session {
   }
 
 }
-

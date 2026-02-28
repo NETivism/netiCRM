@@ -105,7 +105,8 @@ class CRM_Bridge_OG_Drupal {
   public static function updateCiviACLRole(&$params, $op) {
 
 
-    $optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+    $optionGroupID = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
       'acl_role',
       'id',
       'name'
@@ -124,10 +125,12 @@ class CRM_Bridge_OG_Drupal {
     $dao->is_active = 1;
 
     $weightParams = ['option_group_id' => $optionGroupID];
-    $dao->weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+    $dao->weight = CRM_Utils_Weight::getDefaultWeight(
+      'CRM_Core_DAO_OptionValue',
       $weightParams
     );
-    $dao->value = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+    $dao->value = CRM_Utils_Weight::getDefaultWeight(
+      'CRM_Core_DAO_OptionValue',
       $weightParams,
       'value'
     );
@@ -197,8 +200,10 @@ SELECT v.id
     }
 
     // get the group id of this OG
-    $groupID = CRM_Bridge_OG_Utils::groupID(CRM_Bridge_OG_Utils::ogSyncName($params['og_id']),
-      NULL, TRUE
+    $groupID = CRM_Bridge_OG_Utils::groupID(
+      CRM_Bridge_OG_Utils::ogSyncName($params['og_id']),
+      NULL,
+      TRUE
     );
 
     $groupParams = ['contact_id' => $contactID,
@@ -219,8 +224,10 @@ SELECT v.id
       $params['is_admin'] !== NULL
     ) {
       // get the group ID of the acl group
-      $groupID = CRM_Bridge_OG_Utils::groupID(CRM_Bridge_OG_Utils::ogSyncACLName($params['og_id']),
-        NULL, TRUE
+      $groupID = CRM_Bridge_OG_Utils::groupID(
+        CRM_Bridge_OG_Utils::ogSyncACLName($params['og_id']),
+        NULL,
+        TRUE
       );
 
       $groupParams = ['contact_id' => $contactID,
@@ -237,4 +244,3 @@ SELECT v.id
     }
   }
 }
-

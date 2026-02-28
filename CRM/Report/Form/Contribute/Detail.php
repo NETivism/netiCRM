@@ -59,7 +59,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
 
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Contribution']; public function __construct() {
+  protected $_customGroupExtends = ['Contribution'];
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -317,7 +318,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                LEFT JOIN civicrm_contribution_page  {$this->_aliases['civicrm_contribution_page']} 
                      ON {$this->_aliases['civicrm_contribution']}.contribution_page_id ={$this->_aliases['civicrm_contribution_page']}.id";
 
-    if ($this->_addressField OR (!empty($this->_params['state_province_id_value']) OR !empty($this->_params['country_id_value']))) {
+    if ($this->_addressField or (!empty($this->_params['state_province_id_value']) or !empty($this->_params['country_id_value']))) {
       $this->_from .= "
             LEFT JOIN civicrm_address {$this->_aliases['civicrm_address']} 
                    ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_address']}.contact_id AND 
@@ -416,10 +417,12 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
 
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&" .
             "state_province_id_op=in&state_province_id_value={$value}",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_address_state_province_id_link'] = $url;
           $rows[$rowNum]['civicrm_address_state_province_id_hover'] = ts("List all contribution(s) for this State.");
@@ -432,10 +435,12 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
 
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&" .
             "country_id_op=in&country_id_value={$value}",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_address_country_id_link'] = $url;
           $rows[$rowNum]['civicrm_address_country_id_hover'] = ts("List all contribution(s) for this Country.");
@@ -449,7 +454,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         CRM_Utils_Array::value('civicrm_contact_sort_name', $rows[$rowNum]) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -464,7 +470,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       if (($value = CRM_Utils_Array::value('civicrm_contribution_total_amount_sum', $row)) &&
         CRM_Core_Permission::check('access CiviContribute')
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view/contribution",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view/contribution",
           "reset=1&id=" . $row['civicrm_contribution_contribution_id'] . "&cid=" . $row['civicrm_contact_id'] . "&action=view&context=contribution&selectedChild=contribute",
           $this->_absoluteUrl
         );
@@ -488,4 +495,3 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     }
   }
 }
-

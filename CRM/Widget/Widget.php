@@ -92,9 +92,13 @@ class CRM_Widget_Widget {
     $data->title = $widget->title;
     $data->logo = $widget->url_logo;
     $data->button_title = $widget->button_title;
-    $data->button_url = CRM_Utils_System::url('civicrm/contribute/transact',
+    $data->button_url = CRM_Utils_System::url(
+      'civicrm/contribute/transact',
       "reset=1&id=$contributionPageID",
-      TRUE, NULL, FALSE, TRUE
+      TRUE,
+      NULL,
+      FALSE,
+      TRUE
     );
     $data->about = $widget->about;
 
@@ -139,7 +143,7 @@ WHERE  id = %1";
       }
 
       if ($dao->end_date) {
-        $endDate = CRM_Utils_Date::unixTime($dao->end_date, true);
+        $endDate = CRM_Utils_Date::unixTime($dao->end_date, TRUE);
         if ($endDate &&
           $endDate < $now
         ) {
@@ -187,7 +191,6 @@ WHERE  id = %1";
    */
   public function getEmbedCode($contributionPageID, $widgetID, $format = "normal") {
     self::registerRequest($contributionPageID, $widgetID, __FUNCTION__);
-    return "<embed>.......................</embed>" . print_r(func_get_args(), true);
+    return "<embed>.......................</embed>" . print_r(func_get_args(), TRUE);
   }
 }
-

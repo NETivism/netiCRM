@@ -59,7 +59,8 @@ class CRM_Group_Controller extends CRM_Core_Controller {
 
     $uploadNames = $this->get('uploadNames');
     if (!empty($uploadNames)) {
-      $uploadNames = array_merge($uploadNames,
+      $uploadNames = array_merge(
+        $uploadNames,
         CRM_Core_BAO_File::uploadNames()
       );
     }
@@ -79,4 +80,3 @@ class CRM_Group_Controller extends CRM_Core_Controller {
     return $this->get('selectorName');
   }
 }
-

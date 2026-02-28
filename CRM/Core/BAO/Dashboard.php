@@ -447,4 +447,3 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
     $dashlet->delete();
   }
 }
-

@@ -175,7 +175,8 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
     if ($unassignedOnly) {
       // Get combinations that are not assigned to any page (premiums_id is NULL)
       $combination->premiums_id = NULL;
-    } else {
+    }
+    else {
       // Get combinations assigned to specific premiums_id
       $combination->premiums_id = $premiumsId;
     }

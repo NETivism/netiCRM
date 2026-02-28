@@ -67,4 +67,3 @@ class CRM_Contribute_Controller_ContributionPage extends CRM_Core_Controller {
     $this->addActions();
   }
 }
-

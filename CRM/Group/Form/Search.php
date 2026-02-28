@@ -47,7 +47,10 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    $this->add('text', 'title', ts('Find'),
+    $this->add(
+      'text',
+      'title',
+      ts('Find'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title')
     );
 
@@ -62,21 +65,36 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
       unset($groupTypes['Access Control']);
     }
 
-    $this->addCheckBox('group_type',
+    $this->addCheckBox(
+      'group_type',
       ts('Type'),
       $tsGroupTypes,
-      NULL, NULL, NULL, NULL, '<br>'
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      '<br>'
     );
 
-    $this->addCheckBox('group_mode',
+    $this->addCheckBox(
+      'group_mode',
       ts('Mode'),
       [
         '0' => ts('Normal'),
         '1' => ts('Smart'),
-      ], NULL, NULL, NULL, NULL, '<br>', TRUE
+      ],
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      '<br>',
+      TRUE
     );
 
-    $this->add('select', 'visibility', ts('Visibility'),
+    $this->add(
+      'select',
+      'visibility',
+      ts('Visibility'),
       ['' => ts('- any visibility -')] + CRM_Core_SelectValues::ufVisibility(TRUE)
     );
     $this->addElement('checkbox', 'active_status', ts('Enabled'));
@@ -109,4 +127,3 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
     }
   }
 }
-

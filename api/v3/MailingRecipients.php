@@ -54,4 +54,3 @@
 function civicrm_api3_mailing_recipients_get($params, $ids = []) {
   return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
-

@@ -267,7 +267,7 @@ ALTER TABLE `civicrm_domain`
   }
 
   /* preserve the mailer preferences from config backend to
-     * civicrm_preferences and unset these from config backend. 
+     * civicrm_preferences and unset these from config backend.
      */
   public function mailerPreferences() {
 
@@ -301,4 +301,3 @@ ALTER TABLE `civicrm_domain`
     }
   }
 }
-

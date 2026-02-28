@@ -44,10 +44,12 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
 
   public static $_primaryIDName = 'id';
 
-  protected $_pstatus = NULL; public function __construct(&$formValues) {
+  protected $_pstatus = NULL;
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
-    $this->_eventID = CRM_Utils_Array::value('event_id',
+    $this->_eventID = CRM_Utils_Array::value(
+      'event_id',
       $this->_formValues
     );
 
@@ -97,7 +99,8 @@ UNIQUE INDEX unique_participant_id ( participant_id )
 ) ENGINE=HEAP
 ";
 
-    CRM_Core_DAO::executeQuery($sql,
+    CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
   }
@@ -113,7 +116,8 @@ WHERE  p.contact_id = c.id
   AND  p.is_test    = 0
   AND  p.event_id = {$this->_eventID}
 ";
-    CRM_Core_DAO::executeQuery($sql,
+    CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -132,7 +136,8 @@ WHERE
 ORDER BY c.id, l.price_field_value_id;
 ";
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -158,7 +163,8 @@ UPDATE {$this->_tableName}
 SET $values
 WHERE participant_id = $participantID;
 ";
-      CRM_Core_DAO::executeQuery($sql,
+      CRM_Core_DAO::executeQuery(
+        $sql,
         CRM_Core_DAO::$_nullArray
       );
     }
@@ -184,7 +190,8 @@ AND    p.entity_id    = e.id
       $sql .= " AND e.id = $eventID";
     }
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       $params
     );
     return $dao;
@@ -203,7 +210,8 @@ AND    p.entity_id    = e.id
       return;
     }
 
-    $form->add('select',
+    $form->add(
+      'select',
       'event_id',
       ts('Event'),
       $event,
@@ -265,8 +273,8 @@ AND    p.entity_id    = e.id
     return NULL;
   }
 
-  public function count(){
-    if(!$this->_filled){
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -274,7 +282,10 @@ AND    p.entity_id    = e.id
     return $value;
   }
 
-  public function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -291,9 +302,13 @@ contact_a.display_name   as display_name";
       $selectClause .= ",\ntempTable.{$fieldName} as {$fieldName}";
     }
 
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
@@ -333,4 +348,3 @@ INNER JOIN {$this->_tableName} tempTable ON ( tempTable.contact_id = contact_a.i
   }
 
 }
-

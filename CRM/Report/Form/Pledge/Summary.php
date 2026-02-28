@@ -46,7 +46,8 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
   protected $_totalPaid = FALSE;
-  protected $_customGroupExtends = ['Pledge']; public function __construct() {
+  protected $_customGroupExtends = ['Pledge'];
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -251,15 +252,19 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
-                CRM_Utils_Array::value("{$fieldName}_value",
+                CRM_Utils_Array::value(
+                  "{$fieldName}_value",
                   $this->_params
                 ),
-                CRM_Utils_Array::value("{$fieldName}_min",
+                CRM_Utils_Array::value(
+                  "{$fieldName}_min",
                   $this->_params
                 ),
-                CRM_Utils_Array::value("{$fieldName}_max",
+                CRM_Utils_Array::value(
+                  "{$fieldName}_max",
                   $this->_params
                 )
               );
@@ -469,7 +474,8 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_pledge_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_pledge_contact_id'],
           $this->_absoluteUrl
         );
@@ -510,4 +516,3 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
     }
   }
 }
-

@@ -386,4 +386,3 @@ function _civicrm_mailer_check_params(&$params, $required) {
 
   return NULL;
 }
-

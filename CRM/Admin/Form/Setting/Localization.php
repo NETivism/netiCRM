@@ -78,8 +78,12 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
       // add the ability to return to single language
       $warning = ts('WARNING: This will make your CiviCRM installation a single-language one again. THIS WILL DELETE ALL DATA RELATED TO LANGUAGES OTHER THAN THE DEFAULT ONE SELECTED ABOVE (and only that language will be preserved).');
       $this->assign('warning', $warning);
-      $this->addElement('checkbox', 'makeSinglelingual', ts('Return to Single Language'),
-        NULL, ['onChange' => "if (this.checked) alert('$warning')"]
+      $this->addElement(
+        'checkbox',
+        'makeSinglelingual',
+        ts('Return to Single Language'),
+        NULL,
+        ['onChange' => "if (this.checked) alert('$warning')"]
       );
     }
     else {
@@ -99,8 +103,12 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
       CRM_Core_Error::setCallback();
 
       if (!$dao->_lastError and !$config->logging) {
-        $this->addElement('checkbox', 'makeMultilingual', ts('Enable Multiple Languages'),
-          NULL, ['onChange' => "if (this.checked) alert('$warning')"]
+        $this->addElement(
+          'checkbox',
+          'makeMultilingual',
+          ts('Enable Multiple Languages'),
+          NULL,
+          ['onChange' => "if (this.checked) alert('$warning')"]
         );
       }
     }
@@ -215,9 +223,10 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     if (empty($values['currencyLimit'])) {
       $values['currencyLimit'] = $values['defaultCurrency'];
     }
-    elseif (!in_array($values['defaultCurrency'],
-        $values['currencyLimit']
-      )) {
+    elseif (!in_array(
+      $values['defaultCurrency'],
+      $values['currencyLimit']
+    )) {
       $values['currencyLimit'][] = $values['defaultCurrency'];
       // sort so that when we display drop down, weights have right value
       sort($values['currencyLimit']);
@@ -236,7 +245,8 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     }
 
     $dontCare = NULL;
-    CRM_Core_OptionGroup::createAssoc('currencies_enabled',
+    CRM_Core_OptionGroup::createAssoc(
+      'currencies_enabled',
       $options,
       $dontCare
     );
@@ -280,4 +290,3 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     }
   }
 }
-

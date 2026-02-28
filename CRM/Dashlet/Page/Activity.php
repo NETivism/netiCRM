@@ -71,15 +71,19 @@ class CRM_Dashlet_Page_Activity extends CRM_Core_Page {
     $sortID = NULL;
 
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
-      CRM_Core_Action::VIEW, $this, $output
+      CRM_Core_Action::VIEW,
+      $this,
+      $output
     );
     $controller->setEmbedded(TRUE);
     $controller->run();
@@ -88,4 +92,3 @@ class CRM_Dashlet_Page_Activity extends CRM_Core_Page {
     return parent::run();
   }
 }
-

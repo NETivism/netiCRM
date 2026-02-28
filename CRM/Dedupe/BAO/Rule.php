@@ -59,7 +59,8 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    */
   public function sql() {
     if ($this->params &&
-      (!CRM_Utils_Array::arrayKeyExists($this->rule_table, $this->params) ||
+      (
+        !CRM_Utils_Array::arrayKeyExists($this->rule_table, $this->params) ||
         !CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])
       )
     ) {
@@ -129,7 +130,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
       $str = 'NULL';
       if (CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])) {
         if (is_array($this->params[$this->rule_table][$this->rule_field])) {
-          foreach($this->params[$this->rule_table][$this->rule_field] as $str) {
+          foreach ($this->params[$this->rule_table][$this->rule_field] as $str) {
             $str = CRM_Utils_Type::escape($str, 'String');
             if ($this->rule_length) {
               $where[] = "SUBSTR(t1.{$this->rule_field}, 1, {$this->rule_length}) = SUBSTR('$str', 1, {$this->rule_length})";
@@ -207,7 +208,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];
     }
-    else{
+    else {
       // find default
       $rgBao->level = $params['level'];
       $rgBao->contact_type = $params['contact_type'];
@@ -238,7 +239,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];
     }
-    else{
+    else {
       // find default
       $rgBao->level = $params['level'];
       $rgBao->contact_type = $params['contact_type'];
@@ -264,4 +265,3 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
     return $ruleFields;
   }
 }
-

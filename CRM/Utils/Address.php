@@ -48,7 +48,8 @@ class CRM_Utils_Address {
    *
    * @static
    */
-  public static function format($fields,
+  public static function format(
+    $fields,
     $format = NULL,
     $microformat = FALSE,
     $mailing = FALSE,
@@ -103,7 +104,7 @@ class CRM_Utils_Address {
     }
 
     if (!$microformat) {
-        // replacements in case of Individual Name Format
+      // replacements in case of Individual Name Format
       $replacements = [
         'display_name' => CRM_Utils_Array::value('display_name', $fields),
         'individual_prefix' => CRM_Utils_Array::value('individual_prefix', $fields),
@@ -264,4 +265,3 @@ class CRM_Utils_Address {
     return $finalFormatted;
   }
 }
-

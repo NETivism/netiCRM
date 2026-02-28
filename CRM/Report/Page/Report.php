@@ -56,8 +56,12 @@ class CRM_Report_Page_Report extends CRM_Core_Page {
 
 
 
-    $templateInfo = CRM_Core_OptionGroup::getRowValues('report_template', "{$optionVal}", 'value',
-      'String', FALSE
+    $templateInfo = CRM_Core_OptionGroup::getRowValues(
+      'report_template',
+      "{$optionVal}",
+      'value',
+      'String',
+      FALSE
     );
 
     $extKey = strpos($templateInfo['name'], '.');
@@ -89,4 +93,3 @@ class CRM_Report_Page_Report extends CRM_Core_Page {
     return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/report/list', "reset=1"));
   }
 }
-

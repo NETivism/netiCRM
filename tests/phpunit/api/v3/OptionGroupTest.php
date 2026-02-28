@@ -12,7 +12,8 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
   /*
   * Good to test option group as a representative on the Camel Case
   */
@@ -89,7 +90,10 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
    */
 
   public function testGetOptionCreateFailRollback() {
-    $countFirst = civicrm_api('OptionGroup', 'getcount', [
+    $countFirst = civicrm_api(
+      'OptionGroup',
+      'getcount',
+      [
         'version' => 3,
         'options' => ['limit' => 5000],
       ]
@@ -110,14 +114,18 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('OptionGroup', 'create', $params);
     $this->assertEquals(1, $result['is_error'], 'Error should be passed up to top level In line ' . __LINE__);
-    $countAfter = civicrm_api('OptionGroup', 'getcount', [
+    $countAfter = civicrm_api(
+      'OptionGroup',
+      'getcount',
+      [
         'version' => 3,
         'options' => ['limit' => 5000],
       ]
     );
-    $this->assertEquals($countFirst, $countAfter,
+    $this->assertEquals(
+      $countFirst,
+      $countAfter,
       'Count of option groups should not have changed due to rollback triggered by option value In line ' . __LINE__
     );
   }
 }
-

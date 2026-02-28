@@ -61,8 +61,12 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
 
 
     $aclRoles = ['' => ts('- select -')] + CRM_Core_OptionGroup::values('acl_role');
-    $this->add('select', 'acl_role_id', ts('ACL Role'),
-      $aclRoles, TRUE
+    $this->add(
+      'select',
+      'acl_role_id',
+      ts('ACL Role'),
+      $aclRoles,
+      TRUE
     );
 
 
@@ -102,4 +106,3 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
     }
   }
 }
-

@@ -118,7 +118,8 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     if (isset($defaults['start_date'])) {
       list($defaults['start_date'],
         $defaults['start_date_time']
-      ) = CRM_Utils_Date::setDateDefaults($defaults['start_date'],
+      ) = CRM_Utils_Date::setDateDefaults(
+        $defaults['start_date'],
         'activityDateTime'
       );
     }
@@ -131,7 +132,8 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     if (isset($defaults['end_date'])) {
       list($defaults['end_date'],
         $defaults['end_date_time']
-      ) = CRM_Utils_Date::setDateDefaults($defaults['end_date'],
+      ) = CRM_Utils_Date::setDateDefaults(
+        $defaults['end_date'],
         'activityDateTime'
       );
     }
@@ -163,7 +165,8 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -200,8 +203,12 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     $this->addElement('select', 'status_id', ts('Campaign Status'), ['' => ts('- select -')] + $campaignStatus);
 
     // add External Identifire Element
-    $this->add('text', 'external_identifier', ts('External Id'),
-      CRM_Core_DAO::getAttribute('CRM_Campaign_DAO_Campaign', 'external_identifier'), FALSE
+    $this->add(
+      'text',
+      'external_identifier',
+      ts('External Id'),
+      CRM_Core_DAO::getAttribute('CRM_Campaign_DAO_Campaign', 'external_identifier'),
+      FALSE
     );
 
     // add Campaign Parent Id
@@ -209,7 +216,10 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     $campaigns = CRM_Campaign_BAO_Campaign::getAllCampaign($this->_campaignId);
 
     if ($campaigns) {
-      $this->addElement('select', 'parent_id', ts('Parent Id'),
+      $this->addElement(
+        'select',
+        'parent_id',
+        ts('Parent Id'),
         ['' => ts('- select Parent -')] + $campaigns
       );
     }
@@ -217,7 +227,9 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     //get the campaign groups.
     $groups = CRM_Core_PseudoConstant::group('Campaign');
 
-    $inG = &$this->addElement('advmultiselect', 'includeGroups',
+    $inG = &$this->addElement(
+      'advmultiselect',
+      'includeGroups',
       ts('Include Group(s)') . ' ',
       $groups,
       ['size' => 5,
@@ -244,7 +256,8 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
         ]);
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
@@ -352,6 +365,3 @@ class CRM_Campaign_Form_Campaign extends CRM_Core_Form {
     }
   }
 }
-
-
-

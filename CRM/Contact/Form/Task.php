@@ -147,7 +147,7 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       }
 
       if (!empty($primaryIDName)) {
-        $sql = "CREATE TABLE {$form->_componentTable} ( id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";  
+        $sql = "CREATE TABLE {$form->_componentTable} ( id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
       }
       else {
         $sql = "CREATE TABLE {$form->_componentTable} ( contact_id int primary key $customColumns) ENGINE=MyISAM DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
@@ -164,13 +164,14 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
       // fire the query again and get the contact id's + display name
       $sortID = NULL;
       if ($form->get(CRM_Utils_Sort::SORT_ID)) {
-        $sortID = CRM_Utils_Sort::sortIDValue($form->get(CRM_Utils_Sort::SORT_ID),
+        $sortID = CRM_Utils_Sort::sortIDValue(
+          $form->get(CRM_Utils_Sort::SORT_ID),
           $form->get(CRM_Utils_Sort::SORT_DIRECTION)
         );
       }
 
       $selectorName = $form->controller->selectorName();
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $selectorName) . '.php');
+      require_once(str_replace('_', DIRECTORY_SEPARATOR, $selectorName) . '.php');
 
       $fv = $form->get('formValues');
       $customClass = $form->get('customSearchClass');
@@ -309,7 +310,8 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  public function addRules() {}
+  public function addRules() {
+  }
 
   /**
    * Function to actually build the form
@@ -328,7 +330,8 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
    *
    * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
   //end of function
 
   /**
@@ -341,8 +344,9 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -354,4 +358,3 @@ class CRM_Contact_Form_Task extends CRM_Core_Form {
     );
   }
 }
-

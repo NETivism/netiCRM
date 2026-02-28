@@ -150,8 +150,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     foreach ($this->_fields as $name => $field) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
         if (!isset($this->_defaults[$name])) {
-          CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID, $name, $this->_defaults,
-            NULL, CRM_Profile_Form::MODE_REGISTER
+          CRM_Core_BAO_CustomField::setProfileDefaults(
+            $customFieldID,
+            $name,
+            $this->_defaults,
+            NULL,
+            CRM_Profile_Form::MODE_REGISTER
           );
         }
       }
@@ -181,9 +185,9 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $this->addFormRule(['CRM_Contribute_Form_PCP_PCPAccount', 'formRule'], $this);
     }
     else {
-			if (!$session->get('userID')) {
-				CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
-			}
+      if (!$session->get('userID')) {
+        CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
+      }
       $fields = CRM_Core_BAO_UFGroup::getFields($id, FALSE, CRM_Core_Action::ADD);
     }
 
@@ -309,4 +313,3 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
   }
 }
-

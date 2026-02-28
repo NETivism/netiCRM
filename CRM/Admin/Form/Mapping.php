@@ -70,12 +70,19 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
     else {
       $this->applyFilter('__ALL__', 'trim');
 
-      $this->add('text', 'name', ts('Name'),
-        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'name'), TRUE
+      $this->add(
+        'text',
+        'name',
+        ts('Name'),
+        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'name'),
+        TRUE
       );
       $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_Mapping', $this->_id]);
 
-      $this->addElement('text', 'description', ts('Description'),
+      $this->addElement(
+        'text',
+        'description',
+        ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'description')
       );
 
@@ -119,4 +126,3 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
   }
   //end of function
 }
-

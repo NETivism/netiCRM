@@ -230,7 +230,7 @@ WHERE  civicrm_pcp.contact_id = civicrm_contact.id
    * @return total amount
    */
   public static function thermoMeter($pcpId, $type = 'amount') {
-    switch($type) {
+    switch ($type) {
       case 'amount':
         $query = "
 SELECT SUM(cc.total_amount) as total
@@ -501,16 +501,24 @@ WHERE pcp.id = %1 AND cc.contribution_status_id =1 AND cc.is_test = 0";
     if ($pcpStatus[$newStatus] == 'Approved') {
       $tplParams['isTellFriendEnabled'] = $pcpBlockInfo['is_tellfriend_enabled'];
       if ($pcpBlockInfo['is_tellfriend_enabled']) {
-        $pcpTellFriendURL = CRM_Utils_System::url('civicrm/friend',
+        $pcpTellFriendURL = CRM_Utils_System::url(
+          'civicrm/friend',
           "reset=1&eid=$pcpId&blockId=$blockId&page=pcp",
-          TRUE, NULL, FALSE, TRUE
+          TRUE,
+          NULL,
+          FALSE,
+          TRUE
         );
         $tplParams['pcpTellFriendURL'] = $pcpTellFriendURL;
       }
     }
-    $pcpInfoURL = CRM_Utils_System::url('civicrm/contribute/pcp/info',
+    $pcpInfoURL = CRM_Utils_System::url(
+      'civicrm/contribute/pcp/info',
       "reset=1&id=$pcpId",
-      TRUE, NULL, FALSE, TRUE
+      TRUE,
+      NULL,
+      FALSE,
+      TRUE
     );
     $tplParams['pcpInfoURL'] = $pcpInfoURL;
     $cc = NULL;
@@ -653,7 +661,7 @@ WHERE pcp.id = %1";
       1 => [$pcpId, 'Integer'],
     ]);
     $files = [];
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $files[] = CRM_Core_BAO_File::url($dao->file_id, $pcpId, 'civicrm_pcp');
     }
     return $files;
@@ -704,11 +712,10 @@ WHERE pcp.entity_id = %1
       AND ufgroup.is_active = 1";
     $params = [1 => [$contributionPageId, 'Integer']];
     if (!$supporterProfileId = CRM_Core_DAO::singleValueQuery($query, $params)) {
-       return CRM_Core_Error::statusBounce(ts('Supporter profile is not set for this Personal Campaign Page or the profile is disabled. Please contact the site administrator if you need assistance.'));
+      return CRM_Core_Error::statusBounce(ts('Supporter profile is not set for this Personal Campaign Page or the profile is disabled. Please contact the site administrator if you need assistance.'));
     }
     else {
       return $supporterProfileId;
     }
   }
 }
-

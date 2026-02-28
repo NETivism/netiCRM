@@ -57,8 +57,11 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     }
 
     //   crm_core_error::debug("$this->_actions", $this->_action);
-    $this->_opID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-      'report_template', 'id', 'name'
+    $this->_opID = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
+      'report_template',
+      'id',
+      'name'
     );
 
     $instanceInfo = [];
@@ -75,7 +78,8 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_OptionValue', $params, $defaults);
     }
     else {
-      $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+      $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight(
+        'CRM_Core_DAO_OptionValue',
         ['option_group_id' => $this->_opID]
       );
     }
@@ -84,7 +88,8 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
 
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -118,7 +123,8 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
 
     $this->add('select', 'component_id', ts('Component'), ['' => ts('Contact')] + $components);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -193,4 +199,3 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     }
   }
 }
-

@@ -90,7 +90,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
     else {
       $titles = CRM_Core_OptionGroup::values('custom_search');
-      if(!empty($titles[$this->_customSearchID])){
+      if (!empty($titles[$this->_customSearchID])) {
         $this->setTitle($titles[$this->_customSearchID]);
       }
     }
@@ -174,7 +174,7 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     parent::postProcess();
   }
 
-  public function setTitle($title){
+  public function setTitle($title) {
     if ($title) {
       CRM_Utils_System::setTitle($title);
     }
@@ -184,4 +184,3 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
   }
 
 }
-

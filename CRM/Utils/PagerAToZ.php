@@ -115,7 +115,7 @@ class CRM_Utils_PagerAToZ {
     //get the current path
     $path = CRM_Utils_System::currentPath();
 
-    if(!empty($query->_formValues)){
+    if (!empty($query->_formValues)) {
       $qfKey = CRM_Utils_Array::value('qfKey', $query->_formValues);
       $aToZBar = [];
       foreach ($AToZBar as $key => $link) {
@@ -134,7 +134,8 @@ class CRM_Utils_PagerAToZ {
           // we do it this way since we want the url to be encoded but not the link character
           // since that seems to mess up drupal utf-8 encoding etc
           $url .= $link;
-          $element['item'] = sprintf('<a href="%s" %s>%s</a>',
+          $element['item'] = sprintf(
+            '<a href="%s" %s>%s</a>',
             $url,
             $klass,
             $link
@@ -146,16 +147,16 @@ class CRM_Utils_PagerAToZ {
         $aToZBar[] = $element;
       }
 
-      $url = sprintf('<a href="%s">%s</a>',
+      $url = sprintf(
+        '<a href="%s">%s</a>',
         CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=1"),
         'All'
       );
       $aToZBar[] = ['item' => $url];
       return $aToZBar;
     }
-    else{
+    else {
       return NULL;
     }
   }
 }
-

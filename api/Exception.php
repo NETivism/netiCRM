@@ -19,7 +19,7 @@
  * @param array $data
  *   extra params to return. eg an extra array of ids. It is not mandatory, but can help the computer using the api. Keep in mind the api consumer isn't to be trusted. eg. the database password is NOT a good extra data
  */
-class API_Exception extends Exception  {
+class API_Exception extends Exception {
   public const UNAUTHORIZED = 'unauthorized';
   public const NOT_IMPLEMENTED = 'not-found';
 
@@ -31,11 +31,13 @@ class API_Exception extends Exception  {
    * @param array $extraParams
    * @param Exception $previous
    */
-  public function __construct($message, $error_code = 0, $extraParams = [],?Exception $previous = null) {
-    if (is_numeric ($error_code)) // using int for error code "old way")
+  public function __construct($message, $error_code = 0, $extraParams = [], ?Exception $previous = NULL) {
+    if (is_numeric($error_code)) { // using int for error code "old way")
       $code = $error_code;
-    else
+    }
+    else {
       $code = 0;
+    }
     parent::__construct($message, $code, $previous);
     $this->extraParams = $extraParams + ['error_code' => $error_code];
   }
@@ -58,7 +60,7 @@ class API_Exception extends Exception  {
   /**
    * @return array
    */
-  public function getErrorCodes(){
+  public function getErrorCodes() {
     return [
         2000 => '$params was not an array',
         2001 => 'Invalid Value for Date field',
@@ -68,4 +70,3 @@ class API_Exception extends Exception  {
         ];
   }
 }
-

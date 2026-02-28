@@ -40,11 +40,12 @@
 class CRM_Report_Form_Event_Income extends CRM_Report_Form {
   public $_setVariable;
   public $_outputMode;
-  public CONST ROW_COUNT_LIMIT = 2;
+  public const ROW_COUNT_LIMIT = 2;
 
   protected $_summary = NULL;
 
-  protected $_add2groupSupported = FALSE; public function __construct() {
+  protected $_add2groupSupported = FALSE;
+  public function __construct() {
 
     $this->_columns = [
       'civicrm_event' =>
@@ -54,7 +55,9 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
           ['title' => ts('Event Title'),
             'operatorType' => CRM_Report_Form::OP_MULTISELECT,
             'type' => CRM_Utils_Type::T_INT,
-            'options' => CRM_Event_PseudoConstant::event(NULL, NULL,
+            'options' => CRM_Event_PseudoConstant::event(
+              NULL,
+              NULL,
               "is_template IS NULL OR is_template = 0"
             ),
           ],
@@ -283,7 +286,7 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->_limit = ($pageId - 1) * self::ROW_COUNT_LIMIT;
   }
 
-  public function setPager($rowCount = null) {
+  public function setPager($rowCount = NULL) {
 
     $params = ['total' => $this->_rowsFound,
       'rowCount' => self::ROW_COUNT_LIMIT,
@@ -303,7 +306,9 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     if (empty($this->_params['id_value'][0])) {
       $this->_params['id_value'] = [];
       $this->_setVariable = FALSE;
-      $events = CRM_Event_PseudoConstant::event(NULL, NULL,
+      $events = CRM_Event_PseudoConstant::event(
+        NULL,
+        NULL,
         "is_template IS NULL OR is_template = 0"
       );
       if (empty($events)) {
@@ -343,4 +348,3 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     parent::endPostProcess();
   }
 }
-

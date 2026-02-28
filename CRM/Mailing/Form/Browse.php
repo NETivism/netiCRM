@@ -61,7 +61,7 @@ class CRM_Mailing_Form_Browse extends CRM_Core_Form {
 
     // check for action permissions.
     if (!CRM_Core_Permission::checkActionPermission('CiviMail', $this->_action)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
 
@@ -82,7 +82,8 @@ class CRM_Mailing_Form_Browse extends CRM_Core_Form {
    */
 
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Confirm'),
@@ -116,4 +117,3 @@ class CRM_Mailing_Form_Browse extends CRM_Core_Form {
   }
   //end of function
 }
-

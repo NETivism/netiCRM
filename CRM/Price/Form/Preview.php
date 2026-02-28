@@ -147,7 +147,8 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
@@ -156,4 +157,3 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
     );
   }
 }
-

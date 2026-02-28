@@ -293,20 +293,29 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // set breadcrumb to append to 2nd layer pages
     $breadCrumb = [['title' => ts('Manage Contribution Pages'),
-        'url' => CRM_Utils_System::url(CRM_Utils_System::currentPath(),
+        'url' => CRM_Utils_System::url(
+          CRM_Utils_System::currentPath(),
           'reset=1'
         ),
       ]];
@@ -314,9 +323,10 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
     // what action to take ?
     if ($action & CRM_Core_Action::ADD) {
       $session = CRM_Core_Session::singleton();
-      $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
-          'action=browse&reset=1'
-        ));
+      $session->pushUserContext(CRM_Utils_System::url(
+        CRM_Utils_System::currentPath(),
+        'action=browse&reset=1'
+      ));
 
 
       $controller = new CRM_Contribute_Controller_ContributionPage(NULL, $action);
@@ -329,9 +339,10 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       $page = [];
       CRM_Contribute_BAO_ContributionPage::setValues($id, $page);
       $session = CRM_Core_Session::singleton();
-      $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
-          "action=update&reset=1&id={$id}"
-        ));
+      $session->pushUserContext(CRM_Utils_System::url(
+        CRM_Utils_System::currentPath(),
+        "action=update&reset=1&id={$id}"
+      ));
       $config = CRM_Core_Config::singleton();
 
       // get shorten url
@@ -357,7 +368,7 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       CRM_Utils_System::setTitle(ts('Dashlets')." - ".$page['title']);
       $last3month = date('Y-m-01', strtotime('-3 months'));
       $pageStatistics = CRM_Contribute_Page_DashBoard::getContributionPageStatistics($id, $last3month);
-      foreach($pageStatistics['track'] as &$track) {
+      foreach ($pageStatistics['track'] as &$track) {
         $track['display'] = '<div>'.ts("%1 achieved", [1 => "{$track['percent_goal']}% ({$track['count_goal']}".ts('People').")"])."</div><div style='color:grey'>".ts("Total")." {$track['percent']}% ({$track['count']}".ts('People').")</div>";
       }
       if ($track['start'] && $track['end']) {
@@ -383,12 +394,17 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       CRM_Utils_System::appendBreadCrumb($breadCrumb);
 
       $session = CRM_Core_Session::singleton();
-      $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
-          'reset=1&action=browse'
-        ));
+      $session->pushUserContext(CRM_Utils_System::url(
+        CRM_Utils_System::currentPath(),
+        'reset=1&action=browse'
+      ));
 
-      $id = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, FALSE, 0
+      $id = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        FALSE,
+        0
       );
       $query = "
 SELECT      ccp.title
@@ -402,7 +418,8 @@ WHERE       cp.contribution_page_id = {$id}";
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/contribute', 'reset=1'));
       }
 
-      $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionPage_Delete',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Contribute_Form_ContributionPage_Delete',
         'Delete Contribution Page',
         CRM_Core_Action::DELETE
       );
@@ -428,8 +445,13 @@ WHERE       cp.contribution_page_id = {$id}";
    * @access public
    */
   public function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -437,8 +459,13 @@ WHERE       cp.contribution_page_id = {$id}";
       return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the contribution page list and try again.'));
     }
 
-    $gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this, TRUE, 0, 'GET'
+    $gid = CRM_Utils_Request::retrieve(
+      'gid',
+      'Positive',
+      $this,
+      TRUE,
+      0,
+      'GET'
     );
 
     CRM_Contribute_BAO_ContributionPage::copy($gid);
@@ -454,12 +481,17 @@ WHERE       cp.contribution_page_id = {$id}";
    * @static
    */
   public function browse($action = NULL) {
-    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
+    $this->_sortByCharacter = CRM_Utils_Request::retrieve(
+      'sortByCharacter',
       'String',
       $this
     );
-    $createdId = CRM_Utils_Request::retrieve('cid', 'Positive',
-      $this, FALSE, 0
+    $createdId = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     if ($this->_sortByCharacter == 1 ||
@@ -511,7 +543,7 @@ ORDER BY is_active DESC, id ASC
     //get configure actions links.
     $configureActionLinks = self::configureActionLinks();
 
-    $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
+    $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE);
     $contributionPage = [];
 
     // Add key for action validation.
@@ -531,7 +563,8 @@ ORDER BY is_active DESC, id ASC
 
       //build the configure links.
       $sectionsInfo = CRM_Utils_Array::value($dao->id, $contriPageSectionInfo, []);
-      $contributionPage[$dao->id]['configureActionLinks'] = CRM_Core_Action::formLink(self::formatConfigureLinks($sectionsInfo),
+      $contributionPage[$dao->id]['configureActionLinks'] = CRM_Core_Action::formLink(
+        self::formatConfigureLinks($sectionsInfo),
         $action,
         ['id' => $dao->id],
         ts('Configure'),
@@ -539,7 +572,8 @@ ORDER BY is_active DESC, id ASC
       );
 
       //build the contributions links.
-      $contributionPage[$dao->id]['contributionLinks'] = CRM_Core_Action::formLink(self::contributionLinks(),
+      $contributionPage[$dao->id]['contributionLinks'] = CRM_Core_Action::formLink(
+        self::contributionLinks(),
         $action,
         ['id' => $dao->id],
         ts('Contributions'),
@@ -547,7 +581,8 @@ ORDER BY is_active DESC, id ASC
       );
 
       //build the online contribution links.
-      $contributionPage[$dao->id]['onlineContributionLinks'] = CRM_Core_Action::formLink(self::onlineContributionLinks(),
+      $contributionPage[$dao->id]['onlineContributionLinks'] = CRM_Core_Action::formLink(
+        self::onlineContributionLinks(),
         $action,
         ['id' => $dao->id],
         ts('Links'),
@@ -555,7 +590,8 @@ ORDER BY is_active DESC, id ASC
       );
 
       //build the normal action links.
-      $contributionPage[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(),
+      $contributionPage[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
         $action,
         [
           'id' => $dao->id,
@@ -573,7 +609,8 @@ ORDER BY is_active DESC, id ASC
 
   public function search() {
     if (isset($this->_action) &
-      (CRM_Core_Action::ADD |
+      (
+        CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE
       )
@@ -581,7 +618,8 @@ ORDER BY is_active DESC, id ASC
       return;
     }
 
-    $form = new CRM_Core_Controller_Simple('CRM_Contribute_Form_SearchContribution',
+    $form = new CRM_Core_Controller_Simple(
+      'CRM_Contribute_Form_SearchContribution',
       ts('Search Contribution'),
       CRM_Core_Action::ADD
     );
@@ -737,4 +775,3 @@ SELECT count(id)
     return $perm;
   }
 }
-

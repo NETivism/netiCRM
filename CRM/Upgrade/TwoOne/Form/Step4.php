@@ -77,7 +77,8 @@ class CRM_Upgrade_TwoOne_Form_Step4 extends CRM_Upgrade_Form {
     return $this->checkVersion($this->latestVersion);
   }
 
-  public function buildQuickForm() {}
+  public function buildQuickForm() {
+  }
 
   public function getTitle() {
     return ts('Database Upgrade to v2.1 Completed');
@@ -93,4 +94,3 @@ class CRM_Upgrade_TwoOne_Form_Step4 extends CRM_Upgrade_Form {
     return '<p><strong>' . ts('Your CiviCRM database has been successfully upgraded to v2.1.') . '</strong></p><p>' . ts('Please be sure to follow the remaining steps in the <a href=\'%1\' target=\'_blank\'><strong>Upgrade Instructions</strong></a>.', [1 => $upgradeDoc]) . '</p><p>' . ts('Thank you for using CiviCRM.') . '</p>';
   }
 }
-

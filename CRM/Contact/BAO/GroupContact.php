@@ -105,13 +105,15 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
     if (empty($params)) {
       return NULL;
     }
-    $values['group']['data'] = &CRM_Contact_BAO_GroupContact::getContactGroup($params['contact_id'],
+    $values['group']['data'] = &CRM_Contact_BAO_GroupContact::getContactGroup(
+      $params['contact_id'],
       'Added',
       3
     );
 
     // get the total count of groups
-    $values['group']['totalCount'] = CRM_Contact_BAO_GroupContact::getContactGroup($params['contact_id'],
+    $values['group']['totalCount'] = CRM_Contact_BAO_GroupContact::getContactGroup(
+      $params['contact_id'],
       'Added',
       NULL,
       TRUE
@@ -130,7 +132,9 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    * @access public
    * @static
    */
-  public static function addContactsToGroup(&$contactIds, $groupId,
+  public static function addContactsToGroup(
+    &$contactIds,
+    $groupId,
     $method = 'Admin',
     $status = 'Added',
     $tracking = NULL
@@ -142,7 +146,8 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
 
     list($numContactsAdded,
       $numContactsNotAdded
-    ) = self::bulkAddContactsToGroup($contactIds,
+    ) = self::bulkAddContactsToGroup(
+      $contactIds,
       $groupId,
       $method,
       $status,
@@ -304,7 +309,9 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    *
    * $access public
    */
-  public static function &getContactGroup($contactId, $status = NULL,
+  public static function &getContactGroup(
+    $contactId,
+    $status = NULL,
     $numGroupContact = NULL,
     $count = FALSE,
     $ignorePermission = FALSE,
@@ -424,7 +431,8 @@ class CRM_Contact_BAO_GroupContact extends CRM_Contact_DAO_GroupContact {
    *
    * @access public
    */
-  public static function getGroupContacts(&$group,
+  public static function getGroupContacts(
+    &$group,
     $returnProperties = NULL,
     $status = 'Added',
     $sort = NULL,
@@ -609,8 +617,12 @@ AND civicrm_group_contact.group_id = %2";
       $ignorePermission = TRUE;
     }
     if ($contactId) {
-      $contactGroupList = &CRM_Contact_BAO_GroupContact::getContactGroup($contactId, 'Added',
-        NULL, FALSE, $ignorePermission
+      $contactGroupList = &CRM_Contact_BAO_GroupContact::getContactGroup(
+        $contactId,
+        'Added',
+        NULL,
+        FALSE,
+        $ignorePermission
       );
       if (is_array($contactGroupList)) {
         foreach ($contactGroupList as $key) {
@@ -678,7 +690,8 @@ AND civicrm_group_contact.group_id = %2";
    * @access public
    * @static
    */
-  public static function bulkAddContactsToGroup($contactIDs,
+  public static function bulkAddContactsToGroup(
+    $contactIDs,
     $groupID,
     $method = 'Admin',
     $status = 'Added',
@@ -859,4 +872,3 @@ AND       group_id IN ( $groupIDString )
     CRM_Core_DAO::executeQuery($sql, $params);
   }
 }
-

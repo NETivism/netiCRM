@@ -194,18 +194,18 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
         if (!$testDAO->find(TRUE)) {
           CRM_Core_Error::fatal(ts('Could not retrieve payment processor details'));
         }
-        if($testDAO->is_default){
+        if ($testDAO->is_default) {
           $paymentDefault[$testDAO->id] = self::buildPayment($testDAO);
         }
-        else{
+        else {
           $paymentDAO[$testDAO->id] = self::buildPayment($testDAO);
         }
       }
       else {
-        if($dao->is_default){
+        if ($dao->is_default) {
           $paymentDefault[$dao->id] = self::buildPayment($dao);
         }
-        else{
+        else {
           $paymentDAO[$dao->id] = self::buildPayment($dao);
         }
       }
@@ -234,7 +234,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
       if ($mode == 'test' && $dao->is_test) {
         $paymentDAO[$dao->id] = self::buildPayment($dao);
       }
-      elseif($mode != 'test' && !$dao->is_test) {
+      elseif ($mode != 'test' && !$dao->is_test) {
         $paymentDAO[$dao->id] = self::buildPayment($dao);
       }
     }
@@ -282,4 +282,3 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
     return $result;
   }
 }
-

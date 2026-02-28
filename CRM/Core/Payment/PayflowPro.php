@@ -17,8 +17,8 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
    */
   public $_processorName;
   // (not used, implicit in the API, might need to convert?)
-  public CONST
-  CHARSET = 'UFT-8';
+  public const
+    CHARSET = 'UFT-8';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -62,8 +62,8 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
 
   /*
      * This function  sends request and receives response from
-     * the processor. It is the main function for processing on-server 
-	 * credit card transactions
+     * the processor. It is the main function for processing on-server
+     * credit card transactions
      */
   public function doDirectPayment(&$params) {
     if (!defined('CURLOPT_SSLCERT')) {
@@ -72,7 +72,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
 
     /*
          * define variables for connecting with the gateway
-		 */
+         */
 
 
     // Are you using the Payflow Fraud Protection Service?
@@ -97,7 +97,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     /*
          *Create the array of variables to be sent to the processor from the $params array
          * passed into this function
-		 *
+         *
          */
 
     $payflow_query_array = [
@@ -170,13 +170,25 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
 
       switch ($params['frequency_unit']) {
         case '1 week':
-          $params['next_sched_contribution'] = mktime(0, 0, 0, date("m"), date("d") + 7,
+          $params['next_sched_contribution'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d") + 7,
             date("Y")
           );
-          $params['end_date'] = mktime(0, 0, 0, date("m"), date("d") + (7 * $payflow_query_array['TERM']),
+          $params['end_date'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d") + (7 * $payflow_query_array['TERM']),
             date("Y")
           );
-          $payflow_query_array['START'] = date('mdY', $params['next_sched_contribution'
+          $payflow_query_array['START'] = date(
+            'mdY',
+            $params['next_sched_contribution'
             ]
           );
           $payflow_query_array['PAYPERIOD'] = "WEEK";
@@ -185,12 +197,25 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
           break;
 
         case '2 weeks':
-          $params['next_sched_contribution'] = mktime(0, 0, 0, date("m"), date("d") + 14, date("Y")
+          $params['next_sched_contribution'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d") + 14,
+            date("Y")
           );
-          $params['end_date'] = mktime(0, 0, 0, date("m"), date("d") + (14 * $payflow_query_array['TERM'])
-            , date("Y ")
+          $params['end_date'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d") + (14 * $payflow_query_array['TERM']),
+            date("Y ")
           );
-          $payflow_query_array['START'] = date('mdY', $params['next_sched_contribution'
+          $payflow_query_array['START'] = date(
+            'mdY',
+            $params['next_sched_contribution'
             ]
           );
           $payflow_query_array['PAYPERIOD'] = "BIWK";
@@ -199,12 +224,25 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
           break;
 
         case '4 weeks':
-          $params['next_sched_contribution'] = mktime(0, 0, 0, date("m"), date("d") + 28, date("Y")
+          $params['next_sched_contribution'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d") + 28,
+            date("Y")
           );
-          $params['end_date'] = mktime(0, 0, 0, date("m"), date("d") + (28 * $payflow_query_array['TERM'])
-            , date("Y")
+          $params['end_date'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d") + (28 * $payflow_query_array['TERM']),
+            date("Y")
           );
-          $payflow_query_array['START'] = date('mdY', $params['next_sched_contribution'
+          $payflow_query_array['START'] = date(
+            'mdY',
+            $params['next_sched_contribution'
             ]
           );
           $payflow_query_array['PAYPERIOD'] = "FRWK";
@@ -213,14 +251,26 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
           break;
 
         case '1 month':
-          $params['next_sched_contribution'] = mktime(0, 0, 0, date("m") + 1,
-            date("d"), date("Y")
+          $params['next_sched_contribution'] = mktime(
+            0,
+            0,
+            0,
+            date("m") + 1,
+            date("d"),
+            date("Y")
           );
-          $params['end_date'] = mktime(0, 0, 0, date("m") +
+          $params['end_date'] = mktime(
+            0,
+            0,
+            0,
+            date("m") +
             (1 * $payflow_query_array['TERM']),
-            date("d"), date("Y")
+            date("d"),
+            date("Y")
           );
-          $payflow_query_array['START'] = date('mdY', $params['next_sched_contribution'
+          $payflow_query_array['START'] = date(
+            'mdY',
+            $params['next_sched_contribution'
             ]
           );
           $payflow_query_array['PAYPERIOD'] = "MONT";
@@ -229,14 +279,26 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
           break;
 
         case '3 months':
-          $params['next_sched_contribution'] = mktime(0, 0, 0, date("m") + 3, date("d")
-            , date("Y")
+          $params['next_sched_contribution'] = mktime(
+            0,
+            0,
+            0,
+            date("m") + 3,
+            date("d"),
+            date("Y")
           );
-          $params['end_date'] = mktime(0, 0, 0, date("m") +
+          $params['end_date'] = mktime(
+            0,
+            0,
+            0,
+            date("m") +
             (3 * $payflow_query_array['TERM']),
-            date("d"), date("Y")
+            date("d"),
+            date("Y")
           );
-          $payflow_query_array['START'] = date('mdY', $params['next_sched_contribution']
+          $payflow_query_array['START'] = date(
+            'mdY',
+            $params['next_sched_contribution']
           );
           $payflow_query_array['PAYPERIOD'] = "QTER";
           $params['frequency_unit'] = "month";
@@ -244,14 +306,26 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
           break;
 
         case '6 months':
-          $params['next_sched_contribution'] = mktime(0, 0, 0, date("m") + 6, date("d"),
+          $params['next_sched_contribution'] = mktime(
+            0,
+            0,
+            0,
+            date("m") + 6,
+            date("d"),
             date("Y")
           );
-          $params['end_date'] = mktime(0, 0, 0, date("m") +
+          $params['end_date'] = mktime(
+            0,
+            0,
+            0,
+            date("m") +
             (6 * $payflow_query_array['TERM']),
-            date("d"), date("Y")
+            date("d"),
+            date("Y")
           );
-          $payflow_query_array['START'] = date('mdY', $params['next_sched_contribution'
+          $payflow_query_array['START'] = date(
+            'mdY',
+            $params['next_sched_contribution'
             ]
           );
           $payflow_query_array['PAYPERIOD'] = "SMYR";
@@ -260,14 +334,26 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
           break;
 
         case '1 year':
-          $params['next_sched_contribution'] = mktime(0, 0, 0, date("m"), date("d"),
+          $params['next_sched_contribution'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d"),
             date("Y") + 1
           );
-          $params['end_date'] = mktime(0, 0, 0, date("m"), date("d"),
+          $params['end_date'] = mktime(
+            0,
+            0,
+            0,
+            date("m"),
+            date("d"),
             date("Y") +
             (1 * $payflow_query_array['TEM'])
           );
-          $payflow_query_array['START'] = date('mdY', $params['next_sched_contribution'
+          $payflow_query_array['START'] = date(
+            'mdY',
+            $params['next_sched_contribution'
             ]
           );
           $payflow_query_array['PAYPERIOD'] = "YEAR";
@@ -458,7 +544,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
      * Submit transaction using CuRL
      * @submiturl string Url to direct HTTPS GET to
      * @payflow_query value string to be posted
-     * 
+     *
      */
   public function submit_transaction($submiturl, $payflow_query) {
     /*
@@ -542,7 +628,7 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
 
 
     /*
-         * Transaction submitted - 
+         * Transaction submitted -
          * See if we had a curl error - if so tell 'em and bail out
          *
          * NOTE: curl_error does not return a logical value (see its documentation), but
@@ -555,20 +641,26 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
       $errorDesc = curl_error($ch);
 
       //Paranoia - in the unlikley event that 'curl' errno fails
-      if ($errorNum == 0)
-      $errorNum = 9005;
+      if ($errorNum == 0) {
+        $errorNum = 9005;
+      }
 
       // Paranoia - in the unlikley event that 'curl' error fails
-      if (strlen($errorDesc) == 0)
-      $errorDesc = "Connection to payment gateway failed";
+      if (strlen($errorDesc) == 0) {
+        $errorDesc = "Connection to payment gateway failed";
+      }
       if ($errorNum = 60) {
-        return self::errorExit($errorNum, "Curl error - " . $errorDesc .
+        return self::errorExit(
+          $errorNum,
+          "Curl error - " . $errorDesc .
           " Try this link for more information http://curl.haxx.se/d
                                          ocs/sslcerts.html"
         );
       }
 
-      return self::errorExit($errorNum, "Curl error - " . $errorDesc .
+      return self::errorExit(
+        $errorNum,
+        "Curl error - " . $errorDesc .
         "  processor response = " . $processorResponse
       );
     }
@@ -678,4 +770,3 @@ class CRM_Core_Payment_PayflowPro extends CRM_Core_Payment {
     //RT0000000001
   }
 }
-

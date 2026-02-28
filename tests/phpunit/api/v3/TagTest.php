@@ -36,7 +36,8 @@ class api_v3_TagTest extends CiviUnitTestCase {
     parent::setUp();
   }
 
-  public function tearDown() {}
+  public function tearDown() {
+  }
 
   ///////////////// civicrm_tag_get methods
 
@@ -264,4 +265,3 @@ class api_v3_TagTest extends CiviUnitTestCase {
     $this->assertEquals('civicrm_contact', $result['values']['used_for']['api.default']);
   }
 }
-

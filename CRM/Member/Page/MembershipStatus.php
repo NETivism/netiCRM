@@ -107,15 +107,23 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
    */
   public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -160,7 +168,9 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
         else {
           $action -= CRM_Core_Action::DISABLE;
         }
-        $membershipStatus[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $membershipStatus[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $dao->id]
         );
       }
@@ -173,8 +183,11 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
     // Add order changing widget to selector
     $returnURL = CRM_Utils_System::url('civicrm/admin/member/membershipStatus', "reset=1&action=browse");
 
-    CRM_Utils_Weight::addOrder($membershipStatus, 'CRM_Member_DAO_MembershipStatus',
-      'id', $returnURL
+    CRM_Utils_Weight::addOrder(
+      $membershipStatus,
+      'CRM_Member_DAO_MembershipStatus',
+      'id',
+      $returnURL
     );
 
     $this->assign('rows', $membershipStatus);
@@ -207,4 +220,3 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
     return 'civicrm/admin/member/membershipStatus';
   }
 }
-

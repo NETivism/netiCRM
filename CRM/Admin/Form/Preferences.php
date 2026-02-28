@@ -48,15 +48,27 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
 
   protected $_config = NULL;
 
-  protected $_params = NULL; public function preProcess() {
-    $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive',
-      $this, FALSE
+  protected $_params = NULL;
+  public function preProcess() {
+    $this->_contactID = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
+      $this,
+      FALSE
     );
-    $this->_system = CRM_Utils_Request::retrieve('system', 'Boolean',
-      $this, FALSE, TRUE
+    $this->_system = CRM_Utils_Request::retrieve(
+      'system',
+      'Boolean',
+      $this,
+      FALSE,
+      TRUE
     );
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'update'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'update'
     );
     if (isset($action)) {
       $this->assign('action', $action);
@@ -100,7 +112,8 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
       if (isset($this->_config->$name) &&
         $this->_config->$name
       ) {
-        $value = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $value = explode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($this->_config->$name, 1, -1)
         );
         if (!empty($value)) {
@@ -129,14 +142,20 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
       foreach ($options as $key => $val) {
         $newOptions[$key] = $val;
       }
-      $this->addCheckBox($name, $title,
+      $this->addCheckBox(
+        $name,
+        $title,
         $newOptions,
-        NULL, NULL, NULL, NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
         ['&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>']
       );
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -164,7 +183,8 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
       if (CRM_Utils_Array::value($name, $this->_params) &&
         is_array($this->_params[$name])
       ) {
-        $this->_config->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $this->_config->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           array_keys($this->_params[$name])
         ) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
@@ -177,4 +197,3 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   }
   //end of function
 }
-

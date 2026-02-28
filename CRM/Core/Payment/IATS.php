@@ -43,9 +43,9 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
   public $_processorName;
   public $_profile;
   # (not used, implicit in the API, might need to convert?)
-  public CONST CHARSET = 'UFT-8';
+  public const CHARSET = 'UFT-8';
   /* check IATS website for additional supported currencies */
-  public CONST CURRENCIES = 'CAD,USD,AUD,GBP,EUR,NZD';
+  public const CURRENCIES = 'CAD,USD,AUD,GBP,EUR,NZD';
 
   /**
    * Constructor
@@ -91,11 +91,11 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
     // beginning of modified sample code from IATS php api include IATS supplied api library
 
     if ($isRecur) {
-      include_once ('Services/IATS/iats_reoccur.php');
+      include_once('Services/IATS/iats_reoccur.php');
       $iatslink1 = new iatslinkReoccur;
     }
     else {
-      include_once ('Services/IATS/iatslink.php');
+      include_once('Services/IATS/iatslink.php');
       $iatslink1 = new iatslink;
     }
 
@@ -160,6 +160,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
         switch ($params['frequency_unit']) {
           case 'week':
             $paymentsRecur = 520;
+            // no break
           case 'month':
             $paymentsRecur = 120;
         }
@@ -238,20 +239,26 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
   public function &error($error = NULL) {
     $e = &CRM_Core_Error::singleton();
     if (is_object($error)) {
-      $e->push($error->getResponseCode(),
-        0, NULL,
+      $e->push(
+        $error->getResponseCode(),
+        0,
+        NULL,
         $error->getMessage()
       );
     }
     elseif ($error && is_numeric($error)) {
-      $e->push($error,
-        0, NULL,
+      $e->push(
+        $error,
+        0,
+        NULL,
         $this->errorString($error)
       );
     }
     elseif (is_string($error)) {
-      $e->push(9002,
-        0, NULL,
+      $e->push(
+        9002,
+        0,
+        NULL,
         $error
       );
     }
@@ -322,4 +329,3 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
     }
   }
 }
-

@@ -168,17 +168,21 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         $params[$ids]['is_active'] = ($recur['contribution_status_id'] != 3);
         $links = self::recurLinks();
         if ($params[$ids]['is_active']) {
-          $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
+          $params[$ids]['action'] = CRM_Core_Action::formLink(
+            $links,
+            $action,
             ['cid' => $this->_contactId,
               'id' => $ids,
               'cxt' => 'contribution',
             ]
           );
         }
-        else{
+        else {
           unset($links[CRM_Core_Action::DISABLE]);
           unset($links[CRM_Core_Action::UPDATE]);
-          $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
+          $params[$ids]['action'] = CRM_Core_Action::formLink(
+            $links,
+            $action,
             ['cid' => $this->_contactId,
               'id' => $ids,
               'cxt' => 'contribution',
@@ -200,7 +204,9 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $params = CRM_Contribute_BAO_Contribution::getHonorContacts($this->_contactId);
     if (!empty($params)) {
       foreach ($params as $ids => $honorId) {
-        $params[$ids]['action'] = CRM_Core_Action::formLink(self::honorLinks(), $action,
+        $params[$ids]['action'] = CRM_Core_Action::formLink(
+          self::honorLinks(),
+          $action,
           ['cid' => $honorId['honorId'],
             'id' => $ids,
             'cxt' => 'contribution',
@@ -351,8 +357,12 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
 
   public function setContext() {
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
-    $context = CRM_Utils_Request::retrieve('context', 'String',
-      $this, FALSE, 'search'
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
     $compContext = CRM_Utils_Request::retrieve('compContext', 'String', $this);
 
@@ -379,13 +389,15 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'dashboard':
-        $url = CRM_Utils_System::url('civicrm/contribute',
+        $url = CRM_Utils_System::url(
+          'civicrm/contribute',
           'reset=1'
         );
         break;
 
       case 'pledgeDashboard':
-        $url = CRM_Utils_System::url('civicrm/pledge',
+        $url = CRM_Utils_System::url(
+          'civicrm/pledge',
           'reset=1'
         );
         break;
@@ -400,7 +412,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
           $cid = $this->_contactId;
         }
 
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$cid}&selectedChild=contribute"
         );
         break;
@@ -426,7 +439,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
         );
         break;
@@ -451,7 +465,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         else {
           $action = 'update';
         }
-        $url = CRM_Utils_System::url('civicrm/contact/view/membership',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
           "reset=1&action={$action}&id={$componentId}&cid={$this->_contactId}&context={$context}&selectedChild=member{$searchKey}{$compContext}"
         );
         break;
@@ -475,13 +490,15 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         else {
           $action = 'update';
         }
-        $url = CRM_Utils_System::url('civicrm/contact/view/participant',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/participant',
           "reset=1&action={$action}&id={$componentId}&cid={$this->_contactId}&context={$context}&selectedChild=event{$searchKey}{$compContext}"
         );
         break;
 
       case 'pledge':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=pledge"
         );
         break;
@@ -518,7 +535,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         if ($this->_contactId) {
           $cid = '&cid=' . $this->_contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/contribute/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/contribute/search',
           'reset=1&force=1' . $cid
         );
         break;
@@ -528,4 +546,3 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $session->pushUserContext($url);
   }
 }
-

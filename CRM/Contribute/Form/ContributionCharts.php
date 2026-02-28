@@ -91,7 +91,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     if ($this->_year) {
       $selectedYear = $this->_year;
     }
-    else{
+    else {
       $selectedYear = date('Y');
     }
     $group = 'Contribution Chart';
@@ -107,7 +107,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
       $abbrMonthNames[$i] = strftime('%b', mktime(0, 0, 0, $i+1, 10, 1970));
     }
 
-    if(empty($chartData) || time() - $chartTime > 86400 || $_GET['update']) {
+    if (empty($chartData) || time() - $chartTime > 86400 || $_GET['update']) {
       $chartInfoYearly = CRM_Contribute_BAO_Contribution_Utils::contributionChartYearly();
       $this->_years = $chartInfoYearly['By Year'];
 
@@ -123,17 +123,17 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
       CRM_Core_BAO_Cache::setItem($chartData, $group, $path.'_chartData'.$selectedYear, $components['CiviContribute']->componentID);
       CRM_Core_BAO_Cache::setItem(time(), $group, $path.'_chartTime'.$selectedYear, $components['CiviContribute']->componentID);
     }
-    else{
+    else {
       $this->_years = $chartYears;
     }
-    if(!empty($chartData)){
+    if (!empty($chartData)) {
       $chart = [
         'id' => 'chart-monthly',
         'selector' => '#chart-monthly',
         'type' => 'Bar',
         'labels' => json_encode($abbrMonthNames),
         'series' => json_encode([array_values($chartData)]),
-        'withToolTip' => true,
+        'withToolTip' => TRUE,
         'seriesUnit' => '$',
         'seriesUnitPosition' => 'prefix',
       ];
@@ -142,4 +142,3 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
     }
   }
 }
-

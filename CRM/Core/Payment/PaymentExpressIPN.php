@@ -174,7 +174,7 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
       return TRUE;
     }
     else {
-      /* Since trxn_id hasn't got any use here, 
+      /* Since trxn_id hasn't got any use here,
              * lets make use of it by passing the eventID/membershipTypeID to next level.
              * And change trxn_id to the payment processor reference before finishing db update */
 
@@ -238,7 +238,8 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
       }
 
       // get the payment processor id from contribution page
-      $paymentProcessorID = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $paymentProcessorID = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_ContributionPage',
         $contribution->contribution_page_id,
         'payment_processor_id'
       );
@@ -305,21 +306,27 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
         ]);
       $processResponse = _valueXml('ProcessResponse', $processResponse);
 
-      fwrite($message_log, sprintf("\n\r%s:- %s\n", date("D M j G:i:s T Y"),
-          $processResponse
-        ));
+      fwrite($message_log, sprintf(
+        "\n\r%s:- %s\n",
+        date("D M j G:i:s T Y"),
+        $processResponse
+      ));
 
       // Send the XML-formatted validation request to DPS so that we can receive a decrypted XML response which contains the transaction results
       $curl = _initCURL($processResponse, $dps_url);
 
-      fwrite($message_log, sprintf("\n\r%s:- %s\n", date("D M j G:i:s T Y"),
-          $curl
-        ));
+      fwrite($message_log, sprintf(
+        "\n\r%s:- %s\n",
+        date("D M j G:i:s T Y"),
+        $curl
+      ));
       $success = FALSE;
       if ($response = curl_exec($curl)) {
-        fwrite($message_log, sprintf("\n\r%s:- %s\n", date("D M j G:i:s T Y"),
-            $response
-          ));
+        fwrite($message_log, sprintf(
+          "\n\r%s:- %s\n",
+          date("D M j G:i:s T Y"),
+          $response
+        ));
         curl_close($curl);
 
         // Assign the returned XML values to variables
@@ -389,7 +396,8 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
 
 
 
-    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorID,
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment(
+      $paymentProcessorID,
       $mode
     );
 
@@ -404,15 +412,21 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
       }
 
       if ($component == "event") {
-        $finalURL = CRM_Utils_System::url('civicrm/event/register',
+        $finalURL = CRM_Utils_System::url(
+          'civicrm/event/register',
           "_qf_ThankYou_display=1&qfKey=$qfKey",
-          FALSE, NULL, FALSE
+          FALSE,
+          NULL,
+          FALSE
         );
       }
       elseif ($component == "contribute") {
-        $finalURL = CRM_Utils_System::url('civicrm/contribute/transact',
+        $finalURL = CRM_Utils_System::url(
+          'civicrm/contribute/transact',
           "_qf_ThankYou_display=1&qfKey=$qfKey",
-          FALSE, NULL, FALSE
+          FALSE,
+          NULL,
+          FALSE
         );
       }
 
@@ -421,15 +435,21 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
     else {
 
       if ($component == "event") {
-        $finalURL = CRM_Utils_System::url('civicrm/event/confirm',
+        $finalURL = CRM_Utils_System::url(
+          'civicrm/event/confirm',
           "reset=1&cc=fail&participantId=$privateData[participantID]",
-          FALSE, NULL, FALSE
+          FALSE,
+          NULL,
+          FALSE
         );
       }
       elseif ($component == "contribute") {
-        $finalURL = CRM_Utils_System::url('civicrm/contribute/transact',
+        $finalURL = CRM_Utils_System::url(
+          'civicrm/contribute/transact',
           "_qf_Main_display=1&cancel=1&qfKey=$qfKey",
-          FALSE, NULL, FALSE
+          FALSE,
+          NULL,
+          FALSE
         );
       }
 
@@ -451,4 +471,3 @@ class CRM_Core_Payment_PaymentExpressIPN extends CRM_Core_Payment_BaseIPN {
     return $vars;
   }
 }
-

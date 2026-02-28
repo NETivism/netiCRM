@@ -48,7 +48,8 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     //  Insert a row in civicrm_group creating option group
     //  from_email_address group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/group_admins.xml'
       )
@@ -57,7 +58,8 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     //  Insert a row in civicrm_group creating option group
     //  from_email_address group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/group_subscribers.xml'
       )
@@ -66,7 +68,8 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     //  Insert a row in civicrm_group creating option group
     //  from_email_address group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/group_nesting.xml'
       )
@@ -182,7 +185,9 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     ];
 
     $result = &civicrm_group_nesting_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -195,7 +200,9 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     $params = [];
 
     $result = &civicrm_group_nesting_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -208,7 +215,9 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     $params = 'a string';
 
     $result = &civicrm_group_nesting_get($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -242,7 +251,9 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     $params = [];
 
     $result = &civicrm_group_nesting_create($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -255,7 +266,9 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     $params = 'a string';
 
     $result = &civicrm_group_nesting_create($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -289,7 +302,9 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     $params = [];
 
     $result = &civicrm_group_nesting_remove($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -302,10 +317,10 @@ class api_v2_GroupNestingTest extends CiviUnitTestCase {
     $params = 'a string';
 
     $result = &civicrm_group_nesting_remove($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
 }
-
-

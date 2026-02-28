@@ -127,11 +127,13 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
       if ($config->userSystem) {
         try {
           $ufID = $config->userSystem->createUser($userParams, 'email');
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
           // If CMS user creation fails, fall back to using contactId
           $ufID = $this->contactId;
         }
-      } else {
+      }
+      else {
         // No userSystem available, use contactId as fallback
         $ufID = $this->contactId;
       }
@@ -150,7 +152,8 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
           ]
         );
       }
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       // Silently fail if UFMatch creation fails in test environment
     }
 
@@ -287,8 +290,12 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
   /**
    * Assert a valid JSON-RPC 2.0 error response
    */
-  protected function assertJsonRpcError($result, $expectedCode = NULL,
-    $expectedMessageSubstring = NULL, $id = NULL) {
+  protected function assertJsonRpcError(
+    $result,
+    $expectedCode = NULL,
+    $expectedMessageSubstring = NULL,
+    $id = NULL
+  ) {
     $this->assertIsArray($result, 'Result should be an array');
     $this->assertArrayHasKey('jsonrpc', $result);
     $this->assertSame('2.0', $result['jsonrpc']);
@@ -298,8 +305,11 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
     $this->assertArrayHasKey('message', $result['error']);
 
     if ($expectedCode !== NULL) {
-      $this->assertSame($expectedCode, $result['error']['code'],
-        'Error code should match expected');
+      $this->assertSame(
+        $expectedCode,
+        $result['error']['code'],
+        'Error code should match expected'
+      );
     }
     if ($expectedMessageSubstring !== NULL) {
       $this->assertStringContainsString(
@@ -309,8 +319,11 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
       );
     }
     if ($id !== NULL) {
-      $this->assertSame($id, $result['id'],
-        'Error response ID should match request ID');
+      $this->assertSame(
+        $id,
+        $result['id'],
+        'Error response ID should match request ID'
+      );
     }
   }
 
@@ -368,7 +381,9 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
   public function testHandleUnknownMethod() {
     $this->setHeaderAuth();
     $this->mcp->setRawInput($this->buildJsonRpcRequest(
-      'nonexistent/method', [], 'test-unknown'
+      'nonexistent/method',
+      [],
+      'test-unknown'
     ));
 
     $result = $this->mcp->handle();
@@ -388,7 +403,9 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
     $this->setHeaderAuth();
     $requestId = 'format-check-42';
     $this->mcp->setRawInput($this->buildJsonRpcRequest(
-      'initialize', [], $requestId
+      'initialize',
+      [],
+      $requestId
     ));
 
     $result = $this->mcp->handle();
@@ -417,7 +434,8 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
       // Verify it's not a site key or API key error
       $this->assertStringNotContainsString('site key', $result['error']['message']);
       $this->assertStringNotContainsString('Invalid API key', $result['error']['message']);
-    } else {
+    }
+    else {
       $this->assertJsonRpcSuccess($result);
     }
   }
@@ -498,7 +516,8 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
       // We just verify we get a proper error response
       $this->assertJsonRpcError($result);
       $this->assertNotEmpty($result['error']['message']);
-    } else {
+    }
+    else {
       $this->assertJsonRpcSuccess($result);
     }
   }
@@ -627,8 +646,11 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
       'contact_query', 'contribution_query'];
 
     foreach ($expectedTools as $expected) {
-      $this->assertContains($expected, $toolNames,
-        "Tool '$expected' should be in tools/list");
+      $this->assertContains(
+        $expected,
+        $toolNames,
+        "Tool '$expected' should be in tools/list"
+      );
     }
   }
 
@@ -654,8 +676,11 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
     $tools = $result['result']['tools'];
     $this->assertIsArray($tools);
     // Should have fewer or no tools compared to full permissions
-    $this->assertLessThanOrEqual(4, count($tools),
-      'Limited permissions should reduce available tools');
+    $this->assertLessThanOrEqual(
+      4,
+      count($tools),
+      'Limited permissions should reduce available tools'
+    );
   }
 
   // =====================================================
@@ -831,8 +856,10 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
 
     // Should return an error (either permission or unknown tool)
     $this->assertArrayHasKey('error', $result);
-    $this->assertNotEmpty($result['error']['message'],
-      'Error message should not be empty');
+    $this->assertNotEmpty(
+      $result['error']['message'],
+      'Error message should not be empty'
+    );
   }
 
   // =====================================================
@@ -877,7 +904,9 @@ class CRM_Utils_MCPTest extends CiviUnitTestCase {
   public function testNotificationsInitialized() {
     $this->setHeaderAuth();
     $this->mcp->setRawInput($this->buildJsonRpcRequest(
-      'notifications/initialized', [], 'notif-1'
+      'notifications/initialized',
+      [],
+      'notif-1'
     ));
 
     $result = $this->mcp->handle();

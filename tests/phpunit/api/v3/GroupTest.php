@@ -12,7 +12,8 @@
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_GroupTest extends CiviUnitTestCase {
   protected $_apiversion;
-  protected $_groupID; public function get_info() {
+  protected $_groupID;
+  public function get_info() {
     return [
       'name' => 'Group Get',
       'description' => 'Test all Group Get API methods.',
@@ -229,7 +230,8 @@ class api_v3_GroupTest extends CiviUnitTestCase {
     $params['id'] = $this->_groupID;
     $params['return.name'] = 1;
     $group = civicrm_api('group', 'get', $params);
-    $this->assertEquals($group['values'][$this->_groupID]['name'],
+    $this->assertEquals(
+      $group['values'][$this->_groupID]['name'],
       "Test Group 1_{$this->_groupID}"
     );
   }
@@ -275,4 +277,3 @@ class api_v3_GroupTest extends CiviUnitTestCase {
     $this->assertEquals(1, $result['values']['is_active']['api.default']);
   }
 }
-

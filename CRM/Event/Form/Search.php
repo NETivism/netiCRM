@@ -21,7 +21,7 @@
  | with this program; if not, contact CiviCRM LLC                     |
  | at info[AT]civicrm[DOT]org. If you have questions about the        |
  | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |    
+ | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
 
@@ -181,9 +181,9 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $this->_done = FALSE;
     $this->defaults = [];
 
-    /* 
-         * we allow the controller to set force/reset externally, useful when we are being 
-         * driven by the wizard framework 
+    /*
+         * we allow the controller to set force/reset externally, useful when we are being
+         * driven by the wizard framework
          */
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
@@ -204,7 +204,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $this->_eventId = CRM_Utils_Request::retrieve('event', 'Positive', CRM_Core_DAO::$_nullObject);
     if (empty($this->_eventId) && !empty($this->_formValues['event_id']) && is_numeric($this->_formValues['event_id'])) {
-      $this->_eventId = $this->_formValues['event_id']; 
+      $this->_eventId = $this->_formValues['event_id'];
     }
     if ($this->_eventId) {
       $params = ['id' => $this->_eventId];
@@ -250,14 +250,16 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-    $selector = new CRM_Event_Selector_Search($this->_queryParams,
+    $selector = new CRM_Event_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -272,7 +274,8 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -299,9 +302,9 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     CRM_Event_BAO_Query::buildSearchForm($this);
 
-    /* 
-         * add form checkboxes for each row. This is needed out here to conform to QF protocol 
-         * of all elements being declared in builQuickForm 
+    /*
+         * add form checkboxes for each row. This is needed out here to conform to QF protocol
+         * of all elements being declared in builQuickForm
          */
 
     $rows = $this->get('rows');
@@ -349,7 +352,10 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
 
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
-      $this->add('submit', $this->_actionButtonName, ts('Go'),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Go'),
         ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
@@ -358,13 +364,19 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
       // override default task
       $this->addElement('hidden', 'task_force', 3);
-      $this->add('submit', $this->_exportButtonName, ts('Export Participants'),
+      $this->add(
+        'submit',
+        $this->_exportButtonName,
+        ts('Export Participants'),
         ['class' => 'form-submit',
           'id' => 'export',
         ]
       );
 
-      $this->add('submit', $this->_printButtonName, ts('Print'),
+      $this->add(
+        'submit',
+        $this->_printButtonName,
+        ts('Print'),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
         ]
@@ -428,9 +440,10 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     // we don't show test registrations in Contact Summary / User Dashboard
     // in Search mode by default we hide test registrations
-    if (!CRM_Utils_Array::value('participant_test',
-        $this->_formValues
-      )) {
+    if (!CRM_Utils_Array::value(
+      'participant_test',
+      $this->_formValues
+    )) {
       $this->_formValues["participant_test"] = 0;
     }
 
@@ -462,7 +475,8 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -470,7 +484,8 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
-    $selector = new CRM_Event_Selector_Search($this->_queryParams,
+    $selector = new CRM_Event_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -488,7 +503,8 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -533,7 +549,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     if (!empty($fields['event_id']) && !is_numeric($fields['event_id'])) {
       if (strstr($fields['event_id'], ',')) {
         $ids = explode(',', $fields['event_id']);
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
           if (!is_numeric($id)) {
             $errors['event_id'] = ts('Please select valid event.');
             break;
@@ -548,7 +564,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     if (!empty($fields['event_type_id']) && !is_numeric($fields['event_type_id'])) {
       if (strstr($fields['event_type_id'], ',')) {
         $ids = explode(',', $fields['event_type_id']);
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
           if (!is_numeric($id)) {
             $errors['event_id'] = ts('Please select valid event type.');
             break;
@@ -657,7 +673,9 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
     }
 
-    $type = CRM_Utils_Request::retrieve('type', 'Positive',
+    $type = CRM_Utils_Request::retrieve(
+      'type',
+      'Positive',
       CRM_Core_DAO::$_nullObject
     );
     if ($type) {
@@ -669,7 +687,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     if ($feeLevel && $this->_event['id']) {
       if (strstr($feeLevel, '|')) {
         $this->_formValues['participant_fee_id'] = explode('|', $feeLevel);
-        foreach($this->_formValues['participant_fee_id'] as $key => $value) {
+        foreach ($this->_formValues['participant_fee_id'] as $key => $value) {
           $this->_formValues['participant_fee_id'][$key] = $value;
         }
       }
@@ -677,7 +695,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
         if (strstr($feeLevel, 'priceset:') && strstr($feeLevel, ',')) {
           list($pricesetLabel, $fees) = explode(":", $feeLevel);
           $fees = explode(",", $fees);
-          foreach($fees as $fee) {
+          foreach ($fees as $fee) {
             $this->_formValues['participant_fee_id'][] = 'priceset:'.$fee;
           }
         }
@@ -723,7 +741,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
       else {
         $ids = explode(',', $defaults['event_id']);
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
           $eventTitle = CRM_Event_BAO_Event::retrieveField($id, 'title');
           $prePopulate[] = ['id' => trim($id), 'name' => $eventTitle];
         }
@@ -742,7 +760,7 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
       }
       else {
         $ids = explode(',', $defaults['event_type_id']);
-        foreach($ids as $id) {
+        foreach ($ids as $id) {
           $prePopulate[] = ['id' => trim($id), 'name' => $types[$id]];
         }
       }
@@ -751,4 +769,3 @@ class CRM_Event_Form_Search extends CRM_Core_Form {
     }
   }
 }
-

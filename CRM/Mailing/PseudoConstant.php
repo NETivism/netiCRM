@@ -174,7 +174,8 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$completed) {
 
       $mailingACL = CRM_Mailing_BAO_Mailing::mailingACL();
-      CRM_Core_PseudoConstant::populate(self::$completed,
+      CRM_Core_PseudoConstant::populate(
+        self::$completed,
         'CRM_Mailing_DAO_Mailing',
         FALSE,
         'name',
@@ -235,13 +236,13 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
     return $options[$field];
   }
 
-  public static function bounceType($key = 'id', $label = 'name'){
+  public static function bounceType($key = 'id', $label = 'name') {
     $types = [];
     CRM_Core_DAO::commonRetrieveAll('CRM_Mailing_DAO_BounceType', 'id', NULL, $types);
     $bounceType = self::$bounceType;
-    if(!isset($bounceType[$key.$label])){
-      foreach($types as $t){
-        if(isset($t[$key]) && isset($t[$label])){
+    if (!isset($bounceType[$key.$label])) {
+      foreach ($types as $t) {
+        if (isset($t[$key]) && isset($t[$label])) {
           $bounceType[$key.$label][$t[$key]] = $t[$label];
         }
       }
@@ -249,4 +250,3 @@ class CRM_Mailing_PseudoConstant extends CRM_Core_PseudoConstant {
     return $bounceType[$key.$label];
   }
 }
-

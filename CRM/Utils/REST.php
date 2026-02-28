@@ -199,7 +199,9 @@ class CRM_Utils_REST {
 
         $count = ' count="' . $result['count'] . '" ';
       }
-      else $count = "";
+      else {
+        $count = "";
+      }
       $xml = "<?xml version=\"1.0\"?>
         <ResultSet xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" $count>
         ";
@@ -332,7 +334,7 @@ class CRM_Utils_REST {
     $action = strtolower($args[2] ?? '');
     /*
     $permissionRequired = 'API search';
-    
+
     // Map actions to REST API permissions
     if (in_array($action, ['create'])) {
       $permissionRequired = 'API create';
@@ -346,7 +348,7 @@ class CRM_Utils_REST {
     elseif (in_array($action, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
       $permissionRequired = 'API search';
     }
-    
+
     // Check API permission if required
     if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
       return self::error("FATAL: You do not have permission to perform this action via REST API. Required permission: " . $permissionRequired);
@@ -399,7 +401,8 @@ class CRM_Utils_REST {
     if ($_SERVER['REQUEST_METHOD'] == 'GET' && !strstr(strtolower((string)$args[2]), 'get') && strtolower((string)$args[2]) != 'check') {
       // get only valid for non destructive methods
 
-      return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",
+      return civicrm_api3_create_error(
+        "SECURITY: All requests that modify the database must be http POST, not GET.",
         [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
@@ -413,10 +416,16 @@ class CRM_Utils_REST {
     $disableOptions = [
       'sort', 'limit', 'rowCount', 'offset'
     ];
-    foreach($disableOptions as $opt) {
-      if (isset($params[$opt])) unset($params[$opt]);
-      if (isset($params['option.'.$opt])) unset($params['option.'.$opt]);
-      if (isset($params['option_'.$opt])) unset($params['option_'.$opt]);
+    foreach ($disableOptions as $opt) {
+      if (isset($params[$opt])) {
+        unset($params[$opt]);
+      }
+      if (isset($params['option.'.$opt])) {
+        unset($params['option.'.$opt]);
+      }
+      if (isset($params['option_'.$opt])) {
+        unset($params['option_'.$opt]);
+      }
     }
     if (isset($params['options'])) {
       $options =& $params['options'];
@@ -467,7 +476,7 @@ class CRM_Utils_REST {
       'action' => 1,
     ];
 
-    if($_SERVER["CONTENT_TYPE"] === strtolower('application/json')) {
+    if ($_SERVER["CONTENT_TYPE"] === strtolower('application/json')) {
       $input = file_get_contents('php://input');
       $params = json_decode($input, TRUE);
       if (empty($params)) {
@@ -489,7 +498,9 @@ class CRM_Utils_REST {
       }
     }
     if (CRM_Utils_Array::arrayKeyExists('return', $_REQUEST) && is_array($_REQUEST['return'])) {
-      foreach ($_REQUEST['return'] as $key => $v) $params['return.' . $key] = 1;
+      foreach ($_REQUEST['return'] as $key => $v) {
+        $params['return.' . $key] = 1;
+      }
     }
     return $params;
   }
@@ -530,7 +541,8 @@ class CRM_Utils_REST {
     $config = CRM_Core_Config::singleton();
     if (!$config->debug && !self::isWebServiceRequest()) {
       require_once 'api/v3/utils.php';
-      $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
+      $error = civicrm_api3_create_error(
+        "SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
         [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
@@ -625,7 +637,7 @@ class CRM_Utils_REST {
     return TRUE;
   }
 
-    /**
+  /**
    * Does this request appear to be a web-service request?
    *
    * It is important to distinguish regular browser-page-loads from web-service-requests. Regular
@@ -652,4 +664,3 @@ class CRM_Utils_REST {
   }
 
 }
-

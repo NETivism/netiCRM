@@ -31,7 +31,7 @@
 define('CIVICRM_SETTINGS_PATH', __DIR__ . '/civicrm.settings.dist.php');
 define('CIVICRM_SETTINGS_LOCAL_PATH', __DIR__ . '/civicrm.settings.local.php');
 
-if(file_exists(CIVICRM_SETTINGS_LOCAL_PATH)){
+if (file_exists(CIVICRM_SETTINGS_LOCAL_PATH)) {
   require_once CIVICRM_SETTINGS_LOCAL_PATH;
 }
 require_once CIVICRM_SETTINGS_PATH;
@@ -46,7 +46,7 @@ define('API_LATEST_VERSION', 3);
 if (PHP_MAJOR_VERSION === 5) {
   require_once __DIR__.'/CiviUnitTestBase.5.php';
 }
-elseif(PHP_MAJOR_VERSION >= 7) {
+elseif (PHP_MAJOR_VERSION >= 7) {
   require_once __DIR__.'/CiviUnitTestBase.7.php';
 }
 
@@ -182,7 +182,8 @@ class CiviUnitTestCase extends CiviUnitTestBase {
   /**
    *  Required implementation of abstract method
    */
-  protected function getDataSet() {}
+  protected function getDataSet() {
+  }
 
   private static function _populateDB($perClass = FALSE, &$object = NULL) {
 
@@ -414,7 +415,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
     if (empty($searchValue)) {
       $this->fail("empty value passed to assertDBNotNull");
     }
-    $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn, true);
+    $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn, TRUE);
     $this->assertNotNull($value, $message);
 
     return $value;
@@ -422,21 +423,26 @@ class CiviUnitTestCase extends CiviUnitTestBase {
 
   // Request a record from the DB by seachColumn+searchValue. Success if returnColumn value is NULL.
   public function assertDBNull($daoName, $searchValue, $returnColumn, $searchColumn, $message) {
-    $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn, true);
+    $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn, TRUE);
     $this->assertNull($value, $message);
   }
 
   // Request a record from the DB by id. Success if row not found.
   public function assertDBRowNotExist($daoName, $id, $message) {
-    $value = CRM_Core_DAO::getFieldValue($daoName, $id, 'id', 'id', true);
+    $value = CRM_Core_DAO::getFieldValue($daoName, $id, 'id', 'id', TRUE);
     $this->assertNull($value, $message);
   }
 
   // Compare a single column value in a retrieved DB record to an expected value
-  public function assertDBCompareValue($daoName, $searchValue, $returnColumn, $searchColumn,
-    $expectedValue, $message
+  public function assertDBCompareValue(
+    $daoName,
+    $searchValue,
+    $returnColumn,
+    $searchColumn,
+    $expectedValue,
+    $message
   ) {
-    $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn, true);
+    $value = CRM_Core_DAO::getFieldValue($daoName, $searchValue, $returnColumn, $searchColumn, TRUE);
     $this->assertEquals($expectedValue, $value, $message);
   }
 
@@ -462,9 +468,14 @@ class CiviUnitTestCase extends CiviUnitTestBase {
   protected function assertDBQuery($expected, $query, $params = [
     ]) {
     $actual = CRM_Core_DAO::singleValueQuery($query, $params);
-    $this->assertEquals($expected, $actual,
-      sprintf('expected=[%s] actual=[%s] query=[%s]',
-        $expected, $actual, CRM_Core_DAO::composeQuery($query, $params, FALSE)
+    $this->assertEquals(
+      $expected,
+      $actual,
+      sprintf(
+        'expected=[%s] actual=[%s] query=[%s]',
+        $expected,
+        $actual,
+        CRM_Core_DAO::composeQuery($query, $params, FALSE)
       )
     );
   }
@@ -482,17 +493,20 @@ class CiviUnitTestCase extends CiviUnitTestBase {
 
   public function assertArrayKeyExists($key, &$list) {
     $result = isset($list[$key]) ? TRUE : FALSE;
-    $this->assertTrue($result, ts("%1 element exists?",
-        [1 => $key]
-      ));
+    $this->assertTrue($result, ts(
+      "%1 element exists?",
+      [1 => $key]
+    ));
   }
 
   public function assertArrayValueNotNull($key, &$list) {
     $this->assertArrayKeyExists($key, $list);
 
     $value = $list[$key] ?? NULL;
-    $this->assertTrue($value,
-      ts("%1 element not null?",
+    $this->assertTrue(
+      $value,
+      ts(
+        "%1 element not null?",
         [1 => $key]
       )
     );
@@ -517,7 +531,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
         $actualValues['custom_'.$k] = $v;
       }
     }
-    foreach($expectValues as $k => $v) {
+    foreach ($expectValues as $k => $v) {
       if (!strstr($k, 'custom_')) {
         unset($expectValues[$k]);
       }
@@ -533,7 +547,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
    * @return int    id of Organisation created
    */
   public function organizationCreate($params = []) {
-    if(!$params){
+    if (!$params) {
       $params = [];
     }
     $orgParams = [
@@ -541,7 +555,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
         'contact_type' => 'Organization',
         'version' => API_LATEST_VERSION,
     ];
-    return $this->_contactCreate(array_merge($orgParams,$params));
+    return $this->_contactCreate(array_merge($orgParams, $params));
   }
 
   /**
@@ -596,7 +610,8 @@ class CiviUnitTestCase extends CiviUnitTestBase {
   private function _contactCreate($params) {
     $result = civicrm_api('Contact', 'create', $params);
     if (CRM_Utils_Array::value('is_error', $result) ||
-      (!CRM_Utils_Array::value('contact_id', $result) &&
+      (
+        !CRM_Utils_Array::value('contact_id', $result) &&
         !CRM_Utils_Array::value('id', $result)
       )
     ) {
@@ -628,7 +643,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
   public function membershipTypeCreate($contactID, $contributionTypeID = 1, $version = 3) {
     require_once 'CRM/Member/PseudoConstant.php';
     CRM_Member_PseudoConstant::flush('membershipType');
-    CRM_Core_Config::clearDBCache( );
+    CRM_Core_Config::clearDBCache();
     $params = [
       'name' => 'General',
       'duration_unit' => 'year',
@@ -729,13 +744,13 @@ class CiviUnitTestCase extends CiviUnitTestBase {
     CRM_Member_PseudoConstant::flush('membershipStatus');
     if (CRM_Utils_Array::value('is_error', $result)) {
       throw new Exception("Could not create membership status: $name, Error message: " . $result['error_message']);
-      exit( );
+      exit();
     }
     return $result['id'];
   }
 
   public function membershipStatusDelete($membershipStatusID) {
-    if ( ! $membershipStatusID ) {
+    if (! $membershipStatusID) {
       return;
     }
     $result = civicrm_api('MembershipStatus', 'Delete', ['id' => $membershipStatusID, 'version' => 3]);
@@ -1706,7 +1721,7 @@ class CiviUnitTestCase extends CiviUnitTestBase {
      * @param string $action - optional action - otherwise taken from function name
      */
   public function documentMe($params, $result, $function, $filename, $description = "", $subfile = NULL, $action = NULL) {
-    if (defined('DONT_DOCUMENT_TEST_CONFIG') ) {
+    if (defined('DONT_DOCUMENT_TEST_CONFIG')) {
       return;
     }
     $entity = substr(basename($filename), 0, strlen(basename($filename)) - 8);
@@ -1998,12 +2013,16 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
 
   public static function unsetId(&$unformattedArray) {
     $formattedArray = [];
-    if (array_key_exists('id', $unformattedArray))unset($unformattedArray['id']);
+    if (array_key_exists('id', $unformattedArray)) {
+      unset($unformattedArray['id']);
+    }
     if (CRM_Utils_Array::value('values', $unformattedArray) && is_array($unformattedArray['values'])) {
       foreach ($unformattedArray['values'] as $key => $value) {
         if (is_Array($value)) {
           foreach ($value as $k => $v) {
-            if ($k == 'id')unset($value[$k]);
+            if ($k == 'id') {
+              unset($value[$k]);
+            }
           }
         }
         elseif ($key == 'id') {
@@ -2049,32 +2068,33 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
   /*
    * Empty mail log in preparation for test
    */
-  public function prepareMailLog(){
-    if(!defined('CIVICRM_MAIL_LOG')){
-      define( 'CIVICRM_MAIL_LOG', CIVICRM_TEMPLATE_COMPILEDIR . '/mail.log' );
+  public function prepareMailLog() {
+    if (!defined('CIVICRM_MAIL_LOG')) {
+      define('CIVICRM_MAIL_LOG', CIVICRM_TEMPLATE_COMPILEDIR . '/mail.log');
     }
-    $this->assertFalse(is_numeric(CIVICRM_MAIL_LOG) ,'we need to be able to log email to check receipt');
-    file_put_contents(CIVICRM_MAIL_LOG,'');
+    $this->assertFalse(is_numeric(CIVICRM_MAIL_LOG), 'we need to be able to log email to check receipt');
+    file_put_contents(CIVICRM_MAIL_LOG, '');
   }
   /*
    * Check contents of mail log
    * @param array $strings strings that should be included
    * @param array $absentStrings strings that should not be included
    */
-  public function checkMailLog($strings, $absentStrings = [], $prefix = ''){
+  public function checkMailLog($strings, $absentStrings = [], $prefix = '') {
     $mail = file_get_contents(CIVICRM_MAIL_LOG);
     foreach ($strings as $string) {
       $this->assertContains($string, $mail, "$string .  not found in  $mail  $prefix");
     }
     foreach ($absentStrings as $string) {
-      $this->assertEmpty(strstr($mail,$string),"$string  incorrectly found in $mail $prefix");;
+      $this->assertEmpty(strstr($mail, $string), "$string  incorrectly found in $mail $prefix");
+      ;
     }
     return $mail;
   }
   /*
    * Check that mail log is empty
    */
-  public function assertMailLogEmpty($prefix = ''){
+  public function assertMailLogEmpty($prefix = '') {
     $mail = file_get_contents(CIVICRM_MAIL_LOG);
     $this->assertEmpty($mail, 'mail sent when it should not have been ' . $prefix);
   }
@@ -2091,7 +2111,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
   }
 
   public function cleanTempDirs() {
-    if(!is_array($this->tempDirs)){
+    if (!is_array($this->tempDirs)) {
       // fix test errors where this is not set
       return;
     }
@@ -2137,9 +2157,9 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
     $tree = CRM_Core_BAO_CustomGroup::getTree($entityType);
     $generatedArray = [];
     if (is_array($tree) && !empty($tree)) {
-      foreach($tree as $groupId => $group) {
+      foreach ($tree as $groupId => $group) {
         if (is_numeric($groupId) && !empty($group['fields'])) {
-          foreach($group['fields'] as $fieldId => $field) {
+          foreach ($group['fields'] as $fieldId => $field) {
             $options = [];
             if (!empty($field['option_group_id'])) {
               $options = CRM_Core_OptionGroup::valuesByID($field['option_group_id']);
@@ -2149,7 +2169,7 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
             }
             else {
               $value = NULL;
-              switch($field['data_type']) {
+              switch ($field['data_type']) {
                 case "String":
                 case "Memo":
                   $value = CRM_Utils_String::createRandom(20);
@@ -2223,4 +2243,3 @@ AND    ( TABLE_NAME LIKE 'civicrm_value_%' )
 function CiviUnitTestCase_fatalErrorHandler($message) {
   throw new Exception("{$message['message']}: {$message['code']}");
 }
-

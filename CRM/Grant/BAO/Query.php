@@ -116,8 +116,11 @@ class CRM_Grant_BAO_Query {
     switch ($name) {
       case 'grant_money_transfer_date_low':
       case 'grant_money_transfer_date_high':
-        $query->dateQueryBuilder($values, 'civicrm_grant',
-          'grant_money_transfer_date', 'money_transfer_date',
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_grant',
+          'grant_money_transfer_date',
+          'money_transfer_date',
           'Money Transfer Date'
         );
         return;
@@ -130,9 +133,12 @@ class CRM_Grant_BAO_Query {
 
       case 'grant_application_received_date_low':
       case 'grant_application_received_date_high':
-        $query->dateQueryBuilder($values, 'civicrm_grant',
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_grant',
           'grant_application_received_date',
-          'application_received_date', 'Application Received Date'
+          'application_received_date',
+          'Application Received Date'
         );
         return;
 
@@ -144,9 +150,12 @@ class CRM_Grant_BAO_Query {
 
       case 'grant_due_date_low':
       case 'grant_due_date_high':
-        $query->dateQueryBuilder($values, 'civicrm_grant',
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_grant',
           'grant_due_date',
-          'grant_due_date', 'Grant Due Date'
+          'grant_due_date',
+          'Grant Due Date'
         );
         return;
 
@@ -158,9 +167,12 @@ class CRM_Grant_BAO_Query {
 
       case 'grant_decision_date_low':
       case 'grant_decision_date_high':
-        $query->dateQueryBuilder($values, 'civicrm_grant',
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_grant',
           'grant_decision_date',
-          'decision_date', 'Grant Decision Date'
+          'decision_date',
+          'Grant Decision Date'
         );
         return;
 
@@ -219,8 +231,12 @@ class CRM_Grant_BAO_Query {
       case 'grant_amount':
       case 'grant_amount_low':
       case 'grant_amount_high':
-        $query->numberRangeBuilder($values,
-          'civicrm_grant', 'grant_amount', 'amount_total', 'Total Amount'
+        $query->numberRangeBuilder(
+          $values,
+          'civicrm_grant',
+          'grant_amount',
+          'amount_total',
+          'Total Amount'
         );
     }
   }
@@ -299,12 +315,18 @@ class CRM_Grant_BAO_Query {
 
 
     $grantType = CRM_Core_OptionGroup::values('grant_type');
-    $form->add('select', 'grant_type_id', ts('Grant Type'),
+    $form->add(
+      'select',
+      'grant_type_id',
+      ts('Grant Type'),
       ['' => ts('- select -')] + $grantType
     );
 
     $grantStatus = CRM_Core_OptionGroup::values('grant_status');
-    $form->add('select', 'grant_status_id', ts('Grant Status'),
+    $form->add(
+      'select',
+      'grant_status_id',
+      ts('Grant Status'),
       ['' => ts('- select -')] + $grantStatus
     );
 
@@ -347,10 +369,13 @@ class CRM_Grant_BAO_Query {
         foreach ($group['fields'] as $field) {
           $fieldId = $field['id'];
           $elementName = 'custom_' . $fieldId;
-          CRM_Core_BAO_CustomField::addQuickFormElement($form,
+          CRM_Core_BAO_CustomField::addQuickFormElement(
+            $form,
             $elementName,
             $fieldId,
-            FALSE, FALSE, TRUE
+            FALSE,
+            FALSE,
+            TRUE
           );
         }
       }
@@ -364,8 +389,9 @@ class CRM_Grant_BAO_Query {
     $showHide->addShow('grantForm_show');
   }
 
-  public static function searchAction(&$row, $id) {}
+  public static function searchAction(&$row, $id) {
+  }
 
-  public static function tableNames(&$tables) {}
+  public static function tableNames(&$tables) {
+  }
 }
-

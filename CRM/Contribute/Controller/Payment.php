@@ -61,4 +61,3 @@ class CRM_Contribute_Controller_Payment extends CRM_Core_Controller {
     }
   }
 }
-

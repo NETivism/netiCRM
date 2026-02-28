@@ -27,99 +27,99 @@
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Contribute/BAO/ContributionType.php';
 
-class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase 
-{
+class CRM_Contribute_BAO_ContributionTypeTest extends CiviUnitTestCase {
     
-    public function get_info( ) 
-    {
-        return [
-                     'name'        => 'ContributionType BAOs',
-                     'description' => 'Test all Contribute_BAO_Contribution methods.',
-                     'group'       => 'CiviCRM BAO Tests',
-                     ];
-    }
+  public function get_info() {
+    return [
+                 'name'        => 'ContributionType BAOs',
+                 'description' => 'Test all Contribute_BAO_Contribution methods.',
+                 'group'       => 'CiviCRM BAO Tests',
+                 ];
+  }
     
-    public function setUp( ) 
-    {
-        parent::setUp();
-    }
+  public function setUp() {
+    parent::setUp();
+  }
     
  
-    /**
-     * check method add()
-     */
-    public function testAdd( )
-    {
-        $params = [ 'name'          => 'Donations',
-                         'is_deductible' => 0,
-                         'is_active'     => 1
-                         ];
-        $ids = [];
-        $contributionType = CRM_Contribute_BAO_ContributionType::add( $params, $ids );
+  /**
+   * check method add()
+   */
+  public function testAdd() {
+    $params = [ 'name'          => 'Donations',
+                     'is_deductible' => 0,
+                     'is_active'     => 1
+                     ];
+    $ids = [];
+    $contributionType = CRM_Contribute_BAO_ContributionType::add($params, $ids);
 
-        $result = $this->assertDBNotNull( 'CRM_Contribute_BAO_ContributionType', $contributionType->id ,
-                                          'name', 'id',
-                                          'Database check on updated contribution type record.' );
+    $result = $this->assertDBNotNull(
+      'CRM_Contribute_BAO_ContributionType',
+      $contributionType->id,
+      'name',
+      'id',
+      'Database check on updated contribution type record.'
+    );
         
-        $this->assertEquals( $result, 'Donations', 'Verify contribution type name.');
-    }
+    $this->assertEquals($result, 'Donations', 'Verify contribution type name.');
+  }
 
-    /**
-     * check method retrive()
-     */
-    public function testRetrieve( ) 
-    {
-        $params = [ 'name'          => 'Donations',
-                         'is_deductible' => 0,
-                         'is_active'     => 1
-                         ];
-        $ids = [];
-        $contributionType = CRM_Contribute_BAO_ContributionType::add( $params, $ids );
+  /**
+   * check method retrive()
+   */
+  public function testRetrieve() {
+    $params = [ 'name'          => 'Donations',
+                     'is_deductible' => 0,
+                     'is_active'     => 1
+                     ];
+    $ids = [];
+    $contributionType = CRM_Contribute_BAO_ContributionType::add($params, $ids);
 
-        $defaults = [];
-        $result = CRM_Contribute_BAO_ContributionType::retrieve( $params, $defaults );
+    $defaults = [];
+    $result = CRM_Contribute_BAO_ContributionType::retrieve($params, $defaults);
 
-        $this->assertEquals( $result->name, 'Donations', 'Verify contribution type name.');
-    }
+    $this->assertEquals($result->name, 'Donations', 'Verify contribution type name.');
+  }
 
-    /**
-     * check method setIsActive()
-     */
-    public function testSetIsActive(  ) 
-    {
-        $params = [ 'name'          => 'testDonations',
-                         'is_deductible' => 0,
-                         'is_active'     => 1
-                         ];
-        $ids = [];
-        $contributionType = CRM_Contribute_BAO_ContributionType::add( $params, $ids );
-        $result = CRM_Contribute_BAO_ContributionType::setIsActive( $contributionType->id, 0 );
-        $this->assertEquals( $result, true , 'Verify contribution type record updation for is_active.');
+  /**
+   * check method setIsActive()
+   */
+  public function testSetIsActive() {
+    $params = [ 'name'          => 'testDonations',
+                     'is_deductible' => 0,
+                     'is_active'     => 1
+                     ];
+    $ids = [];
+    $contributionType = CRM_Contribute_BAO_ContributionType::add($params, $ids);
+    $result = CRM_Contribute_BAO_ContributionType::setIsActive($contributionType->id, 0);
+    $this->assertEquals($result, TRUE, 'Verify contribution type record updation for is_active.');
         
-        $isActive = $this->assertDBNotNull( 'CRM_Contribute_BAO_ContributionType', $contributionType->id ,
-                                            'is_active', 'id',
-                                            'Database check on updated for contribution type is_active.' );
-        $this->assertEquals( $isActive, 0, 'Verify contribution types is_active.');
-    }
+    $isActive = $this->assertDBNotNull(
+      'CRM_Contribute_BAO_ContributionType',
+      $contributionType->id,
+      'is_active',
+      'id',
+      'Database check on updated for contribution type is_active.'
+    );
+    $this->assertEquals($isActive, 0, 'Verify contribution types is_active.');
+  }
 
-    /**
-     * check method del()
-     */
-    public function testdel(  ) 
-    {
-        $params = [ 'name'          => 'checkDonations',
-                         'is_deductible' => 0,
-                         'is_active'     => 1
-                         ];
-        $ids = [];
-        $contributionType = CRM_Contribute_BAO_ContributionType::add( $params, $ids );
+  /**
+   * check method del()
+   */
+  public function testdel() {
+    $params = [ 'name'          => 'checkDonations',
+                     'is_deductible' => 0,
+                     'is_active'     => 1
+                     ];
+    $ids = [];
+    $contributionType = CRM_Contribute_BAO_ContributionType::add($params, $ids);
         
-        CRM_Contribute_BAO_ContributionType::del( $contributionType->id );
-        $params = ['id' => $contributionType->id ];
-        $result = CRM_Contribute_BAO_ContributionType::retrieve( $params, $defaults );
-        $this->assertEquals( empty($result), true, 'Verify contribution types record deletion.');
+    CRM_Contribute_BAO_ContributionType::del($contributionType->id);
+    $params = ['id' => $contributionType->id ];
+    $result = CRM_Contribute_BAO_ContributionType::retrieve($params, $defaults);
+    $this->assertEquals(empty($result), TRUE, 'Verify contribution types record deletion.');
         
-    }
+  }
 
 }
-?>

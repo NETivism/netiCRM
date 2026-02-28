@@ -37,7 +37,8 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
 
     if ($this->_values['filter'] & self::VALID_EMAIL) {
       $this->assign('email_status', TRUE);
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'back',
             'name' => ts('<< Previous'),
             'isDefault' => TRUE,
@@ -55,7 +56,8 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
     else {
       $this->assign('email_status', FALSE);
       $this->addButton('refresh', ts('Re-send Validation Email'));
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'jump',
             'name' => ts('Refresh'),

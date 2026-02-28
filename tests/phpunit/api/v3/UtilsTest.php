@@ -63,7 +63,8 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  protected function tearDown() {}
+  protected function tearDown() {
+  }
 
   public function testAddFormattedParam() {
     $values = ['contact_type' => 'Individual'];
@@ -96,7 +97,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
       CRM_Core_Permission_UnitTests::$permissions = ['access CiviCRM'];
       _civicrm_api3_api_check_permission('contact', 'create', $check);
     }
-    catch(Exception$e) {
+    catch (Exception$e) {
       $message = $e->getMessage();
     }
     $this->assertEquals($message, 'API permission check failed for contact/create call; missing permission: add contacts.', 'lacking permissions should throw an exception');
@@ -129,7 +130,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     try {
       $result = civicrm_api3_verify_mandatory($params, 'CRM_Core_BAO_Note', ['note', 'subject']);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->assertEquals('Mandatory key(s) missing from params array: entity_id, note, subject', $expected->getMessage());
       return;
     }
@@ -154,7 +155,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     try {
       $result = civicrm_api3_verify_one_mandatory($params, 'CRM_Core_BAO_Note', ['note', 'subject']);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->assertEquals('Mandatory key(s) missing from params array: entity_id, one of (note, subject)', $expected->getMessage());
       return;
     }
@@ -172,15 +173,15 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     try {
       civicrm_api3_verify_one_mandatory($params, NULL, ['note', 'subject']);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->fail('Exception raised when it shouldn\'t have been  in line ' . __LINE__);
     }
   }
 
 
   /*
-	 * Test GET DAO function returns DAO
-	 */
+     * Test GET DAO function returns DAO
+     */
   public function testGetDAO() {
     $DAO = _civicrm_api3_get_DAO('civicrm_api3_custom_group_get');
     $this->assertEquals('CRM_Core_DAO_CustomGroup', $DAO);
@@ -200,8 +201,8 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertEquals('CRM_Member_DAO_Membership', $DAO);
   }
   /*
-	 * Test GET DAO function returns DAO
-	 */
+     * Test GET DAO function returns DAO
+     */
   public function testGetBAO() {
     $BAO = _civicrm_api3_get_BAO('civicrm_api3_website_get');
     $this->assertEquals('CRM_Core_BAO_Website', $BAO);
@@ -246,7 +247,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     try {
       _civicrm_api3_validate_fields('Membership', 'get', $params);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->assertEquals('join_date is not a valid date: abc', $expected->getMessage());
     }
   }
@@ -260,4 +261,3 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertArrayHasKey('values', $result);
   }
 }
-

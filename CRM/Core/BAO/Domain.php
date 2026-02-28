@@ -90,7 +90,8 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
   }
 
   public static function version() {
-    return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Domain',
+    return CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_Domain',
       CRM_Core_Config::domainID(),
       'version'
     );
@@ -206,11 +207,16 @@ class CRM_Core_BAO_Domain extends CRM_Core_DAO_Domain {
     }
     elseif (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE) {
       // create a group with that of domain name
-      $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Domain',
-        CRM_Core_Config::domainID(), 'name'
+      $title = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_Domain',
+        CRM_Core_Config::domainID(),
+        'name'
       );
-      $groupID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group',
-        $title, 'id', 'title'
+      $groupID = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Group',
+        $title,
+        'id',
+        'title'
       );
       if (empty($groupID) && !empty($title)) {
         $groupParams = ['title' => $title,
@@ -262,4 +268,3 @@ INNER JOIN  civicrm_group_contact gc ON
     return $siteContacts;
   }
 }
-
