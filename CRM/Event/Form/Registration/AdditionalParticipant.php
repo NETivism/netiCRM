@@ -424,12 +424,11 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     }
 
     if ($button != 'skip') {
-      //Additional Participant can also register for an event only once
 
-      $isRegistered = CRM_Event_Form_Registration_Register::checkRegistration($fields, $self, TRUE);
-      // refs #32662,return false means additional participant already registered
+      // do not redirect after register check
+      $allowedRegister = CRM_Event_Form_Registration_Register::checkRegistration($fields, $self, TRUE, FALSE);
 
-      if (!$isRegistered) {
+      if ($allowedRegister === FALSE) {
         $errors['_qf_default'] = ts('A person is already registered for this event.');
       }
 

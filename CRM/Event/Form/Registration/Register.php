@@ -66,6 +66,13 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
   public $_defaults;
 
   /**
+   * Result array of form element after registration checked
+   *
+   * @var array
+   */
+  public $_check;
+
+  /**
    * The status message that user view.
    *
    */
@@ -103,7 +110,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       }
     }
 
-    //To check if the user is already registered for the event(CRM-2426)
+    // When user is already registered for this event, this will redirect to info page
     self::checkRegistration(NULL, $this);
 
     $this->assign('availableRegistrations', $this->_availableRegistrations);
@@ -940,9 +947,15 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
     $self->isEventFull();
 
     //To check if the user is already registered for the event(CRM-2426)
-    $checked = $self->checkRegistration($fields, $self);
-    if (is_array($checked)) {
-      $errors += $checked;
+    $allowedRegister = $self->checkRegistration($fields, $self);
+    if ($allowedRegister === FALSE) {
+      if (!empty($self->_check) && is_array($self->_check)) {
+        $errors += $self->_check;
+      }
+      else {
+        $url = CRM_Utils_System::url('user', "destination=" . urlencode("civicrm/event/register?reset=1&id={$self->_values['event']['id']}"));
+        $errors['email-5'] = ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', [1 => $url]);
+      }
     }
 
     // check full
@@ -1343,42 +1356,60 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
   //end of function
 
   /**
-   * Method to check if the user is already registered for the event
-   * and if result found redirect to the event info page
+   * check if event can be register by current user
+   * 
+   * If event cannot be register, and the user is already registered.
+   * Use $allowRedirection when event cannot be registered
    *
    * @param array $fields  the input form values(anonymous user)
-   * @param array $self    event data
+   * @param object $self    event form object. The check result message will save into $self->_check
    * @param boolean $isAdditional  if it's additional participant
+   * @param boolean $allowRedirection if event found user registered or cannot bt registered, redirect to info page
    *
-   * @return void
+   * @return bool TRUE for allowed register going on, FALSE when not allowed. Redirection will happen when allowRedirection set to TRUE
    * @access public
    */
-  public static function checkRegistration($fields, &$self, $isAdditional = FALSE) {
+  public static function checkRegistration($fields, &$self, $isAdditional = FALSE, $allowRedirection = TRUE) {
     if ($self->_mode == 'test') {
-      return FALSE;
+      return TRUE;
     }
 
     $contactID = NULL;
     $contactID = self::getRegistrationContactID($fields, $self, $isAdditional);
 
     // implement hook for change registrion check
-    CRM_Utils_Hook::checkRegistration($contactID, $fields, $self, $isAdditional, $forceAllowedRegister);
-    if (!empty($forceAllowedRegister)) {
-      return $forceAllowedRegister;
+    $overrideCheck = NULL;
+    CRM_Utils_Hook::checkRegistration($contactID, $fields, $self, $isAdditional, $overrideCheck);
+    if ($overrideCheck === TRUE || $overrideCheck === FALSE) {
+      if ($overrideCheck) {
+        return TRUE;
+      }
+      else {
+        if ($allowRedirection) {
+          $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$self->_values['event']['id']}&noFullMsg=true");
+          if ($self->_action & CRM_Core_Action::PREVIEW) {
+            $url .= '&action=preview';
+          }
+          CRM_Utils_System::redirect($url);
+        }
+        else {
+          return FALSE;
+        }
+      }
+    }
+    // backward compatibility
+    elseif (!empty($overrideCheck)) {
+      return TRUE;
     }
 
     // skip check when confirm by mail link
     if ($self->_allowConfirmation) {
-      if ($isAdditional) {
-        // refs #32662,return false means additional participant already registered
-        return TRUE;
-      }
-      return FALSE;
+      return TRUE;
     }
     if ($contactID) {
       $session = CRM_Core_Session::singleton();
 
-      // check if contact exists but email not the same
+      // special case: check if contact exists but email not the same
       if (isset($fields['_qf_default']) && $fields['cms_create_account']) {
         $dao = new CRM_Core_DAO_UFMatch();
         $dao->contact_id = $contactID;
@@ -1388,7 +1419,8 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           // then the drupal duplicate email check may failed
           // we should validate and stop here before confirm stage
           $url = CRM_Utils_System::url('user', "destination=" . urlencode("civicrm/event/register?reset=1&id={$self->_values['event']['id']}"));
-          return ['email-5' => ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', [1 => $url])];
+          $self->_check = ['email-5' => ts('Accroding your profile, you are one of our registered user. Please <a href="%1">login</a> to proceed.', [1 => $url])];
+          return FALSE;
         }
       }
 
@@ -1403,7 +1435,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
       $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, "is_counted = 1");
       while ($participant->fetch()) {
         if (CRM_Utils_Array::arrayKeyExists($participant->status_id, $statusTypes)) {
-          if (!$isAdditional) {
+          if ($allowRedirection) {
             $registerUrl = CRM_Utils_System::url(
               'civicrm/event/register',
               "reset=1&id={$self->_values['event']['id']}&cid=0"
@@ -1416,8 +1448,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
             }
             CRM_Utils_System::redirect($url);
           }
-
-          if ($isAdditional) {
+          else {
             return FALSE;
           }
         }
