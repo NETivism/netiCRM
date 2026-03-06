@@ -628,7 +628,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    */
   public function getHookedTemplateFileName() {
     $pageTemplateFile = $this->getTemplateFileName();
-    CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
+    CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'form', $pageTemplateFile);
     return $pageTemplateFile;
   }
 
