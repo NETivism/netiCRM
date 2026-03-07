@@ -25,6 +25,7 @@ steps:
     - /usr/bin/supervisord &
     - /init.sh
     - cd $DRUPAL_ROOT && drush status | grep version
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit Packages/Smarty
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
@@ -113,6 +114,7 @@ steps:
     - /usr/bin/supervisord &
     - /init.sh
     - cd $DRUPAL_ROOT && drush status | grep version
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit Packages/Smarty
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
@@ -203,6 +205,7 @@ steps:
     - /usr/bin/supervisord &
     - /init.sh
     - cd $DRUPAL_ROOT && drush status | grep version
+    - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit Packages/Smarty
     - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
     - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php

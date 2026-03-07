@@ -43,4 +43,27 @@ function smarty_make_timestamp($string)
 
 /* vim: set expandtab: */
 
+/**
+ * Convert a strftime()-style format string to a date()-style format string.
+ *
+ * Used to replace deprecated strftime() calls (PHP 8.1+) with date().
+ *
+ * @param string $fmt  strftime format string
+ * @return string      date() format string
+ */
+function _smarty_strftime_to_date_format($fmt) {
+    return strtr($fmt, [
+        '%a' => 'D',    '%A' => 'l',
+        '%b' => 'M',    '%B' => 'F',
+        '%d' => 'd',    '%e' => 'j',
+        '%H' => 'H',    '%I' => 'h',
+        '%j' => 'z',    '%m' => 'm',
+        '%M' => 'i',    '%p' => 'A',    '%P' => 'a',
+        '%S' => 's',    '%u' => 'N',    '%w' => 'w',
+        '%W' => 'W',    '%Y' => 'Y',    '%y' => 'y',
+        '%Z' => 'T',    '%z' => 'O',
+        '%n' => "\n",   '%t' => "\t",   '%%' => '%',
+    ]);
+}
+
 ?>
