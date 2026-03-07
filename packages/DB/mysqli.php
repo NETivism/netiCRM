@@ -231,6 +231,7 @@ class DB_mysqli extends DB_common
     function __construct()
     {
         parent::__construct();
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
     }
 
     // }}}
@@ -293,54 +294,47 @@ class DB_mysqli extends DB_common
             $this->dbsyntax = $dsn['dbsyntax'];
         }
 
-        $ini = ini_get('track_errors');
-        @ini_set('track_errors', 1);
-        $php_errormsg = '';
-
-        if (((int) $this->getOption('ssl')) === 1) {
-            $init = mysqli_init();
-            mysqli_ssl_set(
-                $init,
-                empty($dsn['key'])    ? null : $dsn['key'],
-                empty($dsn['cert'])   ? null : $dsn['cert'],
-                empty($dsn['ca'])     ? null : $dsn['ca'],
-                empty($dsn['capath']) ? null : $dsn['capath'],
-                empty($dsn['cipher']) ? null : $dsn['cipher']
-            );
-            if ($this->connection = @mysqli_real_connect(
+        try {
+            if (((int) $this->getOption('ssl')) === 1) {
+                $init = mysqli_init();
+                mysqli_ssl_set(
+                    $init,
+                    empty($dsn['key'])    ? null : $dsn['key'],
+                    empty($dsn['cert'])   ? null : $dsn['cert'],
+                    empty($dsn['ca'])     ? null : $dsn['ca'],
+                    empty($dsn['capath']) ? null : $dsn['capath'],
+                    empty($dsn['cipher']) ? null : $dsn['cipher']
+                );
+                mysqli_real_connect(
                     $init,
                     $dsn['hostspec'],
                     $dsn['username'],
                     $dsn['password'],
                     $dsn['database'],
                     $dsn['port'],
-                    $dsn['socket']))
-            {
+                    $dsn['socket']
+                );
                 $this->connection = $init;
+            } else {
+                $this->connection = mysqli_connect(
+                    $dsn['hostspec'],
+                    $dsn['username'],
+                    $dsn['password'],
+                    $dsn['database'],
+                    $dsn['port'],
+                    $dsn['socket']
+                );
             }
-        } else {
-            $this->connection = @mysqli_connect(
-                $dsn['hostspec'],
-                $dsn['username'],
-                $dsn['password'],
-                $dsn['database'],
-                $dsn['port'],
-                $dsn['socket']
-            );
+        } catch (mysqli_sql_exception $e) {
+            return $this->raiseError(DB_ERROR_CONNECT_FAILED,
+                                     null, null, null,
+                                     $e->getMessage());
         }
 
-        @ini_set('track_errors', $ini);
-
         if (!$this->connection) {
-            if (($err = @mysqli_connect_error()) != '') {
-                return $this->raiseError(DB_ERROR_CONNECT_FAILED,
-                                         null, null, null,
-                                         $err);
-            } else {
-                return $this->raiseError(DB_ERROR_CONNECT_FAILED,
-                                         null, null, null,
-                                         $php_errormsg);
-            }
+            return $this->raiseError(DB_ERROR_CONNECT_FAILED,
+                                     null, null, null,
+                                     @mysqli_connect_error());
         }
 
         if ($dsn['database']) {
@@ -383,23 +377,27 @@ class DB_mysqli extends DB_common
         $this->last_query = $query;
         $query = $this->modifyQuery($query);
         if ($this->_db) {
-            if (!@mysqli_select_db($this->connection, $this->_db)) {
-                return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED);
+            try {
+                mysqli_select_db($this->connection, $this->_db);
+            } catch (mysqli_sql_exception $e) {
+                return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED, $e);
             }
         }
         if (!$this->autocommit && $ismanip) {
             if ($this->transaction_opcount == 0) {
-                $result = @mysqli_query($this->connection, 'SET AUTOCOMMIT=0');
-                $result = @mysqli_query($this->connection, 'BEGIN');
-                if (!$result) {
-                    return $this->mysqliRaiseError();
+                try {
+                    mysqli_query($this->connection, 'SET AUTOCOMMIT=0');
+                    mysqli_query($this->connection, 'BEGIN');
+                } catch (mysqli_sql_exception $e) {
+                    return $this->mysqliRaiseError(null, $e);
                 }
             }
             $this->transaction_opcount++;
         }
-        $result = @mysqli_query($this->connection, $query);
-        if (!$result) {
-            return $this->mysqliRaiseError();
+        try {
+            $result = mysqli_query($this->connection, $query);
+        } catch (mysqli_sql_exception $e) {
+            return $this->mysqliRaiseError(null, $e);
         }
         if (is_object($result)) {
             return $result;
@@ -585,16 +583,19 @@ class DB_mysqli extends DB_common
     {
         if ($this->transaction_opcount > 0) {
             if ($this->_db) {
-                if (!@mysqli_select_db($this->connection, $this->_db)) {
-                    return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED);
+                try {
+                    mysqli_select_db($this->connection, $this->_db);
+                } catch (mysqli_sql_exception $e) {
+                    return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED, $e);
                 }
             }
-            $result = @mysqli_query($this->connection, 'COMMIT');
-            $result = @mysqli_query($this->connection, 'SET AUTOCOMMIT=1');
-            $this->transaction_opcount = 0;
-            if (!$result) {
-                return $this->mysqliRaiseError();
+            try {
+                mysqli_query($this->connection, 'COMMIT');
+                mysqli_query($this->connection, 'SET AUTOCOMMIT=1');
+            } catch (mysqli_sql_exception $e) {
+                return $this->mysqliRaiseError(null, $e);
             }
+            $this->transaction_opcount = 0;
         }
         return DB_OK;
     }
@@ -611,16 +612,19 @@ class DB_mysqli extends DB_common
     {
         if ($this->transaction_opcount > 0) {
             if ($this->_db) {
-                if (!@mysqli_select_db($this->connection, $this->_db)) {
-                    return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED);
+                try {
+                    mysqli_select_db($this->connection, $this->_db);
+                } catch (mysqli_sql_exception $e) {
+                    return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED, $e);
                 }
             }
-            $result = @mysqli_query($this->connection, 'ROLLBACK');
-            $result = @mysqli_query($this->connection, 'SET AUTOCOMMIT=1');
-            $this->transaction_opcount = 0;
-            if (!$result) {
-                return $this->mysqliRaiseError();
+            try {
+                mysqli_query($this->connection, 'ROLLBACK');
+                mysqli_query($this->connection, 'SET AUTOCOMMIT=1');
+            } catch (mysqli_sql_exception $e) {
+                return $this->mysqliRaiseError(null, $e);
             }
+            $this->transaction_opcount = 0;
         }
         return DB_OK;
     }
@@ -912,7 +916,7 @@ class DB_mysqli extends DB_common
      * @see DB_common::raiseError(),
      *      DB_mysqli::errorNative(), DB_common::errorCode()
      */
-    function mysqliRaiseError($errno = null)
+    function mysqliRaiseError($errno = null, $exception = null)
     {
         if ($errno === null) {
             if ($this->options['portability'] & DB_PORTABILITY_ERRORS) {
@@ -925,11 +929,18 @@ class DB_mysqli extends DB_common
                 $this->errorcode_map[1048] = DB_ERROR_CONSTRAINT;
                 $this->errorcode_map[1062] = DB_ERROR_ALREADY_EXISTS;
             }
-            $errno = $this->errorCode(mysqli_errno($this->connection));
+            $nativeErrno = ($exception instanceof mysqli_sql_exception)
+                ? $exception->getCode()
+                : @mysqli_errno($this->connection);
+            $errno = $this->errorCode($nativeErrno);
         }
-        return $this->raiseError($errno, null, null, null,
-                                 @mysqli_errno($this->connection) . ' ** ' .
-                                 @mysqli_error($this->connection));
+        if ($exception instanceof mysqli_sql_exception) {
+            $nativeMsg = $exception->getCode() . ' ** ' . $exception->getMessage();
+        } else {
+            $nativeMsg = @mysqli_errno($this->connection) . ' ** ' .
+                         @mysqli_error($this->connection);
+        }
+        return $this->raiseError($errno, null, null, null, $nativeMsg);
     }
 
     // }}}
@@ -968,8 +979,10 @@ class DB_mysqli extends DB_common
         if (is_string($result)) {
             // Fix for bug #11580.
             if ($this->_db) {
-                if (!@mysqli_select_db($this->connection, $this->_db)) {
-                    return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED);
+                try {
+                    mysqli_select_db($this->connection, $this->_db);
+                } catch (mysqli_sql_exception $e) {
+                    return $this->mysqliRaiseError(DB_ERROR_NODBSELECTED, $e);
                 }
             }
 
@@ -977,8 +990,12 @@ class DB_mysqli extends DB_common
              * Probably received a table name.
              * Create a result resource identifier.
              */
-            $id = @mysqli_query($this->connection,
-                                "SELECT * FROM $result LIMIT 0");
+            try {
+                $id = mysqli_query($this->connection,
+                                   "SELECT * FROM $result LIMIT 0");
+            } catch (mysqli_sql_exception $e) {
+                return $this->mysqliRaiseError(null, $e);
+            }
             $got_string = true;
         } elseif (isset($result->result)) {
             /*

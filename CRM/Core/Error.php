@@ -135,69 +135,36 @@ class CRM_Core_Error extends PEAR_ErrorStack {
    * @access public
    */
   public static function handle($pearError) {
-    // setup smarty with config, session and template location.
-    $template = CRM_Core_Smarty::singleton();
     $config = CRM_Core_Config::singleton();
 
-    // create the error array
     $error = self::getErrorDetails($pearError);
 
-    if (function_exists('mysqli_error')) {
-      $dao = new CRM_Core_DAO();
-
-      // we do it this way, since calling the function
-      // getDatabaseConnection could potentially result
-      // in an infinite loop
-      global $_DB_DATAOBJECT;
-      if (isset($_DB_DATAOBJECT['CONNECTIONS'][$dao->_database_dsn_md5])) {
-        $conn = $_DB_DATAOBJECT['CONNECTIONS'][$dao->_database_dsn_md5];
-        $link = $conn->connection;
-
-        if (mysqli_error($link)) {
-          $mysql_error = mysqli_error($link) . ', ' . mysqli_errno($link);
-          $template->assign_by_ref('mysql_code', $mysql_error);
-
-          // execute a dummy query to clear error stack
-          mysqli_query($link, 'select 1');
-        }
-      }
-    }
-
     $backtrace = CRM_Core_Error::backtrace('backtrace', FALSE);
-    if (ini_get('xdebug.default_enable') && !empty(CRM_Utils_System::isUserLoggedIn()) && $config->debug) {
-      $template->assign_by_ref('error', $error);
-      if (function_exists('xdebug_var_dump')) {
-        ob_start();
-        xdebug_var_dump($error);
-        echo '<pre>'.$backtrace.'</pre>';
-        $debugMsg = ob_get_contents();
-        ob_end_clean();
-      }
-    }
     CRM_Core_Error::debug_var('db_error', $error);
     CRM_Core_Error::debug_var('backtrace', $backtrace);
 
-    if ($config->initialized) {
-      $vars = [];
-      if ($debugMsg) {
-        $vars['debug'] = $debugMsg;
-      }
-      $vars['message'] = ts('We experienced an unexpected error. Please file an issue with the backtrace');
-      $content = self::output($config->fatalErrorTemplate, $vars);
-    }
-    else {
-      // this will show blank page
+    if (!$config->initialized) {
+      // No config yet — cannot render template
       echo "Sorry. A non-recoverable error has occurred.";
       CRM_Utils_System::civiExit(1);
     }
 
-    self::abend();
-
-    $errorData = [
-      'object' => $pearError,
-      'content' => $content,
+    $vars = [
+      'type' => 'data-error',
+      'message' => NULL,
+      'suppress' => FALSE,
     ];
-    throw new CRM_Core_Exception($error['message'].'|'.$error['user_info'], CRM_Core_Error::DATABASE_ERROR, $errorData);
+    $content = self::output($config->fatalErrorTemplate, $vars);
+
+    self::abend();
+    throw new CRM_Core_Exception(
+      'We experienced an unexpected database error.',
+      CRM_Core_Error::DATABASE_ERROR,
+      [
+        'content' => $content,
+        'object' => $pearError,
+      ]
+    );
   }
 
   /**
@@ -241,6 +208,7 @@ class CRM_Core_Error extends PEAR_ErrorStack {
 
     CRM_Core_Error::debug_var('fatal_error', $message);
     CRM_Core_Error::backtrace('backtrace', TRUE);
+    $vars['type'] = 'internal-error';
     $vars['message'] = $message;
     if ($suppress) {
       $vars['suppress'] = $suppress;
@@ -518,10 +486,8 @@ class CRM_Core_Error extends PEAR_ErrorStack {
     $error['code'] = $pearError->getCode();
     $error['message'] = $pearError->getMessage();
     $error['mode'] = $pearError->getMode();
-    $error['debug_info'] = $pearError->getDebugInfo();
     $error['type'] = $pearError->getType();
     $error['user_info'] = $pearError->getUserInfo();
-    $error['to_string'] = $pearError->toString();
 
     return $error;
   }
