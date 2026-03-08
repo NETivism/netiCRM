@@ -11,7 +11,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
 
@@ -92,6 +91,8 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
 
   /**
    * Browse all entities.
+   *
+   * @return void
    */
   public function browse() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -219,6 +220,11 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     */
   }
 
+  /**
+   * Search batches.
+   *
+   * @return void
+   */
   public function search() {
     if ($this->_action & (CRM_Core_Action::ADD | CRM_Core_Action::UPDATE | CRM_Core_Action::DELETE)) {
       return;
@@ -231,6 +237,13 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $form->run();
   }
 
+  /**
+   * Process download of batch file.
+   *
+   * @param int $id
+   *
+   * @return void
+   */
   public function processDownload($id) {
     $params = [
       'id' => $id,

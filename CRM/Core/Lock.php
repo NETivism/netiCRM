@@ -26,10 +26,9 @@
 */
 
 /**
+ * Provides advisory locking mechanism to prevent concurrent execution of critical operations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_Lock {
@@ -41,6 +40,12 @@ class CRM_Core_Lock {
   protected $_hasLock = FALSE;
 
   protected $_name;
+  /**
+   * Class constructor.
+   *
+   * @param string $name The name of the lock.
+   * @param int|null $timeout The timeout in seconds.
+   */
   public function __construct($name, $timeout = NULL) {
     $config = CRM_Core_Config::singleton();
     $dsnArray = DB::parseDSN($config->dsn);
@@ -52,10 +57,18 @@ class CRM_Core_Lock {
     $this->acquire();
   }
 
+  /**
+   * Class destructor. Releases the lock if held.
+   */
   public function __destruct() {
     $this->release();
   }
 
+  /**
+   * Acquire the lock.
+   *
+   * @return bool True if lock acquired.
+   */
   public function acquire() {
     if (!$this->_hasLock) {
       $query = "SELECT GET_LOCK( %1, %2 )";
@@ -70,6 +83,11 @@ class CRM_Core_Lock {
     return $this->_hasLock;
   }
 
+  /**
+   * Release the lock.
+   *
+   * @return int|null Result of the release query.
+   */
   public function release() {
     if ($this->_hasLock) {
       $this->_hasLock = FALSE;
@@ -80,15 +98,21 @@ class CRM_Core_Lock {
     }
   }
 
+  /**
+   * Check if the lock is currently held by this instance.
+   *
+   * @return bool True if lock is held.
+   */
   public function isAcquired() {
     return $this->_hasLock;
   }
 
   /**
-   * Check lock is free
+   * Check if a named lock is free.
    *
-   * @param string $name
-   * @return boolean
+   * @param string $name The name of the lock.
+   *
+   * @return bool|int|null Result of the check.
    */
   public static function isFree($name) {
     $config = CRM_Core_Config::singleton();
@@ -102,10 +126,11 @@ class CRM_Core_Lock {
   }
 
   /**
-   * check lock is used
+   * Check if a named lock is used.
    *
-   * @param string $name
-   * @return string|null
+   * @param string $name The name of the lock.
+   *
+   * @return string|null Connection ID using the lock, or null if free.
    */
   public static function isUsed($name) {
     $config = CRM_Core_Config::singleton();

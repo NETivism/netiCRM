@@ -27,14 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * form for thank-you / success page - 1st step of payment
+ * Form for the first step of the payment process.
  */
 class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   /**
@@ -46,10 +44,12 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   protected $_preventMultipleSubmission;
 
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method initializes the payment process, checks if the user has passed
+   * the entry criteria, and handles payment processor form initialization.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -69,10 +69,12 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds radio buttons for selecting payment methods or pay later options
+   * based on the current context (contribution or event).
+   *
+   * @return mixed the built form components
    */
   public function buildQuickForm() {
     if ($this->_ppType) {
@@ -112,26 +114,25 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array list of errors to be posted back to the form (currently empty)
    */
   public static function formRule($fields, $files, $self) {
     return $errors;
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Copies the original contribution, updates the selected payment processor,
+   * generates a new invoice ID, and initiates the transfer checkout process.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
@@ -180,9 +181,11 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * Function to process when payment data is event registration and pay later.
-   * @param int $pid for participant id.
-   * @param object $contrib A CRM_Contrib_DAO_Contribution object.
+   * Update participant status when pay later is selected.
+   *
+   * Sets the participant status to 'Pending from pay later'.
+   *
+   * @param int $pid the participant ID to update
    *
    * @return void
    */
@@ -201,11 +204,12 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * overwrite action, since we are only showing elements in frozen mode
-   * no help display needed
+   * Determine the current action for the page.
    *
-   * @return int
-   * @access public
+   * Overwrites the parent action to ensure elements are shown in frozen mode
+   * without help displays.
+   *
+   * @return int the action code (VIEW or VIEW|PREVIEW)
    */
   public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {

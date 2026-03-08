@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -58,6 +56,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   public $_params;
   public $_membershipId;
   public $_groupTree;
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     // check for edit permission
     if (!CRM_Core_Permission::check('edit memberships')) {
@@ -174,12 +177,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -268,10 +270,9 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -375,13 +376,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * Function for validation
+   * Function for validation.
    *
    * @param array $params (ref.) an assoc array of name/value pairs
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @return array|bool true or array of errors
    */
   public static function formRule($params) {
     $errors = [];
@@ -400,11 +399,9 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * Function to process the renewal form
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 

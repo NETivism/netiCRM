@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -65,12 +63,9 @@ class CRM_Export_Form_Select extends CRM_Core_Form {
   public $_mappingTypeId;
 
   /**
-   * build all the data structures needed to build the form
-   *
-   * @param
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // we need to determine component export
@@ -234,10 +229,9 @@ FROM   {$this->_componentTable}
   }
 
   /**
-   * Function to actually build the form
+   * Build the form object.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     //export option
@@ -298,10 +292,9 @@ FROM   {$this->_componentTable}
   }
 
   /**
-   * Process the uploaded file
+   * Process the form submission.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $exportOption = $this->controller->exportValue($this->_name, 'exportOption');
@@ -365,18 +358,18 @@ FROM   {$this->_componentTable}
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Export All or Selected Fields');
   }
 
   /**
-   * Function to build mapping form element
+   * Build mapping form element.
    *
+   * @return void
    */
   public function buildMapping() {
     switch ($this->_exportMode) {

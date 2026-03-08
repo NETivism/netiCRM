@@ -27,14 +27,18 @@
 */
 
 /**
+ * Provides query-building and search functionality for Membership data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Member_BAO_Query {
 
+  /**
+   * Get fields.
+   *
+   * @return array
+   */
   public static function &getFields() {
 
     $fields = &CRM_Member_BAO_Membership::exportableFields();
@@ -42,10 +46,11 @@ class CRM_Member_BAO_Query {
   }
 
   /**
-   * if membership are involved, add the specific membership fields
+   * If membership are involved, add the specific membership fields.
+   *
+   * @param CRM_Contact_BAO_Query $query
    *
    * @return void
-   * @access public
    */
   public static function select(&$query) {
     // if membership mode add membership id
@@ -118,6 +123,13 @@ class CRM_Member_BAO_Query {
     }
   }
 
+  /**
+   * Where clause for membership.
+   *
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   */
   public static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
@@ -146,6 +158,14 @@ class CRM_Member_BAO_Query {
     }
   }
 
+  /**
+   * Where clause single.
+   *
+   * @param array $values
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   */
   public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
     switch ($name) {
@@ -299,6 +319,15 @@ class CRM_Member_BAO_Query {
     }
   }
 
+  /**
+   * From clause.
+   *
+   * @param string $name
+   * @param int $mode
+   * @param string $side
+   *
+   * @return string|null
+   */
   public static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
@@ -336,6 +365,13 @@ class CRM_Member_BAO_Query {
     return $from;
   }
 
+  /**
+   * Default return properties.
+   *
+   * @param int $mode
+   *
+   * @return array|null
+   */
   public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_MEMBER) {
@@ -369,6 +405,13 @@ class CRM_Member_BAO_Query {
     return $properties;
   }
 
+  /**
+   * Build search form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function buildSearchForm(&$form) {
 
     $attrs = ['multiple' => 'multiple'];
@@ -422,14 +465,36 @@ class CRM_Member_BAO_Query {
     $form->assign('validCiviMember', TRUE);
   }
 
+  /**
+   * Search action.
+   *
+   * @param array $row
+   * @param int $id
+   *
+   * @return void
+   */
   public static function searchAction(&$row, $id) {
   }
 
+  /**
+   * Add show/hide.
+   *
+   * @param CRM_Core_ShowHideBlocks $showHide
+   *
+   * @return void
+   */
   public static function addShowHide(&$showHide) {
     $showHide->addHide('memberForm');
     $showHide->addShow('memberForm_show');
   }
 
+  /**
+   * Table names.
+   *
+   * @param array $tables
+   *
+   * @return void
+   */
   public static function tableNames(&$tables) {
     //add membership table
     if (CRM_Utils_Array::value('civicrm_membership_log', $tables) || CRM_Utils_Array::value('civicrm_membership_status', $tables) || CRM_Utils_Array::value('civicrm_membership_type', $tables)) {

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -54,7 +52,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
    * Are we forced to run a search
    *
    * @var int
-   * @access protected
    */
   protected $_force;
 
@@ -62,7 +59,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
    * name of search button
    *
    * @var string
-   * @access protected
    */
   protected $_searchButtonName;
 
@@ -70,7 +66,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
    * name of print button
    *
    * @var string
-   * @access protected
    */
   protected $_printButtonName;
 
@@ -78,7 +73,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
    * name of action button
    *
    * @var string
-   * @access protected
    */
   protected $_actionButtonName;
 
@@ -86,7 +80,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
    * form values that we will be using
    *
    * @var array
-   * @access protected
    */
   protected $_formValues;
 
@@ -94,14 +87,12 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
    * the params that are sent to the query
    *
    * @var array
-   * @access protected
    */
   protected $_queryParams;
 
   /**
    * have we already done this search
    *
-   * @access protected
    * @var boolean
    */
   protected $_done;
@@ -109,7 +100,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_single = FALSE;
@@ -117,7 +107,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_limit = NULL;
@@ -125,7 +114,6 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   /**
    * what context are we being invoked from
    *
-   * @access protected
    * @var string
    */
   protected $_context = NULL;
@@ -139,10 +127,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   protected $_prefix = "member_";
 
   /**
-   * processing needed for buildForm and later
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->set('searchFormName', 'Search');
@@ -226,9 +213,7 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
@@ -294,21 +279,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * The post processing of the form gets done here.
-   *
-   * Key things done during post processing are
-   *      - check for reset or next request. if present, skip post procesing.
-   *      - now check if user requested running a saved search, if so, then
-   *        the form values associated with the saved search are used for searching.
-   *      - if user has done a submit with new values the regular post submissing is
-   *        done.
-   * The processing consists of using a Selector / Controller framework for getting the
-   * search results.
-   *
-   * @param
+   * Post process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     if ($this->_done) {
@@ -388,10 +361,20 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
     $controller->run();
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return $this->_defaults;
   }
 
+  /**
+   * Fix form values.
+   *
+   * @return void
+   */
   public function fixFormValues() {
     // if this search has been forced
     // then see if there are any get values, and if so over-ride the post values
@@ -497,10 +480,9 @@ class CRM_Member_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Find Members');

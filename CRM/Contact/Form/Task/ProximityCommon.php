@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -60,23 +58,23 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
   protected $_title;
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     /*
-         * initialize the task and row fields
-         */
+     * Initialize the task and row fields.
+     */
 
     parent::preProcess();
   }
 
   /**
-   * Build the form
+   * Build the form.
    *
-   * @access public
+   * @param CRM_Core_Form $form
+   * @param int|bool $proxSearch
    *
    * @return void
    */
@@ -121,15 +119,13 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Core_Form $form the form object
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $form) {
     $errors = [];
@@ -151,11 +147,11 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Set the default form values
+   * Set the default form values.
    *
-   * @access protected
+   * @param CRM_Core_Form $form
    *
-   * @return array the default array reference
+   * @return void
    */
   public function &setDefaultValues($form = NULL) {
     $defaults = [];

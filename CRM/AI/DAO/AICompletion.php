@@ -26,9 +26,7 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_AI_DAO_AICompletion extends CRM_Core_DAO {

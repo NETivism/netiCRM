@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,13 +37,24 @@
 class CRM_Report_Page_InstanceList extends CRM_Core_Page {
 
   /**
-   * The action links that we need to display for the browse screen
+   * Action links displayed on the browse screen.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
   public static $_links = NULL;
 
+  /**
+   * Retrieves the list of report instances, optionally filtered by template ID or component.
+   * Filters out instances for disabled components and those the current user lacks permission
+   * to view. Sets $title to a descriptive string when filtering by template ID.
+   *
+   * @param int|null $ovID Option value ID of the report template to filter by, or NULL for all.
+   * @param string|null &$title Output: set to a label string when $ovID is provided.
+   * @param string|null $compName Component name to filter by (e.g. 'Contribute'), or NULL for all.
+   *   Pass 'contact' (case-insensitive) to list only contact-component reports.
+   *
+   * @return array Nested array: compName => [ instanceId => [ title, label, description, url, deleteUrl ] ].
+   */
   public static function &info($ovID = NULL, &$title = NULL, $compName = NULL) {
 
     $report = '';

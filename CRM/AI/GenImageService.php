@@ -157,7 +157,7 @@ abstract class CRM_AI_GenImageService {
    * @param string $code Error code
    * @param string $message Error message
    * @param mixed $details Additional error details (optional)
-   * @return array Error response format
+   * @return array<string, array<string, mixed>|bool> Error response format
    */
   protected function createErrorResponse($code, $message, $details = NULL) {
     $error = [

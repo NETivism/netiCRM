@@ -27,13 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Contact_Selector_Controller extends CRM_Core_Selector_Controller {
+
+  /**
+   * Get the QILL (query in local language) for the current search.
+   *
+   * @return array|null
+   *   The QILL description array, or NULL if not available.
+   */
   public function getQill() {
     return $this->_object->getQILL();
   }

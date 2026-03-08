@@ -1,4 +1,10 @@
 <?php
+/**
+ * NCCC (National Credit Card Center) payment processor for handling credit card transactions via the civicrm_nccc Drupal module.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 date_default_timezone_set('Asia/Taipei');
 
 class CRM_Core_Payment_NCCC extends CRM_Core_Payment {
@@ -32,8 +38,6 @@ class CRM_Core_Payment_NCCC extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;

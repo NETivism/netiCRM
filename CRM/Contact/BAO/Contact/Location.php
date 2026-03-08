@@ -26,10 +26,9 @@
 */
 
 /**
+ * Handles retrieval and formatting of contact location (address, phone, email) data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_BAO_Contact_Location {
@@ -37,7 +36,9 @@ class CRM_Contact_BAO_Contact_Location {
   /**
    * function to get the display name, primary email, location type and location id of a contact
    *
-   * @param  int    $id id of the contact
+   * @param  int     $id             id of the contact
+   * @param  boolean $isPrimary      whether to fetch primary email
+   * @param  int     $locationTypeID location type id
    *
    * @return array  of display_name, email, location type and location id if found, or (null,null,null, null)
    * @static
@@ -74,7 +75,8 @@ WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
   /**
    * function to get the sms number and display name of a contact
    *
-   * @param  int    $id id of the contact
+   * @param  int    $id   id of the contact
+   * @param  string $type type of phone
    *
    * @return array    tuple of display_name and sms if found, or (null,null)
    * @static
@@ -109,10 +111,11 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
   /**
    * function to get the information to map a contact
    *
-   * @param  array  $ids    the list of ids for which we want map info
-   * $param  int    $locationTypeID
+   * @param  array   $ids            the list of ids for which we want map info
+   * @param  int     $locationTypeID location type id
+   * @param  boolean $imageUrlOnly   whether to return only image url
    *
-   * @return null|string     display name of the contact if found
+   * @return array   array of location information for each contact
    * @static
    * @access public
    */

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
 
@@ -122,10 +119,9 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->addButtons(

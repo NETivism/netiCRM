@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 
@@ -52,8 +51,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get BAO Name.
    *
-   * @return string
-   *   Classname of BAO.
+   * @return string Classname of BAO.
    */
   public function getBAOName() {
     return 'CRM_SMS_BAO_Provider';
@@ -62,8 +60,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get action Links.
    *
-   * @return array
-   *   (reference) of action links
+   * @return array (reference) of action links
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -103,6 +100,8 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    * Finally it calls the parent's run method.
+   *
+   * @return void
    */
   public function run() {
     // set title and breadcrumb
@@ -139,7 +138,9 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Browse all Providers.
    *
-   * @param array $action
+   * @param int|null $action
+   *
+   * @return void
    */
   public function browse($action = NULL) {
     $providers = CRM_SMS_BAO_Provider::getProviders();
@@ -193,8 +194,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get name of edit form.
    *
-   * @return string
-   *   Classname of edit form.
+   * @return string Classname of edit form.
    */
   public function editForm() {
     return 'CRM_SMS_Form_Provider';
@@ -203,8 +203,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get edit form name.
    *
-   * @return string
-   *   name of this page.
+   * @return string name of this page.
    */
   public function editName() {
     return 'SMS Provider';
@@ -213,10 +212,9 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get user context.
    *
-   * @param null $mode
+   * @param int|null $mode
    *
-   * @return string
-   *   user context.
+   * @return string user context.
    */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/sms/provider';

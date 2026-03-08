@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
@@ -92,10 +89,9 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $attr = [];
@@ -123,21 +119,18 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Preview');
   }
 
   /**
-   * Process the mapped fields and map it into the uploaded file
-   * preview the file and extract some summary statistics
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $fileName = $this->controller->exportValue('UploadFile', 'uploadFile');

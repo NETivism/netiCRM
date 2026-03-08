@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,7 +50,6 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    * is this the first page?
    *
    * @var boolean
-   * @access protected
    */
   protected $_first = FALSE;
 
@@ -60,7 +57,6 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    * are we in single form mode or wizard mode?
    *
    * @var boolean
-   * @access protected
    */
   protected $_single;
 
@@ -86,7 +82,6 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $config = CRM_Core_Config::singleton();
@@ -221,9 +216,8 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    * This function sets the default values for the form. For edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -255,8 +249,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $className = CRM_Utils_System::getClassName($this);
@@ -328,6 +321,11 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     $this->add('hidden', 'is_template', $this->_isTemplate);
   }
 
+  /**
+   * End post process
+   *
+   * @return void
+   */
   public function endPostProcess() {
     // make submit buttons keep the current working tab opened.
     if ($this->_action & CRM_Core_Action::UPDATE) {
@@ -362,6 +360,11 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Get template file name
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Event/Form/ManageEvent/{$this->_id}/{$this->_name}.tpl";

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Interface for custom contact search implementations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 interface CRM_Contact_Form_Search_Interface {
@@ -41,6 +40,11 @@ interface CRM_Contact_Form_Search_Interface {
 
   /**
    * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @abstract
    */
   public function buildForm(&$form);
 

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Base class for handling Instant Payment Notification (IPN) callbacks from payment gateways
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_Payment_BaseIPN {
@@ -37,11 +36,25 @@ class CRM_Core_Payment_BaseIPN {
   public static $_now = NULL;
 
   public static $_membershipStatus = NULL;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     self::$_now = date('YmdHis');
     self::$_membershipStatus = CRM_Member_PseudoConstant::membershipStatus();
   }
 
+  /**
+   * Validate common IPN data.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references
+   * @param bool $required whether validation is strictly required
+   * @param int|null $paymentProcessorID optional payment processor ID
+   *
+   * @return bool TRUE if data is valid
+   */
   public function validateData(&$input, &$ids, &$objects, $required = TRUE, $paymentProcessorID = NULL) {
     // make sure contribution exists and is valid
 
@@ -79,6 +92,15 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
+  /**
+   * Create or update a contact based on IPN input.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references
+   *
+   * @return bool TRUE on success
+   */
   public function createContact(&$input, &$ids, &$objects) {
     $params = [];
     $billingID = $ids['billing'];
@@ -102,6 +124,18 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
+  /**
+   * Load various CiviCRM objects associated with the IPN request.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references to be populated
+   * @param bool $required whether loading is strictly required
+   * @param int|null $paymentProcessorID payment processor ID
+   * @param bool $isReserveObjectsContribution whether to reserve contribution objects
+   *
+   * @return bool TRUE if objects are loaded successfully
+   */
   public function loadObjects(&$input, &$ids, &$objects, $required, $paymentProcessorID, $isReserveObjectsContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
     $contribution = &$objects['contribution'];
@@ -259,6 +293,15 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
+  /**
+   * Handle a failed transaction.
+   *
+   * @param array &$objects object references
+   * @param CRM_Core_Transaction &$transaction current transaction
+   * @param string $message failure message
+   *
+   * @return array|null result of failed notify mail if applicable
+   */
   public function failed(&$objects, &$transaction, $message = '') {
     CRM_Utils_Hook::ipnPre('failed', $objects);
     $contribution = &$objects['contribution'];
@@ -348,6 +391,14 @@ class CRM_Core_Payment_BaseIPN {
     return $returnArray;
   }
 
+  /**
+   * Handle a pending transaction.
+   *
+   * @param array &$objects object references
+   * @param CRM_Core_Transaction &$transaction current transaction
+   *
+   * @return bool TRUE
+   */
   public function pending(&$objects, &$transaction) {
     CRM_Utils_Hook::ipnPre('pending', $objects);
     $transaction->commit();
@@ -357,6 +408,14 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
+  /**
+   * Handle a cancelled transaction.
+   *
+   * @param array &$objects object references
+   * @param CRM_Core_Transaction &$transaction current transaction
+   *
+   * @return bool TRUE
+   */
   public function cancelled(&$objects, &$transaction) {
     CRM_Utils_Hook::ipnPre('cancelled', $objects);
     $contribution = &$objects['contribution'];
@@ -404,6 +463,14 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
+  /**
+   * Handle an unhandled transaction status.
+   *
+   * @param array &$objects object references
+   * @param CRM_Core_Transaction &$transaction current transaction
+   *
+   * @return bool FALSE
+   */
   public function unhandled(&$objects, &$transaction) {
     $transaction->rollback();
     // we dont handle this as yet
@@ -412,6 +479,18 @@ class CRM_Core_Payment_BaseIPN {
     return FALSE;
   }
 
+  /**
+   * Complete a transaction successfully.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references
+   * @param CRM_Core_Transaction &$transaction current transaction
+   * @param bool $recur whether it's a recurring payment
+   * @param bool $sendMail whether to send a confirmation email
+   *
+   * @return void
+   */
   public function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE, $sendMail = TRUE) {
     $values = [];
     CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
@@ -742,6 +821,15 @@ class CRM_Core_Payment_BaseIPN {
     }
   }
 
+  /**
+   * Copy a contribution for a new installment.
+   *
+   * @param CRM_Contribute_BAO_Contribution &$contrib original contribution object
+   * @param int $rid recurring ID
+   * @param string $trxn_id new transaction ID
+   *
+   * @return CRM_Contribute_BAO_Contribution|bool cloned contribution object or FALSE on failure
+   */
   public static function copyContribution(&$contrib, $rid, $trxn_id) {
     if (is_object($contrib)) {
       $c = clone $contrib;
@@ -768,6 +856,13 @@ class CRM_Core_Payment_BaseIPN {
     return FALSE;
   }
 
+  /**
+   * Get the billing location type ID.
+   *
+   * @param array &$ids array to store extracted IDs
+   *
+   * @return bool TRUE if billing ID found
+   */
   public function getBillingID(&$ids) {
     // get the billing location type
 
@@ -781,6 +876,18 @@ class CRM_Core_Payment_BaseIPN {
     return TRUE;
   }
 
+  /**
+   * Send a confirmation or notification email.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references
+   * @param array &$values values for the email template
+   * @param bool $recur whether it's a recurring payment
+   * @param bool $returnMessageText whether to return the message text instead of sending
+   *
+   * @return string|void message text if requested
+   */
   public function sendMail(&$input, &$ids, &$objects, &$values, $recur = FALSE, $returnMessageText = FALSE) {
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
@@ -1187,6 +1294,13 @@ class CRM_Core_Payment_BaseIPN {
     }
   }
 
+  /**
+   * Update the status of a contribution.
+   *
+   * @param array &$params update parameters
+   *
+   * @return int|void updated status ID
+   */
   public static function updateContributionStatus(&$params) {
     // get minimum required values.
     $statusId = CRM_Utils_Array::value('contribution_status_id', $params);

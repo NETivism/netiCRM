@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,12 +38,12 @@
 class CRM_Contribute_BAO_Widget extends CRM_Contribute_DAO_Widget {
 
   /**
-   * Gets all campaign related data and returns it as a std class.
+   * Gets all campaign related data and returns it as an array.
    *
    * @param int $contributionPageID
-   * @param string $widgetID
    *
-   * @return stdClass
+   * @return array
+   * @static
    */
   public static function getContributionPageData($contributionPageID) {
     $config = CRM_Core_Config::singleton();

@@ -27,25 +27,29 @@
 */
 
 /**
+ * Provides query-building and search functionality for Pledge data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Pledge_BAO_Query {
   public $_qill;
+  /**
+   * Get fields.
+   *
+   * @return array
+   */
   public static function &getFields() {
-
     $fields = CRM_Pledge_BAO_Pledge::exportableFields();
     return $fields;
   }
 
   /**
-   * build select for Pledge
+   * Build select for Pledge.
+   *
+   * @param CRM_Contact_BAO_Query $query
    *
    * @return void
-   * @access public
    */
   public static function select(&$query) {
     if (($query->_mode & CRM_Contact_BAO_Query::MODE_PLEDGE) ||
@@ -183,6 +187,13 @@ class CRM_Pledge_BAO_Query {
     }
   }
 
+  /**
+   * Where clause for pledge.
+   *
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   */
   public static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
@@ -207,6 +218,14 @@ class CRM_Pledge_BAO_Query {
     }
   }
 
+  /**
+   * Where clause single.
+   *
+   * @param array $values
+   * @param CRM_Contact_BAO_Query $query
+   *
+   * @return void
+   */
   public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
@@ -427,6 +446,15 @@ class CRM_Pledge_BAO_Query {
     }
   }
 
+  /**
+   * From clause.
+   *
+   * @param string $name
+   * @param int $mode
+   * @param string $side
+   *
+   * @return string|null
+   */
   public static function from($name, $mode, $side) {
     $from = NULL;
 
@@ -466,21 +494,23 @@ class CRM_Pledge_BAO_Query {
   }
 
   /**
-   * getter for the qill object
+   * Getter for the qill object.
    *
    * @return string
-   * @access public
    */
   public function qill() {
     return (isset($this->_qill)) ? $this->_qill : "";
   }
 
   /**
-   * Ideally this function should include fields that are displayed in the selector
+   * Default return properties.
+   *
+   * @param int $mode
+   *
+   * @return array|null
    */
   public static function defaultReturnProperties($mode) {
     $properties = NULL;
-
     if ($mode & CRM_Contact_BAO_Query::MODE_PLEDGE) {
       $properties = [
         'contact_type' => 1,
@@ -505,7 +535,11 @@ class CRM_Pledge_BAO_Query {
   }
 
   /**
-   * This includes any extra fields that might need for export etc
+   * Extra return properties.
+   *
+   * @param int $mode
+   *
+   * @return array|null
    */
   public static function extraReturnProperties($mode) {
     $properties = NULL;
@@ -536,6 +570,13 @@ class CRM_Pledge_BAO_Query {
     return $properties;
   }
 
+  /**
+   * Build search form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function buildSearchForm(&$form) {
     // pledge related dates
     $form->addDate('pledge_start_date_low', ts('Payments Start Date - From'), FALSE, ['formatType' => 'searchDate']);
@@ -639,9 +680,24 @@ class CRM_Pledge_BAO_Query {
     $form->assign('validCiviPledge', TRUE);
   }
 
+  /**
+   * Search action.
+   *
+   * @param array $row
+   * @param int $id
+   *
+   * @return void
+   */
   public static function searchAction(&$row, $id) {
   }
 
+  /**
+   * Table names.
+   *
+   * @param array $tables
+   *
+   * @return void
+   */
   public static function tableNames(&$tables) {
     //add status table
     if (CRM_Utils_Array::value('pledge_status', $tables) ||

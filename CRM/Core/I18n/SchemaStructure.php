@@ -27,13 +27,17 @@
 */
 
 /**
+ * Defines the internationalization schema structure for translatable database columns
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_I18n_SchemaStructure {
+  /**
+   * Returns the list of internationalized columns.
+   *
+   * @return array
+   */
   public static function &columns() {
     static $result = NULL;
     if (!$result) {
@@ -205,6 +209,11 @@ class CRM_Core_I18n_SchemaStructure {
     }
     return $result;
   }
+  /**
+   * Returns the list of internationalized indices.
+   *
+   * @return array
+   */
   public static function &indices() {
     static $result = NULL;
     if (!$result) {
@@ -282,6 +291,11 @@ class CRM_Core_I18n_SchemaStructure {
     }
     return $result;
   }
+  /**
+   * Returns the list of internationalized tables.
+   *
+   * @return array
+   */
   public static function &tables() {
     static $result = NULL;
     if (!$result) {

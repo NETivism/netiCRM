@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -60,7 +58,6 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
    * @param null
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // get the controller vars
@@ -97,10 +94,7 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
   /**
    * Set the default form values
    *
-   * @param null
-   *
-   * @return array   the default array reference
-   * @access protected
+   * @return array the default array reference
    */
   public function &setDefaultValues() {
     $defaults = [];
@@ -116,7 +110,6 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
    * @param null
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if (is_array($this->_groupTree[$this->_groupId])) {

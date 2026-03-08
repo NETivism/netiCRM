@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,6 +36,11 @@
  * For initial version, this page only contains static links - so this class is empty for now.
  */
 class CRM_Admin_Page_Access extends CRM_Core_Page {
+  /**
+   * Runs the page.
+   *
+   * @return void
+   */
   public function run() {
     $config = CRM_Core_Config::singleton();
     $ufAccessURL = CRM_Utils_System::url('admin/people/permissions');

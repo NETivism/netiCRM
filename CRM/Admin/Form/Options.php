@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -58,10 +56,9 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
   protected $_GName;
 
   /**
-   * Function to pre-process
+   * Pre-processes the form.
    *
-   * @return None
-   * @access public
+   * @return void Pre-processes the form.
    */
   public function preProcess() {
     parent::preProcess();
@@ -115,12 +112,9 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array The default values.
    */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
@@ -138,10 +132,9 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -302,15 +295,13 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields the input form values
-   * @param array $files  the uploaded files if any
-   * @param array $self   current form object.
+   * @param array $fields The input form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return array array of errors / empty array.
-   * @access public
-   * @static
+   * @return bool|array True if no errors, else array of errors.
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -359,11 +350,9 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {

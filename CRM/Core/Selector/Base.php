@@ -31,9 +31,7 @@
  * interface. This class provides common functionality with regard to actions
  * and display names
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_Selector_Base {
@@ -60,16 +58,12 @@ class CRM_Core_Selector_Base {
   protected $_key;
 
   /**
-   * This function gets the attribute for the action that
-   * it matches.
+   * Get an attribute for an action that matches the selector criteria.
    *
-   * @param string  match      the action to match against
-   * @param string  attribute  the attribute to return ( name, link, title )
+   * @param int $match the action to match against
+   * @param string $attribute the attribute name to return (e.g., 'name', 'link', 'title')
    *
-   * @return string            the attribute that matches the action if any
-   *
-   * @access public
-   *
+   * @return string|null the attribute value if found
    */
   public function getActionAttribute($match, $attribute = 'name') {
     $links = &$this->links();
@@ -83,40 +77,33 @@ class CRM_Core_Selector_Base {
   }
 
   /**
-   * This is a static virtual function returning reference on links array. Each
-   * inherited class must redefine this function
+   * Return a reference to the links array.
    *
-   * links is an array of associative arrays. Each element of the array
-   * has at least 3 fields
+   * This is a virtual function that must be redefined in inherited classes.
    *
-   * name    : the name of the link
-   * url     : the URI to be used for this link
-   * qs      : the parameters to the above url along with any dynamic substitutions
-   * title   : A more descriptive name, typically used in breadcrumbs / navigation
+   * @return array|null links definitions
    */
   public static function &links() {
     return NULL;
   }
 
   /**
-   * compose the template file name from the class name
+   * Get the template filename derived from the class name.
    *
-   * @param string $action the action being performed
+   * @param int|null $action the action being performed
    *
-   * @return string template file name
-   * @access public
+   * @return string template filename
    */
   public function getTemplateFileName($action = NULL) {
     return (str_replace('_', DIRECTORY_SEPARATOR, CRM_Utils_System::getClassName($this)) . ".tpl");
   }
 
   /**
-   * getter for the sorting direction for the fields which will be displayed on the form.
+   * Compute and return the sort order array for the given action.
    *
-   * @param string action the action being performed
+   * @param int $action the action being performed
    *
-   * @return array the elements that can be sorted along with their properties
-   * @access public
+   * @return array elements that can be sorted along with their properties
    */
   public function &getSortOrder($action) {
     $columnHeaders = &$this->getColumnHeaders(NULL);
@@ -148,21 +135,20 @@ class CRM_Core_Selector_Base {
   }
 
   /**
-   * setter for permission
+   * Set the permission mask for this selector.
    *
-   * @var string
-   * @access public
+   * @param string $permission permission string
+   *
+   * @return void
    */
   public function setPermission($permission) {
     $this->_permission = $permission;
   }
 
   /**
-   * get the display text in plain language for the search
-   * to display on the results page
+   * Get the plain language description (QILL) of the search criteria.
    *
-   * @return string
-   * @access public
+   * @return string|null QILL description
    */
   public function getQill() {
     return NULL;

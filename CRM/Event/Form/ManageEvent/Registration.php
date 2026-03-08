@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -51,7 +49,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -61,9 +58,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * This function sets the default values for the form.
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $eventId = $this->_id;
@@ -132,8 +128,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * Fix what blocks to show/hide based on the default values set
    *
-   * @param array   $defaults the array of default values
-   * @param boolean $force    should we set show hide based on input defaults
+   * @param array $defaults the array of default values
    *
    * @return void
    */
@@ -176,8 +171,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->applyFilter('__ALL__', 'trim');
@@ -242,8 +236,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * Function to build Registration Block
    *
-   * @param int $pageId
-   * @static
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public function buildRegistrationBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
@@ -275,8 +270,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * Function to build Confirmation Block
    *
-   * @param int $pageId
-   * @static
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public function buildConfirmationBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
@@ -290,8 +286,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * Function to build Email Block
    *
-   * @param int $pageId
-   * @static
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public function buildMailBlock(&$form) {
     $form->registerRule('emailList', 'callback', 'emailList', 'CRM_Utils_Rule');
@@ -362,6 +359,13 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     );
   }
 
+  /**
+   * Function to build ThankYou Block
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function buildThankYouBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->add('text', 'thankyou_title', ts('Title'), $attributes['thankyou_title']);
@@ -374,7 +378,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * Add local and global form rules
    *
-   * @access protected
    *
    * @return void
    */
@@ -385,11 +388,9 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * global validation rules for the form
    *
-   * @param array $fields posted values of the form
+   * @param array $values posted values of the form
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
   public static function formRule($values) {
     if ($values['is_online_registration']) {
@@ -429,9 +430,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = [];
@@ -525,7 +525,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Online Registration');

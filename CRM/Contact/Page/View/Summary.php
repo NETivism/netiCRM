@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -46,8 +44,6 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
    * the contact and calls the appropriate type of page to view.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
     parent::preProcess();
@@ -89,8 +85,6 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
    * the contact and calls the appropriate type of page to view.
    *
    * @return void
-   * @access public
-   *
    */
   public function run() {
     $this->preProcess();
@@ -106,10 +100,9 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
   }
 
   /**
-   * Edit name and address of a contact
+   * Edit name and address of a contact.
    *
    * @return void
-   * @access public
    */
   public function edit() {
     // set the userContext stack
@@ -124,10 +117,9 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
   }
 
   /**
-   * View summary details of a contact
+   * View summary details of a contact.
    *
    * @return void
-   * @access public
    */
   public function view() {
     $session = CRM_Core_Session::singleton();
@@ -402,6 +394,11 @@ class CRM_Contact_Page_View_Summary extends CRM_Contact_Page_View {
     }
   }
 
+  /**
+   * Get template file name.
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_contactId) {
       $csType = $this->get('contactSubtype');

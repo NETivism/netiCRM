@@ -27,38 +27,68 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Report_Form_Case_Demographics extends CRM_Report_Form {
 
   /**
-   * @var mixed[]
+   * @var array Gender labels keyed by gender ID.
    */
   public $_genders;
+
   /**
-   * @var never[]
+   * @var array Report column headers keyed by column alias.
    */
   public $_columnHeaders;
-  public $_from;
-  public $_aliases;
+
   /**
-   * @var string
+   * @var string SQL FROM clause.
+   */
+  public $_from;
+
+  /**
+   * @var array Table alias mapping keyed by table name.
+   */
+  public $_aliases;
+
+  /**
+   * @var string SQL WHERE clause.
    */
   public $_where;
+
   /**
-   * @var string
+   * @var string SQL GROUP BY clause.
    */
   public $_groupBy;
+
+  /**
+   * @var bool Whether to generate absolute URLs for links.
+   */
   public $_absoluteUrl;
+
+  /**
+   * @var array|null Summary statistics data.
+   */
   protected $_summary = NULL;
 
+  /**
+   * @var bool Whether email field is selected.
+   */
   protected $_emailField = FALSE;
 
+  /**
+   * @var bool Whether phone field is selected.
+   */
   protected $_phoneField = FALSE;
+  /**
+   * Class constructor.
+   *
+   * Defines column definitions for contact, email, address, phone, activity, case, and group tables.
+   * Dynamically adds custom field columns for Contact, Individual, and Open Case custom groups.
+   * Initializes gender options.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -239,10 +269,20 @@ where (cg.extends='Contact' OR cg.extends='Individual' OR cg.extends_entity_colu
     parent::__construct();
   }
 
+  /**
+   * Pre-processes the report form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Builds the SELECT clause from selected and required fields. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];

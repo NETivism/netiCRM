@@ -26,9 +26,7 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Activity_DAO_ActivityAssignment extends CRM_Core_DAO {

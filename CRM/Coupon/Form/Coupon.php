@@ -12,6 +12,9 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
    */
   protected $_id;
 
+  /**
+   * Pre-processes form variables, retrieving IDs and setting up form context.
+   */
   public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
@@ -32,6 +35,14 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Validates form input data before submission.
+   *
+   * @param array $fields An array of submitted form fields.
+   * @param array $files An array of uploaded files.
+   * @param CRM_Core_Form $form The form object.
+   * @return array|bool Returns an array of errors if validation fails, otherwise TRUE.
+   */
   public static function formRule($fields, $files, $form) {
     $errors = [];
     if (!empty($fields['batch_prefix'])) {
@@ -74,6 +85,9 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Builds the quick form elements for the coupon management form.
+   */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::UPDATE) {
       $attr = ['readonly' => $readonly];
@@ -139,6 +153,11 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     $this->addFormRule(['CRM_Coupon_Form_Coupon', 'formRule'], $this);
   }
 
+  /**
+   * Sets default values for form fields, either from existing data or initial defaults.
+   *
+   * @return array An associative array of default values for the form fields.
+   */
   public function setDefaultValues() {
     $defaults = [];
     if (isset($this->_id)) {
@@ -168,6 +187,9 @@ class CRM_Coupon_Form_Coupon extends CRM_Core_Form {
     return $defaults;
   }
 
+  /**
+   * Processes the form after submission, handling coupon creation or batch generation.
+   */
   public function postProcess() {
     $fields = CRM_Coupon_DAO_Coupon::fields();
     $params = $this->controller->exportValues();

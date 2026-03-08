@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,14 +38,11 @@
 class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
 
   /**
-   * Function to get the list of ddashlets
-   * ( defaults dashlets defined by admin )
+   * Retrieve a list of dashlets (widgets).
    *
-   *  @param boolean $all all or only active
+   * @param bool $all TRUE to return all dashlets, FALSE for only active ones
    *
-   * @return array $widgets  array of dashlets
-   * @access public
-   * @static
+   * @return array associative array of dashlet data
    */
   public static function getDashlets($all = TRUE) {
     $dashlets = [];
@@ -74,15 +69,13 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Function to get the list of dashlets for a contact
-   * and if there are no dashlets for contact return default dashlets and update
-   * contact's preference entry
+   * Retrieve the list of dashlets for a specific contact.
    *
-   * @param int $contactID contactID
+   * If the contact has no dashlet preferences, default dashlets are assigned.
    *
-   * @return array $dashlets  array of dashlets
-   * @access public
-   * @static
+   * @param bool $flatFormat TRUE to return a simple array of dashlet IDs
+   *
+   * @return array associative array of contact dashlet data
    */
   public static function getContactDashlets($flatFormat = FALSE) {
     $dashlets = [];
@@ -139,11 +132,12 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Function to check dashlet permission for current user
+   * Check dashlet permission for the current user.
    *
-   * @param string permission string
+   * @param string $permission permission string
+   * @param string $operator permission operator ('AND' or 'OR')
    *
-   * @return boolean true if use has permission else false
+   * @return bool TRUE if the user has permission, FALSE otherwise
    */
   public static function checkPermission($permission, $operator) {
     if ($permission) {
@@ -211,13 +205,11 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Function to get details of each dashlets
+   * Get detailed information for a specific dashlet.
    *
-   * @param int $dashletID widget ID
+   * @param int $dashletID dashlet ID
    *
-   * @return array associted array title and content
-   * @access public
-   * @static
+   * @return array associative array containing 'title' and 'content'
    */
   public static function getDashletInfo($dashletID) {
     $dashletInfo = [];
@@ -269,13 +261,11 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Function to save changes made by use to the Dashlet
+   * Save changes made by a user to their dashlet configuration.
    *
-   * @param array $columns associated array
+   * @param array $columns associative array representing dashlet positions
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function saveDashletChanges($columns) {
     $session = CRM_Core_Session::singleton();
@@ -333,13 +323,11 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Function to add dashlets
+   * Add or update a dashlet record.
    *
-   * @param array $params associated array
+   * @param array &$params associative array of dashlet data
    *
-   * @return object $dashlet returns dashlet object
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_Dashboard the dashlet object
    */
   public static function addDashlet(&$params) {
 
@@ -380,8 +368,14 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Update contact dashboard with new dashlet
+   * Update contact dashboards with a new dashlet.
    *
+   * Adds the dashlet to all contacts if created by an admin, otherwise
+   * only to the current contact.
+   *
+   * @param CRM_Core_DAO_Dashboard &$dashlet dashlet object
+   *
+   * @return void
    */
   public static function addContactDashlet(&$dashlet) {
     $admin = CRM_Core_Permission::check('administer CiviCRM');
@@ -423,10 +417,9 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Function to reset dashlet cache
+   * Reset the dashlet cache by clearing the content of all dashlets.
    *
    * @return void
-   * @static
    */
   public static function resetDashletCache() {
     $query = "UPDATE civicrm_dashboard SET content = NULL";
@@ -434,10 +427,11 @@ class CRM_Core_BAO_Dashboard extends CRM_Core_DAO_Dashboard {
   }
 
   /**
-   * Delete Dashlet
+   * Delete a specific dashlet.
+   *
+   * @param int $dashletID dashlet ID
    *
    * @return void
-   * @static
    */
   public static function deleteDashlet($dashletID) {
 

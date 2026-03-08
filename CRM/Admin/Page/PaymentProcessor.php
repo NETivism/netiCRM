@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   public static $_links = NULL;
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
@@ -56,7 +54,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
@@ -93,15 +91,9 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the page.
-   *
-   * This method is called after the page is created. It checks for the
-   * type of action and executes that action.
-   * Finally it calls the parent's run method.
+   * Runs the page.
    *
    * @return void
-   * @access public
-   *
    */
   public function run() {
     // set title and breadcrumb
@@ -117,11 +109,11 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all payment processors.
+   * Browses all payment processors.
+   *
+   * @param int|null $action
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse($action = NULL) {
     // get all custom groups sorted by weight
@@ -180,7 +172,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
@@ -189,7 +181,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
@@ -198,9 +190,11 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/paymentProcessor';

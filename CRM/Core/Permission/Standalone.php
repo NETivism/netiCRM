@@ -26,10 +26,9 @@
 */
 
 /**
+ * Standalone (non-CMS) permission checking implementation
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,23 +38,22 @@
 class CRM_Core_Permission_Standalone {
 
   /**
-   * get the current permission of this user
+   * Get the current permission of this user.
    *
-   * @return string the permission of the user (edit or view or null)
+   * @return int The permission level.
    */
   public static function getPermission() {
     return CRM_Core_Permission::EDIT;
   }
 
   /**
-   * Get the permissioned where clause for the user
+   * Get the permissioned where clause for the user.
    *
-   * @param int $type the type of permission needed
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int $type The type of permission needed.
+   * @param array $tables (reference) The tables that are needed for the select clause.
+   * @param array $whereTables (reference) The tables that are needed for the where clause.
    *
-   * @return string the group where clause for this user
-   * @access public
+   * @return string The group where clause for this user.
    */
   public static function whereClause($type, &$tables, &$whereTables) {
     return '( 1 )';
@@ -63,29 +61,23 @@ class CRM_Core_Permission_Standalone {
 
   /**
    * Get all groups from database, filtered by permissions
-   * for this user
+   * for this user.
    *
-   * @param string $groupType     type of group(Access/Mailing)
-   * @param boolen $excludeHidden exclude hidden groups.
+   * @param string|null $groupType Type of group (Access/Mailing).
+   * @param bool $excludeHidden Whether to exclude hidden groups.
    *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all groups.
-   *
+   * @return array List of all groups.
    */
   public static function &group($groupType = NULL, $excludeHidden = TRUE) {
     return CRM_Core_PseudoConstant::allGroup($groupType, $excludeHidden);
   }
 
   /**
-   * given a permission string, check for access requirements
+   * Given a permission string, check for access requirements.
    *
-   * @param string $str the permission to check
+   * @param string $str The permission to check.
    *
-   * @return boolean true if yes, else false
-   * @static
-   * @access public
+   * @return bool True if yes, else false.
    */
   public static function check($str) {
     static $isAdmin = NULL;

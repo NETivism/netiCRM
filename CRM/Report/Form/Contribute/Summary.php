@@ -27,35 +27,95 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
   /**
-   * @var array<string, array<'no_display', bool>>
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
-  public $_interval;
-  public $_from;
-  public $_aliases;
+
   /**
+   * The human-readable frequency label for the current time-based group-by (e.g. 'Week', 'Month').
+   *
+   * @var string|null
+   */
+  public $_interval;
+
+  /**
+   * The SQL FROM clause built by from().
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
+  public $_aliases;
+
+  /**
+   * The SQL GROUP BY clause built by groupBy().
+   *
    * @var string
    */
   public $_groupBy;
+
+  /**
+   * The SQL WHERE clause.
+   *
+   * @var string
+   */
   public $_where;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
+  /**
+   * Whether the address table is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_addressField = FALSE;
 
+  /**
+   * Supported chart types for this report.
+   *
+   * @var array<string, string>
+   */
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
   ];
+
+  /**
+   * Entity type whose custom fields are available in this report.
+   *
+   * @var string[]
+   */
   protected $_customGroupExtends = ['Contribution'];
+
+  /**
+   * Whether custom field group-bys are supported.
+   *
+   * @var bool
+   */
   protected $_customGroupGroupBy = TRUE;
 
+  /**
+   * Initialises column definitions for contact, email, phone, address, contribution type,
+   * contribution page, contribution, and group tables.
+   */
   public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -268,14 +328,33 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Delegates to the parent setDefaultValues().
+   *
+   * @param bool $freeze Whether to freeze (disable) form elements.
+   *
+   * @return array Default form values.
+   */
   public function setDefaultValues($freeze = TRUE) {
     return parent::setDefaultValues($freeze);
   }
 
+  /**
+   * Builds the SELECT clause from selected fields and group-by frequency settings.
+   * Handles date frequency grouping (YEARWEEK, YEAR, MONTH, QUARTER) and statistics
+   * (sum, count, avg). Conditionally sets $_addressField. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -380,6 +459,17 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Validates group-by and field selection combinations. Prevents combining 'Receive Date'
+   * group-by with certain fields (contribution source, type, page). Also validates that
+   * aggregate statistic filter fields are only used when the Amount Statistics field is selected.
+   *
+   * @param array $fields Submitted form values.
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Contribute_Summary $self The form instance.
+   *
+   * @return array Associative array of field => error message; empty if valid.
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     //check for searching combination of dispaly columns and
@@ -417,6 +507,13 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     return $errors;
   }
 
+  /**
+   * Builds the FROM clause joining contact to contribution (inner), contribution type,
+   * contribution page, email, phone (all left joins), and optionally address.
+   * Populates $_from.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
         FROM civicrm_contact  {$this->_aliases['civicrm_contact']}
@@ -444,6 +541,13 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Builds the GROUP BY clause from selected group-by fields with optional frequency modifiers.
+   * Enables WITH ROLLUP when only one frequency-based group-by is selected without a HAVING clause.
+   * Falls back to grouping by contact ID when no group-bys are selected. Populates $_groupBy.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "";
     $append = FALSE;
@@ -492,6 +596,15 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Computes report statistics by delegating to the parent, then adds aggregate totals
+   * (sum, count, average) computed by a separate COUNT/SUM/AVG query when no HAVING clause
+   * is active.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array with 'counts' and 'filters' entries.
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
@@ -522,12 +635,26 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Builds the ACL clause for the contact alias, then delegates to the parent postProcess().
+   *
+   * @return void
+   */
   public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
+  /**
+   * Builds chart data arrays from result rows when a chart type is selected.
+   * Groups receive_date values with their subtotals and amounts for use with bar/pie charts.
+   * Assigns chart type and axis labels to the template.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
   public function buildChart(&$rows) {
     $graphRows = [];
     $count = 0;
@@ -553,6 +680,16 @@ class CRM_Report_Form_Contribute_Summary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Post-processes result rows to add drill-down links for date-grouped rows (linking to
+   * contribute/detail filtered by date range), fix subtotal display, resolve state/province
+   * and country IDs with links to filtered detail report, linkify contact names, and
+   * resolve payment instrument IDs to labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

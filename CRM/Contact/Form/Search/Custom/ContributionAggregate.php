@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for searching contacts by aggregate contribution amounts
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,6 +36,13 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
 
   public $_columns;
   protected $_formValues;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
@@ -50,6 +56,14 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
     ];
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     /**
      * Define the search form fields here
@@ -90,6 +104,9 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
 
   /**
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
+   * @access public
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
@@ -97,6 +114,15 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
 
   /**
    * Construct the search query
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
+   * @access public
    */
   public function all(
     $offset = 0,
@@ -174,6 +200,12 @@ $having
     return $sql;
   }
 
+  /**
+   * Get from
+   *
+   * @return string
+   * @access public
+   */
   public function from() {
     return "
 civicrm_contribution AS contrib,
@@ -181,10 +213,14 @@ civicrm_contact AS contact_a
 ";
   }
 
-  /*
-      * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
-      *
-      */
+  /**
+   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
@@ -221,6 +257,14 @@ civicrm_contact AS contact_a
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Get having
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function having($includeContactIDs = FALSE) {
     $clauses = [];
     $min = CRM_Utils_Array::value('min_amount', $this->_formValues);
@@ -238,9 +282,12 @@ civicrm_contact AS contact_a
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /*
-     * Functions below generally don't need to be modified
-     */
+  /**
+   * Functions below generally don't need to be modified
+   *
+   * @return int
+   * @access public
+   */
   public function count() {
     $sql = $this->all();
 
@@ -251,14 +298,36 @@ civicrm_contact AS contact_a
     return $dao->N;
   }
 
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
   public function summary() {
     return NULL;
   }

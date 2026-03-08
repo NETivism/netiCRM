@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -90,7 +88,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
   /**
    * the smart marketing group type id
    *
-   * @var object
+   * @var int
    */
   protected $_smartMarketingTypeId;
 
@@ -105,7 +103,6 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    * set up variables to build the form
    *
    * @return void
-   * @acess protected
    */
   public function preProcess() {
     $this->_id = $this->get('id');
@@ -195,13 +192,12 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     }
   }
 
-  /*
-     * This function sets the default values for the form. LocationType that in edit/view mode
-     * the default values are retrieved from the database
-     *
-     * @access public
-     * @return None
-     */
+  /**
+   * This function sets the default values for the form. LocationType that in edit/view mode
+   * the default values are retrieved from the database
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     $defaults = [];
 
@@ -265,8 +261,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
@@ -470,10 +465,10 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    * global validation rules for the form
    *
    * @param array $fields posted values of the form
+   * @param array $fileParams
+   * @param array $options
    *
    * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
    */
   public static function formRule($fields, $fileParams, $options) {
     $errors = [];
@@ -527,7 +522,6 @@ AND    id <> %3
    * Process the form when submitted
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     CRM_Utils_System::flushCache('CRM_Core_DAO_Group');
@@ -616,7 +610,7 @@ AND    id <> %3
   /**
    * init first enabled smart marketing group to property
    *
-   * @return void
+   * @return bool|void
    */
   private function initSmartMarketingGroup() {
     $groupTypes = CRM_Core_OptionGroup::values('group_type');

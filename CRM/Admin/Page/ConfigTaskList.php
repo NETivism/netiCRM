@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,6 +35,11 @@
  * Page for displaying list of site configuration tasks with links to each setting form
  */
 class CRM_Admin_Page_ConfigTaskList extends CRM_Core_Page {
+  /**
+   * Runs the page.
+   *
+   * @return void
+   */
   public function run() {
 
     CRM_Utils_System::setTitle(ts("Configuration Checklist"));

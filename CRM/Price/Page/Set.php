@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -53,10 +51,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
   /**
    * Get the action links for this page.
    *
-   * @param null
-   *
-   * @return  array   array of action links that we need to display for the browse screen
-   * @access public
+   * @return array array of action links that we need to display for the browse screen
    */
   public function &actionLinks() {
     // check if variable _actionsLinks is populated
@@ -121,11 +116,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * type of action and executes that action.
    * Finally it calls the parent's run method.
    *
-   * @param null
-   *
    * @return void
-   * @access public
-   *
    */
   public function run() {
     // get the requested action
@@ -208,13 +199,12 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
   }
 
   /**
-   * edit price set
+   * Edit price set.
    *
-   * @param int    $id       price set id
-   * @param string $action   the action to be invoked
+   * @param int $sid price set id
+   * @param string $action the action to be invoked
    *
    * @return void
-   * @access public
    */
   public function edit($sid, $action) {
     // create a simple controller for editing price sets
@@ -230,12 +220,11 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
   }
 
   /**
-   * Preview price set
+   * Preview price set.
    *
-   * @param int $id price set id
+   * @param int $sid price set id
    *
    * @return void
-   * @access public
    */
   public function preview($sid) {
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Preview', ts('Preview Price Set'), NULL);
@@ -254,12 +243,11 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
   }
 
   /**
-   * Browse all price sets
+   * Browse all price sets.
    *
-   * @param string $action   the action to be invoked
+   * @param string $action the action to be invoked
    *
    * @return void
-   * @access public
    */
   public function browse($action = NULL) {
     // get all price sets
@@ -317,11 +305,9 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
   }
 
   /**
-   * This function is to make a copy of a price set, including
-   * all the fields in the page
+   * This function is to make a copy of a price set, including all the fields in the page.
    *
    * @return void
-   * @access public
    */
   public function copy() {
     $key = CRM_Utils_Request::retrieve(

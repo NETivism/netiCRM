@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: $
  *
@@ -88,14 +87,12 @@ class CRM_Utils_Token {
   ];
 
   /**
-   * Check a string (mailing body) for required tokens.
+   * Check a mailing body string for required tokens.
    *
-   * @param string $str           The message
+   * @param string $str  The message body to check (passed by reference).
    *
-   * @return true|array           true if all required tokens are found,
-   *                              else an array of the missing tokens
-   * @access public
-   * @static
+   * @return true|array  TRUE if all required tokens are present, or an array
+   *                     of the missing token keys.
    */
   public static function requiredTokens(&$str) {
     if (self::$_requiredTokens == NULL) {

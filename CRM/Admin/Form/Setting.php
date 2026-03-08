@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,12 +40,9 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
   protected $_defaults;
 
   /**
-   * This function sets the default values for the form.
-   * default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array The default values.
    */
   public function setDefaultValues() {
     if (!$this->_defaults) {
@@ -88,10 +83,9 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     $this->addButtons(
@@ -108,11 +102,9 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     // store the submitted values in an array
@@ -121,6 +113,13 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     self::commonProcess($params);
   }
 
+  /**
+   * Common process function.
+   *
+   * @param array $params The input form values.
+   *
+   * @return void Common process function.
+   */
   public function commonProcess(&$params) {
     $vars = $params;
     CRM_Core_BAO_ConfigSetting::add($vars);
@@ -152,6 +151,11 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     CRM_Core_Session::setStatus(ts('Your changes have been saved.'));
   }
 
+  /**
+   * Rebuilds the navigation menu.
+   *
+   * @return void Rebuilds the navigation menu.
+   */
   public function rebuildMenu() {
     // ensure config is set with new values
     $config = CRM_Core_Config::singleton(TRUE, TRUE);

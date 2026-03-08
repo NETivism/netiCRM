@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,6 +39,12 @@
 class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
   // which (and whether) mailing workflow this template belongs to
   protected $_workflow_id = NULL;
+
+  /**
+   * Pre-processes the form.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_action = CRM_Utils_Request::retrieve(
@@ -58,12 +62,9 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = $this->_values;
@@ -111,10 +112,9 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
@@ -249,11 +249,9 @@ class CRM_Admin_Form_MessageTemplates extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 

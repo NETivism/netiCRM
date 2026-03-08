@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 date_default_timezone_set('Asia/Taipei');
 class CRM_Core_Payment_EbillBa extends CRM_Core_Payment {
 
@@ -31,8 +35,6 @@ class CRM_Core_Payment_EbillBa extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;

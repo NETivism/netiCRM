@@ -26,20 +26,33 @@
 */
 
 /**
+ * Native gettext implementation for CiviCRM internationalization
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  * Convenience class for PHP-Gettext compatibility.
  */
 class CRM_Core_I18n_NativeGettext {
+  /**
+   * Translate a string using gettext.
+   *
+   * @param string $string The string to translate.
+   *
+   * @return string The translated string.
+   */
   public function translate($string) {
     return gettext($string);
   }
 
   /**
+   * Translate a string with context.
+   *
    * Based on php-gettext, since native gettext does not support this as is.
+   *
+   * @param string $context The context.
+   * @param string $text The string to translate.
+   *
+   * @return string The translated string.
    */
   public function pgettext($context, $text) {
     $key = $context . chr(4) . $text;
@@ -53,6 +66,15 @@ class CRM_Core_I18n_NativeGettext {
     }
   }
 
+  /**
+   * Translate a plural string.
+   *
+   * @param string $text The singular form.
+   * @param string $plural The plural form.
+   * @param int $count The count.
+   *
+   * @return string The translated string.
+   */
   public function ngettext($text, $plural, $count) {
     return ngettext($text, $plural, $count);
   }

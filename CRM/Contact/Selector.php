@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,10 +39,34 @@
  */
 class CRM_Contact_Selector extends CRM_Core_Selector_Base implements CRM_Core_Selector_API {
 
+  /**
+   * Whether to refresh the group contact cache.
+   *
+   * @var bool
+   */
   public $_refresh;
+
+  /**
+   * The search context (e.g., 'search', 'smog', 'amtg').
+   *
+   * @var string
+   */
   public $_context;
+
+  /**
+   * Custom fields for import.
+   *
+   * @var array
+   */
   public $_customFields;
+
+  /**
+   * Query options.
+   *
+   * @var array
+   */
   public $_options;
+
   /**
    * This defines two actions- View and Edit.
    *

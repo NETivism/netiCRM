@@ -1,33 +1,156 @@
 <?php
 class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
+  /**
+   * Total row count.
+   * @var int
+   */
   public $_totalRowCount;
+
+  /**
+   * Contact type.
+   * @var string
+   */
   public $_contactType;
+
+  /**
+   * Status ID.
+   * @var string
+   */
   public $_statusID;
+
+  /**
+   * Contact sub type.
+   * @var string
+   */
   public $_contactSubType;
+
+  /**
+   * Whether to geocode address.
+   * @var bool
+   */
   protected $_doGeocodeAddress;
 
+  /**
+   * New group name.
+   * @var string
+   */
   public $_newGroupName;
+
+  /**
+   * New group description.
+   * @var string
+   */
   public $_newGroupDesc;
+
+  /**
+   * New group ID.
+   * @var int
+   */
   public $_newGroupId;
+
+  /**
+   * Groups to add contacts to.
+   * @var array
+   */
   public $_groups;
+
+  /**
+   * All groups.
+   * @var array
+   */
   public $_allGroups;
+
+  /**
+   * New tag name.
+   * @var string
+   */
   public $_newTagName;
+
+  /**
+   * New tag description.
+   * @var string
+   */
   public $_newTagDesc;
+
+  /**
+   * New tag ID.
+   * @var int
+   */
   public $_newTagId;
+
+  /**
+   * Tags to add to contacts.
+   * @var array
+   */
   public $_tag;
+
+  /**
+   * All tags.
+   * @var array
+   */
   public $_allTags;
 
+  /**
+   * Mapper related.
+   * @var array
+   */
   protected $_mapperRelated;
+
+  /**
+   * Mapper related contact type.
+   * @var array
+   */
   protected $_mapperRelatedContactType;
+
+  /**
+   * Mapper related contact details.
+   * @var array
+   */
   protected $_mapperRelatedContactDetails;
+
+  /**
+   * Mapper related contact location type.
+   * @var array
+   */
   protected $_mapperRelatedContactLocType;
+
+  /**
+   * Mapper related contact phone type.
+   * @var array
+   */
   protected $_mapperRelatedContactPhoneType;
+
+  /**
+   * Mapper related contact IM provider.
+   * @var array
+   */
   protected $_mapperRelatedContactImProvider;
+
+  /**
+   * Mapper related contact website type.
+   * @var array
+   */
   protected $_mapperRelatedContactWebsiteType;
 
+  /**
+   * Group additions.
+   * @var array
+   */
   protected $_groupAdditions;
+
+  /**
+   * Tag additions.
+   * @var array
+   */
   protected $_tagAdditions;
 
+  /**
+   * Class constructor.
+   *
+   * @param string $tableName
+   * @param string $createSql
+   * @param bool $createTable
+   */
   public function __construct($tableName = NULL, $createSql = NULL, $createTable = FALSE) {
     parent::__construct($tableName);
 
@@ -52,6 +175,13 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     $this->_tagAdditions = [];
   }
 
+  /**
+   * Run the import process.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function runImport(&$form) {
     global $civicrm_batch;
     $allArgs = func_get_args();
@@ -291,6 +421,13 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Prepare session object.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function prepareSessionObject(&$form) {
     $form->controller->initTemplate();
     $form->controller->initSession();
@@ -300,6 +437,11 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     CRM_Core_Session::registerAndRetrieveSessionObjects(["_{$name}_container", ['CiviCRM', $scope]]);
   }
 
+  /**
+   * Batch start callback.
+   *
+   * @return void
+   */
   public function batchStartCallback() {
     global $civicrm_batch;
     if ($civicrm_batch) {
@@ -311,6 +453,11 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Batch finish callback.
+   *
+   * @return void
+   */
   public function batchFinishCallback() {
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {
@@ -360,6 +507,15 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Add contact to group and/or tag.
+   *
+   * @param int $contactId
+   * @param array $groups
+   * @param array $tags
+   *
+   * @return void
+   */
   public function addContactToGroupTag($contactId, $groups = [], $tags = []) {
     static $existsGroups, $existsTag;
 
@@ -415,6 +571,15 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Add imported contacts to a new or existing group.
+   *
+   * @param array $contactIds
+   * @param string $newGroupName
+   * @param string $newGroupDesc
+   *
+   * @return bool
+   */
   public function addImportedContactsToNewGroup($contactIds, $newGroupName, $newGroupDesc) {
     static $newGroupId;
     if ($this->_newGroupId) {
@@ -468,6 +633,15 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     return FALSE;
   }
 
+  /**
+   * Tag imported contacts with a new or existing tag.
+   *
+   * @param array $contactIds
+   * @param string $newTagName
+   * @param string $newTagDesc
+   *
+   * @return bool
+   */
   public function tagImportedContactsWithNewTag($contactIds, $newTagName, $newTagDesc) {
     static $newTagId;
     if ($this->_newTagId) {

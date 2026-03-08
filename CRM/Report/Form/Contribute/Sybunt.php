@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,6 +45,9 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     'pieChart' => 'Pie Chart',
   ];
   protected $_add2groupSupported = FALSE;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $yearsInPast = 8;
     $yearsInFuture = 2;
@@ -153,10 +154,20 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -211,6 +222,11 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
 
     $this->_from = " 
@@ -226,6 +242,11 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
                             {$this->_aliases['civicrm_phone']}.is_primary = 1 ";
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $this->_where = "";
     $this->_statusClause = "";
@@ -279,11 +300,23 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->assign('chartSupported', TRUE);
     $this->_groupBy = "Group BY {$this->_aliases['civicrm_contribution']}.contact_id, Year({$this->_aliases['civicrm_contribution']}.receive_date) WITH ROLLUP ";
   }
 
+  /**
+   * Calculate statistics.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
@@ -304,6 +337,11 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     // get ready with post process params
     $this->beginPostProcess();
@@ -382,6 +420,13 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Build chart.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function buildChart(&$rows) {
     $graphRows = [];
     $count = 0;
@@ -415,6 +460,13 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
 
     foreach ($rows as $rowNum => $row) {

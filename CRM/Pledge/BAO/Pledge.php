@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,12 +37,11 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
    * static field for all the pledge information that we can potentially export
    *
    * @var array
-   * @static
    */
   public static $_exportableFields = NULL;
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
@@ -52,17 +49,12 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * pledge id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * retrieves the relevant objects.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
+   * @param array $params (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Pledge_BAO_Pledge object
-   * @access public
-   * @static
+   * @return CRM_Pledge_BAO_Pledge|null
    */
   public static function retrieve(&$params, &$defaults) {
     $pledge = new CRM_Pledge_DAO_Pledge();
@@ -75,14 +67,11 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
   }
 
   /**
-   * function to add pledge
+   * Function to add pledge.
    *
    * @param array $params reference array contains the values submitted by the form
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Pledge_DAO_Pledge
    */
   public static function add(&$params) {
 
@@ -122,15 +111,13 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
 
   /**
    * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * and store the values in the values array.
    *
    * @param array $params input parameters to find object
    * @param array $values output values of the object
-   * @param array $returnProperties  if you want to return specific fields
+   * @param array|null $returnProperties if you want to return specific fields
    *
-   * @return array associated array of field values
-   * @access public
-   * @static
+   * @return array|null associated array of field values
    */
   public static function &getValues(&$params, &$values, $returnProperties = NULL) {
     if (empty($params)) {
@@ -141,16 +128,13 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
   }
 
   /**
-   * takes an associative array and creates a pledge object
+   * Takes an associative array and creates a pledge object.
    *
    * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Pledge_BAO_Pledge object
-   * @access public
-   * @static
+   * @return CRM_Pledge_BAO_Pledge
    */
   public static function &create(&$params) {
-
     //FIXME: a cludgy hack to fix the dates to MySQL format
     $dateFields = ['start_date', 'create_date', 'acknowledge_date', 'modified_date', 'cancel_date', 'end_date'];
     foreach ($dateFields as $df) {
@@ -259,13 +243,11 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
   }
 
   /**
-   * Function to delete the pledge
+   * Function to delete the pledge.
    *
-   * @param int $id  pledge id
+   * @param int $id pledge id
    *
-   * @access public
-   * @static
-   *
+   * @return bool
    */
   public static function deletePledge($id) {
     CRM_Utils_Hook::pre('delete', 'Pledge', $id, CRM_Core_DAO::$_nullArray);
@@ -307,7 +289,13 @@ class CRM_Pledge_BAO_Pledge extends CRM_Pledge_DAO_Pledge {
   }
 
   /**
-   * function to get the amount details date wise.
+   * Function to get the amount details date wise.
+   *
+   * @param string|null $status
+   * @param string|null $startDate
+   * @param string|null $endDate
+   *
+   * @return array|null
    */
   public static function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
     $where = [];
@@ -434,14 +422,11 @@ WHERE  $whereCond
   }
 
   /**
-   * Function to get list of pledges In Honor of contact Ids
+   * Function to get list of pledges In Honor of contact Ids.
    *
    * @param int $honorId In Honor of Contact ID
    *
-   * @return return the list of pledge fields
-   *
-   * @access public
-   * @static
+   * @return array the list of pledge fields
    */
   public static function getHonorContacts($honorId) {
     $params = [];
@@ -477,11 +462,10 @@ WHERE  $whereCond
   /**
    * Function to send Acknowledgment and create activity.
    *
-   * @param object $form form object.
-   * @param array  $params (reference ) an assoc array of name/value pairs.
-   * @access public
+   * @param CRM_Core_Form $form form object.
+   * @param array $params (reference ) an assoc array of name/value pairs.
    *
-   * @return None.
+   * @return void
    */
   public static function sendAcknowledgment(&$form, $params) {
     //handle Acknowledgment.
@@ -687,10 +671,9 @@ WHERE  $whereCond
   }
 
   /**
-   * combine all the exportable fields from the lower levels object
+   * Combine all the exportable fields from the lower levels object.
    *
    * @return array array of exportable Fields
-   * @access public
    */
   public static function &exportableFields() {
     if (!self::$_exportableFields) {
@@ -744,16 +727,14 @@ WHERE  $whereCond
   }
 
   /**
-   * Function to get pending or in progress pledges
+   * Function to get pending or in progress pledges.
    *
    * @param int $contactID contact id
    *
    * @return array associated array of pledge id(s)
-   * @static
    */
   public static function getContactPledges($contactID) {
     $pledgeDetails = [];
-
     $pledgeStatuses = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
 
     $status = [];
@@ -788,13 +769,11 @@ WHERE civicrm_pledge.status_id  {$statusClause}
   }
 
   /**
-   * Function to get pledge record count for a Contact
+   * Function to get pledge record count for a Contact.
    *
-   * @param int $contactId Contact ID
+   * @param int $contactID Contact ID
    *
    * @return int count of pledge records
-   * @access public
-   * @static
    */
   public static function getContactPledgeCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_pledge WHERE civicrm_pledge.contact_id = {$contactID} AND civicrm_pledge.is_test = 0";

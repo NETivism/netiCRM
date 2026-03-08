@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,6 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
    * Event
    *
    * @var array
-   * @static
    */
   private static $event;
 
@@ -51,7 +48,6 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
    * Participant Status
    *
    * @var array
-   * @static
    */
   private static $participantStatus;
 
@@ -59,7 +55,6 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
    * Participant Role
    *
    * @var array
-   * @static
    */
   private static $participantRole;
 
@@ -67,7 +62,6 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
    * Participant Listing
    *
    * @var array
-   * @static
    */
   private static $participantListing;
 
@@ -75,7 +69,6 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
    * Event Type.
    *
    * @var array
-   * @static
    */
   private static $eventType;
 
@@ -88,10 +81,12 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the n events
    *
-   * @access public
+   * @param int $id
+   * @param bool $all
+   * @param string $condition
    *
-   * @return array - array reference of all events if any
-   * @static
+   *
+   * @return array|string|null - array reference of all events if any
    */
   public static function &event($id = NULL, $all = FALSE, $condition = NULL) {
     $key = "{$id}_{$all}_{$condition}";
@@ -126,12 +121,12 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the n participant statuses
    *
-   * @access public
+   * @param int $id
+   * @param string $cond
+   * @param string $retColumn tells populate() whether to return 'name' (default) or 'label' values
    *
-   * @param  string - $retColumn  tells populate() whether to return 'name' (default) or 'label' values
    *
-   * @return array  - array reference of all participant statuses if any
-   * @static
+   * @return array|string|null - array reference of all participant statuses if any
    */
   public static function &participantStatus($id = NULL, $cond = NULL, $retColumn = 'name') {
     if (self::$participantStatus === NULL) {
@@ -178,10 +173,11 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the n participant roles
    *
-   * @access public
+   * @param int $id
+   * @param string $cond
    *
-   * @return array - array reference of all participant roles if any
-   * @static
+   *
+   * @return array|string|null - array reference of all participant roles if any
    */
   public static function &participantRole($id = NULL, $cond = NULL) {
     $index = $cond ? $cond : 'No Condition';
@@ -212,10 +208,10 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the participant listings
    *
-   * @access public
+   * @param int $id
    *
-   * @return array - array reference of all participant listings if any
-   * @static
+   *
+   * @return array|string|null - array reference of all participant listings if any
    */
   public static function &participantListing($id = NULL) {
     if (!self::$participantListing) {
@@ -234,10 +230,10 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all  event types.
    *
-   * @access public
+   * @param int $id
    *
-   * @return array - array reference of all event types.
-   * @static
+   *
+   * @return array|string|null - array reference of all event types.
    */
   public static function &eventType($id = NULL) {
     if (!self::$eventType) {
@@ -256,7 +252,9 @@ class CRM_Event_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * get event template titles
    *
-   * @return array  of event id → template title pairs
+   * @param int $id
+   *
+   * @return array|string|null of event id → template title pairs
    */
   public static function &eventTemplates($id = NULL) {
     if (!self::$eventTemplates) {

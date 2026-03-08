@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
@@ -36,6 +35,11 @@
  * This class contains all the function that are called using AJAX (jQuery)
  */
 class CRM_Activity_Page_AJAX {
+  /**
+   * Get case activity
+   *
+   * @return void
+   */
   public static function getCaseActivity() {
     $caseID = CRM_Utils_Type::escape($_GET['caseID'], 'Integer');
     $contactID = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
@@ -71,6 +75,11 @@ class CRM_Activity_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Convert to case activity
+   *
+   * @return void
+   */
   public static function convertToCaseActivity() {
     $params = ['caseID', 'activityID', 'contactID', 'newSubject', 'targetContactIds', 'mode'];
     foreach ($params as $param) {

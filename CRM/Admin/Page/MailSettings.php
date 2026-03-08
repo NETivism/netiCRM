@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
   public static $_links = NULL;
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
@@ -56,7 +54,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
@@ -83,11 +81,9 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all mail settings.
+   * Browses all mail settings.
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
     //get all mail settings.
@@ -133,7 +129,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
@@ -142,7 +138,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
@@ -151,9 +147,11 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/mailSettings';

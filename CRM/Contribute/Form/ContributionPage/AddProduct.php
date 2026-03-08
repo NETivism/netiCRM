@@ -27,14 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * form to process actions fo adding product to contribution page
+ * form to process actions for adding product to contribution page
  */
 class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_Form_ContributionPage {
 
@@ -43,11 +41,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   public static $_pid;
 
   /**
-   * Function to pre  process the form
+   * Set up variables before the form is built.
    *
-   * @access public
+   * This method initializes the available products for the contribution page
+   * and retrieves the product ID (pid) if editing an existing entry.
    *
-   * @return None
+   * @return void
    */
   public function preProcess() {
     parent::preProcess();
@@ -73,12 +72,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves product ID and weight from the database if in edit mode.
+   * Otherwise, calculates the default weight for a new product.
    *
-   * @return void
+   * @return array<string, float|int> the array of default values for form elements
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -115,10 +114,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Handles product selection, weight input, and action-specific layouts
+   * like DELETE confirmation or PREVIEW.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $mngPremURL = CRM_Utils_System::url('civicrm/admin/contribute/managePremiums', 'reset=1');
@@ -206,10 +207,11 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Handles deletion, preview redirection, or saving the product-to-page association.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -262,10 +264,9 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Add Premium to Contribution Page');

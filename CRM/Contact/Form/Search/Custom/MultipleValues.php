@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for searching contacts by multiple custom field values
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,6 +40,12 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
   protected $_groupTree;
   protected $_tables;
   protected $_options;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -67,6 +72,9 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
+  /**
+   * Add columns to the result set for the selected custom groups.
+   */
   public function addColumns() {
     // add all the fields for chosen groups
     $this->_tables = $this->_options = [];
@@ -93,6 +101,11 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
     $form->add('text', 'sort_name', ts('Contact Name'), TRUE);
 
@@ -126,10 +139,25 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
   public function summary() {
     return NULL;
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string|void
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -174,6 +202,11 @@ contact_a.sort_name    as sort_name,
     );
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     $from = "FROM civicrm_contact contact_a";
     $customFrom = [];
@@ -199,6 +232,13 @@ contact_a.sort_name    as sort_name,
     return $from;
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     $count = 1;
     $clause = [];
@@ -246,14 +286,32 @@ contact_a.sort_name    as sort_name,
     return $this->whereClause($where, $params);
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/MultipleValues.tpl';
   }
 
+  /**
+   * Get the default values for the search form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return [];
   }
 
+  /**
+   * Alter a single result row.
+   *
+   * This transforms custom field values from their stored format
+   * to a human-readable format.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
     foreach ($this->_options as $fieldID => $values) {
       $customVal = $valueSeparatedArray = [];

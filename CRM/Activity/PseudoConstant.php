@@ -7,8 +7,8 @@ class CRM_Activity_PseudoConstant extends CRM_Core_PseudoConstant {
    *
    * The static array activityStatus is returned
    *
-   * @access public
-   * @static
+   * @param string $column
+   *
    *
    * @return array - array reference of all activity statuses
    */
@@ -21,10 +21,12 @@ class CRM_Activity_PseudoConstant extends CRM_Core_PseudoConstant {
    *
    * The static array activityType is returned
    *
-   * @param boolean $all - get All Activity  types - default is to get only active ones.
+   * @param bool $all - get All Activity  types - default is to get only active ones.
+   * @param bool $includeCaseActivities
+   * @param bool $reset
+   * @param string $returnColumn
+   * @param bool $includeCampaignActivities
    *
-   * @access public
-   * @static
    *
    * @return array - array reference of all activty types.
    */

@@ -2,6 +2,10 @@
 
 class CRM_Coupon_Page_CouponTrack extends CRM_Core_Page {
 
+  /**
+   * Executes the main logic for the Coupon Track page.
+   * Displays coupon usage details, optionally filtered by coupon ID.
+   */
   public function run() {
     $couponId = CRM_Utils_Request::retrieve('coupon_id', 'Positive', $this);
     if ($couponId) {

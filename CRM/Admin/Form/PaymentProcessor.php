@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: PaymentProcessor.php 9702 2007-05-29 23:57:16Z lobo $
  *
@@ -53,6 +52,11 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   protected $_isTypeFreezed = NULL;
 
   protected $_ppDAO;
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     parent::preProcess();
 
@@ -198,10 +202,11 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @param bool $check Whether to check for existing processor.
+   *
+   * @return void Builds the form.
    */
   public function buildQuickForm($check = FALSE) {
     parent::buildQuickForm();
@@ -310,6 +315,13 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Admin_Form_PaymentProcessor', 'formRule']);
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields The input form values.
+   *
+   * @return bool|array True if no errors, else array of errors.
+   */
   public static function formRule($fields) {
 
     // make sure that at least one of live or test is present
@@ -345,6 +357,15 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Checks the section for required fields.
+   *
+   * @param array $fields The input form values.
+   * @param array $errors The error array.
+   * @param string|null $section The section name.
+   *
+   * @return bool True if the section is empty.
+   */
   public static function checkSection(&$fields, &$errors, $section = NULL) {
     if (!empty($fields['payment_processor_type'])) {
       $processorType = CRM_Core_DAO::executeQuery("SELECT user_name_label, password_label, signature_label, subject_label FROM civicrm_payment_processor_type WHERE name LIKE %1", [1 => [$fields['payment_processor_type'], 'String']]);
@@ -401,6 +422,11 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     return $isAllEmpty;
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = [];
 
@@ -452,11 +478,9 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     $cache = &CRM_Utils_Cache::singleton();
@@ -479,7 +503,15 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->updatePaymentProcessor($values, $domainID, FALSE);
     $this->updatePaymentProcessor($values, $domainID, TRUE);
   }
-  //end of function
+  /**
+   * Updates the payment processor.
+   *
+   * @param array $values The input form values.
+   * @param int $domainID The domain ID.
+   * @param bool $test Is this a test processor.
+   *
+   * @return void Updates the payment processor.
+   */
   public function updatePaymentProcessor(&$values, $domainID, $test) {
     $dao = new CRM_Core_DAO_PaymentProcessor();
 

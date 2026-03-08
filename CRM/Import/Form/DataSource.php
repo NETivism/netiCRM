@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,26 +37,58 @@
  */
 class CRM_Import_Form_DataSource extends CRM_Core_Form {
 
+  /**
+   * Form parameters.
+   * @var array
+   */
   public $_params;
+
+  /**
+   * Data source class name.
+   * @var string
+   */
   private $_dataSource;
 
+  /**
+   * Whether the data source is valid.
+   * @var bool
+   */
   private $_dataSourceIsValid = FALSE;
 
+  /**
+   * Data source class file path.
+   * @var string
+   */
   private $_dataSourceClassFile;
 
+  /**
+   * Dedupe rule group ID.
+   * @var int
+   */
   private $_dedupeRuleGroupId;
 
+  /**
+   * Dedupe rule groups.
+   * @var array
+   */
   private $_dedupeRuleGroups;
 
+  /**
+   * Dedupe rule fields.
+   * @var array
+   */
   private $_dedupeRuleFields;
 
+  /**
+   * Contact types.
+   * @var array
+   */
   private $_contactTypes;
 
   /**
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
 
@@ -150,10 +180,8 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
-
   public function buildQuickForm() {
 
     // If there's a dataSource in the query string, we need to load
@@ -280,6 +308,11 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Get all available data sources.
+   *
+   * @return array
+   */
   private function _getDataSources() {
     // Open the data source dir and scan it for class files
     $config = CRM_Core_Config::singleton();
@@ -316,7 +349,6 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
    * and then setup some common data structures for the next step
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $this->controller->resetPage('MapField');
@@ -388,9 +420,7 @@ class CRM_Import_Form_DataSource extends CRM_Core_Form {
   /**
    * Return a descriptive name for the page, used in wizard header
    *
-   *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Choose Data Source');

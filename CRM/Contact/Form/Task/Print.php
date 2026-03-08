@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // set print view, so that print templates are called
@@ -96,11 +93,9 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Build the form - it consists of
-   *    - displaying the QILL (query in local language)
-   *    - displaying elements for saving the search
-   *
-   * @access public
+   * Build the form - it consists of.
+   * - displaying the QILL (query in local language)
+   * - displaying elements for saving the search
    *
    * @return void
    */
@@ -123,9 +118,7 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
-   *
-   * @access public
+   * Process the form after the input has been submitted and validated.
    *
    * @return void
    */

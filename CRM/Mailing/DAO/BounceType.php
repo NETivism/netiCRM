@@ -26,9 +26,7 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
@@ -101,19 +99,17 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
    */
   public $hold_threshold;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_mailing_bounce_type
-  */
+   * Class constructor.
+   *
+   * @return CRM_Mailing_DAO_BounceType
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * returns all the column names of this table
+   * Returns all the column names of this table.
    *
-   * @access public
-   * @return array
+   * @return array Array of column names.
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -148,10 +144,9 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return self::$_fields;
   }
   /**
-   * returns the names of this table
+   * Returns the name of this table.
    *
-   * @access public
-   * @return string
+   * @return string The table name.
    */
   public static function getTableName() {
     return self::$_tableName;
@@ -166,10 +161,11 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return self::$_log;
   }
   /**
-   * returns the list of fields that can be imported
+   * Returns the list of fields that can be imported.
    *
-   * @access public
-   * return array
+   * @param bool $prefix Whether to prefix the field names.
+   *
+   * @return array Array of importable fields.
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -189,10 +185,11 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * returns the list of fields that can be exported
+   * Returns the list of fields that can be exported.
    *
-   * @access public
-   * return array
+   * @param bool $prefix Whether to prefix the field names.
+   *
+   * @return array Array of exportable fields.
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
@@ -212,9 +209,9 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return self::$_export;
   }
   /**
-   * returns an array containing the enum fields of the civicrm_mailing_bounce_type table
+   * Returns an array containing the enum fields of this table.
    *
-   * @return array (reference)  the array of enum fields
+   * @return array Reference to the array of enum fields.
    */
   public static function &getEnums() {
     static $enums = [
@@ -223,12 +220,12 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return $enums;
   }
   /**
-   * returns a ts()-translated enum value for display purposes
+   * Returns a translated enum value for display purposes.
    *
-   * @param string $field  the enum field in question
-   * @param string $value  the enum value up for translation
+   * @param string $field The enum field in question.
+   * @param string $value The enum value up for translation.
    *
-   * @return string  the display value of the enum
+   * @return string The display value of the enum.
    */
   public static function tsEnum($field, $value) {
     static $translations = NULL;
@@ -253,9 +250,10 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return $translations[$field][$value];
   }
   /**
-   * adds $value['foo_display'] for each $value['foo'] enum from civicrm_mailing_bounce_type
+   * Adds display labels for enum fields to the values array.
    *
-   * @param array $values (reference)  the array up for enhancing
+   * @param array $values (reference) The array to enhance.
+   *
    * @return void
    */
   public static function addDisplayEnums(&$values) {

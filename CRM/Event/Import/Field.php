@@ -25,10 +25,16 @@
  +--------------------------------------------------------------------+
 */
 
+/**
+ * Represents a single field definition used during event participant data import
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Event_Import_Field {
 
   /**#@+
-   * @access protected
    * @var string
    */
 
@@ -65,6 +71,15 @@ class CRM_Event_Import_Field {
    * @var object
    */
   public $_value;
+  /**
+   * class constructor
+   *
+   * @param string $name
+   * @param string $title
+   * @param int $type
+   * @param string $headerPattern
+   * @param string $dataPattern
+   */
   public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
     $this->_name = $name;
     $this->_title = $title;
@@ -75,6 +90,11 @@ class CRM_Event_Import_Field {
     $this->_value = NULL;
   }
 
+  /**
+   * Reset value
+   *
+   * @return void
+   */
   public function resetValue() {
     $this->_value = NULL;
   }
@@ -87,6 +107,11 @@ class CRM_Event_Import_Field {
     $this->_value = $value;
   }
 
+  /**
+   * Validate
+   *
+   * @return bool
+   */
   public function validate() {
     if (CRM_Utils_System::isNull($this->_value)) {
       return TRUE;

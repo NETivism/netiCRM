@@ -27,31 +27,27 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
 class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Confirm a pending subscription
+   * Confirm a pending subscription.
    *
-   * @param int $contact_id       The id of the contact
-   * @param int $subscribe_id     The id of the subscription event
-   * @param string $hash          The hash
+   * @param int $contact_id The id of the contact.
+   * @param int $subscribe_id The id of the subscription event.
+   * @param string $hash The hash.
    *
-   * @return boolean              True on success
-   * @access public
-   * @static
+   * @return string|bool The title of the group on success, false otherwise.
    */
   public static function confirm($contact_id, $subscribe_id, $hash) {
     $se = CRM_Mailing_Event_BAO_Subscribe::verify($contact_id, $subscribe_id, $hash);

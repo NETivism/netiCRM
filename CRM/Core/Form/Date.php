@@ -26,10 +26,9 @@
 */
 
 /**
+ * Provides date and time form element building utilities
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_Form_Date {
@@ -40,12 +39,11 @@ class CRM_Core_Form_Date {
   public const DATE_yyyy_mm_dd = 1, DATE_mm_dd_yy = 2, DATE_mm_dd_yyyy = 4, DATE_Month_dd_yyyy = 8, DATE_dd_mon_yy = 16, DATE_dd_mm_yyyy = 32;
 
   /**
-   * This function is to build the date-format form
+   * Build the allowed date formats radio group on a form.
    *
-   * @param Object  $form   the form object that we are operating on
+   * @param CRM_Core_Form $form the form object being operated on
    *
-   * @static
-   * @access public
+   * @return void
    */
   public static function buildAllowedDateFormats(&$form) {
 
@@ -67,12 +65,15 @@ class CRM_Core_Form_Date {
   }
 
   /**
-   * This function is to build the date range - relative or absolute
+   * Build a date range selector (relative or absolute) on a form.
    *
-   * @param Object  $form   the form object that we are operating on
+   * @param CRM_Core_Form $form the form object being operated on
+   * @param string $fieldName the name of the date range field
+   * @param int $count (unused)
+   * @param bool $required whether the field is required
+   * @param bool $addReportFilters whether to include report-specific filters
    *
-   * @static
-   * @access public
+   * @return void
    */
   public static function buildDateRange(&$form, $fieldName, $count = 1, $required = FALSE, $addReportFilters = TRUE) {
     $selector = [ts('Choose Date Range'),

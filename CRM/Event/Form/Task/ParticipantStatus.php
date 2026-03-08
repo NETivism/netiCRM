@@ -27,13 +27,16 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Event_Form_Task_ParticipantStatus extends CRM_Event_Form_Task_Batch {
+  /**
+   * Build the form
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     // CRM_Event_Form_Task_Batch::buildQuickForm() gets ufGroupId
     // from the form, so set it here to the id of the reserved profile

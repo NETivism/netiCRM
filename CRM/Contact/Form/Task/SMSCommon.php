@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2016
  */
 
@@ -43,6 +42,8 @@ class CRM_Contact_Form_Task_SMSCommon {
    * Pre process the provider.
    *
    * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function preProcessProvider(&$form) {
     $form->_single = FALSE;
@@ -66,6 +67,8 @@ class CRM_Contact_Form_Task_SMSCommon {
    * Build the form object.
    *
    * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function buildQuickForm(&$form) {
     $form->assign('SMSTask', TRUE);
@@ -210,14 +213,11 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
   /**
    * Form rule.
    *
-   * @param array $fields
-   *   The input form values.
-   * @param array $dontCare
-   * @param object $self
-   *   Additional values form 'this'.
+   * @param array $fields The input form values.
+   * @param array $dontCare The files array (unused).
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return bool|array
-   *   true if no errors, else array of errors
+   * @return bool|array true if no errors, else array of errors
    */
   public static function formRule($fields, $dontCare, $self) {
     $errors = [];
@@ -266,6 +266,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
    * Process the form after the input has been submitted and validated.
    *
    * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function postProcess(&$form) {
 
@@ -367,6 +369,16 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
   }
 
+  /**
+   * Batch send SMS.
+   *
+   * @param array $contactDetails
+   * @param array $activityParams
+   * @param array $smsParams
+   * @param array $contactIds
+   *
+   * @return void
+   */
   public static function batchSend($contactDetails, $activityParams, $smsParams, $contactIds) {
     global $civicrm_batch;
 

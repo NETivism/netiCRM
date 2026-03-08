@@ -28,14 +28,20 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment {
 
+  /**
+   * Create participant payment
+   *
+   * @param array $params
+   * @param array $ids
+   *
+   * @return CRM_Event_BAO_ParticipantPayment
+   */
   public static function &create(&$params, &$ids) {
 
     if (CRM_Utils_Array::value('id', $params)) {
@@ -70,7 +76,6 @@ class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment 
    * @param  array  $params   array in the format of $field => $value.
    *
    * @return boolean  true if deleted false otherwise
-   * @access public
    */
   public static function deleteParticipantPayment($params) {
     $participantPayment = new CRM_Event_DAO_ParticipantPayment();

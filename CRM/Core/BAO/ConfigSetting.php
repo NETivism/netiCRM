@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,12 +39,11 @@
 class CRM_Core_BAO_ConfigSetting {
 
   /**
-   * Function to add civicrm settings
+   * Add or update CiviCRM settings in the database.
    *
-   * @params array $params associated array of civicrm variables
+   * @param array &$params associative array of setting variables
    *
-   * @return null
-   * @static
+   * @return void
    */
   public static function add(&$params) {
     CRM_Core_BAO_ConfigSetting::fixParams($params);
@@ -97,12 +94,11 @@ class CRM_Core_BAO_ConfigSetting {
   }
 
   /**
-   * Function to fix civicrm setting variables
+   * Normalize setting variables (e.g., convert ISO country codes to IDs).
    *
-   * @params array $params associated array of civicrm variables
+   * @param array &$params associative array of setting variables
    *
-   * @return null
-   * @static
+   * @return void
    */
   public static function fixParams(&$params) {
     // in our old civicrm.settings.php we were using ISO code for country and
@@ -129,13 +125,12 @@ class CRM_Core_BAO_ConfigSetting {
   }
 
   /**
-   * Function to format the array containing before inserting in db
+   * Merge new setting values with existing ones stored in the database.
    *
-   * @param  array $params associated array of civicrm variables(submitted)
-   * @param  array $values associated array of civicrm variables stored in db
+   * @param array &$params associative array of new setting variables
+   * @param array &$values associative array of existing setting variables
    *
-   * @return null
-   * @static
+   * @return void
    */
   public static function formatParams(&$params, &$values) {
     if (empty($params) ||
@@ -154,10 +149,11 @@ class CRM_Core_BAO_ConfigSetting {
   }
 
   /**
-   * Function to retrieve the settings values from db
+   * Retrieve setting values from the database.
    *
-   * @return array $defaults
-   * @static
+   * @param array &$defaults associative array to store the retrieved settings
+   *
+   * @return void
    */
   public static function retrieve(&$defaults) {
 
@@ -313,6 +309,11 @@ class CRM_Core_BAO_ConfigSetting {
     }
   }
 
+  /**
+   * Get current configuration settings for URLs and directories.
+   *
+   * @return array [url, dir, siteName, siteRoot]
+   */
   public static function getConfigSettings() {
     $config = &CRM_Core_Config::singleton();
 
@@ -350,6 +351,11 @@ class CRM_Core_BAO_ConfigSetting {
     return [$url, $dir, $siteName, $siteRoot];
   }
 
+  /**
+   * Get guessed configuration settings based on environment.
+   *
+   * @return array [url, dir, siteName, siteRoot]
+   */
   public static function getBestGuessSettings() {
     $config = &CRM_Core_Config::singleton();
 
@@ -379,6 +385,13 @@ class CRM_Core_BAO_ConfigSetting {
     return [$url, $dir, $siteName, $siteRoot];
   }
 
+  /**
+   * Perform site move logic by updating base URLs and directories in settings.
+   *
+   * @param array $defaultValues optional default values for old/new URLs and paths
+   *
+   * @return string status message of the site move process
+   */
   public static function doSiteMove($defaultValues = []) {
     $moveStatus = ts('Beginning site move process...') . '<br />';
     // get the current and guessed values
@@ -487,7 +500,9 @@ WHERE  id = %1
   }
 
   /**
-   * @return array
+   * Get a list of variables that should be skipped when storing settings in the database.
+   *
+   * @return string[] array of variable names
    */
   public static function skipVars() {
     return [

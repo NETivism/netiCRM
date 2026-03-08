@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for finding contacts based on SYBNT (some year but not this year) contribution patterns
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,6 +44,13 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
 
   protected $_contribution_type_id;
 
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
@@ -85,6 +91,14 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
     }
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     $form->addSelect('contribution_type_id', ts('Contribution Type'), $this->_contribution_type_id, ['multiple' => 'multiple']);
 
@@ -102,6 +116,14 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
 
   }
 
+  /**
+   * Set default values
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return array<string, string|int>
+   * @access public
+   */
   public function setDefaultValues($form) {
     $thisYear = date('Y');
     $lastYear = date('Y', strtotime('-1 year'));
@@ -117,6 +139,12 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
     return $defaults;
   }
 
+  /**
+   * Get qill
+   *
+   * @return array<int, array<string, string>>
+   * @access public
+   */
   public function qill() {
     $qill = [];
     if (!empty($this->_formValues['contribution_type_id'])) {
@@ -143,15 +171,33 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
     return $qill;
   }
 
+  /**
+   * Set breadcrumb
+   *
+   * @return void
+   * @access public
+   */
   public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
+  /**
+   * Set title
+   *
+   * @return void
+   * @access public
+   */
   public function setTitle() {
     $title = ts('Last year but not this year donors');
     CRM_Utils_System::setTitle($title);
   }
 
+  /**
+   * Get count
+   *
+   * @return int
+   * @access public
+   */
   public function count() {
     $sql = $this->all();
 
@@ -159,10 +205,32 @@ class CRM_Contact_Form_Search_Custom_ContribSYBNT extends CRM_Contact_Form_Searc
     return $dao->N;
   }
 
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
+  /**
+   * Get all
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
+   * @access public
+   */
   public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
 
     $where = $this->where();
@@ -200,6 +268,12 @@ GROUP BY   contact.id
     return $sql;
   }
 
+  /**
+   * Get select
+   *
+   * @return string
+   * @access public
+   */
   public function select() {
     return "
 sum(contrib_1.total_amount) AS receive_amount,
@@ -207,6 +281,12 @@ count(contrib_1.id) AS completed_count
 ";
   }
 
+  /**
+   * Get from
+   *
+   * @return string
+   * @access public
+   */
   public function from() {
     $from = NULL;
 
@@ -217,6 +297,14 @@ count(contrib_1.id) AS completed_count
     return $from;
   }
 
+  /**
+   * Get where
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function where($includeContactIDs = FALSE) {
     $clauses = [];
     $clauses[] = "contrib_1.is_test = 0";
@@ -281,6 +369,14 @@ GROUP BY contact.id
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Get having
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function having($includeContactIDs = FALSE) {
     $clauses = [];
     $min = CRM_Utils_Array::value('include_min_amount', $this->_formValues);
@@ -296,14 +392,32 @@ GROUP BY contact.id
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get template file
+   *
+   * @return string
+   * @access public
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/ContribSYBNT.tpl';
   }
 
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
   public function summary() {
     return NULL;
   }

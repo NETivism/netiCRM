@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -67,7 +65,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * @param array  $params (reference ) an assoc array of name/value pairs
    * @param array $ids    the array that holds all the db ids
    *
-   * @return object CRM_Contribute_BAO_Contribution object
+   * @return CRM_Contribute_BAO_Contribution|CRM_Core_Error CRM_Contribute_BAO_Contribution object
    * @access public
    * @static
    */
@@ -217,7 +215,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * @param array $params (reference ) an assoc array of name/value pairs
    * @param array $ids    the array that holds all the db ids
    *
-   * @return object CRM_Contribute_BAO_Contribution object
+   * @return CRM_Contribute_BAO_Contribution|CRM_Core_Error CRM_Contribute_BAO_Contribution object
    * @access public
    * @static
    */
@@ -361,7 +359,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    *
    * @param int $id the contribution id
    *
-   * @return void
+   * @return CRM_Contribute_BAO_Contribution
    * @access public
    */
   public static function copy($id) {
@@ -460,6 +458,13 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * This function is used by both the web form layer and the api. Note that
    * the api needs the name => value conversion, also the view layer typically
    * requires value => name conversion
+   *
+   * @param array $defaults
+   * @param string $property
+   * @param array $lookup
+   * @param boolean $reverse
+   *
+   * @return boolean
    */
   public static function lookupValue(&$defaults, $property, &$lookup, $reverse) {
     $id = $property . '_id';
@@ -493,7 +498,7 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    *                        in a hierarchical manner
    * @param array $ids      (reference) the array that holds all the db ids
    *
-   * @return object CRM_Contribute_BAO_Contribution object
+   * @return CRM_Contribute_BAO_Contribution|null CRM_Contribute_BAO_Contribution object
    * @access public
    * @static
    */
@@ -508,6 +513,9 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
    * The ordering is important, since currently we do not have a weight
    * scheme. Adding weight is super important and should be done in the
    * next week or so, before this can be called complete.
+   *
+   * @param string $contactType
+   * @param boolean $status
    *
    * @return array array of importable Fields
    * @access public
@@ -574,6 +582,12 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     return self::$_importableFields[$cacheKeyString];
   }
 
+  /**
+   * combine all the exportable fields from the lower levels object
+   *
+   * @return array array of exportable Fields
+   * @access public
+   */
   public static function &exportableFields() {
     if (!self::$_exportableFields) {
       if (!self::$_exportableFields) {
@@ -636,6 +650,15 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     return self::$_exportableFields;
   }
 
+  /**
+   * Get total amount and count of contributions for a given status and date range
+   *
+   * @param string|null $status
+   * @param string|null $startDate
+   * @param string|null $endDate
+   *
+   * @return array|null
+   */
   public function getTotalAmountAndCount($status = NULL, $startDate = NULL, $endDate = NULL) {
 
     $where = [];
@@ -689,7 +712,9 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
   /**
    * Delete the indirect records associated with this contribution first
    *
-   * @return $results no of deleted Contribution on success, false otherwise
+   * @param int $id
+   *
+   * @return int|false no of deleted Contribution on success, false otherwise
    * @access public
    * @static
    */
@@ -769,12 +794,14 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
   /**
    * Check if there is a contribution with the same trxn_id or invoice_id
    *
-   * @param array  $params (reference ) an assoc array of name/value pairs
+   * @param array  $input (reference ) an assoc array of name/value pairs
    * @param array  $duplicates (reference ) store ids of duplicate contribs
+   * @param int    $id
    *
    * @return boolean true if duplicate, false otherwise
    * @access public
-   * static  */
+   * @static
+   */
   public static function checkDuplicate($input, &$duplicates, $id = NULL) {
     if (!$id) {
       $id = CRM_Utils_Array::value('id', $input);
@@ -820,12 +847,14 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    *
    * Separate this with checkDuplicate to prevent unwanted behavior when calling old duplicate check
    *
-   * @param array  $params (reference ) an assoc array of name/value pairs
+   * @param array  $input (reference ) an assoc array of name/value pairs
    * @param array  $duplicates (reference ) store ids of duplicate contribs
+   * @param int    $id
    *
    * @return boolean true if duplicate, false otherwise
    * @access public
-   * static  */
+   * @static
+   */
   public static function checkDuplicateReceipt($input, &$duplicates, $id = NULL) {
     if (!$id) {
       $id = CRM_Utils_Array::value('id', $input);
@@ -863,13 +892,14 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
   /**
    * Check contribution related object can still process payment
    *
-   * @param array  $id of contribution
+   * @param int    $id of contribution
    * @param array  $ids from getComponentDetails
-   * @param object $form from form
+   * @param CRM_Core_Form|null $form from form
    *
    * @return boolean true if
    * @access public
-   * static  */
+   * @static
+   */
   public static function checkPaymentAvailable($id, $ids, $form = NULL) {
     $return = FALSE;
     $mode = $form->_mode ?? 'live';
@@ -968,7 +998,7 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
    *
    * @param array  $params (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Contribute_BAO_ContributionProduct object
+   * @return CRM_Contribute_DAO_ContributionProduct
    * @access public
    * @static
    */
@@ -1022,6 +1052,14 @@ INNER JOIN  civicrm_contact contact ON ( contact.id = civicrm_contribution.conta
     return $fields;
   }
 
+  /**
+   * Get current and goal amount for a contribution page
+   *
+   * @param int $pageID
+   *
+   * @return array
+   * @static
+   */
   public static function getCurrentandGoalAmount($pageID) {
     $query = "
 SELECT p.goal_amount as goal, sum( c.total_amount ) as total
@@ -1051,7 +1089,7 @@ GROUP BY p.id
    * @param array $params  associated array of fields (by reference)
    * @param int   $honorId honor Id
    *
-   * @return contact id
+   * @return CRM_Contact_BAO_Contact contact id
    */
   public static function createHonorContact(&$params, $honorId = NULL) {
     $honorParams = ['first_name' => $params["honor_first_name"],
@@ -1084,7 +1122,7 @@ GROUP BY p.id
    *
    * @param int $honorId In Honor of Contact ID
    *
-   * @return return the list of contribution fields
+   * @return array the list of contribution fields
    *
    * @access public
    * @static
@@ -1134,6 +1172,14 @@ WHERE  civicrm_contribution.contact_id = civicrm_contact.id
     return CRM_Core_DAO::singleValueQuery($query, CRM_Core_DAO::$_nullArray);
   }
 
+  /**
+   * Get annual contribution summary for a contact
+   *
+   * @param int|array $contactID
+   *
+   * @return array
+   * @static
+   */
   public static function annual($contactID) {
     if (is_array($contactID)) {
       $contactIDs = CRM_Utils_Array::implode(',', $contactID);
@@ -1214,7 +1260,7 @@ GROUP BY currency
    *
    * @param array  $params (reference ) an assoc array of name/value pairs
    *
-   * @return array contribution id if success else NULL
+   * @return int|null contribution id if success else NULL
    * @access public
    * static  */
   public static function checkDuplicateIds($params) {
@@ -1305,9 +1351,9 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
   /**
    *  Function to create address associated with contribution record.
    *  @param array $params an associated array
-   *  @param int   $billingID $billingLocationTypeID
+   *  @param int   $billingLocationTypeID $billingLocationTypeID
    *
-   *  @return address id
+   *  @return int address id
    *  @static
    */
   public static function createAddress(&$params, $billingLocationTypeID) {
@@ -1338,7 +1384,7 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
    *  Function to create soft contributon with contribution record.
    *  @param array $params an associated array
    *
-   *  @return soft contribution id
+   *  @return CRM_Contribute_DAO_ContributionSoft
    *  @static
    */
   public static function addSoftContribution($params) {
@@ -1358,6 +1404,7 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
   /**
    *  Function to retrieve soft contributon for contribution record.
    *  @param array $params an associated array
+   *  @param boolean $all
    *
    *  @return array soft contribution id
    *  @static
@@ -1382,6 +1429,7 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
   /**
    *  Function to retrieve the list of soft contributons for given contact.
    *  @param int $contact_id contact id
+   *  @param int $isTest
    *
    *  @return array
    *  @static
@@ -1438,6 +1486,15 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
     return $result;
   }
 
+  /**
+   * Get soft contribution totals for a contact
+   *
+   * @param int $contact_id
+   * @param int $isTest
+   *
+   * @return array
+   * @static
+   */
   public static function getSoftContributionTotals($contact_id, $isTest = 0) {
     $query = "SELECT SUM(amount) as amount,
                          AVG(total_amount) as average,
@@ -1476,8 +1533,8 @@ LEFT JOIN civicrm_option_value contribution_status ON (civicrm_contribution.cont
   /**
    * Delete billing address record related contribution
    *
-   * @param int $contact_id contact id
-   * @param int $contribution_id contributionId
+   * @param int|null $contributionId contributionId
+   * @param int|null $contactId contact id
    * @access public
    * @static
    */
@@ -1513,7 +1570,7 @@ WHERE ( $contributionCond  OR $contactCond )";
    * @param int    $componentId   participant/membership id.
    * @param string $componentName Event/Membership.
    *
-   * @return $contributionId pending contribution id.
+   * @return int|null pending contribution id.
    * @static
    */
   public static function checkOnlinePendingContribution($componentId, $componentName) {
@@ -1569,6 +1626,12 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
 
   /**
    * This function update contribution as well as related objects.
+   *
+   * @param array $params
+   * @param boolean $processContributionObject
+   *
+   * @return array
+   * @static
    */
   public static function transitionComponents($params, $processContributionObject = FALSE) {
     // get minimum required values.
@@ -1872,6 +1935,9 @@ LEFT JOIN  civicrm_contribution contribution ON ( componentPayment.contribution_
    * This function return all contribution related object ids.
    *
    * @param array $ids contribution ids
+   *
+   * @return array
+   * @static
    */
   public static function getComponentDetails($ids) {
     $componentDetails = $pledgePayment = [];
@@ -1924,6 +1990,16 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
     return $componentDetails;
   }
 
+  /**
+   * Get contribution count for a contact
+   *
+   * @param int $contactId
+   * @param boolean $includeSoftCredit
+   * @param boolean $includeHonoree
+   *
+   * @return int
+   * @static
+   */
   public static function contributionCount($contactId, $includeSoftCredit = TRUE, $includeHonoree = TRUE) {
     if (!$contactId) {
       return 0;
@@ -1957,6 +2033,7 @@ WHERE c.id IN ({$contributionIds}) ORDER BY c.id ASC";
    *
    * @return array $ids             containing organization id and individual id
    * @access public
+   * @static
    */
   public static function getOnbehalfIds($contributionId, $contributorId = NULL) {
 
@@ -2017,6 +2094,12 @@ SELECT source_contact_id
     return $ids;
   }
 
+  /**
+   * Get various contribution dates
+   *
+   * @return array
+   * @static
+   */
   public static function getContributionDates() {
     $config = CRM_Core_Config::singleton();
     $currentMonth = date('m');
@@ -2047,6 +2130,18 @@ SELECT source_contact_id
     ];
   }
 
+  /**
+   * Get receipt html for a contribution
+   *
+   * @param array $input
+   * @param array $ids
+   * @param array $objects
+   * @param array $values
+   * @param CRM_Core_Smarty|null $template
+   *
+   * @return string
+   * @static
+   */
   public static function getReceipt(&$input, &$ids, &$objects, &$values, &$template = NULL) {
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
@@ -2194,6 +2289,16 @@ SELECT source_contact_id
     return $html;
   }
 
+  /**
+   * Get annual receipt html for a contact
+   *
+   * @param int $contact_id
+   * @param array $option
+   * @param CRM_Core_Smarty|null $template
+   *
+   * @return string
+   * @static
+   */
   public static function getAnnualReceipt($contact_id, $option, &$template = NULL) {
     $config = CRM_Core_Config::singleton();
     $domain = CRM_Core_BAO_Domain::getDomain();
@@ -2346,6 +2451,15 @@ SELECT source_contact_id
     }
   }
 
+  /**
+   * Get annual receipt records for a contact
+   *
+   * @param int $contact_id
+   * @param array|null $option
+   *
+   * @return array
+   * @static
+   */
   public static function getAnnualReceiptRecord($contact_id, $option = NULL) {
     $config = CRM_Core_Config::singleton();
     $where = [];
@@ -2427,6 +2541,17 @@ SELECT source_contact_id
     return $records;
   }
 
+  /**
+   * Generate receipt ID for a contribution
+   *
+   * @param CRM_Contribute_DAO_Contribution|array|int $contrib
+   * @param boolean $save
+   * @param boolean $is_online
+   * @param boolean $reset
+   *
+   * @return string|false
+   * @static
+   */
   public static function genReceiptID(&$contrib, $save = TRUE, $is_online = FALSE, $reset = FALSE) {
     if (is_numeric($contrib)) {
       $id = $contrib;
@@ -2522,6 +2647,7 @@ SELECT source_contact_id
    * @param string $prefix receipt id calc from this prefix
    *
    * @return string
+   * @static
    */
   public static function lastReceiptID($prefix) {
     $receiptId = '';
@@ -2581,7 +2707,11 @@ SELECT source_contact_id
   /**
    * Get ids from saved Contribution
    *
-   * @param  int $idcontribution id
+   * @param  int $id contribution id
+   * @param string $type
+   *
+   * @return array|false
+   * @static
    */
   public static function buildIds($id, $type = 'form') {
     $query = "SELECT c.id as contributionID,
@@ -2644,6 +2774,9 @@ WHERE c.id = $id";
    * @param string $path url path to notify
    * @param boolean $return_query to only return query string
    * when TRUE, default FALSE
+   *
+   * @return string
+   * @static
    */
   public static function makeNotifyUrl(&$params, $path, $return_query = FALSE) {
     $query = [];
@@ -2688,6 +2821,17 @@ WHERE c.id = $id";
     }
   }
 
+  /**
+   * Get invoice html for a contribution
+   *
+   * @param int $contributionId
+   * @param array $paymentInfo
+   * @param string $message
+   * @param boolean $sendMail
+   *
+   * @return string|void
+   * @static
+   */
   public static function getInvoice($contributionId, $paymentInfo, $message, $sendMail = FALSE) {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
@@ -2779,6 +2923,14 @@ WHERE c.id = $id";
     }
   }
 
+  /**
+   * Get payment class name for a contribution
+   *
+   * @param int $contributionId
+   *
+   * @return string|null
+   * @static
+   */
   public static function getPaymentClass($contributionId) {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
@@ -2793,6 +2945,17 @@ WHERE c.id = $id";
     return $paymentClass;
   }
 
+  /**
+   * Send PDF receipt for a contribution
+   *
+   * @param int $contributionId
+   * @param string|null $fromEmail
+   * @param string|null $receiptType
+   * @param string|null $receiptText
+   *
+   * @return void
+   * @static
+   */
   public static function sendPDFReceipt($contributionId, $fromEmail, $receiptType = NULL, $receiptText = NULL) {
     $params = [];
     $args = ['id' => $contributionId];
@@ -2890,6 +3053,14 @@ WHERE c.id = $id";
     }
   }
 
+  /**
+   * Get formatted legal ID for a contribution
+   *
+   * @param string $legalID
+   *
+   * @return string
+   * @static
+   */
   public static function getFormatLegalID($legalID) {
     $config = CRM_Core_Config::singleton();
     $legalIDformat = $config->receiptDisplayLegalID;

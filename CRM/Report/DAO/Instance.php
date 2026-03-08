@@ -26,55 +26,44 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Report_DAO_Instance extends CRM_Core_DAO {
   /**
-   * static instance to hold the table name
+   * Database table name for this DAO.
    *
    * @var string
-   * @static
    */
   public static $_tableName = 'civicrm_report_instance';
   /**
-   * static instance to hold the field values
+   * Cached field definitions for this table.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
   public static $_fields = NULL;
   /**
-   * static instance to hold the FK relationships
+   * Cached foreign key relationship definitions.
    *
-   * @var string
-   * @static
+   * @var array|null
    */
   public static $_links = NULL;
   /**
-   * static instance to hold the values that can
-   * be imported / apu
+   * Cached list of importable field names.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
   public static $_import = NULL;
   /**
-   * static instance to hold the values that can
-   * be exported / apu
+   * Cached list of exportable field names.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
   public static $_export = NULL;
   /**
-   * static value to see if we should log any modifications to
-   * this table in the civicrm_log table
+   * Whether modifications to this table are logged to civicrm_log.
    *
-   * @var boolean
-   * @static
+   * @var bool
    */
   public static $_log = FALSE;
   /**
@@ -156,15 +145,15 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO {
    */
   public $email_cc;
   /**
-   * comma-separated list of email addresses to send the report to
+   * HTML header prepended to the report output (e.g. opening html/head/body tags, CSS imports).
    *
-   * @var text
+   * @var string
    */
   public $header;
   /**
-   * comma-separated list of email addresses to send the report to
+   * HTML footer appended to the report output (e.g. closing body/html tags, powered-by image).
    *
-   * @var text
+   * @var string
    */
   public $footer;
   /**
@@ -174,19 +163,15 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO {
    */
   public $navigation_id;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_report_instance
-  */
+   * Class constructor. Calls parent CRM_Core_DAO constructor.
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * return foreign links
+   * Returns the foreign key relationship map for this table.
    *
-   * @access public
-   * @return array
+   * @return array Associative array of local_column => foreign_table:foreign_column.
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -212,11 +197,10 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * Returns all field definitions for this table.
+   *
+   * @return array Associative array of field_name => field definition array.
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -334,28 +318,27 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO {
     return self::$_fields;
   }
   /**
-   * returns the names of this table
+   * Returns the database table name for this DAO.
    *
-   * @access public
-   * @return string
+   * @return string The table name 'civicrm_report_instance'.
    */
   public static function getTableName() {
     return self::$_tableName;
   }
   /**
-   * returns if this table needs to be logged
+   * Returns whether changes to this table are logged to civicrm_log.
    *
-   * @access public
-   * @return boolean
+   * @return bool Always FALSE for report instances.
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * returns the list of fields that can be imported
+   * Returns the list of fields marked as importable.
    *
-   * @access public
-   * return array
+   * @param bool $prefix If TRUE, keys the result under 'report_instance' instead of field name.
+   *
+   * @return array Associative array of importable field definitions.
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -375,10 +358,11 @@ class CRM_Report_DAO_Instance extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * returns the list of fields that can be exported
+   * Returns the list of fields marked as exportable.
    *
-   * @access public
-   * return array
+   * @param bool $prefix If TRUE, keys the result under 'report_instance' instead of field name.
+   *
+   * @return array Associative array of exportable field definitions.
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

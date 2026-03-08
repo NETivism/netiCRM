@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,7 +46,7 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
   private static $_customizeActionLinks;
 
   /**
-   * Get action Links
+   * Gets the string action links.
    *
    * @return array (reference) of action links
    */
@@ -68,6 +66,11 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
     return self::$_stringActionLinks;
   }
 
+  /**
+   * Gets the customize action links.
+   *
+   * @return array (reference) of action links
+   */
   public function &customizeActionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_customizeActionLinks)) {
@@ -85,7 +88,7 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
   }
 
   /**
-   * Run the basic page (run essentially starts execution for that page).
+   * Runs the basic page.
    *
    * @return void
    */
@@ -96,12 +99,9 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
   }
 
   /**
-   * Browse all options
-   *
+   * Browses all templates.
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
     $permission = FALSE;

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Wrapper of mobile payment which should integrate with other paymewnt module to work together
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 /*
   +--------------------------------------------------------------------+
   | CiviCRM version 3.3                                                |
@@ -53,11 +59,10 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   private static $_singleton = NULL;
 
   /**
-   * Constructor
+   * Class constructor.
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
+   * @param array &$paymentProcessor payment processor parameters
    */
   public function __construct($mode, &$paymentProcessor) {
 
@@ -67,13 +72,13 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_Mobile
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -84,16 +89,22 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   /**
-   * Setter for the payment form that wants to use the processor
+   * Setter for the payment form that wants to use the processor.
    *
-   * @param obj $paymentForm
+   * @param CRM_Core_Form &$paymentForm
    *
+   * @return void
    */
   public function setForm(&$paymentForm) {
     parent::setForm($paymentForm);
     // event registration doesn't use this...
   }
 
+  /**
+   * Check if the processor has the right configuration values.
+   *
+   * @return string|null error message if any, else NULL
+   */
   public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
@@ -128,13 +139,12 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   }
 
   /**
-   * Main transaction function
+   * Handle transfer checkout (redirect to payment gateway).
    *
-   * @param array $params  name value pair of contribution data
+   * @param array &$params name-value pairs of contribution data
+   * @param string $component component name ('contribute' or 'event')
    *
    * @return void
-   * @access public
-   *
    */
   public function doTransferCheckout(&$params, $component) {
     $instrument_id = $params['civicrm_instrument_id'];
@@ -231,6 +241,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Handle Apple Pay checkout via POST data.
+   *
+   * @return string themed HTML page
+   */
   public static function checkout() {
     if ($_POST['instrument'] == 'ApplePay') {
       $domain = CRM_Core_BAO_Domain::getDomain();
@@ -246,6 +261,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Validate an Apple Pay session URL.
+   *
+   * @return void
+   */
   public static function validate() {
     $contributionId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $validationUrl = CRM_Utils_Request::retrieve('validationURL', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
@@ -319,6 +339,11 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Process a mobile payment transaction.
+   *
+   * @return void
+   */
   public static function transact() {
     $contributionId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $ppProvider = CRM_Utils_Request::retrieve('provider', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
@@ -406,6 +431,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Add a note to the contribution record.
+   *
+   * @param string $note note content
+   * @param CRM_Contribute_DAO_Contribution &$contribution contribution object
+   *
+   * @return void
+   */
   public static function addNote($note, &$contribution) {
 
     $note = date("Y/m/d H:i:s "). ts("Transaction record").": \n\n".$note."\n===============================\n";
@@ -427,6 +460,14 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     CRM_Core_BAO_Note::add($noteParams, $note_id);
   }
 
+  /**
+   * Get the administrative fields for this payment processor.
+   *
+   * @param object $ppDAO payment processor DAO
+   * @param CRM_Core_Form $form the settings form
+   *
+   * @return array array of administrative fields
+   */
   public static function getAdminFields($ppDAO, $form) {
     $text = ts('If the provider needs server IP address, the IP address of this website is %1', [1 => gethostbyname($_SERVER['HTTP_HOST'])]);
     CRM_Core_Session::setStatus($text);
@@ -452,6 +493,15 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
     ];
   }
 
+  /**
+   * Check if a validation URL is accessible and allowed by Apple Pay.
+   *
+   * @param string $url validation URL
+   * @param bool $isTest whether in test mode
+   * @param string &$host reference to store the host IP
+   *
+   * @return bool TRUE if allowed
+   */
   public static function doCheckValidationUrl($url, $isTest = FALSE, &$host = NULL) {
     $isPass = FALSE;
 
@@ -514,7 +564,13 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
 
     return $isPass;
   }
-
+  /**
+   * Get the sync data URL for manual synchronization.
+   *
+   * @param int $contributionId contribution ID
+   *
+   * @return string|null sync URL or NULL if not supported
+   */
   public static function getSyncDataUrl($contributionId) {
     $payment_instrument_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contributionId, 'payment_instrument_id');
     $instrument_options = CRM_Core_OptionGroup::values('payment_instrument', FALSE);

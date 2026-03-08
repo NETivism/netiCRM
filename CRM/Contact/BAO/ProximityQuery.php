@@ -26,10 +26,9 @@
 */
 
 /**
+ * Builds proximity-based (geographic distance) queries for contact searches
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_BAO_ProximityQuery {
@@ -54,6 +53,13 @@ class CRM_Contact_BAO_ProximityQuery {
   protected static $_earthRadiusSemiMajor;
   protected static $_earthEccentricitySQ;
 
+  /**
+   * Initialize static variables
+   *
+   * @return void
+   * @static
+   * @access public
+   */
   public static function initialize() {
     static $_initialized = FALSE;
 
@@ -79,6 +85,15 @@ class CRM_Contact_BAO_ProximityQuery {
      * Default to an approximate average radius for the United States.
      */
 
+  /**
+   * Estimate the Earth's radius at a given latitude.
+   *
+   * @param float $latitude latitude
+   *
+   * @return float radius
+   * @static
+   * @access public
+   */
   public static function earthRadius($latitude) {
     $lat = deg2rad($latitude);
 
@@ -90,6 +105,14 @@ class CRM_Contact_BAO_ProximityQuery {
   /**
    * Convert longitude and latitude to earth-centered earth-fixed coordinates.
    * X axis is 0 long, 0 lat; Y axis is 90 deg E; Z axis is north pole.
+   *
+   * @param float $longitude longitude
+   * @param float $latitude  latitude
+   * @param float $height    height
+   *
+   * @return array [x, y, z]
+   * @static
+   * @access public
    */
   public static function earthXYZ($longitude, $latitude, $height = 0) {
     $long = deg2rad($longitude);
@@ -111,6 +134,13 @@ class CRM_Contact_BAO_ProximityQuery {
 
   /**
    * Convert a given angle to earth-surface distance.
+   *
+   * @param float $angle    angle
+   * @param float $latitude latitude
+   *
+   * @return float distance
+   * @static
+   * @access public
    */
   public static function earthArcLength($angle, $latitude) {
     return deg2rad($angle) * self::earthRadius($latitude);
@@ -118,6 +148,15 @@ class CRM_Contact_BAO_ProximityQuery {
 
   /**
    * Estimate the earth-surface distance between two locations.
+   *
+   * @param float $longitudeSrc longitude src
+   * @param float $latitudeSrc  latitude src
+   * @param float $longitudeDst longitude dst
+   * @param float $latitudeDst  latitude dst
+   *
+   * @return float distance
+   * @static
+   * @access public
    */
   public static function earthDistance(
     $longitudeSrc,
@@ -139,6 +178,14 @@ class CRM_Contact_BAO_ProximityQuery {
 
   /**
    * Estimate the min and max longitudes within $distance of a given location.
+   *
+   * @param float $longitude longitude
+   * @param float $latitude  latitude
+   * @param float $distance  distance
+   *
+   * @return array [minLong, maxLong]
+   * @static
+   * @access public
    */
   public static function earthLongitudeRange($longitude, $latitude, $distance) {
     $long = deg2rad($longitude);
@@ -165,6 +212,14 @@ class CRM_Contact_BAO_ProximityQuery {
 
   /**
    * Estimate the min and max latitudes within $distance of a given location.
+   *
+   * @param float $longitude longitude
+   * @param float $latitude  latitude
+   * @param float $distance  distance
+   *
+   * @return array [minLat, maxLat]
+   * @static
+   * @access public
    */
   public static function earthLatitudeRange($longitude, $latitude, $distance) {
     $long = deg2rad($longitude);
@@ -201,14 +256,17 @@ class CRM_Contact_BAO_ProximityQuery {
     ];
   }
 
-  /*
-     * Returns the SQL fragment needed to add a column called 'distance'
-     * to a query that includes the location table
-     *
-     * @param $longitude
-     * @param $latitude
-     */
-
+  /**
+   * Returns the SQL fragment needed to add a column called 'distance'
+   * to a query that includes the location table
+   *
+   * @param float $longitude longitude
+   * @param float $latitude  latitude
+   *
+   * @return string sql fragment
+   * @static
+   * @access public
+   */
   public static function earthDistanceSQL($longitude, $latitude) {
     $long = deg2rad($longitude);
     $lat = deg2rad($latitude);
@@ -227,6 +285,18 @@ IFNULL( ACOS( $cosLat * COS( RADIANS( $latitude ) ) *
 ";
   }
 
+  /**
+   * Get the where clause for proximity search
+   *
+   * @param float  $latitude    latitude
+   * @param float  $longitude   longitude
+   * @param float  $distance    distance
+   * @param string $tablePrefix table prefix
+   *
+   * @return string where clause
+   * @static
+   * @access public
+   */
   public static function where($latitude, $longitude, $distance, $tablePrefix = 'civicrm_address') {
     self::initialize();
 
@@ -257,6 +327,16 @@ $earthDistanceSQL  <= $distance
     return $where;
   }
 
+  /**
+   * Process proximity search
+   *
+   * @param object $query  (reference) query object
+   * @param array  $values (reference) values
+   *
+   * @return void
+   * @static
+   * @access public
+   */
   public static function process(&$query, &$values) {
     list($name, $op, $distance, $grouping, $wildcard) = $values;
 

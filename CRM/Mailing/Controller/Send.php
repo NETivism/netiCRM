@@ -27,16 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
 class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param string|null $title The title of the controller.
+   * @param int $action The action to perform.
+   * @param bool $modal Whether to use a modal dialog.
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 

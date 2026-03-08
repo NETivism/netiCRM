@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -58,6 +56,9 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    */
   public static $_links = NULL;
 
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     parent::__construct();
 
@@ -87,14 +88,12 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
     }
   }
 
-  /*
-     * Heart of the viewing process. The runner gets all the meta data for
-     * the contact and calls the appropriate type of page to view.
-     *
-     * @return void
-     * @access public
-     *
-     */
+  /**
+   * Heart of the viewing process. The runner gets all the meta data for
+   * the contact and calls the appropriate type of page to view.
+   *
+   * @return void
+   */
   public function preProcess() {
     if (!$this->_contactId) {
       return CRM_Core_Error::statusBounce(ts('You must be logged in to view this page.'));
@@ -111,10 +110,9 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
   }
 
   /**
-   * Function to build user dashboard
+   * Build user dashboard.
    *
-   * @return none
-   * @access public
+   * @return void
    */
   public function buildUserDashBoard() {
     //build component selectors
@@ -195,11 +193,9 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
   }
 
   /**
-   * perform actions and display for user dashboard
+   * Perform actions and display for user dashboard.
    *
-   * @return none
-   *
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();
@@ -208,10 +204,9 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
   }
 
   /**
-   * Get action links
+   * Get action links.
    *
-   * @return array (reference) of action links
-   * @static
+   * @return array
    */
   public static function &links() {
     if (!(self::$_links)) {

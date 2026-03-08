@@ -1,4 +1,9 @@
 <?php
+/**
+ * ECPay (formerly AllPay) payment processor for handling credit card, ATM, CVS, and recurring transactions via the ECPay gateway.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
 date_default_timezone_set('Asia/Taipei');
 
 class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
@@ -36,11 +41,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   private static $_singleton = NULL;
 
   /**
-   * Constructor
+   * Class constructor.
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
+   * @param array &$paymentProcessor payment processor parameters
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
@@ -51,13 +55,13 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_ALLPAY
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -68,10 +72,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Provide default payment
+   * Provide default payment URL values.
    *
-   * @param array $defaults   array to be change
-   * @param object $paymen dao that will be added to payment when default is empty
+   * @param array &$default array to be changed
+   * @param object $payment DAO object containing payment details
+   *
    * @return void
    */
   public static function buildPaymentDefault(&$default, $payment) {
@@ -88,10 +93,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
     $config = CRM_Core_Config::singleton();
@@ -131,11 +135,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Original _civicrm_allpay_instrument, Get all used instrument.
+   * Get all used instruments.
    *
-   * @param string $type The String of return type, as 'normal'(default), 'form_name' and 'code'.
+   * @param string $type the return type: 'normal', 'form_name', or 'code'
    *
-   * @return array The instruments used by AllPay.
+   * @return array the instruments used by AllPay
    */
   public static function getInstruments($type = 'normal') {
     $i = [
@@ -166,12 +170,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Generate trxn_id of allPay, Original _civicrm_allpay_trxn_id
+   * Generate a transaction ID for AllPay.
    *
-   * @param boolean $is_test Is this id a test contribution or not.
-   * @param string $id The contribution Id.
+   * @param bool $is_test whether this is a test contribution
+   * @param string $id the contribution ID
    *
-   * @return string If test, return expand string of id.
+   * @return string generated transaction ID
    */
   public static function generateTrxnId($is_test, $id) {
     if ($is_test) {
@@ -180,12 +184,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     return $id;
   }
   /**
-   * Generate a trxn_id for recurring. Original _civicrm_allpay_recur_trxn
+   * Generate a transaction ID for recurring payments.
    *
-   * @param string $parent Input 'MerchantTradeNo' from allpay return values/
-   * @param string $gwsr Input 'gwsr' from allpay return values.
+   * @param string $parent MerchantTradeNo from AllPay
+   * @param string $gwsr gwsr from AllPay
    *
-   * @return string implode by $parent and $gwsr.
+   * @return string concatenated transaction ID
    */
   public static function generateRecurTrxn($parent, $gwsr) {
     if (empty($gwsr)) {
@@ -197,14 +201,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Sets appropriate parameters for checking out to google
+   * Set appropriate parameters for checking out to AllPay.
    *
-   * @param array $params  name value pair of contribution data.
-   * @param string component String of payment type as 'contribute' or 'event'.
+   * @param array &$params name-value pairs of contribution data
+   * @param string $component component name ('contribute' or 'event')
    *
    * @return void
-   * @access public
-   *
    */
   public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
@@ -287,16 +289,15 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Retrieve arguments of order. Original _civicrm_allpay_order.
+   * Retrieve arguments for an order.
    *
-   * @param array $vars Parameters of the contribution page or session.
-   * @param string $component String of payment type as 'contribute' or 'event'.
-   * @param array $payment_processor The payment processor parameters.
-   * @param string $instrument_code The code of used instrument like 'Credit' or 'ATM'.
-   * @param string $form_key The unique from key from the session.
+   * @param array &$vars parameters of the contribution page or session
+   * @param string $component component name ('contribute' or 'event')
+   * @param array &$payment_processor payment processor parameters
+   * @param string $instrument_code instrument code (e.g., 'Credit', 'ATM')
+   * @param string $form_key unique form key from the session
    *
-   * @return array Rearrange nessesary arguments for checkout.
-   *
+   * @return array<string, mixed> necessary arguments for checkout
    */
   public static function getOrderArgs(&$vars, $component, &$payment_processor, $instrument_code, $form_key) {
 
@@ -437,12 +438,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Print redirect form HTML. Original _civicrm_allpay_form_redirect.
+   * Output redirect form HTML.
    *
-   * @param array $redirect_vars Variables of form elements which is name to value.
-   * @param array $payment_processor The payment processor parameters.
+   * @param array $redirect_vars variables for form elements
+   * @param array $payment_processor payment processor parameters
    *
-   * @return void
+   * @return string HTML redirect form
    */
   public static function outputRedirectForm($redirect_vars, $payment_processor) {
     header('Pragma: no-cache');
@@ -477,13 +478,13 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Generate notify URL added to checkout request. Original _civicrm_allpay_notify_url
+   * Generate a notify URL for checkout requests.
    *
-   * @param array $vars Variables used in compose query.
-   * @param string $path Notify URL path.
-   * @param string $component String of payment type as 'contribute' or 'event'.
+   * @param array &$vars variables used to compose the query
+   * @param string $path notify URL path
+   * @param string $component component name ('contribute' or 'event')
    *
-   * @return string The full path or notify URL.
+   * @return string full notify URL
    */
   public static function generateNotifyUrl(&$vars, $path, $component) {
     $query = [];
@@ -532,12 +533,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Generate mac value used to for validation. Original _civicrm_allpay_checkmacvalue
+   * Generate a MAC value for validation.
    *
-   * @param mixed $args Arguments of the order. Default is Array. Will rearrange to Array if type is String.
-   * @param array $payment_processor The payment processor parameters.
+   * @param mixed &$args order arguments (array or string)
+   * @param array $payment_processor payment processor parameters
    *
-   * @return string md5 hash of mac values.
+   * @return string MD5 hash of MAC values
    */
   public static function generateMacValue(&$args, $payment_processor) {
     // remove empty arg
@@ -585,11 +586,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Synchronize all recurring of specific day of month.
-   * Original civicrm_allpay_recur_sync
+   * Synchronize all recurring payments for a specific day of the month.
    *
-   * @param array $days The array of days need to synchronize recurrings.
-   * @return null
+   * @param array $days array of days to synchronize
+   *
+   * @return void
    */
   public static function recurSync($days = []) {
     $allpayEnabled = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_payment_processor WHERE payment_processor_type LIKE 'ALLPAY%' AND is_active > 0");
@@ -637,12 +638,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Chcek recurring of specific id from AllPay API.
-   * Original civicrm_allpay_recur_check
+   * Check a specific recurring payment ID from AllPay API.
    *
-   * @param integer $rid The recurring id.
-   * @param object $order If you want to include object already wrote.
-   * @return null
+   * @param int $rid recurring ID
+   * @param object|null $order optional order object
+   *
+   * @return void
    */
   public static function recurCheck($rid, $order = NULL) {
     $now = time();
@@ -779,11 +780,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Check TradeStatus from ALLPAY
+   * Check trade status from AllPay.
    *
-   * @param string $orderId
-   * @param array $order
-   * @return false|string
+   * @param string $orderId transaction ID
+   * @param array|null $order optional order data
+   *
+   * @return string|bool result message or FALSE on failure
    */
   public static function tradeCheck($orderId, $order = NULL) {
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -866,14 +868,13 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Help function for such function as recurCheck.
-   * Posting Data to AllPay server and retrieve data.
-   * Original _civicrm_allpay_postdata
+   * Post data to AllPay server and retrieve response.
    *
-   * @param string $url Post url
-   * @param array $post_data Post Data
-   * @param boolean $json Is return json format.
-   * @return string|array|null
+   * @param string $url post URL
+   * @param array $post_data post data
+   * @param bool $json whether to return JSON format
+   *
+   * @return mixed response from server
    */
   public static function postdata($url, $post_data, $json = TRUE) {
     $ch = curl_init($url);
@@ -908,12 +909,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Get AllPay error msg.
-   * Original _civicrm_allpay_error_msg
+   * Get AllPay error message for a given code.
    *
-   * @param string $code Error code from allpay.
+   * @param string $code error code
    *
-   * @return string Translated error message response to the code.
+   * @return string|null translated error message
    */
   public static function getErrorMsg($code) {
     $code = (string) $code;
@@ -953,11 +953,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Original _civicrm_allpay_noid_hash
+   * Generate a hash for transactions without an ID.
    *
-   * @param object $o Return log object from AllPay.
-   * @param string $main_trxn The TradeNo of AllPay transaction.
-   * @return string|null get the hash
+   * @param object $o return log object from AllPay
+   * @param string $main_trxn TradeNo of AllPay transaction
+   *
+   * @return string|null hash value
    */
   public static function getNoidHash($o, $main_trxn) {
     // check database for this
@@ -985,6 +986,13 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Cancel a recurring message.
+   *
+   * @param int $recurID recurring ID
+   *
+   * @return mixed result of cancelation
+   */
   public function cancelRecuringMessage($recurID) {
     if (function_exists("_civicrm_allpay_cancel_recuring_message")) {
       return _civicrm_allpay_cancel_recuring_message();
@@ -995,14 +1003,14 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   }
 
   /**
-   * Execute ipn as called from allpay transaction. Original civicrm_allpay_ipn
+   * Execute IPN as called from AllPay transaction.
    *
-   * @param array $instrument The code of used instrument like 'Credit' or 'ATM'.
-   * @param array $post Bring post variables if you need test.
-   * @param array $get Bring get variables if you need test.
-   * @param boolean $print Does server echo the result, or just return that. Default is TRUE.
+   * @param array|string $arguments instrument code or arguments array
+   * @param array|null $post optional POST variables
+   * @param array|null $get optional GET variables
+   * @param bool $print whether to echo the result
    *
-   * @return string|void If $print is FALSE, function will return the result as Array.
+   * @return string|void result if $print is FALSE
    */
   public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,13 +37,11 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
   }
 
   /**
-   * takes an associative array and creates a financial transaction object
+   * Create a financial transaction record and associate it with an entity (e.g., contribution).
    *
-   * @param array  $params (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of financial transaction data
    *
-   * @return false|object CRM_Core_BAO_FinancialTrxn object
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_FinancialTrxn|bool the created trxn object, or FALSE on error
    */
   public static function create(&$params) {
     $trxn = new CRM_Core_DAO_FinancialTrxn();
@@ -107,17 +103,12 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
   }
 
   /**
+   * Get the IDs of the financial transaction and entity association for a specific entity.
    *
-   * Given an entity_id and entity_table, check for corresponding entity_financial_trxn and financial_trxn record.
-   * NOTE: This should be moved to separate BAO for EntityFinancialTrxn when we start adding more code for that object.
+   * @param int $entity_id entity ID
+   * @param string $entity_table name of the entity table (defaults to 'civicrm_contribution')
    *
-   * @param string $entityTable name of the entity table usually 'civicrm_contact'
-   * @param int $entityID id of the entity usually the contactID.
-   *
-   * @return array() reference $tag array of catagory id's the contact belongs to.
-   *
-   * @access public
-   * @static
+   * @return array<string, mixed> [entityFinancialTrxnId, financialTrxnId]
    */
   public static function getFinancialTrxnIds($entity_id, $entity_table = 'civicrm_contribution') {
     $ids = ['entityFinancialTrxnId' => NULL, 'financialTrxnId' => NULL];
@@ -140,11 +131,12 @@ class CRM_Core_BAO_FinancialTrxn extends CRM_Core_DAO_FinancialTrxn {
   }
 
   /**
-   * Delete financial transaction
+   * Delete a financial transaction and its associated entity record.
    *
-   * @return true on success, false otherwise
-   * @access public
-   * @static
+   * @param int $entity_id entity ID
+   * @param string $entity_table name of the entity table (defaults to 'civicrm_contribution')
+   *
+   * @return bool TRUE on success, FALSE otherwise
    */
   public static function deleteFinancialTrxn($entity_id, $entity_table = 'civicrm_contribution') {
     $fids = self::getFinancialTrxnIds($entity_id, $entity_table);

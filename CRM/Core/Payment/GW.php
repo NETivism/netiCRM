@@ -1,4 +1,10 @@
 <?php
+/**
+ * Green World (GW) payment processor for handling credit card transactions via the civicrm_gw Drupal module.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 date_default_timezone_set('Asia/Taipei');
 
 class CRM_Core_Payment_GW extends CRM_Core_Payment {
@@ -29,11 +35,10 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
   private static $_singleton = NULL;
 
   /**
-   * Constructor
+   * Class constructor.
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
+   * @param array &$paymentProcessor payment processor parameters
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
@@ -44,13 +49,13 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_GW
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -61,10 +66,9 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
     $config = CRM_Core_Config::singleton();
@@ -104,13 +108,12 @@ class CRM_Core_Payment_GW extends CRM_Core_Payment {
   }
 
   /**
-   * Sets appropriate parameters for checking out to google
+   * Handle transfer checkout (redirect to payment gateway).
    *
-   * @param array $params  name value pair of contribution datat
+   * @param array &$params name-value pairs of contribution data
+   * @param string $component component name ('contribute' or 'event')
    *
    * @return void
-   * @access public
-   *
    */
   public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);

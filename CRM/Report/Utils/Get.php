@@ -26,14 +26,21 @@
 */
 
 /**
+ * Processes URL parameters and query string values for report filtering
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Report_Utils_Get {
 
+  /**
+   * Retrieves a GET parameter and escapes it to the requested CRM type.
+   *
+   * @param string $name GET parameter name.
+   * @param int $type CRM_Utils_Type constant (e.g. CRM_Utils_Type::T_STRING, T_INT).
+   *
+   * @return mixed|null The typed and escaped value, or NULL if the parameter is absent.
+   */
   public static function getTypedValue($name, $type) {
     $value = CRM_Utils_Array::value($name, $_GET);
     if ($value === NULL) {
@@ -46,6 +53,18 @@ class CRM_Report_Utils_Get {
     );
   }
 
+  /**
+   * Reads date range GET parameters for a report filter field and populates defaults.
+   * Supports both explicit _from/_to values and a _relative shorthand via
+   * CRM_Report_Form::getFromTo(). Clears other filter defaults when a value is found.
+   *
+   * @param string $fieldName Base field name used to derive GET keys ({fieldName}_from,
+   *   {fieldName}_to, {fieldName}_relative).
+   * @param array &$field Field definition array (unused; kept for API consistency).
+   * @param array &$defaults Report form defaults array to populate with date values.
+   *
+   * @return bool FALSE if neither from nor to value is present; no return otherwise.
+   */
   public static function dateParam($fieldName, &$field, &$defaults) {
     // type = 12 (datetime) is not recognized by Utils_Type::escape() method,
     // and therefore the below hack
@@ -88,6 +107,16 @@ class CRM_Report_Utils_Get {
     }
   }
 
+  /**
+   * Reads a string filter GET parameter and populates defaults with the value and operator.
+   * Supported operators: has, sw (starts with), ew (ends with), nhas (not has), like, neq.
+   *
+   * @param string $fieldName Base field name used to derive GET keys ({fieldName}_value, {fieldName}_op).
+   * @param array &$field Field definition array; 'type' key is used for value escaping.
+   * @param array &$defaults Report form defaults array to populate.
+   *
+   * @return void
+   */
   public static function stringParam($fieldName, &$field, &$defaults) {
     $fieldOP = CRM_Utils_Array::value("{$fieldName}_op", $_GET, 'like');
 
@@ -108,6 +137,17 @@ class CRM_Report_Utils_Get {
     }
   }
 
+  /**
+   * Reads an integer or money filter GET parameter and populates defaults.
+   * Supported operators: lte, gte, eq, lt, gt, neq (single-value);
+   * bw/nbw (between, uses _min/_max keys); in (comma-separated list, max 15 values).
+   *
+   * @param string $fieldName Base field name used to derive GET keys.
+   * @param array &$field Field definition array; 'type' key is used for value escaping.
+   * @param array &$defaults Report form defaults array to populate.
+   *
+   * @return void
+   */
   public static function intParam($fieldName, &$field, &$defaults) {
     $fieldOP = CRM_Utils_Array::value("{$fieldName}_op", $_GET, 'eq');
 
@@ -162,6 +202,14 @@ class CRM_Report_Utils_Get {
     }
   }
 
+  /**
+   * Reads the chart type GET parameter and sets it in defaults if it is a valid chart type.
+   * Valid values: 'barChart', 'pieChart'.
+   *
+   * @param array &$defaults Report form defaults array to populate with the 'charts' key.
+   *
+   * @return void
+   */
   public static function processChart(&$defaults) {
     $chartType = CRM_Utils_Array::value("charts", $_GET);
     if (in_array($chartType, ['barChart', 'pieChart'])) {
@@ -169,6 +217,16 @@ class CRM_Report_Utils_Get {
     }
   }
 
+  /**
+   * Iterates over all filter fields grouped by table and dispatches to the appropriate
+   * parameter handler based on field type (int/money → intParam, string → stringParam,
+   * date/datetime → dateParam).
+   *
+   * @param array &$fieldGrp Two-dimensional array: tableName => [ fieldName => fieldDef ].
+   * @param array &$defaults Report form defaults array to populate.
+   *
+   * @return void
+   */
   public static function processFilter(&$fieldGrp, &$defaults) {
     // process only filters for now
     foreach ($fieldGrp as $tableName => $fields) {
@@ -192,7 +250,15 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  //unset default filters
+  /**
+   * Removes all filter-related keys from the defaults array on the first call.
+   * Subsequent calls within the same request are no-ops (uses a static flag).
+   * Keys removed are those ending in: _value, _op, _min, _max, _from, _to, _relative.
+   *
+   * @param array &$defaults Report form defaults array to clean up.
+   *
+   * @return void
+   */
   public static function unsetFilters(&$defaults) {
     static $unsetFlag = TRUE;
     if ($unsetFlag) {
@@ -210,6 +276,15 @@ class CRM_Report_Utils_Get {
     }
   }
 
+  /**
+   * Reads the 'gby' GET parameter (space-separated field names) and sets matching
+   * group_bys in defaults. Clears any existing group_bys on the first match found.
+   *
+   * @param array &$fieldGrp Two-dimensional array: tableName => [ fieldName => fieldDef ].
+   * @param array &$defaults Report form defaults array to populate with group_bys.
+   *
+   * @return void
+   */
   public static function processGroupBy(&$fieldGrp, &$defaults) {
     // process only group_bys for now
     $flag = FALSE;
@@ -234,6 +309,15 @@ class CRM_Report_Utils_Get {
     }
   }
 
+  /**
+   * Reads the 'fld' GET parameter (comma-separated field names) and enables matching
+   * fields in the defaults['fields'] array.
+   *
+   * @param array &$reportFields Two-dimensional array: tableName => [ fieldName => fieldDef ].
+   * @param array &$defaults Report form defaults array to populate with fields selections.
+   *
+   * @return void
+   */
   public static function processFields(&$reportFields, &$defaults) {
     //add filters from url
     if (is_array($reportFields)) {

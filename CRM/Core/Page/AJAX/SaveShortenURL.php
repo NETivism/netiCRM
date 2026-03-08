@@ -1,5 +1,15 @@
 <?php
+/**
+ * AJAX handler for saving shortened URLs associated with contribution pages, events, and profiles
+ *
+ */
+
 class CRM_Core_Page_AJAX_SaveShortenURL {
+  /**
+   * AJAX entry point to save a shortened URL for a specific page.
+   *
+   * @return void
+   */
   public static function run() {
     $pageId = CRM_Utils_Request::retrieve('page_id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $pageType = CRM_Utils_Request::retrieve('page_type', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');

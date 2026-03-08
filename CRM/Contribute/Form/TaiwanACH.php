@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Form for managing Taiwan ACH (Automated Clearing House) contribution details.
+ */
 class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   public $_context;
   public $_processors;
@@ -8,6 +11,15 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes IDs for contact, Taiwan ACH record, and recurring
+   * contribution. It also retrieves available TaiwanACH payment processors and
+   * sets up custom data.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -37,6 +49,15 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH', 'formRule'], $this);
   }
 
+  /**
+   * Actually build the form components.
+   *
+   * Adds fields for contribution page selection, amount, ACH type (Bank/Post),
+   * payment processor, bank code, post office account type, stamp verification
+   * status, and account details.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::ADD) {
       if (empty($this->_contactId)) {
@@ -93,6 +114,18 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Global form rule for validation.
+   *
+   * Validates contact selection, required bank/post office fields, legal
+   * identifier format, and custom order number requirements.
+   *
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
 
@@ -128,6 +161,14 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     return $errors;
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves existing ACH details for the recurring contribution record or
+   * loads the contact's legal identifier.
+   *
+   * @return array the array of default values for form elements
+   */
   public function setDefaultValues() {
     $defaults = [];
     if ($this->_id && $this->_contributionRecurId) {
@@ -157,6 +198,15 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     return $defaults;
   }
 
+  /**
+   * Process the form submission.
+   *
+   * Updates or creates the Taiwan ACH record, handles status changes based on
+   * stamp verification, and manages redirections back to contact view or
+   * contribution list.
+   *
+   * @return void
+   */
   public function postProcess() {
     $submittedValues = $this->controller->exportValues($this->_name);
 

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,14 +41,19 @@ class CRM_Utils_System {
   public static $_shutdowned = NULL;
 
   /**
-   * Compose a new url string from the current url string
-   * Used by all the framework components, specifically,
-   * pager, sort and qfc
+   * Compose a new URL string from the current URL string.
    *
-   * @param string $urlVar the url variable being considered (i.e. crmPageID, crmSortID etc)
+   * Used by all the framework components, specifically pager, sort, and QFC.
    *
-   * @return string the url fragment
-   * @access public
+   * @param string $urlVar
+   *   The URL variable being considered (e.g., 'crmPageID', 'crmSortID').
+   * @param bool $includeReset
+   *   Whether to include the 'reset' variable in the URL.
+   * @param bool $includeForce
+   *   Whether to include the 'force' variable in the URL.
+   *
+   * @return string
+   *   The composed URL fragment.
    */
   public static function makeURL($urlVar, $includeReset = FALSE, $includeForce = TRUE) {
     $config = CRM_Core_Config::singleton();
@@ -63,17 +66,21 @@ class CRM_Utils_System {
   }
 
   /**
-   * get the query string and clean it up. Strip some variables that should not
-   * be propagated, specically variable like 'reset'. Also strip any side-affect
-   * actions (i.e. export)
+   * Get the query string and clean it up.
    *
-   * This function is copied mostly verbatim from Pager.php (_getLinksUrl)
+   * Strip variables that should not be propagated, specifically variables
+   * like 'reset'. Also strip any side-effect actions (e.g., export).
+   * This function is copied mostly verbatim from Pager.php (_getLinksUrl).
    *
-   * @param string  $urlVar       the url variable being considered (i.e. crmPageID, crmSortID etc)
-   * @param boolean $includeReset should we include the reset var (generally this variable should be skipped)
+   * @param string $urlVar
+   *   The URL variable being considered (e.g., 'crmPageID', 'crmSortID').
+   * @param bool $includeReset
+   *   Whether to include the 'reset' variable (generally should be skipped).
+   * @param bool $includeForce
+   *   Whether to include the 'force' variable.
    *
    * @return string
-   * @access public
+   *   The cleaned query string with the URL variable appended.
    */
   public static function getLinksUrl($urlVar, $includeReset = FALSE, $includeForce = TRUE) {
     // Sort out query string to prevent messy urls
@@ -128,16 +135,18 @@ class CRM_Utils_System {
   }
 
   /**
-   * Wrapping function to themeing
+   * Wrapping function for theming.
    *
-   * For drupal 9 and new exception handling, we use exception to handle what kind of theme we should output
-   * Do not use this control themeing anymore. Use drupal invoke function to display output
-   * All content will use stdout and capture by drupal
+   * For Drupal 9 and new exception handling, exceptions are used to determine
+   * the output theme. Do not use this to control theming anymore. Use Drupal
+   * invoke functions to display output. All content uses stdout and is
+   * captured by Drupal.
    *
-   * @param string  $content the content that will be themed
+   * @param string $content
+   *   The content that will be themed, passed by reference.
    *
-   * @return void           prints content on stdout
-   * @access public
+   * @return void
+   *   Prints content on stdout.
    */
   public static function theme(&$content) {
     if (empty($content)) {
@@ -147,18 +156,24 @@ class CRM_Utils_System {
   }
 
   /**
-   * Generate an internal CiviCRM URL
+   * Generate an internal CiviCRM URL.
    *
-   * @param $path     string   The path being linked to, such as "civicrm/add"
-   * @param $query    string   A query string to append to the link.
-   * @param $absolute boolean  Whether to force the output to be an absolute link (beginning with http:).
-   *                           Useful for links that will be displayed outside the site, such as in an
-   *                           RSS feed.
-   * @param $fragment string   A fragment identifier (named anchor) to append to the link.
+   * @param string|null $path
+   *   The path being linked to, such as "civicrm/add".
+   * @param string|null $query
+   *   A query string to append to the link.
+   * @param bool $absolute
+   *   Whether to force the output to be an absolute link (beginning with http:).
+   *   Useful for links that will be displayed outside the site, such as in an RSS feed.
+   * @param string|null $fragment
+   *   A fragment identifier (named anchor) to append to the link.
+   * @param bool $htmlize
+   *   Whether to encode ampersands in the query string as HTML entities.
+   * @param bool $frontend
+   *   Whether to generate a frontend URL.
    *
-   * @return string            an HTML string containing a link to the given path.
-   * @access public
-   *
+   * @return string
+   *   A URL string for the given path.
    */
   public static function url(
     $path = NULL,
@@ -176,6 +191,27 @@ class CRM_Utils_System {
     return CRM_Core_Config::$_userSystem->url($path, $query, $absolute, $fragment, $htmlize, $frontend);
   }
 
+  /**
+   * Generate an HTML anchor tag linking to an internal CiviCRM URL.
+   *
+   * @param string $text
+   *   The link text to display.
+   * @param string|null $path
+   *   The path being linked to, such as "civicrm/add".
+   * @param string|null $query
+   *   A query string to append to the link.
+   * @param bool $absolute
+   *   Whether to force the output to be an absolute link.
+   * @param string|null $fragment
+   *   A fragment identifier (named anchor) to append to the link.
+   * @param bool $htmlize
+   *   Whether to encode ampersands in the query string as HTML entities.
+   * @param bool $frontend
+   *   Whether to generate a frontend URL.
+   *
+   * @return string
+   *   An HTML anchor tag.
+   */
   public static function href(
     $text,
     $path = NULL,
@@ -189,15 +225,33 @@ class CRM_Utils_System {
     return "<a href=\"$url\">$text</a>";
   }
 
+  /**
+   * Display a permission denied page via the CMS.
+   *
+   * @return mixed
+   *   CMS-specific return value for permission denied handling.
+   */
   public static function permissionDenied() {
     return CRM_Core_Config::$_userSystem->permissionDenied();
   }
 
+  /**
+   * Log out the current user via the CMS.
+   *
+   * @return mixed
+   *   CMS-specific return value for logout handling.
+   */
   public static function logout() {
     return CRM_Core_Config::$_userSystem->logout();
   }
 
-  // this is a very drupal specific function for now
+  /**
+   * Update CMS categories/taxonomy.
+   *
+   * This is a Drupal-specific function for now.
+   *
+   * @return void
+   */
   public static function updateCategories() {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework == 'Drupal') {
@@ -216,10 +270,13 @@ class CRM_Utils_System {
   }
 
   /**
-     * This static function sets the Content-Security-Policy header based on the configuration
-     * rules defined in CRM_Core_Config. If the current path matches the CSPexcludePath
-     * configuration rule, the header is not set.
-     */
+   * Set the Content-Security-Policy header based on configuration rules.
+   *
+   * Uses CSP rules defined in CRM_Core_Config. If the current path matches
+   * the cspExcludePath configuration rule, the header is not set.
+   *
+   * @return void
+   */
   public static function setCSPHeader() {
     if (empty(CRM_Core_Config::singleton()->cspRules)) {
       return;
@@ -274,12 +331,21 @@ class CRM_Utils_System {
   }
 
   /**
-   * this function is called from a template to compose a url
+   * Compose a URL from template parameters.
    *
-   * @param array $params list of parameters
+   * Called from Smarty templates to compose a CiviCRM URL.
    *
-   * @return string url
-   * @access public
+   * @param array $params
+   *   Associative array of URL parameters. Keys include:
+   *   - 'p': path (defaults to current path)
+   *   - 'q': query string
+   *   - 'a': absolute flag (bool)
+   *   - 'f': fragment
+   *   - 'h': htmlize flag (bool)
+   *   - 'fe': frontend flag (bool)
+   *
+   * @return string
+   *   The composed URL.
    */
   public static function crmURL($params) {
     $p = CRM_Utils_Array::value('p', $params);
@@ -298,27 +364,31 @@ class CRM_Utils_System {
   }
 
   /**
-   * sets the title of the page
+   * Set the title of the page.
    *
    * @param string $title
-   * @param string $pageTitle
+   *   The page title to set.
+   * @param string|null $pageTitle
+   *   Optional alternative page title for the CMS.
    *
    * @return void
-   * @access public
    */
   public static function setTitle($title, $pageTitle = NULL) {
     return CRM_Core_Config::$_userSystem->setTitle($title, $pageTitle);
   }
 
   /**
-   * figures and sets the userContext. Uses the referer if valid
-   * else uses the default
+   * Determine and set the user context URL.
    *
-   * @param array  $names   refererer should match any str in this array
-   * @param string $default the default userContext if no match found
+   * Uses the HTTP referer if it matches any of the given name patterns,
+   * otherwise falls back to the provided default URL.
+   *
+   * @param array $names
+   *   Array of strings that the referer should match against.
+   * @param string|null $default
+   *   The default user context URL if no referer match is found.
    *
    * @return void
-   * @access public
    */
   public static function setUserContext($names, $default = NULL) {
     $url = $default;
@@ -341,128 +411,128 @@ class CRM_Utils_System {
   }
 
   /**
-   * gets a class name for an object
+   * Get the class name of an object.
    *
-   * @param  object $object      - object whose class name is needed
+   * @param object $object
+   *   The object whose class name is needed.
    *
-   * @return string $className   - class name
-   *
-   * @access public
-   * @static  */
+   * @return string
+   *   The class name.
+   */
   public static function getClassName($object) {
     return get_class($object);
   }
 
   /**
-   * redirect to another url
+   * Redirect to another URL.
    *
-   * @param string $url the url to goto
+   * @param string|null $url
+   *   The URL to redirect to. If NULL, redirects to the base URL.
    *
    * @return void
-   * @access public
-   * @static  */
+   */
   public static function redirect($url = NULL) {
     return CRM_Core_Config::$_userSystem->redirect($url);
   }
 
   /**
-   * Append an additional breadcrumb tag to the existing breadcrumb
+   * Append additional breadcrumb items to the existing breadcrumb trail.
    *
-   * @param string $title
-   * @param string $url
+   * @param array $breadCrumbs
+   *   Array of breadcrumb items, each containing 'title' and 'url' keys.
    *
    * @return void
-   * @access public
-   * @static  */
+   */
   public static function appendBreadCrumb($breadCrumbs) {
     return CRM_Core_Config::$_userSystem->appendBreadCrumb($breadCrumbs);
   }
 
   /**
-   * Reset an additional breadcrumb tag to the existing breadcrumb
+   * Reset the breadcrumb trail.
    *
    * @return void
-   * @access public
-   * @static  */
+   */
   public static function resetBreadCrumb() {
     return CRM_Core_Config::$_userSystem->resetBreadCrumb();
   }
 
   /**
-   * Append a string to the head of the html file
+   * Append a string or meta tag definition to the HTML head.
    *
-   * @param string $head the new string to be appended
+   * @param string|array $bc
+   *   The HTML string or meta tag array to append to the head section.
    *
    * @return void
-   * @access public
-   * @static  */
+   */
   public static function addHTMLHead($bc) {
     return CRM_Core_Config::$_userSystem->addHTMLHead($bc);
   }
 
   /**
-   * Append a javascript file
+   * Append a JavaScript file or inline script.
    *
-   * @param array $params   template call's parameters
-   * @param string $text    {js} block contents from the template
+   * @param array $params
+   *   Template call's parameters.
+   * @param string $text
+   *   The {js} block contents from the Smarty template.
    *
    * @return void
-   * @access public
-   * @static  */
+   */
   public static function addJs($params, $text) {
     return CRM_Core_Config::$_userSystem->addJs($params, $text);
   }
 
   /**
-   * figure out the post url for the form
+   * Determine the POST URL for a form.
    *
-   * @param the default action if one is pre-specified
+   * @param string $action
+   *   The default action if one is pre-specified.
    *
-   * @return string the url to post the form
-   * @access public
-   * @static  */
+   * @return string
+   *   The URL to which the form should be posted.
+   */
   public static function postURL($action) {
     return CRM_Core_Config::$_userSystem->postURL($action);
   }
 
   /**
-   * Get sitename from CMS system
+   * Get the site name from the CMS system.
    *
    * @return string
-   * @access public
-   * @static
+   *   The site name.
    */
   public static function siteName() {
     return CRM_Core_Config::$_userSystem->siteName($name, $default);
   }
 
   /**
-   * Get user registration setting from CMS system
+   * Get user registration setting from the CMS system.
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return bool
+   *   TRUE if user registration is allowed, FALSE otherwise.
    */
   public static function allowedUserRegisteration() {
     return CRM_Core_Config::$_userSystem->allowedUserRegisteration();
   }
 
   /**
-   * Get user registration setting from CMS system
+   * Check whether email verification is required for user registration.
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return bool
+   *   TRUE if email verification is required, FALSE otherwise.
    */
   public static function userEmailVerification() {
     return CRM_Core_Config::$_userSystem->userEmailVerification();
   }
 
   /**
-   * Check module exists on system
-   * @return string
-   * @access public
-   * @static
+   * Check whether a CMS module exists on the system.
+   *
+   * @param string $module
+   *   The module name to check.
+   *
+   * @return bool
+   *   TRUE if the module exists, FALSE otherwise.
    */
   public static function moduleExists($module) {
     $config = CRM_Core_Config::singleton();
@@ -473,10 +543,13 @@ class CRM_Utils_System {
   }
 
   /**
-   * Check hook exists in module list
+   * Get the list of modules implementing a given hook.
+   *
+   * @param string $hook
+   *   The hook name to check.
+   *
    * @return array
-   * @access public
-   * @static
+   *   Array of module names implementing the hook.
    */
   public static function moduleImplements($hook) {
     $config = CRM_Core_Config::singleton();
@@ -487,11 +560,10 @@ class CRM_Utils_System {
   }
 
   /**
-   * rewrite various system urls to https
+   * Rewrite various system URLs to use HTTPS.
    *
    * @return void
-   * access public
-   * @static  */
+   */
   public static function mapConfigToSSL() {
     $config = &CRM_Core_Config::singleton();
     $url = str_replace('http://', 'https://', $config->userFrameworkResourceURL);
@@ -505,18 +577,27 @@ class CRM_Utils_System {
   }
 
   /**
-   * Get the base URL from the system
-   *
-   * @param
+   * Get the base URL from the CMS system.
    *
    * @return string
-   * @access public
-   * @static  */
+   *   The base URL of the user framework.
+   */
   public static function baseURL() {
     $config = CRM_Core_Config::singleton();
     return $config->userFrameworkBaseURL;
   }
 
+  /**
+   * Handle authentication failure by either aborting with a message or returning FALSE.
+   *
+   * @param string $message
+   *   The error message to display if aborting.
+   * @param bool $abort
+   *   If TRUE, output the message and exit. If FALSE, return FALSE.
+   *
+   * @return false|void
+   *   Returns FALSE if not aborting; otherwise exits the script.
+   */
   public static function authenticateAbort($message, $abort) {
     if ($abort) {
       echo $message;
@@ -527,6 +608,15 @@ class CRM_Utils_System {
     }
   }
 
+  /**
+   * Authenticate the site key from the request against the configured CIVICRM_SITE_KEY.
+   *
+   * @param bool $abort
+   *   If TRUE, abort with an error message on failure. If FALSE, return FALSE.
+   *
+   * @return bool
+   *   TRUE if the key is valid, FALSE otherwise.
+   */
   public static function authenticateKey($abort = TRUE) {
     if (isset($_SERVER['HTTP_X_CIVICRM_SITE_KEY'])) {
       $key = $_SERVER['HTTP_X_CIVICRM_SITE_KEY'];
@@ -556,6 +646,24 @@ class CRM_Utils_System {
     return TRUE;
   }
 
+  /**
+   * Authenticate a script request using site key and user credentials.
+   *
+   * Validates the site key and user credentials, optionally storing
+   * the contact ID and user ID in the session.
+   *
+   * @param bool $abort
+   *   If TRUE, abort with an error message on failure.
+   * @param string|null $name
+   *   The username. If NULL, retrieved from the REQUEST parameters.
+   * @param string|null $pass
+   *   The password. If NULL, retrieved from the REQUEST parameters.
+   * @param bool $storeInSession
+   *   Whether to store the user ID and contact ID in the session on success.
+   *
+   * @return bool|array
+   *   TRUE on success, FALSE on failure.
+   */
   public static function authenticateScript($abort = TRUE, $name = NULL, $pass = NULL, $storeInSession = TRUE) {
     // auth to make sure the user has a login/password to do a shell
     // operation

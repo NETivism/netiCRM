@@ -27,23 +27,22 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class generates form components for Contribution Type
- *
+ * This class generates form components for Contribution Type management.
  */
 class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
 
   /**
-   * Function to build the form
+   * Build the quick form components.
    *
-   * @return None
-   * @access public
+   * Adds fields for contribution type name, description, accounting code,
+   * tax rate, deductibility, and tax receipt settings.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -74,11 +73,12 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Handles deletion of a contribution type or adding/updating a record based
+   * on the submitted values.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 

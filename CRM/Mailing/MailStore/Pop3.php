@@ -26,10 +26,9 @@
 */
 
 /**
+ * Mail store implementation for reading messages from a POP3 server
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -48,8 +47,6 @@ class CRM_Mailing_MailStore_Pop3 extends CRM_Mailing_MailStore {
    * @param string $username  authentication username
    * @param string $password  authentication password
    * @param bool   $ssl       whether to use POP3 or POP3S
-   *
-   * @return void
    */
   public function __construct($host, $username, $password, $ssl = TRUE) {
     if ($this->_debug) {

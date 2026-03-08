@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -170,6 +168,12 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     }
   }
 
+  /**
+   * Get the template file name
+   *
+   * @return string
+   * @access public
+   */
   public function getTemplateFileName() {
     if (!$this->_searchPane) {
       return parent::getTemplateFileName();
@@ -307,7 +311,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * multiple purposes (queries, save/edit etc)
    *
    * @return void
-   * @access private
+   * @access public
    */
   public function normalizeFormValues() {
     $contactType = CRM_Utils_Array::value('contact_type', $this->_formValues);
@@ -360,8 +364,10 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
   /**
    * normalize default values for multiselect plugins
    *
-   * @return void
-   * @access private
+   * @param array $defaults
+   *
+   * @return array
+   * @access public
    */
   public function normalizeDefaultValues(&$defaults) {
     if (!is_array($defaults)) {

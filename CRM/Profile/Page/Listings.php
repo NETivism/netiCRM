@@ -28,9 +28,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,7 +43,6 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    * all the fields that are listings related
    *
    * @var array
-   * @access protected
    */
   protected $_fields;
 
@@ -53,7 +50,6 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    * the custom fields for this domain
    *
    * @var array
-   * @access protected
    */
   protected $_customFields;
 
@@ -61,7 +57,6 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
    * The input params from the request
    *
    * @var array
-   * @access protected
    */
   protected $_params;
 
@@ -93,12 +88,10 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
   protected $_profileIds = [];
 
   /**
-   * extracts the parameters from the request and constructs information for
-   * the selector object to do a query
+   * Extracts the parameters from the request and constructs information for
+   * the selector object to do a query.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
     $this->_search = TRUE;
@@ -331,7 +324,9 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
   }
 
   /**
-   * run this page (figure out the action needed and perform it).
+   * Run the page.
+   *
+   * Figure out the action needed and perform it.
    *
    * @return void
    */
@@ -458,13 +453,12 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
 
     return parent::run();
   }
-
   /**
-   * Function to get the list of contacts for a profile
+   * Function to get the list of contacts for a profile.
    *
-   * @param $form object
+   * @param int $gid profile group id
    *
-   * @access public
+   * @return array array of contact ids
    */
   public static function getProfileContact($gid) {
     $session = CRM_Core_Session::singleton();
@@ -523,6 +517,11 @@ class CRM_Profile_Page_Listings extends CRM_Core_Page {
     return $contactIds;
   }
 
+  /**
+   * Get template file name.
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_gid) {
       $templateFile = "CRM/Profile/Page/{$this->_gid}/Listings.tpl";

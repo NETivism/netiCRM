@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 /*
  +--------------------------------------------------------------------+
@@ -27,10 +31,9 @@
 */
 
 /**
+ * Payment processor implementation for Google Checkout gateway
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -61,8 +64,6 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;

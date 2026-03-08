@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,7 +48,7 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
   /**
    * Function to pre processing
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function preProcess() {
@@ -63,7 +61,7 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
   /**
    * Function to build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -92,6 +90,17 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Contact_Form_DedupeFind', 'formRule'], $this);
   }
 
+  /**
+   * global validation rules for the form
+   *
+   * @param array  $fields posted values of the form
+   * @param array  $files  uploaded files
+   * @param object $form   (reference) form object
+   *
+   * @return array<string, string> list of errors to be posted back to the form
+   * @static
+   * @access public
+   */
   public static function formRule($fields, $files, $form) {
     $errors = [];
     if ($form->rgid) {
@@ -108,6 +117,12 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     return $errors;
   }
 
+  /**
+   * Set default values
+   *
+   * @return array default values
+   * @access public
+   */
   public function setDefaultValues() {
     return $this->_defaults;
   }
@@ -115,9 +130,8 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
   /**
    * Function to process the form
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     $values = $this->exportValues();

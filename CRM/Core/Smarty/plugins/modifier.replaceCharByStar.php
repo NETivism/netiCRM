@@ -27,12 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
+/**
+ * Mask characters in a string with asterisks, preserving start and end.
+ *
+ * @param string $str the string to mask
+ *
+ * @return string masked string
+ */
 function smarty_modifier_replacecharbystar($str) {
   if (strpos($str, '@') !== FALSE) {
     $glue = '@';
@@ -49,6 +54,13 @@ function smarty_modifier_replacecharbystar($str) {
   return $return;
 }
 
+/**
+ * Helper function to apply asterisks to a single segment of a string.
+ *
+ * @param string $str the segment to mask
+ *
+ * @return string masked segment
+ */
 function _doAddStar($str) {
   if (mb_strlen($str) > 2) {
     $return = mb_substr($str, 0, 1);

@@ -27,17 +27,25 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
+  /**
+   * Gets the BAO name.
+   *
+   * @return string
+   */
   public function getBAOName() {
     return 'CRM_Event_BAO_ParticipantStatusType';
   }
 
+  /**
+   * Gets the action links.
+   *
+   * @return array
+   */
   public function &links() {
     static $links = NULL;
     if ($links === NULL) {
@@ -71,6 +79,11 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
     return $links;
   }
 
+  /**
+   * Browses all participant statuses.
+   *
+   * @return void
+   */
   public function browse() {
     $statusTypes = [];
 
@@ -99,14 +112,31 @@ class CRM_Admin_Page_ParticipantStatus extends CRM_Core_Page_Basic {
     $this->assign('rows', $statusTypes);
   }
 
+  /**
+   * Gets the name of the edit form.
+   *
+   * @return string
+   */
   public function editForm() {
     return 'CRM_Admin_Form_ParticipantStatus';
   }
 
+  /**
+   * Gets the edit form name.
+   *
+   * @return string
+   */
   public function editName() {
     return 'Participant Status';
   }
 
+  /**
+   * Gets user context.
+   *
+   * @param string|null $mode
+   *
+   * @return string
+   */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/participant_status';
   }

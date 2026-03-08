@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,10 +41,9 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
   protected $_currencySymbols;
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
@@ -158,6 +155,13 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields The input form values.
+   *
+   * @return bool|array True if no errors, else array of errors.
+   */
   public static function formRule($fields) {
     $errors = [];
     if (CRM_Utils_Array::value('monetaryThousandSeparator', $fields) ==
@@ -182,6 +186,11 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     parent::setDefaultValues();
 
@@ -195,6 +204,11 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     return $this->_defaults;
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void Processes the submitted form values.
+   */
   public function postProcess() {
     $values = $this->exportValues();
 

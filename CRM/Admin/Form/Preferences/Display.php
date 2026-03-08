@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: Display.php 30467 2010-11-02 07:43:49Z sushant $
  *
@@ -38,6 +37,11 @@
  *
  */
 class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts('Settings - Site Preferences'));
@@ -50,6 +54,11 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     ];
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = [];
 
@@ -74,10 +83,9 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     $wysiwyg_options = ['' => ts('Textarea')] + CRM_Core_PseudoConstant::wysiwygEditor();
@@ -105,11 +113,9 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action == CRM_Core_Action::VIEW) {

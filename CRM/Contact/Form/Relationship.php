@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -107,6 +105,12 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * casid if it called from case context
    */
   protected $_caseId;
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
     //custom data related code
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
@@ -173,7 +177,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return array defaults array
    */
   public function setDefaultValues() {
     if ($this->_cdType) {
@@ -243,7 +247,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
   /**
    * This function is used to add the rules for form.
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function addRules() {
@@ -269,7 +273,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
   /**
    * Function to build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -462,7 +466,7 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // store the submitted values in an array
@@ -675,11 +679,12 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
   /**
    * This function is to get the result of the search for contact in relationship form
    *
-   * @param  array $params  This contains elements for search criteria
+   * @param array $params This contains elements for search criteria
+   * @param object $object object of the form
    *
    * @access public
    *
-   * @return None
+   * @return void
    *
    */
   public static function search(&$params, $object = NULL) {
@@ -785,6 +790,8 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
    * function for validation
    *
    * @param array $params (reference ) an assoc array of name/value pairs
+   * @param array $files
+   * @param CRM_Core_Form $form
    *
    * @return mixed true or array of errors
    * @access public
@@ -883,6 +890,14 @@ class CRM_Contact_Form_Relationship extends CRM_Core_Form {
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Modify parameters for ajax call
+   *
+   * @param array $params
+   *
+   * @return void
+   * @access public
+   */
   public function modifyParams(&$params) {
     if (!$this->_callAjax) {
       return;

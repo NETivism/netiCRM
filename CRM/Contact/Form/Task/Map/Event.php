@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: Event.php 30171 2010-10-14 09:11:27Z mover $
  *
@@ -41,7 +40,10 @@
 class CRM_Contact_Form_Task_Map_Event extends CRM_Contact_Form_Task_Map {
 
   /**
-   * build all the data structures needed to build the form
+   * Pre-process the form.
+   *
+   * Note: This method currently performs an immediate redirect, so the
+   * mapping functionality is disabled.
    *
    * @return void
    * @access public
@@ -66,6 +68,11 @@ class CRM_Contact_Form_Task_Map_Event extends CRM_Contact_Form_Task_Map {
     $this->assign('skipLocationType', TRUE);
   }
 
+  /**
+   * Get the template file name for this page.
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     return 'CRM/Contact/Form/Task/Map.tpl';
   }

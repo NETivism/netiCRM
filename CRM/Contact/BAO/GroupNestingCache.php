@@ -26,13 +26,19 @@
 */
 
 /**
+ * Manages the cache for group nesting (parent-child) relationships
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_BAO_GroupNestingCache {
+  /**
+   * Update the group nesting cache
+   *
+   * @return void
+   * @static
+   * @access public
+   */
   public static function update() {
     // lets build the tree in memory first
 
@@ -98,6 +104,15 @@ WHERE  id = $id
     CRM_Core_BAO_Cache::setItem($tree, 'contact groups', 'nestable tree hierarchy');
   }
 
+  /**
+   * Check if the group nesting graph is cyclic
+   *
+   * @param array $tree (reference) tree hierarchy
+   *
+   * @return boolean true if cyclic
+   * @static
+   * @access public
+   */
   public static function checkCyclicGraph(&$tree) {
     // lets keep this simple, we should probably use a graph algoritm here at some stage
 
@@ -112,6 +127,16 @@ WHERE  id = $id
     return FALSE;
   }
 
+  /**
+   * Check if a specific node in the tree is cyclic
+   *
+   * @param array $tree (reference) tree hierarchy
+   * @param int   $id   group id
+   *
+   * @return boolean true if cyclic
+   * @static
+   * @access public
+   */
   public static function isCyclic(&$tree, $id) {
     $parents = $children = [];
     self::getAll($parent, $tree, $id, 'parents');
@@ -130,6 +155,16 @@ WHERE  id = $id
     return FALSE;
   }
 
+  /**
+   * Get potential candidates for child/parent
+   *
+   * @param int   $id     group id
+   * @param array $groups (reference) all groups
+   *
+   * @return array potential candidates
+   * @static
+   * @access public
+   */
   public static function getPotentialCandidates($id, &$groups) {
 
     $tree = &CRM_Core_BAO_Cache::getItem('contact groups', 'nestable tree hierarchy');
@@ -150,6 +185,18 @@ WHERE  id = $id
     return array_keys($potential);
   }
 
+  /**
+   * Invalidate nodes in the tree
+   *
+   * @param array  $potential (reference) potential candidates
+   * @param array  $tree      (reference) tree hierarchy
+   * @param int    $id        group id
+   * @param string $token     token (children/parents)
+   *
+   * @return void
+   * @static
+   * @access public
+   */
   public static function invalidate(&$potential, &$tree, $id, $token) {
     unset($potential[$id]);
 
@@ -164,6 +211,18 @@ WHERE  id = $id
     }
   }
 
+  /**
+   * Get all nodes in the tree for a specific direction
+   *
+   * @param array  $all   (reference) all nodes
+   * @param array  $tree  (reference) tree hierarchy
+   * @param int    $id    group id
+   * @param string $token token (children/parents)
+   *
+   * @return void
+   * @static
+   * @access public
+   */
   public static function getAll(&$all, &$tree, $id, $token) {
     // if seen before, dont do anything
     if (isset($all[$id])) {
@@ -182,6 +241,13 @@ WHERE  id = $id
     }
   }
 
+  /**
+   * Get json representation of group nesting tree
+   *
+   * @return string json representation
+   * @static
+   * @access public
+   */
   public static function json() {
 
     $tree = &CRM_Core_BAO_Cache::getItem('contact groups', 'nestable tree hierarchy');

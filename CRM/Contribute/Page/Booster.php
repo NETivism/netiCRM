@@ -1,5 +1,10 @@
 <?php
 class CRM_Contribute_Page_Booster extends CRM_Core_Page {
+  /**
+   * Run the page
+   *
+   * @return void
+   */
   public function run() {
     CRM_Utils_System::setTitle(ts('Contribution Booster'));
     $mainCategories = [
@@ -75,6 +80,12 @@ class CRM_Contribute_Page_Booster extends CRM_Core_Page {
     parent::run();
   }
 
+  /**
+   * Set breadcrumb for the page
+   *
+   * @return void
+   * @static
+   */
   public static function setBreadcrumb() {
     CRM_Utils_System::appendBreadCrumb([
       0 => [

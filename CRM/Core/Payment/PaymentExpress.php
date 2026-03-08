@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 /*
   +--------------------------------------------------------------------+
   | CiviCRM version 3.3                                                |
@@ -55,8 +59,6 @@ class CRM_Core_Payment_PaymentExpress extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
 

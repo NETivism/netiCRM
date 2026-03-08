@@ -27,28 +27,25 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Pledge_BAO_Payment extends CRM_Pledge_DAO_Payment {
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Function to get pledge payment details
+   * Function to get pledge payment details.
    *
    * @param int $pledgeId pledge id
    *
    * @return array associated array of pledge payment details
-   * @static
    */
   public static function getPledgePayments($pledgeId) {
     $query = "
@@ -91,6 +88,13 @@ WHERE     pledge_id = %1
     return $paymentDetails;
   }
 
+  /**
+   * Takes an associative array and creates a pledge payment object.
+   *
+   * @param array $params (reference ) an assoc array of name/value pairs
+   *
+   * @return CRM_Pledge_DAO_Payment|CRM_Core_Error
+   */
   public static function create($params) {
 
     $transaction = new CRM_Core_Transaction();
@@ -195,12 +199,11 @@ WHERE     pledge_id = %1
   }
 
   /**
-   * Add pledge payment
+   * Add pledge payment.
    *
    * @param array $params associate array of field
    *
-   * @return pledge payment id
-   * @static
+   * @return CRM_Pledge_DAO_Payment
    */
   public static function add($params) {
 
@@ -220,17 +223,12 @@ WHERE     pledge_id = %1
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * pledge id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * retrieves the relevant objects.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
+   * @param array $params (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Pledge_BAO_Payment object
-   * @access public
-   * @static
+   * @return CRM_Pledge_BAO_Payment|null
    */
   public static function retrieve(&$params, &$defaults) {
     $payment = new CRM_Pledge_DAO_Payment();
@@ -243,13 +241,11 @@ WHERE     pledge_id = %1
   }
 
   /**
-   * Function to delete all pledge payments
+   * Function to delete all pledge payments.
    *
-   * @param int $id  pledge id
+   * @param int $id pledge id
    *
-   * @access public
-   * @static
-   *
+   * @return bool
    */
   public static function deletePayments($id) {
 
@@ -281,10 +277,9 @@ WHERE     pledge_id = %1
   /**
    * On delete contribution record update associated pledge payment and pledge.
    *
-   * @param int $contributionID  contribution id
+   * @param int $contributionID contribution id
    *
-   * @access public
-   * @static
+   * @return bool
    */
   public static function resetPledgePayment($contributionID) {
     //get all status
@@ -315,14 +310,17 @@ WHERE     pledge_id = %1
   }
 
   /**
-   * update Pledge Payment Status
+   * Update Pledge Payment Status.
    *
-   * @param int   $pledgeID, id of pledge
-   * @param array $paymentIDs, ids of pledge payment
-   * @param int   $paymentStatus, payment status
-   * @param int   $pledgeStatus, pledge status
+   * @param int $pledgeID id of pledge
+   * @param array|null $paymentIDs ids of pledge payment
+   * @param int|null $paymentStatusID payment status
+   * @param int|null $pledgeStatusID pledge status
+   * @param float $actualAmount actual amount
+   * @param bool $adjustTotalAmount adjust total amount
+   * @param bool $isScriptUpdate is script update
    *
-   * @return int $newStatus, updated status id (or 0)
+   * @return int updated status id (or 0)
    */
   public static function updatePledgePaymentStatus(
     $pledgeID,
@@ -488,12 +486,11 @@ WHERE  civicrm_pledge.id = %2
   }
 
   /**
-   * Calculate the pledge status
+   * Calculate the pledge status.
    *
    * @param int $pledgeId pledge id
    *
-   * @return int $statusId calculated status id of pledge
-   * @static
+   * @return int calculated status id of pledge
    */
   public static function calculatePledgeStatus($pledgeId) {
 
@@ -528,12 +525,16 @@ WHERE  civicrm_pledge.id = %2
   }
 
   /**
-   * Function to update pledge payment table
+   * Function to update pledge payment table.
    *
-   * @param int   $pledgeId pledge id
-   * @param array $paymentIds payment ids
-   * @param int   $paymentStatusId payment status id
-   * @static
+   * @param int $pledgeId pledge id
+   * @param int $paymentStatusId payment status id
+   * @param array|null $paymentIds payment ids
+   * @param float $actualAmount actual amount
+   * @param int|null $contributionId contribution id
+   * @param bool $isScriptUpdate is script update
+   *
+   * @return void
    */
   public static function updatePledgePayments($pledgeId, $paymentStatusId, $paymentIds = NULL, $actualAmount = 0, $contributionId = NULL, $isScriptUpdate = FALSE) {
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
@@ -570,11 +571,11 @@ WHERE  civicrm_pledge_payment.pledge_id = %1
   }
 
   /**
-   * Function to update pledge payment table when reminder is sent
+   * Function to update pledge payment table when reminder is sent.
    *
    * @param int $paymentId payment id
    *
-   * @static
+   * @return void
    */
   public static function updateReminderDetails($paymentId) {
     $query = "
@@ -587,12 +588,12 @@ WHERE  civicrm_pledge_payment.id = {$paymentId}
   }
 
   /**
-   * Function to get oldest pending or in progress pledge payments
+   * Function to get oldest pending or in progress pledge payments.
    *
    * @param int $pledgeID pledge id
+   * @param int $limit limit
    *
    * @return array associated array of pledge details
-   * @static
    */
   public static function getOldestPledgePayment($pledgeID, $limit = 1) {
     //get pending / overdue statuses
@@ -629,6 +630,17 @@ LIMIT 0, %2
     return end($paymentDetails);
   }
 
+  /**
+   * Adjust pledge payment.
+   *
+   * @param int $pledgeID
+   * @param float $actualAmount
+   * @param float $pledgeScheduledAmount
+   * @param int|null $paymentContributionId
+   * @param int|null $pPaymentId
+   *
+   * @return void
+   */
   public static function adjustPledgePayment($pledgeID, $actualAmount, $pledgeScheduledAmount, $paymentContributionId = NULL, $pPaymentId = NULL) {
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
     $oldestPayment = self::getOldestPledgePayment($pledgeID);

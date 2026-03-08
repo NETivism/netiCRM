@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * cache of preview data values
    *
    * @var array
-   * @access protected
    */
   protected $_dataValues;
 
@@ -51,7 +48,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * mapper fields
    *
    * @var array
-   * @access protected
    */
   protected $_mapperFields;
 
@@ -59,7 +55,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * loaded mapping ID
    *
    * @var int
-   * @access protected
    */
   protected $_loadedMappingId;
 
@@ -67,7 +62,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * number of columns in import file
    *
    * @var int
-   * @access protected
    */
   protected $_columnCount;
 
@@ -75,7 +69,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * column headers, if we have them
    *
    * @var array
-   * @access protected
    */
   protected $_columnHeaders;
 
@@ -84,18 +77,16 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * form building already.
    *
    * @var array
-   * @access protected
    */
   protected $_fieldUsed;
 
   /**
    * Attempt to resolve the header with our mapper fields
    *
-   * @param header
-   * @param mapperFields
+   * @param string $columnName
+   * @param array $patterns
    *
    * @return string
-   * @access public
    */
   public function defaultFromHeader($columnName, &$patterns) {
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
@@ -113,11 +104,10 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
   /**
    * Guess at the field names given the data and patterns from the schema
    *
-   * @param patterns
-   * @param index
+   * @param array $patterns
+   * @param int $index
    *
    * @return string
-   * @access public
    */
   public function defaultFromData(&$patterns, $index) {
     $best = '';
@@ -157,7 +147,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_mapperFields = $this->get('fields');
@@ -193,7 +182,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * Function to actually build the form
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
 
@@ -378,9 +366,7 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    *
    * @param array $fields posted values of the form
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
   public static function formRule($fields) {
     $errors = [];
@@ -474,7 +460,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * preview the file and extract some summary statistics
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $params = $this->controller->exportValues('MapField');
@@ -599,7 +584,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Match Fields');

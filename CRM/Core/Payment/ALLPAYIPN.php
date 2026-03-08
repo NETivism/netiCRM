@@ -1,16 +1,36 @@
 <?php
+/**
+ * Handles Instant Payment Notifications (IPN) from the ECPay (formerly AllPay) payment gateway for one-time and recurring transactions.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
   public static $_payment_processor = NULL;
   public static $_input = NULL;
   public $_post = NULL;
   public $_get = NULL;
+  /**
+   * Class constructor.
+   *
+   * @param array $post POST variables
+   * @param array $get GET variables
+   */
   public function __construct($post, $get) {
     parent::__construct();
     $this->_post = $post;
     $this->_get = $get;
   }
 
+  /**
+   * Main entry point for IPN processing.
+   *
+   * @param string $component component name ('contribute' or 'event')
+   * @param string $instrument instrument code
+   *
+   * @return string|bool result status or FALSE on failure
+   */
   public function main($component, $instrument) {
     // get the contribution and contact ids from the GET params
 
@@ -86,6 +106,14 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     // never for front-end user.
   }
 
+  /**
+   * Extract contribution and contact IDs from GET parameters.
+   *
+   * @param array &$ids array to store extracted IDs
+   * @param string|null $component component name
+   *
+   * @return void
+   */
   public function getIds(&$ids) {
     $contribId = CRM_Utils_Array::value('cid', $this->_get);
     if (!empty($contribId) && CRM_Utils_Type::escape($contribId, 'Integer')) {
@@ -105,6 +133,16 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
+  /**
+   * Perform additional validation on the IPN request.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references
+   * @param string &$note string to store validation notes
+   *
+   * @return bool TRUE if validation passes
+   */
   public function validateOthers(&$input, &$ids, &$objects, &$note) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
@@ -239,6 +277,14 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
     return $pass;
   }
 
+  /**
+   * Add a note to the contribution record.
+   *
+   * @param string $note note content
+   * @param CRM_Contribute_BAO_Contribution &$contribution contribution object
+   *
+   * @return void
+   */
   public function addNote($note, &$contribution) {
 
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
@@ -262,10 +308,10 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   /**
-   * Save data to database. Original civicrm_allpay_record.
+   * Save IPN data to the database.
    *
-   * @param integer|array $cid Contribution ID or Array of Contribution IDs.
-   * @param array $data The data need to write in database.
+   * @param int|array $cid contribution ID or arguments array
+   * @param array|null $data data to be recorded
    *
    * @return void
    */

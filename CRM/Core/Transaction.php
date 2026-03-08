@@ -26,11 +26,10 @@
 */
 
 /**
+ * Provides nested database transaction management with automatic rollback on errors
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * @copyright David Strauss <david@fourkitchens.com> (c) 2007
- * $Id$
  *
  * This file has its origins in Donald Lobo's conversation with David
  * Strauss over IRC and the CRM_Core_DAO::transaction() function.
@@ -78,6 +77,11 @@ class CRM_Core_Transaction {
    */
   private $_pseudoCommitted = FALSE;
 
+  /**
+   * Class constructor.
+   *
+   * @param string|null $isolationLevel The transaction isolation level.
+   */
   public function __construct($isolationLevel = NULL) {
     if (!self::$_dao) {
       self::$_dao = new CRM_Core_DAO();
@@ -94,10 +98,18 @@ class CRM_Core_Transaction {
     self::$_count++;
   }
 
+  /**
+   * Class destructor. Commits the transaction if not already committed.
+   */
   public function __destruct() {
     $this->commit();
   }
 
+  /**
+   * Commit the transaction.
+   *
+   * @param bool|null $resetIsolation Whether to reset the isolation level.
+   */
   public function commit($resetIsolation = NULL) {
     if (self::$_count > 0 && !$this->_pseudoCommitted) {
       $this->_pseudoCommitted = TRUE;
@@ -120,12 +132,20 @@ class CRM_Core_Transaction {
     }
   }
 
+  /**
+   * Set rollback flag if the provided flag is false.
+   *
+   * @param bool $flag The flag to check.
+   */
   public static function rollbackIfFalse($flag) {
     if ($flag === FALSE) {
       self::$_doCommit = FALSE;
     }
   }
 
+  /**
+   * Mark the transaction for rollback.
+   */
   public function rollback() {
     self::$_doCommit = FALSE;
   }
@@ -149,6 +169,11 @@ class CRM_Core_Transaction {
     }
   }
 
+  /**
+   * Check if the transaction will be committed.
+   *
+   * @return bool
+   */
   public static function willCommit() {
     return self::$_doCommit;
   }

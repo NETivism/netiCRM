@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,6 +38,8 @@ class CRM_Event_Page_AJAX {
 
   /**
    * Function for building Event combo box
+   *
+   * @return void
    */
   public static function event() {
 
@@ -66,6 +66,8 @@ LIMIT 0, 50
 
   /**
    * Function for building Event Type combo box
+   *
+   * @return void
    */
   public static function eventType() {
 
@@ -93,6 +95,8 @@ ORDER by v.weight";
 
   /**
    * Function for building EventFee combo box
+   *
+   * @return void
    */
   public static function eventFee() {
 
@@ -117,6 +121,11 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Function for building Event List
+   *
+   * @return void
+   */
   public static function eventList() {
 
     $events = CRM_Event_BAO_Event::getEvents(TRUE);
@@ -136,6 +145,8 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
 
   /**
    * Function to get default participant role
+   *
+   * @return void
    */
   public static function participantRole() {
 
@@ -158,6 +169,8 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
 
   /**
    * Function to get Event Full or left seat
+   *
+   * @return void
    */
   public static function eventFull() {
     $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : NULL);

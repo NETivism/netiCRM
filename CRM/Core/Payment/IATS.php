@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 /*
  +--------------------------------------------------------------------+
@@ -27,11 +31,10 @@
 */
 
 /**
+ * Payment processor implementation for iATS Payments gateway
  *
- * @package CRM
  * @author Alan Dixon
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,8 +53,6 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_paymentProcessor = $paymentProcessor;

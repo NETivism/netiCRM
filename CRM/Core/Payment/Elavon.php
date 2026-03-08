@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 /*
  +----------------------------------------------------------------------------+
  | Elavon (Nova) Virtual Merchant Core Payment Module for CiviCRM version 3.3 |

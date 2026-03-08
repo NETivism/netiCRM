@@ -11,21 +11,63 @@ use PhpMyAdmin\SqlParser\Statements\UpdateStatement;
 use PhpMyAdmin\SqlParser\Statements\DeleteStatement;
 use PhpMyAdmin\SqlParser\Utils\Formatter;
 
+/**
+ * SQL query parser and validator using phpMyAdmin's SQL parser library.
+ *
+ * Validates that all tables, fields, functions, and statement types in a
+ * SQL query are within a configurable allowlist. Supports recursive
+ * validation of subqueries.
+ */
 class CRM_Utils_SqlParser {
 
+  /**
+   * The original SQL query string.
+   *
+   * @var string
+   */
   private $query;
+
+  /**
+   * Allowlist configuration with 'table', 'field', and 'statement' keys.
+   *
+   * @var array{table?: string|string[], field?: string|string[], statement?: string|string[]}
+   */
   private $allowlist;
+
+  /**
+   * The phpMyAdmin SQL parser instance.
+   *
+   * @var \PhpMyAdmin\SqlParser\Parser
+   */
   private $parser;
+
+  /**
+   * List of validation error messages.
+   *
+   * @var string[]
+   */
   private $errors = [];
+
+  /**
+   * Whether the query passed all validation checks.
+   *
+   * @var bool
+   */
   private $isValid = TRUE;
 
   /**
-   * Parse and validate query
+   * Parse and validate a SQL query against an allowlist.
    *
-   * Validate all touched tables, fields and statements are in allowed list
+   * Parses the query, collects aliases, and validates that all referenced
+   * tables, fields, functions, and statement types are permitted.
+   * If no 'statement' key is provided in $allowlist, only SELECT is allowed.
    *
-   * @param string $query SQL query to validate
-   * @param array $allowlist Array with 'table', 'field', and 'statement' keys containing allowed values
+   * @param string $query     The SQL query string to validate.
+   * @param array  $allowlist Allowlist configuration. Supported keys:
+   *                          - 'table': string|string[] of allowed table names
+   *                          - 'field': string|string[] of allowed field names
+   *                          - 'statement': string|string[] of allowed statement types
+   *                            (e.g., 'SELECT'). Defaults to 'SELECT'.
    */
   public function __construct(string $query, array $allowlist = []) {
     $this->query = $query;
@@ -55,20 +97,20 @@ class CRM_Utils_SqlParser {
   }
 
   /**
-   * Get validation errors
+   * Get the list of validation error messages.
    *
-   * @return array
+   * @return string[]
    */
   public function getErrors(): array {
     return $this->errors;
   }
 
   /**
-   * Get rebuilt query from parsed statements
+   * Rebuild and return the SQL query from the first parsed statement.
    *
-   * @param bool $format
+   * @param bool $format If TRUE, return a human-readable formatted query.
    *
-   * @return string|null
+   * @return string|null The rebuilt SQL string, or NULL if no statements were parsed.
    */
   public function getQuery($format = FALSE): ?string {
     if (empty($this->parser->statements)) {
@@ -83,7 +125,9 @@ class CRM_Utils_SqlParser {
   }
 
   /**
-   * Collect all aliases from the query and add to allowlist
+   * Collect all table and field aliases from the query and add them to the allowlist.
+   *
+   * @return void
    */
   private function collectAliases(): void {
     if (empty($this->parser->statements)) {
@@ -99,9 +143,11 @@ class CRM_Utils_SqlParser {
   }
 
   /**
-   * Recursively collect all aliases from subqueries before validation
+   * Recursively collect all aliases from subqueries in FROM, SELECT, WHERE, and HAVING clauses.
    *
-   * @param SelectStatement $statement
+   * @param SelectStatement $statement The SELECT statement to inspect for subqueries.
+   *
+   * @return void
    */
   private function collectAllSubqueryAliases(SelectStatement $statement): void {
     if ($statement->from) {

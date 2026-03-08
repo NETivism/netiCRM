@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -41,18 +39,16 @@ class CRM_Mailing_BAO_BouncePattern extends CRM_Mailing_DAO_BouncePattern {
   public static $_patterns = NULL;
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Build the static pattern array
+   * Build the static pattern array.
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function buildPatterns() {
     self::$_patterns = [];
@@ -76,11 +72,9 @@ class CRM_Mailing_BAO_BouncePattern extends CRM_Mailing_DAO_BouncePattern {
   /**
    * Try to match the string to a bounce type.
    *
-   * @param string $message       The message to be matched
+   * @param string $message The message to be matched.
    *
-   * @return array                Tuple (bounce_type, bounce_reason)
-   * @access public
-   * @static
+   * @return array Tuple (bounce_type_id, bounce_reason).
    */
   public static function &match(&$message) {
     // clean up $message and replace all white space by a single space, CRM-4767

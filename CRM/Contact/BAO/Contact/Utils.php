@@ -26,10 +26,9 @@
 */
 
 /**
+ * Utility methods for contact operations including image processing and greeting formatting
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_BAO_Contact_Utils {
@@ -37,7 +36,9 @@ class CRM_Contact_BAO_Contact_Utils {
   /**
    * given a contact type, get the contact image
    *
-   * @param string $contact_type
+   * @param string  $contactType contact type
+   * @param boolean $urlOnly     whether to return only image url
+   * @param int     $contactId   contact id
    *
    * @return string
    * @access public
@@ -95,7 +96,7 @@ class CRM_Contact_BAO_Contact_Utils {
    *
    * @param array $contactIds array of contact ids
    *
-   * @return boolen true or false true if mix contact array else fale
+   * @return boolean true or false true if mix contact array else false
    *
    * @access public
    * @static
@@ -121,11 +122,11 @@ WHERE  id IN ( $idString )
   /**
    * Generate a checksum for a contactID
    *
-   * @param int    $contactID
-   * @param int    $ts         timestamp that checksum was generated
-   * @param int    $live       life of this checksum in hours/ 'inf' for infinite
+   * @param int $contactID contact id
+   * @param int $ts        timestamp that checksum was generated
+   * @param int $live      life of this checksum in hours/ 'inf' for infinite
    *
-   * @return array ( $cs, $ts, $live )
+   * @return string checksum
    * @static
    * @access public
    */
@@ -241,12 +242,10 @@ WHERE  id IN ( $idString )
   /**
    * Make sure the checksum is valid for the passed in contactID
    *
-   * @param int    $contactID
-   * @param string $cs         checksum to match against
-   * @param int    $ts         timestamp that checksum was generated
-   * @param int    $live       life of this checksum in hours/ 'inf' for infinite
+   * @param int    $contactID  contact id
+   * @param string $inputCheck checksum to match against
    *
-   * @return boolean           true if valid, else false
+   * @return boolean true if valid, else false
    * @static
    * @access public
    */
@@ -274,11 +273,11 @@ WHERE  id IN ( $idString )
   }
 
   /**
-   * Function to get the count of  contact loctions
+   * Function to get the count of contact locations
    *
    * @param int $contactId contact id
    *
-   * @return int $locationCount max locations for the contact
+   * @return int max locations for the contact
    * @static
    * @access public
    */
@@ -312,9 +311,10 @@ UNION
   /**
    * Create Current employer relationship for a individual
    *
-   * @param int    $contactID        contact id of the individual
-   * @param string $organization     it can be name or id of organization
+   * @param int    $contactID    contact id of the individual
+   * @param string $organization it can be name or id of organization
    *
+   * @return void
    * @access public
    * @static
    */
@@ -400,6 +400,7 @@ UNION
    * @param array   $relationshipParams relationship params.
    * @param boolean $duplicate          are we triggered existing relationship.
    *
+   * @return void
    * @access public
    * @static
    */
@@ -433,6 +434,9 @@ UNION
    *
    * @param array $currentEmployerParams associated array of contact id and its employer id
    *
+   * @return void
+   * @static
+   * @access public
    */
   public static function setCurrentEmployer($currentEmployerParams) {
     foreach ($currentEmployerParams as $contactId => $orgId) {
@@ -451,6 +455,9 @@ WHERE contact_a.id ={$contactId} AND contact_b.id={$orgId}; ";
    *
    * @param int $organizationId current employer id
    *
+   * @return void
+   * @static
+   * @access public
    */
   public static function updateCurrentEmployer($organizationId) {
     $query = "UPDATE civicrm_contact contact_a,civicrm_contact contact_b
@@ -463,9 +470,12 @@ WHERE contact_a.employer_id=contact_b.id AND contact_b.id={$organizationId}; ";
   /**
    * Function to clear cached current employer name
    *
-   * @param int $contactId contact id ( mostly individual contact id)
+   * @param int $contactId  contact id ( mostly individual contact id)
    * @param int $employerId contact id ( mostly organization contact id)
    *
+   * @return void
+   * @static
+   * @access public
    */
   public static function clearCurrentEmployer($contactId, $employerId = NULL) {
     if (empty($contactId)) {
@@ -515,13 +525,17 @@ WHERE id={$contactId}; ";
   /**
    * Function to build form for related contacts / on behalf of organization.
    *
-   * @param $form              object  invoking Object
-   * @param $contactType       string  contact type
-   * @param $title             string  fieldset title
-   * @param $maxLocationBlocks int     number of location blocks
+   * @param object  $form              invoking Object
+   * @param string  $contactType       contact type
+   * @param int     $countryID         country id
+   * @param int     $stateID           state id
+   * @param string  $title             fieldset title
+   * @param boolean $contactEditMode   contact edit mode
+   * @param int     $maxLocationBlocks number of location blocks
    *
+   * @return void
    * @static
-   *
+   * @access public
    */
   public static function buildOnBehalfForm(
     &$form,
@@ -684,6 +698,9 @@ WHERE id={$contactId}; ";
    *
    * @param int $employerId contact id of employer ( organization id )
    *
+   * @return void
+   * @static
+   * @access public
    */
   public static function clearAllEmployee($employerId) {
     $query = "
@@ -697,11 +714,12 @@ UPDATE civicrm_contact
   /**
    * Given an array of contact ids this function will return array with links to view contact page
    *
-   * @param array $contactIDs associated contact id's
-   * @param int $originalId associated with the contact which is edited
+   * @param array   $contactIDs  associated contact id's
+   * @param boolean $addViewLink whether to add view link
+   * @param boolean $addEditLink whether to add edit link
+   * @param int     $originalId  associated with the contact which is edited
    *
-   *
-   * @return array $contactViewLinks returns array with links to contact view
+   * @return array returns array with links to contact view
    * @static
    * @access public
    */
@@ -803,10 +821,12 @@ LEFT JOIN  civicrm_email ce ON ( ce.contact_id=c.id AND ce.is_primary = 1 )
    * This function retrieve component related contact information.
    *
    * @param array  $componentIds     array of component Ids.
+   * @param string $componentName    component name
    * @param array  $returnProperties array of return elements.
    *
-   * @return $contactDetails array of contact info.
+   * @return array array of contact info.
    * @static
+   * @access public
    */
   public static function contactDetails($componentIds, $componentName, $returnProperties = []) {
     $contactDetails = [];
@@ -912,7 +932,7 @@ Group By  componentId";
    * has same address as shared contact address. We copy the address so that search etc will be
    * much efficient.
    *
-   * @param array $address this is associated array which contains submitted form values
+   * @param array $address (reference) this is associated array which contains submitted form values
    *
    * @return void
    * @static
@@ -960,10 +980,11 @@ Group By  componentId";
   /**
    * Function to get the list of contact name give address associated array
    *
-   * @param array $addresses associated array of
+   * @param array $addresses (reference) associated array of addresses
    *
-   * @return $contactNames associated array of contact names
+   * @return array associated array of contact names
    * @static
+   * @access public
    */
   public static function getAddressShareContactNames(&$addresses) {
     $contactNames = [];
@@ -995,10 +1016,12 @@ Group By  componentId";
   /**
    * Fetch the default greeting for a given contact type
    *
-   * @param string $contactType contact type
+   * @param string $contactType  contact type
    * @param string $greetingType greeting type
    *
-   * @return int or null
+   * @return int|null
+   * @static
+   * @access public
    */
   public static function defaultGreeting($contactType, $greetingType) {
     $contactTypeFilters = ['Individual' => 1, 'Household' => 2, 'Organization' => 3];
@@ -1020,6 +1043,15 @@ Group By  componentId";
     }
   }
 
+  /**
+   * Get from email addresses for a contact
+   *
+   * @param int $contactId contact id
+   *
+   * @return array array of from email addresses
+   * @static
+   * @access public
+   */
   public static function fromEmailAddress($contactId = NULL) {
     $session = CRM_Core_Session::singleton();
     if (!$contactId) {

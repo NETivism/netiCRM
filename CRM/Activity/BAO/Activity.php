@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,6 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * static field for all the activity information that we can potentially export
    *
    * @var array
-   * @static
    */
   public static $_exportableFields = NULL;
 
@@ -51,17 +48,15 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * static field for all the activity information that we can potentially import
    *
    * @var array
-   * @static
    */
   public static $_importableFields = NULL;
 
   /**
    * Check if there is absolute minimum of data to add the object
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return boolean
-   * @access public
+   * @return bool
    */
   public static function dataExists(&$params) {
     if (CRM_Utils_Array::value('source_contact_id', $params) ||
@@ -79,12 +74,10 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * of time. This is the inverse function of create. It also stores all the retrieved
    * values in the default array
    *
-   * @param array  $params   (reference ) an assoc array of name/value pairs
-   * @param array  $defaults (reference ) an assoc array to hold the flattened values
-   * @param string $activityType activity type
+   * @param array $params (reference ) an assoc array of name/value pairs
+   * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Core_BAO_Meeting object
-   * @access public
+   * @return CRM_Activity_DAO_Activity|null CRM_Core_BAO_Meeting object
    */
   public static function retrieve(&$params, &$defaults) {
     $activity = new CRM_Activity_DAO_Activity();
@@ -139,11 +132,10 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Function to delete the activity
    *
-   * @param array  $params  associated array
+   * @param array $params associated array
+   * @param bool $moveToTrash
    *
-   * @return void
-   * @access public
-   *
+   * @return bool|null
    */
   public static function deleteActivity(&$params, $moveToTrash = FALSE) {
 
@@ -230,10 +222,9 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Delete activity assignment record
    *
-   * @param int    $id  activity id
+   * @param int $activityId activity id
    *
-   * @return null
-   * @access public
+   * @return void
    */
   public static function deleteActivityAssignment($activityId) {
 
@@ -245,10 +236,9 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Delete activity target record
    *
-   * @param int    $id  activity id
+   * @param int $activityId activity id
    *
-   * @return null
-   * @access public
+   * @return void
    */
   public static function deleteActivityTarget($activityId) {
 
@@ -260,10 +250,9 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Create activity target record
    *
-   * @param array    activity_id, target_contact_id
+   * @param array $params activity_id, target_contact_id
    *
-   * @return null
-   * @access public
+   * @return void
    */
   public static function createActivityTarget($params) {
     if (!$params['target_contact_id']) {
@@ -281,10 +270,9 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Create activity assignment record
    *
-   * @param array    activity_id, assignee_contact_id
+   * @param array $params activity_id, assignee_contact_id
    *
-   * @return null
-   * @access public
+   * @return void
    */
   public static function createActivityAssignment($params) {
     if (!$params['assignee_contact_id']) {
@@ -300,14 +288,9 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Function to process the activities
    *
-   * @param object $form         form object
-   * @param array  $params       associated array of the submitted values
-   * @param array  $ids          array of ids
-   * @param string $activityType activity Type
-   * @param boolean $record   true if it is Record Activity
-   * @access public
+   * @param array $params associated array of the submitted values
    *
-   * @return
+   * @return CRM_Activity_DAO_Activity|CRM_Core_Error
    */
   public static function create(&$params) {
     // check required params
@@ -615,6 +598,14 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     return $result;
   }
 
+  /**
+   * Log activity action
+   *
+   * @param CRM_Activity_DAO_Activity $activity
+   * @param string $logMessage
+   *
+   * @return bool
+   */
   public static function logActivityAction($activity, $logMessage = NULL) {
     $session = &CRM_Core_Session::singleton();
     $id = $session->get('userID');
@@ -636,19 +627,16 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * function to get the list Actvities
    *
-   * @param array reference $params  array of parameters
-   * @param int     $offset          which row to start from ?
-   * @param int     $rowCount        how many rows to fetch
-   * @param object|array  $sort      object or array describing sort order for sql query.
-   * @param type    $type            type of activity we're interested in
-   * @param boolean $admin           if contact is admin
-   * @param int     $caseId          case id
-   * @param string  $context         context , page on which selector is build
+   * @param array $data array of parameters
+   * @param int $offset which row to start from ?
+   * @param int $rowCount how many rows to fetch
+   * @param object|array $sort object or array describing sort order for sql query.
+   * @param bool $admin if contact is admin
+   * @param int $caseId case id
+   * @param string $context context , page on which selector is build
    *
-   * @return array (reference)      $values the relevant data object values of open activitie
+   * @return array $values the relevant data object values of open activitie
    *
-   * @access public
-   * @static
    */
   public static function &getActivities(
     &$data,
@@ -885,7 +873,7 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
    * user has permission. To decide whether we are going to include
    * component related activities w/ core activity retrieve process.
    *
-   * return an array of component id and name.
+   * @return array an array of component id and name.
    **/
   public static function activityComponents() {
 
@@ -917,15 +905,13 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = {$acti
   /**
    * function to get the actvity count
    *
-   * @param int     $contactID       Contact ID
-   * @param boolean $admin           if contact is admin
-   * @param int     $caseId          case id
-   * @param string  $context         context , page on which selector is build
+   * @param int $contactID Contact ID
+   * @param bool $admin if contact is admin
+   * @param int $caseId case id
+   * @param string $context context , page on which selector is build
    *
-   * @return int   count of activities
+   * @return int count of activities
    *
-   * @access public
-   * @static
    */
   public static function &getActivitiesCount($contactID, $admin = FALSE, $caseId = NULL, $context = NULL) {
     list($sqlClause, $params) = self::getActivitySQLClause($contactID, $admin, $caseId, $context, TRUE);
@@ -945,6 +931,17 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
     return CRM_Core_DAO::singleValueQuery($query, $params);
   }
 
+  /**
+   * Get activity SQL clause
+   *
+   * @param int $contactID
+   * @param bool $admin
+   * @param int $caseId
+   * @param string $context
+   * @param bool $count
+   *
+   * @return array
+   */
   public static function getActivitySQLClause($contactID, $admin = FALSE, $caseId = NULL, $context = NULL, $count = FALSE) {
     $params = [];
     $sourceWhere = $targetWhere = $assigneeWhere = $caseWhere = 1;
@@ -1137,22 +1134,21 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * send the message to all the contacts and also insert a
    * contact activity in each contacts record
    *
-   * @param array  $contactDetails array('contact_id' => 123, 'email' => 'aaa@bbb.ccc')
-   * @param string $subject      the subject of the message
-   * @param string $message      the message contents
+   * @param array $contactDetails array('contact_id' => 123, 'email' => 'aaa@bbb.ccc')
+   * @param string $subject the subject of the message
+   * @param string $text the message contents (text)
+   * @param string $html the message contents (html)
    * @param string $emailAddress use this 'to' email address instead of the default Primary address
-   * @param int    $userID       use this userID if set
+   * @param int $userID use this userID if set
    * @param string $from
-   * @param array  $attachments  the array of attachments if any
-   * @param string $cc           cc recepient
-   * @param string $bcc          bcc recepient
-   * @param array  $contactIds    contact ids
+   * @param array $attachments the array of attachments if any
+   * @param string $cc cc recepient
+   * @param string $bcc bcc recepient
+   * @param array $contactIds contact ids
    * @param object $object form object for processing this email
-   * @param int    parent id to save this activity
+   * @param int $parentId parent id to save this activity
    *
-   * @return array               ( sent, activityId) if any email is sent and activityId
-   * @access public
-   * @static
+   * @return array ( sent, activityId) if any email is sent and activityId
    */
   public static function sendEmail(
     &$contactDetails,
@@ -1355,11 +1351,15 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   }
 
   /**
-   * @param int  $fromId     from contact id
-   * @param int  $toId       to contact id
-   * @param int  $templateId message template id
-   * @param int  $check      check if mail should be send on hold, desease or do not email
-   * @param int  $parentId   parent activity ID that will save this email activity
+   * Send email via template
+   *
+   * @param string|int $from from contact id or formatted address
+   * @param int $toId to contact id
+   * @param int $templateId message template id
+   * @param bool $check check if mail should be send on hold, desease or do not email
+   * @param int $parentId parent activity ID that will save this email activity
+   *
+   * @return bool
    */
   public static function sendEmailTemplate($from, $toId, $templateId, $check = FALSE, $parentId = NULL) {
     $returnProperties = [
@@ -1423,12 +1423,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   /**
    * Prepare SMS from objects
    *
-   * @param array $contactIds Also cound be 1 integer of contact_id
-   * @param integer $providerId
+   * @param array|int $contactIds Also cound be 1 integer of contact_id
+   * @param int $providerId
    * @param string $message
    * @param array $values objects, contribution is $values['contribution']
    *
-   * @return null
+   * @return array
    */
   public static function prepareSMS(
     $contactIds,
@@ -1523,7 +1523,6 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param array $smsParams An array of parameters of sending SMS, must include 'provider_id'.
    * @param array $contactIds An array of contact_id as values.
    * @param int $userID sender contact id, null will use current logged contact
-   * @param bool $bulk default FALSE send one by one, TRUE will disable token replace
    *
    * @return array[
    *  'sent' => int,
@@ -1714,6 +1713,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * @param int $templateId
    * @param bool $check
    * @param int $parentId
+   *
    * @return bool
    */
   public static function sendSMSTemplate(
@@ -1785,17 +1785,12 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    *
    * This function can call without civicrm contact object when specify phone in smsParams
    *
-   * @param array $smsParams
-   *   The params used for sending sms.
-   * @param string $smsMessage
-   *   Message body of sms.
-   * @param int $toId
-   *   The contact id of the recipient.
-   * @param int $activityId
-   *   If provided, this will update activity details and status after send
+   * @param array $smsParams The params used for sending sms.
+   * @param string $smsMessage Message body of sms.
+   * @param int $toId The contact id of the recipient.
+   * @param int $activityId If provided, this will update activity details and status after send
    *
-   * @return bool|object
-   *   true on success or PEAR_Error object
+   * @return bool|object true on success or PEAR_Error object
    */
   public static function sendSMSMessage(
     $smsParams,
@@ -1847,6 +1842,10 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * Send sms messages to group of contacts
    *
    * SMS provider may provide send multiple messages at a time
+   *
+   * @param array $bulkMessages
+   *
+   * @return array
    */
   public static function sendBulkSMSMessage($bulkMessages) {
     $msg = reset($bulkMessages);
@@ -1889,16 +1888,19 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   /**
    * send the email message to a specific contact
    *
-   * @param string $from         the name and email of the sender
-   * @param int    $toID         the contact id of the recipient
-   * @param string $subject      the subject of the message
-   * @param string $message      the message contents
+   * @param string $from the name and email of the sender
+   * @param int $fromID sender contact id
+   * @param int $toID the contact id of the recipient
+   * @param string $subject the subject of the message
+   * @param string $text_message the message contents (text)
+   * @param string $html_message the message contents (html)
    * @param string $emailAddress use this 'to' email address instead of the default Primary address
-   * @param int    $activityId   the activity ID that tracks the message
+   * @param int $activityId the activity ID that tracks the message
+   * @param array $attachments
+   * @param string $cc
+   * @param string $bcc
    *
-   * @return boolean             true if successfull else false.
-   * @access public
-   * @static
+   * @return bool true if successfull else false.
    */
   public static function sendMessage(
     $from,
@@ -1973,10 +1975,7 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
    * scheme. Adding weight is super important and should be done in the
    * next week or so, before this can be called complete.
    *
-   * @param NULL
-   *
-   * @return array    array of importable Fields
-   * @access public
+   * @return array array of importable Fields
    */
   public static function &importableFields() {
     if (!self::$_importableFields) {
@@ -2017,11 +2016,9 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   /**
    * To get the Activities of a target contact
    *
-   * @param $contactId    Integer  ContactId of the contact whose activities
-   *                               need to find
+   * @param int $contactId ContactId of the contact whose activities need to find
    *
-   * @return array    array of activity fields
-   * @access public
+   * @return array array of activity fields
    */
   public static function getContactActivity($contactId) {
     $activities = [];
@@ -2093,15 +2090,13 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
   /**
    * Function to add activity for Membership/Event/Contribution
    *
-   * @param object &$object particular component object
+   * @param object $object particular component object
    * @param string $activityType
    * @param int $targetContactID
    * @param string $activityStatus
    *
-   * @static
-   * @access public
    *
-   * @return int
+   * @return int|bool
    */
   public static function addActivity(&$object, $activityType = '', $targetContactID = NULL, $activityStatus = NULL) {
     if ($object->__table == 'civicrm_membership') {
@@ -2212,14 +2207,12 @@ SELECT  display_name
   /**
    * Function to add activity for transactional email
    *
-   * @param object &$object particular component object, can be return valur from CRM_Core_DAO::commonRetrieve
+   * @param object $object particular component object, can be return valur from CRM_Core_DAO::commonRetrieve
    * @param string $activityType activity type internal name, use this to get activity id
    * @param string $subjectSuffix subject suffix prepend to activity
    *
-   * @static
-   * @access public
    *
-   * @return int
+   * @return int|bool
    */
   public static function addTransactionalActivity(&$object, $activityType, $subjectSuffix = NULL) {
     if ($object->__table == 'civicrm_membership') {
@@ -2301,6 +2294,7 @@ SELECT  display_name
    * @param int $activityId
    * @param bool $success If true, update to completed status. If false, use specify status if provided. Otherwise, use unreachable status.
    * @param int $specifyStatus if provided, use this id to update activity instead. Only trigger when not success
+   *
    * @return bool
    */
   public static function updateTransactionalStatus($activityId, $success, $specifyStatus = NULL) {
@@ -2335,10 +2329,9 @@ SELECT  display_name
   /**
    * Function to get Parent activity for currently viewd activity
    *
-   * @param int  $activityId   current activity id
+   * @param int $activityId current activity id
    *
-   * @return int $parentId  Id of parent acyivity otherwise false.
-   * @access public
+   * @return int|bool $parentId Id of parent acyivity otherwise false.
    */
   public static function getParentActivity($activityId) {
     static $parentActivities = [];
@@ -2363,10 +2356,9 @@ SELECT  display_name
   /**
    * Function to get total count of prior revision of currently viewd activity
    *
-   * @param int  $activityId   current activity id
+   * @param int $activityID current activity id
    *
-   * @return int $params  count of prior acyivities otherwise false.
-   * @access public
+   * @return int $params count of prior acyivities otherwise false.
    */
   public static function getPriorCount($activityID) {
     static $priorCounts = [];
@@ -2401,10 +2393,10 @@ AND id < {$activityID}
   /**
    * Function to get all prior activities of currently viewd activity
    *
-   * @param int  $activityId   current activity id
+   * @param int $activityID current activity id
+   * @param bool $onlyPriorRevisions
    *
-   * @return array $result  prior acyivities info.
-   * @access public
+   * @return array $result prior acyivities info.
    */
   public static function getPriorAcitivities($activityID, $onlyPriorRevisions = FALSE) {
     static $priorActivities = [];
@@ -2452,10 +2444,9 @@ AND cl.modified_id  = c.id
   /**
    * Function to find the latest revision of a given activity
    *
-   * @param int  $activityId    prior activity id
+   * @param int $activityID prior activity id
    *
-   * @return int $params  current activity id.
-   * @access public
+   * @return int $params current activity id.
    */
   public static function getLatestActivityId($activityID) {
     static $latestActivityIds = [];
@@ -2485,11 +2476,10 @@ AND cl.modified_id  = c.id
   /**
    * Function to create a follow up a given activity
    *
-   * @activityId int activity id of parent activity
+   * @param int $activityId activity id of parent activity
+   * @param array $params activity details
    *
-   * @param array  $activity details
-   *
-   * @access public
+   * @return CRM_Activity_DAO_Activity
    */
   public static function createFollowupActivity($activityId, $params) {
     if (!$activityId) {
@@ -2497,7 +2487,6 @@ AND cl.modified_id  = c.id
     }
 
     $session = &CRM_Core_Session::singleton();
-
     $followupParams = [];
     $followupParams['parent_id'] = $activityId;
     $followupParams['source_contact_id'] = $session->get('userID');
@@ -2522,11 +2511,11 @@ AND cl.modified_id  = c.id
   /**
    * Function to get Activity specific File according activity type Id.
    *
-   * @param int  $activityTypeId  activity id
+   * @param int $activityTypeId activity id
+   * @param string $crmDir
    *
-   * @return if file exists returns $activityTypeFile activity filename otherwise false.
+   * @return string|bool if file exists returns $activityTypeFile activity filename otherwise false.
    *
-   * @static
    */
   public static function getFileForActivityTypeId($activityTypeId, $crmDir = 'Activity') {
 
@@ -2557,10 +2546,9 @@ AND cl.modified_id  = c.id
   /**
    * Function to restore the activity
    *
-   * @param array  $params  associated array
+   * @param array $params associated array
    *
-   * @return void
-   * @access public
+   * @return CRM_Activity_DAO_Activity
    *
    */
   public static function restoreActivity(&$params) {
@@ -2579,7 +2567,6 @@ AND cl.modified_id  = c.id
    * @param string $name if it is called by case $name = Case else $name = Activity
    *
    * @return array array of exportable Fields
-   * @access public
    */
   public static function &exportableFields($name = 'Activity') {
     if (!isset(self::$_exportableFields[$name])) {
@@ -2628,10 +2615,9 @@ AND cl.modified_id  = c.id
    * This function delete activity record related to contact record,
    * when there are no target and assignee record w/ other contact.
    *
-   * @param  int $contactId contactId
+   * @param int $contactId contactId
    *
-   * @return true/null
-   * @access public
+   * @return bool|null
    */
   public static function cleanupActivity($contactId) {
     $result = NULL;
@@ -2692,11 +2678,10 @@ AND cl.modified_id  = c.id
   /**
    * Does user has sufficient permission for view/edit activity record.
    *
-   * @param  int   $activityId activity record id.
-   * @param  int   $action     edit/view
+   * @param int $activityId activity record id.
+   * @param int $action edit/view
    *
-   * @return boolean $allow true/false
-   * @access public
+   * @return bool $allow true/false
    */
   public static function checkPermission($activityId, $action) {
     $allow = FALSE;

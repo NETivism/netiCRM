@@ -3,9 +3,7 @@
 class CRM_Batch_Form_Search extends CRM_Core_Form {
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
@@ -30,6 +28,11 @@ class CRM_Batch_Form_Search extends CRM_Core_Form {
     ]);
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();

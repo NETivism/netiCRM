@@ -6,10 +6,9 @@
 class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Contribution Receipt'));
@@ -98,6 +97,11 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     $this->addFormRule([get_class($this), 'formRule']);
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     $defaults['deleteBigStamp'] = '';
@@ -141,7 +145,11 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     return $defaults;
   }
 
-  // FROM : /CRM/Contribute/Form/ManagePremiums.php#L291-L321
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void
+   */
   public function postProcess() {
     $config = CRM_Core_Config::singleton();
     $params = $this->controller->exportValues($this->_name);
@@ -214,6 +222,15 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     parent::commonProcess($params);
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return bool|array
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if ((!empty($fields['receiptDisplayLegalID']) && $fields['receiptDisplayLegalID'] !== 'complete') && (!empty($fields['receiptEmailEncryption']) && $fields['receiptEmailEncryption'] === '1')) {
@@ -223,16 +240,14 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * Resize a premium image to a different size
-   *
-   * @access private
+   * Resizes a premium image to a different size.
    *
    * @param string $filename
    * @param string $resizedName
-   * @param $width
-   * @param $height
+   * @param int $width
+   * @param int $height
    *
-   * @return Path to image
+   * @return string Path to image
    */
   private function _resizeImage($filename, $resizedName, $width, $height) {
     // figure out the new filename

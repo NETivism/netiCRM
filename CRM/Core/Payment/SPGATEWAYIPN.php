@@ -1,4 +1,10 @@
 <?php
+/**
+ * Handles Instant Payment Notifications (IPN) from the SPGATEWAY (Neweb Pay) payment gateway for one-time and recurring transactions.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
 
@@ -6,12 +12,24 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
   private $_get;
   private $_paymentProcessor;
 
+  /**
+   * Constructor
+   *
+   * @param array $post POST data
+   * @param array $get GET data
+   */
   public function __construct($post, $get) {
     parent::__construct();
     $this->_post = $post;
     $this->_get = $get;
   }
 
+  /**
+   * Main IPN process
+   *
+   * @param string $instrument Payment instrument
+   * @return bool|string Result of the IPN process
+   */
   public function main($instrument) {
     $objects = $ids = $input = [];
     $this->getIds($ids);
@@ -214,6 +232,12 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     return FALSE;
   }
 
+  /**
+   * Get contribution and recur IDs from GET parameters
+   *
+   * @param array $ids Reference to the IDs array
+   * @return void
+   */
   public function getIds(&$ids) {
     $contribId = CRM_Utils_Array::value('cid', $this->_get);
     if (!empty($contribId) && CRM_Utils_Type::escape($contribId, 'Integer')) {
@@ -234,6 +258,16 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
+  /**
+   * Validate other IPN data
+   *
+   * @param array $input Input data
+   * @param array $ids Reference to IDs array
+   * @param array $objects Reference to objects array
+   * @param string $note Reference to note string
+   * @param string $instrument Payment instrument
+   * @return bool Whether validation passed
+   */
   public function validateOthers(&$input, &$ids, &$objects, &$note, $instrument = '') {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
@@ -418,6 +452,13 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
     return $pass;
   }
 
+  /**
+   * Add a note to the contribution
+   *
+   * @param string $note Note to add
+   * @param object $contribution Reference to contribution object
+   * @return void
+   */
   public function addNote($note, &$contribution) {
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
     $noteExists = CRM_Core_BAO_Note::getNote($contribution->id, 'civicrm_contribution');

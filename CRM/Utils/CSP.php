@@ -82,11 +82,9 @@ class CRM_Utils_CSP {
   public $policies = [];
 
   /**
-   * Constructor function that takes an encoded policy as input and parses it into an associative array.
+   * Parse a CSP header string into the internal $policies associative array.
    *
-   * @param string $encPolicy Encoded policy string to be parsed
-   *
-   * @return object Returns the current object instance
+   * @param string $encPolicy  Semicolon-delimited CSP policy string (e.g. "default-src 'self'; img-src *").
    */
   public function __construct($encPolicy) {
     $rawDirectives = explode(";", $encPolicy);

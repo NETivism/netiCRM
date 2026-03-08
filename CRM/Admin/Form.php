@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -60,6 +58,11 @@ class CRM_Admin_Form extends CRM_Core_Form {
    */
   protected $_BAOName;
 
+  /**
+   * Pre-processes the form.
+   *
+   * @return void None.
+   */
   public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
@@ -77,7 +80,7 @@ class CRM_Admin_Form extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return None The default values for the form.
    */
   public function setDefaultValues() {
     if (isset($this->_id) && empty($this->_values)) {
@@ -105,7 +108,7 @@ class CRM_Admin_Form extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return None None.
    * @access public
    */
   public function buildQuickForm() {

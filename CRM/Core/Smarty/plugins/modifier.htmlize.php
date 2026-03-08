@@ -27,18 +27,16 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Convert a given text part a better HTML representation (add paragraphs and make URLs clickable)
+ * Convert text to a better HTML representation (add paragraphs and clickable URLs).
  *
  * @param string $text text to HTML-ize
  *
- * @return string HTML-ized version of $text
+ * @return string HTML-ized version
  */
 function smarty_modifier_htmlize($text) {
   $text = preg_replace('@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', '<a href="$1">$1</a>', $text);

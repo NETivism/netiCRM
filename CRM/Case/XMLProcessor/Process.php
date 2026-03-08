@@ -26,10 +26,9 @@
 */
 
 /**
+ * Processes Case XML configuration to manage case activities and relationships
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 

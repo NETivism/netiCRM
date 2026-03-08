@@ -27,22 +27,22 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * form to process actions on the group aspect of Custom Data
+ * form to process actions on the profile section of Contribution Page
  */
 class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_ContributionPage {
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * This method adds dropdowns to select profiles for the top and bottom of
+   * the contribution page. It also sets up validation rules.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
 
@@ -70,12 +70,12 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing profile associations for the current contribution page
+   * from the database.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
@@ -96,10 +96,12 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Updates the `civicrm_uf_join` table to link the selected profiles
+   * with the current contribution page.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -139,23 +141,25 @@ class CRM_Contribute_Form_ContributionPage_Custom extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Include Profiles');
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
+   * Ensures that if a profile contains membership fields, the membership
+   * block must also be enabled for the contribution page.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param int $contributionPageId the ID of the current contribution page
+   *
+   * @return mixed true if no errors, or an array of error messages
    */
   public static function formRule($fields, $files, $contributionPageId) {
     $errors = [];

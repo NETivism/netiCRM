@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,12 +39,10 @@ class CRM_Contact_Form_Edit_Address {
   /**
    * build form for address input fields
    *
-   * @param object $form - CRM_Core_Form (or subclass)
-   * @param array reference $location - location array
-   * @param int $locationId - location id whose block needs to be built.
+   * @param object $form               (reference) CRM_Core_Form (or subclass)
+   * @param int    $addressBlockCount  address block count
    *
-   * @return none
-   *
+   * @return void
    * @access public
    * @static
    */
@@ -259,12 +255,10 @@ class CRM_Contact_Form_Edit_Address {
   /**
    * check for correct state / country mapping.
    *
-   * @param array reference $fields - submitted form values.
-   * @param array reference $errors - if any errors found add to this array. please.
+   * @param array $fields (reference) submitted form values.
+   * @param array $errors (reference) if any errors found add to this array.
    *
-   * @return true if no errors
-   *         array of errors if any present.
-   *
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
@@ -342,6 +336,18 @@ class CRM_Contact_Form_Edit_Address {
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Fix state select based on country
+   *
+   * @param object $form                (reference) form object
+   * @param string $countryElementName country element name
+   * @param string $stateElementName   state element name
+   * @param int    $countryDefaultValue default country id
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function fixStateSelect(
     &$form,
     $countryElementName,

@@ -27,19 +27,15 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
 /**
- * This class generates form components generic to recurring contributions
+ * This class handles manual transaction processing or status synchronization for recurring contributions.
  *
- * It delegates the work to lower level subclasses and integrates the changes
- * back in. It also uses a lot of functionality with the CRM API's, so any change
- * made here could potentially affect the API etc. Be careful, be aware, use unit tests.
- *
+ * It provides buttons to either sync the status with the payment gateway or
+ * immediately process a pending transaction for a specific recurring record.
  */
 class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
 
@@ -63,28 +59,33 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    */
   public $_contactID;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * Enables protection against multiple submissions.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_preventMultipleSubmission = TRUE;
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array the array of default values (currently empty)
    */
   public function setDefaultValues() {
-
     return $defaults;
   }
 
   /**
-   * Function to actually build the components of the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds the 'Sync Now' and 'Process Now' buttons based on the capabilities
+   * of the payment processor associated with the recurring contribution.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     $id = $this->get('recurId');
@@ -116,11 +117,13 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
   }
 
   /**
-   * This function is called after the user submits the form
+   * Process the form submission.
    *
-   * @access public
+   * Determines which action was requested (sync or process) and invokes the
+   * corresponding method on the payment processor class. Then redirects the
+   * user back to the recurring contribution view page.
    *
-   * @return None
+   * @return mixed false if permissions are missing, or a status bounce redirection
    */
   public function postProcess() {
     if (!CRM_Core_Permission::check('edit contributions')) {
@@ -152,5 +155,4 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
     $message = ts("The contribution record has been processed.").$resultMessage;
     return CRM_Core_Error::statusBounce($message, $url);
   }
-  //end of function
 }

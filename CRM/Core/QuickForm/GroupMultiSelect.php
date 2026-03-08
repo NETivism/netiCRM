@@ -27,10 +27,9 @@
 */
 
 /**
+ * Enhanced multi-select form element with grouped options and move-all controls
  *
- * @package CRM
  * @copyright U.S. PIRG Education Fund 2007
- * $Id$
  *
  */
 
@@ -52,6 +51,11 @@ class CRM_Core_QuickForm_GroupMultiSelect extends CRM_Core_QuickForm_NestedAdvMu
   public $_upButtonAttributes;
   public $_downButtonAttributes;
   public $_tableAttributes;
+  /**
+   * Return the element HTML for the group multi-select component.
+   *
+   * @return string HTML code
+   */
   public function toHtml() {
     if ($this->_flagFrozen) {
       return $this->getFrozenHtml();

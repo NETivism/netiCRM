@@ -26,10 +26,9 @@
 */
 
 /**
+ * Manages show/hide toggle behavior for collapsible form sections
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_ShowHideBlocks {
@@ -57,13 +56,10 @@ class CRM_Core_ShowHideBlocks {
   protected $_hide;
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param array $show initial value of show array
-   * @param array $hide initial value of hide array
-   *
-   * @return Object     the newly created object
-   * @access public
+   * @param array|null $show Initial value of show array.
+   * @param array|null $hide Initial value of hide array.
    */
   public function __construct($show = NULL, $hide = NULL) {
     if (!empty($show)) {
@@ -82,11 +78,7 @@ class CRM_Core_ShowHideBlocks {
   }
 
   /**
-   * load icon vars used in hide and show links
-   *
-   * @return void
-   * @access public
-   * @static
+   * Load icon vars used in hide and show links.
    */
   public static function setIcons() {
     if (!isset(self::$_showIcon)) {
@@ -97,10 +89,7 @@ class CRM_Core_ShowHideBlocks {
   }
 
   /**
-   * add the values from this class to the template
-   *
-   * @return void
-   * @access public
+   * Add the values from this class to the template.
    */
   public function addToTemplate() {
     $hide = $show = '';
@@ -129,12 +118,9 @@ class CRM_Core_ShowHideBlocks {
   }
 
   /**
-   * Add a value to the show array
+   * Add a value to the show array.
    *
-   * @param string $name id to be added
-   *
-   * @return void
-   * @access public
+   * @param string $name ID to be added.
    */
   public function addShow($name) {
     $this->_show[$name] = 1;
@@ -144,12 +130,9 @@ class CRM_Core_ShowHideBlocks {
   }
 
   /**
-   * Add a value to the hide array
+   * Add a value to the hide array.
    *
-   * @param string $name id to be added
-   *
-   * @return void
-   * @access public
+   * @param string $name ID to be added.
    */
   public function addHide($name) {
     $this->_hide[$name] = 1;
@@ -159,30 +142,29 @@ class CRM_Core_ShowHideBlocks {
   }
 
   /**
-   * create a well formatted html link from the smaller pieces
+   * Create a well-formatted HTML link from the smaller pieces.
    *
-   * @param string $name name of the link
-   * @param string $href
-   * @param string $text
-   * @param string $js
+   * @param string $name Name of the link.
+   * @param string $href The href attribute.
+   * @param string $text The link text.
+   * @param string $js JavaScript code.
    *
-   * @return string      the formatted html link
-   * @access public
+   * @return string The formatted HTML link.
    */
   public static function linkHtml($name, $href, $text, $js) {
     return '<a name="' . $name . '" id="' . $name . '" href="' . $href . '" ' . $js . ">$text</a>";
   }
 
   /**
-   * Create links that we can use in the form
+   * Create links that we can use in the form.
    *
-   * @param CRM_Core_Form $form          the form object
-   * @param string        $prefix        the attribute that we are referencing
-   * @param string        $showLinkText  the text to be shown for the show link
-   * @param string        $hideLinkText  the text to be shown for the hide link
+   * @param CRM_Core_Form $form The form object.
+   * @param string $prefix The attribute that we are referencing.
+   * @param string $showLinkText The text to be shown for the show link.
+   * @param string $hideLinkText The text to be shown for the hide link.
+   * @param bool $assign Whether to assign the values to the form.
    *
-   * @return void
-   * @access public
+   * @return array|void
    */
   public static function links(&$form, $prefix, $showLinkText, $hideLinkText, $assign = TRUE) {
     $showCode = "show('id_{$prefix}'); hide('id_{$prefix}_show');";
@@ -202,19 +184,16 @@ class CRM_Core_ShowHideBlocks {
   }
 
   /**
-   * Create html link elements that we can use in the form
+   * Create HTML link elements that we can use in the form.
    *
-   * @param CRM_Core_Form $form          the form object
-   * @param int           $index         the current index of the element being processed
-   * @param int           $maxIndex      the max number of elements that will be processed
-   * @param string        $prefix        the attribute that we are referencing
-   * @param string        $showLinkText  the text to be shown for the show link
-   * @param string        $hideLinkText  the text to be shown for the hide link
-   * @param string        $elementType   the set the class
-   * @param string        $hideLink      the hide block string
-   *
-   * @return void
-   * @access public
+   * @param CRM_Core_Form $form The form object.
+   * @param int $index The current index of the element being processed.
+   * @param int $maxIndex The max number of elements that will be processed.
+   * @param string $prefix The attribute that we are referencing.
+   * @param string $showLinkText The text to be shown for the show link.
+   * @param string $hideLinkText The text to be shown for the hide link.
+   * @param string|null $elementType The element type.
+   * @param string|null $hideLink The hide block string.
    */
   public function linksForArray(&$form, $index, $maxIndex, $prefix, $showLinkText, $hideLinkText, $elementType = NULL, $hideLink = NULL) {
     $showHidePrefix = str_replace(["]", "["], ["", "_"], $prefix);

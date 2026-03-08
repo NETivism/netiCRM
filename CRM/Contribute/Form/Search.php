@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -150,7 +148,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
   protected $_prefix = "contribute_";
 
   /**
-   * processing needed for buildForm and later
+   * Pre-process the form
    *
    * @return void
    * @access public
@@ -250,6 +248,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->assign('contributionSummary', $this->get('summary'));
   }
 
+  /**
+   * Set default values for the form
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     if (!CRM_Utils_Array::value(
       'contribution_status',
@@ -263,9 +267,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
   /**
    * Build the form
    *
-   * @access public
-   *
    * @return void
+   * @access public
    */
   public function buildQuickForm() {
     // text for sort_name
@@ -343,18 +346,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * The post processing of the form gets done here.
-   *
-   * Key things done during post processing are
-   *      - check for reset or next request. if present, skip post procesing.
-   *      - now check if user requested running a saved search, if so, then
-   *        the form values associated with the saved search are used for searching.
-   *      - if user has done a submit with new values the regular post submissing is
-   *        done.
-   * The processing consists of using a Selector / Controller framework for getting the
-   * search results.
-   *
-   * @param
+   * Process the form
    *
    * @return void
    * @access public
@@ -471,6 +463,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $controller->run();
   }
 
+  /**
+   * Fix form values from request if forced
+   *
+   * @return void
+   * @access public
+   */
   public function fixFormValues() {
     // if this search has been forced
     // then see if there are any get values, and if so over-ride the post values

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -66,6 +64,9 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
   protected $_emailField = FALSE;
 
   protected $_summary = NULL;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
 
     $this->validRelationships();
@@ -179,10 +180,20 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $this->_columnHeaders = $select = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -219,6 +230,11 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
 
     $this->_from = NULL;
@@ -246,6 +262,11 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -296,10 +317,22 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_relationship']}.$this->orgContact, {$this->_aliases['civicrm_relationship']}.$this->otherContact , {$this->_aliases['civicrm_contribution']}.id, {$this->_aliases['civicrm_relationship']}.relationship_type_id ";
   }
 
+  /**
+   * Calculate statistics.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
@@ -313,6 +346,11 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     $this->beginPostProcess();
@@ -338,6 +376,11 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Get valid relationships.
+   *
+   * @return void
+   */
   public function validRelationships() {
     require_once("api/v2/RelationshipType.php");
     $this->relationTypes = $relationTypes = [];
@@ -362,6 +405,13 @@ class CRM_Report_Form_Contribute_OrganizationSummary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $type = substr($this->_params['relationship_type_id_value'], -3);

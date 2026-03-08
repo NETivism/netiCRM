@@ -1,4 +1,10 @@
 <?php
+/**
+ * TapPay payment processor for handling credit card and recurring donations via the TapPay gateway.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
@@ -44,6 +50,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
+  /**
+   * Class constructor.
+   *
+   * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form &$paymentForm payment form object
+   * @param string $apiType API type
+   */
   public function __construct($mode, &$paymentProcessor, &$paymentForm, $apiType) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
@@ -51,13 +65,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_TapPay
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $args = func_get_args();
@@ -72,10 +86,9 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
     $config = CRM_Core_Config::singleton();
@@ -95,6 +108,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Get the administrative fields for this payment processor.
+   *
+   * @param object $ppDAO payment processor DAO
+   * @param CRM_Core_Form $form the settings form
+   *
+   * @return array<int, array<string, mixed>> array of administrative fields
+   */
   public static function getAdminFields($ppDAO, $form) {
     $fields = [
       [
@@ -178,6 +199,11 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
+  /**
+   * Generate the payment frame HTML.
+   *
+   * @return string HTML code for the payment frame
+   */
   public function getPaymentFrame() {
     if (!empty($this->_paymentProcessor)) {
       $this->_paymentForm->add('hidden', 'prime', '');
@@ -219,6 +245,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Handle transfer checkout (redirect to payment gateway).
+   *
+   * @param array &$params name-value pairs of contribution data
+   * @param string $component component name ('contribute' or 'event')
+   *
+   * @return void
+   */
   public function doTransferCheckout(&$params, $component) {
     $currentPath = CRM_Utils_System::currentPath();
     $params['prime'] = CRM_Utils_Type::escape($_POST['prime'], 'String');
@@ -260,12 +294,26 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     CRM_Utils_System::redirect($thankyou);
   }
 
+  /**
+   * Get the recurring cancelation message.
+   *
+   * @param int $recurID recurring ID
+   *
+   * @return string HTML message and JS
+   */
   public function cancelRecuringMessage($recurID) {
     $text = '<p>'.ts("Please edit recurring and change status to 'Completed'.").'</p>';
     $js = '<script>cj(".ui-dialog-buttonset button").hide();</script>';
     return $text . $js;
   }
 
+  /**
+   * Process a payment using a Prime token.
+   *
+   * @param array $payment payment data (including Prime token)
+   *
+   * @return array|bool result array or FALSE on failure
+   */
   public static function payByPrime($payment) {
     if ($payment && !empty($payment['payment_processor_id'])) {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
@@ -368,6 +416,15 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;
   }
 
+  /**
+   * Process a payment using a stored card token (recurring).
+   *
+   * @param int|null $recurringId optional recurring ID
+   * @param int|null $referContributionId optional reference contribution ID
+   * @param bool $sendMail whether to send a confirmation email
+   *
+   * @return array<string, mixed> result array
+   */
   public static function payByToken($recurringId = NULL, $referContributionId = NULL, $sendMail = TRUE) {
     if (empty($recurringId)) {
       $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
@@ -505,11 +562,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
   /**
-   * @param $paymentProcessorId Payment Processor ID
-   * @param $contribId Which contribution be updated
-   * @param $tokenParams Array, must contain 'card_toke', 'card_key'
-   * @param $sendMail Boolean, Send mail after finished transaction or not.
-   * return array('status' => $result->status, 'msg' => $result->msg);
+   * Process a non-recurring payment using a stored card token.
+   *
+   * @param int $paymentProcessorId payment processor ID
+   * @param int $contribId contribution ID
+   * @param array $tokenParams token parameters (card_token, card_key)
+   * @param bool $sendMail whether to send a confirmation email
+   *
+   * @return array<string, mixed> result array
    */
   public static function payByTokenForNonRecur($paymentProcessorId, $contribId, $tokenParams, $sendMail = FALSE) {
     // Check required parameters
@@ -601,6 +661,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return $response;
   }
 
+  /**
+   * Bind a card for future recurring payments.
+   *
+   * @param array $payment payment and card data
+   * @param bool $isSendMail whether to send a confirmation email
+   *
+   * @return array|bool result array or FALSE on failure
+   */
   public static function payByBindCard($payment, $isSendMail = FALSE) {
     if ($payment && !empty($payment['payment_processor_id'])) {
       $trxn_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $payment['contributionID'], 'trxn_id');
@@ -674,6 +742,14 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
     return FALSE;
   }
 
+  /**
+   * Retrieve and update card metadata (token status, expiry).
+   *
+   * @param int $contributionId contribution ID
+   * @param object|null $data optional metadata to use
+   *
+   * @return object|bool result metadata or FALSE on failure
+   */
   public static function cardMetadata($contributionId, $data = NULL) {
     if (empty($contributionId)) {
       return FALSE;
@@ -733,12 +809,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
   }
 
   /**
-   * Make Transaction for certainly contribution.
+   * Finalize a transaction based on API results.
    *
-   * @param Object $result The result object.
-   * @param Integer $contributionId The ID of contribution.
-   * @param Boolean $sendMail If TRUE, send mail for contact after finished.
-   * @return Boolean Is success or not.
+   * @param object $result API result object
+   * @param int|null $contributionId optional contribution ID
+   * @param bool $sendMail whether to send a confirmation email
+   *
+   * @return void
    */
   public static function doTransaction($result, $contributionId = NULL, $sendMail = TRUE) {
     $input = $ids = $objects = [];
@@ -847,6 +924,13 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
   }
 
+  /**
+   * Execute all pending recurring payments for TapPay.
+   *
+   * @param int|null $time optional current timestamp
+   *
+   * @return string|void error message if applicable
+   */
   public static function doExecuteAllRecur($time = NULL) {
     // Check sequence;
     $seq = new CRM_Core_DAO_Sequence();
@@ -952,6 +1036,14 @@ LIMIT 0, 100
     }
   }
 
+  /**
+   * Check and process a specific recurring payment.
+   *
+   * @param int $recurId recurring ID
+   * @param int|null $time optional current timestamp
+   *
+   * @return string synchronization result message
+   */
   public static function doCheckRecur($recurId, $time = NULL) {
     CRM_Core_Error::debug_log_message("TapPay synchronize execute: ".$recurId);
     if (empty($time)) {
@@ -1135,6 +1227,14 @@ LIMIT 0, 100
     return $resultNote;
   }
 
+  /**
+   * Static entry point for querying a TapPay record.
+   *
+   * @param array $url_params URL parameters from router
+   * @param array $get optional GET variables
+   *
+   * @return void
+   */
   public static function queryRecord($url_params, $get = []) {
     // apply $_GET to $get , and filted params 'q'
     if (empty($get)) {
@@ -1159,6 +1259,14 @@ LIMIT 0, 100
     return CRM_Core_Error::statusBounce($resultNote, $redirect);
   }
 
+  /**
+   * Synchronize a specific contribution record with TapPay.
+   *
+   * @param int $contributionId contribution ID
+   * @param object|null $data optional record data to use
+   *
+   * @return string result message
+   */
   public static function doSyncRecord($contributionId, $data = NULL) {
     // retrieve contribution object
     $contribution = new CRM_Contribute_DAO_Contribution();
@@ -1315,6 +1423,11 @@ LIMIT 0, 100
     return $resultNote;
   }
 
+  /**
+   * Synchronize records from the last few days.
+   *
+   * @return void
+   */
   public static function doSyncLastDaysRecords() {
     $last2Day = date('Y-m-d 00:00:00', time() - (86400 * 2));
     $currentDay = date('Y-m-d 23:59:59');
@@ -1332,6 +1445,11 @@ LIMIT 0, 100
     }
   }
 
+  /**
+   * Check and update the status of recurring contributions (end date, card expiry).
+   *
+   * @return void
+   */
   public static function doStatusCheck() {
     // update recurring status when end date is due
     $currentDay = date('Y-m-d 00:00:00');
@@ -1379,6 +1497,14 @@ LIMIT 0, 100
     }
   }
 
+  /**
+   * Get the payment parameters from the session associated with a key.
+   *
+   * @param string $qfKey quickform key
+   * @param string $class form class name
+   *
+   * @return array|bool payment parameters or FALSE on failure
+   */
   public static function getAssociatedSession($qfKey, $class) {
     if (!$qfKey) {
       return FALSE;
@@ -1402,6 +1528,14 @@ LIMIT 0, 100
     return $payment;
   }
 
+  /**
+   * Handle card notification webhook from TapPay.
+   *
+   * @param array $url_params URL parameters
+   * @param mixed $request notification data (JSON string or object)
+   *
+   * @return int 1 on success, 0 on failure
+   */
   public static function cardNotify($url_params, $request = NULL) {
     // Get Input
     if (empty($request)) {
@@ -1559,13 +1693,14 @@ LIMIT 0, 100
   }
 
   /**
-   * Execute ipn when called by tappay 3d validation.
+   * Execute IPN for 3D Secure or card notifications.
    *
-   * @param array $urlParams Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
-   * @param string $request Bring post variables if you need test, format json.
-   * @param array $get Bring get variables if you need test.
-   * @param boolean $sendMail TRUE mean need sendmail after finished..
-   * @return void
+   * @param array $params parameters (including contribution ID)
+   * @param mixed $request notification data
+   * @param array|null $get optional GET variables
+   * @param bool $sendMail whether to send a confirmation email
+   *
+   * @return int|void 0 on failure
    */
   public static function doIPN($params, $request = NULL, $get = NULL, $sendMail = TRUE) {
     // Get Input
@@ -1609,7 +1744,12 @@ LIMIT 0, 100
   }
 
   /**
-   * Trigger when click transaction button.
+   * Handle recurring transaction trigger.
+   *
+   * @param int|null $recurId recurring ID
+   * @param bool $sendMail whether to send a confirmation email
+   *
+   * @return array result note
    */
   public static function doRecurTransact($recurId = NULL, $sendMail = FALSE) {
     // Get current user
@@ -1636,24 +1776,25 @@ LIMIT 0, 100
   }
 
   /**
-   * Get the message as pressing "Sync Now" button.
-   * Called by MakingTransaction form.
+   * Get the sync now confirmation message.
    *
-   * @param int $contributionId The contribution id of the page.
-   * @param int $recurId The recurring id of the page.
-   * @return string The message
+   * @param int $contributionId contribution ID
+   * @param int|null $recurId recurring ID
+   *
+   * @return string confirmation message
    */
   public static function getSyncNowMessage($contributionId, $recurId = NULL) {
     return ts("Are you sure you want to sync all expiry dates of this token?", [1 => $recurId]);
   }
 
   /**
-   * Behavior after pressed "Sync now" button.
+   * Perform manual recurring update/synchronization.
    *
-   * @param int $id The contribution recurring ID
-   * @param string $idType Means the type of the ID, value as "Contribution" or "recur"
-   * @param object $form The MakingTransaction form object
-   * @return void
+   * @param int $id ID (contribution or recurring)
+   * @param string $idType ID type ('contribution' or 'recur')
+   * @param CRM_Core_Form|null $form calling form
+   *
+   * @return string result message
    */
   public static function doRecurUpdate($id, $idType = 'contribution', $form = NULL) {
     if (strstr('recur', $idType)) {
@@ -1738,11 +1879,11 @@ LIMIT 0, 100
   }
 
   /**
-   * Function called from contributionRecur page to show tappay detail information
+   * Get detailed record information for display.
    *
-   * @param int @contributionId the contribution id
+   * @param int $contributionId contribution ID
    *
-   * @return array The label as the key to value.
+   * @return array|null label-value pairs for record details
    */
   public static function getRecordDetail($contributionId) {
     $tappayDAO = new CRM_Contribute_DAO_TapPay();
@@ -1806,6 +1947,13 @@ LIMIT 0, 100
     return $returnData;
   }
 
+  /**
+   * Get all TapPay log records for a contribution.
+   *
+   * @param int $contributionId contribution ID
+   *
+   * @return array array of log records
+   */
   public static function getContributionAllRecordData($contributionId) {
     $logs = [];
     $tappayLog = new CRM_Contribute_DAO_TapPayLog();
@@ -1817,6 +1965,14 @@ LIMIT 0, 100
     return $logs;
   }
 
+  /**
+   * Generate a transaction ID for TapPay.
+   *
+   * @param int $contributionId contribution ID
+   * @param int|null $recurringId optional recurring ID
+   *
+   * @return string generated transaction ID
+   */
   public static function getContributionTrxnID($contributionId, $recurringId = NULL) {
     $rand = base_convert(strval(rand(16, 255)), 10, 16);
     if (empty($recurringId)) {
@@ -1832,6 +1988,13 @@ LIMIT 0, 100
     return $trxnId;
   }
 
+  /**
+   * Get the manual sync data URL for a contribution.
+   *
+   * @param int $contributionId contribution ID
+   *
+   * @return string sync URL
+   */
   public static function getSyncDataUrl($contributionId) {
     $get = $_GET;
     unset($get['q']);
@@ -1841,7 +2004,12 @@ LIMIT 0, 100
   }
 
   /**
-   * Function to add note into CRM log
+   * Add a note to the CRM log for a contribution.
+   *
+   * @param string $note note content
+   * @param CRM_Contribute_DAO_Contribution &$contribution contribution object
+   *
+   * @return void
    */
   public static function addNoteToLog($note, &$contribution) {
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
@@ -1849,7 +2017,12 @@ LIMIT 0, 100
   }
 
   /**
-   * Function to add note into contribution
+   * Add a note to the contribution record.
+   *
+   * @param string $note note content
+   * @param CRM_Contribute_DAO_Contribution &$contribution contribution object
+   *
+   * @return void
    */
   public static function addNote($note, &$contribution) {
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -57,7 +55,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contribute_BAO_ContributionType object
+   * @return CRM_Contribute_BAO_ContributionType|null CRM_Contribute_BAO_ContributionType object
    * @access public
    * @static
    */
@@ -77,7 +75,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @param int      $id        id of the database record
    * @param boolean  $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean             TRUE on success, FALSE otherwise
    * @static
    */
   public static function setIsActive($id, $is_active) {
@@ -93,7 +91,7 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    *
-   * @return object
+   * @return CRM_Contribute_BAO_ContributionType
    */
   public static function add(&$params, &$ids) {
 
@@ -119,9 +117,10 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * Function to delete contribution Types
    *
    * @param int $contributionTypeId
+   *
+   * @return void|string
    * @static
    */
-
   public static function del($contributionTypeId) {
     //checking if contribution type is present
     $check = FALSE;
@@ -159,12 +158,12 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
   }
 
   /**
-   * Function to see if contritbution type is deductible
+   * Function to see if contribution type is deductible
    *
    * @param int $contributionTypeId contribution type id to retrieve
    * @param boolean $all default FALSE. TRUE will return type even type is not active.
    *
-   * @return numeric when contribution type found. FALSE when not found.
+   * @return int|false when contribution type found. FALSE when not found.
    */
   public static function deductible($contributionTypeId, $all = FALSE) {
     $types = [];

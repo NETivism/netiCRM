@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -54,9 +52,9 @@ class CRM_Core_Permission {
   public const EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6, ADMIN = 7;
 
   /**
-   * get the current permission of this user
+   * Get the current permission of this user.
    *
-   * @return string the permission of the user (edit or view or null)
+   * @return string|null The permission of the user (edit or view or null).
    */
   public static function getPermission() {
     $config = CRM_Core_Config::singleton();
@@ -65,13 +63,11 @@ class CRM_Core_Permission {
   }
 
   /**
-   * given a permission string, check for access requirements
+   * Given a permission string, check for access requirements.
    *
-   * @param string $str the permission to check
+   * @param string $str The permission to check.
    *
-   * @return boolean true if yes, else false
-   * @static
-   * @access public
+   * @return bool True if permitted, else false.
    */
   public static function check($str) {
     $config = CRM_Core_Config::singleton();
@@ -79,14 +75,14 @@ class CRM_Core_Permission {
   }
 
   /**
-   * Get the permissioned where clause for the user
+   * Get the permissioned WHERE clause for the user.
    *
-   * @param int $type the type of permission needed
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int $type The type of permission needed.
+   * @param array $tables (reference) The tables that are needed for the select clause.
+   * @param array $whereTables (reference) The tables that are needed for the where clause.
+   * @param string $context The context of the query.
    *
-   * @return string the group where clause for this user
-   * @access public
+   * @return string The group WHERE clause for this user.
    */
   public static function whereClause($type, &$tables, &$whereTables, $context = 'contact') {
     $config = CRM_Core_Config::singleton();
@@ -96,16 +92,12 @@ class CRM_Core_Permission {
 
   /**
    * Get all groups from database, filtered by permissions
-   * for this user
+   * for this user.
    *
-   * @param string $groupType     type of group(Access/Mailing)
-   * @param boolen $excludeHidden exclude hidden groups.
+   * @param string $groupType Type of group (Access/Mailing).
+   * @param bool $excludeHidden Exclude hidden groups.
    *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all groups.
-   *
+   * @return array List of all groups.
    */
   public static function group($groupType, $excludeHidden = TRUE) {
     $config = CRM_Core_Config::singleton();
@@ -113,6 +105,14 @@ class CRM_Core_Permission {
     return $className::group($groupType, $excludeHidden);
   }
 
+  /**
+   * Get all custom groups the user has permission to access.
+   *
+   * @param int $type The type of permission needed.
+   * @param bool $reset Whether to reset the cache.
+   *
+   * @return array List of group IDs.
+   */
   public static function customGroup($type = CRM_Core_Permission::VIEW, $reset = FALSE) {
     $customGroups = CRM_Core_PseudoConstant::customGroup($reset);
     $defaultGroups = [];
@@ -134,6 +134,15 @@ class CRM_Core_Permission {
     return CRM_ACL_API::group($type, NULL, 'civicrm_custom_group', $customGroups, $defaultGroups);
   }
 
+  /**
+   * Get the WHERE clause for custom groups based on permissions.
+   *
+   * @param int $type The type of permission needed.
+   * @param string|null $prefix The table prefix for the ID column.
+   * @param bool $reset Whether to reset the cache.
+   *
+   * @return string The WHERE clause fragment.
+   */
   public static function customGroupClause($type = CRM_Core_Permission::VIEW, $prefix = NULL, $reset = FALSE) {
     $groups = self::customGroup($type, $reset);
     if (empty($groups)) {
@@ -144,6 +153,14 @@ class CRM_Core_Permission {
     }
   }
 
+  /**
+   * Check if a UF group is valid for the user.
+   *
+   * @param int $gid The UF group ID.
+   * @param int $type The type of permission needed.
+   *
+   * @return bool
+   */
   public static function ufGroupValid($gid, $type = CRM_Core_Permission::VIEW) {
     if (empty($gid)) {
       return TRUE;
@@ -153,6 +170,13 @@ class CRM_Core_Permission {
     return in_array($gid, $groups) ? TRUE : FALSE;
   }
 
+  /**
+   * Get all UF groups the user has permission to access.
+   *
+   * @param int $type The type of permission needed.
+   *
+   * @return array List of group IDs.
+   */
   public static function ufGroup($type = CRM_Core_Permission::VIEW) {
     $ufGroups = CRM_Core_PseudoConstant::ufGroup();
 
@@ -194,6 +218,15 @@ class CRM_Core_Permission {
     return CRM_ACL_API::group($type, NULL, 'civicrm_uf_group', $ufGroups);
   }
 
+  /**
+   * Get the WHERE clause for UF groups based on permissions.
+   *
+   * @param int $type The type of permission needed.
+   * @param string|null $prefix The table prefix for the ID column.
+   * @param bool $returnUFGroupIds Whether to return the group IDs instead of a clause.
+   *
+   * @return string|array The WHERE clause fragment or group IDs.
+   */
   public static function ufGroupClause($type = CRM_Core_Permission::VIEW, $prefix = NULL, $returnUFGroupIds = FALSE) {
     $groups = self::ufGroup($type);
     if ($returnUFGroupIds) {
@@ -207,6 +240,14 @@ class CRM_Core_Permission {
     }
   }
 
+  /**
+   * Get all events the user has permission to access.
+   *
+   * @param int $type The type of permission needed.
+   * @param int|null $eventID Specific event ID to check.
+   *
+   * @return array|int|null List of event IDs or the event ID if valid.
+   */
   public static function event($type = CRM_Core_Permission::VIEW, $eventID = NULL) {
 
     $events = CRM_Event_PseudoConstant::event(NULL, TRUE);
@@ -230,6 +271,14 @@ class CRM_Core_Permission {
     return array_search($eventID, $permissionedEvents) === FALSE ? NULL : $eventID;
   }
 
+  /**
+   * Get the WHERE clause for events based on permissions.
+   *
+   * @param int $type The type of permission needed.
+   * @param string|null $prefix The table prefix for the ID column.
+   *
+   * @return string The WHERE clause fragment.
+   */
   public static function eventClause($type = CRM_Core_Permission::VIEW, $prefix = NULL) {
     $events = self::event($type);
     if (empty($events)) {
@@ -240,6 +289,14 @@ class CRM_Core_Permission {
     }
   }
 
+  /**
+   * Check if the user has access to a specific module.
+   *
+   * @param string $module The module name.
+   * @param bool $checkPermission Whether to perform a full permission check.
+   *
+   * @return bool
+   */
   public static function access($module, $checkPermission = TRUE) {
     $config = CRM_Core_Config::singleton();
 
@@ -261,12 +318,13 @@ class CRM_Core_Permission {
   }
 
   /**
-   * check permissions for delete and edit actions
+   * Check permissions for delete and edit actions.
    *
-   * @param string  $module component name.
-   * @param $action action to be check across component
+   * @param string $module Component name.
+   * @param int $action Action to be checked across component.
    *
-   **/
+   * @return bool
+   */
   public static function checkActionPermission($module, $action) {
     //check delete related permissions.
     if ($action & CRM_Core_Action::DELETE) {
@@ -294,6 +352,14 @@ class CRM_Core_Permission {
     }
   }
 
+  /**
+   * Check multiple permissions combined with an operator.
+   *
+   * @param array $args List of permissions to check.
+   * @param string $op The operator ('and' or 'or').
+   *
+   * @return bool
+   */
   public static function checkMenu(&$args, $op = 'and') {
     if (!is_array($args)) {
       return $args;
@@ -310,6 +376,13 @@ class CRM_Core_Permission {
     return ($op == 'or') ? FALSE : TRUE;
   }
 
+  /**
+   * Check if a menu item is accessible.
+   *
+   * @param array $item The menu item definition.
+   *
+   * @return bool
+   */
   public static function checkMenuItem(&$item) {
     if (!CRM_Utils_Array::arrayKeyExists('access_callback', $item)) {
       CRM_Core_Error::backtrace();
@@ -369,6 +442,13 @@ class CRM_Core_Permission {
     }
   }
 
+  /**
+   * Get all basic permissions.
+   *
+   * @param bool $all Whether to include permissions from all components or just enabled ones.
+   *
+   * @return array List of permissions.
+   */
   public static function &basicPermissions($all = FALSE) {
     static $permissions = NULL;
 
@@ -448,11 +528,10 @@ class CRM_Core_Permission {
   }
 
   /**
-   * Validate user permission across
-   * edit or view or with supportable acls.
+   * Validate user permission across edit or view or with supportable ACLs.
    *
-   * return boolean true/false.
-   **/
+   * @return bool
+   */
   public static function giveMeAllACLs() {
     $hasPermission = FALSE;
     if (CRM_Core_Permission::check('view all contacts') ||
@@ -477,10 +556,9 @@ class CRM_Core_Permission {
   /**
    * Function to get component name from given permission.
    *
-   * @param string  $permission
+   * @param string $permission The permission string.
    *
-   * return string $componentName the name of component.
-   * @static
+   * @return string|null The name of component.
    */
   public static function getComponentName($permission) {
     $componentName = NULL;

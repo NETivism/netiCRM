@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,7 +40,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * the set id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
@@ -50,7 +47,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    *  set is empty or not
    *
    * @var bool
-   * @access protected
    */
   protected $_isGroupEmpty = TRUE;
 
@@ -58,7 +54,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * array of existing subtypes set for a custom set
    *
    * @var array
-   * @access protected
    */
   protected $_subtypes = [];
 
@@ -66,20 +61,15 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * array of default params
    *
    * @var array
-   * @access protected
    */
   protected $_defaults = [];
 
   /**
    * Function to set variables up before form is built
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function preProcess() {
-
     // current set id
     $this->_id = $this->get('id');
 
@@ -115,13 +105,11 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Custom_Form_Group $self additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -190,10 +178,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * This function is used to add the rules (mainly global rules) for form.
    * All local rules are added near the element
    *
-   * @param null
-   *
    * @return void
-   * @access public
    * @see valid_date
    */
   public function addRules() {
@@ -203,10 +188,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->applyFilter('__ALL__', 'trim');
@@ -474,10 +456,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @param null
-   *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
   public function setDefaultValues() {
     $defaults = &$this->_defaults;
@@ -524,10 +503,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
   /**
    * Process the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -572,13 +548,13 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     }
   }
 
-  /*
-     * Function to return a formatted list of relationship name.
-     * @param $list array array of relationship name.
-     * @static
-     * return array array of relationship name.
-     */
-
+  /**
+   * Function to return a formatted list of relationship name.
+   *
+   * @param array $list array of relationship name.
+   *
+   * @return array array of relationship name.
+   */
   public static function getFormattedList(&$list) {
     $relName = [];
     foreach ($list as $listItemKey => &$itemValue) {

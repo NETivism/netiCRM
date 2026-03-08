@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,7 @@
 class CRM_Contact_Page_SearchRedirect extends CRM_Core_Page {
 
   /**
-   * Find the path and go to Custom Search
+   * Find the path and go to Custom Search.
    */
   public function __construct() {
     $currentPath = CRM_Utils_System::currentPath();

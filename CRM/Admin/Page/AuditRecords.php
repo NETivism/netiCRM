@@ -26,9 +26,7 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2013
- * $Id$
  *
  */
 
@@ -37,6 +35,11 @@
  */
 class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
 
+  /**
+   * Runs the page.
+   *
+   * @return void
+   */
   public function run() {
     $date = date('Ymd000000', strtotime('-30Day'));
     $sql = "SELECT l.*, c.sort_name AS user_contact_name, c_modify.sort_name AS modified_name FROM civicrm_log l LEFT JOIN civicrm_uf_match um ON l.entity_id = um.uf_id LEFT JOIN civicrm_contact c ON um.contact_id = c.id LEFT JOIN civicrm_contact c_modify ON l.modified_id = c_modify.id WHERE entity_table LIKE 'audit.%' AND l.modified_date > %1 ORDER BY l.modified_date DESC";

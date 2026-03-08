@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,12 +48,10 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
   /**
    * Browse all activities for a particular contact
    *
-   * @return none
+   * @return void
    *
-   * @access public
    */
   public function browse() {
-
     $output = CRM_Core_Selector_Controller::SESSION;
 
     $selector = new CRM_Activity_Selector_Activity($this->_contactId, $this->_permission);
@@ -96,6 +92,11 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $this->assign('context', 'activity');
   }
 
+  /**
+   * Edit activity
+   *
+   * @return void
+   */
   public function edit() {
     // used for ajax tabs
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -173,7 +174,6 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
    * the contact and calls the appropriate type of page to view.
    *
    * @return void
-   * @access public
    *
    */
   public function preProcess() {
@@ -200,6 +200,11 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
     $controller->run();
   }
 
+  /**
+   * Delete activity
+   *
+   * @return void
+   */
   public function delete() {
     $controller = new CRM_Core_Controller_Simple(
       'CRM_Activity_Form_Activity',
@@ -215,9 +220,8 @@ class CRM_Activity_Page_Tab extends CRM_Core_Page {
   /**
    * perform actions and display for activities.
    *
-   * @return none
+   * @return void
    *
-   * @access public
    */
   public function run() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);

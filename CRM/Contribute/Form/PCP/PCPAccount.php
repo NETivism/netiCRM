@@ -27,15 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class generates form components for processing a ontribution
- *
+ * Form for managing the contact information of a PCP supporter.
  */
 class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
 
@@ -61,6 +58,15 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
 
   private $_context;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes IDs for the PCP, contribution page, and contact.
+   * It also handles permission checks to ensure only authorized users can
+   * edit contact information.
+   *
+   * @return void
+   */
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
@@ -133,6 +139,14 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves profile defaults for the contact and handles custom field
+   * default values.
+   *
+   * @return array the array of default values for form elements
+   */
   public function setDefaultValues() {
     if (!$this->_contactID) {
       return;
@@ -163,10 +177,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds profile fields from the designated supporter profile, handles CMS
+   * account creation if the user is anonymous, and adds CAPTCHA if required.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     $session = CRM_Core_Session::singleton();
@@ -234,15 +250,15 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * Validates email uniqueness if the user doesn't have administrative permissions.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array list of errors to be posted back to the form
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -260,11 +276,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Updates or creates the contact record using the profile data, handles deduplication,
+   * and processes CMS user account creation if requested.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $session = CRM_Core_Session::singleton();

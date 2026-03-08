@@ -26,10 +26,9 @@
 */
 
 /**
+ * Handles additional information sections (premium, honor, payment notes) on contribution forms
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contribute_Form_AdditionalInfo {
@@ -37,9 +36,11 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to build the form for Premium Information.
    *
-   * @access public
+   * @param CRM_Core_Form $form
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildPremium(&$form) {
     //premium section
@@ -250,9 +251,11 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to build the form for Additional Details.
    *
-   * @access public
+   * @param CRM_Core_Form $form
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildAdditionalDetail(&$form) {
     //Additional information section
@@ -330,9 +333,11 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to build the form for Honoree Information.
    *
-   * @access public
+   * @param CRM_Core_Form $form
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildHonoree(&$form) {
     //Honoree section
@@ -353,9 +358,11 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to build the form for PaymentReminders Information.
    *
-   * @access public
+   * @param CRM_Core_Form $form
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildPaymentReminders(&$form) {
     //PaymentReminders section
@@ -371,9 +378,14 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to process the Premium Information
    *
-   * @access public
+   * @param array $params
+   * @param int $contributionID
+   * @param int|null $premiumID
+   * @param array|null $options
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
 
@@ -478,9 +490,14 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to process the Note
    *
-   * @access public
+   * @param array $params
+   * @param int $contactID
+   * @param int $contributionID
+   * @param int|null $contributionNoteID
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
@@ -501,9 +518,12 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to process the Common data
    *
-   * @access public
+   * @param array $params
+   * @param array $formatted
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function postProcessCommon(&$params, &$formatted) {
     $fields = ['non_deductible_amount',
@@ -565,13 +585,13 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to send email receipt.
    *
-   * @form object  of Contribution form.
-   *
+   * @param CRM_Core_Form $form object of Contribution form.
    * @param array  $params (reference ) an assoc array of name/value pairs.
-   * @$ccContribution boolen,  is it credit card contribution.
-   * @access public.
+   * @param boolean $ccContribution is it credit card contribution.
    *
-   * @return None.
+   * @return boolean
+   * @access public
+   * @static
    */
   public static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
@@ -806,9 +826,12 @@ class CRM_Contribute_Form_AdditionalInfo {
   /**
    * Function to process price set and line items.
    *
-   * @access public
+   * @param int $contributionId
+   * @param array $lineItem
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function processPriceSet($contributionId, $lineItem) {
     if (!$contributionId || !is_array($lineItem)

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,12 +46,11 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
   public static $_links = NULL;
 
   /**
-   * delete a saved search.
+   * Delete a saved search.
    *
-   * @param int $id - id of saved search
+   * @param int $id id of saved search
    *
    * @return void
-   *
    */
   public function delete($id) {
     // first delete the group associated with this saved search
@@ -73,8 +70,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
   /**
    * Browse all saved searches.
    *
-   * @return content of the parents run method
-   *
+   * @return void
    */
   public function browse() {
     $rows = [];
@@ -116,7 +112,7 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
   }
 
   /**
-   * run this page (figure out the action needed and perform it).
+   * Run this page (figure out the action needed and perform it).
    *
    * @return void
    */
@@ -144,10 +140,9 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
   }
 
   /**
-   * Get action Links
+   * Get action Links.
    *
-   * @return array (reference) of action links
-   * @static
+   * @return array
    */
   public static function &links() {
 

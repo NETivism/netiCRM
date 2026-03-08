@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -49,7 +47,6 @@ class CRM_Event_Task {
    * the task array
    *
    * @var array
-   * @static
    */
   public static $_tasks = NULL;
 
@@ -57,7 +54,6 @@ class CRM_Event_Task {
    * the optional task array
    *
    * @var array
-   * @static
    */
   public static $_optionalTasks = NULL;
 
@@ -66,8 +62,6 @@ class CRM_Event_Task {
    * on a contact / group of contacts
    *
    * @return array the set of tasks for a group of contacts
-   * @static
-   * @access public
    */
   public static function &tasks() {
     if (!(self::$_tasks)) {
@@ -142,8 +136,6 @@ class CRM_Event_Task {
    * for participants
    *
    * @return array the set of task titles
-   * @static
-   * @access public
    */
   public static function &taskTitles() {
     self::tasks();
@@ -163,9 +155,7 @@ class CRM_Event_Task {
   /**
    * These tasks get added based on the context the user is in
    *
-   * @return array the set of optional tasks for a group of contacts
-   * @static
-   * @access public
+   * @return array<int, mixed> the set of optional tasks for a group of contacts
    */
   public static function &optionalTaskTitle() {
     $tasks = [
@@ -175,13 +165,12 @@ class CRM_Event_Task {
   }
 
   /**
-   * show tasks selectively based on the permission level
-   * of the user
+   * Show tasks selectively based on the permission level
+   * of the user.
    *
    * @param int $permission
    *
    * @return array set of tasks that are valid for the user
-   * @access public
    */
   public static function &permissionedTaskTitles($permission) {
     $tasks = [];
@@ -206,13 +195,11 @@ class CRM_Event_Task {
 
   /**
    * These tasks are the core set of tasks that the user can perform
-   * on participants
+   * on participants.
    *
    * @param int $value
    *
    * @return array the set of tasks for a group of participants
-   * @static
-   * @access public
    */
   public static function getTask($value) {
     self::tasks();

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,12 +38,11 @@
 class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -59,10 +56,9 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -127,11 +123,9 @@ class CRM_Member_Form_MembershipStatus extends CRM_Member_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 

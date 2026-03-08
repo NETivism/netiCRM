@@ -26,8 +26,8 @@
  */
 
 /**
+ * Provides query-building and search functionality for Mailing data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2016
  */
 class CRM_Mailing_BAO_Query {
@@ -35,7 +35,9 @@ class CRM_Mailing_BAO_Query {
   public static $_mailingFields = NULL;
 
   /**
-   * @return array|null
+   * Get the mailing fields.
+   *
+   * @return array Array of mailing fields.
    */
   public static function &getFields() {
     if (!self::$_mailingFields) {
@@ -50,9 +52,11 @@ class CRM_Mailing_BAO_Query {
   }
 
   /**
-   * If mailings are involved, add the specific Mailing fields
+   * If mailings are involved, add the specific Mailing fields.
    *
-   * @param $query
+   * @param CRM_Contact_BAO_Query $query (reference) The query object.
+   *
+   * @return void
    */
   public static function select(&$query) {
     if ($query->_mode & CRM_Contact_BAO_Query::MODE_MAILING) {
@@ -118,7 +122,11 @@ class CRM_Mailing_BAO_Query {
   }
 
   /**
-   * @param $query
+   * Add the where clause for mailings.
+   *
+   * @param CRM_Contact_BAO_Query $query (reference) The query object.
+   *
+   * @return void
    */
   public static function where(&$query) {
     $grouping = NULL;
@@ -144,11 +152,13 @@ class CRM_Mailing_BAO_Query {
   }
 
   /**
-   * @param string $name
-   * @param $mode
-   * @param $side
+   * Add the from clause for mailings.
    *
-   * @return null|string
+   * @param string $name The table name.
+   * @param int $mode The query mode.
+   * @param string $side The join type.
+   *
+   * @return string|null The from clause.
    */
   public static function from($name, $mode, $side) {
     $from = NULL;
@@ -202,10 +212,12 @@ class CRM_Mailing_BAO_Query {
   }
 
   /**
-   * @param $mode
-   * @param bool $includeCustomFields
+   * Get the default return properties for mailings.
    *
-   * @return array|null
+   * @param int $mode The query mode.
+   * @param bool $includeCustomFields Whether to include custom fields.
+   *
+   * @return array|null Array of default return properties.
    */
   public static function defaultReturnProperties(
     $mode,
@@ -234,8 +246,12 @@ class CRM_Mailing_BAO_Query {
   }
 
   /**
-   * @param $values
-   * @param $query
+   * Add a single where clause for mailings.
+   *
+   * @param array $values (reference) The parameters for the where clause.
+   * @param CRM_Contact_BAO_Query $query (reference) The query object.
+   *
+   * @return void
    */
   public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
@@ -455,10 +471,11 @@ class CRM_Mailing_BAO_Query {
   }
 
   /**
-   * Add all the elements shared between Mailing search and advnaced search.
+   * Add all the elements shared between Mailing search and advanced search.
    *
+   * @param CRM_Core_Form $form (reference) The form object.
    *
-   * @param CRM_Core_Form $form
+   * @return void
    */
   public static function buildSearchForm(&$form) {
     // mailing selectors
@@ -506,14 +523,22 @@ class CRM_Mailing_BAO_Query {
   }
 
   /**
-   * @param $row
-   * @param int $id
+   * Define the search action.
+   *
+   * @param array $row (reference) The row data.
+   * @param int $id The contact ID.
+   *
+   * @return void
    */
   public static function searchAction(&$row, $id) {
   }
 
   /**
-   * @param $tables
+   * Get the table names for mailings.
+   *
+   * @param array $tables (reference) Array of table names.
+   *
+   * @return void
    */
   public static function tableNames(&$tables) {
   }
@@ -521,13 +546,14 @@ class CRM_Mailing_BAO_Query {
   /**
    * Filter query results based on which contacts do (not) have a particular mailing event in their history.
    *
-   * @param $query
-   * @param $values
-   * @param string $tableName
-   * @param string $fieldName
-   * @param $fieldTitle
+   * @param CRM_Contact_BAO_Query $query (reference) The query object.
+   * @param array $values (reference) The parameters for the query.
+   * @param string $tableName The event table name.
+   * @param string $fieldName The event field name.
+   * @param string $fieldTitle The field title for qill.
+   * @param array $valueTitles (reference) The value titles for qill.
    *
-   * @param $valueTitles
+   * @return void
    */
   public static function mailingEventQueryBuilder(&$query, &$values, $tableName, $fieldName, $fieldTitle, &$valueTitles) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
@@ -568,11 +594,11 @@ class CRM_Mailing_BAO_Query {
   /**
    * Check if the values in the date range are in correct chronological order.
    *
-   * @param array $fields
-   * @param array $files
-   * @param CRM_Core_Form $form
+   * @param array $fields Array of form fields.
+   * @param array $files Array of files.
+   * @param CRM_Core_Form $form (reference) The form object.
    *
-   * @return bool|array
+   * @return bool|array True on success, array of errors otherwise.
    */
   public static function formRule($fields, $files, $form) {
     $errors = [];

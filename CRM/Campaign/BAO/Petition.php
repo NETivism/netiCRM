@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -208,6 +206,7 @@ WHERE
    * @param boolean $all
    * @param int $id
    * @static
+   * @return array<string, int|float|non-empty-array<mixed>>
    */
   public static function getPetitionSignatureTotal($surveyId) {
     $surveyInfo = CRM_Campaign_BAO_Petition::getSurveyInfo((int) $surveyId);
@@ -232,6 +231,9 @@ WHERE
     return $statusTotal;
   }
 
+  /**
+   * @return array<string, mixed>
+   */
   public static function getSurveyInfo($surveyId = NULL) {
     $surveyInfo = [];
 

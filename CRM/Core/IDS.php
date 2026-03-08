@@ -26,10 +26,9 @@
 */
 
 /**
+ * Intrusion Detection System integration for monitoring and filtering malicious input
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 require_once 'IDS/autoload.php';
@@ -172,9 +171,9 @@ class CRM_Core_IDS {
    * This function includes the IDS vendor parts and runs the
    * detection routines on the request array.
    *
-   * @param object cake controller object
+   * @param array $args The request arguments.
    *
-   * @return boolean
+   * @return bool
    */
   public function check(&$args) {
     $path = CRM_Utils_Array::implode('/', $args);
@@ -261,6 +260,12 @@ class CRM_Core_IDS {
     return TRUE;
   }
 
+  /**
+   * Initialize the IDS configuration.
+   *
+   * @param string|null $configFile The configuration file path.
+   * @param bool $forceCreate Whether to force creation of the config file.
+   */
   public static function initConfig($configFile = NULL, $forceCreate = FALSE) {
     global $tsLocale;
     $config = CRM_Core_Config::singleton();
@@ -314,16 +319,12 @@ class CRM_Core_IDS {
   }
 
   /**
-   * This function rects on the values in
-   * the incoming results array.
+   * This function reacts on the values in the incoming results array.
    *
-   * Depending on the impact value certain actions are
-   * performed.
+   * Depending on the impact value certain actions are performed.
    *
-   * @param Report $result
-   * @param int $impact
-   *
-   * @return boolean
+   * @param Report $result The IDS report object.
+   * @param int $impact The impact value.
    */
   private function react(Report $result, $impact) {
     if ($impact >= $this->_threshold['kick']) {
@@ -341,12 +342,19 @@ class CRM_Core_IDS {
   }
 
   /**
-   * These function
+   * Log the suspicious action.
+   *
+   * @return bool
    */
   private function log() {
     return TRUE;
   }
 
+  /**
+   * Warn the user about suspicious action.
+   *
+   * @return bool
+   */
   private function warn() {
     if (CRM_Utils_System::isUserLoggedIn()) {
       return TRUE;
@@ -358,6 +366,9 @@ class CRM_Core_IDS {
     }
   }
 
+  /**
+   * Kick the user for suspicious action.
+   */
   private function kick() {
     $session = CRM_Core_Session::singleton();
     $session->reset(2);
@@ -366,12 +377,11 @@ class CRM_Core_IDS {
   }
 
   /**
-   * Record suspicious action to log
+   * Record suspicious action to log.
    *
-   * @param Report $result Object of \IDS\Report
-   * @param string $reaction action that civicrm take
-   * @param int $impact calculation from IDS
-   * @return void
+   * @param Report $result Object of \IDS\Report.
+   * @param string $reaction Action that CiviCRM took.
+   * @param int $impact Calculation from IDS.
    */
   private function record($result, $reaction, $impact) {
     $ip = CRM_Utils_System::ipAddress();
@@ -416,6 +426,11 @@ class CRM_Core_IDS {
     }
   }
 
+  /**
+   * Parse exception definitions for IDS.
+   *
+   * @param array $definition The exception definition.
+   */
   public function parseDefinitions($definition) {
     if (is_array($definition)) {
       foreach ($definition as $def) {

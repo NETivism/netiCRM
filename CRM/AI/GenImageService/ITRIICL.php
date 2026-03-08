@@ -18,6 +18,8 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * Constructor
    *
    * Initialize service with configuration from CiviCRM settings
+   *
+   * @throws Exception
    */
   public function __construct() {
     parent::__construct();
@@ -104,7 +106,7 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * Convert standardized parameters to service-specific format
    *
    * @param array $params Input parameters (by reference)
-   * @return void
+   * @return void None.
    */
   protected function formatParams(&$params) {
     // Set basic default parameters for ITRI ICL
@@ -247,7 +249,7 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * Convert ratio strings to width/height values
    *
    * @param string $ratio Ratio string (e.g., "1:1", "4:3", "16:9")
-   * @return void
+   * @return void None.
    */
   private function processRatio($ratio) {
     $ratioMap = [

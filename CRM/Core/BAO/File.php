@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,6 +37,16 @@
 class CRM_Core_BAO_File extends CRM_Core_DAO_File {
   public const PUBLIC_ENTITY_TABLE = 'civicrm_pcp';
 
+  /**
+   * Get the full filesystem path to a file.
+   *
+   * @param int $fileID file ID
+   * @param int $entityID entity ID (e.g., contact ID)
+   * @param string|null $entityTable name of the entity table
+   * @param string|bool $quest optional quest parameter for directory structure
+   *
+   * @return array [path, mime_type, entity_table]
+   */
   public static function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
 
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
@@ -75,6 +83,16 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return [NULL, NULL, NULL];
   }
 
+  /**
+   * Get the public URL to a file.
+   *
+   * @param int $fileID file ID
+   * @param int $entityID entity ID
+   * @param string|null $entityTable name of the entity table
+   * @param string|bool $quest optional quest parameter
+   *
+   * @return array [url, mime_type, entity_table]
+   */
   public static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
@@ -112,6 +130,23 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return [NULL, NULL, NULL];
   }
 
+  /**
+   * Post-process a file upload.
+   *
+   * Moves the file to the custom upload directory and records metadata in the database.
+   *
+   * @param string $data current path to the file
+   * @param int|null $fileID file ID (if updating)
+   * @param string $entityTable name of the entity table
+   * @param int $entityID entity ID
+   * @param string|null $entitySubtype optional entity subtype for directory structure
+   * @param bool $overwrite whether to overwrite existing file
+   * @param array|null $fileParams additional file metadata
+   * @param string $uploadName name of the upload element
+   * @param string|null $mimeType MIME type of the file
+   *
+   * @return void
+   */
   public static function filePostProcess(
     $data,
     $fileID,
@@ -190,6 +225,15 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     $entityFileDAO->save();
   }
 
+  /**
+   * Delete a file and its associations.
+   *
+   * @param int $fileID file ID
+   * @param int $entityID entity ID
+   * @param int $fieldID custom field ID associated with the file
+   *
+   * @return void
+   */
   public static function del($fileID, $entityID, $fieldID) {
     // get the table and column name
     list($tableName, $columnName, $groupID) = CRM_Core_BAO_CustomField::getTableColumnGroup($fieldID);
@@ -224,8 +268,12 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
   }
 
   /**
-   * delete all the files and associated object associated with this
-   * combination
+   * Delete all files and their associations for a specific entity.
+   *
+   * @param string $entityTable name of the entity table
+   * @param int $entityID entity ID
+   *
+   * @return void
    */
   public static function deleteEntityFile($entityTable, $entityID) {
     if (empty($entityTable) ||
@@ -259,6 +307,13 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     }
   }
 
+  /**
+   * Get entity information associated with a file ID.
+   *
+   * @param int $fileID file ID
+   *
+   * @return array|null associative array of entity file data
+   */
   public static function getEntity($fileID) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     $entityFileDAO->file_id = $fileID;
@@ -271,8 +326,12 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
   }
 
   /**
-   * get all the files and associated object associated with this
-   * combination
+   * Get details for all files associated with a specific entity.
+   *
+   * @param string $entityTable name of the entity table
+   * @param int $entityID entity ID
+   *
+   * @return array array of file detail arrays
    */
   public static function &getEntityFile($entityTable, $entityID) {
     static $entityFiles;
@@ -309,6 +368,15 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return $entityFiles[$entityTable][$entityID];
   }
 
+  /**
+   * Get SQL query components for finding files associated with an entity.
+   *
+   * @param string $entityTable name of the entity table
+   * @param int $entityID entity ID
+   * @param int|null $fileID optional file type ID filter
+   *
+   * @return array [sql_query, sql_params]
+   */
   public static function sql($entityTable, $entityID, $fileID = NULL) {
     $sql = "
 SELECT    CF.id as cfID,
@@ -331,6 +399,17 @@ AND       CEF.entity_id    = %2";
     return [$sql, $params];
   }
 
+  /**
+   * Build file attachment fields on a form.
+   *
+   * @param CRM_Core_Form &$form form object
+   * @param string $entityTable name of the entity table
+   * @param int|null $entityID entity ID
+   * @param int|null $numAttachments number of attachment fields to show
+   * @param array $attr additional attributes for the file element
+   *
+   * @return void
+   */
   public static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = []) {
 
     $config = CRM_Core_Config::singleton();
@@ -372,6 +451,15 @@ AND       CEF.entity_id    = %2";
     }
   }
 
+  /**
+   * Get formatted HTML links/images for current attachments of an entity.
+   *
+   * @param string $entityTable name of the entity table
+   * @param int $entityID entity ID
+   * @param string $separator separator for multiple links
+   *
+   * @return string|null HTML string of attachment links
+   */
   public static function attachmentInfo($entityTable, $entityID, $separator = '<br />') {
     if (!$entityID) {
       return NULL;
@@ -393,6 +481,17 @@ AND       CEF.entity_id    = %2";
     return NULL;
   }
 
+  /**
+   * Format attachment parameters from form values.
+   *
+   * @param array &$formValues associative array of form values
+   * @param array &$params array to store formatted attachment parameters
+   * @param string $entityTable name of the entity table
+   * @param int|null $entityID entity ID
+   * @param int $maxAttachments maximum number of attachments
+   *
+   * @return void
+   */
   public static function formatAttachment(
     &$formValues,
     &$params,
@@ -429,6 +528,16 @@ AND       CEF.entity_id    = %2";
     }
   }
 
+  /**
+   * Process attachments from parameters and save them.
+   *
+   * @param array &$params associative array of parameters containing attachment data
+   * @param string $entityTable name of the entity table
+   * @param int $entityID entity ID
+   * @param int $maxAttachments maximum number of attachments
+   *
+   * @return void
+   */
   public static function processAttachment(
     &$params,
     $entityTable,
@@ -459,6 +568,11 @@ AND       CEF.entity_id    = %2";
     }
   }
 
+  /**
+   * Get a list of allowed file upload element names.
+   *
+   * @return string[] array of element names
+   */
   public static function uploadNames() {
     $config = CRM_Core_Config::singleton();
     $numAttachments = 3;
@@ -474,11 +588,16 @@ AND       CEF.entity_id    = %2";
     return $names;
   }
 
-  /*
-     * Function to copy/attach an existing file to a different entity
-     * table and id.
-     */
-
+  /**
+   * Copy file associations from one entity to another.
+   *
+   * @param string $oldEntityTable source entity table
+   * @param int $oldEntityId source entity ID
+   * @param string $newEntityTable target entity table
+   * @param int $newEntityId target entity ID
+   *
+   * @return void
+   */
   public static function copyEntityFile($oldEntityTable, $oldEntityId, $newEntityTable, $newEntityId) {
     $oldEntityFile = new CRM_Core_DAO_EntityFile();
     $oldEntityFile->entity_id = $oldEntityId;
@@ -495,11 +614,14 @@ AND       CEF.entity_id    = %2";
   }
 
   /**
-   * Generates an access-token for downloading a specific file.
+   * Generate an access token for downloading a specific file.
    *
-   * @param int $entityId entity id the file is attached to
-   * @param int $fileId file ID
-   * @return string
+   * @param int|null $entityId entity ID the file is attached to
+   * @param int|null $fileId file ID
+   * @param int|null $genTs optional generation timestamp (defaults to current time)
+   * @param int|null $life token lifetime in hours (defaults to 24)
+   *
+   * @return string generated token
    */
   public static function generateFileHash($entityId = NULL, $fileId = NULL, $genTs = NULL, $life = NULL) {
     // Use multiple (but stable) inputs for hash information.
@@ -526,10 +648,11 @@ AND       CEF.entity_id    = %2";
   /**
    * Validate a file access token.
    *
-   * @param string $hash
-   * @param int $entityId Entity Id the file is attached to
-   * @param int $fileId File Id
-   * @return bool
+   * @param string $hash the token to validate
+   * @param int $entityId entity ID the file is attached to
+   * @param int $fileId file ID
+   *
+   * @return bool TRUE if the token is valid and not expired, otherwise FALSE
    */
   public static function validateFileHash($hash, $entityId, $fileId) {
     $input = CRM_Utils_System::explode('_', $hash, 3);
@@ -562,9 +685,9 @@ AND       CEF.entity_id    = %2";
   }
 
   /**
-   * Clear temporary upload dir
+   * Periodically clear the temporary upload directory.
    *
-   * @param int $afterDays clear files that exists after n days.
+   * @param int $afterDays number of days after which files are considered expired
    *
    * @return void
    */

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,6 +38,13 @@ class CRM_ACL_BAO_Cache extends CRM_ACL_DAO_Cache {
 
   public static $_cache = NULL;
 
+  /**
+   * Build the ACL cache for a contact
+   *
+   * @param int $id
+   *
+   * @return array
+   */
   public static function &build($id) {
     if (!self::$_cache) {
       self::$_cache = [];
@@ -61,6 +66,13 @@ class CRM_ACL_BAO_Cache extends CRM_ACL_DAO_Cache {
     return self::$_cache[$id];
   }
 
+  /**
+   * Retrieve the ACL cache for a contact from the database
+   *
+   * @param int $id
+   *
+   * @return array
+   */
   public static function retrieve($id) {
     $query = "
 SELECT acl_id
@@ -82,6 +94,12 @@ SELECT acl_id
     return $cache;
   }
 
+  /**
+   * Store the ACL cache for a contact in the database
+   *
+   * @param int $id
+   * @param array $cache
+   */
   public static function store($id, &$cache) {
     foreach ($cache as $aclID => $data) {
       $dao = new CRM_ACL_DAO_Cache();
@@ -96,6 +114,11 @@ SELECT acl_id
     }
   }
 
+  /**
+   * Delete the ACL cache entry for a contact
+   *
+   * @param int $id
+   */
   public static function deleteEntry($id) {
     if (self::$_cache &&
       CRM_Utils_Array::arrayKeyExists($id, self::$_cache)
@@ -111,6 +134,11 @@ WHERE contact_id = %1
     $dao = &CRM_Core_DAO::executeQuery($query, $params);
   }
 
+  /**
+   * Update the ACL cache entry for a contact
+   *
+   * @param int $id
+   */
   public static function updateEntry($id) {
     // rebuilds civicrm_acl_cache
     self::deleteEntry($id);
@@ -121,7 +149,9 @@ WHERE contact_id = %1
     CRM_Contact_BAO_Contact_Permission::cache($id, CRM_Core_Permission::VIEW, TRUE);
   }
 
-  // deletes all the cache entries
+  /**
+   * Reset all the cache entries
+   */
   public static function resetCache() {
     // reset any static caching
     self::$_cache = NULL;

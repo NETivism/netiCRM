@@ -10,6 +10,11 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
   protected $_formValues = [];
 
+  /**
+   * Build all the data structures needed to build the form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
     // get selector defined form values
@@ -71,6 +76,11 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     if (!$this->_hasProblem) {
       $options = [
@@ -104,6 +114,15 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     }
   }
 
+  /**
+   * Form rule.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array<string, mixed>
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!empty($fields['payment_type'])) {
@@ -123,6 +142,11 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     return $errors;
   }
 
+  /**
+   * Process the form after the input has been submitted and validated.
+   *
+   * @return void
+   */
   public function postProcess() {
     // $this->_contactIds  <== contact id
     // $this->_additionalIds <== recurring id

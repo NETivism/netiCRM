@@ -5,7 +5,6 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
    * all the fields that are listings related
    *
    * @var array
-   * @access protected
    */
   protected $_fields;
 
@@ -141,6 +140,18 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Generate chart data.
+   *
+   * @param CRM_Core_Page $page
+   *   The page object.
+   * @param string $chartName
+   *   The name of the chart.
+   * @param array $selectorParams
+   *   Parameters for the selector.
+   * @param array $chartParams
+   *   Optional parameters for the chart.
+   */
   public static function chart($page, $chartName, $selectorParams, $chartParams = NULL) {
     $referrerTypes = CRM_Core_PseudoConstant::referrerTypes();
     $label = $dates = [];

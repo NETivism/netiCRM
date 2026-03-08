@@ -28,9 +28,7 @@
 /**
  * This file contains the various menus of the CiviCRM module
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -62,6 +60,11 @@ class CRM_Core_Menu {
   public static $_menuCache = NULL;
   public const MENU_ITEM = 1;
 
+  /**
+   * Get all menu items from XML files and hooks.
+   *
+   * @return array List of menu items.
+   */
   public static function &xmlItems() {
     if (!self::$_items) {
       $config = CRM_Core_Config::singleton();
@@ -91,6 +94,12 @@ class CRM_Core_Menu {
     return self::$_items;
   }
 
+  /**
+   * Read a menu XML file and populate the menu array.
+   *
+   * @param string $name The path to the XML file.
+   * @param array $menu The menu array to populate.
+   */
   public static function read($name, &$menu) {
 
     $config = CRM_Core_Config::singleton();
@@ -151,10 +160,9 @@ class CRM_Core_Menu {
   }
 
   /**
-   * This function defines information for various menu items
+   * Get all menu items, including those from hooks.
    *
-   * @static
-   * @access public
+   * @return array List of menu items.
    */
   public static function &items() {
     $items = self::xmlItems();
@@ -162,6 +170,13 @@ class CRM_Core_Menu {
     return $items;
   }
 
+  /**
+   * Check if all values in an array are true.
+   *
+   * @param array $values The array to check.
+   *
+   * @return bool
+   */
   public static function isArrayTrue(&$values) {
     foreach ($values as $name => $value) {
       if (!$value) {
@@ -171,6 +186,12 @@ class CRM_Core_Menu {
     return TRUE;
   }
 
+  /**
+   * Fill menu values by propagating from parent paths.
+   *
+   * @param array $menu The menu array.
+   * @param string $path The path to fill values for.
+   */
   public static function fillMenuValues(&$menu, $path) {
     $fieldsToPropagate = [
       'access_callback',
@@ -219,13 +240,14 @@ class CRM_Core_Menu {
   }
 
   /**
-   * We use this function to
+   * Build the menu structure.
    *
    * 1. Compute the breadcrumb
    * 2. Compute local tasks value if any
    * 3. Propagate access argument, access callback, page callback to the menu item
    * 4. Build the global navigation block
    *
+   * @param array $menu The menu array.
    */
   public static function build(&$menu) {
     foreach ($menu as $path => $menuItems) {
@@ -243,6 +265,11 @@ class CRM_Core_Menu {
     self::buildAdminLinks($menu);
   }
 
+  /**
+   * Store the menu structure in the database.
+   *
+   * @param bool $truncate Whether to truncate the menu table first.
+   */
   public static function store($truncate = TRUE) {
     // first clean up the db
     if ($truncate) {
@@ -279,6 +306,11 @@ class CRM_Core_Menu {
     }
   }
 
+  /**
+   * Build admin links for the menu.
+   *
+   * @param array $menu The menu array.
+   */
   public static function buildAdminLinks(&$menu) {
     $values = [];
 
@@ -318,6 +350,13 @@ class CRM_Core_Menu {
     $menu['admin'] = ['breadcrumb' => $values];
   }
 
+  /**
+   * Get the navigation structure.
+   *
+   * @param bool $all Whether to return all items or just non-collapsed ones.
+   *
+   * @return array|null The navigation structure.
+   */
   public static function &getNavigation($all = FALSE) {
     CRM_Core_Error::fatal();
 
@@ -425,6 +464,11 @@ class CRM_Core_Menu {
     return $values;
   }
 
+  /**
+   * Get admin links.
+   *
+   * @return array|null The admin links.
+   */
   public static function &getAdminLinks() {
     $links = self::get('admin');
 
@@ -441,13 +485,10 @@ class CRM_Core_Menu {
   /**
    * Get the breadcrumb for a given path.
    *
-   * @param  array   $menu   An array of all the menu items.
-   * @param  string  $path   Path for which breadcrumb is to be build.
+   * @param array $menu An array of all the menu items.
+   * @param string $path Path for which breadcrumb is to be built.
    *
-   * @return array  The breadcrumb for this path
-   *
-   * @static
-   * @access public
+   * @return array The breadcrumb for this path.
    */
   public static function buildBreadcrumb(&$menu, $path) {
     $crumbs = [];
@@ -479,12 +520,26 @@ class CRM_Core_Menu {
     return $crumbs;
   }
 
+  /**
+   * Build the return URL for a given path.
+   *
+   * @param array $menu The menu array.
+   * @param string $path The path.
+   */
   public static function buildReturnUrl(&$menu, $path) {
     if (!isset($menu[$path]['return_url'])) {
       list($menu[$path]['return_url'], $menu[$path]['return_url_args']) = self::getReturnUrl($menu, $path);
     }
   }
 
+  /**
+   * Get the return URL for a given path.
+   *
+   * @param array $menu The menu array.
+   * @param string $path The path.
+   *
+   * @return array Array containing the return URL and its arguments.
+   */
   public static function getReturnUrl(&$menu, $path) {
     if (!isset($menu[$path]['return_url'])) {
       $pathElements = explode('/', $path);
@@ -510,6 +565,12 @@ class CRM_Core_Menu {
     }
   }
 
+  /**
+   * Fill component IDs for menu items.
+   *
+   * @param array $menu The menu array.
+   * @param string $path The path.
+   */
   public static function fillComponentIds(&$menu, $path) {
     static $cache = [];
 
@@ -545,6 +606,13 @@ class CRM_Core_Menu {
     }
   }
 
+  /**
+   * Get a menu item for a given path.
+   *
+   * @param string $path The path.
+   *
+   * @return array|null The menu item details.
+   */
   public static function get($path) {
     // return null if menu rebuild
     $config = CRM_Core_Config::singleton();
@@ -627,6 +695,13 @@ UNION (
     return $menuPath;
   }
 
+  /**
+   * Parse path arguments from a string into an array.
+   *
+   * @param string $pathArgs The path arguments string.
+   *
+   * @return array|null The parsed arguments array.
+   */
   public static function getArrayForPathArgs($pathArgs) {
     if (!is_string($pathArgs)) {
       return;
@@ -658,6 +733,14 @@ UNION (
     return $arr;
   }
 
+  /**
+   * Build a menu URL.
+   *
+   * @param string $url The base URL.
+   * @param string $query The query string.
+   *
+   * @return string The complete URL.
+   */
   public static function buildMenuUrl($url, $query) {
     return $url.'?'.$query;
   }

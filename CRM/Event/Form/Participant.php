@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -213,7 +211,6 @@ class CRM_Event_Form_Participant extends CRM_Contact_Form_Task {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_showFeeBlock = CRM_Utils_Array::value('eventId', $_GET);
@@ -523,9 +520,8 @@ SELECT civicrm_custom_group.name as name,
    * This function sets the default values for the form in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     if ($this->_showFeeBlock) {
@@ -690,10 +686,8 @@ SELECT civicrm_custom_group.name as name,
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
-
   public function buildQuickForm() {
     if ($this->_showFeeBlock) {
       if (CRM_Core_Permission::access('CiviContribute')) {
@@ -963,7 +957,6 @@ cj(function() {
   /**
    * Add local and global form rules
    *
-   * @access protected
    *
    * @return void
    */
@@ -974,11 +967,11 @@ cj(function() {
   /**
    * global validation rules for the form
    *
-   * @param array $fields posted values of the form
+   * @param array $values posted values of the form
+   * @param array $files
+   * @param CRM_Event_Form_Participant $self
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
   public static function formRule($values, $files, $self) {
     // If $values['_qf_Participant_next'] is Delete or
@@ -1049,7 +1042,8 @@ cj(function() {
   /**
    * Function to process the form
    *
-   * @access public
+   *
+   * @return void
    */
   public function postProcess() {
     // get the submitted form values.

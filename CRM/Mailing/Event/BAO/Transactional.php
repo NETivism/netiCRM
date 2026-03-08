@@ -3,20 +3,18 @@
 class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transactional {
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Create a new delivery event
+   * Create a new delivery event.
    *
-   * @param array $params     Associative array of delivery event values
+   * @param array $params (reference) Associative array of delivery event values.
    *
-   * @return object
-   * @access public
-   * @static
+   * @return CRM_Mailing_Event_BAO_Transactional|null The created event object or null on failure.
    */
   public static function create(&$params) {
     if (empty($params['activity_id'])) {
@@ -39,10 +37,11 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
   }
 
   /**
-   * Get Transactional mailing events
+   * Get Transactional mailing events.
    *
-   * @param int $activityId
-   * @return void
+   * @param int $activityId The activity ID.
+   *
+   * @return array Array of mailing events.
    */
   public static function getEventsByActivity($activityId) {
     $eq = CRM_Mailing_Event_DAO_Queue::getTableName();
@@ -78,10 +77,11 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
   }
 
   /**
-   * Format event got from database
+   * Format event got from database.
    *
-   * @param array $mailingEvents
-   * @return void
+   * @param array $mailingEvents The array of mailing events.
+   *
+   * @return array The formatted array of mailing events.
    */
   public static function formatMailingEvents($mailingEvents) {
     foreach ($mailingEvents as $idx => $event) {

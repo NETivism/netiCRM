@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,20 +48,16 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
   public $_groupId;
 
   /**
-   * class constructor
-   *
-   * @return CRM_Contact_Page_View_CustomData
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * add a few specific things to view contact
+   * Add a few specific things to view contact.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
@@ -86,13 +80,7 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    *
-   * @access public
-   *
-   * @param object $page - the view page which created this one
-   *
-   * @return none
-   * @static
-   *
+   * @return void
    */
   public function run() {
     $this->preProcess();

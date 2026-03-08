@@ -26,9 +26,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,6 +45,10 @@ class CRM_Activity_Controller_Search extends CRM_Core_Controller {
 
   /**
    * class constructor
+   *
+   * @param string $title
+   * @param bool $modal
+   * @param int $action
    */
   public function __construct($title = NULL, $modal = TRUE, $action = CRM_Core_Action::NONE) {
 
@@ -61,6 +63,11 @@ class CRM_Activity_Controller_Search extends CRM_Core_Controller {
     $this->addActions();
   }
 
+  /**
+   * Get selector name
+   *
+   * @return string
+   */
   public function selectorName() {
     return $this->get('selectorName');
   }

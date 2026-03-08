@@ -26,10 +26,9 @@
 */
 
 /**
+ * Mail store implementation for reading messages from an IMAP server
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -49,8 +48,6 @@ class CRM_Mailing_MailStore_Imap extends CRM_Mailing_MailStore {
    * @param string $password  authentication password
    * @param bool   $ssl       whether to use IMAP or IMAPS
    * @param string $folder    name of the inbox folder
-   *
-   * @return void
    */
   public function __construct($host, $username, $password, $ssl = TRUE, $folder = 'INBOX') {
     // default to INBOX if an empty string

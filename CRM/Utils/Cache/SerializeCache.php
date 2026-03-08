@@ -24,6 +24,14 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
+
+/**
+ * File-based cache implementation that serializes data to PHP files in the template compile directory
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
 
   /**
@@ -35,8 +43,6 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
    * Constructor
    *
    * @param array   $config  an array of configuration params
-   *
-   * @return void
    */
   public function __construct($config) {
     $this->_cache = [];

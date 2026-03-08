@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -49,7 +47,6 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_participantId = CRM_Utils_Request::retrieve('participantId', 'Positive', $this);
@@ -100,8 +97,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     if (CRM_Utils_Array::value('is_monetary', $values['event'])) {
@@ -233,9 +229,8 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the button.

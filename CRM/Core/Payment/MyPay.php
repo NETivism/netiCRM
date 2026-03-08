@@ -1,4 +1,10 @@
 <?php
+/**
+ * MyPay payment processor for handling credit card and recurring donations via the MyPay gateway.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 date_default_timezone_set('Asia/Taipei');
 class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
 
@@ -36,11 +42,10 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   private static $_singleton = NULL;
 
   /**
-   * Constructor
+   * Class constructor.
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
+   * @param array &$paymentProcessor payment processor parameters
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
@@ -48,13 +53,13 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_MyPay
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -65,10 +70,11 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Provide default payment
+   * Provide default payment URL values.
    *
-   * @param array $defaults   array to be change
-   * @param object $paymen dao that will be added to payment when default is empty
+   * @param array &$default array to be changed
+   * @param object $payment DAO object containing payment details
+   *
    * @return void
    */
   public static function buildPaymentDefault(&$default, $payment) {
@@ -83,10 +89,9 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
     $config = CRM_Core_Config::singleton();
@@ -161,6 +166,14 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
   */
 
+  /**
+   * Handle transfer checkout (redirect to payment gateway).
+   *
+   * @param array &$params name-value pairs of contribution data
+   * @param string $component component name ('contribute' or 'event')
+   *
+   * @return void
+   */
   public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
@@ -263,11 +276,11 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Get all used instrument.
+   * Get all used instruments.
    *
-   * @param string $type The String of return type, as 'normal'(default), 'form_name' and 'code'.
+   * @param string $type the return type: 'normal', 'form_name', or 'code'
    *
-   * @return array The instruments used by mypay.
+   * @return array the instruments used by MyPay
    */
   public static function getInstruments($type = 'normal') {
     $i = [
@@ -292,12 +305,13 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Generate trxn_id of MyPay
+   * Generate a transaction ID for MyPay.
    *
-   * @param boolean $is_test Is this id a test contribution or not.
-   * @param string $id The contribution Id.
+   * @param int $contributionId contribution ID
+   * @param int $is_test whether this is a test contribution
+   * @param int|null $recurringId optional recurring ID
    *
-   * @return string If test, return expand string of id.
+   * @return string generated transaction ID
    */
   public static function getContributionTrxnID($contributionId, $is_test = 0, $recurringId = NULL) {
     $rand = base_convert(strval(rand(16, 255)), 10, 16);
@@ -318,16 +332,14 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Retrieve arguments of order
+   * Retrieve arguments for an order.
    *
-   * @param array $vars Parameters of the contribution page or session.
-   * @param string $component String of payment type as 'contribute' or 'event'.
-   * @param array $payment_processor The payment processor parameters.
-   * @param string $instrument_code The code of used instrument like 'Credit' or 'ATM'.
-   * @param string $form_key The unique from key from the session.
+   * @param array &$vars parameters of the contribution page or session
+   * @param string $component component name ('contribute' or 'event')
+   * @param string $instrumentCode instrument code
+   * @param string $formKey unique form key from the session
    *
-   * @return array Rearrange nessesary arguments for checkout.
-   *
+   * @return array<string, mixed> necessary arguments for checkout
    */
   public function getOrderArgs(&$vars, $component, $instrumentCode, $formKey) {
     $paymentProcessor = $this->_paymentProcessor;
@@ -439,12 +451,12 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Print redirect form HTML
+   * Post data to MyPay server and retrieve response.
    *
-   * @param array $redirect_vars Variables of form elements which is name to value.
-   * @param array $payment_processor The payment processor parameters.
+   * @param string $url post URL
+   * @param array $data post data
    *
-   * @return void
+   * @return array response from server
    */
   public function postData($url, $data) {
     $ch = curl_init();
@@ -498,12 +510,11 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Print redirect form HTML
+   * Output redirect form HTML.
    *
-   * @param array $redirect_vars Variables of form elements which is name to value.
-   * @param array $payment_processor The payment processor parameters.
+   * @param array $redirectVars variables for form elements
    *
-   * @return void
+   * @return string HTML redirect form
    */
   public function outputRedirectForm($redirectVars) {
     $paymentProcessor = $this->_paymentProcessor;
@@ -540,6 +551,14 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
     return $html;
   }
 
+  /**
+   * Encrypt arguments using AES-256-CBC.
+   *
+   * @param mixed $fields data to encrypt
+   * @param string $key encryption key
+   *
+   * @return string base64-encoded encrypted data
+   */
   public static function encryptArgs($fields, $key) {
     $data = json_encode($fields);
     $size = openssl_cipher_iv_length('AES-256-CBC');
@@ -550,15 +569,15 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Execute ipn as called from mypay transaction.
+   * Execute IPN as called from MyPay transaction.
    *
-   * @param array $arguments Default params in CiviCRM Router, Must be array('civicrm', 'mypay', 'ipn')
-   * @param string $instrument The code of used instrument like 'Credit' or 'ATM'.
-   * @param array $post Bring post variables if you need test.
-   * @param array $get Bring get variables if you need test.
-   * @param boolean $print Does server echo the result, or just return that. Default is TRUE.
+   * @param array|null $arguments instrument code or arguments array
+   * @param string|null $instrument instrument code
+   * @param array|null $post optional POST variables
+   * @param array|null $get optional GET variables
+   * @param bool $print whether to echo the result
    *
-   * @return string|void If $print is FALSE, function will return the result as Array.
+   * @return string|void result if $print is FALSE
    */
   public static function doIPN($arguments, $instrument = NULL, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
@@ -652,11 +671,12 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
-   * Write data into table `civicrm_contrbution_mypay_log`
-   * @param number|NULL $logId The field `id` in `civicrm_contrbution_mypay_log`. Use NULL to create new row.
-   * @param Array $data Insert fields of the row. The value must be String type and keys must match field name.
+   * Write data into table `civicrm_contribution_mypay_log`.
    *
-   * @return number $id The `id` of the row.
+   * @param int|null $logId log record ID (use NULL for new record)
+   * @param array $data data to be recorded
+   *
+   * @return int record ID
    */
   public static function writeLog($logId, $data = []) {
     $recordType = ['contribution_id', 'uid', 'url', 'cmd', 'date', 'post_data', 'return_data'];
@@ -677,7 +697,13 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
+   * Save IPN data to the database.
    *
+   * @param int $contributionId contribution ID
+   * @param array $data data to be recorded
+   * @param string $apiType optional API type
+   *
+   * @return void
    */
   public static function doRecordData($contributionId, $data, $apiType = '') {
     $recordType = [
@@ -704,7 +730,11 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
+   * Get the encryption key for a specific contribution.
    *
+   * @param int $contributionId contribution ID
+   *
+   * @return string|null encryption key
    */
   public static function getKey($contributionId) {
     $mypay = new CRM_Contribute_DAO_MyPay();
@@ -715,7 +745,11 @@ class CRM_Core_Payment_MyPay extends CRM_Core_Payment {
   }
 
   /**
+   * Generate a transaction ID based on IPN input.
    *
+   * @param array $input IPN input data
+   *
+   * @return string|null generated transaction ID
    */
   public static function getTrxnIdByPost($input) {
     $trxnId = NULL;

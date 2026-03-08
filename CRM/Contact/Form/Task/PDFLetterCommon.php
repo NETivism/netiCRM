@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,11 @@
 class CRM_Contact_Form_Task_PDFLetterCommon {
 
   /**
-   * build all the data structures needed to build the form
+   * Pre-process the form by loading available message templates.
    *
-   * @return void
+   * @param CRM_Core_Form $form
    * @access public
+   * @static
    */
   public static function preProcess(&$form) {
 
@@ -61,6 +60,12 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $form->assign('messageSubject', $messageSubject);
   }
 
+  /**
+   * Pre-process the form for a single contact.
+   *
+   * @param CRM_Core_Form $form
+   * @param int $cid Contact ID.
+   */
   public static function preProcessSingle(&$form, $cid) {
     $form->_contactIds = [$cid];
     // put contact display name in title for single contact mode
@@ -123,13 +128,14 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
   }
 
   /**
-   * form rule
+   * Form rule.
    *
-   * @param array $fields    the input form values
-   * @param array $dontCare
-   * @param array $self      additional values form 'this'
+   * @param array $fields The input form values.
+   * @param array $dontCare (not used)
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return true if no errors, else array of errors
+   * @return bool|array
+   *   true if no errors, else array of errors.
    * @access public
    *
    */
@@ -145,11 +151,12 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
+   * @param CRM_Contact_Form_Task_PDF $form
    * @access public
    *
-   * @return None
+   * @return void
    */
   public static function postProcess(&$form) {
     $formValues = $form->controller->exportValues($form->getName());
@@ -255,6 +262,11 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     CRM_Utils_System::civiExit(1);
   }
 
+  /**
+   * Apply custom formatting and purification to the HTML message.
+   *
+   * @param string $message The HTML message to format.
+   */
   public static function formatMessage(&$message) {
     $newLineOperators = ['p' => ['oper' => '<p>',
         'pattern' => '/<(\s+)?p(\s+)?>/m',

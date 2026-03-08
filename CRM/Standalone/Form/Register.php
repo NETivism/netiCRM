@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,6 +39,9 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
   protected $_openID;
 
+  /**
+   * Pre-process the form.
+   */
   public function preProcess() {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework !== "Standalone") {
@@ -62,6 +63,13 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     $this->_openID = $session->get('openid');
   }
 
+
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, mixed>
+   *   The default values
+   */
   public function setDefaultValues() {
     $defaults = [];
 
@@ -70,6 +78,10 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     return $defaults;
   }
 
+
+  /**
+   * Build the form.
+   */
   public function buildQuickForm() {
     $this->add(
       'text',
@@ -121,6 +133,10 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     );
   }
 
+
+  /**
+   * Process the form submission.
+   */
   public function postProcess() {
     $formValues = $this->controller->exportValues($this->_name);
 

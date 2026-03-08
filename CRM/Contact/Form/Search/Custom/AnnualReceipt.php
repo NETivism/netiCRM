@@ -26,15 +26,21 @@
 */
 
 /**
+ * Custom search form for generating annual contribution receipts
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   public $_year;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -52,6 +58,14 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     ];
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     $years = [];
     for ($year = date('Y'); $year < date('Y') + 10; $year++) {
@@ -70,6 +84,12 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     }
   }
 
+  /**
+   * Get summary
+   *
+   * @return array<string, mixed>
+   * @access public
+   */
   public function summary() {
     $year = CRM_Utils_Array::value('year', $this->_formValues);
     $summary = [
@@ -79,6 +99,17 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     return $summary;
   }
 
+  /**
+   * Construct the search query
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
     $select = "
 contact_a.id           as contact_id  ,
@@ -99,12 +130,26 @@ SUM(contribution.total_amount) as total_amount
     return $sql;
   }
 
+  /**
+   * Get from clause
+   *
+   * @return string
+   * @access public
+   */
   public function from() {
     return "
 FROM      civicrm_contact contact_a
 INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.contact_id";
   }
 
+  /**
+   * Get where clause
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function where($includeContactIDs = FALSE) {
     $params = [];
     $where = [
@@ -124,13 +169,33 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
     return $where;
   }
 
+  /**
+   * Get template file name
+   *
+   * @return string
+   * @access public
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
+  /**
+   * Set default values
+   *
+   * @return void
+   * @access public
+   */
   public function setDefaultValues() {
   }
 
+  /**
+   * Alter row
+   *
+   * @param array $row
+   *
+   * @return void
+   * @access public
+   */
   public function alterRow(&$row) {
   }
 }

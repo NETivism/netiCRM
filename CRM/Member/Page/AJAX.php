@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,7 +37,11 @@
 class CRM_Member_Page_AJAX {
 
   /**
-   * Function to setDefaults according to membership type
+   * Function to setDefaults according to membership type.
+   *
+   * @param object $config
+   *
+   * @return void
    */
   public static function getMemberTypeDefaults($config) {
 

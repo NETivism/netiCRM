@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Admin_Form_PreferencesDate extends CRM_Admin_Form {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
 
@@ -96,14 +93,11 @@ class CRM_Admin_Form_PreferencesDate extends CRM_Admin_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global form rule.
    *
-   * @param array  $fields   (referance) posted values of the form
+   * @param array $fields The input form values.
    *
-   * @return array    if errors then list of errors to be posted back to the form,
-   *                  true otherwise
-   * @static
-   * @access public
+   * @return bool|array True if no errors, else array of errors.
    */
   public static function formRule($fields) {
     $errors = [];
@@ -116,11 +110,9 @@ class CRM_Admin_Form_PreferencesDate extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     if (!($this->_action & CRM_Core_Action::UPDATE)) {

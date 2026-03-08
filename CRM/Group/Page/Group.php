@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,8 +40,18 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    */
   public static $_links = NULL;
 
+  /**
+   * Pager object.
+   *
+   * @var CRM_Utils_Pager
+   */
   protected $_pager = NULL;
 
+  /**
+   * Character to sort by.
+   *
+   * @var string
+   */
   protected $_sortByCharacter;
 
   /**
@@ -52,6 +60,12 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * @var array
    */
   public static $_savedSearchLinks = NULL;
+
+  /**
+   * Get BAO Name.
+   *
+   * @return string
+   */
   public function getBAOName() {
     return 'CRM_Contact_BAO_Group';
   }
@@ -60,7 +74,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * Function to define action links
    *
    * @return array self::$_links array of action links
-   * @access public
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -104,7 +117,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * Function to define action links for saved search
    *
    * @return array self::$_savedSearchLinks array of action links
-   * @access public
    */
   public function &savedSearchLinks() {
     if (!self::$_savedSearchLinks) {
@@ -137,7 +149,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * return class name of edit form
    *
    * @return string
-   * @access public
    */
   public function editForm() {
     return 'CRM_Group_Form_Edit';
@@ -147,7 +158,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * return name of edit form
    *
    * @return string
-   * @access public
    */
   public function editName() {
     return 'Edit Group';
@@ -157,7 +167,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * return class name of delete form
    *
    * @return string
-   * @access public
    */
   public function deleteForm() {
     return 'CRM_Group_Form_Delete';
@@ -167,7 +176,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * return name of delete form
    *
    * @return string
-   * @access public
    */
   public function deleteName() {
     return 'Delete Group';
@@ -176,8 +184,9 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
   /**
    * return user context uri to return to
    *
+   * @param int $mode
+   *
    * @return string
-   * @access public
    */
   public function userContext($mode = NULL) {
     return 'civicrm/group';
@@ -186,8 +195,9 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
   /**
    * return user context uri params
    *
+   * @param int $mode
+   *
    * @return string
-   * @access public
    */
   public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';
@@ -196,11 +206,10 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
   /**
    * make sure that the user has permission to access this group
    *
-   * @param int $id   the id of the object
-   * @param int $name the name or title of the object
+   * @param int $id the id of the object
+   * @param string $title the name or title of the object
    *
-   * @return string   the permission that the user has (or null)
-   * @access public
+   * @return string the permission that the user has (or null)
    */
   public function checkPermission($id, $title) {
     return CRM_Contact_BAO_Group::checkPermission($id, $title);
@@ -213,7 +222,6 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
    * @param int $action
    *
    * @return void
-   * @access public
    */
   public function browse($action = NULL) {
 
@@ -390,6 +398,11 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
     }
   }
 
+  /**
+   * Run the search form.
+   *
+   * @return void
+   */
   public function search() {
     if ($this->_action &
       (
@@ -408,6 +421,15 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
     $form->run();
   }
 
+  /**
+   * Build the where clause for the search.
+   *
+   * @param array $params
+   * @param bool $sortBy
+   * @param bool $excludeHidden
+   *
+   * @return string
+   */
   public function whereClause(&$params, $sortBy = TRUE, $excludeHidden = TRUE) {
     $values = [];
 
@@ -496,6 +518,14 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Pager.
+   *
+   * @param string $whereClause
+   * @param array $whereParams
+   *
+   * @return void
+   */
   public function pager($whereClause, $whereParams) {
 
     $params['status'] = ts('Group %%StatusMessage%%');
@@ -527,6 +557,14 @@ class CRM_Group_Page_Group extends CRM_Core_Page_Basic {
     $this->assign_by_ref('pager', $this->_pager);
   }
 
+  /**
+   * Pager A to Z.
+   *
+   * @param string $whereClause
+   * @param array $whereParams
+   *
+   * @return void
+   */
   public function pagerAtoZ($whereClause, $whereParams) {
 
     $query = "

@@ -19,8 +19,6 @@
 
 /**
  *
- * @package CRM
- * $Id$
  *
  */
 
@@ -29,6 +27,12 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
   public $_columns;
   protected $_formValues;
   protected $_tableName = NULL;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
@@ -43,6 +47,11 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     ];
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
 
     /**
@@ -75,19 +84,34 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     $form->assign('elements', ['limit_groups', 'oc_month_start', 'oc_month_end', 'oc_day_start', 'oc_day_end']);
   }
 
+  /**
+   * Set the breadcrumb for the search page.
+   */
   public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
   /**
+   * Get the path to the template file.
+   *
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
    */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/UpcomingBirthday.tpl';
   }
 
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
    */
   public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
@@ -134,6 +158,11 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     return $sql;
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     $limit_group = $this->_formValues['limit_groups'];
     if (!empty($limit_group) && is_array($limit_group)) {
@@ -144,6 +173,13 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     }
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
@@ -200,8 +236,10 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     return $partial_where_clause;
   }
 
-  /*
-   * Functions below generally don't need to be modified
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
    */
   public function count() {
     $sql = $this->all();
@@ -210,19 +248,43 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     return $dao->N;
   }
 
+  /**
+   * Get the SQL for retrieving contact IDs.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
+  /**
+   * Getter for the display columns.
+   *
+   * @return array
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return array{}
+   */
   public function summary() {
     $summary = [];
     return $summary;
   }
 
+  /**
+   * Alter a single result row for display.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
     $row['birth'] = str_replace('.', '/', $row['birth']);
   }

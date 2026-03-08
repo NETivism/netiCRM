@@ -20,6 +20,11 @@ class CRM_AI_Page_AJAX {
   public const HTTP_SERVICE_UNAVAILABLE = 503;
   public const HTTP_GATEWAY_TIMEOUT = 504;
 
+  /**
+   * Handle chat request.
+   *
+   * @return void
+   */
   public static function chat() {
     $maxlength = 2000;
     $toneStyle = $aiRole = $context = NULL;
@@ -197,6 +202,12 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Get template list.
+   *
+   * @return void
+   * @throws CRM_Core_Exception
+   */
   public static function getTemplateList() {
     $data = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
@@ -272,6 +283,12 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Get template by ID.
+   *
+   * @return void
+   * @throws CRM_Core_Exception
+   */
   public static function getTemplate() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
@@ -304,6 +321,11 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Set template status and title.
+   *
+   * @return void
+   */
   public static function setTemplate() {
     $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
@@ -378,6 +400,11 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Set share status.
+   *
+   * @return void
+   */
   public static function setShare() {
     $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
@@ -425,6 +452,11 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Generate image by text prompt.
+   *
+   * @return void
+   */
   public static function generateImage() {
     $maxlength = 1000;
 
@@ -580,6 +612,11 @@ class CRM_AI_Page_AJAX {
     ], self::HTTP_BAD_REQUEST);
   }
 
+  /**
+   * Get sample image by locale and style/ratio.
+   *
+   * @return void
+   */
   public static function getSampleImage() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
@@ -684,6 +721,11 @@ class CRM_AI_Page_AJAX {
     ]);
   }
 
+  /**
+   * Get image generation history for current user.
+   *
+   * @return void
+   */
   public static function getImageHistory() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
@@ -880,6 +922,7 @@ class CRM_AI_Page_AJAX {
    * This function handles the response in case of an error.
    *
    * @param mixed $error The error message or object that needs to be sent as a response.
+   * @param int $statusCode The HTTP status code.
    */
   public static function responseError($error, $statusCode = 400) {
     // 405 status code needs special handling for Allow header
@@ -929,6 +972,7 @@ class CRM_AI_Page_AJAX {
    * @param array $jsondata The JSON data to be validated.
    * @param array $allowedInput An associative array where the keys are what we expect to find in the JSON data,
    *                            and the values are the types that these inputs should have.
+   * @param array $requiredFields The required fields.
    * @return bool Returns true if all inputs exist and are of the correct type; otherwise returns false.
    */
   public static function validateJsonData($jsondata, $allowedInput, $requiredFields = []) {
@@ -968,7 +1012,7 @@ class CRM_AI_Page_AJAX {
    * Extract error code from exception message
    *
    * @param string $errorMessage Original error message
-   * @return string Error code
+   * @return string The error code.
    */
   private static function parseErrorCode($errorMessage) {
     // Pattern to extract error codes from AITransPrompt exceptions

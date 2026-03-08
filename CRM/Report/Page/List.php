@@ -27,17 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Page for displaying list of Reprot templates available
+ * Page for displaying the list of available report templates.
  */
 class CRM_Report_Page_List extends CRM_Core_Page {
 
+  /**
+   * Retrieves all active report template entries from the 'report_list' option group,
+   * grouped by component name, with URLs for the template and any created instances.
+   *
+   * @return array Nested array: componentName => [ optionValue => [ title, description, url, instanceUrl? ] ].
+   */
   public static function &info() {
     $sql = "
 SELECT  v.id, v.value, v.label, v.description, v.component_id, 

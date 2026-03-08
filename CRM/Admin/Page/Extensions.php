@@ -28,9 +28,7 @@
 /**
  * This is a part of CiviCRM extension management functionality.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,11 +50,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   public static $_extNotInstalled = NULL;
 
   /**
-   * Obtains the group name from url and sets the title.
+   * Obtains the group name from URL and sets the title.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
 
@@ -69,7 +65,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
@@ -78,7 +74,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
@@ -115,7 +111,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the basic page (run essentially starts execution for that page).
+   * Runs the basic page.
    *
    * @return void
    */
@@ -125,12 +121,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all options
-   *
+   * Browses all extensions.
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
 
@@ -183,7 +176,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
@@ -192,7 +185,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
@@ -201,21 +194,22 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/extensions';
   }
 
   /**
-   * function to get userContext params
+   * Gets user context params.
    *
-   * @param int $mode mode that we are in
+   * @param string|null $mode
    *
    * @return string
-   * @access public
    */
   public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';

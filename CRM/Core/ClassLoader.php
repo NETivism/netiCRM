@@ -1,4 +1,10 @@
 <?php
+/**
+ * Autoloader for CiviCRM classes that registers with the SPL autoload stack
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
 
 require_once __DIR__.'/../../functions.php';
 class CRM_Core_ClassLoader {
@@ -13,9 +19,11 @@ class CRM_Core_ClassLoader {
   private static $_include_paths = [];
 
   /**
-   * @param bool $force
+   * Singleton function used to manage this object.
    *
-   * @return object
+   * @param bool $force Whether to force a reconstruction of the singleton instance.
+   *
+   * @return CRM_Core_ClassLoader The class loader instance.
    */
   public static function &singleton($force = FALSE) {
     if ($force || self::$_singleton === NULL) {
@@ -54,9 +62,7 @@ class CRM_Core_ClassLoader {
   /**
    * Registers this instance as an autoloader.
    *
-   * @param Boolean $prepend Whether to prepend the autoloader or not
-   *
-   * @api
+   * @param bool $prepend Whether to prepend the autoloader to the SPL stack.
    */
   public function register($prepend = FALSE) {
     if ($this->_registered) {
@@ -67,6 +73,11 @@ class CRM_Core_ClassLoader {
 
   }
 
+  /**
+   * Autoloads a class.
+   *
+   * @param string $class Name of the class to load.
+   */
   public function loadClass($class) {
     self::$_include_paths = explode(PATH_SEPARATOR, get_include_path());
     if (FALSE === strpos($class, '\\')) {

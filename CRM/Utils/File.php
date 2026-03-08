@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: $
  *
@@ -39,12 +38,13 @@
 class CRM_Utils_File {
 
   /**
-   * Given a file name, determine if the file contents make it an ascii file
+   * Determine if a file contains only ASCII characters.
    *
-   * @param string $name name of file
+   * Reads the file line by line and checks each line for non-ASCII content.
    *
-   * @return boolean     true if file is ascii
-   * @access public
+   * @param string $name The file path to check.
+   *
+   * @return bool TRUE if the file contains only ASCII characters, FALSE otherwise.
    */
   public static function isAscii($name) {
     $fd = fopen($name, "r");
@@ -66,12 +66,13 @@ class CRM_Utils_File {
   }
 
   /**
-   * Given a file name, determine if the file contents make it an html file
+   * Determine if a file contains HTML content.
    *
-   * @param string $name name of file
+   * Reads the first few lines of the file to detect HTML markup.
    *
-   * @return boolean     true if file is html
-   * @access public
+   * @param string $name The file path to check.
+   *
+   * @return bool TRUE if the file appears to contain HTML, FALSE otherwise.
    */
   public static function isHtml($name) {
     $fd = fopen($name, "r");
@@ -95,15 +96,13 @@ class CRM_Utils_File {
   }
 
   /**
-   * create a directory given a path name, creates parent directories
-   * if needed
+   * Create a directory at the given path, recursively creating parent directories if needed.
    *
-   * @param string $path  the path name
-   * @param boolean $abort should we abort or just return an invalid code
+   * @param string $path The directory path to create.
+   * @param bool $abort If TRUE, terminate execution on failure; if FALSE, return FALSE on failure.
    *
-   * @return void
-   * @access public
-   * @static
+   * @return bool|void TRUE on success, FALSE on failure (when $abort is FALSE),
+   *                   or void if directory already exists.
    */
   public static function createDir($path, $abort = TRUE) {
     if (is_dir($path) || empty($path)) {
@@ -126,14 +125,12 @@ class CRM_Utils_File {
   }
 
   /**
-   * delete a directory given a path name, delete children directories
-   * and files if needed
+   * Recursively delete the contents of a directory, and optionally remove the directory itself.
    *
-   * @param string $path  the path name
+   * @param string $target The directory path to clean.
+   * @param bool $rmdir If TRUE, remove the directory after deleting its contents.
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function cleanDir($target, $rmdir = TRUE) {
     static $exceptions = ['.', '..'];
@@ -159,6 +156,14 @@ class CRM_Utils_File {
     }
   }
 
+  /**
+   * Recursively copy a directory and its contents to a destination.
+   *
+   * @param string $source The source directory path.
+   * @param string $destination The destination directory path.
+   *
+   * @return void
+   */
   public static function copyDir($source, $destination) {
 
     $dir = opendir($source);
@@ -177,12 +182,13 @@ class CRM_Utils_File {
   }
 
   /**
-   * Given a file name, recode it (in place!) to UTF-8
+   * Recode a file's contents from the configured legacy encoding to UTF-8 in place.
    *
-   * @param string $name name of file
+   * Uses mb_convert_encoding if available, otherwise falls back to iconv.
    *
-   * @return boolean  whether the file was recoded properly
-   * @access public
+   * @param string $name The file path to recode.
+   *
+   * @return bool TRUE if the file was recoded successfully, FALSE on any failure.
    */
   public static function toUtf8($name) {
 
@@ -229,11 +235,12 @@ class CRM_Utils_File {
   }
 
   /**
-   * Appends trailing slashed to paths
+   * Append a trailing directory separator to a path if not already present.
    *
-   * @return string
-   * @access public
-   * @static
+   * @param string $name The path to process.
+   * @param string|null $separator The separator character to use. Defaults to DIRECTORY_SEPARATOR.
+   *
+   * @return string The path with a trailing separator.
    */
   public static function addTrailingSlash($name, $separator = NULL) {
     if (!$separator) {
@@ -246,6 +253,20 @@ class CRM_Utils_File {
     return $name;
   }
 
+  /**
+   * Execute SQL statements from a file or query string against a database.
+   *
+   * Connects to the database using the given DSN, strips comments,
+   * splits the content by semicolons, and executes each statement.
+   *
+   * @param string $dsn The PEAR DB data source name for the database connection.
+   * @param string $fileName The file path containing SQL statements, or a raw SQL string if $isQueryString is TRUE.
+   * @param string|null $prefix Optional SQL to prepend before the file/query content.
+   * @param bool $isQueryString If TRUE, treat $fileName as a raw SQL string instead of a file path.
+   * @param bool $dieOnErrors If TRUE, terminate on query errors; if FALSE, echo the error and continue.
+   *
+   * @return void
+   */
   public static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
 
     $db = &DB::connect($dsn);
@@ -283,6 +304,16 @@ class CRM_Utils_File {
     }
   }
 
+  /**
+   * Check if a file extension is in the configured safe extensions list.
+   *
+   * HTML/HTM extensions are only allowed for users with 'access CiviMail'
+   * or 'administer CiviCRM' permissions.
+   *
+   * @param string $ext The file extension to check (without the leading dot).
+   *
+   * @return bool TRUE if the extension is considered safe, FALSE otherwise.
+   */
   public static function isExtensionSafe($ext) {
     static $extensions = NULL;
     if (!$extensions) {
@@ -306,11 +337,11 @@ class CRM_Utils_File {
   }
 
   /**
-   * Determine whether a given file is listed in the PHP include path
+   * Determine whether a given file can be found in the PHP include path.
    *
-   * @param string $name name of file
+   * @param string $name The file name or relative path to check.
    *
-   * @return boolean  whether the file can be include()d or require()d
+   * @return bool TRUE if the file can be included/required, FALSE otherwise.
    */
   public static function isIncludable($name) {
     $x = @fopen($name, 'r', TRUE);
@@ -324,8 +355,14 @@ class CRM_Utils_File {
   }
 
   /**
-   * remove the 32 bit md5 we add to the fileName
-   * also remove the unknown tag if we added it
+   * Remove the unique hash suffix appended to a file name by makeFileName().
+   *
+   * Strips the underscore-prefixed alphanumeric hash (8-32 chars) that
+   * appears before the file extension.
+   *
+   * @param string $name The file name to clean.
+   *
+   * @return string The file name with the hash suffix removed.
    */
   public static function cleanFileName($name) {
     // replace the last 33 character before the '.' with null
@@ -333,6 +370,17 @@ class CRM_Utils_File {
     return $name;
   }
 
+  /**
+   * Generate a unique file name by appending a random alphanumeric suffix.
+   *
+   * If the file extension is not in the safe list, the extension is munged
+   * and ".unknown" is appended. The file name is truncated to fit within
+   * filesystem limits (255 bytes).
+   *
+   * @param string $name The original file name.
+   *
+   * @return string The generated unique file name.
+   */
   public static function makeFileName($name) {
     $uniqID = CRM_Utils_String::createRandom(8, CRM_Utils_String::ALPHANUMERIC);
     $info = pathinfo($name);
@@ -355,6 +403,14 @@ class CRM_Utils_File {
     }
   }
 
+  /**
+   * Get all files in a directory that match a given file extension.
+   *
+   * @param string $path The directory path to search.
+   * @param string $ext The file extension to filter by (without the leading dot).
+   *
+   * @return string[] An array of full file paths matching the extension.
+   */
   public static function getFilesByExtension($path, $ext) {
     $path = self::addTrailingSlash($path);
     $dh = opendir($path);
@@ -369,9 +425,14 @@ class CRM_Utils_File {
   }
 
   /**
-   * Restrict access to a given directory (by planting there a restrictive .htaccess file)
+   * Restrict HTTP access to a directory by creating a restrictive .htaccess file.
    *
-   * @param string $dir  the directory to be secured
+   * Does nothing if the directory path is empty to avoid accidentally
+   * placing the .htaccess file in the site root.
+   *
+   * @param string $dir The directory path to secure (must include trailing slash).
+   *
+   * @return void
    */
   public static function restrictAccess($dir) {
     // note: empty value for $dir can play havoc, since that might result in putting '.htaccess' to root dir
@@ -394,8 +455,13 @@ class CRM_Utils_File {
   }
 
   /**
-   * Create the base file path from which all our internal directories are
-   * offset. This is derived from the cms public dir
+   * Get the base file path from which all CiviCRM internal directories are offset.
+   *
+   * Derived from the CMS public directory. The result is cached statically.
+   *
+   * @param string|null $cmsDir The CMS public directory name. Defaults to the system public directory.
+   *
+   * @return string The base file path with a trailing directory separator.
    */
   public static function baseFilePath($cmsDir = NULL) {
     static $path = NULL;

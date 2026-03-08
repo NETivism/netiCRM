@@ -27,21 +27,43 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
+
+  /**
+   * Number of rows to insert in a single SQL statement.
+   */
   public const NUM_ROWS_TO_INSERT = 100;
+
+  /**
+   * Get info about this data source.
+   *
+   * @return array
+   */
   public function getInfo() {
     return ['title' => ts('Comma-Separated Values (CSV)')];
   }
 
+  /**
+   * Pre-process form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function preProcess(&$form) {
   }
 
+  /**
+   * Build the form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function buildQuickForm(&$form) {
     $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_CSV');
 
@@ -61,6 +83,15 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
     $form->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
   }
 
+  /**
+   * Process the form.
+   *
+   * @param CRM_Core_Form $form
+   * @param array $params
+   * @param object $db
+   *
+   * @return void
+   */
   public static function postProcess(&$form, &$params, &$db) {
     $file = $params['uploadFile']['name'];
 
@@ -86,12 +117,12 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
   /**
    * Create a table that matches the CSV file and populate it with the file's contents
    *
-   * @param object $db     handle to the database connection
-   * @param string $file   file name to load
-   * @param bool   $headers  whether the first row contains headers
-   * @param string $table  Name of table from which data imported.
+   * @param object $db handle to the database connection
+   * @param string $file file name to load
+   * @param bool $headers whether the first row contains headers
+   * @param string $table Name of table from which data imported.
    *
-   * @return string  name of the created table
+   * @return array<string, string|\non-empty-list<(string | null)>|bool> name of the created table and original column headers
    */
   private static function _CsvToTable(&$db, $file, $headers = FALSE, $table = NULL) {
     $result = [];

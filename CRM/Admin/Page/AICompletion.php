@@ -39,12 +39,9 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
   private $_pager;
 
   /**
-   * This function is the main function that is called
-   * when the page loads, it decides the which action has
-   * to be taken for the page.
+   * Main function that is called when the page loads, it decides which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
@@ -60,6 +57,11 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Browses all records.
+   *
+   * @return void
+   */
   public function browse() {
     // filter
     $filters = [];
@@ -183,10 +185,20 @@ DESC
     $this->assign('rows', $rows);
   }
 
+  /**
+   * Views a record.
+   *
+   * @return void
+   */
   public function view() {
     $this->edit();
   }
 
+  /**
+   * Edits a record.
+   *
+   * @return void
+   */
   public function edit() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $controller = new CRM_Core_Controller_Simple('CRM_AI_Form_AICompletion', ts('AI Copywriter'), $this->_action);
@@ -204,10 +216,9 @@ DESC
   }
 
   /**
-   * Get action links
+   * Gets action links.
    *
-   * @return array (reference) of action links
-   * @static
+   * @return array
    */
   public static function &links() {
     if (!(self::$_links)) {
@@ -229,6 +240,13 @@ DESC
     return self::$_links;
   }
 
+  /**
+   * Sets up the pager.
+   *
+   * @param int $total
+   *
+   * @return void
+   */
   public function pager($total) {
     $params = [];
     $params['status'] = '';
@@ -241,6 +259,15 @@ DESC
     $this->assign_by_ref('pager', $this->_pager);
   }
 
+  /**
+   * Builds the WHERE clause.
+   *
+   * @param array $filters
+   * @param array $where
+   * @param array $params
+   *
+   * @return void
+   */
   public function buildWhere($filters, &$where, &$params) {
     foreach ($filters as $ele => $filterValue) {
       if ($ele == 'is_template') {
@@ -264,6 +291,13 @@ DESC
     }
   }
 
+  /**
+   * Validates the filters.
+   *
+   * @param array $filters
+   *
+   * @return void
+   */
   public function validateFilters(&$filters) {
     $filters = array_filter($filters);
     $available = [];
@@ -288,6 +322,11 @@ DESC
     }
   }
 
+  /**
+   * Gets statistics.
+   *
+   * @return array<string, non-empty-array<mixed>>
+   */
   public function getStats() {
     $stats = [
       'component' => []

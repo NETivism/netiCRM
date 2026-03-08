@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * This defines two actions - Details and Delete.
    *
    * @var array
-   * @static
    */
   public static $_actionLinks;
 
@@ -51,7 +48,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * we use desc to remind us what that column is, name is used in the tpl
    *
    * @var array
-   * @static
    */
   public static $_columnHeaders;
 
@@ -59,7 +55,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * contactId - contact id of contact whose activies are displayed
    *
    * @var int
-   * @access protected
    */
   protected $_contactId;
 
@@ -72,11 +67,10 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * Class constructor
    *
-   * @param int $contactId - contact whose activities we want to display
-   * @param int $permission - the permission we have for this contact
-   *
-   * @return CRM_Contact_Selector_Activity
-   * @access public
+   * @param int $contactId contact whose activities we want to display
+   * @param int $permission the permission we have for this contact
+   * @param bool $admin
+   * @param string $context
    */
   public function __construct($contactId, $permission, $admin = FALSE, $context = 'activity') {
     $this->_contactId = $contactId;
@@ -95,10 +89,14 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    *
    * - View
    *
-   * @param string $activityType type of activity
+   * @param int $activityTypeId
+   * @param int $sourceRecordId
+   * @param bool $accessMailingReport
+   * @param int $activityId
+   * @param string $key
+   * @param string $compContext
    *
    * @return array
-   * @access public
    *
    */
   public function actionLinks(
@@ -305,8 +303,11 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * getter for array of the parameters required for creating pager.
    *
-   * @param
-   * @access public
+   * @param int $action
+   * @param array $params
+   *
+   *
+   * @return void
    */
   public function getPagerParams($action, &$params) {
     $params['status'] = ts('Activities %%StatusMessage%%');
@@ -321,11 +322,10 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * returns the column headers as an array of tuples:
    * (name, sortName (key to the sort array))
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param int $action the action being performed
+   * @param string $output what should the result set include (web/email/csv)
    *
    * @return array the column headers that need to be displayed
-   * @access public
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if ($output == CRM_Core_Selector_Controller::EXPORT || $output == CRM_Core_Selector_Controller::SCREEN) {
@@ -345,10 +345,10 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * Returns total number of rows for the query.
    *
-   * @param string $action - action being performed
+   * @param int $action - action being performed
+   * @param int $case
    *
    * @return int Total number of rows
-   * @access public
    */
   public function getTotalCount($action, $case = NULL) {
 
@@ -358,13 +358,14 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * returns all the rows in the given offset and rowCount
    *
-   * @param enum   $action   the action being performed
-   * @param int    $offset   the row number to start from
-   * @param int    $rowCount the number of rows to return
-   * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param int $action the action being performed
+   * @param int $offset the row number to start from
+   * @param int $rowCount the number of rows to return
+   * @param string $sort the sql string that describes the sort order
+   * @param string $output what should the result set include (web/email/csv)
+   * @param int $case
    *
-   * @return int   the total number of rows for this action
+   * @return array the total number of rows for this action
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL, $case = NULL) {
     $params['contact_id'] = $this->_contactId;
@@ -473,7 +474,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    *
    *
    * @return array $_columnHeaders
-   * @access private
    */
   private static function &_getColumnHeaders() {
     if (!isset(self::$_columnHeaders)) {

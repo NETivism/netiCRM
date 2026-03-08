@@ -26,36 +26,112 @@
 */
 
 /**
+ * Base class for CiviCRM report forms.
  *
- * @package CRM
+ * Provides common functionality for building, filtering, displaying,
+ * and exporting report data. Subclasses override specific methods
+ * (e.g. select, from, where, groupBy, orderBy) to define report behavior.
+ *
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
- *
  */
 
 class CRM_Report_Form extends CRM_Core_Form {
+  /**
+   * Current section number for drill-down navigation.
+   *
+   * @var int|null
+   */
   public $_section;
   /**
+   * Description of the report template or instance.
+   *
    * @var string|null
    */
   public $_description;
+  /**
+   * Map of table names to their SQL aliases.
+   *
+   * @var array
+   */
   public $_aliases;
+  /**
+   * Column headers for the report result set.
+   *
+   * @var array
+   */
   public $_columnHeaders;
+  /**
+   * Flag indicating whether the grand total row has been set.
+   *
+   * @var bool
+   */
   public $_grandFlag;
+  /**
+   * The date grouping interval label (e.g. Month, Year).
+   *
+   * @var string|null
+   */
   public $_interval;
+  /**
+   * The WHERE clause string for the report query.
+   *
+   * @var string|null
+   */
   public $_where;
+  /**
+   * Whether to send the report output via email.
+   *
+   * @var bool
+   */
   public $_sendmail;
   /**
+   * Whether to generate absolute URLs in report output.
+   *
    * @var bool
    */
   public $_absoluteUrl;
+  /**
+   * The current output mode (html, print, pdf, csv, group).
+   *
+   * @var string|null
+   */
   public $_outputMode;
+  /**
+   * The FROM clause string for the report query.
+   *
+   * @var string|null
+   */
   public $_from;
+  /**
+   * The GROUP BY clause string for the report query.
+   *
+   * @var string|null
+   */
   public $_groupBy;
+  /**
+   * The ORDER BY clause string for the report query.
+   *
+   * @var string|null
+   */
   public $_orderBy;
+  /**
+   * The SELECT clause string for the report query.
+   *
+   * @var string|null
+   */
   public $_select = NULL;
+  /**
+   * The HAVING clause string for the report query.
+   *
+   * @var string|null
+   */
   public $_having = NULL;
 
+  /**
+   * Available chart types for the report.
+   *
+   * @var array|null
+   */
   protected $_charts;
 
   public const ROW_COUNT_LIMIT = 50;
@@ -69,14 +145,14 @@ class CRM_Report_Form extends CRM_Core_Form {
   /**
    * The id of the report instance
    *
-   * @var integer
+   * @var int
    */
   protected $_id;
 
   /**
    * The id of the report template
    *
-   * @var integer;
+   * @var int
    */
   protected $_templateID;
 
@@ -89,7 +165,7 @@ class CRM_Report_Form extends CRM_Core_Form {
 
   /**
    * The set of all columns in the report. An associative array
-   * with column name as the key and attribues as the value
+   * with column name as the key and attributes as the value.
    *
    * @var array
    */
@@ -109,6 +185,11 @@ class CRM_Report_Form extends CRM_Core_Form {
    */
   protected $_options = [];
 
+  /**
+   * Default form values for the report.
+   *
+   * @var array
+   */
   protected $_defaults = [];
 
   /**
@@ -142,15 +223,26 @@ class CRM_Report_Form extends CRM_Core_Form {
   /**
    * Object type that a custom group extends
    *
-   * @var null
+   * @var array|null
    */
   protected $_customGroupExtends = NULL;
+  /**
+   * Whether to include custom group filters.
+   *
+   * @var bool
+   */
   protected $_customGroupFilters = TRUE;
+  /**
+   * Whether to allow group-by on custom group fields.
+   *
+   * @var bool
+   */
   protected $_customGroupGroupBy = FALSE;
 
   /**
-   * build tags filter
+   * Whether to build the tags filter.
    *
+   * @var bool
    */
   protected $_tagFilter = FALSE;
 
@@ -170,25 +262,110 @@ class CRM_Report_Form extends CRM_Core_Form {
     '</td><td width="25%">', '</tr><tr><td>',
   ];
 
+  /**
+   * Whether to force the report to run immediately.
+   *
+   * @var int|bool
+   */
   protected $_force = 1;
 
+  /**
+   * Submitted report parameters.
+   *
+   * @var array|null
+   */
   protected $_params = NULL;
+  /**
+   * Form values from the report form submission.
+   *
+   * @var array|null
+   */
   protected $_formValues = NULL;
+  /**
+   * Values loaded from the saved report instance.
+   *
+   * @var array|null
+   */
   protected $_instanceValues = NULL;
 
+  /**
+   * Whether the instance form should be displayed.
+   *
+   * @var bool
+   */
   protected $_instanceForm = FALSE;
 
+  /**
+   * Button name for saving a report instance.
+   *
+   * @var string|null
+   */
   protected $_instanceButtonName = NULL;
+  /**
+   * Button name for printing the report.
+   *
+   * @var string|null
+   */
   protected $_printButtonName = NULL;
+  /**
+   * Button name for PDF export.
+   *
+   * @var string|null
+   */
   protected $_pdfButtonName = NULL;
+  /**
+   * Button name for CSV export.
+   *
+   * @var string|null
+   */
   protected $_csvButtonName = NULL;
+  /**
+   * Button name for adding contacts to a group.
+   *
+   * @var string|null
+   */
   protected $_groupButtonName = NULL;
+  /**
+   * Button name for chart display.
+   *
+   * @var string|null
+   */
   protected $_chartButtonName = NULL;
+  /**
+   * Whether CSV export is supported for this report.
+   *
+   * @var bool
+   */
   protected $_csvSupported = TRUE;
+  /**
+   * Whether add-to-group functionality is supported.
+   *
+   * @var bool
+   */
   protected $_add2groupSupported = TRUE;
+  /**
+   * Available groups for adding contacts.
+   *
+   * @var array|null
+   */
   protected $_groups = NULL;
+  /**
+   * Total number of rows found by the query (before paging).
+   *
+   * @var int|null
+   */
   protected $_rowsFound = NULL;
+  /**
+   * The SQL ROLLUP modifier for grand totals.
+   *
+   * @var string|null
+   */
   protected $_rollup = NULL;
+  /**
+   * The SQL LIMIT clause string for paging.
+   *
+   * @var string|null
+   */
   protected $_limit = NULL;
 
   /**
@@ -204,12 +381,22 @@ class CRM_Report_Form extends CRM_Core_Form {
 
   /**
    * Variables to hold the acl inner join and where clause
+   *
+   * @var string|null
    */
   protected $_aclFrom = NULL;
+  /**
+   * ACL WHERE clause condition.
+   *
+   * @var string|null
+   */
   protected $_aclWhere = NULL;
 
   /**
+   * Class constructor.
    *
+   * Initializes the report form by building tag filters, checking custom data
+   * permissions, and merging custom data columns into the column list.
    */
   public function __construct() {
     parent::__construct();
@@ -229,6 +416,14 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->addCustomDataToColumns();
   }
 
+  /**
+   * Common pre-processing for report forms.
+   *
+   * Loads the report instance (if any), checks permissions, initializes
+   * form values, output button names, and determines the instance form mode.
+   *
+   * @return void
+   */
   public function preProcessCommon() {
     $this->_force = CRM_Utils_Request::retrieve(
       'force',
@@ -326,6 +521,11 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->_chartButtonName = $this->getButtonName('submit', 'chart');
   }
 
+  /**
+   * Add breadcrumb for the report template list.
+   *
+   * @return void
+   */
   public function addBreadCrumb() {
     $breadCrumbs = [['title' => ts('Report Templates'),
         'url' => CRM_Utils_System::url('civicrm/admin/report/template/list', 'reset=1'),
@@ -334,6 +534,15 @@ class CRM_Report_Form extends CRM_Core_Form {
     CRM_Utils_System::appendBreadCrumb($breadCrumbs);
   }
 
+  /**
+   * Pre-process the report form.
+   *
+   * Calls common pre-processing, sets up column aliases, merges DAO/BAO
+   * exported fields, processes filters and group-bys from URL parameters,
+   * and runs the report if forced.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->preProcessCommon();
     if (!$this->_id) {
@@ -466,6 +675,18 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Set default values for the report form.
+   *
+   * Populates default values for fields, filters, group-bys, and options.
+   * Optionally freezes required field elements in the form.
+   *
+   * @param bool $freeze
+   *   Whether to freeze required form elements. Defaults to TRUE.
+   *
+   * @return array
+   *   The default values array.
+   */
   public function setDefaultValues($freeze = TRUE) {
     $freezeGroup = [];
 
@@ -559,6 +780,17 @@ class CRM_Report_Form extends CRM_Core_Form {
     return $this->_defaults;
   }
 
+  /**
+   * Retrieve a specific element from a checkbox/radio group by field name.
+   *
+   * @param string $group
+   *   The group element name.
+   * @param string $grpFieldName
+   *   The field name to find within the group.
+   *
+   * @return object|false
+   *   The form element object if found, or FALSE otherwise.
+   */
   public function getElementFromGroup($group, $grpFieldName) {
     $eleObj = $this->getElement($group);
     foreach ($eleObj->_elements as $index => $obj) {
@@ -569,6 +801,14 @@ class CRM_Report_Form extends CRM_Core_Form {
     return FALSE;
   }
 
+  /**
+   * Add the column selection checkboxes to the report form.
+   *
+   * Builds the list of available display columns from the column definitions
+   * and adds them as a checkbox group element.
+   *
+   * @return void
+   */
   public function addColumns() {
     $options = [];
     $colGroups = NULL;
@@ -605,6 +845,14 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->assign('colGroups', $colGroups);
   }
 
+  /**
+   * Add filter elements to the report form.
+   *
+   * Iterates through defined filters and builds appropriate form elements
+   * based on each filter's operator type (multiselect, select, date, numeric, or string).
+   *
+   * @return void
+   */
   public function addFilters() {
 
     $options = $filters = [];
@@ -681,6 +929,11 @@ class CRM_Report_Form extends CRM_Core_Form {
     $this->assign('filters', $filters);
   }
 
+  /**
+   * Add report option elements (checkboxes and selects) to the form.
+   *
+   * @return void
+   */
   public function addOptions() {
     if (!empty($this->_options)) {
       // FIXME: For now lets build all elements as checkboxes.
@@ -709,6 +962,13 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Add chart type selection element to the form.
+   *
+   * Only adds the element if chart types have been defined in $_charts.
+   *
+   * @return void
+   */
   public function addChartOptions() {
     if (!empty($this->_charts)) {
       $this->addElement('select', "charts", ts('Chart'), $this->_charts);
@@ -717,6 +977,11 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Add group-by column selection checkboxes and frequency dropdowns to the form.
+   *
+   * @return void
+   */
   public function addGroupBys() {
     $options = $freqElements = [];
 
@@ -754,6 +1019,14 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Build the report instance form and action buttons.
+   *
+   * Adds buttons for saving, printing, PDF, CSV export, chart display,
+   * and the add-to-group functionality.
+   *
+   * @return void
+   */
   public function buildInstanceAndButtons() {
 
     CRM_Report_Form_Instance::buildForm($this);
@@ -804,6 +1077,14 @@ class CRM_Report_Form extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Build the report form.
+   *
+   * Adds columns, filters, options, group-bys, instance form, and buttons.
+   * Also registers the formRule callback if one is defined in the subclass.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $this->addColumns();
 
@@ -821,9 +1102,20 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
-  // a formrule function to ensure that fields selected in group_by
-  // (if any) should only be the ones present in display/select fields criteria;
-  // note: works if and only if any custom field selected in group_by.
+  /**
+   * Validate that custom data fields selected in group-by are also in display columns.
+   *
+   * Ensures that fields selected in the 'Group by Columns' section are also
+   * selected in 'Display Columns' when custom fields are involved.
+   *
+   * @param array $fields
+   *   The submitted form field values.
+   * @param array $ignoreFields
+   *   List of field names to ignore during validation.
+   *
+   * @return array<string, string>
+   *   An array of error messages keyed by form element name, or empty if valid.
+   */
   public function customDataFormRule($fields, $ignoreFields = []) {
     $errors = [];
     if (!empty($this->_customGroupExtends) && $this->_customGroupGroupBy && !empty($fields['group_bys'])) {
@@ -849,8 +1141,20 @@ class CRM_Report_Form extends CRM_Core_Form {
     return $errors;
   }
 
-  // Note: $fieldName param allows inheriting class to build operationPairs
-  // specific to a field.
+  /**
+   * Get the available filter operation pairs for a given operator type.
+   *
+   * Returns an associative array of operator key => label pairs appropriate
+   * for the specified type (int, float, select, multiselect, date, or string).
+   *
+   * @param int|string $type
+   *   The operator type constant (e.g. CRM_Report_Form::OP_INT) or "string".
+   * @param string|null $fieldName
+   *   Optional field name, allowing subclasses to customize operations per field.
+   *
+   * @return array
+   *   Associative array of operator key => translated label pairs.
+   */
   public static function getOperationPair($type = "string", $fieldName = NULL) {
     // FIXME: At some point we should move these key-val pairs
     // to option_group and option_value table.
@@ -902,6 +1206,14 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Build the tag filter column definition.
+   *
+   * Adds a civicrm_tag column with a multiselect filter for contact tags,
+   * if any tags exist in the system.
+   *
+   * @return void
+   */
   public function buildTagFilter() {
 
     $contactTags = CRM_Core_BAO_Tag::getTags();
@@ -920,6 +1232,15 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Convert a report filter operator key to its SQL equivalent.
+   *
+   * @param string $operator
+   *   The operator key (e.g. 'eq', 'lt', 'has', 'in', 'nll').
+   *
+   * @return string
+   *   The corresponding SQL operator string.
+   */
   public static function getSQLOperator($operator = "like") {
     switch ($operator) {
       case 'eq':
@@ -959,6 +1280,28 @@ class CRM_Report_Form extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Build a SQL WHERE clause fragment for a single filter field.
+   *
+   * Generates the appropriate clause based on the operator type (between,
+   * contains, in, starts/ends with, null checks, etc.) and delegates to
+   * whereGroupClause() or whereTagClause() for group/tag fields.
+   *
+   * @param array $field
+   *   The field definition array (passed by reference), including keys like
+   *   'dbAlias', 'type', 'clause', 'group', and 'tag'.
+   * @param string $op
+   *   The filter operator key (e.g. 'bw', 'has', 'in', 'eq').
+   * @param mixed $value
+   *   The filter value.
+   * @param mixed $min
+   *   The minimum value for range operators.
+   * @param mixed $max
+   *   The maximum value for range operators.
+   *
+   * @return string|null
+   *   The SQL WHERE clause fragment, or NULL if no clause is generated.
+   */
   public function whereClause(
     &$field,
     $op,
@@ -1101,6 +1444,23 @@ class CRM_Report_Form extends CRM_Core_Form {
     return $clause;
   }
 
+  /**
+   * Build a SQL date range WHERE clause for a date filter field.
+   *
+   * @param string $fieldName
+   *   The SQL field name (including alias) to filter on.
+   * @param string $relative
+   *   The relative date range key (e.g. 'this.month'), or a null-check operator.
+   * @param string $from
+   *   The start date value.
+   * @param string $to
+   *   The end date value.
+   * @param int|null $type
+   *   The CRM_Utils_Type constant for the field type.
+   *
+   * @return string|null
+   *   The SQL WHERE clause fragment, or NULL if no clause is generated.
+   */
   public function dateClause(
     $fieldName,
     $relative,
@@ -1133,6 +1493,20 @@ class CRM_Report_Form extends CRM_Core_Form {
     return NULL;
   }
 
+  /**
+   * Format a date range for display in the report statistics.
+   *
+   * @param string $relative
+   *   The relative date range key.
+   * @param string $from
+   *   The start date value.
+   * @param string $to
+   *   The end date value.
+   *
+   * @return string|null
+   *   The formatted date range string (e.g. "Jan 1, 2020 - Dec 31, 2020"),
+   *   or NULL if no dates are available.
+   */
   public static function dateDisplay($relative, $from, $to) {
     list($from, $to) = self::getFromTo($relative, $from, $to);
 
@@ -1157,6 +1531,19 @@ class CRM_Report_Form extends CRM_Core_Form {
     return NULL;
   }
 
+  /**
+   * Convert relative or absolute date inputs to processed from/to date strings.
+   *
+   * @param string $relative
+   *   The relative date range key (e.g. 'this.year'). If set, overrides $from/$to.
+   * @param string $from
+   *   The absolute start date value.
+   * @param string $to
+   *   The absolute end date value.
+   *
+   * @return array
+   *   A two-element array containing the processed [from, to] date strings.
+   */
   public static function getFromTo($relative, $from, $to) {
 
     //FIX ME not working for relative
@@ -1174,10 +1561,32 @@ class CRM_Report_Form extends CRM_Core_Form {
     return [$from, $to];
   }
 
+  /**
+   * Modify the report display rows before rendering.
+   *
+   * Override this method in subclasses to customize the display of report rows
+   * (e.g. adding links, formatting values, altering cell content).
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
   }
 
+  /**
+   * Format custom data field values in the report rows for display.
+   *
+   * Replaces raw custom field values with their human-readable labels
+   * (e.g. option value labels, country/state names, boolean Yes/No).
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   *
+   * @return void
+   */
   public function alterCustomDataDisplay(&$rows) {
     // custom code to alter rows having custom values
     if (empty($this->_customGroupExtends)) {
@@ -1210,7 +1619,6 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
       cf.is_searchable = 1 AND
       cf.data_type   NOT IN ('ContactReference', 'Date') AND
       cf.id IN (" . CRM_Utils_Array::implode(",", $customFieldIds) . ")";
-
     $dao = CRM_Core_DAO::executeQuery($query);
     while ($dao->fetch()) {
       foreach ($customFieldCols as $key) {
@@ -1239,6 +1647,24 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Format a single custom field value for display.
+   *
+   * Converts raw stored values to human-readable format based on the
+   * custom field's data type and HTML type (e.g. Boolean to Yes/No,
+   * option values to labels, country/state codes to names).
+   *
+   * @param mixed $value
+   *   The raw custom field value.
+   * @param array $customField
+   *   The custom field definition containing 'data_type', 'html_type',
+   *   'option_group_id', etc.
+   * @param array $fieldValueMap
+   *   Map of option_group_id => [value => label] for option lookups.
+   *
+   * @return string|null
+   *   The formatted display value, or NULL if the input value is empty.
+   */
   public function formatCustomValues($value, $customField, $fieldValueMap) {
     if (CRM_Utils_System::isNull($value)) {
       return;
@@ -1353,6 +1779,17 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     return $retValue;
   }
 
+  /**
+   * Remove duplicate values from consecutive rows for specified columns.
+   *
+   * For columns listed in $_noRepeats, replaces repeated values with
+   * empty strings so they are not displayed again in the report output.
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   *
+   * @return void
+   */
   public function removeDuplicates(&$rows) {
     if (empty($this->_noRepeats)) {
       return;
@@ -1373,6 +1810,21 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Fix the display of a subtotal row by setting non-grouped columns.
+   *
+   * For subtotal rows, sets the first non-grouped column to "Subtotal"
+   * and removes subsequent non-grouped columns from the row.
+   *
+   * @param array $row
+   *   A single report row, passed by reference.
+   * @param array $fields
+   *   List of field names that are part of the group-by.
+   * @param bool $subtotal
+   *   Whether to display the "Subtotal" label. Defaults to TRUE.
+   *
+   * @return void
+   */
   public function fixSubTotalDisplay(&$row, $fields, $subtotal = TRUE) {
 
     foreach ($row as $colName => $colVal) {
@@ -1391,6 +1843,20 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Process and extract the grand total row from the result set.
+   *
+   * When ROLLUP is used, the last row contains grand totals. This method
+   * pops that row, labels non-statistic columns as "Grand Total", and
+   * assigns it to the template.
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference. The last row is removed
+   *   if it is a grand total row.
+   *
+   * @return bool
+   *   TRUE if a grand total row was processed, FALSE otherwise.
+   */
   public function grandTotal(&$rows) {
     if (!$this->_rollup || ($this->_rollup == '') ||
       ($this->_limit && count($rows) >= self::ROW_COUNT_LIMIT)
@@ -1416,6 +1882,19 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     return TRUE;
   }
 
+  /**
+   * Format the report result rows for display.
+   *
+   * Sets up pagination, builds charts, removes hidden columns,
+   * processes grand totals, and calls alterDisplay/alterCustomDataDisplay hooks.
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   * @param bool $pager
+   *   Whether to set up the pager. Defaults to TRUE.
+   *
+   * @return void
+   */
   public function formatDisplay(&$rows, $pager = TRUE) {
     // set pager based on if any limit was applied in the query.
     if ($pager) {
@@ -1454,13 +1933,29 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     $this->alterCustomDataDisplay($rows);
   }
 
+  /**
+   * Build chart data from the report rows.
+   *
+   * Override this method in subclasses to generate chart configurations.
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   *
+   * @return void
+   */
   public function buildChart(&$rows) {
     // override this method for building charts.
   }
 
-  // select() method below has been added recently (v3.3), and many of the report templates might
-  // still be having their own select() method. We should fix them as and when encountered and move
-  // towards generalizing the select() method below.
+  /**
+   * Build the SELECT clause for the report query.
+   *
+   * Iterates through column definitions to build select expressions,
+   * including statistics (SUM, COUNT, AVG) and group-by date frequency
+   * expressions. Also populates $_columnHeaders.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
 
@@ -1583,10 +2078,38 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Build a custom select clause for a specific field.
+   *
+   * Override this method in subclasses to provide custom SELECT expressions
+   * for particular fields. When overridden, the method should also update
+   * $this->_columnHeaders as needed.
+   *
+   * @param string $tableName
+   *   The table name, passed by reference.
+   * @param string $tableKey
+   *   The column group key (e.g. 'fields', 'group_bys').
+   * @param string $fieldName
+   *   The field name, passed by reference.
+   * @param array $field
+   *   The field definition array, passed by reference.
+   *
+   * @return string|false
+   *   A custom SELECT clause string, or FALSE to use the default behavior.
+   */
   public function selectClause(&$tableName, $tableKey, &$fieldName, &$field) {
     return FALSE;
   }
 
+  /**
+   * Build the WHERE and HAVING clauses for the report query.
+   *
+   * Iterates through all filter definitions, generates clause fragments
+   * using whereClause() and dateClause(), and combines them with AND.
+   * Also appends the ACL WHERE clause if set.
+   *
+   * @return void
+   */
   public function where() {
     $whereClauses = $havingClauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -1643,6 +2166,14 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Determine the report output mode based on the submitted button or URL parameter.
+   *
+   * Sets $_outputMode (html, print, pdf, csv, group) and related template
+   * variables. Also sets $_absoluteUrl and $_sendmail flags as needed.
+   *
+   * @return void
+   */
   public function processReportMode() {
     $buttonName = $this->controller->getButtonName();
 
@@ -1697,6 +2228,14 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Begin post-processing of the report form.
+   *
+   * Exports form values, merges with forced defaults, determines
+   * whether to show the update button, and processes the report output mode.
+   *
+   * @return void
+   */
   public function beginPostProcess() {
     $this->_params = $this->controller->exportValues($this->_name);
     if (empty($this->_params) &&
@@ -1717,6 +2256,18 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     $this->processReportMode();
   }
 
+  /**
+   * Build the complete SQL query for the report.
+   *
+   * Calls select(), from(), customDataFrom(), where(), groupBy(), orderBy(),
+   * and optionally limit() to assemble the full SQL statement.
+   *
+   * @param bool $applyLimit
+   *   Whether to apply the LIMIT clause. Defaults to TRUE.
+   *
+   * @return string
+   *   The complete SQL query string.
+   */
   public function buildQuery($applyLimit = TRUE) {
     $this->select();
     $this->from();
@@ -1739,14 +2290,42 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     return $sql;
   }
 
+  /**
+   * Build the GROUP BY clause for the report query.
+   *
+   * Override this method in subclasses to define grouping behavior.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "";
   }
 
+  /**
+   * Build the ORDER BY clause for the report query.
+   *
+   * Override this method in subclasses to define sorting behavior.
+   *
+   * @return void
+   */
   public function orderBy() {
     $this->_orderBy = "";
   }
 
+  /**
+   * Execute the SQL query and build the result row array.
+   *
+   * Runs the query, calls modifyColumnHeaders(), then iterates
+   * through the DAO result to populate the rows array.
+   *
+   * @param string $sql
+   *   The SQL query to execute.
+   * @param array $rows
+   *   The result rows array, passed by reference. Will be populated
+   *   with associative arrays keyed by column header names.
+   *
+   * @return void
+   */
   public function buildRows($sql, &$rows) {
     $dao = CRM_Core_DAO::executeQuery($sql);
     if (!is_array($rows)) {
@@ -1767,17 +2346,44 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Modify column headers before building result rows.
+   *
+   * Override this method in subclasses to add, remove, or alter
+   * column headers after the SELECT is built but before rows are populated.
+   *
+   * @return void
+   */
   public function modifyColumnHeaders() {
     // use this method to modify $this->_columnHeaders
   }
 
+  /**
+   * Assign column headers, rows, and statistics to the template.
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   *
+   * @return void
+   */
   public function doTemplateAssignment(&$rows) {
     $this->assign_by_ref('columnHeaders', $this->_columnHeaders);
     $this->assign_by_ref('rows', $rows);
     $this->assign('statistics', $this->statistics($rows));
   }
 
-  // override this method to build your own statistics
+  /**
+   * Build the statistics summary for the report.
+   *
+   * Computes row counts, group-by descriptions, and filter descriptions.
+   * Override this method in subclasses to add custom statistics.
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   *
+   * @return array
+   *   An associative array of statistics with keys 'counts', 'groups', 'filters'.
+   */
   public function statistics(&$rows) {
     $statistics = [];
 
@@ -1796,6 +2402,16 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     return $statistics;
   }
 
+  /**
+   * Add row count statistics to the statistics array.
+   *
+   * @param array $statistics
+   *   The statistics array, passed by reference.
+   * @param int $count
+   *   The number of rows listed in the current page.
+   *
+   * @return void
+   */
   public function countStat(&$statistics, $count) {
     $statistics['counts']['rowCount'] = ['title' => ts('Row(s) Listed'),
       'value' => $count,
@@ -1808,6 +2424,16 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Add group-by statistics to the statistics array.
+   *
+   * Lists which columns are used for grouping in the report.
+   *
+   * @param array $statistics
+   *   The statistics array, passed by reference.
+   *
+   * @return void
+   */
   public function groupByStat(&$statistics) {
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
       is_array($this->_params['group_bys']) &&
@@ -1828,6 +2454,17 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Add filter statistics to the statistics array.
+   *
+   * Describes the currently active filters and their values for display
+   * in the report header.
+   *
+   * @param array $statistics
+   *   The statistics array, passed by reference.
+   *
+   * @return void
+   */
   public function filterStat(&$statistics) {
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -1899,6 +2536,17 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Complete post-processing of the report.
+   *
+   * Handles output based on the current mode: print, PDF, email, CSV export,
+   * add-to-group, or saving the report instance.
+   *
+   * @param array|null $rows
+   *   The report result rows. Defaults to NULL.
+   *
+   * @return void
+   */
   public function endPostProcess(&$rows = NULL) {
     if ($this->_outputMode == 'print' ||
       $this->_outputMode == 'pdf' ||
@@ -1969,6 +2617,15 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Main post-processing handler for the report form.
+   *
+   * Orchestrates the full report generation pipeline: begins post-processing,
+   * builds the SQL query, populates result rows, formats the display,
+   * assigns template variables, and completes output handling.
+   *
+   * @return void
+   */
   public function postProcess() {
     // get ready with post process params
     $this->beginPostProcess();
@@ -1990,6 +2647,18 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Apply the LIMIT clause for pagination.
+   *
+   * Only applies when output mode is 'html' or 'group'. Adds
+   * SQL_CALC_FOUND_ROWS to the SELECT and computes the offset
+   * based on the current page number.
+   *
+   * @param int $rowCount
+   *   The number of rows per page. Defaults to ROW_COUNT_LIMIT.
+   *
+   * @return void
+   */
   public function limit($rowCount = self::ROW_COUNT_LIMIT) {
 
     // lets do the pager if in html mode
@@ -2017,6 +2686,17 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Set up the pager for paginated report output.
+   *
+   * Queries FOUND_ROWS() to get the total row count and initializes
+   * the CRM_Utils_Pager object for the template.
+   *
+   * @param int $rowCount
+   *   The number of rows per page. Defaults to ROW_COUNT_LIMIT.
+   *
+   * @return void
+   */
   public function setPager($rowCount = self::ROW_COUNT_LIMIT) {
     if ($this->_limit && ($this->_limit != '')) {
 
@@ -2035,6 +2715,18 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
     }
   }
 
+  /**
+   * Build a WHERE sub-clause for group membership filtering.
+   *
+   * Generates a subquery that checks contact membership in regular and
+   * smart groups, including cached smart group contacts.
+   *
+   * @param string $clause
+   *   The SQL clause fragment for group_contact filtering.
+   *
+   * @return string
+   *   The complete WHERE sub-clause with group membership check.
+   */
   public function whereGroupClause($clause) {
 
     $smartGroupQuery = "";
@@ -2065,6 +2757,18 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                           {$smartGroupQuery} ) ";
   }
 
+  /**
+   * Build a WHERE sub-clause for tag filtering.
+   *
+   * Generates a subquery that checks contact membership in tags via
+   * the civicrm_entity_tag table.
+   *
+   * @param string $clause
+   *   The SQL clause fragment for entity_tag filtering.
+   *
+   * @return string
+   *   The complete WHERE sub-clause with tag membership check.
+   */
   public function whereTagClause($clause) {
     // not using left join in query because if any contact
     // belongs to more than one tag, results duplicate
@@ -2075,11 +2779,34 @@ WHERE cg.extends IN ('" . CRM_Utils_Array::implode("','", $this->_customGroupExt
                           WHERE entity_table = 'civicrm_contact' AND {$clause} ) ";
   }
 
+  /**
+   * Build the ACL (Access Control List) FROM and WHERE clause fragments.
+   *
+   * Uses the contact permission cache to generate join and filter clauses
+   * that restrict report results based on the current user's permissions.
+   *
+   * @param string $tableAlias
+   *   The alias for the contact table. Defaults to 'contact_a'.
+   *
+   * @return void
+   */
   public function buildACLClause($tableAlias = 'contact_a') {
 
     list($this->_aclFrom, $this->_aclWhere) = CRM_Contact_BAO_Contact_Permission::cacheClause($tableAlias);
   }
 
+  /**
+   * Add custom data fields and filters to the report column definitions.
+   *
+   * Queries the database for custom groups that extend the configured entity
+   * types and adds their fields as report columns and/or filters, with
+   * appropriate operator types based on data type.
+   *
+   * @param bool $addFields
+   *   Whether to add custom fields as display columns. Defaults to TRUE.
+   *
+   * @return void
+   */
   public function addCustomDataToColumns($addFields = TRUE) {
     if (empty($this->_customGroupExtends)) {
       return;
@@ -2237,6 +2964,14 @@ ORDER BY cg.weight";
     }
   }
 
+  /**
+   * Add LEFT JOIN clauses for custom data tables to the FROM clause.
+   *
+   * Joins custom value tables and ContactReference lookup tables
+   * based on the entity type mapping and selected fields.
+   *
+   * @return void
+   */
   public function customDataFrom() {
     if (empty($this->_customGroupExtends)) {
       return;
@@ -2270,6 +3005,18 @@ LEFT JOIN civicrm_contact {$field['alias']} ON {$field['alias']}.id = {$this->_a
     }
   }
 
+  /**
+   * Check whether any custom field from a table property is selected in the report parameters.
+   *
+   * Examines the current report parameters to determine if any field,
+   * group-by, or filter from the given column property is actively selected.
+   *
+   * @param array $prop
+   *   The column property array containing 'fields', 'group_bys', and 'filters'.
+   *
+   * @return bool
+   *   TRUE if at least one custom field is selected, FALSE otherwise.
+   */
   public function isFieldSelected($prop) {
     if (empty($prop)) {
       return FALSE;

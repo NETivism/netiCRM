@@ -27,28 +27,67 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
+ */
+/**
+ * Smarty resource callback to get template source.
+ *
+ * @param string $tpl_name template name
+ * @param string &$tpl_source reference to store template source
+ * @param Smarty &$smarty_obj the Smarty object
+ *
+ * @return bool
  */
 function civicrm_smarty_resource_string_get_template($tpl_name, &$tpl_source, &$smarty_obj) {
   $tpl_source = $tpl_name;
   return TRUE;
 }
 
+/**
+ * Smarty resource callback to get template timestamp.
+ *
+ * @param string $tpl_name template name
+ * @param int &$tpl_timestamp reference to store timestamp
+ * @param Smarty &$smarty_obj the Smarty object
+ *
+ * @return bool
+ */
 function civicrm_smarty_resource_string_get_timestamp($tpl_name, &$tpl_timestamp, &$smarty_obj) {
   $tpl_timestamp = time();
   return TRUE;
 }
 
+/**
+ * Smarty resource callback to check secure mode.
+ *
+ * @param string $tpl_name template name
+ * @param Smarty &$smarty_obj the Smarty object
+ *
+ * @return bool
+ */
 function civicrm_smarty_resource_string_get_secure($tpl_name, &$smarty_obj) {
   return TRUE;
 }
 
+/**
+ * Smarty resource callback to check trusted mode.
+ *
+ * @param string $tpl_name template name
+ * @param Smarty &$smarty_obj the Smarty object
+ *
+ * @return void
+ */
 function civicrm_smarty_resource_string_get_trusted($tpl_name, &$smarty_obj) {
 }
 
+/**
+ * Register the 'string' resource with Smarty.
+ *
+ * @param Smarty|null &$template optional Smarty object
+ *
+ * @return void
+ */
 function civicrm_smarty_register_string_resource(&$template = NULL) {
   if (empty($template)) {
     $template = &CRM_Core_Smarty::singleton();

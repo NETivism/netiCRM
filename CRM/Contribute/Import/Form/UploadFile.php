@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -77,7 +75,7 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -145,6 +143,12 @@ class CRM_Contribute_Import_Form_UploadFile extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Set default values for the form
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     $defaults = $this->_submitValues;
     if (!$defaults['createContactOption']) {

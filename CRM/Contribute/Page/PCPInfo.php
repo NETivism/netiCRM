@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,8 +50,7 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
    * type of action and executes that action.
    * Finally it calls the parent's run method.
    *
-   * @return void
-   * @access public
+   * @return mixed
    *
    */
   public function run() {
@@ -356,6 +353,11 @@ class CRM_Contribute_Page_PCPInfo extends CRM_Core_Page {
     parent::run();
   }
 
+  /**
+   * Get template file name
+   *
+   * @return string
+   */
   public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Contribute/Page/{$this->_id}/PCPInfo.tpl";

@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: PaymentProcessorType.php 9702 2007-05-29 23:57:16Z lobo $
  *
@@ -41,6 +40,11 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
   protected $_id = NULL;
 
   protected $_fields = NULL;
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     parent::preProcess();
 
@@ -128,10 +132,11 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @param bool $check Whether to check for existing processor type.
+   *
+   * @return void Builds the form.
    */
   public function buildQuickForm($check = FALSE) {
     parent::buildQuickForm();
@@ -162,6 +167,11 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
     $this->add('checkbox', 'is_recur', ts('Does this Payment Processor Type support recurring donations?'));
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = [];
 
@@ -187,11 +197,9 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     $cache = &CRM_Utils_Cache::singleton();

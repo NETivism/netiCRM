@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -53,10 +51,8 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   /**
    * Get the action links for this page.
    *
-   * @param
-   *
-   * @return array $_actionLinks
-   *
+   * @return array
+   *   A reference to the array of action links.
    */
   public function &actionLinks() {
     // check if variable _actionsLinks is populated
@@ -140,10 +136,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
    * type of action and executes that action.
    * Finally it calls the parent's run method.
    *
-   * @param
-   *
    * @return void
-   * @access public
    */
   public function run() {
     // get the requested action
@@ -198,10 +191,9 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
 
   /**
    * This function is to make a copy of a profile, including
-   * all the fields in the profile
+   * all the fields in the profile.
    *
    * @return void
-   * @access public
    */
   public function copy() {
     $key = CRM_Utils_Request::retrieve(
@@ -233,10 +225,9 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   }
 
   /**
-   * This function is for profile mode (standalone html form ) for uf group
+   * This function is for profile mode (standalone html form) for uf group.
    *
    * @return void
-   * @access public
    */
   public function profileCode() {
     $template = CRM_Core_Smarty::singleton();
@@ -270,13 +261,14 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   }
 
   /**
-   * edit uf group
+   * Edit uf group.
    *
-   * @param int $id uf group id
-   * @param string $action the action to be invoked
+   * @param int $id
+   *   uf group id.
+   * @param string $action
+   *   The action to be invoked.
    *
    * @return void
-   * @access public
    */
   public function edit($id, $action) {
     // create a simple controller for editing uf data
@@ -291,11 +283,9 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   /**
    * Browse all uf data groups.
    *
-   * @param
+   * @param string|null $action
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse($action = NULL) {
     $ufGroup = [];
@@ -403,12 +393,14 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
   }
 
   /**
-   * this function is for preview mode for ufoup
+   * This function is for preview mode for uf group.
    *
-   * @param int $id uf group id
+   * @param int $id
+   *   uf group id.
+   * @param string $action
+   *   The action to be invoked.
    *
    * @return void
-   * @access public
    */
   public function preview($id, $action) {
     $controller = new CRM_Core_Controller_Simple('CRM_UF_Form_Preview', ts('CiviCRM Profile Group Preview'), NULL);
@@ -419,6 +411,14 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $controller->run();
   }
 
+  /**
+   * Set the user context.
+   *
+   * @param int $id
+   *   uf group id.
+   * @param string $action
+   *   The action to be invoked.
+   */
   public function setContext($id, $action) {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
 
@@ -451,6 +451,15 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     $session->pushUserContext($url);
   }
 
+  /**
+   * Extract group types from the group type string.
+   *
+   * @param string $groupType
+   *   The group type string.
+   *
+   * @return array
+   *   The extracted group types.
+   */
   public static function extractGroupTypes($groupType) {
     $returnGroupTypes = [];
     if (!$groupType) {
@@ -514,6 +523,15 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
     return $returnGroupTypes;
   }
 
+  /**
+   * Get the profile html.
+   *
+   * @param int|null $gid
+   *   The profile group id.
+   *
+   * @return string
+   *   The profile html.
+   */
   public static function profile($gid = NULL) {
     $config = CRM_Core_Config::singleton();
 

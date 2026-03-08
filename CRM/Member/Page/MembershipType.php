@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,12 +40,11 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
   public static $_links = NULL;
 
   /**
-   * Get BAO Name
+   * Get BAO Name.
    *
    * @return string Classname of BAO.
    */
@@ -56,7 +53,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Get action Links.
    *
    * @return array (reference) of action links
    */
@@ -100,8 +97,6 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
-   *
    */
   public function run() {
 
@@ -141,10 +136,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
   /**
    * Browse all membership types.
    *
-   *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
     // get all membership types sorted by weight
@@ -215,7 +207,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Get name of edit form.
    *
    * @return string Classname of edit form.
    */
@@ -224,7 +216,7 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get edit form name
+   * Get edit form name.
    *
    * @return string name of this page.
    */
@@ -234,6 +226,8 @@ class CRM_Member_Page_MembershipType extends CRM_Core_Page_Basic {
 
   /**
    * Get user context.
+   *
+   * @param int|null $mode
    *
    * @return string user context.
    */

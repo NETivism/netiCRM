@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,7 +37,9 @@
 class CRM_Admin_Page_AJAX {
 
   /**
-   * Function to build menu tree
+   * Builds the navigation menu tree.
+   *
+   * @return void
    */
   public static function getNavigationList() {
 
@@ -48,7 +48,9 @@ class CRM_Admin_Page_AJAX {
   }
 
   /**
-   * Function to process drag/move action for menu tree
+   * Processes the drag/move action for the navigation menu tree.
+   *
+   * @return void
    */
   public static function menuTree() {
 
@@ -57,8 +59,9 @@ class CRM_Admin_Page_AJAX {
   }
 
   /**
-   * Function to build status message while
-   * enabling/ disabling various objects
+   * Builds the status message while enabling or disabling various objects.
+   *
+   * @return void
    */
   public static function getStatusMsg() {
     $recordID = CRM_Utils_Type::escape($_POST['recordID'], 'Integer');
@@ -268,6 +271,11 @@ class CRM_Admin_Page_AJAX {
     exit;
   }
 
+  /**
+   * Gets the list of tags.
+   *
+   * @return void
+   */
   public static function getTagList() {
     $name = CRM_Utils_Type::escape($_GET['name'], 'String');
     $parentId = CRM_Utils_Type::escape($_GET['parentId'], 'Integer');
@@ -293,6 +301,11 @@ class CRM_Admin_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Processes tags.
+   *
+   * @return void
+   */
   public static function processTags() {
     $skipTagCreate = $skipEntityAction = $entityId = NULL;
     $action = CRM_Utils_Type::escape($_POST['action'], 'String');

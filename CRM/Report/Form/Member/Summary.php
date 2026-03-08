@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -54,6 +52,9 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
 
   protected $_customGroupExtends = ['Membership'];
   protected $_customGroupGroupBy = FALSE;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
@@ -133,6 +134,11 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $groupBys = FALSE;
@@ -261,6 +267,11 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
         FROM  civicrm_membership {$this->_aliases['civicrm_membership']}
@@ -275,6 +286,11 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
                          ON payment.contribution_id = {$this->_aliases['civicrm_contribution']}.id";
   }
   // end of from
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -318,6 +334,11 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = "";
     if (is_array($this->_params['group_bys']) &&
@@ -360,6 +381,13 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Calculate statistics.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
@@ -398,10 +426,22 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     parent::postProcess();
   }
 
+  /**
+   * Build chart.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function buildChart(&$rows) {
     $graphRows = [];
     $count = 0;
@@ -471,6 +511,13 @@ class CRM_Report_Form_Member_Summary extends CRM_Report_Form {
     $this->assign('chartType', $this->_params['charts']);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

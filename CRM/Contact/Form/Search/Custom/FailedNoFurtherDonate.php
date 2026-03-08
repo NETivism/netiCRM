@@ -9,6 +9,13 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
   protected $_tableName = NULL;
   protected $_filled = NULL;
 
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
@@ -21,6 +28,12 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
     }
   }
 
+  /**
+   * Build columns
+   *
+   * @return void
+   * @access public
+   */
   public function buildColumn() {
     $this->_queryColumns = [
       'contact.id' => 'id',
@@ -38,6 +51,12 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
       ts('Amount') . ' - (' . ts("Failed") . ')' => 'total_amount_failed',
     ];
   }
+  /**
+   * Build temp table
+   *
+   * @return void
+   * @access public
+   */
   public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
@@ -66,6 +85,12 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
+  /**
+   * Drop temp table
+   *
+   * @return void
+   * @access public
+   */
   public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
@@ -73,6 +98,9 @@ PRIMARY KEY (id)
 
   /**
    * fill temp table for further use
+   *
+   * @return void
+   * @access public
    */
   public function fillTable() {
     $this->buildTempTable();
@@ -117,6 +145,12 @@ $having
     }
   }
 
+  /**
+   * Get temp from clause
+   *
+   * @return string
+   * @access public
+   */
   public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN 
  (SELECT ca.* FROM civicrm_contribution ca LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = ca.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ca.id WHERE ca.is_test = 0 AND ca.contribution_status_id = 4 AND pp.id IS NULL AND mp.id IS NULL ORDER BY ca.created_date DESC) failed ON failed.contact_id = contact.id
@@ -127,6 +161,9 @@ $having
 
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   *
+   * @return string
+   * @access public
    */
   public function tempWhere() {
     $days = $this->_formValues['days'] ? $this->_formValues['days'] : 7;
@@ -137,10 +174,24 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Get temp having clause
+   *
+   * @return string
+   * @access public
+   */
   public function tempHaving() {
     return '';
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     for ($i = 2; $i <= 15; $i++) {
       $option[$i] = $i;
@@ -148,12 +199,24 @@ $having
     $form->addSelect('days', ts('days'), $option);
   }
 
+  /**
+   * Set default values
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     return [
       'days' => 7,
     ];
   }
 
+  /**
+   * Set breadcrumb
+   *
+   * @return void
+   * @access public
+   */
   public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }

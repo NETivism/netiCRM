@@ -27,23 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Replace the value of an attribute in the input string. Assume
- * the the attribute is well formed, of the type name="value". If
- * no replacement is mentioned the value is inserted at the end of
- * the form element
+ * Generate help icon/text HTML to be inserted into the template.
  *
- * @param array  $params the function params
- * @param object $smarty reference to the smarty object
+ * @param array $params (id, text, file, helpicon)
+ * @param Smarty &$smarty reference to the Smarty object
  *
- * @return string the help html to be inserted
- * @access public
+ * @return string|void the help HTML
  */
 function smarty_function_help($params, &$smarty) {
   if (!isset($params['id']) || !isset($smarty->_tpl_vars['config'])) {

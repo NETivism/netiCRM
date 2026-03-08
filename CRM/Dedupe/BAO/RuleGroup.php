@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -132,6 +130,8 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
 
   /**
    * Return the SQL query for dropping the temporary table.
+   *
+   * @return string
    */
   public function tableDropQuery() {
     return 'DROP TEMPORARY TABLE IF EXISTS dedupe';
@@ -139,6 +139,8 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
 
   /**
    * Return the SQL query for creating the temporary table.
+   *
+   * @return array
    */
   public function tableQuery() {
     $queries = [];
@@ -181,6 +183,11 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     return $queries;
   }
 
+  /**
+   * Fill the dedupe table
+   *
+   * @return void
+   */
   public function fillTable() {
     // get the list of queries handy
     $tableQueries = $this->tableQuery();
@@ -271,8 +278,16 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     }
   }
 
-  // Function to determine if a given query set contains inclusive or exclusive set of weights.
-  // The function assumes that the query set is already ordered by weight in desc order.
+  /**
+   * Function to determine if a given query set contains inclusive or exclusive set of weights.
+   * The function assumes that the query set is already ordered by weight in desc order.
+   *
+   * @param array $tableQueries
+   * @param int $threshold
+   * @param array $exclWeightSum
+   *
+   * @return array
+   */
   public static function isQuerySetInclusive($tableQueries, $threshold, $exclWeightSum = []) {
     $input = [];
     foreach ($tableQueries as $key => $query) {
@@ -305,7 +320,13 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     return [$totalCombinations == 1, $totalCombinations <= 0];
   }
 
-  // sort queries by number of records for the table associated with them
+  /**
+   * sort queries by number of records for the table associated with them
+   *
+   * @param array $tableQueries
+   *
+   * @return void
+   */
   public static function orderByTableCount(&$tableQueries) {
     static $tableCount = [];
 
@@ -330,11 +351,12 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
   /**
    * Return the SQL query for getting only the interesting results out of the dedupe table.
    *
-   * @$checkPermission boolean $params a flag to indicate if permission should be considered.
+   * @param bool $checkPermission a flag to indicate if permission should be considered.
    * default is to always check permissioning but public pages for example might not want
    * permission to be checked for anonymous users. Refer CRM-6211. We might be beaking
    * Multi-Site dedupe for public pages.
    *
+   * @return string
    */
   public function thresholdQuery($checkPermission = TRUE) {
 
@@ -377,7 +399,6 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    * @param array contains the rule group property to identify rule group
    *
    * @return (rule field => weight) array and threshold associated to rule group
-   * @access public
    */
   public static function dedupeRuleFieldsWeight($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
@@ -417,7 +438,6 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    *
    * @param string $contactType Individual, Household or Organization
    *
-   * @static
    *
    * @return array id => "nice name" of rule group
    */
@@ -442,6 +462,13 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
     return $result;
   }
 
+  /**
+   * Get details by params
+   *
+   * @param array $params
+   *
+   * @return array
+   */
   public static function getDetailsByParams($params = []) {
     $ruleGroups = [];
     $dao = new CRM_Dedupe_DAO_RuleGroup();

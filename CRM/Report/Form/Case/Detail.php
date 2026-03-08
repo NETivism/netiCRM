@@ -27,48 +27,87 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
 
   /**
-   * @var mixed[]
+   * @var array Case status options keyed by status ID.
    */
   public $case_statuses;
+
   /**
-   * @var mixed[]
+   * @var array Case type options keyed by type ID.
    */
   public $case_types;
+
   /**
-   * @var mixed[]
+   * @var array Relationship type labels keyed by relationship type ID.
    */
   public $rel_types;
+
   /**
-   * @var never[]|\non-empty-array<\mixed, \mixed>
+   * @var array Report column headers keyed by column alias.
    */
   public $_columnHeaders;
-  public $_aliases;
-  public $_from;
-  public $_where;
+
   /**
-   * @var string
+   * @var array Table alias mapping keyed by table name.
+   */
+  public $_aliases;
+
+  /**
+   * @var string SQL FROM clause.
+   */
+  public $_from;
+
+  /**
+   * @var string SQL WHERE clause.
+   */
+  public $_where;
+
+  /**
+   * @var string SQL GROUP BY clause.
    */
   public $_groupBy;
+
+  /**
+   * @var bool Whether relationship fields are selected.
+   */
   protected $_relField = FALSE;
 
+  /**
+   * @var bool Whether address fields are selected.
+   */
   protected $_addressField = FALSE;
 
+  /**
+   * @var bool Whether email field is selected.
+   */
   protected $_emailField = FALSE;
 
+  /**
+   * @var bool Whether phone field is selected.
+   */
   protected $_phoneField = FALSE;
 
+  /**
+   * @var bool Whether world region field is selected.
+   */
   protected $_worldRegionField = FALSE;
 
+  /**
+   * @var bool Whether activity field is selected.
+   */
   protected $_activityField = FALSE;
+  /**
+   * Class constructor.
+   *
+   * Initializes case status, case type, and relationship type options.
+   * Defines column definitions for case, contact, relationship, email, phone, address, world region, activity, and case contact tables.
+   */
   public function __construct() {
     $this->case_statuses = CRM_Case_PseudoConstant::caseStatus();
     $this->case_types = CRM_Case_PseudoConstant::caseType();
@@ -261,10 +300,20 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-processes the report form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Builds the SELECT clause from selected and required fields. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -303,6 +352,11 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Builds the FROM clause joining case, case contact, contact, relationship, address, email, phone, world region, and activity tables. Populates $_from.
+   *
+   * @return void
+   */
   public function from() {
 
     $cc = $this->_aliases['civicrm_case'];
@@ -358,6 +412,11 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Builds the WHERE clause from submitted filter values. Populates $_where.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     $this->_having = '';
@@ -427,10 +486,22 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Builds the GROUP BY clause by case ID. Populates $_groupBy.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_case']}.id";
   }
 
+  /**
+   * Generates report statistics including total case count and country count.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array.
+   */
   public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
@@ -463,6 +534,12 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Executes the report query after determining which optional fields to include based on filter params.
+   * Builds rows, formats display, appends activity column header if needed, and assigns output to the template.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     $this->beginPostProcess();
@@ -498,6 +575,14 @@ class CRM_Report_Form_Case_Detail extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Modifies report output rows for display. Converts status, type, relationship IDs to labels,
+   * adds case subject links, and resolves country, state, and activity subject values.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     $entryFound = FALSE;
 

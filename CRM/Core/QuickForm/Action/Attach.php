@@ -2,9 +2,7 @@
 /**
  * Another upload action when form needs 2 upload buttons
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -23,14 +21,11 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
   protected $_uploadDir;
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param object $stateMachine reference to state machine object
-   * @param string $uploadDir    directory to store the uploaded files
-   * @param array  $uploadNames  element names of the various uploadable files
-   *
-   * @return object
-   * @access public
+   * @param CRM_Core_StateMachine &$stateMachine reference to state machine object
+   * @param string $uploadDir directory to store the uploaded files
+   * @param string[] $uploadNames element names of the various uploadable files
    */
   public function __construct(&$stateMachine, $uploadDir, $uploadNames) {
     parent::__construct($stateMachine);
@@ -40,15 +35,14 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
   }
 
   /**
-   * upload and move the file if valid to the uploaded directory
+   * Upload and move the file if valid to the uploaded directory.
    *
-   * @param object $page       the CRM_Core_Form object
-   * @param object $data       the QFC data container
-   * @param string $pageName   the name of the page which index the data container with
-   * @param string $uploadName the name of the uploaded file
+   * @param CRM_Core_Form &$page the form object
+   * @param array &$data the QFC data container
+   * @param string $pageName the name of the page indexing the data container
+   * @param string $uploadName the name of the uploaded file element
    *
    * @return void
-   * @access private
    */
   public function attach(&$page, &$data, $pageName, $uploadName) {
     // make sure uploadName exists in the QF array
@@ -100,11 +94,10 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
   /**
    * Processes the request.
    *
-   * @param  object    $page       CRM_Core_Form the current form-page
-   * @param  string    $actionName Current action name, as one Action object can serve multiple actions
+   * @param CRM_Core_Form &$page the current form-page
+   * @param string $actionName current action name
    *
    * @return void
-   * @access public
    */
   public function perform(&$page, $actionName) {
     // like in Action_Next
@@ -118,6 +111,14 @@ class CRM_Core_QuickForm_Action_Attach extends CRM_Core_QuickForm_Action {
     $page->controller->_actions['attach']->realPerform($page, $actionName);
   }
 
+  /**
+   * Real processing of the request after buildForm check.
+   *
+   * @param CRM_Core_Form &$page the current form-page
+   * @param string $actionName current action name
+   *
+   * @return void
+   */
   public function realPerform(&$page, $actionName) {
     $pageName = $page->getAttribute('name');
     $data = &$page->controller->container();

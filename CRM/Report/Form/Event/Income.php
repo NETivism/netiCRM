@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,6 +39,9 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
   protected $_summary = NULL;
 
   protected $_add2groupSupported = FALSE;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
 
     $this->_columns = [
@@ -64,11 +65,23 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_csvSupported = FALSE;
     parent::preProcess();
   }
 
+  /**
+   * Build event report.
+   *
+   * @param array $eventIDs
+   *
+   * @return void
+   */
   public function buildEventReport($eventIDs) {
 
     $this->assign('events', $eventIDs);
@@ -255,6 +268,13 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->assign('statistics', $this->statistics($eventIDs));
   }
 
+  /**
+   * Calculate statistics.
+   *
+   * @param array $eventIDs
+   *
+   * @return array
+   */
   public function statistics(&$eventIDs) {
     $statistics = [];
     $count = count($eventIDs);
@@ -266,6 +286,13 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     return $statistics;
   }
 
+  /**
+   * Set limit.
+   *
+   * @param int $rowCount
+   *
+   * @return void
+   */
   public function limit($rowCount = self::ROW_COUNT_LIMIT) {
     parent::limit($rowCount);
 
@@ -280,6 +307,13 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->_limit = ($pageId - 1) * self::ROW_COUNT_LIMIT;
   }
 
+  /**
+   * Set pager.
+   *
+   * @param int $rowCount
+   *
+   * @return void
+   */
   public function setPager($rowCount = NULL) {
 
     $params = ['total' => $this->_rowsFound,
@@ -294,6 +328,11 @@ class CRM_Report_Form_Event_Income extends CRM_Report_Form {
     $this->assign_by_ref('pager', $pager);
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $this->beginPostProcess();
     $this->_setVariable = TRUE;

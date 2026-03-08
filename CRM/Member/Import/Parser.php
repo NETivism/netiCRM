@@ -26,10 +26,9 @@
 */
 
 /**
+ * Base parser for validating and processing Membership import data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -67,7 +66,6 @@ abstract class CRM_Member_Import_Parser {
   protected $_fileName;
 
   /**#@+
-   * @access protected
    * @var integer
    */
 
@@ -251,12 +249,38 @@ abstract class CRM_Member_Import_Parser {
    */
 
   public $_contactType;
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
+  /**
+   * Initializer code, called before the processing.
+   *
+   * @return void
+   */
   abstract public function init();
+
+  /**
+   * Run the parser.
+   *
+   * @param string $fileName
+   * @param string $seperator
+   * @param array $mapper
+   * @param bool $skipColumnHeader
+   * @param int $mode
+   * @param string $contactType
+   * @param int $onDuplicate
+   * @param int $createContactOption
+   * @param int $dedupeRuleGroupId
+   * @param string $dataReferenceField
+   * @param string $filenamePrefix
+   *
+   * @return void
+   */
   public function run(
     $fileName,
     $seperator,
@@ -473,21 +497,57 @@ abstract class CRM_Member_Import_Parser {
     return $this->fini();
   }
 
+  /**
+   * Handle the values in mapField mode.
+   *
+   * @param array $values the array of values belonging to this line
+   *
+   * @return int
+   */
   abstract public function mapField(&$values);
+
+  /**
+   * Handle the values in preview mode.
+   *
+   * @param array $values the array of values belonging to this line
+   *
+   * @return int the result of this processing
+   */
   abstract public function preview(&$values);
+
+  /**
+   * Handle the values in summary mode.
+   *
+   * @param array $values the array of values belonging to this line
+   *
+   * @return int the result of this processing
+   */
   abstract public function summary(&$values);
+
+  /**
+   * Handle the values in import mode.
+   *
+   * @param int $onDuplicate the code for what action to take on duplicates
+   * @param array $values the array of values belonging to this line
+   *
+   * @return int the result of this processing
+   */
   abstract public function import($onDuplicate, &$values);
 
+  /**
+   * The finalizer code, called after the processing.
+   *
+   * @return void
+   */
   abstract public function fini();
 
   /**
    * Given a list of the importable field keys that the user has selected
-   * set the active fields array to this list
+   * set the active fields array to this list.
    *
-   * @param array mapped array of values
+   * @param array $fieldKeys mapped array of values
    *
    * @return void
-   * @access public
    */
   public function setActiveFields($fieldKeys) {
     if (!empty($fieldKeys)) {
@@ -504,6 +564,14 @@ abstract class CRM_Member_Import_Parser {
     }
   }
 
+  /**
+   * Set active field values.
+   *
+   * @param array $elements
+   * @param int $erroneousField
+   *
+   * @return int
+   */
   public function setActiveFieldValues($elements, &$erroneousField) {
     $maxCount = count($elements) < $this->_activeFieldCount ? count($elements) : $this->_activeFieldCount;
     for ($i = 0; $i < $maxCount; $i++) {
@@ -528,6 +596,13 @@ abstract class CRM_Member_Import_Parser {
     return $valid;
   }
 
+  /**
+   * Set active field location types.
+   *
+   * @param array $elements
+   *
+   * @return void
+   */
   public function setActiveFieldLocationTypes($elements) {
     if (!empty($elements)) {
       for ($i = 0; $i < count($elements); $i++) {
@@ -536,6 +611,13 @@ abstract class CRM_Member_Import_Parser {
     }
   }
 
+  /**
+   * Set active field phone types.
+   *
+   * @param array $elements
+   *
+   * @return void
+   */
   public function setActiveFieldPhoneTypes($elements) {
     if (!empty($elements)) {
       for ($i = 0; $i < count($elements); $i++) {
@@ -544,6 +626,13 @@ abstract class CRM_Member_Import_Parser {
     }
   }
 
+  /**
+   * Set active field website types.
+   *
+   * @param array $elements
+   *
+   * @return void
+   */
   public function setActiveFieldWebsiteTypes($elements) {
     if (!empty($elements)) {
       for ($i = 0; $i < count($elements); $i++) {
@@ -553,12 +642,11 @@ abstract class CRM_Member_Import_Parser {
   }
 
   /**
-   * Function to set IM Service Provider type fields
+   * Function to set IM Service Provider type fields.
    *
    * @param array $elements IM service provider type ids
    *
    * @return void
-   * @access public
    */
   public function setActiveFieldImProviders($elements) {
     if (!empty($elements)) {
@@ -569,10 +657,9 @@ abstract class CRM_Member_Import_Parser {
   }
 
   /**
-   * function to format the field values for input to the api
+   * Function to format the field values for input to the api.
    *
-   * @return array (reference ) associative array of name/value pairs
-   * @access public
+   * @return array associative array of name/value pairs
    */
   public function &getActiveFieldParams() {
     $params = [];
@@ -617,6 +704,11 @@ abstract class CRM_Member_Import_Parser {
     return $params;
   }
 
+  /**
+   * Get select values.
+   *
+   * @return array
+   */
   public function getSelectValues() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
@@ -625,6 +717,11 @@ abstract class CRM_Member_Import_Parser {
     return $values;
   }
 
+  /**
+   * Get select types.
+   *
+   * @return array
+   */
   public function getSelectTypes() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
@@ -635,6 +732,11 @@ abstract class CRM_Member_Import_Parser {
     return $values;
   }
 
+  /**
+   * Get header patterns.
+   *
+   * @return array
+   */
   public function getHeaderPatterns() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
@@ -645,6 +747,11 @@ abstract class CRM_Member_Import_Parser {
     return $values;
   }
 
+  /**
+   * Get data patterns.
+   *
+   * @return array
+   */
   public function getDataPatterns() {
     /**
       priority of fields is 'email', 'Each date fields like join_date, start_date', 'phone', 'membership fields', 'contact fields'
@@ -677,6 +784,18 @@ abstract class CRM_Member_Import_Parser {
     return $values;
   }
 
+  /**
+   * Add a field to the parser.
+   *
+   * @param string $name
+   * @param string $title
+   * @param int $type
+   * @param string $headerPattern
+   * @param string $dataPattern
+   * @param bool $hasLocationType
+   *
+   * @return void
+   */
   public function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE) {
     if (empty($name)) {
       $this->_fields['doNotImport'] = new CRM_Member_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
@@ -694,24 +813,23 @@ abstract class CRM_Member_Import_Parser {
   }
 
   /**
-   * setter function
+   * Setter function for max lines to process.
    *
    * @param int $max
    *
    * @return void
-   * @access public
    */
   public function setMaxLinesToProcess($max) {
     $this->_maxLinesToProcess = $max;
   }
 
   /**
-   * Store parser values
+   * Store parser values.
    *
-   * @param CRM_Core_Session $store
+   * @param CRM_Core_Form $store
+   * @param int $mode
    *
    * @return void
-   * @access public
    */
   public function set($store, $mode = self::MODE_SUMMARY) {
     $store->set('fileSize', $this->_fileSize);
@@ -761,28 +879,25 @@ abstract class CRM_Member_Import_Parser {
   }
 
   /**
-   * Export data to a CSV file
+   * Export data to a CSV file.
    *
-   * @param string $filename
+   * @param string $fileName
    * @param array $header
-   * @param data $data
+   * @param array $data
    *
    * @return void
-   * @access public
    */
   public static function exportCSV($fileName, $header, $data) {
     CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
   }
 
   /**
-   * Remove single-quote enclosures from a value array (row)
+   * Remove single-quote enclosures from a value array (row).
    *
    * @param array $values
    * @param string $enclosure
    *
    * @return void
-   * @static
-   * @access public
    */
   public static function encloseScrub(&$values, $enclosure = "'") {
     if (empty($values)) {
@@ -794,6 +909,14 @@ abstract class CRM_Member_Import_Parser {
     }
   }
 
+  /**
+   * Error file name.
+   *
+   * @param int $type
+   * @param string $prefix
+   *
+   * @return string
+   */
   public static function errorFileName($type, $prefix) {
     return CRM_Import_Parser::saveFileName($type, $prefix);
   }

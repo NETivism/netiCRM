@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -69,17 +67,22 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
   protected $_pledgeIds;
 
   /**
-   * build all the data structures needed to build the form
-   *
-   * @param
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     self::preProcessCommon($this);
   }
 
+  /**
+   * Common pre-process function.
+   *
+   * @param CRM_Core_Form $form
+   * @param bool $useTable
+   *
+   * @return void
+   */
   public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_pledgeIds = [];
 
@@ -147,8 +150,10 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
   }
 
   /**
-   * Given the signer id, compute the contact id
-   * since its used for things like send email
+   * Given the signer ID, compute the contact ID
+   * since its used for things like send email.
+   *
+   * @return void
    */
   public function setContactIDs() {
     $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent(
@@ -158,14 +163,15 @@ class CRM_Pledge_Form_Task extends CRM_Core_Form {
   }
 
   /**
-   * simple shell that derived classes can call to add buttons to
-   * the form with a customized title for the main Submit
+   * Simple shell that derived classes can call to add buttons to
+   * the form with a customized title for the main Submit.
    *
    * @param string $title title of the main button
-   * @param string $type  button type for the form after processing
+   * @param string $nextType button type for the form after processing
+   * @param string $backType button type for the form after processing
+   * @param bool|null $submitOnce
    *
    * @return void
-   * @access public
    */
   public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
     $this->addButtons(

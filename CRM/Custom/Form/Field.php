@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * the custom group id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
@@ -55,7 +52,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * The field id, used when editing the field
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
@@ -63,7 +59,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * The default custom data/input types, when editing the field
    *
    * @var array
-   * @access protected
    */
   protected $_defaultDataType;
 
@@ -76,7 +71,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * Array for valid combinations of data_type & html_type
    *
    * @var array
-   * @static
    */
   private static $_dataTypeValues = NULL;
   private static $_dataTypeKeys = NULL;
@@ -106,13 +100,9 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * Function to set variables up before form is built
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function preProcess() {
-
     if (!(self::$_dataTypeKeys)) {
       self::$_dataTypeKeys = array_keys(CRM_Core_BAO_CustomField::dataType());
       self::$_dataTypeValues = array_values(CRM_Core_BAO_CustomField::dataType());
@@ -173,10 +163,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @param null
-   *
-   * @return array    array of default values
-   * @access public
+   * @return array array of default values
    */
   public function setDefaultValues() {
     $defaults = $this->_values;
@@ -259,10 +246,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_gid) {
@@ -595,12 +579,12 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * global validation rules for the form
    *
-   * @param array  $fields   (referance) posted values of the form
+   * @param array $fields (referance) posted values of the form
+   * @param array $files
+   * @param CRM_Custom_Form_Field $self
    *
-   * @return array    if errors then list of errors to be posted back to the form,
+   * @return array|bool if errors then list of errors to be posted back to the form,
    *                  true otherwise
-   * @static
-   * @access public
    */
   public static function formRule($fields, $files, $self) {
     $default = CRM_Utils_Array::value('default_value', $fields);
@@ -921,10 +905,7 @@ AND    option_group_id = %2";
   /**
    * Process the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // store the submitted values in an array

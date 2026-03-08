@@ -25,6 +25,13 @@
  +--------------------------------------------------------------------+
 */
 
+/**
+ * Abstract base parser for importing event participant data from CSV files
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 abstract class CRM_Event_Import_Parser {
   public const MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
 
@@ -48,7 +55,6 @@ abstract class CRM_Event_Import_Parser {
   protected $_fileName;
 
   /**#@+
-   * @access protected
    * @var integer
    */
 
@@ -198,12 +204,29 @@ abstract class CRM_Event_Import_Parser {
    */
 
   public $_contactType;
+  /**
+   * class constructor
+   */
   public function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
   abstract public function init();
+  /**
+   * Run the parser
+   *
+   * @param array $fileName
+   * @param string $seperator
+   * @param array $mapper
+   * @param bool $skipColumnHeader
+   * @param int $mode
+   * @param int $contactType
+   * @param int $onDuplicate
+   * @param string $filenamePrefix
+   *
+   * @return mixed
+   */
   public function run(
     $fileName,
     $seperator,
@@ -437,7 +460,6 @@ abstract class CRM_Event_Import_Parser {
    * @param array mapped array of values
    *
    * @return void
-   * @access public
    */
   public function setActiveFields($fieldKeys) {
     $this->_activeFieldCount = count($fieldKeys);
@@ -493,7 +515,6 @@ abstract class CRM_Event_Import_Parser {
    * function to format the field values for input to the api
    *
    * @return array (reference ) associative array of name/value pairs
-   * @access public
    */
   public function &getActiveFieldParams() {
     $params = [];
@@ -576,7 +597,6 @@ abstract class CRM_Event_Import_Parser {
    * @param int $max
    *
    * @return void
-   * @access public
    */
   public function setMaxLinesToProcess($max) {
     $this->_maxLinesToProcess = $max;
@@ -588,7 +608,6 @@ abstract class CRM_Event_Import_Parser {
    * @param CRM_Core_Session $store
    *
    * @return void
-   * @access public
    */
   public function set($store, $mode = self::MODE_SUMMARY) {
     $store->set('fileSize', $this->_fileSize);
@@ -645,7 +664,6 @@ abstract class CRM_Event_Import_Parser {
    * @param data $data
    *
    * @return void
-   * @access public
    */
   public static function exportCSV($fileName, $header, $data) {
     CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
@@ -658,8 +676,6 @@ abstract class CRM_Event_Import_Parser {
    * @param string $enclosure
    *
    * @return void
-   * @static
-   * @access public
    */
   public static function encloseScrub(&$values, $enclosure = "'") {
     if (empty($values)) {
@@ -671,6 +687,14 @@ abstract class CRM_Event_Import_Parser {
     }
   }
 
+  /**
+   * Get error filename
+   *
+   * @param int $type
+   * @param string $prefix
+   *
+   * @return string
+   */
   public static function errorFileName($type, $prefix) {
     return CRM_Import_Parser::saveFileName($type, $prefix);
   }

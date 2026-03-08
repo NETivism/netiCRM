@@ -1,4 +1,10 @@
 <?php
+/**
+ * Handles Instant Payment Notifications (IPN) from the MyPay payment gateway for one-time and recurring transactions.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   public static $_payment_processor = NULL;
@@ -36,8 +42,10 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     "B500" => "Execution Failed",
   ];
   /**
-   * @param array $post Input $_POST alternative.
-   * @param array $get Input $_GET alternative.
+   * Class constructor.
+   *
+   * @param array $post input $_POST alternative
+   * @param array $get input $_GET alternative
    */
   public function __construct($post = [], $get = []) {
     parent::__construct();
@@ -46,11 +54,11 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   /**
-   * Main function
+   * Main entry point for processing IPN requests.
    *
-   * @param array $instrument The instrument, like 'Credit', 'BARCODE'... etc.
+   * @param string $instrument instrument code (e.g., 'Credit', 'BARCODE')
    *
-   * @return void
+   * @return string result code
    */
   public function main($instrument) {
     // get the contribution and contact ids from the GET params
@@ -142,6 +150,17 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     return '8888';
   }
 
+  /**
+   * Perform additional validation on the IPN request.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references
+   * @param string &$note string to store validation notes
+   * @param string $instrument instrument code
+   *
+   * @return bool TRUE if validation passes
+   */
   public function validateOthers(&$input, &$ids, &$objects, &$note, $instrument) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
@@ -294,8 +313,11 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   /**
-   * MyPay ids doesn't be carried in GET params.
-   * If it's recurring, The contribution should be the first time one.
+   * Extract contribution and contact IDs.
+   *
+   * @param array &$ids array to store extracted IDs
+   *
+   * @return void
    */
   public function getIds(&$ids = []) {
     $trxnId = $this->_post['order_id'];
@@ -304,7 +326,12 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   /**
+   * Add a note to the contribution record.
    *
+   * @param string $note note content
+   * @param CRM_Contribute_BAO_Contribution &$contribution contribution object
+   *
+   * @return void
    */
   public function addNote($note, &$contribution) {
     require_once 'CRM/Core/BAO/Note.php';

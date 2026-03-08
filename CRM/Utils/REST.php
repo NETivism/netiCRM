@@ -28,7 +28,6 @@
 /**
  * This class handles all REST client requests.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
  *
  */
@@ -123,6 +122,9 @@ class CRM_Utils_REST {
   }
 
   // Generates values needed for error messages
+  /**
+   * @return array<string, mixed>
+   */
   public static function error($message = 'Unknown Error') {
 
     $values = [

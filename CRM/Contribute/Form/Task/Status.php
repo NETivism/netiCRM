@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
@@ -111,9 +110,8 @@ WHERE  {$this->_componentClause}";
   /**
    * Build the form
    *
-   * @access public
-   *
    * @return void
+   * @access public
    */
   public function buildQuickForm() {
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -246,9 +244,8 @@ AND    co.id IN ( $contribIDs )";
   /**
    * process the form after the input has been submitted and validated
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
@@ -326,6 +323,14 @@ AND    co.id IN ( $contribIDs )";
     CRM_Core_Session::setStatus(ts('Contribution status has been updated for selected record(s).'));
   }
 
+  /**
+   * Get details for contributions
+   *
+   * @param string $contributionIDs
+   *
+   * @return array
+   * @static
+   */
   public static function &getDetails($contributionIDs) {
     $query = "
 SELECT    c.id              as contribution_id,

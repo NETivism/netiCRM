@@ -58,8 +58,6 @@ class CRM_Utils_Image {
    * @param string $destination
    * @param integer $quality
    * @param boolean $replace
-   *
-   * @return void
    */
   public function __construct($source, $destination, $quality = 90, $replace = FALSE) {
     $this->_prepared = FALSE;

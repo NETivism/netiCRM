@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -55,16 +53,9 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
   public $_fields;
 
   /**
-   * pre processing work done here.
+   * Pre processing work done here.
    *
-   * gets session variables for group or field id
-   *
-   * @param
-   *
-   * @return void
-   *
-   * @access public
-   *
+   * Gets session variables for group or field id.
    */
   public function preProcess() {
     $flag = FALSE;
@@ -123,11 +114,10 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Set the default form values
+   * Set the default form values.
    *
-   * @access protected
-   *
-   * @return array the default array reference
+   * @return array
+   *   The default array reference.
    */
   public function &setDefaultValues() {
     $defaults = [];
@@ -164,10 +154,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @return void
-   * @access public
+   * Build the form.
    */
   public function buildQuickForm() {
     foreach ($this->_fields as $name => $field) {

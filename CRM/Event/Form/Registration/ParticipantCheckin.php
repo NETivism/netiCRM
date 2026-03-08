@@ -11,7 +11,6 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // required parameter from url
@@ -53,8 +52,7 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     if (CRM_Core_Permission::check("edit event participants")) {
@@ -105,6 +103,11 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
     }
   }
 
+  /**
+   * Function to process the form
+   *
+   * @return void
+   */
   public function postProcess() {
     $participantStatus = CRM_Event_PseudoConstant::participantstatus();
     $attendedStatusId = array_search('Attended', $participantStatus);

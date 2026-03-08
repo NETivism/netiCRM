@@ -27,13 +27,16 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Event_Page_ParticipantListing_NameAndEmail extends CRM_Event_Page_ParticipantListing_Simple {
+  /**
+   * Pre process
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_participantListingType = 'Name and Email';
 

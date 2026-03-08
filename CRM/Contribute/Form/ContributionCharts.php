@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,6 +48,12 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
    */
   protected $_chartType = NULL;
 
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
     $this->_year = CRM_Utils_Request::retrieve('year', 'Int', $this);
     $this->postProcess();
@@ -85,7 +89,7 @@ class CRM_Contribute_Form_ContributionCharts extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     if ($this->_year) {

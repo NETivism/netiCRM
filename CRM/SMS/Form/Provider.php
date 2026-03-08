@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 
@@ -38,6 +37,11 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
   public $_submitValues;
   protected $_id = NULL;
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
 
     $this->_id = $this->get('id');
@@ -68,6 +72,8 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
 
   /**
    * Build the form object.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -129,9 +135,10 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
   }
 
   /**
-   * Form rule
+   * Global form rule.
    *
    * @param array $fields
+   *
    * @return array
    */
   public static function formRule($fields) {
@@ -207,6 +214,8 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
 
   /**
    * Process the form submission.
+   *
+   * @return void
    */
   public function postProcess() {
     CRM_Utils_System::flushCache('CRM_SMS_DAO_Provider');

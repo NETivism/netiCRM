@@ -28,11 +28,11 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   private $_additionalHeaders = [];
 
   /**
-   * Send transactional mail
+   * Send transactional mail.
    *
-   * Alternative of CRM_Utils_Mail::send
+   * Alternative of CRM_Utils_Mail::send.
    *
-   * @param array &$params Is an associative array which holds the values of field needed to send an email. These are:
+   * @param array $params (reference) Is an associative array which holds the values of field needed to send an email. These are:
    *   contactId : contact id is required
    *   from    : complete from envelope
    *   toName  : name of person to send email
@@ -46,25 +46,11 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    *   attachments: an associative array of
    *     fullPath : complete pathname to the file
    *     mime_type: mime type of the attachment
-   *     cleanName: the user friendly name of the attachmment
+   *     cleanName: the user friendly name of the attachment
    *
-   * @param array $callback array first element is for success callback, second is for error callback
-   *   ```
-   *   $callback = [
-   *     0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for success
-   *       $activityId,
-   *       TRUE,
-   *     ]],
-   *     1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for error
-   *       $activityId,
-   *       FALSE,
-   *     ]],
-   *   ];
-   *   ```
+   * @param array|null $callback array first element is for success callback, second is for error callback.
    *
-   * @access public
-   *
-   * @return boolean true if a mail was sent, else false
+   * @return bool True if a mail was sent, else false.
    */
   public static function send(&$params, $callback = NULL) {
     $config = CRM_Core_Config::singleton();
@@ -226,9 +212,9 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   }
 
   /**
-   * Non-blocking mail send
+   * Non-blocking mail send.
    *
-   * @param object $mailer From CRM_Core_Config::getMailer($params['mailerType'])
+   * @param object $mailer From CRM_Core_Config::getMailer($params['mailerType']).
    * @param array $params An associative array for to send email.
    *   $params = array(
    *     'headers' => (array) associative array from Mail_mime->headers
@@ -237,6 +223,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    *     'callback' => (string) associative array for callbacks
    *     'queue' => (object) object from CRM_Mailing_Event_DAO_Queue
    *   );
+   *
    * @return void
    */
   public static function sendNonBlocking($mailer, $params) {
@@ -270,11 +257,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   }
 
   /**
-   * Mark this transactional email delivered
+   * Mark this transactional email delivered.
    *
-   * @param int $event_queue_id
-   * @param int $job_id
-   * @param string $hash hash
+   * @param int $event_queue_id The event queue ID.
+   * @param int $job_id The job ID.
+   * @param string $hash The hash.
+   *
    * @return void
    */
   public static function delivered($event_queue_id, $job_id, $hash) {
@@ -287,14 +275,15 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   }
 
   /**
-   * Mark this transactional email bounced
+   * Mark this transactional email bounced.
    *
    * Email bounced immediately when deliver failed.
    *
-   * @param int $event_queue_id
-   * @param int $job_id
-   * @param string $hash hash
-   * @param string $resultMessage text message after mailer object return result
+   * @param int $event_queue_id The event queue ID.
+   * @param int $job_id The job ID.
+   * @param string $hash The hash.
+   * @param string $resultMessage Text message after mailer object return result.
+   *
    * @return void
    */
   public static function bounced($event_queue_id, $job_id, $hash, $resultMessage) {
@@ -307,6 +296,14 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     CRM_Mailing_Event_BAO_Bounce::create($params);
   }
 
+  /**
+   * Send mail to additional recipients (CC/BCC).
+   *
+   * @param array $recipients Array of email addresses.
+   * @param array $params (reference) The original mail parameters.
+   *
+   * @return void
+   */
   public static function additionalRecipients($recipients, $params) {
     unset($params['activityId'], $params['toName'], $params['toMail']);
     $tidyParams = $params;
@@ -322,11 +319,11 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   }
 
   /**
-   * Transactional Object
+   * Transactional Object constructor.
    *
    * For transactional object, we got to create new body, sender address for each email.
-   * We summarize here
    *
+   * @param array|null $params Initial parameters.
    */
   public function __construct($params = NULL) {
     parent::__construct();
@@ -372,25 +369,24 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   }
 
   /**
-   * Compose transactional mailing
+   * Compose transactional mailing.
    *
-   * Because we extends from CRM_Mailing_BAO_Mailing, we reserve these args
+   * Because we extends from CRM_Mailing_BAO_Mailing, we reserve these args.
    *
-   * @param int $job_id
-   * @param int $event_queue_id
-   * @param string $hash
-   * @param int $contactId
-   * @param string $email
-   * @param string &$recipient
-   * @param book $test
-   * @param array $contactDetails
-   * @param array $attachFiles array element include attachments / images
-   * @param bool $isForward
-   * @param string $fromEmail
-   * @param string $replyToEmail
+   * @param int $job_id The job ID.
+   * @param int $event_queue_id The event queue ID.
+   * @param string $hash The hash.
+   * @param int $contactId The contact ID.
+   * @param string $email The recipient email.
+   * @param string $recipient (reference) The formatted recipient.
+   * @param bool $test Whether this is a test.
+   * @param array $contactDetails Details of the contact.
+   * @param array $attachFiles (reference) Array element include attachments / images.
+   * @param bool $isForward Whether this is a forward.
+   * @param string|null $fromEmail The from email.
+   * @param string|null $replyToEmail The reply-to email.
    *
-   * @return Mail_Mime
-   * @access public
+   * @return Mail_mime|null The mail object.
    */
   public function &compose(
     $job_id,
@@ -629,13 +625,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   }
 
   /**
-   * Get transactional details for an email
+   * Get transactional details for an email.
    *
-   * @param  array   $contactId
-   * @param  array   $activityId
+   * @param int $contactId The contact ID.
+   * @param int $activityId The activity ID.
    *
-   * @return array
-   * @access public
+   * @return array Array of report data.
    */
   public static function getActivityReport($contactId, $activityId) {
     $eq = CRM_Mailing_Event_DAO_Queue::getTableName();

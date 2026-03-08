@@ -26,10 +26,9 @@
 */
 
 /**
+ * Abstract base class for payment processor implementations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -77,13 +76,13 @@ abstract class CRM_Core_Payment {
   public static $_editableFields = [];
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
-   * @param string $mode the mode of operation: live or test
+   * @param string $mode The mode of operation: live or test.
+   * @param array $paymentProcessor The payment processor details.
+   * @param object|null $paymentForm The form object.
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment The payment object.
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     if (self::$_singleton === NULL) {
@@ -110,63 +109,66 @@ abstract class CRM_Core_Payment {
   }
 
   /**
-   * Setter for the payment form that wants to use the processor
+   * Setter for the payment form that wants to use the processor.
    *
-   * @param obj $paymentForm
-   *
+   * @param object $paymentForm The form object.
    */
   public function setForm(&$paymentForm) {
     $this->_paymentForm = $paymentForm;
   }
 
   /**
-   * Getter for payment form that is using the processor
+   * Getter for payment form that is using the processor.
    *
-   * @return obj  A form object
+   * @return object|null A form object.
    */
   public function getForm() {
     return $this->_paymentForm;
   }
 
   /**
-   * Getter for accessing member vars
+   * Getter for accessing member vars.
    *
+   * @param string $name The variable name.
+   *
+   * @return mixed|null The variable value.
    */
   public function getVar($name) {
     return $this->$name ?? NULL;
   }
 
   /**
-   * This function collects all the information from a web/api form and invokes
-   * the relevant payment processor specific functions to perform the transaction
+   * Performs direct payment transaction.
    *
-   * @param  array $params assoc array of input parameters for this transaction
+   * @param array $params Associative array of input parameters for this transaction.
    *
-   * @return array the result in an nice formatted array (or an error object)
-   * @abstract
+   * @return array The result in a formatted array.
    */
   abstract public function doDirectPayment(&$params);
 
   /**
-   * This function checks to see if we have the right config values
+   * This function checks to see if we have the right config values.
    *
-   * @param  string $mode the mode we are operating in (live or test)
-   *
-   * @return string the error message if any
-   * @public
+   * @return string|null The error message if any.
    */
   abstract public function checkConfig();
 
   /**
-   * This function returns the URL used to cancel recurring subscriptions
+   * This function returns the URL used to cancel recurring subscriptions.
    *
-   * @return string the url of the payment processor cancel page
-   * @public
+   * @return string|null The URL of the payment processor cancel page.
    */
   public function cancelSubscriptionURL() {
     return NULL;
   }
 
+  /**
+   * Check if redirect to PayPal is needed.
+   *
+   * @param array $paymentProcessor The payment processor details.
+   *
+   * @return bool
+   */
   public static function paypalRedirect(&$paymentProcessor) {
     if (!$paymentProcessor) {
       return FALSE;
@@ -184,8 +186,7 @@ abstract class CRM_Core_Payment {
   }
 
   /**
-   * Function to get Payment Processor Info
-   *
+   * Get payment processor information for AJAX requests.
    */
   public static function getPaymentProcessorInfo() {
     $ppID = CRM_Utils_Type::escape($_POST['ppID'], 'Positive');
@@ -200,6 +201,14 @@ abstract class CRM_Core_Payment {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Prepare parameters for transfer checkout.
+   *
+   * @param object|array $contrib The contribution details.
+   * @param array $params The transaction parameters.
+   *
+   * @return array<string, mixed> The prepared variables.
+   */
   public function prepareTransferCheckoutParams($contrib, $params) {
     if (is_object($contrib)) {
       $values = [];
@@ -250,14 +259,12 @@ abstract class CRM_Core_Payment {
   }
 
   /**
-   * Calculate expireation base on event setting and specific date
+   * Calculate expiration based on event setting and specific date.
    *
-   * @param int $baseTime timestamp for calculate basetime
-   * @param string $plusDay days after base time to be expiration
+   * @param int|null $baseTime Timestamp for calculation base time.
+   * @param int $plusDay Days after base time to be expiration.
    *
-   * @return int timestamp
-   * @access public
-   * @static
+   * @return int Timestamp.
    */
   public static function calcExpirationDate($baseTime, $plusDay = self::PAY_LATER_DEFAULT_EXPIRED_DAY) {
     // refs #22026

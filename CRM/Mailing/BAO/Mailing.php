@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
@@ -96,12 +94,20 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
   protected $_domain = NULL;
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
+  /**
+   * Get the number of recipients for a mailing.
+   *
+   * @param int $job_id ID of the mailing job.
+   * @param int|null $mailing_id Optional ID of the mailing.
+   *
+   * @return int The number of recipients.
+   */
   public static function &getRecipientsCount($job_id, $mailing_id = NULL) {
     // need this for backward compatibility, so we can get count for old mailings
     // please do not use this function if possible
@@ -109,8 +115,19 @@ class CRM_Mailing_BAO_Mailing extends CRM_Mailing_DAO_Mailing {
     return $eq->N;
   }
 
-  // note that $job_id is used only as a variable in the temp table construction
-  // and does not play a role in the queries generated
+  /**
+   * Get the recipients for a mailing job.
+   *
+   * @param int $job_id ID of the mailing job.
+   * @param int|null $mailing_id Optional ID of the mailing.
+   * @param int|null $offset Offset for the query.
+   * @param int|null $limit Limit for the query.
+   * @param bool $storeRecipients Whether to store the recipients in the database.
+   * @param bool $dedupeEmail Whether to remove duplicate emails.
+   * @param string|null $mode Optional mode for the query.
+   *
+   * @return CRM_Mailing_Event_BAO_Queue The event queue object.
+   */
   public static function &getRecipients($job_id, $mailing_id = NULL, $offset = NULL, $limit = NULL, $storeRecipients = FALSE, $dedupeEmail = FALSE, $mode = NULL) {
     $mailingGroup = new CRM_Mailing_DAO_Group();
 
@@ -625,6 +642,13 @@ ORDER BY   i.contact_id, i.email_id
     return $eq;
   }
 
+  /**
+   * Get the group IDs for a mailing.
+   *
+   * @param string $type The type of group (Include, Exclude, Base).
+   *
+   * @return array Array of group IDs.
+   */
   private function _getMailingGroupIds($type = 'Include') {
     $mailingGroup = new CRM_Mailing_DAO_Group();
     $group = CRM_Contact_DAO_Group::getTableName();
@@ -653,12 +677,12 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
+   * Returns the regex patterns that are used for preparing the text and html templates.
    *
-   * Returns the regex patterns that are used for preparing the text and html templates
+   * @param bool $onlyHrefs Whether to return only patterns for hrefs.
    *
-   * @access private
-   *
-   **/
+   * @return string The regex patterns.
+   */
   protected function &getPatterns($onlyHrefs = FALSE) {
 
     $patterns = [];
@@ -685,14 +709,12 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
-   *  returns an array that denotes the type of token that we are dealing with
-   *  we use the type later on when we are doing a token replcement lookup
+   * Returns an array that denotes the type of token that we are dealing with.
+   * We use the type later on when we are doing a token replacement lookup.
    *
-   *  @param string $token       The token for which we will be doing adata lookup
+   * @param string $token The token for which we will be doing a data lookup.
    *
-   *  @return array $funcStruct  An array that holds the token itself and the type.
-   *                             the type will tell us which function to use for the data lookup
-   *                             if we need to do a lookup at all
+   * @return array<string, string|null> An array that holds the token itself and the type.
    */
   public function &getDataFunc($token) {
     static $_categories = NULL;
@@ -749,14 +771,11 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
+   * Prepares the text and html templates for generating the emails.
+   * Returns a copy of the prepared templates.
    *
-   * Prepares the text and html templates
-   * for generating the emails and returns a copy of the
-   * prepared templates
-   *
-   * @access private
-   *
-   **/
+   * @return array The prepared templates.
+   */
   protected function getPreparedTemplates() {
     if (!$this->preparedTemplates) {
       $patterns['html'] = $this->getPatterns(TRUE);
@@ -794,16 +813,11 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
+   * Retrieve a reference to an array that holds the email and text templates for this email.
+   * Assembles the complete template including the header and footer that the user has uploaded or declared.
    *
-   *  Retrieve a ref to an array that holds the email and text templates for this email
-   *  assembles the complete template including the header and footer
-   *  that the user has uploaded or declared (if they have dome that)
-   *
-   *
-   * @return array reference to an assoc array
-   * @access private
-   *
-   **/
+   * @return array Reference to an associative array of templates.
+   */
   protected function &getTemplates() {
 
     if (!$this->templates) {
@@ -851,21 +865,10 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
+   * Retrieve a reference to an array that holds all of the tokens in the email body.
    *
-   *  Retrieve a ref to an array that holds all of the tokens in the email body
-   *  where the keys are the type of token and the values are ordinal arrays
-   *  that hold the token names (even repeated tokens) in the order in which
-   *  they appear in the body of the email.
-   *
-   *  note: the real work is done in the _getTokens() function
-   *
-   *  this function needs to have some sort of a body assigned
-   *  either text or html for this to have any meaningful impact
-   *
-   * @return array               reference to an assoc array
-   * @access public
-   *
-   **/
+   * @return array Reference to an associative array of tokens.
+   */
   public function &getTokens() {
     if (!$this->tokens) {
 
@@ -888,13 +891,11 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
-   * Returns the token set for all 3 parts as one set. This allows it to be sent to the
-   * hook in one call and standardizes it across other token workflows
+   * Returns the token set for all 3 parts as one set.
+   * This allows it to be sent to the hook in one call and standardizes it across other token workflows.
    *
-   * @return array               reference to an assoc array
-   * @access public
-   *
-   **/
+   * @return array Reference to an associative array of flattened tokens.
+   */
   public function &getFlattenedTokens() {
     if (!$this->flattenedTokens) {
       $tokens = $this->getTokens();
@@ -906,18 +907,9 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
+   * Parses out all of the tokens that have been included in the html and text bodies of the email.
    *
-   *  _getTokens parses out all of the tokens that have been
-   *  included in the html and text bodies of the email
-   *  we get the tokens and then separate them into an
-   *  internal structure named tokens that has the same
-   *  form as the static tokens property(?) of the CRM_Utils_Token class.
-   *  The difference is that there might be repeated token names as we want the
-   *  structures to represent the order in which tokens were found from left to right, top to bottom.
-   *
-   *
-   * @param str $prop     name of the property that holds the text that we want to scan for tokens (html, text)
-   * @access private
+   * @param string $prop Name of the property that holds the text that we want to scan for tokens (html, text, subject).
    *
    * @return void
    */
@@ -937,12 +929,11 @@ ORDER BY   i.contact_id, i.email_id
   }
 
   /**
-   * Generate an event queue for a test job
+   * Generate an event queue for a test job.
    *
-   * @params array $params contains form values
+   * @param array $testParams Parameters for the test job.
    *
    * @return void
-   * @access public
    */
   public function getTestRecipients($testParams) {
     if (CRM_Utils_Array::arrayKeyExists($testParams['test_group'], CRM_Core_PseudoConstant::group())) {
@@ -1008,12 +999,9 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * Retrieve the header and footer for this mailing
-   *
-   * @param void
+   * Retrieve the header and footer for this mailing.
    *
    * @return void
-   * @access private
    */
   protected function getHeaderFooter() {
     if (!$this->header and $this->header_id) {
@@ -1032,14 +1020,14 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * static wrapper for getting verp and urls
+   * Static wrapper for getting verp and urls.
    *
-   * @param int $job_id           ID of the Job associated with this message
-   * @param int $event_queue_id   ID of the EventQueue
-   * @param string $hash          Hash of the EventQueue
-   * @param string $email         Destination address
+   * @param int $job_id ID of the Job associated with this message.
+   * @param int $event_queue_id ID of the EventQueue.
+   * @param string $hash Hash of the EventQueue.
+   * @param string $email Destination address.
    *
-   * @return (reference) array    array ref that hold array refs to the verp info and urls
+   * @return array Array containing the verp info and urls.
    */
   public static function getVerpAndUrls($job_id, $event_queue_id, $hash, $email) {
     // create a skeleton object and set its properties that are required by getVerpAndUrlsAndHeaders()
@@ -1055,26 +1043,13 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * Given and array of headers and a prefix, job ID, event queue ID, and hash,
-   * add a Message-ID header if needed.
+   * Given an array of headers and a prefix, job ID, event queue ID, and hash, add a Message-ID header if needed.
    *
-   * i.e. if the global includeMessageId is set and there isn't already a
-   * Message-ID in the array.
-   * The message ID is structured the same way as a verp. However no interpretation
-   * is placed on the values received, so they do not need to follow the verp
-   * convention.
-   *
-   * @param array $headers
-   *   Array of message headers to update, in-out.
-   * @param string $prefix
-   *   Prefix for the message ID, use same prefixes as verp.
-   *                                wherever possible
-   * @param string $job_id
-   *   Job ID component of the generated message ID.
-   * @param string $event_queue_id
-   *   Event Queue ID component of the generated message ID.
-   * @param string $hash
-   *   Hash component of the generated message ID.
+   * @param array $headers (reference) Array of message headers to update.
+   * @param string|null $prefix Prefix for the message ID.
+   * @param string|null $job_id Job ID component of the generated message ID.
+   * @param string|null $event_queue_id Event Queue ID component of the generated message ID.
+   * @param string|null $hash Hash component of the generated message ID.
    *
    * @return void
    */
@@ -1120,15 +1095,15 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * get verp, urls and headers
+   * Get verp, urls and headers.
    *
-   * @param int $job_id           ID of the Job associated with this message
-   * @param int $event_queue_id   ID of the EventQueue
-   * @param string $hash          Hash of the EventQueue
-   * @param string $email         Destination address
+   * @param int $job_id ID of the Job associated with this message.
+   * @param int $event_queue_id ID of the EventQueue.
+   * @param string $hash Hash of the EventQueue.
+   * @param string $email Destination address.
+   * @param bool $isForward Whether this is a forward mailing.
    *
-   * @return (reference) array    array ref that hold array refs to the verp info, urls, and headers
-   * @access private
+   * @return array Reference to an array containing the verp info, urls, and headers.
    */
   protected function getVerpAndUrlsAndHeaders($job_id, $event_queue_id, $hash, $email, $isForward = FALSE) {
     $config = CRM_Core_Config::singleton();
@@ -1241,20 +1216,22 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * Compose a message
+   * Compose a message.
    *
-   * @param int $job_id           ID of the Job associated with this message
-   * @param int $event_queue_id   ID of the EventQueue
-   * @param string $hash          Hash of the EventQueue
-   * @param string $contactId     ID of the Contact
-   * @param string $email         Destination address
-   * @param string $recipient     To: of the recipient
-   * @param boolean $test         Is this mailing a test?
-   * @param boolean $isForward    Is this mailing compose for forward?
-   * @param string  $fromEmail    email address of who is forwardinf it.
+   * @param int $job_id ID of the Job associated with this message.
+   * @param int $event_queue_id ID of the EventQueue.
+   * @param string $hash Hash of the EventQueue.
+   * @param int $contactId ID of the Contact.
+   * @param string $email Destination address.
+   * @param string $recipient (reference) To: of the recipient.
+   * @param bool $test Is this mailing a test?
+   * @param array $contactDetails Details of the contact.
+   * @param array $attachments (reference) Array of attachments.
+   * @param bool $isForward Is this mailing composed for forward?
+   * @param string|null $fromEmail Email address of who is forwarding it.
+   * @param string|null $replyToEmail Reply-to email address.
    *
-   * @return object               The mail object
-   * @access public
+   * @return Mail_mime|null The mail object.
    */
   public function &compose(
     $job_id,
@@ -1504,10 +1481,11 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
+   * Get mailing object and replaces subscribeInvite, domain and mailing tokens.
    *
-   * get mailing object and replaces subscribeInvite,
-   * domain and mailing tokens
+   * @param CRM_Mailing_BAO_Mailing $mailing (reference) The mailing object.
    *
+   * @return void
    */
   public static function tokenReplace(&$mailing) {
 
@@ -1531,10 +1509,16 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
+   * getTokenData receives a token from an email and returns the appropriate data for the token.
    *
-   *  getTokenData receives a token from an email
-   *  and returns the appropriate data for the token
+   * @param array $token_a (reference) The token structure.
+   * @param bool $html Whether the token is for an HTML email.
+   * @param array $contact (reference) The contact details.
+   * @param array $verp (reference) The verp info.
+   * @param array $urls (reference) The urls info.
+   * @param int $event_queue_id The event queue ID.
    *
+   * @return string The token data.
    */
   protected function getTokenData(&$token_a, $html, &$contact, &$verp, &$urls, $event_queue_id) {
     $type = $token_a['type'];
@@ -1601,11 +1585,10 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * Return a list of group names for this mailing.  Does not work with
-   * prior-mailing targets.
+   * Return a list of group names for this mailing.
+   * Does not work with prior-mailing targets.
    *
-   * @return array        Names of groups receiving this mailing
-   * @access public
+   * @return array Names of groups receiving this mailing.
    */
   public function &getGroupNames() {
     if (!isset($this->id)) {
@@ -1631,15 +1614,12 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * function to add the mailings
+   * Function to add the mailings.
    *
-   * @param array $params reference array contains the values submitted by the form
-   * @param array $ids    reference array contains the id
+   * @param array $params (reference) Array contains the values submitted by the form.
+   * @param array $ids Array contains the id.
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Mailing_DAO_Mailing The mailing object.
    */
   public static function add(&$params, $ids = []) {
     $id = CRM_Utils_Array::value('mailing_id', $ids, CRM_Utils_Array::value('id', $params));
@@ -1675,14 +1655,12 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * Construct a new mailing object, along with job and mailing_group
-   * objects, from the form values of the create mailing wizard.
+   * Construct a new mailing object, along with job and mailing_group objects, from the form values.
    *
-   * @params array $params        Form values
+   * @param array $params (reference) Form values.
+   * @param array $ids Array of IDs.
    *
-   * @return object $mailing      The new mailing object
-   * @access public
-   * @static
+   * @return CRM_Mailing_BAO_Mailing The new mailing object.
    */
   public static function create(&$params, $ids = []) {
     // Retrieve domain email and name for default sender
@@ -1801,15 +1779,13 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * Generate a report.  Fetch event count information, mailing data, and job
-   * status.
+   * Generate a report.
+   * Fetch event count information, mailing data, and job status.
    *
-   * @param int     $id          The mailing id to report
-   * @param boolean $skipDetails whether return all detailed report
+   * @param int $id The mailing id to report.
+   * @param bool $skipDetails Whether to return all detailed report.
    *
-   * @return array        Associative array of reporting data
-   * @access public
-   * @static
+   * @return array Associative array of reporting data.
    */
   public static function &report($id, $skipDetails = FALSE) {
     $mailing_id = CRM_Utils_Type::escape($id, 'Integer');
@@ -2214,12 +2190,9 @@ AND civicrm_contact.is_opt_out =0";
   }
 
   /**
-   * Get the count of mailings
+   * Get the count of mailings.
    *
-   * @param
-   *
-   * @return int              Count
-   * @access public
+   * @return int Count of mailings.
    */
   public function getCount() {
     $this->selectAdd();
@@ -2231,6 +2204,13 @@ AND civicrm_contact.is_opt_out =0";
     return $this->count;
   }
 
+  /**
+   * Check if the user has permission to access a mailing.
+   *
+   * @param int $id The mailing ID.
+   *
+   * @return void
+   */
   public static function checkPermission($id) {
     if (!$id) {
       return;
@@ -2246,6 +2226,13 @@ AND civicrm_contact.is_opt_out =0";
     return;
   }
 
+  /**
+   * Return a SQL clause for mailing ACL.
+   *
+   * @param string|null $alias The table alias.
+   *
+   * @return string The SQL clause.
+   */
   public static function mailingACL($alias = NULL) {
     $mailingACL = " ( 0 ) ";
 
@@ -2258,6 +2245,14 @@ AND civicrm_contact.is_opt_out =0";
     return $mailingACL;
   }
 
+  /**
+   * Get the list of mailing IDs that the user can access.
+   *
+   * @param bool $count Whether to return only the count.
+   * @param string|null $condition Additional condition for the query.
+   *
+   * @return array|int Array of mailing IDs or count.
+   */
   public static function &mailingACLIDs($count = FALSE, $condition = NULL) {
     // get all the groups that this user can access
     // if they dont have universal access
@@ -2291,14 +2286,15 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * Get the rows for a browse operation
+   * Get the rows for a browse operation.
    *
-   * @param int $offset       The row number to start from
-   * @param int $rowCount     The nmber of rows to return
-   * @param string $sort      The sql string that describes the sort order
+   * @param int $offset The row number to start from.
+   * @param int $rowCount The number of rows to return.
+   * @param CRM_Utils_Sort|string|null $sort The sort order.
+   * @param string|null $additionalClause Additional SQL clause.
+   * @param array|null $additionalParams Additional parameters for the query.
    *
-   * @return array            The rows
-   * @access public
+   * @return array The rows.
    */
   public function &getRows($offset, $rowCount, $sort, $additionalClause = NULL, $additionalParams = NULL) {
     $mailing = self::getTableName();
@@ -2378,26 +2374,22 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * Function to show detail Mailing report
+   * Function to show detail Mailing report.
    *
-   * @param int $id
+   * @param int $id The mailing ID.
    *
-   * @static
-   * @access public
+   * @return string The URL for the mailing report.
    */
-
   public static function showEmailDetails($id) {
     return CRM_Utils_System::url('civicrm/mailing/report', "mid=$id");
   }
 
   /**
-   * Delete Mails and all its associated records
+   * Delete Mails and all its associated records.
    *
-   * @param  int  $id id of the mail to delete
+   * @param int $id ID of the mail to delete.
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function del($id) {
     if (empty($id)) {
@@ -2419,14 +2411,11 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * Delete Jobss and all its associated records
-   * related to test Mailings
+   * Delete Jobs and all its associated records related to test Mailings.
    *
-   * @param  int  $id id of the Job to delete
+   * @param int $id ID of the Job to delete.
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function delJob($id) {
     if (empty($id)) {
@@ -2438,6 +2427,11 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
     $dao->delete();
   }
 
+  /**
+   * Get the return properties for a mailing.
+   *
+   * @return array Array of return properties.
+   */
   public function getReturnProperties() {
     $tokens = &$this->getTokens();
 
@@ -2471,16 +2465,16 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * gives required details of contacts
+   * Gives required details of contacts.
    *
-   * @param  array   $contactIds       of conatcts
-   * @param  array   $returnProperties of required properties
-   * @param  boolean $skipOnHold       don't return on_hold contact info also.
-   * @param  boolean $skipDeceased     don't return deceased contact info.
-   * @param  array   $extraParams      extra params
+   * @param array $contactIDs Array of contact IDs.
+   * @param array|null $returnProperties Array of required properties.
+   * @param bool $skipOnHold Don't return on_hold contact info.
+   * @param bool $skipDeceased Don't return deceased contact info.
+   * @param array|null $extraParams Extra params for the query.
+   * @param bool $customHook Whether to skip the custom hook call.
    *
-   * @return array
-   * @access public
+   * @return array Array of contact details.
    */
   public static function getDetails(
     $contactIDs,
@@ -2589,13 +2583,12 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * gives required details of a contact
+   * Gives required details of a contact for a mailing.
    *
-   * @param  int $contactId
-   * @param  int $mailingId
+   * @param int $contactId The contact ID.
+   * @param int $mailingId The mailing ID.
    *
-   * @return array
-   * @access public
+   * @return array Array of report data.
    */
   public static function getContactReport($contactId, $mailingId) {
     $job = CRM_Mailing_BAO_Job::getTableName();
@@ -2634,14 +2627,12 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * Function to build the  compose mail form
+   * Function to build the compose mail form.
    *
-   * @param   $form
+   * @param CRM_Core_Form $form (reference) The form object.
    *
-   * @return None
-   * @access public
+   * @return void
    */
-
   public static function commonCompose(&$form) {
     //get the tokens.
     $tokens = [];
@@ -2826,12 +2817,11 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * Function to build the  compose PDF letter form
+   * Function to build the compose PDF letter form.
    *
-   * @param   $form
+   * @param CRM_Core_Form $form (reference) The form object.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public static function commonLetterCompose(&$form) {
     //get the tokens.
@@ -2894,10 +2884,9 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
   }
 
   /**
-   * Get the search based mailing Ids
+   * Get the search based mailing IDs.
    *
-   * @return array $mailingIDs, searched base mailing ids.
-   * @access public
+   * @return array Array of search based mailing IDs.
    */
   public function searchMailingIDs() {
     $group = CRM_Mailing_DAO_Group::getTableName();
@@ -2919,14 +2908,12 @@ SELECT  $mailing.id as mailing_id
   }
 
   /**
-   * Get the content/components of mailing based on mailing Id
+   * Get the content/components of mailing based on mailing ID.
    *
-   * @param $report array of mailing report
+   * @param array $report (reference) Array of mailing report.
+   * @param CRM_Core_Page|CRM_Core_Form $form (reference) The page or form object.
    *
-   * @param $form reference of this
-   *
-   * @return $report array content/component.
-   * @access public
+   * @return array Array of content/components.
    */
   public static function getMailingContent(&$report, &$form) {
     $htmlHeader = $textHeader = NULL;
@@ -2986,6 +2973,13 @@ SELECT  $mailing.id as mailing_id
     return $report;
   }
 
+  /**
+   * Check if VERP should be overridden for a job.
+   *
+   * @param int $jobID The job ID.
+   *
+   * @return bool True if VERP should be overridden.
+   */
   public static function overrideVerp($jobID) {
     static $_cache = [];
 
@@ -3002,6 +2996,11 @@ WHERE  civicrm_mailing_job.id = %1
     return $_cache[$jobID];
   }
 
+  /**
+   * Process the mailing queue.
+   *
+   * @return bool True if the queue was processed.
+   */
   public static function processQueue() {
 
     $config = &CRM_Core_Config::singleton();
@@ -3059,7 +3058,9 @@ WHERE  civicrm_mailing_job.id = %1
   }
 
   /**
-   * @return array
+   * Get the list of mailings.
+   *
+   * @return array Array of mailings.
    */
   public static function getMailingsList() {
     static $list = [];
@@ -3080,6 +3081,13 @@ ORDER BY civicrm_mailing.name";
     return $list;
   }
 
+  /**
+   * Get the default from email address.
+   *
+   * @param string $part Optional part to add to the email address.
+   *
+   * @return string The default from email address.
+   */
   public static function defaultFromMail($part = "") {
     $localpart = CRM_Core_BAO_MailSettings::defaultLocalpart();
     $localpart = rtrim($localpart, '+');
@@ -3091,6 +3099,13 @@ ORDER BY civicrm_mailing.name";
     return '';
   }
 
+  /**
+   * Change the visibility of a mailing.
+   *
+   * @param int $mid The mailing ID.
+   *
+   * @return bool True if the visibility was changed.
+   */
   public static function changeVisibility($mid) {
     if (is_numeric($mid) && !empty($mid)) {
       $mailing = new CRM_Mailing_BAO_Mailing();
@@ -3108,6 +3123,11 @@ ORDER BY civicrm_mailing.name";
     return FALSE;
   }
 
+  /**
+   * Check if the mailing is hidden.
+   *
+   * @return int 1 if the mailing is hidden, 0 otherwise.
+   */
   public function checkIsHidden() {
     if (!empty($this->id)) {
       return CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $this->id, 'is_hidden');

@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,7 +41,6 @@ class CRM_Event_Form_EventFees {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public static function preProcess(&$form) {
     //as when call come from register.php
@@ -93,9 +90,10 @@ class CRM_Event_Form_EventFees {
    * This function sets the default values for the form in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
+   * @param CRM_Core_Form $form
    *
-   * @return None
+   *
+   * @return array
    */
   public static function setDefaultValues(&$form) {
     $defaults = [];
@@ -401,9 +399,11 @@ class CRM_Event_Form_EventFees {
   /**
    * This function sets the default values for price set.
    *
-   * @access public
+   * @param int $participantID
+   * @param int $eventID
    *
-   * @return None
+   *
+   * @return array
    */
   public static function setDefaultPriceSet($participantID, $eventID = NULL) {
     $defaults = [];
@@ -489,8 +489,9 @@ SELECT  id, html_type
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function buildQuickForm(&$form) {
     if ($form->_eventId) {

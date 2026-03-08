@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,10 +41,9 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
   protected $_oldSiteName;
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Update Directory Path and URL'));
@@ -67,6 +64,11 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     parent::buildQuickForm();
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     if (!$this->_defaults) {
       parent::setDefaultValues();
@@ -81,6 +83,13 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     return $this->_defaults;
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields
+   *
+   * @return bool|array
+   */
   public static function formRule($fields) {
     $tmpDir = trim($fields['newBaseDir']);
 
@@ -94,6 +103,11 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     return $errors;
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void
+   */
   public function postProcess() {
     // redirect to admin page after saving
     $session = CRM_Core_Session::singleton();

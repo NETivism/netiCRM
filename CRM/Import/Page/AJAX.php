@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,7 +37,9 @@
 class CRM_Import_Page_AJAX {
 
   /**
-   * Function to show import status
+   * Function to show import status.
+   *
+   * @return void
    */
   public static function status() {
     // make sure we get an id

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,18 +40,16 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
   protected $_options;
 
   /**
-   * takes an associative array and creates a price field object
+   * Takes an associative array and creates a price field object.
    *
-   * the function extract all the params it needs to initialize the create a
+   * The function extract all the params it needs to initialize the create a
    * price field object. the params array could contain additional unused name/value
-   * pairs
+   * pairs.
    *
-   * @param array  $params    (reference ) an assoc array of name/value pairs
-   * @param array  $ids       the array that holds all the db ids
+   * @param array $params (reference ) an assoc array of name/value pairs
+   * @param array $ids the array that holds all the db ids
    *
-   * @return object CRM_Price_BAO_Field object
-   * @access public
-   * @static
+   * @return CRM_Price_BAO_Field
    */
   public static function &add(&$params, $ids) {
     $priceFieldBAO = new CRM_Price_BAO_Field();
@@ -69,20 +65,17 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
   }
 
   /**
-   * takes an associative array and creates a price field object
+   * Takes an associative array and creates a price field object.
    *
-   * This function is invoked from within the web form layer and also from the api layer
+   * This function is invoked from within the web form layer and also from the api layer.
    *
    * @param array $params (reference) an assoc array of name/value pairs
+   * @param array $ids the array that holds all the db ids
    *
-   * @return object CRM_Price_DAO_Field object
-   * @access public
-   * @static
+   * @return CRM_Price_BAO_Field|CRM_Core_Error
    */
   public static function create(&$params, $ids) {
-
     $transaction = new CRM_Core_Transaction();
-
     $priceField = &self::add($params, $ids);
 
     if (is_a($priceField, 'CRM_Core_Error')) {
@@ -152,32 +145,24 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * retrieves the relevant objects.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
+   * @param array $params (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Price_DAO_Field object
-   * @access public
-   * @static
+   * @return CRM_Price_DAO_Field
    */
   public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_Field', $params, $defaults);
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag in the db.
    *
-   * @param int      $id         Id of the database record
-   * @param boolean  $is_active  Value we want to set the is_active field
+   * @param int $id Id of the database record
+   * @param bool $is_active Value we want to set the is_active field
    *
-   * @return   Object            DAO object on sucess, null otherwise
-   *
-   * @access public
-   * @static
+   * @return bool|null DAO object on success, null otherwise
    */
   public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_Field', $id, 'is_active', $is_active);
@@ -189,27 +174,24 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
    * @param int $id id of field.
    *
    * @return string name
-   *
-   * @access public
-   * @static
-   *
    */
   public static function getTitle($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Field', $id, 'label');
   }
 
   /**
-   * This function for building custom fields
+   * This function for building custom fields.
    *
-   * @param object  $qf             form object (reference)
-   * @param string  $elementName    name of the custom field
-   * @param boolean $inactiveNeeded
-   * @param boolean $useRequired    true if required else false
-   * @param boolean $search         true if used for search else false
-   * @param string  $label          label for custom field
+   * @param CRM_Core_Form $qf form object (reference)
+   * @param string $elementName name of the custom field
+   * @param int $fieldId field id
+   * @param bool $inactiveNeeded
+   * @param bool $useRequired true if required else false
+   * @param string|null $label label for custom field
+   * @param array|null $fieldOptions
+   * @param array $freezeOptions
    *
-   * @access public
-   * @static
+   * @return object|void
    */
   public static function addQuickFormElement(
     &$qf,
@@ -515,11 +497,11 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
   }
 
   /**
-   * Retrieve a list of options for the specified field
+   * Retrieve a list of options for the specified field.
    *
    * @param int $fieldId price field ID
    * @param bool $inactiveNeeded include inactive options
-   * @param bool $reset ignore stored values\
+   * @param bool $reset ignore stored values
    *
    * @return array array of options
    */
@@ -536,6 +518,14 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
     return $options[$fieldId];
   }
 
+  /**
+   * Get option ID.
+   *
+   * @param string $optionLabel
+   * @param int $fid
+   *
+   * @return int|void
+   */
   public static function getOptionId($optionLabel, $fid) {
     if (!$optionLabel || !$fid) {
       return;
@@ -564,13 +554,9 @@ WHERE
   /**
    * Delete the price set field.
    *
-   * @param   int   $id    Field Id
+   * @param int $id Field Id
    *
-   * @return  boolean
-   *
-   * @access public
-   * @static
-   *
+   * @return bool|null
    */
   public static function deleteField($id) {
     $field = new CRM_Price_DAO_Field();
@@ -593,6 +579,11 @@ WHERE
     return NULL;
   }
 
+  /**
+   * Get HTML types.
+   *
+   * @return array
+   */
   public static function &htmlTypes() {
     static $htmlTypes = NULL;
     if (!$htmlTypes) {
@@ -607,17 +598,14 @@ WHERE
   }
 
   /**
-   * Validate the priceset
+   * Validate the priceset.
    *
-   * @param int $priceSetId, array $fields
+   * @param int $priceSetId
+   * @param array $fields
+   * @param array $error (reference)
    *
-   * retrun the error string
-   *
-   * @access public
-   * @static
-   *
+   * @return void
    */
-
   public static function priceSetValidation($priceSetId, $fields, &$error) {
     // check for at least one positive
     // amount price field should be selected.
@@ -686,6 +674,13 @@ WHERE  id IN (" . CRM_Utils_Array::implode(',', array_keys($priceFields)) . ')';
     }
   }
 
+  /**
+   * Get price levels.
+   *
+   * @param array $where
+   *
+   * @return array
+   */
   public static function getPriceLevels($where = []) {
     if (empty($where)) {
       $where = " (1) ";
@@ -752,14 +747,11 @@ ORDER BY ce.entity_id DESC, cf.id, cf.weight, cv.weight ASC
   }
 
   /**
-   * This function is to make a copy of a price field, including
-   * all the fields
+   * This function is to make a copy of a price field, including all the fields.
    *
-   * @param int $id the price field id to copy
+   * @param int $fid the price field id to copy
    *
-   * @return the copy object
-   * @access public
-   * @static
+   * @return CRM_Price_DAO_Field the copy object
    */
   public static function copy($fid) {
     $fieldsFix = [

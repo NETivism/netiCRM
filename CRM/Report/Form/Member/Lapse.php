@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,6 +45,9 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
   protected $_phoneField = FALSE;
   protected $_charts = ['' => 'Tabular'];
   protected $_customGroupExtends = ['Membership'];
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
@@ -158,10 +159,20 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -191,6 +202,15 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     //check for searching combination of dispaly columns and
@@ -199,6 +219,11 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     return $errors;
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = NULL;
 
@@ -237,6 +262,11 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -289,6 +319,11 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $this->beginPostProcess();
 
@@ -315,6 +350,13 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

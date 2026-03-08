@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,20 +38,18 @@
 class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
 
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * takes an associative array and creates a price set object
+   * Takes an associative array and creates a price set object.
    *
    * @param array $params (reference) an assoc array of name/value pairs
    *
-   * @return object CRM_Price_DAO_Set object
-   * @access public
-   * @static
+   * @return CRM_Price_BAO_Set
    */
   public static function create(&$params) {
     $priceSetBAO = new CRM_Price_BAO_Set();
@@ -66,31 +62,24 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * retrieves the relevant objects.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
+   * @param array $params (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Price_DAO_Set object
-   * @access public
-   * @static
+   * @return CRM_Price_DAO_Set
    */
   public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_Set', $params, $defaults);
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag in the db.
    *
-   * @param  int      $id         id of the database record
-   * @param  boolean  $is_active  value we want to set the is_active field
+   * @param int $id id of the database record
+   * @param bool $isActive value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
-   * @static
-   * @access public
+   * @return bool|null DAO object on success, null otherwise
    */
   public static function setIsActive($id, $isActive) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_Set', $id, 'is_active', $isActive);
@@ -99,13 +88,9 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
   /**
    * Get the price set title.
    *
-   * @param int $id   id of price set
+   * @param int $id id of price set
    *
-   * @return string   title
-   *
-   * @access public
-   * @static
-   *
+   * @return string title
    */
   public static function getTitle($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $id, 'title');
@@ -114,7 +99,8 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
   /**
    * Return a list of all forms which use this price set.
    *
-   * @param int  $id id of price set
+   * @param int $id id of price set
+   * @param bool $onlyTable
    *
    * @return array
    */
@@ -191,15 +177,11 @@ WHERE     ct.id = cp.contribution_type_id AND
   }
 
   /**
-   * Delete the price set
+   * Delete the price set.
    *
    * @param int $id Price Set id
    *
-   * @return boolean false if fields exist for this set, true if the
-   * set could be deleted
-   *
-   * @access public
-   * @static
+   * @return bool false if fields exist for this set, true if the set could be deleted
    */
   public static function deleteSet($id) {
     // remove from all inactive forms
@@ -231,16 +213,15 @@ WHERE     ct.id = cp.contribution_type_id AND
   }
 
   /**
-   * Link the price set with the specified table and id
+   * Link the price set with the specified table and id.
    *
    * @param string $entityTable
-   * @param integer $entityId
-   * @param integer $priceSetId
+   * @param int $entityId
+   * @param int $priceSetId
    *
    * @return bool
    */
   public static function addTo($entityTable, $entityId, $priceSetId) {
-    // verify that the price set exists
     $dao = new CRM_Price_DAO_Set();
     $dao->id = $priceSetId;
     if (!$dao->find()) {
@@ -260,10 +241,12 @@ WHERE     ct.id = cp.contribution_type_id AND
   }
 
   /**
-   * Delete price set for the given entity and id
+   * Delete price set for the given entity and id.
    *
    * @param string $entityTable
-   * @param integer $entityId
+   * @param int $entityId
+   *
+   * @return bool
    */
   public static function removeFrom($entityTable, $entityId) {
 
@@ -274,12 +257,12 @@ WHERE     ct.id = cp.contribution_type_id AND
   }
 
   /**
-   * Find a price_set_id associatied with the given table and id
+   * Find a price_set_id associated with the given table and id.
    *
    * @param string $entityTable
-   * @param integer $entityId
+   * @param int $entityId
    *
-   * @return integer|false price_set_id, or false if none found
+   * @return int|bool price_set_id, or false if none found
    */
   public static function getFor($entityTable, $entityId) {
     if (!$entityTable || !$entityId) {
@@ -294,15 +277,11 @@ WHERE     ct.id = cp.contribution_type_id AND
   }
 
   /**
-   * Find a price_set_id associatied with the given option value or  field ID
+   * Find a price_set_id associated with the given option value or field ID.
    *
-   * @param array $params (reference) an assoc array of name/value pairs
-   *                      array may contain either option id or
-   *                      price field id
+   * @param array $params (reference) an assoc array of name/value pairs array may contain either option id or price field id
    *
-   * @return price set id on success, null  otherwise
-   * @static
-   * @access public
+   * @return int|null price set id on success, null otherwise
    */
   public static function getSetId(&$params) {
     $fid = NULL;
@@ -327,10 +306,10 @@ WHERE     ct.id = cp.contribution_type_id AND
   }
 
   /**
-   * Return an associative array of all price sets
+   * Return an associative array of all price sets.
    *
-   * @param bool   $withInactive        whether or not to include inactive entries
-   * @param string $extendComponentName name of the component like 'CiviEvent','CiviContribute'
+   * @param bool $withInactive whether or not to include inactive entries
+   * @param string|bool $extendComponentName name of the component like 'CiviEvent','CiviContribute'
    *
    * @return array associative array of id => name
    */
@@ -370,13 +349,15 @@ WHERE     ct.id = cp.contribution_type_id AND
   }
 
   /**
-   * Get price set details
+   * Get price set details.
    *
-   * An array containing price set details (including price fields) is returned
+   * An array containing price set details (including price fields) is returned.
    *
-   * @param int $setId - price set id whose details are needed
+   * @param int $setID price set id whose details are needed
+   * @param bool $required
+   * @param bool $isActive
    *
-   * @return array $setTree - array consisting of field details
+   * @return array array consisting of field details
    */
   public static function getSetDetail($setID, $required = TRUE, $isActive = TRUE) {
     // create a new tree
@@ -463,6 +444,15 @@ WHERE  id = %1";
     return $setTree;
   }
 
+  /**
+   * Initialize price set.
+   *
+   * @param CRM_Core_Form $form
+   * @param int $id
+   * @param string $entityTable
+   *
+   * @return int|bool
+   */
   public static function initSet(&$form, $id, $entityTable = 'civicrm_event') {
     // get price info
     if ($priceSetId = self::getFor($entityTable, $id)) {
@@ -547,6 +537,15 @@ WHERE  id = %1";
     return FALSE;
   }
 
+  /**
+   * Process amount.
+   *
+   * @param array $fields
+   * @param array $params
+   * @param array $lineItem
+   *
+   * @return void
+   */
   public static function processAmount(&$fields, &$params, &$lineItem) {
     // using price set
     $totalPrice = 0;
@@ -633,8 +632,9 @@ WHERE  id = %1";
   /**
    * Function to build the price set form.
    *
-   * @return None
-   * @access public
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function buildPriceSet(&$form) {
     $priceSetId = $form->get('priceSetId');
@@ -681,14 +681,12 @@ WHERE  id = %1";
   }
 
   /**
-   * Get field ids of a price set
+   * Get field ids of a price set.
    *
-   * @param int id Price Set id
+   * @param int $id Price Set id
    *
    * @return array of the field ids
    *
-   * @access public
-   * @static
    */
   public static function getFieldIds($id) {
     $priceField = new CRM_Price_DAO_Field();
@@ -700,6 +698,13 @@ WHERE  id = %1";
     return $var;
   }
 
+  /**
+   * Get fields.
+   *
+   * @param int $id
+   *
+   * @return array
+   */
   public static function getFields($id) {
     $setTitle = self::getTitle($id);
     $priceField = new CRM_Price_BAO_Field();
@@ -715,14 +720,11 @@ WHERE  id = %1";
   }
 
   /**
-   * This function is to make a copy of a price set, including
-   * all the fields
+   * This function is to make a copy of a price set, including all the fields.
    *
    * @param int $id the price set id to copy
    *
-   * @return the copy object
-   * @access public
-   * @static
+   * @return CRM_Price_DAO_Set the copy object
    */
   public static function copy($id) {
     $maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_price_set");
@@ -754,9 +756,11 @@ WHERE  id = %1";
   }
 
   /**
-   * This function is to check price set permission
+   * This function is to check price set permission.
    *
    * @param int $sid the price set id
+   *
+   * @return bool
    */
   public static function checkPermission($sid) {
     if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
@@ -769,13 +773,12 @@ WHERE  id = %1";
   }
 
   /**
-   * Get the sum of participant count
-   * for all fields of given price set.
+   * Get the sum of participant count for all fields of given price set.
    *
    * @param int $sid the price set id
+   * @param bool $onlyActive
    *
-   * @access public
-   * @static
+   * @return int
    */
   public static function getPricesetCount($sid, $onlyActive = TRUE) {
     static $pricesetFieldCount;
@@ -804,6 +807,13 @@ WHERE  pset.id = %1 $where";
     return $pricesetFieldCount[$sid];
   }
 
+  /**
+   * Amount level text.
+   *
+   * @param array $lineItem
+   *
+   * @return string
+   */
   public static function amountLevelText($lineItem) {
     $amount_level = [];
     $totalParticipant = 0;

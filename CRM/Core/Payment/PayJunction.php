@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 /**
  * Copyright (C) 2007
@@ -10,9 +14,7 @@
 
 /**
  *
- * @package CRM
  * @author Michael Morris and Gene Chi @ Phase2 Technology <mmorris@phase2technology.com>
- * $Id$
  *
  */
 
@@ -42,8 +44,6 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     //require PayJunction API library

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,12 +38,24 @@
 class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
   protected $_params;
 
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
     $this->assign('rows', $this->get('rows'));
 
     $this->_params = $this->controller->exportValues($this->_name);
   }
 
+  /**
+   * Build the form
+   *
+   * @return void
+   * @access public
+   */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
 
@@ -92,6 +102,12 @@ class CRM_Contact_Form_Search_Simple extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Post-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function postProcess() {
     $this->_params = $this->controller->exportValues($this->_name);
     CRM_Core_Error::debug($this->_params);

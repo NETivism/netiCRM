@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Mapping Provider'));
@@ -56,14 +53,11 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-
+   * @param array $fields
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array
    */
   public static function formRule($fields) {
     $errors = [];
@@ -80,13 +74,9 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * This function is used to add the rules (mainly global rules) for form.
-   * All local rules are added near the element
-   *
-   * @param null
+   * Adds the rules (mainly global rules) for the form.
    *
    * @return void
-   * @access public
    */
   public function addRules() {
     $this->addFormRule(['CRM_Admin_Form_Setting_Mapping', 'formRule']);

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -247,6 +245,12 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
 
   }
 
+  /**
+   * Set default values for the form
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     // process defaults only once
     if (!empty($this->_defaults)) {
@@ -603,9 +607,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -888,8 +892,10 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
   /**
    * build the radio/text form elements for the amount field
    *
+   * @param boolean $separateMembershipPayment
+   *
    * @return void
-   * @access private
+   * @access public
    */
   public function buildAmount($separateMembershipPayment = FALSE) {
     $elements = [];
@@ -1020,7 +1026,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
   /**
    * Function to add the honor block
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildHonorBlock() {
@@ -1057,6 +1063,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * build elements to enable pay on behalf of an organization.
    *
    * @access public
+   *
+   * @return void
    */
   public function buildOnBehalfOrganization() {
     if ($this->_membershipContactID) {
@@ -1094,6 +1102,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * build elements to enable pay later functionality
    *
    * @access public
+   *
+   * @return void
    */
   public function buildPayLater() {
 
@@ -1131,6 +1141,8 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    * build elements to collect information for recurring contributions
    *
    * @access public
+   *
+   * @return void
    */
   public function buildRecur() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionRecur');
@@ -1231,9 +1243,9 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    *
    * @param array $fields  the input form values
    * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param CRM_Contribute_Form_Contribution_Main $self
    *
-   * @return true if no errors, else array of errors
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
@@ -1567,6 +1579,15 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     return empty($errors) ? TRUE : $errors;
   }
 
+  /**
+   * Compute the amount for the contribution
+   *
+   * @param array $params
+   * @param CRM_Contribute_Form_Contribution_Main $form
+   *
+   * @return float|int|null
+   * @static
+   */
   public static function computeAmount(&$params, &$form) {
     $amount = NULL;
 
@@ -1604,7 +1625,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $config = CRM_Core_Config::singleton();
@@ -1722,6 +1743,14 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     }
   }
 
+  /**
+   * Check for duplicate account
+   *
+   * @param array $fields
+   * @param CRM_Contribute_Form_Contribution_Main $self
+   *
+   * @return array|false
+   */
   public function checkDuplicateAccount($fields, &$self) {
     // CRM-3907, skip check for preview registrations
     if ($self->_mode == 'test') {

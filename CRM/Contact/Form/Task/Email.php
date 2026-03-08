@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -69,7 +67,7 @@ class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
   public $_templates = NULL;
 
   /**
-   * build all the data structures needed to build the form
+   * Set up variables for the form.
    *
    * @return void
    * @access public
@@ -125,11 +123,11 @@ class CRM_Contact_Form_Task_Email extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     CRM_Contact_Form_Task_EmailCommon::postProcess($this);

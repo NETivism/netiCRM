@@ -27,32 +27,33 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
+/**
+ * form to process actions on the Personal Campaign Page (PCP) section of Contribution Page
+ */
 class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_ContributionPage {
 
   /**
-   * Function to pre process the form
+   * Set up variables before the form is built.
    *
-   * @access public
+   * Calls the parent preProcess method.
    *
-   * @return None
+   * @return void
    */
   public function preProcess() {
     parent::preProcess();
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing PCP block settings for the current contribution page
+   * from the database. Sets initial values for approval, link text, and notification email.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
@@ -77,10 +78,12 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Adds fields for enabling PCP, approval requirements, supporter profiles,
+   * link text, and notification emails.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->addElement('checkbox', 'is_active', ts('Enable Personal Campaign Pages (for this contribution page)?'), NULL, ['onclick' => "return showHideByValue('is_active',true,'pcpFields','table-row','radio',false);"]);
@@ -125,13 +128,16 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
   }
 
   /**
-   * Function for validation
+   * Global form rule for validation.
    *
-   * @param array $params (ref.) an assoc array of name/value pairs
+   * Validates that a supporter profile is selected if PCP is enabled,
+   * ensuring the profile contains an email field, and validates notification emails.
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @param array $params an assoc array of name/value pairs submitted by the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return mixed true if no errors, or an array of error messages
    */
   public static function formRule($params, $files, $self) {
     $errors = [];
@@ -160,10 +166,12 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Creates or updates the `civicrm_pcp_block` record associated with the
+   * current contribution page.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -184,10 +192,9 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Enable Personal Campaign Pages');

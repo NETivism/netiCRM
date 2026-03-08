@@ -26,15 +26,20 @@
 */
 
 /**
+ * Sample custom search form demonstrating how to build custom searches
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   public $_stateID;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -56,6 +61,11 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     ];
   }
 
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
   public function buildForm(&$form) {
 
     $form->add(
@@ -80,6 +90,11 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     $form->assign('elements', ['household_name', 'state_province_id']);
   }
 
+  /**
+   * Get summary data.
+   *
+   * @return array<string, string|float>
+   */
   public function summary() {
     $summary = ['summary' => 'This is a summary',
       'total' => 50.0,
@@ -87,6 +102,16 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     return $summary;
   }
 
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -109,6 +134,11 @@ state_province.name    as state_province
     );
   }
 
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
   public function from() {
     return "
 FROM      civicrm_contact contact_a
@@ -120,6 +150,13 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
 ";
   }
 
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
   public function where($includeContactIDs = FALSE) {
     $params = [];
     $where = "contact_a.contact_type   = 'Household'";
@@ -161,15 +198,30 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
     return $this->whereClause($where, $params);
   }
 
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
+  /**
+   * Set the default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     return ['household_name' => '',
     ];
   }
 
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
   public function alterRow(&$row) {
     $row['sort_name'] .= ' ( altered )';
   }

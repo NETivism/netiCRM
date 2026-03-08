@@ -30,16 +30,14 @@
  * any useful functionality. As such we dont require anyone to derive
  * from this class. However it includes a few common files
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Core_Base {
 
   /**
-   * constructor
+   * Class constructor.
    */
   public function __construct() {
   }

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Generates case activity reports from XML-based case type definitions
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -283,6 +282,9 @@ WHERE      a.id = %1
     return $activityInfos[$index];
   }
 
+  /**
+   * @return array<string, mixed>
+   */
   public function &getActivity(
     $clientID,
     $activityDAO,

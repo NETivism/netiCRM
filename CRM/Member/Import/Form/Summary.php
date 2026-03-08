@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,10 +37,9 @@
 class CRM_Member_Import_Form_Summary extends CRM_Core_Form {
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
 
@@ -101,10 +98,9 @@ class CRM_Member_Import_Form_Summary extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->addButtons(
@@ -118,10 +114,9 @@ class CRM_Member_Import_Form_Summary extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Summary');

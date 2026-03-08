@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -50,6 +48,9 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
   protected $_summary = NULL;
 
   protected $_customGroupExtends = ['Participant'];
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
@@ -186,10 +187,20 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -224,11 +235,25 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
         FROM civicrm_participant {$this->_aliases['civicrm_participant']}
@@ -247,6 +272,11 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
                        {$this->_aliases['civicrm_email']}.is_primary = 1) ";
   }
 
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -303,6 +333,11 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
   public function groupBy() {
     $this->_groupBy = [];
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
@@ -328,6 +363,11 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     }
   }
 
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
 
     // get ready with post process params
@@ -352,6 +392,13 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
 

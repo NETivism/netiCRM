@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,6 +40,11 @@ class CRM_Event_Page_ParticipantListing_NameStatusAndDate extends CRM_Core_Page 
   protected $_eventTitle;
 
   protected $_pager;
+  /**
+   * Pre process
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
 
@@ -67,6 +70,11 @@ class CRM_Event_Page_ParticipantListing_NameStatusAndDate extends CRM_Core_Page 
     $this->assign('displayRecent', FALSE);
   }
 
+  /**
+   * Run
+   *
+   * @return void
+   */
   public function run() {
     $this->preProcess();
 
@@ -119,6 +127,15 @@ LIMIT    $offset, $rowCount";
     return parent::run();
   }
 
+  /**
+   * Pager
+   *
+   * @param string $fromClause
+   * @param string $whereClause
+   * @param array $whereParams
+   *
+   * @return void
+   */
   public function pager($fromClause, $whereClause, $whereParams) {
 
     $params = [];
@@ -142,6 +159,11 @@ SELECT count( civicrm_contact.id )
     $this->assign_by_ref('pager', $this->_pager);
   }
 
+  /**
+   * Order by
+   *
+   * @return string
+   */
   public function orderBy() {
     static $headers = NULL;
 

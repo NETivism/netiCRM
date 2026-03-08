@@ -26,10 +26,9 @@
 */
 
 /**
+ * Utility methods for generating iCalendar (ICS) formatted event data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,12 +42,15 @@
 class CRM_Utils_ICalendar {
 
   /**
-   * Escape text elements for safe ICalendar use
+   * Escape text elements for safe ICalendar use.
    *
-   * @param $text Text to escape
+   * Decodes HTML entities, strips tags, escapes special characters
+   * (commas, semicolons, backslashes), converts line breaks, and
+   * splits long multibyte strings for RFC 5545 line folding.
    *
-   * @return  Escaped text
+   * @param string $text The text to escape.
    *
+   * @return string The escaped and folded text.
    */
   public static function formatText($text) {
     $text = html_entity_decode($text, ENT_QUOTES);
@@ -64,6 +66,16 @@ class CRM_Utils_ICalendar {
     return $text;
   }
 
+  /**
+   * Format HTML content for ICalendar ALTREP use.
+   *
+   * Decodes HTML entities, removes newlines/carriage returns,
+   * and wraps the content in a basic HTML document structure.
+   *
+   * @param string $html The HTML content to format.
+   *
+   * @return string The formatted HTML wrapped in html/body tags.
+   */
   public static function formatHTML($html) {
     $html = html_entity_decode($html, ENT_QUOTES);
     $html = preg_replace("/\r|\n/", "", $html);
@@ -71,12 +83,15 @@ class CRM_Utils_ICalendar {
   }
 
   /**
-   * Escape date elements for safe ICalendar use
+   * Format a date string for ICalendar or GData use.
    *
-   * @param $date Date to escape
+   * Converts a date string to ICalendar format (YYYYMMDDTHHmmss)
+   * or GData format (YYYY-MM-DDTHH:mm:ss.000) depending on the flag.
    *
-   * @return  Escaped date
+   * @param string $date The date string to format (any strtotime-parseable value).
+   * @param bool $gdata If TRUE, use GData format; otherwise use standard ICalendar format.
    *
+   * @return string The formatted date string.
    */
   public static function formatDate($date, $gdata = FALSE) {
 
@@ -95,27 +110,20 @@ class CRM_Utils_ICalendar {
   }
 
   /**
+   * Send the ICalendar data to the browser with the specified content type.
    *
-   * Send the ICalendar to the browser with the specified content type
-   * - 'text/calendar' : used for downloaded ics file
-   * - 'text/plain'    : used for iCal formatted feed
-   * - 'text/xml'      : used for gData or rss formatted feeds
-   *
-   * @access public
-   *
-   * @param string $content_type
-   *
-   * @param string $filename The file name (for downloads)
-   *
-   * @param string $disposition How the file should be sent ('attachment' for downloads)
-   *
-   * @param string $charset The character set to use, defaults to
-   * 'us-ascii'.
+   * Supported content types:
+   * - 'text/calendar': used for downloaded .ics files
+   * - 'text/plain': used for iCal formatted feeds
+   * - 'text/xml': used for GData or RSS formatted feeds
    *
    * @param string $calendar The calendar data to be published.
+   * @param string $content_type The MIME content type for the response.
+   * @param string $charset The character set to use.
+   * @param string|null $fileName The file name for downloads.
+   * @param string|null $disposition How the file should be sent (e.g. 'attachment' for downloads).
    *
    * @return void
-   *
    */
   public static function send($calendar, $content_type = 'text/calendar', $charset = 'us-ascii', $fileName = NULL, $disposition = NULL) {
 
@@ -133,6 +141,14 @@ class CRM_Utils_ICalendar {
     echo $calendar;
   }
 
+  /**
+   * Split a multibyte string into chunks of a given length.
+   *
+   * @param string $str The multibyte string to split.
+   * @param int $split_len The maximum number of multibyte characters per chunk.
+   *
+   * @return string[]|false An array of string chunks, or FALSE if split_len is invalid.
+   */
   public static function mb_str_split($str, $split_len = 1) {
     if (!preg_match('/^[0-9]+$/', $split_len) || $split_len < 1) {
       return FALSE;

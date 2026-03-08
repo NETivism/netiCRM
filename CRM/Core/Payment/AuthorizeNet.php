@@ -8,10 +8,11 @@
  */
 
 /**
+ * Payment processor implementation for Authorize.Net gateway
  *
- * @package CRM
  * @author Marshal Newrock <marshal@idealso.com>
  * $Id: AuthorizeNet.php 30063 2010-10-06 10:33:02Z ashwini $
+ * @package CiviCRM_PaymentProcessor
  */
 
 /* NOTE:
@@ -46,8 +47,6 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
@@ -289,6 +288,9 @@ class CRM_Core_Payment_AuthorizeNet extends CRM_Core_Payment {
     return $params;
   }
 
+  /**
+   * @return array<string, mixed>
+   */
   public function _getAuthorizeNetFields() {
     $fields = [];
     $fields['x_login'] = $this->_getParam('apiLogin');

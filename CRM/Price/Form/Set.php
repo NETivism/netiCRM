@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,17 +40,13 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
    * the set id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_sid;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @param null
+   * Function to set variables up before form is built.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // current set id
@@ -79,15 +73,13 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
    * @param array $options additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $options) {
     $errors = [];
@@ -103,12 +95,9 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->applyFilter('__ALL__', 'trim');
@@ -220,13 +209,11 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @param null
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
   public function setDefaultValues() {
     $defaults = ['is_active' => TRUE];
@@ -244,12 +231,9 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
-   *
-   * @param null
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.

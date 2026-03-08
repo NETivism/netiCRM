@@ -1,5 +1,12 @@
 <?php
 class CRM_Core_Page_Payment_TapPay extends CRM_Core_Page {
+  /**
+   * Run the TapPay payment page flow.
+   *
+   * Initializes the payment session and assigns necessary variables for frontend processing.
+   *
+   * @return void
+   */
   public function run() {
     $qfKey = CRM_Utils_Array::value('qfKey', $_REQUEST, NULL);
     $id = CRM_Utils_Array::value('id', $_REQUEST, NULL);

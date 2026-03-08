@@ -26,8 +26,8 @@
  */
 
 /**
+ * Abstract base class for SMS gateway provider implementations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 abstract class CRM_SMS_Provider {

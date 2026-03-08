@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -95,9 +93,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
   /**
    * This function sets the default values for the form.
    *
-   * @param null
-   *
-   * @return array   array of default values
+   * @return array<string, int> array of default values
    * @access public
    */
   public function setDefaultValues() {
@@ -364,10 +360,10 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
   /**
    * function to create labels (pdf)
    *
-   * @param   array    $contactRows   assciated array of contact data
-   * @param   string   $format   format in which labels needs to be printed
+   * @param array $contactRows   assciated array of contact data
+   * @param string $format   format in which labels needs to be printed
    *
-   * @return  null
+   * @return  void
    * @access  public
    */
   public function createLabel(&$contactRows, &$format) {
@@ -394,7 +390,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
   /**
    * function to create the array of returnProperties
    *
-   * @param   string   $format   format for which return properties build
+   * @param string $format   format for which return properties build
    *
    * @return array of returnProperties
    * @access  public
@@ -420,6 +416,11 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     return $returnProperties;
   }
 
+  /**
+   * Merge contacts with the same address onto a single label.
+   *
+   * @param array $rows
+   */
   public function mergeSameAddress(&$rows) {
     $uniqueAddress = [];
     foreach (array_keys($rows) as $rowID) {
@@ -468,6 +469,13 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
   }
 
+  /**
+   * Merge individuals into their households to avoid duplicate labels.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
   public function mergeSameHousehold(&$rows) {
     # group selected contacts by type
     $individuals = [];

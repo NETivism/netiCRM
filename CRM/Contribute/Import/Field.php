@@ -26,10 +26,9 @@
 */
 
 /**
+ * Defines field mappings for Contribution data import
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -104,6 +103,18 @@ class CRM_Contribute_Import_Field {
    */
   public $_softCreditField;
 
+  /**
+   * class constructor
+   *
+   * @param string $name
+   * @param string $title
+   * @param int $type
+   * @param string $headerPattern
+   * @param string $dataPattern
+   * @param boolean $hasLocationType
+   * @param string|null $phoneType
+   * @param string|null $softCreditField
+   */
   public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE, $phoneType = NULL, $softCreditField = NULL) {
     $this->_name = $name;
     $this->_title = $title;
@@ -116,6 +127,11 @@ class CRM_Contribute_Import_Field {
     $this->_value = NULL;
   }
 
+  /**
+   * Reset value of this field
+   *
+   * @return void
+   */
   public function resetValue() {
     $this->_value = NULL;
   }
@@ -123,11 +139,20 @@ class CRM_Contribute_Import_Field {
   /**
    * the value is in string format. convert the value to the type of this field
    * and set the field value with the appropriate type
+   *
+   * @param mixed $value
+   *
+   * @return void
    */
   public function setValue($value) {
     $this->_value = $value;
   }
 
+  /**
+   * Validate this field value
+   *
+   * @return boolean
+   */
   public function validate() {
 
     if (CRM_Utils_System::isNull($this->_value)) {

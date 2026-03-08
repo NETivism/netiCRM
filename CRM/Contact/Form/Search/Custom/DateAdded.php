@@ -26,10 +26,9 @@
 */
 
 /**
+ * Custom search form for finding contacts by date they were added to a group
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,6 +43,13 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
   public $_groups;
   public $_tableName;
   protected $_debug = 0;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     parent::__construct($formValues);
 
@@ -57,6 +63,14 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     ];
   }
 
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
   public function buildForm(&$form) {
     $form->addDate('start_date', ts('Start Date'), FALSE, ['formatType' => 'custom']);
     $form->addDate('end_date', ts('End Date'), FALSE, ['formatType' => 'custom']);
@@ -107,10 +121,27 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     $form->assign('elements', ['start_date', 'end_date', 'includeGroups', 'excludeGroups']);
   }
 
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
   public function summary() {
     return NULL;
   }
 
+  /**
+   * Get all
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function all(
     $offset = 0,
     $rowcount = 0,
@@ -152,6 +183,12 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     );
   }
 
+  /**
+   * Get from
+   *
+   * @return string
+   * @access public
+   */
   public function from() {
     //define table name
     $randomNum = md5(uniqid());
@@ -371,14 +408,34 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     return $from;
   }
 
+  /**
+   * Get where
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
   public function where($includeContactIDs = FALSE) {
     return '(1)';
   }
 
+  /**
+   * Get template file
+   *
+   * @return string
+   * @access public
+   */
   public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
+  /**
+   * Get count
+   *
+   * @return int
+   * @access public
+   */
   public function count() {
     $sql = $this->all();
 
@@ -389,6 +446,11 @@ class CRM_Contact_Form_Search_Custom_DateAdded extends CRM_Contact_Form_Search_C
     return $dao->N;
   }
 
+  /**
+   * Destructor
+   *
+   * @access public
+   */
   public function __destruct() {
     //drop the temp. tables if they exist
     if (!empty($this->_includeGroups)) {

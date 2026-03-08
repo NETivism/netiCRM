@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -46,7 +44,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    *
    * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Contribute_DAO_ContributionPage object
+   * @return CRM_Contribute_DAO_ContributionPage CRM_Contribute_DAO_ContributionPage object
    * @access public
    * @static
    */
@@ -69,13 +67,22 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @param int      $id        id of the database record
    * @param boolean  $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean             TRUE on success, FALSE otherwise
    * @static
    */
   public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionPage', $id, 'is_active', $is_active);
   }
 
+  /**
+   * Set values for a contribution page
+   *
+   * @param int $id
+   * @param array $values
+   *
+   * @return void
+   * @static
+   */
   public static function setValues($id, &$values) {
     $params = ['id' => $id];
 
@@ -113,7 +120,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @param boolean $isTest            if in test mode
    * @param boolean $returnMessageText return the message text instead of sending the mail
    *
-   * @return void
+   * @return void|array
    * @access public
    * @static
    */
@@ -412,14 +419,14 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
   }
 
   /**
-   * Function to send the emails
+   * Function to send the failed notification emails
    *
    * @param int     $contactID         contact id
    * @param array   $values            associated array of fields
    * @param boolean $isTest            if in test mode
    * @param boolean $returnMessageText return the message text instead of sending the mail
    *
-   * @return void
+   * @return void|array
    * @access public
    * @static
    */
@@ -481,7 +488,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @param string  $type         txnType
    * @param int     $contactID    contact id for contributor
    * @param int     $pageID       contribution page id
-   * @param object  $recur        object of recurring contribution table
+   * @param CRM_Contribute_DAO_ContributionRecur $recur object of recurring contribution table
    *
    * @return void
    * @access public
@@ -541,6 +548,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    * @param int    $gid            uf group id
    * @param string $name
    * @param int    $cid            contact id
+   * @param CRM_Core_Smarty $template
    * @param array  $params         params to build component whereclause
    *
    * @return void
@@ -591,7 +599,7 @@ class CRM_Contribute_BAO_ContributionPage extends CRM_Contribute_DAO_Contributio
    *
    * @param int $id the contribution page id to copy
    *
-   * @return the copy object
+   * @return CRM_Contribute_DAO_ContributionPage the copy object
    * @access public
    * @static
    */
@@ -759,8 +767,11 @@ WHERE entity_table = 'civicrm_contribution_page'
   /**
    * Function to get info for all sections enable/disable.
    *
+   * @param array $contribPageIds
+   *
    * @return array $info info regarding all sections.
    * @access public
+   * @static
    */
   public static function getSectionInfo($contribPageIds = []) {
     $info = [];
@@ -917,6 +928,16 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     return [];
   }
 
+  /**
+   * Tokenize input string
+   *
+   * @param int $contactId
+   * @param string $input
+   * @param int|null $contributionId
+   *
+   * @return string
+   * @static
+   */
   public static function tokenize($contactId, $input, $contributionId = NULL) {
     $output = $input;
     $tokens = CRM_Utils_Token::getTokens($input);
@@ -968,6 +989,14 @@ LEFT JOIN  civicrm_premiums            ON ( civicrm_premiums.entity_id = civicrm
     return $output;
   }
 
+  /**
+   * Get fee block for a contribution page
+   *
+   * @param int $pageId
+   *
+   * @return array
+   * @static
+   */
   public static function feeBlock($pageId) {
     $feeBlock = [];
     if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_contribution_page', $pageId)) {

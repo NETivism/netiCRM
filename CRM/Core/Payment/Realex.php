@@ -32,10 +32,10 @@
    */
 
 /**
+ * Payment processor implementation for Realex Payments gateway
  *
- * @package CRM
  * @author Tom Kirkpatrick <tkp@kirkdesigns.co.uk>
- * $Id$
+ * @package CiviCRM_PaymentProcessor
  */
 
 class CRM_Core_Payment_Realex extends CRM_Core_Payment {
@@ -62,8 +62,6 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
    */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
@@ -260,6 +258,7 @@ class CRM_Core_Payment_Realex extends CRM_Core_Payment {
    *   - error  : false, if no error. Otherwise, it is the error message
    *   - return : a multi-dimension associative array represent the value
    *               of the XML input string.
+   * @return array<string, mixed>
    */
   public function xml_parse_into_assoc($xml) {
     $input = [];

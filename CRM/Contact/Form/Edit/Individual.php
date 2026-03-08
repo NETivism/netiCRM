@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,9 +41,12 @@ class CRM_Contact_Form_Edit_Individual {
   /**
    * This function provides the HTML form elements that are specific to the Individual Contact Type
    *
-   * @access public
+   * @param object $form   (reference) form object
+   * @param int    $action action
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildQuickForm(&$form, $action = NULL) {
     $form->applyFilter('__ALL__', 'trim');
@@ -119,11 +120,11 @@ class CRM_Contact_Form_Edit_Individual {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields    the input form values
+   * @param array $files     the uploaded files if any
+   * @param int   $contactID contact id
    *
-   * @return true if no errors, else array of errors
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */

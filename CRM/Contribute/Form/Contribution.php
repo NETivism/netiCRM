@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -169,7 +167,7 @@ class CRM_Contribute_Form_Contribution extends CRM_Core_Form {
   protected $_cdType;
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process the form
    *
    * @return void
    * @access public
@@ -544,6 +542,12 @@ WHERE  contribution_id = {$this->_id}
     $this->assign('lineItem', empty($this->_lineItems) ? FALSE : $this->_lineItems);
   }
 
+  /**
+   * Set default values for the form
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
@@ -715,9 +719,9 @@ WHERE  contribution_id = {$this->_id}
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -1228,9 +1232,9 @@ WHERE  contribution_id = {$this->_id}
    *
    * @param array $fields  the input form values
    * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param CRM_Contribute_Form_Contribution $self
    *
-   * @return true if no errors, else array of errors
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
@@ -1299,9 +1303,8 @@ WHERE  contribution_id = {$this->_id}
   /**
    * Function to process the form
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -1887,6 +1890,12 @@ WHERE  contribution_id = {$this->_id}
 
   /**
    * This function process contribution related objects.
+   *
+   * @param int $contributionId
+   * @param int $statusId
+   * @param int|null $previousStatusId
+   *
+   * @return string|null
    */
   public function updateRelatedComponent($contributionId, $statusId, $previousStatusId = NULL) {
     $statusMsg = NULL;

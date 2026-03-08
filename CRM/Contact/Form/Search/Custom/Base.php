@@ -26,10 +26,9 @@
 */
 
 /**
+ * Base class for custom search form implementations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,10 +38,23 @@ class CRM_Contact_Form_Search_Custom_Base {
 
   protected $_columns;
 
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
   public function __construct(&$formValues) {
     $this->_formValues = &$formValues;
   }
 
+  /**
+   * Get count
+   *
+   * @return int
+   * @access public
+   */
   public function count() {
     return CRM_Core_DAO::singleValueQuery(
       $this->sql('count(distinct contact_a.id) as total'),
@@ -50,10 +62,26 @@ class CRM_Contact_Form_Search_Custom_Base {
     );
   }
 
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
   public function summary() {
     return NULL;
   }
 
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
   public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     $sql = $this->sql(
       'contact_a.id as contact_id',
@@ -70,6 +98,19 @@ class CRM_Contact_Form_Search_Custom_Base {
     );
   }
 
+  /**
+   * Get sql
+   *
+   * @param string $selectClause
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   * @param null $groupBy
+   *
+   * @return string
+   * @access public
+   */
   public function sql(
     $selectClause,
     $offset = 0,
@@ -96,14 +137,37 @@ class CRM_Contact_Form_Search_Custom_Base {
     return $sql;
   }
 
+  /**
+   * Get template file name
+   *
+   * @return null
+   * @access public
+   */
   public function templateFile() {
     return NULL;
   }
 
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
   public function &columns() {
     return $this->_columns;
   }
 
+  /**
+   * Include contact IDs
+   *
+   * @param string $sql
+   * @param array $formValues
+   * @param bool $isExport
+   *
+   * @return void
+   * @access public
+   * @static
+   */
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
@@ -119,6 +183,17 @@ class CRM_Contact_Form_Search_Custom_Base {
     }
   }
 
+  /**
+   * Add sort offset
+   *
+   * @param string $sql
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return void
+   * @access public
+   */
   public function addSortOffset(
     &$sql,
     $offset,
@@ -139,6 +214,15 @@ class CRM_Contact_Form_Search_Custom_Base {
     }
   }
 
+  /**
+   * Validate user SQL
+   *
+   * @param string $sql
+   * @param bool $onlyWhere
+   *
+   * @return void
+   * @access public
+   */
   public function validateUserSQL(&$sql, $onlyWhere = FALSE) {
     $includeStrings = ['contact_a'];
     $excludeStrings = ['insert', 'delete', 'update'];
@@ -166,6 +250,15 @@ class CRM_Contact_Form_Search_Custom_Base {
     }
   }
 
+  /**
+   * Get where clause
+   *
+   * @param string $where
+   * @param array $params
+   *
+   * @return string
+   * @access public
+   */
   public function whereClause(&$where, &$params) {
     return CRM_Core_DAO::composeQuery($where, $params, TRUE);
   }

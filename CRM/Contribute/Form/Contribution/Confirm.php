@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -455,9 +453,9 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
    *
    * @param array $fields  the input form values
    * @param array $files   the uploaded files if any
-   * @param array $form the form object
+   * @param CRM_Contribute_Form_Contribution_Confirm $self the form object
    *
-   * @return true if no errors, else array of errors
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
@@ -808,7 +806,10 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   }
 
   /**
-   * Process the form
+   * Process the premium parameters
+   *
+   * @param array $premiumParams
+   * @param CRM_Contribute_DAO_Contribution $contribution
    *
    * @return void
    * @access public
@@ -991,8 +992,18 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   /**
    * Process the contribution
    *
-   * @return object
+   * @param CRM_Core_Form $form
+   * @param array $params
+   * @param array|null $result
+   * @param int $contactID
+   * @param CRM_Contribute_DAO_ContributionType $contributionType
+   * @param boolean $deductibleMode
+   * @param boolean $pending
+   * @param boolean $online
+   *
+   * @return CRM_Contribute_BAO_Contribution
    * @access public
+   * @static
    */
   public static function processContribution(&$form, $params, $result, $contactID, $contributionType, $deductibleMode = TRUE, $pending = FALSE, $online = TRUE) {
 
@@ -1339,6 +1350,10 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   /**
    * Create the recurring contribution record
    *
+   * @param array $params
+   * @param int $contactID
+   *
+   * @return int|null
    */
   public function processRecurringContribution(&$params, $contactID) {
     // return if this page is not set for recurring
@@ -1389,7 +1404,7 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   /**
    * Create the Honor contact
    *
-   * @return void
+   * @return int|null
    * @access public
    */
   public function createHonorContact() {
@@ -1425,13 +1440,15 @@ class CRM_Contribute_Form_Contribution_Confirm extends CRM_Contribute_Form_Contr
   /**
    * Function to add on behalf of organization and it's location
    *
-   * @param $behalfOrganization array  array of organization info
-   * @param $values             array  form values array
-   * @param $contactID          int    individual contact id. One
+   * @param array $behalfOrganization array of organization info
+   * @param int $contactID individual contact id. One
    * who is doing the process of signup / contribution.
+   * @param array $values form values array
+   * @param array $params
    *
    * @return void
    * @access public
+   * @static
    */
   public static function processOnBehalfOrganization(&$behalfOrganization, &$contactID, &$values, &$params) {
     $isCurrentEmployer = FALSE;

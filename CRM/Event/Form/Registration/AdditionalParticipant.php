@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -74,7 +72,6 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -112,9 +109,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
    * This function sets the default values for the form. For edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = $unsetSubmittedOptions = [];
@@ -191,8 +187,7 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
@@ -402,13 +397,11 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Event_Form_Registration_AdditionalParticipant $self additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array true if no errors, else array of errors
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -529,9 +522,8 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the button name.
@@ -682,6 +674,13 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     }
   }
 
+  /**
+   * Get pages
+   *
+   * @param int $additionalParticipant
+   *
+   * @return array
+   */
   public static function &getPages($additionalParticipant) {
     $details = [];
     for ($i = 1; $i <= $additionalParticipant; $i++) {
@@ -697,7 +696,6 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
    * check whether call current participant is last one
    *
    * @return boolean ture on success.
-   * @access public
    */
   public function isLastParticipant() {
     $formName = $this->_attributes['name'];
@@ -712,7 +710,10 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
   /**
    * Reset values for all options those are full.
    *
-   **/
+   * @param array $optionFullIds
+   *
+   * @return void
+   */
   public function resetElementValue($optionFullIds = []) {
     if (!is_array($optionFullIds) ||
       empty($optionFullIds) ||
@@ -768,6 +769,14 @@ class CRM_Event_Form_Registration_AdditionalParticipant extends CRM_Event_Form_R
     }
   }
 
+  /**
+   * Reset submitted value
+   *
+   * @param string $elementName
+   * @param array $optionIds
+   *
+   * @return void
+   */
   public function resetSubmittedValue($elementName, $optionIds = []) {
     if (empty($elementName) ||
       !$this->elementExists($elementName) ||

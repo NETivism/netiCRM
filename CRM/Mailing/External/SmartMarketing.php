@@ -1,4 +1,8 @@
 <?php
+/**
+ * Abstract base class for external smart marketing integrations that sync contact groups to remote services
+ *
+ */
 
 abstract class CRM_Mailing_External_SmartMarketing {
 

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,6 +36,11 @@
  */
 class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
   public $addressSequence;
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
   public function preProcess() {
     parent::preProcess();
 
@@ -49,6 +52,11 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     ];
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = [];
     $defaults['address_standardization_provider'] = $this->_config->address_standardization_provider;
@@ -90,10 +98,9 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     $this->applyFilter('__ALL__', 'trim');
@@ -111,6 +118,13 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     parent::buildQuickForm();
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields The input form values.
+   *
+   * @return bool|array True if no errors, else array of errors.
+   */
   public static function formRule($fields) {
     $p = $fields['address_standardization_provider'];
     $u = $fields['address_standardization_userid'];
@@ -134,11 +148,9 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action == CRM_Core_Action::VIEW) {

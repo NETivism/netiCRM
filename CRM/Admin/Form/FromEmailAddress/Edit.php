@@ -4,7 +4,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
   /**
    * Return a descriptive name for the page, used in wizard header
    *
-   * @return string
+   * @return string The form title.
    */
   public function getTitle() {
     return ts('Configure');
@@ -13,7 +13,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
   /**
    * Preprocess Form
    *
-   * @return void
+   * @return void None.
    */
   public function preProcess() {
     parent::preProcess();
@@ -31,7 +31,7 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
    * @param array $files  the uploaded files if any
    * @param array $self   current form object.
    *
-   * @return array array of errors / empty array.
+   * @return array<string, mixed> array of errors / empty array.
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
@@ -52,8 +52,9 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
+   *
+   * @return array<string, mixed> The default values for the form.
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -66,7 +67,9 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
+   *
+   * @return void None.
    */
   public function buildQuickForm() {
     $this->addTextfield('from', ts('From Name'), NULL, TRUE);
@@ -100,7 +103,9 @@ class CRM_Admin_Form_FromEmailAddress_Edit extends CRM_Admin_Form_FromEmailAddre
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
+   *
+   * @return void None.
    */
   public function postProcess() {
     $this->_values['from'] = $this->controller->exportValue($this->_name, 'from');

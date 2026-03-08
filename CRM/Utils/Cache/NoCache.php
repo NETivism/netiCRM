@@ -26,10 +26,9 @@
 */
 
 /**
+ * No-op cache backend implementation that performs no caching
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
- * $Id$
  *
  */
 class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
@@ -47,8 +46,6 @@ class CRM_Utils_Cache_NoCache implements CRM_Utils_Cache_Interface {
    * Constructor
    *
    * @param array   $config  an array of configuration params
-   *
-   * @return void
    */
   public function __construct($config) {
   }

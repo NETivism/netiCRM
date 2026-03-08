@@ -26,10 +26,9 @@
 */
 
 /**
+ * Interface for cache storage backends
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
- * $Id$
  *
  */
 interface CRM_Utils_Cache_Interface {

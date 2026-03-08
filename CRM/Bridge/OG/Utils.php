@@ -26,32 +26,63 @@
 */
 
 /**
+ * Utility functions for Organic Groups and CiviCRM integration
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Bridge_OG_Utils {
   public const aclEnabled = 1, syncFromCiviCRM = 1;
 
+  /**
+   * Is ACL enabled
+   *
+   * @return int
+   */
   public static function aclEnabled() {
     return self::aclEnabled;
   }
 
+  /**
+   * Sync from CiviCRM
+   *
+   * @return int
+   */
   public static function syncFromCiviCRM() {
     // make sure that acls are not enabled
     return !self::aclEnabled & self::syncFromCiviCRM;
   }
 
+  /**
+   * OG sync name
+   *
+   * @param int $ogID
+   *
+   * @return string
+   */
   public static function ogSyncName($ogID) {
     return "OG Sync Group :{$ogID}:";
   }
 
+  /**
+   * OG sync ACL name
+   *
+   * @param int $ogID
+   *
+   * @return string
+   */
   public static function ogSyncACLName($ogID) {
     return "OG Sync Group ACL :{$ogID}:";
   }
 
+  /**
+   * Get OG ID
+   *
+   * @param int $groupID
+   * @param bool $abort
+   *
+   * @return int|null
+   */
   public static function ogID($groupID, $abort = TRUE) {
     $source = CRM_Core_DAO::getFieldValue(
       'CRM_Contact_DAO_Group',
@@ -71,6 +102,13 @@ class CRM_Bridge_OG_Utils {
     return NULL;
   }
 
+  /**
+   * Get contact ID from UF ID
+   *
+   * @param int $ufID
+   *
+   * @return int
+   */
   public static function contactID($ufID) {
 
     $contactID = civicrm_uf_match_id_get($ufID);
@@ -91,6 +129,15 @@ class CRM_Bridge_OG_Utils {
     return $values['contact_id'];
   }
 
+  /**
+   * Get group ID
+   *
+   * @param string $source
+   * @param string $title
+   * @param bool $abort
+   *
+   * @return int|null
+   */
   public static function groupID($source, $title = NULL, $abort = FALSE) {
     $query = "
 SELECT id

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -56,9 +54,9 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
   public $_blockCount;
 
   /**
-   * Function to actually build the form
+   * Pre-process the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function preProcess() {
@@ -93,6 +91,12 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     }
   }
 
+  /**
+   * Build the form
+   *
+   * @return void
+   * @access public
+   */
   public function buildQuickForm() {
     //get the saved search mapping id
     $mappingId = NULL;
@@ -290,9 +294,24 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     return TRUE;
   }
 
+  /**
+   * Normalize form values
+   *
+   * @return void
+   * @access public
+   */
   public function normalizeFormValues() {
   }
 
+  /**
+   * Convert form values to search parameters
+   *
+   * @param array $formValues
+   * @param boolean $wildcard
+   *
+   * @return array
+   * @access public
+   */
   public function &convertFormValues(&$formValues, $wildcard = FALSE) {
     $fields = CRM_Core_BAO_Mapping::formattedFields($formValues);
     if ($wildcard) {
@@ -305,6 +324,12 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     return $fields;
   }
 
+  /**
+   * Get return properties
+   *
+   * @return array
+   * @access public
+   */
   public function &returnProperties() {
     return CRM_Core_BAO_Mapping::returnProperties($this->_formValues);
   }

@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2016
  */
 
@@ -52,6 +51,11 @@ class CRM_Contact_Form_Task_SMS extends CRM_Contact_Form_Task {
    */
   public $_templates = NULL;
 
+  /**
+   * Build all the data structures needed to build the form.
+   *
+   * @return void
+   */
   public function preProcess() {
 
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -72,6 +76,8 @@ class CRM_Contact_Form_Task_SMS extends CRM_Contact_Form_Task {
 
   /**
    * Build the form object.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     //enable form element
@@ -81,6 +87,8 @@ class CRM_Contact_Form_Task_SMS extends CRM_Contact_Form_Task {
 
   /**
    * Process the form after the input has been submitted and validated.
+   *
+   * @return void
    */
   public function postProcess() {
     CRM_Contact_Form_Task_SMSCommon::postProcess($this);

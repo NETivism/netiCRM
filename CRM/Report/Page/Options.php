@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,43 +41,38 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
    */
   public $_id;
   /**
-   * The action links that we need to display for the browse screen
+   * Action links displayed on the browse screen.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
   public static $_links = NULL;
 
   /**
-   * The option group name
+   * The option group machine name (e.g. 'report_template').
    *
-   * @var array
-   * @static
+   * @var string|null
    */
   public static $_gName = NULL;
 
   /**
-   * The option group name in display format (capitalized, without underscores...etc)
+   * The option group display name (capitalized, spaces instead of underscores).
    *
-   * @var array
-   * @static
+   * @var string|null
    */
   public static $_GName = NULL;
 
   /**
-   * The option group id
+   * The option group database ID.
    *
-   * @var array
-   * @static
+   * @var int|null
    */
   public static $_gId = NULL;
 
   /**
-   * Obtains the group name from url and sets the title.
+   * Obtains the group name from the URL and sets the page title.
+   * Hardcodes the option group to 'report_template' and looks up its ID.
    *
    * @return void
-   * @access public
-   *
    */
   public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
@@ -115,9 +108,10 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get action Links
+   * Returns the action links for report template rows (edit, enable, disable, delete).
+   * Lazily builds and caches the links array in the static $_links property.
    *
-   * @return array (reference) of action links
+   * @return array Reference to the array of action link definitions.
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -163,12 +157,9 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all options
-   *
+   * Renders the list of registered report templates with reorder controls.
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
 
@@ -222,12 +213,11 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
   }
 
   /**
-   * function to get userContext params
+   * Returns the query string parameters for the user context (post-action redirect).
    *
-   * @param int $mode mode that we are in
+   * @param int|null $mode The action mode (unused).
    *
-   * @return string
-   * @access public
+   * @return string Query string 'reset=1&action=browse'.
    */
   public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';

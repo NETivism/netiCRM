@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
@@ -37,6 +35,14 @@
  * This is base class for all ajax calls
  */
 class CRM_Coupon_Page_AJAX {
+  /**
+   * Handles AJAX request to validate an event coupon code.
+   *
+   * Retrieves coupon code and event ID from POST data, validates the coupon against the event,
+   * and returns a JSON response indicating validity or an error.
+   *
+   * @return void Outputs JSON response directly and exits.
+   */
   public static function validEventFromCode() {
     $code = CRM_Utils_Request::retrieve('code', 'Text', $object, FALSE, '', 'Post');
     $event_id = CRM_Utils_Request::retrieve('event_id', 'Positive', $object, FALSE, '', 'Post');
@@ -78,6 +84,14 @@ class CRM_Coupon_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Prepares coupon data into a JSON-friendly associative array.
+   *
+   * Extracts relevant information like description and entity mappings for price field values.
+   *
+   * @param array $coupon An associative array containing coupon data.
+   * @return string A JSON-encoded string representing the coupon details.
+   */
   public static function prepareJson($coupon) {
     $return = [
       'description' => $coupon['description'],

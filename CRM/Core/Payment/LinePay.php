@@ -1,35 +1,8 @@
 <?php
-/*
-  +--------------------------------------------------------------------+
-  | CiviCRM version 3.3                                                |
-  +--------------------------------------------------------------------+
-  | This file is a part of CiviCRM.                                    |
-  |                                                                    |
-  | CiviCRM is free software; you can copy, modify, and distribute it  |
-  | under the terms of the GNU Affero General Public License           |
-  | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
-  |                                                                    |
-  | CiviCRM is distributed in the hope that it will be useful, but     |
-  | WITHOUT ANY WARRANTY; without even the implied warranty of         |
-  | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
-  | See the GNU Affero General Public License for more details.        |
-  |                                                                    |
-  | You should have received a copy of the GNU Affero General Public   |
-  | License and the CiviCRM Licensing Exception along                  |
-  | with this program; if not, contact CiviCRM LLC                     |
-  | at info[AT]civicrm[DOT]org. If you have questions about the        |
-  | GNU Affero General Public License or the licensing of CiviCRM,     |
-  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
-  +--------------------------------------------------------------------+
-*/
-
-/*
- * PxPay Functionality Copyright (C) 2008 Lucas Baker, Logistic Information Systems Limited (Logis)
- * PxAccess Functionality Copyright (C) 2008 Eileen McNaughton
- * Licensed to CiviCRM under the Academic Free License version 3.0.
+/**
+ * LinePay payment processor API client for initiating and confirming LINE Pay transactions.
  *
- * Grateful acknowledgements go to Donald Lobo for invaluable assistance
- * in creating this payment processor module
+ * @package CiviCRM_PaymentProcessor
  */
 
 class CRM_Core_Payment_LinePay {
@@ -39,12 +12,25 @@ class CRM_Core_Payment_LinePay {
 
   private $_linePayAPI;
 
+  /**
+   * Class constructor.
+   *
+   * @param int $paymentProcessorId payment processor ID
+   * @param string $type API type (defaults to 'request')
+   */
   public function __construct($paymentProcessorId, $type = 'request') {
     $this->_paymentProcessId = $paymentProcessorId;
     $this->_apiType = $type;
     $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, $type);
   }
 
+  /**
+   * Initiate a LinePay request.
+   *
+   * @param array &$params contribution and form parameters
+   *
+   * @return void
+   */
   public function doRequest(&$params) {
 
     // prepare confirm url
@@ -114,7 +100,12 @@ class CRM_Core_Payment_LinePay {
   }
 
   /**
-   * $url_params should be array('civicrm', 'contribute', 'transact')
+   * Static entry point for confirming a LinePay transaction.
+   *
+   * @param array $url_params URL parameters from router
+   * @param array $get optional GET variables
+   *
+   * @return void
    */
   public static function confirm($url_params, $get = []) {
     if (empty($get)) {
@@ -141,6 +132,13 @@ class CRM_Core_Payment_LinePay {
     $linePayAPI->doConfirm($params);
   }
 
+  /**
+   * Handle the confirmation of a LinePay transaction.
+   *
+   * @param array $params confirmation parameters (including transactionId)
+   *
+   * @return void
+   */
   public function doConfirm($params) {
     $type = 'linepay';
     $config = CRM_Core_Config::singleton();
@@ -213,9 +211,12 @@ class CRM_Core_Payment_LinePay {
   }
 
   /**
-   * $get = array(
-   *   'id' => $contribution->id,
-   * )
+   * Static entry point for querying LinePay transaction status.
+   *
+   * @param array $url_params URL parameters from router
+   * @param array $get parameters containing contribution ID
+   *
+   * @return CRM_Core_Error|void status bounce or error on failure
    */
   public static function query($url_params, $get = []) {
     if (empty($get)) {
@@ -298,6 +299,13 @@ class CRM_Core_Payment_LinePay {
     }
   }
 
+  /**
+   * Add LinePay response message to the contribution note.
+   *
+   * @param CRM_Contribute_DAO_Contribution|int $contribution contribution object or ID
+   *
+   * @return void
+   */
   private function addResponseMessageToNote($contribution) {
     if (is_numeric($contribution)) {
       $contribution = self::prepareContribution($contribution);
@@ -308,6 +316,13 @@ class CRM_Core_Payment_LinePay {
     CRM_Core_Payment_Mobile::addNote($note, $contribution);
   }
 
+  /**
+   * Prepare a contribution object from a contribution ID.
+   *
+   * @param int $contributionId contribution ID
+   *
+   * @return CRM_Contribute_DAO_Contribution contribution object
+   */
   private static function prepareContribution($contributionId) {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
@@ -315,6 +330,14 @@ class CRM_Core_Payment_LinePay {
     return $contribution;
   }
 
+  /**
+   * Prepare a LinePay API instance.
+   *
+   * @param int $paymentProcessorId payment processor ID
+   * @param string $type API type
+   *
+   * @return CRM_Core_Payment_LinePayAPI LinePay API object
+   */
   private static function prepareLinePayAPI($paymentProcessorId, $type = 'request') {
     $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
     $paymentProcessor->id = $paymentProcessorId;
@@ -329,6 +352,15 @@ class CRM_Core_Payment_LinePay {
     return new CRM_Core_Payment_LinePayAPI($apiParams);
   }
 
+  /**
+   * Prepare the thank you page URL.
+   *
+   * @param string $path page path
+   * @param string $qfKey quickform key
+   * @param bool $failed whether the payment failed
+   *
+   * @return string full thank you URL
+   */
   private static function prepareThankYouUrl($path, $qfKey, $failed = FALSE) {
     $query = "_qf_ThankYou_display=1&qfKey={$qfKey}";
     $query .= $failed ? '&payment_result_type=4' : '&payment_result_type=1';

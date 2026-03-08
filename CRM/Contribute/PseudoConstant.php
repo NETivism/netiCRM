@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -125,11 +123,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the financial types
    *
+   * @param int|null $id
+   *
+   * @return string|array - array reference of all financial types if any
    * @access public
-   *
-   * @param null $id
-   *
-   * @return array - array reference of all financial types if any
    * @static
    */
   public static function &financialType($id = NULL) {
@@ -139,13 +136,12 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the contribution types
    *
+   * @param int|null $id - specify id for return
+   * @param string|false $receiptType - limit option based on receipt type
+   * @param boolean $receiptTypeLabel - display receipt type label
+   *
+   * @return string|array - array reference of all contribution types if any
    * @access public
-   *
-   * @param null $id - specify id for return
-   * @param false $receiptType - limit option based on receipt type
-   * @param false $receiptTypeLabel - display receipt type label
-   *
-   * @return array - array reference of all contribution types if any
    * @static
    */
   public static function &contributionType($id = NULL, $receiptType = FALSE, $receiptTypeLabel = FALSE) {
@@ -185,9 +181,11 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the contribution pages
    *
-   * @access public
+   * @param int|null $id
+   * @param boolean $isActive
    *
-   * @return array - array reference of all contribution pages if any
+   * @return string|array - array reference of all contribution pages if any
+   * @access public
    * @static
    */
   public static function &contributionPage($id = NULL, $isActive = FALSE) {
@@ -208,9 +206,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the payment instruments
    *
-   * @access public
+   * @param string $columnName
    *
    * @return array - array reference of all payment instruments if any
+   * @access public
    * @static
    */
   public static function &paymentInstrument($columnName = 'label') {
@@ -231,9 +230,8 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the valid accepted credit cards
    *
-   * @access public
-   *
    * @return array - array reference of all payment instruments if any
+   * @access public
    * @static
    */
   public static function &creditCard() {
@@ -252,9 +250,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all premiums
    *
-   * @access public
+   * @param int|null $pageID
    *
    * @return array - array of all Premiums if any
+   * @access public
    * @static
    */
   public static function products($pageID = NULL) {
@@ -298,6 +297,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     return $products;
   }
 
+  /**
+   * Get all enabled currencies
+   *
+   * @return array
+   * @access public
+   * @static
+   */
   public static function &currency() {
     if (!isset(self::$currency)) {
       self::$currency = CRM_Core_OptionGroup::values('currencies_enabled', FALSE, FALSE, FALSE, NULL);
@@ -308,9 +314,11 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the contribution statuses
    *
-   * @access public
+   * @param int|null $id
+   * @param string $columnName
    *
-   * @return array - array reference of all contribution statuses
+   * @return string|array - array reference of all contribution statuses
+   * @access public
    * @static
    */
   public static function &contributionStatus($id = NULL, $columnName = 'label') {
@@ -336,9 +344,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the pcp status
    *
-   * @access public
+   * @param string $columnName
    *
    * @return array - array reference of all pcp status
+   * @access public
    * @static
    */
   public static function &pcpStatus($columnName = 'label') {
@@ -352,9 +361,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the Personal campaign pages
    *
-   * @access public
+   * @param int|null $id
    *
-   * @return array - array reference of all pcp if any
+   * @return string|array - array reference of all pcp if any
+   * @access public
    * @static
    */
   public static function &pcPage($id = NULL) {
@@ -377,11 +387,12 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all Taiwan ACH Bank Code
+   * Get all Taiwan ACH bank code and name
    *
+   * @param string $code
+   *
+   * @return array|string - array reference of all pcp if any
    * @access public
-   *
-   * @return array - array reference of all pcp if any
    * @static
    */
   public static function &taiwanACH($code = '') {
@@ -410,6 +421,12 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     return self::$taiwanACH;
   }
 
+  /**
+   * Get Taiwan ACH stamp verification statuses
+   *
+   * @return array
+   * @static
+   */
   public static function taiwanACHStampVerification() {
     return [
       0 => ts('Pending'),
@@ -421,9 +438,8 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all Taiwan ACH failed code and reason
    *
-   * @access public
-   *
    * @return array - array reference of all pcp if any
+   * @access public
    * @static
    */
   public static function &taiwanACHFailedReason() {

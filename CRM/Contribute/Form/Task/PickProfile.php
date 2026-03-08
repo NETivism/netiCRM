@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -61,7 +59,6 @@ class CRM_Contribute_Form_Task_PickProfile extends CRM_Contribute_Form_Task {
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     /*
@@ -90,8 +87,6 @@ class CRM_Contribute_Form_Task_PickProfile extends CRM_Contribute_Form_Task {
   /**
    * Build the form
    *
-   * @access public
-   *
    * @return void
    */
   public function buildQuickForm() {
@@ -117,8 +112,6 @@ class CRM_Contribute_Form_Task_PickProfile extends CRM_Contribute_Form_Task {
   /**
    * Add local and global form rules
    *
-   * @access protected
-   *
    * @return void
    */
   public function addRules() {
@@ -130,9 +123,7 @@ class CRM_Contribute_Form_Task_PickProfile extends CRM_Contribute_Form_Task {
    *
    * @param array $fields posted values of the form
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return mixed list of errors to be posted back to the form
    */
   public static function formRule($fields) {
     return TRUE;
@@ -141,9 +132,7 @@ class CRM_Contribute_Form_Task_PickProfile extends CRM_Contribute_Form_Task {
   /**
    * process the form after the input has been submitted and validated
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -153,5 +142,4 @@ class CRM_Contribute_Form_Task_PickProfile extends CRM_Contribute_Form_Task {
     // also reset the batch page so it gets new values from the db
     $this->controller->resetPage('Batch');
   }
-  //end of function
 }

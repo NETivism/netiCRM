@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -204,10 +202,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   public $_contributionID;
 
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method initializes the environment, retrieves the contribution page ID,
+   * handles permissions, initializes payment processors, and sets up membership
+   * or pledge related data if applicable.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $config = CRM_Core_Config::singleton();
@@ -742,20 +743,21 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   }
 
   /**
-   * set the default values
+   * Set the default values for the form.
    *
-   * @return void
-   * @access public
+   * @return array the default values for the form fields
    */
   public function setDefaultValues() {
     return $this->_defaults;
   }
 
   /**
-   * assign the minimal set of variables to the template
+   * Assign the minimal set of variables to the template.
+   *
+   * This method identifies and assigns essential variables such as billing name,
+   * amount, currency, and recurring information to the Smarty template.
    *
    * @return void
-   * @access public
    */
   public function assignToTemplate() {
     $name = CRM_Utils_Array::value('billing_first_name', $this->_params);
@@ -892,10 +894,16 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   }
 
   /**
-   * Function to add the custom fields
+   * Add custom fields to the form.
    *
-   * @return None
-   * @access public
+   * This method retrieves custom fields based on the provided profile ID,
+   * filters out conflicting fields, and builds the profile elements on the form.
+   *
+   * @param int $id the profile ID containing custom fields
+   * @param string $name the name to assign the fields to in the template
+   * @param bool $viewOnly whether the fields are for viewing only (no input)
+   *
+   * @return void
    */
   public function buildCustom($id, $name, $viewOnly = FALSE) {
     $stateCountryMap = [];
@@ -991,6 +999,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Get the template file name for the form.
+   *
+   * This method checks for a custom template based on the contribution page ID
+   * and form name. If not found, it returns the default template.
+   *
+   * @return string the path to the template file
+   */
   public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Contribute/Form/Contribution/{$this->_id}/{$this->_name}.tpl";
@@ -1003,11 +1019,12 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   }
 
   /**
-   * Function to authenticate pledge user during online payment.
+   * Authenticate pledge user during online payment.
    *
-   * @access public
+   * This method verifies that the user accessing the pledge payment link is authorized,
+   * either through a logged-in session or a valid checksum.
    *
-   * @return None
+   * @return void
    */
   public function authenticatePledgeUser() {
     //get the userChecksum and contact id
@@ -1057,11 +1074,13 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   }
 
   /**
-   * In case user cancel recurring contribution,
-   * When we get the control back from payment gate way
-   * lets delete the recurring and related contribution.
+   * Handle cleanup when a user cancels a recurring contribution.
    *
-   **/
+   * This method is called when returning from a payment gateway after a cancellation.
+   * it deletes the corresponding recurring contribution and any related pending contributions.
+   *
+   * @return void
+   */
   public function cancelRecurring() {
     $isCancel = CRM_Utils_Request::retrieve('cancel', 'Boolean', CRM_Core_DAO::$_nullObject);
     if ($isCancel) {
@@ -1080,6 +1099,16 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Track the visitor's interaction with the contribution page.
+   *
+   * This method records the visit state (main, confirm, payment, thankyou)
+   * and links it to the contribution page and optionally the contribution ID.
+   *
+   * @param string $pageName the name of the current page/state (e.g., 'main', 'confirm')
+   *
+   * @return void
+   */
   public function track($pageName = '') {
     $page_id = $this->_values['id'];
     if (empty($pageName)) {
@@ -1107,10 +1136,14 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
   }
 
   /**
-   * Load custom field default value from original contribution id
+   * Load custom field default values from an original contribution ID.
    *
-   * @id  int
-   *   original contribution id
+   * This is used to pre-fill the form with data from a previous contribution,
+   * typically when a user is donating again.
+   *
+   * @param int $id the original contribution ID to load data from
+   *
+   * @return void
    */
   public function loadDefaultFromOriginalId($id = NULL) {
     $this->_originalId = NULL;

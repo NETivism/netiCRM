@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,11 +43,10 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * takes an associative array and creates a relationship object
    *
+   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array $ids    (reference) the array that holds all the db ids
    *
-   * @param array $params (reference ) an assoc array of name/value pairs
-   * @param array $ids    the array that holds all the db ids
-   *
-   * @return object CRM_Contact_BAO_Relationship object
+   * @return array [valid, invalid, duplicate, saved, relationshipIds]
    * @access public
    * @static
    */
@@ -178,11 +175,11 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * This is the function that check/add if the relationship created is valid
    *
-   * @param array  $params      (reference ) an assoc array of name/value pairs
-   * @param integer $contactId  this is contact id for adding relationship
-   * @param array $ids          the array that holds all the db ids
+   * @param array   $params    (reference) an assoc array of name/value pairs
+   * @param array   $ids       (reference) the array that holds all the db ids
+   * @param integer $contactId this is contact id for adding relationship
    *
-   * @return object CRM_Contact_BAO_Relationship
+   * @return CRM_Contact_BAO_Relationship relationship object
    * @access public
    * @static
    */
@@ -254,7 +251,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * Check if there is data to create the object
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array $params (reference) an assoc array of name/value pairs
    *
    * @return boolean
    * @access public
@@ -271,24 +268,20 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * Function to get get list of relationship type based on the contact type.
    *
-   * @param int     $contactId      this is the contact id of the current contact.
-   * @param string  $strContact     it's  values are 'a or b' if value is 'a' then selected contact is the
-   *                                value of contac_id_a for the relationship and if value is 'b'
-   *                                then selected contact is the value of contac_id_b for the relationship
-   * @param string  $relationshipId the id of the existing relationship if any
-   * @param string  $contactType    contact type
-   * @param boolean $all            if true returns relationship types in both the direction
-   * @param string  $column         name/label that going to retrieve from db.
-   *
-   *
-   * @param string  $contactSubType includes relationshiptypes between this subtype
-   *
+   * @param int     $contactId                this is the contact id of the current contact.
+   * @param string  $contactSuffix            it's values are 'a or b'
+   * @param int     $relationshipId           the id of the existing relationship if any
+   * @param string  $contactType              contact type
+   * @param boolean $all                      if true returns relationship types in both the direction
+   * @param string  $column                   name/label that going to retrieve from db.
+   * @param boolean $biDirectional            bi-directional
+   * @param string  $contactSubType           includes relationshiptypes between this subtype
    * @param boolean $onlySubTypeRelationTypes if set only subtype which is passed by $contactSubType
    *                                          related relationshiptypes get return
+   *
+   * @return array array of all relationship types with context to current contact.
    * @access public
    * @static
-   *
-   * @return array - array reference of all relationship types with context to current contact.
    */
   public static function getContactRelationshipType(
     $contactId,
@@ -375,9 +368,8 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    *
    * @param int $id relationship id
    *
-   * @return null
+   * @return CRM_Contact_DAO_Relationship deleted relationship object
    * @access public
-   *
    * @static
    */
   public static function del($id) {
@@ -438,11 +430,11 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * Function to disable/enable the relationship
    *
-   * @param int $id relationship id
+   * @param int $id     relationship id
+   * @param int $action action
    *
-   * @return null
+   * @return void
    * @access public
-
    * @static
    */
   public static function disableEnableRelationship($id, $action) {
@@ -481,7 +473,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * Delete the object records that are associated with this contact
    *
-   * @param  int  $contactId id of the contact to delete
+   * @param int $contactId id of the contact to delete
    *
    * @return void
    * @access public
@@ -504,7 +496,7 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    *
    * @param int $id relationship id
    *
-   * $returns  returns the contact ids in the realtionship
+   * @return CRM_Contact_DAO_Relationship returns the contact ids in the realtionship
    * @access public
    * @static
    */
@@ -522,11 +514,11 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * Function to check if the relationship type selected between two contacts is correct
    *
-   * @param int $contact_a 1st contact id
-   * @param int $contact_b 2nd contact id
+   * @param int $contact_a          1st contact id
+   * @param int $contact_b          2nd contact id
    * @param int $relationshipTypeId relationship type id
    *
-   * @return boolean  true if it is valid relationship else false
+   * @return boolean true if it is valid relationship else false
    * @access public
    * @static
    */
@@ -560,11 +552,11 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * this function does the validtion for valid relationship
    *
-   * @param array   $params     this array contains the values there are subitted by the form
-   * @param array   $ids        the array that holds all the db ids
-   * @param integer $contactId  this is contact id for adding relationship
+   * @param array   $params    (reference) this array contains the values there are subitted by the form
+   * @param array   $ids       (reference) the array that holds all the db ids
+   * @param integer $contactId this is contact id for adding relationship
    *
-   * @return
+   * @return string error message if invalid
    * @access public
    * @static
    */
@@ -590,9 +582,9 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * this function checks for duplicate relationship
    *
-   * @param array $params (reference ) an assoc array of name/value pairs
-   * @param integer $id this the id of the contact whom we are adding relationship
-   * @param integer $contactId  this is contact id for adding relationship
+   * @param array   $params         (reference) an assoc array of name/value pairs
+   * @param integer $id             this the id of the contact whom we are adding relationship
+   * @param integer $contactId      this is contact id for adding relationship
    * @param integer $relationshipId this is relationship id for the contact
    *
    * @return boolean true if record exists else false
@@ -636,11 +628,12 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * update the is_active flag in the db
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * @param int     $id        id of the database record
+   * @param boolean $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on success, null otherwise
+   * @return boolean true on success, false otherwise
    * @static
+   * @access public
    */
   public static function setIsActive($id, $is_active) {
     // set the userContext stack
@@ -651,11 +644,10 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
    * Given the list of params in the params array, fetch the object
    * and store the values in the values array
    *
-   * @param array $params        input parameters to find object
-   * @param array $values        output values of the object
-   * @param array $ids           the array that holds all the db ids
+   * @param array $params (reference) input parameters to find object
+   * @param array $values (reference) output values of the object
    *
-   * @return array (reference)   the values that could be potentially assigned to smarty
+   * @return array|null the values that could be potentially assigned to smarty
    * @access public
    * @static
    */
@@ -685,14 +677,14 @@ class CRM_Contact_BAO_Relationship extends CRM_Contact_DAO_Relationship {
   /**
    * helper function to form the sql for relationship retrieval
    *
-   * @param int $contactId contact id
-   * @param int $status (check const at top of file)
-   * @param int $numRelationship no of relationships to display (limit)
-   * @param int $count get the no of relationships
-   * $param int $relationshipId relationship id
-   * @param string $direction   the direction we are interested in a_b or b_a
+   * @param int    $contactId      contact id
+   * @param int    $status         status
+   * @param int    $numRelationship no of relationships to display (limit)
+   * @param int    $count          get the no of relationships
+   * @param int    $relationshipId relationship id
+   * @param string $direction      the direction we are interested in a_b or b_a
    *
-   * return string the query for this diretion
+   * @return array the query components for this direction
    * @static
    * @access public
    */
@@ -811,16 +803,16 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
   /**
    * This is the function to get the list of relationships
    *
-   * @param int $contactId contact id
-   * @param int $status 1: Past 2: Disabled 3: Current
-   * @param int $numRelationship no of relationships to display (limit)
-   * @param int $count get the no of relationships
-   * $param int $relationshipId relationship id
-   * $param array $links the list of links to display
-   * $param int   $permissionMask  the permission mask to be applied for the actions
-   * $param boolean $permissionedContact to return only permissioned Contact
+   * @param int     $contactId          contact id
+   * @param int     $status             status
+   * @param int     $numRelationship    no of relationships to display (limit)
+   * @param int     $count              get the no of relationships
+   * @param int     $relationshipId     relationship id
+   * @param array   $links              the list of links to display
+   * @param int     $permissionMask     the permission mask to be applied for the actions
+   * @param boolean $permissionedContact to return only permissioned Contact
    *
-   * return array $values relationship records
+   * @return array|int relationship records or count
    * @static
    * @access public
    */
@@ -987,10 +979,11 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
   /**
    * Function to get get list of relationship type based on the target contact type.
    *
-   * @param string $targetContactType it's valid contact tpye(may be Individual , Organization , Household)
+   * @param string $targetContactType it's valid contact tpye
    *
-   * @return array - array reference of all relationship types with context to current contact type .
-   *
+   * @return array array of all relationship types with context to current contact type.
+   * @static
+   * @access public
    */
   public static function getRelationType($targetContactType) {
     $relationshipType = [];
@@ -1013,13 +1006,15 @@ LEFT JOIN  civicrm_country ON (civicrm_address.country_id = civicrm_country.id)
    * membership is is extedned by the same relationship type to that
    * of the existing relationship.
    *
-   * @param $contactId  Int     contact id
-   * @param $params     array   array of values submitted by POST
-   * @param $ids        array   array of ids
-   * @param $action             which action called this function
+   * @param int     $contactId contact id
+   * @param array   $params    (reference) array of values submitted by POST
+   * @param array   $ids       array of ids
+   * @param int     $action    which action called this function
+   * @param boolean $active    active membership only
    *
+   * @return void
    * @static
-   *
+   * @access public
    */
   public static function relatedMemberships($contactId, &$params, $ids, $action = CRM_Core_Action::ADD, $active = TRUE) {
     // Check the end date and set the status of the relationship
@@ -1210,12 +1205,11 @@ SELECT relationship_type_id, relationship_direction
   /**
    * Function to get Current Employer for Contact
    *
-   * @param $contactIds       Contact Ids
+   * @param array $contactIds Contact Ids
    *
-   * @return $currentEmployer array of the current employer
-   *
+   * @return array array of the current employer
    * @static
-   *
+   * @access public
    */
   public static function getCurrentEmployer($contactIds) {
     $contacts = CRM_Utils_Array::implode(',', $contactIds);
@@ -1239,14 +1233,12 @@ WHERE id IN ( {$contacts} )
   /**
    * Function to return list of permissioned employer for a given contact.
    *
-   * @param $contactID   int     contact id whose employers
-   * are to be found.
-   * @param $name        string  employers sort name
-   *
-   * @static
+   * @param int    $contactID contact id whose employers are to be found.
+   * @param string $name      employers sort name
    *
    * @return array array of employers.
-   *
+   * @static
+   * @access public
    */
   public static function getPermissionedEmployer($contactID, $name = '%') {
     $employers = [];
@@ -1284,6 +1276,15 @@ cc.sort_name LIKE '%$name%'";
     return $employers;
   }
 
+  /**
+   * Get current permitted organization
+   *
+   * @param int $contactId contact id
+   *
+   * @return int|false permitted organization id
+   * @static
+   * @access public
+   */
   public static function currentPermittedOrganization($contactId) {
     if (!empty($contactId)) {
       $permitted = self::getPermissionedEmployer($contactId);
@@ -1309,15 +1310,14 @@ cc.sort_name LIKE '%$name%'";
 
   /**
    * Merge relationships from otherContact to mainContact
-   * Called during contact merge operation
    *
-   * @param int $mainId contact id of main contact record.
-   * @param int $otherId contact id of record which is going to merge.
-   * @param array $sqls (reference) array of sql statements to append to.
+   * @param int   $mainId  contact id of main contact record.
+   * @param int   $otherId contact id of record which is going to merge.
+   * @param array $sqls    (reference) array of sql statements to append to.
    *
-   * @see CRM_Dedupe_Merger::cpTables()
-   *
+   * @return void
    * @static
+   * @access public
    */
   public static function mergeRelationships($mainId, $otherId, &$sqls) {
     // Delete circular relationships

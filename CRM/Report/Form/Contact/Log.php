@@ -27,33 +27,65 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
 
-  public $activityTypes;
   /**
-   * @var never[]
+   * All activity types, keyed by ID, used for label resolution.
+   *
+   * @var array<int, string>
+   */
+  public $activityTypes;
+
+  /**
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
+
   /**
+   * The SQL FROM clause built by from().
+   *
    * @var string
    */
   public $_from;
+
   /**
+   * The SQL WHERE clause built by where().
+   *
    * @var string
    */
   public $_where;
+
   /**
+   * The SQL ORDER BY clause built by orderBy().
+   *
    * @var string
    */
   public $_orderBy;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
   protected $_summary = NULL;
+
+  /**
+   * Loads sorted activity types and initialises column definitions for contact (modifier),
+   * touched contact, activity, and log tables.
+   */
   public function __construct() {
 
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
@@ -141,10 +173,21 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     parent::__construct();
   }
 
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Builds the SELECT clause from selected and required fields.
+   * Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
   public function select() {
     $select = [];
     $this->_columnHeaders = [];
@@ -166,11 +209,27 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
+  /**
+   * Form validation callback. No validation rules for this report.
+   *
+   * @param array $fields Submitted form values (unused).
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Contact_Log $self The form instance (unused).
+   *
+   * @return array Empty array (no errors).
+   */
   public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
+  /**
+   * Builds the FROM clause joining civicrm_log with the modifier contact (INNER JOIN),
+   * and left-joining the touched contact and activity records based on entity_table type.
+   * Populates $_from.
+   *
+   * @return void
+   */
   public function from() {
     $this->_from = "
         FROM civicrm_log {$this->_aliases['civicrm_log']}
@@ -180,6 +239,12 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
         ";
   }
 
+  /**
+   * Builds the WHERE clause from submitted filter values. Always excludes log entries
+   * for the 'civicrm_domain' entity table. Populates $_where.
+   *
+   * @return void
+   */
   public function where() {
     $clauses = [];
     $this->_having = '';
@@ -218,6 +283,11 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
+  /**
+   * Builds the ORDER BY clause sorting by modified_date descending. Populates $_orderBy.
+   *
+   * @return void
+   */
   public function orderBy() {
     $this->_orderBy = "
 ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
@@ -238,6 +308,14 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         $this->endPostProcess( $rows );
     }
 */
+  /**
+   * Post-processes result rows to linkify the modifier contact, touched contact,
+   * and activity subject. Also resolves activity type IDs to human-readable labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
   public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;

@@ -1,13 +1,20 @@
 <?php
+/**
+ * Form for internal contribution processing.
+ */
 class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   public $_contactId;
   public $_pageId;
   public $_ajax;
+
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method retrieves contact and contribution page IDs from the request,
+   * handles AJAX requests, and ensures the internal contribution page feature
+   * is installed.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
@@ -27,13 +34,9 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @param null
-   *
-   * @return array   array of default values
-   * @access public
+   * @return array<string, mixed> the array of default values for form elements
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -47,12 +50,12 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
    *
-   * @param null
+   * Adds selection fields for contribution pages and original contribution records
+   * (if applicable). Also handles contact selection or creation.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_ajax) {
@@ -100,13 +103,15 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global form rule for validation.
    *
-   * @param array $fields posted values of the form
+   * Validates contact ID existence and ensuring a valid contribution page is selected.
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $form the form object
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
    */
   public static function formRule($fields, $files, $form) {
     $errors = [];
@@ -131,12 +136,12 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
+   * Process the form submission.
    *
-   * @param null
+   * Generates a checksum for the selected contact and redirects the user
+   * to the contribution transaction page.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
@@ -160,6 +165,14 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 
+  /**
+   * Retrieve contribution details for the current contact.
+   *
+   * Fetches the most recent recurring and non-recurring contributions to allow
+   * the user to base a new transaction on a previous one.
+   *
+   * @return array the array of formatted contribution record labels and IDs
+   */
   public function getContributionDetails() {
     $records = [ts('-- select --')];
     // get exists contribution

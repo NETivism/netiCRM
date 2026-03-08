@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,6 +37,12 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
   public $_elementIndex;
   protected $_customClass = NULL;
 
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function preProcess() {
     $this->set('searchFormName', 'Custom');
 
@@ -98,6 +102,12 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
   }
 
+  /**
+   * Set default values for the form
+   *
+   * @return array
+   * @access public
+   */
   public function setDefaultValues() {
     $formValues = $this->_formValues;
     unset($formValues['component_mode']);
@@ -112,6 +122,12 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
   }
 
+  /**
+   * Build the form
+   *
+   * @return void
+   * @access public
+   */
   public function buildQuickForm() {
     if (method_exists($this->_customClass, 'buildForm')) {
       $this->_customClass->buildForm($this);
@@ -131,6 +147,12 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     }
   }
 
+  /**
+   * Get the template file name
+   *
+   * @return string
+   * @access public
+   */
   public function getTemplateFileName() {
 
     $ext = new CRM_Core_Extensions();
@@ -145,6 +167,12 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     return $fileName ? $fileName : parent::getTemplateFileName();
   }
 
+  /**
+   * Post process the form
+   *
+   * @return void
+   * @access public
+   */
   public function postProcess() {
     $this->set('isAdvanced', '3');
     $this->set('isCustom', '1');
@@ -171,6 +199,14 @@ class CRM_Contact_Form_Search_Custom extends CRM_Contact_Form_Search {
     parent::postProcess();
   }
 
+  /**
+   * Set the form title
+   *
+   * @param string $title
+   *
+   * @return void
+   * @access public
+   */
   public function setTitle($title) {
     if ($title) {
       CRM_Utils_System::setTitle($title);

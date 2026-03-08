@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,8 +41,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is browse
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function browse() {
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Search', ts('Events'), $this->_action);
@@ -68,8 +65,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is view
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function view() {
     // build associated contributions
@@ -91,8 +87,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is update or new
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function edit() {
     // set https for offline cc transaction
@@ -119,6 +114,11 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
+  /**
+   * Pre process
+   *
+   * @return void
+   */
   public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
@@ -151,8 +151,7 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
   public function run() {
     $this->preProcess();
@@ -193,6 +192,11 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Set context
+   *
+   * @return void
+   */
   public function setContext() {
     $context = CRM_Utils_Request::retrieve(
       'context',
@@ -299,8 +303,9 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * This function is used for the to show the associated
    * contribution for the participant
    *
-   * return null
-   * @access public
+   * @param int $is_test
+   *
+   * @return void
    */
   public function associatedContribution($is_test = 0) {
     if (CRM_Core_Permission::access('CiviContribute')) {

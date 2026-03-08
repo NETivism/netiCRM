@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,12 +43,11 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
   public const MAX_CONTACTS = 50;
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -93,10 +90,9 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -294,13 +290,11 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
   }
 
   /**
-   * Function for validation
+   * Function for validation.
    *
    * @param array $params (ref.) an assoc array of name/value pairs
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @return array|bool true or array of errors
    */
   public static function formRule($params) {
 
@@ -391,11 +385,9 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 
@@ -565,14 +557,11 @@ class CRM_Member_Form_MembershipType extends CRM_Member_Form {
   }
 
   /**
-   * This function is to get the result of the search for membership organisation.
+   * This function is to get the result of the search for membership organization.
    *
-   * @param  array $params  This contains elements for search criteria
+   * @param array $params This contains elements for search criteria
    *
-   * @access public
-   *
-   * @return None
-   *
+   * @return void
    */
   public function search(&$params) {
     //max records that will be listed

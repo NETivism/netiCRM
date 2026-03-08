@@ -27,17 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
@@ -46,7 +42,6 @@ class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
   public static $_links = NULL;
 
@@ -62,7 +57,7 @@ class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
   /**
    * Get action Links
    *
-   * @return array (reference) of action links
+   * @return array of action links
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -104,7 +99,6 @@ class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
   public function run() {
@@ -161,8 +155,6 @@ class CRM_ACL_Page_ACL extends CRM_Core_Page_Basic {
    * Browse all acls
    *
    * @return void
-   * @access public
-   * @static
    */
   public function browse() {
 
@@ -274,6 +266,8 @@ ORDER BY entity_id
 
   /**
    * Get user context.
+   *
+   * @param int $mode
    *
    * @return string user context.
    */

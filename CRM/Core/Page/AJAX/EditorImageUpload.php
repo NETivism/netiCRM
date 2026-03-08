@@ -5,7 +5,9 @@
 class CRM_Core_Page_AJAX_EditorImageUpload {
 
   /**
-   * Handle image upload from editor
+   * Handle image upload from editor via AJAX.
+   *
+   * Validates permissions, file types, and size before saving to a temporary directory.
    *
    * @return void
    */
@@ -143,11 +145,12 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
   }
 
   /**
-   * Save uploaded file to backend temp directory for later processing
+   * Save uploaded file to the backend temporary directory for later processing.
    *
-   * @param array $fileInfo File information
-   * @param string $displayName Display name for the file
-   * @return array Result with success status and file details
+   * @param array $fileInfo associative array of file metadata
+   * @param string $displayName display name for the file
+   *
+   * @return array [success => bool, filename => string, filepath => string, temp_dir => string, message => string]
    */
   private static function saveToTempDirectory($fileInfo, $displayName) {
     try {
@@ -212,10 +215,11 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
   }
 
   /**
-   * Get file extension from MIME type
+   * Get the file extension corresponding to a MIME type.
    *
    * @param string $mimeType MIME type
-   * @return string File extension
+   *
+   * @return string file extension
    */
   private static function getFileExtension($mimeType) {
     $extensions = [
@@ -230,9 +234,11 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
   }
 
   /**
-   * This function handles the response in case of an error.
+   * Send a JSON error response and exit.
    *
-   * @param mixed $error The error message or object that needs to be sent as a response.
+   * @param mixed $error error data
+   *
+   * @return void
    */
   public static function responseError($error) {
     http_response_code(400);
@@ -242,9 +248,11 @@ class CRM_Core_Page_AJAX_EditorImageUpload {
   }
 
   /**
-   * This function handles the response in case of success.
+   * Send a JSON success response and exit.
    *
-   * @param mixed $data The data that needs to be sent as a response.
+   * @param mixed $data response data
+   *
+   * @return void
    */
   public static function responseSuccess($data) {
     http_response_code(200);

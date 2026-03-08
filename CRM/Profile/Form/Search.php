@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,14 +42,9 @@
 class CRM_Profile_Form_Search extends CRM_Profile_Form {
 
   /**
-   * pre processing work done here.
-   *
-   * @param
+   * Pre-process form.
    *
    * @return void
-   *
-   * @access public
-   *
    */
   public function preProcess() {
     $this->_mode = CRM_Profile_Form::MODE_SEARCH;
@@ -59,9 +52,7 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
   }
 
   /**
-   * Set the default form values
-   *
-   * @access protected
+   * Set the default values for the form.
    *
    * @return array the default array reference
    */
@@ -100,10 +91,9 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // Is proximity search enabled for this profile?
@@ -130,9 +120,7 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
   }
 
   /**
-   *
-   *
-   * @access public
+   * Process the form.
    *
    * @return void
    */

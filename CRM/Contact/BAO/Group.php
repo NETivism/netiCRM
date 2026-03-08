@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -52,7 +50,7 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contact_BAO_Group object
+   * @return CRM_Contact_DAO_Group|null CRM_Contact_BAO_Group object
    * @access public
    * @static
    */
@@ -74,10 +72,9 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    *
    * @param int $id group id
    *
-   * @return null
+   * @return void
    * @access public
    * @static
-   *
    */
   public static function discard($id) {
 
@@ -137,11 +134,12 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Returns an array of the contacts in the given group.
    *
-   * @param int id group id
+   * @param int    $id     group id
+   * @param string $status One of Added, Removed, Pending. Empty for get all status. default 'Added'.
    *
-   * @param string status One of Added, Removed, Pending. Empty for get all status. default 'Added'.
-   *
-   * @return array
+   * @return array array of contacts
+   * @static
+   * @access public
    */
   public static function getGroupContacts($id, $status = 'Added') {
     $search = [
@@ -178,7 +176,12 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Returns count of contacts in the given group.
    *
-   * @return int
+   * @param int    $id     group id
+   * @param string $status status of members
+   *
+   * @return int count of contacts
+   * @static
+   * @access public
    */
   public static function getGroupContactsCount($id, $status = 'Added') {
     return count(self::getGroupContacts($id, $status));
@@ -187,11 +190,13 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Get the count of a members in a group with the specific status
    *
-   * @param int $id      group id
-   * @param enum $status status of members in group
+   * @param int     $id                group id
+   * @param string  $status            status of members in group
+   * @param boolean $countChildGroups  whether to include child groups
    *
    * @return int count of members in the group with above status
    * @access public
+   * @static
    */
   public static function memberCount($id, $status = 'Added', $countChildGroups = FALSE) {
     if (!$countChildGroups) {
@@ -215,7 +220,8 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Get the list of member for a group id
    *
-   * @param int $lngGroupId this is group id
+   * @param int     $groupID  group id
+   * @param boolean $useCache whether to use cache
    *
    * @return array $aMembers this arrray contains the list of members for this group id
    * @access public
@@ -244,14 +250,14 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Returns array of group object(s) matching a set of one or Group properties.
    *
-   * @param array       $param             Array of one or more valid property_name=>value pairs.
-   *                                       Limits the set of groups returned.
-   * @param array       $returnProperties  Which properties should be included in the returned group objects.
-   *                                       (member_count should be last element.)
+   * @param array $params           Array of one or more valid property_name=>value pairs.
+   *                                Limits the set of groups returned.
+   * @param array $returnProperties Which properties should be included in the returned group objects.
+   *                                (member_count should be last element.)
    *
-   * @return  An array of group objects.
-   *
+   * @return \CRM_Contact_DAO_Group[] An array of group objects.
    * @access public
+   * @static
    */
   public static function getGroups($params = NULL, $returnProperties = NULL) {
     $dao = new CRM_Contact_DAO_Group();
@@ -292,10 +298,10 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * make sure that the user has permission to access this group
    *
-   * @param int $id   the id of the object
-   * @param int $name the name or title of the object
+   * @param int    $id    the id of the object
+   * @param string $title the name or title of the object
    *
-   * @return string   the permission that the user has (or null)
+   * @return array|null the permission that the user has (or null)
    * @access public
    * @static
    */
@@ -341,9 +347,9 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Create a new group
    *
-   * @param array $params     Associative array of parameters
+   * @param array $params Associative array of parameters
    *
-   * @return object|null      The new group BAO (if created)
+   * @return CRM_Contact_BAO_Group|null The new group BAO (if created)
    * @access public
    * @static
    */
@@ -496,6 +502,9 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * given a saved search compute the clause and the tables
    * and store it for future use
+   *
+   * @return void
+   * @access public
    */
   public function buildClause() {
     $params = [['group', 'IN', [$this->id => 1], 0, 0]];
@@ -518,9 +527,9 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * Defines a new group (static or query-based)
    *
-   * @param array $params     Associative array of parameters
+   * @param array $params Associative array of parameters
    *
-   * @return object|null      The new group BAO (if created)
+   * @return CRM_Contact_BAO_Group|null The new group BAO (if created)
    * @access public
    * @static
    */
@@ -539,11 +548,12 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
   /**
    * update the is_active flag in the db
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $isActive  value we want to set the is_active field
+   * @param int     $id       id of the database record
+   * @param boolean $isActive value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean true on sucess, false otherwise
    * @static
+   * @access public
    */
   public static function setIsActive($id, $isActive) {
     return CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Group', $id, 'is_active', $isActive);
@@ -553,10 +563,11 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * build the condition to retrieve groups.
    *
    * @param string  $groupType     type of group(Access/Mailing)
-   * @param boolen  $excludeHidden exclude hidden groups.
+   * @param boolean $excludeHidden exclude hidden groups.
    *
-   * @return string $condition
+   * @return string|null $condition
    * @static
+   * @access public
    */
   public static function groupTypeCondition($groupType = NULL, $excludeHidden = TRUE) {
     $value = NULL;
@@ -595,9 +606,9 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
    * This function create the hidden smart group when user perform
    * contact seach and want to send mailing to search contacts.
    *
-   * @param  array $params ( reference ) an assoc array of name/value pairs
+   * @param array $params ( reference ) an assoc array of name/value pairs
    *
-   * @return array ( smartGroupId, ssId ) smart group id and saved search id
+   * @return array|null ( smartGroupId, ssId ) smart group id and saved search id
    * @access public
    * @static
    */
@@ -663,6 +674,15 @@ class CRM_Contact_BAO_Group extends CRM_Contact_DAO_Group {
     return [$smartGroupId, $ssId];
   }
 
+  /**
+   * Set default public groups
+   *
+   * @param array $defaults (reference) defaults array
+   *
+   * @return array defaults
+   * @static
+   * @access public
+   */
   public static function publicDefaultGroups(&$defaults) {
     $query = CRM_Core_DAO::executeQuery("SELECT id FROM civicrm_group WHERE visibility LIKE 'Public Pages' && is_hidden = 0");
     while ($query->fetch()) {

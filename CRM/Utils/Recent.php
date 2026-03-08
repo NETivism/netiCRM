@@ -27,38 +27,38 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
+ * Manages a session-stored list of recently viewed CiviCRM items.
  *
+ * Provides methods to add, retrieve, and delete items from the
+ * recently viewed queue, stored in the user's session.
  */
 class CRM_Utils_Recent {
 
   /**
-   * max number of items in queue
+   * Maximum number of items in the recently viewed queue.
    *
-   * @int
+   * @var int
    */
   public const MAX_ITEMS = 10, STORE_NAME = 'CRM_Utils_Recent';
 
   /**
-   * The list of recently viewed items
+   * The list of recently viewed items.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
   private static $_recent = NULL;
 
   /**
-   * initialize this class and set the static variables
+   * Initialize the recently viewed list from the session.
+   *
+   * Loads the stored recent items from the session if not already loaded.
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function initialize() {
     if (!self::$_recent) {
@@ -71,11 +71,9 @@ class CRM_Utils_Recent {
   }
 
   /**
-   * return the recently viewed array
+   * Return the recently viewed items array.
    *
-   * @return array the recently viewed array
-   * @access public
-   * @static
+   * @return array the recently viewed items
    */
   public static function &get() {
     self::initialize();
@@ -83,16 +81,20 @@ class CRM_Utils_Recent {
   }
 
   /**
-   * add an item to the recent stack
+   * Add an item to the recently viewed stack.
    *
-   * @param string $title  the title to display
-   * @param string $url    the link for the above title
-   * @param string $icon   a link to a graphical image
-   * @param string $id     object id
+   * If an item with the same URL already exists, it is removed before
+   * adding the new entry to the top. The list is capped at MAX_ITEMS.
+   *
+   * @param string $title the display title
+   * @param string $url the URL link for the item
+   * @param int $id the entity ID
+   * @param string $type the entity type (e.g. 'Contact', 'Activity')
+   * @param int $contactId the related contact ID
+   * @param string $contactName the related contact display name
+   * @param array $others optional additional data (keys: subtype, isDeleted, imageUrl, editUrl, deleteUrl)
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function add(
     $title,
@@ -144,13 +146,11 @@ class CRM_Utils_Recent {
   }
 
   /**
-   * delete an item from the recent stack
+   * Delete an item from the recently viewed stack by matching its ID and type.
    *
-   * @param array $recentItem array of the recent Item to be removed
+   * @param array $recentItem associative array with 'id' and 'type' keys identifying the item to remove
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function del($recentItem) {
     self::initialize();
@@ -173,13 +173,11 @@ class CRM_Utils_Recent {
   }
 
   /**
-   * delete an item from the recent stack
+   * Remove all recently viewed items associated with a given contact ID.
    *
-   * @param string $id  contact id that had to be removed
+   * @param int $id the contact ID whose recent items should be removed
    *
    * @return void
-   * @access public
-   * @static
    */
   public static function delContact($id) {
     self::initialize();

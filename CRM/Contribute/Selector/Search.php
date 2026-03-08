@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -161,11 +159,13 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    *
    * @param array $queryParams array of parameters for query
    * @param int   $action - action of search basic or advanced.
-   * @param string   $contributionClause if the caller wants to further restrict the search (used in contributions)
+   * @param string|null   $contributionClause if the caller wants to further restrict the search (used in contributions)
    * @param boolean $single are we dealing only with one contact?
-   * @param int     $limit  how many contributions do we want returned
+   * @param int|null     $limit  how many contributions do we want returned
+   * @param string $context
+   * @param string|null $compContext
    *
-   * @return CRM_Contact_Selector
+   * @return CRM_Contribute_Selector_Search
    * @access public
    */
   public function __construct(
@@ -217,9 +217,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    * - View
    * - Edit
    *
+   * @param int|null $componentId
+   * @param int|null $componentAction
+   * @param string|null $key
+   * @param string|null $compContext
+   *
    * @return array
    * @access public
-   *
+   * @static
    */
   public static function &links($componentId = NULL, $componentAction = NULL, $key = NULL, $compContext = NULL) {
     $extraParams = NULL;
@@ -270,7 +275,10 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
   /**
    * getter for array of the parameters required for creating pager.
    *
-   * @param
+   * @param int $action
+   * @param array $params
+   *
+   * @return void
    * @access public
    */
   public function getPagerParams($action, &$params) {
@@ -313,13 +321,13 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
   /**
    * returns all the rows in the given offset and rowCount
    *
-   * @param enum   $action   the action being performed
+   * @param int   $action   the action being performed
    * @param int    $offset   the row number to start from
    * @param int    $rowCount the number of rows to return
    * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param string|null   $output   what should the result set include (web/email/csv)
    *
-   * @return int   the total number of rows for this action
+   * @return array
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $result = $this->_query->searchQuery(
@@ -464,13 +472,11 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
   }
 
   /**
+   * Get QILL
    *
    * @return array   $qill         which contains an array of strings
    * @access public
    */
-
-  // the current internationalisation is bad, but should more or less work
-  // for most of "European" languages
   public function getQILL() {
     return $this->_query->qill();
   }
@@ -479,8 +485,8 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
    * returns the column headers as an array of tuples:
    * (name, sortName (key to the sort array))
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param string|null $action the action being performed
+   * @param string|null   $output what should the result set include (web/email/csv)
    *
    * @return array the column headers that need to be displayed
    * @access public
@@ -581,10 +587,20 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     return self::$_columnHeaders;
   }
 
+  /**
+   * Alphabet query
+   *
+   * @return DB_Result
+   */
   public function alphabetQuery() {
     return $this->_query->searchQuery(NULL, NULL, NULL, FALSE, FALSE, TRUE);
   }
 
+  /**
+   * Get query object
+   *
+   * @return CRM_Contact_BAO_Query
+   */
   public function &getQuery() {
     return $this->_query;
   }
@@ -600,10 +616,23 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     return ts('CiviCRM Contribution Search');
   }
 
+  /**
+   * Get summary
+   *
+   * @return array
+   */
   public function getSummary() {
     return $this->_query->summaryContribution($this->_context);
   }
 
+  /**
+   * Return properties for query
+   *
+   * @param array $queryParams
+   *
+   * @return array
+   * @static
+   */
   public static function returnProperties($queryParams) {
     $returnProperties = CRM_Contribute_BAO_Query::defaultReturnProperties(CRM_Contact_BAO_Query::MODE_CONTRIBUTE);
 
@@ -651,6 +680,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     return $returnProperties;
   }
 
+  /**
+   * Get contribution premiums
+   *
+   * @param array $ids
+   *
+   * @return array
+   * @static
+   */
   public static function getContributionPremiums($ids) {
     $premiums = [];
 
@@ -675,6 +712,14 @@ class CRM_Contribute_Selector_Search extends CRM_Core_Selector_Base implements C
     return $premiums;
   }
 
+  /**
+   * Get contribution referrers
+   *
+   * @param array $ids
+   *
+   * @return array
+   * @static
+   */
   public static function getContributionReferrers($ids) {
     $params = [
       'entityTable' => 'civicrm_contribution',

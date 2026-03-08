@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,18 +35,12 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
   public $N;
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a message template record based on the provided parameters.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
-   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object CRM_Core_BAO_MessageTemplates object
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_MessageTemplates|null matching DAO object
    */
   public static function retrieve(&$params, &$defaults) {
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
@@ -61,27 +53,23 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag for a message template in the database.
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * @param int $id ID of the database record
+   * @param bool $is_active value to set for the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
-   * @static
+   * @return CRM_Core_DAO_MessageTemplates|null updated DAO object
    */
   public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_MessageTemplates', $id, 'is_active', $is_active);
   }
 
   /**
-   * function to add the Message Templates
+   * Add or update a message template record.
    *
-   * @param array $params reference array contains the values submitted by the form
+   * @param array $params associative array of template data
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Core_DAO_MessageTemplates|null created/updated template object
    */
   public static function add(&$params) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
@@ -94,12 +82,11 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   }
 
   /**
-   * function to delete the Message Templates
+   * Delete a message template record and clear its references in other tables.
    *
-   * @access public
-   * @static
+   * @param int $messageTemplatesID ID of the template to delete
    *
-   * @return object
+   * @return void
    */
   public static function del($messageTemplatesID) {
     // make sure messageTemplatesID is an integer
@@ -126,12 +113,12 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   }
 
   /**
-   * function to get the Message Templates
+   * Get a list of active message templates.
    *
-   * @access public
-   * @static
+   * @param bool $all TRUE to include templates not assigned to workflows
+   * @param bool $isSMS TRUE to return only SMS templates
    *
-   * @return object
+   * @return array associative array of (id => title)
    */
   public static function getMessageTemplates($all = TRUE, $isSMS = FALSE) {
     $msgTpls = [];
@@ -157,11 +144,12 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   }
 
   /**
-   * Get message template by specify workflow
+   * Get message template content by its workflow group and value names.
    *
-   * @param string $groupName workflow group name from option group
-   * @param string $valueName workflow value name option value
-   * @return array
+   * @param string $groupName workflow group name
+   * @param string $valueName workflow value name
+   *
+   * @return array associative array of template data (subject, text, html)
    */
   public static function getMessageTemplateByWorkflow($groupName, $valueName) {
     static $cache;
@@ -190,6 +178,16 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     return $cache[$groupName.'__'.$valueName];
   }
 
+  /**
+   * Send a reminder email using a specified message template.
+   *
+   * @param int $contactId contact ID
+   * @param string $email recipient email address
+   * @param int $messageTemplateID template ID
+   * @param string $from sender email address
+   *
+   * @return bool TRUE if email was sent, FALSE otherwise
+   */
   public static function sendReminder($contactId, $email, $messageTemplateID, $from) {
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->id = $messageTemplateID;
@@ -276,9 +274,9 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   }
 
   /**
-   * Revert a message template to its default subject+text+HTML state
+   * Revert a message template to its default state.
    *
-   * @param integer id  id of the template
+   * @param int $id ID of the template to revert
    *
    * @return void
    */
@@ -307,25 +305,13 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   }
 
   /**
-   * Send an email from the specified template based on an array of params
+   * Send an email using a specified message template and optional Smarty parameters.
    *
-   * @param array $params  a string-keyed array of function params, see function body for details
-   * @param object &$smarty passed by reference smarty object. Will be used when multiple call of sendTemplate in a loop
-   * @param array $callback array first element is for success callback, second is for error callback
-   *   ```
-   *   $callback = [
-   *     0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for success
-   *       $activityId,
-   *       TRUE,
-   *     ]],
-   *     1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' => [ // this is for error
-   *       $activityId,
-   *       FALSE,
-   *     ]],
-   *   ];
-   *   ```
+   * @param array $params associative array of email parameters
+   * @param CRM_Core_Smarty|null &$smarty optional Smarty object for reuse
+   * @param array|null $callback optional callback array for success/error
    *
-   * @return array  of four parameters: a boolean whether the email was sent, and the subject, text and HTML templates
+   * @return array [bool sent_status, string subject, string text, string html]
    */
   public static function sendTemplate($params, &$smarty = NULL, $callback = NULL) {
     $defaults = [
@@ -515,10 +501,11 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
   }
 
   /**
-   * Get workflow group name / value name by workflow id
+   * Get the workflow group and value names for a specific template by its workflow ID.
    *
-   * @param int $workflow_id workflow id of message template
-   * @return array
+   * @param int $workflowId workflow ID
+   *
+   * @return array [groupName, valueName]
    */
   public static function getMessageTemplateNames($workflowId) {
     $query = 'SELECT ov.name as groupName, og.name as valueName

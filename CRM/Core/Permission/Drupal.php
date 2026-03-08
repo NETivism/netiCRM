@@ -26,10 +26,9 @@
 */
 
 /**
+ * Drupal-specific permission checking and management implementation
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -63,16 +62,12 @@ class CRM_Core_Permission_Drupal {
 
   /**
    * Get all groups from database, filtered by permissions
-   * for this user
+   * for this user.
    *
-   * @param string $groupType     type of group(Access/Mailing)
-   * @param boolen $excludeHidden exclude hidden groups.
+   * @param string|null $groupType Type of group (Access/Mailing).
+   * @param bool $excludeHidden Whether to exclude hidden groups.
    *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all groups.
-   *
+   * @return array List of all groups.
    */
   public static function &group($groupType = NULL, $excludeHidden = TRUE) {
     if (!isset(self::$_viewPermissionedGroups)) {
@@ -116,14 +111,14 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * Get group clause for this user
+   * Get group clause for this user.
    *
-   * @param int $type the type of permission needed
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int $type The type of permission needed.
+   * @param array $tables (reference) The tables that are needed for the select clause.
+   * @param array $whereTables (reference) The tables that are needed for the where clause.
+   * @param string $context The context.
    *
-   * @return string the group where clause for this user
-   * @access public
+   * @return string The group where clause for this user.
    */
   public static function groupClause($type, &$tables, &$whereTables, $context) {
     if (!isset(self::$_viewPermissionedGroups)) {
@@ -205,9 +200,9 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * get the current permission of this user
+   * Get the current permission of this user.
    *
-   * @return string the permission of the user (edit or view or null)
+   * @return int|null The permission level.
    */
   public static function getPermission() {
     self::group();
@@ -222,14 +217,14 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * Get the permissioned where clause for the user
+   * Get the permissioned where clause for the user.
    *
-   * @param int $type the type of permission needed
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int $type The type of permission needed.
+   * @param array $tables (reference) The tables that are needed for the select clause.
+   * @param array $whereTables (reference) The tables that are needed for the where clause.
+   * @param string $context The context.
    *
-   * @return string the group where clause for this user
-   * @access public
+   * @return string The group where clause for this user.
    */
   public static function whereClause($type, &$tables, &$whereTables, $context) {
     self::group();
@@ -238,13 +233,12 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * given a permission string, check for access requirements
+   * Given a permission string, check for access requirements.
    *
-   * @param string $str the permission to check
+   * @param string $permission The permission to check.
+   * @param int|null $contactID Optional contact ID to check for.
    *
-   * @return boolean true if yes, else false
-   * @static
-   * @access public
+   * @return bool True if yes, else false.
    */
   public static function check($permission, $contactID = NULL) {
     $ufID = NULL;

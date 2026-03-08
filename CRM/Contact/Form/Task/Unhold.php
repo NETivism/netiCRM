@@ -3,19 +3,28 @@
 class CRM_Contact_Form_Task_Unhold extends CRM_Contact_Form_Task {
 
   /**
-   * Function to set variables up before form is built
+   * Set variables up before form is built.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
   }
 
+  /**
+   * Build the form object.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $this->addDefaultButtons(ts('Unhold Email'), 'done');
   }
 
+  /**
+   * Process the form after the input has been submitted and validated.
+   *
+   * @return void
+   */
   public function postProcess() {
     // Query to unhold emails of selected contacts
 

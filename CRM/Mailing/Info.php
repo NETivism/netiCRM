@@ -30,9 +30,7 @@
  * information about it. It needs to extend CRM_Core_Component_Info
  * abstract class.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 class CRM_Mailing_Info extends CRM_Core_Component_Info {
@@ -69,6 +67,9 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
   }
 
   // docs inherited from interface
+  /**
+   * @return array<int, string>
+   */
   public function getPermissions() {
     $permissions = [
       'access CiviMail',

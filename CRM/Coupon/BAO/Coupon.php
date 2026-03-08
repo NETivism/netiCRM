@@ -5,9 +5,19 @@
  */
 class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
 
+  /**
+   * Class constructor.
+   */
   public function __construct() {
     parent::__construct();
   }
+
+  /**
+   * Adds a new coupon to the database.
+   *
+   * @param array $params An associative array of coupon data.
+   * @return CRM_Coupon_BAO_Coupon The newly created coupon object.
+   */
   public static function add(&$params) {
     $coupon = new CRM_Coupon_BAO_Coupon();
     $coupon->copyValues($params);
@@ -15,6 +25,11 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $coupon;
   }
 
+  /**
+   * Creates a new coupon, including its associated entities.
+   *
+   * @param array $params An associative array of coupon data, potentially including entity associations.
+   */
   public static function create(&$params) {
     // save
     $fields = CRM_Coupon_DAO_Coupon::fields();
@@ -34,19 +49,22 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
   }
 
   /**
-   * update the is_active flag in the db
+   * Updates the 'is_active' flag for a given coupon in the database.
    *
-   * @param  int      $id         id of the database record
-   * @param  boolean  $is_active  value we want to set the is_active field
-   *
-   * @return Object             DAO object on sucess, null otherwise
-   * @static
-   * @access public
+   * @param int $id The ID of the database record for the coupon.
+   * @param bool $isActive The boolean value to set for the 'is_active' field.
+   * @return object|null The DAO object on success, or null otherwise.
    */
   public static function setIsActive($id, $isActive) {
     return CRM_Core_DAO::setFieldValue('CRM_Coupon_DAO_Coupon', $id, 'is_active', $isActive);
   }
 
+  /**
+   * Saves or updates the entities associated with a coupon.
+   *
+   * @param int $couponId The ID of the coupon.
+   * @param array $data An associative array where keys are entity table names and values are arrays of entity IDs.
+   */
   public static function saveCouponEntity($couponId, $data) {
     if (empty($couponId) || !is_numeric($couponId)) {
       return;
@@ -67,6 +85,12 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Deletes a coupon and its associated tracking and entity records.
+   *
+   * @param int $id The ID of the coupon to delete.
+   * @return bool TRUE on successful deletion.
+   */
   public static function deleteCoupon($id) {
     $coupon = new CRM_Coupon_DAO_Coupon();
     $coupon->id = $id;
@@ -90,6 +114,12 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return TRUE;
   }
 
+  /**
+   * Creates a copy of an existing coupon, including its associated entities.
+   *
+   * @param int $id The ID of the coupon to copy.
+   * @return object The newly created coupon object.
+   */
   public static function copy($id) {
     $maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_coupon");
 
@@ -109,6 +139,13 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $copy;
   }
 
+  /**
+   * Retrieves a coupon by its ID or code, using a static cache.
+   *
+   * @param int|null $id The ID of the coupon to retrieve.
+   * @param string|null $code The code of the coupon to retrieve.
+   * @return array An associative array representing the coupon data, or an empty array if not found.
+   */
   public static function getCoupon($id = NULL, $code = NULL) {
     static $coupons = [];
     if ($code && !empty($coupons[$code])) {
@@ -146,6 +183,13 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $coupon;
   }
 
+  /**
+   * Retrieves a list of coupons based on specified filters.
+   *
+   * @param array $filter An associative array of filter criteria.
+   * @param bool $returnFetchedResult If true, returns a single fetched result array instead of a DAO object.
+   * @return CRM_Core_DAO|array|FALSE The DAO result set, a fetched array, or FALSE if no results.
+   */
   public static function getCouponList($filter, $returnFetchedResult = FALSE) {
     $sql = "SELECT cc.*, e.entity_table, e.entity_id FROM civicrm_coupon cc LEFT JOIN civicrm_coupon_entity e ON cc.id = e.coupon_id WHERE ";
     $where = $args = [];
@@ -218,6 +262,12 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Counts the number of times each coupon has been used.
+   *
+   * @param array $ids An array of coupon IDs.
+   * @return array An associative array where keys are coupon IDs and values are their usage counts.
+   */
   public static function getCouponUsed($ids) {
     $result = array_fill_keys($ids, 0);
     if (!empty($ids)) {
@@ -231,6 +281,13 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $result;
   }
 
+  /**
+   * Retrieves detailed information about coupon usage, optionally filtered by IDs.
+   *
+   * @param array $ids An array of IDs to filter the results by. Defaults to an empty array.
+   * @param string $field The field to use for filtering. Defaults to 'ct.coupon_id'.
+   * @return CRM_Core_DAO The DAO result set containing coupon usage details.
+   */
   public static function getCouponUsedBy($ids = [], $field = 'ct.coupon_id') {
     if (!empty($ids)) {
       if (empty($field)) {
@@ -249,6 +306,13 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Retrieves coupon usage details for specific contacts and coupons.
+   *
+   * @param array $contactIds An array of contact IDs.
+   * @param array $ids An array of coupon IDs.
+   * @return CRM_Core_DAO|null The DAO result set or null if input is invalid.
+   */
   public function getContactCouponUsed($contactIds, $ids) {
     if (!is_array($ids) || !is_array($contactIds)) {
       return;
@@ -265,10 +329,22 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return CRM_Core_DAO::executeQuery($sql);
   }
 
+  /**
+   * Retrieves coupon data using common DAO retrieval methods.
+   *
+   * @param array &$params An associative array of parameters for retrieval.
+   * @param array &$defaults An associative array to store the retrieved defaults.
+   * @return mixed The result of the commonRetrieve call.
+   */
   public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Coupon_DAO_Coupon', $params, $defaults);
   }
 
+  /**
+   * Formats or cleans up entity data within the parameters array.
+   *
+   * @param array &$params The parameters array, modified in place.
+   */
   public static function formatCouponEntity(&$params) {
     foreach ($params as $key => $value) {
       if (in_array($key, ['civicrm_event', 'civicrm_price_field_value'])) {
@@ -291,6 +367,11 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Adds a coupon input element to a form.
+   *
+   * @param CRM_Core_Form &$form The form object to which the element is added.
+   */
   public static function addQuickFormElement(&$form) {
     $ele = $form->add('text', 'coupon', ts('Coupon'), ['placeholder' => ts('Enter coupon code')]);
     if (!empty($form->_coupon['coupon_track_id'])) {
@@ -304,6 +385,12 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Validates if a given coupon code is valid based on its properties and current time.
+   *
+   * @param string $code The coupon code to validate.
+   * @return array|bool|null Returns the coupon data array if valid, FALSE if invalid, or NULL if the code is empty.
+   */
   public static function validFromCode($code) {
     if (empty($code)) {
       return NULL;
@@ -341,6 +428,14 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $valid;
   }
 
+  /**
+   * Validates if a coupon code is valid for a specific event and potentially other entities.
+   *
+   * @param string $code The coupon code to validate.
+   * @param int $eventId The ID of the event to validate against.
+   * @param array $additionalVerify An associative array of additional entities and their IDs to verify against.
+   * @return bool TRUE if the coupon is valid for the event and additional verifications, FALSE otherwise.
+   */
   public static function validEventFromCode($code, $eventId, $additionalVerify = []) {
     $valid = TRUE;
     $coupon = self::validFromCode($code);
@@ -382,6 +477,13 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Retrieves and validates coupon information based on form submission values.
+   *
+   * @param CRM_Core_Form $form The form object.
+   * @param array $fields An associative array of submitted form fields.
+   * @return array|bool Returns the validated coupon data if found and valid, otherwise FALSE.
+   */
   public static function getCouponFromFormSubmit($form, $fields) {
     $code = $fields['coupon'];
     if (!empty($code)) {
@@ -462,6 +564,12 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Calculates and applies coupon discount to form values.
+   *
+   * @param CRM_Core_Form $form The form object.
+   * @param array $submitValues An associative array of submitted form values.
+   */
   public static function countAmount($form, $submitValues) {
     $coupon = self::getCouponFromFormSubmit($form, $submitValues);
     if (!empty($coupon)) {
@@ -486,6 +594,13 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     }
   }
 
+  /**
+   * Checks for errors related to coupon application based on form submission.
+   *
+   * @param CRM_Core_Form $form The form object.
+   * @param array $submitValues An associative array of submitted form values.
+   * @return array|null An array of errors if any, or null if no errors.
+   */
   public static function checkError($form, $submitValues) {
     if (empty($submitValues['coupon'])) {
       return ;
@@ -519,6 +634,15 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $errors;
   }
 
+  /**
+   * Adds a record to the coupon track table to log coupon usage.
+   *
+   * @param int $couponId The ID of the coupon used.
+   * @param int $contributionId The ID of the contribution associated with the usage.
+   * @param int|null $contactId The ID of the contact who used the coupon (optional).
+   * @param int|null $discountAmount The amount of discount applied (optional).
+   * @return CRM_Coupon_DAO_CouponTrack The newly created coupon track object.
+   */
   public static function addCouponTrack($couponId, $contributionId, $contactId = NULL, $discountAmount = NULL) {
     $coupon = new CRM_Coupon_DAO_Coupon();
     $coupon->id = $couponId;
@@ -533,3 +657,4 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $couponTrack;
   }
 }
+

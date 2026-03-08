@@ -41,7 +41,7 @@ class CRM_SMS_Provider_Flydove extends CRM_SMS_Provider {
    *  'guid' => string,
    *  'activityId' => int,
    * ]
-   * @return array response of self::doRequest
+   * @return array{} response of self::doRequest
    */
   public function send(&$messages) {
     $response = [];

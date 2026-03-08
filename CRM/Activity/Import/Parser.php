@@ -26,10 +26,9 @@
 */
 
 /**
+ * Base parser for validating and processing Activity import data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -49,7 +48,6 @@ abstract class CRM_Activity_Import_Parser {
   public const ERROR_FILE_PREFIX = 'activity';
 
   /**#@+
-   * @access protected
    * @var integer
    */
 
@@ -191,12 +189,29 @@ abstract class CRM_Activity_Import_Parser {
    * @var boolean
    */
   protected $_haveColumnHeader;
+  /**
+   * class constructor
+   */
   public function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
   abstract public function init();
+
+  /**
+   * Run the parser
+   *
+   * @param array $fileName
+   * @param string $seperator
+   * @param array $mapper
+   * @param bool $skipColumnHeader
+   * @param int $mode
+   * @param int $onDuplicate
+   * @param string $filenamePrefix
+   *
+   * @return mixed
+   */
   public function run(
     $fileName,
     $seperator,
@@ -414,10 +429,9 @@ abstract class CRM_Activity_Import_Parser {
    * Given a list of the importable field keys that the user has selected
    * set the active fields array to this list
    *
-   * @param array mapped array of values
+   * @param array $fieldKeys mapped array of values
    *
    * @return void
-   * @access public
    */
   public function setActiveFields($fieldKeys) {
     $this->_activeFieldCount = count($fieldKeys);
@@ -444,6 +458,15 @@ abstract class CRM_Activity_Import_Parser {
             $this->_activeFields[$i]->_phoneType = $elements[$i];
         }
     }*/
+
+  /**
+   * Set active field values
+   *
+   * @param array $elements
+   * @param int $erroneousField
+   *
+   * @return int
+   */
   public function setActiveFieldValues($elements, &$erroneousField) {
     $maxCount = count($elements) < $this->_activeFieldCount ? count($elements) : $this->_activeFieldCount;
     for ($i = 0; $i < $maxCount; $i++) {
@@ -472,7 +495,6 @@ abstract class CRM_Activity_Import_Parser {
    * function to format the field values for input to the api
    *
    * @return array (reference ) associative array of name/value pairs
-   * @access public
    */
   public function &getActiveFieldParams() {
     $params = [];
@@ -488,6 +510,11 @@ abstract class CRM_Activity_Import_Parser {
     return $params;
   }
 
+  /**
+   * Get select values
+   *
+   * @return array
+   */
   public function getSelectValues() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
@@ -496,6 +523,11 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
+  /**
+   * Get select types
+   *
+   * @return array
+   */
   public function getSelectTypes() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
@@ -504,6 +536,11 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
+  /**
+   * Get header patterns
+   *
+   * @return array
+   */
   public function getHeaderPatterns() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
@@ -512,6 +549,11 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
+  /**
+   * Get data patterns
+   *
+   * @return array
+   */
   public function getDataPatterns() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
@@ -520,6 +562,17 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
+  /**
+   * Add field
+   *
+   * @param string $name
+   * @param string $title
+   * @param int $type
+   * @param string $headerPattern
+   * @param string $dataPattern
+   *
+   * @return void
+   */
   public function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
     if (empty($name)) {
       $this->_fields['doNotImport'] = new CRM_Activity_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
@@ -543,7 +596,6 @@ abstract class CRM_Activity_Import_Parser {
    * @param int $max
    *
    * @return void
-   * @access public
    */
   public function setMaxLinesToProcess($max) {
     $this->_maxLinesToProcess = $max;
@@ -552,10 +604,10 @@ abstract class CRM_Activity_Import_Parser {
   /**
    * Store parser values
    *
-   * @param CRM_Core_Session $store
+   * @param object $store
+   * @param int $mode
    *
    * @return void
-   * @access public
    */
   public function set($store, $mode = self::MODE_SUMMARY) {
     $store->set('fileSize', $this->_fileSize);
@@ -595,12 +647,11 @@ abstract class CRM_Activity_Import_Parser {
   /**
    * Export data to a CSV file
    *
-   * @param string $filename
+   * @param string $fileName
    * @param array $header
-   * @param data $data
+   * @param array $data
    *
    * @return void
-   * @access public
    */
   public static function exportCSV($fileName, $header, $data) {
     CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
@@ -613,8 +664,6 @@ abstract class CRM_Activity_Import_Parser {
    * @param string $enclosure
    *
    * @return void
-   * @static
-   * @access public
    */
   public static function encloseScrub(&$values, $enclosure = "'") {
     if (empty($values)) {
@@ -626,6 +675,14 @@ abstract class CRM_Activity_Import_Parser {
     }
   }
 
+  /**
+   * Get error filename
+   *
+   * @param int $type
+   * @param string $prefix
+   *
+   * @return string
+   */
   public function errorFileName($type, $prefix) {
     return CRM_Import_Parser::saveFileName($type, $prefix);
   }

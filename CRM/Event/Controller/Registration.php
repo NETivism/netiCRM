@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,6 +35,10 @@ class CRM_Event_Controller_Registration extends CRM_Core_Controller {
 
   /**
    * class constructor
+   *
+   * @param string $title
+   * @param int $action
+   * @param bool $modal
    */
   public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);

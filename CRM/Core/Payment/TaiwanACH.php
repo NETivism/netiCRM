@@ -1,4 +1,10 @@
 <?php
+/**
+ * Taiwan ACH (Automated Clearing House) payment processor for handling bank transfer recurring donations.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
 
@@ -18,19 +24,25 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
+  /**
+   * Class constructor.
+   *
+   * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_TaiwanACH
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -41,10 +53,9 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
     $config = CRM_Core_Config::singleton();
@@ -88,12 +99,29 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
 
   }
 
+  /**
+   * Add a note to the contribution record log.
+   *
+   * @param string $note note content
+   * @param CRM_Contribute_DAO_Contribution &$contribution contribution object
+   *
+   * @return void
+   */
   public static function addNote($note, &$contribution) {
 
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
     CRM_Core_Error::debug_log_message($note);
   }
 
+  /**
+   * Check if the configuration section is valid.
+   *
+   * @param array &$fields form fields
+   * @param array &$errors array to store errors
+   * @param string|null $section configuration section (e.g., 'test')
+   *
+   * @return bool TRUE if all fields are empty
+   */
   public static function checkSection(&$fields, &$errors, $section = NULL) {
     $emptyField = 0;
     $isAllEmpty = FALSE;

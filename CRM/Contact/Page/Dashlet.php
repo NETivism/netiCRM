@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Contact_Page_Dashlet extends CRM_Core_Page {
 
   /**
-   * Run dashboard
+   * Run dashboard.
    *
-   * @return none
-   * @access public
+   * @return void
    */
   public function run() {
     CRM_Utils_System::setTitle(ts('Dashlets'));

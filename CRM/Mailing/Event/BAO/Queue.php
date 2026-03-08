@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -37,20 +35,18 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
 
   public $email;
   /**
-   * class constructor
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Queue a new recipient
+   * Queue a new recipient.
    *
-   * @param array     The values of the new EventQueue
+   * @param array $params (reference) The values of the new EventQueue.
    *
-   * @return object   The new EventQueue
-   * @access public
-   * @static
+   * @return CRM_Mailing_Event_BAO_Queue The new EventQueue object.
    */
   public static function &create(&$params) {
     $eq = new CRM_Mailing_Event_BAO_Queue();
@@ -61,13 +57,11 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
   }
 
   /**
-   * Create a security hash from the job, email and contact ids
+   * Create a security hash from the job, email and contact ids.
    *
-   * @param array     The ids to be hashed
+   * @param array $params The ids to be hashed.
    *
-   * @return int      The hash
-   * @access public
-   * @static
+   * @return string The hash.
    */
   public static function hash($params) {
     $jobId = $params['job_id'];
@@ -82,15 +76,13 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
   }
 
   /**
-   * Verify that a queue event exists with the specified id/job id/hash
+   * Verify that a queue event exists with the specified id/job id/hash.
    *
-   * @param int $job_id       The job ID of the event to find
-   * @param int $queue_id     The Queue Event ID to find
-   * @param string $hash      The hash to validate against
+   * @param int $job_id The job ID of the event to find.
+   * @param int $queue_id The Queue Event ID to find.
+   * @param string $hash The hash to validate against.
    *
-   * @return object|null      The queue event if verified, or null
-   * @access public
-   * @static
+   * @return CRM_Mailing_Event_BAO_Queue|null The queue event if verified, or null.
    */
   public static function &verify($job_id, $queue_id, $hash) {
     $success = NULL;
@@ -110,11 +102,9 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
   /**
    * Given a queue event ID, find the corresponding email address.
    *
-   * @param int $queue_id         The queue event ID
+   * @param int $queue_id The queue event ID.
    *
-   * @return string               The email address
-   * @access public
-   * @static
+   * @return string|null The email address.
    */
   public static function getEmailAddress($queue_id) {
     $email = CRM_Core_BAO_Email::getTableName();
@@ -135,14 +125,12 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
   }
 
   /**
-   * Count up events given a mailing id and optional job id
+   * Count up events given a mailing id and optional job id.
    *
-   * @param int $mailing_id       ID of the mailing to count
-   * @param int $job_id           Optional ID of a job to limit results
+   * @param int $mailing_id ID of the mailing to count.
+   * @param int|null $job_id Optional ID of a job to limit results.
    *
-   * @return int                  Number of matching events
-   * @access public
-   * @static
+   * @return int Number of matching events.
    */
   public static function getTotalCount($mailing_id, $job_id = NULL) {
     $dao = new CRM_Core_DAO();
@@ -170,17 +158,15 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
   }
 
   /**
-   * Get rows for the event browser
+   * Get rows for the event browser.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           optional ID of the job
-   * @param int $offset           Offset
-   * @param int $rowCount         Number of rows
-   * @param array $sort           sort array
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of the job.
+   * @param int|null $offset Offset for the query.
+   * @param int|null $rowCount Number of rows to return.
+   * @param CRM_Utils_Sort|string|null $sort Sort object or string.
    *
-   * @return array                Result set
-   * @access public
-   * @static
+   * @return array Result set of queue events.
    */
   public static function &getRows(
     $mailing_id,
@@ -254,12 +240,9 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
   }
 
   /**
-   * Get the mailing object for this queue event instance
+   * Get the mailing object for this queue event instance.
    *
-   * @param
-   *
-   * @return object           Mailing BAO
-   * @access public
+   * @return CRM_Mailing_BAO_Mailing The mailing object.
    */
   public function &getMailing() {
     $mailing = new CRM_Mailing_BAO_Mailing();
@@ -279,6 +262,13 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
     return $mailing;
   }
 
+  /**
+   * Get contact information for a given queue ID.
+   *
+   * @param int $queueID The queue ID.
+   *
+   * @return array Array containing display name and email.
+   */
   public static function getContactInfo($queueID) {
     $query = "
 SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
@@ -303,6 +293,14 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
     return [$displayName, $email];
   }
 
+  /**
+   * Bulk create queue events.
+   *
+   * @param array $params Array of queue parameters.
+   * @param string|null $now Optional timestamp.
+   *
+   * @return void
+   */
   public static function bulkCreate($params, $now = NULL) {
     if (!$now) {
       $now = time();

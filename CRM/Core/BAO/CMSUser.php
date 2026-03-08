@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,14 +38,9 @@
 class CRM_Core_BAO_CMSUser {
 
   /**
-   * Function for synchronizing cms users with CiviCRM contacts
-   *
-   * @param NULL
+   * Synchronize all users from the CMS user table to CiviCRM contacts.
    *
    * @return void
-   *
-   * @static
-   * @access public
    */
   public static function synchronize() {
     //start of schronization code
@@ -110,14 +103,12 @@ class CRM_Core_BAO_CMSUser {
   }
 
   /**
-   * Function to create CMS user using Profile
+   * Create a CMS user and associate it with a CiviCRM contact.
    *
-   * @param array  $params associated array
-   * @param string $mail email id for cms user
+   * @param array &$params associative array of user details
+   * @param string $mail email address for the CMS user
    *
-   * @return int contact id that has been created
-   * @access public
-   * @static
+   * @return int|bool the CMS user ID on success, or FALSE on failure
    */
   public static function create(&$params, $mail) {
     $config = CRM_Core_Config::singleton();
@@ -142,14 +133,14 @@ class CRM_Core_BAO_CMSUser {
   }
 
   /**
-   * Function to create Form for CMS user using Profile
+   * Add CMS user account creation fields to a CiviCRM form.
    *
-   * @param object  $form
-   * @param integer $gid id of group of profile
-   * @param string $emailPresent true, if the profile field has email(primary)
+   * @param CRM_Core_Form &$form the form object
+   * @param int $gid ID of the profile group
+   * @param bool $emailPresent TRUE if an email field is present in the profile
+   * @param int $action the form action (e.g., CRM_Core_Action::ADD)
    *
-   * @access public
-   * @static
+   * @return bool|void FALSE if registration is disabled, otherwise adds elements to the form
    */
   public static function buildForm(&$form, $gid, $emailPresent, $action = CRM_Core_Action::NONE) {
     $config = CRM_Core_Config::singleton();
@@ -272,6 +263,15 @@ class CRM_Core_BAO_CMSUser {
     $form->assign('showCMS', $showCMS);
   }
 
+  /**
+   * Validation rule for CMS user account creation.
+   *
+   * @param array $fields associative array of form field values
+   * @param array $files associative array of uploaded files
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array|bool error array if validation fails, otherwise TRUE
+   */
   public static function formRule($fields, $files, $self) {
     if (!CRM_Utils_Array::value('cms_create_account', $fields)) {
       return TRUE;
@@ -300,7 +300,7 @@ class CRM_Core_BAO_CMSUser {
       }
 
       if ($emailName == NULL) {
-        $errors['_qf_default'] == ts('Could not find an email address.');
+        $errors['_qf_default'] = ts('Could not find an email address.');
         return $errors;
       }
 
@@ -340,14 +340,11 @@ class CRM_Core_BAO_CMSUser {
   }
 
   /**
-   * Function to check if a cms user already exists.
+   * Check if a CMS user exists based on contact details (primarily email).
    *
-   * @param  Array $contact array of contact-details
+   * @param array &$contact associative array of contact details
    *
-   * @return uid if user exists, false otherwise
-   *
-   * @access public
-   * @static
+   * @return int|bool the CMS user ID if found, otherwise FALSE
    */
   public static function userExists(&$contact) {
     $config = CRM_Core_Config::singleton();
@@ -395,6 +392,13 @@ class CRM_Core_BAO_CMSUser {
     return $result;
   }
 
+  /**
+   * Get a database handle for the CMS database.
+   *
+   * @param CRM_Core_Config &$config the config singleton
+   *
+   * @return object|CRM_Core_Error the database handle object
+   */
   public static function &dbHandle(&$config) {
     CRM_Core_Error::ignoreException();
     $db_uf = DB::connect($config->userFrameworkDSN);

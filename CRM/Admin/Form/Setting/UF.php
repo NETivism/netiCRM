@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,10 +38,9 @@
 class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
@@ -72,12 +69,9 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array<string, mixed>
    */
   public function setDefaultValues() {
     $defaults = [];

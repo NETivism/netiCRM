@@ -26,9 +26,7 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
@@ -95,19 +93,17 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
    */
   public $pattern;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_mailing_bounce_pattern
-  */
+   * Class constructor.
+   *
+   * @return CRM_Mailing_DAO_BouncePattern
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * return foreign links
+   * Return foreign links.
    *
-   * @access public
-   * @return array
+   * @return array Array of foreign links.
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -131,11 +127,10 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * Returns all the column names of this table.
+   *
+   * @return array Array of column names.
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -162,10 +157,9 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
     return self::$_fields;
   }
   /**
-   * returns the names of this table
+   * Returns the name of this table.
    *
-   * @access public
-   * @return string
+   * @return string The table name.
    */
   public static function getTableName() {
     return self::$_tableName;
@@ -180,10 +174,11 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
     return self::$_log;
   }
   /**
-   * returns the list of fields that can be imported
+   * Returns the list of fields that can be imported.
    *
-   * @access public
-   * return array
+   * @param bool $prefix Whether to prefix the field names.
+   *
+   * @return array Array of importable fields.
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
@@ -203,10 +198,11 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * returns the list of fields that can be exported
+   * Returns the list of fields that can be exported.
    *
-   * @access public
-   * return array
+   * @param bool $prefix Whether to prefix the field names.
+   *
+   * @return array Array of exportable fields.
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {

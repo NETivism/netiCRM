@@ -27,10 +27,9 @@
 */
 
 /**
+ * Provides query-building and search functionality for Activity data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Activity_BAO_Query {
@@ -39,8 +38,9 @@ class CRM_Activity_BAO_Query {
   /**
    * build select for Case
    *
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
-   * @access public
    */
   public static function select(&$query) {
     if (CRM_Utils_Array::value('activity_id', $query->_returnProperties)) {
@@ -132,8 +132,9 @@ class CRM_Activity_BAO_Query {
    * Given a list of conditions in query generate the required
    * where clause
    *
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
-   * @access public
    */
   public static function where(&$query) {
     $isTest = FALSE;
@@ -162,8 +163,10 @@ class CRM_Activity_BAO_Query {
   /**
    * where clause for a single field
    *
+   * @param array $values
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
-   * @access public
    */
   public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
@@ -322,6 +325,15 @@ class CRM_Activity_BAO_Query {
     }
   }
 
+  /**
+   * Build from clause
+   *
+   * @param string $name
+   * @param int $mode
+   * @param string $side
+   *
+   * @return string
+   */
   public static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
@@ -372,7 +384,6 @@ class CRM_Activity_BAO_Query {
    * getter for the qill object
    *
    * @return string
-   * @access public
    */
   public function qill() {
     return (isset($this->_qill)) ? $this->_qill : "";
@@ -381,10 +392,9 @@ class CRM_Activity_BAO_Query {
   /**
    * add all the elements shared between case activity search  and advanaced search
    *
-   * @access public
+   * @param CRM_Core_Form $form
    *
    * @return void
-   * @static
    */
   public static function buildSearchForm(&$form) {
     $form->addElement('text', 'activity_contact_name', ts('Contact Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
@@ -431,11 +441,25 @@ class CRM_Activity_BAO_Query {
     }
   }
 
+  /**
+   * Add show/hide blocks
+   *
+   * @param CRM_Core_ShowHideBlocks $showHide
+   *
+   * @return void
+   */
   public static function addShowHide(&$showHide) {
     $showHide->addHide('caseActivityForm');
     $showHide->addShow('caseActivityForm_show');
   }
 
+  /**
+   * Get default return properties
+   *
+   * @param int $mode
+   *
+   * @return array|null
+   */
   public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {

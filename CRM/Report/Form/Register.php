@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,6 +41,12 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
   public $_id;
   protected $_values = NULL;
 
+  /**
+   * Retrieves the action mode and record ID from the URL, and looks up the
+   * report_template option group ID for use during form building.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
     $this->_id = CRM_Utils_Request::retrieve('id', 'String', $this, FALSE);
@@ -64,6 +68,13 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     $instanceInfo = [];
   }
 
+  /**
+   * Returns default values for the register form.
+   * For delete action, returns an empty array. For update, loads the existing option value.
+   * For create, calculates the default weight.
+   *
+   * @return array Default form values.
+   */
   public function setDefaultValues() {
     $defaults = [];
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -83,6 +94,13 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     return $defaults;
   }
 
+  /**
+   * Builds the report template registration form with fields for label, URL, class,
+   * weight, description, enabled status, and component. For delete action, shows only
+   * a confirmation button.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->addButtons(
@@ -135,6 +153,15 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     $this->addFormRule(['CRM_Report_Form_Register', 'formRule'], $this);
   }
 
+  /**
+   * Validates that the report URL value and class name are unique in the database.
+   *
+   * @param array $fields Submitted form values (expects 'value' and 'name').
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Register $self The form instance, used to check existing record ID.
+   *
+   * @return array<string, mixed> Associative array of field => error message; empty if valid.
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     $dupeClass = FALSE;
@@ -165,11 +192,11 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes form submission. For delete action, removes the option value record.
+   * For create/update, saves the submitted values as an option value in the
+   * 'report_template' option group and redirects to the template list.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {

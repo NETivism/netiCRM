@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -48,12 +46,10 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
   public $params_duration;
   public $params_last_duration;
   /**
-   * Heart of the viewing process. The runner gets all the meta data for
-   * the contact and calls the appropriate type of page to view.
+   * Pre-process the page
    *
    * @return void
    * @access public
-   *
    */
   public function preProcess() {
     $title = ts('CiviContribute Dashboard');
@@ -87,6 +83,14 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 
+  /**
+   * Get date range from request or defaults
+   *
+   * @param string|null $start_date
+   * @param string|null $end_date
+   *
+   * @return void|CRM_Core_Error
+   */
   public function getDate($start_date = NULL, $end_date = NULL) {
     if (!empty($_GET['end_date']) || !empty($_GET['start_date'])) {
       $this->is_custom_date = TRUE;
@@ -137,6 +141,11 @@ class CRM_Contribute_Page_DashBoard extends CRM_Core_Page {
 
   }
 
+  /**
+   * Process dashboard data
+   *
+   * @return void
+   */
   public function processDashBoard() {
     if ($_GET['debug']) {
       $this->assign('debug', 1);
@@ -470,6 +479,15 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
 
   }
 
+  /**
+   * Get last duration time range
+   *
+   * @param string $start_date
+   * @param string $end_date
+   *
+   * @return array
+   * @static
+   */
   public static function getLastDurationTime($start_date, $end_date) {
     $last_end_date = date('Y-m-d', strtotime($start_date) - 86400);
     $duration_stamp = strtotime($end_date) - strtotime($start_date);
@@ -477,6 +495,16 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
     return [$last_start_date, $last_end_date];
   }
 
+  /**
+   * Get contribution page statistics
+   *
+   * @param int $pid
+   * @param string|null $start_date
+   * @param string|null $end_date
+   *
+   * @return array<string, mixed[]>
+   * @static
+   */
   public static function getContributionPageStatistics($pid, $start_date = NULL, $end_date = NULL) {
     $pid = (int)$pid;
     $page = $track = $achievement = $duration = [];
@@ -554,6 +582,16 @@ SELECT COUNT(fst_donor.id) as ct, SUM(fst_donor.amount) as sum FROM
     return $return;
   }
 
+  /**
+   * Get data for chart from summary array
+   *
+   * @param array $label_array
+   * @param array $summary_array
+   * @param string $type
+   *
+   * @return array
+   * @static
+   */
   private static function getDataForChart($label_array, $summary_array, $type = 'sum') {
     $return_array = [];
     if (!is_array($summary_array['label'])) {

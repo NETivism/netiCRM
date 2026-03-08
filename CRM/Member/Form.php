@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -54,6 +52,11 @@ class CRM_Member_Form extends CRM_Core_Form {
    */
   protected $_BAOName;
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
@@ -66,12 +69,11 @@ class CRM_Member_Form extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     if (!empty($this->_defaults)) {
@@ -107,10 +109,9 @@ class CRM_Member_Form extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::RENEW) {

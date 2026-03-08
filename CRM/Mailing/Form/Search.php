@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -75,6 +73,9 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
       ]);
   }
 
+  /**
+   * @return array<string, non-empty-array<string, int>>
+   */
   public function setDefaultValues() {
     $defaults = [];
     foreach ([

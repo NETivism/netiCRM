@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
@@ -15,19 +19,25 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
+  /**
+   * Class constructor.
+   *
+   * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   */
   public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_Backer
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -38,10 +48,9 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
     $error = [];
@@ -58,6 +67,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Get the administrative fields for this payment processor.
+   *
+   * @param object $ppDAO payment processor DAO
+   * @param CRM_Core_Form $form the settings form
+   *
+   * @return array array of administrative fields
+   */
   public static function getAdminFields($ppDAO, $form) {
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
     foreach ($pages as $id => $page) {
@@ -110,6 +127,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
+  /**
+   * Check the signature of a request for security.
+   *
+   * @param string $string the payload to check
+   * @param string|null $signature the signature to verify against
+   *
+   * @return bool TRUE if signature is valid
+   */
   public function checkSignature($string, $signature = NULL) {
     if (empty($signature)) {
       $headers = CRM_Utils_System::getAllHeaders();
@@ -133,6 +158,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return FALSE;
   }
 
+  /**
+   * Process a contribution from a JSON payload.
+   *
+   * @param string $jsonString the JSON payload from Backer
+   * @param array &$contributionResult array to store processing results
+   *
+   * @return int|void|string contribution ID if successful, or error status
+   */
   public function processContribution($jsonString, &$contributionResult) {
     $params = self::formatParams($jsonString);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
@@ -481,6 +514,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Process an IPN request for a contribution.
+   *
+   * @param array $ids extracted IDs
+   * @param array $contrib contribution data
+   *
+   * @return void
+   */
   public function processIPN($ids, $contrib) {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
@@ -520,10 +561,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Format params from backer
+   * Format parameters received from Backer.
    *
-   * @param string $string
-   * @return array
+   * @param string $string JSON string from Backer
+   *
+   * @return array formatted parameters
    */
   public static function formatParams($string) {
     $params = [];
@@ -547,6 +589,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return $params;
   }
 
+  /**
+   * Format contact information from Backer JSON data.
+   *
+   * @param array $json the parsed JSON data
+   * @param array &$params array to store formatted contact data
+   *
+   * @return void
+   */
   public static function formatContact($json, &$params) {
     $name = self::explodeName($json['user']['name']);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
@@ -651,6 +701,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $params['additional']['address'][0] = $address;
   }
 
+  /**
+   * Format recurring contribution information from Backer JSON data.
+   *
+   * @param array $json the parsed JSON data
+   * @param array &$params array to store formatted recurring data
+   *
+   * @return void
+   */
   public static function formatRecurring($json, &$params) {
     $statusMap = [
       // recurring contribution status
@@ -695,6 +753,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $params['recurring'] = $recurring;
   }
 
+  /**
+   * Format contribution information from Backer JSON data.
+   *
+   * @param array $json the parsed JSON data
+   * @param array &$params array to store formatted contribution data
+   *
+   * @return void
+   */
   public static function formatContribution($json, &$params) {
     $config = CRM_Core_Config::singleton();
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
@@ -901,10 +967,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Explode name string to sure name - given name
+   * Explode a full name string into surname and given name.
    *
-   * @param string $str
-   * @return array|false
+   * @param string $str full name string
+   *
+   * @return array|false [surname, given_name] or FALSE on failure
    */
   public static function explodeName($str) {
     $str = trim($str);
@@ -946,7 +1013,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Validating mobile number.
+   * Validate and format a mobile phone number for Taiwan.
+   *
+   * @param string $str phone number string
+   *
+   * @return string|false formatted phone number or FALSE if invalid
    */
   public static function validateMobilePhone($str) {
     $str = trim($str);
@@ -977,8 +1048,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Attempts to backfill the missing contribution_recur_id on a contribution
-   * by matching the beginning of the invoice_id with the given trxn_id.
+   * Backfill missing contribution_recur_id on contributions based on trxn_id.
+   *
+   * @param string $trxn_id the transaction ID to match
+   *
+   * @return void
    */
   public static function updateContributionRecurId($trxn_id) {
     $sql = "

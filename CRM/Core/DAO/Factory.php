@@ -1,4 +1,10 @@
 <?php
+/**
+ * Factory class for creating Core DAO instances such as Domain, Country, and StateProvince
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
 
 class CRM_Core_DAO_Factory {
 

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,12 +37,12 @@
 class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_ContributionPage {
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing thank-you title, text, and receipt settings for the
+   * current contribution page from the database.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
   public function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
@@ -53,10 +51,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Adds fields for thank-you title/text/footer, email receipt settings,
+   * from name/email selection, CC/BCC receipt lists, and SMS notification settings.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->registerRule('emailList', 'callback', 'emailList', 'CRM_Utils_Rule');
@@ -152,15 +152,16 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * Validates from email address and ensures it's not from restricted providers
+   * if email receipting is enabled.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param array $options additional user data/context
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
    */
   public static function formRule($fields, $files, $options) {
     $errors = [];
@@ -185,10 +186,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Saves or updates the thank-you and receipt configuration for the
+   * current contribution page.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -213,10 +216,9 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Thanks and Receipt');
