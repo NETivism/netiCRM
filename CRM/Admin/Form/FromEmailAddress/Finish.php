@@ -16,7 +16,7 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('action', CRM_Core_Action::UPDATE);
     parent::preProcess();
   }
@@ -25,7 +25,7 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
    * This function sets the default values for the form. MobileProvider that in edit/view mode
    * the default values are retrieved from the database
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['is_active'] = $this->_values['is_active'];
     $defaults['is_default'] = $this->_values['is_default'];
@@ -43,7 +43,8 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
       $eleDefault->freeze();
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'back',
           'name' => ts('<< Previous'),

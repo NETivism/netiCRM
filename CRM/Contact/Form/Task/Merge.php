@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to Merge Contacts.
  *
@@ -47,7 +45,7 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $statusMsg = NULL;
     $contactIds = [];
@@ -75,15 +73,16 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       $contact = CRM_Core_DAO::executeQuery($sql);
       while ($contact->fetch()) {
         $contactTypes[$contact->contact_type] = TRUE;
-        if (count($contactTypes) > 1)
-        break;
+        if (count($contactTypes) > 1) {
+          break;
+        }
       }
       if (count($contactTypes) > 1) {
         $statusMsg = ts('Please select same contact type records.');
       }
     }
     if ($statusMsg) {
-       return CRM_Core_Error::statusBounce($statusMsg);
+      return CRM_Core_Error::statusBounce($statusMsg);
     }
 
     $url = NULL;
@@ -105,20 +104,20 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       $level = 'Fuzzy';
       $cType = key($contactTypes);
 
-
       $rgBao = new CRM_Dedupe_DAO_RuleGroup();
       $rgBao->level = $level;
       $rgBao->is_default = 1;
       $rgBao->contact_type = $cType;
       if (!$rgBao->find(TRUE)) {
-         return CRM_Core_Error::statusBounce("You can not merge contact records because $level rule for $cType does not exist.");
+        return CRM_Core_Error::statusBounce("You can not merge contact records because $level rule for $cType does not exist.");
       }
       $ruleGroupID = $rgBao->id;
       $session = CRM_Core_Session::singleton();
       $session->set('selectedSearchContactIds', $contactIds);
 
       // create a hidden group and poceed to merge
-      $url = CRM_Utils_System::url('civicrm/contact/dedupefind',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/dedupefind',
         "reset=1&action=update&rgid={$ruleGroupID}&context=search"
       );
     }
@@ -129,4 +128,3 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
     }
   }
 }
-

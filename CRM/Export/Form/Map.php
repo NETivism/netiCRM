@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -87,19 +84,20 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       $this->_mappingObject = $this->get('mappingObject');
     }
 
-    if (! $this->_exportColumnCount ) {
-      if( $this->_mappingId ){
+    if (!$this->_exportColumnCount) {
+      if ($this->_mappingId) {
         $mapping = CRM_Core_BAO_Mapping::getMappingFields($this->_mappingId);
         $mappingFields = $mapping[0][1];
         $this->_exportColumnCount = count($mappingFields) + 5;
       }
-      elseif (!empty($this->_mappingObject)){
+      elseif (!empty($this->_mappingObject)) {
         $this->_exportColumnCount = count($this->_mappingObject['mappingName'][1]) + 5;
       }
       else {
         $this->_exportColumnCount = 10;
       }
-    } else {
+    }
+    else {
       $this->_exportColumnCount = $this->_exportColumnCount + 10;
     }
   }
@@ -113,7 +111,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
     CRM_Core_BAO_Mapping::buildMappingForm($this, 'Export', $this->_mappingId, $this->_exportColumnCount, $blockCnt = 2, $this->get('exportMode'));
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -137,7 +136,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $values, $mappingTypeId) {
+  public static function formRule($fields, $values, $mappingTypeId) {
     $errors = [];
 
     if (CRM_Utils_Array::value('saveMapping', $fields)) {
@@ -200,7 +199,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
 
     $mapperKeysOrigin = $params['mapper'][1];
     $mapperWeight = $params['weight'][1];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
 
@@ -258,17 +257,19 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
         }
       }
       if ($isSelectorEmpty) {
-        CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+        CRM_Export_BAO_Export::exportCustom(
+          $this->get('customSearchClass'),
           $this->get('formValues'),
-          $this->get(CRM_Utils_Sort::SORT_ORDER), 
-          $primaryIDName, 
+          $this->get(CRM_Utils_Sort::SORT_ORDER),
+          $primaryIDName,
           TRUE,
           TRUE,
           $this->get('exportMode')
         );
       }
     }
-    CRM_Export_BAO_Export::exportComponents($this->get('selectAll'),
+    CRM_Export_BAO_Export::exportComponents(
+      $this->get('selectAll'),
       $this->get('componentIds'),
       $this->get('queryParams'),
       $this->get(CRM_Utils_Sort::SORT_ORDER),
@@ -300,20 +301,20 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * @param  $params  The parameters in postProcess();
    * @return none
    */
-  private function updateAndSaveMapping($params){
-    if ( CRM_Utils_Array::value('updateMapping', $params)) {
+  private function updateAndSaveMapping($params) {
+    if (CRM_Utils_Array::value('updateMapping', $params)) {
       //save mapping fields
-      CRM_Core_BAO_Mapping::saveMappingFields($params, $params['mappingId'] );
+      CRM_Core_BAO_Mapping::saveMappingFields($params, $params['mappingId']);
     }
 
-    if ( CRM_Utils_Array::value('saveMapping', $params) ) {
+    if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = [
         'name'      => $params['saveMappingName'],
         'description'   => $params['saveMappingDesc'],
-        'mapping_type_id' => $this->get( 'mappingTypeId'),
+        'mapping_type_id' => $this->get('mappingTypeId'),
       ];
 
-      $saveMapping = CRM_Core_BAO_Mapping::add( $mappingParams );
+      $saveMapping = CRM_Core_BAO_Mapping::add($mappingParams);
       $this->set('mappingId', $saveMapping->id);
 
       //save mapping fields
@@ -321,6 +322,4 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
   }
 
-
 }
-

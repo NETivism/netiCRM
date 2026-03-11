@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Custom Sets.
  *
@@ -60,7 +58,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return  array   array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       self::$_actionLinks = [
@@ -118,19 +116,27 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     if ($action & CRM_Core_Action::DELETE) {
       $session = &CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/', 'action=browse'));
       $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_DeleteGroup', "Delete Cutom Set", NULL);
-      $id = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, FALSE, 0
+      $id = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        FALSE,
+        0
       );
       $controller->set('id', $id);
       $controller->setEmbedded(TRUE);
@@ -139,8 +145,12 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     }
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -151,7 +161,6 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
       $this->preview($id);
     }
     else {
-
 
       // finally browse the custom groups
       $this->browse();
@@ -169,7 +178,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function edit($id, $action) {
+  public function edit($id, $action) {
     // create a simple controller for editing custom data
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Group', ts('Custom Set'), $action);
 
@@ -190,7 +199,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function preview($id) {
+  public function preview($id) {
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Preview', ts('Preview Custom Data'), NULL);
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group', 'action=browse'));
@@ -208,7 +217,7 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse($action = NULL) {
+  public function browse($action = NULL) {
     // get all custom groups sorted by weight
     $customGroup = [];
     $dao = new CRM_Core_DAO_CustomGroup();
@@ -230,7 +239,9 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
         $action -= CRM_Core_Action::DISABLE;
       }
       $customGroup[$dao->id]['order'] = $customGroup[$dao->id]['weight'];
-      $customGroup[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $customGroup[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         ['id' => $dao->id]
       );
     }
@@ -244,24 +255,19 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     //fix for Displaying subTypes
     $subTypes = [];
 
-
-
-
-
     $subTypes['Activity'] = CRM_Core_PseudoConstant::activityType(FALSE, TRUE);
     $subTypes['Contribution'] = CRM_Contribute_PseudoConstant::contributionType();
     $subTypes['ContributionPage'] = CRM_Contribute_PseudoConstant::contributionType();
     $subTypes['Membership'] = CRM_Member_BAO_MembershipType::getMembershipTypes(FALSE);
     $subTypes['Event'] = CRM_Core_OptionGroup::values('event_type');
     $subTypes['Participant'] = [];
-    $subTypes['ParticipantRole'] = CRM_Core_OptionGroup::values('participant_role');;
+    $subTypes['ParticipantRole'] = CRM_Core_OptionGroup::values('participant_role');
+    ;
     $subTypes['ParticipantEventName'] = CRM_Event_PseudoConstant::event();
     $subTypes['ParticipantEventType'] = CRM_Core_OptionGroup::values('event_type');
     $subTypes['Individual'] = CRM_Contact_BAO_ContactType::subTypePairs('Individual', FALSE, NULL);
     $subTypes['Household'] = CRM_Contact_BAO_ContactType::subTypePairs('Household', FALSE, NULL);
     $subTypes['Organization'] = CRM_Contact_BAO_ContactType::subTypePairs('Organization', FALSE, NULL);
-
-
 
     $relTypeInd = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Individual');
     $relTypeOrg = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, 'Organization');
@@ -274,14 +280,20 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
     //adding subtype specific relationships CRM-5256
     $relSubType = CRM_Contact_BAO_ContactType::subTypeInfo();
     foreach ($relSubType as $subType => $val) {
-      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, $val['parent'],
-        FALSE, 'label', TRUE, $subType
+      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(
+        NULL,
+        NULL,
+        NULL,
+        $val['parent'],
+        FALSE,
+        'label',
+        TRUE,
+        $subType
       );
       $allRelationshipType = array_merge($allRelationshipType, $subTypeRelationshipTypes);
     }
 
     $subTypes['Relationship'] = $allRelationshipType;
-
 
     $cSubTypes = CRM_Core_Component::contactSubTypes();
     $contactSubTypes = [];
@@ -332,11 +344,13 @@ class CRM_Custom_Page_Group extends CRM_Core_Page {
 
     $returnURL = CRM_Utils_System::url('civicrm/admin/custom/group', "reset=1&action=browse");
 
-    CRM_Utils_Weight::addOrder($customGroup, 'CRM_Core_DAO_CustomGroup',
-      'id', $returnURL
+    CRM_Utils_Weight::addOrder(
+      $customGroup,
+      'CRM_Core_DAO_CustomGroup',
+      'id',
+      $returnURL
     );
 
     $this->assign('rows', $customGroup);
   }
 }
-

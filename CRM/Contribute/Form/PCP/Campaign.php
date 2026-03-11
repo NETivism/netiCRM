@@ -80,8 +80,12 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       if ($this->_key) {
         $queryParams['key'] = $this->_key;
       }
-      $pcpPagePreviewUrl = CRM_Utils_System::url("civicrm/contribute/pcp/info", http_build_query($queryParams, '', '&'),
-        TRUE, NULL, FALSE,
+      $pcpPagePreviewUrl = CRM_Utils_System::url(
+        "civicrm/contribute/pcp/info",
+        http_build_query($queryParams, '', '&'),
+        TRUE,
+        NULL,
+        FALSE,
         TRUE
       );
       $this->assign('pcp_page_preview_url', $pcpPagePreviewUrl);
@@ -92,7 +96,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     parent::preProcess();
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $dafaults = [];
     $dao = new CRM_Contribute_DAO_PCP();
 
@@ -194,7 +198,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $isActive->freeze();
     }
     if (!in_array($statusId, [$statusDraftId]) && !$isManager) {
-      foreach($readOnly as &$element) {
+      foreach ($readOnly as &$element) {
         $element->freeze();
       }
     }
@@ -233,7 +237,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($fields['goal_amount'] <= 0) {
       $errors['goal_amount'] = ts('Goal Amount should be a numeric value greater than zero.');
@@ -275,8 +279,11 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     $params['goal_amount'] = CRM_Utils_Rule::cleanMoney($params['goal_amount']);
 
-    $approval_needed = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCPBlock',
-      $params['contribution_page_id'], 'is_approval_needed', 'entity_id'
+    $approval_needed = CRM_Core_DAO::getFieldValue(
+      'CRM_Contribute_DAO_PCPBlock',
+      $params['contribution_page_id'],
+      'is_approval_needed',
+      'entity_id'
     );
     $approvalMessage = NULL;
     $statusDraftId = CRM_Core_OptionGroup::getValue('pcp_status', 'Draft', 'name');
@@ -355,27 +362,36 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
       $this->assign('pcpId', $pcp->id);
 
-      $supporterUrl = CRM_Utils_System::url("civicrm/contact/view",
+      $supporterUrl = CRM_Utils_System::url(
+        "civicrm/contact/view",
         "reset=1&cid={$pcp->contact_id}",
-        TRUE, NULL, FALSE,
+        TRUE,
+        NULL,
+        FALSE,
         FALSE
       );
       $this->assign('supporterUrl', $supporterUrl);
       $supporterName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $pcp->contact_id, 'display_name');
       $this->assign('supporterName', $supporterName);
 
-      $contribPageUrl = CRM_Utils_System::url("civicrm/contribute/transact",
+      $contribPageUrl = CRM_Utils_System::url(
+        "civicrm/contribute/transact",
         "reset=1&id={$pcp->contribution_page_id}",
-        TRUE, NULL, FALSE,
+        TRUE,
+        NULL,
+        FALSE,
         TRUE
       );
       $this->assign('contribPageUrl', $contribPageUrl);
       $contribPageTitle = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $pcp->contribution_page_id, 'title');
       $this->assign('contribPageTitle', $contribPageTitle);
 
-      $managePCPUrl = CRM_Utils_System::url("civicrm/admin/pcp",
+      $managePCPUrl = CRM_Utils_System::url(
+        "civicrm/admin/pcp",
         "reset=1&contribution_page_id={$pcp->contribution_page_id}",
-        TRUE, NULL, FALSE,
+        TRUE,
+        NULL,
+        FALSE,
         FALSE
       );
       $this->assign('managePCPUrl', $managePCPUrl);
@@ -409,7 +425,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
         }
       }
     }
-
 
     // send welcome mail to Draft user or Waiting for review user
     if (!$this->_pageId) {
@@ -474,4 +489,3 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     }
   }
 }
-

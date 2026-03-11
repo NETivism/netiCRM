@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Price Sets.
  *
@@ -60,7 +58,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * @return  array   array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting
@@ -129,17 +127,25 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $sid = CRM_Utils_Request::retrieve('sid', 'Positive',
-      $this, FALSE, 0
+    $sid = CRM_Utils_Request::retrieve(
+      'sid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     if ($sid) {
@@ -159,8 +165,6 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       $this->copy();
     }
     else {
-
-
 
       // if action is delete do the needful.
       if ($action & (CRM_Core_Action::DELETE)) {
@@ -212,7 +216,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function edit($sid, $action) {
+  public function edit($sid, $action) {
     // create a simple controller for editing price sets
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Set', ts('Price Set'), $action);
 
@@ -233,7 +237,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function preview($sid) {
+  public function preview($sid) {
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Preview', ts('Preview Price Set'), NULL);
     $session = CRM_Core_Session::singleton();
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -257,7 +261,7 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse($action = NULL) {
+  public function browse($action = NULL) {
     // get all price sets
     $priceSet = [];
 
@@ -279,11 +283,14 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       $priceSet[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $priceSet[$dao->id]);
 
-      $compIds = explode(CRM_Core_DAO::VALUE_SEPARATOR,
+      $compIds = explode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         CRM_Utils_Array::value('extends', $priceSet[$dao->id])
       );
       $extends = [];
-      foreach ($compIds as $compId) $extends[] = $comps[CRM_Core_Component::getComponentName($compId)];
+      foreach ($compIds as $compId) {
+        $extends[] = $comps[CRM_Core_Component::getComponentName($compId)];
+      }
       $priceSet[$dao->id]['extends'] = CRM_Utils_Array::implode(', ', $extends);
 
       // form all action links
@@ -297,7 +304,9 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
         $action -= CRM_Core_Action::DISABLE;
       }
 
-      $priceSet[$dao->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $priceSet[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         [
           'sid' => $dao->id,
           'key' => $key
@@ -314,9 +323,14 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+  public function copy() {
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -324,14 +338,17 @@ class CRM_Price_Page_Set extends CRM_Core_Page {
       return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the price field list and try again.'));
     }
 
-    $id = CRM_Utils_Request::retrieve('sid', 'Positive',
-      $this, TRUE, 0, 'GET'
+    $id = CRM_Utils_Request::retrieve(
+      'sid',
+      'Positive',
+      $this,
+      TRUE,
+      0,
+      'GET'
     );
-
 
     CRM_Price_BAO_Set::copy($id);
 
     CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
   }
 }
-

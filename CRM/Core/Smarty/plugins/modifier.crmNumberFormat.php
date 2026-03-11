@@ -66,4 +66,3 @@ function smarty_modifier_crmNumberFormat($number, $decimals = NULL, $dec_point =
     return '';
   }
 }
-

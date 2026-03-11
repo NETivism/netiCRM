@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * customize the output to meet our specific requirements
  */
@@ -74,7 +72,8 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
     $this->add('text', 'context', ts('Context:'), NULL, TRUE);
     $this->add('text', 'name', ts('Name:'), NULL, TRUE);
     $this->add('textarea', 'data', ts('Data:'), ['rows' => 4, 'cols' => 50], TRUE);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -106,4 +105,3 @@ class CRM_Admin_Form_Persistent extends CRM_Core_Form {
     CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/tplstrings', "reset=1"));
   }
 }
-

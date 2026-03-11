@@ -9,7 +9,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
   public $_entityId;
 
   public $_entityTable;
-  
+
   public $_action;
 
   public $_mode;
@@ -28,7 +28,6 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
   protected $_params;
 
-
   /**
    * Function to set variables up before form is built
    *
@@ -38,7 +37,7 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
   public function preProcess() {
     $this->_values = $this->get('values');
     $this->_params = $this->get('params');
-    if(!$this->_pass){
+    if (!$this->_pass) {
       $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
       $this->_mode = ($this->_action & CRM_Core_Action::PREVIEW) ? 'test' : 'live';
       $pass = TRUE;
@@ -51,20 +50,20 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
       // permission check
       $contribution_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
       $this->_id = $contribution_id;
-      if(empty($current_contact_id) || empty($ufid)){
+      if (empty($current_contact_id) || empty($ufid)) {
         $pass = FALSE;
       }
-      else{
+      else {
         $details = CRM_Contribute_BAO_Contribution::getComponentDetails([$contribution_id]);
         $ids = reset($details);
-        if(!empty($ids['contact_id'])){
-          if($ids['contact_id'] != $current_contact_id){
-            if(!CRM_Core_Permission::check('access CiviContribute')){
+        if (!empty($ids['contact_id'])) {
+          if ($ids['contact_id'] != $current_contact_id) {
+            if (!CRM_Core_Permission::check('access CiviContribute')) {
               $pass = FALSE;
             }
           }
         }
-        if(!empty($ids)){
+        if (!empty($ids)) {
           $this->_component = $ids['component'];
           $this->_ids = $ids;
           $this->_ids['ufid'] = $ufid;
@@ -75,25 +74,25 @@ class CRM_Contribute_Form_Payment extends CRM_Core_Form {
 
       // check status and end date
       $state = $this->controller->_actionName[0];
-      if(!empty($this->_ids) && $state != 'ThankYou'){
+      if (!empty($this->_ids) && $state != 'ThankYou') {
         $available = CRM_Contribute_BAO_Contribution::checkPaymentAvailable($this->_id, $this->_ids, $this);
-        if($available === FALSE){
-           return CRM_Core_Error::statusBounce(ts('This payment cannot be made at the moment. If you have any questions, please contact the site administrator.'));
+        if ($available === FALSE) {
+          return CRM_Core_Error::statusBounce(ts('This payment cannot be made at the moment. If you have any questions, please contact the site administrator.'));
         }
-        else{
+        else {
           $this->_paymentProcessors = $this->get('paymentProcessors');
           $this->_paymentProcessor = $this->get('paymentProcessor');
-          if(!count($this->_paymentProcessors)){
-             return CRM_Core_Error::statusBounce(ts("We don't have available method for this payment."));
+          if (!count($this->_paymentProcessors)) {
+            return CRM_Core_Error::statusBounce(ts("We don't have available method for this payment."));
           }
         }
       }
-      else{
+      else {
         $pass = FALSE;
       }
 
       // set entity id and entity table
-      switch($this->_component){
+      switch ($this->_component) {
         case 'event':
           $this->_entityId = $ids['event'];
           $this->_entityTable = 'civicrm_event';

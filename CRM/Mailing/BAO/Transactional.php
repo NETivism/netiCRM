@@ -11,7 +11,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   /**
    * Activity Names that can invoke transactional email
    */
-  const ALLOWED_ACTIVITY_TYPES = 'Email,Email Receipt,Contribution Notification Email,Event Notification Email,Membership Notification Email,PCP Notification Email,Mailing Notification Email';
+  public const ALLOWED_ACTIVITY_TYPES = 'Email,Email Receipt,Contribution Notification Email,Event Notification Email,Membership Notification Email,PCP Notification Email,Mailing Notification Email';
 
   /**
    * job object of this mailing
@@ -81,7 +81,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       'subject' => 'string',
       'html' => 'string',
     ];
-    foreach($required as $field => $type) {
+    foreach ($required as $field => $type) {
       $rule = ['CRM_Utils_Rule', $type];
       if (empty($params[$field])) {
         CRM_Core_Error::debug_log_message('Transactional Email Error: missing required field '.$field);
@@ -96,12 +96,12 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     // use CRM_Utils_Mail to send cc / bcc
     $additionalRecipients = [];
-    foreach(['cc', 'bcc'] as $ccType) {
+    foreach (['cc', 'bcc'] as $ccType) {
       if (CRM_Utils_Array::value($ccType, $params)) {
         $aRecipients = explode(',', $params[$ccType]);
         unset($params[$ccType]);
         if (!empty($aRecipients)) {
-          foreach($aRecipients as $rec) {
+          foreach ($aRecipients as $rec) {
             $rec = trim($rec);
             if (CRM_Utils_Rule::email($rec)) {
               $additionalRecipients[] = $rec;
@@ -112,7 +112,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
 
     if (empty($params['from'])) {
-      $defaultNameEmail = CRM_Core_BAO_Domain::getNameAndEmail( );
+      $defaultNameEmail = CRM_Core_BAO_Domain::getNameAndEmail();
       $params['from'] = CRM_Utils_Mail::formatRFC822Email($defaultNameEmail[0], $defaultNameEmail[1]);
     }
 
@@ -310,7 +310,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
   public static function additionalRecipients($recipients, $params) {
     unset($params['activityId'], $params['toName'], $params['toMail']);
     $tidyParams = $params;
-    foreach($recipients as $email) {
+    foreach ($recipients as $email) {
       if (CRM_Utils_Rule::email($email)) {
         $sendParams = $tidyParams;
         $sendParams['toEmail'] = $email;
@@ -328,7 +328,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * We summarize here
    *
    */
-  function __construct($params = NULL) {
+  public function __construct($params = NULL) {
     parent::__construct();
     $this->is_hidden = 1;
     $this->name = 'Transactional Email';
@@ -371,10 +371,9 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $this->_job->find(TRUE);
   }
 
-
   /**
    * Compose transactional mailing
-   * 
+   *
    * Because we extends from CRM_Mailing_BAO_Mailing, we reserve these args
    *
    * @param int $job_id
@@ -393,11 +392,20 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
    * @return Mail_Mime
    * @access public
    */
-  public function &compose($job_id, $event_queue_id, $hash, $contactId,
-  $email, &$recipient, $test,
-  $contactDetails, &$attachFiles, $isForward = FALSE,
-  $fromEmail = NULL, $replyToEmail = NULL
-) {
+  public function &compose(
+    $job_id,
+    $event_queue_id,
+    $hash,
+    $contactId,
+    $email,
+    &$recipient,
+    $test,
+    $contactDetails,
+    &$attachFiles,
+    $isForward = FALSE,
+    $fromEmail = NULL,
+    $replyToEmail = NULL
+  ) {
     $config = CRM_Core_Config::singleton();
     if ($this->_domain == NULL) {
       $this->_domain = CRM_Core_BAO_Domain::getDomain();
@@ -413,7 +421,6 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     if ($replyToEmail && ($fromEmail != $replyToEmail) && CRM_Utils_Mail::checkRFC822Email($fromEmail)) {
       $headers['Reply-To'] = "{$replyToEmail}";
     }
-
 
     // refs #32614, disable smarty evaluation functions
 
@@ -479,21 +486,21 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
       // this is where we create a text template from the html template if the text template did not exist
       // this way we ensure that every recipient will receive an email even if the pref is set to text and the
       // user uploads an html email only
-      $text = CRM_Utils_String::htmlToText(join('', $html));
+      $text = CRM_Utils_String::htmlToText(implode('', $html));
     }
 
     // push the tracking url on to the html email if necessary
     if ($this->open_tracking && $html) {
       $trackedOpen = FALSE;
       $openTrack = '<img src="' . $config->userFrameworkResourceURL . "extern/open.php?q=$event_queue_id\" width='1' height='1' alt='' border='0'>\n";
-      foreach($html as $idx => $document) {
+      foreach ($html as $idx => $document) {
         if (stristr($document, '</body>')) {
           $html[$idx] = preg_replace('@</body>@i', $openTrack.'</body>', $document);
           $trackedOpen = TRUE;
           break;
         }
       }
-      if (!$trackedOpen){
+      if (!$trackedOpen) {
         array_push($html, "\n".$openTrack);
       }
     }
@@ -506,12 +513,13 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     if (!empty($this->_additionalHeaders)) {
       $mailParams = array_merge($mailParams, $this->_additionalHeaders);
     }
-    if ($text && ($test || $contact['preferred_mail_format'] == 'Text' ||
+    if ($text && (
+      $test || $contact['preferred_mail_format'] == 'Text' ||
         $contact['preferred_mail_format'] == 'Both' ||
         ($contact['preferred_mail_format'] == 'HTML' && !CRM_Utils_Array::arrayKeyExists('html', $pEmails))
-      )) {
+    )) {
       if (is_array($text)) {
-        $textBody = join('', $text);
+        $textBody = implode('', $text);
       }
       else {
         $textBody = $text;
@@ -520,7 +528,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     }
 
     if ($html && ($test || ($contact['preferred_mail_format'] == 'HTML' || $contact['preferred_mail_format'] == 'Both'))) {
-      $htmlBody = join('', $html);
+      $htmlBody = implode('', $html);
 
       // refs #32614, disable smarty evaluation functions
       // #17688, rwd support for newsletter image
@@ -540,7 +548,7 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
     $mailParams['images'] = $attachFiles['images'];
     $mailingSubject = CRM_Utils_Array::value('subject', $pEmails);
     if (is_array($mailingSubject)) {
-      $mailingSubject = join('', $mailingSubject);
+      $mailingSubject = implode('', $mailingSubject);
     }
     $mailParams['Subject'] = $mailingSubject;
 
@@ -570,7 +578,8 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     if (!empty($mailParams['attachments'])) {
       foreach ($mailParams['attachments'] as $fileID => $attach) {
-        $message->addAttachment($attach['fullPath'],
+        $message->addAttachment(
+          $attach['fullPath'],
           $attach['mime_type'],
           $attach['cleanName']
         );
@@ -618,7 +627,6 @@ class CRM_Mailing_BAO_Transactional extends CRM_Mailing_BAO_Mailing {
 
     return $message;
   }
-
 
   /**
    * Get transactional details for an email

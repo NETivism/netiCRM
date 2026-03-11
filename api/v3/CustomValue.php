@@ -142,7 +142,7 @@ function civicrm_api3_custom_value_get($params) {
     $entityType = substr($getParams['entityType'], 8);
     if (strstr($entityType, '_')) {
       $getParams['entityType'] = '';
-      foreach(explode('_', $entityType) as $word) {
+      foreach (explode('_', $entityType) as $word) {
         $getParams['entityType'] .= ucfirst($word);
       }
     }
@@ -206,7 +206,7 @@ function civicrm_api3_custom_value_get($params) {
         $n = 0;
         $id = $fieldNumber;
       }
-      else{
+      else {
         $n = $idArray[2];
         $id = $fieldNumber . "." . $idArray[2];
       }
@@ -251,4 +251,3 @@ function civicrm_api3_custom_value_get($params) {
     return civicrm_api3_create_success($values, $params);
   }
 }
-

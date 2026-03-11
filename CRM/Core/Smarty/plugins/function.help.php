@@ -67,7 +67,8 @@ function smarty_function_help($params, &$smarty) {
 
   if (isset($params['helpicon'])) {
     $helpclass = $params['helpicon'];
-    $helpselector = '.'.str_replace(' ', '.', $helpclass);;
+    $helpselector = '.'.str_replace(' ', '.', $helpclass);
+    ;
   }
   else {
     $helpclass = 'helpicon';
@@ -90,4 +91,3 @@ function smarty_function_help($params, &$smarty) {
   <div class="{$helpclass}">&nbsp;<span id="{$id}_help" style="display:none">$help</span></div>&nbsp;&nbsp;&nbsp;
   EOT;
 }
-

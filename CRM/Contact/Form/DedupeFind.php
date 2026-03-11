@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for DedupeRules
  *
@@ -55,7 +53,7 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->rgid = CRM_Utils_Request::retrieve('rgid', 'Positive', $this, FALSE, 0);
     if (CRM_Contact_Page_DedupeFind::dedupeRunning()) {
       $this->assign('is_running_process', TRUE);
@@ -75,7 +73,8 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     asort($groupList);
 
     $this->add('select', 'group_id', ts('Select Group'), $groupList);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
@@ -93,7 +92,7 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Contact_Form_DedupeFind', 'formRule'], $this);
   }
 
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     if ($form->rgid) {
       $dedupeGroupParams = ['id' => $form->rgid];
@@ -109,7 +108,7 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 
@@ -137,4 +136,3 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     CRM_Utils_System::redirect($url);
   }
 }
-

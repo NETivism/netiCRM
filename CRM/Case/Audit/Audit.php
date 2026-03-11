@@ -13,8 +13,8 @@ class Audit {
     $retval = [];
 
     /*
-		 * Loop through the activities in the file and add them to the appropriate region array.
-		 */
+         * Loop through the activities in the file and add them to the appropriate region array.
+         */
 
     $doc = new DOMDocument();
 
@@ -125,7 +125,7 @@ class Audit {
           // If there are any fields with ifBlank specified, replace their values.
           // We need to do this as a second pass because if we do it while looping through fields we might not have come across the field we need yet.
           foreach ($regionList as $region) {
-            foreach ($retval[$activityindex][$region] as & $v) {
+            foreach ($retval[$activityindex][$region] as &$v) {
               $vlabel = $v['label'];
               if (trim($v['value']) == '' && !empty($ifBlanks[$region][$vlabel])) {
                 if (!empty($ifBlankReplacements[$ifBlanks[$region][$vlabel]])) {
@@ -140,9 +140,9 @@ class Audit {
         }
         else {
           /* This is a little bit inefficient, but the alternative is to do two passes
-					because we don't know until we've examined all the field values whether the activity
-					is completed, since the field that determines it and its value is configurable,
-					so either way isn't ideal. */
+                    because we don't know until we've examined all the field values whether the activity
+                    is completed, since the field that determines it and its value is configurable,
+                    so either way isn't ideal. */
 
           unset($retval[$activityindex]);
           unset($caseActivities[$activityindex]);
@@ -166,11 +166,11 @@ class Audit {
   }
 
   /* compareActivities
-	 * 
-	 * This is intended to be called as a sort callback function, returning whether an activity's date is earlier or later than another's.
-	 * The type of date to use is specified in the config.
-	 * 
-	 */
+     *
+     * This is intended to be called as a sort callback function, returning whether an activity's date is earlier or later than another's.
+     * The type of date to use is specified in the config.
+     *
+     */
 
   public function compareActivities($a, $b) {
     // This should work
@@ -180,7 +180,7 @@ class Audit {
     }
 
     if ($aval < $bval) {
-      return - 1;
+      return -1;
     }
     elseif ($aval > $bval) {
       return 1;
@@ -190,14 +190,15 @@ class Audit {
     }
   }
 
-  static function run($xmlString, $clientID, $caseID, $printReport = FALSE) {
+  public static function run($xmlString, $clientID, $caseID, $printReport = FALSE) {
     /*
 $fh = fopen('C:/temp/audit2.xml', 'w');
 fwrite($fh, $xmlString);
 fclose($fh);
 */
 
-    $audit = new Audit($xmlString,
+    $audit = new Audit(
+      $xmlString,
       'audit.conf.xml'
     );
     $activities = $audit->getActivities($printReport);
@@ -219,4 +220,3 @@ fclose($fh);
 }
 
 // Audit::run( file_get_contents( 'CaseReport.xml' ) );
-

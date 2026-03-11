@@ -25,8 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 require_once 'api/v2/Pledge.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v2_PledgeTest extends CiviUnitTestCase {
@@ -35,13 +33,14 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
    * Assume empty database with just civicrm_data
    */
   protected $_individualId;
-  protected $_pledge; function setUp() {
+  protected $_pledge;
+  public function setUp() {
     parent::setUp();
 
     $this->_individualId = $this->individualCreate();
   }
 
-  function tearDown() {
+  public function tearDown() {
     // truncate a few tables
     $tablesToTruncate = [
       'civicrm_contact',
@@ -51,15 +50,15 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_pledge_get methods
-  function testGetEmptyParamsPledge() {
+  public function testGetEmptyParamsPledge() {
     // carry over from old contribute - should return empty array - not written for contact
   }
 
-  function testGetParamsNotArrayPledge() {
+  public function testGetParamsNotArrayPledge() {
     //carry over from old contribute - no separate handling for this now
   }
 
-  function testGetPledge() {
+  public function testGetPledge() {
     //need to set scheduled payment in advance we are running test @ midnight & it becomes unexpectedly overdue
     //due to timezone issues
     $dayaftertomorrow = mktime(0, 0, 0, date("m"), date("d") + 2, date("y"));
@@ -97,28 +96,28 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_pledge_add
-  function testCreateEmptyParamsPledge() {
+  public function testCreateEmptyParamsPledge() {
     $params = [];
     $pledge = &civicrm_pledge_add($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'No input parameters present');
   }
 
-  function testCreateParamsNotArrayPledge() {
+  public function testCreateParamsNotArrayPledge() {
     $params = 'contact_id= 1';
     $pledge = &civicrm_pledge_add($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Input parameters is not an array');
   }
 
-  function testCreateParamsWithoutRequiredKeys() {
+  public function testCreateParamsWithoutRequiredKeys() {
     $params = ['no_required' => 1];
     $pledge = &civicrm_pledge_add($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Required fields not found for pledge contact_id');
   }
 
-  function testCreatePledge() {
+  public function testCreatePledge() {
     $dayaftertomorrow = mktime(0, 0, 0, date("m"), date("d") + 2, date("y"));
     $params = [
       'contact_id' => $this->_individualId,
@@ -151,9 +150,8 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $pledge = &civicrm_pledge_delete($pledgeID);
   }
 
-
   //To Update Pledge
-  function testCreateUpdatePledge() {
+  public function testCreateUpdatePledge() {
     // we test 'sequential' param here too
     $pledgeID = $this->pledgeCreate($this->_individualId);
 
@@ -170,7 +168,6 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
     $old_frequency_unit = $original[0]['pledge_frequency_unit'];
     $old_frequency_interval = $original[0]['pledge_frequency_interval'];
     $old_status_id = $original[0]['pledge_status'];
-
 
     //check against values in CiviUnitTestCase::createPledge()
     $this->assertEquals($old_contact_id, $this->_individualId, 'In line ' . __LINE__);
@@ -200,32 +197,31 @@ class api_v2_PledgeTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_pledge_delete methods
-  function testDeleteEmptyParamsPledge() {
+  public function testDeleteEmptyParamsPledge() {
     $params = [];
     $pledge = civicrm_pledge_delete($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Could not find pledge_id in input parameters');
   }
 
-  function testDeleteParamsNotArrayPledge() {
+  public function testDeleteParamsNotArrayPledge() {
     $params = 'pledge_id= 1';
     $pledge = civicrm_pledge_delete($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Could not find pledge_id in input parameters');
   }
 
-  function testDeleteWrongParamPledge() {
+  public function testDeleteWrongParamPledge() {
     $params = ['pledge_source' => 'SSF'];
     $pledge = &civicrm_pledge_delete($params);
     $this->assertEquals($pledge['is_error'], 1);
     $this->assertEquals($pledge['error_message'], 'Could not find pledge_id in input parameters');
   }
 
-  function testDeletePledge() {
+  public function testDeletePledge() {
     $pledgeID = $this->pledgeCreate($this->_individualId);
     $params   = ['pledge_id' => $pledgeID];
     $pledge   = civicrm_pledge_delete($params);
     $this->assertEquals($pledge['is_error'], 0);
   }
 }
-

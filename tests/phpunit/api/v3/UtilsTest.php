@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Core/Permission.php';
 require_once 'CRM/Core/Permission/UnitTests.php';
@@ -63,16 +60,17 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  protected function tearDown() {}
+  protected function tearDown() {
+  }
 
-  function testAddFormattedParam() {
+  public function testAddFormattedParam() {
     $values = ['contact_type' => 'Individual'];
     $params = ['something' => 1];
     $result = _civicrm_api3_deprecated_add_formatted_param($values, $params);
     $this->assertTrue($result);
   }
 
-  function testCheckPermissionReturn() {
+  public function testCheckPermissionReturn() {
     $check = ['check_permissions' => TRUE];
 
     CRM_Core_Permission_UnitTests::$permissions = [];
@@ -89,14 +87,14 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertTrue(_civicrm_api3_api_check_permission('contact', 'create', $check, FALSE), 'overfluous permissions should be enough');
   }
 
-  function testCheckPermissionThrow() {
+  public function testCheckPermissionThrow() {
     $check = ['check_permissions' => TRUE];
 
     try {
       CRM_Core_Permission_UnitTests::$permissions = ['access CiviCRM'];
       _civicrm_api3_api_check_permission('contact', 'create', $check);
     }
-    catch(Exception$e) {
+    catch (Exception$e) {
       $message = $e->getMessage();
     }
     $this->assertEquals($message, 'API permission check failed for contact/create call; missing permission: add contacts.', 'lacking permissions should throw an exception');
@@ -105,7 +103,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertTrue(_civicrm_api3_api_check_permission('contact', 'create', $check), 'overfluous permissions should return true');
   }
 
-  function testCheckPermissionSkip() {
+  public function testCheckPermissionSkip() {
     CRM_Core_Permission_UnitTests::$permissions = ['access CiviCRM'];
     $params = ['check_permissions' => TRUE];
     $this->assertFalse(_civicrm_api3_api_check_permission('contact', 'create', $params, FALSE), 'lacking permissions should not be enough');
@@ -116,7 +114,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
   /*
      * Test verify mandatory - includes DAO & passed as well as empty & NULL fields
      */
-  function testVerifyMandatory() {
+  public function testVerifyMandatory() {
     _civicrm_api3_initialize(TRUE);
     $params = [
       'entity_table' => 'civicrm_contact',
@@ -129,7 +127,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     try {
       $result = civicrm_api3_verify_mandatory($params, 'CRM_Core_BAO_Note', ['note', 'subject']);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->assertEquals('Mandatory key(s) missing from params array: entity_id, note, subject', $expected->getMessage());
       return;
     }
@@ -140,7 +138,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
   /*
      * Test verify one mandatory - includes DAO & passed as well as empty & NULL fields
      */
-  function testVerifyOneMandatory() {
+  public function testVerifyOneMandatory() {
     _civicrm_api3_initialize(TRUE);
     $params = [
       'entity_table' => 'civicrm_contact',
@@ -154,7 +152,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     try {
       $result = civicrm_api3_verify_one_mandatory($params, 'CRM_Core_BAO_Note', ['note', 'subject']);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->assertEquals('Mandatory key(s) missing from params array: entity_id, one of (note, subject)', $expected->getMessage());
       return;
     }
@@ -165,23 +163,22 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
   /*
      * Test verify one mandatory - includes DAO & passed as well as empty & NULL fields
      */
-  function testVerifyOneMandatoryOneSet() {
+  public function testVerifyOneMandatoryOneSet() {
     _civicrm_api3_initialize(TRUE);
     $params = ['entity_table' => 'civicrm_contact', 'note' => 'note', 'contact_id' => $this->_contactID, 'modified_date' => '2011-01-31', 'subject' => NULL, 'version' => $this->_apiversion];
 
     try {
       civicrm_api3_verify_one_mandatory($params, NULL, ['note', 'subject']);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->fail('Exception raised when it shouldn\'t have been  in line ' . __LINE__);
     }
   }
 
-
   /*
-	 * Test GET DAO function returns DAO
-	 */
-  function testGetDAO() {
+     * Test GET DAO function returns DAO
+     */
+  public function testGetDAO() {
     $DAO = _civicrm_api3_get_DAO('civicrm_api3_custom_group_get');
     $this->assertEquals('CRM_Core_DAO_CustomGroup', $DAO);
     $DAO = _civicrm_api3_get_DAO('custom_group');
@@ -200,9 +197,9 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertEquals('CRM_Member_DAO_Membership', $DAO);
   }
   /*
-	 * Test GET DAO function returns DAO
-	 */
-  function testGetBAO() {
+     * Test GET DAO function returns DAO
+     */
+  public function testGetBAO() {
     $BAO = _civicrm_api3_get_BAO('civicrm_api3_website_get');
     $this->assertEquals('CRM_Core_BAO_Website', $BAO);
     $BAO = _civicrm_api3_get_BAO('civicrm_api3_survey_get');
@@ -211,14 +208,14 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertEquals('CRM_Pledge_BAO_PledgePayment', $BAO);
   }
 
-  function test_civicrm_api3_validate_fields() {
+  public function test_civicrm_api3_validate_fields() {
     $params = ['start_date' => '2010-12-20', 'end_date' => ''];
     _civicrm_api3_validate_fields('relationship', 'get', $params);
     $this->assertEquals('20101220000000', $params['start_date']);
     $this->assertEquals('', $params['end_date']);
   }
 
-  function test_civicrm_api3_validate_fields_membership() {
+  public function test_civicrm_api3_validate_fields_membership() {
     $params = ['start_date' => '2010-12-20', 'end_date' => '', 'membership_end_date' => '0', 'join_date' => '2010-12-20', 'membership_start_date' => '2010-12-20'];
     _civicrm_api3_validate_fields('Membership', 'get', $params);
     $this->assertEquals('20101220000000', $params['start_date'], 'in line ' . __LINE__);
@@ -226,7 +223,7 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertEquals('20101220000000', $params['join_date'], 'join_date not set in line ' . __LINE__);
   }
 
-  function test_civicrm_api3_validate_fields_event() {
+  public function test_civicrm_api3_validate_fields_event() {
 
     $params = [
       'registration_start_date' => 20080601,
@@ -239,19 +236,19 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertEquals('20080601000000', $params['registration_start_date']);
   }
 
-  function test_civicrm_api3_validate_fields_exception() {
+  public function test_civicrm_api3_validate_fields_exception() {
     $params = [
       'join_date' => 'abc',
     ];
     try {
       _civicrm_api3_validate_fields('Membership', 'get', $params);
     }
-    catch(Exception$expected) {
+    catch (Exception$expected) {
       $this->assertEquals('join_date is not a valid date: abc', $expected->getMessage());
     }
   }
 
-  function testGetFields() {
+  public function testGetFields() {
     $result = civicrm_api('membership', 'getfields', ['version' => 3]);
     $this->assertArrayHasKey('values', $result);
     $result = civicrm_api('relationship', 'getfields', ['version' => 3]);
@@ -260,4 +257,3 @@ class api_v3_UtilsTest extends CiviUnitTestCase {
     $this->assertArrayHasKey('values', $result);
   }
 }
-

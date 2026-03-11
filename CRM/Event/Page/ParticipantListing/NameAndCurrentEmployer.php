@@ -1,6 +1,5 @@
 <?php
 
-
 class CRM_Event_Page_ParticipantListing_NameAndCurrentEmployer extends CRM_Core_Page {
   protected $_id;
 
@@ -10,7 +9,7 @@ class CRM_Event_Page_ParticipantListing_NameAndCurrentEmployer extends CRM_Core_
 
   protected $_pager;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
 
     // retrieve Event Title and include it in page title
@@ -21,7 +20,7 @@ class CRM_Event_Page_ParticipantListing_NameAndCurrentEmployer extends CRM_Core_
     $this->assign('displayRecent', FALSE);
   }
 
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $fromClause = "
@@ -79,7 +78,7 @@ ORDER BY $orderBy
 LIMIT    $offset, $rowCount";
     $object = CRM_Core_DAO::executeQuery($query, $params);
     $summary_item = [];
-    while($object->fetch()){
+    while ($object->fetch()) {
       $summary_item[] = $roles[$object->role_id] . ": ". $object->role_count;
     }
     $this->assign_by_ref('summary', $summary_item);
@@ -87,8 +86,7 @@ LIMIT    $offset, $rowCount";
     return parent::run();
   }
 
-  function pager($fromClause, $whereClause, $whereParams) {
-
+  public function pager($fromClause, $whereClause, $whereParams) {
 
     $params = [];
 
@@ -112,7 +110,7 @@ SELECT count( civicrm_contact.id )
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  function orderBy() {
+  public function orderBy() {
     static $headers = NULL;
 
     if (!$headers) {
@@ -147,5 +145,3 @@ SELECT count( civicrm_contact.id )
     return $sort->orderBy();
   }
 }
-
-

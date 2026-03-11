@@ -34,9 +34,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -56,7 +53,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -68,7 +65,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $eventId = $this->_id;
 
     $defaults = parent::setDefaultValues();
@@ -81,7 +78,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
         $defaults['is_multiple_registrations_max'] = $defaults['is_multiple_registrations'];
       }
 
-
       $ufJoinParams = ['entity_table' => 'civicrm_event',
         'module' => 'CiviEvent',
         'entity_id' => $eventId,
@@ -93,7 +89,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
       if ($defaults['is_multiple_registrations']) {
         // CRM-4377: set additional participants’ profiles – set to ‘none’ if explicitly unset (non-active)
-        $ufJoin = new CRM_Core_DAO_UFJoin;
+        $ufJoin = new CRM_Core_DAO_UFJoin();
         $ufJoin->module = 'CiviEvent_Additional';
         $ufJoin->entity_table = 'civicrm_event';
         $ufJoin->entity_id = $eventId;
@@ -141,7 +137,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return void
    */
-  function setShowHide(&$defaults) {
+  public function setShowHide(&$defaults) {
 
     $this->_showHide = new CRM_Core_ShowHideBlocks(['registration' => 1], '');
     if (empty($defaults)) {
@@ -187,7 +183,8 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $this->applyFilter('__ALL__', 'trim');
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
 
-    $this->addElement('checkbox',
+    $this->addElement(
+      'checkbox',
       'is_online_registration',
       ts('Allow Online Registration?'),
       NULL,
@@ -209,20 +206,20 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
 
     $this->addElement('checkbox', 'is_multiple_registrations', ts('Register multiple participants?'), NULL, ['onclick' => "return showHideByValue('is_multiple_registrations', '', 'allow_same_emails|additional_profile_pre|additional_profile_post|is_multiple_registrations_limit', 'table-row', 'radio', false);"]);
 
-    for($i = 2; $i <= 10; $i++) {
+    for ($i = 2; $i <= 10; $i++) {
       $maxLimit[$i]  = $i;
     }
     $this->addSelect('is_multiple_registrations_max', ts('Maximum per registration'), $maxLimit);
 
     $this->addElement('checkbox', 'allow_same_participant_emails', ts('Allow multiple registrations from the same email address?'));
 
-
     $participantStatuses = &CRM_Event_PseudoConstant::participantStatus();
     if (in_array('Awaiting approval', $participantStatuses) &&
         in_array('Pending from approval', $participantStatuses) &&
         in_array('Rejected', $participantStatuses) &&
         !$this->_eventInfo['has_waitlist']) {
-      $this->addElement('checkbox',
+      $this->addElement(
+        'checkbox',
         'requires_approval',
         ts('Require participant approval?'),
         NULL,
@@ -248,16 +245,15 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @param int $pageId
    * @static
    */
-  function buildRegistrationBlock(&$form) {
+  public function buildRegistrationBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->addWysiwyg('intro_text', ts('Introductory Text'), $attributes['intro_text']);
     // FIXME: This hack forces height of editor to 175px. Need to modify QF classes for editors to allow passing
     // explicit height and width.
     $form->addWysiwyg('footer_text', ts('Footer Text'), ['rows' => 2, 'cols' => 40]);
 
-
-
-    $types = array_merge(['Contact', 'Individual', 'Participant'],
+    $types = array_merge(
+      ['Contact', 'Individual', 'Participant'],
       CRM_Contact_BAO_ContactType::subTypes('Individual')
     );
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
@@ -282,7 +278,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @param int $pageId
    * @static
    */
-  function buildConfirmationBlock(&$form) {
+  public function buildConfirmationBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->add('text', 'confirm_title', ts('Title'), $attributes['confirm_title']);
     $form->addWysiwyg('confirm_text', ts('Introductory Text'), $attributes['confirm_text']);
@@ -297,7 +293,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @param int $pageId
    * @static
    */
-  function buildMailBlock(&$form) {
+  public function buildMailBlock(&$form) {
     $form->registerRule('emailList', 'callback', 'emailList', 'CRM_Utils_Rule');
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->addYesNo('is_email_confirm', ts('Send Confirmation Email?'), NULL, NULL, ['onclick' => "return showHideByValue('is_email_confirm','','confirmEmail','block','radio',false);"]);
@@ -317,7 +313,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     );
     $selectableEmail = [];
     $hasVerified = FALSE;
-    foreach($availableFrom as $fromAddr) {
+    foreach ($availableFrom as $fromAddr) {
       $email = htmlspecialchars($fromAddr['email']);
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
         $email = ts('%1 Verified', [1 => '🛡️ '.htmlspecialchars($fromAddr['email'])]);
@@ -336,10 +332,12 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $form->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
     $form->addRule("confirm_from_email", ts('Email is not valid.'), 'email');
 
-    $form->addElement('checkbox',
+    $form->addElement(
+      'checkbox',
       'allow_cancel_by_link',
       ts('Attach cancel registration link'),
-      NULL);
+      NULL
+    );
 
     $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $form->assign('default_from_target', 'confirm_from_email');
@@ -350,8 +348,12 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     $tokens = CRM_Core_SelectValues::contactTokens();
     $form->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
-    $form->add('select', 'token2', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $form->add(
+      'select',
+      'token2',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -360,7 +362,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     );
   }
 
-  function buildThankYouBlock(&$form) {
+  public function buildThankYouBlock(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Event_DAO_Event');
     $form->add('text', 'thankyou_title', ts('Title'), $attributes['thankyou_title']);
     $form->addWysiwyg('thankyou_text', ts('Introductory Text'), $attributes['thankyou_text']);
@@ -376,7 +378,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Event_Form_ManageEvent_Registration', 'formRule']);
   }
 
@@ -389,7 +391,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
    * @static
    * @access public
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     if ($values['is_online_registration']) {
       if (!$values['confirm_title']) {
         $errorMsg['confirm_title'] = ts('Please enter a Title for the registration Confirmation Page');
@@ -407,7 +409,7 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
           $errorMsg['confirm_from_email'] = ts('Please enter Confirmation Email FROM Email Address.');
         }
         else {
-          if(!CRM_Utils_Rule::email($email)) {
+          if (!CRM_Utils_Rule::email($email)) {
             $errorMsg['confirm_from_email'] = ts('Please enter the valid email address.');
           }
           if (!CRM_Utils_Mail::checkMailProviders($email)) {
@@ -453,16 +455,17 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     }
 
     if (!$this->_isTemplate) {
-      $params['registration_start_date'] = CRM_Utils_Date::processDate($params['registration_start_date'],
+      $params['registration_start_date'] = CRM_Utils_Date::processDate(
+        $params['registration_start_date'],
         $params['registration_start_date_time'],
         TRUE
       );
-      $params['registration_end_date'] = CRM_Utils_Date::processDate($params['registration_end_date'],
+      $params['registration_end_date'] = CRM_Utils_Date::processDate(
+        $params['registration_end_date'],
         $params['registration_end_date_time'],
         TRUE
       );
     }
-
 
     CRM_Event_BAO_Event::add($params);
 
@@ -472,8 +475,6 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
       'entity_table' => 'civicrm_event',
       'entity_id' => $this->_id,
     ];
-
-
 
     // first delete all past entries
     CRM_Core_BAO_UFJoin::deleteAll($ufJoinParams);
@@ -530,4 +531,3 @@ class CRM_Event_Form_ManageEvent_Registration extends CRM_Event_Form_ManageEvent
     return ts('Online Registration');
   }
 }
-

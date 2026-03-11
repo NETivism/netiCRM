@@ -41,11 +41,9 @@
 function smarty_function_crmDBTpl($params, &$smarty) {
   // $vars = array( 'context', 'name', 'assign' ); out of which name is optional
 
-
-  $contextNameData = CRM_Core_BAO_Persistent::getContext($params['context'],
+  $contextNameData = CRM_Core_BAO_Persistent::getContext(
+    $params['context'],
     CRM_Utils_Array::value('name', $params)
   );
   $smarty->assign($params['var'], $contextNameData);
 }
-
-

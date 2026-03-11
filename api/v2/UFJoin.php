@@ -1,7 +1,6 @@
 <?php
 // $Id: UFJoin.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -116,7 +115,8 @@ function civicrm_uf_join_id_find(&$params) {
   }
 
   if (!isset($params['id']) &&
-    (!isset($params['entity_table']) &&
+    (
+      !isset($params['entity_table']) &&
       !isset($params['entity_id']) &&
       !isset($params['weight'])
     )
@@ -151,4 +151,3 @@ function civicrm_uf_join_UFGroupId_find(&$params) {
 
   return CRM_Core_BAO_UFJoin::findUFGroupId($params);
 }
-

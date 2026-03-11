@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Main page for viewing all Saved searches.
  *
@@ -47,7 +45,7 @@ class CRM_Contact_Page_CustomSearch extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   public static function &info() {
     $sql = "
@@ -59,7 +57,8 @@ AND    g.name = 'custom_search'
 AND    v.is_active = 1
 ORDER By  v.weight
 ";
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -81,7 +80,7 @@ ORDER By  v.weight
    * @return content of the parents run method
    *
    */
-  function browse() {
+  public function browse() {
     $rows = &self::info();
     $this->assign('rows', $rows);
     return parent::run();
@@ -92,14 +91,16 @@ ORDER By  v.weight
    *
    * @return void
    */
-  function run() {
-    $action = CRM_Utils_Request::retrieve('action',
+  public function run() {
+    $action = CRM_Utils_Request::retrieve(
+      'action',
       'String',
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     $this->assign('action', $action);
     $this->browse();
   }
 }
-

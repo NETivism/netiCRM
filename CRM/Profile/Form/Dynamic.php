@@ -54,7 +54,7 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     if ($this->get('register')) {
       $this->_mode = CRM_Profile_Form::MODE_REGISTER;
     }
@@ -79,7 +79,8 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -105,7 +106,7 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
 
     // if no values, return
@@ -127,4 +128,3 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
     parent::postProcess();
   }
 }
-

@@ -64,8 +64,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * System default language(fallback language)
    */
-  CONST SYSTEM_LANG = 'en_US';
-  CONST SYSTEM_FILEDIR = 'civicrm';
+  public const SYSTEM_LANG = 'en_US';
+  public const SYSTEM_FILEDIR = 'civicrm';
 
   /**
    * the dsn of the database connection
@@ -129,7 +129,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
   /**
    * Shut down callbacks
-   * 
+   *
    * The elements of this array will be called before / after civicrm shutdown
    * The format will be array(
    *   'before' => array(
@@ -141,7 +141,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * ))
    * The $callback must be static method or function. The session may not exists.
    * In after shutdown, callback will be called after fastcgi_finish_request
-   * 
+   *
    * @var array
    */
   public static $_shutdownCallbacks = [];
@@ -207,7 +207,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @return void
    * @access private
    */
-  private function __construct() {}
+  private function __construct() {
+  }
 
   /**
    * Singleton function used to manage this object.
@@ -218,7 +219,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @return object
    * @static
    */
-  static function &singleton($loadFromDB = TRUE, $force = FALSE) {
+  public static function &singleton($loadFromDB = TRUE, $force = FALSE) {
     if (self::$_singleton === NULL || $force) {
       global $civicrm_root;
       $civicrm_root = rtrim($civicrm_root, '/').'/'; // force add traling slash
@@ -231,7 +232,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
       // if not in cache, fire off config construction
       if (!self::$_singleton) {
-        self::$_singleton = new CRM_Core_Config;
+        self::$_singleton = new CRM_Core_Config();
         self::$_singleton->_initialize($loadFromDB);
 
         //initialize variables. for gencode we cannot load from the
@@ -274,7 +275,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         }
       }
 
-
       if (isset(self::$_singleton->customPHPPathDir) &&
         self::$_singleton->customPHPPathDir
       ) {
@@ -308,7 +308,6 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     return self::$_singleton;
   }
 
-
   private function _setUserFrameworkConfig($userFramework) {
     global $civicrm_root;
 
@@ -322,7 +321,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     $class = $this->userFrameworkClass;
     $this->userSystem = new $class();
-    if(isset($this->userSystem->version)){
+    if (isset($this->userSystem->version)) {
       $this->userFrameworkVersion = $this->userSystem->version;
     }
 
@@ -334,7 +333,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     if (defined('CIVICRM_UF_BASEURL')) {
       $url = parse_url(CRM_Utils_File::addTrailingSlash(CIVICRM_UF_BASEURL, '/'));
       $host = $url['host'];
-      $port = empty($url['port'])? '': ':'.$url['port'];
+      $port = empty($url['port']) ? '' : ':'.$url['port'];
       $path = $url['path'];
     }
     else {
@@ -423,7 +422,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    *
    * @return object
    */
-  static public function &getLog() {
+  public static function &getLog() {
     if (!isset(self::$_log)) {
       self::$_log = &Log::singleton('display');
     }
@@ -450,7 +449,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       $dirName = CRM_Utils_Type::escape($_SERVER['HTTP_HOST'], 'DirectoryName');
       $this->templateCompileDir = $temp . DIRECTORY_SEPARATOR . 'smarty' . php_sapi_name() . DIRECTORY_SEPARATOR . $dirName . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR;
     }
-    elseif(defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
+    elseif (defined('CIVICRM_TEMPLATE_COMPILEDIR')) {
       $this->templateCompileDir = CRM_Utils_File::addTrailingSlash(CIVICRM_TEMPLATE_COMPILEDIR).CRM_Utils_File::addTrailingSlash($tsLocale);
     }
 
@@ -513,7 +512,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
     }
 
     // we need to do this here so all blocks also load from an ssl server
-    if(CRM_Utils_System::isSSL()) {
+    if (CRM_Utils_System::isSSL()) {
       CRM_Utils_System::mapConfigToSSL();
     }
 
@@ -539,12 +538,12 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * retrieve a mailer to send any mail from the applciation
    *
-   * @param int $mailerType 
+   * @param int $mailerType
    * @access private
    *
    * @return object
    */
-  static function &getMailer($mailerType = '') {
+  public static function &getMailer($mailerType = '') {
     $mailerTypes = CRM_Core_BAO_MailSettings::$_mailerTypes;
     // refs #30289, special case for retrieve mailer type from mail settings
     if (is_numeric($mailerType) && !empty($mailerTypes[$mailerType])) {
@@ -554,7 +553,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
         if (count($mailSettings)) {
           self::$_mail[$mailerType] = [];
           $filters = [];
-          foreach($mailSettings as $setting) {
+          foreach ($mailSettings as $setting) {
             $params['host'] = $setting['server'];
             $params['port'] = !empty($setting['port']) ? $setting['port'] : 25;
             $params['username'] = $setting['username'];
@@ -574,8 +573,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
               }
             }
           }
-          foreach($filters as &$setting) {
-            foreach(self::$_mail[$mailerType] as $sid => &$mailSetting) {
+          foreach ($filters as &$setting) {
+            foreach (self::$_mail[$mailerType] as $sid => &$mailSetting) {
               $mailSetting->_filters[] = &$setting;
             }
           }
@@ -594,7 +593,8 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
 
     // always fallback to default mailer
     if (!isset(self::$_mail[$mailerType]) || empty(self::$_mail[$mailerType])) {
-      $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();;
+      $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
+      ;
 
       if (defined('CIVICRM_MAILER_SPOOL') &&
         CIVICRM_MAILER_SPOOL
@@ -684,7 +684,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * @static
    * @access public
    */
-  static function check(&$config, &$required) {
+  public static function check(&$config, &$required) {
     foreach ($required as $name) {
       if (CRM_Utils_System::isNull($config->$name)) {
         return FALSE;
@@ -697,7 +697,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
    * reset the serialized array and recompute
    * use with care
    */
-  function reset() {
+  public function reset() {
     $query = "UPDATE civicrm_domain SET config_backend = null";
     CRM_Core_DAO::executeQuery($query);
   }
@@ -705,7 +705,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * one function to get domain ID
    */
-  static function domainID($domainID = NULL, $reset = FALSE) {
+  public static function domainID($domainID = NULL, $reset = FALSE) {
     static $domain;
     if ($domainID) {
       $domain = $domainID;
@@ -720,7 +720,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear db cache
    */
-  static function clearDBCache() {
+  public static function clearDBCache() {
     $queries = ['TRUNCATE TABLE civicrm_acl_cache',
       'TRUNCATE TABLE civicrm_acl_contact_cache',
       'TRUNCATE TABLE civicrm_cache',
@@ -741,7 +741,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear up session
    */
-  function sessionReset(){
+  public function sessionReset() {
     $session = CRM_Core_Session::singleton();
     $session->reset(2);
   }
@@ -749,7 +749,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * clear leftover temporary tables
    */
-  function clearTempTables() {
+  public function clearTempTables() {
     // CRM-5645
 
     $dao = new CRM_Contact_DAO_Contact();
@@ -767,7 +767,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
       // check if over 30 days
       if (is_numeric($microtime)) {
         $microtime = (int) $microtime;
-        if (CRM_REQUEST_TIME - $microtime > 86400*30) {
+        if (CRM_REQUEST_TIME - $microtime > 86400 * 30) {
           $importTables[] = $tableDAO->import_table;
         }
       }
@@ -786,7 +786,7 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   /**
    * function to check if running in upgrade mode
    */
-  static function isUpgradeMode($path = NULL) {
+  public static function isUpgradeMode($path = NULL) {
     if ($path && $path == 'civicrm/upgrade') {
       return TRUE;
     }
@@ -832,4 +832,3 @@ class CRM_Core_Config extends CRM_Core_Config_Variables {
   }
 }
 // end CRM_Core_Config
-

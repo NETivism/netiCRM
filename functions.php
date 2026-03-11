@@ -22,7 +22,7 @@ function ts($text, $params = []) {
   }
 
   $i18n = CRM_Core_I18n::singleton();
-  if($locale != $tsLocale){
+  if ($locale != $tsLocale) {
     $locale = $tsLocale;
     if (!empty($i18n->_customTranslateFunction) && $function === NULL) {
       if (function_exists($i18n->_customTranslateFunction)) {

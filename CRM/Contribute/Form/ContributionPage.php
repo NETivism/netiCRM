@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * form to process actions on the group aspect of Custom Data
  */
@@ -98,14 +94,22 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
    */
   public function preProcess() {
     // current contribution page id
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $this->_id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // get the requested action
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // setting title and 3rd level breadcrumb for html page if contrib page exists
@@ -113,7 +117,8 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
       $this->assign('id', $this->_id);
       $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
 
-      $url = CRM_Utils_System::url('civicrm/admin/contribute',
+      $url = CRM_Utils_System::url(
+        'civicrm/admin/contribute',
         "action=update&reset=1&id={$this->_id}"
       );
 
@@ -159,7 +164,8 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
     $this->applyFilter('__ALL__', 'trim');
 
     if ($this->_single) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'upload',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -206,7 +212,7 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $config = CRM_Core_Config::singleton();
     if (isset($this->_id)) {
@@ -231,9 +237,10 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
       }
 
       if (CRM_Utils_Array::value('pledge_frequency_unit', $pledgeBlockDefaults)) {
-        $defaults['pledge_frequency_unit'] = array_fill_keys(explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
-            $pledgeBlockDefaults['pledge_frequency_unit']
-          ), '1');
+        $defaults['pledge_frequency_unit'] = array_fill_keys(explode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+          $pledgeBlockDefaults['pledge_frequency_unit']
+        ), '1');
       }
 
       // fix the display of the monetary value, CRM-4038
@@ -286,9 +293,10 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
 
     if (CRM_Utils_Array::value('recur_frequency_unit', $defaults)) {
 
-      $defaults['recur_frequency_unit'] = array_fill_keys(explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
-          $defaults['recur_frequency_unit']
-        ), '1');
+      $defaults['recur_frequency_unit'] = array_fill_keys(explode(
+        CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $defaults['recur_frequency_unit']
+      ), '1');
     }
     else {
 
@@ -301,7 +309,6 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
     else {
       $defaults['is_for_organization'] = 1;
     }
-
 
     return $defaults;
   }
@@ -317,10 +324,10 @@ class CRM_Contribute_Form_ContributionPage extends CRM_Core_Form {
     //page is newly created.
     if ($pageId && !$this->_id) {
       $session = CRM_Core_Session::singleton();
-      $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/contribute',
-          "action=update&reset=1&id={$pageId}"
-        ));
+      $session->pushUserContext(CRM_Utils_System::url(
+        'civicrm/admin/contribute',
+        "action=update&reset=1&id={$pageId}"
+      ));
     }
   }
 }
-

@@ -35,7 +35,6 @@
  *
  */
 
-
 class CRM_Core_Payment_IATS extends CRM_Core_Payment {
   /**
    * @var mixed
@@ -43,9 +42,9 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
   public $_processorName;
   public $_profile;
   # (not used, implicit in the API, might need to convert?)
-  CONST CHARSET = 'UFT-8';
+  public const CHARSET = 'UFT-8';
   /* check IATS website for additional supported currencies */
-  CONST CURRENCIES = 'CAD,USD,AUD,GBP,EUR,NZD';
+  public const CURRENCIES = 'CAD,USD,AUD,GBP,EUR,NZD';
 
   /**
    * Constructor
@@ -54,7 +53,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('IATS');
 
@@ -71,7 +70,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
     }
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     // $result = '';
     //       foreach($params as $key => $value) {
     //         $result .= "<strong>$key</strong>: $value<br />";
@@ -91,12 +90,12 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
     // beginning of modified sample code from IATS php api include IATS supplied api library
 
     if ($isRecur) {
-      include_once ('Services/IATS/iats_reoccur.php');
-      $iatslink1 = new iatslinkReoccur;
+      include_once('Services/IATS/iats_reoccur.php');
+      $iatslink1 = new iatslinkReoccur();
     }
     else {
-      include_once ('Services/IATS/iatslink.php');
-      $iatslink1 = new iatslink;
+      include_once('Services/IATS/iatslink.php');
+      $iatslink1 = new iatslink();
     }
 
     $iatslink1->setTestMode($this->_profile['mode'] != 'live');
@@ -160,6 +159,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
         switch ($params['frequency_unit']) {
           case 'week':
             $paymentsRecur = 520;
+            // no break
           case 'month':
             $paymentsRecur = 120;
         }
@@ -235,23 +235,29 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
     }
   }
 
-  function &error($error = NULL) {
+  public function &error($error = NULL) {
     $e = &CRM_Core_Error::singleton();
     if (is_object($error)) {
-      $e->push($error->getResponseCode(),
-        0, NULL,
+      $e->push(
+        $error->getResponseCode(),
+        0,
+        NULL,
         $error->getMessage()
       );
     }
     elseif ($error && is_numeric($error)) {
-      $e->push($error,
-        0, NULL,
+      $e->push(
+        $error,
+        0,
+        NULL,
         $this->errorString($error)
       );
     }
     elseif (is_string($error)) {
-      $e->push(9002,
-        0, NULL,
+      $e->push(
+        9002,
+        0,
+        NULL,
         $error
       );
     }
@@ -261,7 +267,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
     return $e;
   }
 
-  function errorString($error_id) {
+  public function errorString($error_id) {
     $errors = [
       1 => 'Agent Code has not been set up on the authorization system.',
       2 => 'Unable to process transaction. Verify and re-enter credit card information.',
@@ -303,7 +309,7 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
 
     if (empty($this->_paymentProcessor['signature'])) {
@@ -322,4 +328,3 @@ class CRM_Core_Payment_IATS extends CRM_Core_Payment {
     }
   }
 }
-

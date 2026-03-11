@@ -33,17 +33,18 @@
  *
  */
 
-
 class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   public $_soInstance;
   protected $_numStrings = 10;
 
   protected $_stringName = NULL;
 
-  protected $_defaults = NULL; function preProcess() {
+  protected $_defaults = NULL;
+  public function preProcess() {
     $this->_soInstance = CRM_Utils_Array::value('instance', $_GET);
     $this->assign('soInstance', $this->_soInstance);
-    $breadCrumbUrl = CRM_Utils_System::url('civicrm/admin/options/wordreplacements',
+    $breadCrumbUrl = CRM_Utils_System::url(
+      'civicrm/admin/options/wordreplacements',
       "reset=1"
     );
     $breadCrumb = [['title' => ts('Word Replacements'),
@@ -142,7 +143,8 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
 
     $this->assign('stringOverrideInstances', empty($stringOverrideInstances) ? FALSE : $stringOverrideInstances);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -164,7 +166,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     $errors = [];
 
     $oldValues = CRM_Utils_Array::value('old', $values);
@@ -197,7 +199,7 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
-    $this->_numStrings = sizeof($params['old']);
+    $this->_numStrings = count($params['old']);
 
     $enabled['exactMatch'] = $enabled['wildcardMatch'] = $disabled['exactMatch'] = $disabled['wildcardMatch'] = [];
     for ($i = 1; $i <= $this->_numStrings; $i++) {
@@ -244,7 +246,6 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
     $params = ['locale_custom_strings' => $stringOverride];
     $id = CRM_Core_Config::domainID();
 
-
     $wordReplacementSettings = CRM_Core_BAO_Domain::edit($params, $id);
 
     if ($wordReplacementSettings) {
@@ -253,10 +254,10 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
       CRM_Core_BAO_Navigation::resetNavigation();
 
       CRM_Core_Session::setStatus("Your Settings have been saved");
-      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/options/wordreplacements',
-          "reset=1"
-        ));
+      CRM_Utils_System::redirect(CRM_Utils_System::url(
+        'civicrm/admin/options/wordreplacements',
+        "reset=1"
+      ));
     }
   }
 }
-

@@ -5,7 +5,8 @@ class api_v3_GrantTest extends CiviUnitTestCase {
   protected $params;
   protected $ids = [];
   protected $_entity = 'Grant';
-  public $DBResetRequired = FALSE; function setUp() {
+  public $DBResetRequired = FALSE;
+  public function setUp() {
     parent::setUp();
     $this->ids['contact'][0] = $this->individualCreate();
     $this->params = [
@@ -21,7 +22,7 @@ class api_v3_GrantTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     foreach ($this->ids as $entity => $entities) {
       foreach ($entities as $id) {
         civicrm_api($entity, 'delete', ['version' => $this->_apiversion, 'id' => $id]);
@@ -68,7 +69,10 @@ class api_v3_GrantTest extends CiviUnitTestCase {
   public function testCreateAutoGrant() {
     $entityName = $this->_entity;
     $baoString  = 'CRM_Grant_BAO_Grant';
-    $fields     = civicrm_api($entityName, 'getfields', [
+    $fields     = civicrm_api(
+      $entityName,
+      'getfields',
+      [
         'version' => 3,
       ]
     );
@@ -147,4 +151,3 @@ class api_v3_GrantTest extends CiviUnitTestCase {
     $baoObj->free();
   }
 }
-

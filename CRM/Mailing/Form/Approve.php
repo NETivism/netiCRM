@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  */
@@ -70,7 +68,6 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
       $this->redirectToListing();
     }
 
-
     // when user come from search context.
 
     $this->_searchBasedMailing = CRM_Contact_Form_Search::isSearchContext($this->get('context'));
@@ -86,7 +83,6 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     $this->_contactID = $session->get('userID');
 
-
     $this->_mailing = new CRM_Mailing_BAO_Mailing();
     $this->_mailing->id = $this->_mailingID;
     if (!$this->_mailing->find(TRUE)) {
@@ -101,7 +97,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if ($this->_mailingID) {
       /*
@@ -144,7 +140,6 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     $this->addRadio('approval_status_id', ts('Approval Status'), $mailApprovalStatus, TRUE, NULL, TRUE);
 */
 
-
     $buttons = [
       ['type' => 'next',
         'name' => ts('Save'),
@@ -162,14 +157,16 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     // add the preview elements
     $preview = [];
 
-    $preview['subject'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
+    $preview['subject'] = CRM_Core_DAO::getFieldValue(
+      'CRM_Mailing_DAO_Mailing',
       $this->_mailingID,
       'subject'
     );
     $preview['viewURL'] = CRM_Utils_System::url('civicrm/mailing/view', "reset=1&id={$this->_mailingID}");
     $preview['type'] = $this->_mailing->body_html ? 'html' : 'text';
 
-    $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_mailing',
+    $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo(
+      'civicrm_mailing',
       $this->_mailingID
     );
 
@@ -205,7 +202,6 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     $params['approval_date'] = date('YmdHis');
 */
 
-
     // if rejected, then we need to reset the scheduled date and scheduled id
     /*
 
@@ -226,9 +222,7 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     }
     */
 
-
     CRM_Mailing_BAO_Mailing::create($params, $ids);
-
 
     //when user perform mailing from search context
     //redirect it to search result CRM-3711
@@ -261,9 +255,10 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     }
 
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/mailing/browse/scheduled',
-        'reset=1&scheduled=true'
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      'civicrm/mailing/browse/scheduled',
+      'reset=1&scheduled=true'
+    ));
   }
 
   /**
@@ -277,4 +272,3 @@ class CRM_Mailing_Form_Approve extends CRM_Core_Form {
     return ts('Approve/Reject Mailing');
   }
 }
-

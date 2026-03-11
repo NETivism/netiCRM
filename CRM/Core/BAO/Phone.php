@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Class contains functions for phone
  */
@@ -49,7 +47,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $phone = new CRM_Core_DAO_Phone();
 
     $phone->copyValues($params);
@@ -67,7 +65,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
    * @access public
    * @static
    */
-  static function &getValues($entityBlock) {
+  public static function &getValues($entityBlock) {
     $getValues = &CRM_Core_BAO_Block::getValues('phone', $entityBlock);
     return $getValues;
   }
@@ -83,7 +81,7 @@ class CRM_Core_BAO_Phone extends CRM_Core_DAO_Phone {
    * @access public
    * @static
    */
-  static function allPhones($id, $updateBlankLocInfo = FALSE, $type = NULL) {
+  public static function allPhones($id, $updateBlankLocInfo = FALSE, $type = NULL) {
     if (!$id) {
       return NULL;
     }
@@ -140,7 +138,7 @@ ORDER BY civicrm_phone.is_primary DESC,  phone_id ASC ";
    * @access public
    * @static
    */
-  static function allEntityPhones($entityElements, $type = NULL) {
+  public static function allEntityPhones($entityElements, $type = NULL) {
     if (empty($entityElements)) {
       return NULL;
     }
@@ -188,7 +186,7 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
    * return void
    * @static
    */
-  static function setOptionToNull($optionId) {
+  public static function setOptionToNull($optionId) {
     if (!$optionId) {
       return;
     }
@@ -206,11 +204,11 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
    * Get current exists id from value(phone)
    *
    * Only effect when phone id not provided. Id will be added into params before add.
-   * 
+   *
    * @param array $params referenced array to be add exists phone id
    * @return void
    */
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['phone']) && !empty($params['contact_id'])) {
       $check = preg_replace('/[^0-9]/', '', $params['phone']);
       $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_phone WHERE REGEXP_REPLACE(phone, '[^0-9]+', '') LIKE %1 AND contact_id = %2", [
@@ -220,4 +218,3 @@ ORDER BY ph.is_primary DESC, phone_id ASC ";
     }
   }
 }
-

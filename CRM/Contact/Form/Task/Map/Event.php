@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to map
  * the address for group of
@@ -48,13 +46,19 @@ class CRM_Contact_Form_Task_Map_Event extends CRM_Contact_Form_Task_Map {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::redirect();
-    $ids = CRM_Utils_Request::retrieve('eid', 'Positive',
-      $this, TRUE
+    $ids = CRM_Utils_Request::retrieve(
+      'eid',
+      'Positive',
+      $this,
+      TRUE
     );
-    $lid = CRM_Utils_Request::retrieve('lid', 'Positive',
-      $this, FALSE
+    $lid = CRM_Utils_Request::retrieve(
+      'lid',
+      'Positive',
+      $this,
+      FALSE
     );
     $type = 'Event';
     //self::createMapXML($ids, $lid, $this, TRUE, $type);
@@ -62,8 +66,7 @@ class CRM_Contact_Form_Task_Map_Event extends CRM_Contact_Form_Task_Map {
     $this->assign('skipLocationType', TRUE);
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     return 'CRM/Contact/Form/Task/Map.tpl';
   }
 }
-

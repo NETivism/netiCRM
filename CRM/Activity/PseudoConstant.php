@@ -28,7 +28,8 @@ class CRM_Activity_PseudoConstant extends CRM_Core_PseudoConstant {
    *
    * @return array - array reference of all activty types.
    */
-  public static function &activityType($all = TRUE,
+  public static function &activityType(
+    $all = TRUE,
     $includeCaseActivities = FALSE,
     $reset = FALSE,
     $returnColumn = 'label',

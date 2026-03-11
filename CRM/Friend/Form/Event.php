@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for Tell A Friend
  *
@@ -132,4 +129,3 @@ class CRM_Friend_Form_Event extends CRM_Event_Form_ManageEvent {
     return ts('Tell a Friend');
   }
 }
-

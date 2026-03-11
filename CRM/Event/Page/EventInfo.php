@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Event Info Page - Summmary about the event
  */
@@ -52,17 +50,18 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     //get the event id.
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $this->track();
     $config = CRM_Core_Config::singleton();
 
     // ensure that the user has permission to see this page
-    if (!CRM_Core_Permission::event(CRM_Core_Permission::VIEW,
-        $this->_id
-      )) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to view this event'));
+    if (!CRM_Core_Permission::event(
+      CRM_Core_Permission::VIEW,
+      $this->_id
+    )) {
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to view this event'));
     }
 
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
@@ -85,12 +84,12 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     }
     elseif (!$values['event']['is_active']) {
       // form is inactive, die a fatal death
-       return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+      return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
     }
 
     if (!empty($values['event']['is_template'])) {
       // form is an Event Template
-       return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
+      return CRM_Core_Error::statusBounce(ts('The page you requested is currently unavailable.'));
     }
 
     $this->assign('isShowLocation', CRM_Utils_Array::value('is_show_location', $values['event']));
@@ -145,16 +144,22 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
 
         // we always generate urls for the front end in joomla
         if ($action == CRM_Core_Action::PREVIEW) {
-          $url = CRM_Utils_System::url('civicrm/event/register',
+          $url = CRM_Utils_System::url(
+            'civicrm/event/register',
             "id={$this->_id}&reset=1&action=preview",
-            TRUE, NULL, TRUE,
+            TRUE,
+            NULL,
+            TRUE,
             TRUE
           );
         }
         else {
-          $url = CRM_Utils_System::url('civicrm/event/register',
+          $url = CRM_Utils_System::url(
+            'civicrm/event/register',
             "id={$this->_id}&reset=1",
-            TRUE, NULL, TRUE,
+            TRUE,
+            NULL,
+            TRUE,
             TRUE
           );
         }
@@ -206,7 +211,6 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     }
     CRM_Event_BAO_Event::assignEventShare($values['event'], $this);
 
-
     // Prepare params used for meta.
     $params = [];
     $siteName = CRM_Utils_System::siteName();
@@ -225,7 +229,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
         foreach ($ufg_inner['fields'] as $uffield) {
           if (is_array($uffield)) {
             if ($uffield['data_type'] == 'File') {
-              if (!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/',$uffield['customValue'][1]['data'])) {
+              if (!empty($uffield['customValue'][1]) && preg_match('/\.(jpg|png|jpeg)$/', $uffield['customValue'][1]['data'])) {
                 $image = $config->customFileUploadURL . $uffield['customValue'][1]['data'];
                 break;
                 break;
@@ -248,7 +252,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     parent::run();
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Event/Page/{$this->_id}/EventInfo.tpl";
       $template = &CRM_Core_Page::getTemplate();
@@ -260,7 +264,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return parent::getTemplateFileName();
   }
 
-  function track() {
+  public function track() {
     $params = [
       'state' => '0',
       'page_type' => 'civicrm_event',
@@ -270,7 +274,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     CRM_Core_BAO_Track::add($params);
   }
 
-  function getContactID() {
+  public function getContactID() {
     //check if this is a checksum authentication
     $userChecksum = CRM_Utils_Request::retrieve('cs', 'String', $this);
     if ($userChecksum) {
@@ -287,7 +291,7 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return $session->get('userID');
   }
 
-  static function feeBlock($eventId) {
+  public static function feeBlock($eventId) {
     $feeBlock = [];
     if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $eventId)) {
       $feeBlock['price_set_id'] = $priceSetId;
@@ -340,4 +344,3 @@ class CRM_Event_Page_EventInfo extends CRM_Core_Page {
     return $feeBlock;
   }
 }
-

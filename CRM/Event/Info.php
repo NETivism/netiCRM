@@ -25,9 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
@@ -52,7 +49,6 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
       'showActivitiesInCore' => 1,
     ];
   }
-
 
   // docs inherited from interface
   public function getPermissions() {
@@ -113,4 +109,3 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

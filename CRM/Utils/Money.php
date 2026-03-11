@@ -37,7 +37,7 @@
  * Money utilties
  */
 class CRM_Utils_Money {
-  static $_currencySymbols = NULL;
+  public static $_currencySymbols = NULL;
 
   /**
    * format a monetary string
@@ -57,7 +57,7 @@ class CRM_Utils_Money {
    *
    * @static
    */
-  static function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
+  public static function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
 
     if (CRM_Utils_System::isNull($amount)) {
       return '';
@@ -121,7 +121,6 @@ class CRM_Utils_Money {
       $money = $amount;
     }
 
-
     $replacements = [
       '%a' => $money,
       '%C' => $currency,
@@ -148,7 +147,7 @@ class CRM_Utils_Money {
       return $amount;
     }
     $formatted = $amount;
-    switch($valueFormat) {
+    switch ($valueFormat) {
       case '%!i':
         $formatted = number_format((float)$amount, 2);
         break;
@@ -160,8 +159,7 @@ class CRM_Utils_Money {
     return $formatted;
   }
 
-
-  static function toTaiwanDollar($amount) {
+  public static function toTaiwanDollar($amount) {
     $amount = floor($amount);
     $amount = (string) $amount;
 
@@ -200,8 +198,8 @@ class CRM_Utils_Money {
               $output = '<span class="' . $class . '">' . $unit[$k] . '</span>' . $output;
             }
             else {
-              if (isset($amt[$k-1])) {
-                if ($amt[$k-1] != '零') {
+              if (isset($amt[$k - 1])) {
+                if ($amt[$k - 1] != '零') {
                   $output = $v . $output;
                 }
               }
@@ -214,7 +212,7 @@ class CRM_Utils_Money {
             $output = $v . '<span class="' . $class . '">' . $unit[$k] . '</span>' . $output;
           }
           else {
-            if ($amt[$k-1] != '零') {
+            if ($amt[$k - 1] != '零') {
               $output = '<span class="' . $class . '">' . $unit[$k] . '</span>' . $v . $output;
             }
             else {
@@ -228,8 +226,8 @@ class CRM_Utils_Money {
             $output = $v . '<span class="' . $class . '">' . str_replace("萬", "", $unit[$k]) . '</span>' . $output;
           }
           else {
-            if (isset($amt[$k-1])) {
-              if ($amt[$k-1] != '零') {
+            if (isset($amt[$k - 1])) {
+              if ($amt[$k - 1] != '零') {
                 $output = $v . $output;
               }
             }
@@ -241,4 +239,3 @@ class CRM_Utils_Money {
     return $output;
   }
 }
-

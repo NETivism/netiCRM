@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class if for search builder processing
  */
@@ -115,7 +112,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Search_Builder', 'formRule']);
   }
 
@@ -128,7 +125,7 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
    * @static
    * @access public
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     //CRM_Core_Error::debug('s', $values);
     if (CRM_Utils_Array::value('addMore', $values) || CRM_Utils_Array::value('addBlock', $values)) {
       return TRUE;
@@ -136,7 +133,6 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
 
     $fields = [];
     $fields = CRM_Contact_BAO_Contact::exportableFields('All', FALSE, TRUE);
-
 
     $compomentFields = &CRM_Core_Component::getQueryFields();
 
@@ -146,7 +142,6 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
 
     $fld = [];
     $fld = CRM_Core_BAO_Mapping::formattedFields($values, TRUE);
-
 
     $errorMsg = [];
     foreach ($fld as $k => $v) {
@@ -277,7 +272,8 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
             elseif (trim($v[2])) {
               //else check value for rest of the Operators
               $error = CRM_Utils_Type::validate($v[2], $type, FALSE);
-              if ($type == 'Date' && $error) {}
+              if ($type == 'Date' && $error) {
+              }
               elseif ($error != $v[2]) {
                 $errorMsg["value[$v[3]][$v[4]]"] = ts("Please enter valid value.");
               }
@@ -294,13 +290,14 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     return TRUE;
   }
 
-  public function normalizeFormValues() {}
+  public function normalizeFormValues() {
+  }
 
   public function &convertFormValues(&$formValues, $wildcard = FALSE) {
     $fields = CRM_Core_BAO_Mapping::formattedFields($formValues);
-    if($wildcard){
-      foreach($fields as $k => $v){
-        if(isset($v[4]) && $v[1] == 'LIKE'){
+    if ($wildcard) {
+      foreach ($fields as $k => $v) {
+        if (isset($v[4]) && $v[1] == 'LIKE') {
           $fields[$k][4] = 1;
         }
       }
@@ -387,4 +384,3 @@ class CRM_Contact_Form_Search_Builder extends CRM_Contact_Form_Search {
     parent::postProcess();
   }
 }
-

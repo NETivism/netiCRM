@@ -1,5 +1,6 @@
 <?php
-date_default_timezone_set('Asia/Taipei'); require_once 'CRM/Core/Payment.php';
+date_default_timezone_set('Asia/Taipei');
+require_once 'CRM/Core/Payment.php';
 class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
 
   /**
@@ -16,9 +17,9 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
-  static protected $_params = [];
+  protected static $_params = [];
 
   public static $_hideFields = ['invoice_id', 'trxn_id'];
 
@@ -29,7 +30,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -38,7 +39,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Neweb');
@@ -55,7 +56,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Neweb($mode, $paymentProcessor);
@@ -69,7 +70,7 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -90,23 +91,23 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
     }
   }
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
@@ -120,12 +121,12 @@ class CRM_Core_Payment_Neweb extends CRM_Core_Payment {
     }
   }
 
-  function cancelRecuringMessage($recurID){
+  public function cancelRecuringMessage($recurID) {
     if (function_exists("_civicrm_neweb_cancel_recuring_message")) {
-      return _civicrm_neweb_cancel_recuring_message($recurID); 
-    }else{
+      return _civicrm_neweb_cancel_recuring_message($recurID);
+    }
+    else {
       CRM_Core_Error::fatal('Module civicrm_neweb doesn\'t exists.');
     }
   }
 }
-

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Dummy page for details of Email
  *
@@ -51,12 +48,18 @@ class CRM_Contact_Page_View_Email extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the callback, module and activity id
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'browse'
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'browse'
     );
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
       $this
     );
 
@@ -88,7 +91,7 @@ class CRM_Contact_Page_View_Email extends CRM_Core_Page {
       list($fromContactName, $fromContactEmail, $toDoNotEmail) = CRM_Contact_BAO_Contact::getContactDetails($dao->contact_id);
 
       if (!trim($fromContactEmail)) {
-         return CRM_Core_Error::statusBounce(ts('Your user record does not have a valid email address'));
+        return CRM_Core_Error::statusBounce(ts('Your user record does not have a valid email address'));
       }
 
       if (!trim($fromContactName)) {
@@ -112,4 +115,3 @@ class CRM_Contact_Page_View_Email extends CRM_Core_Page {
     parent::run();
   }
 }
-

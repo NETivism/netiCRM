@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to group
  * contacts. This class provides functionality for the actual
@@ -69,7 +67,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -87,7 +85,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     //create radio buttons to select existing group or add a new group
     $options = [ts('Add Contact To Existing Group'), ts('Create New Group')];
@@ -95,17 +93,25 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
     if (!$this->_id) {
       $this->addRadio('group_option', ts('Group Options'), $options, ['onclick' => "return showElements();"]);
 
-      $this->add('text', 'title', ts('Group Name:') . ' ',
+      $this->add(
+        'text',
+        'title',
+        ts('Group Name:') . ' ',
         CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title')
       );
-      $this->addRule('title', ts('Name already exists in Database.'),
-        'objectExists', ['CRM_Contact_DAO_Group', $this->_id, 'title']
+      $this->addRule(
+        'title',
+        ts('Name already exists in Database.'),
+        'objectExists',
+        ['CRM_Contact_DAO_Group', $this->_id, 'title']
       );
 
-      $this->add('textarea', 'description', ts('Description:') . ' ',
+      $this->add(
+        'textarea',
+        'description',
+        ts('Description:') . ' ',
         CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
       );
-
 
       $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
       if (!CRM_Core_Permission::access('CiviMail')) {
@@ -113,10 +119,15 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
       }
 
       if (!empty($groupTypes)) {
-        $this->addCheckBox('group_type',
+        $this->addCheckBox(
+          'group_type',
           ts('Group Type'),
           $groupTypes,
-          NULL, NULL, NULL, NULL, '&nbsp;&nbsp;&nbsp;'
+          NULL,
+          NULL,
+          NULL,
+          NULL,
+          '&nbsp;&nbsp;&nbsp;'
         );
       }
     }
@@ -154,7 +165,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
 
     if ($this->_context === 'amtg') {
@@ -172,7 +183,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_task_AddToGroup', 'formRule']);
   }
 
@@ -185,7 +196,7 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
    * @static
    * @access public
    */
-  static function formRule($params) {
+  public static function formRule($params) {
     $errors = [];
 
     if ($params['group_option'] && !$params['title']) {
@@ -214,7 +225,8 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
       $groupParams['description'] = $params['description'];
       $groupParams['visibility'] = "User and User Admin Only";
       if (is_array($params['group_type'])) {
-        $groupParams['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
+        $groupParams['group_type'] = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(
+          CRM_Core_DAO::VALUE_SEPARATOR,
           array_keys($params['group_type'])
         ) . CRM_Core_DAO::VALUE_SEPARATOR;
       }
@@ -222,7 +234,6 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
         $groupParams['group_type'] = '';
       }
       $groupParams['is_active'] = 1;
-
 
       $createdGroup = &CRM_Contact_BAO_Group::create($groupParams);
       $groupID = $createdGroup->id;
@@ -251,4 +262,3 @@ class CRM_Contact_Form_Task_AddToGroup extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

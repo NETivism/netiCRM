@@ -1,7 +1,6 @@
 <?php
 // $Id: Contribution.php 44883 2013-01-16 05:47:23Z yashodha $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -127,7 +126,8 @@ function &civicrm_contribution_get(&$params) {
   if (count($contributions) != 1 &&
     !$params['returnFirst']
   ) {
-    return civicrm_create_error(ts('%1 contributions matching input params', [1 => count($contributions)]),
+    return civicrm_create_error(
+      ts('%1 contributions matching input params', [1 => count($contributions)]),
       $contributions
     );
   }
@@ -324,7 +324,7 @@ function _civicrm_contribute_check_params(&$params) {
   foreach ($required as $field => $eitherField) {
     if ($field == 'total_amount') {
       $amount = CRM_Utils_Array::value($field, $params);
-      if(empty($amount) && $amount !== 0 && $amount !== "0") {
+      if (empty($amount) && $amount !== 0 && $amount !== "0") {
         $valid = FALSE;
         $error .= $field;
         break;
@@ -363,7 +363,8 @@ function _civicrm_contribute_duplicate_check(&$params) {
   if ($result) {
     $d = CRM_Utils_Array::implode(', ', $duplicates);
     $error = CRM_Core_Error::createError("Duplicate error - existing contribution record(s) have a matching Transaction ID or Invoice ID. Contribution record ID(s) are: $d", CRM_Core_Error::DUPLICATE_CONTRIBUTION, 'Fatal', $d);
-    return civicrm_create_error($error->pop(),
+    return civicrm_create_error(
+      $error->pop(),
       $d
     );
   }
@@ -388,7 +389,8 @@ function _civicrm_contribute_receiptid_check(&$params) {
   if ($result) {
     $d = CRM_Utils_Array::implode(', ', $duplicates);
     $error = CRM_Core_Error::createError("Duplicate error - existing contribution record(s) have a matching Receipt ID. Contribution record ID(s) are: $d", CRM_Core_Error::DUPLICATE_CONTRIBUTION, 'Fatal', $d);
-    return civicrm_create_error($error->pop(),
+    return civicrm_create_error(
+      $error->pop(),
       $d
     );
   }
@@ -473,7 +475,8 @@ function civicrm_contribute_transact($params) {
   }
 
   require_once 'CRM/Financial/BAO/PaymentProcessor.php';
-  $paymentProcessor = CRM_Financial_BAO_PaymentProcessor::getPayment($params['payment_processor_id'],
+  $paymentProcessor = CRM_Financial_BAO_PaymentProcessor::getPayment(
+    $params['payment_processor_id'],
     $params['payment_processor_mode']
   );
   if (civicrm_error($paymentProcessor)) {
@@ -504,4 +507,3 @@ function civicrm_contribute_transact($params) {
   $contribution = civicrm_contribution_add($params);
   return $contribution;
 }
-

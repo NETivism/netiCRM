@@ -10,7 +10,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  function get_info() {
+  public function get_info() {
     return [
      'name' => 'SPGATEWAY payment processor',
      'description' => 'Test SPGATEWAY payment processor.',
@@ -21,19 +21,19 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
 
     // Initialize configuration
-    if(!defined('DRUPAL_ROOT')){
+    if (!defined('DRUPAL_ROOT')) {
       die("You must exprot DRUPAL_ROOT for bootstrap drupal before test.");
     }
-    if(!CRM_Utils_System::moduleExists('civicrm_spgateway')){
+    if (!CRM_Utils_System::moduleExists('civicrm_spgateway')) {
       die("You must enable civicrm_spgateway module first before test.");
     }
     // check drupal version
     $version = CRM_Core_Config::$_userSystem->version;
-    if($version < 8){
+    if ($version < 8) {
       $payment_page = variable_get('civicrm_demo_payment_page', []);
     }
     else {
@@ -41,7 +41,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     }
 
     $class_name = 'Payment_SPGATEWAY';
-    if(isset($payment_page[$class_name])){
+    if (isset($payment_page[$class_name])) {
       $this->_page_id = $payment_page[$class_name];
     }
     else {
@@ -58,7 +58,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
-    if(empty($result['count'])){
+    if (empty($result['count'])) {
       $payment_processors = [];
       $params = [
         'version' => 3,
@@ -66,9 +66,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
-      if(!empty($result['count'])){
+      if (!empty($result['count'])) {
         $domain_id = CRM_Core_Config::domainID();
-        foreach($result['values'] as $type_id => $p){
+        foreach ($result['values'] as $type_id => $p) {
           $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
@@ -93,7 +93,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
           ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
-          if(is_numeric($result['id'])){
+          if (is_numeric($result['id'])) {
             $payment_processors[] = $result['id'];
           }
 
@@ -124,7 +124,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
-    if(!empty($result['count'])){
+    if (!empty($result['count'])) {
       $this->_cid = $result['id'];
     }
 
@@ -135,7 +135,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->_processor = NULL;
   }
 
@@ -144,7 +144,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
    *
    * @return void
    */
-  function testSinglePaymentNotifyMGP12(){
+  public function testSinglePaymentNotifyMGP12() {
     $now = time();
     $trxn_id = 'singleUt'.substr($now, -5);
     $amount = 111;
@@ -199,7 +199,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Gateway' => 'MPG',
       'IsLogin' => FALSE,
       'LangType' => 'zh-Tw',
-      'PayTime' => date('Y-m-d H:i:s',$now),
+      'PayTime' => date('Y-m-d H:i:s', $now),
       'RespondCode' => '00',
       'Exp' => '2112',
       'TokenUseStatus' => 0,
@@ -236,7 +236,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
    *
    * @return void
    */
-  function testSinglePaymentNotifyMGP23(){
+  public function testSinglePaymentNotifyMGP23() {
     $now = time();
     $trxn_id = 'singleMGP23'.substr($now, -5);
     $amount = 112;
@@ -287,7 +287,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       "EscrowBank" => "HNCB",
       "ItemDesc" => "This is description",
       "PaymentType" => "CREDIT",
-      'PayTime' => date('Y-m-d H:i:s',$now),
+      'PayTime' => date('Y-m-d H:i:s', $now),
       "RespondCode" => "00",
       "Auth" => "699550",
       "Card6No" => "400022",
@@ -327,7 +327,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function testSinglePaymentSync(){
+  public function testSinglePaymentSync() {
     $now = time();
     $trxn_id = 'singleSyncUt'.substr($now, -5);
     $amount = 200;
@@ -381,7 +381,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Gateway' => 'MPG',
       'IsLogin' => FALSE,
       'LangType' => 'zh-Tw',
-      'PayTime' => date('Y-m-d H:i:s',$now),
+      'PayTime' => date('Y-m-d H:i:s', $now),
       'RespondCode' => '00',
       'Exp' => '2112',
       'TokenUseStatus' => 0,
@@ -429,7 +429,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         'PaymentType' => 'CREDIT',
         'CreateTime' => date('Y-m-d H:i:s'),
         'PayTime' => date('Y-m-d H:i:s'),
-        'FundTime' => date('Y-m-d', $now + 86400*7),
+        'FundTime' => date('Y-m-d', $now + 86400 * 7),
         'RespondCode' => '00',
         'Auth' => '12345',
         'ECI' => NULL,
@@ -466,7 +466,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
 
   }
 
-  function testSingleWithWrongParams() {
+  public function testSingleWithWrongParams() {
     $now = time();
     $trxn_id = 'singleEmptyUt'.substr($now, -5);
     $amount = 222;
@@ -520,7 +520,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'Gateway' => 'MPG',
       'IsLogin' => FALSE,
       'LangType' => 'zh-Tw',
-      'PayTime' => date('Y-m-d H:i:s',$now),
+      'PayTime' => date('Y-m-d H:i:s', $now),
       'RespondCode' => '00',
       'Exp' => '2112',
       'TokenUseStatus' => 0,
@@ -542,7 +542,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotFalse(strpos($error_msg, 'Failuare'));
   }
 
-  function testRecurringPaymentNotify(){
+  public function testRecurringPaymentNotify() {
     $now = time();
     $trxn_id = 'recurUt'.substr($now, -5);
     $amount = 222;
@@ -636,7 +636,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "TradeNo" => "16112415263934243",
         "AuthCode" => "930637",
         "RespondCode" => "00",
-        "AuthTime" => date("Ymdhis",$now),
+        "AuthTime" => date("Ymdhis", $now),
         "CardNo" => "400022******1111",
         "EscrowBank" => "KGI",
         "AuthBank" => "KGI",
@@ -644,7 +644,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     ];
     $ppid = $this->_processor['id'];
     $get['ppid'] = $ppid;
-    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test?'test':'live');
+    $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $this->_is_test ? 'test' : 'live');
     $post = ['Period' => CRM_Core_Payment_SPGATEWAYAPI::recurEncrypt(json_encode($post), $paymentProcessor)];
     $this->doIPN(['spgateway', 'ipn', 'Credit'], $post, $get, __LINE__);
 
@@ -693,7 +693,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "MerOrderNo" => $trxn_id,
         "OrderNo" => $trxn_id2,
         "TradeNo" => "16112415263934243",
-        "AuthDate" => date("Y-m-d h:i:s",$now),
+        "AuthDate" => date("Y-m-d h:i:s", $now),
         "TotalTimes" => "5",
         "AlreadyTimes" => 2,
         "AuthAmt" => $amount,
@@ -733,7 +733,6 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     // Check if first time data is recovered by second post.
     $this->assertDBQuery($first_data, "SELECT data FROM civicrm_contribution_spgateway WHERE cid = $contribution->id");
 
-
     /**
      * Failed
      */
@@ -754,7 +753,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "MerOrderNo" => $trxn_id,
         "OrderNo" => $trxn_id3,
         "TradeNo" => "16112415263934243",
-        "AuthDate" => date("Y-m-d h:i:s",$now),
+        "AuthDate" => date("Y-m-d h:i:s", $now),
         "TotalTimes" => "5",
         "AlreadyTimes" => 3,
         "AuthAmt" => $amount,
@@ -796,7 +795,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $post = (object) [
       'Status' => 'SUCCESS',
       'Message' => '查詢成功',
-      'Result' => 
+      'Result' =>
       (object)([
         'MerchantID' => 'abcd',
         'Amt' => $amount,
@@ -806,7 +805,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         'PaymentType' => 'CREDIT',
         'CreateTime' => date('Y-m-d H:i:s'),
         'PayTime' => date('Y-m-d H:i:s'),
-        'FundTime' => date('Y-m-d', $now + 86400*7),
+        'FundTime' => date('Y-m-d', $now + 86400 * 7),
         'RespondCode' => '00',
         'Auth' => '12345',
         'ECI' => NULL,
@@ -857,7 +856,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
         "MerOrderNo" => $trxn_id,
         "OrderNo" => $trxn_id5,
         "TradeNo" => "16112415263934243",
-        "AuthDate" => date("Y-m-d h:i:s",$now),
+        "AuthDate" => date("Y-m-d h:i:s", $now),
         "TotalTimes" => "5",
         "AlreadyTimes" => 5,
         "AuthAmt" => $amount,
@@ -896,10 +895,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($data, "In line " . __LINE__);
   }
 
-
-  function testNonCreditNotifyMGP12(){
+  public function testNonCreditNotifyMGP12() {
     // BARCODE : 11
-    $now = time()+300;
+    $now = time() + 300;
     $trxn_id = 'nonCreditUtMGP12'.substr($now, -5);
     $amount = 111;
 
@@ -965,7 +963,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
   }
 
-  function doSingleNonCreditTest12($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
+  public function doSingleNonCreditTest12($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params) {
     // create contribution
     $contrib = [
       'trxn_id' => $trxn_id,
@@ -997,7 +995,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $afteweek = $now + ( 7 * 86400 );
+    $afteweek = $now + (7 * 86400);
     $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
@@ -1008,7 +1006,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'TradeNo' => '16112117153757079',
       'MerchantOrderNo' => $trxn_id,
       'PaymentType' => $payment_type,
-      'ExpireDate' => date('Y-m-d',$afteweek),
+      'ExpireDate' => date('Y-m-d', $afteweek),
     ];
     $data = array_merge($data, $return_params);
     $json = json_encode($data);
@@ -1035,9 +1033,9 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function testNonCreditNotifyMGP23(){
+  public function testNonCreditNotifyMGP23() {
     // BARCODE : 11
-    $now = time()+305;
+    $now = time() + 305;
     $trxn_id = 'nonCreditUtMGP23'.substr($now, -5);
     $amount = 111;
 
@@ -1103,7 +1101,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     );
   }
 
-  function doSingleNonCreditTest23($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params){
+  public function doSingleNonCreditTest23($now, $trxn_id, $amount, $instrument_id, $payment_type, $return_params) {
     // create contribution
     $contrib = [
       'trxn_id' => $trxn_id,
@@ -1135,7 +1133,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger ipn
-    $afteweek = $now + ( 7 * 86400 );
+    $afteweek = $now + (7 * 86400);
     $get = $post = $ids = [];
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
     $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
@@ -1146,7 +1144,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
       'TradeNo' => '16112117153757079',
       'MerchantOrderNo' => $trxn_id,
       'PaymentType' => $payment_type,
-      'ExpireDate' => date('Y-m-d',$afteweek),
+      'ExpireDate' => date('Y-m-d', $afteweek),
       'Status' => 'SUCCESS',
       'Message' => '',
     ];
@@ -1176,7 +1174,7 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     $this->assertNotEmpty($cid, "In line " . __LINE__);
   }
 
-  function doIPN($args, $post, $get, $line) {
+  public function doIPN($args, $post, $get, $line) {
     try {
       CRM_Core_Payment_SPGATEWAY::doIPN($args, $post, $get);
     }
@@ -1190,4 +1188,3 @@ class CRM_Core_Payment_SPGATEWAYTest extends CiviUnitTestCase {
     }
   }
 }
-

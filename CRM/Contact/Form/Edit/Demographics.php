@@ -47,7 +47,7 @@ class CRM_Contact_Form_Edit_Demographics {
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     // radio button for gender
     $genderOptions = [];
     $gender = CRM_Core_PseudoConstant::gender();
@@ -70,6 +70,6 @@ class CRM_Contact_Form_Edit_Demographics {
    *
    * @return None
    */
-  static function setDefaultValues(&$form, &$defaults) {}
+  public static function setDefaultValues(&$form, &$defaults) {
+  }
 }
-

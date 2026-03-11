@@ -25,9 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
@@ -39,7 +36,6 @@
  *
  */
 class CRM_Contribute_Info extends CRM_Core_Component_Info {
-
 
   // docs inherited from interface
   protected $keyword = 'contribute';
@@ -62,7 +58,6 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
       'delete in CiviContribute',
     ];
   }
-
 
   // docs inherited from interface
   public function getUserDashboardElement() {
@@ -106,4 +101,3 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

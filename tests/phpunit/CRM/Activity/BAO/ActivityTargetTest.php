@@ -33,45 +33,41 @@ require_once 'CRM/Activity/BAO/ActivityTarget.php';
  *
  *  @package   CiviCRM
  */
-class CRM_Activity_BAO_ActivityTargetTest extends CiviUnitTestCase 
-{
+class CRM_Activity_BAO_ActivityTargetTest extends CiviUnitTestCase {
 
-    /**
-     * Sets up the fixture, for example, opens a network connection.
-     * This method is called before a test is executed.
-     *
-     * @access protected
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-    }
+  /**
+   * Sets up the fixture, for example, opens a network connection.
+   * This method is called before a test is executed.
+   *
+   * @access protected
+   */
+  protected function setUp() {
+    parent::setUp();
+  }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     *
-     * @access protected
-     */
-    protected function tearDown()
-    {
-    }
+  /**
+   * Tears down the fixture, for example, closes a network connection.
+   * This method is called after a test is executed.
+   *
+   * @access protected
+   */
+  protected function tearDown() {
+  }
 
-    public function testRetrieveTargetIdsByActivityIdZeroID( ) {
-        $activity = $this->activityCreate( );
+  public function testRetrieveTargetIdsByActivityIdZeroID() {
+    $activity = $this->activityCreate();
 
-        $target = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId( 0 );
-        $this->assertSame( $target, [ ], 'No targets returned' );
-    }
+    $target = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId(0);
+    $this->assertSame($target, [ ], 'No targets returned');
+  }
 
+  public function testRetrieveTargetIdsByActivityIdOneID() {
+    $activity = $this->activityCreate();
 
-    public function testRetrieveTargetIdsByActivityIdOneID( ) {
-        $activity = $this->activityCreate( );
+    $targetIDs = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId($activity['id']);
 
-        $targetIDs = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId( $activity['id'] );
-
-        // assert that we have at least one targetID
-        $this->assertEquals( count( $targetIDs ), 1, 'One target ID match for activity' );
-        $this->assertEquals( $targetIDs[0], $activity['target_contact_id'], 'The returned target contacts ids match' );
-    }
+    // assert that we have at least one targetID
+    $this->assertEquals(count($targetIDs), 1, 'One target ID match for activity');
+    $this->assertEquals($targetIDs[0], $activity['target_contact_id'], 'The returned target contacts ids match');
+  }
 }

@@ -1,7 +1,6 @@
 <?php
 // $Id: Domain.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -104,4 +103,3 @@ function civicrm_domain_create($params) {
   _civicrm_object_to_array($domain, $domain_array);
   return $domain_array;
 }
-

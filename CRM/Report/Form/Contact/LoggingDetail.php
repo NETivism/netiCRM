@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
   /**
    * @var array<string, array<'title', mixed>>
@@ -42,7 +41,8 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
   private $loggingDB;
 
   private $log_conn_id;
-  private $log_date; function __construct() {
+  private $log_date;
+  public function __construct() {
     // don’t display the ‘Add these Contacts to Group’ button
     $this->_add2groupSupported = FALSE;
 
@@ -54,7 +54,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
 
     // make sure the report works even without the params
     if (!$this->log_conn_id or !$this->log_date) {
-      $dao = new CRM_Core_DAO;
+      $dao = new CRM_Core_DAO();
       $dao->query("SELECT log_conn_id, log_date FROM {$this->loggingDB}.log_civicrm_contact WHERE log_action = 'Update' ORDER BY log_date DESC LIMIT 1");
       $dao->fetch();
       $this->log_conn_id = $dao->log_conn_id;
@@ -70,7 +70,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function buildRows($sql, &$rows) {
+  public function buildRows($sql, &$rows) {
     // safeguard for when there aren’t any log entries yet
     if (!$this->log_conn_id or !$this->log_date) {
       return;
@@ -110,8 +110,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     $originalSQL = "SELECT * FROM {$this->loggingDB}.log_civicrm_contact WHERE log_conn_id != %1 AND log_date < %2 AND id = %3 ORDER BY log_date DESC LIMIT 1";
     $original = $this->sqlToArray($originalSQL, $params);
 
-
-    $dao = new CRM_Contact_DAO_Contact;
+    $dao = new CRM_Contact_DAO_Contact();
     $fields = &$dao->fields();
 
     // populate $rows with only the differences between $changed and $original (skipping log_* columns)
@@ -127,7 +126,8 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     }
   }
 
-  function buildQuery($applyLimit = null) {}
+  public function buildQuery($applyLimit = NULL) {
+  }
 
   private function sqlToArray($sql, $params) {
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
@@ -135,4 +135,3 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     return $dao->toArray();
   }
 }
-

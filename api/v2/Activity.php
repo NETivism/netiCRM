@@ -1,7 +1,6 @@
 <?php
 // $Id: Activity.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -296,8 +295,8 @@ function _civicrm_activity_check_params(&$params, $addMode = FALSE) {
     elseif (!is_numeric($value)) {
       return civicrm_create_error(ts('Invalid %1 Contact Id', [
         1 => ucfirst(
-              $key
-            )]));
+          $key
+        )]));
     }
 
     if (empty($valueIds)) {
@@ -429,9 +428,10 @@ function civicrm_activity_processemail($file, $activityTypeID, $result = [
     if (!file_exists($file) ||
       !is_readable($file)
     ) {
-      return CRM_Core_Error::createAPIError(ts('File %1 does not exist or is not readable',
-          [1 => $file]
-        ));
+      return CRM_Core_Error::createAPIError(ts(
+        'File %1 does not exist or is not readable',
+        [1 => $file]
+      ));
     }
   }
 
@@ -523,7 +523,8 @@ function civicrm_activity_custom_get($params) {
   }
 
   require_once 'CRM/Core/BAO/CustomGroup.php';
-  $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Activity',
+  $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+    'Activity',
     CRM_Core_DAO::$_nullObject,
     $params['activity_id'],
     NULL,
@@ -537,7 +538,8 @@ function civicrm_activity_custom_get($params) {
     }
     $groupCount++;
   }
-  $formattedGroupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree,
+  $formattedGroupTree = CRM_Core_BAO_CustomGroup::formatGroupTree(
+    $groupTree,
     $groupCount,
     CRM_Core_DAO::$_nullObject
   );
@@ -551,4 +553,3 @@ function civicrm_activity_custom_get($params) {
 
   return $customData;
 }
-

@@ -34,10 +34,9 @@
  *
  */
 
-
 class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment {
 
-  static function &create(&$params, &$ids) {
+  public static function &create(&$params, &$ids) {
 
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'ParticipantPayment', $params['id'], $params);
@@ -73,7 +72,7 @@ class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment 
    * @return boolean  true if deleted false otherwise
    * @access public
    */
-  static function deleteParticipantPayment($params) {
+  public static function deleteParticipantPayment($params) {
     $participantPayment = new CRM_Event_DAO_ParticipantPayment();
 
     $valid = FALSE;
@@ -92,10 +91,9 @@ class CRM_Event_BAO_ParticipantPayment extends CRM_Event_DAO_ParticipantPayment 
     while ($participantPayment->fetch()) {
       $participantPayment->delete();
     }
-    if($participantPayment){
+    if ($participantPayment) {
       return $participantPayment;
     }
     return FALSE;
   }
 }
-

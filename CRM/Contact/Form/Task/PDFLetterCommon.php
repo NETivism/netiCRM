@@ -45,7 +45,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @return void
    * @access public
    */
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
 
     $messageText = [];
     $messageSubject = [];
@@ -61,7 +61,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $form->assign('messageSubject', $messageSubject);
   }
 
-  static function preProcessSingle(&$form, $cid) {
+  public static function preProcessSingle(&$form, $cid) {
     $form->_contactIds = [$cid];
     // put contact display name in title for single contact mode
 
@@ -75,21 +75,24 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    *
    * @return void
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     if (count($form->_contactIds) > 100) {
       CRM_Core_Error::statusBounce(ts('PDF generation only allow 100 contacts per run.'));
     }
     $form->assign('totalSelectedContacts', count($form->_contactIds));
 
-
     CRM_Mailing_BAO_Mailing::commonLetterCompose($form);
     if ($form->_single) {
-      $cancelURL = CRM_Utils_System::url('civicrm/contact/view',
+      $cancelURL = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$form->_cid}&selectedChild=activity",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
       if ($form->get('action') == CRM_Core_Action::VIEW) {
-        $form->addButtons([
+        $form->addButtons(
+          [
             ['type' => 'cancel',
               'name' => ts('Done'),
               'js' => ['onclick' => "location.href='{$cancelURL}'; return false;"],
@@ -98,7 +101,8 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
         );
       }
       else {
-        $form->addButtons([
+        $form->addButtons(
+          [
             ['type' => 'submit',
               'name' => ts('Make PDF Letter'),
               'isDefault' => TRUE,
@@ -129,7 +133,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    * @access public
    *
    */
-  static function formRule($fields, $dontCare, $self) {
+  public static function formRule($fields, $dontCare, $self) {
     $errors = [];
     $template = CRM_Core_Smarty::singleton();
 
@@ -147,7 +151,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
    *
    * @return None
    */
-  static function postProcess(&$form) {
+  public static function postProcess(&$form) {
     $formValues = $form->controller->exportValues($form->getName());
 
     // process message template
@@ -170,8 +174,6 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
         CRM_Core_BAO_MessageTemplates::add($messageTemplate);
       }
     }
-
-
 
     $html = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>body { margin: 56px; }</style></head><body>';
 
@@ -253,7 +255,7 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     CRM_Utils_System::civiExit(1);
   }
 
-  static function formatMessage(&$message) {
+  public static function formatMessage(&$message) {
     $newLineOperators = ['p' => ['oper' => '<p>',
         'pattern' => '/<(\s+)?p(\s+)?>/m',
       ],
@@ -263,9 +265,9 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     ];
 
     $htmlMsg = preg_split($newLineOperators['p']['pattern'], $message);
-    foreach ($htmlMsg as $k => & $m) {
+    foreach ($htmlMsg as $k => &$m) {
       $messages = preg_split($newLineOperators['br']['pattern'], $m);
-      foreach ($messages as $key => & $msg) {
+      foreach ($messages as $key => &$msg) {
         $msg = trim($msg);
         $matches = [];
         if (preg_match('/^(&nbsp;)+/', $msg, $matches)) {
@@ -291,4 +293,3 @@ class CRM_Contact_Form_Task_PDFLetterCommon {
     $message = CRM_Utils_String::htmlPurifier($message);
   }
 }
-

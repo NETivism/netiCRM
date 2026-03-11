@@ -42,15 +42,13 @@
  *
  */
 
-
-
 class CRM_Utils_SoapServer {
 
   /**
    * Number of seconds we should let a soap process idle
    * @static
    */
-  static $soap_timeout = 0;
+  public static $soap_timeout = 0;
 
   /**
    * Cache the actual UF Class
@@ -103,7 +101,6 @@ class CRM_Utils_SoapServer {
       throw new SoapFault('Client', 'Invalid key');
     }
 
-
     if (self::$soap_timeout &&
       $t > ($session->get('soap_time') + self::$soap_timeout)
     ) {
@@ -127,7 +124,7 @@ class CRM_Utils_SoapServer {
    */
   public function authenticate($name, $pass) {
     $ufClassName = $this->ufClass;
-    $result =& $ufClassName::authenticate($name, $pass);
+    $result = &$ufClassName::authenticate($name, $pass);
 
     if (empty($result)) {
       throw new SoapFault('Client', 'Invalid login');
@@ -224,4 +221,3 @@ class CRM_Utils_SoapServer {
     return civicrm_contact_get($params);
   }
 }
-

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
 
   /**
@@ -42,7 +41,7 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
    * return null
    * @access public
    */
-  function listContribution() {
+  public function listContribution() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), NULL);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -64,9 +63,6 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
       $this->assign('honor', TRUE);
     }
 
-
-
-
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->contact_id = $this->_contactId;
     $recur->is_test = 0;
@@ -75,8 +71,6 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
     $config = CRM_Core_Config::singleton();
 
     $recurStatus = CRM_Contribute_PseudoConstant::contributionStatus();
-
-
 
     require_once 'api/v3/utils.php';
     $recurRow = [];
@@ -126,9 +120,8 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     parent::preProcess();
     $this->listContribution();
   }
 }
-

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * class for managing a http request
  *
@@ -50,12 +47,13 @@ class CRM_Utils_Request {
    * @access private
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {}
+  public function __construct() {
+  }
 
   /**
    * get the variable information from the request (GET/POST/SESSION
@@ -72,7 +70,7 @@ class CRM_Utils_Request {
    * @static
    *
    */
-  static function retrieve($name, $type, &$store, $abort = FALSE, $default = NULL, $method = 'GET') {
+  public static function retrieve($name, $type, &$store, $abort = FALSE, $default = NULL, $method = 'GET') {
 
     // hack to detect stuff not yet converted to new style
     if (!is_string($type)) {
@@ -95,7 +93,6 @@ class CRM_Utils_Request {
         break;
     }
 
-
     if (isset($value) &&
       (CRM_Utils_Type::validate($value, $type, $abort, $name) === NULL)
     ) {
@@ -107,7 +104,7 @@ class CRM_Utils_Request {
     }
 
     if (!isset($value) && $abort) {
-       return CRM_Core_Error::statusBounce(ts("Could not find valid value for %1", [1 => $name]));
+      return CRM_Core_Error::statusBounce(ts("Could not find valid value for %1", [1 => $name]));
     }
 
     if (!isset($value) && $default !== NULL) {
@@ -126,13 +123,13 @@ class CRM_Utils_Request {
     return $value;
   }
 
-  static function getRedirectDestination($url) {
+  public static function getRedirectDestination($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $redirect = curl_exec($ch);
     curl_close($ch);
-    if(preg_match('/<a href="([^"]*)"/i', $redirect, $match)) {
+    if (preg_match('/<a href="([^"]*)"/i', $redirect, $match)) {
       $redirect = $match[1];
       if ($redirect) {
         return $redirect;
@@ -141,4 +138,3 @@ class CRM_Utils_Request {
     return '';
   }
 }
-

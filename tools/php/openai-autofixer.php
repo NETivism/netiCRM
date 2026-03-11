@@ -5,22 +5,22 @@ if (!php_sapi_name() === 'cli') {
   exit(1);
 }
 
-function usage($long =  FALSE){
-    $output = <<<'EOT'
-      Usage: This tool parses error logs line by line, utilizes OpenAI to
-      generate corrective code, and applies these changes to the respective files.
-      Currently, only support one line auto replacement.
+function usage($long =  FALSE) {
+  $output = <<<'EOT'
+    Usage: This tool parses error logs line by line, utilizes OpenAI to
+    generate corrective code, and applies these changes to the respective files.
+    Currently, only support one line auto replacement.
 
-        php openai-autofixer.php \
-          --input-file=<file_name> \
-          --filename-match="<regex>" \
-          --linenum-match="<regex>" \
-          --prompt-file=<file_name> \
-          --report-file=<file_name>
-          --openai-keyfile=<file_name> \
-          --context=<AnBn|func> \
+      php openai-autofixer.php \
+        --input-file=<file_name> \
+        --filename-match="<regex>" \
+        --linenum-match="<regex>" \
+        --prompt-file=<file_name> \
+        --report-file=<file_name>
+        --openai-keyfile=<file_name> \
+        --context=<AnBn|func> \
 
-    EOT;
+  EOT;
   if ($long) {
     $output .= <<<'EOT'
         --input-file [required]: This is the input log file with each error logged on a separate line.
@@ -78,41 +78,41 @@ function usage($long =  FALSE){
   fwrite(STDERR, $output."\n");
 }
 
-function prompt($logLine, $fileName, $lineNum, $promptTemplate, $params){
+function prompt($logLine, $fileName, $lineNum, $promptTemplate, $params) {
   $fileLines = [];
   $fileLines = file($fileName);
   if (!empty($params['context']) && $params['context'] != 'func') {
     if (!empty($params['context-before'])) {
-      $before = ($lineNum-1) - $params['context-before'];
+      $before = ($lineNum - 1) - $params['context-before'];
     }
     if (!empty($params['context-after'])) {
-      $after = ($lineNum-1) + $params['context-after'] + 1;
+      $after = ($lineNum - 1) + $params['context-after'] + 1;
     }
     if ($before && $after && isset($fileLines[$before]) && isset($fileLines[$after])) {
-      $code = implode("", array_slice($fileLines, $before, $after-$before));
+      $code = implode("", array_slice($fileLines, $before, $after - $before));
     }
-    elseif ($before && isset($fileLines[$before]) && isset($fileLines[$lineNum-1])) {
-      $code = implode("", array_slice($fileLines, $before, ($lineNum)-$before));
+    elseif ($before && isset($fileLines[$before]) && isset($fileLines[$lineNum - 1])) {
+      $code = implode("", array_slice($fileLines, $before, ($lineNum) - $before));
     }
-    elseif ($after && isset($fileLines[$after]) && isset($fileLines[$lineNum-1])) {
-      $code = implode("", array_slice($fileLines, $lineNum-1, $after-($lineNum-1)));
+    elseif ($after && isset($fileLines[$after]) && isset($fileLines[$lineNum - 1])) {
+      $code = implode("", array_slice($fileLines, $lineNum - 1, $after - ($lineNum - 1)));
     }
   }
   elseif (!empty($params['context']) && $params['context'] == 'func') {
     $funcLine = NULL;
-    for($i = $lineNum-1; $i>=0; $i--) {
+    for ($i = $lineNum - 1; $i >= 0; $i--) {
       if (preg_match('/(public|private|protected)?\s?(static)?\s?function\s+[^(]+\(/', $fileLines[$i])) {
         $funcLine = $i;
         break;
       }
     }
-    if (is_int($funcLine) && isset($fileLines[$funcLine]) && isset($fileLines[$lineNum-1])) {
-      $code = implode("", array_slice($fileLines, $funcLine, ($lineNum)-$funcLine));
+    if (is_int($funcLine) && isset($fileLines[$funcLine]) && isset($fileLines[$lineNum - 1])) {
+      $code = implode("", array_slice($fileLines, $funcLine, ($lineNum) - $funcLine));
     }
   }
   else {
     // single line
-    $code = trim($fileLines[$lineNum-1]);
+    $code = trim($fileLines[$lineNum - 1]);
   }
   return str_replace(['{{code-block}}', '{{log-line}}'], [$code, $logLine], $promptTemplate);
 }
@@ -169,14 +169,14 @@ function request($prompt, $params, &$result) {
 function replace($new, $fileName, $lineNum, &$outcome) {
   $fileLines = [];
   $fileLines = file($fileName);
-  $newLineCount = count(explode("\n",$new));
+  $newLineCount = count(explode("\n", $new));
   if ($newLineCount == 1) {
-    $old = $fileLines[$lineNum-1];
+    $old = $fileLines[$lineNum - 1];
     preg_match('/^\s*/', $old, $matches);
     if (!empty($matches)) {
       $new = $matches[0].trim($new)."\n";
     }
-    $fileLines[$lineNum-1] = $new;
+    $fileLines[$lineNum - 1] = $new;
     file_put_contents($fileName, implode("", $fileLines));
     $msg = "-".trim($old, "\n")."\n";
     $msg .= "+".trim($new, "\n");
@@ -192,13 +192,13 @@ function replace($new, $fileName, $lineNum, &$outcome) {
 }
 
 function parseArgv($argv, &$params) {
-  $params['long-help'] = false;
-  foreach($argv as $argument){
+  $params['long-help'] = FALSE;
+  foreach ($argv as $argument) {
     if (preg_match('/^--([a-z-]+)=(.*)$/', $argument, $matches)) {
       $params[$matches[1]] = trim($matches[2], '"'."'");
     }
     elseif ($argument === '--help') {
-      $params['long-help'] = true;
+      $params['long-help'] = TRUE;
     }
   }
 }
@@ -274,10 +274,10 @@ if (!empty($stdErrs)) {
 }
 
 if (!empty($validatedParams['context'])) {
-  if(preg_match('/A(\d+)/', $validatedParams['context'], $matches)) {
+  if (preg_match('/A(\d+)/', $validatedParams['context'], $matches)) {
     $validatedParams['context-after'] = $matches[1];
   }
-  if(preg_match('/B(\d+)/', $validatedParams['context'], $matches)) {
+  if (preg_match('/B(\d+)/', $validatedParams['context'], $matches)) {
     $validatedParams['context-before'] = $matches[1];
   }
 }
@@ -288,8 +288,8 @@ fwrite(STDERR, "  tail -f {$validatedParams['report-file']}\n");
 $logLines = explode("\n", $logs);
 chdir(__DIR__.'/../../');
 if (!empty($logLines)) {
-  foreach($logLines as $num => $line) {
-    $num = $num+1;
+  foreach ($logLines as $num => $line) {
+    $num = $num + 1;
     fwrite(STDERR, "Processing line {$num}");
     fwrite($reportFile, "Processing line {$num}... ", 1000);
     if (empty(trim($line))) {

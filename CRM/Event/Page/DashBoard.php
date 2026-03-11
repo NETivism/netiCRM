@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This is page is for Event Dashboard
  */
@@ -48,9 +46,8 @@ class CRM_Event_Page_DashBoard extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('CiviEvent'));
-
 
     $eventSummary = CRM_Event_BAO_Event::getEventSummary();
 
@@ -78,7 +75,7 @@ class CRM_Event_Page_DashBoard extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Search', ts('events'), NULL);
@@ -93,4 +90,3 @@ class CRM_Event_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

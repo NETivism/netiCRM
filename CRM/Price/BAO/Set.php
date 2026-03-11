@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Business object for managing price sets
  *
@@ -45,7 +42,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -58,7 +55,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     $priceSetBAO = new CRM_Price_BAO_Set();
     $priceSetBAO->copyValues($params);
     if (defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
@@ -81,7 +78,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_Set', $params, $defaults);
   }
 
@@ -95,7 +92,7 @@ class CRM_Price_BAO_Set extends CRM_Price_DAO_Set {
    * @static
    * @access public
    */
-  static function setIsActive($id, $isActive) {
+  public static function setIsActive($id, $isActive) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_Set', $id, 'is_active', $isActive);
   }
 
@@ -251,7 +248,6 @@ WHERE     ct.id = cp.contribution_type_id AND
     }
     unset($dao);
 
-
     $dao = new CRM_Price_DAO_SetEntity();
     // find if this already exists
     $dao->entity_id = $entityId;
@@ -290,7 +286,6 @@ WHERE     ct.id = cp.contribution_type_id AND
       return FALSE;
     }
 
-
     $dao = new CRM_Price_DAO_SetEntity();
     $dao->entity_table = $entityTable;
     $dao->entity_id = $entityId;
@@ -311,7 +306,6 @@ WHERE     ct.id = cp.contribution_type_id AND
    */
   public static function getSetId(&$params) {
     $fid = NULL;
-
 
     if ($oid = CRM_Utils_Array::value('oid', $params)) {
 
@@ -402,7 +396,7 @@ WHERE     ct.id = cp.contribution_type_id AND
       'is_active',
       'visibility_id',
       'max_value',
-      'active_on', 
+      'active_on',
       'expire_on',
     ];
     if ($required == TRUE) {
@@ -446,10 +440,9 @@ WHERE price_set_id = %1
         }
         $setTree[$setID]['fields'][$fieldID][$field] = $dao->$field;
       }
-      
 
       $inactiveNeeded = FALSE;
-      if(!$isActive) {
+      if (!$isActive) {
         // also get in-active options
         $inactiveNeeded = TRUE;
       }
@@ -470,7 +463,7 @@ WHERE  id = %1";
     return $setTree;
   }
 
-  static function initSet(&$form, $id, $entityTable = 'civicrm_event') {
+  public static function initSet(&$form, $id, $entityTable = 'civicrm_event') {
     // get price info
     if ($priceSetId = self::getFor($entityTable, $id)) {
       if ($form->_action & CRM_Core_Action::UPDATE) {
@@ -511,7 +504,6 @@ WHERE  id = %1";
 
       //get the price set fields participant count.
       if ($entityTable == 'civicrm_event') {
-
 
         //get option count info.
         $form->_priceSet['optionsCountTotal'] = self::getPricesetCount($priceSetId);
@@ -555,11 +547,10 @@ WHERE  id = %1";
     return FALSE;
   }
 
-  static function processAmount(&$fields, &$params, &$lineItem) {
+  public static function processAmount(&$fields, &$params, &$lineItem) {
     // using price set
     $totalPrice = 0;
     $radioLevel = $checkboxLevel = $selectLevel = $textLevel = [];
-
 
     foreach ($fields as $id => $field) {
       if (empty($params["price_{$id}"]) && $params["price_{$id}"] == NULL) {
@@ -586,7 +577,8 @@ WHERE  id = %1";
           $params['amount_priceset_level_radio'] = [];
           $params['amount_priceset_level_radio'][$optionValueId] = $optionLabel;
           if (isset($radioLevel)) {
-            $radioLevel = array_merge($radioLevel,
+            $radioLevel = array_merge(
+              $radioLevel,
               array_keys($params['amount_priceset_level_radio'])
             );
           }
@@ -644,7 +636,7 @@ WHERE  id = %1";
    * @return None
    * @access public
    */
-  static function buildPriceSet(&$form) {
+  public static function buildPriceSet(&$form) {
     $priceSetId = $form->get('priceSetId');
     if (!$priceSetId) {
       return;
@@ -666,7 +658,7 @@ WHERE  id = %1";
 
     CRM_Utils_Hook::buildAmount('contribution', $form, $feeBlock);
 
-    $hasField = false;
+    $hasField = FALSE;
     foreach ($feeBlock as $field) {
       if (CRM_Utils_Array::value('visibility', $field) == 'public' || $className == 'CRM_Contribute_Form_Contribution') {
         $options = CRM_Utils_Array::value('options', $field);
@@ -675,13 +667,13 @@ WHERE  id = %1";
         }
 
         $element = CRM_Price_BAO_Field::addQuickFormElement($form, 'price_' . $field['id'], $field['id'], FALSE, CRM_Utils_Array::value('is_required', $field, FALSE), NULL, $options);
-        if(!empty($element)){
+        if (!empty($element)) {
           $hasField = TRUE;
         }
 
       }
     }
-    if(!$hasField){
+    if (!$hasField) {
       $status = ts('There are no active field in the price set.');
       $session = CRM_Core_Session::singleton();
       $session->setStatus($status);
@@ -732,7 +724,7 @@ WHERE  id = %1";
    * @access public
    * @static
    */
-  static function copy($id) {
+  public static function copy($id) {
     $maxId = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_price_set");
 
     $title = ts('[Copy id %1]', [1 => $maxId + 1]);
@@ -757,7 +749,6 @@ WHERE  id = %1";
     }
     $copy->save();
 
-
     CRM_Utils_Hook::copy('Set', $copy);
     return $copy;
   }
@@ -767,11 +758,11 @@ WHERE  id = %1";
    *
    * @param int $sid the price set id
    */
-  static function checkPermission($sid) {
+  public static function checkPermission($sid) {
     if ($sid && defined('CIVICRM_EVENT_PRICE_SET_DOMAIN_ID') && CIVICRM_EVENT_PRICE_SET_DOMAIN_ID) {
       $domain_id = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Set', $sid, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domain_id) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
     }
     return TRUE;
@@ -835,4 +826,3 @@ WHERE  pset.id = %1 $where";
     return CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR, $amount_level) . $displayParticipantCount . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
   }
 }
-

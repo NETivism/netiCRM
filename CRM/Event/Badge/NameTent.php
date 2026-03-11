@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
 * Copyright (C) 2010 Tech To The People
 * Licensed to CiviCRM under the Academic Free License version 3.0.
@@ -37,7 +36,6 @@
  * @package CRM
  *
  */
-
 
 class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
   /**
@@ -51,7 +49,7 @@ class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
    */
   public $format;
   public $pdf;
-  function __construct() {
+  public function __construct() {
     parent::__construct();
     // A4
     $pw = 297;
@@ -87,4 +85,3 @@ class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
     $this->pdf->StopTransform();
   }
 }
-

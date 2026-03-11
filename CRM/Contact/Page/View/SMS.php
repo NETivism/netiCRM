@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * Dummy page for details of SMS
  *
@@ -53,12 +48,18 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the callback, module and activity id
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'browse'
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'browse'
     );
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
       $this
     );
 
@@ -69,19 +70,22 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
       $cid = $dao->entity_id;
     }
 
-
     $dao = new CRM_SMS_DAO_History();
     $dao->id = $id;
 
     if ($dao->find(TRUE)) {
-      $this->assign('fromName',
-        CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $this->assign(
+        'fromName',
+        CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
           $dao->contact_id,
           'display_name'
         )
       );
-      $this->assign('toName',
-        CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $this->assign(
+        'toName',
+        CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
           $cid,
           'display_name'
         )
@@ -94,11 +98,9 @@ class CRM_Contact_Page_View_SMS extends CRM_Core_Page {
 
       CRM_Utils_System::setTitle($contactImage . ' ' . $displayName);
 
-
       // also add the cid params to the Menu array
       CRM_Core_Menu::addParam('cid', $cid);
     }
     parent::run();
   }
 }
-

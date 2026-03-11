@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class holds all the Pseudo constants that are specific to Contributions. This avoids
  * polluting the core class and isolates the mass mailer class
@@ -117,7 +114,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   private static $taiwanACH;
-  
+
   /**
    * Taiwan ACH return failed code and reason
    * @var array
@@ -161,7 +158,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if ($receiptType == 'is_deductible') {
       $types = array_intersect_key(self::$contributionType, self::$deductibleType);
     }
-    elseif($receiptType == 'is_taxreceipt'){
+    elseif ($receiptType == 'is_taxreceipt') {
       $types = array_intersect_key(self::$contributionType, self::$taxType);
     }
     else {
@@ -170,10 +167,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
     if ($receiptTypeLabel) {
       foreach ($types as $k => $v) {
-        if(!empty(self::$deductibleType[$k])) {
+        if (!empty(self::$deductibleType[$k])) {
           $types[$k] .= ' (' . ts('Deductible') . ')';
         }
-        elseif(!empty(self::$taxType[$k])) {
+        elseif (!empty(self::$taxType[$k])) {
           $types[$k] .= ' (' . ts('Tax Receipt') . ')';
         }
       }
@@ -218,8 +215,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    */
   public static function &paymentInstrument($columnName = 'label') {
     if (!isset(self::$paymentInstrument[$columnName])) {
-      self::$paymentInstrument[$columnName] = CRM_Core_OptionGroup::values('payment_instrument',
-        FALSE, FALSE, FALSE, NULL, $columnName
+      self::$paymentInstrument[$columnName] = CRM_Core_OptionGroup::values(
+        'payment_instrument',
+        FALSE,
+        FALSE,
+        FALSE,
+        NULL,
+        $columnName
       );
     }
 
@@ -276,7 +278,6 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
       $productID = [];
 
-
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->premiums_id = $premiumID;
       $dao->find();
@@ -315,8 +316,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   public static function &contributionStatus($id = NULL, $columnName = 'label') {
     $cacheKey = $columnName;
     if (!isset(self::$contributionStatus[$cacheKey])) {
-      self::$contributionStatus[$cacheKey] = CRM_Core_OptionGroup::values('contribution_status',
-        FALSE, FALSE, FALSE, NULL, $columnName
+      self::$contributionStatus[$cacheKey] = CRM_Core_OptionGroup::values(
+        'contribution_status',
+        FALSE,
+        FALSE,
+        FALSE,
+        NULL,
+        $columnName
       );
     }
     $result = self::$contributionStatus[$cacheKey];
@@ -355,7 +361,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$pcPage) {
       self::$pcPage = [];
       $dao = CRM_Core_DAO::executeQuery("SELECT pcp.id, pcp.title, pcp.contact_id, c.sort_name, pcp.contact_id, c.external_identifier FROM civicrm_pcp pcp INNER JOIN civicrm_contact c ON c.id = pcp.contact_id");
-      while($dao->fetch()){
+      while ($dao->fetch()) {
         if ($dao->external_identifier) {
           self::$pcPage[$dao->id] = "$dao->title by $dao->sort_name ($dao->contact_id - $dao->external_identifier)";
         }
@@ -383,7 +389,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$taiwanACH) {
       $fp = fopen($civicrm_root.'xml/templates/taiwan_ach.tpl', 'r');
       $parent = '';
-      while(($data = fgetcsv($fp, 100)) !== FALSE) {
+      while (($data = fgetcsv($fp, 100)) !== FALSE) {
         if (empty($data[1])) {
           $parent = $data[0];
           continue;
@@ -392,7 +398,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
           self::$taiwanACH[$parent][$data[0]] = $data[0].' '.$data[1];
         }
       }
-      fclose($fp); 
+      fclose($fp);
     }
     if (!empty($code)) {
       foreach (self::$taiwanACH as $banks) {
@@ -425,7 +431,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$taiwanACHFailedReason) {
       $fp = fopen($civicrm_root.'xml/templates/taiwan_ach_failed_reason.tpl', 'r');
       $parent = '';
-      while(($data = fgetcsv($fp, 100)) !== FALSE) {
+      while (($data = fgetcsv($fp, 100)) !== FALSE) {
         if (empty($data[1])) {
           $parent = explode('_', $data[0]);
           $instrumentName = $parent[0];
@@ -442,4 +448,3 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     return self::$taiwanACHFailedReason;
   }
 }
-

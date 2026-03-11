@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components
  * for previewing Civicrm Profile Group
@@ -70,7 +66,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $flag = FALSE;
     $this->_gid = $this->get('id');
     $this->set('gid', $this->_gid);
@@ -84,10 +80,10 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       $fieldDAO->find(TRUE);
 
       if ($fieldDAO->is_active == 0) {
-         return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not be displayed on profile form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not be displayed on profile form.'));
       }
       elseif ($fieldDAO->is_view == 1) {
-         return CRM_Core_Error::statusBounce(ts('This field is view only so it will not be displayed on profile form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is view only so it will not be displayed on profile form.'));
       }
       $name = $fieldDAO->field_name;
       // preview for field
@@ -133,7 +129,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $stateCountryMap = [];
     foreach ($this->_fields as $name => $field) {
@@ -180,7 +176,8 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
@@ -189,4 +186,3 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
     );
   }
 }
-

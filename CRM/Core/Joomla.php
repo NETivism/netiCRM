@@ -46,13 +46,12 @@ class CRM_Core_Joomla {
    * @access public
    * @static
    */
-  static function sidebarLeft() {
+  public static function sidebarLeft() {
     $config = CRM_Core_Config::singleton();
 
     if ($config->userFrameworkFrontend) {
       return;
     }
-
 
     $blockIds = [
       CRM_Core_Block::CREATE_NEW,
@@ -69,11 +68,9 @@ class CRM_Core_Joomla {
       $blocks[] = CRM_Core_Block::getContent($id);
     }
 
-
     $template = CRM_Core_Smarty::singleton();
     $template->assign_by_ref('blocks', $blocks);
     $sidebarLeft = $template->fetch('CRM/Block/blocks.tpl');
     $template->assign_by_ref('sidebarLeft', $sidebarLeft);
   }
 }
-

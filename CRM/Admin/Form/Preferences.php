@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -48,22 +46,33 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
 
   protected $_config = NULL;
 
-  protected $_params = NULL; function preProcess() {
-    $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive',
-      $this, FALSE
+  protected $_params = NULL;
+  public function preProcess() {
+    $this->_contactID = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
+      $this,
+      FALSE
     );
-    $this->_system = CRM_Utils_Request::retrieve('system', 'Boolean',
-      $this, FALSE, TRUE
+    $this->_system = CRM_Utils_Request::retrieve(
+      'system',
+      'Boolean',
+      $this,
+      FALSE,
+      TRUE
     );
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'update'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'update'
     );
     if (isset($action)) {
       $this->assign('action', $action);
     }
 
     $session = CRM_Core_Session::singleton();
-
 
     $this->_config = new CRM_Core_DAO_Preferences();
     $this->_config->domain_id = CRM_Core_Config::domainID();
@@ -94,13 +103,14 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/setting', 'reset=1'));
   }
 
-  function cbsDefaultValues(&$defaults) {
+  public function cbsDefaultValues(&$defaults) {
 
     foreach ($this->_cbs as $name => $title) {
       if (isset($this->_config->$name) &&
         $this->_config->$name
       ) {
-        $value = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $value = explode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($this->_config->$name, 1, -1)
         );
         if (!empty($value)) {
@@ -122,21 +132,26 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   public function buildQuickForm() {
     parent::buildQuickForm();
 
-
     foreach ($this->_cbs as $name => $title) {
       $options = array_flip(CRM_Core_OptionGroup::values($name, FALSE, FALSE, TRUE));
       $newOptions = [];
       foreach ($options as $key => $val) {
         $newOptions[$key] = $val;
       }
-      $this->addCheckBox($name, $title,
+      $this->addCheckBox(
+        $name,
+        $title,
         $newOptions,
-        NULL, NULL, NULL, NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
         ['&nbsp;&nbsp;', '&nbsp;&nbsp;', '<br/>']
       );
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -164,7 +179,8 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
       if (CRM_Utils_Array::value($name, $this->_params) &&
         is_array($this->_params[$name])
       ) {
-        $this->_config->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $this->_config->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           array_keys($this->_params[$name])
         ) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
@@ -177,4 +193,3 @@ class CRM_Admin_Form_Preferences extends CRM_Core_Form {
   }
   //end of function
 }
-

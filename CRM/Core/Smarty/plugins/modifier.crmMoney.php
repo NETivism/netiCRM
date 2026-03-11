@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Format the given monetary amount (and currency) for display
  *
@@ -47,4 +45,3 @@
 function smarty_modifier_crmMoney($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
   return CRM_Utils_Money::format($amount, $currency, $format, $onlyNumber);
 }
-

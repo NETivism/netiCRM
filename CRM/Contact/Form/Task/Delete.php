@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class provides the functionality to delete a group of
  * contacts. This class provides functionality for the actual
@@ -67,15 +62,18 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
 
     //check for delete
     if (!CRM_Core_Permission::check('delete contacts')) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
-      $this, FALSE
+    $cid = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
+      $this,
+      FALSE
     );
 
     $this->_searchKey = CRM_Utils_Request::retrieve('key', 'String', $this);
@@ -87,7 +85,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     $this->_skipUndelete = (CRM_Core_Permission::check('access deleted contacts') and (CRM_Utils_Request::retrieve('skip_undelete', 'Boolean', $this) or CRM_Utils_Array::value('task', $values) == CRM_Contact_Task::DELETE_PERMANENTLY));
 
     if ($this->_skipUndelete && !CRM_Core_Permission::check('delete contacts permanantly')) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
     $this->_restore = (CRM_Utils_Request::retrieve('restore', 'Boolean', $this) or CRM_Utils_Array::value('task', $values) == CRM_Contact_Task::RESTORE);
     $this->assign('trash', !$this->_skipUndelete);
@@ -98,7 +96,7 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     if ($cid) {
 
       if (!CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::EDIT)) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to delete this contact. Note: you can delete contacts if you can edit them.'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to delete this contact. Note: you can delete contacts if you can edit them.'));
       }
 
       $this->_contactIds = [$cid];
@@ -121,7 +119,6 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     }
     CRM_Utils_System::setTitle($pageTitle);
 
-
     $this->_sharedAddressMessage = $this->get('sharedAddressMessage');
     if (!$this->_restore && !$this->_sharedAddressMessage) {
       // we check for each contact for shared contact address
@@ -134,7 +131,8 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
 
         if ($sharedAddressMessage['count'] > 0) {
           $sharedAddressCount += $sharedAddressMessage['count'];
-          $sharedContactList = array_merge($sharedContactList,
+          $sharedContactList = array_merge(
+            $sharedContactList,
             $sharedAddressMessage['contactList']
           );
         }
@@ -176,12 +174,12 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
       $smartGroups = CRM_Contact_BAO_GroupContactCache::contactGroup($cid);
       $groupIds = array_keys($groups);
       if (!empty($smartGroups)) {
-        foreach($smartGroups['group'] as $group) {
+        foreach ($smartGroups['group'] as $group) {
           $groupIds[] = $group['id'];
         }
       }
       if (!empty($groupIds)) {
-        foreach($groupIds as $groupId) {
+        foreach ($groupIds as $groupId) {
           $smartMarketing = CRM_Mailing_External_SmartMarketing::getProviderByGroup($groupId);
           if (!empty($smartMarketing)) {
             $this->assign('smart_marketing_hint', TRUE);
@@ -199,11 +197,11 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     if ($this->_restore) {
       $label = ts('Restore Contact(s)');
     }
-    elseif($this->_skipUndelete) {
+    elseif ($this->_skipUndelete) {
       $label = ts('Permanently Delete Contact');
     }
     else {
@@ -213,9 +211,10 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
     if ($this->_single) {
       // also fix the user context stack in case the user hits cancel
       $session = CRM_Core_Session::singleton();
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view',
-          'reset=1&cid=' . $this->_contactIds[0]
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/contact/view',
+        'reset=1&cid=' . $this->_contactIds[0]
+      ));
       $this->addDefaultButtons($label, 'done', 'cancel');
     }
     else {
@@ -269,7 +268,8 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
       ];
 
       if ($selfDelete) {
-        $display_name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+        $display_name = CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
           $currentUserId,
           'display_name'
         );
@@ -292,7 +292,8 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
           ts('Selected contact cannot be deleted.'),
         ];
         if ($selfDelete) {
-          $display_name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+          $display_name = CRM_Core_DAO::getFieldValue(
+            'CRM_Contact_DAO_Contact',
             $currentUserId,
             'display_name'
           );
@@ -326,4 +327,3 @@ class CRM_Contact_Form_Task_Delete extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

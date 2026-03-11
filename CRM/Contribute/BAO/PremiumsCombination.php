@@ -41,7 +41,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -55,7 +55,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $combination = new CRM_Contribute_DAO_PremiumsCombination();
     $combination->copyValues($params);
     if ($combination->find(TRUE)) {
@@ -76,7 +76,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    *
    * @return object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['created_date'] = date('YmdHis');
     $params['modified_date'] = date('YmdHis');
@@ -102,7 +102,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     $transaction = new CRM_Core_Transaction();
 
     $combination = self::add($params, CRM_Utils_Array::value('id', $params));
@@ -125,7 +125,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @static
    *
    */
-  static function del($id) {
+  public static function del($id) {
     $productDao = new CRM_Contribute_DAO_PremiumsCombinationProducts();
     $productDao->combination_id = $id;
     $productDao->delete();
@@ -144,7 +144,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    */
-  static function setDefaultValues(&$defaults, $id = NULL) {
+  public static function setDefaultValues(&$defaults, $id = NULL) {
     if (!$id) {
       return $defaults;
     }
@@ -168,14 +168,15 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    */
-  static function getCombinations($premiumsId, $onlyActive = TRUE, $unassignedOnly = TRUE) {
+  public static function getCombinations($premiumsId, $onlyActive = TRUE, $unassignedOnly = TRUE) {
     $combinations = [];
     $combination = new CRM_Contribute_DAO_PremiumsCombination();
-    
+
     if ($unassignedOnly) {
       // Get combinations that are not assigned to any page (premiums_id is NULL)
       $combination->premiums_id = NULL;
-    } else {
+    }
+    else {
       // Get combinations assigned to specific premiums_id
       $combination->premiums_id = $premiumsId;
     }
@@ -202,7 +203,7 @@ class CRM_Contribute_BAO_PremiumsCombination extends CRM_Contribute_DAO_Premiums
    * @access public
    * @static
    */
-  static function getCombinationProducts($combinationId) {
+  public static function getCombinationProducts($combinationId) {
     $products = [];
 
     $dao = CRM_Core_DAO::executeQuery("

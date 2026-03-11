@@ -8,7 +8,6 @@
  * @docmaker_intro_end
  */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_ContributionRecurTest extends CiviUnitTestCase {
   protected $_apiversion = 3;
@@ -20,7 +19,7 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
     $this->_individualId = $this->individualCreate();
     $this->_params = [
@@ -54,7 +53,7 @@ class api_v3_ContributionRecurTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
   }
 
   /**

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of Mail account settings
  */
@@ -47,14 +44,14 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_MailSettings';
   }
 
@@ -63,7 +60,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       // helper variable for nicer formatting
       self::$_links = [
@@ -92,12 +89,11 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse() {
+  public function browse() {
     //get all mail settings.
     $allMailSettings = [];
 
     $mailSetting = new CRM_Core_DAO_MailSettings();
-
 
     $allProtocols = CRM_Core_PseudoConstant::mailProtocol();
     $allProtocols += [ 'smtp' => ts('SMTP')];
@@ -108,7 +104,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
     //find all mail settings.
     $mailSetting->find();
     $usedFor = CRM_Core_BAO_MailSettings::$_mailerTypes;
-    foreach($usedFor as $k => $v) {
+    foreach ($usedFor as $k => $v) {
       $usedFor[$k] = ts($v);
     }
     while ($mailSetting->fetch()) {
@@ -126,7 +122,9 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
       }
 
       //add action links.
-      $allMailSettings[$mailSetting->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $allMailSettings[$mailSetting->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $mailSetting->id]
       );
     }
@@ -139,7 +137,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_MailSettings';
   }
 
@@ -148,7 +146,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Mail Settings';
   }
 
@@ -157,8 +155,7 @@ class CRM_Admin_Page_MailSettings extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/mailSettings';
   }
 }
-

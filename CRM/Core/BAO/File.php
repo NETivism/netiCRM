@@ -33,14 +33,13 @@
  *
  */
 
-
 /**
  * BAO object for crm_log table
  */
 class CRM_Core_BAO_File extends CRM_Core_DAO_File {
-  const PUBLIC_ENTITY_TABLE = 'civicrm_pcp';
+  public const PUBLIC_ENTITY_TABLE = 'civicrm_pcp';
 
-  static function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  public static function path($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
 
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
@@ -76,7 +75,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return [NULL, NULL, NULL];
   }
 
-  static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
+  public static function url($fileID, $entityID, $entityTable = NULL, $quest = FALSE) {
     $entityFileDAO = new CRM_Core_DAO_EntityFile();
     if ($entityTable) {
       $entityFileDAO->entity_table = $entityTable;
@@ -87,7 +86,7 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     if ($entityFileDAO->find(TRUE)) {
       // display url only when file section is public
       $publicFileSection = explode(',', CRM_Core_BAO_File::PUBLIC_ENTITY_TABLE);
-      if (in_array($entityFileDAO->entity_table, $publicFileSection) || substr($entityFileDAO->entity_table, 0,13) == 'civicrm_value') {
+      if (in_array($entityFileDAO->entity_table, $publicFileSection) || substr($entityFileDAO->entity_table, 0, 13) == 'civicrm_value') {
         $fileDAO = new CRM_Core_DAO_File();
         $fileDAO->id = $fileID;
         if ($fileDAO->find(TRUE)) {
@@ -113,10 +112,13 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
     return [NULL, NULL, NULL];
   }
 
-
-  public static function filePostProcess($data, $fileID,
-    $entityTable, $entityID,
-    $entitySubtype, $overwrite = TRUE,
+  public static function filePostProcess(
+    $data,
+    $fileID,
+    $entityTable,
+    $entityID,
+    $entitySubtype,
+    $overwrite = TRUE,
     $fileParams = NULL,
     $uploadName = 'uploadFile',
     $mimeType = NULL
@@ -291,9 +293,9 @@ class CRM_Core_BAO_File extends CRM_Core_DAO_File {
       $result['mime_type'] = $dao->mime_type;
       $result['fileName'] = $dao->uri;
       $result['cleanName'] = CRM_Utils_File::cleanFileName($dao->uri);
-      $result['fullPath'] = rtrim($config->customFileUploadDir, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . $dao->uri;
+      $result['fullPath'] = rtrim($config->customFileUploadDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $dao->uri;
       $result['url'] = CRM_Utils_System::url('civicrm/file', "reset=1&id={$dao->cfID}&eid={$entityID}&fcs=$fileHash");
-      $result['url_real'] = rtrim($config->customFileUploadURL, DIRECTORY_SEPARATOR ) . DIRECTORY_SEPARATOR . urlencode($dao->uri);
+      $result['url_real'] = rtrim($config->customFileUploadURL, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . urlencode($dao->uri);
       $result['href'] = "<a href=\"{$result['url']}\" target=\"_blank\">{$result['cleanName']}</a>";
       if (strstr($dao->mime_type, 'image')) {
         $imginfo = getimagesize($result['fullPath']);
@@ -329,7 +331,7 @@ AND       CEF.entity_id    = %2";
     return [$sql, $params];
   }
 
-  static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = []) {
+  public static function buildAttachment(&$form, $entityTable, $entityID = NULL, $numAttachments = NULL, $attr = []) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -340,7 +342,7 @@ AND       CEF.entity_id    = %2";
       $currentAttachments = self::getEntityFile($entityTable, $entityID);
       $numAttachments -= count($currentAttachments);
     }
-    if ($numAttachments > 0 ) {
+    if ($numAttachments > 0) {
       // set default max file size as 2MB
       $maxFileSize = $config->maxFileSize ? $config->maxFileSize : 10;
       $attributes = [
@@ -370,7 +372,7 @@ AND       CEF.entity_id    = %2";
     }
   }
 
-  static function attachmentInfo($entityTable, $entityID, $separator = '<br />') {
+  public static function attachmentInfo($entityTable, $entityID, $separator = '<br />') {
     if (!$entityID) {
       return NULL;
     }
@@ -391,7 +393,8 @@ AND       CEF.entity_id    = %2";
     return NULL;
   }
 
-  static function formatAttachment(&$formValues,
+  public static function formatAttachment(
+    &$formValues,
     &$params,
     $entityTable,
     $entityID = NULL,
@@ -426,21 +429,22 @@ AND       CEF.entity_id    = %2";
     }
   }
 
-  static function processAttachment(&$params,
+  public static function processAttachment(
+    &$params,
     $entityTable,
     $entityID,
     $maxAttachments = 0
   ) {
     $config = CRM_Core_Config::singleton();
     $numAttachments = $maxAttachments ? $maxAttachments : $config->maxAttachments;
-    
 
     for ($i = 0; $i < $numAttachments; $i++) {
       if (isset($params["attachFile_$i"]) &&
         is_array($params["attachFile_$i"])
       ) {
         if (!empty($params["attachFile_$i"]['location']) && file_exists($params["attachFile_$i"]['location'])) {
-          self::filePostProcess($params["attachFile_$i"]['location'],
+          self::filePostProcess(
+            $params["attachFile_$i"]['location'],
             NULL,
             $entityTable,
             $entityID,
@@ -455,7 +459,7 @@ AND       CEF.entity_id    = %2";
     }
   }
 
-  static function uploadNames() {
+  public static function uploadNames() {
     $config = CRM_Core_Config::singleton();
     $numAttachments = 3;
 
@@ -475,7 +479,7 @@ AND       CEF.entity_id    = %2";
      * table and id.
      */
 
-  static function copyEntityFile($oldEntityTable, $oldEntityId, $newEntityTable, $newEntityId) {
+  public static function copyEntityFile($oldEntityTable, $oldEntityId, $newEntityTable, $newEntityId) {
     $oldEntityFile = new CRM_Core_DAO_EntityFile();
     $oldEntityFile->entity_id = $oldEntityId;
     $oldEntityFile->entity_table = $oldEntityTable;
@@ -534,13 +538,13 @@ AND       CEF.entity_id    = %2";
     $testHash = CRM_Core_BAO_File::generateFileHash($entityId, $fileId, $inputTs, $inputLF);
 
     $success = FALSE;
-    if(strlen($testHash) != strlen($hash)) {
+    if (strlen($testHash) != strlen($hash)) {
       $success = FALSE;
     }
     else {
       $result = $testHash ^ $hash;
       $check = 0;
-      for($i = strlen($result) - 1; $i >= 0; $i--) { 
+      for ($i = strlen($result) - 1; $i >= 0; $i--) {
         $check |= ord($result[$i]);
       }
       $success = !$check;
@@ -559,7 +563,7 @@ AND       CEF.entity_id    = %2";
 
   /**
    * Clear temporary upload dir
-   * 
+   *
    * @param int $afterDays clear files that exists after n days.
    *
    * @return void
@@ -571,11 +575,10 @@ AND       CEF.entity_id    = %2";
         if ($fileInfo->isDot()) {
           continue;
         }
-        if ($fileInfo->isFile() && time() - $fileInfo->getMTime() >= $afterDays*24*60*60) {
+        if ($fileInfo->isFile() && time() - $fileInfo->getMTime() >= $afterDays * 24 * 60 * 60) {
           unlink($fileInfo->getRealPath());
         }
       }
     }
   }
 }
-

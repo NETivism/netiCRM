@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Main page for Cases dashlet
  *
@@ -48,13 +46,12 @@ class CRM_Dashlet_Page_MyCases extends CRM_Core_Page {
    *
    * @access public
    */
-  function run() {
+  public function run() {
 
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
-       return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
+      return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
     }
-
 
     $session = CRM_Core_Session::singleton();
     $userID = $session->get('userID');
@@ -66,4 +63,3 @@ class CRM_Dashlet_Page_MyCases extends CRM_Core_Page {
     return parent::run();
   }
 }
-

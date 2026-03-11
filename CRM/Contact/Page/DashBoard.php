@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * CiviCRM Dashboard
  *
@@ -47,7 +45,7 @@ class CRM_Contact_Page_DashBoard extends CRM_Core_Page {
    * @return none
    * @access public
    */
-  function run() {
+  public function run() {
     $resetCache = CRM_Utils_Request::retrieve('resetCache', 'Positive', CRM_Core_DAO::$_nullObject);
 
     if ($resetCache) {
@@ -72,4 +70,3 @@ class CRM_Contact_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

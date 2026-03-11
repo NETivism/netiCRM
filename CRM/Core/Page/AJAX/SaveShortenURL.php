@@ -1,6 +1,6 @@
 <?php
 class CRM_Core_Page_AJAX_SaveShortenURL {
-  static function run() {
+  public static function run() {
     $pageId = CRM_Utils_Request::retrieve('page_id', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $pageType = CRM_Utils_Request::retrieve('page_type', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $shorten = CRM_Utils_Request::retrieve('shorten', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
@@ -28,5 +28,5 @@ class CRM_Core_Page_AJAX_SaveShortenURL {
       }
     }
     CRM_Utils_System::civiExit();
-  }  
+  }
 }

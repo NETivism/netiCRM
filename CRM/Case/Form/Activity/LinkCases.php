@@ -33,14 +33,12 @@
  *
  */
 
-
-
 /**
  * This class generates form components for OpenCase Activity
  *
  */
 class CRM_Case_Form_Activity_LinkCases {
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     if (!isset($form->_caseId)) {
       CRM_Core_Error::fatal(ts('Case Id not found.'));
     }
@@ -69,11 +67,11 @@ class CRM_Case_Form_Activity_LinkCases {
    *
    * @return None
    */
-  function setDefaultValues(&$form) {
+  public function setDefaultValues(&$form) {
     return $defaults = [];
   }
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $form->add('text', 'link_to_case', ts('Link To Case'));
     $form->add('hidden', 'link_to_case_id', '', ['id' => 'link_to_case_id']);
   }
@@ -87,7 +85,7 @@ class CRM_Case_Form_Activity_LinkCases {
    * @static
    * @access public
    */
-  static function formRule($values, $files, $form) {
+  public static function formRule($values, $files, $form) {
     $errors = [];
 
     $linkCaseId = CRM_Utils_Array::value('link_to_case_id', $values);
@@ -138,4 +136,3 @@ class CRM_Case_Form_Activity_LinkCases {
     }
   }
 }
-

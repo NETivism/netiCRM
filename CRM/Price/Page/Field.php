@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Create a page for displaying Price Fields.
  *
@@ -69,7 +67,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return array  array of action links that we need to display for the browse screen
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to delete this price field?');
@@ -126,7 +124,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
 
     $priceField = [];
     $priceFieldBAO = new CRM_Price_BAO_Field();
@@ -148,7 +146,6 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       if ($priceFieldBAO->html_type == 'Text') {
         $optionValues = [];
         $params = ['price_field_id' => $priceFieldBAO->id];
-
 
         CRM_Price_BAO_FieldValue::retrieve($params, $optionValues);
 
@@ -177,7 +174,9 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       $htmlTypes = CRM_Price_BAO_Field::htmlTypes();
       $priceField[$priceFieldBAO->id]['html_type'] = $htmlTypes[$priceField[$priceFieldBAO->id]['html_type']];
       $priceField[$priceFieldBAO->id]['order'] = $priceField[$priceFieldBAO->id]['weight'];
-      $priceField[$priceFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $priceField[$priceFieldBAO->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         [
           'fid' => $priceFieldBAO->id,
           'sid' => $this->_sid,
@@ -189,8 +188,12 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     $returnURL = CRM_Utils_System::url('civicrm/admin/price/field', "reset=1&action=browse&sid={$this->_sid}");
     $filter = "price_set_id = {$this->_sid}";
 
-    CRM_Utils_Weight::addOrder($priceField, 'CRM_Price_DAO_Field',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $priceField,
+      'CRM_Price_DAO_Field',
+      'id',
+      $returnURL,
+      $filter
     );
     $this->assign('priceField', $priceField);
   }
@@ -206,7 +209,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function edit($action) {
+  public function edit($action) {
     // create a simple controller for editing price data
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Field', ts('Price Field'), $action);
 
@@ -220,7 +223,6 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     $controller->run();
   }
 
-
   /**
    * This function is to make a copy of a price set, including
    * all the fields in the page
@@ -228,9 +230,14 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+  public function copy() {
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -238,14 +245,23 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
       return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the price field list and try again.'));
     }
 
-    $sid = CRM_Utils_Request::retrieve('sid', 'Positive',
-      $this, TRUE, 0, 'GET'
+    $sid = CRM_Utils_Request::retrieve(
+      'sid',
+      'Positive',
+      $this,
+      TRUE,
+      0,
+      'GET'
     );
 
-    $fid = CRM_Utils_Request::retrieve('fid', 'Positive',
-      $this, TRUE, 0, 'GET'
+    $fid = CRM_Utils_Request::retrieve(
+      'fid',
+      'Positive',
+      $this,
+      TRUE,
+      0,
+      'GET'
     );
-
 
     $copy = CRM_Price_BAO_Field::copy($fid);
 
@@ -263,19 +279,28 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function run() {
-
+  public function run() {
 
     // get the group id
-    $this->_sid = CRM_Utils_Request::retrieve('sid', 'Positive',
+    $this->_sid = CRM_Utils_Request::retrieve(
+      'sid',
+      'Positive',
       $this
     );
-    $fid = CRM_Utils_Request::retrieve('fid', 'Positive',
-      $this, FALSE, 0
+    $fid = CRM_Utils_Request::retrieve(
+      'fid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     if ($this->_sid) {
@@ -299,7 +324,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
         // add breadcrumb
 
         $url = CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1');
-        CRM_Utils_System::appendBreadCrumb([['title'=>ts('Price'), 'url'=> $url]]);
+        CRM_Utils_System::appendBreadCrumb([['title' => ts('Price'), 'url' => $url]]);
         $this->assign('usedPriceSetTitle', CRM_Price_BAO_Field::getTitle($fid));
         $this->assign('usedBy', $usedBy);
         $comps = ["Event" => "civicrm_event",
@@ -355,7 +380,7 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function preview($fid) {
+  public function preview($fid) {
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Preview', ts('Preview Form Field'), CRM_Core_Action::PREVIEW);
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&action=browse&sid=' . $this->_sid));
@@ -366,4 +391,3 @@ class CRM_Price_Page_Field extends CRM_Core_Page {
     $controller->run();
   }
 }
-

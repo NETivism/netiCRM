@@ -86,7 +86,7 @@ function civicrm_api3_relationship_type_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -133,4 +133,3 @@ function civicrm_api3_relationship_type_delete($params) {
   }
   return civicrm_api3_create_success($result, $params, 'relationship_type', 'delete', $relationTypeBAO);
 }
-

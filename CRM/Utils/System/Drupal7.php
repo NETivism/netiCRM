@@ -11,7 +11,7 @@ class CRM_Utils_System_Drupal7 {
    * @return bool
    * @Todo Handle setting cleanurls configuration for CiviCRM?
    */
-  function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
+  public function loadBootStrap($params = [], $loadUser = TRUE, $throwError = FALSE) {
     $cmsPath = CRM_Utils_System_Drupal::cmsRootPath();
     if (!file_exists("$cmsPath/includes/bootstrap.inc")) {
       if ($throwError) {
@@ -24,7 +24,7 @@ class CRM_Utils_System_Drupal7 {
     // explicitly setting error reporting, since we cannot handle drupal related notices
     // @todo 1 = E_ERROR, but more to the point setting error reporting deep in code
     // causes grief with debugging scripts
-		global $user;
+    global $user;
     if (empty($user)) {
       if ($throwError) {
         throw new Exception('Sorry, could not load drupal bootstrap.');
@@ -33,7 +33,7 @@ class CRM_Utils_System_Drupal7 {
     }
 
     // we have user to load
-		if (!empty($params)) {
+    if (!empty($params)) {
       $config = CRM_Core_Config::singleton();
       $version = $config->userSystem->version;
       $uid = CRM_Utils_Array::value('uid', $params);
@@ -74,7 +74,7 @@ class CRM_Utils_System_Drupal7 {
    *
    * @return void
    */
-  function checkUserNameEmailExists($params, $emailName = 'email') {
+  public function checkUserNameEmailExists($params, $emailName = 'email') {
     $config = CRM_Core_Config::singleton();
     $errors = [];
 
@@ -112,7 +112,8 @@ class CRM_Utils_System_Drupal7 {
           [':mail' => $params['mail']]
         )->fetchField();
         if ((bool) $uid) {
-          $errors[$emailName] = ts('This email %1 is already registered. Please select another email.',
+          $errors[$emailName] = ts(
+            'This email %1 is already registered. Please select another email.',
             [1 => $params['mail']]
           );
         }
@@ -132,7 +133,7 @@ class CRM_Utils_System_Drupal7 {
    * @access public
    *
    */
-  function createUser($params, $mail) {
+  public function createUser($params, $mail) {
     $form_state = [];
     $form_state['input'] = [
       'name' => $params['cms_name'],
@@ -142,7 +143,7 @@ class CRM_Utils_System_Drupal7 {
 
     $admin = user_access('administer users');
     if (!variable_get('user_email_verification', TRUE) || $admin) {
-            $form_state['input']['pass'] = ['pass1'=>$params['cms_pass'],'pass2'=>$params['cms_pass']];
+      $form_state['input']['pass'] = ['pass1' => $params['cms_pass'],'pass2' => $params['cms_pass']];
     }
 
     $form_state['rebuild'] = FALSE;
@@ -177,7 +178,7 @@ class CRM_Utils_System_Drupal7 {
    *  @param integer $ufID User ID in CMS
    *  @param string $ufName User name
    */
-  function updateCMSName($ufID, $ufName) {
+  public function updateCMSName($ufID, $ufName) {
     // CRM-5555
     if (function_exists('user_load')) {
       $user = user_load($ufID);
@@ -194,13 +195,13 @@ class CRM_Utils_System_Drupal7 {
     }
   }
 
-  function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
+  public function languageNegotiationURL($url, $addLanguagePart = TRUE, $removeLanguagePart = FALSE) {
     static $exists;
     if (empty($url)) {
       return $url;
     }
 
-    if($exists || function_exists('language_negotiation_get')){
+    if ($exists || function_exists('language_negotiation_get')) {
       $exists = TRUE;
       global $language;
 
@@ -252,7 +253,7 @@ class CRM_Utils_System_Drupal7 {
     return $url;
   }
 
-  function setTitle($pageTitle) {
+  public function setTitle($pageTitle) {
     $title = CRM_Utils_String::htmlPurifier($pageTitle);
     drupal_set_title($title, PASS_THROUGH);
   }

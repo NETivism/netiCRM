@@ -36,15 +36,15 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
   protected $_membershipTypeID;
   protected $_membershipStatusID;
   protected $_contribution = [];
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->_contactID = $this->organizationCreate(NULL);
     $this->_contributionTypeID = $this->contributionTypeCreate();
-    $this->_membershipTypeID = $this->membershipTypeCreate($this->_contactID,$this->_contributionTypeID);
+    $this->_membershipTypeID = $this->membershipTypeCreate($this->_contactID, $this->_contributionTypeID);
     $this->_membershipStatusID = $this->membershipStatusCreate('test status');
     $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, TRUE, 'name');
-        $params = [
+    $params = [
       'contact_id' => $this->_contactID,
       'currency' => 'USD',
       'contribution_type_id' => $this->_contributionTypeID,
@@ -61,10 +61,10 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
       'thankyou_date' => '20080522',
       'version' => 3,
     ];
-    $this->_contribution = civicrm_api('contribution','create', $params);
+    $this->_contribution = civicrm_api('contribution', 'create', $params);
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->quickCleanup(
       [
         'civicrm_contact',
@@ -96,8 +96,6 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
   public function testCreate() {
     $contactId = $this->individualCreate(NULL);
 
-
-
     $params = [
       'contact_id' => $contactId,
       'membership_type_id' => $this->_membershipTypeID,
@@ -124,7 +122,6 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
     $this->assertEquals($result['values'][$result['id']]['contribution_id'], $this->_contribution['id'], 'Check Contribution Id in line ' . __LINE__);
 
   }
-
 
   ///////////////// civicrm_membershipPayment_get methods
 
@@ -176,4 +173,3 @@ class api_v3_MembershipPaymentTest extends CiviUnitTestCase {
 
   }
 }
-

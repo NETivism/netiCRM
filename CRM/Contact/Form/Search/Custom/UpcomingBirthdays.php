@@ -24,12 +24,12 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
   protected $_formValues;
-  protected $_tableName = NULL; function __construct(&$formValues) {
+  protected $_tableName = NULL;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -43,7 +43,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
 
     /**
      * You can define a custom title for the search form
@@ -75,21 +75,21 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     $form->assign('elements', ['limit_groups', 'oc_month_start', 'oc_month_end', 'oc_day_start', 'oc_day_end']);
   }
 
-  function setBreadcrumb() {
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/UpcomingBirthday.tpl';
   }
 
   /**
    * Construct the search query
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
 
     /******************************************************************************/
@@ -134,7 +134,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     return $sql;
   }
 
-  function from() {
+  public function from() {
     $limit_group = $this->_formValues['limit_groups'];
     if (!empty($limit_group) && is_array($limit_group)) {
       return " civicrm_contact contact_a INNER JOIN civicrm_group_contact g ON g.contact_id = contact_a.id AND g.status = 'Added' ";
@@ -144,7 +144,7 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     }
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
     $oc_month_start = (int)$this->_formValues['oc_month_start'];
@@ -169,8 +169,8 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
 
     $limit_group = $this->_formValues['limit_groups'];
     if (!empty($limit_group) && is_array($limit_group)) {
-      foreach($limit_group as $idx => $g) {
-        if (!is_numeric($g)){
+      foreach ($limit_group as $idx => $g) {
+        if (!is_numeric($g)) {
           unset($limit_group[$idx]);
         }
       }
@@ -200,31 +200,30 @@ class CRM_Contact_Form_Search_Custom_UpcomingBirthdays implements CRM_Contact_Fo
     return $partial_where_clause;
   }
 
-  /* 
+  /*
    * Functions below generally don't need to be modified
    */
-  function count() {
+  public function count() {
     $sql = $this->all();
 
     $dao = CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     return $dao->N;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
-  function &columns() {
+  public function &columns() {
     return $this->_columns;
   }
 
-  function summary(){
+  public function summary() {
     $summary = [];
     return $summary;
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     $row['birth'] = str_replace('.', '/', $row['birth']);
   }
 }
-

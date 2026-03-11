@@ -115,7 +115,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   /**
    * class constructor
    */
-  function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL, $mapperPCP = NULL) {
+  public function __construct(&$mapperKeys, $mapperSoftCredit = NULL, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL, $mapperPCP = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
     $this->_mapperSoftCredit = &$mapperSoftCredit;
@@ -133,12 +133,13 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return void
    * @access public
    */
-  function init() {
+  public function init() {
 
     $fields = &CRM_Contribute_BAO_Contribution::importableFields($this->_contactType, FALSE);
     $this->_importableContactFields = $fields;
 
-    $fields = array_merge($fields,
+    $fields = array_merge(
+      $fields,
       [
         'soft_credit' => [
           'title' => ts('Soft Credit'),
@@ -249,13 +250,13 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         $this->_externalIdentifierIndex = $index;
         $this->_allExternalIdentifiers = [];
       }
-      elseif($key == 'contribution_contact_id'){
+      elseif ($key == 'contribution_contact_id') {
         $this->_contactIdIndex = $index;
       }
-      elseif($key == 'total_amount'){
+      elseif ($key == 'total_amount') {
         $this->_totalAmountIndex = $index;
       }
-      elseif($key == 'contribution_type') {
+      elseif ($key == 'contribution_type') {
         $this->_contributionTypeIndex = $index;
       }
 
@@ -310,7 +311,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean
    * @access public
    */
-  function mapField(&$values) {
+  public function mapField(&$values) {
     return CRM_Contribute_Import_Parser::VALID;
   }
 
@@ -322,7 +323,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean      the result of this processing
    * @access public
    */
-  function preview(&$values) {
+  public function preview(&$values) {
     return $this->summary($values);
   }
 
@@ -334,7 +335,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean      the result of this processing
    * @access public
    */
-  function summary(&$values) {
+  public function summary(&$values) {
     $erroneousField = NULL;
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
@@ -402,8 +403,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             break;
           case 'contribution_contact_id':
             if ($this->_createContactOption == self::CONTACT_NOIDCREATE) {
-							$contactExists = CRM_Import_Parser_Contact::checkContactById(['contribution_contact_id' => $params['contribution_contact_id']], 'contribution_contact_id');
-							if (!$contactExists) {
+              $contactExists = CRM_Import_Parser_Contact::checkContactById(['contribution_contact_id' => $params['contribution_contact_id']], 'contribution_contact_id');
+              if (!$contactExists) {
                 CRM_Import_Parser_Contact::addToErrorMsg(ts('Could not find contact by %1', [1 => ts('Contact ID').'-'.$val]), $errorMessage);
               }
             }
@@ -469,8 +470,8 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $csType = CRM_Utils_Array::value('contact_sub_type', $params);
     }
     $contactFields = CRM_Core_BAO_CustomField::getFields($this->_contactType, FALSE, FALSE, $csType);
-    if(!empty($contactFields)){
-      foreach(array_keys($contactFields) as $customKey) {
+    if (!empty($contactFields)) {
+      foreach (array_keys($contactFields) as $customKey) {
         if (isset($params['custom_'.$customKey])) {
           $contactParams['custom_'.$customKey] = $params['custom_'.$customKey];
         }
@@ -502,7 +503,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return boolean      the result of this processing
    * @access public
    */
-  function import($onDuplicate, &$values) {
+  public function import($onDuplicate, &$values) {
     $contactValues = $values;
     $statusFieldName = $this->_statusFieldName;
     // first make sure this is a valid line
@@ -775,7 +776,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
             }
             elseif (is_array($params[$dupeFieldName])) {
               $hasValue = FALSE;
-              foreach($params[$dupeFieldName] as $email) {
+              foreach ($params[$dupeFieldName] as $email) {
                 if ($dupeFieldName === 'email' && !empty($email['email'])) {
                   $hasValue = TRUE;
                 }
@@ -797,7 +798,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
         }
 
         if ($doCreateContact && count($noValueFields) >= count($fieldsArray)) {
-          foreach($noValueFields as $fieldTitle) {
+          foreach ($noValueFields as $fieldTitle) {
             $dispArray[] = $fieldTitle;
           }
         }
@@ -856,7 +857,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
   /**
    *  Function to process pledge payments
    */
-  function processPledgePayments(&$formatted) {
+  public function processPledgePayments(&$formatted) {
     $statusFieldName = $this->_statusFieldName;
     if (CRM_Utils_Array::value('pledge_payment_id', $formatted) &&
       CRM_Utils_Array::value('pledge_id', $formatted)
@@ -865,10 +866,12 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
       $completeStatusID = CRM_Core_OptionGroup::getValue('contribution_status', 'Completed', 'name');
 
       //need to update payment record to map contribution_id
-      CRM_Core_DAO::setFieldValue('CRM_Pledge_DAO_Payment', $formatted['pledge_payment_id'],
-        'contribution_id', $formatted['contribution_id']
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Pledge_DAO_Payment',
+        $formatted['pledge_payment_id'],
+        'contribution_id',
+        $formatted['contribution_id']
       );
-
 
       CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($formatted['pledge_id'], [$formatted['pledge_payment_id']], $completeStatusID, NULL, $formatted['total_amount']);
 
@@ -885,7 +888,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return array
    * @access public
    */
-  function &getImportedContributions() {
+  public function &getImportedContributions() {
     return $this->_newContributions;
   }
 
@@ -895,7 +898,7 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
    * @return array
    * @access public
    */
-  function importContribution($formatted, &$values) {
+  public function importContribution($formatted, &$values) {
     if (!empty($this->_sourceIp)) {
       $formatted['source_ip'] = $this->_sourceIp;
     }
@@ -937,13 +940,12 @@ class CRM_Contribute_Import_Parser_Contribution extends CRM_Contribute_Import_Pa
     return $this->processPledgePayments($formatted);
   }
 
-
   /**
    * the initializer code, called before the processing
    *
    * @return void
    * @access public
    */
-  function fini() {}
+  public function fini() {
+  }
 }
-

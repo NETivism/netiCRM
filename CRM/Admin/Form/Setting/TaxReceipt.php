@@ -14,7 +14,6 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Receipt Tax included'));
 
-
     $fields = CRM_Core_BAO_CustomField::getFields('Contribution');
     $option = [0 => ts('-- '.ts('Cancel').'--')];
     foreach ($fields as $custom_id => $f) {
@@ -40,4 +39,3 @@ class CRM_Admin_Form_Setting_TaxReceipt extends CRM_Admin_Form_Setting {
     parent::buildQuickForm($check);
   }
 }
-

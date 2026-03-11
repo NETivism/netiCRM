@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Mapping
  *
@@ -70,15 +68,21 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
     else {
       $this->applyFilter('__ALL__', 'trim');
 
-      $this->add('text', 'name', ts('Name'),
-        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'name'), TRUE
+      $this->add(
+        'text',
+        'name',
+        ts('Name'),
+        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'name'),
+        TRUE
       );
       $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_Mapping', $this->_id]);
 
-      $this->addElement('text', 'description', ts('Description'),
+      $this->addElement(
+        'text',
+        'description',
+        ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Mapping', 'description')
       );
-
 
       $mappingType = $this->addElement('select', 'mapping_type_id', ts('Mapping Type'), CRM_Core_PseudoConstant::mappingTypes());
 
@@ -88,7 +92,7 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
     }
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     return $defaults;
   }
@@ -119,4 +123,3 @@ class CRM_Admin_Form_Mapping extends CRM_Admin_Form {
   }
   //end of function
 }
-

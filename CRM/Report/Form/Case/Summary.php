@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
 
   /**
@@ -67,7 +65,8 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
    */
   public $_groupBy;
   protected $_summary = NULL;
-  protected $_relField = FALSE; function __construct() {
+  protected $_relField = FALSE;
+  public function __construct() {
     $this->case_statuses = CRM_Case_PseudoConstant::caseStatus();
     $rels = CRM_Core_PseudoConstant::relationshipType();
     foreach ($rels as $relid => $v) {
@@ -162,11 +161,11 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -196,7 +195,7 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     if (empty($fields['relationship_type_id_value']) && (CRM_Utils_Array::arrayKeyExists('sort_name', $fields['fields']) || CRM_Utils_Array::arrayKeyExists('label_b_a', $fields['fields']))) {
       $errors['fields'] = ts('Either filter on at least one relationship type, or de-select Staff Member and Relationship from the list of fields.');
@@ -207,7 +206,7 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  public function from() {
 
     $cc = $this->_aliases['civicrm_case'];
     $c = $this->_aliases['civicrm_contact'];
@@ -235,7 +234,7 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     }
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
@@ -247,7 +246,11 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
             $from = CRM_Utils_Array::value("{$fieldName}_from", $this->_params);
             $to = CRM_Utils_Array::value("{$fieldName}_to", $this->_params);
 
-            $clause = $this->dateClause($field['dbAlias'], $relative, $from, $to,
+            $clause = $this->dateClause(
+              $field['dbAlias'],
+              $relative,
+              $from,
+              $to,
               CRM_Utils_Array::value('type', $field)
             );
           }
@@ -255,7 +258,8 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
 
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -279,11 +283,11 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -297,7 +301,7 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_case_status_id', $row)) {
@@ -321,4 +325,3 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     }
   }
 }
-

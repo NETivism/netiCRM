@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains function for Open Id
  */
@@ -49,7 +47,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $openId = new CRM_Core_DAO_OpenID();
 
     // normalize the OpenID URL
@@ -70,7 +68,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function &getValues($entityBlock) {
+  public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('openid', $entityBlock);
   }
 
@@ -83,7 +81,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function isAllowedToLogin($identity_url) {
+  public static function isAllowedToLogin($identity_url) {
     $openId = new CRM_Core_DAO_OpenID();
     $openId->openid = $identity_url;
     if ($openId->find(TRUE)) {
@@ -101,7 +99,7 @@ class CRM_Core_BAO_OpenID extends CRM_Core_DAO_OpenID {
    * @access public
    * @static
    */
-  static function allOpenIDs($id, $updateBlankLocInfo = FALSE) {
+  public static function allOpenIDs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -141,42 +139,44 @@ ORDER BY
     return $openids;
   }
 
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     // do nothing
   }
 
-  static function normalizeURL($url) {
+  public static function normalizeURL($url) {
     $parsed = parse_url($url);
 
     if (!$parsed) {
-      return null;
+      return NULL;
     }
 
     if (isset($parsed['scheme']) &&
       isset($parsed['host'])) {
       $scheme = strtolower($parsed['scheme']);
       if (!in_array($scheme, ['http', 'https'])) {
-        return null;
+        return NULL;
       }
-    } else {
+    }
+    else {
       $url = 'http://' . $url;
     }
 
     $normalized = self::_normalizeURL($url);
-    if ($normalized === null) {
-      return null;
+    if ($normalized === NULL) {
+      return NULL;
     }
 
     $parts = explode("#", $url, 2);
     if (count($parts) == 1) {
       list($defragged, $frag) = [$parts[0], ""];
-    } else {
+    }
+    else {
       list($defragged, $frag) = $parts;
     }
     return $defragged;
   }
 
-  static function _normalizeURL($uri) {
+  public static function _normalizeURL($uri) {
     $uri_matches = [];
     preg_match('&^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?&', $uri, $uri_matches);
 
@@ -189,7 +189,7 @@ ORDER BY
     $illegal_matches = [];
     preg_match("/([^-A-Za-z0-9:\/\?#\[\]@\!\$&'\(\)\*\+,;=\._~\%])/", $uri, $illegal_matches);
     if ($illegal_matches) {
-      return null;
+      return NULL;
     }
 
     $scheme = $uri_matches[2];
@@ -200,26 +200,26 @@ ORDER BY
     $scheme = $uri_matches[2];
     if ($scheme === '') {
       // No scheme specified
-      return null;
+      return NULL;
     }
 
     $scheme = strtolower($scheme);
     if (!in_array($scheme, ['http', 'https'])) {
       // Not an absolute HTTP or HTTPS URI
-      return null;
+      return NULL;
     }
 
     $authority = $uri_matches[4];
     if ($authority === '') {
       // Not an absolute URI
-      return null;
+      return NULL;
     }
 
     $authority_matches = [];
     preg_match('/^([^@]*@)?([^:]*)(:.*)?/', $authority, $authority_matches);
     if (count($authority_matches) === 0) {
       // URI does not have a valid authority
-      return null;
+      return NULL;
     }
 
     if (count($authority_matches) < 4) {
@@ -230,59 +230,62 @@ ORDER BY
 
     list($_whole, $userinfo, $host, $port) = $authority_matches;
 
-    if ($userinfo === null) {
+    if ($userinfo === NULL) {
       $userinfo = '';
     }
 
     if (strpos($host, '%') !== -1) {
       $host = strtolower($host);
-      $host = preg_replace_callback('/%([0-9A-Fa-f]{2})/', function($mo) {
+      $host = preg_replace_callback('/%([0-9A-Fa-f]{2})/', function ($mo) {
         return chr(intval($mo[1], 16));
       }, $host);
-    } else {
+    }
+    else {
       $host = strtolower($host);
     }
 
     if ($port) {
-        if (($port == ':') ||
-            ($scheme == 'http' && $port == ':80') ||
-            ($scheme == 'https' && $port == ':443')) {
-            $port = '';
-        }
-    } else {
+      if (($port == ':') ||
+          ($scheme == 'http' && $port == ':80') ||
+          ($scheme == 'https' && $port == ':443')) {
         $port = '';
+      }
+    }
+    else {
+      $port = '';
     }
 
     $authority = $userinfo . $host . $port;
 
     $path = $uri_matches[5];
-    $path = preg_replace_callback('/%([0-9A-Fa-f]{2})/', function($mo) {
+    $path = preg_replace_callback('/%([0-9A-Fa-f]{2})/', function ($mo) {
       $_unreserved = [];
       for ($i = 0; $i < 256; $i++) {
-        $_unreserved[$i] = false;
+        $_unreserved[$i] = FALSE;
       }
 
       for ($i = ord('A'); $i <= ord('Z'); $i++) {
-        $_unreserved[$i] = true;
+        $_unreserved[$i] = TRUE;
       }
 
       for ($i = ord('0'); $i <= ord('9'); $i++) {
-        $_unreserved[$i] = true;
+        $_unreserved[$i] = TRUE;
       }
 
       for ($i = ord('a'); $i <= ord('z'); $i++) {
-        $_unreserved[$i] = true;
+        $_unreserved[$i] = TRUE;
       }
 
-      $_unreserved[ord('-')] = true;
-      $_unreserved[ord('.')] = true;
-      $_unreserved[ord('_')] = true;
-      $_unreserved[ord('~')] = true;
+      $_unreserved[ord('-')] = TRUE;
+      $_unreserved[ord('.')] = TRUE;
+      $_unreserved[ord('_')] = TRUE;
+      $_unreserved[ord('~')] = TRUE;
 
       $i = intval($mo[1], 16);
       if ($_unreserved[$i]) {
         return chr($i);
-      } else {
+      }
+      else {
         return strtoupper($mo[0]);
       }
 
@@ -293,31 +296,38 @@ ORDER BY
     while ($path) {
       if (strpos($path, '../') === 0) {
         $path = substr($path, 3);
-      } else if (strpos($path, './') === 0) {
+      }
+      elseif (strpos($path, './') === 0) {
         $path = substr($path, 2);
-      } else if (strpos($path, '/./') === 0) {
+      }
+      elseif (strpos($path, '/./') === 0) {
         $path = substr($path, 2);
-      } else if ($path == '/.') {
+      }
+      elseif ($path == '/.') {
         $path = '/';
-      } else if (strpos($path, '/../') === 0) {
+      }
+      elseif (strpos($path, '/../') === 0) {
         $path = substr($path, 3);
         if ($result_segments) {
           array_pop($result_segments);
         }
-      } else if ($path == '/..') {
+      }
+      elseif ($path == '/..') {
         $path = '/';
         if ($result_segments) {
           array_pop($result_segments);
         }
-      } else if (($path == '..') || ($path == '.')) {
+      }
+      elseif (($path == '..') || ($path == '.')) {
         $path = '';
-      } else {
+      }
+      else {
         $i = 0;
         if ($path[0] == '/') {
           $i = 1;
         }
         $i = strpos($path, '/', $i);
-        if ($i === false) {
+        if ($i === FALSE) {
           $i = strlen($path);
         }
         $result_segments[] = substr($path, 0, $i);
@@ -330,16 +340,15 @@ ORDER BY
     }
 
     $query = $uri_matches[6];
-    if ($query === null) {
+    if ($query === NULL) {
       $query = '';
     }
 
     $fragment = $uri_matches[8];
-    if ($fragment === null) {
+    if ($fragment === NULL) {
       $fragment = '';
     }
 
     return $scheme . '://' . $authority . $path . $query . $fragment;
   }
 }
-

@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
 
   /**
@@ -54,7 +49,8 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
   public $_absoluteUrl;
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Participant']; function __construct() {
+  protected $_customGroupExtends = ['Participant'];
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -190,11 +186,11 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
 
@@ -228,12 +224,12 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_participant {$this->_aliases['civicrm_participant']}
              LEFT JOIN civicrm_event {$this->_aliases['civicrm_event']} 
@@ -251,7 +247,7 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
                        {$this->_aliases['civicrm_email']}.is_primary = 1) ";
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -279,7 +275,8 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
             }
 
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -306,8 +303,8 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
-    $this->_groupBy = array();
+  public function groupBy() {
+    $this->_groupBy = [];
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
       is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])
@@ -331,7 +328,7 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     }
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     // get ready with post process params
     $this->beginPostProcess();
@@ -355,7 +352,7 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
@@ -367,9 +364,11 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_event_id', $row)) {
         if ($value = $row['civicrm_participant_event_id']) {
           $rows[$rowNum]['civicrm_participant_event_id'] = CRM_Event_PseudoConstant::event($value, FALSE);
-          $url = CRM_Report_Utils_Report::getNextUrl('event/income',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'event/income',
             'reset=1&force=1&id_op=in&id_value=' . $value,
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_participant_event_id_link'] = $url;
           $rows[$rowNum]['civicrm_participant_event_id_hover'] = ts("View Event Income Details for this Event");
@@ -420,7 +419,8 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
         $rows[$rowNum]['civicrm_contact_display_name'] &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -449,8 +449,10 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_employer_id', $row)) {
         if ($value = $row['civicrm_contact_employer_id']) {
           $rows[$rowNum]['civicrm_contact_employer_id'] = CRM_Contact_BAO_Contact::displayName($value);
-          $url = CRM_Utils_System::url('civicrm/contact/view',
-            'reset=1&cid=' . $value, $this->_absoluteUrl
+          $url = CRM_Utils_System::url(
+            'civicrm/contact/view',
+            'reset=1&cid=' . $value,
+            $this->_absoluteUrl
           );
           $rows[$rowNum]['civicrm_contact_employer_id_link'] = $url;
           $rows[$rowNum]['civicrm_contact_employer_id_hover'] = ts('View Contact Summary for this Contact.');
@@ -465,4 +467,3 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form {
     }
   }
 }
-

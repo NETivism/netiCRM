@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public $_includeGroups;
@@ -49,7 +47,8 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
 
   protected $_tableName = NULL;
 
-  protected $_where = ' (1) '; function __construct(&$formValues) {
+  protected $_where = ' (1) ';
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
     $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Contact Type') => 'contact_type',
@@ -68,7 +67,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $this->_groups = FALSE;
     $this->_tags = FALSE;
     $this->_andOr = $this->_formValues['andOr'];
-
 
     //make easy to check conditions for groups and tags are
     //selected or it is empty search
@@ -90,13 +88,13 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     }
   }
 
-  function __destruct() {
+  public function __destruct() {
     // mysql drops the tables when connectiomn is terminated
     // cannot drop tables here, since the search might be used
     // in other parts after the object is destroyed
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
 
     $groups = &CRM_Core_PseudoConstant::group();
 
@@ -107,35 +105,51 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
       CRM_Utils_System::redirect($url);
     }
 
-    $inG = &$form->addElement('select', 'includeGroups',
-      ts('Include Group(s)') . ' ', $groups,
+    $inG = &$form->addElement(
+      'select',
+      'includeGroups',
+      ts('Include Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
       ]
     );
 
-    $outG = &$form->addElement('select', 'excludeGroups',
-      ts('Exclude Group(s)') . ' ', $groups,
+    $outG = &$form->addElement(
+      'select',
+      'excludeGroups',
+      ts('Exclude Group(s)') . ' ',
+      $groups,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
       ]
     );
-    $andOr = &$form->addElement('checkbox', 'andOr', 'Search with tag (check for AND, uncheck For OR)', NULL,
+    $andOr = &$form->addElement(
+      'checkbox',
+      'andOr',
+      'Search with tag (check for AND, uncheck For OR)',
+      NULL,
       ['checked' => 'checked']
     );
 
-    $int = &$form->addElement('select', 'includeTags',
-      ts('Include Tag(s)') . ' ', $tags,
+    $int = &$form->addElement(
+      'select',
+      'includeTags',
+      ts('Include Tag(s)') . ' ',
+      $tags,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
       ]
     );
 
-    $outt = &$form->addElement('select', 'excludeTags',
-      ts('Exclude Tag(s)') . ' ', $tags,
+    $outt = &$form->addElement(
+      'select',
+      'excludeTags',
+      ts('Exclude Tag(s)') . ' ',
+      $tags,
       ['size' => 5,
         'style' => 'width:400px',
         'multiple' => 'multiple',
@@ -154,8 +168,12 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     $form->assign('elements', ['includeGroups', 'excludeGroups', 'andOr', 'includeTags', 'excludeTags']);
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE, $justIDs = FALSE
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
+    $includeContactIDs = FALSE,
+    $justIDs = FALSE
   ) {
     if ($justIDs) {
       $selectClause = "DISTINCT(contact_a.id)  as contact_id";
@@ -212,7 +230,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $sql;
   }
 
-  function from() {
+  public function from() {
 
     //define table name
     $randomNum = md5(uniqid());
@@ -317,7 +335,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
         }
       }
 
-
       $sql = "CREATE TEMPORARY TABLE Ig_{$this->_tableName} ( id int PRIMARY KEY AUTO_INCREMENT,
                                                                    contact_id int,
                                                                    group_names varchar(64)) ENGINE=HEAP";
@@ -338,7 +355,6 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
                  SELECT              civicrm_contact.id as contact_id, ''
                  FROM                civicrm_contact";
       }
-
 
       //used only when exclude group is selected
       $includeGroup .= " LEFT JOIN Xg_{$this->_tableName} ON civicrm_contact.id = Xg_{$this->_tableName}.contact_id";
@@ -751,7 +767,7 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $from;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
 
     if ($includeContactIDs) {
       $contactIDs = [];
@@ -776,30 +792,29 @@ class CRM_Contact_Form_Search_Custom_Group extends CRM_Contact_Form_Search_Custo
     return $where;
   }
 
-  /* 
+  /*
      * Functions below generally don't need to be modified
      */
-  function count() {
+  public function count() {
     $sql = $this->all();
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     return $dao->N;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
-  function &columns() {
+  public function &columns() {
     return $this->_columns;
   }
 
-  function summary() {
+  public function summary() {
     return NULL;
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 }
-

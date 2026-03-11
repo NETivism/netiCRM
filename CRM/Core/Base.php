@@ -36,13 +36,11 @@
  *
  */
 
-
-
 class CRM_Core_Base {
 
   /**
    * constructor
    */
-  function __construct() {}
+  public function __construct() {
+  }
 }
-

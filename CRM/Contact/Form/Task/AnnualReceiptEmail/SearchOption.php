@@ -12,11 +12,11 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
    * @var boolean
    */
 
-  CONST GENERATE_COUNT_EACH_TIME = 100;
-  CONST BATCH_THRESHOLD = 100;
+  public const GENERATE_COUNT_EACH_TIME = 100;
+  public const BATCH_THRESHOLD = 100;
 
-  static protected $_tmpreceipt = NULL;
-  static protected $_exportFileName = NULL;
+  protected static $_tmpreceipt = NULL;
+  protected static $_exportFileName = NULL;
 
   protected $_year = NULL;
 
@@ -37,7 +37,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('Send Annual Receipt Email'));
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $this, FALSE);
     if ($cid) {
@@ -63,12 +63,12 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
     }
 
     $years = [];
-    if(!empty($this->_year)){
+    if (!empty($this->_year)) {
       $years[$this->_year] = $this->_year;
       $ele = $this->addElement('select', 'year', ts('Receipt Year'), $years);
     }
-    else{
-      for($year = date('Y'); $year < date('Y') + 10; $year++) {
+    else {
+      for ($year = date('Y'); $year < date('Y') + 10; $year++) {
         $years[$year - 9] = $year - 9;
       }
       $this->addElement('select', 'year', ts('Receipt Year'), $years);
@@ -87,7 +87,8 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
     ];
     $this->addElement('select', 'is_recur', ts('Find Recurring Contributions?'), $isRecur);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'back',
           'name' => ts('<< Go Back'),
@@ -102,7 +103,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
     );
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['year'] = date('m') == '12' ? date('Y') : date('Y') - 1;
     return $defaults;
@@ -121,4 +122,3 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_SearchOption extends CRM_Contact_
   }
 
 }
-

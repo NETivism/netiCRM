@@ -6,7 +6,6 @@
  */
 require_once 'tests/phpunit/CiviTest/CiviUnitTestCase.php';
 
-
 /**
  *  Test APIv3 civicrm_create_custom_group
  *
@@ -15,7 +14,7 @@ require_once 'tests/phpunit/CiviTest/CiviUnitTestCase.php';
 class api_v3_CustomFieldTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'Custom Field Create',
       'description' => 'Test all Custom Field Create API methods.',
@@ -23,12 +22,12 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     parent::setUp();
   }
 
-  function tearDown() {
+  public function tearDown() {
     $tablesToTruncate = [
       'civicrm_custom_group', 'civicrm_custom_field',
     ];
@@ -39,7 +38,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check with no array
    */
-  function testCustomFieldCreateNoArray() {
+  public function testCustomFieldCreateNoArray() {
     $fieldParams = NULL;
 
     $customField = civicrm_api('custom_field', 'create', $fieldParams);
@@ -50,7 +49,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check with no label
    */
-  function testCustomFieldCreateWithoutLabel() {
+  public function testCustomFieldCreateWithoutLabel() {
     $customGroup = $this->customGroupCreate('Individual', 'text_test_group', 3);
     $params = [
       'custom_group_id' => $customGroup['id'],
@@ -73,7 +72,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check with edit
    */
-  function testCustomFieldCreateWithEdit() {
+  public function testCustomFieldCreateWithEdit() {
     $customGroup = $this->customGroupCreate('Individual', 'text_test_group', 3);
     $params = [
       'custom_group_id' => $customGroup['id'],
@@ -100,7 +99,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check without groupId
    */
-  function testCustomFieldCreateWithoutGroupID() {
+  public function testCustomFieldCreateWithoutGroupID() {
     $fieldParams = [
       'name' => 'test_textfield1',
       'label' => 'Name',
@@ -122,7 +121,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * Check for Each data type: loop through available form input types
    **/
-  function testCustomFieldCreateAllAvailableFormInputs() {
+  public function testCustomFieldCreateAllAvailableFormInputs() {
     $gid = $this->customGroupCreate('Individual', 'testAllFormInputs');
 
     $dtype = CRM_Core_BAO_CustomField::dataType();
@@ -137,17 +136,17 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
       $n++;
     }
   }
-/*
- * Can't figure out the point of this?
- */
-  function _loopingCustomFieldCreateTest($params) {
+  /*
+   * Can't figure out the point of this?
+   */
+  public function _loopingCustomFieldCreateTest($params) {
     $customField = civicrm_api('custom_field', 'create', $params);
     $this->assertEquals(0, $customField['is_error'], var_export($customField, TRUE));
     $this->assertNotNull($customField['id']);
     $this->getAndCheck($params, $customField['id'], 'CustomField');
   }
 
-  function _buildParams($gid, $htype, $dtype) {
+  public function _buildParams($gid, $htype, $dtype) {
     $params = $this->_buildBasicParams($gid, $htype, $dtype);
     /* //Not Working for any type. Maybe redundant with testCustomFieldCreateWithOptionValues()
         if ($htype == 'Multi-Select')
@@ -159,12 +158,10 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
                          ));
 */
 
-
-
     return $params;
   }
 
-  function _buildBasicParams($gid, $htype, $dtype) {
+  public function _buildBasicParams($gid, $htype, $dtype) {
     return [
       'custom_group_id' => $gid,
       'label' => $dtype . $htype,
@@ -195,7 +192,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check with data type - Options with option_values
    */
-  function testCustomFieldCreateWithOptionValues() {
+  public function testCustomFieldCreateWithOptionValues() {
     $customGroup = $this->customGroupCreate('Contact', 'select_test_group', 3);
 
     $option_values = [
@@ -236,7 +233,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check with no array
    */
-  function testCustomFieldDeleteNoArray() {
+  public function testCustomFieldDeleteNoArray() {
     $params = NULL;
     $customField = civicrm_api('custom_field', 'delete', $params);
     $this->assertEquals($customField['is_error'], 1);
@@ -246,7 +243,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check without Field ID
    */
-  function testCustomFieldDeleteWithoutFieldID() {
+  public function testCustomFieldDeleteWithoutFieldID() {
     $params = ['version' => $this->_apiversion];
     $customField = civicrm_api('custom_field', 'delete', $params);
     $this->assertEquals($customField['is_error'], 1);
@@ -256,7 +253,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check without valid array
    */
-  function testCustomFieldDelete() {
+  public function testCustomFieldDelete() {
     $customGroup = $this->customGroupCreate('Individual', 'test_group');
     $customField = $this->customFieldCreate($customGroup['id'], 'test_name');
     $this->assertNotNull($customField['id'], 'in line ' . __LINE__);
@@ -274,7 +271,7 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
   /**
    * check for Option Value
    */
-  function testCustomFieldOptionValueDelete() {
+  public function testCustomFieldOptionValueDelete() {
     $customGroup = $this->customGroupCreate('Contact', 'ABC');
     $customOptionValueFields = $this->customFieldOptionValueCreate($customGroup, 'fieldABC');
     $customOptionValueFields['version'] = $this->_apiversion;
@@ -287,4 +284,3 @@ class api_v3_CustomFieldTest extends CiviUnitTestCase {
     $this->assertEquals($customField['is_error'], 0);
   }
 }
-

@@ -59,7 +59,7 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
     $count = $this->get('count');
     $this->assign('count', $count);
@@ -112,20 +112,36 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     $defaults['open_tracking'] = TRUE;
 
     $options = ['' => ts("-- select --")] + CRM_Core_SelectValues::ufVisibility(TRUE);
-    $this->add('select', 'visibility', ts('Mailing Visibility'),
-    $options, TRUE
+    $this->add(
+      'select',
+      'visibility',
+      ts('Mailing Visibility'),
+      $options,
+      TRUE
     );
 
-    $this->add('select', 'unsubscribe_id', ts('Unsubscribe Message'),
-      CRM_Mailing_PseudoConstant::component('Unsubscribe'), TRUE
+    $this->add(
+      'select',
+      'unsubscribe_id',
+      ts('Unsubscribe Message'),
+      CRM_Mailing_PseudoConstant::component('Unsubscribe'),
+      TRUE
     );
 
-    $this->add('select', 'resubscribe_id', ts('Resubscribe Message'),
-      CRM_Mailing_PseudoConstant::component('Resubscribe'), TRUE
+    $this->add(
+      'select',
+      'resubscribe_id',
+      ts('Resubscribe Message'),
+      CRM_Mailing_PseudoConstant::component('Resubscribe'),
+      TRUE
     );
 
-    $this->add('select', 'optout_id', ts('Opt-out Message'),
-      CRM_Mailing_PseudoConstant::component('OptOut'), TRUE
+    $this->add(
+      'select',
+      'optout_id',
+      ts('Opt-out Message'),
+      CRM_Mailing_PseudoConstant::component('OptOut'),
+      TRUE
     );
 
     //FIXME : currently we are hiding save an continue later when
@@ -266,4 +282,3 @@ class CRM_Mailing_Form_Settings extends CRM_Core_Form {
     return ts('Track and Respond');
   }
 }
-

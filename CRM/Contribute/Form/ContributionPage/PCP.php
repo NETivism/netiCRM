@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_ContributionPage {
 
   /**
@@ -43,7 +42,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    *
    * @return None
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -55,7 +54,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
     CRM_Utils_System::setTitle(ts('Personal Campaign Page Settings (%1)', [1 => $title]));
     $defaults = [];
@@ -83,7 +82,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addElement('checkbox', 'is_active', ts('Enable Personal Campaign Pages (for this contribution page)?'), NULL, ['onclick' => "return showHideByValue('is_active',true,'pcpFields','table-row','radio',false);"]);
 
     $this->addElement('checkbox', 'is_approval_needed', ts('Approval required'));
@@ -110,7 +109,8 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
       $this->setDefaults(['supporter_profile_id' => $defaultProfile]);
     }
 
-    $this->add('text',
+    $this->add(
+      'text',
       'link_text',
       ts("'Create Personal Campaign Page' link text"),
       CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PCPBlock', 'pcp_link_text')
@@ -165,7 +165,7 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
 
@@ -180,7 +180,6 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_approval_needed'] = CRM_Utils_Array::value('is_approval_needed', $params, FALSE);
 
-
     $dao = CRM_Contribute_BAO_PCP::add($params);
   }
 
@@ -194,4 +193,3 @@ class CRM_Contribute_Form_ContributionPage_PCP extends CRM_Contribute_Form_Contr
     return ts('Enable Personal Campaign Pages');
   }
 }
-

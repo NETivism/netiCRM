@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'Spout/Autoloader/autoload.php';
 
 use Box\Spout\Writer\WriterFactory;
@@ -35,12 +34,12 @@ use Box\Spout\Common\Type;
 class CRM_Core_Report_Excel {
   private static $_singleton = NULL;
 
-  static function &singleton($type) {
+  public static function &singleton($type) {
     return self::writer($type);
   }
 
-  static function writer($type) {
-    switch($type) {
+  public static function writer($type) {
+    switch ($type) {
       case 'csv':
         $writer = WriterFactory::create(Type::CSV);
         $writer->setShouldAddBOM(TRUE); // this is default
@@ -53,8 +52,8 @@ class CRM_Core_Report_Excel {
     return $writer;
   }
 
-  static function reader($type) {
-    switch($type) {
+  public static function reader($type) {
+    switch ($type) {
       case 'csv':
         $reader = ReaderFactory::create(Type::CSV);
         break;
@@ -83,14 +82,14 @@ class CRM_Core_Report_Excel {
    *
    * @access  public
    */
-  function makeCSVTable(&$header, &$rows, $titleHeader = NULL, $print = TRUE, $outputHeader = TRUE) {
+  public function makeCSVTable(&$header, &$rows, $titleHeader = NULL, $print = TRUE, $outputHeader = TRUE) {
     if ($titleHeader) {
       echo $titleHeader;
     }
 
     $bom = "\xEF\xBB\xBF";
     $result = $bom;
-    if($print){
+    if ($print) {
       echo $bom;
     }
 
@@ -194,10 +193,11 @@ class CRM_Core_Report_Excel {
     }
   }
   // end of the 'getTableCsv()' function
-  function writeHTMLFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE) {
+  public function writeHTMLFile($fileName, &$header, &$rows, $titleHeader = NULL, $outputHeader = TRUE) {
     if ($outputHeader) {
 
-      CRM_Utils_System::download(CRM_Utils_String::munge($fileName),
+      CRM_Utils_System::download(
+        CRM_Utils_String::munge($fileName),
         'application/vnd.ms-excel',
         CRM_Core_DAO::$_nullObject,
         'xls',
@@ -227,11 +227,11 @@ class CRM_Core_Report_Excel {
     echo "</tbody></table>";
   }
 
-  static function writeCSVFile($fileName, &$header, &$rows, $download = TRUE) {
+  public static function writeCSVFile($fileName, &$header, &$rows, $download = TRUE) {
     return self::writeExportFile('csv', $fileName, $header, $rows, $download);
   }
 
-  static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE, $append = FALSE) {
+  public static function writeExcelFile($fileName, &$header, &$rows, $download = TRUE, $append = FALSE) {
     if ($append) {
       return self::appendExcelFile($fileName, $header, $rows);
     }
@@ -240,7 +240,7 @@ class CRM_Core_Report_Excel {
     }
   }
 
-  static function readExcelFile($fileName) {
+  public static function readExcelFile($fileName) {
     if (file_exists($fileName)) {
       $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
       $reader = self::reader('excel');
@@ -257,8 +257,8 @@ class CRM_Core_Report_Excel {
     }
     return NULL;
   }
-  
-  static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
+
+  public static function writeExportFile($type, $fileName, &$header, &$rows, $download = TRUE) {
     $config = CRM_Core_Config::singleton();
     $writer = self::singleton($type);
     if ($download) {
@@ -304,7 +304,7 @@ class CRM_Core_Report_Excel {
     }
   }
 
-  static function appendExcelFile($fileName, &$header, &$rows) {
+  public static function appendExcelFile($fileName, &$header, &$rows) {
     $config = CRM_Core_Config::singleton();
     if (strpos($fileName, $config->uploadDir) === 0) {
       $filePath = $fileName;
@@ -315,10 +315,10 @@ class CRM_Core_Report_Excel {
     $writer = CRM_Core_Report_Excel::singleton('excel');
     $writer->openToFile($filePath.'.new');
 
-    if (!is_file($filePath)){
+    if (!is_file($filePath)) {
       $writer->addRow($header);
     }
-    else{
+    else {
       $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
       $reader = CRM_Core_Report_Excel::reader('excel');
       $reader->setTempFolder($tmpDir);
@@ -339,10 +339,9 @@ class CRM_Core_Report_Excel {
       ->addRows($rows)
       ->close();
 
-    if (is_file($filePath)){
+    if (is_file($filePath)) {
       unlink($filePath);
     }
     rename($filePath.'.new', $filePath);
   }
 }
-

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Reprot templates available
  */
@@ -62,7 +60,8 @@ ORDER BY  v.weight";
       $rows[$dao->component_name][$dao->value]['description'] = $dao->description;
       $rows[$dao->component_name][$dao->value]['url'] = CRM_Utils_System::url('civicrm/report/' . trim($dao->value, '/'), 'reset=1');
       if ($dao->instance_id) {
-        $rows[$dao->component_name][$dao->value]['instanceUrl'] = CRM_Utils_System::url('civicrm/report/instance/list',
+        $rows[$dao->component_name][$dao->value]['instanceUrl'] = CRM_Utils_System::url(
+          'civicrm/report/instance/list',
           "reset=1&ovid={$dao->id}"
         );
       }
@@ -76,11 +75,10 @@ ORDER BY  v.weight";
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $rows = &self::info();
     $this->assign('list', $rows);
 
     return parent::run();
   }
 }
-

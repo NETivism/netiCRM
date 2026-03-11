@@ -51,7 +51,7 @@ class CRM_Core_QuickForm_Action extends HTML_QuickForm_Action {
    * @return object
    * @access public
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     $this->_stateMachine = &$stateMachine;
   }
 
@@ -61,7 +61,7 @@ class CRM_Core_QuickForm_Action extends HTML_QuickForm_Action {
    * @return void
    * @access public
    */
-  function popUserContext() {
+  public function popUserContext() {
     $session = CRM_Core_Session::singleton();
     $config = CRM_Core_Config::singleton();
 
@@ -84,4 +84,3 @@ class CRM_Core_QuickForm_Action extends HTML_QuickForm_Action {
     }
   }
 }
-

@@ -40,7 +40,7 @@
  *
  */
 class CRM_Member_Task {
-  CONST DELETE_MEMBERS = 1, PRINT_MEMBERS = 2, EXPORT_MEMBERS = 3, EMAIL_CONTACTS = 4, BATCH_MEMBERS = 5;
+  public const DELETE_MEMBERS = 1, PRINT_MEMBERS = 2, EXPORT_MEMBERS = 3, EMAIL_CONTACTS = 4, BATCH_MEMBERS = 5;
 
   /**
    * the task array
@@ -48,7 +48,7 @@ class CRM_Member_Task {
    * @var array
    * @static
    */
-  static $_tasks = NULL;
+  public static $_tasks = NULL;
 
   /**
    * the optional task array
@@ -56,7 +56,7 @@ class CRM_Member_Task {
    * @var array
    * @static
    */
-  static $_optionalTasks = NULL;
+  public static $_optionalTasks = NULL;
 
   /**
    * These tasks are the core set of tasks that the user can perform
@@ -66,7 +66,7 @@ class CRM_Member_Task {
    * @static
    * @access public
    */
-  static function &tasks() {
+  public static function &tasks() {
     if (!(self::$_tasks)) {
       self::$_tasks = [
         1 => ['title' => ts('Delete Members'),
@@ -114,7 +114,7 @@ class CRM_Member_Task {
    * @static
    * @access public
    */
-  static function &taskTitles() {
+  public static function &taskTitles() {
     self::tasks();
     $titles = [];
     foreach (self::$_tasks as $id => $value) {
@@ -135,7 +135,7 @@ class CRM_Member_Task {
    * @return array set of tasks that are valid for the user
    * @access public
    */
-  static function &permissionedTaskTitles($permission) {
+  public static function &permissionedTaskTitles($permission) {
     $tasks = [];
     if (($permission == CRM_Core_Permission::EDIT)
       || CRM_Core_Permission::check('edit memberships')
@@ -165,7 +165,7 @@ class CRM_Member_Task {
    * @static
    * @access public
    */
-  static function getTask($value) {
+  public static function getTask($value) {
     self::tasks();
     if (!$value || !CRM_Utils_Array::value($value, self::$_tasks)) {
       // make the print task by default
@@ -176,4 +176,3 @@ class CRM_Member_Task {
     ];
   }
 }
-

@@ -34,19 +34,18 @@
  *
  */
 
-
-
 class CRM_Core_Extensions_ExtensionType {
 
   public $extDir;
   /**
    *
    */
-  CONST OPTION_GROUP_NAME = 'system_extensions';
+  public const OPTION_GROUP_NAME = 'system_extensions';
 
   private $allowedExtTypes = ['payment', 'search', 'report'];
 
-  protected static $_extensions = NULL; function __construct() {
+  protected static $_extensions = NULL;
+  public function __construct() {
     $ext = CRM_Core_Extensions::singleton();
     self::$_extensions = $ext->getExtensions();
     $config = CRM_Core_Config::singleton();
@@ -81,7 +80,8 @@ class CRM_Core_Extensions_ExtensionType {
     $groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', self::OPTION_GROUP_NAME, 'id', 'name');
 
     $params = ['option_group_id' => $groupId,
-      'weight' => CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+      'weight' => CRM_Utils_Weight::getDefaultWeight(
+        'CRM_Core_DAO_OptionValue',
         ['option_group_id' => $groupId]
       ),
       'label' => $e['per_id'][$id]['label'],
@@ -110,4 +110,3 @@ class CRM_Core_Extensions_ExtensionType {
     CRM_Utils_File::cleanDir($e['per_id'][$id]['path']);
   }
 }
-

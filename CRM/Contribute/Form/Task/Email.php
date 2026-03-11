@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality to email a group of
  * contacts.
@@ -65,7 +62,7 @@ class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Contact_Form_Task_EmailCommon::preProcessFromAddress($this);
     parent::preProcess();
 
@@ -111,4 +108,3 @@ class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
     return $tokens;
   }
 }
-

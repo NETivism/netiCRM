@@ -10,11 +10,11 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @var object
    */
   public $_config;
-  const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
-  const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';
-  const ALLPAY_URL_SITE = '/Cashier/AioCheckOut';
-  const ALLPAY_URL_API = '/Cashier/QueryTradeInfo';
-  const ALLPAY_URL_RECUR = '/Cashier/QueryCreditCardPeriodInfo';
+  public const ALLPAY_REAL_DOMAIN = 'https://payment.ecpay.com.tw';
+  public const ALLPAY_TEST_DOMAIN = 'https://payment-stage.ecpay.com.tw';
+  public const ALLPAY_URL_SITE = '/Cashier/AioCheckOut';
+  public const ALLPAY_URL_API = '/Cashier/QueryTradeInfo';
+  public const ALLPAY_URL_RECUR = '/Cashier/QueryCreditCardPeriodInfo';
 
   /**
    * mode of operation: live or test
@@ -22,7 +22,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
   public static $_hideFields = ['invoice_id', 'trxn_id'];
 
@@ -33,7 +33,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -42,7 +42,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Allpay');
@@ -59,7 +59,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ALLPAY($mode, $paymentProcessor);
@@ -74,7 +74,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @param object $paymen dao that will be added to payment when default is empty
    * @return void
    */
-  static function buildPaymentDefault(&$default, $payment) {
+  public static function buildPaymentDefault(&$default, $payment) {
     if ($payment->is_test > 0) {
       $default['url_site'] = CRM_Core_Payment_ALLPAY::ALLPAY_TEST_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_SITE;
       $default['url_api'] = CRM_Core_Payment_ALLPAY::ALLPAY_TEST_DOMAIN . CRM_Core_Payment_ALLPAY::ALLPAY_URL_API;
@@ -93,7 +93,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -114,19 +114,19 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
@@ -137,30 +137,30 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return array The instruments used by AllPay.
    */
-  static function getInstruments($type = 'normal'){
+  public static function getInstruments($type = 'normal') {
     $i = [
       'Credit Card' => ['label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'],
       'ATM' => ['label' => ts('ATM Transfer'), 'desc' => '', 'code' => 'ATM'],
       'Web ATM' => ['label' => ts('Web ATM Transfer'), 'desc' => '', 'code' => 'WebATM'],
-      'Convenient Store' => ['label' => ts('Convenient Store Barcode'), 'desc'=>'', 'code' => 'BARCODE'],
-      'Convenient Store (Code)' => ['label'=> ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'],
-      'Alipay' => ['label'=> ts('AliPay'), 'desc' => '', 'code' => 'Alipay'],
+      'Convenient Store' => ['label' => ts('Convenient Store Barcode'), 'desc' => '', 'code' => 'BARCODE'],
+      'Convenient Store (Code)' => ['label' => ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'],
+      'Alipay' => ['label' => ts('AliPay'), 'desc' => '', 'code' => 'Alipay'],
       // 'Tenpay' => array('label'=> ts('Tenpay'), 'desc' => '', 'code' => 'Tenpay'),
     ];
-    if($type == 'form_name'){
-      foreach($i as $name => $data){
+    if ($type == 'form_name') {
+      foreach ($i as $name => $data) {
         $form_name = preg_replace('/[^0-9a-z]+/i', '_', strtolower($name));
         $instrument[$form_name] = $data;
       }
       return $instrument;
     }
-    elseif($type == 'code'){
-      foreach($i as $name =>  $data){
+    elseif ($type == 'code') {
+      foreach ($i as $name =>  $data) {
         $instrument[$name] = $data['code'];
       }
       return $instrument;
     }
-    else{
+    else {
       return $i;
     }
   }
@@ -173,8 +173,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string If test, return expand string of id.
    */
-  static function generateTrxnId($is_test, $id){
-    if($is_test){
+  public static function generateTrxnId($is_test, $id) {
+    if ($is_test) {
       $id = 'test' . substr(str_replace(['.','-'], '', $_SERVER['HTTP_HOST']), 0, 3) . $id. 'T'. mt_rand(100, 999);
     }
     return $id;
@@ -187,15 +187,14 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string implode by $parent and $gwsr.
    */
-  static function generateRecurTrxn($parent, $gwsr){
-    if(empty($gwsr)){
+  public static function generateRecurTrxn($parent, $gwsr) {
+    if (empty($gwsr)) {
       return $parent;
     }
-    else{
+    else {
       return $parent . '-' . $gwsr;
     }
   }
-
 
   /**
    * Sets appropriate parameters for checking out to google
@@ -207,7 +206,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @access public
    *
    */
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
@@ -232,23 +231,23 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $_SESSION['allpay']['submitted'] = TRUE;
     $_SESSION['allpay']['instrument'] = $instrument_code;
 
-    if($instrument_code == 'Credit' || $instrument_code == 'WebATM'){
+    if ($instrument_code == 'Credit' || $instrument_code == 'WebATM') {
       $is_pay_later = FALSE;
     }
-    else{
+    else {
       $is_pay_later = TRUE;
 
       // Set participant status to 'Pending from pay later', Accupied the seat.
-      if($params['participantID']){
+      if ($params['participantID']) {
         $pstatus = CRM_Event_PseudoConstant::participantStatus();
-        if($new_pstatus = array_search('Pending from pay later', $pstatus)){
+        if ($new_pstatus = array_search('Pending from pay later', $pstatus)) {
           CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $params['participantID'], 'status_id', $new_pstatus, 'id');
           $sql = 'SELECT id FROM civicrm_participant WHERE registered_by_id = %1';
           $paramsRegisteredBy = [
             1 => [$params['participantID'], 'Integer'],
           ];
           $dao = CRM_Core_DAO::executeQuery($sql, $paramsRegisteredBy);
-          while($dao->fetch()){
+          while ($dao->fetch()) {
             CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $dao->id, 'status_id', $new_pstatus, 'id');
           }
         }
@@ -259,12 +258,12 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $contrib_params = [ 'id' => $params['contributionID'] ];
     $contrib_values = $contrib_ids = [];
     CRM_Contribute_BAO_Contribution::getValues($contrib_params, $contrib_values, $contrib_ids);
-    if($params['civicrm_instrument_id']){
+    if ($params['civicrm_instrument_id']) {
       $contrib_values['payment_instrument_id'] = $params['civicrm_instrument_id'];
     }
     $contrib_values['is_pay_later'] = $is_pay_later;
     $contrib_values['trxn_id'] = self::generateTrxnId($is_test, $params['contributionID']);
-    $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
+    $contribution = &CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
     // Inject in quickform sessions
     // Special hacking for display trxn_id after thank you page.
@@ -287,7 +286,6 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     CRM_Utils_System::civiExit();
   }
 
-
   /**
    * Retrieve arguments of order. Original _civicrm_allpay_order.
    *
@@ -300,25 +298,25 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * @return array Rearrange nessesary arguments for checkout.
    *
    */
-  static function getOrderArgs(&$vars, $component, &$payment_processor, $instrument_code, $form_key){
+  public static function getOrderArgs(&$vars, $component, &$payment_processor, $instrument_code, $form_key) {
 
-    // url 
+    // url
     $notify_url = self::generateNotifyUrl($vars, 'allpay/ipn/'.$instrument_code, $component);
     $civi_base_url = CRM_Utils_System::currentPath();
     $query = http_build_query([ "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey']], '', '&');
     $thankyou_url = CRM_Utils_System::url($civi_base_url, $query, TRUE, NULL, FALSE);
-  
+
     // parameter
-    if($component == 'event' && !empty($_SESSION['CiviCRM'][$form_key])){
-      $values =& $_SESSION['CiviCRM'][$form_key]['values']['event'];
+    if ($component == 'event' && !empty($_SESSION['CiviCRM'][$form_key])) {
+      $values = &$_SESSION['CiviCRM'][$form_key]['values']['event'];
     }
-    else{
-      $values =& $_SESSION['CiviCRM'][$form_key]['values'];
+    else {
+      $values = &$_SESSION['CiviCRM'][$form_key]['values'];
     }
-  
+
     // building vars
-    $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'],'.')) : $vars['amount'];
-  
+    $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'], '.')) : $vars['amount'];
+
     $args = [
       'MerchantID' => $payment_processor['user_name'],
       'MerchantTradeNo' => $vars['trxn_id'],
@@ -338,7 +336,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       'NeedExtraPaidInfo' => 'Y',
       'DeviceSource' => '',
     ];
-  
+
     // max 7 days of expire
     $baseTime = time() + 86400; // because not include today
     if (!empty($vars['payment_expired_timestamp'])) {
@@ -350,27 +348,29 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     if ($hours < 24) {
       $hours = 24;
     }
-    if(CRM_Utils_System::getUFLocale() == 'en_US'){
+    if (CRM_Utils_System::getUFLocale() == 'en_US') {
       $args['Language'] = 'ENG';
     }
-    switch($instrument_code){
+    switch ($instrument_code) {
       case 'ATM':
-        $args['ExpireDate'] = ceil($hours/24) > 60 ? 60 : ceil($hours/24);
+        $args['ExpireDate'] = ceil($hours / 24) > 60 ? 60 : ceil($hours / 24);
+        // no break
       case 'BARCODE':
-        $args['StoreExpireDate'] = ceil($hours/24) > 7 ? 7 : ceil($hours/24);
+        $args['StoreExpireDate'] = ceil($hours / 24) > 7 ? 7 : ceil($hours / 24);
+        // no break
       case 'CVS':
-        if($instrument_code == 'CVS' && !empty($hours)) {
+        if ($instrument_code == 'CVS' && !empty($hours)) {
           // hour before 24hr
           $end_of_day_hr = 24 - (int)date('H');
           $end_of_day_min = (int)date('i') + 1;
-          $args['StoreExpireDate'] = ceil($hours/24) > 7 ? 7 : ceil($hours/24);
-          $args['StoreExpireDate'] = $args['StoreExpireDate']*24*60 + $end_of_day_hr*60 - $end_of_day_min;
+          $args['StoreExpireDate'] = ceil($hours / 24) > 7 ? 7 : ceil($hours / 24);
+          $args['StoreExpireDate'] = $args['StoreExpireDate'] * 24 * 60 + $end_of_day_hr * 60 - $end_of_day_min;
         }
         $args['Desc_1'] = '';
         $args['Desc_2'] = '';
         $args['Desc_3'] = '';
         $args['Desc_4'] = '';
-  
+
         #ATM / CVS / BARCODE
         $args['PaymentInfoURL'] = CRM_Utils_System::url('allpay/record/'.$vars['contributionID'], "", TRUE, NULL, FALSE);
         break;
@@ -382,7 +382,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
           'return.phone' => 1,
         ];
         $result = civicrm_api('contact', 'get', $params);
-        if(!empty($result['count'])){
+        if (!empty($result['count'])) {
           $phone = $result['values'][$result['id']]['phone'];
           $name = $result['values'][$result['id']]['sort_name'];
         }
@@ -393,38 +393,39 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         $args['PhoneNo'] = $phone;
         $args['UserName'] = $name;
         break;
-      /*
-      case 'Tenpay':
-        $args['ExpireTime'] = '';
-        break;
-       */
+        /*
+        case 'Tenpay':
+          $args['ExpireTime'] = '';
+          break;
+         */
       case 'WebATM':
         break;
       case 'Credit':
-        if($vars['is_recur']){
+        if ($vars['is_recur']) {
           $args['PeriodAmount'] = $amount;
           $period = strtoupper($vars['frequency_unit'][0]);
           $args['PeriodType'] = $vars['frequency_unit'] == 'week' ? 'D' : $period;
-  
-          if($vars['frequency_unit'] == 'month'){
+
+          if ($vars['frequency_unit'] == 'month') {
             $frequency_interval = $vars['frequency_interval'] > 12 ? 12 : $vars['frequency_interval'];
           }
-          elseif($vars['frequency_unit'] == 'week'){
+          elseif ($vars['frequency_unit'] == 'week') {
             $frequency_interval = (7 * $vars['frequency_interval']) > 365 ? 365 : ($vars['frequency_interval'] * 7);
           }
-          elseif($vars['frequency_unit'] == 'day'){
+          elseif ($vars['frequency_unit'] == 'day') {
             $frequency_interval = $vars['frequency_interval'] > 365 ? 365 : $vars['frequency_interval'];
           }
-          elseif($vars['frequency_unit'] == 'year'){
+          elseif ($vars['frequency_unit'] == 'year') {
             $frequency_interval = 1;
           }
-          if(empty($frequency_interval)){
+          if (empty($frequency_interval)) {
             $frequency_interval = 1;
           }
           $args['Frequency'] = $frequency_interval;
-          if($vars['frequency_unit'] == 'year'){
+          if ($vars['frequency_unit'] == 'year') {
             $args['ExecTimes'] = empty($vars['installments']) ? 9 : $vars['installments'];
-          }else{
+          }
+          else {
             $args['ExecTimes'] = empty($vars['installments']) ? 99 : $vars['installments']; // support endless
           }
           $args['PeriodReturnURL'] = $notify_url.'&is_recur=1';
@@ -434,7 +435,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
     return $args ;
   }
-  
+
   /**
    * Print redirect form HTML. Original _civicrm_allpay_form_redirect.
    *
@@ -443,17 +444,17 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return void
    */
-  static function outputRedirectForm($redirect_vars, $payment_processor){
+  public static function outputRedirectForm($redirect_vars, $payment_processor) {
     header('Pragma: no-cache');
     header('Cache-Control: no-store, no-cache, must-revalidate');
     header('Expires: 0');
-  
+
     $o = "";
-  
+
     $js = 'document.forms.redirect.submit();';
     $o .= '<form action="'.$payment_processor['url_site'].'" name="redirect" method="post" id="redirect-form">';
-    foreach($redirect_vars as $k=>$p){
-      if($k[0] != '#'){
+    foreach ($redirect_vars as $k => $p) {
+      if ($k[0] != '#') {
         $o .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
       }
     }
@@ -474,7 +475,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   <html>
   ';
   }
-  
+
   /**
    * Generate notify URL added to checkout request. Original _civicrm_allpay_notify_url
    *
@@ -484,30 +485,30 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string The full path or notify URL.
    */
-  static function generateNotifyUrl(&$vars, $path, $component){
+  public static function generateNotifyUrl(&$vars, $path, $component) {
     $query = [];
     $query["contact_id"] = $vars['contactID'];
     $query["cid"] = $vars['contributionID'];
     $query["module"] = $component;
-  
-    if ( $component == 'event' ) {
+
+    if ($component == 'event') {
       $query["eid"] = $vars['eventID'];
       $query["pid"] = $vars['participantID'];
     }
     else {
-      if ( !empty($vars['membershipID']) ) {
+      if (!empty($vars['membershipID'])) {
         $query["mid"] = $vars['membershipID'];
       }
-      if ( !empty($vars['related_contact']) ){
+      if (!empty($vars['related_contact'])) {
         $query["rid"] = $vars['related_contact'];
-        if ( !empty($vars['onbehalf_dupe_alert']) ){
+        if (!empty($vars['onbehalf_dupe_alert'])) {
           $query["onbehalf_dupe_alert"] = $vars['onbehalf_dupe_alert'];
         }
       }
     }
-  
+
     // if recurring donations, add a few more items
-    if ( !empty( $vars['is_recur']) ) {
+    if (!empty($vars['is_recur'])) {
       if ($vars['contributionRecurID']) {
         $query["crid"] = $vars['contributionRecurID'];
         $query["cpid"] = $vars['contributionPageID'];
@@ -522,10 +523,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       NULL,
       FALSE
     );
-    if( ( !empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on' ) || ( !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ){
+    if ((!empty($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on') || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
       return str_replace('http://', 'https://', $url);
     }
-    else{
+    else {
       return $url;
     }
   }
@@ -538,19 +539,19 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string md5 hash of mac values.
    */
-  static function generateMacValue(&$args, $payment_processor){
+  public static function generateMacValue(&$args, $payment_processor) {
     // remove empty arg
-    if(is_array($args)){
-      foreach($args as $k => $v){
-        if($k == 'CheckMacValue'){
+    if (is_array($args)) {
+      foreach ($args as $k => $v) {
+        if ($k == 'CheckMacValue') {
           unset($args[$k]);
         }
       }
     }
-    elseif(is_string($args)){
+    elseif (is_string($args)) {
       $tmp = explode('&', $args);
       $args = [];
-      foreach($tmp as $v){
+      foreach ($tmp as $v) {
         list($key, $value) = explode('=', $v);
         $args[$key] = $value;
       }
@@ -559,14 +560,14 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $a = [
       'HashKey='.$payment_processor['password'],
     ];
-    foreach($args as $k => $v){
+    foreach ($args as $k => $v) {
       $a[] = $k.'='.$v;
     }
     $a[] = 'HashIV='.$payment_processor['signature'];
     $keystr = CRM_Utils_Array::implode('&', $a);
     $keystr = urlencode($keystr);
     $keystr = strtolower($keystr);
-  
+
     $special_char_allpay = [
       '%2d' => '-',
       '%5f' => '_',
@@ -586,7 +587,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   /**
    * Synchronize all recurring of specific day of month.
    * Original civicrm_allpay_recur_sync
-   * 
+   *
    * @param array $days The array of days need to synchronize recurrings.
    * @return null
    */
@@ -595,7 +596,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     if (!$allpayEnabled) {
       return;
     }
-    if(empty($days)){
+    if (empty($days)) {
       $days = [
         date('j'),
         date('j', strtotime('-1 day')),
@@ -604,7 +605,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       // when end of month
       $end_this_month = date('j', strtotime('last day of this month'));
       if (date('j') == $end_this_month) {
-        for($i = $end_this_month; $i <= 31; $i++) {
+        for ($i = $end_this_month; $i <= 31; $i++) {
           $days[] = $i;
         }
       }
@@ -614,7 +615,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     $query = "SELECT (SELECT count(c.id) FROM civicrm_contribution c WHERE c.contribution_recur_id = r.id AND c.receive_date >= %2 AND c.receive_date <= %3 ) AS contribution_count, r.* FROM civicrm_contribution_recur r
     WHERE r.contribution_status_id = 5 AND r.frequency_unit = 'month' AND DAY(r.start_date) = %1
     ORDER BY r.create_date ASC";
-    foreach($days as $d){
+    foreach ($days as $d) {
       $d = (string) $d;
       CRM_Core_Error::debug_log_message('CiviCRM AllPay: Start to sync recurring for day '.$d);
       $query_params = [
@@ -623,8 +624,8 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
         3 => [date('Y-m-').sprintf('%02s', $d).' 23:59:59', 'String'],
       ];
       $result = CRM_Core_DAO::executeQuery($query, $query_params);
-      while($result->fetch()){
-        if(empty($result->contribution_count)){
+      while ($result->fetch()) {
+        if (empty($result->contribution_count)) {
           // check if is next day of expect recurring
           self::recurCheck($result->id);
           usleep(300000); // sleep 0.3 second
@@ -638,7 +639,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
   /**
    * Chcek recurring of specific id from AllPay API.
    * Original civicrm_allpay_recur_check
-   * 
+   *
    * @param integer $rid The recurring id.
    * @param object $order If you want to include object already wrote.
    * @return null
@@ -650,15 +651,15 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
 
     // fetch first contribution
     $result->fetch();
-    if(!empty($result->N)){
+    if (!empty($result->N)) {
       $first_contrib_id = $result->cid;
       $is_test = $result->is_test;
       $payment_processor = CRM_Core_BAO_PaymentProcessor::getPayment($result->pid, $is_test ? 'test' : 'live');
-      if($payment_processor['payment_processor_type'] != 'ALLPAY'){
+      if ($payment_processor['payment_processor_type'] != 'ALLPAY') {
         return;
       }
 
-      if(!empty($payment_processor['url_recur']) && !empty($payment_processor['user_name'])){
+      if (!empty($payment_processor['url_recur']) && !empty($payment_processor['user_name'])) {
         $processor = [
           'password' => $payment_processor['password'],
           'signature' => $payment_processor['signature'],
@@ -669,14 +670,14 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
           'TimeStamp' => $now,
         ];
         self::generateMacValue($post_data, $processor);
-        if(empty($order)){
+        if (empty($order)) {
           $order = self::postdata($payment_processor['url_recur'], $post_data);
         }
-        if(!empty($order) && $order->MerchantTradeNo == $result->trxn_id && count($order->ExecLog) > 1){
+        if (!empty($order) && $order->MerchantTradeNo == $result->trxn_id && count($order->ExecLog) > 1) {
           // update recur status
-          if(isset($order->ExecStatus)){
+          if (isset($order->ExecStatus)) {
             $recur_param = $null = [];
-            if($order->ExecStatus == 0 && $result->recurring_status != 3){
+            if ($order->ExecStatus == 0 && $result->recurring_status != 3) {
               // cancelled
               $recur_param = [
                 'id' => $rid,
@@ -686,7 +687,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               ];
               CRM_Contribute_BAO_ContributionRecur::add($recur_param, $null);
             }
-            elseif($order->ExecStatus == 2 && $result->recurring_status != 1){
+            elseif ($order->ExecStatus == 2 && $result->recurring_status != 1) {
               // completed
               $recur_param = [
                 'id' => $rid,
@@ -696,17 +697,17 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
               ];
               CRM_Contribute_BAO_ContributionRecur::add($recur_param, $null);
             }
-            elseif($order->ExecStatus == 1){
+            elseif ($order->ExecStatus == 1) {
               // current running, should be 5, do nothing
             }
           }
 
           $orders = [];
-          foreach($order->ExecLog as $o){
+          foreach ($order->ExecLog as $o) {
             // update exists first contribution if pending
             // otherwise skip
-            if($order->gwsr == $o->gwsr){
-              if($result->contribution_status_id != 2) {
+            if ($order->gwsr == $o->gwsr) {
+              if ($result->contribution_status_id != 2) {
                 continue;
               }
               else {
@@ -723,7 +724,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
             }
             $noid = self::getNoidHash($o, $order->MerchantTradeNo);
             if (!empty($noid)) {
-              if($o->RtnCode == 1 && empty($o->gwsr)){
+              if ($o->RtnCode == 1 && empty($o->gwsr)) {
                 continue; // skip, not normal
               }
               $trxn_id = self::generateRecurTrxn($order->MerchantTradeNo, $noid);
@@ -731,18 +732,18 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
             }
           }
           // remove exists records
-          while($result->fetch()){
+          while ($result->fetch()) {
             unset($orders[$result->trxn_id]);
           }
           // real record to add
-          if(!empty($orders)){
-            foreach($orders as $trxn_id => $o){
+          if (!empty($orders)) {
+            foreach ($orders as $trxn_id => $o) {
               $get = $post = $ids = [];
               list($main_trxn, $noid) = explode('-', $trxn_id);
               $ids = CRM_Contribute_BAO_Contribution::buildIds($first_contrib_id);
               $query = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, NULL, $return_query = TRUE);
               parse_str($query, $get);
-              if($order->gwsr != $o->gwsr){
+              if ($order->gwsr != $o->gwsr) {
                 $get['is_recur'] = 1;
               }
               $post = [
@@ -795,7 +796,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       }
     }
     if (!empty($paymentProcessorId) && !empty($contribution->id)) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test' : 'live');
 
       if (strstr($paymentProcessor['payment_processor_type'], 'ALLPAY') && !empty($paymentProcessor['user_name'])) {
         $processor = [
@@ -868,44 +869,44 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    * Help function for such function as recurCheck.
    * Posting Data to AllPay server and retrieve data.
    * Original _civicrm_allpay_postdata
-   * 
+   *
    * @param string $url Post url
    * @param array $post_data Post Data
    * @param boolean $json Is return json format.
    * @return string|array|null
    */
-  public static function postdata($url, $post_data, $json = TRUE){
+  public static function postdata($url, $post_data, $json = TRUE) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($ch, CURLOPT_POST, 1);
     $field_string = http_build_query($post_data, '', '&');
     curl_setopt($ch, CURLOPT_POSTFIELDS, $field_string);
     curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
     $receive = curl_exec($ch);
-    if(curl_errno($ch)){
+    if (curl_errno($ch)) {
       CRM_Core_Error::debug_log_message('AllPay: Fetch recuring error: curl_errno: '.curl_errno($ch).' / '. curl_error($ch));
     }
-    else{
+    else {
       CRM_Core_Error::debug_log_message('AllPay: Request:'.$url."?".$field_string.'; Receive: '.$receive);
     }
     curl_close($ch);
-    if(!empty($receive)){
-      if($json){
+    if (!empty($receive)) {
+      if ($json) {
         return json_decode($receive);
       }
-      else{
+      else {
         $return = [];
         parse_str($receive, $return);
         return $return;
       }
     }
-    else{
+    else {
       return FALSE;
     }
   }
-  
+
   /**
    * Get AllPay error msg.
    * Original _civicrm_allpay_error_msg
@@ -914,10 +915,10 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string Translated error message response to the code.
    */
-  static function getErrorMsg($code){
+  public static function getErrorMsg($code) {
     $code = (string) $code;
     // success
-    if($code == '1' || $code == '2'){
+    if ($code == '1' || $code == '2') {
       return;
     }
 
@@ -943,22 +944,22 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
       'uncertain' => 'Please login your payment processor system to check problem.',
       '0' => 'Please login your payment processor system to check problem.',
     ];
-    if(!empty($msg[$code])){
+    if (!empty($msg[$code])) {
       return ts($msg[$code]);
     }
-    else{
+    else {
       return ts('Error when processing your payment.');
     }
   }
 
   /**
    * Original _civicrm_allpay_noid_hash
-   * 
+   *
    * @param object $o Return log object from AllPay.
    * @param string $main_trxn The TradeNo of AllPay transaction.
    * @return string|null get the hash
    */
-  static function getNoidHash($o, $main_trxn) {
+  public static function getNoidHash($o, $main_trxn) {
     // check database for this
     $lookup = [
       1 => ['%TradeNo":"'.$main_trxn.'"%ProcessDate":"'.str_replace('/', '\\\\\\\\', $o->process_date).'"%', 'String'],
@@ -984,9 +985,9 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
   }
 
-  function cancelRecuringMessage($recurID){
+  public function cancelRecuringMessage($recurID) {
     if (function_exists("_civicrm_allpay_cancel_recuring_message")) {
-      return _civicrm_allpay_cancel_recuring_message(); 
+      return _civicrm_allpay_cancel_recuring_message();
     }
     else {
       CRM_Core_Error::fatal('Module civicrm_allpay doesn\'t exists.');
@@ -1003,7 +1004,7 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
    *
    * @return string|void If $print is FALSE, function will return the result as Array.
    */
-  static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
+  public static function doIPN($arguments, $post = NULL, $get = NULL, $print = TRUE) {
     // detect variables
     $post = !empty($post) ? $post : $_POST;
     $get = !empty($get) ? $get : $_GET;
@@ -1021,27 +1022,26 @@ class CRM_Core_Payment_ALLPAY extends CRM_Core_Payment {
     }
 
     // detect variables
-    if(empty($post)){
-      CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not find POST data from payment server", TRUE);
+    if (empty($post)) {
+      CRM_Core_Error::debug_log_message("civicrm_allpay: Could not find POST data from payment server", TRUE);
       CRM_Utils_System::civiExit();
     }
-    else{
+    else {
       $component = $get['module'];
-      if(!empty($component)){
+      if (!empty($component)) {
         $ipn = new CRM_Core_Payment_ALLPAYIPN($post, $get);
         $result = $ipn->main($component, $instrument);
-        if(!empty($result) && $print){
+        if (!empty($result) && $print) {
           echo $result;
         }
-        else{
+        else {
           return $result;
         }
       }
-      else{
-        CRM_Core_Error::debug_log_message( "civicrm_allpay: Could not get module name from request url", TRUE);
+      else {
+        CRM_Core_Error::debug_log_message("civicrm_allpay: Could not get module name from request url", TRUE);
       }
     }
     CRM_Utils_System::civiExit();
   }
 }
-

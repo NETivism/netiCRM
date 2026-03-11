@@ -57,7 +57,10 @@
  *
  * @return string
  */
-function smarty_modifier_mb_truncate($string, $length = 80, $etc = '...',
+function smarty_modifier_mb_truncate(
+  $string,
+  $length = 80,
+  $etc = '...',
   $break_words = FALSE
 ) {
   if (function_exists('mb_internal_encoding') and function_exists('mb_strlen') and function_exists('mb_substr')) {
@@ -84,8 +87,9 @@ function smarty_modifier_mb_truncate($string, $length = 80, $etc = '...',
 
     return $substr($string, 0, $length) . $etc;
   }
-  else return $string;
+  else {
+    return $string;
+  }
 }
 
 /* vim: set expandtab: */
-

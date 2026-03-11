@@ -38,8 +38,6 @@
  *
  */
 
-
-
 class CRM_Utils_Wrapper {
 
   /**
@@ -63,7 +61,7 @@ class CRM_Utils_Wrapper {
    * @return none.
    * @access public
    */
-  function run($formName, $formLabel, $arguments = NULL) {
+  public function run($formName, $formLabel, $arguments = NULL) {
     if (is_array($arguments)) {
       $mode = CRM_Utils_Array::value('mode', $arguments);
       $imageUpload = (bool) CRM_Utils_Array::value('imageUpload', $arguments, FALSE);
@@ -77,7 +75,8 @@ class CRM_Utils_Wrapper {
       $addSequence = $ignoreKey = $imageUpload = $attachUpload = FALSE;
     }
 
-    $this->_controller = new CRM_Core_Controller_Simple($formName,
+    $this->_controller = new CRM_Core_Controller_Simple(
+      $formName,
       $formLabel,
       $mode,
       $imageUpload,
@@ -95,7 +94,8 @@ class CRM_Utils_Wrapper {
           $default = CRM_Utils_Array::value('default', $params);
 
           $value = NULL;
-          $value = CRM_Utils_Request::retrieve($urlVar,
+          $value = CRM_Utils_Request::retrieve(
+            $urlVar,
             $type,
             $this->_controller,
             $default
@@ -113,4 +113,3 @@ class CRM_Utils_Wrapper {
     $this->_controller->run();
   }
 }
-

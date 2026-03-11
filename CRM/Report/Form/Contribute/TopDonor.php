@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
   public $_columnHeaders;
@@ -60,7 +58,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
 
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
-  function __construct() {
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -140,7 +138,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
             ],
           'city' =>
           ['default' => TRUE],
-          'postal_code' => 
+          'postal_code' =>
           ['default' => TRUE],
           'street_address' =>
           ['default' => TRUE],
@@ -159,17 +157,17 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     parent::buildQuickForm();
 
     $this->getElement('total_range_op')->freeze();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     //Headers for Rank column
@@ -217,7 +215,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
             }
           }
 
-          if($tableName == 'civicrm_phone') {
+          if ($tableName == 'civicrm_phone') {
             $this->_phoneField = TRUE;
           }
         }
@@ -226,7 +224,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     $this->_select = " SELECT * FROM ( SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     $op = CRM_Utils_Array::value('total_range_op', $fields);
@@ -242,7 +240,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
         	INNER JOIN civicrm_contribution {$this->_aliases['civicrm_contribution']} 
@@ -262,7 +260,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     $this->_tempClause = $this->_outerCluase = '';
     foreach ($this->_columns as $tableName => $table) {
@@ -281,7 +279,8 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -314,11 +313,11 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id ";
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -336,7 +335,6 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     $this->groupBy();
 
     $this->limit();
-
 
     //set the variable value rank, rows = 0
     $setVariable = " SET @rows:=0, @rank=0 ";
@@ -363,7 +361,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function limit($rowCount = CRM_Report_Form::ROW_COUNT_LIMIT) {
+  public function limit($rowCount = CRM_Report_Form::ROW_COUNT_LIMIT) {
 
     // lets do the pager if in html mode
     $this->_limit = NULL;
@@ -389,7 +387,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
@@ -402,27 +400,29 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
         if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name', $row) &&
           CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
         ) {
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
           $entryFound = TRUE;
         }
 
         // handle country
-      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
-        if ($value = $row['civicrm_address_country_id']) {
-          $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_address_country_id', $row)) {
+          if ($value = $row['civicrm_address_country_id']) {
+            $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
+          }
+          $entryFound = TRUE;
         }
-        $entryFound = TRUE;
-      }
-      if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
-        if ($value = $row['civicrm_address_state_province_id']) {
-          $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+        if (CRM_Utils_Array::arrayKeyExists('civicrm_address_state_province_id', $row)) {
+          if ($value = $row['civicrm_address_state_province_id']) {
+            $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
+          }
+          $entryFound = TRUE;
         }
-        $entryFound = TRUE;
-      }
 
         // skip looking further in rows, if first row itself doesn't
         // have the column we need
@@ -433,4 +433,3 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
     }
   }
 }
-

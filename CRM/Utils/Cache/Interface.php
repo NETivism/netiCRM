@@ -42,7 +42,7 @@ interface CRM_Utils_Cache_Interface {
    *
    * @return void
    */
-  function set($key, &$value);
+  public function set($key, &$value);
 
   /**
    * Get a value from the cache
@@ -51,7 +51,7 @@ interface CRM_Utils_Cache_Interface {
    *
    * @return mixed NULL if $key has not been previously set
    */
-  function get($key);
+  public function get($key);
 
   /**
    * Delete a value from the cache
@@ -60,13 +60,12 @@ interface CRM_Utils_Cache_Interface {
    *
    * @return void
    */
-  function delete($key);
+  public function delete($key);
 
   /**
    * Delete all values from the cache
    *
    * @return void
    */
-  function flush();
+  public function flush();
 }
-

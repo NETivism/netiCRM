@@ -70,7 +70,7 @@ class CRM_Core_Exception extends PEAR_Exception {
    * @return void
    */
   public static function getExcceptionHandler() {
-    $handler = set_error_handler(function(){});
+    $handler = set_error_handler(function () {});
     restore_error_handler();
     return $handler;
   }

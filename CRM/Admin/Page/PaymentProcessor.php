@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of payment processors
  */
@@ -47,14 +44,14 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_PaymentProcessor';
   }
 
@@ -63,7 +60,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -106,11 +103,12 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     // set title and breadcrumb
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
     $breadCrumb = [['title' => ts('Global Settings'),
-        'url' => CRM_Utils_System::url('civicrm/admin/setting',
+        'url' => CRM_Utils_System::url(
+          'civicrm/admin/setting',
           'reset=1'
         ),
       ]];
@@ -125,7 +123,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse($action = NULL) {
+  public function browse($action = NULL) {
     // get all custom groups sorted by weight
     $paymentProcessor = [];
     $dao = new CRM_Core_DAO_PaymentProcessor();
@@ -154,7 +152,9 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
         $isShowMessage = TRUE;
       }
 
-      $paymentProcessor[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $paymentProcessor[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $dao->id]
       );
     }
@@ -184,7 +184,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_PaymentProcessor';
   }
 
@@ -193,7 +193,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Payment Processors';
   }
 
@@ -202,8 +202,7 @@ class CRM_Admin_Page_PaymentProcessor extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/paymentProcessor';
   }
 }
-

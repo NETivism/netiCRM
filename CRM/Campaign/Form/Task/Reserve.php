@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality to add contacts for
  * voter reservation.
@@ -78,7 +75,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     //get the survey id from user submitted values.
@@ -106,7 +103,8 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
         $statusIds[] = $statusId;
       }
     }
-    $this->_surveyActivities = CRM_Campaign_BAO_Survey::getSurveyActivities($this->_surveyId,
+    $this->_surveyActivities = CRM_Campaign_BAO_Survey::getSurveyActivities(
+      $this->_surveyId,
       $this->_interviewerId,
       $statusIds
     );
@@ -127,7 +125,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
     CRM_Utils_System::setTitle(ts('Reserve Respondents'));
   }
 
-  function validateSurvey() {
+  public function validateSurvey() {
     $errorMsg = NULL;
     $maxVoters = CRM_Utils_Array::value('max_number_of_contacts', $this->_surveyDetails);
     if ($maxVoters) {
@@ -135,14 +133,16 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
         $errorMsg = ts('The maximum number of contacts is already reserved for this interviewer.');
       }
       elseif (count($this->_contactIds) > ($maxVoters - $this->_numVoters)) {
-        $errorMsg = ts('You can reserve a maximum of %1 contact(s) at a time for this survey.',
+        $errorMsg = ts(
+          'You can reserve a maximum of %1 contact(s) at a time for this survey.',
           [1 => $maxVoters - $this->_numVoters]
         );
       }
     }
     $defaultNum = CRM_Utils_Array::value('default_number_of_contacts', $this->_surveyDetails);
     if (!$errorMsg && $defaultNum && (count($this->_contactIds) > $defaultNum)) {
-      $errorMsg = ts('You can reserve a maximum of %1 contact(s) at a time for this survey.',
+      $errorMsg = ts(
+        'You can reserve a maximum of %1 contact(s) at a time for this survey.',
         [1 => $defaultNum]
       );
     }
@@ -158,7 +158,7 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $buttons = [['type' => 'done',
         'name' => ts('Reserve'),
         'subName' => 'reserve',
@@ -196,8 +196,6 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
     }
 
     $campaignId = CRM_Utils_Array::value('campaign_id', $this->_surveyDetails);
-
-
 
     $campGrps = CRM_Campaign_BAO_Campaign::getCampaignGroups($campaignId);
     foreach ($campGrps as $grpId => $grpVals) {
@@ -251,7 +249,8 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
       $status[] = ts('Reservation has been added for %1 Contact(s).', [1 => $countVoters]);
     }
     if (count($this->_contactIds) > $countVoters) {
-      $status[] = ts('Reservation did not add for %1 Contact(s).',
+      $status[] = ts(
+        'Reservation did not add for %1 Contact(s).',
         [1 => (count($this->_contactIds) - $countVoters)]
       );
     }
@@ -271,4 +270,3 @@ class CRM_Campaign_Form_Task_Reserve extends CRM_Campaign_Form_Task {
     }
   }
 }
-

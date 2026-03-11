@@ -27,7 +27,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * which page are we browsing tracking from?
@@ -86,7 +86,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    */
   public $_columnHeaders;
 
-
   /**
    * Class constructor
    *
@@ -99,8 +98,8 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return CRM_Contact_Selector_Profile
    * @access public
    */
-  function __construct($filters, $scope = NULL) {
-    foreach($filters as $filter => $value) {
+  public function __construct($filters, $scope = NULL) {
+    foreach ($filters as $filter => $value) {
       if (!empty($value)) {
         $filter = '_'.$filter;
         $this->$filter = $value;
@@ -124,7 +123,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         'end' => ts('End Date'),
       ];
       $this->_drillDown = $this->_base;
-      foreach($get as $filter => $value) {
+      foreach ($get as $filter => $value) {
         if ($this->_allowedGet [$filter]) {
           $this->_drillDown .= '&'.$filter."=".$value;
         }
@@ -170,7 +169,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @access public
    * @static
    */
-  static function &links() {
+  public static function &links() {
     return self::$_links;
   }
   //end of function
@@ -181,7 +180,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
     $params['status'] = ts('%1 %%StatusMessage%%', [1 => $this->referrerToTitle()]);
@@ -201,7 +200,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return array the column headers that need to be displayed
    * @access public
    */
-  function &getColumnHeaders($action = NULL, $type = NULL) {
+  public function &getColumnHeaders($action = NULL, $type = NULL) {
 
     if (!isset($this->_columnHeaders)) {
       $this->_columnHeaders = [
@@ -264,7 +263,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     $dao = $this->getQuery();
     if (!empty($dao->N)) {
       return $dao->N;
@@ -283,7 +282,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     $dao = $this->getQuery('*', NULL, $offset, $rowCount, $sort);
 
     $result = [];
@@ -306,7 +305,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         $landing = $url['path'].' <a href="'.$dao->landing.'" target="_blank"><i class="zmdi zmdi-arrow-right-top"></i></a>';
       }
       $utmInfo = [];
-      foreach($this->_utm as $k => $v) {
+      foreach ($this->_utm as $k => $v) {
         if (!empty($dao->$k)) {
           $utmInfo[$k] = $v.":".'<a href="'.CRM_Utils_System::url($this->_drillDown."&{$k}={$dao->$k}").'">'.$dao->$k.'</a>';
         }
@@ -317,7 +316,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       else {
         $utmInfo = '';
       }
-      if (empty($dao->referrer_type)){
+      if (empty($dao->referrer_type)) {
         $dao->referrer_type = 'unknown';
       }
       $results[$id] = [];
@@ -338,24 +337,24 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         $recordTables[$dao->entity_table][$dao->entity_id][$id] = $id;
       }
     }
-    foreach($pageTables as $table => $pages) {
+    foreach ($pageTables as $table => $pages) {
       $pageDAO = CRM_Core_DAO::executeQuery("SELECT id, title FROM $table WHERE id IN(".CRM_Utils_Array::implode(',', array_keys($pages)).")");
-      while($pageDAO->fetch()) {
-        foreach($pages[$pageDAO->id] as $resultId) {
+      while ($pageDAO->fetch()) {
+        foreach ($pages[$pageDAO->id] as $resultId) {
           $url = str_replace('%%id%%', $pageDAO->id, $this->_pageUrl[$table]);
           $results[$resultId]['page_id'] = $pageDAO->title.'<a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
         }
       }
     }
-    foreach($recordTables as $table => $records) {
+    foreach ($recordTables as $table => $records) {
       if ($table === 'civicrm_contact') {
         $recordDAO = CRM_Core_DAO::executeQuery("SELECT c.id, c.id as cid, c.sort_name FROM $table c WHERE c.id IN(".CRM_Utils_Array::implode(',', array_keys($records)).")");
       }
       else {
         $recordDAO = CRM_Core_DAO::executeQuery("SELECT t.id, t.contact_id as cid, c.sort_name FROM $table t INNER JOIN civicrm_contact c ON c.id = t.contact_id WHERE t.id IN(".CRM_Utils_Array::implode(',', array_keys($records)).")");
       }
-      while($recordDAO->fetch()) {
-        foreach($records[$recordDAO->id] as $resultId) {
+      while ($recordDAO->fetch()) {
+        foreach ($records[$recordDAO->id] as $resultId) {
           $url = str_replace(['%%cid%%', '%%id%%'], [$recordDAO->cid, $recordDAO->id], $this->_referencedRecordUrl[$table]);
           $results[$resultId]['entity_id'] = $this->_referencedRecordType[$table].': '.'<a href="'.CRM_Utils_System::url($this->_drillDown.'&entity_id=%').'">'.$recordDAO->sort_name.'</a><a href="'.CRM_Utils_System::url($url).'" target="_blank"><i class="zmdi zmdi-info"></i></a>';
         }
@@ -364,8 +363,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     return $results;
   }
 
-
-  function getQuery($select = '*', $groupBy = NULL, $offset = NULL, $rowCount = NULL, $sort = NULL) {
+  public function getQuery($select = '*', $groupBy = NULL, $offset = NULL, $rowCount = NULL, $sort = NULL) {
     $where = $args = [];
     $where[] = "referrer_type IS NOT NULL";
     if ($this->_pageType) {
@@ -473,13 +471,14 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {}
+  public function getExportFileName($output = 'csv') {
+  }
 
-  function referrerToTitle() {
+  public function referrerToTitle() {
     $name[] = ts('Traffic Source');
     if ($this->_pageType) {
       $name[] = $this->_pageTypes[$this->_pageType];
-      switch($this->_pageType) {
+      switch ($this->_pageType) {
         case 'civicrm_contribution_page':
           if ($this->_pageId) {
             $name[] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_pageId, 'title');
@@ -496,24 +495,24 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
           }
           break;
       }
-    } 
+    }
     return CRM_Utils_Array::implode(' - ', $name);
   }
 
-  function getTitle() {
+  public function getTitle() {
     return $this->referrerToTitle();
   }
 
-  function filters($page) {
+  public function filters($page) {
     // generate breadcrumbs
     $get = $_GET;
-    foreach($get as $name => $value) {
+    foreach ($get as $name => $value) {
       if (!$this->_allowedGet[$name]) {
         unset($get[$name]);
       }
     }
     if (count($get)) {
-      foreach($get as $name => $value) {
+      foreach ($get as $name => $value) {
         if (!empty($this->_allowedGet[$name])) {
           $removeGet = $get;
           unset($removeGet[$name]);
@@ -522,7 +521,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
             'title' => $this->_allowedGet[$name],
             'url' => $this->_base."&".http_build_query($removeGet, '', '&'),
           ];
-          switch($name) {
+          switch ($name) {
             case 'rtype':
               $filters[$name]['value_display'] = $this->_referrerTypes[$value];
               break;
@@ -534,6 +533,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
               break;
             case 'entity_id':
               $filters[$name]['value_display'] = $value;
+              // no break
             case 'utm_source':
             case 'utm_medium':
             case 'utm_campaign':
@@ -559,7 +559,7 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     $page->assign('drill_down_base', CRM_Utils_System::url($this->_drillDown));
   }
 
-  function breadcrumbs($page) {
+  public function breadcrumbs($page) {
     if ($this->_pageType && $this->_pageId && !$page->_breadcrumbs) {
       // breadcrumb starter
       $breadcrumbs = [
@@ -571,4 +571,3 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
   }
 }
 //end of class
-

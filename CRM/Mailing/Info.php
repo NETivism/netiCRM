@@ -25,10 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
@@ -44,7 +40,6 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
   // docs inherited from interface
   protected $keyword = 'mailing';
 
-
   // docs inherited from interface
   public function getInfo() {
     return [
@@ -56,8 +51,7 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
     ];
   }
 
-
-  static function workflowEnabled() {
+  public static function workflowEnabled() {
     $config = CRM_Core_Config::singleton();
 
     if (!CRM_Utils_System::moduleExists('rules')) {
@@ -92,7 +86,6 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
     return $permissions;
   }
 
-
   // docs inherited from interface
   public function getUserDashboardElement() {
     // no dashboard element for this component
@@ -123,6 +116,6 @@ class CRM_Mailing_Info extends CRM_Core_Component_Info {
   }
 
   // add shortcut to Create New
-  public function creatNewShortcut(&$shortCuts) {}
+  public function creatNewShortcut(&$shortCuts) {
+  }
 }
-

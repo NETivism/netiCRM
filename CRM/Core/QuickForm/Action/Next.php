@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_QuickForm_Action_Next extends CRM_Core_QuickForm_Action {
 
   /**
@@ -45,7 +44,7 @@ class CRM_Core_QuickForm_Action_Next extends CRM_Core_QuickForm_Action {
    * @return object
    * @access public
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     parent::__construct($stateMachine);
   }
 
@@ -58,8 +57,7 @@ class CRM_Core_QuickForm_Action_Next extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     $this->_stateMachine->perform($page, $actionName, 'Next');
   }
 }
-

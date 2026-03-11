@@ -38,7 +38,7 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -66,7 +66,7 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
     $allEmail = CRM_Core_BAO_Email::allEmails($contact_id);
     $defaultEmail = '';
-    foreach($allEmail as $m) {
+    foreach ($allEmail as $m) {
       if ($m['is_primary']) {
         $defaultEmail = $m['is_primary'];
       }
@@ -98,7 +98,7 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
 
     $transaction->commit();
 
-    // remove opt-out and freezed email 
+    // remove opt-out and freezed email
     $params = ['id' => $contact_id];
     $contact = [];
     CRM_Contact_BAO_Contact::retrieve($params, $contact);
@@ -112,14 +112,13 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
       CRM_Contact_BAO_Contact::create($params);
     }
     $emailOnHold = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE contact_id = %1 AND is_bulkmail = 1 AND on_hold = 1", [
-      1 => [$contact_id, 'Positive'],      
+      1 => [$contact_id, 'Positive'],
     ]);
     if ($emailOnHold) {
       CRM_Core_DAO::executeQuery("UPDATE civicrm_email SET on_hold = 0 WHERE id = %1", [
-        1 => [$emailOnHold, 'Positive'],      
+        1 => [$emailOnHold, 'Positive'],
       ]);
     }
-
 
     $component = new CRM_Mailing_BAO_Component();
     $component->is_default = 1;
@@ -172,4 +171,3 @@ class CRM_Mailing_Event_BAO_Confirm extends CRM_Mailing_Event_DAO_Confirm {
     return $group->title;
   }
 }
-

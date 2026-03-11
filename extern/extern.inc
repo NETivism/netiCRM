@@ -9,5 +9,4 @@ function _forcePHPIDS() {
   $ids->check($args);
 }
 
-
 _forcePHPIDS();

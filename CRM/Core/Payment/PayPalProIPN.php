@@ -33,15 +33,14 @@
  *
  */
 
-
 class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
 
-  static $_paymentProcessor = NULL;
-  function __construct() {
+  public static $_paymentProcessor = NULL;
+  public function __construct() {
     parent::__construct();
   }
 
-  function getValue($name, $type, $abort = TRUE) {
+  public function getValue($name, $type, $abort = TRUE) {
 
     if (!empty($_POST)) {
       $rpInvoiceArray = [];
@@ -68,10 +67,15 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  static function retrieve($name, $type, $method = 'POST', $abort = TRUE) {
+  public static function retrieve($name, $type, $method = 'POST', $abort = TRUE) {
     static $store = NULL;
-    $value = CRM_Utils_Request::retrieve($name, $type, $store,
-      FALSE, NULL, $method
+    $value = CRM_Utils_Request::retrieve(
+      $name,
+      $type,
+      $store,
+      FALSE,
+      NULL,
+      $method
     );
     if ($abort && $value === NULL) {
       $name = CRM_Utils_Type::escape($name, 'string', FALSE);
@@ -82,7 +86,7 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     return $value;
   }
 
-  function recur(&$input, &$ids, &$objects, $first) {
+  public function recur(&$input, &$ids, &$objects, $first) {
 
     if (!isset($input['txnType'])) {
       CRM_Core_Error::debug_log_message("Could not find txn_type in input request");
@@ -136,7 +140,6 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
          recurring_payment_suspended_due_to_max_failed_payment	RP Profile Suspended due to Max Failed Payment
         */
 
-
     //set transaction type
     $txnType = $_POST['txn_type'];
 
@@ -181,8 +184,11 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     if ($sendNotification) {
       //send recurring Notification email for user
 
-      CRM_Contribute_BAO_ContributionPage::recurringNofify($subscriptionPaymentStatus, $ids['contact'],
-        $ids['contributionPage'], $recur
+      CRM_Contribute_BAO_ContributionPage::recurringNofify(
+        $subscriptionPaymentStatus,
+        $ids['contact'],
+        $ids['contributionPage'],
+        $recur
       );
     }
 
@@ -205,12 +211,16 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
       $objects['contribution'] = &$contribution;
     }
 
-    $this->single($input, $ids, $objects,
-      TRUE, $first
+    $this->single(
+      $input,
+      $ids,
+      $objects,
+      TRUE,
+      $first
     );
   }
 
-  function single(&$input, &$ids, &$objects, $recur = FALSE, $first = FALSE) {
+  public function single(&$input, &$ids, &$objects, $recur = FALSE, $first = FALSE) {
     $contribution = &$objects['contribution'];
 
     // make sure the invoice is valid and matches what we have in the contribution record
@@ -235,7 +245,6 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     else {
       $contribution->total_amount = $input['amount'];
     }
-
 
     $transaction = new CRM_Core_Transaction();
 
@@ -272,11 +281,9 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     $this->completeTransaction($input, $ids, $objects, $transaction, $recur);
   }
 
-  function main($component = 'contribute') {
+  public function main($component = 'contribute') {
     CRM_Core_Error::debug_var('GET', $_GET, TRUE, TRUE);
     CRM_Core_Error::debug_var('POST', $_POST, TRUE, TRUE);
-
-
 
     $objects = $ids = $input = [];
     $input['component'] = $component;
@@ -324,7 +331,7 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     }
   }
 
-  function getInput(&$input, &$ids) {
+  public function getInput(&$input, &$ids) {
 
     if (!$this->getBillingID($ids)) {
       return FALSE;
@@ -357,4 +364,3 @@ class CRM_Core_Payment_PayPalProIPN extends CRM_Core_Payment_BaseIPN {
     $input['trxn_id'] = self::retrieve('txn_id', 'String', 'POST', FALSE);
   }
 }
-

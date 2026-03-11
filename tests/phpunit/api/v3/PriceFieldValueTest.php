@@ -28,7 +28,7 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
       'is_reserved' => 1,
     ];
 
-    $price_set = civicrm_api('price_set', 'create',$priceSetparams);
+    $price_set = civicrm_api('price_set', 'create', $priceSetparams);
     $this->priceSetID = $price_set['id'];
 
     $priceFieldparams = [
@@ -40,7 +40,7 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
       'is_enter_qty' => 1,
       'is_active' => 1,
     ];
-    $priceField = civicrm_api('price_field','create', $priceFieldparams);
+    $priceField = civicrm_api('price_field', 'create', $priceFieldparams);
     $this->priceFieldID = $priceField['id'];
     $this->_params = [
       'version' => 3,
@@ -51,17 +51,17 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
      ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $tablesToTruncate = [
         'civicrm_contact',
         'civicrm_contribution',
     ];
     $this->quickCleanup($tablesToTruncate);
-    civicrm_api('PriceField','delete', [
+    civicrm_api('PriceField', 'delete', [
         'version' => 3,
         'id' => $this->priceFieldID,
     ]);
-    $delete = civicrm_api('PriceSet','delete', [
+    $delete = civicrm_api('PriceSet', 'delete', [
       'version' => 3,
       'id' => $this->priceSetID,
     ]);
@@ -91,7 +91,7 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
     $this->documentMe($getParams, $getResult, __FUNCTION__, __FILE__);
     $this->assertAPISuccess($getResult, 'In line ' . __LINE__);
     $this->assertEquals(1, $getResult['count'], 'In line ' . __LINE__);
-    civicrm_api('price_field_value','delete', ['version' => 3, 'id' => $createResult['id']]);
+    civicrm_api('price_field_value', 'delete', ['version' => 3, 'id' => $createResult['id']]);
   }
 
   public function testDeletePriceFieldValue() {
@@ -116,4 +116,3 @@ class api_v3_PriceFieldValueTest extends CiviUnitTestCase {
   }
 
 }
-

@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class contains all case related functions that are called using AJAX (jQuery)
  */
@@ -42,7 +40,7 @@ class CRM_Case_Page_AJAX {
   /**
    * Retrieve unclosed cases.
    */
-  static function unclosedCases() {
+  public static function unclosedCases() {
     $criteria = explode('-', CRM_Utils_Type::escape(CRM_Utils_Array::value('s', $_GET), 'String'));
 
     $limit = NULL;
@@ -71,8 +69,7 @@ class CRM_Case_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function processCaseTags() {
-
+  public function processCaseTags() {
 
     $caseId = CRM_Utils_Type::escape($_POST['case_id'], 'Integer');
     $tags = CRM_Utils_Type::escape($_POST['tag'], 'String');
@@ -100,8 +97,6 @@ class CRM_Case_Page_AJAX {
 
     $session = &CRM_Core_Session::singleton();
 
-
-
     $activityParams = [];
 
     $activityParams['source_contact_id'] = $session->get('userID');
@@ -114,7 +109,6 @@ class CRM_Case_Page_AJAX {
 
     $activity = CRM_Activity_BAO_Activity::create($activityParams);
 
-
     $caseParams = ['activity_id' => $activity->id,
       'case_id' => $caseId,
     ];
@@ -125,7 +119,7 @@ class CRM_Case_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function caseDetails() {
+  public function caseDetails() {
     $caseId = CRM_Utils_Type::escape($_GET['caseId'], 'Integer');
     $contactId = CRM_Utils_Type::escape($_GET['contactId'], 'Integer');
 
@@ -133,9 +127,11 @@ class CRM_Case_Page_AJAX {
     $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$caseId, 'Integer']]);
 
     while ($dao->fetch()) {
-      $caseType = CRM_Case_BAO_Case::getCaseType((str_replace(CRM_Case_BAO_Case::VALUE_SEPERATOR, "",
-            $dao->case_type_id
-          )));
+      $caseType = CRM_Case_BAO_Case::getCaseType((str_replace(
+        CRM_Case_BAO_Case::VALUE_SEPERATOR,
+        "",
+        $dao->case_type_id
+      )));
       $caseStatuses = CRM_Case_PseudoConstant::caseStatus();
       $cs = $caseStatuses[$dao->status_id];
       $caseDetails = "<html><table><tr><td>Case Subject</td><td>$dao->subject</td></tr>
@@ -147,4 +143,3 @@ class CRM_Case_Page_AJAX {
     }
   }
 }
-

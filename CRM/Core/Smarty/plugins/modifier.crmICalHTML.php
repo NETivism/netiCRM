@@ -45,4 +45,3 @@
 function smarty_modifier_crmICalHTML($str) {
   return CRM_Utils_ICalendar::formatHTML($str);
 }
-

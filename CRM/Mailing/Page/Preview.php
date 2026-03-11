@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * a page for mailing preview
  */
@@ -45,8 +43,7 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
-
+  public function run() {
 
     $session = CRM_Core_Session::singleton();
 
@@ -78,7 +75,8 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
 
     // get and format attachments
 
-    $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_mailing',
+    $attachments = &CRM_Core_BAO_File::getEntityFile(
+      'civicrm_mailing',
       $mailing->id
     );
 
@@ -86,15 +84,26 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
     $returnProperties = $mailing->getReturnProperties();
     $params = ['contact_id' => $session->get('userID')];
 
-    $details = CRM_Utils_Token::getTokenDetails($params,
+    $details = CRM_Utils_Token::getTokenDetails(
+      $params,
       $returnProperties,
-      TRUE, TRUE, NULL,
+      TRUE,
+      TRUE,
+      NULL,
       $mailing->getFlattenedTokens(),
       get_class($this)
     );
 
-    $mime = &$mailing->compose(NULL, NULL, NULL, $session->get('userID'), $fromEmail, $fromEmail,
-      TRUE, $details[0][$session->get('userID')], $attachments
+    $mime = &$mailing->compose(
+      NULL,
+      NULL,
+      NULL,
+      $session->get('userID'),
+      $fromEmail,
+      $fromEmail,
+      TRUE,
+      $details[0][$session->get('userID')],
+      $attachments
     );
 
     if ($type == 'html') {
@@ -108,4 +117,3 @@ class CRM_Mailing_Page_Preview extends CRM_Core_Page {
     CRM_Utils_System::civiExit();
   }
 }
-

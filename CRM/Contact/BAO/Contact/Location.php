@@ -43,12 +43,11 @@ class CRM_Contact_BAO_Contact_Location {
    * @static
    * @access public
    */
-  static function getEmailDetails($id, $isPrimary = TRUE, $locationTypeID = NULL) {
+  public static function getEmailDetails($id, $isPrimary = TRUE, $locationTypeID = NULL) {
     $primaryClause = NULL;
     if ($isPrimary) {
       $primaryClause = " AND civicrm_email.is_primary = 1";
     }
-
 
     $locationClause = NULL;
     if ($locationTypeID) {
@@ -81,7 +80,7 @@ WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
    * @static
    * @access public
    */
-  static function getPhoneDetails($id, $type = NULL) {
+  public static function getPhoneDetails($id, $type = NULL) {
     if (!$id) {
       return [NULL, NULL];
     }
@@ -90,7 +89,6 @@ WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
     if ($type) {
       $cond = " AND civicrm_phone.phone_type = '$type'";
     }
-
 
     $sql = "
    SELECT civicrm_contact.display_name, civicrm_phone.phone
@@ -118,7 +116,7 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
    * @static
    * @access public
    */
-  static function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
+  public static function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
 
     $idString = ' ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
     $sql = "
@@ -182,9 +180,9 @@ WHERE civicrm_contact.id IN $idString ";
           $dao->longitude = $reverseGeoDecode['geo_code_2'];
         }
       }
-      if (empty($dao->latitude) || empty($dao->longitude)){
+      if (empty($dao->latitude) || empty($dao->longitude)) {
         continue;
-      } 
+      }
       $location['contactID'] = $dao->contact_id;
       $location['displayName'] = $dao->display_name;
       $location['photo'] = $dao->image_url;
@@ -208,11 +206,13 @@ WHERE civicrm_contact.id IN $idString ";
       $location['url'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $dao->contact_id);
       $location['location_type'] = $dao->location_type;
 
-      $location['image'] = CRM_Contact_BAO_Contact_Utils::getImage($dao->contact_sub_type ?? $dao->contact_type, $imageUrlOnly, $dao->contact_id
+      $location['image'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $dao->contact_sub_type ?? $dao->contact_type,
+        $imageUrlOnly,
+        $dao->contact_id
       );
       $locations[] = $location;
     }
     return $locations;
   }
 }
-

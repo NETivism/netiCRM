@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -55,7 +47,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -63,14 +55,14 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
    * @static
    */
-  static $_properties = ['contact_id',
+  public static $_properties = ['contact_id',
     'contact_type',
     'sort_name',
     'event_id',
@@ -167,7 +159,8 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $eventClause = NULL,
     $single = FALSE,
@@ -188,7 +181,12 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_EVENT
     );
     $this->_query->_distinctComponentClause = " DISTINCT(civicrm_participant.id)";
@@ -202,7 +200,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @access public
    *
    */
-  function setLimit($limit) {
+  public function setLimit($limit) {
     $this->_limit = $limit;
   }
 
@@ -217,7 +215,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @access public
    *
    */
-  static function &links($qfKey = NULL, $context = NULL, $compContext = NULL) {
+  public static function &links($qfKey = NULL, $context = NULL, $compContext = NULL) {
     $extraParams = NULL;
     if ($compContext) {
       $extraParams .= "&compContext={$compContext}";
@@ -229,7 +227,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     if ($qfKey) {
       $extraParams .= "&key={$qfKey}";
     }
-
 
     if (!(self::$_links)) {
       self::$_links = [
@@ -263,7 +260,7 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Event') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
     if ($this->_limit) {
@@ -286,10 +283,15 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+  public function getTotalCount($action) {
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_eventClause
     );
@@ -306,10 +308,15 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    *
    * @return array  rows in the given offset and rowCount
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_eventClause
     );
@@ -325,8 +332,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       $permissions[] = CRM_Core_Permission::DELETE;
     }
     $mask = CRM_Core_Action::mask($permissions);
-
-
 
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
     $statusContribution = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -359,7 +364,8 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->participant_id;
 
-      $row['action'] = CRM_Core_Action::formLink(self::links($this->_key, $this->_context, $this->_compContext),
+      $row['action'] = CRM_Core_Action::formLink(
+        self::links($this->_key, $this->_context, $this->_compContext),
         $mask,
         ['id' => $result->participant_id,
           'cid' => $result->contact_id,
@@ -367,10 +373,11 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         ]
       );
 
-
-
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
 
       $row['contribution_total_amount'] = NULL;
@@ -398,12 +405,12 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         $lineItems[$row['participant_id']] = CRM_Price_BAO_LineItem::getLineItems($row['participant_id']);
       }
 
-      if(!empty($row['contribution_id'])){
+      if (!empty($row['contribution_id'])) {
         $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy([$row['contribution_id']], 'contribution_id');
         $dao->fetch();
         if ($dao->N > 0) {
           $coupon = [];
-          foreach($dao as $idx => $value) {
+          foreach ($dao as $idx => $value) {
             if ($idx[0] != '_') {
               $coupon[$idx] = $value;
             }
@@ -503,11 +510,11 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     return self::$_columnHeaders;
   }
 
-  function alphabetQuery() {
+  public function alphabetQuery() {
     return $this->_query->searchQuery(NULL, NULL, NULL, FALSE, FALSE, TRUE);
   }
 
-  function &getQuery() {
+  public function &getQuery() {
     return $this->_query;
   }
 
@@ -518,9 +525,8 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Event Search');
   }
 }
 //end of class
-

@@ -33,13 +33,11 @@
  *
  */
 
-
-
 class CRM_Core_I18n_Form extends CRM_Core_Form {
   public $_locales;
   public $_structure;
   public $_defaults;
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
     $this->_locales = array_keys($config->languageLimit);
 
@@ -84,11 +82,11 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
     $this->assign('context', CRM_Utils_Request::retrieve('context', 'String', $this));
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 
-  function postProcess() {
+  public function postProcess() {
     $values = $this->exportValues();
     $table = $values['table'];
     $field = $values['field'];
@@ -114,4 +112,3 @@ class CRM_Core_I18n_Form extends CRM_Core_Form {
     CRM_Utils_System::civiExit();
   }
 }
-

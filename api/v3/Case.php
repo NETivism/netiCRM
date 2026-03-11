@@ -37,7 +37,6 @@
  *
  */
 
-
 /**
  * Open a new case, add client and manager roles, and add standard timeline
  *
@@ -168,7 +167,7 @@ function civicrm_api3_case_get($params) {
 
   // Get mode
   if (!($caseId = CRM_Utils_Array::value('id', $params))) {
-     $caseId = CRM_Utils_Array::value('case_id', $params);
+    $caseId = CRM_Utils_Array::value('case_id', $params);
   }
 
   if ($caseId) {
@@ -211,7 +210,7 @@ function civicrm_api3_case_get($params) {
     foreach ((array) $client as $cid) {
       if (is_numeric($cid)) {
         $ids = array_merge($ids, CRM_Case_BAO_Case::retrieveCaseIdsByContactId($cid, TRUE));
-    }
+      }
     }
 
     if (empty($ids)) {
@@ -482,7 +481,7 @@ function _civicrm_api3_case_check_params($params, $mode = NULL) {
         return civicrm_api3_create_error('Missing input parameters. Must provide case_type or case_type_id.');
       }
 
-    $required = ['contact_id' => '', 'subject' => 'str'];
+      $required = ['contact_id' => '', 'subject' => 'str'];
 
       if (!CRM_Utils_Array::value('case_type', $params)) {
 
@@ -559,4 +558,3 @@ function _civicrm_api3_case_check_params($params, $mode = NULL) {
     }
   }
 }
-

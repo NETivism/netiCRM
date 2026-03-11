@@ -50,7 +50,7 @@ class CRM_Contact_Form_NewContact {
    *
    * @return void
    */
-  static function buildQuickForm(&$form, $blockNo = 1, $extraProfiles = NULL) {
+  public static function buildQuickForm(&$form, $blockNo = 1, $extraProfiles = NULL) {
     // call to build contact autocomplete
     $attributes = ['width' => '200px'];
     $form->add('text', "contact[{$blockNo}]", ts('Select Contact'), $attributes);
@@ -62,13 +62,16 @@ class CRM_Contact_Form_NewContact {
       // build select for new contact
 
       $contactProfiles = CRM_Core_BAO_UFGroup::getReservedProfiles('Contact', $extraProfiles);
-      $form->add('select', "profiles[{$blockNo}]", ts('Create New Contact'),
+      $form->add(
+        'select',
+        "profiles[{$blockNo}]",
+        ts('Create New Contact'),
         ['' => ts('- create new contact -')] + $contactProfiles,
-        FALSE, ['onChange' => "if (this.value) {  newContact{$blockNo}( this.value, {$blockNo} );}"]
+        FALSE,
+        ['onChange' => "if (this.value) {  newContact{$blockNo}( this.value, {$blockNo} );}"]
       );
     }
 
     $form->assign('blockNo', $blockNo);
   }
 }
-

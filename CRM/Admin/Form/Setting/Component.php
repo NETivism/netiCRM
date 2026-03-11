@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Component
  */
@@ -51,8 +49,11 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     CRM_Utils_System::setTitle(ts('Settings - Enable Components'));
 
     $components = $this->_getComponentSelectValues();
-    $include = &$this->addElement('advmultiselect', 'enableComponents',
-      ts('Components') . ' ', $components,
+    $include = &$this->addElement(
+      'advmultiselect',
+      'enableComponents',
+      ts('Components') . ' ',
+      $components,
       ['size' => 5,
         'style' => 'width:150px',
         'class' => 'advmultiselect',
@@ -78,7 +79,7 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
    * @access public
    * @static
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
 
     if (is_array($fields['enableComponents'])) {
@@ -89,7 +90,6 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
 
     return $errors;
   }
-
 
   private function _getComponentSelectValues() {
     $ret = [];
@@ -105,7 +105,6 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
 
-
     $params['enableComponentIDs'] = [];
     foreach ($params['enableComponents'] as $name) {
       $params['enableComponentIDs'][] = $this->_components[$name]->componentID;
@@ -118,4 +117,3 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     CRM_Core_BAO_Navigation::resetNavigation();
   }
 }
-

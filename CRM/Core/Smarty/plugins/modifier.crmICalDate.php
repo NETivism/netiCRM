@@ -42,8 +42,6 @@
  * @access public
  */
 
-
 function smarty_modifier_crmICalDate($str, $gdata = FALSE) {
   return CRM_Utils_ICalendar::formatDate($str, $gdata);
 }
-

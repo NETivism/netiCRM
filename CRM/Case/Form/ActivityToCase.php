@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for building activity to a case
  *
@@ -49,7 +47,7 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_activityId = CRM_Utils_Request::retrieve('activityId', 'Positive', CRM_Core_DAO::$_nullObject);
     if (!$this->_activityId) {
       CRM_Core_Error::fatal('required activity id is missing.');
@@ -68,15 +66,15 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $targetContactValues = $defaults = [];
     $params = ['id' => $this->_activityId];
-
 
     CRM_Activity_BAO_Activity::retrieve($params, $defaults);
     $defaults['case_activity_subject'] = $defaults['subject'];
     if (!CRM_Utils_Array::isEmpty($defaults['target_contact'])) {
-      $targetContactValues = array_combine(array_unique($defaults['target_contact']),
+      $targetContactValues = array_combine(
+        array_unique($defaults['target_contact']),
         explode(';', trim($defaults['target_contact_value']))
       );
     }
@@ -102,4 +100,3 @@ class CRM_Case_Form_ActivityToCase extends CRM_Core_Form {
     $this->add('text', 'case_activity_subject', ts('Subject'), ['size' => 50]);
   }
 }
-

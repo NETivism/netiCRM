@@ -1,7 +1,6 @@
 <?php
 // $Id: MembershipContact.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -134,8 +133,11 @@ function civicrm_membership_contact_get(&$params) {
       $membershipType = CRM_Utils_Array::value('membership_type', $params);
       if ($membershipType) {
         require_once 'CRM/Member/DAO/MembershipType.php';
-        $membershipTypeId = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-          $membershipType, 'id', 'name'
+        $membershipTypeId = CRM_Core_DAO::getFieldValue(
+          'CRM_Member_DAO_MembershipType',
+          $membershipType,
+          'id',
+          'name'
         );
       }
     }
@@ -170,7 +172,8 @@ function civicrm_membership_contact_get(&$params) {
   }
 
   $members[$contactID] = [];
-  $relationships = [];;
+  $relationships = [];
+  ;
   foreach ($membershipValues as $membershipId => $values) {
     // populate the membership type name for the membership type id
     require_once 'CRM/Member/BAO/MembershipType.php';
@@ -190,7 +193,11 @@ function civicrm_membership_contact_get(&$params) {
       $membershipValues[$membershipId]['relationship_name'] = $relationshipType->name_a_b;
     }
     require_once 'CRM/Core/BAO/CustomGroup.php';
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Membership', CRM_Core_DAO::$_nullObject, $membershipId, FALSE,
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+      'Membership',
+      CRM_Core_DAO::$_nullObject,
+      $membershipId,
+      FALSE,
       $values['membership_type_id']
     );
     $groupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);
@@ -266,7 +273,8 @@ function _civicrm_membership_format_params(&$params, &$values, $create = FALSE) 
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -327,7 +335,6 @@ function _civicrm_membership_format_params(&$params, &$values, $create = FALSE) 
   }
 
   _civicrm_custom_format_params($params, $values, 'Membership');
-
 
   if ($create) {
     // CRM_Member_BAO_Membership::create() handles membership_start_date,
@@ -415,4 +422,3 @@ function _civicrm_membership_check_params(&$params) {
 
   return [];
 }
-

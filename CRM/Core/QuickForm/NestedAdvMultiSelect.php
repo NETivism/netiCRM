@@ -34,10 +34,13 @@
  *
  */
 
-
 class CRM_Core_QuickForm_NestedAdvMultiSelect extends HTML_QuickForm_advmultiselect {
-  function load(&$options, $param1 = NULL, $param2 = NULL,
-    $param3 = NULL, $param4 = NULL
+  public function load(
+    &$options,
+    $param1 = NULL,
+    $param2 = NULL,
+    $param3 = NULL,
+    $param4 = NULL
   ) {
     switch (TRUE) {
       case ($options instanceof Iterator):
@@ -52,4 +55,3 @@ class CRM_Core_QuickForm_NestedAdvMultiSelect extends HTML_QuickForm_advmultisel
     }
   }
 }
-

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * a page for mailing preview
  */
@@ -49,7 +47,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
    * Second check for visibility
    * Call a hook to see if hook wants to override visibility setting
    */
-  function checkPermission() {
+  public function checkPermission() {
     if (!$this->_mailing) {
       return FALSE;
     }
@@ -57,7 +55,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     // check for visibility, if visibility is Public Pages and they have the permission
     // return true
 
-    if ($this->_mailing->visibility == 'Public Pages' && CRM_Core_Permission::check('view public CiviMail content' )) {
+    if ($this->_mailing->visibility == 'Public Pages' && CRM_Core_Permission::check('view public CiviMail content')) {
       return TRUE;
     }
 
@@ -76,7 +74,7 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
    *
    * @return void
    */
-  function run($id = NULL, $contact_id = NULL, $print = TRUE) {
+  public function run($id = NULL, $contact_id = NULL, $print = TRUE) {
     if (is_numeric($id)) {
       $this->_mailingID = $id;
     }
@@ -97,10 +95,8 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
       $this->_contactID = $session->get('userID');
     }
 
-
     $this->_mailing = new CRM_Mailing_BAO_Mailing();
     $this->_mailing->id = $this->_mailingID;
-
 
     if (!$this->_mailing->find(TRUE) ||
       !$this->checkPermission()
@@ -113,12 +109,12 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
 
     CRM_Mailing_BAO_Mailing::tokenReplace($this->_mailing);
 
-
     // refs #32614, disable smarty evaluation functions
 
     // get and format attachments
 
-    $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_mailing',
+    $attachments = &CRM_Core_BAO_File::getEntityFile(
+      'civicrm_mailing',
       $this->_mailing->id
     );
 
@@ -127,9 +123,12 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
       //get details of contact with token value including Custom Field Token Values.CRM-3734
       $returnProperties = $this->_mailing->getReturnProperties();
       $params = ['contact_id' => $this->_contactID];
-      $details = CRM_Utils_Token::getTokenDetails($params,
+      $details = CRM_Utils_Token::getTokenDetails(
+        $params,
         $returnProperties,
-        TRUE, TRUE, NULL,
+        TRUE,
+        TRUE,
+        NULL,
         $this->_mailing->getFlattenedTokens(),
         get_class($this)
       );
@@ -139,10 +138,16 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
 
       $details = ['test'];
     }
-    $mime = &$this->_mailing->compose(NULL, NULL, NULL, 0,
+    $mime = &$this->_mailing->compose(
+      NULL,
+      NULL,
+      NULL,
+      0,
       $this->_mailing->from_email,
       $this->_mailing->from_email,
-      TRUE, $details, $attachments
+      TRUE,
+      $details,
+      $attachments
     );
 
     if (isset($this->_mailing->body_html)) {
@@ -173,4 +178,3 @@ class CRM_Mailing_Page_View extends CRM_Core_Page {
     }
   }
 }
-

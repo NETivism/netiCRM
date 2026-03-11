@@ -33,25 +33,20 @@
  *
  */
 
-
-
-
-
-
 abstract class CRM_Activity_Import_Parser {
-  CONST MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
+  public const MAX_ERRORS = 250, MAX_WARNINGS = 25, VALID = 1, WARNING = 2, ERROR = 4, CONFLICT = 8, STOP = 16, DUPLICATE = 32, MULTIPLE_DUPE = 64, NO_MATCH = 128;
 
   /**
    * various parser modes
    */
-  CONST MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
+  public const MODE_MAPFIELD = 1, MODE_PREVIEW = 2, MODE_SUMMARY = 4, MODE_IMPORT = 8;
 
   /**
    * codes for duplicate record handling
    */
-  CONST DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
+  public const DUPLICATE_SKIP = 1, DUPLICATE_REPLACE = 2, DUPLICATE_UPDATE = 4, DUPLICATE_FILL = 8, DUPLICATE_NOCHECK = 16;
 
-  CONST ERROR_FILE_PREFIX = 'activity';
+  public const ERROR_FILE_PREFIX = 'activity';
 
   /**#@+
    * @access protected
@@ -195,13 +190,15 @@ abstract class CRM_Activity_Import_Parser {
    *
    * @var boolean
    */
-  protected $_haveColumnHeader; function __construct() {
+  protected $_haveColumnHeader;
+  public function __construct() {
     $this->_maxLinesToProcess = 0;
     $this->_maxErrorCount = self::MAX_ERRORS;
   }
 
-  abstract function init();
-  function run($fileName,
+  abstract public function init();
+  public function run(
+    $fileName,
     $seperator,
     &$mapper,
     $skipColumnHeader = FALSE,
@@ -359,7 +356,6 @@ abstract class CRM_Activity_Import_Parser {
 
     fclose($fd);
 
-
     if ($mode == self::MODE_PREVIEW || $mode == self::MODE_IMPORT) {
       $customHeaders = $mapper;
       $filenamePrefix = self::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
@@ -372,7 +368,8 @@ abstract class CRM_Activity_Import_Parser {
       }
       if ($this->_invalidRowCount) {
         // removed view url for invlaid contacts
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('Reason'),
           ],
           $customHeaders
@@ -381,7 +378,8 @@ abstract class CRM_Activity_Import_Parser {
         self::exportCSV($this->_errorFileName, $headers, $this->_errors);
       }
       if ($this->_conflictCount) {
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('Reason'),
           ],
           $customHeaders
@@ -390,7 +388,8 @@ abstract class CRM_Activity_Import_Parser {
         self::exportCSV($this->_conflictFileName, $headers, $this->_conflicts);
       }
       if ($this->_duplicateCount) {
-        $headers = array_merge([ts('Line Number'),
+        $headers = array_merge(
+          [ts('Line Number'),
             ts('View Activity History URL'),
           ],
           $customHeaders
@@ -404,12 +403,12 @@ abstract class CRM_Activity_Import_Parser {
     return $this->fini();
   }
 
-  abstract function mapField(&$values);
-  abstract function preview(&$values);
-  abstract function summary(&$values);
-  abstract function import($onDuplicate, &$values);
+  abstract public function mapField(&$values);
+  abstract public function preview(&$values);
+  abstract public function summary(&$values);
+  abstract public function import($onDuplicate, &$values);
 
-  abstract function fini();
+  abstract public function fini();
 
   /**
    * Given a list of the importable field keys that the user has selected
@@ -420,7 +419,7 @@ abstract class CRM_Activity_Import_Parser {
    * @return void
    * @access public
    */
-  function setActiveFields($fieldKeys) {
+  public function setActiveFields($fieldKeys) {
     $this->_activeFieldCount = count($fieldKeys);
     foreach ($fieldKeys as $key) {
       if (empty($this->_fields[$key])) {
@@ -432,20 +431,20 @@ abstract class CRM_Activity_Import_Parser {
     }
   }
 
-  /*function setActiveFieldLocationTypes( $elements ) 
+  /*function setActiveFieldLocationTypes( $elements )
     {
         for ($i = 0; $i < count( $elements ); $i++) {
             $this->_activeFields[$i]->_hasLocationType = $elements[$i];
         }
     }
-    
-    function setActiveFieldPhoneTypes( $elements ) 
+
+    function setActiveFieldPhoneTypes( $elements )
     {
         for ($i = 0; $i < count( $elements ); $i++) {
             $this->_activeFields[$i]->_phoneType = $elements[$i];
         }
     }*/
-  function setActiveFieldValues($elements, &$erroneousField) {
+  public function setActiveFieldValues($elements, &$erroneousField) {
     $maxCount = count($elements) < $this->_activeFieldCount ? count($elements) : $this->_activeFieldCount;
     for ($i = 0; $i < $maxCount; $i++) {
       $this->_activeFields[$i]->setValue($elements[$i]);
@@ -475,7 +474,7 @@ abstract class CRM_Activity_Import_Parser {
    * @return array (reference ) associative array of name/value pairs
    * @access public
    */
-  function &getActiveFieldParams() {
+  public function &getActiveFieldParams() {
     $params = [];
     for ($i = 0; $i < $this->_activeFieldCount; $i++) {
       if (isset($this->_activeFields[$i]->_value)
@@ -489,7 +488,7 @@ abstract class CRM_Activity_Import_Parser {
     return $params;
   }
 
-  function getSelectValues() {
+  public function getSelectValues() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_title;
@@ -497,7 +496,7 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
-  function getSelectTypes() {
+  public function getSelectTypes() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_hasLocationType;
@@ -505,7 +504,7 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
-  function getHeaderPatterns() {
+  public function getHeaderPatterns() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_headerPattern;
@@ -513,7 +512,7 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
-  function getDataPatterns() {
+  public function getDataPatterns() {
     $values = [];
     foreach ($this->_fields as $name => $field) {
       $values[$name] = $field->_dataPattern;
@@ -521,7 +520,7 @@ abstract class CRM_Activity_Import_Parser {
     return $values;
   }
 
-  function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
+  public function addField($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
     if (empty($name)) {
       $this->_fields['doNotImport'] = new CRM_Activity_Import_Field($name, $title, $type, $headerPattern, $dataPattern);
     }
@@ -546,7 +545,7 @@ abstract class CRM_Activity_Import_Parser {
    * @return void
    * @access public
    */
-  function setMaxLinesToProcess($max) {
+  public function setMaxLinesToProcess($max) {
     $this->_maxLinesToProcess = $max;
   }
 
@@ -558,7 +557,7 @@ abstract class CRM_Activity_Import_Parser {
    * @return void
    * @access public
    */
-  function set($store, $mode = self::MODE_SUMMARY) {
+  public function set($store, $mode = self::MODE_SUMMARY) {
     $store->set('fileSize', $this->_fileSize);
     $store->set('lineCount', $this->_lineCount);
     $store->set('seperator', $this->_seperator);
@@ -603,7 +602,7 @@ abstract class CRM_Activity_Import_Parser {
    * @return void
    * @access public
    */
-  static function exportCSV($fileName, $header, $data) {
+  public static function exportCSV($fileName, $header, $data) {
     CRM_Core_Report_Excel::writeExcelFile($fileName, $header, $data, $download = FALSE);
   }
 
@@ -617,7 +616,7 @@ abstract class CRM_Activity_Import_Parser {
    * @static
    * @access public
    */
-  static function encloseScrub(&$values, $enclosure = "'") {
+  public static function encloseScrub(&$values, $enclosure = "'") {
     if (empty($values)) {
       return;
     }
@@ -627,8 +626,7 @@ abstract class CRM_Activity_Import_Parser {
     }
   }
 
-  function errorFileName($type, $prefix) {
+  public function errorFileName($type, $prefix) {
     return CRM_Import_Parser::saveFileName($type, $prefix);
   }
 }
-

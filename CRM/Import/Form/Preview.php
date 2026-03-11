@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class previews the uploaded file and returns summary
  * statistics
@@ -193,15 +190,17 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $invalidTagName = $invalidGroupName = FALSE;
 
     if (CRM_Utils_Array::value('newTagName', $fields)) {
-      if (!CRM_Utils_Rule::objectExists(trim($fields['newTagName']),
-          ['CRM_Core_DAO_Tag']
-        )) {
-        $errors['newTagName'] = ts('Tag \'%1\' already exists.',
+      if (!CRM_Utils_Rule::objectExists(
+        trim($fields['newTagName']),
+        ['CRM_Core_DAO_Tag']
+      )) {
+        $errors['newTagName'] = ts(
+          'Tag \'%1\' already exists.',
           [1 => $fields['newTagName']]
         );
         $invalidTagName = TRUE;
@@ -392,9 +391,14 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $parser = new CRM_Import_Parser_Contact($mapperKeys, $mapperLocTypes,
-      $mapperPhoneTypes, $mapperRelated, $mapperRelatedContactType,
-      $mapperRelatedContactDetails, $mapperRelatedContactLocType,
+    $parser = new CRM_Import_Parser_Contact(
+      $mapperKeys,
+      $mapperLocTypes,
+      $mapperPhoneTypes,
+      $mapperRelated,
+      $mapperRelatedContactType,
+      $mapperRelatedContactDetails,
+      $mapperRelatedContactLocType,
       $mapperRelatedContactPhoneType
     );
 
@@ -437,7 +441,9 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
 
     $tableName = $this->get('importTableName');
     //print "Running parser on table: $tableName<br/>";
-    $parser->run($tableName, $mapperFields,
+    $parser->run(
+      $tableName,
+      $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,
       $this->get('contactType'),
       $this->get('primaryKeyName'),
@@ -490,7 +496,8 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
           $new = FALSE;
         }
         $groupAdditions[] = [
-          'url' => CRM_Utils_System::url('civicrm/group/search',
+          'url' => CRM_Utils_System::url(
+            'civicrm/group/search',
             'reset=1&force=1&context=smog&gid=' . $groupId
           ),
           'name' => $name,
@@ -538,7 +545,8 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
           $new = FALSE;
         }
         $tagAdditions[] = [
-          'url' => CRM_Utils_System::url('civicrm/contact/search',
+          'url' => CRM_Utils_System::url(
+            'civicrm/contact/search',
             'reset=1&force=1&context=smog&id=' . $tagId
           ),
           'name' => $tagName,
@@ -559,7 +567,6 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     $errors = $errorStack->getErrors();
 
     $errorMessage = [];
-
 
     if (is_array($errors)) {
       foreach ($errors as $key => $value) {
@@ -590,4 +597,3 @@ class CRM_Import_Form_Preview extends CRM_Core_Form {
     }
   }
 }
-

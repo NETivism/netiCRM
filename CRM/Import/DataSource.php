@@ -33,7 +33,6 @@
  *
  */
 
-
 #require_once 'CRM/Import/Parser/Contact.php';
 
 /**
@@ -93,4 +92,3 @@ abstract class CRM_Import_DataSource {
   }
 
 }
-

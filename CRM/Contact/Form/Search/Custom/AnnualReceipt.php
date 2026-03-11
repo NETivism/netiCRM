@@ -35,12 +35,12 @@
 
 class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   public $_year;
-  function __construct(&$formValues) {
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     if (!isset($formValues['year'])) {
       $this->_year = CRM_Utils_Request::retrieve('year', 'Integer', CRM_Core_DAO::$_nullObject);
-      if ($this->_year ) {
+      if ($this->_year) {
         $formValues['year'] = $this->_year;
       }
     }
@@ -52,9 +52,9 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $years = [];
-    for($year = date('Y'); $year < date('Y') + 10; $year++) {
+    for ($year = date('Y'); $year < date('Y') + 10; $year++) {
       $years[$year - 9] = $year - 9;
     }
     $form->addElement('select', 'year', ts('Receipt Year'), $years);
@@ -65,12 +65,12 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
 
     // reset session when visit first selection
     $session = CRM_Core_Session::singleton();
-    if(!empty($_GET['csid'])){
+    if (!empty($_GET['csid'])) {
       $session->resetScope('AnnualReceipt');
     }
   }
 
-  function summary() {
+  public function summary() {
     $year = CRM_Utils_Array::value('year', $this->_formValues);
     $summary = [
       'summary' => ts('Date'),
@@ -79,7 +79,7 @@ class CRM_Contact_Form_Search_Custom_AnnualReceipt extends CRM_Contact_Form_Sear
     return $summary;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
     $select = "
 contact_a.id           as contact_id  ,
 contact_a.sort_name    as sort_name,
@@ -89,23 +89,23 @@ SUM(contribution.total_amount) as total_amount
     $groupby = "GROUP BY contribution.contact_id";
     $sql = $this->sql($select, $offset, $rowcount, $sort, $includeContactIDs, $groupby);
     $year = CRM_Utils_Array::value('year', $this->_formValues);
-    if(!empty($year)){
+    if (!empty($year)) {
       $session = CRM_Core_Session::singleton();
       $session->set('year', $year, 'AnnualReceipt');
     }
-    else{
+    else {
       $session->set('year', $year, 'AnnualReceipt');
     }
     return $sql;
   }
 
-  function from() {
+  public function from() {
     return "
 FROM      civicrm_contact contact_a
 INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.contact_id";
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $params = [];
     $where = [
       'contribution.is_test = 0',
@@ -113,7 +113,7 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
       'contact_a.is_deleted = 0',
     ];
     $year = CRM_Utils_Array::value('year', $this->_formValues);
-    if(!empty($year)){
+    if (!empty($year)) {
       $start = $year.'-01-01 00:00:00';
       $end = $year.'-12-31 23:59:59';
       $where[] = "contribution.receipt_date >= '$start' AND contribution.receipt_date <= '$end'";
@@ -124,14 +124,13 @@ INNER JOIN civicrm_contribution contribution ON contact_a.id = contribution.cont
     return $where;
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
   }
 }
-

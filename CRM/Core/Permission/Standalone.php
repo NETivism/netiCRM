@@ -87,7 +87,7 @@ class CRM_Core_Permission_Standalone {
    * @static
    * @access public
    */
-  static function check($str) {
+  public static function check($str) {
     static $isAdmin = NULL;
     if ($isAdmin === NULL) {
       $session = CRM_Core_Session::singleton();
@@ -99,4 +99,3 @@ class CRM_Core_Permission_Standalone {
     return ($isAdmin) ? TRUE : CRM_ACL_API::check($str, NULL);
   }
 }
-

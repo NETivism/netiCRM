@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -63,7 +55,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -71,14 +63,14 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
    * @static
    */
-  static $_properties = ['contact_id', 'membership_id',
+  public static $_properties = ['contact_id', 'membership_id',
     'contact_type',
     'sort_name',
     'membership_type',
@@ -160,7 +152,8 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $memberClause = NULL,
     $single = FALSE,
@@ -178,7 +171,12 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
 
     // type of selector
     $this->_action = $action;
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_MEMBER
     );
     $this->_query->_distinctComponentClause = " DISTINCT(civicrm_membership.id)";
@@ -197,7 +195,8 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @access public
    *
    */
-  static function &links($status = 'all',
+  public static function &links(
+    $status = 'all',
     $isPaymentProcessor = NULL,
     $accessContribution = NULL,
     $qfKey = NULL,
@@ -267,7 +266,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Member') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
     if ($this->_limit) {
@@ -290,10 +289,15 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+  public function getTotalCount($action) {
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_memberClause
     );
@@ -310,10 +314,12 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
     // check if we can process credit card registration
 
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(
+      FALSE,
+      FALSE,
       "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
@@ -331,9 +337,14 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
       $this->_accessContribution = FALSE;
     }
 
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_memberClause
     );
@@ -379,7 +390,9 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
         if ($memberNameStatus[$statusId] == 'Pending') {
           $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
         }
-        $row['action'] = CRM_Core_Action::formLink(self::links('all',
+        $row['action'] = CRM_Core_Action::formLink(
+          self::links(
+            'all',
             $this->_isPaymentProcessor,
             $this->_accessContribution,
             $this->_key,
@@ -393,7 +406,9 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
         );
       }
       else {
-        $row['action'] = CRM_Core_Action::formLink(self::links('view'), $mask,
+        $row['action'] = CRM_Core_Action::formLink(
+          self::links('view'),
+          $mask,
           ['id' => $result->membership_id,
             'cid' => $result->contact_id,
             'cxt' => $this->_context,
@@ -401,10 +416,11 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
         );
       }
 
-
-
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
       $row['membership_id'] = $result->membership_id;
 
@@ -507,7 +523,7 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
     return self::$_columnHeaders;
   }
 
-  function &getQuery() {
+  public function &getQuery() {
     return $this->_query;
   }
 
@@ -518,9 +534,8 @@ class CRM_Member_Selector_Search extends CRM_Core_Selector_Base implements CRM_C
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Member Search');
   }
 }
 //end of class
-

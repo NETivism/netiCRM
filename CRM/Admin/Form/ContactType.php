@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for ContactSub Type
  *
@@ -54,11 +52,17 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
       return;
     }
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text', 'label', ts('Name'),
+    $this->add(
+      'text',
+      'label',
+      ts('Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_ContactType', 'label'),
       TRUE
     );
-    $contactType = $this->add('select', 'parent_id', ts('Basic Contact Type'),
+    $contactType = $this->add(
+      'select',
+      'parent_id',
+      ts('Basic Contact Type'),
       CRM_Contact_BAO_ContactType::basicTypePairs(FALSE, 'id')
     );
     $enabled = $this->add('checkbox', 'is_active', ts('Enabled?'));
@@ -75,7 +79,10 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
       }
     }
     $this->addElement('text', 'image_URL', ts('Image URL'));
-    $this->add('text', 'description', ts('Description'),
+    $this->add(
+      'text',
+      'description',
+      ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_ContactType', 'description')
     );
 
@@ -92,7 +99,7 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
 
     $errors = [];
 
@@ -141,9 +148,9 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
       $params['name'] = ucfirst(CRM_Utils_String::munge($params['label']));
     }
     $contactType = CRM_Contact_BAO_ContactType::add($params);
-    CRM_Core_Session::setStatus(ts("The Contact Type '%1' has been saved.",
-        [1 => $contactType->label]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      "The Contact Type '%1' has been saved.",
+      [1 => $contactType->label]
+    ));
   }
 }
-

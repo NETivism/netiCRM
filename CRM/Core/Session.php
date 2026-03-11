@@ -25,16 +25,12 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
-
 class CRM_Core_Session {
 
   /**
    * Cache of all the session names that we manage
    */
-  static $_managedNames = NULL;
+  public static $_managedNames = NULL;
 
   /**
    * key is used to allow the application to have multiple top
@@ -47,10 +43,10 @@ class CRM_Core_Session {
    * @var string
    */
   protected $_key = 'CiviCRM';
-  CONST KEY = 'CiviCRM';
-  CONST USER_CONTEXT = 'userContext';
-  CONST EXPIRED_TIME = 32400; // second
-  CONST EXPIRED_TIME_LONG = 86400; // second
+  public const KEY = 'CiviCRM';
+  public const USER_CONTEXT = 'userContext';
+  public const EXPIRED_TIME = 32400; // second
+  public const EXPIRED_TIME_LONG = 86400; // second
 
   /**
    * This is just a reference to the real session. Allows us to
@@ -66,7 +62,7 @@ class CRM_Core_Session {
    *
    * @var object
    * @static  */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -85,7 +81,7 @@ class CRM_Core_Session {
    *
    * @return void
    */
-  function __construct() {
+  public function __construct() {
     $this->_session = NULL;
   }
 
@@ -94,9 +90,9 @@ class CRM_Core_Session {
    *
    * @return object
    * @static  */
-  static function &singleton() {
+  public static function &singleton() {
     if (self::$_singleton === NULL) {
-      self::$_singleton = new CRM_Core_Session;
+      self::$_singleton = new CRM_Core_Session();
     }
     return self::$_singleton;
   }
@@ -111,20 +107,20 @@ class CRM_Core_Session {
    *
    * @return void
    */
-  function initialize($isRead = FALSE) {
+  public function initialize($isRead = FALSE) {
     // lets initialize the _session variable just before we need it
     // hopefully any bootstrapping code will actually load the session from the CMS
     if (!isset($this->_session)) {
       // CRM-9483
       if (php_sapi_name() !== 'cli') {
         CRM_Core_Config::singleton()->userSystem->sessionStart();
-        $this->_session =& $_SESSION;
+        $this->_session = &$_SESSION;
         if ($isRead) {
           return;
         }
       }
       else {
-        $this->_session =& $_SESSION;
+        $this->_session = &$_SESSION;
       }
     }
 
@@ -147,7 +143,7 @@ class CRM_Core_Session {
    *
    * @return void
    */
-  function reset($all = 1) {
+  public function reset($all = 1) {
     if ($all != 1) {
       // to make certain we clear it, first initialize it to empty
       $this->_session[$this->_key] = [];
@@ -168,7 +164,7 @@ class CRM_Core_Session {
    *
    * @return void
    */
-  function createScope($prefix, $isRead = FALSE) {
+  public function createScope($prefix, $isRead = FALSE) {
     $this->initialize($isRead);
 
     if ($isRead || empty($prefix)) {
@@ -188,7 +184,7 @@ class CRM_Core_Session {
    *
    * @return void
    */
-  function resetScope($prefix) {
+  public function resetScope($prefix) {
     $this->initialize();
 
     if (empty($prefix)) {
@@ -211,7 +207,7 @@ class CRM_Core_Session {
    *
    * @return Boolean
    */
-  function changeScope($oldPrefix, $newPrefix) {
+  public function changeScope($oldPrefix, $newPrefix) {
     $this->initialize();
 
     if (!empty($oldPrefix) && !empty($newPrefix)) {
@@ -232,7 +228,7 @@ class CRM_Core_Session {
    *
    * @return Boolean
    */
-  function checkScope($prefix) {
+  public function checkScope($prefix) {
     $this->initialize();
 
     return isset($this->_session[$this->_key][$prefix]);
@@ -248,15 +244,15 @@ class CRM_Core_Session {
    *
    * @return Boolean
    */
-  function lookupScope($lookup, $name, $value) {
+  public function lookupScope($lookup, $name, $value) {
     $this->initialize();
-    foreach($this->_session[$this->_key] as $prefix => $v){
+    foreach ($this->_session[$this->_key] as $prefix => $v) {
       if (strstr($prefix, $lookup)) {
-        if(is_array($v) && isset($v[$name]) && $v[$name] == $value) {
+        if (is_array($v) && isset($v[$name]) && $v[$name] == $value) {
           return $prefix;
         }
-        else{
-          if($v === $value) {
+        else {
+          if ($v === $value) {
             return $prefix;
           }
         }
@@ -281,7 +277,7 @@ class CRM_Core_Session {
    * @return void
    *
    */
-  function set($name, $value = NULL, $prefix = NULL) {
+  public function set($name, $value = NULL, $prefix = NULL) {
     // create session scope
     $this->initialize();
     $this->createScope($prefix);
@@ -320,21 +316,21 @@ class CRM_Core_Session {
    * @return mixed
    *
    */
-  function get($name, $prefix = NULL) {
+  public function get($name, $prefix = NULL) {
     $this->createScope($prefix, TRUE);
 
     if (empty($this->_session) || empty($this->_session[$this->_key])) {
-      return null;
+      return NULL;
     }
 
     if (empty($prefix)) {
-      $session =& $this->_session[$this->_key];
+      $session = &$this->_session[$this->_key];
     }
     else {
       if (empty($this->_session[$this->_key][$prefix])) {
-        return null;
+        return NULL;
       }
-      $session =& $this->_session[$this->_key][$prefix];
+      $session = &$this->_session[$this->_key][$prefix];
     }
 
     return CRM_Utils_Array::value($name, $session);
@@ -352,7 +348,7 @@ class CRM_Core_Session {
    * @return void
    *
    */
-  function getVars(&$vars, $prefix = '') {
+  public function getVars(&$vars, $prefix = '') {
     // create session scope
     $this->createScope($prefix, TRUE);
 
@@ -380,7 +376,7 @@ class CRM_Core_Session {
    * @access public
    *
    */
-  function pushUserContext($userContext, $check = TRUE) {
+  public function pushUserContext($userContext, $check = TRUE) {
     if (empty($userContext)) {
       return;
     }
@@ -420,7 +416,7 @@ class CRM_Core_Session {
    * @access public
    *
    */
-  function replaceUserContext($userContext) {
+  public function replaceUserContext($userContext) {
     if (empty($userContext)) {
       return;
     }
@@ -439,7 +435,7 @@ class CRM_Core_Session {
    * @return the top of the userContext stack (also pops the top element)
    *
    */
-  function popUserContext() {
+  public function popUserContext() {
     $this->createScope(self::USER_CONTEXT);
 
     return array_pop($this->_session[$this->_key][self::USER_CONTEXT]);
@@ -453,7 +449,7 @@ class CRM_Core_Session {
    * @return the top of the userContext stack
    *
    */
-  function readUserContext() {
+  public function readUserContext() {
     $this->createScope(self::USER_CONTEXT);
 
     $config = CRM_Core_Config::singleton();
@@ -464,7 +460,7 @@ class CRM_Core_Session {
   /**
    * dumps the session to the log
    */
-  function debug($all = 1) {
+  public function debug($all = 1) {
     $this->initialize();
     if ($all != 1) {
       CRM_Core_Error::debug('CRM Session', $this->_session);
@@ -481,7 +477,7 @@ class CRM_Core_Session {
    *
    * @return string        the status message if any
    */
-  function getStatus($reset = FALSE) {
+  public function getStatus($reset = FALSE) {
     $this->initialize();
 
     $status = NULL;
@@ -505,12 +501,12 @@ class CRM_Core_Session {
    * @static  *
    * @return void
    */
-  static function setStatus($status, $append = TRUE, $type = 'status') {
+  public static function setStatus($status, $append = TRUE, $type = 'status') {
     if ($status === FALSE && !$append) {
       unset(self::$_singleton->_session[self::$_singleton->_key]['status'][$type]);
     }
     if (empty($status)) {
-      return; 
+      return;
     }
     $session = self::singleton();
     $session->initialize();
@@ -540,7 +536,7 @@ class CRM_Core_Session {
     }
   }
 
-  static function registerAndRetrieveSessionObjects($names) {
+  public static function registerAndRetrieveSessionObjects($names) {
     if (!is_array($names)) {
       $names = [$names];
     }
@@ -552,11 +548,10 @@ class CRM_Core_Session {
       self::$_managedNames = array_merge(self::$_managedNames, $names);
     }
 
-
     CRM_Core_BAO_Cache::restoreSessionFromCache($names);
   }
 
-  static function storeSessionObjects($reset = TRUE) {
+  public static function storeSessionObjects($reset = TRUE) {
     // refs #32045, should run only once when fatal error appear
     static $ran;
     if ($ran) {
@@ -567,11 +562,9 @@ class CRM_Core_Session {
     }
     $ran++;
 
-
     CRM_Core_BAO_Cache::storeSessionToCache(self::$_managedNames, $reset);
 
     self::$_managedNames = NULL;
   }
 
 }
-

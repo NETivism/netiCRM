@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -53,19 +51,20 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
   protected $_isTestFreezed = NULL;
 
   protected $_isTypeFreezed = NULL;
-  
+
   protected $_ppDAO;
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     CRM_Utils_System::setTitle(ts('Settings - Payment Processor'));
 
     // get the payment processor meta information
-    
+
     if ($this->_id) {
       $this->_ppType = CRM_Utils_Request::retrieve('pp', 'String', $this, FALSE, NULL);
       if (!$this->_ppType) {
-        $this->_ppType = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PaymentProcessor',
+        $this->_ppType = CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_PaymentProcessor',
           $this->_id,
           'payment_processor_type'
         );
@@ -81,7 +80,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->_ppDAO = new CRM_Core_DAO_PaymentProcessorType();
     $this->_ppDAO->name = $this->_ppType;
 
-    if(empty($this->_ppDAO->name)){
+    if (empty($this->_ppDAO->name)) {
       $this->_ppDAO->is_active = 1;
     }
     if (!$this->_ppDAO->find(TRUE)) {
@@ -89,15 +88,21 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     }
 
     if ($this->_id) {
-      $refreshURL = CRM_Utils_System::url('civicrm/admin/paymentProcessor',
+      $refreshURL = CRM_Utils_System::url(
+        'civicrm/admin/paymentProcessor',
         "reset=1&action=update&id={$this->_id}",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
     else {
-      $refreshURL = CRM_Utils_System::url('civicrm/admin/paymentProcessor',
+      $refreshURL = CRM_Utils_System::url(
+        'civicrm/admin/paymentProcessor',
         "reset=1&action=add",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
 
@@ -112,13 +117,12 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     $this->assign('is_recur', $this->_ppDAO->is_recur);
 
-
     $class = $this->_ppDAO->class_name;
     $class = 'CRM_Core_'.$class;
     if (method_exists($class, 'getAdminFields')) {
       $this->_fields = $class::getAdminFields($this->_ppDAO, $this);
     }
-    else{
+    else {
       $this->_fields = [
         ['name' => 'user_name',
           'label' => $this->_ppDAO->user_name_label,
@@ -169,7 +173,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       if ($haveActiveRecur) {
         $this->_isFreezed = TRUE;
       }
-      $haveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND is_test = 1 AND contribution_status_id = 5", [ 1 => [ $this->_id+1 , 'Positive']]);
+      $haveActiveRecur = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE processor_id = %1 AND is_test = 1 AND contribution_status_id = 5", [ 1 => [ $this->_id + 1 , 'Positive']]);
       if ($haveActiveRecur) {
         $this->_isTestFreezed = TRUE;
       }
@@ -208,13 +212,20 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_PaymentProcessor');
 
-    $this->add('text', 'name', ts('Name'),
-      $attributes['name'], TRUE
+    $this->add(
+      'text',
+      'name',
+      ts('Name'),
+      $attributes['name'],
+      TRUE
     );
 
     $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_PaymentProcessor', $this->_id]);
 
-    $this->add('text', 'description', ts('Description'),
+    $this->add(
+      'text',
+      'description',
+      ts('Description'),
       $attributes['description']
     );
 
@@ -228,7 +239,12 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     if (empty($id) || $currentType !== 'Neweb') {
       unset($types['Neweb']);
     }
-    $processorTypeEle = $this->add('select', 'payment_processor_type', ts('Payment Processor Type'), $types, TRUE,
+    $processorTypeEle = $this->add(
+      'select',
+      'payment_processor_type',
+      ts('Payment Processor Type'),
+      $types,
+      TRUE,
       ['onchange' => "reload(true)"]
     );
     if ($this->_isTypeFreezed) {
@@ -251,7 +267,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       }
       if ($this->_isFreezed) {
         if ($field['name'] == 'user_name') {
-          if($currentType !== 'TapPay') {
+          if ($currentType !== 'TapPay') {
             $fieldAttributes = $attributes[$field['name']] + ['readonly' => 'readonly'];
           }
         }
@@ -270,7 +286,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       }
       if (!empty($field['type'])) {
 
-        switch($field['type']) {
+        switch ($field['type']) {
           case 'select':
             $this->addSelect($field['name'], $field['label'], $field['options']);
             $this->addSelect('test_'.$field['name'], $field['label'], $field['options']);
@@ -294,7 +310,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Admin_Form_PaymentProcessor', 'formRule']);
   }
 
-  static function formRule($fields) {
+  public static function formRule($fields) {
 
     // make sure that at least one of live or test is present
     // and we have at least name and url_site
@@ -329,7 +345,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     return empty($errors) ? TRUE : $errors;
   }
 
-  static function checkSection(&$fields, &$errors, $section = NULL) {
+  public static function checkSection(&$fields, &$errors, $section = NULL) {
     if (!empty($fields['payment_processor_type'])) {
       $processorType = CRM_Core_DAO::executeQuery("SELECT user_name_label, password_label, signature_label, subject_label FROM civicrm_payment_processor_type WHERE name LIKE %1", [1 => [$fields['payment_processor_type'], 'String']]);
       $processorType->fetch();
@@ -339,7 +355,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
       $allPresent = TRUE;
       $isAllEmpty = FALSE;
       $requiredFieldsCount = 0;
-      foreach(['user_name', 'password', 'signature', 'subject'] as $name) {
+      foreach (['user_name', 'password', 'signature', 'subject'] as $name) {
         $label = $name.'_label';
         if ($section) {
           $name = "{$section}_$name";
@@ -385,7 +401,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     return $isAllEmpty;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     $defaults['payment_processor_type'] = $this->_ppType;
@@ -464,7 +480,7 @@ class CRM_Admin_Form_PaymentProcessor extends CRM_Admin_Form {
     $this->updatePaymentProcessor($values, $domainID, TRUE);
   }
   //end of function
-  function updatePaymentProcessor(&$values, $domainID, $test) {
+  public function updatePaymentProcessor(&$values, $domainID, $test) {
     $dao = new CRM_Core_DAO_PaymentProcessor();
 
     $dao->id = $test ? $this->_testID : $this->_id;

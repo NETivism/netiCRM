@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for Tell A Friend Form For End User
  *
@@ -47,7 +44,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
   /**
    * Constants for number of friend contacts
    */
-  CONST NUM_OPTION = 3;
+  public const NUM_OPTION = 3;
 
   /**
    * the id of the entity that we are proceessing
@@ -89,12 +86,16 @@ class CRM_Friend_Form extends CRM_Core_Form {
     elseif ($page == 'pcp') {
       $this->_pcpBlockId = CRM_Utils_Request::retrieve('blockId', 'Positive', $this, TRUE);
 
-      CRM_Core_DAO::commonRetrieveAll('CRM_Contribute_DAO_PCPBlock', 'id',
-        $this->_pcpBlockId, $pcpBlock, ['is_tellfriend_enabled', 'tellfriend_limit']
+      CRM_Core_DAO::commonRetrieveAll(
+        'CRM_Contribute_DAO_PCPBlock',
+        'id',
+        $this->_pcpBlockId,
+        $pcpBlock,
+        ['is_tellfriend_enabled', 'tellfriend_limit']
       );
 
       if (!CRM_Utils_Array::value('is_tellfriend_enabled', $pcpBlock[$this->_pcpBlockId])) {
-         return CRM_Core_Error::statusBounce(ts('Tell Friend is disable for this Personal Campaign Page'));
+        return CRM_Core_Error::statusBounce(ts('Tell Friend is disable for this Personal Campaign Page'));
       }
 
       $this->_mailLimit = $pcpBlock[$this->_pcpBlockId]['tellfriend_limit'];
@@ -114,7 +115,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
     }
 
     if (!$this->_contactID) {
-       return CRM_Core_Error::statusBounce(ts('Could not get the contact ID'));
+      return CRM_Core_Error::statusBounce(ts('Could not get the contact ID'));
     }
 
     // we do not want to display recently viewed items, so turn off
@@ -141,7 +142,6 @@ class CRM_Friend_Form extends CRM_Core_Form {
     $this->assign('intro', CRM_Utils_Array::value('intro', $defaults));
     $this->assign('message', CRM_Utils_Array::value('suggested_message', $defaults));
 
-
     list($fromName, $fromEmail) = CRM_Contact_BAO_Contact::getContactDetails($this->_contactID);
 
     $defaults['from_name'] = $fromName;
@@ -158,14 +158,16 @@ class CRM_Friend_Form extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     // Details of User
-    $name = &$this->add('text',
+    $name = &$this->add(
+      'text',
       'from_name',
       ts('From'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'first_name')
     );
     $name->freeze();
 
-    $email = &$this->add('text',
+    $email = &$this->add(
+      'text',
       'from_email',
       ts('Your Email'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_Email', 'email'),
@@ -188,7 +190,8 @@ class CRM_Friend_Form extends CRM_Core_Form {
       $this->addRule("friend[$i][email]", ts('The format of this email address is not valid.'), 'email');
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Send Your Message'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -212,7 +215,7 @@ class CRM_Friend_Form extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
 
     $errors = [];
 
@@ -277,9 +280,12 @@ class CRM_Friend_Form extends CRM_Core_Form {
 
       if ($linkText = CRM_Contribute_BAO_PCP::getPcpBlockStatus($defaults['entity_id'])) {
 
-        $linkTextUrl = CRM_Utils_System::url('civicrm/contribute/campaign',
+        $linkTextUrl = CRM_Utils_System::url(
+          'civicrm/contribute/campaign',
           "action=add&reset=1&pageId={$defaults['entity_id']}",
-          FALSE, NULL, TRUE,
+          FALSE,
+          NULL,
+          TRUE,
           TRUE
         );
         $this->assign('linkTextUrl', $linkTextUrl);
@@ -291,4 +297,3 @@ class CRM_Friend_Form extends CRM_Core_Form {
     $this->assign('thankYouText', $defaults['thankyou_text']);
   }
 }
-

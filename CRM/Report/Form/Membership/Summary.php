@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
 
   public $_columnHeaders;
@@ -50,7 +48,8 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ]; function __construct() {
+  ];
+  public function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
     $this->_columns = ['civicrm_contact' =>
@@ -144,16 +143,16 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $this->assign('reportTitle', ts('Membership Summary Report'));
     parent::preProcess();
   }
 
-  function setDefaultValues($freeze = null) {
+  public function setDefaultValues($freeze = NULL) {
     return parent::setDefaultValues();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -180,7 +179,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     //check for searching combination of dispaly columns and
     //grouping criteria
@@ -188,7 +187,7 @@ class CRM_Report_Form_Membership_Summary extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = NULL;
 
     $this->_from = "
@@ -211,7 +210,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     }
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -229,7 +228,8 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -253,7 +253,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     }
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = [];
     $statistics[] = ['title' => ts('Row(s) Listed'),
       'value' => count($rows),
@@ -261,7 +261,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     return $statistics;
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
     if (is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])
@@ -288,7 +288,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     }
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->_params = $this->controller->exportValues($this->_name);
     if (empty($this->_params) &&
       $this->_force
@@ -345,7 +345,7 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     parent::endPostProcess();
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     $checkList = [];
@@ -398,7 +398,8 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url('civicrm/report/member/detail',
+        $url = CRM_Utils_System::url(
+          'civicrm/report/member/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id']
         );
         $rows[$rowNum]['civicrm_contact_display_name'] = "<a href='$url'>" . $row["civicrm_contact_display_name"] . '</a>';
@@ -413,4 +414,3 @@ LEFT  JOIN civicrm_contribution  {$this->_aliases['civicrm_contribution']}
     }
   }
 }
-

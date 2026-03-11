@@ -31,29 +31,28 @@
  * $Id$
  *
  */
-                    class CRM_Core_DAO_OptionValue extends CRM_Core_DAO
-{
+class CRM_Core_DAO_OptionValue extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_option_value';
+  public static $_tableName = 'civicrm_option_value';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Option ID
    *
    * @var int unsigned
@@ -173,14 +172,13 @@
    * @var int unsigned
    */
   public $visibility_id;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_option_value
-   */
-  function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_option_value
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -189,8 +187,7 @@
    * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'option_group_id' => 'civicrm_option_group:id',
@@ -200,48 +197,46 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'option_group_id', 'civicrm_option_group', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'component_id', 'civicrm_component', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'domain_id', 'civicrm_domain', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'option_group_id', 'civicrm_option_group', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'component_id', 'civicrm_component', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'domain_id', 'civicrm_domain', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'option_group_id' => [
           'name' => 'option_group_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                     'FKClassName' => 'CRM_Core_DAO_OptionGroup',
         ] ,
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Option Label') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
@@ -249,7 +244,7 @@
           'name' => 'value',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Option Value') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 512,
            'size' => CRM_Utils_Type::HUGE,
                 ] ,
@@ -259,11 +254,11 @@
           'title' => ts('Option Name') ,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_option_value.name',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'grouping' => [
           'name' => 'grouping',
@@ -285,7 +280,7 @@
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'description' => [
           'name' => 'description',
@@ -332,19 +327,17 @@
    * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -353,21 +346,21 @@
    * @access public
    * return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['option_value'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                                          }
+    }
     return self::$_import;
   }
   /**
@@ -376,21 +369,21 @@
    * @access public
    * return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['option_value'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                                          }
+    }
     return self::$_export;
   }
 }

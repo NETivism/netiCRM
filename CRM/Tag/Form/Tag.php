@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for tags
  *
@@ -50,7 +45,8 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
    * @var int
    */
   protected $_entityID;
-  protected $_entityTable; function preProcess() {
+  protected $_entityTable;
+  public function preProcess() {
     if ($this->get('entityID')) {
       $this->_entityID = $this->get('entityID');
     }
@@ -109,7 +105,6 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
 
     //build tag widget
 
-
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, $this->_entityTable, $this->_entityID);
 
@@ -117,7 +112,8 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
       $this->freeze();
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Update Tags'),
             'isDefault' => TRUE,
@@ -150,4 +146,3 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
   }
   //end of function
 }
-

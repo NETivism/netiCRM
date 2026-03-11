@@ -40,7 +40,7 @@
  *
  */
 class CRM_Campaign_Task {
-  CONST INTERVIEW = 1, RESERVE = 2, RELEASE = 3, PRINT_VOTERS = 4;
+  public const INTERVIEW = 1, RESERVE = 2, RELEASE = 3, PRINT_VOTERS = 4;
 
   /**
    * the task array
@@ -48,7 +48,7 @@ class CRM_Campaign_Task {
    * @var array
    * @static
    */
-  static $_tasks = NULL;
+  public static $_tasks = NULL;
 
   /**
    * the optional task array
@@ -56,7 +56,7 @@ class CRM_Campaign_Task {
    * @var array
    * @static
    */
-  static $_optionalTasks = NULL;
+  public static $_optionalTasks = NULL;
 
   /**
    * These tasks are the core set of tasks that the user can perform
@@ -66,7 +66,7 @@ class CRM_Campaign_Task {
    * @static
    * @access public
    */
-  static function &tasks() {
+  public static function &tasks() {
     if (!(self::$_tasks)) {
       self::$_tasks = [1 => ['title' => ts('Record Respondents Interview'),
           'class' => ['CRM_Campaign_Form_Task_Interview',
@@ -92,7 +92,6 @@ class CRM_Campaign_Task {
       ];
     }
 
-
     CRM_Utils_Hook::searchTasks('campaign', self::$_tasks);
 
     asort(self::$_tasks);
@@ -108,7 +107,7 @@ class CRM_Campaign_Task {
    * @static
    * @access public
    */
-  static function &taskTitles() {
+  public static function &taskTitles() {
     self::tasks();
     $titles = [];
     foreach (self::$_tasks as $id => $value) {
@@ -127,7 +126,7 @@ class CRM_Campaign_Task {
    * @return array set of tasks that are valid for the user
    * @access public
    */
-  static function &permissionedTaskTitles($permission) {
+  public static function &permissionedTaskTitles($permission) {
     $tasks = self::taskTitles();
 
     return $tasks;
@@ -143,7 +142,7 @@ class CRM_Campaign_Task {
    * @static
    * @access public
    */
-  static function getTask($value) {
+  public static function getTask($value) {
     self::tasks();
     if (!$value || !CRM_Utils_Array::value($value, self::$_tasks)) {
       // make the interview task by default
@@ -155,4 +154,3 @@ class CRM_Campaign_Task {
     ];
   }
 }
-

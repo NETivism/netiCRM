@@ -51,4 +51,3 @@ function smarty_modifier_crmFirstWord($string) {
   $words = explode(' ', $string);
   return $words[0];
 }
-

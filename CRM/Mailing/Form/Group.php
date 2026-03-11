@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Choose include / exclude groups and mailings
  *
@@ -86,7 +83,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $mailingID = CRM_Utils_Request::retrieve('mid', 'Integer', $this, FALSE, NULL);
     $continue = CRM_Utils_Request::retrieve('continue', 'String', $this, FALSE, NULL);
     $reschedule = CRM_Utils_Request::retrieve('reschedule', 'Integer', $this, FALSE, NULL);
@@ -140,7 +137,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
 
       $defaults['campaign_id'] = $mailing->campaign_id;
       $defaults['dedupe_email'] = $mailing->dedupe_email;
-
 
       $dao = new CRM_Mailing_DAO_Group();
 
@@ -202,7 +198,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    */
   public function buildQuickForm() {
 
-
     //get the context
     $context = $this->get('context');
     if (!empty($this->_searchBasedMailing)) {
@@ -210,7 +205,10 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
     $this->assign('context', $context);
 
-    $this->add('text', 'name', ts('Name Your Mailing'),
+    $this->add(
+      'text',
+      'name',
+      ts('Name Your Mailing'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'name'),
       TRUE
     );
@@ -225,7 +223,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
     CRM_Campaign_BAO_Campaign::addCampaign($this, $campaignId);
 */
-
 
     //dedupe on email option
     $this->addElement('checkbox', 'dedupe_email', ts('Remove duplicate emails?'));
@@ -246,7 +243,9 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     if (!empty($this->_searchBasedMailing)) {
       //get the static groups
       $staticGroups = CRM_Core_PseudoConstant::staticGroup(FALSE, 'Mailing');
-      $this->add('select', 'baseGroup',
+      $this->add(
+        'select',
+        'baseGroup',
         ts('Unsubscription Group'),
         [
           '' => ts('- select -'),
@@ -262,7 +261,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     // mailing
     $this->addSelect('includeMailings', ts('INCLUDE Recipients of These Mailing(s)'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
     $this->addSelect('excludeMailings', ts('EXCLUDE Recipients of These Mailing(s)'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
-    
+
     // open
     $this->addSelect('includeOpened', ts('INCLUDE Recipients who opened these mailing'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
     $this->addSelect('excludeOpened', ts('EXCLUDE Recipients who opened these mailing'), $mailings, ['class' => 'chosen', 'multiple' => 'multiple']);
@@ -320,7 +319,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     $rules = [];
     if ($this->_searchBasedMailing && $this->_contactIds) {
       $session = CRM_Core_Session::singleton();
-
 
       if ($this->_resultSelectOption == 'ts_sel') {
         // create a static grp if only a subset of result set was selected:
@@ -382,17 +380,16 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       }
     }
 
-
     $qf_Group_submit = $this->controller->exportValue($this->_name, '_qf_Group_submit');
     $this->set('name', $params['name']);
 
-    foreach($values as $key => $args){
-      if(preg_match('/^(include|exclude)/i', $key)){
+    foreach ($values as $key => $args) {
+      if (preg_match('/^(include|exclude)/i', $key)) {
         $rulekey = str_replace(['include', 'exclude'], '', $key);
         $rulekey = strtolower($rulekey);
         $ruletype = strstr($key, 'include') ? 'include' : 'exclude';
         if (!empty($args) && is_array($args)) {
-          foreach($args as $k => $id){
+          foreach ($args as $k => $id) {
             if (!empty($id)) {
               $rules[$rulekey][$ruletype][] = $id;
             }
@@ -433,7 +430,6 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $params['created_date'] = date('YmdHis');
     }
 
-
     $mailing = CRM_Mailing_BAO_Mailing::create($params, $ids);
     $this->set('mailing_id', $mailing->id);
 
@@ -443,7 +439,8 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     }
 
     // also compute the recipients and store them in the mailing recipients table
-    CRM_Mailing_BAO_Mailing::getRecipients($mailing->id,
+    CRM_Mailing_BAO_Mailing::getRecipients(
+      $mailing->id,
       $mailing->id,
       NULL,
       NULL,
@@ -451,11 +448,10 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
       $dedupeEmail
     );
 
-
     $count = CRM_Mailing_BAO_Recipients::mailingSize($mailing->id);
     $this->set('count', $count);
     $this->assign('count', $count);
-    foreach($rules as $key => $rule){
+    foreach ($rules as $key => $rule) {
       $this->set($key, $rule);
     }
 
@@ -526,7 +522,7 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     if (isset($fields['includeGroups']) &&
       is_array($fields['includeGroups']) &&
@@ -567,4 +563,3 @@ class CRM_Mailing_Form_Group extends CRM_Contact_Form_Task {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

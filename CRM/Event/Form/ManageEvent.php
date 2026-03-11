@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing Event
  *
@@ -90,7 +88,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $config = CRM_Core_Config::singleton();
     if (in_array("CiviEvent", $config->enableComponents)) {
       $this->assign('CiviEvent', TRUE);
@@ -115,15 +113,19 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       // its an update mode, do a permission check
 
       if (!CRM_Event_BAO_Event::checkPermission($this->_id, CRM_Core_Permission::EDIT)) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
       }
 
       $participantListingID = CRM_Utils_Array::value('participant_listing_id', $eventInfo);
       //CRM_Core_DAO::getFieldValue( 'CRM_Event_DAO_Event', $this->_id, 'participant_listing_id' );
       if ($participantListingID) {
-        $participantListingURL = CRM_Utils_System::url('civicrm/event/participant',
+        $participantListingURL = CRM_Utils_System::url(
+          'civicrm/event/participant',
           "reset=1&id={$this->_id}",
-          TRUE, NULL, TRUE, TRUE
+          TRUE,
+          NULL,
+          TRUE,
+          TRUE
         );
         $this->assign('participantListingURL', $participantListingURL);
       }
@@ -166,7 +168,6 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
       $this->assign('title', $title);
     }
 
-
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1', 'label');
     $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 0', 'label');
     $findParticipants['statusCounted'] = CRM_Utils_Array::implode(', ', array_values($statusTypes));
@@ -184,7 +185,8 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     $breadCrumb = [];
     if (!$this->_isTemplate) {
       if ($this->_id) {
-        $this->_doneUrl = CRM_Utils_System::url(CRM_Utils_System::currentPath(),
+        $this->_doneUrl = CRM_Utils_System::url(
+          CRM_Utils_System::currentPath(),
           "action=update&reset=1&id={$this->_id}"
         );
         if (!empty($eventInfo['event_title'])) {
@@ -197,7 +199,8 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
         }
       }
       else {
-        $this->_doneUrl = CRM_Utils_System::url('civicrm/event/manage',
+        $this->_doneUrl = CRM_Utils_System::url(
+          'civicrm/event/manage',
           'reset=1'
         );
         $breadCrumb = [['title' => ts('Manage Events'),
@@ -222,7 +225,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
@@ -263,12 +266,14 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
 
     if (!$this->_cancelURL) {
       if ($this->_isTemplate) {
-        $this->_cancelURL = CRM_Utils_System::url('civicrm/admin/eventTemplate',
+        $this->_cancelURL = CRM_Utils_System::url(
+          'civicrm/admin/eventTemplate',
           'reset=1'
         );
       }
       else {
-        $this->_cancelURL = CRM_Utils_System::url('civicrm/event/manage',
+        $this->_cancelURL = CRM_Utils_System::url(
+          'civicrm/event/manage',
           'reset=1'
         );
       }
@@ -323,7 +328,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     $this->add('hidden', 'is_template', $this->_isTemplate);
   }
 
-  function endPostProcess() {
+  public function endPostProcess() {
     // make submit buttons keep the current working tab opened.
     if ($this->_action & CRM_Core_Action::UPDATE) {
       $className = CRM_Utils_String::getClassName($this->_name);
@@ -357,7 +362,7 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_id) {
       $templateFile = "CRM/Event/Form/ManageEvent/{$this->_id}/{$this->_name}.tpl";
       $template = &CRM_Core_Form::getTemplate();
@@ -377,4 +382,3 @@ class CRM_Event_Form_ManageEvent extends CRM_Core_Form {
     */
   }
 }
-

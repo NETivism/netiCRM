@@ -34,18 +34,19 @@
  */
 class CRM_Report_Utils_Get {
 
-  static function getTypedValue($name, $type) {
+  public static function getTypedValue($name, $type) {
     $value = CRM_Utils_Array::value($name, $_GET);
     if ($value === NULL) {
       return NULL;
     }
-    return CRM_Utils_Type::escape($value,
+    return CRM_Utils_Type::escape(
+      $value,
       CRM_Utils_Type::typeToString($type),
       FALSE
     );
   }
 
-  static function dateParam($fieldName, &$field, &$defaults) {
+  public static function dateParam($fieldName, &$field, &$defaults) {
     // type = 12 (datetime) is not recognized by Utils_Type::escape() method,
     // and therefore the below hack
     $type = 4;
@@ -87,7 +88,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  static function stringParam($fieldName, &$field, &$defaults) {
+  public static function stringParam($fieldName, &$field, &$defaults) {
     $fieldOP = CRM_Utils_Array::value("{$fieldName}_op", $_GET, 'like');
 
     switch ($fieldOP) {
@@ -107,7 +108,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  static function intParam($fieldName, &$field, &$defaults) {
+  public static function intParam($fieldName, &$field, &$defaults) {
     $fieldOP = CRM_Utils_Array::value("{$fieldName}_op", $_GET, 'eq');
 
     switch ($fieldOP) {
@@ -161,14 +162,14 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  static function processChart(&$defaults) {
+  public static function processChart(&$defaults) {
     $chartType = CRM_Utils_Array::value("charts", $_GET);
     if (in_array($chartType, ['barChart', 'pieChart'])) {
       $defaults["charts"] = $chartType;
     }
   }
 
-  static function processFilter(&$fieldGrp, &$defaults) {
+  public static function processFilter(&$fieldGrp, &$defaults) {
     // process only filters for now
     foreach ($fieldGrp as $tableName => $fields) {
       foreach ($fields as $fieldName => $field) {
@@ -192,7 +193,7 @@ class CRM_Report_Utils_Get {
   }
 
   //unset default filters
-  static function unsetFilters(&$defaults) {
+  public static function unsetFilters(&$defaults) {
     static $unsetFlag = TRUE;
     if ($unsetFlag) {
       foreach ($defaults as $field_name => $field_value) {
@@ -209,7 +210,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  static function processGroupBy(&$fieldGrp, &$defaults) {
+  public static function processGroupBy(&$fieldGrp, &$defaults) {
     // process only group_bys for now
     $flag = FALSE;
 
@@ -233,7 +234,7 @@ class CRM_Report_Utils_Get {
     }
   }
 
-  static function processFields(&$reportFields, &$defaults) {
+  public static function processFields(&$reportFields, &$defaults) {
     //add filters from url
     if (is_array($reportFields)) {
       if ($urlFields = CRM_Utils_Array::value("fld", $_GET)) {
@@ -251,4 +252,3 @@ class CRM_Report_Utils_Get {
     }
   }
 }
-

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
   public $N;
@@ -52,7 +50,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->copyValues($params);
     if ($messageTemplates->find(TRUE)) {
@@ -71,7 +69,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_MessageTemplates', $id, 'is_active', $is_active);
   }
 
@@ -85,7 +83,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return object
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
 
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
@@ -103,10 +101,10 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return object
    */
-  static function del($messageTemplatesID) {
+  public static function del($messageTemplatesID) {
     // make sure messageTemplatesID is an integer
     if (!CRM_Utils_Rule::positiveInteger($messageTemplatesID)) {
-       return CRM_Core_Error::statusBounce(ts('Invalid Message template'));
+      return CRM_Core_Error::statusBounce(ts('Invalid Message template'));
     }
 
     // set membership_type to null
@@ -135,14 +133,15 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return object
    */
-  static function getMessageTemplates($all = TRUE, $isSMS = FALSE) {
+  public static function getMessageTemplates($all = TRUE, $isSMS = FALSE) {
     $msgTpls = [];
 
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->is_active = 1;
-    if($isSMS){
+    if ($isSMS) {
       $messageTemplates->is_sms = $isSMS;
-    }else{
+    }
+    else {
       unset($messageTemplates->is_sms);
     }
 
@@ -164,7 +163,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @param string $valueName workflow value name option value
    * @return array
    */
-  static function getMessageTemplateByWorkflow($groupName, $valueName) {
+  public static function getMessageTemplateByWorkflow($groupName, $valueName) {
     static $cache;
     if (!empty($cache[$groupName.'__'.$valueName])) {
       return $cache[$groupName.'__'.$valueName];
@@ -191,7 +190,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     return $cache[$groupName.'__'.$valueName];
   }
 
-  static function sendReminder($contactId, $email, $messageTemplateID, $from) {
+  public static function sendReminder($contactId, $email, $messageTemplateID, $from) {
     $messageTemplates = new CRM_Core_DAO_MessageTemplates();
     $messageTemplates->id = $messageTemplateID;
 
@@ -206,7 +205,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       if (!$body_text) {
         $body_text = CRM_Utils_String::htmlToText($body_html);
       }
-      $mailing = new CRM_Mailing_BAO_Mailing;
+      $mailing = new CRM_Mailing_BAO_Mailing();
       $mailing->subject = $body_subject;
       $mailing->body_text = $body_text;
       $mailing->body_html = $body_html;
@@ -283,16 +282,16 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return void
    */
-  static function revert($id) {
-    $diverted = new self;
+  public static function revert($id) {
+    $diverted = new self();
     $diverted->id = (int) $id;
     $diverted->find(1);
 
     if ($diverted->N != 1) {
-       return CRM_Core_Error::statusBounce(ts('Did not find a message template with id of %1.', [1 => $id]));
+      return CRM_Core_Error::statusBounce(ts('Did not find a message template with id of %1.', [1 => $id]));
     }
 
-    $orig = new self;
+    $orig = new self();
     $orig->workflow_id = $diverted->workflow_id;
     $orig->is_reserved = 1;
     $orig->find(1);
@@ -328,7 +327,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    *
    * @return array  of four parameters: a boolean whether the email was sent, and the subject, text and HTML templates
    */
-  static function sendTemplate($params, &$smarty = NULL, $callback = NULL) {
+  public static function sendTemplate($params, &$smarty = NULL, $callback = NULL) {
     $defaults = [
       // activity id for use transactional email
       'activityId' => NULL,
@@ -381,7 +380,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
     $domain = CRM_Core_BAO_Domain::getDomain();
     $hookTokens = [];
-    $mailing = new CRM_Mailing_BAO_Mailing;
+    $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->body_text = $text;
     $mailing->body_html = $html;
     $tokens = $mailing->getTokens();
@@ -419,7 +418,8 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
       $contactArray = [$contactID => $contact];
       $contactIDArray = [$contactID];
-      CRM_Utils_Hook::tokenValues($contactArray,
+      CRM_Utils_Hook::tokenValues(
+        $contactArray,
         $contactIDArray,
         NULL,
         CRM_Utils_Token::flattenTokens($tokens),
@@ -464,7 +464,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     $params['html'] = $html;
 
     if ($params['toEmail']) {
-      $contactParams = [ 
+      $contactParams = [
         'email' => $params['toEmail'],
         'version' => 3,
       ];
@@ -497,7 +497,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_mailerTypes);
       if (!empty($params['activityId']) && $config->enableTransactionalEmail) {
         $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $params['activityId'], 'activity_type_id');
-        if(in_array(CRM_Core_OptionGroup::getName('activity_type', $activityTypeId), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
+        if (in_array(CRM_Core_OptionGroup::getName('activity_type', $activityTypeId), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
           $sent = CRM_Mailing_BAO_Transactional::send($params, $callback);
         }
       }
@@ -520,7 +520,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
    * @param int $workflow_id workflow id of message template
    * @return array
    */
-  static function getMessageTemplateNames($workflowId) {
+  public static function getMessageTemplateNames($workflowId) {
     $query = 'SELECT ov.name as groupName, og.name as valueName
                   FROM civicrm_msg_template mt
                   INNER JOIN civicrm_option_value ov ON workflow_id = ov.id
@@ -537,4 +537,3 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     return [];
   }
 }
-

@@ -1,7 +1,6 @@
 <?php
 // $Id: UFGroup.php 44572 2013-01-03 23:05:40Z totten $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -461,4 +460,3 @@ function civicrm_uf_group_weight($params) {
   }
   return $result;
 }
-

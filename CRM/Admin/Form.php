@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to Mobile provider
  *
@@ -62,14 +60,14 @@ class CRM_Admin_Form extends CRM_Core_Form {
    */
   protected $_BAOName;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
     $this->_values = [];
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
-      $baoName::retrieve( $params, $this->_values );
+      $baoName::retrieve($params, $this->_values);
     }
   }
 
@@ -81,12 +79,12 @@ class CRM_Admin_Form extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (isset($this->_id) && empty($this->_values)) {
       $this->_values = [];
       $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
-      $baoName::retrieve( $params, $this->_values );
+      $baoName::retrieve($params, $this->_values);
     }
     $defaults = $this->_values;
 
@@ -112,7 +110,8 @@ class CRM_Admin_Form extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -125,7 +124,8 @@ class CRM_Admin_Form extends CRM_Core_Form {
     }
     else {
       $js = ['data' => 'click-once'];
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
@@ -139,4 +139,3 @@ class CRM_Admin_Form extends CRM_Core_Form {
     }
   }
 }
-

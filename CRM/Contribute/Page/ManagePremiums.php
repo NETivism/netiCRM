@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of Premiums
  */
@@ -46,14 +44,14 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Contribute_BAO_ManagePremiums';
   }
 
@@ -62,7 +60,7 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -117,18 +115,26 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    * @access public
    *
    */
-  function run() {
+  public function run() {
 
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -150,7 +156,7 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse() {
+  public function browse() {
     // get all custom groups sorted by weight
     $premiums = [];
 
@@ -161,15 +167,14 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
     while ($dao->fetch()) {
       $premiums[$dao->id] = [];
       CRM_Core_DAO::storeValues($dao, $premiums[$dao->id]);
-      
+
       // Calculate remaining stock (stock_qty - send_qty)
       $stockQty = $dao->stock_qty ?: 0;
       $sendQty = $dao->send_qty ?: 0;
       $premiums[$dao->id]['remaining_stock'] = $stockQty - $sendQty;
-      
+
       // form all action links
       $action = array_sum(array_keys($this->links()));
-
 
       if ($dao->is_active) {
         $action -= CRM_Core_Action::ENABLE;
@@ -183,7 +188,8 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::BROWSE;
       }
 
-      $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
+      $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
         $action,
         ['id' => $dao->id]
       );
@@ -196,7 +202,7 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Contribute_Form_ManagePremiums';
   }
 
@@ -205,7 +211,7 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Manage Premiums';
   }
 
@@ -214,8 +220,7 @@ class CRM_Contribute_Page_ManagePremiums extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/contribute/managePremiums';
   }
 }
-

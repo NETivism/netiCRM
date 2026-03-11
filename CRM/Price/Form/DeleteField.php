@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is to build the form for Deleting Group
  */
@@ -62,12 +60,14 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
    * @return void
    * @acess protected
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_fid = $this->get('fid');
 
-    $this->_title = CRM_Core_DAO::getFieldValue('CRM_Price_DAO_Field',
+    $this->_title = CRM_Core_DAO::getFieldValue(
+      'CRM_Price_DAO_Field',
       $this->_fid,
-      'label', 'id'
+      'label',
+      'id'
     );
 
     $this->assign('title', $this->_title);
@@ -84,7 +84,8 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Delete Price Field'),
           'isDefault' => TRUE,
@@ -106,10 +107,8 @@ class CRM_Price_Form_DeleteField extends CRM_Core_Form {
    */
   public function postProcess() {
 
-
     if (CRM_Price_BAO_Field::deleteField($this->_fid)) {
       CRM_Core_Session::setStatus(ts('The Price Field \'%1\' has been deleted.', [1 => $this->_title]));
     }
   }
 }
-

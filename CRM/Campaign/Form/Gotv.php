@@ -37,7 +37,6 @@
  * Files required
  */
 
-
 class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
 
   public $_search;
@@ -67,7 +66,7 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_search = CRM_Utils_Array::value('search', $_GET);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
     $this->_surveyId = CRM_Utils_Request::retrieve('sid', 'Positive', $this);
@@ -116,7 +115,7 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     if ($this->_search) {
       return;
     }
@@ -144,13 +143,17 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
       $session = CRM_Core_Session::singleton();
       $userId = $session->get('userID');
       // get interviewer id
-      $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
-        CRM_Core_DAO::$_nullObject, FALSE, $userId
+      $cid = CRM_Utils_Request::retrieve(
+        'cid',
+        'Positive',
+        CRM_Core_DAO::$_nullObject,
+        FALSE,
+        $userId
       );
 
-
       $defaults['survey_interviewer_id'] = $cid;
-      $defaults['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $defaults['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
         $cid,
         'sort_name',
         'id'
@@ -167,7 +170,7 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
     $this->validateIds();
   }
 
-  function validateIds() {
+  public function validateIds() {
     $errorMessages = [];
     //check for required permissions.
     if (!CRM_Core_Permission::check('manage campaign') &&
@@ -176,7 +179,6 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
     ) {
       $errorMessages[] = ts('You are not authorized to access this page.');
     }
-
 
     $surveys = CRM_Campaign_BAO_Survey::getSurveyList();
     if (empty($surveys)) {
@@ -192,4 +194,3 @@ class CRM_Campaign_Form_Gotv extends CRM_Core_Form {
     $this->assign('errorMessages', empty($errorMessages) ? FALSE : $errorMessages);
   }
 }
-

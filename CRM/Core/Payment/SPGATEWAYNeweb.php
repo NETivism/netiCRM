@@ -24,14 +24,14 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
 
     if (empty($pid)) {
       CRM_Core_Error::debug_log_message('civicrm_spgateway.neweb : There are no SPGATEWAY payment processor.');
-          CRM_Utils_System::notFound();
+      CRM_Utils_System::notFound();
     }
 
     if (!empty($post['Period'])) {
       if (is_array($pid)) {
         $pids = $pid;
         foreach ($pids as $pid) {
-          $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test': 'live');
+          $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test' : 'live');
           $decryptParams = CRM_Core_Payment_SPGATEWAYAPI::dataDecode(CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($post['Period'], $paymentProcessor));
           CRM_Core_Error::debug_var('spgateway_neweb_transfer_decrypt_params', $decryptParams);
           if (!empty($decryptParams['MerchantOrderNo'])) {
@@ -45,7 +45,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
         }
       }
       else {
-        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test': 'live');
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($pid, $isTest ? 'test' : 'live');
         $decryptParams = CRM_Core_Payment_SPGATEWAYAPI::dataDecode(CRM_Core_Payment_SPGATEWAYAPI::recurDecrypt($post['Period'], $paymentProcessor));
         CRM_Core_Error::debug_var('spgateway_neweb_transfer_decrypt_params', $decryptParams);
         $rid = $decryptParams['MerchantOrderNo'];
@@ -126,7 +126,6 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
     CRM_Utils_System::civiExit();
   }
 
-
   /**
    * Migrate from civicrm_spgateway_neweb_resync
    *
@@ -148,7 +147,7 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
           2 => [$ppid_new, 'Integer'],
         ];
         $bao = CRM_Core_DAO::executeQuery($sql, $params);
-        while($bao->fetch()) {
+        while ($bao->fetch()) {
           $recurNo[] = $bao->rid;
         }
       }
@@ -167,22 +166,22 @@ class CRM_Core_Payment_SPGATEWAYNeweb {
         // Only execute the contributions last month have successed.
         $lastReceiveMonth = date('Ym', strtotime($dao->last_receive_date));
         $lastCancelMonth = date('Ym', strtotime($dao->last_failed_date));
-	$lastMonth = date('Ym', strtotime('-1 month'));
+        $lastMonth = date('Ym', strtotime('-1 month'));
         $thisMonth = date('Ym');
-	if ($lastMonth == $lastCancelMonth || $lastReceiveMonth < $lastMonth) {
-	  CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: Skipped failed recurring recur_id = {$recurId}, trxn_id = {$dao->last_trxn_id}, last_cancelled_date = {$dao->last_failed_date}, last_receive_date = {$dao->last_receive_date}");
-	  $skip++;
-	  continue;
-	}
-	if ($thisMonth == $lastReceiveMonth) {
-	  CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: Skipped completed recurring recur_id = {$recurId}, trxn_id = {$dao->last_trxn_id}, last_receive_date = {$dao->last_receive_date}");
-	  $alreadyCompleted++;
-	  continue;
-	}
+        if ($lastMonth == $lastCancelMonth || $lastReceiveMonth < $lastMonth) {
+          CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: Skipped failed recurring recur_id = {$recurId}, trxn_id = {$dao->last_trxn_id}, last_cancelled_date = {$dao->last_failed_date}, last_receive_date = {$dao->last_receive_date}");
+          $skip++;
+          continue;
+        }
+        if ($thisMonth == $lastReceiveMonth) {
+          CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: Skipped completed recurring recur_id = {$recurId}, trxn_id = {$dao->last_trxn_id}, last_receive_date = {$dao->last_receive_date}");
+          $alreadyCompleted++;
+          continue;
+        }
         CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: Find not complete contribution in this month, recur_id = {$recurId}, trxn_id = {$dao->last_trxn_id}");
         $lastTrxnId = $dao->last_trxn_id;
         $explodeTrxnId = explode('_', $lastTrxnId);
-        $no = $explodeTrxnId[2]+1;
+        $no = $explodeTrxnId[2] + 1;
         $trxn_id = 'r_'.$recurId.'_'.$no;
         $count++;
         CRM_Core_Error::debug_log_message("SPGATEWAYNeweb: start syncing $trxn_id");

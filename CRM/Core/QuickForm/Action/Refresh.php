@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
 
   /**
@@ -45,7 +44,7 @@ class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
    * @return object
    * @access public
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     parent::__construct($stateMachine);
   }
 
@@ -58,7 +57,7 @@ class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
    * @return void
    * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     // save the form values and validation status to the session
     $page->isFormBuilt() or $page->buildForm();
 
@@ -66,7 +65,6 @@ class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
     $data = &$page->controller->container();
     $data['values'][$pageName] = $page->exportValues();
     $data['valid'][$pageName] = $page->validate();
-
 
     // Modal form and page is invalid: don't go further
     if ($page->controller->isModal() && !$data['valid'][$pageName]) {
@@ -79,4 +77,3 @@ class CRM_Core_QuickForm_Action_Refresh extends CRM_Core_QuickForm_Action {
     return $page->handle('jump');
   }
 }
-

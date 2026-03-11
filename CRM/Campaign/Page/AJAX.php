@@ -32,14 +32,12 @@
  *
  */
 
-
-
 /**
  * This class contains all campaign related functions that are called using AJAX (jQuery)
  */
 class CRM_Campaign_Page_AJAX {
 
-  static function registerInterview() {
+  public static function registerInterview() {
     $voterId = CRM_Utils_Array::value('voter_id', $_POST);
     $activityId = CRM_Utils_Array::value('activity_id', $_POST);
     $params = ['voter_id' => $voterId,
@@ -69,20 +67,18 @@ class CRM_Campaign_Page_AJAX {
       }
     }
 
-
     $activityId = CRM_Campaign_Form_Task_Interview::registerInterview($params);
     $result = ['status' => ($activityId) ? 'success' : 'fail',
       'voter_id' => $voterId,
       'activity_id' => $params['interviewer_id'],
     ];
 
-
     echo json_encode($result);
 
     CRM_Utils_System::civiExit();
   }
 
-  static function loadOptionGroupDetails() {
+  public static function loadOptionGroupDetails() {
 
     $id = CRM_Utils_Array::value('option_group_id', $_POST);
     $status = 'fail';
@@ -124,7 +120,7 @@ class CRM_Campaign_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function voterList() {
+  public function voterList() {
     $searchParams = ['city',
       'sort_name',
       'street_unit',
@@ -218,14 +214,19 @@ class CRM_Campaign_Page_AJAX {
       $$pName = $pValues['default'];
       if (CRM_Utils_Array::value($pValues['name'], $_POST)) {
         $$pName = CRM_Utils_Type::escape($_POST[$pValues['name']], $pValues['type']);
-        if ($pName == 'sort')$$pName = $selectorCols[$$pName];
+        if ($pName == 'sort') {
+          $$pName = $selectorCols[$$pName];
+        }
       }
     }
 
-
     $queryParams = CRM_Contact_BAO_Query::convertFormValues($params);
-    $query = new CRM_Contact_BAO_Query($queryParams,
-      NULL, NULL, FALSE, FALSE,
+    $query = new CRM_Contact_BAO_Query(
+      $queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_CAMPAIGN
     );
 
@@ -233,9 +234,14 @@ class CRM_Campaign_Page_AJAX {
 
     $voterClause = CRM_Campaign_BAO_Query::voterClause($voterClauseParams);
 
-    $searchCount = $query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+    $searchCount = $query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $voterClause
     );
@@ -256,20 +262,25 @@ class CRM_Campaign_Page_AJAX {
         $offset = 0;
       }
 
-
       $config = CRM_Core_Config::singleton();
 
       // get the result of the search
-      $result = $query->searchQuery($offset, $rowCount, $sort,
-        FALSE, FALSE,
-        FALSE, FALSE,
+      $result = $query->searchQuery(
+        $offset,
+        $rowCount,
+        $sort,
+        FALSE,
+        FALSE,
+        FALSE,
+        FALSE,
         FALSE,
         $voterClause,
         $sortOrder
       );
       while ($result->fetch()) {
         $contactID = $result->contact_id;
-        $typeImage = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
+        $typeImage = CRM_Contact_BAO_Contact_Utils::getImage(
+          $result->contact_sub_type ?
           $result->contact_sub_type : $result->contact_type,
           FALSE,
           $result->contact_id
@@ -304,7 +315,6 @@ class CRM_Campaign_Page_AJAX {
       }
     }
 
-
     $selectorElements = array_merge($selectorCols, [$extraVoterColName]);
 
     $iFilteredTotal = $iTotal;
@@ -313,7 +323,7 @@ class CRM_Campaign_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  function processVoterData() {
+  public function processVoterData() {
     $status = NULL;
     $operation = CRM_Utils_Type::escape($_POST['operation'], 'String');
     if ($operation == 'release') {
@@ -321,7 +331,8 @@ class CRM_Campaign_Page_AJAX {
       $activityId = CRM_Utils_Type::escape($_POST['activity_id'], 'Integer');
       $isDelete = CRM_Utils_String::strtoboolstr(CRM_Utils_Type::escape($_POST['isDelete'], 'String'));
       if ($activityId &&
-        CRM_Core_DAO::setFieldValue('CRM_Activity_DAO_Activity',
+        CRM_Core_DAO::setFieldValue(
+          'CRM_Activity_DAO_Activity',
           $activityId,
           'is_deleted',
           $isDelete
@@ -337,7 +348,8 @@ class CRM_Campaign_Page_AJAX {
         $activityId = CRM_Utils_Type::escape($_POST['activity_id'], 'Integer');
         if ($activityId) {
           $createActivity = FALSE;
-          $activityUpdated = CRM_Core_DAO::setFieldValue('CRM_Activity_DAO_Activity',
+          $activityUpdated = CRM_Core_DAO::setFieldValue(
+            'CRM_Activity_DAO_Activity',
             $activityId,
             'is_deleted',
             0
@@ -369,14 +381,17 @@ class CRM_Campaign_Page_AJAX {
         $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
         $scheduledStatusId = array_search('Scheduled', $activityStatus);
         if ($isReserved) {
-          $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey',
+          $activityTypeId = CRM_Core_DAO::getFieldValue(
+            'CRM_Campaign_DAO_Survey',
             $activityParams['source_record_id'],
             'activity_type_id'
           );
           $surveytitle = CRM_Utils_Array::value('surveyTitle', $_POST);
           if (!$surveytitle) {
-            $surveytitle = CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey',
-              $activityParams['source_record_id'], 'title'
+            $surveytitle = CRM_Core_DAO::getFieldValue(
+              'CRM_Campaign_DAO_Survey',
+              $activityParams['source_record_id'],
+              'title'
             );
           }
           $subject = ts('%1', [1 => $surveytitle]) . ' - ' . ts('Respondent Reservation');
@@ -385,7 +400,6 @@ class CRM_Campaign_Page_AJAX {
           $activityParams['skipRecentView'] = 1;
           $activityParams['activity_date_time'] = date('YmdHis');
           $activityParams['activity_type_id'] = $activityTypeId;
-
 
           $activity = CRM_Activity_BAO_Activity::create($activityParams);
           if ($activity->id) {
@@ -396,7 +410,8 @@ class CRM_Campaign_Page_AJAX {
           //delete reserved activity for given voter.
 
           $voterIds = [$activityParams['target_contact_id']];
-          $activities = CRM_Campaign_BAO_Survey::voterActivityDetails($activityParams['source_record_id'],
+          $activities = CRM_Campaign_BAO_Survey::voterActivityDetails(
+            $activityParams['source_record_id'],
             $voterIds,
             $activityParams['source_contact_id'],
             [$scheduledStatusId]
@@ -404,7 +419,8 @@ class CRM_Campaign_Page_AJAX {
           foreach ($activities as $voterId => $values) {
             $activityId = CRM_Utils_Array::value('activity_id', $values);
             if ($activityId && ($values['status_id'] == $scheduledStatusId)) {
-              CRM_Core_DAO::setFieldValue('CRM_Activity_DAO_Activity',
+              CRM_Core_DAO::setFieldValue(
+                'CRM_Activity_DAO_Activity',
                 $activityId,
                 'is_deleted',
                 TRUE
@@ -427,7 +443,8 @@ class CRM_Campaign_Page_AJAX {
         else {
           $statusValue = 1;
         }
-        CRM_Core_DAO::setFieldValue('CRM_Activity_DAO_Activity',
+        CRM_Core_DAO::setFieldValue(
+          'CRM_Activity_DAO_Activity',
           $activityId,
           'status_id',
           $statusValue
@@ -440,4 +457,3 @@ class CRM_Campaign_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 }
-

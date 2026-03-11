@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Page to display / edit the header / footer of a mailing
  *
@@ -47,19 +45,19 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
    *
    * @return string Classname of BAO
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Mailing_BAO_Mailing';
   }
 
-  function &links() {
+  public function &links() {
     return CRM_Core_DAO::$_nullObject;
   }
 
-  function editForm() {
+  public function editForm() {
     return NULL;
   }
 
-  function editName() {
+  public function editName() {
     return 'CiviMail Report';
   }
 
@@ -68,21 +66,20 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/mailing/report';
   }
 
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'reset=1&mid=' . $this->_mailing_id;
   }
 
-  function run() {
+  public function run() {
     $this->_mailing_id = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
 
     // check that the user has permission to access mailing id
 
     CRM_Mailing_BAO_Mailing::checkPermission($this->_mailing_id);
-
 
     $report = CRM_Mailing_BAO_Mailing::report($this->_mailing_id);
 
@@ -101,7 +98,8 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
       $atype = CRM_Utils_Request::retrieve('atype', 'Positive', $this);
       $aid = CRM_Utils_Request::retrieve('aid', 'Positive', $this);
 
-      $backUrl = CRM_Utils_System::url('civicrm/activity/view',
+      $backUrl = CRM_Utils_System::url(
+        'civicrm/activity/view',
         "atype={$atype}&action=view&reset=1&id={$aid}&cid={$cid}&context=activity"
       );
       $backUrlTitle = ts('Back to Activity');
@@ -114,11 +112,11 @@ class CRM_Mailing_Page_Report extends CRM_Core_Page_Basic {
     $this->assign('backUrlTitle', $backUrlTitle);
 
     $this->assign('report', $report);
-    CRM_Utils_System::setTitle(ts('CiviMail Report: %1',
-        [1 => $report['mailing']['name']]
-      ));
+    CRM_Utils_System::setTitle(ts(
+      'CiviMail Report: %1',
+      [1 => $report['mailing']['name']]
+    ));
 
     return parent::run();
   }
 }
-

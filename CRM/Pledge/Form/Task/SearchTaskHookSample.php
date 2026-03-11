@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to save a search
  * Saved Searches are used for saving frequently used queries
@@ -46,7 +44,7 @@ class CRM_Pledge_Form_Task_SearchTaskHookSample extends CRM_Pledge_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $rows = [];
     // display name and pledge details of all selected contacts
@@ -78,7 +76,8 @@ INNER JOIN civicrm_contact ct ON ( plg.contact_id = ct.id )
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -87,4 +86,3 @@ INNER JOIN civicrm_contact ct ON ( plg.contact_id = ct.id )
     );
   }
 }
-

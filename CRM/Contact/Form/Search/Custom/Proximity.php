@@ -33,14 +33,14 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public $_group;
   public $_tag;
   protected $_latitude = NULL;
   protected $_longitude = NULL;
-  protected $_distance = NULL; function __construct(&$formValues) {
+  protected $_distance = NULL;
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     // unset search profile if set
@@ -91,7 +91,7 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $config = CRM_Core_Config::singleton();
     $countryDefault = $config->defaultContactCountry;
 
@@ -100,17 +100,20 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
     $proxUnits = ['km' => ts('km'), 'miles' => ts('miles')];
     $form->add('select', 'prox_distance_unit', ts('Units'), $proxUnits, TRUE);
 
-    $form->add('text',
+    $form->add(
+      'text',
       'street_address',
       ts('Street Address')
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'city',
       ts('City')
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'postal_code',
       ts('Postal Code')
     );
@@ -136,7 +139,6 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
 
     $tag = ['' => ts('- any tag -')] + CRM_Core_PseudoConstant::tag();
     $form->addElement('select', 'tag', ts('Tag'), $tag);
-
 
     // state country js, CRM-5233
 
@@ -164,7 +166,10 @@ class CRM_Contact_Form_Search_Custom_Proximity extends CRM_Contact_Form_Search_C
       ]);
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
 
@@ -178,13 +183,17 @@ state_province.name    as state_province,
 country.name           as country       
 ";
 
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
-  function from() {
+  public function from() {
     $f = "
 FROM      civicrm_contact contact_a
 LEFT JOIN civicrm_address address ON ( address.contact_id       = contact_a.id AND
@@ -208,12 +217,12 @@ LEFT JOIN civicrm_group_contact cgc ON ( cgc.contact_id = contact_a.id AND cgc.s
     return $f;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $params = [];
     $clause = [];
 
-
-    $where = CRM_Contact_BAO_ProximityQuery::where($this->_latitude,
+    $where = CRM_Contact_BAO_ProximityQuery::where(
+      $this->_latitude,
       $this->_longitude,
       $this->_distance,
       'address'
@@ -233,11 +242,11 @@ AND cgc.group_id = {$this->_group}
     return $this->whereClause($where, $params);
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/Proximity.tpl';
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $config = CRM_Core_Config::singleton();
     $countryDefault = $config->defaultContactCountry;
     $defaults = [];
@@ -255,6 +264,6 @@ AND cgc.group_id = {$this->_group}
     return NULL;
   }
 
-  function alterRow(&$row) {}
+  public function alterRow(&$row) {
+  }
 }
-

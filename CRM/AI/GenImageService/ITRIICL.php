@@ -8,7 +8,7 @@
  */
 class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
 
-  const DEFAULT_TIMEOUT = 90;
+  public const DEFAULT_TIMEOUT = 90;
 
   private $apiKey;
   private $endpoint;
@@ -93,7 +93,8 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
       // Step 5: Format response with advanced parameters
       return $this->formatResponse($response, $params);
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       return $this->createErrorResponse('api_error', $e->getMessage());
     }
   }
@@ -161,7 +162,7 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * @return bool True if response indicates error
    */
   public function isError($response) {
-    return !is_array($response) || !isset($response['success']) || $response['success'] !== true;
+    return !is_array($response) || !isset($response['success']) || $response['success'] !== TRUE;
   }
 
   /**
@@ -206,9 +207,9 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
     $ch = curl_init($requestData['url']);
 
     curl_setopt_array($ch, [
-      CURLOPT_POST => true,
+      CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $requestData['payload'],
-      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_RETURNTRANSFER => TRUE,
       CURLOPT_HTTPHEADER => $requestData['headers'],
       CURLOPT_TIMEOUT => $this->timeout,
       CURLOPT_CONNECTTIMEOUT => 10

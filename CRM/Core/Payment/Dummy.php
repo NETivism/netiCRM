@@ -19,18 +19,16 @@
  * begin at one, so always delete one from the "Position in Response"
  */
 
-
-
 class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   /**
    * @var mixed
    */
   public $_processorName;
-  CONST CHARSET = 'iso-8859-1';
+  public const CHARSET = 'iso-8859-1';
 
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
-  static protected $_params = [];
+  protected static $_params = [];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -39,7 +37,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -48,7 +46,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Dummy Processor');
@@ -63,7 +61,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Dummy($mode, $paymentProcessor);
@@ -79,7 +77,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
    * @return array the result in a nice formatted array (or an error object)
    * @public
    */
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     // Invoke hook_civicrm_paymentProcessor
     // In Dummy's case, there is no translation of parameters into
     // the back-end's canonical set of parameters.  But if a processor
@@ -88,7 +86,8 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
 
     // no translation in Dummy processor
     $cookedParams = $params;
-    CRM_Utils_Hook::alterPaymentProcessorParams($this,
+    CRM_Utils_Hook::alterPaymentProcessorParams(
+      $this,
       $params,
       $cookedParams
     );
@@ -114,7 +113,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
     return $params;
   }
 
-  function &error($errorCode = NULL, $errorMessage = NULL) {
+  public function &error($errorCode = NULL, $errorMessage = NULL) {
     $e = &CRM_Core_Error::singleton();
     if ($errorCode) {
       $e->push($errorCode, 0, NULL, $errorMessage);
@@ -131,8 +130,7 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     return NULL;
   }
 }
-

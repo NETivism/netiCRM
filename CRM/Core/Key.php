@@ -36,14 +36,17 @@
 /**
  * Prevent PHP 5.5 broken
  */
-if(!function_exists('hash_equals')) {
+if (!function_exists('hash_equals')) {
   function hash_equals($str1, $str2) {
-    if(strlen($str1) != strlen($str2)) {
-      return false;
-    } else {
+    if (strlen($str1) != strlen($str2)) {
+      return FALSE;
+    }
+    else {
       $res = $str1 ^ $str2;
       $ret = 0;
-      for($i = strlen($res) - 1; $i >= 0; $i--) $ret |= ord($res[$i]);
+      for ($i = strlen($res) - 1; $i >= 0; $i--) {
+        $ret |= ord($res[$i]);
+      }
       return !$ret;
     }
   }
@@ -56,23 +59,23 @@ class CRM_Core_Key {
    *
    * @var int
    */
-  const PRIVATE_KEY_LENGTH = 16;
+  public const PRIVATE_KEY_LENGTH = 16;
 
   /**
    * @var string
    * @see hash_hmac_algos()
    */
-  const HASH_ALGO = 'sha256';
+  public const HASH_ALGO = 'sha256';
 
   /**
    * The length of a generated signature/digest (expressed in hex digits).
    * @var int
    */
-  const HASH_LENGTH = 64;
-  
-  static $_key = NULL;
+  public const HASH_LENGTH = 64;
 
-  static $_sessionID = NULL;
+  public static $_key = NULL;
+
+  public static $_sessionID = NULL;
 
   /**
    * Generate a private key per session and store in session
@@ -81,7 +84,7 @@ class CRM_Core_Key {
    * @static
    * @access private
    */
-  static function privateKey() {
+  public static function privateKey() {
 
     if (!self::$_key) {
       $session = CRM_Core_Session::singleton();
@@ -94,7 +97,7 @@ class CRM_Core_Key {
     return self::$_key;
   }
 
-  static function sessionID() {
+  public static function sessionID() {
     if (!self::$_sessionID) {
       $session = CRM_Core_Session::singleton();
       self::$_sessionID = $session->get('qfSessionID');
@@ -117,7 +120,7 @@ class CRM_Core_Key {
    * @static
    * @acess public
    */
-  static function get($name, $addSequence = FALSE) {
+  public static function get($name, $addSequence = FALSE) {
     $key = self::sign($name);
 
     if ($addSequence) {
@@ -138,7 +141,7 @@ class CRM_Core_Key {
    * @static
    * @acess public
    */
-  static function validate($key, $name, $addSequence = FALSE) {
+  public static function validate($key, $name, $addSequence = FALSE) {
     if (!is_string($key)) {
       return NULL;
     }
@@ -159,7 +162,7 @@ class CRM_Core_Key {
     return $key;
   }
 
-  static function valid($key) {
+  public static function valid($key) {
     // a valid key is a 32 digit hex number
     // followed by an optional _ and a number between 1 and 10000
     if (strpos('_', $key) !== FALSE) {
@@ -198,4 +201,3 @@ class CRM_Core_Key {
     return hash_hmac(self::HASH_ALGO, $sessionID . $delim . $name, $privateKey);
   }
 }
-

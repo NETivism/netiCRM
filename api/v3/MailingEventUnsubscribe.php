@@ -70,12 +70,11 @@ function civicrm_api3_mailing_event_unsubscribe_create($params) {
     return civicrm_api3_create_success($params);
   }
 
-
   return civicrm_api3_create_error('Queue event could not be found');
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -84,4 +83,3 @@ function _civicrm_api3_mailing_event_unsubscribe_create_spec(&$params) {
   $params['hash']['api.required'] = 1;
   $params['event_queue_id']['api.required'] = 1;
 }
-

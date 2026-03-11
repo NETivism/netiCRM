@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to email a group of contacts
  */
@@ -71,7 +69,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -101,7 +99,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addElement('checkbox', 'with_contact', ts('With Contact'));
     $this->addElement('checkbox', 'assigned_to', ts('Assigned to Contact'));
     $this->addElement('checkbox', 'created_by', ts('Created by'));
@@ -116,7 +114,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Activity_Form_Task_PickOption', 'formRule']);
   }
 
@@ -129,7 +127,7 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     return TRUE;
   }
 
@@ -171,4 +169,3 @@ class CRM_Activity_Form_Task_PickOption extends CRM_Activity_Form_Task {
     $this->set('contacts', $this->_contacts);
   }
 }
-

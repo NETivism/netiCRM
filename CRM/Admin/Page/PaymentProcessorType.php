@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for displaying list of payment processors
  */
@@ -47,14 +44,14 @@ class CRM_Admin_Page_PaymentProcessorType extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_PaymentProcessorType';
   }
 
@@ -63,7 +60,7 @@ class CRM_Admin_Page_PaymentProcessorType extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -100,7 +97,7 @@ class CRM_Admin_Page_PaymentProcessorType extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_PaymentProcessorType';
   }
 
@@ -109,7 +106,7 @@ class CRM_Admin_Page_PaymentProcessorType extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Payment Processor Type';
   }
 
@@ -118,8 +115,7 @@ class CRM_Admin_Page_PaymentProcessorType extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/paymentProcessorType';
   }
 }
-

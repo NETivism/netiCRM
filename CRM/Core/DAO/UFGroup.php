@@ -31,29 +31,28 @@
  * $Id$
  *
  */
-                    class CRM_Core_DAO_UFGroup extends CRM_Core_DAO
-{
+class CRM_Core_DAO_UFGroup extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_uf_group';
+  public static $_tableName = 'civicrm_uf_group';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Unique table ID
    *
    * @var int unsigned
@@ -169,7 +168,7 @@
    */
   public $cancel_URL;
   /**
-   * Should we create a cms user for this profile 
+   * Should we create a cms user for this profile
    *
    * @var boolean
    */
@@ -209,14 +208,13 @@
    * @var boolean
    */
   public $is_proximity_search;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_uf_group
-   */
-  function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_uf_group
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -225,8 +223,7 @@
    * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'limit_listings_group_id' => 'civicrm_group:id',
@@ -236,36 +233,34 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'limit_listings_group_id', 'civicrm_group', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'add_to_group_id', 'civicrm_group', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'created_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'limit_listings_group_id', 'civicrm_group', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'add_to_group_id', 'civicrm_group', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'created_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'is_active' => [
           'name' => 'is_active',
@@ -278,11 +273,11 @@
           'title' => ts('Group Type') ,
            'maxlength' => 255,
            'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+             'import' => TRUE,
           'where' => 'civicrm_uf_group.group_type',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
+           'export' => TRUE,
             ] ,
         'title' => [
           'name' => 'title',
@@ -394,19 +389,17 @@
    * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -415,21 +408,21 @@
    * @access public
    * return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['uf_group'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                                          }
+    }
     return self::$_import;
   }
   /**
@@ -438,21 +431,21 @@
    * @access public
    * return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['uf_group'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                                          }
+    }
     return self::$_export;
   }
 }

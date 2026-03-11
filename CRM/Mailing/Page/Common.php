@@ -33,13 +33,10 @@
  *
  */
 
-
-
-
 class CRM_Mailing_Page_Common extends CRM_Core_Page {
   protected $_type = NULL;
-  
-  function run() {
+
+  public function run() {
 
     $job_id = CRM_Utils_Request::retrieve('jid', 'Integer', CRM_Core_DAO::$_nullObject);
     $queue_id = CRM_Utils_Request::retrieve('qid', 'Integer', CRM_Core_DAO::$_nullObject);
@@ -53,8 +50,6 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
       CRM_Core_Error::fatal(ts("Missing input parameters"));
     }
 
-
-
     // verify that the three numbers above match
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
     if (!$q) {
@@ -62,23 +57,32 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     }
     CRM_Contact_BAO_Contact::redirectPreferredLanguage($q->contact_id);
 
-    $cancel = CRM_Utils_Request::retrieve("_qf_{$this->_type}_cancel", 'String', CRM_Core_DAO::$_nullObject,
-      FALSE, NULL, $_REQUEST
+    $cancel = CRM_Utils_Request::retrieve(
+      "_qf_{$this->_type}_cancel",
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      NULL,
+      $_REQUEST
     );
     if ($cancel) {
       $config = CRM_Core_Config::singleton();
       CRM_Utils_System::redirect($config->userFrameworkBaseURL);
     }
 
-    $confirm = CRM_Utils_Request::retrieve('confirm', 'Boolean', CRM_Core_DAO::$_nullObject,
-      FALSE, NULL, $_REQUEST
+    $confirm = CRM_Utils_Request::retrieve(
+      'confirm',
+      'Boolean',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      NULL,
+      $_REQUEST
     );
 
     list($displayName, $email) = CRM_Mailing_Event_BAO_Queue::getContactInfo($queue_id);
     $this->assign('display_name', $displayName);
     $this->assign('email', $email);
     $this->assign('confirm', $confirm);
-
 
     $groups = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_mailing($job_id, $queue_id, $hash, TRUE);
     $this->assign('groups', $groups);
@@ -94,7 +98,7 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
       if ($this->_type == 'unsubscribe') {
         $groups = CRM_Mailing_Event_BAO_Unsubscribe::unsub_from_mailing($job_id, $queue_id, $hash);
         $unsubscribe_state = $session->get($hash, 'unsubscribe');
-        if (count($groups) && empty($unsubscribe_state) ) {
+        if (count($groups) && empty($unsubscribe_state)) {
           CRM_Mailing_Event_BAO_Unsubscribe::send_unsub_response($queue_id, $groups, FALSE, $job_id);
           // prevent double sent
           $session->set($hash, 1, 'unsubscribe');
@@ -123,7 +127,8 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
       }
     }
     else {
-      $confirmURL = CRM_Utils_System::url("civicrm/mailing/{$this->_type}",
+      $confirmURL = CRM_Utils_System::url(
+        "civicrm/mailing/{$this->_type}",
         "reset=1&jid={$job_id}&qid={$queue_id}&h={$hash}&confirm=1"
       );
       $this->assign('confirmURL', $confirmURL);
@@ -136,4 +141,3 @@ class CRM_Mailing_Page_Common extends CRM_Core_Page {
     return parent::run();
   }
 }
-

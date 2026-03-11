@@ -42,7 +42,6 @@
  * Files required for this package
  */
 
-
 require_once 'api/v2/utils.php';
 
 require_once 'CRM/Contact/BAO/Group.php';
@@ -198,7 +197,6 @@ function civicrm_mailer_event_subscribe($params) {
 
   if ($subscribe !== NULL) {
     /* Ask the contact for confirmation */
-
 
     $subscribe->send_confirm_request($email);
 
@@ -386,4 +384,3 @@ function _civicrm_mailer_check_params(&$params, $required) {
 
   return NULL;
 }
-

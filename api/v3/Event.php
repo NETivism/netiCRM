@@ -66,8 +66,8 @@ function civicrm_api3_event_create($params) {
   require_once 'CRM/Event/BAO/Event.php';
 
   $eventBAO = CRM_Event_BAO_Event::create($params);
-    $event = [];
-    _civicrm_api3_object_to_array($eventBAO, $event[$eventBAO->id]);
+  $event = [];
+  _civicrm_api3_object_to_array($eventBAO, $event[$eventBAO->id]);
   return civicrm_api3_create_success($event, $params);
 }
 /*
@@ -77,7 +77,8 @@ function civicrm_api3_event_create($params) {
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_event_create_spec(&$params) {
-  $params['event_type_id']['api.required'] = 1;;
+  $params['event_type_id']['api.required'] = 1;
+  ;
   $params['start_date']['api.required'] = 1;
   $params['title']['api.required'] = 1;
   $params['is_active']['api.default'] = 1;
@@ -89,8 +90,8 @@ function _civicrm_api3_event_create_spec(&$params) {
  * the core code or schema - this means we have to provide support for api calls (where possible)
  * across schema changes.
  */
-function _civicrm_api3_event_create_legacy_support_42(&$params){
-  if(!empty($params['payment_processor_id'])){
+function _civicrm_api3_event_create_legacy_support_42(&$params) {
+  if (!empty($params['payment_processor_id'])) {
     $params['payment_processor'] = CRM_Core_DAO::VALUE_SEPARATOR . $params['payment_processor_id'] . CRM_Core_DAO::VALUE_SEPARATOR;
   }
 }
@@ -130,10 +131,10 @@ function civicrm_api3_event_get($params) {
   _civicrm_api3_dao_set_filter($eventDAO, $params, TRUE, 'Event');
 
   if (CRM_Utils_Array::value('is_template', $params)) {
-    $eventDAO->whereAdd( '( is_template = 1 )' );
+    $eventDAO->whereAdd('( is_template = 1 )');
   }
   else {
-  $eventDAO->whereAdd('( is_template IS NULL ) OR ( is_template = 0 )');
+    $eventDAO->whereAdd('( is_template IS NULL ) OR ( is_template = 0 )');
   }
 
   if (CRM_Utils_Array::value('isCurrent', $params)) {
@@ -175,10 +176,10 @@ function _civicrm_api3_event_get_spec(&$params) {
  * the core code or schema - this means we have to provide support for api calls (where possible)
  * across schema changes.
  */
-function _civicrm_api3_event_get_legacy_support_42(&$event, $event_id){
-  if(!empty($event[$event_id]['payment_processor'])){
-    $processors = explode(CRM_Core_DAO::VALUE_SEPARATOR,$event[$event_id]['payment_processor']);
-    if(count($processors) == 3 ){
+function _civicrm_api3_event_get_legacy_support_42(&$event, $event_id) {
+  if (!empty($event[$event_id]['payment_processor'])) {
+    $processors = explode(CRM_Core_DAO::VALUE_SEPARATOR, $event[$event_id]['payment_processor']);
+    if (count($processors) == 3) {
       $event[$event_id]['payment_processor_id'] = $processors[1];
     }
   }
@@ -232,18 +233,18 @@ function _civicrm_api3_event_getisfull(&$event, $event_id) {
 }
 
 /*
- * Get event location block info 
+ * Get event location block info
  *
  * @param array $event return array of the event
  * @param int $event_id Id of the event to be updated
  *
  */
-function _civicrm_api3_event_getlocblock(&$event, $event_id){
+function _civicrm_api3_event_getlocblock(&$event, $event_id) {
   $params = ['entity_id' => $event_id, 'entity_table' => 'civicrm_event'];
   $location = CRM_Core_BAO_Location::getValues($params);
-  foreach(['address', 'phone', 'email'] as $loc) {
+  foreach (['address', 'phone', 'email'] as $loc) {
     $value = reset($location[$loc]);
-    switch($loc) {
+    switch ($loc) {
       case 'address':
         $event[$event_id]['location_'.$loc] = trim($value['display']);
         break;
@@ -252,7 +253,7 @@ function _civicrm_api3_event_getlocblock(&$event, $event_id){
         $event[$event_id]['location_'.$loc] = $value[$loc];
         break;
     }
-  } 
+  }
 }
 
 /*
@@ -266,7 +267,7 @@ function _civicrm_api3_event_getfee(&$event, $event_id) {
   if (!empty($event[$event_id]['is_monetary'])) {
     $fee = CRM_Event_Page_EventInfo::feeBlock($event_id);
     $feeBlock = [];
-    foreach($fee['label'] as $idx => $label) {
+    foreach ($fee['label'] as $idx => $label) {
       if (isset($fee['value'][$idx]) && $fee['value'][$idx] !== '') {
         $feeBlock[] = [
           'label' => $label,

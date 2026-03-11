@@ -33,17 +33,13 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for DedupeRules
  *
  */
 class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
   public $_contactTypeDisplay;
-  CONST RULES_COUNT = 5;
+  public const RULES_COUNT = 5;
   protected $_contactType;
   protected $_defaults = [];
   protected $_fields = [];
@@ -55,9 +51,8 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // Ensure user has permission to be here
-
 
     if (!CRM_Core_Permission::check('administer dedupe rules')) {
       CRM_Utils_System::permissionDenied();
@@ -157,12 +152,12 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     $total = 0;
     for ($count = 0; $count < self::RULES_COUNT; $count++) {
       if (!empty($fields['weight_'.$count])) {
-        $total += $fields['weight_'.$count]; 
+        $total += $fields['weight_'.$count];
       }
     }
     if ($total < $fields['threshold']) {
@@ -176,7 +171,7 @@ class CRM_Contact_Form_DedupeRules extends CRM_Admin_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 
@@ -260,4 +255,3 @@ UPDATE civicrm_dedupe_rule_group
     CRM_Core_BAO_SchemaHandler::createIndexes($tables, 'dedupe_index', $substrLenghts);
   }
 }
-

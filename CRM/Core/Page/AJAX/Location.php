@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains all the function that are called using AJAX
  */
@@ -48,12 +46,11 @@ class CRM_Core_Page_AJAX_Location {
    * This method is used by on-behalf-of form to dynamically generate poulate the
    * location field values for selected permissioned contact.
    */
-  function getPermissionedLocation() {
+  public function getPermissionedLocation() {
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       CRM_Utils_System::civiExit();
     }
     $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
-
 
     $entityBlock = ['contact_id' => $cid];
     $location = &CRM_Core_BAO_Location::getValues($entityBlock);
@@ -116,7 +113,7 @@ class CRM_Core_Page_AJAX_Location {
     CRM_Utils_System::civiExit();
   }
 
-  static function getLocBlock() {
+  public static function getLocBlock() {
     // i wish i could retrieve loc block info based on loc_block_id,
     // Anyway, lets retrieve an event which has loc_block_id set to 'lbid'.
     if ($_POST['lbid']) {
@@ -168,4 +165,3 @@ class CRM_Core_Page_AJAX_Location {
     exit();
   }
 }
-

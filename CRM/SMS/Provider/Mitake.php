@@ -11,7 +11,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   public $_bulkMode = FALSE;
 
@@ -33,13 +33,13 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     return self::$_singleton;
   }
 
-  function __construct($providerId) {
+  public function __construct($providerId) {
     $providerInfo = CRM_SMS_BAO_Provider::getProviderInfo($providerId);
     $this->_providerInfo = $providerInfo;
     if (strstr($this->_providerInfo['api_url'], 'SmBulkSend')) {
       $this->_bulkMode = TRUE;
     }
-    $this->_objectId = (string) microtime(true);
+    $this->_objectId = (string) microtime(TRUE);
     $this->_mitakeStatuses = [
       '0' => ts('Scheduled'),
       '1' => ts('Delivered'),
@@ -77,9 +77,9 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * ]
    * @return array response of self::doRequest
    */
-  public function send(&$messages){
+  public function send(&$messages) {
     $data = [];
-    if ($this->_bulkMode){
+    if ($this->_bulkMode) {
       if (count($messages) > $this->_bulkLimit) {
         CRM_Core_Error::debug_log_message("The max number of recipients per bulk is ".$this->_bulkLimit.'. Abort this action.');
         return FALSE;
@@ -114,7 +114,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
    * Update activity after SMS send
    */
   public function activityUpdate() {
-    foreach($this->_sms as $guid => $sms) {
+    foreach ($this->_sms as $guid => $sms) {
       if ($sms['activityId']) {
         $details = [];
         $details[] = '<div class="content">'.ts("Body") . ": <br>" . nl2br($sms['smbody']).'</div>';
@@ -126,7 +126,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
           $details[] = ts("To"). CRM_Utils_String::mask($sms['dstaddr'], 'custom', 4, 2);
         }
         if (!empty($sms['result'])) {
-          foreach($sms['result'] as $key => $val) {
+          foreach ($sms['result'] as $key => $val) {
             $details[] = $key.': '.$val;
           }
         }
@@ -170,7 +170,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     // CRM_Core_Error::debug_var('mitake_requst_uri', $requestUri);
     $ch = curl_init($requestUri);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($ch, CURLOPT_POST, 1);
 
     // Mitake seems not accept multipart/form-data
@@ -288,7 +288,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
     // format SMS per line in http request body
     // ClientID $$ dstaddr $$ dlvtime $$ vldtime $$ destname $$ response $$ smbody
     $body = [];
-    foreach($messages as $message) {
+    foreach ($messages as $message) {
       $msg = [];
       if ($message['guid']) {
         $msg['clientID'] = substr($message['guid'], 0, 36);
@@ -359,7 +359,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
 
     // any of SMS correctly response numberic status, this will be TRUE
     $success = 0;
-    foreach($responseLines as $line) {
+    foreach ($responseLines as $line) {
       if (preg_match('/^\[([0-9a-z]+)\]/i', $line, $matches)) {
         $msgCount++;
         $msgIndex = $matches[1];
@@ -376,7 +376,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
               if (isset($this->_mitakeStatuses[$val])) {
                 $result[$msgIndex]['status'] = $this->_mitakeStatuses[$val];
               }
-              if ($val <=4 ) {
+              if ($val <= 4) {
                 $result[$msgIndex]['success'] = 1;
               }
               else {
@@ -398,7 +398,7 @@ class CRM_SMS_Provider_Mitake extends CRM_SMS_Provider {
       }
     }
 
-    foreach($this->_sms as $idx => $sms) {
+    foreach ($this->_sms as $idx => $sms) {
       if (CRM_Utils_Array::arrayKeyExists($idx, $result)) {
         $this->_sms[$idx]['result'] = $result[$idx];
       }

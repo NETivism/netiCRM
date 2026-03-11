@@ -50,7 +50,7 @@ class CRM_Contact_Form_Edit_Email {
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form, $addressBlockCount = NULL) {
+  public static function buildQuickForm(&$form, $addressBlockCount = NULL) {
     // passing this via the session is AWFUL. we need to fix this
     if (!$addressBlockCount) {
       $blockId = ($form->get('Email_Block_Count')) ? $form->get('Email_Block_Count') : 1;
@@ -97,15 +97,19 @@ class CRM_Contact_Form_Edit_Email {
 
       if (CRM_Utils_System::getClassName($form) == 'CRM_Contact_Form_Contact') {
 
-        $form->add('textarea', "email[$blockId][signature_text]", ts('Signature (Text)'),
+        $form->add(
+          'textarea',
+          "email[$blockId][signature_text]",
+          ts('Signature (Text)'),
           ['rows' => 2, 'cols' => 40]
         );
 
-        $form->addWysiwyg("email[$blockId][signature_html]", ts('Signature (HTML)'),
+        $form->addWysiwyg(
+          "email[$blockId][signature_html]",
+          ts('Signature (HTML)'),
           ['rows' => 2, 'cols' => 40]
         );
       }
     }
   }
 }
-

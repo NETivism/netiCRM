@@ -1,7 +1,6 @@
 <?php
 // $Id: Group.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -150,4 +149,3 @@ function civicrm_group_delete(&$params) {
   CRM_Contact_BAO_Group::discard($params['id']);
   return civicrm_create_success(TRUE);
 }
-

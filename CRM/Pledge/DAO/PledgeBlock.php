@@ -31,29 +31,28 @@
  * $Id$
  *
  */
-class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
-{
+class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_pledge_block';
+  public static $_tableName = 'civicrm_pledge_block';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Pledge ID
    *
    * @var int unsigned
@@ -126,44 +125,41 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
    * @var int unsigned
    */
   public $additional_reminder_day;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_pledge_block
-   */
-  function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_pledge_block
+  */
+  public function __construct() {
     parent::__construct();
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName() , 'entity_id', NULL, 'id', 'entity_table');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName(), 'entity_id', NULL, 'id', 'entity_table');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'entity_table' => [
           'name' => 'entity_table',
@@ -176,7 +172,7 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Entity Id') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'pledge_frequency_unit' => [
           'name' => 'pledge_frequency_unit',
@@ -217,18 +213,16 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -237,21 +231,21 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['pledge_block'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
@@ -260,21 +254,21 @@ class CRM_Pledge_DAO_PledgeBlock extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['pledge_block'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
 }

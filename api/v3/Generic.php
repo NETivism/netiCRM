@@ -34,7 +34,7 @@ function civicrm_api3_generic_getfields($apiRequest) {
   }
 
   if (empty($action)) {
-    $action='get';
+    $action = 'get';
   }
   // determines whether to use unique field names - seem comment block above
   $unique = TRUE;
@@ -46,19 +46,23 @@ function civicrm_api3_generic_getfields($apiRequest) {
   // defaults based on data model and API policy
   switch ($action) {
     case 'getfields':
-      $values = _civicrm_api_get_fields($entity, false, $apiRequest['params']);
-      $results[$entity][$cache_key] = civicrm_api3_create_success($values,
-        $apiRequest['params'], $entity, 'getfields'
+      $values = _civicrm_api_get_fields($entity, FALSE, $apiRequest['params']);
+      $results[$entity][$cache_key] = civicrm_api3_create_success(
+        $values,
+        $apiRequest['params'],
+        $entity,
+        'getfields'
       );
       return $results[$entity][$cache_key];
     case 'create':
     case 'update':
     case 'replace':
       $unique = FALSE;
+      // no break
     case 'get':
       $fields = _civicrm_api_get_fields($apiRequest['entity'], $unique, $apiRequest['params']);
       $metadata = [];
-      foreach($fields as $fldname => $fldvalue) {
+      foreach ($fields as $fldname => $fldvalue) {
         $metadata[$fldname] = $fldvalue;
       }
       if (empty($metadata['id']) && !empty($metadata[$apiRequest['entity'] . '_id'])) {
@@ -81,7 +85,7 @@ function civicrm_api3_generic_getfields($apiRequest) {
         'field' => ['title' => 'Field to retrieve options for',
         'api.required' => 1,
       ]];
-        break;
+      break;
     default:
       // oddballs are on their own
       $metadata = [];
@@ -221,7 +225,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
 
     // field has related options id (eg. custom_field)
     if (!empty($result['values'][$apiRequest['params']['field']]['options'])) {
-      foreach($result['values'][$apiRequest['params']['field']]['options'] as $key => $label) {
+      foreach ($result['values'][$apiRequest['params']['field']]['options'] as $key => $label) {
         $values[$key] = [
           'value' => $key,
           'label' => $label,
@@ -229,7 +233,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
       }
     }
     elseif (strstr($result['values'][$apiRequest['params']['field']]['name'], 'custom_') && empty($result['values'][$apiRequest['params']['field']]['option_group_id'])) {
-      switch($result['values'][$apiRequest['params']['field']]['data_type']) {
+      switch ($result['values'][$apiRequest['params']['field']]['data_type']) {
         case 'Boolean':
           $values = [
             0 => [
@@ -250,7 +254,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
           ];
           $result = civicrm_api('constant', 'get', $constantParams);
           if (!$result['is_error'] && !empty($result['values'])) {
-            foreach($result['values'] as $key => $val) {
+            foreach ($result['values'] as $key => $val) {
               $values[$key] = [
                 'value' => $key,
                 'label' => $val,
@@ -266,7 +270,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
           ];
           $result = civicrm_api('constant', 'get', $constantParams);
           if (!$result['is_error'] && !empty($result['values'])) {
-            foreach($result['values'] as $key => $val) {
+            foreach ($result['values'] as $key => $val) {
               $values[$key] = [
                 'value' => $key,
                 'label' => $val,
@@ -286,7 +290,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
           $fieldName = 'participant_'.$apiRequest['params']['field'];
         }
       }
-      // special case for activity 
+      // special case for activity
       if ($entity == 'activity') {
         if (in_array($apiRequest['params']['field'], ['status_id', 'type_id', 'status', 'type'])) {
           $fieldName = 'activity_'.$apiRequest['params']['field'];
@@ -307,7 +311,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
           ];
           $result = civicrm_api('constant', 'get', $constantParams);
           if (!$result['is_error'] && !empty($result['values'])) {
-            foreach($result['values'] as $key => $val) {
+            foreach ($result['values'] as $key => $val) {
               if (is_array($val)) {
                 if (!isset($val['value'])) {
                   $val['value'] = "$key";
@@ -332,11 +336,11 @@ function civicrm_api3_generic_getoptions($apiRequest) {
     if (!empty($values)) {
       return civicrm_api3_create_success($values, $apiRequest['params'], $apiRequest['entity'], 'getoptions');
     }
-    else{ 
+    else {
       return civicrm_api3_create_error("Found field '{$apiRequest['params']['field']}' in entity '{$apiRequest['entity']}', but doesn't have option.");
     }
   }
-  elseif($entity == 'optiongroup') {
+  elseif ($entity == 'optiongroup') {
     $values = [];
     // option group name
     // whatever entity is, get option group values by name
@@ -347,7 +351,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
       'option_group_name' => $optionGroupName,
     ]);
     if (!empty($result['values'])) {
-      foreach($result['values'] as $val) {
+      foreach ($result['values'] as $val) {
         $values[$val['value']] = [
           'label' => $val['label'],
           'name' => $val['name'],
@@ -382,7 +386,7 @@ function civicrm_api3_generic_getoptions($apiRequest) {
  * @param array $fieldSpec metadata for that field
  * @param array $fieldsToResolve anny field resolutions specifically requested
  */
-function _civicrm_api3_generic_get_metadata_options(&$metadata, $fieldname, $fieldSpec, $fieldsToResolve){
+function _civicrm_api3_generic_get_metadata_options(&$metadata, $fieldname, $fieldSpec, $fieldsToResolve) {
   if (CRM_Utils_Array::arrayKeyExists('enumValues', $fieldSpec)) {
     // use of a space after the comma is inconsistent in xml
     $enumStr = str_replace(', ', ',', $fieldSpec['enumValues']);
@@ -390,13 +394,13 @@ function _civicrm_api3_generic_get_metadata_options(&$metadata, $fieldname, $fie
     return;
   }
 
-  if(empty($fieldSpec['pseudoconstant'])){
+  if (empty($fieldSpec['pseudoconstant'])) {
     return ;
   }
-  elseif(!empty($fieldSpec['FKClassName']) && !in_array($fieldname, $fieldsToResolve)){
+  elseif (!empty($fieldSpec['FKClassName']) && !in_array($fieldname, $fieldsToResolve)) {
     return;
   }
-  if(substr($fieldname, -3) == '_id'){
+  if (substr($fieldname, -3) == '_id') {
     $metadata[$fieldname]['api.aliases'][] = substr($fieldname, 0, -3);
   }
 

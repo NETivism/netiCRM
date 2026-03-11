@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Main page for viewing contact.
  *
@@ -49,10 +47,9 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     //fetch the dedupe exception contacts.
     $dedupeExceptions = [];
-
 
     $exception = new CRM_Dedupe_DAO_Exception();
     $exception->find();
@@ -73,7 +70,7 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
       while ($contact->fetch()) {
         $displayNames[$contact->id] = $contact->display_name;
       }
-      foreach ($dedupeExceptions as $key => & $values) {
+      foreach ($dedupeExceptions as $key => &$values) {
         $values['main']['name'] = CRM_Utils_Array::value($values['main']['id'], $displayNames);
         $values['other']['name'] = CRM_Utils_Array::value($values['other']['id'], $displayNames);
       }
@@ -88,9 +85,8 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     return parent::run();
   }
 }
-

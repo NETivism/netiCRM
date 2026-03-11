@@ -16,7 +16,6 @@
  *
  */
 
-
 class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   /**
    * @var string
@@ -28,7 +27,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   public $_processorName;
   public $_params;
   # (not used, implicit in the API, might need to convert?)
-  CONST CHARSET = 'UFT-8';
+  public const CHARSET = 'UFT-8';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -37,7 +36,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -46,9 +45,8 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     //require PayJunction API library
-
 
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
@@ -64,7 +62,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_PayJunction($mode, $paymentProcessor);
@@ -73,10 +71,10 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   }
 
   /*
-    * This function sends request and receives response from 
+    * This function sends request and receives response from
     * PayJunction payment process
     */
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     $logon = $this->_paymentProcessor['user_name'];
     $password = $this->_paymentProcessor['password'];
     $url_site = $this->_paymentProcessor['url_site'];
@@ -120,7 +118,6 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
 
     // set customer info (level 3 data) for the transaction
     $pjpgTxn->setCustInfo($pjpgCustInfo);
-
 
     // empty installments convert to 999 because PayJunction do not allow open end donation
     if ($params['installments'] == "") {
@@ -189,11 +186,10 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   }
   // end function doDirectPayment
 
-
   /*
     * This function checks the PayJunction response code
     */
-  function isError(&$response) {
+  public function isError(&$response) {
     $responseCode = $response['dc_response_code'];
 
     if ($responseCode == "00" || $responseCode == "85") {
@@ -204,9 +200,8 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
     }
   }
 
-
   // ignore for now, more elaborate error handling later.
-  function &checkResult(&$response) {
+  public function &checkResult(&$response) {
     return $response;
   }
 
@@ -218,7 +213,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    * @return mixed value of the field, or empty string if the field is
    * not set
    */
-  function _getParam($field) {
+  public function _getParam($field) {
     if (isset($this->_params[$field])) {
       return $this->_params[$field];
     }
@@ -227,11 +222,13 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
     }
   }
 
-  function &error($error = NULL) {
+  public function &error($error = NULL) {
     $e = &CRM_Core_Error::singleton();
     if ($error) {
-      $e->push($error['dc_response_code'],
-        0, NULL,
+      $e->push(
+        $error['dc_response_code'],
+        0,
+        NULL,
         $error['dc_response_message']
       );
     }
@@ -250,7 +247,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    *
    * @return bool false if value is not a scalar, true if successful
    */
-  function _setParam($field, $value) {
+  public function _setParam($field, $value) {
     if (!is_scalar($value)) {
       return FALSE;
     }
@@ -265,7 +262,7 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
     if (empty($this->_paymentProcessor['user_name'])) {
       $error[] = ts('Username is not set for this payment processor');
@@ -288,4 +285,3 @@ class CRM_Core_Payment_PayJunction extends CRM_Core_Payment {
   }
 }
 // end class CRM_Core_Payment_PayJunction
-

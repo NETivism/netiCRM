@@ -9,7 +9,7 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   protected $_is_test;
   protected $_page_id;
 
-  function get_info() {
+  public function get_info() {
     return [
      'name' => 'LinePay Instrument of Mobile Payment Processor',
      'description' => 'Test LinePay instrument of Mobile payment processor.',
@@ -20,7 +20,7 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
 
     $this->_is_test = 1;
@@ -33,7 +33,7 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
-    if(empty($result['count'])){
+    if (empty($result['count'])) {
       $payment_processors = [];
       $params = [
         'version' => 3,
@@ -41,9 +41,9 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
       ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
-      if(!empty($result['count'])){
+      if (!empty($result['count'])) {
         $domain_id = CRM_Core_Config::domainID();
-        foreach($result['values'] as $type_id => $p){
+        foreach ($result['values'] as $type_id => $p) {
           $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
@@ -65,7 +65,7 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
           ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
-          if(is_numeric($result['id'])){
+          if (is_numeric($result['id'])) {
             $payment_processors[] = $result['id'];
           }
 
@@ -96,7 +96,7 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
-    if(!empty($result['count'])){
+    if (!empty($result['count'])) {
       $this->_cid = $result['id'];
     }
   }
@@ -104,15 +104,15 @@ class CRM_Core_Payment_LinePayTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->_processor = NULL;
   }
 
-  function testSinglePaymentNotify(){
-    
+  public function testSinglePaymentNotify() {
+
   }
 
-  function testNonCreditNotify(){
-    
+  public function testNonCreditNotify() {
+
   }
 }

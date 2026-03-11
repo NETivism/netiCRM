@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 
 /**
@@ -60,7 +57,7 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
       ]
     );
 
-    $op = new PHPUnit_Extensions_Database_Operation_Insert;
+    $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute(
       $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(dirname(__FILE__) . '/dataset/uf_group_test.xml')
@@ -137,7 +134,7 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
 
     //  Truncate the tables
     $this->quickCleanup(
@@ -170,7 +167,7 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
     }
   }
 
-  function testUFGroupCreate() {
+  public function testUFGroupCreate() {
 
     $result = civicrm_api('uf_group', 'create', $this->params);
     $this->documentMe($this->params, $result, __FUNCTION__, __FILE__);
@@ -192,14 +189,14 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
     }
   }
 
-  function testUFGroupCreateWithWrongParams() {
+  public function testUFGroupCreateWithWrongParams() {
     $result = civicrm_api('uf_group', 'create', 'a string');
     $this->assertEquals($result['is_error'], 1);
     $result = civicrm_api('uf_group', 'create', ['name' => 'A title-less group']);
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testUFGroupUpdate() {
+  public function testUFGroupUpdate() {
     $params = [
       'id' => $this->_ufGroupId,
       'add_captcha' => 1,
@@ -238,7 +235,7 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals($result['values'][$result['id']]['limit_listings_group_id'], $params['group'], 'in line ' . __LINE__);
   }
 
-  function testUFGroupGet() {
+  public function testUFGroupGet() {
 
     $result = civicrm_api('uf_group', 'create', $this->params);
     $this->assertEquals(0, $result['is_error'], 'in line ' . __LINE__);
@@ -264,19 +261,19 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
     }
   }
 
-  function testUFGroupUpdateWithEmptyParams() {
+  public function testUFGroupUpdateWithEmptyParams() {
     $result = civicrm_api('uf_group', 'create', [], $this->_ufGroupId);
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testUFGroupUpdateWithWrongParams() {
+  public function testUFGroupUpdateWithWrongParams() {
     $result = civicrm_api('uf_group', 'create', 'a string', $this->_ufGroupId);
     $this->assertEquals($result['is_error'], 1);
     $result = civicrm_api('uf_group', 'create', ['title' => 'Title'], 'a string');
     $this->assertEquals($result['is_error'], 1);
   }
 
-  function testUFGroupDelete() {
+  public function testUFGroupDelete() {
 
     $ufGroup = civicrm_api('uf_group', 'create', $this->params);
     $params = ['version' => $this->_apiversion, 'id' => $ufGroup['id']];
@@ -287,4 +284,3 @@ class api_v3_UFGroupTest extends CiviUnitTestCase {
     $this->assertAPISuccess($result, "in line " . __LINE__);
   }
 }
-

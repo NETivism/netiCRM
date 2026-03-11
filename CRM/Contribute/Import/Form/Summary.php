@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class summarizes the import results
  */
@@ -89,7 +86,9 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
       $dupeActionString = ts('These records have not been imported.');
       $this->assign('dupeError', TRUE);
     }
-    $this->set('validRowCount', $totalRowCount - $invalidRowCount -
+    $this->set(
+      'validRowCount',
+      $totalRowCount - $invalidRowCount -
       $conflictRowCount - $duplicateRowCount - $mismatchCount - $invalidSoftCreditRowCount - $invalidPledgePaymentRowCount - $invalidPCPRowCount
     );
     $this->assign('dupeActionString', $dupeActionString);
@@ -107,7 +106,8 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -126,4 +126,3 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
     return ts('Summary');
   }
 }
-

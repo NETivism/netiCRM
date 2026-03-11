@@ -1,7 +1,6 @@
 <?php
 // $Id: MembershipType.php 43570 2012-11-09 12:03:45Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -209,4 +208,3 @@ function civicrm_membership_type_delete(&$params) {
 
   return $memberDelete ? civicrm_create_success("Given Membership Type have been deleted") : civicrm_create_error('Error while deleting membership type');
 }
-

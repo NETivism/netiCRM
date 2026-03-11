@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -53,7 +51,8 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
    *
    * @var string
    */
-  protected $_BAOName; function preProcess() {
+  protected $_BAOName;
+  public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
   }
@@ -67,14 +66,21 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
   public function buildQuickForm() {
     $this->applyFilter('__ALL__', 'trim');
 
-    $this->add('text', 'name', ts('Name'),
-      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'name'), TRUE
+    $this->add(
+      'text',
+      'name',
+      ts('Name'),
+      CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'name'),
+      TRUE
     );
     $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Mailing_DAO_Component', $this->_id]);
 
     $this->add('select', 'component_type', ts('Component Type'), CRM_Core_SelectValues::mailingComponents());
 
-    $this->add('text', 'subject', ts('Subject'),
+    $this->add(
+      'text',
+      'subject',
+      ts('Subject'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'subject'),
       TRUE
     );
@@ -84,13 +90,17 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
       $componentType = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Component', $this->_id, 'component_type');
       $isRequired = ($componentType != 'Header');
     }
-    $this->add('textarea', 'body_text', ts('Body - TEXT Format'),
+    $this->add(
+      'textarea',
+      'body_text',
+      ts('Body - TEXT Format'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Component', 'body_text'),
       $isRequired
     );
-    $this->addWysiwyg('body_html',
-    ts('Body - HTML Format'),
-    [
+    $this->addWysiwyg(
+      'body_html',
+      ts('Body - HTML Format'),
+      [
       'cols' => '80',
       'rows' => '8',
       ]
@@ -101,7 +111,8 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
 
     $this->addFormRule(['CRM_Mailing_Form_Component', 'dataRule']);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Save'),
@@ -122,14 +133,14 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $params = [];
 
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
-      $baoName::retrieve( $params, $defaults );
+      $baoName::retrieve($params, $defaults);
     }
     $defaults['is_active'] = 1;
 
@@ -153,7 +164,6 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
       $ids['id'] = $this->_id;
     }
 
-
     CRM_Mailing_BAO_Component::add($params, $ids);
   }
   //end of function
@@ -167,7 +177,7 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function dataRule($params, $files, $options) {
+  public static function dataRule($params, $files, $options) {
     if ($params['component_type'] == 'Header' || $params['component_type'] == 'Footer') {
       $InvalidTokens = [];
     }
@@ -204,4 +214,3 @@ class CRM_Mailing_Form_Component extends CRM_Core_Form {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

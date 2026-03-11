@@ -42,7 +42,7 @@
  * http://drupal.org/project/pressflow_transaction
  */
 class CRM_Core_Transaction {
-  const ISOLATION_LEVEL = 'READ UNCOMMITTED,READ COMMITTED,REPEATABLE READ,SERIALIZABLE';
+  public const ISOLATION_LEVEL = 'READ UNCOMMITTED,READ COMMITTED,REPEATABLE READ,SERIALIZABLE';
 
   /**
    * Keep track of the number of opens and close
@@ -78,7 +78,7 @@ class CRM_Core_Transaction {
    */
   private $_pseudoCommitted = FALSE;
 
-  function __construct($isolationLevel = NULL) {
+  public function __construct($isolationLevel = NULL) {
     if (!self::$_dao) {
       self::$_dao = new CRM_Core_DAO();
     }
@@ -94,11 +94,11 @@ class CRM_Core_Transaction {
     self::$_count++;
   }
 
-  function __destruct() {
+  public function __destruct() {
     $this->commit();
   }
 
-  function commit($resetIsolation = NULL) {
+  public function commit($resetIsolation = NULL) {
     if (self::$_count > 0 && !$this->_pseudoCommitted) {
       $this->_pseudoCommitted = TRUE;
       self::$_count--;
@@ -120,7 +120,7 @@ class CRM_Core_Transaction {
     }
   }
 
-  static public function rollbackIfFalse($flag) {
+  public static function rollbackIfFalse($flag) {
     if ($flag === FALSE) {
       self::$_doCommit = FALSE;
     }
@@ -141,7 +141,7 @@ class CRM_Core_Transaction {
    * callstack will not wind-down normally -- e.g. before
    * a call to exit().
    */
-  static public function forceRollbackIfEnabled() {
+  public static function forceRollbackIfEnabled() {
     if (self::$_count > 0) {
       self::$_dao->query('ROLLBACK');
       self::$_count = 0;
@@ -149,8 +149,7 @@ class CRM_Core_Transaction {
     }
   }
 
-  static public function willCommit() {
+  public static function willCommit() {
     return self::$_doCommit;
   }
 }
-

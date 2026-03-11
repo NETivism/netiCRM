@@ -31,29 +31,28 @@
  * $Id$
  *
  */
-class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
-{
+class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_msg_template';
+  public static $_tableName = 'civicrm_msg_template';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    * Message Template ID
    *
    * @var int unsigned
@@ -137,30 +136,28 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @var boolean
    */
   public $is_sms;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_msg_template
-   */
-  function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_msg_template
+  */
+  public function __construct() {
     parent::__construct();
   }
-    /**
+  /**
    * returns all the column names of this table
    *
    * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'msg_title' => [
           'name' => 'msg_title',
@@ -218,18 +215,16 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -238,21 +233,21 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['msg_template'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
@@ -261,21 +256,21 @@ class CRM_Core_DAO_MessageTemplates extends CRM_Core_DAO
    * @access public
    * return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['msg_template'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
 }

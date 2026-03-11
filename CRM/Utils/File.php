@@ -46,7 +46,7 @@ class CRM_Utils_File {
    * @return boolean     true if file is ascii
    * @access public
    */
-  static function isAscii($name) {
+  public static function isAscii($name) {
     $fd = fopen($name, "r");
     if (!$fd) {
       return FALSE;
@@ -73,7 +73,7 @@ class CRM_Utils_File {
    * @return boolean     true if file is html
    * @access public
    */
-  static function isHtml($name) {
+  public static function isHtml($name) {
     $fd = fopen($name, "r");
     if (!$fd) {
       return FALSE;
@@ -105,7 +105,7 @@ class CRM_Utils_File {
    * @access public
    * @static
    */
-  static function createDir($path, $abort = TRUE) {
+  public static function createDir($path, $abort = TRUE) {
     if (is_dir($path) || empty($path)) {
       return;
     }
@@ -115,7 +115,6 @@ class CRM_Utils_File {
       if ($abort) {
         $docLink = CRM_Utils_System::docURL2('Moving an Existing Installation to a New Server or Location', FALSE, 'Moving an Existing Installation to a New Server or Location');
         echo "Error: Could not create directory: $path.<p>If you have moved an existing CiviCRM installation from one location or server to another there are several steps you will need to follow. They are detailed on this CiviCRM wiki page - {$docLink}. A fix for the specific problem that caused this error message to be displayed is to set the value of the config_backend column in the civicrm_domain table to NULL. However we strongly recommend that you review and follow all the steps in that document.</p>";
-
 
         CRM_Utils_System::civiExit();
       }
@@ -185,7 +184,7 @@ class CRM_Utils_File {
    * @return boolean  whether the file was recoded properly
    * @access public
    */
-  static function toUtf8($name) {
+  public static function toUtf8($name) {
 
     static $config = NULL;
     static $legacyEncoding = NULL;
@@ -236,7 +235,7 @@ class CRM_Utils_File {
    * @access public
    * @static
    */
-  static function addTrailingSlash($name, $separator = NULL) {
+  public static function addTrailingSlash($name, $separator = NULL) {
     if (!$separator) {
       $separator = DIRECTORY_SEPARATOR;
     }
@@ -247,8 +246,7 @@ class CRM_Utils_File {
     return $name;
   }
 
-  static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
-
+  public static function sourceSQLFile($dsn, $fileName, $prefix = NULL, $isQueryString = FALSE, $dieOnErrors = TRUE) {
 
     $db = &DB::connect($dsn);
     if (PEAR::isError($db)) {
@@ -285,7 +283,7 @@ class CRM_Utils_File {
     }
   }
 
-  static function isExtensionSafe($ext) {
+  public static function isExtensionSafe($ext) {
     static $extensions = NULL;
     if (!$extensions) {
 
@@ -314,7 +312,7 @@ class CRM_Utils_File {
    *
    * @return boolean  whether the file can be include()d or require()d
    */
-  static function isIncludable($name) {
+  public static function isIncludable($name) {
     $x = @fopen($name, 'r', TRUE);
     if ($x) {
       fclose($x);
@@ -329,13 +327,13 @@ class CRM_Utils_File {
    * remove the 32 bit md5 we add to the fileName
    * also remove the unknown tag if we added it
    */
-  static function cleanFileName($name) {
+  public static function cleanFileName($name) {
     // replace the last 33 character before the '.' with null
     $name = preg_replace('/(_\w{8,32})\./', '.', $name);
     return $name;
   }
 
-  static function makeFileName($name) {
+  public static function makeFileName($name) {
     $uniqID = CRM_Utils_String::createRandom(8, CRM_Utils_String::ALPHANUMERIC);
     $info = pathinfo($name);
     $basename = mb_substr($info['basename'], 0, -(strlen(CRM_Utils_Array::value('extension', $info)) + (CRM_Utils_Array::value('extension', $info) == '' ? 0 : 1)));
@@ -348,7 +346,7 @@ class CRM_Utils_File {
     else {
       $basename = CRM_Utils_String::safeFilename($basename);
       if ($basename && mb_strlen($basename) <= 225) {
-      // do not use munge to preserve original filename
+        // do not use munge to preserve original filename
         return "{$basename}_{$uniqID}".".".CRM_Utils_Array::value('extension', $info);
       }
       else {
@@ -357,7 +355,7 @@ class CRM_Utils_File {
     }
   }
 
-  static function getFilesByExtension($path, $ext) {
+  public static function getFilesByExtension($path, $ext) {
     $path = self::addTrailingSlash($path);
     $dh = opendir($path);
     $files = [];
@@ -375,7 +373,7 @@ class CRM_Utils_File {
    *
    * @param string $dir  the directory to be secured
    */
-  static function restrictAccess($dir) {
+  public static function restrictAccess($dir) {
     // note: empty value for $dir can play havoc, since that might result in putting '.htaccess' to root dir
     // of site, causing site to stop functioning.
     // FIXME: we should do more checks here -
@@ -399,7 +397,7 @@ class CRM_Utils_File {
    * Create the base file path from which all our internal directories are
    * offset. This is derived from the cms public dir
    */
-  static function baseFilePath($cmsDir = NULL) {
+  public static function baseFilePath($cmsDir = NULL) {
     static $path = NULL;
     if (!$path) {
       if ($cmsDir == NULL) {
@@ -410,7 +408,7 @@ class CRM_Utils_File {
     return self::addTrailingSlash($path);
   }
 
-  static function relativeDirectory($directory) {
+  public static function relativeDirectory($directory) {
     // Do nothing on windows
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
       return $directory;
@@ -433,7 +431,7 @@ class CRM_Utils_File {
     return $directory;
   }
 
-  static function absoluteDirectory($directory) {
+  public static function absoluteDirectory($directory) {
     // Do nothing on windows - config will need to specify absolute path
     if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
       return $directory;
@@ -450,46 +448,47 @@ class CRM_Utils_File {
     return $basePath . $directory;
   }
 
-  static function chmod($dir, $mode) {
+  public static function chmod($dir, $mode) {
     chmod($dir, $mode);
   }
 
-  static function existsRename($destination) {
+  public static function existsRename($destination) {
     $basename = basename($destination);
     $directory = str_replace($basename, '', $destination);
-		// Strip control characters (ASCII value < 32). Though these are allowed in
-		// some filesystems, not many applications handle them well.
-		$basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
-		if (substr(PHP_OS, 0, 3) == 'WIN') {
-			// These characters are not allowed in Windows filenames
-			$basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
-		}
+    // Strip control characters (ASCII value < 32). Though these are allowed in
+    // some filesystems, not many applications handle them well.
+    $basename = preg_replace('/[\x00-\x1F]/u', '_', $basename);
+    if (substr(PHP_OS, 0, 3) == 'WIN') {
+      // These characters are not allowed in Windows filenames
+      $basename = str_replace([':', '*', '?', '"', '<', '>', '|'], '_', $basename);
+    }
 
-		if (file_exists($destination)) {
-			// Destination file already exists, generate an alternative.
-			$pos = strrpos($basename, '.');
-			if ($pos !== FALSE) {
-				$name = substr($basename, 0, $pos);
-				$ext = substr($basename, $pos);
-			}
-			else {
-				$name = $basename;
-				$ext = '';
-			}
+    if (file_exists($destination)) {
+      // Destination file already exists, generate an alternative.
+      $pos = strrpos($basename, '.');
+      if ($pos !== FALSE) {
+        $name = substr($basename, 0, $pos);
+        $ext = substr($basename, $pos);
+      }
+      else {
+        $name = $basename;
+        $ext = '';
+      }
 
-			$counter = 0;
-			do {
-				$destination = $directory . $name . '_' . $counter++ . $ext;
-			} while (file_exists($destination));
-		}
+      $counter = 0;
+      do {
+        $destination = $directory . $name . '_' . $counter++ . $ext;
+      }
+      while (file_exists($destination));
+    }
 
-		return $destination;
+    return $destination;
   }
 
   /**
    * Encrypt Xlsx content or file.
    * @param String $filePath file absolute path in the file system
-   * 
+   *
    * @return Void
    */
   public static function encryptXlsxFile($filePath = NULL) {
@@ -543,7 +542,7 @@ class CRM_Utils_File {
               break;
             }
           }
-    
+
           // Use SecureSpreadsheet to encrypt the file by user Email
           $encrypt = new \Nick\SecureSpreadsheet\Encrypt();
           $encrypt->input($filePath)
@@ -552,7 +551,7 @@ class CRM_Utils_File {
           unlink($filePath);
           rename($outputFile, $filePath);
         }
-        else if ($config->decryptExcelOption == 2) {
+        elseif ($config->decryptExcelOption == 2) {
           // Use SecureSpreadsheet to decrypt the file by custom password
           $encrypt = new \Nick\SecureSpreadsheet\Encrypt();
           $encrypt->input($filePath)
@@ -599,7 +598,9 @@ class CRM_Utils_File {
       [{}^\~`]|            # URL unsafe characters
       \.\.                 # Double dot for path traversal
       ~xu',
-      '', $name);
+      '',
+      $name
+    );
 
     // avoids ".", ".." or ".hiddenFiles"
     $filename = ltrim($filename, '.-');
@@ -614,4 +615,3 @@ class CRM_Utils_File {
     return $filename;
   }
 }
-

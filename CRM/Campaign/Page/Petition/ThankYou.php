@@ -33,25 +33,22 @@
  *
  */
 
-
 class CRM_Campaign_Page_Petition_ThankYou extends CRM_Core_Page {
-  function run() {
+  public function run() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $petition_id = CRM_Utils_Request::retrieve('pid', 'Positive', $this);
     $this->assign('survey_id', $petition_id);
     $this->assign('status_id', $id);
 
     // send thank you or email verification emails
-    /* 
-			 * sendEmailMode
-			 * 1 = connected user via login/pwd - thank you
-			 * 	 	or dedupe contact matched who doesn't have a tag CIVICRM_TAG_UNCONFIRMED - thank you
-			 * 	 	login using fb connect - thank you + click to add msg to fb wall
-			 * 2 = send a confirmation request email     
-			 */
-
+    /*
+             * sendEmailMode
+             * 1 = connected user via login/pwd - thank you
+             * 	 	or dedupe contact matched who doesn't have a tag CIVICRM_TAG_UNCONFIRMED - thank you
+             * 	 	login using fb connect - thank you + click to add msg to fb wall
+             * 2 = send a confirmation request email
+             */
 
     parent::run();
   }
 }
-

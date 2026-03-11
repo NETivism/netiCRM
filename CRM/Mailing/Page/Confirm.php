@@ -33,11 +33,8 @@
  *
  */
 
-
-
-
 class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
-  function run() {
+  public function run() {
 
     $contact_id = CRM_Utils_Request::retrieve('cid', 'Integer', CRM_Core_DAO::$_nullObject);
     $subscribe_id = CRM_Utils_Request::retrieve('sid', 'Integer', CRM_Core_DAO::$_nullObject);
@@ -50,7 +47,6 @@ class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
       CRM_Core_Error::fatal(ts("Missing input parameters"));
     }
 
-
     $result = CRM_Mailing_Event_BAO_Confirm::confirm($contact_id, $subscribe_id, $hash);
     if ($result === FALSE) {
       $this->assign('success', $result);
@@ -60,7 +56,6 @@ class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
       $this->assign('group', $result);
       CRM_Utils_System::setTitle(ts("You has been successfully subscribed to the %1 mailing list.", [1 => $result]));
     }
-
 
     list($displayName, $email) = CRM_Contact_BAO_Contact_Location::getEmailDetails($contact_id);
     $this->assign('display_name', $displayName);
@@ -74,4 +69,3 @@ class CRM_Mailing_Page_Confirm extends CRM_Core_Page {
     return parent::run();
   }
 }
-

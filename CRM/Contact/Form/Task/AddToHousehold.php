@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to add contact(s) to Household
  */
@@ -47,7 +45,7 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -62,14 +60,18 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
    *
    * @return None
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     CRM_Utils_System::setTitle(ts('Add Members to Household'));
     $this->addElement('text', 'name', ts('Find Target Household'));
 
-    $this->add('select', 'relationship_type_id', ts('Relationship Type'),
+    $this->add(
+      'select',
+      'relationship_type_id',
+      ts('Relationship Type'),
       ['' => ts('- select -')] +
-      CRM_Contact_BAO_Relationship::getRelationType("Household"), TRUE
+      CRM_Contact_BAO_Relationship::getRelationType("Household"),
+      TRUE
     );
 
     $searchRows = $this->get('searchRows');
@@ -96,7 +98,8 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
     $this->addElement('submit', $this->getButtonName('refresh'), ts('Search'), ['class' => 'form-submit']);
     $this->addElement('submit', $this->getButtonName('cancel'), ts('Cancel'), ['class' => 'form-submit']);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Add to Household'),
           'isDefault' => TRUE,
@@ -116,7 +119,6 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
    * @return None
    */
   public function postProcess() {
-
 
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
@@ -149,11 +151,12 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
           continue;
         }
 
-        if (CRM_Contact_BAO_Relationship::checkDuplicateRelationship($params,
-            CRM_Utils_Array::value('contact', $ids),
-            // step 2
-            $params['contact_check']
-          )) {
+        if (CRM_Contact_BAO_Relationship::checkDuplicateRelationship(
+          $params,
+          CRM_Utils_Array::value('contact', $ids),
+          // step 2
+          $params['contact_check']
+        )) {
           $duplicate++;
           continue;
         }
@@ -179,4 +182,3 @@ class CRM_Contact_Form_Task_AddToHousehold extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

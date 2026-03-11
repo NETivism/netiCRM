@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to note
  *
@@ -71,7 +69,8 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
    *
    * @var int
    */
-  protected $_parentId; function preProcess() {
+  protected $_parentId;
+  public function preProcess() {
     $this->_entityTable = $this->get('entityTable');
     $this->_entityId = $this->get('entityId');
     $this->_id = $this->get('id');
@@ -81,7 +80,7 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
     }
 
     if ($this->_id && CRM_Core_BAO_Note::getNotePrivacyHidden($this->_id)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
+      return CRM_Core_Error::statusBounce(ts('You do not have access to this note.'));
     }
 
     // set title to "Note - "+Contact Name
@@ -98,7 +97,7 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
@@ -126,7 +125,8 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
   public function buildQuickForm() {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -145,7 +145,8 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
 
     $this->add('hidden', 'parent_id');
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -194,4 +195,3 @@ class CRM_Note_Form_Note extends CRM_Core_Form {
   }
   //end of function
 }
-

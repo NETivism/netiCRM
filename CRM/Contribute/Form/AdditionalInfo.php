@@ -41,7 +41,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildPremium(&$form) {
+  public static function buildPremium(&$form) {
     //premium section
     $form->add('hidden', 'hidden_Premium', 1);
 
@@ -69,7 +69,7 @@ class CRM_Contribute_Form_AdditionalInfo {
           }
         }
       }
-      else if (!empty($premiumDetails['products'])) {
+      elseif (!empty($premiumDetails['products'])) {
         // Check if single product has stock management enabled
         $product = $premiumDetails['products'][0];
         $productDAO = new CRM_Contribute_DAO_Product();
@@ -188,7 +188,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
     // Display Item if it's selected even if it disabled. refs #28171
     if (!empty($form->_id) && get_class($form) == 'CRM_Contribute_Form_Contribution') {
-      $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $form->_id, 'product_id', 'contribution_id' );
+      $selectedProductId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionProduct', $form->_id, 'product_id', 'contribution_id');
       if (!empty($selectedProductId) && empty($sel1[$selectedProductId])) {
         $dao = new CRM_Contribute_DAO_Product();
         $dao->id = $selectedProductId;
@@ -254,7 +254,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildAdditionalDetail(&$form) {
+  public static function buildAdditionalDetail(&$form) {
     //Additional information section
     $form->add('hidden', 'hidden_AdditionalDetail', 1);
 
@@ -263,7 +263,10 @@ class CRM_Contribute_Form_AdditionalInfo {
     $form->addDateTime('thankyou_date', ts('Thank-you Sent'), FALSE, ['formatType' => 'activityDateTime']);
 
     // add various amounts
-    $element = &$form->add('text', 'non_deductible_amount', ts('Non-deductible Amount'),
+    $element = &$form->add(
+      'text',
+      'non_deductible_amount',
+      ts('Non-deductible Amount'),
       $attributes['non_deductible_amount']
     );
     $form->addRule('non_deductible_amount', ts('Please enter a valid amount.'), 'money');
@@ -271,28 +274,38 @@ class CRM_Contribute_Form_AdditionalInfo {
     if ($form->_online) {
       $element->freeze();
     }
-    $element = &$form->add('text', 'fee_amount', ts('Transaction Fee Amount'),
+    $element = &$form->add(
+      'text',
+      'fee_amount',
+      ts('Transaction Fee Amount'),
       $attributes['fee_amount']
     );
     $form->addRule('fee_amount', ts('Please enter a valid amount.'), 'money');
     if ($form->_online) {
       $element->freeze();
     }
-    $element = &$form->add('text', 'net_amount', ts('Net Amount'),
+    $element = &$form->add(
+      'text',
+      'net_amount',
+      ts('Net Amount'),
       $attributes['net_amount']
     );
     $form->addRule('net_amount', ts('Please enter a valid amount.'), 'money');
     if ($form->_online) {
       $element->freeze();
     }
-    $element = &$form->add('text', 'invoice_id', ts('Invoice ID'),
+    $element = &$form->add(
+      'text',
+      'invoice_id',
+      ts('Invoice ID'),
       $attributes['invoice_id']
     );
     if ($form->_online) {
       // $element->freeze( );
     }
     else {
-      $form->addRule('invoice_id',
+      $form->addRule(
+        'invoice_id',
         ts('This Invoice ID already exists in the database.'),
         'objectExists',
         ['CRM_Contribute_DAO_Contribution', $form->_id, 'invoice_id']
@@ -300,10 +313,12 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
-    foreach($pages as $pageId => $pageName) {
+    foreach ($pages as $pageId => $pageName) {
       $pages[$pageId] .= " (ID: $pageId)";
     }
-    $form->add('select', 'contribution_page_id',
+    $form->add(
+      'select',
+      'contribution_page_id',
       ts('Contribution Page'),
       ['' => ts('- select -')] +
       $pages
@@ -319,7 +334,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildHonoree(&$form) {
+  public static function buildHonoree(&$form) {
     //Honoree section
     $form->add('hidden', 'hidden_Honoree', 1);
     $honor = CRM_Core_PseudoConstant::honor();
@@ -342,7 +357,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function buildPaymentReminders(&$form) {
+  public static function buildPaymentReminders(&$form) {
     //PaymentReminders section
     $form->add('hidden', 'hidden_PaymentReminders', 1);
     $form->add('text', 'initial_reminder_day', ts('Send Initial Reminder'), ['size' => 3]);
@@ -360,7 +375,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
+  public static function processPremium(&$params, $contributionID, $premiumID = NULL, &$options = NULL) {
 
     $dao = new CRM_Contribute_DAO_ContributionProduct();
     $dao->contribution_id = $contributionID;
@@ -380,7 +395,7 @@ class CRM_Contribute_Form_AdditionalInfo {
           return;
         }
         // Normal premium processing for non-combination items
-        else if (isset($params['product_name'][0])) {
+        elseif (isset($params['product_name'][0])) {
           $dao->product_id = $params['product_name'][0];
           $dao->fulfilled_date = CRM_Utils_Date::processDate($params['fulfilled_date'], NULL, TRUE);
           if (CRM_Utils_Array::value($params['product_name'][0], $options)) {
@@ -398,7 +413,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       }
     }
     // Handle combination premium creation
-    else if (!empty($params['is_combination']) && isset($params['product_name'][0])) {
+    elseif (!empty($params['is_combination']) && isset($params['product_name'][0])) {
       $combinationId = $params['product_name'][0];
 
       // Get combination information for receipt
@@ -429,7 +444,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       }
     }
     // New premium creation (only for non-combination items)
-    else if (isset($params['product_name'][0])) {
+    elseif (isset($params['product_name'][0])) {
       $dao->product_id = $params['product_name'][0];
       $dao->fulfilled_date = CRM_Utils_Date::processDate($params['fulfilled_date'], NULL, TRUE);
       if (CRM_Utils_Array::value($params['product_name'][0], $options)) {
@@ -467,7 +482,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
+  public static function processNote(&$params, $contactID, $contributionID, $contributionNoteID = NULL) {
     //process note
 
     $noteParams = ['entity_table' => 'civicrm_contribution',
@@ -490,7 +505,7 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function postProcessCommon(&$params, &$formatted) {
+  public static function postProcessCommon(&$params, &$formatted) {
     $fields = ['non_deductible_amount',
       'total_amount',
       'fee_amount',
@@ -530,14 +545,17 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
 
     //special case to handle if all checkboxes are unchecked
-    $customFields = CRM_Core_BAO_CustomField::getFields('Contribution',
+    $customFields = CRM_Core_BAO_CustomField::getFields(
+      'Contribution',
       FALSE,
       FALSE,
-      CRM_Utils_Array::value('contribution_type_id',
+      CRM_Utils_Array::value(
+        'contribution_type_id',
         $params
       )
     );
-    $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+    $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customFields,
       CRM_Utils_Array::value('id', $params, NULL),
       'Contribution'
@@ -555,11 +573,11 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None.
    */
-  static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
+  public static function emailReceipt(&$form, &$params, $ccContribution = FALSE) {
     $config = CRM_Core_Config::singleton();
 
     list($contributorDisplayName,
-    $contributorEmail
+      $contributorEmail
     ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($params['contact_id']);
     if (!empty($params['is_attach_receipt'])) {
       $receiptEmailType = !empty($config->receiptEmailType) ? $config->receiptEmailType : 'copy_only';
@@ -571,10 +589,10 @@ class CRM_Contribute_Form_AdditionalInfo {
         if (!empty($receiptTask->_lastSerialId) && preg_match('/^[A-Za-z]{1,2}\d{8,9}$|^\d{8}$/', $receiptTask->_lastSerialId)) {
           $receiptPwd = $receiptTask->_lastSerialId;
         }
-        $pdfFilePath = $receiptTask->makePDF(False, True, $receiptPwd);
+        $pdfFilePath = $receiptTask->makePDF(FALSE, TRUE, $receiptPwd);
       }
       else {
-        $pdfFilePath = $receiptTask->makePDF(False);
+        $pdfFilePath = $receiptTask->makePDF(FALSE);
       }
       $pdfFileName = strstr($pdfFilePath, 'Receipt');
       $pdfParams =  [
@@ -586,7 +604,8 @@ class CRM_Contribute_Form_AdditionalInfo {
 
     $form->assign('receiptType', 'contribution');
     // Retrieve Contribution Type Name from contribution_type_id
-    $params['contributionType_name'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
+    $params['contributionType_name'] = CRM_Core_DAO::getFieldValue(
+      'CRM_Contribute_DAO_ContributionType',
       $params['contribution_type_id']
     );
     if (CRM_Utils_Array::value('payment_instrument_id', $params)) {
@@ -656,7 +675,8 @@ class CRM_Contribute_Form_AdditionalInfo {
       $date = CRM_Utils_Date::mysqlToIso($date);
       $form->assign('credit_card_type', CRM_Utils_Array::value('credit_card_type', $params));
       $form->assign('credit_card_exp_date', $date);
-      $form->assign('credit_card_number',
+      $form->assign(
+        'credit_card_number',
         CRM_Utils_System::mungeCreditCard($params['credit_card_number'])
       );
     }
@@ -690,7 +710,7 @@ class CRM_Contribute_Form_AdditionalInfo {
       $ufJoinParams['weight'] = 2;
       $profiles['post']['id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
       $customGroup = [];
-      foreach($profiles as $idx => $ufGroup) {
+      foreach ($profiles as $idx => $ufGroup) {
         $customFields = $customValues = [];
         if (!empty($ufGroup['id']) && CRM_Core_BAO_UFGroup::filterUFGroups($ufGroup['id'], $params['contact_id'])) {
           $groupTitle = NULL;
@@ -701,7 +721,7 @@ class CRM_Contribute_Form_AdditionalInfo {
               $groupTitle = $v["groupTitle"];
             }
             // unset all view only profile field
-            if ($v['is_view']){
+            if ($v['is_view']) {
               unset($customFields[$k]);
             }
           }
@@ -721,7 +741,7 @@ class CRM_Contribute_Form_AdditionalInfo {
     // refs #35201, do not add any custom data to offline template when no contribution page specify
 
     if ($params['receipt_text']) {
-      $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']); 
+      $params['receipt_text'] = CRM_Contribute_BAO_ContributionPage::tokenize($params['contact_id'], $params['receipt_text']);
     }
     $form->assign_by_ref('formValues', $params);
 
@@ -733,13 +753,12 @@ class CRM_Contribute_Form_AdditionalInfo {
     if ($params['from_email_address']) {
       $fromEmailAddress = $params['from_email_address'];
     }
-    else{
+    else {
       $session = CRM_Core_Session::singleton();
       $userID = $session->get('userID');
       list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($userID);
       $fromEmailAddress = "$userName <$userEmail>";
     }
-
 
     $templateParams = [
       'groupName' => 'msg_tpl_workflow_contribution',
@@ -781,7 +800,6 @@ class CRM_Contribute_Form_AdditionalInfo {
       1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, FALSE]],
     ]);
 
-
     return $sendReceipt;
   }
 
@@ -792,14 +810,12 @@ class CRM_Contribute_Form_AdditionalInfo {
    *
    * @return None
    */
-  static function processPriceSet($contributionId, $lineItem) {
+  public static function processPriceSet($contributionId, $lineItem) {
     if (!$contributionId || !is_array($lineItem)
       || CRM_Utils_System::isNull($lineItem)
     ) {
       return;
     }
-
-
 
     foreach ($lineItem as $priceSetId => $values) {
       if (!$priceSetId) {
@@ -814,4 +830,3 @@ class CRM_Contribute_Form_AdditionalInfo {
     }
   }
 }
-

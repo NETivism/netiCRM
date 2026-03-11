@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is to build the form for adding Group
  */
@@ -61,15 +58,20 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @var int
    * @const
    */
-  CONST LOCATION_BLOCKS = 1; function preProcess() {
+  public const LOCATION_BLOCKS = 1;
+  public function preProcess() {
 
     CRM_Utils_System::setTitle(ts('Domain Information'));
     $breadCrumbPath = CRM_Utils_System::url('civicrm/admin', 'reset=1');
     CRM_Utils_System::appendBreadCrumb(ts('Administer CiviCRM'), $breadCrumbPath);
 
     $this->_id = CRM_Core_Config::domainID();
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'view'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'view'
     );
     //location blocks.
     CRM_Contact_Form_Location::preProcess($this);
@@ -82,9 +84,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
      * @access public
      * @return None
      */
-  function setDefaultValues() {
-
-
+  public function setDefaultValues() {
 
     $defaults = [];
     $params = [];
@@ -95,7 +95,6 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
       CRM_Core_BAO_Domain::retrieve($params, $domainDefaults);
 
       //get the default domain from email address. fix CRM-3552
-
 
       $optionValues = [];
       $grpParams['name'] = 'from_email_address';
@@ -121,10 +120,13 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
       if (!empty($defaults['address'])) {
         foreach ($defaults['address'] as $key => $value) {
-          CRM_Contact_Form_Edit_Address::fixStateSelect($this,
+          CRM_Contact_Form_Edit_Address::fixStateSelect(
+            $this,
             "address[$key][country_id]",
             "address[$key][state_province_id]",
-            CRM_Utils_Array::value('country_id', $value,
+            CRM_Utils_Array::value(
+              'country_id',
+              $value,
               $config->defaultContactCountry
             )
           );
@@ -181,7 +183,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Domain', 'formRule']);
   }
 
@@ -194,7 +196,7 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);
@@ -217,15 +219,12 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
   public function postProcess() {
 
-
-
     $params = [];
 
     $params = $this->exportValues();
     $params['entity_id'] = $this->_id;
     $params['entity_table'] = CRM_Core_BAO_Domain::getTableName();
     $domain = CRM_Core_BAO_Domain::edit($params, $this->_id);
-
 
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
 
@@ -238,7 +237,6 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
 
     $params['loc_block_id'] = $location['id'];
 
-
     CRM_Core_BAO_Domain::edit($params, $this->_id);
 
     CRM_Core_Session::setStatus(ts('Domain information for \'%1\' has been saved.', [1 => $domain->name]));
@@ -246,4 +244,3 @@ class CRM_Contact_Form_Domain extends CRM_Core_Form {
     $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
   }
 }
-

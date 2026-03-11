@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class holds all the Pseudo constants those
  * are specific to Campaign and Survey.
@@ -76,8 +74,11 @@ class CRM_Campaign_PseudoConstant extends CRM_Core_PseudoConstant {
 
       $campaingCompId = CRM_Core_Component::getComponentID('CiviCampaign');
       if ($campaingCompId) {
-        self::$activityType[$cacheKey] = CRM_Core_OptionGroup::values('activity_type',
-          FALSE, FALSE, FALSE,
+        self::$activityType[$cacheKey] = CRM_Core_OptionGroup::values(
+          'activity_type',
+          FALSE,
+          FALSE,
+          FALSE,
           " AND v.component_id={$campaingCompId}",
           $returnColumn
         );
@@ -125,4 +126,3 @@ class CRM_Campaign_PseudoConstant extends CRM_Core_PseudoConstant {
     return self::$campaignStatus;
   }
 }
-

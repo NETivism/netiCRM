@@ -33,7 +33,6 @@
  *
  */
 
-
 require_once 'api/v2/utils.php';
 require_once 'api/v2/Activity.php';
 
@@ -59,7 +58,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
   /**
    * class constructor
    */
-  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
+  public function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
   }
@@ -70,10 +69,10 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @return void
    * @access public
    */
-  function init() {
+  public function init() {
 
-
-    $fields = array_merge(CRM_Activity_BAO_Activity::importableFields(),
+    $fields = array_merge(
+      CRM_Activity_BAO_Activity::importableFields(),
       CRM_Activity_BAO_ActivityTarget::import()
     );
 
@@ -127,7 +126,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @return boolean
    * @access public
    */
-  function mapField(&$values) {
+  public function mapField(&$values) {
     return CRM_Activity_Import_Parser::VALID;
   }
 
@@ -139,7 +138,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function preview(&$values) {
+  public function preview(&$values) {
     return $this->summary($values);
   }
 
@@ -151,7 +150,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function summary(&$values) {
+  public function summary(&$values) {
     $erroneousField = NULL;
     $response = $this->setActiveFieldValues($values, $erroneousField);
     $index = -1;
@@ -181,8 +180,6 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     }
 
     $params = &$this->getActiveFieldParams();
-
-
 
     $errorMessage = NULL;
 
@@ -230,7 +227,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @return boolean      the result of this processing
    * @access public
    */
-  function import($onDuplicate, &$values) {
+  public function import($onDuplicate, &$values) {
     // first make sure this is a valid line
     $response = $this->summary($values);
 
@@ -274,7 +271,8 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
       return CRM_Activity_Import_Parser::ERROR;
     }
 
-    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       CRM_Core_DAO::$_nullObject,
       NULL,
       'Activity'
@@ -342,8 +340,11 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     }
     else {
       if (CRM_Utils_Array::value('external_identifier', $params)) {
-        $targetContactId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-          $params['external_identifier'], 'id', 'external_identifier'
+        $targetContactId = CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
+          $params['external_identifier'],
+          'id',
+          'external_identifier'
         );
 
         if (CRM_Utils_Array::value('target_contact_id', $params) &&
@@ -378,9 +379,10 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
    * @return void
    * @access public
    */
-  function fini() {}
+  public function fini() {
+  }
 
-  static function formatDate($date, $dateType) {
+  public static function formatDate($date, $dateType) {
     $formattedDate = NULL;
     if (empty($date)) {
       return $formattedDate;
@@ -394,9 +396,7 @@ class CRM_Activity_Import_Parser_Activity extends CRM_Activity_Import_Parser {
     $dateKey = 'date';
     $dateParams = [$dateKey => $date];
 
-
     CRM_Utils_Date::convertToDefaultDate($dateParams, $dateType, $dateKey);
     return $dateParams[$dateKey];
   }
 }
-

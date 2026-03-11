@@ -33,17 +33,14 @@
  *
  */
 
-
-
-
 /**
  * form to process actions fo adding product to contribution page
  */
 class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_Form_ContributionPage {
 
-  static $_products;
+  public static $_products;
 
-  static $_pid;
+  public static $_pid;
 
   /**
    * Function to pre  process the form
@@ -56,8 +53,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     parent::preProcess();
 
     $this->_products = CRM_Contribute_PseudoConstant::products($this->_id);
-    $this->_pid = CRM_Utils_Request::retrieve('pid', 'Positive',
-      $this, FALSE, 0
+    $this->_pid = CRM_Utils_Request::retrieve(
+      'pid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     if ($this->_pid) {
@@ -79,7 +80,7 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_pid) {
@@ -90,8 +91,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $defaults['weight'] = $dao->weight;
     }
     if (!isset($defaults['weight']) || !($defaults['weight'])) {
-      $pageID = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, FALSE, 0
+      $pageID = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        FALSE,
+        0
       );
 
       $dao = new CRM_Contribute_DAO_Premium();
@@ -106,7 +111,7 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $dao->fetch();
       $defaults['weight'] = $dao->max_weight + 1;
     }
-    RETURN $defaults;
+    return $defaults;
   }
 
   /**
@@ -123,9 +128,14 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $session = CRM_Core_Session::singleton();
       $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
       $session->pushUserContext($url);
-      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-          CRM_Core_DAO::$_nullObject, '', '', 'GET'
-        )) {
+      if (CRM_Utils_Request::retrieve(
+        'confirmed',
+        'Boolean',
+        CRM_Core_DAO::$_nullObject,
+        '',
+        '',
+        'GET'
+      )) {
 
         $dao = new CRM_Contribute_DAO_PremiumsProduct();
         $dao->id = $this->_pid;
@@ -134,8 +144,8 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
         CRM_Utils_System::redirect($url);
       }
 
-
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -152,7 +162,8 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     if ($this->_action & CRM_Core_Action::PREVIEW) {
 
       CRM_Contribute_BAO_Premium::buildPremiumPreviewBlock($this, NULL, $this->_pid);
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Done with Preview'),
             'isDefault' => TRUE,
@@ -176,7 +187,8 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     $session->pushUserContext(CRM_Utils_System::url($urlParams, 'action=update&reset=1&id=' . $this->_id));
 
     if ($single) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -202,8 +214,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   public function postProcess() {
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
-    $pageID = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $pageID = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     $urlParams = 'civicrm/admin/contribute/premium';
     if ($this->_action & CRM_Core_Action::PREVIEW) {
@@ -238,8 +254,6 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $premiumID = $dao->id;
       $params['premiums_id'] = $premiumID;
 
-
-
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->copyValues($params);
       $dao->save();
@@ -257,4 +271,3 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     return ts('Add Premium to Contribution Page');
   }
 }
-

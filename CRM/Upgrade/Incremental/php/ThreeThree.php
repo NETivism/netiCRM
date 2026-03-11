@@ -33,11 +33,11 @@
  *
  */
 class CRM_Upgrade_Incremental_php_ThreeThree {
-  function verifyPreDBstate(&$errors) {
+  public function verifyPreDBstate(&$errors) {
     return TRUE;
   }
 
-  function upgrade_3_3_alpha1($rev) {
+  public function upgrade_3_3_alpha1($rev) {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework == 'Drupal') {
       // CRM-6426 - make civicrm profiles permissioned on drupal my account
@@ -52,8 +52,6 @@ class CRM_Upgrade_Incremental_php_ThreeThree {
     $colQuery = 'ALTER TABLE `civicrm_custom_field` ADD `name` VARCHAR( 64 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL AFTER `custom_group_id` ';
     CRM_Core_DAO::executeQuery($colQuery, CRM_Core_DAO::$_nullArray, TRUE, NULL, FALSE, FALSE);
 
-
-
     $customFldCntQuery = 'select count(*) from civicrm_custom_field where name like %1 and id != %2';
     $customField = new CRM_Core_DAO_CustomField();
     $customField->selectAdd();
@@ -61,10 +59,13 @@ class CRM_Upgrade_Incremental_php_ThreeThree {
     $customField->find();
     while ($customField->fetch()) {
       $name = CRM_Utils_String::munge($customField->label, '_', 64);
-      $fldCnt = CRM_Core_DAO::singleValueQuery($customFldCntQuery,
+      $fldCnt = CRM_Core_DAO::singleValueQuery(
+        $customFldCntQuery,
         [1 => [$name, 'String'],
           2 => [$customField->id, 'Integer'],
-        ], TRUE, FALSE
+        ],
+        TRUE,
+        FALSE
       );
       if ($fldCnt) {
         $name = CRM_Utils_String::munge("{$name}_" . rand(), '_', 64);
@@ -81,7 +82,6 @@ WHERE id = %2
     }
     $customField->free();
 
-
     $customGrpCntQuery = 'select count(*) from civicrm_custom_group where name like %1 and id != %2';
     $customGroup = new CRM_Core_DAO_CustomGroup();
     $customGroup->selectAdd();
@@ -89,7 +89,8 @@ WHERE id = %2
     $customGroup->find();
     while ($customGroup->fetch()) {
       $name = CRM_Utils_String::munge($customGroup->title, '_', 64);
-      $grpCnt = CRM_Core_DAO::singleValueQuery($customGrpCntQuery,
+      $grpCnt = CRM_Core_DAO::singleValueQuery(
+        $customGrpCntQuery,
         [1 => [$name, 'String'],
           2 => [$customGroup->id, 'Integer'],
         ]
@@ -101,7 +102,6 @@ WHERE id = %2
     }
     $customGroup->free();
 
-
     $ufGrpCntQuery = 'select count(*) from civicrm_uf_group where name like %1 and id != %2';
     $ufGroup = new CRM_Core_DAO_UFGroup();
     $ufGroup->selectAdd();
@@ -109,7 +109,8 @@ WHERE id = %2
     $ufGroup->find();
     while ($ufGroup->fetch()) {
       $name = CRM_Utils_String::munge($ufGroup->title, '_', 64);
-      $ufGrpCnt = CRM_Core_DAO::singleValueQuery($ufGrpCntQuery,
+      $ufGrpCnt = CRM_Core_DAO::singleValueQuery(
+        $ufGrpCntQuery,
         [1 => [$name, 'String'],
           2 => [$ufGroup->id, 'Integer'],
         ]
@@ -130,7 +131,7 @@ WHERE id = %2
     CRM_Core_BAO_ConfigSetting::add($params);
   }
 
-  function upgrade_3_3_beta1($rev) {
+  public function upgrade_3_3_beta1($rev) {
     $upgrade = new CRM_Upgrade_Form();
     $upgrade->processSQL($rev);
 
@@ -140,12 +141,6 @@ WHERE id = %2
     // update line items.
     $updateLineItem1 = "ALTER TABLE civicrm_line_item ADD COLUMN price_field_value_id int(10) unsigned default NULL;";
     CRM_Core_DAO::executeQuery($updateLineItem1);
-
-
-
-
-
-
 
     $priceFieldDAO = new CRM_Price_DAO_Field();
     $priceFieldDAO->find();
@@ -249,7 +244,7 @@ WHERE id = %2
     }
   }
 
-  function upgrade_3_3_beta3($rev) {
+  public function upgrade_3_3_beta3($rev) {
     // get the duplicate Ids of line item entries
     $dupeLineItemIds = [];
     $fields = ['entity_table', 'entity_id', 'price_field_id', 'price_field_value_id'];
@@ -258,7 +253,9 @@ WHERE id = %2
     $mainLineItem->find(TRUE);
     while ($mainLineItem->fetch()) {
       $dupeLineItem = new CRM_Price_BAO_LineItem();
-      foreach ($fields as $fld) $dupeLineItem->$fld = $mainLineItem->$fld;
+      foreach ($fields as $fld) {
+        $dupeLineItem->$fld = $mainLineItem->$fld;
+      }
       $dupeLineItem->find(TRUE);
       $dupeLineItem->addWhere("id != $mainLineItem->id");
       while ($dupeLineItem->fetch()) {
@@ -278,7 +275,7 @@ WHERE id = %2
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_3_0($rev) {
+  public function upgrade_3_3_0($rev) {
     $upgrade = new CRM_Upgrade_Form();
     $upgrade->processSQL($rev);
 
@@ -308,11 +305,14 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id )
      WHERE  grp.name = %1
        AND  val.name IN ( ' . "'" . CRM_Utils_Array::implode("', '", $locales) . "' )";
 
-      CRM_Core_DAO::executeQuery($sql,
+      CRM_Core_DAO::executeQuery(
+        $sql,
         [1 => ['languages', 'String']],
-        TRUE, NULL, FALSE, FALSE
+        TRUE,
+        NULL,
+        FALSE,
+        FALSE
       );
     }
   }
 }
-

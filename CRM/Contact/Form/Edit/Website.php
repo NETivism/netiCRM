@@ -50,7 +50,7 @@ class CRM_Contact_Form_Edit_Website {
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
 
     $blockId = ($form->get('Website_Block_Count')) ? $form->get('Website_Block_Count') : 1;
 
@@ -60,7 +60,10 @@ class CRM_Contact_Form_Edit_Website {
     $form->addElement('select', "website[$blockId][website_type_id]", '', CRM_Core_PseudoConstant::websiteType());
 
     //Website box
-    $form->addElement('text', "website[$blockId][url]", ts('Website'),
+    $form->addElement(
+      'text',
+      "website[$blockId][url]",
+      ts('Website'),
       array_merge(
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_Website', 'url'),
         ['onfocus' => "if (!this.value) {  this.value='http://';} else return false",
@@ -72,4 +75,3 @@ class CRM_Contact_Form_Edit_Website {
     $form->addRule("website[$blockId][url]", ts('Enter a valid web location beginning with \'http://\' or \'https://\'. EXAMPLE: http://www.mysite.org/'), 'url');
   }
 }
-

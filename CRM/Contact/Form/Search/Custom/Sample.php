@@ -33,14 +33,15 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   public $_stateID;
-  function __construct(&$formValues) {
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     if (!isset($formValues['state_province_id'])) {
-      $this->_stateID = CRM_Utils_Request::retrieve('stateID', 'Integer',
+      $this->_stateID = CRM_Utils_Request::retrieve(
+        'stateID',
+        'Integer',
         CRM_Core_DAO::$_nullObject
       );
       if ($this->_stateID) {
@@ -55,9 +56,10 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
 
-    $form->add('text',
+    $form->add(
+      'text',
       'household_name',
       ts('Household Name'),
       TRUE
@@ -78,14 +80,17 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     $form->assign('elements', ['household_name', 'state_province_id']);
   }
 
-  function summary() {
+  public function summary() {
     $summary = ['summary' => 'This is a summary',
       'total' => 50.0,
     ];
     return $summary;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -94,13 +99,17 @@ contact_a.contact_type as contact_type,
 contact_a.sort_name    as sort_name,
 state_province.name    as state_province
 ";
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
-  function from() {
+  public function from() {
     return "
 FROM      civicrm_contact contact_a
 LEFT JOIN civicrm_address address ON ( address.contact_id       = contact_a.id AND
@@ -111,13 +120,14 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
 ";
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $params = [];
     $where = "contact_a.contact_type   = 'Household'";
 
     $count = 1;
     $clause = [];
-    $name = CRM_Utils_Array::value('household_name',
+    $name = CRM_Utils_Array::value(
+      'household_name',
       $this->_formValues
     );
     if ($name != NULL) {
@@ -129,7 +139,8 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
       $count++;
     }
 
-    $state = CRM_Utils_Array::value('state_province_id',
+    $state = CRM_Utils_Array::value(
+      'state_province_id',
       $this->_formValues
     );
     if (!$state &&
@@ -150,17 +161,16 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
     return $this->whereClause($where, $params);
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return ['household_name' => '',
     ];
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     $row['sort_name'] .= ' ( altered )';
   }
 }
-

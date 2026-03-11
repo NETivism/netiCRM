@@ -33,14 +33,12 @@
  *
  */
 
-
-
 class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_TrackableURLOpen {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -57,15 +55,10 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
    */
   public static function track($queue_id, $url_id) {
 
-
-
-
     $search = new CRM_Mailing_BAO_TrackableURL();
 
     /* To find the url, we also join on the queue and job tables.  This
          * prevents foreign key violations. */
-
-
 
     $job = CRM_Mailing_BAO_Job::getTableName();
     $eq = CRM_Mailing_Event_BAO_Queue::getTableName();
@@ -79,7 +72,8 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
       return $search->url;
     }
 
-    $search->query("SELECT $turl.url as url from $turl
+    $search->query(
+      "SELECT $turl.url as url from $turl
                     INNER JOIN $job ON $turl.mailing_id = $job.mailing_id
                     INNER JOIN $eq ON $job.id = $eq.job_id
                     WHERE $eq.id = " . CRM_Utils_Type::escape($queue_id, 'Integer') . " AND $turl.id = " . CRM_Utils_Type::escape($url_id, 'Integer')
@@ -174,9 +168,14 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
    * @access public
    * @static
    */
-  public static function &getRows($mailing_id, $job_id,
-    $is_distinct, $url_id,
-    $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id,
+    $is_distinct,
+    $url_id,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -245,7 +244,8 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
     $results = [];
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
@@ -258,4 +258,3 @@ class CRM_Mailing_Event_BAO_TrackableURLOpen extends CRM_Mailing_Event_DAO_Track
     return $results;
   }
 }
-

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
   /**
    * @var never[]
@@ -55,7 +53,8 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     'pieChart' => 'Pie Chart',
   ];
 
-  protected $_customGroupExtends = ['Pledge']; function __construct() {
+  protected $_customGroupExtends = ['Pledge'];
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -156,12 +155,12 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $this->assign('reportTitle', ts('Pledge But Not Paid Report'));
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -188,7 +187,7 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
     $this->_from = NULL;
 
     $allStatus = CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name');
@@ -230,20 +229,20 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "";
     $this->_groupBy = "
          GROUP BY {$this->_aliases['civicrm_pledge']}.contact_id, 
                   {$this->_aliases['civicrm_pledge']}.id";
   }
 
-  function postProcess() {
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::PostProcess();
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     $checkList = [];
@@ -316,10 +315,12 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('pledge/summary',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'pledge/summary',
           'reset=1&force=1&id_op=eq&id_value=' .
           $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Pledge Details for this contact");
@@ -334,4 +335,3 @@ class CRM_Report_Form_Pledge_Pbnp extends CRM_Report_Form {
     }
   }
 }
-

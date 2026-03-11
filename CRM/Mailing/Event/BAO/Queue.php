@@ -33,18 +33,13 @@
  *
  */
 
-
-
-
-
-
 class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
 
   public $email;
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -79,8 +74,10 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
     $emailId = $params['email_id'];
     $contactId = $params['contact_id'];
 
-    return substr(sha1("{$jobId}:{$emailId}:{$contactId}:" . time()),
-      0, 16
+    return substr(
+      sha1("{$jobId}:{$emailId}:{$contactId}:" . time()),
+      0,
+      16
     );
   }
 
@@ -154,7 +151,8 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
     $mailing = CRM_Mailing_BAO_Mailing::getTableName();
     $job = CRM_Mailing_BAO_Job::getTableName();
 
-    $dao->query("
+    $dao->query(
+      "
             SELECT      COUNT(*) as queued
             FROM        $queue
             INNER JOIN  $job
@@ -163,8 +161,8 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
                     ON  $job.mailing_id = $mailing.id
                     AND $job.is_test = 0
             WHERE       $mailing.id = " . CRM_Utils_Type::escape($mailing_id, 'Integer') . ($job_id ? " AND $job.id = " . CRM_Utils_Type::escape($job_id,
-          'Integer'
-        ) : '')
+        'Integer'
+      ) : '')
     );
 
     $dao->fetch();
@@ -184,8 +182,12 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
    * @access public
    * @static
    */
-  public static function &getRows($mailing_id, $job_id = NULL, $offset = NULL,
-    $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
     $dao = new CRM_Core_Dao();
 
@@ -238,7 +240,8 @@ class CRM_Mailing_Event_BAO_Queue extends CRM_Mailing_Event_DAO_Queue {
     $results = [];
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
@@ -300,7 +303,7 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
     return [$displayName, $email];
   }
 
-  static function bulkCreate($params, $now = NULL) {
+  public static function bulkCreate($params, $now = NULL) {
     if (!$now) {
       $now = time();
     }
@@ -308,8 +311,10 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
     // construct a bulk insert statement
     $values = [];
     foreach ($params as $param) {
-      $values[] = "( {$param[0]}, {$param[1]}, {$param[2]}, '" . substr(sha1("{$param[0]}:{$param[1]}:{$param[2]}:{$now}"),
-        0, 16
+      $values[] = "( {$param[0]}, {$param[1]}, {$param[2]}, '" . substr(
+        sha1("{$param[0]}:{$param[1]}:{$param[2]}:{$now}"),
+        0,
+        16
       ) . "' )";
     }
 
@@ -321,4 +326,3 @@ SELECT DISTINCT(civicrm_mailing_event_queue.contact_id) as contact_id,
     }
   }
 }
-

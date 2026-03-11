@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Logging_Schema {
   private $logs = [];
   private $tables = [];
@@ -43,7 +42,7 @@ class CRM_Logging_Schema {
   /**
    * Populate $this->tables and $this->logs with current db state.
    */
-  function __construct() {
+  public function __construct() {
     $dsn = defined('CIVICRM_LOGGING_DSN') ? DB::parseDSN(CIVICRM_LOGGING_DSN) : DB::parseDSN(CIVICRM_DSN);
     $this->loggingDB = $dsn['database'];
 
@@ -65,7 +64,7 @@ class CRM_Logging_Schema {
   /**
    * Disable logging by dropping the triggers (but keep the log tables intact).
    */
-  function disableLogging() {
+  public function disableLogging() {
     if (!$this->isEnabled()) {
       return;
     }
@@ -77,7 +76,7 @@ class CRM_Logging_Schema {
   /**
    * Enable logging by creating the log tables (where needed) and creating the triggers.
    */
-  function enableLogging() {
+  public function enableLogging() {
     if ($this->isEnabled()) {
       return;
     }
@@ -92,7 +91,7 @@ class CRM_Logging_Schema {
   /**
    * Add missing log table columns.
    */
-  function fixSchemaDifferences() {
+  public function fixSchemaDifferences() {
     if (!$this->isEnabled()) {
       return;
     }
@@ -108,7 +107,7 @@ class CRM_Logging_Schema {
    * param $table string  name of the relevant table
    * param $cols mixed    array of columns to add or null (to check for the missing columns)
    */
-  function fixSchemaDifferencesFor($table, $cols = NULL) {
+  public function fixSchemaDifferencesFor($table, $cols = NULL) {
     if (!$this->isEnabled()) {
       return;
     }
@@ -141,7 +140,7 @@ class CRM_Logging_Schema {
    * Find missing log table columns by comparing columns of the relevant tables.
    * Returns table-name-keyed array of arrays of missing columns, e.g. array('civicrm_value_foo_1' => array('bar_1', 'baz_2'))
    */
-  function schemaDifferences() {
+  public function schemaDifferences() {
     $diffs = [];
     foreach ($this->tables as $table) {
       $diffs[$table] = array_diff($this->columnsOf($table), $this->columnsOf("log_$table"));
@@ -158,19 +157,20 @@ class CRM_Logging_Schema {
     $templates = CRM_Core_OptionGroup::values('report_template');
     if (!isset($templates['logging/contact/summary']) or
       !isset($templates['logging/contact/detail'])
-    ) return;
+    ) {
+      return;
+    }
 
     // add report instances
 
-
-    $bao = new CRM_Report_BAO_Instance;
+    $bao = new CRM_Report_BAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->title = ts('Contact Logging Report (Summary)');
     $bao->report_id = 'logging/contact/summary';
     $bao->permission = 'administer CiviCRM';
     $bao->insert();
 
-    $bao = new CRM_Report_BAO_Instance;
+    $bao = new CRM_Report_BAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->title = ts('Contact Logging Report (Detail)');
     $bao->report_id = 'logging/contact/detail';
@@ -256,7 +256,7 @@ class CRM_Logging_Schema {
       $queries[] = $query;
     }
 
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->executeQuery($query);
     }
@@ -277,13 +277,12 @@ class CRM_Logging_Schema {
 
     // delete report instances
 
-
-    $bao = new CRM_Report_DAO_Instance;
+    $bao = new CRM_Report_DAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->report_id = 'logging/contact/summary';
     $bao->delete();
 
-    $bao = new CRM_Report_DAO_Instance;
+    $bao = new CRM_Report_DAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->report_id = 'logging/contact/details';
     $bao->delete();
@@ -293,7 +292,7 @@ class CRM_Logging_Schema {
    * Drop triggers for all logged tables.
    */
   private function dropTriggers() {
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($this->tables as $table) {
       $dao->executeQuery("DROP TRIGGER IF EXISTS {$table}_after_insert");
       $dao->executeQuery("DROP TRIGGER IF EXISTS {$table}_after_update");
@@ -323,4 +322,3 @@ class CRM_Logging_Schema {
     return (bool) CRM_Core_DAO::singleValueQuery("SHOW TRIGGERS LIKE 'civicrm_contact'");
   }
 }
-

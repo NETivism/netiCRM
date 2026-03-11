@@ -8,7 +8,6 @@
  * @docmaker_intro_end
  */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_GetOptionsTest extends CiviUnitTestCase {
   protected $_apiversion = 3;
@@ -17,12 +16,12 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
 
     global $tsLocale;
     $tsLocale = 'zh_TW';
-    $config =& CRM_Core_Config::singleton();
+    $config = &CRM_Core_Config::singleton();
     $config->countryLimit = [1208, 1228];
     $config->provinceLimit = [1208]; // Taiwan
     $config->defaultContactCountry = 1208; // Taiwan
@@ -30,14 +29,14 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     $config->lcMessages = 'zh_TW';
     $this->_params = [
       'version' => $this->_apiversion,
-      'sequential' => true,
+      'sequential' => TRUE,
     ];
   }
 
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
   }
 
   /**
@@ -51,15 +50,15 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testExample() {
+  public function testExample() {
     $params = $this->_params += [
       'field' => 'contact_type',
     ];
     $result = civicrm_api('Contact', 'getoptions', $params);
-    foreach($result['values'] as $k => &$v) {
-      $a = $k+1;
+    foreach ($result['values'] as $k => &$v) {
+      $a = $k + 1;
       $v['label'] = 'example label '.$a;
-      $v['value'] = $a+1000;
+      $v['value'] = $a + 1000;
     }
     $this->docMakerResponse($result, __FILE__, __FUNCTION__);
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
@@ -78,7 +77,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testContactType() {
+  public function testContactType() {
     $params = $this->_params += [
       'field' => 'contact_type',
     ];
@@ -100,7 +99,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testContactSubType() {
+  public function testContactSubType() {
     // create contact sub type
     CRM_Core_DAO::executeQuery("INSERT IGNORE INTO `civicrm_contact_type` (`name`, `label`, `parent_id`, `is_active`, `is_reserved`) VALUES ('NPO', 'NPO', 3, 1, NULL)");
     $params = $this->_params += [
@@ -125,7 +124,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testPrefixId() {
+  public function testPrefixId() {
     $params = $this->_params += [
       'field' => 'prefix_id',
     ];
@@ -148,7 +147,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
    *
    * @docmaker_end
    */
-  function testSuffixId() {
+  public function testSuffixId() {
     $params = $this->_params += [
       'field' => 'suffix_id',
     ];
@@ -277,7 +276,6 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
     $this->assertAPISuccess($result, 'In line ' . __LINE__);
     $this->assertNotEmpty($result['count'], "In line " . __LINE__);
   }
-
 
   /**
    * @docmaker_start
@@ -420,7 +418,7 @@ class api_v3_GetOptionsTest extends CiviUnitTestCase {
   /**
    * @docmaker_start
    *
-   * @api_entity payment_instrument_id 
+   * @api_entity payment_instrument_id
    * @api_action options
    * @http_method GET
    * @request_url <entrypoint>?entity=contribution&action=getoptions&json={$request_body_inline}

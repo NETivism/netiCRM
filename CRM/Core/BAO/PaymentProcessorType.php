@@ -33,18 +33,17 @@
  *
  */
 
-
 class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorType {
 
   /**
    * static holder for the default payment processor
    */
-  static $_defaultPaymentProcessorType = NULL;
+  public static $_defaultPaymentProcessorType = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -62,7 +61,7 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $paymentProcessorType = new CRM_Core_DAO_PaymentProcessorType();
     $paymentProcessorType->copyValues($params);
     if ($paymentProcessorType->find(TRUE)) {
@@ -83,7 +82,7 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
    * @access public
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_PaymentProcessorType', $id, 'is_active', $is_active);
   }
 
@@ -97,7 +96,7 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
    * @static
    * @access public
    */
-  static function &getDefault() {
+  public static function &getDefault() {
     if (self::$_defaultPaymentProcessorType == NULL) {
       $params = ['is_default' => 1];
       $defaults = [];
@@ -114,7 +113,7 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
    * @access public
    * @static
    */
-  static function del($paymentProcessorTypeId) {
+  public static function del($paymentProcessorTypeId) {
     $query = "SELECT pp.id processor_id  
                   FROM civicrm_payment_processor pp, civicrm_payment_processor_type ppt
                   WHERE pp.payment_processor_type = ppt.name AND ppt.id = %1";
@@ -133,4 +132,3 @@ class CRM_Core_BAO_PaymentProcessorType extends CRM_Core_DAO_PaymentProcessorTyp
     CRM_Core_Session::setStatus(ts('Selected Payment Processor type has been deleted.'));
   }
 }
-

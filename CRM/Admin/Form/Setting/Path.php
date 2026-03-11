@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for File System Path
  *
@@ -59,8 +57,10 @@ class CRM_Admin_Form_Setting_Path extends CRM_Admin_Form_Setting {
     ];
     foreach ($directories as $name => $title) {
       $this->add('text', $name, $title);
-      $this->addRule($name,
-        ts("'%1' directory does not exist",
+      $this->addRule(
+        $name,
+        ts(
+          "'%1' directory does not exist",
           [1 => $title]
         ),
         'fileExists'
@@ -76,4 +76,3 @@ class CRM_Admin_Form_Setting_Path extends CRM_Admin_Form_Setting {
     parent::rebuildMenu();
   }
 }
-

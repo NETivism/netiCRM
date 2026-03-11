@@ -18,7 +18,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
   }
@@ -46,7 +46,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -56,7 +56,6 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
       $error[] = ts('Password is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
 
-
     if (!empty($error)) {
       return CRM_Utils_Array::implode('<br>', $error);
     }
@@ -65,40 +64,40 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
     }
   }
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
 
   }
 
-  function cancelRecuringMessage($recurID) {
+  public function cancelRecuringMessage($recurID) {
 
   }
 
-  static function addNote($note, &$contribution){
+  public static function addNote($note, &$contribution) {
 
     $note = date("Y/m/d H:i:s "). ts("Transaction record")."Trxn ID: {$contribution->trxn_id} \n\n".$note;
-    CRM_Core_Error::debug_log_message( $note );
+    CRM_Core_Error::debug_log_message($note);
   }
 
-  static function checkSection(&$fields, &$errors, $section = NULL) {
+  public static function checkSection(&$fields, &$errors, $section = NULL) {
     $emptyField = 0;
     $isAllEmpty = FALSE;
-    $isTestPrefix = ($section == 'test') ? 'test_': '';
+    $isTestPrefix = ($section == 'test') ? 'test_' : '';
     $ppDAO = new CRM_Core_DAO_PaymentProcessorType();
     $ppDAO->name = 'TaiwanACH';
     $ppDAO->find(TRUE);
@@ -117,7 +116,7 @@ class CRM_Core_Payment_TaiwanACH extends CRM_Core_Payment {
       }
     }
     if (count($errors) == 3) {
-      if(empty($fields["{$isTestPrefix}subject"])) {
+      if (empty($fields["{$isTestPrefix}subject"])) {
         $errors["{$isTestPrefix}subject"] = ts('Missing required field: Provide %1 or %2', [
           1 => $ppDAO->subject_label,
           2 => $ppDAO->user_name_label,

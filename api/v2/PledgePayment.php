@@ -27,11 +27,9 @@
  +--------------------------------------------------------------------+
 */
 
-
-
 /*
 *DRAFT CODE WRITTEN BY EILEEN still dev version (pre-ALPHA)
-*Starting point was Contribute API & some portions are still just that with 
+*Starting point was Contribute API & some portions are still just that with
 *contribute replaced by pledge & not yet tested
 * have only been using create, delete functionality
 */
@@ -315,12 +313,11 @@ function _civicrm_pledgepayment_check_params(&$params) {
  * @access private
  */
 
-
 /* not yet looked at
  * function _civicrm_pledge_duplicate_check( &$params ) {
     require_once 'CRM/Pledge/BAO/Pledge.php';
     $duplicates = array( );
-    $result = CRM_Pledge_BAO_Pledge::checkDuplicate( $params,$duplicates ); 
+    $result = CRM_Pledge_BAO_Pledge::checkDuplicate( $params,$duplicates );
     if ( $result ) {
         $d = CRM_Utils_Array::implode( ', ', $duplicates );
         $error = CRM_Core_Error::createError( "Duplicate error - existing pledge record(s) have a matching Transaction ID or Invoice ID. pledge record ID(s) are: $d", CRM_Core_Error::DUPLICATE_pledge, 'Fatal', $d);
@@ -365,7 +362,8 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -403,7 +401,8 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
         break;
 
       case 'pledge_type':
-        $values['pledge_type_id'] = CRM_Utils_Array::key(ucfirst($value),
+        $values['pledge_type_id'] = CRM_Utils_Array::key(
+          ucfirst($value),
           CRM_Pledge_PseudoConstant::pledgeType()
         );
         break;
@@ -459,7 +458,6 @@ function _civicrm_pledgepayment_format_params(&$params, &$values, $create = FALS
   return [];
 }
 
-
 //having an 'interogate function to find what can be returned from an API would be SUPER useful. Ideally it would also advise which fields are required too. I
 // imaging the most useful format would be to be like the $params array you need to pass in but the value for each field would be information about it. Ideally the
 // function that sets which parameters are required would be accessible from this function to add them in
@@ -480,4 +478,3 @@ function updatePledgePayments($pledgeId, $paymentStatusId, $paymentIds) {
   $result = updatePledgePayments($pledgeId, $paymentStatusId, $paymentIds = NULL);
   return $result;
 }
-

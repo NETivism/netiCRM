@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates form components for adding a petition
  *
@@ -71,9 +68,8 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
    * @return array    array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
-
 
     $ufJoinParams = ['entity_table' => 'civicrm_survey',
       'entity_id' => $this->_surveyId,
@@ -87,12 +83,12 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     return $defaults;
   }
 
-
   public function buildQuickForm() {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -104,10 +100,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
       );
       return;
     }
-
-
-
-
 
     $this->add('text', 'title', ts('Petition Title'), CRM_Core_DAO::getAttribute('CRM_Campaign_DAO_Survey', 'title'), TRUE);
 
@@ -129,13 +121,20 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
 
     $customContactProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Individual']);
     // custom group id
-    $this->add('select', 'contact_profile_id', ts('Contact Profile'),
-      ['' => ts('- select -')] + $customContactProfiles, TRUE
+    $this->add(
+      'select',
+      'contact_profile_id',
+      ts('Contact Profile'),
+      ['' => ts('- select -')] + $customContactProfiles,
+      TRUE
     );
 
     $customProfiles = CRM_Core_BAO_UFGroup::getProfiles(['Activity']);
     // custom group id
-    $this->add('select', 'profile_id', ts('Activity Profile'),
+    $this->add(
+      'select',
+      'profile_id',
+      ts('Activity Profile'),
       ['' => ts('- select -')] + $customProfiles
     );
 
@@ -146,7 +145,8 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $this->add('checkbox', 'is_default', ts('Is Default?'));
 
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -164,7 +164,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     // add a form rule to check default value
     $this->addFormRule(['CRM_Campaign_Form_Survey', 'formRule'], $this);
   }
-
 
   public function postProcess() {
     // store the submitted values in an array
@@ -195,8 +194,6 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     $params['is_default'] = CRM_Utils_Array::value('is_default', $params, 0);
 
     $surveyId = CRM_Campaign_BAO_Survey::create($params);
-
-
 
     // also update the ProfileModule tables
     $ufJoinParams = ['is_active' => 1,
@@ -235,7 +232,3 @@ class CRM_Campaign_Form_Petition extends CRM_Campaign_Form_Survey {
     }
   }
 }
-
-
-
-

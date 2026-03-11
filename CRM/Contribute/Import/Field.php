@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contribute_Import_Field {
 
   /**#@+
@@ -106,7 +104,7 @@ class CRM_Contribute_Import_Field {
    */
   public $_softCreditField;
 
-  function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE, $phoneType = NULL, $softCreditField = NULL) {
+  public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//', $hasLocationType = FALSE, $phoneType = NULL, $softCreditField = NULL) {
     $this->_name = $name;
     $this->_title = $title;
     $this->_type = $type;
@@ -118,7 +116,7 @@ class CRM_Contribute_Import_Field {
     $this->_value = NULL;
   }
 
-  function resetValue() {
+  public function resetValue() {
     $this->_value = NULL;
   }
 
@@ -126,11 +124,11 @@ class CRM_Contribute_Import_Field {
    * the value is in string format. convert the value to the type of this field
    * and set the field value with the appropriate type
    */
-  function setValue($value) {
+  public function setValue($value) {
     $this->_value = $value;
   }
 
-  function validate() {
+  public function validate() {
 
     if (CRM_Utils_System::isNull($this->_value)) {
       return TRUE;
@@ -218,4 +216,3 @@ class CRM_Contribute_Import_Field {
     return TRUE;
   }
 }
-

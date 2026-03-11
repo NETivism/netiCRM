@@ -53,9 +53,8 @@ class CRM_Core_Permission_UnitTests {
   // permission mapping to stub check() calls
   public static $permissions = NULL;
 
-  static function check($str) {
+  public static function check($str) {
     // return the stubbed permission (defaulting to true if the array is missing)
     return is_array(self::$permissions) ? in_array($str, self::$permissions) : TRUE;
   }
 }
-

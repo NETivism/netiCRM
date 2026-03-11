@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Site Url
  *
@@ -56,7 +54,7 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
       $this->addYesNo('enableSSL', ts('Force Secure URLs (SSL)'));
       $this->assign('admin', TRUE);
     }
-    else{
+    else {
       $this->assign('admin', FALSE);
     }
     $this->addElement('text', 'customCSSURL', ts('Custom CiviCRM CSS URL'));
@@ -66,14 +64,21 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
-  static function formRule($fields) {
+  public static function formRule($fields) {
     if (isset($fields['enableSSL']) &&
       $fields['enableSSL']
     ) {
       $config = CRM_Core_Config::singleton();
-      $url = str_replace('http://', 'https://',
-        CRM_Utils_System::url('civicrm/dashboard', 'reset=1', TRUE,
-          NULL, FALSE, FALSE
+      $url = str_replace(
+        'http://',
+        'https://',
+        CRM_Utils_System::url(
+          'civicrm/dashboard',
+          'reset=1',
+          TRUE,
+          NULL,
+          FALSE,
+          FALSE
         )
       );
       if (!CRM_Utils_System::checkURL($url, TRUE)) {
@@ -92,4 +97,3 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     parent::rebuildMenu();
   }
 }
-

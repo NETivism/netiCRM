@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Main page for viewing Recurring Contributions.
  *
@@ -47,7 +45,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * @var array<string, mixed>
    */
   public $_values;
-  static $_links = NULL;
+  public static $_links = NULL;
   public $_permission = NULL;
   public $_contactId = NULL;
 
@@ -57,7 +55,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function view() {
+  public function view() {
     $status = CRM_Contribute_PseudoConstant::contributionStatus();
 
     $recur = new CRM_Contribute_DAO_ContributionRecur();
@@ -231,7 +229,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
 
       // show 'edit' button depends on permission.
       if (CRM_Core_Permission::check('edit contributions')) {
-        $this->assign('is_editable', true);
+        $this->assign('is_editable', TRUE);
       }
 
     }
@@ -243,13 +241,14 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function edit() {
+  public function edit() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionRecur', 'Create Contribution', $this->_action);
     $controller->setEmbedded(TRUE);
 
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
-    $url = CRM_Utils_System::url('civicrm/contact/view',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view',
       'reset=1&selectedChild=contribute&cid=' . $this->_contactId
     );
     $session->pushUserContext($url);
@@ -261,7 +260,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'view');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -285,7 +284,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
       $this->_permission = CRM_Core_Permission::VIEW;
       $this->assign('permission', 'view');
     }
-    
+
     //retrieve custom field information
     $groupTree = &CRM_Core_BAO_CustomGroup::getTree("ContributionRecur", $this, $this->_id, 0);
     $this->_values['custom_data_view'] = CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
@@ -298,7 +297,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     if ($this->_action & CRM_Core_Action::VIEW) {
@@ -306,7 +305,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     }
     elseif ($this->_action & CRM_Core_Action::UPDATE) {
       if (!CRM_Core_Permission::check('edit contributions')) {
-         return CRM_Core_Error::statusBounce(ts("You do not have permission to access this page."));
+        return CRM_Core_Error::statusBounce(ts("You do not have permission to access this page."));
       }
       $this->edit();
     }
@@ -314,7 +313,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return parent::run();
   }
 
-  static function _diff_contribute_recur_log($data) {
+  public static function _diff_contribute_recur_log($data) {
     $allFields = CRM_Contribute_DAO_ContributionRecur::$_fields;
     if (is_string($data)) {
       $log = unserialize($data);
@@ -343,7 +342,7 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
         if ($before[$field]) {
           // is hash:
           if (preg_match('/^[a-f0-9]{32}$/', $before[$field])) {
-            $before[$field] = null;
+            $before[$field] = NULL;
           }
           if (empty($value)) {
             $arrayReturnHtml[] = ts('Delete'). $allFields[$field]['title'] . ': <span class="disabled">'.$before[$field].'</span>';
@@ -352,7 +351,6 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
             $arrayReturnHtml[] = $allFields[$field]['title'] . ': <span class="disabled">'.$before[$field].'</span>→'.$value;
           }
         }
-
         else {
           $arrayReturnHtml[] = ts('Add'). $allFields[$field]['title'] . ': '.$value;
         }
@@ -361,4 +359,3 @@ class CRM_Contribute_Page_ContributionRecur extends CRM_Core_Page {
     return $arrayReturnHtml;
   }
 }
-

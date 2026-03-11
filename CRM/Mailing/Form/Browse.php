@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Build the form for disable mail feature
  *
@@ -55,15 +52,14 @@ class CRM_Mailing_Form_Browse extends CRM_Core_Form {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_mailingId = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this);
 
     // check for action permissions.
     if (!CRM_Core_Permission::checkActionPermission('CiviMail', $this->_action)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
-
 
     $mailing = new CRM_Mailing_BAO_Mailing();
     $mailing->id = $this->_mailingId;
@@ -82,7 +78,8 @@ class CRM_Mailing_Form_Browse extends CRM_Core_Form {
    */
 
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Confirm'),
@@ -116,4 +113,3 @@ class CRM_Mailing_Form_Browse extends CRM_Core_Form {
   }
   //end of function
 }
-

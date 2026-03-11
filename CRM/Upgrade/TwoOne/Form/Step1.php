@@ -33,9 +33,8 @@
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $config = CRM_Core_Config::singleton();
 
     // Let's first update the config defaults
@@ -57,7 +56,7 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
       if ($config->userFramework == 'Joomla') {
         $defaults['userFrameworkVersion'] = '1.5';
         if (class_exists('JVersion')) {
-          $version = new JVersion;
+          $version = new JVersion();
           $defaults['userFrameworkVersion'] = $version->getShortVersion();
         }
       }
@@ -75,7 +74,8 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
 
     // check if log file is writable
     if (!is_writable($config->uploadDir . 'CiviCRM.log')) {
-      $errorMessage = ts('Log file CiviCRM.log is not writable. Make sure files directory is writable.',
+      $errorMessage = ts(
+        'Log file CiviCRM.log is not writable. Make sure files directory is writable.',
         [1 => $config->uploadDir]
       );
       return FALSE;
@@ -244,15 +244,15 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
     return TRUE;
   }
 
-  function upgrade() {
+  public function upgrade() {
     $currentDir = dirname(__FILE__);
 
     // 1. remove domain_ids from the entire db
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'domain_ids.mysql']
     );
     $this->source($sqlFile);
-
 
     // 2. remove domain ids from custom tables
     $query = "SELECT table_name FROM civicrm_custom_group";
@@ -260,14 +260,16 @@ class CRM_Upgrade_TwoOne_Form_Step1 extends CRM_Upgrade_Form {
     while ($dao->fetch()) {
       $query = "ALTER TABLE {$dao->table_name}";
       $constraint = FALSE;
-      if ($constraint = CRM_Core_DAO::checkConstraintExists($dao->table_name,
-          "FK_{$dao->table_name}_domain_id"
-        )) {
+      if ($constraint = CRM_Core_DAO::checkConstraintExists(
+        $dao->table_name,
+        "FK_{$dao->table_name}_domain_id"
+      )) {
         $query .= " DROP FOREIGN KEY FK_{$dao->table_name}_domain_id";
       }
-      if (CRM_Core_DAO::checkConstraintExists($dao->table_name,
-          "unique_domain_id_entity_id"
-        )) {
+      if (CRM_Core_DAO::checkConstraintExists(
+        $dao->table_name,
+        "unique_domain_id_entity_id"
+      )) {
         if ($constraint) {
           $query .= ", ";
         }
@@ -288,23 +290,22 @@ DROP domain_id;";
     $this->setVersion('2.01');
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     $errorMessage = ts('Post-condition failed for upgrade step %1.', [1 => '1']);
     return $this->checkVersion('2.01');
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('CiviCRM 2.1 Upgrade: Step One (Domain Ids)');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     $msg = '<p><strong>' . ts('This process will upgrade your v2.0 CiviCRM database to the v2.1 database format.') . '</strong></p><div class="messsages status"><ul><li><strong>' . ts('Make sure you have a current and complete backup of your CiviCRM database and codebase files before starting the upgrade process.') . '</strong></li><li>' . '</li></ul></div><p>' . ts('Click <strong>Begin Upgrade</strong> to begin the process.') . '</p>';
 
     return $msg;
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Begin Upgrade');
   }
 }
-

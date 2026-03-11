@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Pledge_Page_Tab extends CRM_Core_Page {
   public $_action;
   public $_id;
@@ -46,7 +45,7 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
     $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Search', ts('Pledges'), $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -68,8 +67,9 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function view() {
-    $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_PledgeView',
+  public function view() {
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Pledge_Form_PledgeView',
       'View Pledge',
       $this->_action
     );
@@ -86,8 +86,9 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function edit() {
-    $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Pledge',
+  public function edit() {
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Pledge_Form_Pledge',
       'Create Pledge',
       $this->_action
     );
@@ -98,7 +99,7 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -133,11 +134,13 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     // check if we can process credit card registration
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(
+      FALSE,
+      FALSE,
       "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
@@ -157,10 +160,14 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
     }
     elseif ($this->_action & CRM_Core_Action::DETACH) {
 
-
-      CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($this->_id, NULL, NULL,
-        array_search('Cancelled',
-          CRM_Contribute_PseudoConstant::contributionStatus(NULL,
+      CRM_Pledge_BAO_Payment::updatePledgePaymentStatus(
+        $this->_id,
+        NULL,
+        NULL,
+        array_search(
+          'Cancelled',
+          CRM_Contribute_PseudoConstant::contributionStatus(
+            NULL,
             'name'
           )
         )
@@ -177,7 +184,7 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
-  function setContext() {
+  public function setContext() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
@@ -207,7 +214,8 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'pledge':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=pledge"
         );
         break;
@@ -217,7 +225,8 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
         );
         break;
@@ -231,7 +240,8 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
         if ($this->_contactId) {
           $cid = '&cid=' . $this->_contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/pledge/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/pledge/search',
           'force=1' . $cid
         );
         break;
@@ -240,4 +250,3 @@ class CRM_Pledge_Page_Tab extends CRM_Core_Page {
     $session->pushUserContext($url);
   }
 }
-

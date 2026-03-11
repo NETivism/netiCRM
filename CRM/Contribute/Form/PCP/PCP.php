@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Administer Personal Campaign Pages - Search form
  */
@@ -124,7 +122,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (!empty($_REQUEST['contribution_page_id'])) {
       $defaults['contribution_page_id'] = $_REQUEST['contribution_page_id'];
@@ -145,7 +143,8 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete Campaign'),
             'isDefault' => TRUE,
@@ -165,7 +164,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $contribution_page = [ts('- select -')] + CRM_Contribute_PseudoConstant::contributionPage();
       $dao = CRM_Core_DAO::executeQuery("SELECT p.contact_id, c.sort_name, c.external_identifier FROM civicrm_pcp p INNER JOIN civicrm_contact c ON p.contact_id = c.id GROUP BY p.contact_id");
       $contacts = [ts('- select -')];
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $exid = '';
         if ($dao->external_identifier) {
           $exid = ' - '.$dao->external_identifier;
@@ -177,7 +176,8 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $this->addSelect('contribution_page_id', ts('Belonging Main Contribution Page'), $contribution_page);
       $this->addSelect('contact_id', ts('Created by'), $contacts);
       $this->add('text', 'title', ts('Page Title'));
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'refresh',
             'name' => ts('Search'),
@@ -205,7 +205,8 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {}
+  public static function formRule($fields, $files, $form) {
+  }
 
   /**
    * Process the form
@@ -247,4 +248,3 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     }
   }
 }
-

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to CiviCRM settings
  *
@@ -51,7 +49,7 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
    *
    * @return None
    */
-   function setDefaultValues() {
+  public function setDefaultValues() {
     if (!$this->_defaults) {
       $this->_defaults = [];
       $formArray = ['Component', 'Localization'];
@@ -63,15 +61,18 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
       CRM_Core_BAO_ConfigSetting::retrieve($this->_defaults);
       CRM_Core_Config_Defaults::setValues($this->_defaults, $formMode);
       $config = CRM_Core_Config::singleton();
-      foreach($config as $name => $value) {
+      foreach ($config as $name => $value) {
         $this->_defaults[$name] = $value;
       }
 
-
-      $list = array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options',
-          FALSE, FALSE, TRUE, NULL, 'name'
-        ));
-
+      $list = array_flip(CRM_Core_OptionGroup::values(
+        'contact_autocomplete_options',
+        FALSE,
+        FALSE,
+        TRUE,
+        NULL,
+        'name'
+      ));
 
       $listEnabled = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
 
@@ -93,7 +94,8 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -132,7 +134,8 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
       $config = new CRM_Core_DAO_Preferences();
       $config->domain_id = CRM_Core_Config::domainID();
       $config->find(TRUE);
-      $config->contact_autocomplete_options = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
+      $config->contact_autocomplete_options = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         array_keys($params['autocompleteContactSearch'])
       ) . CRM_Core_DAO::VALUE_SEPARATOR;
       $config->save();
@@ -158,4 +161,3 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     CRM_Core_Menu::store();
   }
 }
-

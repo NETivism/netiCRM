@@ -9,7 +9,6 @@ abstract class CRM_Mailing_External_SmartMarketing {
    */
   abstract public function getRemoteGroups();
 
-
   /**
    * Parse saved data in group table
    *
@@ -26,7 +25,7 @@ abstract class CRM_Mailing_External_SmartMarketing {
     CRM_Core_Error::debug_log_message("Smart Marketing - Syncing Start");
     $availableGroupTypes = CRM_Core_OptionGroup::values('group_type');
     $typeNames = [];
-    foreach($availableGroupTypes as $typeId => $typeName) {
+    foreach ($availableGroupTypes as $typeId => $typeName) {
       if (strstr($typeName, 'Smart Marketing')) {
         list($smartMarketingVendor) = explode(' ', $typeName);
         $typeNames[$typeId] = $smartMarketingVendor;
@@ -35,11 +34,11 @@ abstract class CRM_Mailing_External_SmartMarketing {
     if (!empty($typeNames)) {
       $syncResult = [];
       global $civicrm_batch;
-      foreach($typeNames as $typeId => $class) {
+      foreach ($typeNames as $typeId => $class) {
         $groups = CRM_Core_PseudoConstant::allGroup($typeId);
         CRM_Core_Error::debug_log_message("Smart Marketing - found groups: ".implode(',', $groups));
         if (!empty($groups)) {
-          foreach($groups as $groupId => $groupName) {
+          foreach ($groups as $groupId => $groupName) {
             // skip synced
             if (isset($syncResult[$groupId])) {
               CRM_Core_Error::debug_log_message("Smart Marketing - Skipped $groupId");
@@ -80,7 +79,7 @@ abstract class CRM_Mailing_External_SmartMarketing {
         $result = civicrm_api('group_contact', 'get', $apiParams);
         if (!empty($result['values'])) {
           $contactIds = [];
-          foreach($result['values'] as $item) {
+          foreach ($result['values'] as $item) {
             $contactIds[$item] = $item;
           }
           if (count($contactIds) > $smartMarketingClass::BATCH_NUM) {
@@ -93,7 +92,7 @@ abstract class CRM_Mailing_External_SmartMarketing {
                 'result' => ts('Scheduled').':'.ts('Batch ID').'-'.$batchId,
               ];
             }
-            catch(CRM_Core_Exception $e) {
+            catch (CRM_Core_Exception $e) {
               CRM_Core_Error::debug_log_message("Smart Marketing - Exception in group $groupId: " . $e->getMessage());
               return [
                 'batch' => FALSE,
@@ -123,7 +122,7 @@ abstract class CRM_Mailing_External_SmartMarketing {
                 'result' => $syncResult,
               ];
             }
-            catch(CRM_Core_Exception $e) {
+            catch (CRM_Core_Exception $e) {
               CRM_Core_Error::debug_log_message("Smart Marketing - Exception in group $groupId: " . $e->getMessage());
               return [
                 'batch' => FALSE,
@@ -165,7 +164,7 @@ abstract class CRM_Mailing_External_SmartMarketing {
     if (!empty($group) && !empty($group['group_type'])) {
       $availableGroupTypes = CRM_Core_OptionGroup::values('group_type');
       $groupTypes = explode(CRM_Core_DAO::VALUE_SEPARATOR, trim($group['group_type'], CRM_Core_DAO::VALUE_SEPARATOR));
-      foreach($groupTypes as $typeId) {
+      foreach ($groupTypes as $typeId) {
         $smartMarketingName = $availableGroupTypes[$typeId];
         if (strstr($smartMarketingName, 'Smart Marketing')) {
           list($smartMarketingVendor) = explode(' ', $smartMarketingName);

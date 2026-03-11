@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Auxilary class to provide support to the Contact Form class. Does this by implementing
  * a small set of static methods
@@ -77,7 +74,10 @@ class CRM_Contact_Form_Edit_Individual {
     }
 
     // nick_name
-    $form->addElement('text', 'nick_name', ts('Nick Name'),
+    $form->addElement(
+      'text',
+      'nick_name',
+      ts('Nick Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'nick_name')
     );
 
@@ -97,13 +97,17 @@ class CRM_Contact_Form_Edit_Individual {
     $checkSimilar = defined('CIVICRM_CONTACT_AJAX_CHECK_SIMILAR') ? CIVICRM_CONTACT_AJAX_CHECK_SIMILAR : TRUE;
     $form->assign('checkSimilar', $checkSimilar);
 
-
     //External Identifier Element
-    $form->add('text', 'external_identifier', ts('External Id'),
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'), FALSE
+    $form->add(
+      'text',
+      'external_identifier',
+      ts('External Id'),
+      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'),
+      FALSE
     );
 
-    $form->addRule('external_identifier',
+    $form->addRule(
+      'external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
       ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
@@ -123,7 +127,7 @@ class CRM_Contact_Form_Edit_Individual {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $contactID = NULL) {
+  public static function formRule($fields, $files, $contactID = NULL) {
     $errors = [];
     $primaryID = CRM_Contact_Form_Contact::formRule($fields, $errors, $contactID);
 
@@ -138,4 +142,3 @@ class CRM_Contact_Form_Edit_Individual {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

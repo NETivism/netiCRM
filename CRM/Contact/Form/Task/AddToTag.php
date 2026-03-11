@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality to delete a group of
  * contacts. This class provides functionality for the actual
@@ -65,7 +62,7 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // add select for tag
     $this->_tags = CRM_Core_BAO_Tag::getTags();
 
@@ -73,19 +70,17 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
       $this->_tagElement = &$this->addElement('checkbox', "tag[$tagID]", NULL, $tagName);
     }
 
-
-
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_contact');
 
     $this->addDefaultButtons(ts('Tag Contacts'));
   }
 
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Task_AddToTag', 'formRule']);
   }
 
-  static function formRule($form, $rule) {
+  public static function formRule($form, $rule) {
     $errors = [];
     if (empty($form['tag']) && empty($form['taglist'])) {
       $errors['_qf_default'] = "Please select atleast one tag.";
@@ -156,4 +151,3 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

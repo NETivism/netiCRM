@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to delete a group of
  * participations. This class provides functionality for the actual
@@ -63,7 +61,7 @@ class CRM_Case_Form_Task_Delete extends CRM_Case_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     //check for delete
     if (!CRM_Core_Permission::checkActionPermission('CiviCase', CRM_Core_Action::DELETE)) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
@@ -78,7 +76,7 @@ class CRM_Case_Form_Task_Delete extends CRM_Case_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Delete Cases'), 'done');
   }
 
@@ -105,4 +103,3 @@ class CRM_Case_Form_Task_Delete extends CRM_Case_Form_Task {
     CRM_Core_Session::setStatus($status);
   }
 }
-

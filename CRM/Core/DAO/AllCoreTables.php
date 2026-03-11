@@ -265,8 +265,10 @@ class CRM_Core_DAO_AllCoreTables {
    * @return string|FALSE SQL table name
    */
   public static function getTableForClass($className) {
-    return array_search(self::getCanonicalClassName($className),
-      self::tables());
+    return array_search(
+      self::getCanonicalClassName($className),
+      self::tables()
+    );
   }
 
   /**
@@ -301,10 +303,10 @@ class CRM_Core_DAO_AllCoreTables {
       foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
-            $exports[$labelName] = & $fields[$name];
+            $exports[$labelName] = &$fields[$name];
           }
           else {
-            $exports[$name] = & $fields[$name];
+            $exports[$name] = &$fields[$name];
           }
         }
       }
@@ -341,10 +343,10 @@ class CRM_Core_DAO_AllCoreTables {
       foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
-            $imports[$labelName] = & $fields[$name];
+            $imports[$labelName] = &$fields[$name];
           }
           else {
-            $imports[$name] = & $fields[$name];
+            $imports[$name] = &$fields[$name];
           }
         }
       }

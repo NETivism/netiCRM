@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
 
   /**
@@ -49,7 +47,7 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
 
     $this->add('text', 'title', ts('Find'), $attributes);
 
-    $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE);
     $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'contribution_type_id', 'Contribution Type', $contribution_type, $attrs);
 
@@ -61,7 +59,7 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
       ]);
   }
 
-  function postProcess() {
+  public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();
     $parent->set('searchResult', 1);
@@ -80,4 +78,3 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
     }
   }
 }
-

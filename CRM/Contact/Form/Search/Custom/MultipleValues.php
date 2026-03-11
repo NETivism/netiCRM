@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public $_group;
@@ -41,13 +40,15 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
   public $_customGroupIDs;
   protected $_groupTree;
   protected $_tables;
-  protected $_options; function __construct(&$formValues) {
+  protected $_options;
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
-
-    $this->_groupTree = CRM_Core_BAO_CustomGroup::getTree("'Contact', 'Individual', 'Organization', 'Household'",
+    $this->_groupTree = CRM_Core_BAO_CustomGroup::getTree(
+      "'Contact', 'Individual', 'Organization', 'Household'",
       CRM_Core_DAO::$_nullObject,
-      NULL, -1
+      NULL,
+      -1
     );
 
     $this->_group = CRM_Utils_Array::value('group', $this->_formValues);
@@ -66,7 +67,7 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
-  function addColumns() {
+  public function addColumns() {
     // add all the fields for chosen groups
     $this->_tables = $this->_options = [];
     foreach ($this->_groupTree as $groupID => $group) {
@@ -84,14 +85,15 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
 
         // also build the option array
         $this->_options[$field['id']] = [];
-        CRM_Core_BAO_CustomField::buildOption($field,
+        CRM_Core_BAO_CustomField::buildOption(
+          $field,
           $this->_options[$field['id']]
         );
       }
     }
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     $form->add('text', 'sort_name', ts('Contact Name'), TRUE);
 
     // add select for contact type
@@ -107,8 +109,10 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     $form->addElement('select', 'tag', ts('Tagged'), $tag);
 
     if (empty($this->_groupTree)) {
-      return CRM_Core_Error::statusBounce(ts("Atleast one Custom Group must be present, for Custom Group search."),
-        CRM_Utils_System::url('civicrm/contact/search/custom/list',
+      return CRM_Core_Error::statusBounce(
+        ts("Atleast one Custom Group must be present, for Custom Group search."),
+        CRM_Utils_System::url(
+          'civicrm/contact/search/custom/list',
           'reset=1'
         )
       );
@@ -122,19 +126,27 @@ class CRM_Contact_Form_Search_Custom_MultipleValues extends CRM_Contact_Form_Sea
     }
   }
 
-  function summary() {
+  public function summary() {
     return NULL;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     //redirect if custom group not select in search criteria
     if (!CRM_Utils_Array::value('custom_group', $this->_formValues)) {
-      return CRM_Core_Error::statusBounce(ts("You must select at least one Custom Group as a search criteria."),
-        CRM_Utils_System::url('civicrm/contact/search/custom',
+      return CRM_Core_Error::statusBounce(
+        ts("You must select at least one Custom Group as a search criteria."),
+        CRM_Utils_System::url(
+          'civicrm/contact/search/custom',
           "reset=1&csid={$this->_formValues['customSearchID']}",
-          FALSE, NULL, FALSE, TRUE
+          FALSE,
+          NULL,
+          FALSE,
+          TRUE
         )
       );
     }
@@ -152,13 +164,17 @@ contact_a.sort_name    as sort_name,
     }
     $selectClause .= CRM_Utils_Array::implode(',', $customClauses);
 
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
-  function from() {
+  public function from() {
     $from = "FROM civicrm_contact contact_a";
     $customFrom = [];
     // lets do an INNER JOIN so we get only relevant values rather than all values
@@ -183,11 +199,12 @@ contact_a.sort_name    as sort_name,
     return $from;
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $count = 1;
     $clause = [];
     $params = [];
-    $name = CRM_Utils_Array::value('sort_name',
+    $name = CRM_Utils_Array::value(
+      'sort_name',
       $this->_formValues
     );
     if ($name != NULL) {
@@ -199,7 +216,8 @@ contact_a.sort_name    as sort_name,
       $count++;
     }
 
-    $contact_type = CRM_Utils_Array::value('contact_type',
+    $contact_type = CRM_Utils_Array::value(
+      'contact_type',
       $this->_formValues
     );
     if ($contact_type != NULL) {
@@ -228,43 +246,47 @@ contact_a.sort_name    as sort_name,
     return $this->whereClause($where, $params);
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/MultipleValues.tpl';
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [];
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     foreach ($this->_options as $fieldID => $values) {
       $customVal = $valueSeparatedArray = [];
-      if (in_array($values['attributes']['html_type'],
-          ['Radio', 'Select', 'Autocomplete-Select']
-        )) {
+      if (in_array(
+        $values['attributes']['html_type'],
+        ['Radio', 'Select', 'Autocomplete-Select']
+      )) {
         if ($values['attributes']['data_type'] == 'ContactReference' && $row["custom_{$fieldID}"]) {
           $row["custom_{$fieldID}"] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', (int)$row["custom_{$fieldID}"], 'display_name');
         }
         elseif ($row["custom_{$fieldID}"] &&
-          CRM_Utils_Array::arrayKeyExists($row["custom_{$fieldID}"],
+          CRM_Utils_Array::arrayKeyExists(
+            $row["custom_{$fieldID}"],
             $values
           )
         ) {
           $row["custom_{$fieldID}"] = $values[$row["custom_{$fieldID}"]];
         }
       }
-      elseif (in_array($values['attributes']['html_type'],
-          ['CheckBox', 'Multi-Select', 'AdvMulti-Select']
-        )) {
+      elseif (in_array(
+        $values['attributes']['html_type'],
+        ['CheckBox', 'Multi-Select', 'AdvMulti-Select']
+      )) {
         $valueSeparatedArray = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $row["custom_{$fieldID}"]));
         foreach ($valueSeparatedArray as $val) {
           $customVal[] = $values[$val];
         }
         $row["custom_{$fieldID}"] = CRM_Utils_Array::implode(', ', $customVal);
       }
-      elseif (in_array($values['attributes']['html_type'],
-          ['Multi-Select State/Province', 'Select State/Province']
-        )) {
+      elseif (in_array(
+        $values['attributes']['html_type'],
+        ['Multi-Select State/Province', 'Select State/Province']
+      )) {
         $valueSeparatedArray = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $row["custom_{$fieldID}"]));
         $stateName = CRM_Core_PseudoConstant::stateProvince();
         foreach ($valueSeparatedArray as $val) {
@@ -272,12 +294,17 @@ contact_a.sort_name    as sort_name,
         }
         $row["custom_{$fieldID}"] = CRM_Utils_Array::implode(', ', $customVal);
       }
-      elseif (in_array($values['attributes']['html_type'],
-          ['Multi-Select Country', 'Select Country']
-        )) {
+      elseif (in_array(
+        $values['attributes']['html_type'],
+        ['Multi-Select Country', 'Select Country']
+      )) {
         $valueSeparatedArray = array_filter(explode(CRM_Core_DAO::VALUE_SEPARATOR, $row["custom_{$fieldID}"]));
-        CRM_Core_PseudoConstant::populate($countryNames, 'CRM_Core_DAO_Country',
-          TRUE, 'name', 'is_active'
+        CRM_Core_PseudoConstant::populate(
+          $countryNames,
+          'CRM_Core_DAO_Country',
+          TRUE,
+          'name',
+          'is_active'
         );
         foreach ($valueSeparatedArray as $val) {
           $customVal[] = $countryNames[$val];
@@ -287,4 +314,3 @@ contact_a.sort_name    as sort_name,
     }
   }
 }
-

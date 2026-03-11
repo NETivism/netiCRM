@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * Page for invoking report instances
  */
@@ -47,7 +44,7 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   public static function &info($ovID = NULL, &$title = NULL, $compName = NULL) {
 
@@ -115,7 +112,7 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     //option value ID of the Report
     $ovID = $title = NULL;
     $ovID = CRM_Utils_Request::retrieve('ovid', 'Positive', $this);
@@ -136,4 +133,3 @@ class CRM_Report_Page_InstanceList extends CRM_Core_Page {
     return parent::run();
   }
 }
-

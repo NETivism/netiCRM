@@ -22,4 +22,3 @@ function civicrm_api3_generic_update($apiRequest) {
   }
   return civicrm_api($apiRequest['entity'], 'create', $apiRequest['params']);
 }
-

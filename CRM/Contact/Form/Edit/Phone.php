@@ -50,7 +50,7 @@ class CRM_Contact_Form_Edit_Phone {
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form, $addressBlockCount = NULL) {
+  public static function buildQuickForm(&$form, $addressBlockCount = NULL) {
 
     // passing this via the session is AWFUL. we need to fix this
     if (!$addressBlockCount) {
@@ -80,4 +80,3 @@ class CRM_Contact_Form_Edit_Phone {
     // $form->addRule( "location[$locationId][phone][$locationId][phone]", ts('Phone number is not valid.'), 'phone' );
   }
 }
-

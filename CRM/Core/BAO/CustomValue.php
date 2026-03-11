@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Business objects for managing custom data values.
  *
@@ -82,9 +80,11 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
         $valid = FALSE;
         $mulValues = explode(',', $value);
         foreach ($mulValues as $key => $state) {
-          $valid = CRM_Utils_Array::arrayKeyExists(strtolower(trim($state)),
+          $valid = CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($state)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::stateProvinceAbbreviation()), CASE_LOWER)
-          ) || CRM_Utils_Array::arrayKeyExists(strtolower(trim($state)),
+          ) || CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($state)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::stateProvince()), CASE_LOWER)
           );
           if (!$valid) {
@@ -99,9 +99,11 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
         $valid = FALSE;
         $mulValues = explode(',', $value);
         foreach ($mulValues as $key => $country) {
-          $valid = CRM_Utils_Array::arrayKeyExists(strtolower(trim($country)),
+          $valid = CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($country)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::countryIsoCode()), CASE_LOWER)
-          ) || CRM_Utils_Array::arrayKeyExists(strtolower(trim($country)),
+          ) || CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($country)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::country()), CASE_LOWER)
           );
           if (!$valid) {
@@ -118,7 +120,7 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
           if ($value[0] != '/') {
             $file_path = CRM_Utils_File::baseFilePath().$value;
           }
-          else{
+          else {
             $file_path = $value;
           }
           return file_exists($file_path);
@@ -170,7 +172,6 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
     }
   }
 
-
   public static function fixFieldValueOfTypeMemo(&$formValues) {
     if (empty($formValues)) {
       return NULL;
@@ -183,19 +184,24 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
         continue;
       }
 
-      $htmlType = CRM_Core_DAO::getFieldValue('CRM_Core_BAO_CustomField',
-        substr($key, 7), 'html_type'
+      $htmlType = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_BAO_CustomField',
+        substr($key, 7),
+        'html_type'
       );
       if (($htmlType == 'TextArea') &&
-        !((substr($formValues[$key], 0, 1) == '%') ||
+        !(
+          (substr($formValues[$key], 0, 1) == '%') ||
           (substr($formValues[$key], -1, 1) == '%')
         )
       ) {
         $formValues[$key] = '%' . $formValues[$key] . '%';
       }
 
-      $dataType = CRM_Core_DAO::getFieldValue('CRM_Core_BAO_CustomField',
-        substr($key, 7), 'data_type'
+      $dataType = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_BAO_CustomField',
+        substr($key, 7),
+        'data_type'
       );
       if (($dataType == 'ContactReference') && ($htmlType == 'Autocomplete-Select')) {
         $formValues[$key] = $formValues[$key . '_id'];
@@ -212,7 +218,7 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
    * @return void
    * @static
    */
-  static function deleteCustomValue($customValueID, $customGroupID) {
+  public static function deleteCustomValue($customValueID, $customGroupID) {
     // first we need to find custom value table, from custom group ID
     $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $customGroupID, 'table_name');
 
@@ -221,4 +227,3 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
     CRM_Core_DAO::executeQuery($sql);
   }
 }
-

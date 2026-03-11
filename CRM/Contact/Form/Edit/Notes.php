@@ -32,7 +32,7 @@
  * $Id$
  *
  */
-Class CRM_Contact_Form_Edit_Notes {
+class CRM_Contact_Form_Edit_Notes {
 
   /**
    * This function is to build form elements
@@ -42,10 +42,9 @@ Class CRM_Contact_Form_Edit_Notes {
    * @access public
    */
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $form->applyFilter('__ALL__', 'trim');
     $form->add('text', 'subject', ts('Subject'), ['size' => 60, 'maxlength' => 254]);
     $form->add('textarea', 'note', ts('Notes'), ['cols' => '60', 'rows' => '3']);
   }
 }
-

@@ -33,14 +33,13 @@
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Form_TwoOneTwo extends CRM_Upgrade_Form {
-  function __construct($version) {
+  public function __construct($version) {
     parent::__construct();
     $this->latestVersion = $version;
   }
 
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade to 2.1.2.');
     // check if the db is 2.2
     if (!CRM_Core_DAO::checkTableExists('civicrm_event_page') &&
@@ -101,10 +100,11 @@ class CRM_Upgrade_TwoOne_Form_TwoOneTwo extends CRM_Upgrade_Form {
     return TRUE;
   }
 
-  function upgrade() {
+  public function upgrade() {
     $currentDir = dirname(__FILE__);
 
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'two_one_two.mysql']
     );
     $this->source($sqlFile);
@@ -140,9 +140,8 @@ AND civicrm_option_value.label = civicrm_participant.fee_level
     $this->setVersion($this->latestVersion);
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     $errorMessage = ts('Post-condition failed for upgrade to 2.1.2.');
     return $this->checkVersion($this->latestVersion);
   }
 }
-

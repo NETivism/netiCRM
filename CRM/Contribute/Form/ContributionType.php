@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Contribution Type
  *
@@ -103,4 +101,3 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     }
   }
 }
-

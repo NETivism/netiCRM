@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
 
   /**
@@ -62,7 +61,8 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ]; function __construct() {
+  ];
+  public function __construct() {
     $this->_columns = [];
 
     $this->_columns['civicrm_contact'] = [
@@ -150,12 +150,12 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $this->assign('chartSupported', TRUE);
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -188,12 +188,12 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     //print_r($this->_select);
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}";
 
@@ -217,7 +217,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     //print_r($this->_from);
   }
 
-  function where() {
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -237,7 +237,8 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
                 $clause = "{$this->_aliases['civicrm_relationship']}.relationship_type_id=" . $this->relationshipId;
               }
               else {
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -266,7 +267,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     if (CRM_Utils_Array::value('charts', $this->_params)) {
       $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_mailing']}.id";
     }
@@ -275,7 +276,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     }
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -294,7 +295,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function buildChart(&$rows) {
+  public function buildChart(&$rows) {
     if (empty($rows)) {
       return;
     }
@@ -313,7 +314,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     $this->assign('chartType', $this->_params['charts']);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
@@ -322,9 +323,11 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Contact details for this contact.");
@@ -345,7 +348,6 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -354,8 +356,7 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     }
   }
 
-  function mailing_select() {
-
+  public function mailing_select() {
 
     $data = [];
     $mailing = new CRM_Mailing_BAO_Mailing();
@@ -369,4 +370,3 @@ class CRM_Report_Form_Mailing_Opened extends CRM_Report_Form {
     return $data;
   }
 }
-

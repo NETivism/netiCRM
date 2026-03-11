@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class generates task actions for CiviEvent
  *
@@ -79,11 +76,11 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     self::preProcessCommon($this);
   }
 
-  static function preProcessCommon(&$form, $useTable = FALSE) {
+  public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_participantIds = [];
 
     $values = $form->controller->exportValues($form->get('searchFormName'));
@@ -137,9 +134,10 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
       $session->replaceUserContext(CRM_Utils_System::url('civicrm/event/search', $urlParams));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
-          $urlParams
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        "civicrm/contact/search/$searchFormName",
+        $urlParams
+      ));
     }
   }
 
@@ -148,7 +146,8 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
    * since its used for things like send email
    */
   public function setContactIDs() {
-    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent($this->_participantIds,
+    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent(
+      $this->_participantIds,
       'civicrm_participant'
     );
   }
@@ -163,8 +162,9 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -176,4 +176,3 @@ class CRM_Event_Form_Task extends CRM_Core_Form {
     );
   }
 }
-

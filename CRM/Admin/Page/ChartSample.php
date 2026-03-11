@@ -37,7 +37,7 @@
  */
 class CRM_Admin_Page_ChartSample extends CRM_Core_Page {
 
-  function run() {
+  public function run() {
     return parent::run();
   }
 
@@ -46,7 +46,7 @@ class CRM_Admin_Page_ChartSample extends CRM_Core_Page {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/chartsample';
   }
 }

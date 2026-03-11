@@ -33,7 +33,6 @@
  *
  */
 
-
 /**
  * This class generates form components for processing a ontribution
  *
@@ -134,14 +133,13 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (!$this->_contactID) {
       return;
     }
     foreach ($this->_fields as $name => $dontcare) {
       $fields[$name] = 1;
     }
-
 
     CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactID, $fields, $this->_defaults);
 
@@ -150,8 +148,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     foreach ($this->_fields as $name => $field) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
         if (!isset($this->_defaults[$name])) {
-          CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID, $name, $this->_defaults,
-            NULL, CRM_Profile_Form::MODE_REGISTER
+          CRM_Core_BAO_CustomField::setProfileDefaults(
+            $customFieldID,
+            $name,
+            $this->_defaults,
+            NULL,
+            CRM_Profile_Form::MODE_REGISTER
           );
         }
       }
@@ -181,9 +183,9 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $this->addFormRule(['CRM_Contribute_Form_PCP_PCPAccount', 'formRule'], $this);
     }
     else {
-			if (!$session->get('userID')) {
-				CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
-			}
+      if (!$session->get('userID')) {
+        CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
+      }
       $fields = CRM_Core_BAO_UFGroup::getFields($id, FALSE, CRM_Core_Action::ADD);
     }
 
@@ -205,7 +207,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
         $this->assign("isCaptcha", TRUE);
       }
     }
-
 
     $this->assign('campaignName', CRM_Contribute_PseudoConstant::contributionPage($this->_pageId));
 
@@ -243,7 +244,7 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       foreach ($fields as $key => $value) {
@@ -291,7 +292,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       }
     }
 
-
     $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Strict');
     if ($ids) {
@@ -309,4 +309,3 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
   }
 }
-

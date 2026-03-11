@@ -33,16 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -204,7 +194,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
         'id' => $this->_dedupeRuleGroupId,
       ];
       $this->_dedupeRuleFields[$this->_contactType] = CRM_Dedupe_BAO_Rule::dedupeRuleFieldsMapping($ruleParams);
-      foreach($this->_dedupeRuleFields[$this->_contactType] as $highlight) {
+      foreach ($this->_dedupeRuleFields[$this->_contactType] as $highlight) {
         $highlightedFields[] = $highlight;
       }
     }
@@ -286,7 +276,6 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-
 
     //to save the current mappings
     if (!$this->get('savedMapping')) {
@@ -498,7 +487,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     $js = "<script type='text/javascript'>\n";
     $formName = 'document.forms.' . $this->_name;
     $mapperFieldsShortName = [];
-    foreach($this->_mapperFields as $key => $value){
+    foreach ($this->_mapperFields as $key => $value) {
       $mapperFieldsShortName[$key] = trim(str_replace(ts('(match to contact)'), '', $value));
     }
 
@@ -533,8 +522,15 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
                 $contactSubType = $this->get('contactSubType');
               }
 
-              $relations = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, $contactType,
-                FALSE, 'label', TRUE, $contactSubType
+              $relations = CRM_Contact_BAO_Relationship::getContactRelationshipType(
+                NULL,
+                NULL,
+                NULL,
+                $contactType,
+                FALSE,
+                'label',
+                TRUE,
+                $contactSubType
               );
 
               foreach ($relations as $key => $var) {
@@ -652,7 +648,8 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
         if ($hasColumnNames) {
           // Infer the default from the column names if we have them
           $defaults["mapper[$i]"] = [
-            $this->defaultFromColumnName($this->_columnNames[$i],
+            $this->defaultFromColumnName(
+              $this->_columnNames[$i],
               $columnPatterns
             ),
             0,
@@ -687,7 +684,8 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
 
     $this->setDefaults($defaults);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -712,7 +710,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     if (CRM_Utils_Array::value('saveMapping', $fields)) {
       $nameField = CRM_Utils_Array::value('saveMappingName', $fields);
@@ -766,7 +764,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     $mapperKeysMain = [];
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);
@@ -792,11 +790,15 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     ];
 
     //set respective mapper params to array.
-    foreach (array_keys($mapperParams) as $mapperParam)$$mapperParam = [];
+    foreach (array_keys($mapperParams) as $mapperParam) {
+      $$mapperParam = [];
+    }
 
     for ($i = 0; $i < $this->_columnCount; $i++) {
       //set respective mapper value to null
-      foreach (array_values($mapperParams) as $mapperParam)$$mapperParam = NULL;
+      foreach (array_values($mapperParams) as $mapperParam) {
+        $$mapperParam = NULL;
+      }
 
       $fldName = CRM_Utils_Array::value(0, $mapperKeys[$i]);
       $selOne = CRM_Utils_Array::value(1, $mapperKeys[$i]);
@@ -962,7 +964,8 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = ['name' => $params['saveMappingName'],
         'description' => $params['saveMappingDesc'],
-        'mapping_type_id' => CRM_Core_OptionGroup::getValue('mapping_type',
+        'mapping_type_id' => CRM_Core_OptionGroup::getValue(
+          'mapping_type',
           'Import Contact',
           'name'
         ),
@@ -1041,11 +1044,19 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
       $this->set('savedMapping', $saveMappingFields->mapping_id);
     }
 
-    $parser = new CRM_Import_Parser_Contact($mapperKeysMain, $mapperLocType, $mapperPhoneType,
-      $mapperImProvider, $related, $relatedContactType,
-      $relatedContactDetails, $relatedContactLocType,
-      $relatedContactPhoneType, $relatedContactImProvider,
-      $mapperWebsiteType, $relatedContactWebsiteType
+    $parser = new CRM_Import_Parser_Contact(
+      $mapperKeysMain,
+      $mapperLocType,
+      $mapperPhoneType,
+      $mapperImProvider,
+      $related,
+      $relatedContactType,
+      $relatedContactDetails,
+      $relatedContactLocType,
+      $relatedContactPhoneType,
+      $relatedContactImProvider,
+      $mapperWebsiteType,
+      $relatedContactWebsiteType
     );
     $parser->_dedupeRuleGroupId = $this->_dedupeRuleGroupId;
 
@@ -1053,11 +1064,19 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     $statusFieldName = $this->get('statusFieldName');
     $parser->_skipColumnHeader = $this->get('skipColumnHeader');
     $parser->_dateFormats = $this->get('dateFormats');
-    $parser->run($this->_importTableName, $mapper,
+    $parser->run(
+      $this->_importTableName,
+      $mapper,
       CRM_Import_Parser::MODE_PREVIEW,
       $this->get('contactType'),
-      $primaryKeyName, $statusFieldName, $this->_onDuplicate,
-      NULL, NULL, FALSE, NULL, $this->get('contactSubType')
+      $primaryKeyName,
+      $statusFieldName,
+      $this->_onDuplicate,
+      NULL,
+      NULL,
+      FALSE,
+      NULL,
+      $this->get('contactSubType')
     );
 
     // add all the necessary variables to the form
@@ -1081,7 +1100,7 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function formatCustomFieldName(&$fields) {
+  public function formatCustomFieldName(&$fields) {
     //CRM-2676, replacing the conflict for same custom field name from different custom group.
     $fieldIds = $formattedFieldNames = [];
     foreach ($fields as $key => $value) {
@@ -1107,4 +1126,3 @@ class CRM_Import_Form_MapField extends CRM_Core_Form {
     return $formattedFieldNames;
   }
 }
-

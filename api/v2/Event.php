@@ -1,7 +1,6 @@
 <?php
 // $Id: Event.php 43419 2012-11-05 12:33:14Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -89,7 +88,7 @@ function civicrm_event_create(&$params) {
 
     return $values;
   }
-  catch(Exception$e) {
+  catch (Exception$e) {
     return civicrm_create_error($e->getMessage());
   }
 }
@@ -204,7 +203,8 @@ function civicrm_event_search(&$params) {
   while ($eventDAO->fetch()) {
     $event[$eventDAO->id] = [];
     CRM_Core_DAO::storeValues($eventDAO, $event[$eventDAO->id]);
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Event',
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+      'Event',
       CRM_Core_DAO::$_nullObject,
       $eventDAO->id,
       FALSE,
@@ -261,4 +261,3 @@ function civicrm_event_delete(&$params) {
 
   return CRM_Event_BAO_Event::del($eventID) ? civicrm_create_success() : civicrm_create_error(ts('Error while deleting event'));
 }
-

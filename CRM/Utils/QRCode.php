@@ -3,12 +3,12 @@ class CRM_Utils_QRcode {
   public $_dataImg = '';
   public $_format = 'png';
   private $_data;
-  
-  function __construct($string, $format = 'png') {
+
+  public function __construct($string, $format = 'png') {
     require_once 'phpqrcode/phpqrcode.php';
 
     ob_start();
-    switch($format) {
+    switch ($format) {
       case 'jpg':
       case 'jpeg':
         $this->_format = 'jpg';
@@ -24,8 +24,8 @@ class CRM_Utils_QRcode {
     ob_end_clean();
   }
 
-  function img(){
-    switch($this->_format) {
+  public function img() {
+    switch ($this->_format) {
       case 'jpg':
         Header("Content-type: image/jpeg");
         echo $this->_data;
@@ -38,8 +38,8 @@ class CRM_Utils_QRcode {
         break;
     }
   }
-  function fileImg($filename) {
-    switch($this->_format) {
+  public function fileImg($filename) {
+    switch ($this->_format) {
       case 'jpg':
         $filename = preg_replace('/\.jpg$/i', '', $filename).'.jpg';
         break;
@@ -52,8 +52,8 @@ class CRM_Utils_QRcode {
     return $filepath;
   }
 
-  function dataImg() {
-    switch($this->_format) {
+  public function dataImg() {
+    switch ($this->_format) {
       case 'jpg':
         $this->_dataImg = 'data:image/jpeg;base64,'.base64_encode($this->_data);
         break;

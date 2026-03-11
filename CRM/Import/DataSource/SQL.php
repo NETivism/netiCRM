@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
 
   public function getInfo() {
@@ -43,7 +42,8 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     ];
   }
 
-  public static function preProcess(&$form) {}
+  public static function preProcess(&$form) {
+  }
 
   public static function buildQuickForm(&$form) {
     $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_SQL');
@@ -51,7 +51,7 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     $form->addFormRule(['CRM_Import_DataSource_SQL', 'formRule'], $form);
   }
 
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
 
     // poor man's query validation (case-insensitive regex matching on word boundaries)
@@ -65,10 +65,11 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     return $errors ? $errors : TRUE;
   }
 
-
   public static function postProcess(&$form, &$params, &$db) {
-    $importJob = new CRM_Import_ImportJob(CRM_Utils_Array::value('import_table_name', $params),
-      $params['sqlQuery'], TRUE
+    $importJob = new CRM_Import_ImportJob(
+      CRM_Utils_Array::value('import_table_name', $params),
+      $params['sqlQuery'],
+      TRUE
     );
     $tableName = $importJob->getTableName();
     $form->set('importTableName', $tableName);
@@ -78,4 +79,3 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     $form->set('statusFieldName', $fields['statusFieldName']);
   }
 }
-

@@ -33,41 +33,48 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_Base {
 
   protected $_formValues;
 
   protected $_columns;
-  
-  function __construct(&$formValues) {
+
+  public function __construct(&$formValues) {
     $this->_formValues = &$formValues;
   }
 
-  function count() {
-    return CRM_Core_DAO::singleValueQuery($this->sql('count(distinct contact_a.id) as total'),
+  public function count() {
+    return CRM_Core_DAO::singleValueQuery(
+      $this->sql('count(distinct contact_a.id) as total'),
       CRM_Core_DAO::$_nullArray
     );
   }
 
-  function summary() {
+  public function summary() {
     return NULL;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
-    $sql = $this->sql('contact_a.id as contact_id',
-      $offset, $rowcount, $sort
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+    $sql = $this->sql(
+      'contact_a.id as contact_id',
+      $offset,
+      $rowcount,
+      $sort
     );
     $this->validateUserSQL($sql);
 
-    return CRM_Core_DAO::composeQuery($sql,
+    return CRM_Core_DAO::composeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray,
       TRUE
     );
   }
 
-  function sql($selectClause,
-    $offset = 0, $rowcount = 0, $sort = NULL,
+  public function sql(
+    $selectClause,
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE,
     $groupBy = NULL
   ) {
@@ -75,7 +82,8 @@ class CRM_Contact_Form_Search_Custom_Base {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE " . $this->where();
 
     if ($includeContactIDs) {
-      $this->includeContactIDs($sql,
+      $this->includeContactIDs(
+        $sql,
         $this->_formValues
       );
     }
@@ -88,15 +96,15 @@ class CRM_Contact_Form_Search_Custom_Base {
     return $sql;
   }
 
-  function templateFile() {
+  public function templateFile() {
     return NULL;
   }
 
-  function &columns() {
+  public function &columns() {
     return $this->_columns;
   }
 
-  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -111,8 +119,11 @@ class CRM_Contact_Form_Search_Custom_Base {
     }
   }
 
-  function addSortOffset(&$sql,
-    $offset, $rowcount, $sort
+  public function addSortOffset(
+    &$sql,
+    $offset,
+    $rowcount,
+    $sort
   ) {
     if (!empty($sort)) {
       if (is_string($sort)) {
@@ -128,7 +139,7 @@ class CRM_Contact_Form_Search_Custom_Base {
     }
   }
 
-  function validateUserSQL(&$sql, $onlyWhere = FALSE) {
+  public function validateUserSQL(&$sql, $onlyWhere = FALSE) {
     $includeStrings = ['contact_a'];
     $excludeStrings = ['insert', 'delete', 'update'];
 
@@ -138,23 +149,24 @@ class CRM_Contact_Form_Search_Custom_Base {
 
     foreach ($includeStrings as $string) {
       if (stripos($sql, $string) === FALSE) {
-        return CRM_Core_Error::statusBounce(ts('Could not find \'%1\' string in SQL clause.',
-            [1 => $string]
-          ));
+        return CRM_Core_Error::statusBounce(ts(
+          'Could not find \'%1\' string in SQL clause.',
+          [1 => $string]
+        ));
       }
     }
 
     foreach ($excludeStrings as $string) {
       if (preg_match('/(\s' . $string . ')|(' . $string . '\s)/i', $sql)) {
-        return CRM_Core_Error::statusBounce(ts('Found illegal \'%1\' string in SQL clause.',
-            [1 => $string]
-          ));
+        return CRM_Core_Error::statusBounce(ts(
+          'Found illegal \'%1\' string in SQL clause.',
+          [1 => $string]
+        ));
       }
     }
   }
 
-  function whereClause(&$where, &$params) {
+  public function whereClause(&$where, &$params) {
     return CRM_Core_DAO::composeQuery($where, $params, TRUE);
   }
 }
-

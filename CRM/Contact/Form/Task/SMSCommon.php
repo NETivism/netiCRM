@@ -35,7 +35,7 @@
  * This class provides the common functionality for sending sms to one or a group of contact ids.
  */
 class CRM_Contact_Form_Task_SMSCommon {
-  const RECIEVED_SMS_ACTIVITY_SUBJECT = "SMS Received";
+  public const RECIEVED_SMS_ACTIVITY_SUBJECT = "SMS Received";
 
   public $_contactDetails = [];
 
@@ -75,7 +75,6 @@ class CRM_Contact_Form_Task_SMSCommon {
       $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $form, TRUE);
       $form->_contactIds = [$cid];
     }
-
 
     if (!empty($form->_contactIds)) {
       $queryParams = [];
@@ -239,7 +238,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             $self->set('force_send', TRUE);
             $self->set('has_token', TRUE);
           }
-          if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
+          if (preg_match("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)) {
             if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR)) {
               $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", [1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR]);
               $self->set('force_send', TRUE);
@@ -349,7 +348,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
     }
     else {
-      $sendResult = CRM_Activity_BAO_Activity::sendSMS($formattedContactDetails,
+      $sendResult = CRM_Activity_BAO_Activity::sendSMS(
+        $formattedContactDetails,
         $thisValues,
         $smsParams,
         $contactIds

@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class provides the functionality to create PDF letter for a group of
  * contacts or a single contact.
@@ -69,7 +61,7 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Contact_Form_Task_PDFLetterCommon::preProcess($this);
 
     // store case id if present
@@ -91,7 +83,7 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
     $this->assign('single', $this->_single);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (isset($this->_activityId)) {
       $params = ['id' => $this->_activityId];
       CRM_Activity_BAO_Activity::retrieve($params, $defaults);
@@ -134,4 +126,3 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
     return $tokens;
   }
 }
-

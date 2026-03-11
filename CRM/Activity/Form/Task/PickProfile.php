@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality for batch profile update for Activity
  */
@@ -66,7 +63,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -97,7 +94,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     $types = ['Activity'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types, TRUE);
@@ -132,8 +129,12 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
       CRM_Utils_System::redirect($this->_userContext);
     }
 
-    $ufGroupElement = $this->add('select', 'uf_group_id', ts('Select Profile'),
-      ['' => ts('- select profile -')] + $profiles, TRUE
+    $ufGroupElement = $this->add(
+      'select',
+      'uf_group_id',
+      ts('Select Profile'),
+      ['' => ts('- select profile -')] + $profiles,
+      TRUE
     );
     $this->addDefaultButtons(ts('Continue >>'));
   }
@@ -145,7 +146,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Activity_Form_Task_PickProfile', 'formRule']);
   }
 
@@ -158,7 +159,7 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     return TRUE;
   }
 
@@ -179,4 +180,3 @@ class CRM_Activity_Form_Task_PickProfile extends CRM_Activity_Form_Task {
   }
   //end of function
 }
-

@@ -33,18 +33,17 @@
  *
  */
 
-
 class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
 
   /**
    * static holder for the default LT
    */
-  static $_defaultMembershipStatus = NULL;
+  public static $_defaultMembershipStatus = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -62,7 +61,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $membershipStatus = new CRM_Member_DAO_MembershipStatus();
     $membershipStatus->copyValues($params);
     if ($membershipStatus->find(TRUE)) {
@@ -81,7 +80,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Member_DAO_MembershipStatus', $id, 'is_active', $is_active);
   }
 
@@ -96,7 +95,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    *
    * @return object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_current_member'] = CRM_Utils_Array::value('is_current_member', $params, FALSE);
     $params['is_admin'] = CRM_Utils_Array::value('is_admin', $params, FALSE);
@@ -105,7 +104,8 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
     // set all other defaults to false.
     if ($params['is_default']) {
       $query = "UPDATE civicrm_membership_status SET is_default = 0";
-      CRM_Core_DAO::executeQuery($query,
+      CRM_Core_DAO::executeQuery(
+        $query,
         CRM_Core_DAO::$_nullArray
       );
     }
@@ -142,7 +142,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @param int $membershipStatusId
    * @static
    */
-  static function getMembershipStatus($membershipStatusId) {
+  public static function getMembershipStatus($membershipStatusId) {
     $statusDetails = [];
     $membershipStatus = new CRM_Member_DAO_MembershipStatus();
     $membershipStatus->id = $membershipStatusId;
@@ -158,7 +158,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @param int $membershipStatusId
    * @static
    */
-  static function del($membershipStatusId, $skipRedirect = FALSE) {
+  public static function del($membershipStatusId, $skipRedirect = FALSE) {
     //check dependencies
     //checking if any membership status is present in some other table
     $check = FALSE;
@@ -186,7 +186,6 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
       return $error;
     }
 
-
     //delete from membership Type table
 
     $membershipStatus = new CRM_Member_DAO_MembershipStatus();
@@ -207,14 +206,20 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @return
    * @static
    */
-  static function getMembershipStatusByDate($startDate, $endDate, $joinDate,
-    $statusDate = 'today', $excludeIsAdmin = FALSE
+  public static function getMembershipStatusByDate(
+    $startDate,
+    $endDate,
+    $joinDate,
+    $statusDate = 'today',
+    $excludeIsAdmin = FALSE
   ) {
     $membershipDetails = [];
     if (!$statusDate || $statusDate == 'today') {
       $statusDate = getDate();
-      $statusDate = date('Ymd',
-        mktime($statusDate['hours'],
+      $statusDate = date(
+        'Ymd',
+        mktime(
+          $statusDate['hours'],
           $statusDate['minutes'],
           $statusDate['seconds'],
           $statusDate['mon'],
@@ -274,27 +279,36 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
             ) {
               // add in months
               if ($membershipStatus->{$eve . '_event_adjust_unit'} == 'month') {
-                ${$eve . 'Event'} = date('Ymd', mktime($hour, $minute, $second,
-                    ${$dat . 'Month'} + $membershipStatus->{$eve . '_event_adjust_interval'},
-                    ${$dat . 'Day'},
-                    ${$dat . 'Year'}
-                  ));
+                ${$eve . 'Event'} = date('Ymd', mktime(
+                  $hour,
+                  $minute,
+                  $second,
+                  ${$dat . 'Month'} + $membershipStatus->{$eve . '_event_adjust_interval'},
+                  ${$dat . 'Day'},
+                  ${$dat . 'Year'}
+                ));
               }
               // add in days
               if ($membershipStatus->{$eve . '_event_adjust_unit'} == 'day') {
-                ${$eve . 'Event'} = date('Ymd', mktime($hour, $minute, $second,
-                    ${$dat . 'Month'},
-                    ${$dat . 'Day'} + $membershipStatus->{$eve . '_event_adjust_interval'},
-                    ${$dat . 'Year'}
-                  ));
+                ${$eve . 'Event'} = date('Ymd', mktime(
+                  $hour,
+                  $minute,
+                  $second,
+                  ${$dat . 'Month'},
+                  ${$dat . 'Day'} + $membershipStatus->{$eve . '_event_adjust_interval'},
+                  ${$dat . 'Year'}
+                ));
               }
               // add in years
               if ($membershipStatus->{$eve . '_event_adjust_unit'} == 'year') {
-                ${$eve . 'Event'} = date('Ymd', mktime($hour, $minute, $second,
-                    ${$dat . 'Month'},
-                    ${$dat . 'Day'},
-                    ${$dat . 'Year'} + $membershipStatus->{$eve . '_event_adjust_interval'}
-                  ));
+                ${$eve . 'Event'} = date('Ymd', mktime(
+                  $hour,
+                  $minute,
+                  $second,
+                  ${$dat . 'Month'},
+                  ${$dat . 'Day'},
+                  ${$dat . 'Year'} + $membershipStatus->{$eve . '_event_adjust_interval'}
+                ));
               }
               // if no interval and unit, present
             }
@@ -343,7 +357,7 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
    * @return
    * @static
    */
-  static function getMembershipStatusCurrent() {
+  public static function getMembershipStatusCurrent() {
     $statusIds = [];
 
     $membershipStatus = new CRM_Member_DAO_MembershipStatus();
@@ -358,4 +372,3 @@ class CRM_Member_BAO_MembershipStatus extends CRM_Member_DAO_MembershipStatus {
     return $statusIds;
   }
 }
-

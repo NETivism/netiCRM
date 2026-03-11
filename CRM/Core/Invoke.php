@@ -46,7 +46,7 @@ class CRM_Core_Invoke {
    * @static
    * @access public
    */
-  static function invoke($args) {
+  public static function invoke($args) {
     self::menuRebuild($args);
     CRM_Utils_System::civiBeforeInvoke($args);
 
@@ -85,7 +85,7 @@ class CRM_Core_Invoke {
       }
 
       if (isset($item['breadcrumb']) && !isset($item['is_public'])) {
-        foreach($item['breadcrumb'] as $k => $b){
+        foreach ($item['breadcrumb'] as $k => $b) {
           $item['breadcrumb'][$k]['url'] = CRM_Utils_System::url($b['url']);
         }
         CRM_Utils_System::appendBreadCrumb($item['breadcrumb']);
@@ -170,10 +170,9 @@ class CRM_Core_Invoke {
    * @static
    * @access public
    */
-  static function form($action, $contact_type, $contact_sub_type) {
+  public static function form($action, $contact_type, $contact_sub_type) {
     CRM_Utils_System::setUserContext(['civicrm/contact/search/basic', 'civicrm/contact/view']);
     $wrapper = new CRM_Utils_Wrapper();
-
 
     $properties = &CRM_Core_Component::contactSubTypeProperties($contact_sub_type, 'Edit');
     if ($properties) {
@@ -192,7 +191,7 @@ class CRM_Core_Invoke {
    * @static
    * @access public
    */
-  static function profile($args) {
+  public static function profile($args) {
     if ($args[1] !== 'profile') {
       return;
     }
@@ -200,9 +199,13 @@ class CRM_Core_Invoke {
     $secondArg = CRM_Utils_Array::value(2, $args, '');
 
     if ($secondArg == 'map') {
-      $controller = new CRM_Core_Controller_Simple('CRM_Contact_Form_Task_Map',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Contact_Form_Task_Map',
         ts('Map Contact'),
-        NULL, FALSE, FALSE, TRUE
+        NULL,
+        FALSE,
+        FALSE,
+        TRUE
       );
 
       $gids = explode(',', CRM_Utils_Request::retrieve('gid', 'String', CRM_Core_DAO::$_nullObject, FALSE, 0, 'GET'));
@@ -215,13 +218,17 @@ class CRM_Core_Invoke {
         $profileGID = $profileIds[0];
       }
       else {
-        $profileGID = CRM_Utils_Request::retrieve('gid', 'Integer',
+        $profileGID = CRM_Utils_Request::retrieve(
+          'gid',
+          'Integer',
           $controller,
           TRUE
         );
       }
 
-      $profileView = CRM_Utils_Request::retrieve('pv', 'Integer',
+      $profileView = CRM_Utils_Request::retrieve(
+        'pv',
+        'Integer',
         $controller,
         FALSE
       );
@@ -248,7 +255,8 @@ class CRM_Core_Invoke {
       // CRM-5849: we should actually check the button *type*, but we get the *value*, potentially translated;
       // we should keep both English and translated checks just to make sure we also handle untranslated Cancels
       if ($buttonType == 'Cancel' or $buttonType == ts('Cancel')) {
-        $cancelURL = CRM_Utils_Request::retrieve('cancelURL',
+        $cancelURL = CRM_Utils_Request::retrieve(
+          'cancelURL',
           'String',
           CRM_Core_DAO::$_nullObject,
           FALSE,
@@ -261,10 +269,13 @@ class CRM_Core_Invoke {
       }
 
       if ($secondArg == 'edit') {
-        $controller = new CRM_Core_Controller_Simple('CRM_Profile_Form_Edit',
+        $controller = new CRM_Core_Controller_Simple(
+          'CRM_Profile_Form_Edit',
           ts('Create Profile'),
           CRM_Core_Action::UPDATE,
-          FALSE, FALSE, TRUE
+          FALSE,
+          FALSE,
+          TRUE
         );
         $controller->set('edit', 1);
         $controller->process();
@@ -304,12 +315,13 @@ class CRM_Core_Invoke {
           $template->assign('embedBody', $profile);
           $template->assign('embedId', 'profile-'.$gid);
           $content = $template->fetch('CRM/common/Embed.tpl');
-          echo $content; 
+          echo $content;
           CRM_Utils_System::civiExit();
         }
         else {
           $wrapper = new CRM_Utils_Wrapper();
-          $result = $wrapper->run('CRM_Profile_Form_Edit',
+          $result = $wrapper->run(
+            'CRM_Profile_Form_Edit',
             ts('Create Profile'),
             ['mode' => CRM_Core_Action::ADD,
               'ignoreKey' => TRUE,
@@ -320,12 +332,11 @@ class CRM_Core_Invoke {
       }
     }
 
-
     $page = new CRM_Profile_Page_Listings();
     return $page->run();
   }
 
-  static function menuRebuild($args = NULL, $force = FALSE) {
+  public static function menuRebuild($args = NULL, $force = FALSE) {
     // when force rebuild, do not check permission and add status message
     if ($force) {
       CRM_Core_Menu::store(FALSE);
@@ -348,4 +359,3 @@ class CRM_Core_Invoke {
     }
   }
 }
-

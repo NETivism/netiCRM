@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is to build the form for deleting a field
  */
@@ -63,9 +60,8 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
    * @return void
    * @acess protected
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
-
 
     $defaults = [];
     $params = ['id' => $this->_id];
@@ -87,7 +83,8 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Delete Custom Field'),
           'isDefault' => TRUE,
@@ -122,4 +119,3 @@ class CRM_Custom_Form_DeleteField extends CRM_Core_Form {
     CRM_Utils_Weight::correctDuplicateWeights('CRM_Core_DAO_CustomField');
   }
 }
-

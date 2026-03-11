@@ -5,7 +5,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -22,7 +22,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
     if (empty($params['activity_id'])) {
       return NULL;
     }
-    if(!CRM_Utils_Rule::positiveInteger($params['activity_id'])) {
+    if (!CRM_Utils_Rule::positiveInteger($params['activity_id'])) {
       return NULL;
     }
     $q = CRM_Mailing_Event_BAO_Queue::verify($params['job_id'], $params['event_queue_id'], $params['hash']);
@@ -66,7 +66,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
       1 => [$activityId, 'Positive'],
     ]);
     $rows = [];
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $rows[] = [
         'act' => $dao->act,
         'time' => $dao->time_stamp,
@@ -84,8 +84,8 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
    * @return void
    */
   public static function formatMailingEvents($mailingEvents) {
-    foreach($mailingEvents as $idx => $event) {
-      switch($event['act']) {
+    foreach ($mailingEvents as $idx => $event) {
+      switch ($event['act']) {
         case 'delivered':
           $event['action'] = ts('Delivered');
           break;

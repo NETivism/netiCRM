@@ -41,7 +41,7 @@ class CRM_Admin_Page_AJAX {
   /**
    * Function to build menu tree
    */
-  static function getNavigationList() {
+  public static function getNavigationList() {
 
     echo CRM_Core_BAO_Navigation::buildNavigation(TRUE);
     CRM_Utils_System::civiExit();
@@ -50,7 +50,7 @@ class CRM_Admin_Page_AJAX {
   /**
    * Function to process drag/move action for menu tree
    */
-  static function menuTree() {
+  public static function menuTree() {
 
     echo CRM_Core_BAO_Navigation::processNavigation($_GET);
     CRM_Utils_System::civiExit();
@@ -60,7 +60,7 @@ class CRM_Admin_Page_AJAX {
    * Function to build status message while
    * enabling/ disabling various objects
    */
-  static function getStatusMsg() {
+  public static function getStatusMsg() {
     $recordID = CRM_Utils_Type::escape($_POST['recordID'], 'Integer');
     $recordBAO = CRM_Utils_Type::escape($_POST['recordBAO'], 'String');
     $op = CRM_Utils_Type::escape($_POST['op'], 'String');
@@ -72,7 +72,7 @@ class CRM_Admin_Page_AJAX {
     else {
       switch ($recordBAO) {
         case 'CRM_Core_BAO_UFGroup':
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $method = 'getUFJoinRecord';
           $result = [$recordBAO, $method];
           $ufJoin = call_user_func_array(($result), [$recordID, TRUE]);
@@ -85,7 +85,7 @@ class CRM_Admin_Page_AJAX {
           break;
 
         case 'CRM_Price_BAO_Set':
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $usedBy = CRM_Price_BAO_Set::getUsedBy($recordID);
           $priceSet = CRM_Price_BAO_Set::getTitle($recordID);
 
@@ -203,7 +203,7 @@ class CRM_Admin_Page_AJAX {
           break;
 
         case 'CRM_Core_BAO_OptionValue':
-          require_once (str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
+          require_once(str_replace('_', DIRECTORY_SEPARATOR, $recordBAO) . ".php");
           $label = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $recordID, 'label');
           $status = ts('Are you sure you want to disable this \'%1\' record ?', [1 => $label]);
           break;
@@ -224,10 +224,10 @@ class CRM_Admin_Page_AJAX {
           }
           if (empty($processor_id)) {
             $ccid = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution cc WHERE cc.contribution_recur_id = %1", $params);
-            $contrib = new CRM_Contribute_DAO_Contribution( );
+            $contrib = new CRM_Contribute_DAO_Contribution();
             $contrib->id = $ccid;
 
-            if($contrib->find(true)){
+            if ($contrib->find(TRUE)) {
               $processor_id = $contrib->payment_processor_id;
               $is_test = $contrib->is_test;
             }
@@ -235,11 +235,11 @@ class CRM_Admin_Page_AJAX {
 
           if (!empty($processor_id)) {
             $pp = CRM_Core_BAO_PaymentProcessor::getPayment($processor_id, $is_test);
-            if($pp['class_name']){
-              $classname = 'CRM_Core_'.$pp['class_name']; 
+            if ($pp['class_name']) {
+              $classname = 'CRM_Core_'.$pp['class_name'];
               $payment = new $classname($is_test, $processor_id);
-              if(method_exists($payment, 'cancelRecuringMessage')){
-                $status = $payment->cancelRecuringMessage($recordID);  
+              if (method_exists($payment, 'cancelRecuringMessage')) {
+                $status = $payment->cancelRecuringMessage($recordID);
               }
             }
           }
@@ -268,7 +268,7 @@ class CRM_Admin_Page_AJAX {
     exit;
   }
 
-  static function getTagList() {
+  public static function getTagList() {
     $name = CRM_Utils_Type::escape($_GET['name'], 'String');
     $parentId = CRM_Utils_Type::escape($_GET['parentId'], 'Integer');
 
@@ -293,7 +293,7 @@ class CRM_Admin_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  static function processTags() {
+  public static function processTags() {
     $skipTagCreate = $skipEntityAction = $entityId = NULL;
     $action = CRM_Utils_Type::escape($_POST['action'], 'String');
     $parentId = CRM_Utils_Type::escape($_POST['parentId'], 'Integer');
@@ -313,7 +313,6 @@ class CRM_Admin_Page_AJAX {
 
     $tagID = $_POST['tagID'];
 
-
     $tagInfo = [];
     // if action is select
     if ($action == 'select') {
@@ -324,7 +323,6 @@ class CRM_Admin_Page_AJAX {
         $params = ['name' => $tagID,
           'parent_id' => $parentId,
         ];
-
 
         $tagObject = CRM_Core_BAO_Tag::add($params, CRM_Core_DAO::$_nullArray);
 
@@ -368,4 +366,3 @@ class CRM_Admin_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 }
-

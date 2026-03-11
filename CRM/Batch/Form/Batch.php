@@ -20,7 +20,7 @@
  */
 class CRM_Batch_Form_Batch extends CRM_Core_Form {
   protected $_batch = NULL;
-  function preProcess() {
+  public function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $defaults = [];
     $params = [

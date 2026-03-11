@@ -33,14 +33,13 @@
  *
  */
 
-
 class CRM_Case_XMLProcessor_Settings extends CRM_Case_XMLProcessor {
 
   private $_settings = [];
 
   // Input: The base filename without the .xml extension
   // Output: An array of settings.
-  function run($filename = 'settings') {
+  public function run($filename = 'settings') {
     $xml = $this->retrieve($filename);
 
     // For now it's not an error. In the future it might be a required file.
@@ -58,4 +57,3 @@ class CRM_Case_XMLProcessor_Settings extends CRM_Case_XMLProcessor {
     return $this->_settings;
   }
 }
-

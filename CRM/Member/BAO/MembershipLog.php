@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
 
   /**
@@ -47,7 +46,7 @@ class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
    *
    * @return object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     $membershipLog = new CRM_Member_DAO_MembershipLog();
     $membershipLog->copyValues($params);
     $membershipLog->modified_date = date('Ymd');
@@ -65,13 +64,13 @@ class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
    * @static
    */
 
-  static function del($membershipID) {
+  public static function del($membershipID) {
     $membershipLog = new CRM_Member_DAO_MembershipLog();
     $membershipLog->membership_id = $membershipID;
     return $membershipLog->delete();
   }
 
-  static function resetModifiedID($contactID) {
+  public static function resetModifiedID($contactID) {
     $query = "
 UPDATE civicrm_membership_log
    SET modified_id = null
@@ -81,4 +80,3 @@ UPDATE civicrm_membership_log
     CRM_Core_DAO::executeQuery($query, $params);
   }
 }
-

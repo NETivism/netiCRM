@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  *
  * @package CRM
@@ -51,13 +49,12 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
     if ($this->_action & CRM_Core_Action::ADD) {
       $defaults['object_type'] = 1;
     }
-
 
     $showHide = new CRM_Core_ShowHideBlocks();
 
@@ -132,12 +129,13 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
 
     $this->add('text', 'name', ts('Description'), CRM_Core_DAO::getAttribute('CRM_ACL_DAO_ACL', 'name'), TRUE);
 
-
     $operations = ['' => ts('- select -')] + CRM_ACL_BAO_ACL::operation();
-    $this->add('select',
+    $this->add(
+      'select',
       'operation',
       ts('Operation'),
-      $operations, TRUE
+      $operations,
+      TRUE
     );
 
     $objTypes = ['1' => ts('A group of contacts'),
@@ -150,14 +148,14 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     }
 
     $extra = ['onclick' => "showObjectSelect();"];
-    $this->addRadio('object_type',
+    $this->addRadio(
+      'object_type',
       ts('Type of Data'),
       $objTypes,
       $extra,
-      '&nbsp;', TRUE
+      '&nbsp;',
+      TRUE
     );
-
-
 
     $label = ts('Role');
     $role = ['-1' => ts('- select role -'),
@@ -177,7 +175,6 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
       '0' => ts('All Profiles'),
     ] + CRM_Core_PseudoConstant::ufGroup();
 
-
     $event = ['-1' => ts('- select -'),
       '0' => ts('All Events'),
     ] + CRM_Event_PseudoConstant::event(NULL, FALSE, "( is_template IS NULL OR is_template != 1 )");
@@ -196,8 +193,7 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     $this->addFormRule(['CRM_ACL_Form_ACL', 'formRule']);
   }
 
-
-  static function formRule($params) {
+  public static function formRule($params) {
     $showHide = new CRM_Core_ShowHideBlocks();
 
     // Make sure role is not -1
@@ -277,8 +273,6 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     // note this also resets any ACL cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
 
-
-
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_ACL_BAO_ACL::del($this->_id);
       CRM_Core_Session::setStatus(ts('Selected ACL has been deleted.'));
@@ -320,4 +314,3 @@ class CRM_ACL_Form_ACL extends CRM_Admin_Form {
     }
   }
 }
-

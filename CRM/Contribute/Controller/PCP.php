@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class is used by the Search functionality.
  *
@@ -52,11 +49,9 @@ class CRM_Contribute_Controller_PCP extends CRM_Core_Controller {
   /**
    * class constructor
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
-
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
     parent::__construct($title, $modal);
-
 
     $this->_stateMachine = new CRM_Contribute_StateMachine_PCP($this, $action);
 
@@ -74,4 +69,3 @@ class CRM_Contribute_Controller_PCP extends CRM_Core_Controller {
     }
   }
 }
-

@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * State machine for managing different states of the EventWizard process.
  *
@@ -50,7 +47,7 @@ class CRM_Event_StateMachine_Registration extends CRM_Core_StateMachine {
    *
    * @return object CRM_Event_StateMachine
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $controller, TRUE);
     $is_monetary = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $id, 'is_monetary');
@@ -99,4 +96,3 @@ class CRM_Event_StateMachine_Registration extends CRM_Core_StateMachine {
     $this->addSequentialPages($pages);
   }
 }
-

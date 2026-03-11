@@ -45,4 +45,3 @@ function smarty_function_crmKey($params, &$smarty) {
 
   return CRM_Core_Key::get($params['name']);
 }
-

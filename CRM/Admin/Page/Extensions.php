@@ -34,8 +34,6 @@
  *
  */
 
-
-
 /**
  * This page displays the list of extensions registered in the system.
  */
@@ -47,11 +45,11 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
-  static $_extInstalled = NULL;
+  public static $_extInstalled = NULL;
 
-  static $_extNotInstalled = NULL;
+  public static $_extNotInstalled = NULL;
 
   /**
    * Obtains the group name from url and sets the title.
@@ -60,7 +58,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
 
     $ext = new CRM_Core_Extensions();
     if ($ext->enabled === TRUE) {
@@ -75,7 +73,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
@@ -84,7 +82,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::ADD => [
@@ -121,7 +119,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     parent::run();
   }
@@ -134,7 +132,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    * @access public
    * @static
    */
-  function browse() {
+  public function browse() {
 
     $this->assign('extEnabled', FALSE);
     if (self::$_extInstalled) {
@@ -152,7 +150,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
           $action -= CRM_Core_Action::DISABLE;
           $action -= CRM_Core_Action::ADD;
         }
-        $rows[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $rows[$id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $id,
             'key' => $obj->key,
           ]
@@ -170,7 +170,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::DISABLE;
         $action -= CRM_Core_Action::ENABLE;
         $action -= CRM_Core_Action::DELETE;
-        $rowsUpl[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $rowsUpl[$id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $id,
             'key' => $obj->key,
           ]
@@ -185,7 +187,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_Extensions';
   }
 
@@ -194,7 +196,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'CRM_Admin_Form_Extensions';
   }
 
@@ -203,7 +205,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/extensions';
   }
 
@@ -215,8 +217,7 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    * @return string
    * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';
   }
 }
-

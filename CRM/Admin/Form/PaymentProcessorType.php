@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -42,7 +40,8 @@
 class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
   protected $_id = NULL;
 
-  protected $_fields = NULL; function preProcess() {
+  protected $_fields = NULL;
+  public function preProcess() {
     parent::preProcess();
 
     $this->_fields = [
@@ -145,8 +144,12 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
 
     foreach ($this->_fields as $field) {
       $required = CRM_Utils_Array::value('required', $field, FALSE);
-      $this->add('text', $field['name'],
-        $field['label'], $attributes['name'], $required
+      $this->add(
+        'text',
+        $field['name'],
+        $field['label'],
+        $attributes['name'],
+        $required
       );
       if (CRM_Utils_Array::value('rule', $field)) {
         $this->addRule($field['name'], $field['msg'], $field['rule']);
@@ -159,7 +162,7 @@ class CRM_Admin_Form_PaymentProcessorType extends CRM_Admin_Form {
     $this->add('checkbox', 'is_recur', ts('Does this Payment Processor Type support recurring donations?'));
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if (!$this->_id) {
@@ -226,4 +229,3 @@ UPDATE civicrm_payment_processor SET is_default = 0";
     $dao->save();
   }
 }
-

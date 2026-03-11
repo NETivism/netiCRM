@@ -33,13 +33,12 @@
  *
  */
 
-
 class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -53,7 +52,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
    * @static
    *
    */
-  static function del($id) {
+  public static function del($id) {
     // delete all discount records with the selected discounted id
     $discount = new CRM_Core_DAO_Discount();
     $discount->id = $id;
@@ -75,7 +74,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $discount = new CRM_Core_DAO_Discount();
     $discount->copyValues($params);
     $discount->save();
@@ -92,7 +91,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
    * @return array    $optionGroupIDs option group Ids associated with discount
    *
    */
-  static function getOptionGroup($entityId, $entityTable) {
+  public static function getOptionGroup($entityId, $entityTable) {
     $optionGroupIDs = [];
 
     $dao = new CRM_Core_DAO_Discount();
@@ -114,7 +113,7 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
    * @return integer  $dao->id       discount id of the set which matches
    *                                 the date criteria
    */
-  static function findSet($entityID, $entityTable, $timestamp = CRM_REQUEST_TIME) {
+  public static function findSet($entityID, $entityTable, $timestamp = CRM_REQUEST_TIME) {
     if (empty($entityID) ||
       empty($entityTable)
     ) {
@@ -123,12 +122,10 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
       return NULL;
     }
 
-
     $dao = new CRM_Core_DAO_Discount();
     $dao->entity_id = $entityID;
     $dao->entity_table = $entityTable;
     $dao->find();
-
 
     while ($dao->fetch()) {
       $endDate = $dao->end_date;
@@ -144,4 +141,3 @@ class CRM_Core_BAO_Discount extends CRM_Core_DAO_Discount {
     return FALSE;
   }
 }
-

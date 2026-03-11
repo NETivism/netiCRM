@@ -33,13 +33,12 @@
  *
  */
 
-
 class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact {
 
   /**
    * This is a contructor of the class.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -53,7 +52,7 @@ class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact {
    * @access public
    * @static
    */
-  static function updatePrimaryContact($primaryContactId, $contactId) {
+  public static function updatePrimaryContact($primaryContactId, $contactId) {
     $queryString = "UPDATE civicrm_contact
                            SET primary_contact_id = ";
 
@@ -72,4 +71,3 @@ class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact {
     return CRM_Core_DAO::executeQuery($queryString, $params);
   }
 }
-

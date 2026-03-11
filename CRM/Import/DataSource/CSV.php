@@ -33,14 +33,14 @@
  *
  */
 
-
 class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
-  CONST NUM_ROWS_TO_INSERT = 100;
-  function getInfo() {
+  public const NUM_ROWS_TO_INSERT = 100;
+  public function getInfo() {
     return ['title' => ts('Comma-Separated Values (CSV)')];
   }
 
-  public static function preProcess(&$form) {}
+  public static function preProcess(&$form) {
+  }
 
   public static function buildQuickForm(&$form) {
     $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_CSV');
@@ -64,7 +64,10 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
   public static function postProcess(&$form, &$params, &$db) {
     $file = $params['uploadFile']['name'];
 
-    $result = self::_CsvToTable($db, $file, $params['skipColumnHeader'],
+    $result = self::_CsvToTable(
+      $db,
+      $file,
+      $params['skipColumnHeader'],
       CRM_Utils_Array::value('import_table_name', $params)
     );
 
@@ -116,7 +119,7 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
       }
 
       if (in_array('', $columns) || $duplicateColName) {
-        foreach ($columns as $colKey => & $colName) {
+        foreach ($columns as $colKey => &$colName) {
           if (!$colName) {
             $colName = "col_$colKey";
           }
@@ -127,11 +130,15 @@ class CRM_Import_DataSource_CSV extends CRM_Import_DataSource {
       }
 
       // CRM-4881: we need to quote column names, as they may be MySQL reserved words
-      foreach ($columns as & $column) $column = "`$column`";
+      foreach ($columns as &$column) {
+        $column = "`$column`";
+      }
     }
     else {
       $columns = [];
-      foreach ($firstrow as $i => $_) $columns[] = "col_$i";
+      foreach ($firstrow as $i => $_) {
+        $columns[] = "col_$i";
+      }
     }
 
     // FIXME: we should regen this table's name if it exists rather than drop it

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Synchronizing CMS Users
  *
@@ -49,7 +47,8 @@ class CRM_Admin_Form_CMSUser extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('OK'),
           'isDefault' => TRUE,
@@ -73,4 +72,3 @@ class CRM_Admin_Form_CMSUser extends CRM_Core_Form {
     CRM_Core_BAO_CMSUser::synchronize();
   }
 }
-

@@ -33,14 +33,12 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Address Section
  */
 class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
   public $addressSequence;
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     CRM_Utils_System::setTitle(ts('Settings - Addresses'));
@@ -51,12 +49,11 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     ];
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['address_standardization_provider'] = $this->_config->address_standardization_provider;
     $defaults['address_standardization_userid'] = $this->_config->address_standardization_userid;
     $defaults['address_standardization_url'] = $this->_config->address_standardization_url;
-
 
     $this->addressSequence = $newSequence ?? "";
 
@@ -87,7 +84,6 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
       $defaults['mailing_format'] = $this->_config->mailing_format;
     }
 
-
     parent::cbsDefaultValues($defaults);
 
     return $defaults;
@@ -115,7 +111,7 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
     parent::buildQuickForm();
   }
 
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $p = $fields['address_standardization_provider'];
     $u = $fields['address_standardization_userid'];
     $w = $fields['address_standardization_url'];
@@ -160,12 +156,9 @@ class CRM_Admin_Form_Preferences_Address extends CRM_Admin_Form_Preferences {
       }
     }
 
-
     $this->_config->copyValues($this->_params);
-
 
     parent::postProcess();
   }
   //end of function
 }
-

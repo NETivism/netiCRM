@@ -13,13 +13,12 @@
  * @author Irfan Ahmed <irfan.ahmed@v-empower.com>
  **/
 
-
 class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
   /**
    * @var mixed
    */
   public $_processorName;
-  CONST CHARSET = 'iso-8859-1';
+  public const CHARSET = 'iso-8859-1';
 
   protected $_mode = NULL;
 
@@ -30,7 +29,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -39,7 +38,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Click And Pledge');
@@ -62,7 +61,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_ClickAndPledge($mode, $paymentProcessor);
@@ -79,7 +78,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @return array the result in an nice formatted array (or an error object)
    * @public
    */
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     $args = [];
 
     $this->initialize($args, 'DoDirectPayment');
@@ -124,7 +123,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
     if ($this->_paymentProcessor['payment_processor_type'] == 'ClickAndPledge') {
       if (empty($this->_paymentProcessor['user_name'])) {
@@ -140,7 +139,7 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
     }
   }
 
-  function doTransferCheckout(&$params, $component = 'contribute') {
+  public function doTransferCheckout(&$params, $component = 'contribute') {
     $config = CRM_Core_Config::singleton();
 
     if ($component != 'contribute' && $component != 'event') {
@@ -170,13 +169,19 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
 
     $url = ($component == 'event') ? 'civicrm/event/register' : 'civicrm/contribute/transact';
     $cancel = ($component == 'event') ? '_qf_Register_display' : '_qf_Main_display';
-    $returnURL = CRM_Utils_System::url($url,
+    $returnURL = CRM_Utils_System::url(
+      $url,
       "_qf_ThankYou_display=1&qfKey={$params['qfKey']}",
-      TRUE, NULL, FALSE
+      TRUE,
+      NULL,
+      FALSE
     );
-    $cancelURL = CRM_Utils_System::url($url,
+    $cancelURL = CRM_Utils_System::url(
+      $url,
       "$cancel=1&cancel=1&qfKey={$params['qfKey']}",
-      TRUE, NULL, FALSE
+      TRUE,
+      NULL,
+      FALSE
     );
 
     // ensure that the returnURL is absolute.
@@ -274,4 +279,3 @@ class CRM_Core_Payment_ClickAndPledge extends CRM_Core_Payment {
     CRM_Utils_System::redirect($clickandpledgeURL);
   }
 }
-

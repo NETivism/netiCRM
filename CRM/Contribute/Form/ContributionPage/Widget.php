@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_ContributionPage {
   public $_fields;
   public $_colorFields;
@@ -41,10 +40,9 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   protected $_colors;
 
   protected $_widget;
-  
-  function preProcess() {
-    parent::preProcess();
 
+  public function preProcess() {
+    parent::preProcess();
 
     $this->_widget = new CRM_Contribute_DAO_Widget();
     $this->_widget->contribution_page_id = $this->_id;
@@ -71,7 +69,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->assign('cpageId', $this->_id);
 
     $config = CRM_Core_Config::singleton();
-    $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+    $title = CRM_Core_DAO::getFieldValue(
+      'CRM_Contribute_DAO_ContributionPage',
       $this->_id,
       'title'
     );
@@ -141,7 +140,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     ];
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     // check if there is a widget already created
     if ($this->_widget) {
@@ -154,12 +153,12 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       foreach ($this->_colorFields as $name => $val) {
         $defaults[$name] = $val[3];
       }
-      $defaults['about'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $defaults['about'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_ContributionPage',
         $this->_id,
         'intro_text'
       );
     }
-
 
     $showHide = new CRM_Core_ShowHideBlocks();
     $showHide->addHide("id-colors");
@@ -167,10 +166,11 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return $defaults;
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Widget');
 
-    $this->addElement('checkbox',
+    $this->addElement(
+      'checkbox',
       'is_active',
       ts('Enable Widget?'),
       NULL,
@@ -180,7 +180,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->addWysiwyg('about', ts('About'), $attributes['about']);
 
     foreach ($this->_fields as $name => $val) {
-      $this->add($val[1],
+      $this->add(
+        $val[1],
         $name,
         $val[0],
         $attributes[$name],
@@ -188,7 +189,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       );
     }
     foreach ($this->_colorFields as $name => $val) {
-      $this->add($val[1],
+      $this->add(
+        $val[1],
         $name,
         $val[0],
         $attributes[$name],
@@ -200,7 +202,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->assign_by_ref('colorFields', $this->_colorFields);
 
     $this->_refreshButtonName = $this->getButtonName('refresh');
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->_refreshButtonName,
       ts('Save and Preview')
     );
@@ -236,7 +239,7 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return empty($errors) ? TRUE : $errors;
   }
 
-  function postProcess() {
+  public function postProcess() {
     //to reset quickform elements of next (pcp) page.
     if ($this->controller->getNextName('Widget') == 'PCP') {
       $this->controller->resetPage('PCP');
@@ -251,7 +254,6 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $params['contribution_page_id'] = $this->_id;
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['url_homepage'] = 'null';
-
 
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->copyValues($params);
@@ -273,4 +275,3 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return ts('Widget Settings');
   }
 }
-

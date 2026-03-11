@@ -2,7 +2,7 @@
 
 /**
  * RFM Analysis Class
- * 
+ *
  * Used for calculating and analyzing RFM (Recency, Frequency, Monetary) metrics
  */
 class CRM_Contact_BAO_RFM {
@@ -10,30 +10,30 @@ class CRM_Contact_BAO_RFM {
    * @var string Random suffix used for generating temporary table names
    */
   public $_suffix;
-  
+
   /**
    * @var array Stores threshold values for R, F, M
    */
   protected $_thresholds = [
-    'r' => null,
-    'f' => null,
-    'm' => null
+    'r' => NULL,
+    'f' => NULL,
+    'm' => NULL
   ];
-  
+
   /**
    * @var array Stores whether metrics should use reverse comparison
    */
   protected $_reverse = [
-    'r' => false,
-    'f' => false,
-    'm' => false
+    'r' => FALSE,
+    'f' => FALSE,
+    'm' => FALSE
   ];
-  
+
   /**
    * @var string Date filter string
    */
   protected $_dateString = '';
-  
+
   /**
    * @var string Threshold type: 'recurring', 'non-recurring', 'all'
    */
@@ -43,15 +43,15 @@ class CRM_Contact_BAO_RFM {
    * @var array Temporary table names
    */
   protected $_tables = [
-    'r' => null,
-    'f' => null,
-    'm' => null,
-    'rfm' => null
+    'r' => NULL,
+    'f' => NULL,
+    'm' => NULL,
+    'rfm' => NULL
   ];
-  
+
   /**
    * Constructor
-   * 
+   *
    * @param string $suffix temp table suffix of RFM
    * @param string $dateString Date filter string
    * @param float|int|null $rThreshold R threshold value, null means don't process
@@ -65,7 +65,7 @@ class CRM_Contact_BAO_RFM {
    *                                   If zero, include all data without threshold
    * @param string $thresholdType Threshold type: 'recurring', 'non-recurring', 'all'
    */
-  public function __construct(string $suffix, string $dateString = '', $rThreshold = null, $fThreshold = null, $mThreshold = null, string $thresholdType = 'all') {
+  public function __construct(string $suffix, string $dateString = '', $rThreshold = NULL, $fThreshold = NULL, $mThreshold = NULL, string $thresholdType = 'all') {
     if (empty($suffix)) {
       // Generate random suffix
       $this->_suffix = CRM_Utils_String::createRandom(6);
@@ -73,97 +73,100 @@ class CRM_Contact_BAO_RFM {
     else {
       $this->_suffix = $suffix;
     }
-    
+
     // Set thresholds and reverse flags
-    if ($rThreshold !== null) {
+    if ($rThreshold !== NULL) {
       if ($rThreshold < 0) {
         $this->_thresholds['r'] = abs($rThreshold);
-        $this->_reverse['r'] = true;
-      } else {
+        $this->_reverse['r'] = TRUE;
+      }
+      else {
         $this->_thresholds['r'] = $rThreshold;
       }
     }
-    
-    if ($fThreshold !== null) {
+
+    if ($fThreshold !== NULL) {
       if ($fThreshold < 0) {
         $this->_thresholds['f'] = abs($fThreshold);
-        $this->_reverse['f'] = true;
-      } else {
+        $this->_reverse['f'] = TRUE;
+      }
+      else {
         $this->_thresholds['f'] = $fThreshold;
       }
     }
-    
-    if ($mThreshold !== null) {
+
+    if ($mThreshold !== NULL) {
       if ($mThreshold < 0) {
         $this->_thresholds['m'] = abs($mThreshold);
-        $this->_reverse['m'] = true;
-      } else {
+        $this->_reverse['m'] = TRUE;
+      }
+      else {
         $this->_thresholds['m'] = $mThreshold;
       }
     }
-    
+
     // Set date filter
     $this->_dateString = $dateString;
 
     // Set threshold type
     $this->_thresholdType = $thresholdType;
   }
-  
+
   /**
    * Calculate R (Recency) metric
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
   public function calcR($position = 0.5, bool $reverse = FALSE) {
-    if ($this->_thresholds['r'] !== null) {
+    if ($this->_thresholds['r'] !== NULL) {
       $position = $this->_thresholds['r'];
       $reverse = $this->_reverse['r'];
     }
-    
+
     // Get end date for DATEDIFF calculation
     $endDateStr = $this->getEndDate();
     $aggregateFunc = "MIN(DATEDIFF('$endDateStr', DATE(contrib.receive_date)))";
-    
+
     return $this->calcMetric('r', $position, $reverse, 'duration', $aggregateFunc);
   }
-  
+
   /**
    * Calculate F (Frequency) metric
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
   public function calcF($position = 0.5, bool $reverse = FALSE) {
-    if ($this->_thresholds['f'] !== null) {
+    if ($this->_thresholds['f'] !== NULL) {
       $position = $this->_thresholds['f'];
       $reverse = $this->_reverse['f'];
     }
-    
+
     return $this->calcMetric('f', $position, $reverse, 'frequency', 'COUNT(contrib.id)');
   }
-  
+
   /**
    * Calculate M (Monetary) metric
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
    * @return array Array containing temporary table name and threshold value
    */
   public function calcM($position = 0.5, bool $reverse = FALSE) {
-    if ($this->_thresholds['m'] !== null) {
+    if ($this->_thresholds['m'] !== NULL) {
       $position = $this->_thresholds['m'];
       $reverse = $this->_reverse['m'];
     }
-    
+
     return $this->calcMetric('m', $position, $reverse, 'monetary', 'SUM(contrib.total_amount)');
   }
-  
+
   /**
    * Generic metric calculation function
-   * 
+   *
    * @param string $metricType Metric type (r, f, m)
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param bool $reverse Whether to use reverse comparison
@@ -174,19 +177,19 @@ class CRM_Contact_BAO_RFM {
   protected function calcMetric(string $metricType, $position, bool $reverse, string $columnName, string $aggregateFunc) {
     $order = $reverse ? 'DESC' : 'ASC';
     $dateFilterSQL = '';
-    
+
     if (!empty($this->_dateString)) {
       $dateFilterSQL = $this->getDateFilterSQL($this->_dateString);
     }
-    
+
     // Add recurring filter based on threshold type
     $recurFilterSQL = $this->getRecurFilterSQL($this->_thresholdType);
-    
+
     // Create temporary table
     $metricType = strtolower($metricType);
     $tempTableName = "civicrm_temp_{$metricType}threshold_{$this->_suffix}";
     $dataType = ($metricType === 'm') ? 'DECIMAL(10,2)' : 'INT(10)';
-    
+
     $sqlCreateTempTable = "
     CREATE TEMPORARY TABLE {$tempTableName} (
       contact_id INT(10) UNSIGNED NOT NULL PRIMARY KEY,
@@ -195,7 +198,7 @@ class CRM_Contact_BAO_RFM {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ";
     CRM_Core_DAO::executeQuery($sqlCreateTempTable);
-    
+
     // Special case for zero threshold - include all data without filtering
     if ($position === 0 || $position === 0.0 || $position === "0") {
       $sqlInsert = "
@@ -214,7 +217,8 @@ class CRM_Contact_BAO_RFM {
       ";
 
       $threshold = 0; // Set threshold to 0 for reporting purposes
-    } else {
+    }
+    else {
       // Calculate threshold value for non-zero position
       $threshold = $this->calculateThreshold($position, $metricType, $aggregateFunc, $dateFilterSQL, $recurFilterSQL);
 
@@ -240,19 +244,19 @@ class CRM_Contact_BAO_RFM {
       ";
     }
     CRM_Core_DAO::executeQuery($sqlInsert);
-    
+
     // Save temporary table name
     $this->_tables[$metricType] = $tempTableName;
-    
+
     return [
       'table' => $tempTableName,
       'threshold' => $threshold,
     ];
   }
-  
+
   /**
    * Calculate threshold value
-   * 
+   *
    * @param float|int $position Threshold position percentage or specific threshold value
    * @param string $metricType Metric type (r, f, m)
    * @param string $aggregateFunc Aggregate function expression
@@ -264,7 +268,7 @@ class CRM_Contact_BAO_RFM {
     if ($position >= 1) {
       return (float) $position;
     }
-    
+
     $sqlMinMax = "
     SELECT MIN({$metricType}Val) AS minVal, MAX({$metricType}Val) AS maxVal
     FROM (
@@ -280,13 +284,13 @@ class CRM_Contact_BAO_RFM {
       GROUP BY contrib.contact_id
     ) as subquery
     ";
-    
+
     $result = CRM_Core_DAO::executeQuery($sqlMinMax);
     $result->fetch();
-    
+
     $minVal = ($metricType === 'm') ? (float) $result->minVal : (int) $result->minVal;
     $maxVal = ($metricType === 'm') ? (float) $result->maxVal : (int) $result->maxVal;
-    
+
     return $minVal + (($maxVal - $minVal) * $position);
   }
 
@@ -307,34 +311,34 @@ class CRM_Contact_BAO_RFM {
         return ""; // No filter
     }
   }
-  
+
   /**
    * Calculate RFM intersection
-   * 
+   *
    * @return array Array containing temporary table name and record data
    */
   public function calcRFM(): array {
     // Check if R, F, M have been calculated
     if (!$this->_tables['r'] || !$this->_tables['f'] || !$this->_tables['m']) {
       // If not calculated but thresholds are set, calculate automatically
-      if ($this->_thresholds['r'] !== null && !$this->_tables['r']) {
+      if ($this->_thresholds['r'] !== NULL && !$this->_tables['r']) {
         $this->calcR();
       }
-      if ($this->_thresholds['f'] !== null && !$this->_tables['f']) {
+      if ($this->_thresholds['f'] !== NULL && !$this->_tables['f']) {
         $this->calcF();
       }
-      if ($this->_thresholds['m'] !== null && !$this->_tables['m']) {
+      if ($this->_thresholds['m'] !== NULL && !$this->_tables['m']) {
         $this->calcM();
       }
-      
+
       // Check again if all necessary tables have been generated
       if (!$this->_tables['r'] || !$this->_tables['f'] || !$this->_tables['m']) {
         throw new Exception("R, F, M metrics not calculated, cannot calculate RFM intersection");
       }
     }
-    
+
     $tempTableName = "civicrm_temp_rfm_{$this->_suffix}";
-    
+
     // Create temporary table for RFM intersection
     $sqlCreateTempTable = "
     CREATE TEMPORARY TABLE {$tempTableName} (
@@ -345,7 +349,7 @@ class CRM_Contact_BAO_RFM {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
     ";
     CRM_Core_DAO::executeQuery($sqlCreateTempTable);
-    
+
     // Insert RFM intersection data
     $sqlInsert = "
     INSERT INTO {$tempTableName} (contact_id, R, F, M)
@@ -355,17 +359,17 @@ class CRM_Contact_BAO_RFM {
     INNER JOIN {$this->_tables['m']} m ON r.contact_id = m.contact_id;
     ";
     CRM_Core_DAO::executeQuery($sqlInsert);
-    
+
     // Save temporary table name
     $this->_tables['rfm'] = $tempTableName;
-    
+
     // Get data from the temporary table
     $sqlSelectTempTable = "
     SELECT contact_id, R, F, M FROM {$tempTableName};
     ";
     $result = CRM_Core_DAO::executeQuery($sqlSelectTempTable);
     $records = [];
-    
+
     while ($result->fetch()) {
       $records[] = [
         'contact_id' => $result->contact_id,
@@ -374,38 +378,38 @@ class CRM_Contact_BAO_RFM {
         'M' => $result->M
       ];
     }
-    
+
     return [
       'table' => $tempTableName,
       'records' => $records
     ];
   }
-  
+
   /**
    * Export RFM data to CSV
-   * 
+   *
    * @param string $filename Custom filename (optional)
    * @param  bool $download Bool to indicate print to browser or not
    * @return string Path to the exported CSV file
    */
-  public function exportToCSV(string $filename = null, bool $download = TRUE): string {
+  public function exportToCSV(?string $filename = NULL, bool $download = TRUE): string {
     if (!$this->_tables['rfm']) {
       $this->calcRFM();
     }
-    
-    if ($filename === null) {
+
+    if ($filename === NULL) {
       // Generate filename based on threshold values
       $rLabel = 'R' . ($this->_reverse['r'] ? 'n' : 'p') . '_' . abs($this->_thresholds['r']);
       $fLabel = 'F' . ($this->_reverse['f'] ? 'n' : 'p') . '_' . abs($this->_thresholds['f']);
       $mLabel = 'M' . ($this->_reverse['m'] ? 'n' : 'p') . '_' . abs($this->_thresholds['m']);
       $filename = 'RFM_' . $rLabel . '_' . $fLabel . '_' . $mLabel . '_'.$this->_suffix.'.csv';
     }
-    
+
     $sqlSelectTempTable = "
     SELECT contact_id, R, F, M FROM {$this->_tables['rfm']};
     ";
     $result = CRM_Core_DAO::executeQuery($sqlSelectTempTable);
-    
+
     $data = [];
     while ($result->fetch()) {
       $fields = [
@@ -418,17 +422,16 @@ class CRM_Contact_BAO_RFM {
     }
     $header = [ts('Contact ID'), ts('Recency'), ts('Frequency'), ts('Monetary')];
     CRM_Core_Report_Excel::writeCSVFile($filename, $header, $data, $download);
-    
+
     if (!$download) {
       return $filename;
     }
     return '';
   }
-  
-  
+
   /**
    * Generate date filter SQL
-   * 
+   *
    * @param string $dateFilter Date filter string
    * @return string Date filter SQL statement
    */
@@ -436,16 +439,16 @@ class CRM_Contact_BAO_RFM {
     $filter = CRM_Utils_Date::strtodate($dateFilter);
     $startDate = $filter['start'];
     $endDate = $filter['end'];
-    
+
     if (isset($startDate) && isset($endDate)) {
       return " AND contrib.receive_date BETWEEN '$startDate 00:00:00' AND '$endDate 23:59:59' ";
     }
     return '';
   }
-  
+
   /**
    * Get end date from date filter string
-   * 
+   *
    * @return string End date string for SQL usage, defaults to current date if no filter
    */
   protected function getEndDate(): string {
@@ -459,10 +462,10 @@ class CRM_Contact_BAO_RFM {
     // Default to current date if no date filter
     return date('Y-m-d');
   }
-  
+
   /**
    * Get default thresholds based on date range and threshold type
-   * 
+   *
    * @param string $rangeString Date range string
    * @param string $thresholdType Threshold type (recurring, non-recurring, all)
    * @return array Array containing r, f, m thresholds
@@ -471,27 +474,27 @@ class CRM_Contact_BAO_RFM {
     $filter = CRM_Utils_Date::strtodate($rangeString);
     $totalDays = $filter['day'];
     $totalMonths = $filter['month'];
-    $totalYears = $filter['day']/365;
-    
+    $totalYears = $filter['day'] / 365;
+
     $threshold = [
       'r' => '',
       'f' => '',
       'm' => '',
     ];
-    
+
     switch ($thresholdType) {
       case 'recurring':
         $threshold['r'] = 31;
         $threshold['f'] = max($totalMonths, 2);
         $threshold['m'] = 600 * $totalMonths;
         break;
-        
+
       case 'non-recurring':
         $threshold['r'] = (int) floor($totalDays / 5);
         $threshold['f'] = max($totalYears * 1, 2);
         $threshold['m'] = 600 * $totalMonths;
         break;
-        
+
       case 'all':
       default:
         $threshold['r'] = (int) ceil($totalDays / 5);
@@ -499,7 +502,7 @@ class CRM_Contact_BAO_RFM {
         $threshold['m'] = 600 * $totalMonths;
         break;
     }
-    
+
     return $threshold;
   }
 }

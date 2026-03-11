@@ -25,10 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
-
 /**
  * This class stores logic for managing CiviCRM extensions.
  * On this level, we are only manipulating extension objects.
@@ -45,17 +41,17 @@ class CRM_Core_Extensions {
   /**
    * The option group name
    */
-  CONST OPTION_GROUP_NAME = 'system_extensions';
+  public const OPTION_GROUP_NAME = 'system_extensions';
 
   /**
    * Extension info file name
    */
-  CONST EXT_INFO_FILENAME = 'info.xml';
+  public const EXT_INFO_FILENAME = 'info.xml';
 
   /**
    * Extension info file name
    */
-  CONST EXT_TEMPLATES_DIRNAME = 'templates';
+  public const EXT_TEMPLATES_DIRNAME = 'templates';
 
   /**
    * Allows quickly verifying if extensions are enabled
@@ -217,14 +213,18 @@ class CRM_Core_Extensions {
    */
   private function _discoverInstalled($fullInfo = FALSE) {
 
-
     $result = [];
     $groupParams = ['name' => self::OPTION_GROUP_NAME];
     $links = [];
     $ov = CRM_Core_OptionValue::getRows($groupParams, $links);
     foreach ($ov as $id => $entry) {
-      $ext = new CRM_Core_Extensions_Extension($entry['value'], $entry['grouping'], $entry['name'],
-        $entry['label'], $entry['description'], $entry['is_active']
+      $ext = new CRM_Core_Extensions_Extension(
+        $entry['value'],
+        $entry['grouping'],
+        $entry['name'],
+        $entry['label'],
+        $entry['description'],
+        $entry['is_active']
       );
       $ext->setId($id);
       if ($fullInfo) {
@@ -400,7 +400,7 @@ class CRM_Core_Extensions {
    *
    * @return mixed result of CRM_Core_DAO::setFieldValue
    */
-  static public function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     $extensions = new CRM_Core_Extensions();
     $e = $extensions->getExtensionsByKey();
     foreach ($e as $key => $eo) {
@@ -451,4 +451,3 @@ class CRM_Core_Extensions {
     $ext->uninstall();
   }
 }
-

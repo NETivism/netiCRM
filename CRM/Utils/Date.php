@@ -49,7 +49,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static function format($date, $separator = '', $invalidDate = 0) {
+  public static function format($date, $separator = '', $invalidDate = 0) {
     if (is_numeric($date) &&
       (strlen(strval($date)) == 8 || strlen(strval($date)) == 14)
     ) {
@@ -170,7 +170,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static function &getAbbrWeekdayNames() {
+  public static function &getAbbrWeekdayNames() {
     static $abbrWeekdayNames;
     if (!isset($abbrWeekdayNames)) {
 
@@ -191,7 +191,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static function &getFullWeekdayNames() {
+  public static function &getFullWeekdayNames() {
     static $fullWeekdayNames;
     if (!isset($fullWeekdayNames)) {
 
@@ -212,7 +212,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static function &getAbbrMonthNames($month = FALSE) {
+  public static function &getAbbrMonthNames($month = FALSE) {
     static $abbrMonthNames;
     if (!isset($abbrMonthNames)) {
 
@@ -235,7 +235,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static function &getFullMonthNames() {
+  public static function &getFullMonthNames() {
     static $fullMonthNames;
     if (!isset($fullMonthNames)) {
 
@@ -259,7 +259,7 @@ class CRM_Utils_Date {
    * @return int Unix timestamp
    *
    */
-  static function unixTime($string, $useEndOfMinute = false) {
+  public static function unixTime($string, $useEndOfMinute = FALSE) {
     if (empty($string)) {
       return 0;
     }
@@ -267,11 +267,13 @@ class CRM_Utils_Date {
 
     if (isset($parsedDate['second']) && $parsedDate['second'] > 0) {
       $second = CRM_Utils_Array::value('second', $parsedDate, 0);
-    } else {
+    }
+    else {
       $second = $useEndOfMinute ? 59 : 0;
     }
 
-    return mktime(CRM_Utils_Array::value('hour', $parsedDate),
+    return mktime(
+      CRM_Utils_Array::value('hour', $parsedDate),
       CRM_Utils_Array::value('minute', $parsedDate),
       $second,
       CRM_Utils_Array::value('month', $parsedDate),
@@ -307,7 +309,7 @@ class CRM_Utils_Date {
    *
    * @static
    */
-  static function customFormat($dateString, $format = NULL, $dateParts = NULL) {
+  public static function customFormat($dateString, $format = NULL, $dateParts = NULL) {
     // 1-based (January) month names arrays
     $abbrMonths = self::getAbbrMonthNames();
     $fullMonths = self::getFullMonthNames();
@@ -383,20 +385,26 @@ class CRM_Utils_Date {
       elseif ($day % 10 == 3 and $day != 13) {
         $suffix = 'rd';
       }
-      else $suffix = 'th';
+      else {
+        $suffix = 'th';
+      }
 
       if ($hour24 < 12) {
         if ($hour24 == 00) {
           $hour12 = 12;
         }
-        else $hour12 = $hour24;
+        else {
+          $hour12 = $hour24;
+        }
         $type = 'AM';
       }
       else {
         if ($hour24 == 12) {
           $hour12 = 12;
         }
-        else $hour12 = $hour24 - 12;
+        else {
+          $hour12 = $hour24 - 12;
+        }
         $type = 'PM';
       }
 
@@ -436,7 +444,7 @@ class CRM_Utils_Date {
    * @return string        date/datetime in ISO format
    * @static
    */
-  static function mysqlToIso($mysql) {
+  public static function mysqlToIso($mysql) {
     $year = substr($mysql, 0, 4);
     $month = substr($mysql, 4, 2);
     $day = substr($mysql, 6, 2);
@@ -475,7 +483,7 @@ class CRM_Utils_Date {
    * @return string      date/datetime in MySQL format
    * @static
    */
-  static function isoToMysql($iso) {
+  public static function isoToMysql($iso) {
     $dropArray = ['-' => '', ':' => '', ' ' => ''];
     return strtr($iso, $dropArray);
   }
@@ -488,7 +496,7 @@ class CRM_Utils_Date {
    * @param string $dateParam  index of params
    * @static
    */
-  static function convertToDefaultDate(&$params, $dateType, $dateParam) {
+  public static function convertToDefaultDate(&$params, $dateType, $dateParam) {
     $now = getDate();
     $cen = substr(strval($now['year']), 0, 2);
     $prevCen = $cen - 1;
@@ -497,13 +505,13 @@ class CRM_Utils_Date {
     if (CRM_Utils_Array::value($dateParam, $params)) {
       //suppress hh:mm:ss if it exists
       preg_match("/(\s(([01]\d)|[2][0-3]):([0-5]\d):?([0-5]\d)?)$/", $params[$dateParam], $matches);
-      if(!empty($matches[1])) {
+      if (!empty($matches[1])) {
         $value = str_replace($matches[0], '', $params[$dateParam]);
         $time = preg_replace('/[^\d]/i', '', $matches[1]);
-        if(strlen($time) == 4) {
+        if (strlen($time) == 4) {
           $time .= '00';
         }
-        if(strlen($time) != 6) {
+        if (strlen($time) != 6) {
           return FALSE;
         }
       }
@@ -567,7 +575,6 @@ class CRM_Utils_Date {
         return FALSE;
       }
     }
-
 
     if ($dateType == 2 || $dateType == 4) {
       $formattedDate = explode("/", $value);
@@ -684,18 +691,18 @@ class CRM_Utils_Date {
     return FALSE;
   }
 
-  static function isDate(&$date) {
+  public static function isDate(&$date) {
     if (CRM_Utils_System::isNull($date)) {
       return FALSE;
     }
     return TRUE;
   }
 
-  static function currentDBDate($timeStamp = NULL) {
+  public static function currentDBDate($timeStamp = NULL) {
     return $timeStamp ? date('YmdHis', $timeStamp) : date('YmdHis');
   }
 
-  static function overdue($date, $now = NULL) {
+  public static function overdue($date, $now = NULL) {
     $mysqlDate = self::isoToMysql($date);
     if (!$now) {
       $now = self::currentDBDate();
@@ -724,16 +731,19 @@ class CRM_Utils_Date {
    * @return string  Return the customized todays date (Y-m-d)
    * @static
    */
-  static function getToday($dayParams = NULL, $format = "Y-m-d") {
+  public static function getToday($dayParams = NULL, $format = "Y-m-d") {
     if (is_null($dayParams) || empty($dayParams)) {
       $today = date($format);
     }
     else {
-      $today = date($format, mktime(0, 0, 0,
-          $dayParams['month'],
-          $dayParams['day'],
-          $dayParams['year']
-        ));
+      $today = date($format, mktime(
+        0,
+        0,
+        0,
+        $dayParams['month'],
+        $dayParams['day'],
+        $dayParams['year']
+      ));
     }
 
     return $today;
@@ -749,7 +759,7 @@ class CRM_Utils_Date {
    * @return true              todays date is in the given date range
    * @static
    */
-  static function getRange($startDate, $endDate, $timestamp = CRM_REQUEST_TIME) {
+  public static function getRange($startDate, $endDate, $timestamp = CRM_REQUEST_TIME) {
     $today = date("Y-m-d", $timestamp);
     $mysqlStartDate = self::isoToMysql($startDate);
     $mysqlEndDate = self::isoToMysql($endDate);
@@ -834,7 +844,7 @@ class CRM_Utils_Date {
    * @return array $result contains new date with added interval
    * @access public
    */
-  static function intervalAdd($unit, $interval, $date, $dontCareTime = FALSE) {
+  public static function intervalAdd($unit, $interval, $date, $dontCareTime = FALSE) {
     if (is_array($date)) {
       $hour = CRM_Utils_Array::value('H', $date);
       $minute = CRM_Utils_Array::value('i', $date);
@@ -891,7 +901,7 @@ class CRM_Utils_Date {
    * @param $format given format ( eg 'M Y', 'Y M' )
    * return array of qfMapping and date parts for date format.
    */
-  static function checkBirthDateFormat($format = NULL) {
+  public static function checkBirthDateFormat($format = NULL) {
     $birthDateFormat = NULL;
     if (!$format) {
       $birthDateFormat = self::getDateFormat('birth');
@@ -924,7 +934,7 @@ class CRM_Utils_Date {
    * @return array $dateRange    start date and end date for the relative time frame
    * @static
    */
-  static function relativeToAbsolute($relativeTerm, $unit) {
+  public static function relativeToAbsolute($relativeTerm, $unit) {
     $now = getDate();
     $from = $to = $dateRange = [];
     $from['H'] = $from['i'] = $from['s'] = 0;
@@ -1203,7 +1213,8 @@ class CRM_Utils_Date {
 
           case 'greater':
             $from['d'] = 1;
-            $from['M'] = $now['mon'];;
+            $from['M'] = $now['mon'];
+            ;
             $from['Y'] = $now['year'];
             unset($to);
             break;
@@ -1327,7 +1338,8 @@ class CRM_Utils_Date {
 
           case 'greater':
             $from['d'] = $now['mday'];
-            $from['M'] = $now['mon'];;
+            $from['M'] = $now['mon'];
+            ;
             $from['Y'] = $now['year'];
             unset($to);
             break;
@@ -1356,7 +1368,7 @@ class CRM_Utils_Date {
    * @return int $fy       Current Fiscl Year
    * @access public
    */
-  function calculateFiscalYear($fyDate, $fyMonth) {
+  public function calculateFiscalYear($fyDate, $fyMonth) {
     $date = date("Y-m-d");
     $currentYear = date("Y");
 
@@ -1386,7 +1398,7 @@ class CRM_Utils_Date {
    *
    *  @return string $mysqlDate date format that is excepted by mysql
    */
-  static function processDate($date, $time = NULL, $returnNullString = FALSE, $format = 'YmdHis', $inputCustomFormat = NULL) {
+  public static function processDate($date, $time = NULL, $returnNullString = FALSE, $format = 'YmdHis', $inputCustomFormat = NULL) {
     $mysqlDate = NULL;
 
     if ($returnNullString) {
@@ -1405,7 +1417,7 @@ class CRM_Utils_Date {
     if (trim($date)) {
       // Modify when hour is over 12 and use 'pm' (Contains AM, in spite of rarely wrong using.)
       $pregTest = '/(?<pmam>(?:pm)|(?:am))? ?(?<hr>\d{1,2}):(?<min>\d{1,2})(?::(?<sec>\d{1,2}))? ?((?:pm)|(?:am))?$/i';
-      if(preg_match($pregTest, $date, $matches)) {
+      if (preg_match($pregTest, $date, $matches)) {
         if (empty($time)) {
           $date = preg_replace($pregTest, '', $date);
           $time = $matches[0];
@@ -1426,9 +1438,12 @@ class CRM_Utils_Date {
 
       $timeStamp = strtotime($date . ' ' . $time);
       if (empty($timeStamp)) {
-        CRM_Core_Session::setStatus(ts("%1 has error on format.", [
+        CRM_Core_Session::setStatus(
+          ts("%1 has error on format.", [
             1 => ts('Time')
-          ]), TRUE, 'error'
+          ]),
+          TRUE,
+          'error'
         );
       }
       $mysqlDate = date($format, $timeStamp);
@@ -1444,7 +1459,7 @@ class CRM_Utils_Date {
    *
    *  @return array $date and time
    */
-  static function setDateDefaults($mysqlDate = NULL, $formatType = NULL, $format = NULL, $timeFormat = NULL) {
+  public static function setDateDefaults($mysqlDate = NULL, $formatType = NULL, $format = NULL, $timeFormat = NULL) {
     // if date is not passed assume it as today
     if (!$mysqlDate) {
       $mysqlDate = date('Y-m-d G:i:s');
@@ -1469,7 +1484,6 @@ class CRM_Utils_Date {
     if (!$format) {
       $format = $config->dateInputFormat;
     }
-
 
     // get actual format
     $actualPHPFormats = CRM_Core_SelectValues::datePluginToPHPFormats();
@@ -1505,11 +1519,14 @@ class CRM_Utils_Date {
    *
    * @return string $format
    */
-  static function getDateFormat($formatType = NULL) {
+  public static function getDateFormat($formatType = NULL) {
     $format = NULL;
     if ($formatType) {
-      $format = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_PreferencesDate',
-        $formatType, 'date_format', 'name'
+      $format = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_PreferencesDate',
+        $formatType,
+        'date_format',
+        'name'
       );
     }
 
@@ -1528,7 +1545,7 @@ class CRM_Utils_Date {
    * @static
    * @public
    */
-  static function getUTCTime($offset = 0) {
+  public static function getUTCTime($offset = 0) {
     $originalTimezone = date_default_timezone_get();
     date_default_timezone_set('UTC');
     $time = time() + $offset;
@@ -1545,8 +1562,8 @@ class CRM_Utils_Date {
    */
   public static function strtodate(string $dateFilter): array {
     $today = new DateTime();
-    $startDate = null;
-    $endDate = null;
+    $startDate = NULL;
+    $endDate = NULL;
 
     // Parse `last/next N days/weeks/months/years to today/yesterday`
     if (preg_match('/^(last|next) (\d+) (days|weeks|months|years) to (today|yesterday)$/', strtolower($dateFilter), $matches)) {
@@ -1560,10 +1577,11 @@ class CRM_Utils_Date {
       if ($direction === 'last') {
         $startDate = (clone $endReference)->modify("-{$amount} {$unit}")->format('Y-m-d');
         $endDate = $endReference->format('Y-m-d');
-        
+
         // Adjust start date by +1 day
         $startDate = (new DateTime($startDate))->modify('+1 day')->format('Y-m-d');
-      } else {
+      }
+      else {
         $startDate = $endReference->format('Y-m-d');
         $endDate = (clone $endReference)->modify("+{$amount} {$unit}")->format('Y-m-d');
       }
@@ -1577,7 +1595,8 @@ class CRM_Utils_Date {
       if ($direction === 'last') {
         $startDate = (clone $today)->modify("-{$amount} {$unit}")->format('Y-m-d');
         $endDate = $today->format('Y-m-d');
-      } else {
+      }
+      else {
         $startDate = $today->format('Y-m-d');
         $endDate = (clone $today)->modify("+{$amount} {$unit}")->format('Y-m-d');
       }
@@ -1591,23 +1610,28 @@ class CRM_Utils_Date {
         if ($modifier === 'this') {
           $startDate = (clone $today)->modify('monday this week')->format('Y-m-d');
           $endDate = $today->format('Y-m-d');
-        } else {
+        }
+        else {
           $startDate = (clone $today)->modify('monday last week')->format('Y-m-d');
           $endDate = (clone $today)->modify('sunday last week')->format('Y-m-d');
         }
-      } elseif ($unit === 'month') {
+      }
+      elseif ($unit === 'month') {
         if ($modifier === 'this') {
           $startDate = (clone $today)->modify('first day of this month')->format('Y-m-d');
           $endDate = $today->format('Y-m-d');
-        } else {
+        }
+        else {
           $startDate = (clone $today)->modify('first day of last month')->format('Y-m-d');
           $endDate = (clone $today)->modify('last day of last month')->format('Y-m-d');
         }
-      } elseif ($unit === 'year') {
+      }
+      elseif ($unit === 'year') {
         if ($modifier === 'this') {
           $startDate = (clone $today)->modify('first day of January this year')->format('Y-m-d');
           $endDate = $today->format('Y-m-d');
-        } else {
+        }
+        else {
           $startDate = (clone $today)->modify('first day of January last year')->format('Y-m-d');
           $endDate = (clone $today)->modify('last day of December last year')->format('Y-m-d');
         }
@@ -1617,7 +1641,8 @@ class CRM_Utils_Date {
     elseif ($dateFilter === 'today') {
       $startDate = $today->format('Y-m-d');
       $endDate = $today->format('Y-m-d');
-    } elseif ($dateFilter === 'yesterday') {
+    }
+    elseif ($dateFilter === 'yesterday') {
       $startDate = (clone $today)->modify('-1 day')->format('Y-m-d');
       $endDate = $startDate;
     }
@@ -1648,4 +1673,3 @@ class CRM_Utils_Date {
     ];
   }
 }
-

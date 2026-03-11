@@ -1,4 +1,4 @@
-<?PHP
+<?php
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |
@@ -45,7 +45,7 @@ class CRM_Event_Form_EventFees {
    * @return void
    * @access public
    */
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     //as when call come from register.php
     if (!$form->_eventId) {
       $form->_eventId = CRM_Utils_Request::retrieve('eventId', 'Positive', $form);
@@ -59,7 +59,7 @@ class CRM_Event_Form_EventFees {
       $dao->participant_id = $form->_pId;
       $ids = [];
       if ($dao->find()) {
-        while($dao->fetch()) {
+        while ($dao->fetch()) {
           $ids[] = $dao->contribution_id;
         }
       }
@@ -68,7 +68,7 @@ class CRM_Event_Form_EventFees {
         $dao->fetch();
         if ($dao->N > 0) {
           $coupon = [];
-          foreach($dao as $idx => $value) {
+          foreach ($dao as $idx => $value) {
             if ($idx[0] != '_') {
               $coupon[$idx] = $value;
             }
@@ -77,7 +77,6 @@ class CRM_Event_Form_EventFees {
         }
       }
     }
-
 
     $form->_fromEmails = CRM_Event_BAO_Event::getFromEmailIds($form->_eventId);
 
@@ -98,7 +97,7 @@ class CRM_Event_Form_EventFees {
    *
    * @return None
    */
-  static function setDefaultValues(&$form) {
+  public static function setDefaultValues(&$form) {
     $defaults = [];
 
     if ($form->_eventId) {
@@ -114,7 +113,6 @@ class CRM_Event_Form_EventFees {
     if ($form->_pId) {
       $ids = [];
       $params = ['id' => $form->_pId];
-
 
       CRM_Event_BAO_Participant::getValues($params, $defaults, $ids);
       if ($form->_action == CRM_Core_Action::UPDATE) {
@@ -171,7 +169,6 @@ class CRM_Event_Form_EventFees {
       $fields["email-{$form->_bltID}"] = 1;
       $fields["email-Primary"] = 1;
 
-
       if ($form->_contactId) {
         CRM_Core_BAO_UFGroup::setProfileDefaults($form->_contactId, $fields, $form->_defaults);
       }
@@ -189,7 +186,6 @@ class CRM_Event_Form_EventFees {
         }
       }
 
-
       $config = CRM_Core_Config::singleton();
       // set default country from config if no country set
       if (!CRM_Utils_Array::value("billing_country_id-{$form->_bltID}", $defaults[$form->_pId])) {
@@ -197,16 +193,16 @@ class CRM_Event_Form_EventFees {
       }
     }
 
-
     if ($priceSetId = CRM_Price_BAO_Set::getFor('civicrm_event', $form->_eventId)) {
       // get price set default values, CRM-4090
-      if (in_array(get_class($form),
-          [
+      if (in_array(
+        get_class($form),
+        [
             'CRM_Event_Form_Participant',
             'CRM_Event_Form_Registration_Register',
             'CRM_Event_Form_Registration_AdditionalParticipant',
           ]
-        )) {
+      )) {
         $priceSetValues = self::setDefaultPriceSet($form->_pId, $form->_eventId);
         if (!empty($priceSetValues)) {
           $defaults[$form->_pId] = array_merge($defaults[$form->_pId], $priceSetValues);
@@ -253,7 +249,8 @@ class CRM_Event_Form_EventFees {
         if ($form->_action == CRM_Core_Action::UPDATE && !$form->_originalDiscountId) {
           $form->_originalDiscountId = $defaults[$form->_pId]['discount_id'];
           if ($form->_originalDiscountId) {
-            $optionGroupId = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_Discount",
+            $optionGroupId = CRM_Core_DAO::getFieldValue(
+              "CRM_Core_DAO_Discount",
               $form->_originalDiscountId,
               'option_group_id'
             );
@@ -273,12 +270,14 @@ class CRM_Event_Form_EventFees {
         }
 
         if ($form->_eventId && $discountId) {
-          $defaultDiscountId = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event",
+          $defaultDiscountId = CRM_Core_DAO::getFieldValue(
+            "CRM_Event_DAO_Event",
             $form->_eventId,
             'default_discount_fee_id'
           );
           if ($defaultDiscountId) {
-            $discountKey = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_OptionValue",
+            $discountKey = CRM_Core_DAO::getFieldValue(
+              "CRM_Core_DAO_OptionValue",
               $defaultDiscountId,
               'weight'
             );
@@ -287,14 +286,16 @@ class CRM_Event_Form_EventFees {
           $defaults[$form->_pId]['discount_id'] = $discountId;
           $defaults[$form->_pId]['amount'] = key(array_slice($form->_values['discount'][$discountId], $discountKey - 1, $discountKey, TRUE));
 
-          $optionGroupId = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_Discount",
+          $optionGroupId = CRM_Core_DAO::getFieldValue(
+            "CRM_Core_DAO_Discount",
             $discountId,
             'option_group_id'
           );
         }
         else {
           if ($form->_eventId) {
-            $defaults[$form->_pId]['amount'] = CRM_Core_DAO::getFieldValue("CRM_Event_DAO_Event",
+            $defaults[$form->_pId]['amount'] = CRM_Core_DAO::getFieldValue(
+              "CRM_Event_DAO_Event",
               $form->_eventId,
               'default_fee_id'
             );
@@ -306,10 +307,12 @@ class CRM_Event_Form_EventFees {
         && ($form->_action == CRM_Core_Action::UPDATE || $form->_allowConfirmation)
       ) {
         if (!empty($form->_feeBlock)) {
-          $feeLevel = CRM_Utils_Array::value('fee_level',
+          $feeLevel = CRM_Utils_Array::value(
+            'fee_level',
             $defaults[$form->_pId]
           );
-          $feeAmount = CRM_Utils_Array::value('fee_amount',
+          $feeAmount = CRM_Utils_Array::value(
+            'fee_amount',
             $defaults[$form->_pId]
           );
           foreach ($form->_feeBlock as $amountId => $amountInfo) {
@@ -339,7 +342,8 @@ class CRM_Event_Form_EventFees {
         if (!isset($defaults[$form->_pId]['amount'])) {
           // keeping the old code too
           if (!$optionGroupId) {
-            $optionGroupId = CRM_Core_DAO::getFieldValue("CRM_Core_DAO_OptionGroup",
+            $optionGroupId = CRM_Core_DAO::getFieldValue(
+              "CRM_Core_DAO_OptionGroup",
               'civicrm_event.amount.' .
               $defaults[$form->_pId]['event_id'],
               'id',
@@ -348,7 +352,8 @@ class CRM_Event_Form_EventFees {
           }
 
           $optionParams = ['option_group_id' => $optionGroupId,
-            'label' => CRM_Utils_Array::value('fee_level',
+            'label' => CRM_Utils_Array::value(
+              'fee_level',
               $defaults[$form->_pId]
             ),
           ];
@@ -400,7 +405,7 @@ class CRM_Event_Form_EventFees {
    *
    * @return None
    */
-  static function setDefaultPriceSet($participantID, $eventID = NULL) {
+  public static function setDefaultPriceSet($participantID, $eventID = NULL) {
     $defaults = [];
     if (!$eventID && $participantID) {
       $eventID = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $participantID, 'event_id');
@@ -487,7 +492,7 @@ SELECT  id, html_type
    * @return None
    * @access public
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     if ($form->_eventId) {
       $form->_isPaidEvent = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $form->_eventId, 'is_monetary');
       if ($form->_isPaidEvent) {
@@ -536,7 +541,9 @@ SELECT  id, html_type
           $discounts[$key] = $value['name'];
         }
 
-        $element = $form->add('select', 'discount_id',
+        $element = $form->add(
+          'select',
+          'discount_id',
           ts('Discount Set'),
           [0 => ts('- select -')] + $discounts,
           FALSE,
@@ -552,22 +559,30 @@ SELECT  id, html_type
         CRM_Core_Payment_Form::buildCreditCard($form, TRUE);
       }
       elseif (!$form->_mode) {
-        $form->addElement('checkbox', 'record_contribution', ts('Record Payment?'), NULL,
+        $form->addElement(
+          'checkbox',
+          'record_contribution',
+          ts('Record Payment?'),
+          NULL,
           ['onclick' => "return showHideByValue('record_contribution','','payment_information','table-row','radio',false);"]
         );
 
-
-        $form->add('select', 'contribution_type_id',
+        $form->add(
+          'select',
+          'contribution_type_id',
           ts('Contribution Type'),
           ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType()
         );
 
         $form->addDate('receive_date', ts('Received'), FALSE, ['formatType' => 'activityDate']);
 
-        $form->add('select', 'payment_instrument_id',
+        $form->add(
+          'select',
+          'payment_instrument_id',
           ts('Paid By'),
           ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::paymentInstrument(),
-          FALSE, ['onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);"]
+          FALSE,
+          ['onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);"]
         );
         // don't show transaction id in batch update mode
         $path = CRM_Utils_System::currentPath();
@@ -591,15 +606,24 @@ SELECT  id, html_type
         else {
           $allowStatuses = $statuses;
         }
-        $form->add('select', 'contribution_status_id',
-          ts('Payment Status'), $allowStatuses
+        $form->add(
+          'select',
+          'contribution_status_id',
+          ts('Payment Status'),
+          $allowStatuses
         );
 
-        $form->add('text', 'check_number', ts('Check Number'),
+        $form->add(
+          'text',
+          'check_number',
+          ts('Check Number'),
           CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'check_number')
         );
 
-        $form->add('text', 'total_amount', ts('Total Amount'),
+        $form->add(
+          'text',
+          'total_amount',
+          ts('Total Amount'),
           CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'total_amount')
         );
       }
@@ -611,9 +635,11 @@ SELECT  id, html_type
 
     $form->assign("paid", $form->_isPaidEvent);
 
-    $sendReceiptEle = $form->addElement('checkbox',
+    $sendReceiptEle = $form->addElement(
+      'checkbox',
       'send_receipt',
-      ts('Send Confirmation?'), NULL,
+      ts('Send Confirmation?'),
+      NULL,
       ['onclick' => "showHideByValue('send_receipt','','notice','table-row','radio',false); showHideByValue('send_receipt','','from-email','table-row','radio',false);"]
     );
 
@@ -642,11 +668,9 @@ SELECT  id, html_type
       }
     }
 
-
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $form->assign('outBound_option', $mailingInfo['outBound_option']);
     $form->assign('hasPayment', $form->_paymentId);
     $form->assign('onlinePayment', $form->_online);
   }
 }
-

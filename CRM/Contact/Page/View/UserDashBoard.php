@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * CMS User Dashboard
  * This class is used to build User Dashboard
@@ -59,9 +56,9 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
-  
-  function __construct() {
+  public static $_links = NULL;
+
+  public function __construct() {
     parent::__construct();
 
     $check = CRM_Core_Permission::check('access Contact Dashboard');
@@ -82,7 +79,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
     elseif ($this->_contactId != $userID) {
 
       if (!CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::VIEW)) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to view this contact'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to view this contact'));
       }
       if (!CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)) {
         $this->_edit = FALSE;
@@ -98,9 +95,9 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
      * @access public
      *
      */
-  function preProcess() {
+  public function preProcess() {
     if (!$this->_contactId) {
-       return CRM_Core_Error::statusBounce(ts('You must be logged in to view this page.'));
+      return CRM_Core_Error::statusBounce(ts('You must be logged in to view this page.'));
     }
 
     list($displayName, $contactImage) = CRM_Contact_BAO_Contact::getDisplayAndImage($this->_contactId);
@@ -119,11 +116,10 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    * @return none
    * @access public
    */
-  function buildUserDashBoard() {
+  public function buildUserDashBoard() {
     //build component selectors
     $dashboardElements = [];
     $config = CRM_Core_Config::singleton();
-
 
     $this->_userOptions = CRM_Core_BAO_Preferences::valueOptions('user_dashboard_options');
 
@@ -136,7 +132,8 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       }
 
       if (CRM_Utils_Array::value($name, $this->_userOptions) &&
-        (CRM_Core_Permission::access($component->name) ||
+        (
+          CRM_Core_Permission::access($component->name) ||
           CRM_Core_Permission::check($elem['perm'][0])
         )
       ) {
@@ -158,10 +155,15 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       ];
 
       $links = &self::links();
-      $currentRelationships = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId,
+      $currentRelationships = CRM_Contact_BAO_Relationship::getRelationship(
+        $this->_contactId,
         CRM_Contact_BAO_Relationship::CURRENT,
-        0, 0, 0,
-        $links, NULL, TRUE
+        0,
+        0,
+        0,
+        $links,
+        NULL,
+        TRUE
       );
       $this->assign('currentRelationships', $currentRelationships);
     }
@@ -176,7 +178,6 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
       $this->assign('pcpBlock', $pcpBlock);
       $this->assign('pcpInfo', $pcpInfo);
     }
-
 
     usort($dashboardElements, ['CRM_Utils_Sort', 'cmpFunc']);
     $this->assign('dashboardElements', $dashboardElements);
@@ -200,7 +201,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    *
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     $this->buildUserDashBoard();
     return parent::run();
@@ -212,7 +213,7 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static function &links() {
+  public static function &links() {
     if (!(self::$_links)) {
       $deleteExtra = ts('Are you sure you want to delete this relationship?');
       $disableExtra = ts('Are you sure you want to disable this relationship?');
@@ -233,7 +234,6 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
         ],
       ];
 
-
       if (CRM_Core_Permission::check('access CiviCRM')) {
         self::$_links = array_merge(self::$_links, [CRM_Core_Action::DISABLE => [
               'name' => ts('Disable'),
@@ -248,10 +248,12 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
 
     // call the hook so we can modify it
 
-    CRM_Utils_Hook::links('view.contact.userDashBoard', 'Contact',
-      CRM_Core_DAO::$_nullObject, self::$_links
+    CRM_Utils_Hook::links(
+      'view.contact.userDashBoard',
+      'Contact',
+      CRM_Core_DAO::$_nullObject,
+      self::$_links
     );
     return self::$_links;
   }
 }
-

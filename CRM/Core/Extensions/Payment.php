@@ -34,7 +34,6 @@
  *
  */
 
-
 class CRM_Core_Extensions_Payment {
 
   public $ext;
@@ -53,7 +52,6 @@ class CRM_Core_Extensions_Payment {
     if (CRM_Utils_Array::arrayKeyExists($this->ext->name, $ppByName)) {
       CRM_Core_Error::fatal('This payment processor type already exists.');
     }
-
 
     $dao = new CRM_Core_DAO_PaymentProcessorType();
 
@@ -75,7 +73,6 @@ class CRM_Core_Extensions_Payment {
     $dao->url_recur_test_default = trim($this->ext->typeInfo['urlRecurTestDefault']);
     $dao->url_button_default = trim($this->ext->typeInfo['urlButtonDefault']);
     $dao->url_button_test_default = trim($this->ext->typeInfo['urlButtonTestDefault']);
-
 
     switch (trim($this->ext->typeInfo['billingMode'])) {
       case 'form':
@@ -110,9 +107,7 @@ class CRM_Core_Extensions_Payment {
       CRM_Core_Error::fatal('This payment processor type is not registered.');
     }
 
-
     $paymentProcessors = CRM_Core_PseudoConstant::paymentProcessor(TRUE);
-
 
     foreach ($paymentProcessors as $id => $name) {
       $dao = new CRM_Core_DAO_PaymentProcessor();
@@ -124,7 +119,6 @@ class CRM_Core_Extensions_Payment {
         }
       }
     }
-
 
     CRM_Core_BAO_PaymentProcessorType::del($this->paymentProcessorTypes[$this->ext->key]);
   }
@@ -142,7 +136,6 @@ class CRM_Core_Extensions_Payment {
   private function _getAllPaymentProcessorTypes($attr) {
     $ppt = [];
 
-
     $dao = new CRM_Core_DAO_PaymentProcessorType();
     $dao->find();
     while ($dao->fetch()) {
@@ -151,4 +144,3 @@ class CRM_Core_Extensions_Payment {
     return $ppt;
   }
 }
-

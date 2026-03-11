@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Localization
  *
@@ -58,7 +56,6 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
 
     $locales = &CRM_Core_I18n::languages();
 
-
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     if ($domain->locales) {
@@ -78,8 +75,12 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
       // add the ability to return to single language
       $warning = ts('WARNING: This will make your CiviCRM installation a single-language one again. THIS WILL DELETE ALL DATA RELATED TO LANGUAGES OTHER THAN THE DEFAULT ONE SELECTED ABOVE (and only that language will be preserved).');
       $this->assign('warning', $warning);
-      $this->addElement('checkbox', 'makeSinglelingual', ts('Return to Single Language'),
-        NULL, ['onChange' => "if (this.checked) alert('$warning')"]
+      $this->addElement(
+        'checkbox',
+        'makeSinglelingual',
+        ts('Return to Single Language'),
+        NULL,
+        ['onChange' => "if (this.checked) alert('$warning')"]
       );
     }
     else {
@@ -91,7 +92,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
 
       // test for create view and trigger permissions and if allowed, add the option to go multilingual
       CRM_Core_Error::ignoreException();
-      $dao = new CRM_Core_DAO;
+      $dao = new CRM_Core_DAO();
       $dao->query('CREATE OR REPLACE VIEW civicrm_domain_view AS SELECT * FROM civicrm_domain');
       $dao->query('CREATE TRIGGER civicrm_domain_trigger BEFORE INSERT ON civicrm_domain FOR EACH ROW BEGIN END');
       $dao->query('DROP TRIGGER IF EXISTS civicrm_domain_trigger');
@@ -99,8 +100,12 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
       CRM_Core_Error::setCallback();
 
       if (!$dao->_lastError and !$config->logging) {
-        $this->addElement('checkbox', 'makeMultilingual', ts('Enable Multiple Languages'),
-          NULL, ['onChange' => "if (this.checked) alert('$warning')"]
+        $this->addElement(
+          'checkbox',
+          'makeMultilingual',
+          ts('Enable Multiple Languages'),
+          NULL,
+          ['onChange' => "if (this.checked) alert('$warning')"]
         );
       }
     }
@@ -122,7 +127,6 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     $this->addSelect('countryLimit', ts('Available Countries'), $country, [
         'multiple' => 'multipl',
     ]);
-
 
     $this->addSelect('provinceLimit', ts('Available States and Provinces'), $country, [
         'multiple' => 'multiple',
@@ -154,7 +158,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     if (CRM_Utils_Array::value('monetaryThousandSeparator', $fields) ==
       CRM_Utils_Array::value('monetaryDecimalPoint', $fields)
@@ -178,7 +182,7 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     return empty($errors) ? TRUE : $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     parent::setDefaultValues();
 
     // CRM-1496
@@ -215,14 +219,14 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     if (empty($values['currencyLimit'])) {
       $values['currencyLimit'] = $values['defaultCurrency'];
     }
-    elseif (!in_array($values['defaultCurrency'],
-        $values['currencyLimit']
-      )) {
+    elseif (!in_array(
+      $values['defaultCurrency'],
+      $values['currencyLimit']
+    )) {
       $values['currencyLimit'][] = $values['defaultCurrency'];
       // sort so that when we display drop down, weights have right value
       sort($values['currencyLimit']);
     }
-
 
     // get labels for all the currencies
     $options = [];
@@ -236,7 +240,8 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     }
 
     $dontCare = NULL;
-    CRM_Core_OptionGroup::createAssoc('currencies_enabled',
+    CRM_Core_OptionGroup::createAssoc(
+      'currencies_enabled',
       $options,
       $dontCare
     );
@@ -280,4 +285,3 @@ class CRM_Admin_Form_Setting_Localization extends CRM_Admin_Form_Setting {
     }
   }
 }
-

@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to delete a group of
  * contacts. This class provides functionality for the actual
@@ -49,7 +47,7 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // add select for groups
     $group = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::group();
     $groupElement = $this->add('select', 'group_id', ts('Select Group'), $group, TRUE);
@@ -73,7 +71,7 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
 
     if ($this->get('context') === 'smog') {
@@ -109,4 +107,3 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

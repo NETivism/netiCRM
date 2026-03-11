@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Location Type
  *
@@ -58,7 +56,8 @@ class CRM_Admin_Form_PreferencesDate extends CRM_Admin_Form {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_PreferencesDate');
 
     $this->applyFilter('__ALL__', 'trim');
-    $name = &$this->add('text',
+    $name = &$this->add(
+      'text',
       'name',
       ts('Name'),
       $attributes['name'],
@@ -76,10 +75,16 @@ class CRM_Admin_Form_PreferencesDate extends CRM_Admin_Form {
       $this->add('text', 'date_format', ts('Format'), $attributes['date_format'], TRUE);
     }
     else {
-      $this->add('select', 'date_format', ts('Format'),
+      $this->add(
+        'select',
+        'date_format',
+        ts('Format'),
         ['' => ts('- default input format -')] + CRM_Core_SelectValues::getDatePluginInputFormats()
       );
-      $this->add('select', 'time_format', ts('Time'),
+      $this->add(
+        'select',
+        'time_format',
+        ts('Time'),
         ['' => ts('- none -')] + CRM_Core_SelectValues::getTimeFormats()
       );
     }
@@ -100,7 +105,7 @@ class CRM_Admin_Form_PreferencesDate extends CRM_Admin_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
 
     if ($fields['name'] == 'activityDateTime' && !$fields['time_format']) {
@@ -137,10 +142,10 @@ class CRM_Admin_Form_PreferencesDate extends CRM_Admin_Form {
 
     $dao->save();
 
-    CRM_Core_Session::setStatus(ts('The date type \'%1\' has been saved.',
-        [1 => $params['name']]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      'The date type \'%1\' has been saved.',
+      [1 => $params['name']]
+    ));
   }
   //end of function
 }
-

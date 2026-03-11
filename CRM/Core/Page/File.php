@@ -33,11 +33,8 @@
  *
  */
 
-
 class CRM_Core_Page_File extends CRM_Core_Page {
-  function run() {
-
-
+  public function run() {
 
     $entityId = CRM_Utils_Request::retrieve('eid', 'Positive', $this, TRUE);
     $fieldId = CRM_Utils_Request::retrieve('fid', 'Positive', $this, FALSE);
@@ -51,7 +48,6 @@ class CRM_Core_Page_File extends CRM_Core_Page {
     }
     $quest = CRM_Utils_Request::retrieve('quest', 'String', $this);
     $action = CRM_Utils_Request::retrieve('action', 'String', $this);
-
 
     list($path, $mimeType, $entityTable) = CRM_Core_BAO_File::path($fileId, $entityId, NULL, $quest);
     $publicFileSection = explode(',', CRM_Core_BAO_File::PUBLIC_ENTITY_TABLE);
@@ -105,4 +101,3 @@ class CRM_Core_Page_File extends CRM_Core_Page {
     }
   }
 }
-

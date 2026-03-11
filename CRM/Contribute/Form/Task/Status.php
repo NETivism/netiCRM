@@ -32,8 +32,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to email a group of
  * contacts.
@@ -56,9 +54,12 @@ class CRM_Contribute_Form_Task_Status extends CRM_Contribute_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE
+  public function preProcess() {
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE
     );
 
     if ($id) {
@@ -77,11 +78,12 @@ SELECT count(*)
 FROM   civicrm_contribution
 WHERE  contribution_status_id != 2
 AND    {$this->_componentClause}";
-    $count = CRM_Core_DAO::singleValueQuery($query,
+    $count = CRM_Core_DAO::singleValueQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
     if ($count != 0) {
-       return CRM_Core_Error::statusBounce(ts('Please select only online contributions with Pending status.'));
+      return CRM_Core_Error::statusBounce(ts('Please select only online contributions with Pending status.'));
     }
 
     // ensure that all contributions are generated online by pay later
@@ -89,14 +91,15 @@ AND    {$this->_componentClause}";
 SELECT DISTINCT( source ) as source
 FROM   civicrm_contribution
 WHERE  {$this->_componentClause}";
-    $dao = CRM_Core_DAO::executeQuery($query,
+    $dao = CRM_Core_DAO::executeQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
     while ($dao->fetch()) {
       if (strpos($dao->source, ts('Online Contribution')) === FALSE &&
         strpos($dao->source, ts('Online Event Registration')) === FALSE
       ) {
-         return CRM_Core_Error::statusBounce("<strong>Update Pending Contribution Status</strong> can only be used for pending online contributions (made using the 'Pay Later' option). The Source for these contributions starts with 'Online ...'. Please de-select any offline contributions and try again.");
+        return CRM_Core_Error::statusBounce("<strong>Update Pending Contribution Status</strong> can only be used for pending online contributions (made using the 'Pay Later' option). The Source for these contributions starts with 'Online ...'. Please de-select any offline contributions and try again.");
       }
     }
 
@@ -117,7 +120,9 @@ WHERE  {$this->_componentClause}";
     unset($status[2]);
     unset($status[5]);
     unset($status[6]);
-    $this->add('select', 'contribution_status_id',
+    $this->add(
+      'select',
+      'contribution_status_id',
       ts('Contribution Status'),
       $status,
       TRUE
@@ -137,7 +142,8 @@ FROM   civicrm_contact c,
        civicrm_contribution co
 WHERE  co.contact_id = c.id
 AND    co.id IN ( $contribIDs )";
-    $dao = CRM_Core_DAO::executeQuery($query,
+    $dao = CRM_Core_DAO::executeQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -155,21 +161,27 @@ AND    co.id IN ( $contribIDs )";
       $row['amount'] = $dao->amount;
       $row['source'] = $dao->source;
       $row['trxn_id'] = &$this->addElement('text', "trxn_id_{$row['contribution_id']}", ts('Transaction ID'));
-      $this->addRule("trxn_id_{$row['contribution_id']}",
+      $this->addRule(
+        "trxn_id_{$row['contribution_id']}",
         ts('This Transaction ID already exists in the database. Include the account number for checks.'),
         'objectExists',
         ['CRM_Contribute_DAO_Contribution', $dao->contribution_id, 'trxn_id']
       );
 
-
-      $row['fee_amount'] = &$this->add('text', "fee_amount_{$row['contribution_id']}", ts('Transaction Fee Amount'),
+      $row['fee_amount'] = &$this->add(
+        'text',
+        "fee_amount_{$row['contribution_id']}",
+        ts('Transaction Fee Amount'),
         $attributes['fee_amount']
       );
       $this->addRule("fee_amount_{$row['contribution_id']}", ts('Please enter a valid amount.'), 'money');
       $defaults["fee_amount_{$row['contribution_id']}"] = 0.0;
 
-      $row['trxn_date'] = &$this->addDate("trxn_date_{$row['contribution_id']}", FALSE,
-        ts('Receipt Date'), ['formatType' => 'activityDate']
+      $row['trxn_date'] = &$this->addDate(
+        "trxn_date_{$row['contribution_id']}",
+        FALSE,
+        ts('Receipt Date'),
+        ['formatType' => 'activityDate']
       );
       $defaults["trxn_date_{$row['contribution_id']}"] = $now;
 
@@ -184,7 +196,8 @@ AND    co.id IN ( $contribIDs )";
 
     $this->assign_by_ref('rows', $this->_rows);
     $this->setDefaults($defaults);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Update Pending Status'),
           'isDefault' => TRUE,
@@ -207,7 +220,7 @@ AND    co.id IN ( $contribIDs )";
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $seen = $errors = [];
     foreach ($fields as $name => $value) {
       if (strpos($name, 'trxn_id_') !== FALSE) {
@@ -241,9 +254,7 @@ AND    co.id IN ( $contribIDs )";
     $params = $this->controller->exportValues($this->_name);
     $statusID = $params['contribution_status_id'];
 
-
     $baseIPN = new CRM_Core_Payment_BaseIPN();
-
 
     $transaction = new CRM_Core_Transaction();
 
@@ -315,7 +326,7 @@ AND    co.id IN ( $contribIDs )";
     CRM_Core_Session::setStatus(ts('Contribution status has been updated for selected record(s).'));
   }
 
-  static function &getDetails($contributionIDs) {
+  public static function &getDetails($contributionIDs) {
     $query = "
 SELECT    c.id              as contribution_id,
           c.contact_id      as contact_id     ,
@@ -329,7 +340,8 @@ LEFT JOIN civicrm_participant         p  ON pp.participant_id  = p.id
 WHERE     c.id IN ( $contributionIDs )";
 
     $rows = [];
-    $dao = CRM_Core_DAO::executeQuery($query,
+    $dao = CRM_Core_DAO::executeQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
     while ($dao->fetch()) {
@@ -343,4 +355,3 @@ WHERE     c.id IN ( $contributionIDs )";
     return $rows;
   }
 }
-

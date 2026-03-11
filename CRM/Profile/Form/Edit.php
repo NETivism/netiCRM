@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for custom data
  *
@@ -60,12 +58,12 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $session = CRM_Core_Session::singleton();
 
     // disable anon user for access some profile
     $ufid = $session->get("ufID");
-    if(empty($ufid) && $this->get('edit')){
+    if (empty($ufid) && $this->get('edit')) {
       CRM_Core_Error::fatal();
       return;
     }
@@ -98,7 +96,6 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
       $userID = $session->get('userID');
       $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, $userID);
 
-
       if ($id != $userID) {
         // do not allow edit for anon users in joomla frontend, CRM-4668, unless u have checksum CRM-5228
 
@@ -117,9 +114,10 @@ class CRM_Profile_Form_Edit extends CRM_Profile_Form {
 
     // make sure the gid is set and valid
     if (!$this->_gid) {
-       return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is disabled, OR there is no Profile with that ID, OR a valid \'gid=\' integer value is missing from the URL. Contact the site administrator if you need assistance.',
-          [1 => $this->_gid]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        'The requested Profile (gid=%1) is disabled, OR there is no Profile with that ID, OR a valid \'gid=\' integer value is missing from the URL. Contact the site administrator if you need assistance.',
+        [1 => $this->_gid]
+      ));
     }
 
     // and also the profile is of type 'Profile'
@@ -132,9 +130,10 @@ SELECT module
     $params = [1 => [$this->_gid, 'Integer']];
     $dao = CRM_Core_DAO::executeQuery($query, $params);
     if (!$dao->fetch()) {
-       return CRM_Core_Error::statusBounce(ts('The requested Profile (gid=%1) is not configured to be used for \'Profile\' edit and view forms in its Settings. Contact the site administrator if you need assistance.',
-          [1 => $this->_gid]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        'The requested Profile (gid=%1) is not configured to be used for \'Profile\' edit and view forms in its Settings. Contact the site administrator if you need assistance.',
+        [1 => $this->_gid]
+      ));
     }
 
     // prepare this value
@@ -156,7 +155,8 @@ SELECT module
     $this->assign('recentlyViewed', FALSE);
 
     if ($this->_context != 'dialog') {
-      $this->_postURL = $this->_ufGroup['post_URL'];;
+      $this->_postURL = $this->_ufGroup['post_URL'];
+      ;
       $this->_cancelURL = $this->_ufGroup['cancel_URL'];
 
       $gidString = $this->_gid;
@@ -169,7 +169,8 @@ SELECT module
           $this->_postURL = CRM_Utils_System::url('civicrm/contact/search');
         }
         elseif ($this->_id && $this->_gid) {
-          $this->_postURL = CRM_Utils_System::url('civicrm/profile/view',
+          $this->_postURL = CRM_Utils_System::url(
+            'civicrm/profile/view',
             "reset=1&id={$this->_id}&gid={$gidString}"
           );
         }
@@ -197,7 +198,7 @@ SELECT module
       $session = CRM_Core_Session::singleton();
       $last_check_id = $session->get('last_check_id');
 
-      if(!empty($last_check_id)){
+      if (!empty($last_check_id)) {
         $this->addElement('hidden', 'last_check_id', $last_check_id);
       }
 
@@ -267,7 +268,7 @@ SELECT module
       }
 
       $last_check_id = $this->get('last_check_id');
-      $session->set('last_check_id',$last_check_id);
+      $session->set('last_check_id', $last_check_id);
 
       $url = CRM_Utils_System::url('civicrm/profile/create', "reset=1&gid={$gidString}");
       $session->replaceUserContext($url);
@@ -290,7 +291,7 @@ SELECT module
    *
    * @return    boolean   true if no error found
    */
-  function validate() {
+  public function validate() {
     $errors = parent::validate();
 
     if (!$errors &&
@@ -322,4 +323,3 @@ SELECT module
     return $errors;
   }
 }
-

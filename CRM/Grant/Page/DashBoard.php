@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This is page is for Grant Dashboard
  */
@@ -48,9 +46,8 @@ class CRM_Grant_Page_DashBoard extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $admin = CRM_Core_Permission::check('administer CiviCRM');
-
 
     $grantSummary = CRM_Grant_BAO_Grant::getGrantSummary($admin);
 
@@ -65,7 +62,7 @@ class CRM_Grant_Page_DashBoard extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $controller = new CRM_Core_Controller_Simple('CRM_Grant_Form_Search', ts('grants'), NULL);
@@ -80,4 +77,3 @@ class CRM_Grant_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

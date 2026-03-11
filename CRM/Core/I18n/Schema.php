@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_Core_I18n_Schema {
 
   /**
@@ -43,7 +40,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static function dropAllViews() {
+  public static function dropAllViews() {
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     if (!$domain->locales) {
@@ -68,7 +65,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static function makeMultilingual($locale) {
+  public static function makeMultilingual($locale) {
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
 
@@ -122,8 +119,8 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static function makeSinglelingual($retain) {
-    $domain = new CRM_Core_DAO_Domain;
+  public static function makeSinglelingual($retain) {
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
@@ -169,7 +166,7 @@ class CRM_Core_I18n_Schema {
     }
 
     // execute the queries without i18n rewriting
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->query($query, FALSE);
     }
@@ -192,7 +189,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static function addLocale($locale, $source) {
+  public static function addLocale($locale, $source) {
     // get the current supported locales
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
@@ -245,7 +242,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static function rebuildMultilingualSchema($locales, $version = NULL) {
+  public static function rebuildMultilingualSchema($locales, $version = NULL) {
     if ($version) {
       // fetch all the SchemaStructure versions we ship and sort by version
       $schemas = [];
@@ -260,7 +257,8 @@ class CRM_Core_I18n_Schema {
       // find the latest schema structure older than (or equal to) $version
       do {
         $latest = array_pop($schemas);
-      } while (version_compare($latest, $version, '>'));
+      }
+      while (version_compare($latest, $version, '>'));
       $latest = str_replace('.', '_', $latest);
 
       $class = "CRM_Core_I18n_SchemaStructure_{$latest}";
@@ -270,10 +268,10 @@ class CRM_Core_I18n_Schema {
       $class = 'CRM_Core_I18n_SchemaStructure';
 
     }
-    $indices =& $class::indices();
-    $tables  =& $class::tables();
+    $indices = &$class::indices();
+    $tables  = &$class::tables();
     $queries = [];
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
 
     // get all of the already existing indices
     $existing = [];
@@ -322,7 +320,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return string        the rewritten query
    */
-  static function rewriteQuery($query) {
+  public static function rewriteQuery($query) {
     static $tables = NULL;
     if ($tables === NULL) {
       $tables = &CRM_Core_I18n_SchemaStructure::tables();
@@ -346,8 +344,8 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE INDEX queries
    */
   private static function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $indices =& $class::indices();
-    $columns =& $class::columns();
+    $indices = &$class::indices();
+    $columns = &$class::columns();
     if (!isset($indices[$table])) {
       return [];
     }
@@ -381,7 +379,7 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE TRIGGER queries
    */
   private static function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $columns =& $class::columns();
+    $columns = &$class::columns();
     $queries = [];
     $namesTrigger = [];
     $individualNamesTrigger = [];
@@ -466,7 +464,7 @@ class CRM_Core_I18n_Schema {
    * @return array          array of CREATE INDEX queries
    */
   private static function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $columns =& $class::columns();
+    $columns = &$class::columns();
     $cols = [];
     $dao->query("DESCRIBE {$table}", FALSE);
     while ($dao->fetch()) {
@@ -484,4 +482,3 @@ class CRM_Core_I18n_Schema {
     return "CREATE OR REPLACE VIEW {$table}_{$locale} AS SELECT " . CRM_Utils_Array::implode(', ', $cols) . " FROM {$table}";
   }
 }
-

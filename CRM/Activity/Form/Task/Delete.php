@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class provides the functionality to delete a group of
  * Activites. This class provides functionality for the actual
@@ -57,7 +54,7 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -68,7 +65,7 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Delete Activites'), 'done');
   }
 
@@ -96,4 +93,3 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
     CRM_Core_Session::setStatus($status);
   }
 }
-

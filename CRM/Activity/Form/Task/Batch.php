@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class provides the functionality for batch profile update for Activities
  */
@@ -68,7 +64,7 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -77,17 +73,25 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
     //get the contact read only fields to display.
 
-    $readOnlyFields = array_merge(['sort_name' => ts('Name')],
-      CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options',
-        TRUE, NULL, FALSE, 'name', TRUE
+    $readOnlyFields = array_merge(
+      ['sort_name' => ts('Name')],
+      CRM_Core_BAO_Preferences::valueOptions(
+        'contact_autocomplete_options',
+        TRUE,
+        NULL,
+        FALSE,
+        'name',
+        TRUE
       )
     );
 
     //get the read only field data.
     $returnProperties = array_fill_keys(array_keys($readOnlyFields), 1);
 
-    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails($this->_activityHolderIds,
-      'Activity', $returnProperties
+    $contactDetails = CRM_Contact_BAO_Contact_Utils::contactDetails(
+      $this->_activityHolderIds,
+      'Activity',
+      $returnProperties
     );
     $this->assign('contactDetails', $contactDetails);
     $this->assign('readOnlyFields', $readOnlyFields);
@@ -100,13 +104,12 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $ufGroupId = $this->get('ufGroupId');
 
     if (!$ufGroupId) {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
-
 
     $this->_title = ts('Batch Update for Activities') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
@@ -135,7 +138,8 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Update Activities'),
           'isDefault' => TRUE,
@@ -146,12 +150,9 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
       ]
     );
 
-
     $this->assign('profileTitle', $this->_title);
     $this->assign('componentIds', $this->_activityHolderIds);
     $fileFieldExists = FALSE;
-
-
 
     $customFields = CRM_Core_BAO_CustomField::getFields('Activity');
 
@@ -161,7 +162,8 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
         if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
           $customValue = CRM_Utils_Array::value($customFieldID, $customFields);
           if (CRM_Utils_Array::value('extends_entity_column_value', $customValue)) {
-            $entityColumnValue = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+            $entityColumnValue = explode(
+              CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
               $customValue['extends_entity_column_value']
             );
           }
@@ -197,7 +199,7 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (empty($this->_fields)) {
       return;
     }
@@ -224,9 +226,11 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     if (isset($params['field'])) {
       foreach ($params['field'] as $key => $value) {
 
-        $value['custom'] = CRM_Core_BAO_CustomField::postProcess($value,
+        $value['custom'] = CRM_Core_BAO_CustomField::postProcess(
+          $value,
           CRM_Core_DAO::$_nullObject,
-          $key, 'Activity'
+          $key,
+          'Activity'
         );
         $value['id'] = $key;
 
@@ -268,7 +272,6 @@ WHERE  id = %1";
         // Get Conatct ID
         $value['source_contact_id'] = $dao->source_contact_id;
 
-
         $activityId = civicrm_activity_update($value);
 
         // add custom field values
@@ -287,4 +290,3 @@ WHERE  id = %1";
   }
   //end of function
 }
-

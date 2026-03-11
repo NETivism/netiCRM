@@ -33,15 +33,12 @@
  *
  */
 
-
-
 class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
   public $_showHide;
   public $_event_type_id;
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['eventsByDates'] = 0;
-
 
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     if (!CRM_Utils_Array::value('eventsByDates', $defaults)) {
@@ -71,7 +68,8 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     $event_type = CRM_Core_OptionGroup::values('event_type', FALSE);
     $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'event_type_id', 'Event Type', $event_type, $attrs);
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'refresh',
           'name' => ts('Search'),
@@ -81,7 +79,7 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+  public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();
     $parent->set('searchResult', 1);
@@ -106,4 +104,3 @@ class CRM_Event_Form_SearchEvent extends CRM_Core_Form {
     }
   }
 }
-

@@ -31,29 +31,28 @@
  * $Id$
  *
  */
-        class CRM_AI_DAO_AICompletion extends CRM_Core_DAO
-{
+class CRM_AI_DAO_AICompletion extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_aicompletion';
+  public static $_tableName = 'civicrm_aicompletion';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +60,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +68,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +76,8 @@
    * @var boolean
    * @static
    */
-  static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    * AICompletion ID
    *
    * @var int unsigned
@@ -192,14 +191,13 @@
    * @var int unsigned
    */
   public $status_id;
-   /**
-   * class constructor
-   *
-   * @access public
-   * @return civicrm_aicompletion
-   */
-  function __construct()
-  {
+  /**
+  * class constructor
+  *
+  * @access public
+  * @return civicrm_aicompletion
+  */
+  public function __construct() {
     parent::__construct();
   }
   /**
@@ -208,8 +206,7 @@
    * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'contact_id' => 'civicrm_contact:id',
@@ -217,34 +214,32 @@
     }
     return self::$_links;
   }
-   /**
-   * Returns foreign keys and entity references.
-   *
-   * @return array
-   *   [CRM_Core_Reference_Interface]
-   */
-  public static function getReferenceColumns()
-  {
+  /**
+  * Returns foreign keys and entity references.
+  *
+  * @return array
+  *   [CRM_Core_Reference_Interface]
+  */
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
-   * returns all the column names of this table
-   *
-   * @access public
-   * @return array
-   */
-  static function &fields()
-  {
+  /**
+  * returns all the column names of this table
+  *
+  * @access public
+  * @return array
+  */
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'contact_id' => [
           'name' => 'contact_id',
@@ -254,7 +249,7 @@
         'is_template' => [
           'name' => 'is_template',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'template_title' => [
           'name' => 'template_title',
@@ -267,7 +262,7 @@
           'name' => 'tone_style',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Tone Style') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 64,
            'size' => CRM_Utils_Type::BIG,
                 ] ,
@@ -275,7 +270,7 @@
           'name' => 'ai_role',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Ai Role') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 64,
            'size' => CRM_Utils_Type::BIG,
                 ] ,
@@ -283,36 +278,36 @@
           'name' => 'context',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Context') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'output_text' => [
           'name' => 'output_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Output Text') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'is_share_with_others' => [
           'name' => 'is_share_with_others',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Created Date') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'prompt' => [
           'name' => 'prompt',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Prompt') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'component' => [
           'name' => 'component',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 64,
            'size' => CRM_Utils_Type::BIG,
                 ] ,
@@ -320,7 +315,7 @@
           'name' => 'field',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Field') ,
-          'required' => true,
+          'required' => TRUE,
            'maxlength' => 64,
            'size' => CRM_Utils_Type::BIG,
                 ] ,
@@ -328,36 +323,36 @@
           'name' => 'temperature',
           'type' => CRM_Utils_Type::T_FLOAT,
           'title' => ts('Temperature') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'post_data' => [
           'name' => 'post_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Post Data') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'return_data' => [
           'name' => 'return_data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Return Data') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'prompt_token' => [
           'name' => 'prompt_token',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Prompt Token') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'completion_token' => [
           'name' => 'completion_token',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Completion Token') ,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
         'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
+          'required' => TRUE,
                   ] ,
       ];
     }
@@ -369,18 +364,16 @@
    * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
    * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
@@ -389,21 +382,21 @@
    * @access public
    * return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['aicompletion'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_import;
   }
   /**
@@ -412,21 +405,21 @@
    * @access public
    * return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['aicompletion'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_export;
   }
 }

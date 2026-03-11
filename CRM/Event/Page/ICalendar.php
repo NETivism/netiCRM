@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * ICalendar class
  *
@@ -50,8 +48,7 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
-
+  public function run() {
 
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE, NULL, 'GET');
     $type = CRM_Utils_Request::retrieve('type', 'Positive', $this, FALSE, 0);
@@ -61,7 +58,6 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page {
     $gData = CRM_Utils_Request::retrieve('gData', 'Positive', $this, FALSE, 0);
     $html = CRM_Utils_Request::retrieve('html', 'Positive', $this, FALSE, 0);
     $rss = CRM_Utils_Request::retrieve('rss', 'Positive', $this, FALSE, 0);
-
 
     $info = CRM_Event_BAO_Event::getCompleteInfo($start, $type, $id, $end);
     $this->assign('events', $info);
@@ -100,4 +96,3 @@ class CRM_Event_Page_ICalendar extends CRM_Core_Page {
     CRM_Utils_System::civiExit();
   }
 }
-

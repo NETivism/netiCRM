@@ -33,9 +33,8 @@
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_PostalMailing extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
-  function __construct(&$formValues) {
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     $this->_columns = [ts('Contact Id') => 'contact_id',
@@ -46,7 +45,7 @@ class CRM_Contact_Form_Search_Custom_PostalMailing extends CRM_Contact_Form_Sear
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
 
     $groups = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::allGroup();
     $form->addElement('select', 'group_id', ts('Group'), $groups);
@@ -58,7 +57,10 @@ class CRM_Contact_Form_Search_Custom_PostalMailing extends CRM_Contact_Form_Sear
     $form->assign('elements', ['group_id']);
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -68,13 +70,17 @@ contact_a.sort_name     as sort_name,
 address.street_address  as address,
 state_province.name     as state_province
 ";
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
-  function from() {
+  public function from() {
     return "
 FROM      civicrm_group_contact as cgc, 
           civicrm_contact       as contact_a
@@ -84,12 +90,13 @@ LEFT JOIN civicrm_state_province state_province ON  state_province.id = address.
 ";
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $params = [];
 
     $count = 1;
     $clause = [];
-    $groupID = CRM_Utils_Array::value('group_id',
+    $groupID = CRM_Utils_Array::value(
+      'group_id',
       $this->_formValues
     );
     if ($groupID) {
@@ -110,8 +117,7 @@ LEFT JOIN civicrm_state_province state_province ON  state_province.id = address.
     return $this->whereClause($where, $params);
   }
 
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 }
-

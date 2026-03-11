@@ -35,7 +35,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (!empty($this->_contactId)) {
       $defaults['contact_id'] = $this->_contactId;
@@ -62,7 +62,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     }
     $pages = [];
     CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active', ' is_internal = 1');
-    foreach($pages as $id => &$page) {
+    foreach ($pages as $id => &$page) {
       $page .= " ($id)";
     }
     $records = [
@@ -85,7 +85,8 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     }
     $this->addSelect('contribution_page_id', ts('Contribution Page'), $pages, '', TRUE);
     $this->addCheckBox('is_test', '', [ ts('Test-drive') => 1]);
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'refresh',
           'name' => ts('Next >>'),
@@ -107,7 +108,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     if (empty($fields['contact_select_id'][1])) {
       if (!ctype_digit($fields['contact_id']) || empty($fields['contact_id'])) {
@@ -166,7 +167,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
       1 => [$this->_contactId, 'Positive'],
     ]);
 
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       if ($dao->receive_date) {
         $date = CRM_Utils_Date::customFormat($dao->receive_date);
       }
@@ -179,7 +180,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     $dao = CRM_Core_DAO::executeQuery("SELECT id, total_amount, receive_date FROM civicrm_contribution WHERE contribution_recur_id IS NULL AND contact_id = %1 AND is_test = 0 AND contribution_status_id = 1 ORDER BY receive_date DESC LIMIT 10", [
       1 => [$this->_contactId, 'Positive'],
     ]);
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       if ($dao->receive_date) {
         $date = CRM_Utils_Date::customFormat($dao->receive_date);
       }

@@ -41,8 +41,8 @@ class CRM_Utils_System_Soap {
   /**
    * UF container variables
    */
-  static $uf = NULL;
-  static $ufClass = NULL;
+  public static $uf = NULL;
+  public static $ufClass = NULL;
 
   /**
    * sets the title of the page
@@ -53,7 +53,7 @@ class CRM_Utils_System_Soap {
    * @return void
    * @access public
    */
-  function setTitle($title, $pageTitle) {
+  public function setTitle($title, $pageTitle) {
     return;
   }
 
@@ -66,7 +66,7 @@ class CRM_Utils_System_Soap {
    * @static
    * @access public
    */
-  static function checkPermission($str) {
+  public static function checkPermission($str) {
     return TRUE;
   }
 
@@ -80,7 +80,7 @@ class CRM_Utils_System_Soap {
    * @access public
    * @static
    */
-  static function appendBreadCrumb($title, $url) {
+  public static function appendBreadCrumb($title, $url) {
     return;
   }
 
@@ -93,7 +93,7 @@ class CRM_Utils_System_Soap {
    * @access public
    * @static
    */
-  static function addHTMLHead($head) {
+  public static function addHTMLHead($head) {
     return;
   }
 
@@ -111,7 +111,7 @@ class CRM_Utils_System_Soap {
    * @access public
    *
    */
-  function url($path = NULL, $query = NULL, $absolute = TRUE, $fragment = NULL) {
+  public function url($path = NULL, $query = NULL, $absolute = TRUE, $fragment = NULL) {
     if (isset(self::$ufClass)) {
       $ufClassName = self::$ufClass;
       $url = $ufClassName::url($path, $query, $absolute, $fragment);
@@ -130,7 +130,7 @@ class CRM_Utils_System_Soap {
    * @return string the url to post the form
    * @access public
    */
-  function postURL($action) {
+  public function postURL($action) {
     return NULL;
   }
 
@@ -142,7 +142,8 @@ class CRM_Utils_System_Soap {
    * @return void
    * @access public
    */
-  function setEmail(&$user) {}
+  public function setEmail(&$user) {
+  }
 
   /**
    * Authenticate a user against the real UF
@@ -154,10 +155,10 @@ class CRM_Utils_System_Soap {
    * @access public
    * @static
    */
-  static function &authenticate($name, $pass) {
+  public static function &authenticate($name, $pass) {
     if (isset(self::$ufClass)) {
       $ufClassName = self::$ufClass;
-      $result =& $ufClassName::authenticate($name, $pass);
+      $result = &$ufClassName::authenticate($name, $pass);
       return $result;
     }
     else {
@@ -186,8 +187,7 @@ class CRM_Utils_System_Soap {
    *
    * @return null  as the language is set elsewhere
    */
-  static function getUFLocale() {
+  public static function getUFLocale() {
     return NULL;
   }
 }
-

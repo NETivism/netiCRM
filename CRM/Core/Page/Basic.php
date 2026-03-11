@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
 
   protected $_action;
@@ -52,7 +48,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @access public
    */
 
-  abstract function getBAOName();
+  abstract public function getBAOName();
 
   /**
    * an array of action links
@@ -60,7 +56,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return array (reference)
    * @access public
    */
-  abstract function &links();
+  abstract public function &links();
 
   /**
    * name of the edit form class
@@ -68,7 +64,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  abstract function editForm();
+  abstract public function editForm();
 
   /**
    * name of the form
@@ -76,7 +72,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  abstract function editName();
+  abstract public function editName();
 
   /**
    * userContext to pop back to
@@ -86,7 +82,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  abstract function userContext($mode = NULL);
+  abstract public function userContext($mode = NULL);
 
   /**
    * function to get userContext params
@@ -96,7 +92,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return string
    * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';
   }
 
@@ -122,7 +118,8 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function addValues($controller) {}
+  public function addValues($controller) {
+  }
 
   /**
    * class constructor
@@ -132,7 +129,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    *
    * @return CRM_Core_Page
    */
-  function __construct($title = NULL, $mode = NULL) {
+  public function __construct($title = NULL, $mode = NULL) {
     parent::__construct($title, $mode);
   }
 
@@ -141,33 +138,42 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     // what action do we want to perform ? (store it for smarty too.. :)
     $thisArgs = func_get_args();
     $args = $thisArgs[0] ?? NULL;
     $pageArgs = $thisArgs[1] ?? NULL;
     $sort = $thisArgs[2] ?? NULL;
 
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'browse'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'browse'
     );
     $this->assign('action', $this->_action);
 
     // get 'id' if present
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $this->getBAOName()) . ".php");
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $this->getBAOName()) . ".php");
 
     if ($id) {
       if (!$this->checkPermission($id, NULL)) {
-         return CRM_Core_Error::statusBounce(ts('You do not have permission to make changes to the record'));
+        return CRM_Core_Error::statusBounce(ts('You do not have permission to make changes to the record'));
       }
     }
 
     if ($this->_action &
-      (CRM_Core_Action::VIEW |
+      (
+        CRM_Core_Action::VIEW |
         CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE
@@ -184,7 +190,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     return parent::run();
   }
 
-  function superRun() {
+  public function superRun() {
     return parent::run();
   }
 
@@ -196,7 +202,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return void
    * @access public
    */
-  function browse() {
+  public function browse() {
     $thisArgs = func_get_args();
     $action = $thisArgs[0] ?? NULL;
     $sort = $thisArgs[1] ?? NULL;
@@ -241,7 +247,6 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
       $object->orderBy($key . ' asc');
     }
 
-
     // find all objects
     $object->find();
     while ($object->fetch()) {
@@ -256,7 +261,6 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
         if ($permission) {
           $values[$object->id] = [];
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
-
 
           CRM_Contact_DAO_RelationshipType::addDisplayEnums($values[$object->id]);
 
@@ -288,7 +292,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    * @return void
    * @access private
    */
-  function action(&$object, $action, &$values, &$links, $permission, $forceAction = FALSE) {
+  public function action(&$object, $action, &$values, &$links, $permission, $forceAction = FALSE) {
     $values['class'] = '';
     $newAction = $action;
     $hasDelete = $hasDisable = TRUE;
@@ -353,7 +357,7 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
    *
    * @return void
    */
-  function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
+  public function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
     $controller = new CRM_Core_Controller_Simple($this->editForm(), $this->editName(), $mode, $imageUpload);
 
     // set the userContext stack
@@ -371,4 +375,3 @@ abstract class CRM_Core_Page_Basic extends CRM_Core_Page {
     $controller->run();
   }
 }
-

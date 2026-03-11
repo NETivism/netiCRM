@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class helps to print the labels for contacts
  *
@@ -47,7 +45,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('contactIds', $this->_contactIds);
     parent::preProcess();
   }
@@ -59,7 +57,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Make Mailing Labels'));
 
     //add select for label
@@ -76,10 +74,13 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
 
     $this->add('select', 'label_id', ts('Select Label'), ['' => ts('- select label -')] + $label, TRUE);
 
-
     // add select for Location Type
-    $this->addElement('select', 'location_type_id', ts('Select Location'),
-      ['' => ts('Primary')] + CRM_Core_PseudoConstant::locationType(), TRUE
+    $this->addElement(
+      'select',
+      'location_type_id',
+      ts('Select Location'),
+      ['' => ts('Primary')] + CRM_Core_PseudoConstant::locationType(),
+      TRUE
     );
 
     // checkbox for SKIP contacts with Do Not Mail privacy option
@@ -99,7 +100,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return array   array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['do_not_mail'] = 1;
 
@@ -118,7 +119,6 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     $config = CRM_Core_Config::singleton();
     $locName = NULL;
     //get the address format sequence from the config file
-
 
     $sequence = CRM_Core_BAO_Preferences::value('mailing_sequence');
     foreach ($sequence as $v) {
@@ -307,7 +307,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
         if (empty($contact['addressee_display']) && empty($contact['addressee_id'])) {
           $contactDAO = new CRM_Contact_DAO_Contact();
           $contactDAO->id = $value;
-          $contactDAO->find(true);
+          $contactDAO->find(TRUE);
           $contactDAO->addressee_id = $defaultAddressee;
           CRM_Contact_BAO_Contact::processGreetings($contactDAO);
           $contactDAO->free();
@@ -370,9 +370,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return  null
    * @access  public
    */
-  function createLabel(&$contactRows, &$format) {
-
-
+  public function createLabel(&$contactRows, &$format) {
 
     $pdf = new CRM_Utils_PDF_Label($format, 'mm');
     $pdf->Open();
@@ -401,10 +399,11 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
    * @return array of returnProperties
    * @access  public
    */
-  function getReturnProperties(&$format) {
+  public function getReturnProperties(&$format) {
     $returnProperties = [];
     $matches = [];
-    preg_match_all('/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
+    preg_match_all(
+      '/(?<!\{|\\\\)\{(\w+\.\w+)\}(?!\})/',
       $format,
       $matches,
       PREG_PATTERN_ORDER
@@ -421,7 +420,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     return $returnProperties;
   }
 
-  function mergeSameAddress(&$rows) {
+  public function mergeSameAddress(&$rows) {
     $uniqueAddress = [];
     foreach (array_keys($rows) as $rowID) {
       // load complete address as array key
@@ -469,7 +468,7 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     }
   }
 
-  function mergeSameHousehold(&$rows) {
+  public function mergeSameHousehold(&$rows) {
     # group selected contacts by type
     $individuals = [];
     $households = [];
@@ -501,4 +500,3 @@ class CRM_Contact_Form_Task_Label extends CRM_Contact_Form_Task {
     return $rows;
   }
 }
-

@@ -34,9 +34,6 @@
  *
  */
 
-
-
-
 class CRM_Core_Payment_Google extends CRM_Core_Payment {
 
   /**
@@ -49,7 +46,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -58,7 +55,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * Constructor
@@ -67,7 +64,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    *
    * @return void
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Google Checkout');
@@ -82,7 +79,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Google($mode, $paymentProcessor);
@@ -96,7 +93,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -117,7 +114,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     }
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
@@ -130,7 +127,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @access public
    *
    */
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
 
     $url = rtrim($this->_paymentProcessor['url_site'], '/') . '/cws/v2/Merchant/' . $this->_paymentProcessor['user_name'] . '/checkout';
@@ -174,15 +171,21 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     $cart->SetMerchantPrivateData($privateData);
 
     if ($component == "event") {
-      $returnURL = CRM_Utils_System::url('civicrm/event/register',
+      $returnURL = CRM_Utils_System::url(
+        'civicrm/event/register',
         "_qf_ThankYou_display=1&qfKey={$params['qfKey']}",
-        TRUE, NULL, FALSE
+        TRUE,
+        NULL,
+        FALSE
       );
     }
     elseif ($component == "contribute") {
-      $returnURL = CRM_Utils_System::url('civicrm/contribute/transact',
+      $returnURL = CRM_Utils_System::url(
+        'civicrm/contribute/transact',
         "_qf_ThankYou_display=1&qfKey={$params['qfKey']}",
-        TRUE, NULL, FALSE
+        TRUE,
+        NULL,
+        FALSE
       );
     }
 
@@ -194,7 +197,6 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     $googleParams = ['cart' => $cartVal,
       'signature' => $signatureVal,
     ];
-
 
     $params = ['method' => HTTP_REQUEST_METHOD_POST,
       'allowRedirects' => FALSE,
@@ -211,9 +213,10 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     }
 
     if ($request->getResponseCode() != 302) {
-      CRM_Core_Error::fatal(ts('Invalid response code received from Google Checkout: %1',
-          [1 => $request->getResponseCode()]
-        ));
+      CRM_Core_Error::fatal(ts(
+        'Invalid response code received from Google Checkout: %1',
+        [1 => $request->getResponseCode()]
+      ));
     }
     CRM_Utils_System::redirect($request->getResponseHeader('location'));
 
@@ -226,7 +229,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
    * @searchParamsnvpStr is the array of search params.
    * returns an associtive array containing the response from the server.
    */
-  function invokeAPI($paymentProcessor, $searchParams) {
+  public function invokeAPI($paymentProcessor, $searchParams) {
     $merchantID = $paymentProcessor['user_name'];
     $merchantKey = $paymentProcessor['password'];
     $siteURL = rtrim(str_replace('https://', '', $paymentProcessor['url_site']), '/');
@@ -262,8 +265,10 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
 
     if (curl_errno($ch)) {
       $e = &CRM_Core_Error::singleton();
-      $e->push(curl_errno($ch),
-        0, NULL,
+      $e->push(
+        curl_errno($ch),
+        0,
+        NULL,
         curl_error($ch)
       );
       return $e;
@@ -275,7 +280,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     return self::getArrayFromXML($xmlResponse);
   }
 
-  static function buildXMLQuery($searchParams) {
+  public static function buildXMLQuery($searchParams) {
     $xml = '<?xml version="1.0" encoding="UTF-8"?>
 <notification-history-request xmlns="http://checkout.google.com/schema/2">';
 
@@ -308,7 +313,7 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     return $xml;
   }
 
-  static function getArrayFromXML($xmlData) {
+  public static function getArrayFromXML($xmlData) {
 
     $xmlParser = new XmlParser($xmlData);
     $root = $xmlParser->GetRoot();
@@ -317,4 +322,3 @@ class CRM_Core_Payment_Google extends CRM_Core_Payment {
     return [$root, $data];
   }
 }
-

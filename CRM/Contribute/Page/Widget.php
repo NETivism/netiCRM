@@ -1,6 +1,6 @@
 <?php
 class CRM_Contribute_Page_Widget extends CRM_Core_Page {
-  function run() {
+  public function run() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE, 0, 'GET');
     $embed = CRM_Utils_Request::retrieve('embed', 'Boolean', $this, TRUE, 0, 'GET');
     $page = [];
@@ -12,7 +12,7 @@ class CRM_Contribute_Page_Widget extends CRM_Core_Page {
       $this->assign('cpageId', $id);
       $this->assign('pageTitle', $page['title']);
       $form = [];
-      foreach($widget as $k => $v) {
+      foreach ($widget as $k => $v) {
         if (strstr($k, 'color')) {
           $form[$k]['value'] = $v;
         }

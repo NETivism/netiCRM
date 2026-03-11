@@ -7,8 +7,8 @@
  */
 class CRM_Widget_Widget {
 
-  static $_methodTable;
-  function initialize() {
+  public static $_methodTable;
+  public function initialize() {
     if (!self::$_methodTable) {
       self::$_methodTable = [
         'getContributionPageData' =>
@@ -32,7 +32,7 @@ class CRM_Widget_Widget {
     }
   }
 
-  function &methodTable() {
+  public function &methodTable() {
     self::initialize();
 
     return self::$_methodTable;
@@ -47,7 +47,7 @@ class CRM_Widget_Widget {
    *
    * @return string
    */
-  function registerRequest($contributionPageID, $widgetID, $action) {
+  public function registerRequest($contributionPageID, $widgetID, $action) {
     return "I registered a request to $action on $contributionPageID from $widgetID";
   }
 
@@ -74,7 +74,6 @@ class CRM_Widget_Widget {
       return $data;
     }
 
-
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->contribution_page_id = $contributionPageID;
     if (!$widget->find(TRUE)) {
@@ -92,9 +91,13 @@ class CRM_Widget_Widget {
     $data->title = $widget->title;
     $data->logo = $widget->url_logo;
     $data->button_title = $widget->button_title;
-    $data->button_url = CRM_Utils_System::url('civicrm/contribute/transact',
+    $data->button_url = CRM_Utils_System::url(
+      'civicrm/contribute/transact',
       "reset=1&id=$contributionPageID",
-      TRUE, NULL, FALSE, TRUE
+      TRUE,
+      NULL,
+      FALSE,
+      TRUE
     );
     $data->about = $widget->about;
 
@@ -139,7 +142,7 @@ WHERE  id = %1";
       }
 
       if ($dao->end_date) {
-        $endDate = CRM_Utils_Date::unixTime($dao->end_date, true);
+        $endDate = CRM_Utils_Date::unixTime($dao->end_date, TRUE);
         if ($endDate &&
           $endDate < $now
         ) {
@@ -171,7 +174,6 @@ WHERE  id = %1";
     $data->colors["about_link"] = str_replace('#', $hexPrefix, $widget->color_about_link);
     $data->colors["homepage_link"] = str_replace('#', $hexPrefix, $widget->color_homepage_link);
 
-
     return $data;
   }
 
@@ -187,7 +189,6 @@ WHERE  id = %1";
    */
   public function getEmbedCode($contributionPageID, $widgetID, $format = "normal") {
     self::registerRequest($contributionPageID, $widgetID, __FUNCTION__);
-    return "<embed>.......................</embed>" . print_r(func_get_args(), true);
+    return "<embed>.......................</embed>" . print_r(func_get_args(), TRUE);
   }
 }
-

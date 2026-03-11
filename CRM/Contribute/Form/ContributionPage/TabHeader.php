@@ -37,7 +37,7 @@
  * Helper class to build navigation links
  */
 class CRM_Contribute_Form_ContributionPage_TabHeader {
-  static function build(&$form) {
+  public static function build(&$form) {
     $tabs = $form->get('tabHeader');
     if (!$tabs || !CRM_Utils_Array::value('reset', $_GET)) {
       $tabs = self::process($form);
@@ -48,7 +48,7 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     return $tabs;
   }
 
-  static function process(&$form) {
+  public static function process(&$form) {
     if ($form->getVar('_id') <= 0) {
       return NULL;
     }
@@ -141,7 +141,8 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
       $reset = CRM_Utils_Array::value('reset', $_GET) ? 'reset=1&' : '';
 
       foreach ($tabs as $key => $value) {
-        $tabs[$key]['link'] = CRM_Utils_System::url("civicrm/admin/contribute/{$key}",
+        $tabs[$key]['link'] = CRM_Utils_System::url(
+          "civicrm/admin/contribute/{$key}",
           "{$reset}action=update&snippet=4&id={$contribPageId}&qfKey={$qfKey}"
         );
         $tabs[$key]['active'] = $tabs[$key]['valid'] = TRUE;
@@ -158,12 +159,12 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     return $tabs;
   }
 
-  static function reset(&$form) {
+  public static function reset(&$form) {
     $tabs = self::process($form);
     $form->set('tabHeader', $tabs);
   }
 
-  static function getCurrentTab($tabs) {
+  public static function getCurrentTab($tabs) {
     static $current = FALSE;
 
     if ($current) {
@@ -183,4 +184,3 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     return $current;
   }
 }
-

@@ -37,8 +37,6 @@
  *
  */
 
-
-
 class CRM_Core_Controller_Simple extends CRM_Core_Controller {
 
   /**
@@ -53,7 +51,8 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
    * @return object
    * @access public
    */
-  function __construct($path,
+  public function __construct(
+    $path,
     $title,
     $mode = NULL,
     $imageUpload = FALSE,
@@ -75,7 +74,6 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
       $mode = $savedAction;
     }
 
-
     $this->_stateMachine->addSequentialPages($params, $mode);
 
     $this->addPages($this->_stateMachine, $mode);
@@ -94,7 +92,8 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
       // always allow a single upload file with same name
       if ($attachUpload) {
 
-        $this->addActions($config->uploadDir,
+        $this->addActions(
+          $config->uploadDir,
           CRM_Core_BAO_File::uploadNames()
         );
       }
@@ -123,10 +122,9 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
    * A wrapper for getTemplateFileName that includes calling the hook to
    * prevent us from having to copy & paste the logic of calling the hook
    */
-  function getHookedTemplateFileName() {
+  public function getHookedTemplateFileName() {
     $pageTemplateFile = $this->getTemplateFileName();
     CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
     return $pageTemplateFile;
   }
 }
-

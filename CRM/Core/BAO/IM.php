@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contain function for IM handling
  */
@@ -49,7 +47,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $im = new CRM_Core_DAO_IM();
 
     $im->copyValues($params);
@@ -67,7 +65,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static function &getValues($entityBlock) {
+  public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('im', $entityBlock);
   }
 
@@ -80,7 +78,7 @@ class CRM_Core_BAO_IM extends CRM_Core_DAO_IM {
    * @access public
    * @static
    */
-  static function allIMs($id, $updateBlankLocInfo = FALSE) {
+  public static function allIMs($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -129,15 +127,13 @@ ORDER BY
    * @access public
    * @static
    */
-  static function allEntityIMs(&$entityElements) {
+  public static function allEntityIMs(&$entityElements) {
     if (empty($entityElements)) {
       return NULL;
     }
 
-
     $entityId = $entityElements['entity_id'];
     $entityTable = $entityElements['entity_table'];
-
 
     $sql = "SELECT cim.name as im, ltype.name as locationType, cim.is_primary as is_primary, cim.id as im_id, cim.location_type_id as locationTypeId
 FROM civicrm_loc_block loc, civicrm_im cim, civicrm_location_type ltype, {$entityTable} ev
@@ -166,11 +162,11 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
    * Get current exists id from value(IM)
    *
    * Only effect when phone id not provided. Id will be added into params before add.
-   * 
+   *
    * @param array $params referenced array to be add exists phone id
    * @return void
    */
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['name']) && is_string($params['name']) && !empty($params['contact_id']) && !empty($params['provider_id'])) {
       $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_im WHERE name LIKE %1 AND provider_id = %3 AND contact_id = %2", [
         1 => [$params['name'], 'String'],
@@ -180,4 +176,3 @@ ORDER BY cim.is_primary DESC, im_id ASC ";
     }
   }
 }
-

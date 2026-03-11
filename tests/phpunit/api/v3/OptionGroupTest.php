@@ -1,18 +1,18 @@
 <?php
 // $Id$
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_OptionGroupTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
 
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     parent::setUp();
   }
 
-  function tearDown() {}
+  public function tearDown() {
+  }
   /*
   * Good to test option group as a representative on the Camel Case
   */
@@ -60,7 +60,7 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals('civicrm_event.amount.560', $result['values'][0]['name'], 'In line ' . __LINE__);
-    $this->assertTrue(is_integer($result['values'][0]['api.OptionValue.create']));
+    $this->assertTrue(is_int($result['values'][0]['api.OptionValue.create']));
     $this->assertGreaterThan(0, $result['values'][0]['api.OptionValue.create']);
     civicrm_api('OptionGroup', 'delete', ['version' => 3, 'id' => $result['id']]);
   }
@@ -89,7 +89,10 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
    */
 
   public function testGetOptionCreateFailRollback() {
-    $countFirst = civicrm_api('OptionGroup', 'getcount', [
+    $countFirst = civicrm_api(
+      'OptionGroup',
+      'getcount',
+      [
         'version' => 3,
         'options' => ['limit' => 5000],
       ]
@@ -110,14 +113,18 @@ class api_v3_OptionGroupTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('OptionGroup', 'create', $params);
     $this->assertEquals(1, $result['is_error'], 'Error should be passed up to top level In line ' . __LINE__);
-    $countAfter = civicrm_api('OptionGroup', 'getcount', [
+    $countAfter = civicrm_api(
+      'OptionGroup',
+      'getcount',
+      [
         'version' => 3,
         'options' => ['limit' => 5000],
       ]
     );
-    $this->assertEquals($countFirst, $countAfter,
+    $this->assertEquals(
+      $countFirst,
+      $countAfter,
       'Count of option groups should not have changed due to rollback triggered by option value In line ' . __LINE__
     );
   }
 }
-

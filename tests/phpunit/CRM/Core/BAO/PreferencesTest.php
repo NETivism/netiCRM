@@ -28,38 +28,35 @@
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CRM/Core/BAO/Preferences.php';
 
-class CRM_Core_BAO_PreferencesTest extends CiviUnitTestCase 
-{
-    function get_info( ) 
-    {
-        return [
-                     'name'        => 'Preference BAO',
-                     'description' => 'Test set/get on preference variables.',
-                     'group'       => 'CiviCRM BAO Tests',
-                     ];
-    }
-    
-    function setUp( ) 
-    {
-        parent::setUp();
-    }
+class CRM_Core_BAO_PreferencesTest extends CiviUnitTestCase {
+  public function get_info() {
+    return [
+                 'name'        => 'Preference BAO',
+                 'description' => 'Test set/get on preference variables.',
+                 'group'       => 'CiviCRM BAO Tests',
+                 ];
+  }
 
-    function testValueOptions( ) {
-        
-        $addressOptions = CRM_Core_BAO_Preferences::valueOptions( 'address_options' );
-        
-        // street_address should be set 
-        $this->assertEquals( $addressOptions['street_address'], 1, 'Street Address is not set in address options' );
-        $this->assertEquals( $addressOptions['country']       , 1, 'Country is not set in address options' );
-    }
+  public function setUp() {
+    parent::setUp();
+  }
 
-    function testSetValueOptions( ) {
-        $addressOptions = CRM_Core_BAO_Preferences::valueOptions( 'address_options' );
-        $addressOptions['county'] = 1;
-        CRM_Core_BAO_Preferences::setValue( 'address_options', $addressOptions );
-        $addressOptions = CRM_Core_BAO_Preferences::valueOptions( 'address_options' );
+  public function testValueOptions() {
 
-        $this->assertEquals( $addressOptions['county'], 1, 'County was set but did not stick in db' );
-    }
+    $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options');
+
+    // street_address should be set
+    $this->assertEquals($addressOptions['street_address'], 1, 'Street Address is not set in address options');
+    $this->assertEquals($addressOptions['country'], 1, 'Country is not set in address options');
+  }
+
+  public function testSetValueOptions() {
+    $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options');
+    $addressOptions['county'] = 1;
+    CRM_Core_BAO_Preferences::setValue('address_options', $addressOptions);
+    $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options');
+
+    $this->assertEquals($addressOptions['county'], 1, 'County was set but did not stick in db');
+  }
 
 }

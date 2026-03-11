@@ -33,21 +33,19 @@
  *
  */
 
-
-
 /**
  * This class provides the common functionality for sending email to
  * one or a group of contact ids. This class is reused by all the search
  * components in CiviCRM (since they all have send email as a task)
  */
 class CRM_Contact_Form_Task_EmailCommon {
-  CONST MAX_EMAILS_KILL_SWITCH = 50;
+  public const MAX_EMAILS_KILL_SWITCH = 50;
 
   public $_contactDetails = [];
   public $_allContactDetails = [];
   public $_toContactEmails = [];
 
-  static function preProcessFromAddress(&$form) {
+  public static function preProcessFromAddress(&$form) {
     $form->_single = FALSE;
     $className = CRM_Utils_System::getClassName($form);
     if ($form->_context != 'search' &&
@@ -63,10 +61,10 @@ class CRM_Contact_Form_Task_EmailCommon {
 
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress($contactID);
 
-    foreach($fromEmails as $emailType => $emails) {
+    foreach ($fromEmails as $emailType => $emails) {
       if (!empty($emails)) {
         array_keys($emails);
-        foreach($emails as $header => $display) {
+        foreach ($emails as $header => $display) {
           $form->_emails[$header] = $header;
         }
       }
@@ -99,7 +97,7 @@ class CRM_Contact_Form_Task_EmailCommon {
    *
    * @return void
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $toArray = $ccArray = $bccArray = [];
     $suppressedEmails = 0;
     //here we are getting logged in user id as array but we need target contact id. CRM-5988
@@ -165,8 +163,6 @@ class CRM_Contact_Form_Task_EmailCommon {
         'preferred_mail_format' => 1,
       ];
 
-
-
       list($form->_contactDetails) = CRM_Mailing_BAO_Mailing::getDetails($form->_contactIds, $returnProperties, FALSE, FALSE);
 
       // make a copy of all contact details
@@ -196,7 +192,7 @@ class CRM_Contact_Form_Task_EmailCommon {
       }
 
       if (empty($toArray)) {
-         return CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold.'));
+        return CRM_Core_Error::statusBounce(ts('Selected contact(s) do not have a valid email address, or communication preferences specify DO NOT EMAIL, or they are deceased or Primary email address is On Hold.'));
       }
     }
 
@@ -209,7 +205,6 @@ class CRM_Contact_Form_Task_EmailCommon {
 
     $form->add('select', 'fromEmailAddress', ts('From'), $form->_fromEmails, TRUE);
 
-
     CRM_Mailing_BAO_Mailing::commonCompose($form);
 
     // add attachments
@@ -219,10 +214,14 @@ class CRM_Contact_Form_Task_EmailCommon {
     if ($form->_single) {
       // also fix the user context stack
       if ($form->_caseId) {
-        $ccid = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_CaseContact', $form->_caseId,
-          'contact_id', 'case_id'
+        $ccid = CRM_Core_DAO::getFieldValue(
+          'CRM_Case_DAO_CaseContact',
+          $form->_caseId,
+          'contact_id',
+          'case_id'
         );
-        $url = CRM_Utils_System::url('civicrm/contact/view/case',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/case',
           "&reset=1&action=view&cid={$ccid}&id={$form->_caseId}"
         );
       }
@@ -256,7 +255,7 @@ class CRM_Contact_Form_Task_EmailCommon {
    * @access public
    *
    */
-  static function formRule($fields, $dontCare, $self) {
+  public static function formRule($fields, $dontCare, $self) {
     $errors = [];
     $template = CRM_Core_Smarty::singleton();
 
@@ -284,11 +283,12 @@ class CRM_Contact_Form_Task_EmailCommon {
    *
    * @return None
    */
-  static function postProcess(&$form) {
+  public static function postProcess(&$form) {
     if (count($form->_contactIds) > self::MAX_EMAILS_KILL_SWITCH) {
-      return CRM_Core_Error::statusBounce(ts('Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
-          [1 => self::MAX_EMAILS_KILL_SWITCH]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        'Please do not use this task to send a lot of emails (greater than %1). We recommend using CiviMail instead.',
+        [1 => self::MAX_EMAILS_KILL_SWITCH]
+      ));
     }
 
     // check and ensure that
@@ -328,9 +328,11 @@ class CRM_Contact_Form_Task_EmailCommon {
     }
 
     $attachments = [];
-    CRM_Core_BAO_File::formatAttachment($formValues,
+    CRM_Core_BAO_File::formatAttachment(
+      $formValues,
       $attachments,
-      NULL, NULL
+      NULL,
+      NULL
     );
 
     // format contact details array to handle multiple emails from same contact
@@ -355,7 +357,7 @@ class CRM_Contact_Form_Task_EmailCommon {
 
     // send the mail
     if (CRM_Core_Config::singleton()->enableTransactionalEmail) {
-      foreach($formattedContactDetails as $details) {
+      foreach ($formattedContactDetails as $details) {
         $detailsParam = [$details];
         list($sent, $activityId) = CRM_Activity_BAO_Activity::sendEmail(
           $detailsParam,
@@ -409,7 +411,8 @@ class CRM_Contact_Form_Task_EmailCommon {
 
         // build separate status for on hold messages
         if ($values['on_hold']) {
-          $statusOnHold .= ts('Email was not sent to %1 because primary email address (%2) is On Hold.',
+          $statusOnHold .= ts(
+            'Email was not sent to %1 because primary email address (%2) is On Hold.',
             [1 => "<a href='{$contactViewUrl}'>{$displayName}</a>", 2 => "<strong>{$email}</strong>"]
           ) . '<br />';
         }
@@ -434,4 +437,3 @@ class CRM_Contact_Form_Task_EmailCommon {
   }
   //end of function
 }
-

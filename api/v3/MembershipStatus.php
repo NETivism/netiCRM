@@ -176,11 +176,11 @@ SELECT start_date, end_date, join_date
     require_once 'CRM/Member/BAO/MembershipStatus.php';
 
     // Take the is_admin column in MembershipStatus into consideration when requested
-    if (! CRM_Utils_Array::value('ignore_admin_only', $membershipParams) ) {
+    if (!CRM_Utils_Array::value('ignore_admin_only', $membershipParams)) {
       $result = &CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($dao->start_date, $dao->end_date, $dao->join_date, 'today', TRUE);
     }
     else {
-    $result = &CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($dao->start_date, $dao->end_date, $dao->join_date);
+      $result = &CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($dao->start_date, $dao->end_date, $dao->join_date);
     }
 
     //make is error zero only when valid status found.
@@ -194,4 +194,3 @@ SELECT start_date, end_date, join_date
   $dao->free();
   return $result;
 }
-

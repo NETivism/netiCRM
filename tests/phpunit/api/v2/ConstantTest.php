@@ -52,7 +52,7 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
    *
    *  Initialize configuration
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -68,14 +68,15 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
 
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/../../CiviTest/truncate-option.xml'
       )
     );
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->quickCleanup(['civicrm_option_group']);
   }
 
@@ -94,7 +95,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     //  Insert a row in civicrm_option_group creating
     //  an activity_status option group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/dataset/option_group_activity.xml'
       )
@@ -103,7 +105,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     //  Insert rows in civicrm_option_value defining activity status
     //  values of 'Scheduled', 'Completed', 'Cancelled'
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/option_value_activity.xml'
       )
@@ -115,7 +118,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Completed', $result, "In line " . __LINE__);
     $this->assertContains('Canceled', $result, "In line " . __LINE__);
 
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -126,7 +130,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
   public function testActivityType() {
     //  Insert 'activity_type' option group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/dataset/option_group_activity.xml'
       )
@@ -134,7 +139,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
 
     //  Insert some activity type values
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/option_value_activity.xml'
       )
@@ -145,7 +151,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
 
     $this->assertEquals(2, count($result), "In line " . __LINE__);
     $this->assertContains('Test activity type', $result, "In line " . __LINE__);
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -176,7 +183,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Work', $result, "In line " . __LINE__);
     $this->assertContains('Main', $result, "In line " . __LINE__);
     $this->assertContains('Billing', $result, "In line " . __LINE__);
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -198,7 +206,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Main', $result, "In line " . __LINE__);
     $this->assertContains('Other', $result, "In line " . __LINE__);
     $this->assertContains('Billing', $result, "In line " . __LINE__);
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -209,15 +218,19 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
   public function testPhoneType() {
     //  Insert 'phone_type' option group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(dirname(__FILE__) . '/dataset/option_group_phone_type.xml'
+    $op->execute(
+      $this->_dbconn,
+      new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
+        dirname(__FILE__) . '/dataset/option_group_phone_type.xml'
       )
     );
 
     //  Insert some phone type option values
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(dirname(__FILE__) . '/dataset/option_value_phone_type.xml'
+    $op->execute(
+      $this->_dbconn,
+      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
+        dirname(__FILE__) . '/dataset/option_value_phone_type.xml'
       )
     );
 
@@ -231,7 +244,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Pager', $result, "In line " . __LINE__);
     $this->assertContains('Voicemail', $result, "In line " . __LINE__);
 
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -242,15 +256,19 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
   public function testmailProtocol() {
     //  Insert 'mail_protocol' option group
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(dirname(__FILE__) . '/dataset/option_group_mail_protocol.xml'
+    $op->execute(
+      $this->_dbconn,
+      new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
+        dirname(__FILE__) . '/dataset/option_group_mail_protocol.xml'
       )
     );
 
     //  Insert some mail protocol option values
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(dirname(__FILE__) . '/dataset/option_value_mail_protocol.xml'
+    $op->execute(
+      $this->_dbconn,
+      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
+        dirname(__FILE__) . '/dataset/option_value_mail_protocol.xml'
       )
     );
 
@@ -262,7 +280,8 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
     $this->assertContains('Maildir', $result, "In line " . __LINE__);
     $this->assertContains('POP3', $result, "In line " . __LINE__);
     $this->assertContains('Localdir', $result, "In line " . __LINE__);
-    $this->assertTrue(empty($result['is_error']),
+    $this->assertTrue(
+      empty($result['is_error']),
       "In line " . __LINE__
     );
   }
@@ -277,4 +296,3 @@ class api_v2_ConstantTest extends CiviUnitTestCase {
 // c-hanging-comment-ender-p: nil
 // indent-tabs-mode: nil
 // End:
-

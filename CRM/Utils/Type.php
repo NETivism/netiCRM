@@ -33,8 +33,8 @@
  *
  */
 class CRM_Utils_Type {
-  CONST T_INT = 1, T_STRING = 2, T_ENUM = 2, T_DATE = 4, T_TIME = 8, T_BOOL = 16, T_BOOLEAN = 16, T_TEXT = 32, T_LONGTEXT = 32, T_BLOB = 64, T_TIMESTAMP = 256, T_FLOAT = 512, T_MONEY = 1024, T_EMAIL = 2048, T_URL = 4096, T_CCNUM = 8192, T_MEDIUMBLOB = 16384, T_DOUBLE = 32768;
-  CONST TWO = 2, FOUR = 4, EIGHT = 8, TWELVE = 12, SIXTEEN = 16, TWENTY = 20, MEDIUM = 20, THIRTY = 30, BIG = 30, FORTYFIVE = 45, HUGE = 45;
+  public const T_INT = 1, T_STRING = 2, T_ENUM = 2, T_DATE = 4, T_TIME = 8, T_BOOL = 16, T_BOOLEAN = 16, T_TEXT = 32, T_LONGTEXT = 32, T_BLOB = 64, T_TIMESTAMP = 256, T_FLOAT = 512, T_MONEY = 1024, T_EMAIL = 2048, T_URL = 4096, T_CCNUM = 8192, T_MEDIUMBLOB = 16384, T_DOUBLE = 32768;
+  public const TWO = 2, FOUR = 4, EIGHT = 8, TWELVE = 12, SIXTEEN = 16, TWENTY = 20, MEDIUM = 20, THIRTY = 30, BIG = 30, FORTYFIVE = 45, HUGE = 45;
 
   /**
    * Convert Constant Data type to String
@@ -45,7 +45,7 @@ class CRM_Utils_Type {
    *
    * @access public
    */
-  static function typeToString($type) {
+  public static function typeToString($type) {
     switch ($type) {
       case 1:
         $string = 'Int';
@@ -104,7 +104,7 @@ class CRM_Utils_Type {
         $string = 'Mediumblob';
         break;
 
-      case 32768;
+      case 32768:
         $string = 'Double';
         break;
 
@@ -242,7 +242,6 @@ class CRM_Utils_Type {
         break;
     }
 
-
     if ($abort) {
       CRM_Core_Error::fatal("Provided data is not of the type $type");
     }
@@ -326,9 +325,10 @@ class CRM_Utils_Type {
           $yyyymmdd = date('Ymd', $timestamp);
           return $yyyymmdd;
         }
-        if ((preg_match('/^\d{14}$/', $data) ||
+        if ((
+          preg_match('/^\d{14}$/', $data) ||
             preg_match('/^\d{8}$/', $data)
-          ) &&
+        ) &&
           CRM_Utils_Rule::mysqlDate($data)
         ) {
           return $data;
@@ -386,4 +386,3 @@ class CRM_Utils_Type {
     return NULL;
   }
 }
-

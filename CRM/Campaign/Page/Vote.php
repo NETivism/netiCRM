@@ -33,16 +33,14 @@
  *
  */
 
-
-
-
 /**
  * Page for voting tab interface.
  */
 class CRM_Campaign_Page_Vote extends CRM_Core_Page {
   public $_tabs;
   private $_surveyId;
-  private $_interviewerId; function reserve() {
+  private $_interviewerId;
+  public function reserve() {
     //build ajax voter search and selector.
     $controller = new CRM_Core_Controller_Simple('CRM_Campaign_Form_Gotv', ts('Reserve Respondents'));
     $controller->set('votingTab', TRUE);
@@ -59,7 +57,7 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function interview() {
+  public function interview() {
     //build interview and release voter interface.
     $controller = new CRM_Core_Controller_Simple('CRM_Campaign_Form_Task_Interview', ts('Interview Respondents'));
     $controller->set('votingTab', TRUE);
@@ -74,7 +72,7 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function browse() {
+  public function browse() {
     $this->_tabs = ['reserve' => ts('Reserve Respondents'),
       'interview' => ts('Interview Respondents'),
     ];
@@ -96,18 +94,19 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     $this->assign('subPageType', $subPageType);
 
     //give focus to proper tab.
-    $this->assign('selectedTabIndex', array_search(CRM_Utils_Array::value('subPage', $_GET, 'reserve'),
-        array_keys($this->_tabs)
-      ));
+    $this->assign('selectedTabIndex', array_search(
+      CRM_Utils_Array::value('subPage', $_GET, 'reserve'),
+      array_keys($this->_tabs)
+    ));
   }
 
-  function run() {
+  public function run() {
     $this->browse();
 
     parent::run();
   }
 
-  function buildTabs() {
+  public function buildTabs() {
     //check for required permissions.
     $superUser = FALSE;
     if (CRM_Core_Permission::check('manage campaign') ||
@@ -133,7 +132,8 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
       }
       $allTabs[] = ['id' => $name,
         'title' => $title,
-        'url' => CRM_Utils_System::url('civicrm/campaign/vote',
+        'url' => CRM_Utils_System::url(
+          'civicrm/campaign/vote',
           $urlParams
         ),
       ];
@@ -142,4 +142,3 @@ class CRM_Campaign_Page_Vote extends CRM_Core_Page {
     $this->assign('allTabs', empty($allTabs) ? FALSE : $allTabs);
   }
 }
-

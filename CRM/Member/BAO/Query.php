@@ -35,7 +35,7 @@
  */
 class CRM_Member_BAO_Query {
 
-  static function &getFields() {
+  public static function &getFields() {
 
     $fields = &CRM_Member_BAO_Membership::exportableFields();
     return $fields;
@@ -47,7 +47,7 @@ class CRM_Member_BAO_Query {
    * @return void
    * @access public
    */
-  static function select(&$query) {
+  public static function select(&$query) {
     // if membership mode add membership id
     if ($query->_mode & CRM_Contact_BAO_Query::MODE_MEMBER ||
       CRM_Utils_Array::value('membership_id', $query->_returnProperties)
@@ -118,7 +118,7 @@ class CRM_Member_BAO_Query {
     }
   }
 
-  static function where(&$query) {
+  public static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
@@ -146,29 +146,38 @@ class CRM_Member_BAO_Query {
     }
   }
 
-  static function whereClauseSingle(&$values, &$query) {
+  public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
     switch ($name) {
       case 'member_join_date_low':
       case 'member_join_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_membership', 'member_join_date', 'join_date',
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_membership',
+          'member_join_date',
+          'join_date',
           'Join Date'
         );
         return;
 
       case 'member_start_date_low':
       case 'member_start_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_membership', 'member_start_date', 'start_date',
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_membership',
+          'member_start_date',
+          'start_date',
           'Start Date'
         );
         return;
 
       case 'member_end_date_low':
       case 'member_end_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_membership', 'member_end_date', 'end_date',
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_membership',
+          'member_end_date',
+          'end_date',
           'End Date'
         );
         return;
@@ -207,7 +216,8 @@ class CRM_Member_BAO_Query {
           $names[] = $statusTypes[$id];
         }
         $query->_qill[$grouping][] = ts('Membership Status %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_membership.status_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_membership.status_id",
           $op,
           $status,
           "Integer"
@@ -216,7 +226,8 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_test':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_membership.is_test",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_membership.is_test",
           $op,
           $value,
           "Integer"
@@ -228,7 +239,8 @@ class CRM_Member_BAO_Query {
         return;
 
       case 'member_pay_later':
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_membership.is_pay_later",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_membership.is_pay_later",
           $op,
           $value,
           "Integer"
@@ -252,7 +264,8 @@ class CRM_Member_BAO_Query {
           $names[] = $membershipTypes[$id];
         }
         $query->_qill[$grouping][] = ts('Membership Type %1', [1 => $op]) . ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause("civicrm_membership.membership_type_id",
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          "civicrm_membership.membership_type_id",
           $op,
           $mType,
           "Integer"
@@ -286,7 +299,7 @@ class CRM_Member_BAO_Query {
     }
   }
 
-  static function from($name, $mode, $side) {
+  public static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
       case 'civicrm_membership':
@@ -323,7 +336,7 @@ class CRM_Member_BAO_Query {
     return $from;
   }
 
-  static function defaultReturnProperties($mode) {
+  public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_MEMBER) {
       $properties = [
@@ -356,7 +369,7 @@ class CRM_Member_BAO_Query {
     return $properties;
   }
 
-  static function buildSearchForm(&$form) {
+  public static function buildSearchForm(&$form) {
 
     $attrs = ['multiple' => 'multiple'];
     $membership_type = CRM_Member_PseudoConstant::membershipType();
@@ -395,10 +408,13 @@ class CRM_Member_BAO_Query {
         foreach ($group['fields'] as $field) {
           $fieldId = $field['id'];
           $elementName = 'custom_' . $fieldId;
-          CRM_Core_BAO_CustomField::addQuickFormElement($form,
+          CRM_Core_BAO_CustomField::addQuickFormElement(
+            $form,
             $elementName,
             $fieldId,
-            FALSE, FALSE, TRUE
+            FALSE,
+            FALSE,
+            TRUE
           );
         }
       }
@@ -406,18 +422,18 @@ class CRM_Member_BAO_Query {
     $form->assign('validCiviMember', TRUE);
   }
 
-  static function searchAction(&$row, $id) {}
+  public static function searchAction(&$row, $id) {
+  }
 
-  static function addShowHide(&$showHide) {
+  public static function addShowHide(&$showHide) {
     $showHide->addHide('memberForm');
     $showHide->addShow('memberForm_show');
   }
 
-  static function tableNames(&$tables) {
+  public static function tableNames(&$tables) {
     //add membership table
     if (CRM_Utils_Array::value('civicrm_membership_log', $tables) || CRM_Utils_Array::value('civicrm_membership_status', $tables) || CRM_Utils_Array::value('civicrm_membership_type', $tables)) {
       $tables = array_merge(['civicrm_membership' => 1], $tables);
     }
   }
 }
-

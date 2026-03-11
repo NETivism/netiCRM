@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
 
   /**
@@ -45,7 +42,7 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
    *
    * @return None
    */
-  static function buildAdvanceSetting(&$form) {
+  public static function buildAdvanceSetting(&$form) {
     // should mapping be enabled for this group
     $form->addElement('checkbox', 'is_map', ts('Enable mapping for this profile?'));
 
@@ -107,4 +104,3 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
     }
   }
 }
-

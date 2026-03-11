@@ -33,14 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
-
 /**
  * This class is used to retrieve and display a range of
  * contacts that match the given criteria (specifically for
@@ -56,7 +48,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -64,14 +56,14 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
    * @static
    */
-  static $_properties = [
+  public static $_properties = [
     'id',
     'membership_id',
     'status_id',
@@ -149,7 +141,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct(&$queryParams, $limit = NULL) {
+  public function __construct(&$queryParams, $limit = NULL) {
     // submitted form values
     $this->_queryParams = &$queryParams;
     $this->_limit = $limit;
@@ -167,7 +159,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
   }
   //end of function
 
@@ -179,7 +171,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     return CRM_Core_DAO::singleValueQuery("SELECT COUNT(*) FROM civicrm_membership_log WHERE $this->_where");
   }
 
@@ -194,7 +186,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
     if ($sort) {
       if (is_string($sort)) {
@@ -205,9 +197,9 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
       }
     }
     if (!empty($orderBy) && !preg_match('/^id/i', $orderBy)) {
-      $orderBy .= ', id DESC'; 
+      $orderBy .= ', id DESC';
     }
-    $order = empty($orderBy)?"":"ORDER BY $orderBy";
+    $order = empty($orderBy) ? "" : "ORDER BY $orderBy";
 
     $offsetClause = !empty($offset) ? "OFFSET $offset" : "";
     $limit = !empty($this->_limit) ? "LIMIT $this->_limit" : "";
@@ -215,15 +207,16 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     $fields = CRM_Utils_Array::implode(', ', self::$_properties);
     $sql = "SELECT $fields FROM civicrm_membership_log WHERE $this->_where $order $limit $offsetClause";
     $dao = CRM_Core_DAO::executeQuery($sql);
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $row = [];
       foreach (self::$_properties as $field) {
-        if($field == 'status_id' && !empty($dao->status_id)){
+        if ($field == 'status_id' && !empty($dao->status_id)) {
           $status = new CRM_Member_DAO_MembershipStatus();
           $status->id = $dao->status_id;
           $status->find(TRUE);
           $row['status'] = $status->label;
-        }else if($field == 'modified_id' && !empty($dao->modified_id)){
+        }
+        elseif ($field == 'modified_id' && !empty($dao->modified_id)) {
           $contact = new CRM_Contact_DAO_Contact();
           $contact->id = $dao->modified_id;
           $contact->find(TRUE);
@@ -284,7 +277,7 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
     return self::$_columnHeaders;
   }
 
-  function &getQuery() {
+  public function &getQuery() {
     return $this->_query;
   }
 
@@ -295,9 +288,8 @@ class CRM_Member_Selector_MembershipLog extends CRM_Core_Selector_Base implement
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('Membership Log');
   }
 }
 //end of class
-

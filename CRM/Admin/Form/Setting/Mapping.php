@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Mapping and Geocoding
  *
@@ -67,7 +65,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
    * @access public
    * @static
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
 
     if (!CRM_Utils_System::checkPHPVersion(5, FALSE)) {
@@ -90,8 +88,7 @@ class CRM_Admin_Form_Setting_Mapping extends CRM_Admin_Form_Setting {
    * @return void
    * @access public
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Admin_Form_Setting_Mapping', 'formRule']);
   }
 }
-

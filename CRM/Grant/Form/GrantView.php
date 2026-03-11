@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for processing a Grant
  *
@@ -91,12 +89,10 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
       $this->assign('note', CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $this->_noteId, 'note'));
     }
 
-
     // add Grant to Recent Items
 
-
-
-    $url = CRM_Utils_System::url('civicrm/contact/view/grant',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/grant',
       "action=view&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
     );
 
@@ -104,16 +100,19 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
 
     $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviGrant', CRM_Core_Action::UPDATE)) {
-      $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/grant',
+      $recentOther['editUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/grant',
         "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
     if (CRM_Core_Permission::checkActionPermission('CiviGrant', CRM_Core_Action::DELETE)) {
-      $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/grant',
+      $recentOther['deleteUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/grant',
         "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $values['id'],
       'Grant',
@@ -122,8 +121,8 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
       $recentOther
     );
 
-
-    $attachment = CRM_Core_BAO_File::attachmentInfo('civicrm_grant',
+    $attachment = CRM_Core_BAO_File::attachmentInfo(
+      'civicrm_grant',
       $this->_id
     );
     $this->assign('attachment', $attachment);
@@ -141,7 +140,8 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -151,4 +151,3 @@ class CRM_Grant_Form_GrantView extends CRM_Core_Form {
     );
   }
 }
-

@@ -33,17 +33,15 @@
  *
  */
 
-
 require_once 'ezc/Base/src/ezc_bootstrap.php';
 require_once 'ezc/autoload/mail_autoload.php';
-
 
 class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -60,7 +58,6 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
    */
   public static function &reply($job_id, $queue_id, $hash, $replyto = NULL) {
     /* First make sure there's a matching queue event */
-
 
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
 
@@ -117,7 +114,8 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
     $contacts = CRM_Contact_BAO_Contact::getTableName();
 
     $eq = new CRM_Core_DAO();
-    $eq->query("SELECT     $contacts.display_name as display_name,
+    $eq->query(
+      "SELECT     $contacts.display_name as display_name,
                            $emails.email as email,
                            $queue.job_id as job_id,
                            $queue.hash as hash
@@ -132,7 +130,7 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     if ($fullEmail) {
       // parse the email and set a new destination
-      $parser = new ezcMailParser;
+      $parser = new ezcMailParser();
       $set = new ezcMailVariableSet($fullEmail);
       $parsed = array_shift($parser->parseMail($set));
       $parsed->to = [new ezcMailAddress($mailing->replyto_email)];
@@ -235,10 +233,8 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     $message = new Mail_Mime("\n");
 
-
     $domain = CRM_Core_BAO_Domain::getDomain();
     list($domainEmailName, $_) = CRM_Core_BAO_Domain::getNameAndEmail();
-
 
     $emailDomain = CRM_Core_BAO_MailSettings::defaultDomain();
 
@@ -252,7 +248,6 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
 
     /* TODO: do we need reply tokens? */
 
-
     $html = $component->body_html;
     if ($component->body_text) {
       $text = $component->body_text;
@@ -260,7 +255,6 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
     else {
       $text = CRM_Utils_String::htmlToText($component->body_html);
     }
-
 
     $bao = new CRM_Mailing_BAO_Mailing();
     $bao->body_text = $text;
@@ -300,7 +294,9 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
    * @access public
    * @static
    */
-  public static function getTotalCount($mailing_id, $job_id = NULL,
+  public static function getTotalCount(
+    $mailing_id,
+    $job_id = NULL,
     $is_distinct = FALSE
   ) {
     $dao = new CRM_Core_DAO();
@@ -354,8 +350,13 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
    * @access public
    * @static
    */
-  public static function &getRows($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $is_distinct = FALSE,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -416,7 +417,8 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
     $results = [];
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
@@ -428,4 +430,3 @@ class CRM_Mailing_Event_BAO_Reply extends CRM_Mailing_Event_DAO_Reply {
     return $results;
   }
 }
-

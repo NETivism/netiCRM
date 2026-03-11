@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Extensions
  *
@@ -51,9 +49,12 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   public function preProcess() {
     parent::preProcess();
 
-
-    $this->_key = CRM_Utils_Request::retrieve('key', 'String',
-      $this, FALSE, 0
+    $this->_key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      $this,
+      FALSE,
+      0
     );
 
     $session = CRM_Core_Session::singleton();
@@ -61,7 +62,6 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     $session->pushUserContext($url);
     $this->assign('id', $this->_id);
     $this->assign('key', $this->_key);
-
 
     $ext = new CRM_Core_Extensions();
     $extension = $ext->getExtensionsByKey(TRUE);
@@ -77,7 +77,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
@@ -90,7 +90,8 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Uninstall'),
             'isDefault' => TRUE,
@@ -102,7 +103,8 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
       );
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Install'),
             'isDefault' => TRUE,
@@ -126,7 +128,7 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     return empty($errors) ? TRUE : $errors;
@@ -155,4 +157,3 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     }
   }
 }
-

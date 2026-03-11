@@ -16,7 +16,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   protected $_refundAmount;
   protected $_refundContributionId;
 
-  function get_info() {
+  public function get_info() {
     return [
      'name' => 'TapPay payment processor',
      'description' => 'Test TapPay payment processor.',
@@ -27,7 +27,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     parent::setUp();
     $this->_page_id = 1;
     $this->prepareMailLog();
@@ -43,7 +43,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('PaymentProcessor', 'get', $params);
     $this->assertAPISuccess($result);
-    if(empty($result['count'])){
+    if (empty($result['count'])) {
       $payment_processors = [];
       $params = [
         'version' => 3,
@@ -51,9 +51,9 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
       ];
       $result = civicrm_api('PaymentProcessorType', 'get', $params);
       $this->assertAPISuccess($result);
-      if(!empty($result['count'])){
+      if (!empty($result['count'])) {
         $domain_id = CRM_Core_Config::domainID();
-        foreach($result['values'] as $type_id => $p){
+        foreach ($result['values'] as $type_id => $p) {
           $payment_processor = [
             'version' => 3,
             'domain_id' => $domain_id,
@@ -64,7 +64,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
             'is_default' => 0,
 
             'is_test' => 0,
-            'user_name' => !empty($p['user_name_label']) ? '11111111' : NULL, // Merchant ID  
+            'user_name' => !empty($p['user_name_label']) ? '11111111' : NULL, // Merchant ID
             'password' => !empty($p['password_label']) ? '11111111' : NULL,   // Partner Key
             'signature' => !empty($p['signature_label']) ? '11111111' : NULL, // APP ID
             'subject' => !empty($p['subject_label']) ? '11111111' : NULL,     // APP Key
@@ -77,7 +77,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
           ];
           $result = civicrm_api('PaymentProcessor', 'create', $payment_processor);
           $this->assertAPISuccess($result);
-          if(is_numeric($result['id'])){
+          if (is_numeric($result['id'])) {
             $payment_processors[] = $result['id'];
           }
 
@@ -106,7 +106,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('Contact', 'get', $params);
     $this->assertAPISuccess($result);
-    if(!empty($result['count'])){
+    if (!empty($result['count'])) {
       $this->_cid = $result['id'];
     }
 
@@ -126,11 +126,11 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->_processor = NULL;
   }
 
-  function testSinglePaymentNotify(){
+  public function testSinglePaymentNotify() {
     $now = time();
     $trxnId = 'testing_'.substr($now, -5);
     $amount = 111;
@@ -165,7 +165,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger pay by prime api
-    $microtime = round(microtime(true) * 1000);
+    $microtime = round(microtime(TRUE) * 1000);
 
     // simulate response
     $primeJson = '{
@@ -224,12 +224,12 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $dao->contribution_id = $contribution->id;
     $dao->find(TRUE);
 
-    $this->assertEquals($trxnId, $dao->order_number,  "In line " . __LINE__);
+    $this->assertEquals($trxnId, $dao->order_number, "In line " . __LINE__);
     $this->assertEquals('sample_trade_id', $dao->rec_trade_id, "In line " . __LINE__);
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
-    
+
     // these data should be null when one-time payment
     $this->assertEquals(NULL, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals(NULL, $dao->card_key, "In line " . __LINE__);
@@ -238,10 +238,10 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertEquals('2022-11-30', $dao->expiry_date, "In line " . __LINE__);
   }
 
-  function testRecurringPaymentNotify(){
+  public function testRecurringPaymentNotify() {
     ### 1st contribution of recurring
     $now = time();
-    $basemonth = strtotime(date('Y-m',time()) . '-01 00:00:01');
+    $basemonth = strtotime(date('Y-m', time()) . '-01 00:00:01');
     $amount = 222;
 
     // create recurring
@@ -302,7 +302,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $this->assertDBState('CRM_Contribute_DAO_Contribution', $contribution->id, $params);
 
     // manually trigger pay by prime api
-    $microtime = round(microtime(true) * 1000);
+    $microtime = round(microtime(TRUE) * 1000);
     $plusmonth = strtotime('+3 month', $basemonth);
     $expiryDate = date('Ym', $plusmonth);
     $lastDayOfMonth = date('Y-m-d', strtotime('last day of this month', $plusmonth));
@@ -363,7 +363,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $dao->contribution_id = $contribution->id;
     $dao->find(TRUE);
 
-    $this->assertEquals($trxnId, $dao->order_number,  "In line " . __LINE__);
+    $this->assertEquals($trxnId, $dao->order_number, "In line " . __LINE__);
     $this->assertEquals('sample_trade_id', $dao->rec_trade_id, "In line " . __LINE__);
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
@@ -378,7 +378,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     ### 2nd contribution of recurring
     $now = strtotime(date('Y-m-05', strtotime('+1 month', $basemonth))) + 80000; // later of that 5th of month
-    $microtime = ($now + 5)*1000;
+    $microtime = ($now + 5) * 1000;
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -440,18 +440,18 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $dao->contribution_id = $contribution2nd->id;
     $dao->find(TRUE);
 
-    $this->assertEquals($trxnId2, $dao->order_number,  "In line " . __LINE__);
+    $this->assertEquals($trxnId2, $dao->order_number, "In line " . __LINE__);
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
     $this->assertEquals($this->_cardToken, $dao->card_token, "In line " . __LINE__);
     $this->assertEquals('b1', $dao->card_key, "In line " . __LINE__);
     $this->assertEquals($lastDayOfMonth, $dao->expiry_date, "In line " . __LINE__);
-    
+
     ### 3rd contribution, change amount
     $amount = 333;
     $now = strtotime(date('Y-m-05', strtotime('+2 month', $basemonth))) + 80000; // later of that 5th of month
-    $microtime = ($now + 5)*1000;
+    $microtime = ($now + 5) * 1000;
     CRM_Core_DAO::setFieldValue("CRM_Contribute_DAO_ContributionRecur", $recurring->id, 'amount', $amount);
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
@@ -514,7 +514,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $dao = new CRM_Contribute_DAO_TapPay();
     $dao->contribution_id = $contribution3rd->id;
     $dao->find(TRUE);
-    $this->assertEquals($trxnId3, $dao->order_number,  "In line " . __LINE__);
+    $this->assertEquals($trxnId3, $dao->order_number, "In line " . __LINE__);
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
@@ -524,7 +524,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     ### 4th contribution, this should be latest contribution, end recurring
     $now = strtotime(date('Y-m-05', strtotime('+3 month', $basemonth))) + 65000; // later of that 5th of month
-    $microtime = ($now + 6)*1000;
+    $microtime = ($now + 6) * 1000;
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -586,7 +586,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
     $dao->contribution_id = $contribution4th->id;
     $dao->find(TRUE);
 
-    $this->assertEquals($trxnId4, $dao->order_number,  "In line " . __LINE__);
+    $this->assertEquals($trxnId4, $dao->order_number, "In line " . __LINE__);
     $this->assertEquals('1357', $dao->last_four, "In line " . __LINE__);
     $this->assertEquals('246824', $dao->bin_code, "In line " . __LINE__);
     $this->assertNotEmpty($dao->data, "In line " . __LINE__);
@@ -597,7 +597,7 @@ class CRM_Core_Payment_TapPayTest extends CiviUnitTestCase {
 
     ### 5th contribution, no further contributions should executed this time
     $now = strtotime(date('Y-m-05', strtotime('+4 month', $basemonth))) + 65000; // later of that 5th of month
-    $microtime = ($now + 7)*1000;
+    $microtime = ($now + 7) * 1000;
     global $isTapPayAllRecurExecuted;
     $isTapPayAllRecurExecuted = FALSE;
     CRM_Core_Payment_TapPay::doExecuteAllRecur($now);
@@ -650,7 +650,7 @@ HAVING MAX(t.expiry_date) < %2";
     $this->assertDBCompareValue('CRM_Contribute_DAO_ContributionRecur', $recurring->id, 'contribution_status_id', 'id', 6, "In line " . __LINE__);
   }
 
-  function testCardMetadata(){
+  public function testCardMetadata() {
     $cardMetadata = (object)([
       'status' => 0,
       'msg' => 'Success',
@@ -667,7 +667,7 @@ HAVING MAX(t.expiry_date) < %2";
         'expiry_date' => '202211',
       ]),
       'card_art_info' => (object)([
-        'is_real_card_face' => false,
+        'is_real_card_face' => FALSE,
         'image' => (object)([
           'url' => 'https://ooo.ooo.ooo/TapPay_Card_VISA.png',
           'width' => 1536,
@@ -679,7 +679,7 @@ HAVING MAX(t.expiry_date) < %2";
       ]),
     ]);
 
-    // before metadata update, recurring and contribution should not have this data. 
+    // before metadata update, recurring and contribution should not have this data.
     $this->assertDBQuery(0, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", [ 1 => [$this->_recurFirstContributionId, 'Integer'] ]);
     $this->assertDBCompareValue(
       'CRM_Contribute_DAO_TapPay',
@@ -696,8 +696,8 @@ HAVING MAX(t.expiry_date) < %2";
     $this->assertDBQuery(1, "SELECT r.auto_renew FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.id = %1", [ 1 => [$this->_recurFirstContributionId, 'Integer'] ]);
   }
 
-  function testRecordSync() {
-    $microtime = round(microtime(true) * 1000);
+  public function testRecordSync() {
+    $microtime = round(microtime(TRUE) * 1000);
 
     // full refund
     $fullRefundRecord = (object) ([
@@ -710,25 +710,25 @@ HAVING MAX(t.expiry_date) < %2";
       'refunded_amount' => $this->_refundAmount,
       'amount' => 0,
       'time' => 1554798163345,
-      'three_domain_secure' => false,
+      'three_domain_secure' => FALSE,
       'details' => 'AUTO: unit test',
       'bank_transaction_id' => 'TP1P0H1U0A0A00',
       'auth_code' => '960134',
       'bank_transaction_start_millis' => $microtime,
       'bank_transaction_end_millis' => $microtime,
-      'pay_by_instalment' => false,
+      'pay_by_instalment' => FALSE,
       'merchant_id' => 'TEST_ESUN',
       'order_number' => $this->_refundTrxnId,
       'partial_card_number' => '424242-4242',
       'rec_trade_id' => 'sample_trade_id',
       'bank_result_msg' => '',
-      'pay_by_redeem' => false,
+      'pay_by_redeem' => FALSE,
       'cardholder' => (object) ([
         'phone_number' => '',
         'email' => 'ooo@ooo.com',
         'name' => 'OOO',
       ]),
-      'is_captured' => true,
+      'is_captured' => TRUE,
       'payment_method' => 'direct_pay',
       'record_status' => 3,
       'refund_date' => $microtime,
@@ -747,7 +747,7 @@ HAVING MAX(t.expiry_date) < %2";
       $this->_refundContributionId,
       'cancel_date',
       'id',
-      $expectedValue = date('Y-m-d H:i:s', $microtime/1000),
+      $expectedValue = date('Y-m-d H:i:s', $microtime / 1000),
       "In line " . __LINE__
     );
 
@@ -845,7 +845,7 @@ HAVING MAX(t.expiry_date) < %2";
     CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'trxn_id', $trxnId);
 
     // Save TapPay data
-    $microtime = round(microtime(true) * 1000);
+    $microtime = round(microtime(TRUE) * 1000);
     $oldExpiryDate = date('Ym', strtotime($expiryOffset));
     $primeJson = '{
       "status": 0,
@@ -891,7 +891,7 @@ HAVING MAX(t.expiry_date) < %2";
     ];
   }
 
-  function testUpdateExpiryDate() {
+  public function testUpdateExpiryDate() {
     // Test 1: Update expiry date with ACTIVE token
     $recurData1 = $this->createRecurringContributionWithTapPay([
       'amount' => 123,
@@ -926,8 +926,8 @@ HAVING MAX(t.expiry_date) < %2";
 
     // Verify expiry date was updated
     $dao = CRM_Core_DAO::executeQuery("SELECT * FROM civicrm_contribution_tappay WHERE card_token = %1 ORDER BY id DESC", [ 1 => [$testCardToken1, 'String']]);
-    while($dao->fetch()) {
-      $this->assertEquals('2030-12-31', $dao->expiry_date,  "In line " . __LINE__);
+    while ($dao->fetch()) {
+      $this->assertEquals('2030-12-31', $dao->expiry_date, "In line " . __LINE__);
     }
 
     // Test 2: SUSPENDED token changes status to Cancelled (7)
@@ -963,7 +963,7 @@ HAVING MAX(t.expiry_date) < %2";
 
     // Verify recurring status changed to Cancelled (7)
     $contributionStatusId = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution_recur WHERE id = %1", [ 1 => [$recurring2->id, 'Integer']]);
-    $this->assertEquals('7', $contributionStatusId,  "In line " . __LINE__);
+    $this->assertEquals('7', $contributionStatusId, "In line " . __LINE__);
 
     // Test 3: Change recurring status to Expired (6) and update expiry date
     // Should change status from Expired (6) to In Progress (5)

@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for Options
  *
@@ -73,7 +69,8 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     $session = CRM_Core_Session::singleton();
     if (!$this->_gName) {
       $this->_gName = CRM_Utils_Request::retrieve('group', 'String', $this, FALSE, 0);
-      $this->_gid = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+      $this->_gid = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_OptionGroup',
         $this->_gName,
         'id',
         'name'
@@ -95,11 +92,10 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     if ($this->_gName == 'from_email_address') {
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/from_email', 'reset=1'));
       $this->assign('mail_providers', str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS));
-			$defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
-			$this->assign('default_from_target', 'label');
-			$this->assign('default_from_value', '"'.$config->domain->name.'" <'.$defaultFromMail.'>');
+      $defaultFromMail = CRM_Mailing_BAO_Mailing::defaultFromMail();
+      $this->assign('default_from_target', 'label');
+      $this->assign('default_from_value', '"'.$config->domain->name.'" <'.$defaultFromMail.'>');
     }
-
 
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
@@ -110,7 +106,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       if ($this->_id) {
-        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , [1 => [$this->_id, 'Integer']]);
+        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1", [1 => [$this->_id, 'Integer']]);
         if ($is_default) {
           return CRM_Core_Error::statusBounce(ts('You cannot delete default value.'));
         }
@@ -126,7 +122,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
     if (!isset($defaults['weight']) || !$defaults['weight']) {
@@ -160,7 +156,8 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       $isReserved = (bool) CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'is_reserved');
     }
 
-    $this->add('text',
+    $this->add(
+      'text',
       'label',
       ts('Label'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'label'),
@@ -168,7 +165,8 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     );
 
     if (!in_array($this->_gName, ['email_greeting', 'postal_greeting', 'addressee']) && !$isReserved) {
-      $this->addRule('label',
+      $this->addRule(
+        'label',
         ts('This Label already exists in the database for this option group. Please select a different Value.'),
         'optionExists',
         ['CRM_Core_DAO_OptionValue', $this->_id, $this->_gid, 'label']
@@ -180,7 +178,8 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
         'Closed' => ts('Closed'),
       ];
 
-      $grouping = $this->add('select',
+      $grouping = $this->add(
+        'select',
         'grouping',
         ts('Status Class'),
         $classes
@@ -196,19 +195,22 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       $this->add('text', 'name', ts('Class Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'name'));
     }
     elseif ($this->_gName == 'redaction_rule') {
-      $this->add('text',
+      $this->add(
+        'text',
         'value',
         ts('Value'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'value'),
         TRUE
       );
-      $this->add('checkbox',
+      $this->add(
+        'checkbox',
         'filter',
         ts('Regular Expression?')
       );
     }
     if ($this->_gName == 'participant_listing') {
-      $this->add('text',
+      $this->add(
+        'text',
         'description',
         ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
@@ -216,7 +218,8 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     }
     else {
       // Hard-coding attributes here since description is still stored as varchar and not text in the schema. dgg
-      $this->addWysiwyg('description',
+      $this->addWysiwyg(
+        'description',
         ts('Description'),
         ['rows' => 4, 'cols' => 80],
         $required
@@ -224,14 +227,16 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     }
 
     if ($this->_gName == 'event_badge') {
-      $this->add('text',
+      $this->add(
+        'text',
         'name',
         ts('Class Name'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'name')
       );
     }
 
-    $this->add('text',
+    $this->add(
+      'text',
       'weight',
       ts('Weight'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'weight'),
@@ -249,10 +254,12 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
 
       $caseID = CRM_Core_Component::getComponentID('CiviCase');
       $components = ['' => ts('Contact'), $caseID => 'CiviCase'];
-      $this->add('select',
+      $this->add(
+        'select',
         'component_id',
         ts('Component'),
-        $components, FALSE
+        $components,
+        FALSE
       );
     }
 
@@ -263,7 +270,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
       $this->assign('showDefault', TRUE);
       $ele = $this->add('checkbox', 'is_default', ts('Default Option?'));
       if ($this->_id) {
-        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1" , [1 => [$this->_id, 'Integer']]);
+        $is_default = CRM_Core_DAO::singleValueQuery("SELECT is_default FROM civicrm_option_value WHERE id = %1", [1 => [$this->_id, 'Integer']]);
         if ($is_default >= 1) {
           $ele->freeze();
         }
@@ -305,7 +312,7 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($self->_gName == 'case_status' && !CRM_Utils_Array::value('grouping', $fields)) {
       $errors['grouping'] = ts('Status class is a required field');
@@ -410,4 +417,3 @@ class CRM_Admin_Form_Options extends CRM_Admin_Form {
     }
   }
 }
-

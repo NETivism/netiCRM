@@ -1,7 +1,7 @@
 <?php
 class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
-  const
+  public const
     // default completion service
     COMPLETION_SERVICE = 'OpenAI',
     // default model base on above service
@@ -52,7 +52,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * This is a static function that returns a reference to a singleton instance of a class.
@@ -63,7 +63,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return object A reference to the singleton instance of the class.
    */
-  static function &singleton($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
+  public static function &singleton($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_AI_BAO_AICompletion($serviceProvider, $model, $maxTokens);
     }
@@ -218,7 +218,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   public static function quota() {
     $config = CRM_Core_Config::singleton();
     $used = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00');");
-    $percent = $used < $config->openAICompletionQuota ? floor(($used/$config->openAICompletionQuota)*100) : 100;
+    $percent = $used < $config->openAICompletionQuota ? floor(($used / $config->openAICompletionQuota) * 100) : 100;
 
     return [
       'max' => $config->openAICompletionQuota,
@@ -241,7 +241,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_AI_DAO_AICompletion', $params, $defaults);
   }
 
@@ -308,7 +308,6 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    */
   public static function validateData() {
   }
-
 
   /**
    * Constructor for the AI Completion class.
@@ -443,7 +442,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array Result data array.
    */
   public static function setTemplate($data) {
-    foreach($data as $key => $val) {
+    foreach ($data as $key => $val) {
       if (!in_array($key, ['id', 'is_template', 'template_title'])) {
         unset($data[$key]);
       }
@@ -497,7 +496,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   public static function setShare($acId) {
     $isShare = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others');
     if ($isShare == 0) {
-      return CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others', 1) ? 1 :0;
+      return CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others', 1) ? 1 : 0;
     }
     else {
       return -1;
@@ -556,13 +555,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     $path = 'CRM/AI/shared/'.$component.$suffix.$locale.'.tpl';
     $shared = $smarty->fetch($path);
-    $decodedShared = json_decode($shared, true);
+    $decodedShared = json_decode($shared, TRUE);
 
     if (!$decodedShared) {
       // fallback to non-locale template
       $path = 'CRM/AI/shared/'.$component.$suffix.'.tpl';
       $shared = $smarty->fetch($path);
-      $decodedShared = json_decode($shared, true);
+      $decodedShared = json_decode($shared, TRUE);
     }
 
     return $decodedShared;

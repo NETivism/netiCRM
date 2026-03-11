@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * BAO object for crm_note table
  */
@@ -44,7 +42,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * const the max number of notes we display at any given time
    * @var int
    */
-  CONST MAX_NOTES = 3;
+  public const MAX_NOTES = 3;
 
   /**
    * given a note id, retrieve the note text
@@ -56,7 +54,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static function getNoteText($id) {
+  public static function getNoteText($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $id, 'note');
   }
 
@@ -70,7 +68,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static function getNoteSubject($id) {
+  public static function getNoteSubject($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $id, 'subject');
   }
 
@@ -84,7 +82,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static function getNotePrivacyHidden($note) {
+  public static function getNotePrivacyHidden($note) {
     if (CRM_Core_Permission::check('view all notes')) {
       return FALSE;
     }
@@ -140,7 +138,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static function &add(&$params, $ids) {
+  public static function &add(&$params, $ids) {
     // pre-processing hooks_
     if (CRM_Utils_Array::value('id', $params)) {
       CRM_Utils_Hook::pre('edit', 'Note', $params['id'], $params);
@@ -170,7 +168,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
         $note->contact_id = $params['entity_id'];
       }
       else {
-         return CRM_Core_Error::statusBounce(ts('We could not find your logged in user ID'));
+        return CRM_Core_Error::statusBounce(ts('We could not find your logged in user ID'));
       }
     }
 
@@ -182,7 +180,8 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
 
     if ($note->entity_table == 'civicrm_contact') {
 
-      CRM_Core_BAO_Log::register($note->entity_id,
+      CRM_Core_BAO_Log::register(
+        $note->entity_id,
         'civicrm_note',
         $note->id
       );
@@ -203,10 +202,12 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
 
       $recentOther = [];
       if ($noteActions) {
-        $recentOther = ['editUrl' => CRM_Utils_System::url('civicrm/contact/view/note',
-            "reset=1&action=update&cid={$note->entity_id}&id={$note->id}&context=home"
-          ),
-          'deleteUrl' => CRM_Utils_System::url('civicrm/contact/view/note',
+        $recentOther = ['editUrl' => CRM_Utils_System::url(
+          'civicrm/contact/view/note',
+          "reset=1&action=update&cid={$note->entity_id}&id={$note->id}&context=home"
+        ),
+          'deleteUrl' => CRM_Utils_System::url(
+            'civicrm/contact/view/note',
             "reset=1&action=delete&cid={$note->entity_id}&id={$note->id}&context=home"
           ),
         ];
@@ -214,8 +215,10 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
 
       // add the recently created Note
 
-      CRM_Utils_Recent::add($displayName . ' - ' . $note->subject,
-        CRM_Utils_System::url('civicrm/contact/view/note',
+      CRM_Utils_Recent::add(
+        $displayName . ' - ' . $note->subject,
+        CRM_Utils_System::url(
+          'civicrm/contact/view/note',
           "reset=1&action=view&cid={$note->entity_id}&id={$note->id}&context=home"
         ),
         $note->id,
@@ -246,7 +249,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static function dataExists(&$params) {
+  public static function dataExists(&$params) {
     // return if no data present
     if (empty($params['note']) && empty($params['subject'])) {
       return FALSE;
@@ -267,7 +270,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @access public
    * @static
    */
-  static function &getValues(&$params, &$values, $numNotes = self::MAX_NOTES) {
+  public static function &getValues(&$params, &$values, $numNotes = self::MAX_NOTES) {
     if (empty($params)) {
       return NULL;
     }
@@ -310,7 +313,7 @@ class CRM_Core_BAO_Note extends CRM_Core_DAO_Note {
    * @static
    *
    */
-  static function del($id, $showStatus = TRUE) {
+  public static function del($id, $showStatus = TRUE) {
     $return = NULL;
     $recent = [$id];
     $note = new CRM_Core_DAO_Note();
@@ -443,7 +446,7 @@ ORDER BY modified_date desc";
    * @access public
    * @static
    */
-  static function getContactNoteCount($contactID) {
+  public static function getContactNoteCount($contactID) {
     $note = new CRM_Core_DAO_Note();
     $note->entity_id = $contactID;
     $note->entity_table = 'civicrm_contact';
@@ -520,7 +523,6 @@ ORDER BY modified_date desc";
 
         // get name of user that created this note
 
-
         $contact = new CRM_Contact_DAO_Contact();
         $createdById = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Note', $parentId, 'entity_id');
         $contact->id = $createdById;
@@ -575,4 +577,3 @@ ORDER BY modified_date desc";
     return $ids;
   }
 }
-

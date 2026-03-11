@@ -23,7 +23,6 @@
   +--------------------------------------------------------------------+
 */
 
-
 /*
  * PxPay Functionality Copyright (C) 2008 Lucas Baker, Logistic Information Systems Limited (Logis)
  * PxAccess Functionality Copyright (C) 2008 Eileen McNaughton
@@ -40,13 +39,13 @@ class CRM_Core_Payment_LinePay {
 
   private $_linePayAPI;
 
-  function __construct($paymentProcessorId, $type = 'request') {
+  public function __construct($paymentProcessorId, $type = 'request') {
     $this->_paymentProcessId = $paymentProcessorId;
     $this->_apiType = $type;
     $this->_linePayAPI = self::prepareLinePayAPI($paymentProcessorId, $type);
   }
 
-  function doRequest(&$params){
+  public function doRequest(&$params) {
 
     // prepare confirm url
     $qfKey = $params['qfKey'];
@@ -55,28 +54,28 @@ class CRM_Core_Payment_LinePay {
     $confirmQuery = "qfKey={$qfKey}&cid={$contributionId}&ppid={$paymentProcessorId}";
     $path = CRM_Utils_System::currentPath();
 
-    if(!empty($params['participantID'])){
-      $confirmQuery.="&pid={$params['participantID']}";
+    if (!empty($params['participantID'])) {
+      $confirmQuery .= "&pid={$params['participantID']}";
     }
-    if(!empty($params['eventID'])){
-      $confirmQuery.="&eid={$params['eventID']}";
+    if (!empty($params['eventID'])) {
+      $confirmQuery .= "&eid={$params['eventID']}";
     }
-    if(!empty($params['membershipID'])){
-      $confirmQuery.="&mid={$params['membershipID']}";
+    if (!empty($params['membershipID'])) {
+      $confirmQuery .= "&mid={$params['membershipID']}";
     }
 
-    $confirmUrl = CRM_Utils_System::url('civicrm/linepay/confirm', $confirmQuery, True, NULL, False);
+    $confirmUrl = CRM_Utils_System::url('civicrm/linepay/confirm', $confirmQuery, TRUE, NULL, FALSE);
 
-    $cancelUrl = self::prepareThankYouUrl($path, $qfKey, True);
+    $cancelUrl = self::prepareThankYouUrl($path, $qfKey, TRUE);
 
     // page title, description
-    if(!empty($params['eventID'])){
+    if (!empty($params['eventID'])) {
       $event = new CRM_Event_DAO_Event();
       $event->id = $params['eventID'];
       $event->find(1);
       $page_title = $event->title;
     }
-    else{
+    else {
       $contribution_pgae = new CRM_Contribute_DAO_ContributionPage();
       $contribution_pgae->id = $params['contributionPageID'];
       $contribution_pgae->find(1);
@@ -99,16 +98,16 @@ class CRM_Core_Payment_LinePay {
     $requestParams['cancelUrl'] = $cancelUrl;
 
     $result = $this->_linePayAPI->request($requestParams);
-    if($this->_linePayAPI->_response->returnMessage == 'Success.' && $this->_linePayAPI->_response->returnCode == '0000'){
+    if ($this->_linePayAPI->_response->returnMessage == 'Success.' && $this->_linePayAPI->_response->returnCode == '0000') {
       $transactionId = $this->_linePayAPI->_response->info->transactionId;
-      if(!empty($transactionId)){
+      if (!empty($transactionId)) {
         $contribution = self::prepareContribution($contributionId);
         $contribution->trxn_id = $transactionId;
         $contribution->save();
       }
       CRM_Utils_System::redirect($this->_linePayAPI->_response->info->paymentUrl->web);
     }
-    else{
+    else {
       $this->addResponseMessageToNote($contributionId);
       CRM_Core_Error::fatal($this->_linePayAPI->_response->returnMessage);
     }
@@ -117,10 +116,12 @@ class CRM_Core_Payment_LinePay {
   /**
    * $url_params should be array('civicrm', 'contribute', 'transact')
    */
-  static function confirm($url_params, $get = []){
-    if(empty($get)){
+  public static function confirm($url_params, $get = []) {
+    if (empty($get)) {
       foreach ($_GET as $key => $value) {
-        if ($key == 'q') continue;
+        if ($key == 'q') {
+          continue;
+        }
         if ($key == 'qfKey') {
           $value = CRM_Utils_Type::escape($value, 'String', FALSE);
         }
@@ -130,17 +131,17 @@ class CRM_Core_Payment_LinePay {
         $params[$key] = $value;
       }
     }
-    else{
+    else {
       $params = $get;
     }
-    if(empty($params['ppid'])){
+    if (empty($params['ppid'])) {
       CRM_Core_Error::fatal(ts('Could not find payment processor meta information'));
     }
     $linePayAPI = new CRM_Core_Payment_LinePay($params['ppid'], 'confirm');
     $linePayAPI->doConfirm($params);
   }
 
-  function doConfirm($params){
+  public function doConfirm($params) {
     $type = 'linepay';
     $config = CRM_Core_Config::singleton();
     $contribution = self::prepareContribution($params['cid']);
@@ -171,13 +172,13 @@ class CRM_Core_Payment_LinePay {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
     $input = $ids = $objects = [];
-    if(!empty($params['pid']) && !empty($params['eid'])){
+    if (!empty($params['pid']) && !empty($params['eid'])) {
       $input['component'] = 'event';
       $ids['participant'] = $params['pid'];
       $ids['event'] = $params['eid'];
       $thankYouPath = 'civicrm/event/register';
     }
-    else{
+    else {
       if (!empty($params['mid'])) {
         $ids['membership'] = $params['mid'];
       }
@@ -188,24 +189,24 @@ class CRM_Core_Payment_LinePay {
     $validate_result = $ipn->validateData($input, $ids, $objects, FALSE);
     // Refs #31598, 1172 means duplicated order, often means trigger twice.
     // Refs #41790, 1198 means duplicate API requests.
-    if($validate_result && ($this->_linePayAPI->_response->returnCode != '1172' && $this->_linePayAPI->_response->returnCode != '1198')){
+    if ($validate_result && ($this->_linePayAPI->_response->returnCode != '1172' && $this->_linePayAPI->_response->returnCode != '1198')) {
       $transaction = new CRM_Core_Transaction();
-      if($is_success){
+      if ($is_success) {
         $input['payment_instrument_id'] = $contribution->payment_instrument_id;
         $input['amount'] = $contribution->total_amount;
         $objects['contribution']->receive_date = date('YmdHis');
         $transaction_result = $ipn->completeTransaction($input, $ids, $objects, $transaction);
         $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey']);
       }
-      else{
+      else {
         $error = '';
         $ipn->failed($objects, $transaction, $error);
         $this->addResponseMessageToNote($contribution);
-        $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], True);
+        $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);
       }
     }
-    else{
-      $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], True);
+    else {
+      $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);
     }
 
     CRM_Utils_System::redirect($thankyou_url);
@@ -216,16 +217,18 @@ class CRM_Core_Payment_LinePay {
    *   'id' => $contribution->id,
    * )
    */
-  static function query($url_params, $get = []){
-    if(empty($get)){
+  public static function query($url_params, $get = []) {
+    if (empty($get)) {
       foreach ($_GET as $key => $value) {
-        if($key == 'q')continue;
+        if ($key == 'q') {
+          continue;
+        }
         $get[$key] = $value;
       }
     }
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $get['id'];
-    if($contribution->find(TRUE)){
+    if ($contribution->find(TRUE)) {
       $result_note = ts('Update the contribution manually.');
 
       // Sync to linapay server
@@ -237,11 +240,13 @@ class CRM_Core_Payment_LinePay {
         'transactionId' => $contribution->trxn_id,
       ];
       $linePay->_linePayAPI->request($params);
-      if(!empty($linePay->_linePayAPI->_response->info)){
+      if (!empty($linePay->_linePayAPI->_response->info)) {
         $info = $linePay->_linePayAPI->_response->info;
-        if(is_array($info)){
+        if (is_array($info)) {
           foreach ($info as $transaction) {
-            if($transaction->transactionId == $contribution->trxn_id)break;
+            if ($transaction->transactionId == $contribution->trxn_id) {
+              break;
+            }
           }
         }
 
@@ -254,28 +259,29 @@ class CRM_Core_Payment_LinePay {
         $result_note .= "\n".ts('Sync to Linepay server success.');
 
         // check refundList
-        if(!empty($transaction->refundList)){
+        if (!empty($transaction->refundList)) {
           // find refund, check original status
           $refund = $transaction->refundList[0];
           $cancel_date = $refund->refundTransactionDate;
           $cancel_date = date('YmdHis', strtotime($cancel_date));
           $contribution->cancel_date = $cancel_date;
           $contribution->contribution_status_id = 3;
-          if($origin_cancel_date == $contribution->cancel_date && $origin_status_id == $contribution->contribution_status_id){
+          if ($origin_cancel_date == $contribution->cancel_date && $origin_status_id == $contribution->contribution_status_id) {
             $result_note .= "\n".ts('There are no any change.');
-          }else{
+          }
+          else {
             $contribution->save();
             $result_note .= "\n".ts('The contribution has been canceled.');
           }
         }
-        else{
+        else {
           $result_note .= "\n".ts('There are no any change.');
         }
         // finish check info
         CRM_Core_Payment_Mobile::addNote($result_note, $contribution);
 
       }
-      else{
+      else {
         $result_note = ts('The response has errors, please check the note.');
         $linePay->addResponseMessageToNote($contribution);
 
@@ -286,13 +292,14 @@ class CRM_Core_Payment_LinePay {
       $query = http_build_query($get);
       $redirect = CRM_Utils_System::url('civicrm/contact/view/contribution', $query);
       return CRM_Core_Error::statusBounce($result_note, $redirect);
-    }else{
+    }
+    else {
       CRM_Core_Error::fatal(ts('Wrong contribution ID in url query'));
     }
   }
 
-  private function addResponseMessageToNote($contribution){
-    if(is_numeric($contribution)){
+  private function addResponseMessageToNote($contribution) {
+    if (is_numeric($contribution)) {
       $contribution = self::prepareContribution($contribution);
     }
     $errorMessage = CRM_Core_Payment_LinePayAPI::errorMessage($this->_linePayAPI->_response->returnCode);
@@ -301,14 +308,14 @@ class CRM_Core_Payment_LinePay {
     CRM_Core_Payment_Mobile::addNote($note, $contribution);
   }
 
-  private static function prepareContribution($contributionId){
+  private static function prepareContribution($contributionId) {
     $contribution = new CRM_Contribute_DAO_Contribution();
     $contribution->id = $contributionId;
     $contribution->find(TRUE);
     return $contribution;
   }
 
-  private static function prepareLinePayAPI($paymentProcessorId, $type = 'request'){
+  private static function prepareLinePayAPI($paymentProcessorId, $type = 'request') {
     $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
     $paymentProcessor->id = $paymentProcessorId;
     $paymentProcessor->find(TRUE);
@@ -322,10 +329,10 @@ class CRM_Core_Payment_LinePay {
     return new CRM_Core_Payment_LinePayAPI($apiParams);
   }
 
-  private static function prepareThankYouUrl($path, $qfKey, $failed = false){
+  private static function prepareThankYouUrl($path, $qfKey, $failed = FALSE) {
     $query = "_qf_ThankYou_display=1&qfKey={$qfKey}";
     $query .= $failed ? '&payment_result_type=4' : '&payment_result_type=1';
-    $url = CRM_Utils_System::url($path, $query, True, NULL, False);
+    $url = CRM_Utils_System::url($path, $query, TRUE, NULL, FALSE);
     return $url;
   }
 }

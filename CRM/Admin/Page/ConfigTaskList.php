@@ -33,25 +33,25 @@
  *
  */
 
-
-
 /**
  * Page for displaying list of site configuration tasks with links to each setting form
  */
 class CRM_Admin_Page_ConfigTaskList extends CRM_Core_Page {
-  function run() {
+  public function run() {
 
     CRM_Utils_System::setTitle(ts("Configuration Checklist"));
     $this->assign('recentlyViewed', FALSE);
 
-    $destination = CRM_Utils_System::url('civicrm/admin/configtask',
+    $destination = CRM_Utils_System::url(
+      'civicrm/admin/configtask',
       'reset=1',
-      FALSE, NULL, FALSE
+      FALSE,
+      NULL,
+      FALSE
     );
 
     $destination = urlencode($destination);
     $this->assign('destination', $destination);
-
 
     CRM_Core_OptionValue::getValues(['name' => 'from_email_address'], $optionValue);
     if (!empty($optionValue)) {
@@ -62,4 +62,3 @@ class CRM_Admin_Page_ConfigTaskList extends CRM_Core_Page {
     parent::run();
   }
 }
-

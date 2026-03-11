@@ -33,27 +33,28 @@
  *
  */
 class CRM_Bridge_OG_Utils {
-  CONST aclEnabled = 1, syncFromCiviCRM = 1;
+  public const aclEnabled = 1, syncFromCiviCRM = 1;
 
-  static function aclEnabled() {
+  public static function aclEnabled() {
     return self::aclEnabled;
   }
 
-  static function syncFromCiviCRM() {
+  public static function syncFromCiviCRM() {
     // make sure that acls are not enabled
     return !self::aclEnabled & self::syncFromCiviCRM;
   }
 
-  static function ogSyncName($ogID) {
+  public static function ogSyncName($ogID) {
     return "OG Sync Group :{$ogID}:";
   }
 
-  static function ogSyncACLName($ogID) {
+  public static function ogSyncACLName($ogID) {
     return "OG Sync Group ACL :{$ogID}:";
   }
 
-  static function ogID($groupID, $abort = TRUE) {
-    $source = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group',
+  public static function ogID($groupID, $abort = TRUE) {
+    $source = CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_Group',
       $groupID,
       'source'
     );
@@ -70,7 +71,7 @@ class CRM_Bridge_OG_Utils {
     return NULL;
   }
 
-  static function contactID($ufID) {
+  public static function contactID($ufID) {
 
     $contactID = civicrm_uf_match_id_get($ufID);
     if ($contactID) {
@@ -83,7 +84,6 @@ class CRM_Bridge_OG_Utils {
       'email' => $user->mail,
     ];
 
-
     $values = civicrm_contact_add($params);
     if ($values['is_error']) {
       CRM_Core_Error::fatal();
@@ -91,7 +91,7 @@ class CRM_Bridge_OG_Utils {
     return $values['contact_id'];
   }
 
-  static function groupID($source, $title = NULL, $abort = FALSE) {
+  public static function groupID($source, $title = NULL, $abort = FALSE) {
     $query = "
 SELECT id
   FROM civicrm_group
@@ -113,4 +113,3 @@ SELECT id
     return $groupID;
   }
 }
-

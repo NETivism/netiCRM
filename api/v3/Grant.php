@@ -54,7 +54,7 @@ require_once 'CRM/Grant/BAO/Grant.php';
 function civicrm_api3_grant_create($params) {
   $values = [];
   _civicrm_api3_custom_format_params($params, $values, 'Grant');
-  $params = array_merge($values,$params);
+  $params = array_merge($values, $params);
   // BAO is non standard to we need to construct $ids array. Ideally we would fix BAO to accept $params without
   // id for standardisation
   $ids = [];
@@ -112,4 +112,3 @@ function civicrm_api3_grant_get($params) {
 function civicrm_api3_grant_delete($params) {
   return _civicrm_api3_basic_delete(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
-

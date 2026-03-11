@@ -57,7 +57,6 @@ require_once 'CRM/Core/OptionGroup.php';
  */
 function civicrm_api3_activity_type_get($params) {
 
-
   $activityTypes = CRM_Core_OptionGroup::values('activity_type');
   return civicrm_api3_create_success($activityTypes, $params, 'activity_type', 'get');
 }
@@ -79,7 +78,6 @@ function civicrm_api3_activity_type_get($params) {
  */
 function civicrm_api3_activity_type_create($params) {
 
-
   $action = 1;
   $groupParams = ['name' => 'activity_type'];
 
@@ -95,7 +93,7 @@ function civicrm_api3_activity_type_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -125,4 +123,3 @@ function civicrm_api3_activity_type_delete($params) {
 
   return CRM_Core_BAO_OptionValue::del($activityTypeId);
 }
-

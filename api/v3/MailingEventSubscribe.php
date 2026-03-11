@@ -65,7 +65,6 @@ function civicrm_api3_mailing_event_subscribe_create($params) {
   if ($subscribe !== NULL) {
     /* Ask the contact for confirmation */
 
-
     $subscribe->send_confirm_request($email);
 
     $values = [];
@@ -80,7 +79,7 @@ function civicrm_api3_mailing_event_subscribe_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -88,4 +87,3 @@ function _civicrm_api3_mailing_event_subscribe_create_spec(&$params) {
   $params['email']['api.required'] = 1;
   $params['group_id']['api.required'] = 1;
 }
-

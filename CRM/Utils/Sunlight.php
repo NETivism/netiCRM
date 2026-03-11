@@ -33,12 +33,11 @@
  *
  */
 
-
 class CRM_Utils_Sunlight {
-  static $_apiURL = 'http://api.sunlightlabs.com/';
-  static $_apiKey = NULL;
+  public static $_apiURL = 'http://api.sunlightlabs.com/';
+  public static $_apiKey = NULL;
 
-  static function makeAPICall($uri) {
+  public static function makeAPICall($uri) {
 
     $params = ['method' => HTTP_REQUEST_METHOD_GET,
       'allowRedirects' => FALSE,
@@ -50,15 +49,16 @@ class CRM_Utils_Sunlight {
       CRM_Core_Error::fatal($result->getMessage());
     }
     if ($request->getResponseCode() != 200) {
-      CRM_Core_Error::fatal(ts('Invalid response code received from Sunlight servers: %1',
-          [1 => $request->getResponseCode()]
-        ));
+      CRM_Core_Error::fatal(ts(
+        'Invalid response code received from Sunlight servers: %1',
+        [1 => $request->getResponseCode()]
+      ));
     }
     $string = $request->getResponseBody();
     return simplexml_load_string($string);
   }
 
-  static function getCityState($zipcode) {
+  public static function getCityState($zipcode) {
     $key = self::$_apiKey;
     $uri = "places.getCityStateFromZip.php?zip={$zipcode}&apikey={$key}&output=xml";
     $xml = self::makeAPICall($uri);
@@ -66,7 +66,7 @@ class CRM_Utils_Sunlight {
     return [$xml->city, $xml->state];
   }
 
-  static function getDetailedInfo($peopleID) {
+  public static function getDetailedInfo($peopleID) {
     $key = self::$_apiKey;
     $uri = "people.getPersonInfo.php?id={$peopleID}&apikey={$key}&output=xml";
     $xml = self::makeAPICall($uri);
@@ -94,7 +94,7 @@ class CRM_Utils_Sunlight {
     return $result;
   }
 
-  static function getPeopleInfo($uri) {
+  public static function getPeopleInfo($uri) {
     $xml = self::makeAPICall($uri);
 
     $result = [];
@@ -104,7 +104,7 @@ class CRM_Utils_Sunlight {
     return $result;
   }
 
-  static function getRepresentativeInfo($city, $state) {
+  public static function getRepresentativeInfo($city, $state) {
     if (!$city ||
       !$state
     ) {
@@ -116,7 +116,7 @@ class CRM_Utils_Sunlight {
     return self::getPeopleInfo($uri);
   }
 
-  static function getSenatorInfo($state) {
+  public static function getSenatorInfo($state) {
     if (!$state) {
       return NULL;
     }
@@ -126,7 +126,7 @@ class CRM_Utils_Sunlight {
     return self::getPeopleInfo($uri);
   }
 
-  static function getInfo($city, $state, $zipcode = NULL) {
+  public static function getInfo($city, $state, $zipcode = NULL) {
     if ($zipcode) {
       list($city, $state) = self::getCityState($zipcode);
     }
@@ -145,4 +145,3 @@ class CRM_Utils_Sunlight {
     return $result;
   }
 }
-

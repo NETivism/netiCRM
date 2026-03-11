@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is for activity assignment functions
  *
@@ -44,7 +42,7 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -65,8 +63,8 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
     $target->copyValues($params);
 
     // prevent duplicate
-    if(empty($params['id']) && !empty($params['activity_id']) && !empty($params['target_contact_id'])){
-      if($target->find(TRUE)){
+    if (empty($params['id']) && !empty($params['activity_id']) && !empty($params['target_contact_id'])) {
+      if ($target->find(TRUE)) {
         return $target;
       }
     }
@@ -84,7 +82,7 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
    * @access public
    *
    */
-  static function retrieveTargetIdsByActivityId($activity_id) {
+  public static function retrieveTargetIdsByActivityId($activity_id) {
     $targetArray = [];
 
     if (!CRM_Utils_Rule::positiveInteger($activity_id)) {
@@ -114,7 +112,7 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
    * @access public
    *
    */
-  static function getTargetNames($activityID) {
+  public static function getTargetNames($activityID) {
     $targetNames = [];
 
     if (empty($activityID)) {
@@ -136,4 +134,3 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
     return $targetNames;
   }
 }
-

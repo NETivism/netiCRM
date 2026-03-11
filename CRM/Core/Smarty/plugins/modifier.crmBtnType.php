@@ -51,4 +51,3 @@ function smarty_modifier_crmBtnType($btnName) {
 
   return $substr[3];
 }
-

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
 
   public $_id;
@@ -44,7 +43,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * casid set if called from case context
@@ -63,7 +62,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    *
    * @access public
    */
-  function view() {
+  public function view() {
 
     $viewRelationship = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId, NULL, NULL, NULL, $this->_id);
     //To check whether selected contact is a contact_id_a in
@@ -101,12 +100,10 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $rType = CRM_Utils_Array::value('rtype', $viewRelationship[$this->_id]);
     // add viewed contribution to recent items list
 
-    $url = CRM_Utils_System::url('civicrm/contact/view/rel',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/rel',
       "action=view&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&context=home"
     );
-
-
-
 
     $session = CRM_Core_Session::singleton();
     $recentOther = [];
@@ -114,20 +111,22 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     if (($session->get('userID') == $this->_contactId) ||
       CRM_Contact_BAO_Contact_Permission::allow($this->_contactId, CRM_Core_Permission::EDIT)
     ) {
-      $recentOther = ['editUrl' => CRM_Utils_System::url('civicrm/contact/view/rel',
-          "action=update&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
-        ),
-        'deleteUrl' => CRM_Utils_System::url('civicrm/contact/view/rel',
+      $recentOther = ['editUrl' => CRM_Utils_System::url(
+        'civicrm/contact/view/rel',
+        "action=update&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
+      ),
+        'deleteUrl' => CRM_Utils_System::url(
+          'civicrm/contact/view/rel',
           "action=delete&reset=1&id={$viewRelationship[$this->_id]['id']}&cid={$this->_contactId}&rtype={$rType}&context=home"
         ),
       ];
     }
 
-
     $title = $displayName . ' (' . $viewRelationship[$this->_id]['relation'] . ' ' . CRM_Contact_BAO_Contact::displayName($viewRelationship[$this->_id]['cid']) . ')';
 
     // add the recently viewed Relationship
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $viewRelationship[$this->_id]['id'],
       'Relationship',
@@ -143,7 +142,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
     $links = &self::links();
 
     //CRM-4418, handling edit and delete separately.
@@ -155,16 +154,24 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     }
     $mask = CRM_Core_Action::mask($permissions);
 
-    $currentRelationships = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId,
+    $currentRelationships = CRM_Contact_BAO_Relationship::getRelationship(
+      $this->_contactId,
       CRM_Contact_BAO_Relationship::CURRENT,
-      0, 0, 0,
-      $links, $mask
+      0,
+      0,
+      0,
+      $links,
+      $mask
     );
 
-    $inactiveRelationships = CRM_Contact_BAO_Relationship::getRelationship($this->_contactId,
+    $inactiveRelationships = CRM_Contact_BAO_Relationship::getRelationship(
+      $this->_contactId,
       CRM_Contact_BAO_Relationship::INACTIVE,
-      0, 0, 0,
-      $links, $mask
+      0,
+      0,
+      0,
+      $links,
+      $mask
     );
 
     $this->assign('currentRelationships', $currentRelationships);
@@ -180,7 +187,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function edit() {
+  public function edit() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contact_Form_Relationship', ts('Contact Relationships'), $this->_action);
     $controller->setEmbedded(TRUE);
 
@@ -197,9 +204,11 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
 
     $session->pushUserContext($url);
 
-    if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-        CRM_Core_DAO::$_nullObject
-      )) {
+    if (CRM_Utils_Request::retrieve(
+      'confirmed',
+      'Boolean',
+      CRM_Core_DAO::$_nullObject
+    )) {
       if ($this->_caseId) {
         //create an activity for case role removal.CRM-4480
 
@@ -219,7 +228,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     $controller->run();
   }
 
-  function preProcess() {
+  public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
@@ -245,7 +254,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $this->setContext();
@@ -279,16 +288,24 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     return parent::run();
   }
 
-  function setContext() {
-    $context = CRM_Utils_Request::retrieve('context', 'String',
-      $this, FALSE, 'search'
+  public function setContext() {
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
 
     if ($context == 'dashboard') {
-      $cid = CRM_Utils_Request::retrieve('cid', 'Integer',
-        $this, FALSE
+      $cid = CRM_Utils_Request::retrieve(
+        'cid',
+        'Integer',
+        $this,
+        FALSE
       );
-      $url = CRM_Utils_System::url('civicrm/user',
+      $url = CRM_Utils_System::url(
+        'civicrm/user',
         "reset=1&id={$cid}"
       );
     }
@@ -306,7 +323,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function delete() {
+  public function delete() {
     // calls a function to delete relationship
     CRM_Contact_BAO_Relationship::del($this->_id);
   }
@@ -317,7 +334,7 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
    * @return array (reference) of action links
    * @static
    */
-  static function &links() {
+  public static function &links() {
     if (!(self::$_links)) {
       $deleteExtra = ts('Are you sure you want to delete this relationship?');
       $disableExtra = ts('Are you sure you want to disable this relationship?');
@@ -362,4 +379,3 @@ class CRM_Contact_Page_View_Relationship extends CRM_Core_Page {
     return self::$_links;
   }
 }
-

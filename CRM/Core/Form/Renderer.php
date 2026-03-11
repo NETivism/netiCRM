@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * customize the output to meet our specific requirements
  */
@@ -47,7 +45,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * the converter from array size to css class
@@ -55,7 +53,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    * @var array
    * @static
    */
-  static $_sizeMapper = [
+  public static $_sizeMapper = [
     2 => 'two',
     4 => 'four',
     8 => 'eight',
@@ -70,7 +68,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    *
    * @access public
    */
-  function __construct() {
+  public function __construct() {
     $template = CRM_Core_Smarty::singleton();
     parent::__construct($template);
   }
@@ -80,7 +78,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    *
    * Method providing static instance of as in Singleton pattern.
    */
-  static function &singleton() {
+  public static function &singleton() {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_Core_Form_Renderer();
     }
@@ -101,7 +99,7 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    *
    * @return array
    */
-  function _elementToArray(&$element, $required, $error) {
+  public function _elementToArray(&$element, $required, $error) {
     self::updateAttributes($element, $required, $error);
 
     $el = parent::_elementToArray($element, $required, $error);
@@ -138,14 +136,15 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
    *
    * @return array
    */
-  static function updateAttributes(&$element, $required, $error) {
+  public static function updateAttributes(&$element, $required, $error) {
     // lets create an id for all input elements, so we can generate nice label tags
     // to make it nice and clean, we'll just use the elementName if it is non null
     $attributes = [];
     if (!$element->getAttribute('id')) {
       $name = $element->getAttribute('name');
       if ($name) {
-        $attributes['id'] = str_replace([']', '['],
+        $attributes['id'] = str_replace(
+          [']', '['],
           ['', '_'],
           $name
         );
@@ -191,4 +190,3 @@ class CRM_Core_Form_Renderer extends HTML_QuickForm_Renderer_ArraySmarty {
   }
 }
 // end CRM_Core_Form_Renderer
-

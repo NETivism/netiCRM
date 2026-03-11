@@ -1,7 +1,6 @@
 <?php
 // $Id: Tag.php 43419 2012-11-05 12:33:14Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -87,10 +86,10 @@ function civicrm_tag_create(&$params) {
     }
     return $tag;
   }
-  catch(PEAR_Exception$e) {
+  catch (PEAR_Exception$e) {
     return civicrm_create_error($e->getMessage());
   }
-  catch(Exception$e) {
+  catch (Exception$e) {
     return civicrm_create_error($e->getMessage());
   }
 }
@@ -113,7 +112,7 @@ function civicrm_tag_delete(&$params) {
     require_once 'CRM/Core/BAO/Tag.php';
     return CRM_Core_BAO_Tag::del($tagID) ? civicrm_create_success() : civicrm_create_error(ts('Could not delete tag'));
   }
-  catch(Exception$e) {
+  catch (Exception$e) {
     if (CRM_Core_Error::$modeException) {
       throw $e;
     }
@@ -162,4 +161,3 @@ function civicrm_tag_get($params) {
   $tag['is_error'] = 0;
   return $tag;
 }
-

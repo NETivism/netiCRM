@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to recurring contributions
  *
@@ -65,7 +63,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    */
   public $_contactID;
 
-  function preProcess() {
+  public function preProcess() {
     $this->_preventMultipleSubmission = TRUE;
   }
 
@@ -77,7 +75,7 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     return $defaults;
   }
@@ -147,12 +145,12 @@ class CRM_Contribute_Form_MakingTransaction extends CRM_Core_Form {
 
     $contactId = $this->get('contactId');
     $session = CRM_Core_Session::singleton();
-    $url = CRM_Utils_System::url('civicrm/contact/view/contributionrecur',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/contributionrecur',
       'reset=1&id='.$recurId.'&cid=' . $contactId
     );
     $message = ts("The contribution record has been processed.").$resultMessage;
-     return CRM_Core_Error::statusBounce($message, $url);
+    return CRM_Core_Error::statusBounce($message, $url);
   }
   //end of function
 }
-

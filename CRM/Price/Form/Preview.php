@@ -33,7 +33,6 @@
  *
  */
 
-
 //require_once 'CRM/Price/BAO/Set.php';
 //
 //require_once 'CRM/Core/BAO/CustomOption.php';
@@ -65,7 +64,7 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // get the controller vars
     $groupId = $this->get('groupId');
     $fieldId = $this->get('fieldId');
@@ -102,7 +101,7 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
    * @return array   the default array reference
    * @access protected
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $groupId = $this->get('groupId');
     $fieldId = $this->get('fieldId');
@@ -136,7 +135,6 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
 
     // add the form elements
 
-
     foreach ($this->_groupTree as $group) {
       if (is_array($group['fields']) && !empty($group['fields'])) {
         foreach ($group['fields'] as $field) {
@@ -147,7 +145,8 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
@@ -156,4 +155,3 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
     );
   }
 }
-

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
 
   /**
@@ -55,7 +54,7 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
 
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
-  function __construct() {
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -148,11 +147,11 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -179,12 +178,12 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
             LEFT JOIN civicrm_address {$this->_aliases['civicrm_address']} 
@@ -206,11 +205,11 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id";
   }
 
-  function postProcess() {
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -227,7 +226,7 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
@@ -236,9 +235,11 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Contact details for this contact.");
@@ -259,7 +260,6 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -268,4 +268,3 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     }
   }
 }
-

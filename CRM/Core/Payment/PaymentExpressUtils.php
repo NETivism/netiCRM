@@ -23,7 +23,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
  * PxPay Functionality Copyright (C) 2008 Lucas Baker, Logistic Information Systems Limited (Logis)
  * PxAccess Functionality Copyright (C) 2008 Eileen McNaughton
@@ -75,4 +74,3 @@ function &_initCURL($query, $url) {
   }
   return $curl;
 }
-

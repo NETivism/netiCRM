@@ -33,15 +33,13 @@
  *
  */
 
-
-
 /**
  * This class generates form components for OpenCase Activity
  *
  */
 class CRM_Case_Form_Activity_ChangeCaseStartDate {
 
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     if (!isset($form->_caseId)) {
       CRM_Core_Error::fatal(ts('Case Id not found.'));
     }
@@ -55,13 +53,13 @@ class CRM_Case_Form_Activity_ChangeCaseStartDate {
    *
    * @return None
    */
-  function setDefaultValues(&$form) {
+  public function setDefaultValues(&$form) {
     $defaults = [];
     list($defaults['start_date']) = CRM_Utils_Date::setDateDefaults();
     return $defaults;
   }
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $currentStartDate = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $form->_caseId, 'start_date');
     $form->assign('current_start_date', $currentStartDate);
     $form->addDate('start_date', ts('New Start Date'), FALSE, ['formatType' => 'birth']);
@@ -76,7 +74,7 @@ class CRM_Case_Form_Activity_ChangeCaseStartDate {
    * @static
    * @access public
    */
-  static function formRule($values, $files, $form) {
+  public static function formRule($values, $files, $form) {
     return TRUE;
   }
 
@@ -131,9 +129,11 @@ WHERE civicrm_case.id=  %1";
     $config = &CRM_Core_Config::singleton();
 
     // 1. save activity subject with new start date
-    $currentStartDate = CRM_Utils_Date::customFormat(CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case',
-        $form->_caseId, 'start_date'
-      ), $config->dateformatFull);
+    $currentStartDate = CRM_Utils_Date::customFormat(CRM_Core_DAO::getFieldValue(
+      'CRM_Case_DAO_Case',
+      $form->_caseId,
+      'start_date'
+    ), $config->dateformatFull);
     $newStartDate = CRM_Utils_Date::customFormat(CRM_Utils_Date::mysqlToIso($params['start_date']), $config->dateformatFull);
     $subject = 'Change Case Start Date from ' . $currentStartDate . ' to ' . $newStartDate;
     $activity->subject = $subject;
@@ -158,4 +158,3 @@ WHERE civicrm_case.id=  %1";
     $params['statusMsg'] = ts('Case Start Date changed successfully.');
   }
 }
-

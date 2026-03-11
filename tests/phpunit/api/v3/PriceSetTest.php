@@ -27,7 +27,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
   }
 
   public function testCreatePriceSet() {
@@ -50,7 +50,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     $this->assertAPISuccess($getResult, 'In line ' . __LINE__);
     $this->assertEquals(1, $getResult['count'], 'In line ' . __LINE__);
   }
-  
+
   public function testEventPriceSet() {
     $event = civicrm_api('event', 'create', [
       'version' => $this->_apiversion,
@@ -102,7 +102,7 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     $this->assertEquals(16, $result['values']['is_quick_config']['type']);
   }
 
-  public static function tearDownAfterClass(){
+  public static function tearDownAfterClass() {
     $tablesToTruncate = [
       'civicrm_contact',
       'civicrm_contribution',
@@ -111,4 +111,3 @@ class api_v3_PriceSetTest extends CiviUnitTestCase {
     $unitTest->quickCleanup($tablesToTruncate);
   }
 }
-

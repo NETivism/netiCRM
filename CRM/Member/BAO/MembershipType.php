@@ -33,18 +33,17 @@
  *
  */
 
-
 class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
 
   /**
    * static holder for the default LT
    */
-  static $_defaultMembershipType = NULL;
+  public static $_defaultMembershipType = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -62,7 +61,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $membershipType = new CRM_Member_DAO_MembershipType();
     $membershipType->copyValues($params);
     if ($membershipType->find(TRUE)) {
@@ -81,7 +80,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Member_DAO_MembershipType', $id, 'is_active', $is_active);
   }
 
@@ -96,7 +95,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    *
    * @return object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
 
     // action is taken depending upon the mode
@@ -121,7 +120,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @static
    */
 
-  static function del($membershipTypeId) {
+  public static function del($membershipTypeId) {
     //check dependencies
     $check = FALSE;
     $status = [];
@@ -180,7 +179,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @static
    */
 
-  static function convertDayFormat(&$membershipType) {
+  public static function convertDayFormat(&$membershipType) {
     $periodDays = [
       'fixed_period_start_day',
       'fixed_period_rollover_day',
@@ -216,7 +215,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @param int $membershipTypeId
    * @static
    */
-  static function getMembershipTypes($public = TRUE) {
+  public static function getMembershipTypes($public = TRUE) {
 
     $membershipTypes = [];
     $membershipType = new CRM_Member_DAO_MembershipType();
@@ -239,7 +238,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @param int $membershipTypeId
    * @static
    */
-  static function getMembershipTypeDetails($membershipTypeId) {
+  public static function getMembershipTypeDetails($membershipTypeId) {
 
     $membershipTypeDetails = [];
 
@@ -266,7 +265,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @return array associated array with  start date, end date and join date for the membership
    * @static
    */
-  static function getDatesForMembershipType($membershipTypeId, $joinDate = NULL, $startDate = NULL, $endDate = NULL) {
+  public static function getDatesForMembershipType($membershipTypeId, $joinDate = NULL, $startDate = NULL, $endDate = NULL) {
     $membershipTypeDetails = self::getMembershipTypeDetails($membershipTypeId);
 
     // convert all dates to 'Y-m-d' format.
@@ -309,7 +308,9 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
       if ($membershipTypeDetails['duration_unit'] == 'year') {
 
         //get start fixed day
-        $startMonth = (int) substr($membershipTypeDetails['fixed_period_start_day'], 0,
+        $startMonth = (int) substr(
+          $membershipTypeDetails['fixed_period_start_day'],
+          0,
           strlen($membershipTypeDetails['fixed_period_start_day']) - 2
         );
         $startDay = (int) substr($membershipTypeDetails['fixed_period_start_day'], -2);
@@ -317,7 +318,9 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         $fixedStartDate = date('Y-m-d', mktime(0, 0, 0, $startMonth, $startDay, $year));
 
         //get start rollover day
-        $rolloverMonth = (int) substr($membershipTypeDetails['fixed_period_rollover_day'], 0,
+        $rolloverMonth = (int) substr(
+          $membershipTypeDetails['fixed_period_rollover_day'],
+          0,
           strlen($membershipTypeDetails['fixed_period_rollover_day']) - 2
         );
         $rolloverDay = (int) substr($membershipTypeDetails['fixed_period_rollover_day'], -2);
@@ -443,8 +446,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @return Array array fo the start date, end date and join date of the membership
    * @static
    */
-  static function getRenewalDatesForMembershipType($membershipId, $changeToday = NULL) {
-
+  public static function getRenewalDatesForMembershipType($membershipId, $changeToday = NULL) {
 
     $params = ['id' => $membershipId];
 
@@ -462,11 +464,14 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     if ($statusDetails['is_current_member'] == 1) {
       $startDate = $membershipDetails[$membershipId]->start_date;
       $date = explode('-', $membershipDetails[$membershipId]->end_date);
-      $logStartDate = date('Y-m-d', mktime(0, 0, 0,
-          (int) $date[1],
-          (int) $date[2] + 1,
-          (int) $date[0]
-        ));
+      $logStartDate = date('Y-m-d', mktime(
+        0,
+        0,
+        0,
+        (int) $date[1],
+        (int) $date[2] + 1,
+        (int) $date[0]
+      ));
       $date = explode('-', $logStartDate);
 
       $year = (int) $date[0];
@@ -490,11 +495,14 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         $endDate = NULL;
       }
       else {
-        $endDate = date('Y-m-d', mktime(0, 0, 0,
-            $month,
-            $day - 1,
-            $year
-          ));
+        $endDate = date('Y-m-d', mktime(
+          0,
+          0,
+          0,
+          $month,
+          $day - 1,
+          $year
+        ));
       }
       $today = date('Y-m-d');
     }
@@ -517,7 +525,10 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         $yearValue = date('Y');
         $fixedStartDay = (int) substr($membershipTypeDetails['fixed_period_start_day'], -2);
         $fixedStartMonth = (int) substr($membershipTypeDetails['fixed_period_start_day'], 0, -2);
-        $startDate = $logStartDate = date('Y-m-d', mktime(0, 0, 0,
+        $startDate = $logStartDate = date('Y-m-d', mktime(
+          0,
+          0,
+          0,
           $fixedStartMonth,
           $fixedStartDay,
           $yearValue
@@ -529,8 +540,12 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         $rolloverMonth = (int) substr($membershipTypeDetails['fixed_period_rollover_day'], 0, -2);
 
         if (($rolloverMonth - $fixedStartMonth) < 0) {
-          $rolloverDate = date('Ymd',
-            mktime(0, 0, 0,
+          $rolloverDate = date(
+            'Ymd',
+            mktime(
+              0,
+              0,
+              0,
               $rolloverMonth,
               $rolloverDay,
               $yearValue + 1
@@ -538,8 +553,12 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
           );
         }
         else {
-          $rolloverDate = date('Ymd',
-            mktime(0, 0, 0,
+          $rolloverDate = date(
+            'Ymd',
+            mktime(
+              0,
+              0,
+              0,
               $rolloverMonth,
               $rolloverDay,
               $yearValue
@@ -589,8 +608,12 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
         $endDate = NULL;
       }
       else {
-        $endDate = date('Y-m-d',
-          mktime(0, 0, 0,
+        $endDate = date(
+          'Y-m-d',
+          mktime(
+            0,
+            0,
+            0,
             $month,
             $day - 1,
             $year
@@ -623,7 +646,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
    * @return Array array of the details of membership types
    * @static
    */
-  static function getMembershipTypesByOrg($orgID) {
+  public static function getMembershipTypesByOrg($orgID) {
     $membershipTypes = [];
     $dao = new CRM_Member_DAO_MembershipType();
     $dao->member_of_contact_id = $orgID;
@@ -635,7 +658,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     return $membershipTypes;
   }
 
-  static function calcReminderDate($endDate, $renewalReminderDay) {
+  public static function calcReminderDate($endDate, $renewalReminderDay) {
     $endTimestamp = strtotime($endDate);
     $reminderDate = '';
 
@@ -643,7 +666,7 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     // or reminder later will be sent after end date (originally, we expect sent before end date)
     if (CRM_REQUEST_TIME <= $endTimestamp) {
       if ($renewalReminderDay != 0) {
-        $reminderDate = date('Y-m-d', $endTimestamp - 86400*($renewalReminderDay));
+        $reminderDate = date('Y-m-d', $endTimestamp - 86400 * ($renewalReminderDay));
       }
       else {
         $reminderDate = date('Y-m-d', $endTimestamp);
@@ -657,4 +680,3 @@ class CRM_Member_BAO_MembershipType extends CRM_Member_DAO_MembershipType {
     return $reminderDate;
   }
 }
-

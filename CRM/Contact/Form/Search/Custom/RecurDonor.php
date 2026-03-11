@@ -13,9 +13,9 @@ class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_
   public $_isExport;
   protected $_tableName = NULL;
 
-  function __construct(&$formValues){
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
-    if(empty($this->_tableName)){
+    if (empty($this->_tableName)) {
       $this->_tableName = "civicrm_temp_custom_recurdonor";
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $this->_cpage = CRM_Contribute_PseudoConstant::contributionPage();
@@ -31,8 +31,8 @@ class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_
     }
   }
 
-  function buildColumn(){
-    $this->_queryColumns = [ 
+  public function buildColumn() {
+    $this->_queryColumns = [
       'contact.id' => 'id',
       'contact.sort_name' => 'sort_name',
       'r1.id' => 'rid1',
@@ -66,7 +66,7 @@ class CRM_Contact_Form_Search_Custom_RecurDonor extends CRM_Contact_Form_Search_
     ];
   }
 
-  function buildTempTable() {
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id INTEGER(11) NOT NULL,
@@ -79,10 +79,10 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (strstr($field, 'amount') || strstr($field, '_id')) {
         $type = "INTEGER(10) default NULL";
       }
-      else{
+      else {
         $type = "VARCHAR(32) default ''";
       }
-      if(strstr($field, '_date')){
+      if (strstr($field, '_date')) {
         $type = 'DATETIME NULL default NULL';
       }
       $sql .= "{$field} {$type},\n";
@@ -94,8 +94,8 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  
-  function dropTempTable() {
+
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
@@ -103,17 +103,17 @@ PRIMARY KEY (id)
   /**
    * fill temp table for further use
    */
-  function fillTable($dropTable = FALSE){
+  public function fillTable($dropTable = FALSE) {
     if ($dropTable) {
       $this->dropTempTable();
     }
     $this->buildTempTable();
 
     $select = [];
-    foreach($this->_queryColumns as $k => $v){
+    foreach ($this->_queryColumns as $k => $v) {
       $select[] = $k.' as '.$v;
     }
-    $select = CRM_Utils_Array::implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n", $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -134,26 +134,25 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     while ($dao->fetch()) {
       $values = [];
 
-      foreach($this->_queryColumns as $name){
+      foreach ($this->_queryColumns as $name) {
         if ($name == 'id') {
           $values[] = $dao->$name;
         }
-        elseif(isset($dao->$name)){
+        elseif (isset($dao->$name)) {
           $values[] = "'". CRM_Utils_Type::escape($dao->$name, 'String')."'";
         }
-        else{
+        else {
           $values[] = 'NULL';
         }
       }
-      $values = CRM_Utils_Array::implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ', $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
       $this->_filled = TRUE;
     }
   }
 
-
-  function tempFrom() {
+  public function tempFrom() {
     return "civicrm_contact as contact
     LEFT JOIN 
       (SELECT recur.*, MAX(con.id) as contribution_id FROM civicrm_contribution_recur recur INNER JOIN civicrm_contribution con ON con.contribution_recur_id = recur.id AND con.contribution_status_id = 1 AND con.is_test = 0 WHERE recur.is_test = 0 AND recur.contribution_status_id = 5 GROUP BY recur.id) AS r1 
@@ -167,13 +166,13 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
-  function tempWhere(){
+  public function tempWhere() {
     return ' (contact.is_deleted = 0) ';
   }
 
-  function tempHaving(){
+  public function tempHaving() {
     $having = '';
-    switch($this->_formValues['search_criteria']) {
+    switch ($this->_formValues['search_criteria']) {
       case 'active':
         $having = " COUNT(r1.id) > 0 AND COUNT(r2.id) = 0 ";
         break;
@@ -193,14 +192,14 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     return $having;
   }
 
-  function buildForm(&$form){
+  public function buildForm(&$form) {
     $form->addSelect('search_criteria', ts('Recurring Donors Search'), ['' => ts('-- select --')] + $this->_criteria, NULL, TRUE);
 
     $form->addNumber('amount_low', ts('giving level filter'), ['size' => 8, 'maxlength' => 8]);
     $form->addNumber('amount_high', ts('To'), ['size' => 8, 'maxlength' => 8]);
 
-    foreach($this->_cpage as $pid => $title) {
-      $pages[$pid] = $title."($pid)"; 
+    foreach ($this->_cpage as $pid => $title) {
+      $pages[$pid] = $title."($pid)";
     }
     $form->addSelect('contribution_page_id', ts('Contribution Page'), ['' => ts('-- select --')] + $pages);
 
@@ -210,20 +209,19 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     $form->assign('elements', ['search_criteria', 'amount_low', 'contribution_page_id', 'contribution_type_id']);
   }
 
-  function setBreadcrumb() {
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-
-  function setDefaultValues() {
+  public function setDefaultValues() {
   }
 
-  function setTitle() {
+  public function setTitle() {
     CRM_Utils_System::setTitle(ts('Recurring Donors Search'));
   }
 
-  function count(){
-    if(!$this->_filled){
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
     }
     $sql = $this->all();
@@ -231,7 +229,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     return $dao->N;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     if ($onlyIDs) {
       $fields = "DISTINCT contact_a.id as contact_id";
     }
@@ -239,13 +237,13 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       $fields = $this->select();
     }
 
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
     }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -255,7 +253,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     return $sql;
   }
 
-  function select() {
+  public function select() {
     $fields = "";
     if ($this->_formValues['search_criteria'] == 'never') {
       $fields = "contact_a.*";
@@ -266,7 +264,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     return $fields;
   }
 
-  function from() {
+  public function from() {
     // decrease query loading
     if ($this->_formValues['search_criteria'] == 'never') {
       return "FROM {$this->_tableName} contact_a";
@@ -279,12 +277,12 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     }
   }
 
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $criteria = $this->_formValues['search_criteria'];
     if ($criteria != 'never' && ($this->_formValues['amount_low'] || $this->_formValues['amount_high'] || $this->_formValues['contribution_page_id'] || $this->_formValues['contribution_type_id'])) {
-      $clauses = [];  
+      $clauses = [];
       if (strlen($this->_formValues['amount_low']) > 0) {
-        $amountLow = CRM_Utils_Type::escape($this->_formValues['amount_low'], 'Integer'); 
+        $amountLow = CRM_Utils_Type::escape($this->_formValues['amount_low'], 'Integer');
         if ($criteria == 'active') {
           $clauses[] = "contact_a.amount1 >= ".$amountLow;
         }
@@ -301,7 +299,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
         }
       }
       if (strlen($this->_formValues['amount_high']) > 0) {
-        $amountHigh = CRM_Utils_Type::escape($this->_formValues['amount_high'], 'Integer'); 
+        $amountHigh = CRM_Utils_Type::escape($this->_formValues['amount_high'], 'Integer');
         if ($criteria == 'active') {
           $clauses[] = "contact_a.amount1 <= '$amountHigh'";
         }
@@ -319,7 +317,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       }
 
       if (strlen($this->_formValues['contribution_page_id']) > 0) {
-        $pageId = CRM_Utils_Type::escape($this->_formValues['contribution_page_id'], 'Integer'); 
+        $pageId = CRM_Utils_Type::escape($this->_formValues['contribution_page_id'], 'Integer');
         if ($criteria == 'active') {
           $clauses[] = "c1.contribution_page_id = '$pageId'";
         }
@@ -337,7 +335,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
       }
 
       if (strlen($this->_formValues['contribution_type_id']) > 0) {
-        $typeId = CRM_Utils_Type::escape($this->_formValues['contribution_type_id'], 'Integer'); 
+        $typeId = CRM_Utils_Type::escape($this->_formValues['contribution_type_id'], 'Integer');
         if ($criteria == 'active') {
           $clauses[] = "c1.contribution_type_id = '$typeId'";
         }
@@ -359,7 +357,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     else {
       $sql = ' ( 1 ) ';
     }
-    
+
     if ($includeContactIDs) {
       self::includeContactIDs($sql, $this->_formValues);
     }
@@ -381,17 +379,17 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     }
   }
 
-  function &columns(){
+  public function &columns() {
     return $this->_columns;
   }
 
-  function templateFile(){
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/RecurDonor.tpl';
   }
 
-  function summary() {
+  public function summary() {
     $summary = [];
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -408,7 +406,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     ];
 
     $values = [];
-    foreach($formCriteria as $key => $label) {
+    foreach ($formCriteria as $key => $label) {
       if (!empty($this->_formValues[$key])) {
         if ($key == 'search_criteria') {
           $values[] = $label.": ". $this->_criteria[$this->_formValues[$key]];
@@ -428,14 +426,14 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
 
     return $summary;
   }
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     if ($row['contribution_status_id1']) {
       $row['contribution_status_id1'] = $this->_cstatus[$row['contribution_status_id1']];
     }
     if ($row['contribution_status_id2']) {
       $row['contribution_status_id2'] = $this->_cstatus[$row['contribution_status_id2']];
     }
-    
+
     if ($row['type_id1']) {
       $row['type_id1'] = $this->_ctype[$row['type_id1']];
     }
@@ -495,7 +493,7 @@ ORDER BY r1.start_date ASC, r2.start_date ASC
     }
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }

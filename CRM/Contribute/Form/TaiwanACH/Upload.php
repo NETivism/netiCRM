@@ -6,14 +6,15 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
-  function preProcess() {
+  public function preProcess() {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH_Upload', 'formRule'], $this);
   }
 
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
@@ -38,13 +39,12 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
-
-  function postProcess() {
+  public function postProcess() {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);
     if ($submittedValues['uploadFile']['name']) {
@@ -64,7 +64,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
       $paymentInstrument = CRM_Contribute_PseudoConstant::paymentInstrument();
       $stampStatus = CRM_Contribute_PseudoConstant::taiwanACHStampVerification();
       $counter = [];
-      foreach($result['processed_data'] as &$line) {
+      foreach ($result['processed_data'] as &$line) {
         if (!empty($line['payment_instrument_id'])) {
           $line['payment_instrument'] = $paymentInstrument[$line['payment_instrument_id']];
         }
@@ -80,7 +80,7 @@ class CRM_Contribute_Form_TaiwanACH_Upload extends CRM_Core_Form {
         if ($line['contribution_status_id'] == 1 && $result['import_type'] == 'transaction') {
           $counter[ts('Completed Donation')]++;
         }
-        else if ($line['contribution_status_id'] == 5 && $result['import_type'] == 'verification') {
+        elseif ($line['contribution_status_id'] == 5 && $result['import_type'] == 'verification') {
           $counter[ts('Completed Donation')]++;
         }
         else {

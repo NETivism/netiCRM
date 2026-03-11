@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class is to build the form for Deleting Set
  */
@@ -67,14 +65,18 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
    * @return void
    * @acess protected
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
 
-    $this->_description = CRM_Core_DAO::getFieldValue('CRM_Coupon_DAO_Coupon',
-      $this->_id, 'description'
+    $this->_description = CRM_Core_DAO::getFieldValue(
+      'CRM_Coupon_DAO_Coupon',
+      $this->_id,
+      'description'
     );
-    $this->_code = CRM_Core_DAO::getFieldValue('CRM_Coupon_DAO_Coupon',
-      $this->_id, 'code'
+    $this->_code = CRM_Core_DAO::getFieldValue(
+      'CRM_Coupon_DAO_Coupon',
+      $this->_id,
+      'code'
     );
   }
 
@@ -87,7 +89,8 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
   public function buildQuickForm() {
     $this->assign('description', $this->_description);
     $this->assign('code', $this->_code);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Delete Coupon'),
           'isDefault' => TRUE,
@@ -107,15 +110,16 @@ class CRM_Coupon_Form_DeleteCoupon extends CRM_Core_Form {
    */
   public function postProcess() {
     if (CRM_Coupon_BAO_Coupon::deleteCoupon($this->_id)) {
-      CRM_Core_Session::setStatus(ts('The Coupon \'%1 (%2)\' has been deleted.',
-          [1 => $this->_description, 2 => $this->_code]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'The Coupon \'%1 (%2)\' has been deleted.',
+        [1 => $this->_description, 2 => $this->_code]
+      ));
     }
     else {
-      CRM_Core_Session::setStatus(ts('The Coupon \'%1 (%2)\' has not been deleted!',
-          [1 => $this->_description, 2 => $this->_code]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'The Coupon \'%1 (%2)\' has not been deleted!',
+        [1 => $this->_description, 2 => $this->_code]
+      ));
     }
   }
 }
-

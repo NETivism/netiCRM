@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class summarizes the import results
  */
@@ -88,7 +86,9 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
 
       /* only subtract dupes from succesful import if we're skipping */
 
-      $this->set('validRowCount', $totalRowCount - $invalidRowCount -
+      $this->set(
+        'validRowCount',
+        $totalRowCount - $invalidRowCount -
         $conflictRowCount - $duplicateRowCount - $mismatchCount
       );
     }
@@ -107,7 +107,8 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -126,4 +127,3 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
     return ts('Summary');
   }
 }
-

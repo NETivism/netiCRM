@@ -25,9 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
@@ -53,12 +50,10 @@ class CRM_Report_Info extends CRM_Core_Component_Info {
     ];
   }
 
-
   // docs inherited from interface
   public function getPermissions() {
     return ['access CiviReport', 'access Report Criteria', 'administer Reports'];
   }
-
 
   // docs inherited from interface
   public function getUserDashboardElement() {
@@ -89,6 +84,6 @@ class CRM_Report_Info extends CRM_Core_Component_Info {
   }
 
   // add shortcut to Create New
-  public function creatNewShortcut(&$shortCuts) {}
+  public function creatNewShortcut(&$shortCuts) {
+  }
 }
-

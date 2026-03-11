@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
 
   /**
@@ -43,13 +42,13 @@ class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
    * @access public
    *
    */
-  static function deleteInstance($id = NULL) {
+  public static function deleteInstance($id = NULL) {
     $dao = new CRM_Report_DAO_Instance();
     $dao->id = $id;
     return $dao->delete();
   }
 
-  static function retrieve($params, &$defaults) {
+  public static function retrieve($params, &$defaults) {
     $instance = new CRM_Report_DAO_Instance();
     $instance->copyValues($params);
 
@@ -61,4 +60,3 @@ class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
     return NULL;
   }
 }
-

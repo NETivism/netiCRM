@@ -1,29 +1,29 @@
 <?php
 
-/* 
- +--------------------------------------------------------------------+ 
- | CiviCRM version 3.3                                                | 
- +--------------------------------------------------------------------+ 
- | Copyright CiviCRM LLC (c) 2004-2010                                | 
- +--------------------------------------------------------------------+ 
- | This file is a part of CiviCRM.                                    | 
- |                                                                    | 
- | CiviCRM is free software; you can copy, modify, and distribute it  | 
- | under the terms of the GNU Affero General Public License           | 
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   | 
- |                                                                    | 
- | CiviCRM is distributed in the hope that it will be useful, but     | 
- | WITHOUT ANY WARRANTY; without even the implied warranty of         | 
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               | 
- | See the GNU Affero General Public License for more details.        | 
- |                                                                    | 
+/*
+ +--------------------------------------------------------------------+
+ | CiviCRM version 3.3                                                |
+ +--------------------------------------------------------------------+
+ | Copyright CiviCRM LLC (c) 2004-2010                                |
+ +--------------------------------------------------------------------+
+ | This file is a part of CiviCRM.                                    |
+ |                                                                    |
+ | CiviCRM is free software; you can copy, modify, and distribute it  |
+ | under the terms of the GNU Affero General Public License           |
+ | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
+ |                                                                    |
+ | CiviCRM is distributed in the hope that it will be useful, but     |
+ | WITHOUT ANY WARRANTY; without even the implied warranty of         |
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
+ | See the GNU Affero General Public License for more details.        |
+ |                                                                    |
  | You should have received a copy of the GNU Affero General Public   |
  | License and the CiviCRM Licensing Exception along                  |
  | with this program; if not, contact CiviCRM LLC                     |
  | at info[AT]civicrm[DOT]org. If you have questions about the        |
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+ 
+ +--------------------------------------------------------------------+
 */
 
 /**
@@ -35,7 +35,7 @@
  *
  */
 class CRM_Core_BAO_CustomQuery {
-  CONST PREFIX = 'custom_value_';
+  public const PREFIX = 'custom_value_';
 
   /**
    * the set of custom field ids
@@ -101,7 +101,7 @@ class CRM_Core_BAO_CustomQuery {
    * @var array
    * @static
    */
-  static $extendsMap = [
+  public static $extendsMap = [
     'Contact' => 'civicrm_contact',
     'Individual' => 'civicrm_contact',
     'Household' => 'civicrm_contact',
@@ -128,7 +128,7 @@ class CRM_Core_BAO_CustomQuery {
    *
    * @access public
    */
-  function __construct($ids) {
+  public function __construct($ids) {
     $this->_ids = &$ids;
 
     $this->_select = [];
@@ -198,7 +198,8 @@ SELECT f.id, f.label, f.data_type,
           $optionGroupID = $dao->option_group_id;
         }
         elseif ($dao->data_type != 'Boolean') {
-          $errorMessage = ts("The custom field %1 is corrupt. Please delete and re-build the field",
+          $errorMessage = ts(
+            "The custom field %1 is corrupt. Please delete and re-build the field",
             [1 => $dao->label]
           );
           CRM_Core_Error::fatal($errorMessage);
@@ -246,7 +247,7 @@ SELECT label, value
    * @return void
    * @access public
    */
-  function select() {
+  public function select() {
     if (empty($this->_fields)) {
       return;
     }
@@ -309,7 +310,7 @@ SELECT label, value
    *
    * @access public
    */
-  function where() {
+  public function where() {
     //CRM_Core_Error::debug( 'fld', $this->_fields );
     //CRM_Core_Error::debug( 'ids', $this->_ids );
 
@@ -349,7 +350,6 @@ SELECT label, value
             // if we are coming in from listings,
             // for checkboxes the value is already in the right format and is NOT an array
             if (empty($field['is_search_range']) && is_array($value)) {
-
 
               //ignoring $op value for checkbox and multi select
               $sqlValue = [];
@@ -423,7 +423,8 @@ SELECT label, value
             }
             else {
               if ($field['is_search_range'] && is_array($value)) {
-                $this->searchRange($field['id'],
+                $this->searchRange(
+                  $field['id'],
                   $field['label'],
                   $field['data_type'],
                   $fieldName,
@@ -603,7 +604,7 @@ SELECT label, value
    * @return  array   array of strings
    * @access public
    */
-  function query() {
+  public function query() {
     $this->select();
 
     $this->where();
@@ -627,7 +628,7 @@ SELECT label, value
     ];
   }
 
-  function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
+  public function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
     $qill = [];
 
     if (isset($value['from'])) {
@@ -658,4 +659,3 @@ SELECT label, value
     }
   }
 }
-

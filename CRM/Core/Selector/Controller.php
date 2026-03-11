@@ -40,11 +40,6 @@
  *
  */
 
-
-
-
-
-
 class CRM_Core_Selector_Controller {
 
   public $_case;
@@ -54,8 +49,8 @@ class CRM_Core_Selector_Controller {
    * @var int
    */
   // move the values from the session to the template
-  CONST SESSION = 1, TEMPLATE = 2,
-  TRANSFER = 4, EXPORT = 8, SCREEN = 16, PDF = 32;
+  public const SESSION = 1, TEMPLATE = 2,
+    TRANSFER = 4, EXPORT = 8, SCREEN = 16, PDF = 32;
 
   /**
    * a CRM Object that implements CRM_Core_Selector_API
@@ -194,7 +189,7 @@ class CRM_Core_Selector_Controller {
    * @return Object
    * @access public
    */
-  function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
+  public function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
 
     $this->_object = $object;
     $this->_pageID = $pageID ? $pageID : 1;
@@ -223,7 +218,7 @@ class CRM_Core_Selector_Controller {
     $this->_sort = new CRM_Utils_Sort($this->_sortOrder, $this->_sortID);
 
     /*
-         * if we are in transfer mode, do not goto database, use the 
+         * if we are in transfer mode, do not goto database, use the
          * session values instead
          */
 
@@ -261,7 +256,7 @@ class CRM_Core_Selector_Controller {
    * @return boolean   if the GET params are different from the session params
    * @access public
    */
-  function hasChanged($reset) {
+  public function hasChanged($reset) {
 
     /**
      * if we are in reset state, i.e the store is cleaned out, we return false
@@ -300,7 +295,7 @@ class CRM_Core_Selector_Controller {
    * @return void
    *
    */
-  function run() {
+  public function run() {
 
     // get the column headers
     $columnHeaders = &$this->_object->getColumnHeaders($this->_action, $this->_output);
@@ -363,21 +358,25 @@ class CRM_Core_Selector_Controller {
         self::$_template->assign("{$this->_prefix}summary", $summary);
       }
 
-
       // always store the current pageID and sortID
-      $this->_store->set($this->_prefix . CRM_Utils_Pager::PAGE_ID,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Pager::PAGE_ID,
         $this->_pager->getCurrentPageID()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_ID,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_ID,
         $this->_sort->getCurrentSortID()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_DIRECTION,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_DIRECTION,
         $this->_sort->getCurrentSortDirection()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_ORDER,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_ORDER,
         $this->_sort->orderBy()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Pager::PAGE_ROWCOUNT,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Pager::PAGE_ROWCOUNT,
         $this->_pager->_perPage
       );
     }
@@ -395,8 +394,13 @@ class CRM_Core_Selector_Controller {
       return $form->_object->getRows($form->_action, 0, 0, $form->_sort, $form->_output);
     }
     else {
-      return $form->_object->getRows($form->_action, $form->_pagerOffset, $form->_pagerRowCount,
-        $form->_sort, $form->_output, $form->_case
+      return $form->_object->getRows(
+        $form->_action,
+        $form->_pagerOffset,
+        $form->_pagerRowCount,
+        $form->_sort,
+        $form->_output,
+        $form->_case
       );
     }
   }
@@ -422,7 +426,7 @@ class CRM_Core_Selector_Controller {
    * @return object CRM_Utils_Pager
    * @access public
    */
-  function getPager() {
+  public function getPager() {
     return $this->_pager;
   }
 
@@ -432,7 +436,7 @@ class CRM_Core_Selector_Controller {
    * @return object CRM_Utils_Sort
    * @access public
    */
-  function getSort() {
+  public function getSort() {
     return $this->_sort;
   }
 
@@ -442,13 +446,14 @@ class CRM_Core_Selector_Controller {
    * @return void
    * @access public
    */
-  function moveFromSessionToTemplate() {
+  public function moveFromSessionToTemplate() {
     self::$_template->assign_by_ref("{$this->_prefix}pager", $this->_pager);
 
     $rows = $this->_store->get("{$this->_prefix}rows");
 
     if ($rows) {
-      self::$_template->assign("{$this->_prefix}aToZ",
+      self::$_template->assign(
+        "{$this->_prefix}aToZ",
         $this->_store->get("{$this->_prefix}AToZBar")
       );
     }
@@ -483,7 +488,7 @@ class CRM_Core_Selector_Controller {
    * @return void
    * @access public
    */
-  function setEmbedded($embedded) {
+  public function setEmbedded($embedded) {
     $this->_embedded = $embedded;
   }
 
@@ -493,7 +498,7 @@ class CRM_Core_Selector_Controller {
    * @return boolean return the embedded value
    * @access public
    */
-  function getEmbedded() {
+  public function getEmbedded() {
     return $this->_embedded;
   }
 
@@ -505,7 +510,7 @@ class CRM_Core_Selector_Controller {
    * @return void
    * @access public
    */
-  function setPrint($print) {
+  public function setPrint($print) {
     $this->_print = $print;
   }
 
@@ -515,8 +520,7 @@ class CRM_Core_Selector_Controller {
    * @return boolean return the print value
    * @access public
    */
-  function getPrint() {
+  public function getPrint() {
     return $this->_print;
   }
 }
-

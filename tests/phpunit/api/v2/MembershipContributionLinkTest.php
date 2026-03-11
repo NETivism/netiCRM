@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'api/v2/MembershipContributionLink.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'CiviTest/Contact.php';
@@ -38,7 +37,8 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
   protected $_contactID;
   protected $_contributionTypeID;
   protected $_membershipTypeID;
-  protected $_membershipStatusID; function get_info() {
+  protected $_membershipStatusID;
+  public function get_info() {
     return [
       'name' => 'Membership Contribution Link',
       'description' => 'Test all Membership API methods.',
@@ -46,7 +46,7 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->_contactID = $this->organizationCreate();
     $this->_contributionTypeID = $this->contributionTypeCreate();
@@ -54,7 +54,7 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
     $this->_membershipStatusID = $this->membershipStatusCreate('test status');
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->membershipStatusDelete($this->_membershipStatusID);
     $this->membershipTypeDelete(['id' => $this->_membershipTypeID]);
     $this->contributionTypeDelete();
@@ -193,4 +193,3 @@ class api_v2_MembershipContributionLinkTest extends CiviUnitTestCase {
     $this->contactDelete($contactId);
   }
 }
-

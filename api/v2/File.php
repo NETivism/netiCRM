@@ -286,7 +286,8 @@ function civicrm_files_by_entity_get($entityID, $entityTable = 'civicrm_contact'
       }
 
       if (CRM_Utils_Array::value('file_type_id', $files[$entityFileDAO->file_id])) {
-        $files[$entityFileDAO->file_id]['file_type'] = CRM_Core_OptionGroup::getLabel('file_type',
+        $files[$entityFileDAO->file_id]['file_type'] = CRM_Core_OptionGroup::getLabel(
+          'file_type',
           $files[$entityFileDAO->file_id]['file_type_id']
         );
       }
@@ -328,4 +329,3 @@ function civicrm_entity_file_delete(&$params) {
 
   return $entityFileDAO->delete() ? NULL : civicrm_create_error('Error while deleting');
 }
-

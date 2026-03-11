@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components generic to all the contact types.
  *
@@ -44,7 +42,8 @@
  *
  */
 class CRM_Contact_Form_Test extends CRM_Core_Form {
-  function preProcess() {}
+  public function preProcess() {
+  }
 
   /**
    * This function sets the default values for the form. Note that in edit/view mode
@@ -54,7 +53,7 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $params = [];
   }
@@ -82,6 +81,6 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
    *
    * @return None
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
 }
-

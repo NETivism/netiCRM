@@ -52,10 +52,10 @@ class CRM_Core_Form_Tag {
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
+  public static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
     $tagset = $form->_entityTagValues = [];
 
-    foreach ($parentNames as & $parentNameItem) {
+    foreach ($parentNames as &$parentNameItem) {
       // get the parent id for tag list input for keyword
       $parentId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Tag', $parentNameItem, 'id', 'name');
 
@@ -67,9 +67,12 @@ class CRM_Core_Form_Tag {
         $tagset[$tagsetItem]['parentID'] = $parentId;
 
         //tokeninput url
-        $tagUrl = CRM_Utils_System::url('civicrm/ajax/taglist',
+        $tagUrl = CRM_Utils_System::url(
+          'civicrm/ajax/taglist',
           "parentId={$parentId}",
-          FALSE, NULL, FALSE
+          FALSE,
+          NULL,
+          FALSE
         );
 
         $tagset[$tagsetItem]['tagUrl'] = $tagUrl;
@@ -145,7 +148,7 @@ class CRM_Core_Form_Tag {
    * Function to save entity tags when it is not save used AJAX
    *
    */
-  static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
+  public static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
     foreach ($params as $value) {
       if (!$value) {
         continue;
@@ -168,4 +171,3 @@ class CRM_Core_Form_Tag {
     }
   }
 }
-

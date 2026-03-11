@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class contains functions for email handling
  */
@@ -49,7 +47,7 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $email = new CRM_Core_DAO_Email();
     $email->copyValues($params);
 
@@ -64,12 +62,12 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
    * Business logic of create email
    *
    * @param array $params
-   * 
+   *
    * @return object CRM_Core_BAO_Email object on success, null otherwise
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     CRM_Core_BAO_Block::handlePrimary($params, 'CRM_Core_BAO_Email');
 
     $hook = empty($params['id']) ? 'create' : 'edit';
@@ -110,7 +108,7 @@ contact_id = {$params['contact_id']}";
    * @access public
    * @static
    */
-  static function &getValues($entityBlock) {
+  public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('email', $entityBlock);
   }
 
@@ -123,7 +121,7 @@ contact_id = {$params['contact_id']}";
    * @access public
    * @static
    */
-  static function allEmails($id, $updateBlankLocInfo = FALSE) {
+  public static function allEmails($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -173,14 +171,13 @@ ORDER BY
    * @access public
    * @static
    */
-  static function allEntityEmails(&$entityElements) {
+  public static function allEntityEmails(&$entityElements) {
     if (empty($entityElements)) {
       return NULL;
     }
 
     $entityId = $entityElements['entity_id'];
     $entityTable = $entityElements['entity_table'];
-
 
     $sql = " SELECT email, ltype.name as locationType, e.is_primary as is_primary, e.on_hold as on_hold,e.id as email_id, e.location_type_id as locationTypeId 
 FROM civicrm_loc_block loc, civicrm_email e, civicrm_location_type ltype, {$entityTable} ev
@@ -215,7 +212,7 @@ ORDER BY e.is_primary DESC, email_id ASC ";
    * @return void
    * @static
    */
-  static function holdEmail(&$email) {
+  public static function holdEmail(&$email) {
     //check for update mode
     if ($email->id) {
       //get hold date
@@ -247,11 +244,11 @@ ORDER BY e.is_primary DESC, email_id ASC ";
    * Get current exists id from value(email)
    *
    * Only effect when phone id not provided. Id will be added into params before add.
-   * 
+   *
    * @param array $params referenced array to be add exists phone id
    * @return void
    */
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['email']) && is_string($params['email']) && !empty($params['contact_id'])) {
       $check = preg_replace('/[^a-zA-Z0-9.@-]/', '', $params['email']);
       $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE REGEXP_REPLACE(email, '[^a-zA-Z0-9.@-]', '') LIKE %1 AND contact_id = %2", [
@@ -261,4 +258,3 @@ ORDER BY e.is_primary DESC, email_id ASC ";
     }
   }
 }
-

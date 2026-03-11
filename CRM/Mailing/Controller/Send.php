@@ -33,24 +33,31 @@
  *
  */
 
-
 class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
 
   /**
    * class constructor
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
     parent::__construct($title, $modal, NULL, FALSE, TRUE);
 
     $mailingID = CRM_Utils_Request::retrieve('mid', 'String', $this, FALSE, NULL);
 
     // also get the text and html file
-    $txtFile = CRM_Utils_Request::retrieve('txtFile', 'String',
-      CRM_Core_DAO::$_nullObject, FALSE, NULL
+    $txtFile = CRM_Utils_Request::retrieve(
+      'txtFile',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      NULL
     );
-    $htmlFile = CRM_Utils_Request::retrieve('htmlFile', 'String',
-      CRM_Core_DAO::$_nullObject, FALSE, NULL
+    $htmlFile = CRM_Utils_Request::retrieve(
+      'htmlFile',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      NULL
     );
 
     $config = CRM_Core_Config::singleton();
@@ -73,14 +80,15 @@ class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
 
     // add all the actions
 
-    $uploadNames = array_merge(['textFile', 'htmlFile'],
+    $uploadNames = array_merge(
+      ['textFile', 'htmlFile'],
       CRM_Core_BAO_File::uploadNames()
     );
 
     $config = CRM_Core_Config::singleton();
-    $this->addActions($config->uploadDir,
+    $this->addActions(
+      $config->uploadDir,
       $uploadNames
     );
   }
 }
-

@@ -34,9 +34,10 @@
  */
 class CRM_Report_Utils_Report {
 
-  static function getValueFromUrl($instanceID = NULL) {
+  public static function getValueFromUrl($instanceID = NULL) {
     if ($instanceID) {
-      $optionVal = CRM_Core_DAO::getFieldValue('CRM_Report_DAO_Instance',
+      $optionVal = CRM_Core_DAO::getFieldValue(
+        'CRM_Report_DAO_Instance',
         $instanceID,
         'report_id'
       );
@@ -56,7 +57,7 @@ class CRM_Report_Utils_Report {
     return $optionVal;
   }
 
-  static function getValueIDFromUrl($instanceID = NULL) {
+  public static function getValueIDFromUrl($instanceID = NULL) {
     $optionVal = self::getValueFromUrl($instanceID);
 
     if ($optionVal) {
@@ -68,7 +69,7 @@ class CRM_Report_Utils_Report {
     return FALSE;
   }
 
-  static function getInstanceIDForValue($optionVal) {
+  public static function getInstanceIDForValue($optionVal) {
     static $valId = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($optionVal, $valId)) {
@@ -82,7 +83,7 @@ WHERE  report_id = %1";
     return $valId[$optionVal];
   }
 
-  static function getInstanceIDForPath($path = NULL) {
+  public static function getInstanceIDForPath($path = NULL) {
     static $valId = [];
 
     // if $path is null, try to get it from url
@@ -99,13 +100,15 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
     return $valId[$path];
   }
 
-  static function getNextUrl($urlValue, $query = 'reset=1', $absolute = FALSE, $instanceID = NULL) {
+  public static function getNextUrl($urlValue, $query = 'reset=1', $absolute = FALSE, $instanceID = NULL) {
     if ($instanceID) {
       $instanceID = self::getInstanceIDForValue($urlValue);
 
       if ($instanceID) {
-        return CRM_Utils_System::url("civicrm/report/instance/{$instanceID}",
-          "{$query}", $absolute
+        return CRM_Utils_System::url(
+          "civicrm/report/instance/{$instanceID}",
+          "{$query}",
+          $absolute
         );
       }
       else {
@@ -113,14 +116,16 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
       }
     }
     else {
-      return CRM_Utils_System::url("civicrm/report/" . trim($urlValue, '/'),
-        $query, $absolute
+      return CRM_Utils_System::url(
+        "civicrm/report/" . trim($urlValue, '/'),
+        $query,
+        $absolute
       );
     }
   }
 
   // get instance count for a template
-  static function getInstanceCount($optionVal) {
+  public static function getInstanceCount($optionVal) {
     $sql = "
 SELECT count(inst.id)
 FROM   civicrm_report_instance inst
@@ -131,17 +136,18 @@ WHERE  inst.report_id = %1";
     return $count;
   }
 
-  static function mailReport($fileContent, $instanceID = NULL, $outputMode = 'html') {
+  public static function mailReport($fileContent, $instanceID = NULL, $outputMode = 'html') {
     if (!$instanceID) {
       return FALSE;
     }
 
-    $url = CRM_Utils_System::url("civicrm/report/instance/{$instanceID}",
-      "reset=1", TRUE
+    $url = CRM_Utils_System::url(
+      "civicrm/report/instance/{$instanceID}",
+      "reset=1",
+      TRUE
     );
     $url = "Report Url: {$url} ";
     $fileContent = $url . $fileContent;
-
 
     list($domainEmailName,
       $domainEmailAddress
@@ -149,7 +155,8 @@ WHERE  inst.report_id = %1";
 
     $params = ['id' => $instanceID];
     $instanceInfo = [];
-    CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
+    CRM_Core_DAO::commonRetrieve(
+      'CRM_Report_DAO_Instance',
       $params,
       $instanceInfo
     );
@@ -166,12 +173,11 @@ WHERE  inst.report_id = %1";
     $params['text'] = '';
     $params['html'] = $fileContent;
 
-
     $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_usedFor);
     return CRM_Utils_Mail::send($params);
   }
 
-  static function export2xls(&$form, &$rows, $fileName = NULL) {
+  public static function export2xls(&$form, &$rows, $fileName = NULL) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -181,7 +187,7 @@ WHERE  inst.report_id = %1";
     // Replace internal header names with friendly ones, where available.
     foreach ($columnHeaders as $header) {
       if (isset($form->_columnHeaders[$header])) {
-        if(CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024){
+        if (CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024) {
           $headers[] = $form->_columnHeaders[$header]['title'] . ':' . ts('Currency');
         }
         $headers[] = html_entity_decode(strip_tags($form->_columnHeaders[$header]['title']));
@@ -233,7 +239,7 @@ WHERE  inst.report_id = %1";
     CRM_Utils_System::civiExit();
   }
 
-  static function add2group(&$form, $groupID) {
+  public static function add2group(&$form, $groupID) {
 
     if (is_numeric($groupID) && isset($form->_aliases['civicrm_contact'])) {
 
@@ -282,11 +288,10 @@ WHERE  inst.report_id = %1";
       CRM_Core_Session::setStatus(ts("Listed contact(s) have been added to the selected group."));
     }
   }
-  static function getInstanceID() {
+  public static function getInstanceID() {
 
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
-
 
     if ($arg[1] == 'report' &&
       CRM_Utils_Array::value(2, $arg) == 'instance'
@@ -297,7 +302,7 @@ WHERE  inst.report_id = %1";
     }
   }
 
-  static function getInstancePath() {
+  public static function getInstancePath() {
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
 
@@ -310,22 +315,24 @@ WHERE  inst.report_id = %1";
     }
   }
 
-  static function isInstancePermissioned($instanceId) {
+  public static function isInstancePermissioned($instanceId) {
     if (!$instanceId) {
       return TRUE;
     }
 
     $instanceValues = [];
     $params = ['id' => $instanceId];
-    CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
+    CRM_Core_DAO::commonRetrieve(
+      'CRM_Report_DAO_Instance',
       $params,
       $instanceValues
     );
 
     if (!empty($instanceValues['permission']) &&
-      (!(CRM_Core_Permission::check($instanceValues['permission']) ||
+      (!(
+        CRM_Core_Permission::check($instanceValues['permission']) ||
           CRM_Core_Permission::check('administer Reports')
-        ))
+      ))
     ) {
       return FALSE;
     }
@@ -333,4 +340,3 @@ WHERE  inst.report_id = %1";
     return TRUE;
   }
 }
-

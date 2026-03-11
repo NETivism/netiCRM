@@ -1,7 +1,6 @@
 <?php
 // $Id: Constant.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -110,4 +109,3 @@ function civicrm_constant_get($name, $params = [
 
   return civicrm_create_error(ts('Unknown civicrm constant or method not callable'));
 }
-

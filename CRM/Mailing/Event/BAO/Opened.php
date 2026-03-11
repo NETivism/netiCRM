@@ -33,13 +33,12 @@
  *
  */
 
-
 class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -54,8 +53,6 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
    */
   public static function open($queue_id) {
     /* First make sure there's a matching queue event */
-
-
 
     $success = FALSE;
 
@@ -83,7 +80,8 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
    * @access public
    * @static
    */
-  public static function getTotalCount($mailing_id,
+  public static function getTotalCount(
+    $mailing_id,
     $job_id = NULL,
     $is_distinct = FALSE
   ) {
@@ -138,8 +136,13 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
    * @access public
    * @static
    */
-  public static function &getRows($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $is_distinct = FALSE,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -200,7 +203,8 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
     $results = [];
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
@@ -212,4 +216,3 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
     return $results;
   }
 }
-

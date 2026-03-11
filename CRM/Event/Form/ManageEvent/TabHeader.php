@@ -38,7 +38,7 @@
  */
 class CRM_Event_Form_ManageEvent_TabHeader {
 
-  static function build(&$form) {
+  public static function build(&$form) {
     $tabs = $form->get('tabHeader');
     if (!$tabs || !CRM_Utils_Array::value('reset', $_GET)) {
       $tabs = &self::process($form);
@@ -49,7 +49,7 @@ class CRM_Event_Form_ManageEvent_TabHeader {
     return $tabs;
   }
 
-  static function process(&$form) {
+  public static function process(&$form) {
     if ($form->getVar('_id') <= 0) {
       return NULL;
     }
@@ -112,7 +112,8 @@ class CRM_Event_Form_ManageEvent_TabHeader {
       $form->assign('qfKey', $qfKey);
 
       foreach ($tabs as $key => $value) {
-        $tabs[$key]['link'] = CRM_Utils_System::url("civicrm/event/manage/{$key}",
+        $tabs[$key]['link'] = CRM_Utils_System::url(
+          "civicrm/event/manage/{$key}",
           "{$reset}action=update&id={$eventID}&qfKey={$qfKey}"
         );
         $tabs[$key]['active'] = $tabs[$key]['valid'] = TRUE;
@@ -148,12 +149,12 @@ WHERE      e.id = %1
     return $tabs;
   }
 
-  static function reset(&$form) {
+  public static function reset(&$form) {
     $tabs = &self::process($form);
     $form->set('tabHeader', $tabs);
   }
 
-  static function getCurrentTab($tabs) {
+  public static function getCurrentTab($tabs) {
     static $current = FALSE;
 
     if ($current) {
@@ -173,4 +174,3 @@ WHERE      e.id = %1
     return $current;
   }
 }
-

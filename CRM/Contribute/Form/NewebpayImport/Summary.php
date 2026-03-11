@@ -4,7 +4,7 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
 
   protected $_successedContribution;
 
-  function preProcess() {
+  public function preProcess() {
     $successedTableHeader = $this->get('successedTableHeader');
     $this->_successedContribution = $this->get('successedContribution');
     $this->assign('successedTableHeader', $successedTableHeader);
@@ -40,8 +40,9 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
     $this->assign('downloadStatusUrl', $downloadStatusUrl);
   }
 
-  function buildQuickForm() {
-    $this->addButtons([
+  public function buildQuickForm() {
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
         ],
@@ -49,7 +50,7 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+  public function postProcess() {
   }
 
   /**

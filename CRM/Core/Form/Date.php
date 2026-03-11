@@ -32,12 +32,12 @@
  * $Id$
  *
  */
-Class CRM_Core_Form_Date {
+class CRM_Core_Form_Date {
 
   /**
    * various Date Formats
    */
-  CONST DATE_yyyy_mm_dd = 1, DATE_mm_dd_yy = 2, DATE_mm_dd_yyyy = 4, DATE_Month_dd_yyyy = 8, DATE_dd_mon_yy = 16, DATE_dd_mm_yyyy = 32;
+  public const DATE_yyyy_mm_dd = 1, DATE_mm_dd_yy = 2, DATE_mm_dd_yyyy = 4, DATE_Month_dd_yyyy = 8, DATE_dd_mon_yy = 16, DATE_dd_mm_yyyy = 32;
 
   /**
    * This function is to build the date-format form
@@ -47,10 +47,9 @@ Class CRM_Core_Form_Date {
    * @static
    * @access public
    */
-  static function buildAllowedDateFormats(&$form) {
+  public static function buildAllowedDateFormats(&$form) {
 
     $dateOptions = [];
-
 
     if (CRM_Utils_System::getClassName($form) == 'CRM_Activity_Import_Form_UploadFile') {
       $dateText = ts('yyyy-mm-dd OR yyyy-mm-dd HH:mm OR yyyymmdd OR yyyymmdd HH:mm (1998-12-25 OR 1998-12-25 15:33 OR 19981225 OR 19981225 10:30 OR ( 2008-9-1 OR 2008-9-1 15:33 OR 20080901 15:33)');
@@ -75,7 +74,7 @@ Class CRM_Core_Form_Date {
    * @static
    * @access public
    */
-  static function buildDateRange(&$form, $fieldName, $count = 1, $required = FALSE, $addReportFilters = TRUE) {
+  public static function buildDateRange(&$form, $fieldName, $count = 1, $required = FALSE, $addReportFilters = TRUE) {
     $selector = [ts('Choose Date Range'),
       'this.year' => ts('This Year'),
       'this.fiscal_year' => ts('This Fiscal Year'),
@@ -126,7 +125,8 @@ Class CRM_Core_Form_Date {
       unset($selector['previous.fiscal_year']);
     }
 
-    $form->add('select',
+    $form->add(
+      'select',
       "{$fieldName}_relative",
       ts('Relative Date Range'),
       $selector,
@@ -136,4 +136,3 @@ Class CRM_Core_Form_Date {
     $form->addDateRange($fieldName);
   }
 }
-

@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components generic to all the contact types.
  *
@@ -128,7 +123,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'add');
 
     $this->_dedupeButtonName = $this->getButtonName('refresh', 'dedupe');
@@ -142,12 +137,18 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         CRM_Utils_System::permissionDenied();
         CRM_Utils_System::civiExit();
       }
-      $this->_contactType = CRM_Utils_Request::retrieve('ct', 'String',
-        $this, TRUE, NULL, 'REQUEST'
+      $this->_contactType = CRM_Utils_Request::retrieve(
+        'ct',
+        'String',
+        $this,
+        TRUE,
+        NULL,
+        'REQUEST'
       );
-      if (!in_array($this->_contactType,
-          ['Individual', 'Household', 'Organization']
-        )) {
+      if (!in_array(
+        $this->_contactType,
+        ['Individual', 'Household', 'Organization']
+      )) {
         return CRM_Core_Error::statusBounce(ts('Could not get a contact id and/or contact type'));
       }
 
@@ -157,13 +158,21 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         return CRM_Core_Error::statusBounce(ts("Could not get a valid contact subtype for contact type '%1'", [1 => $this->_contactType]));
       }
 
-      $this->_gid = CRM_Utils_Request::retrieve('gid', 'Integer',
+      $this->_gid = CRM_Utils_Request::retrieve(
+        'gid',
+        'Integer',
         CRM_Core_DAO::$_nullObject,
-        FALSE, NULL, 'GET'
+        FALSE,
+        NULL,
+        'GET'
       );
-      $this->_tid = CRM_Utils_Request::retrieve('tid', 'Integer',
+      $this->_tid = CRM_Utils_Request::retrieve(
+        'tid',
+        'Integer',
         CRM_Core_DAO::$_nullObject,
-        FALSE, NULL, 'GET'
+        FALSE,
+        NULL,
+        'GET'
       );
 
       if ($this->_contactSubType) {
@@ -251,8 +260,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     $this->_editOptions = $this->get('contactEditOptions');
     if (CRM_Utils_System::isNull($this->_editOptions)) {
-      $this->_editOptions = CRM_Core_BAO_Preferences::valueOptions('contact_edit_options', TRUE, NULL,
-        FALSE, 'name', TRUE, 'AND v.filter = 0'
+      $this->_editOptions = CRM_Core_BAO_Preferences::valueOptions(
+        'contact_edit_options',
+        TRUE,
+        NULL,
+        FALSE,
+        'name',
+        TRUE,
+        'AND v.filter = 0'
       );
       $this->set('contactEditOptions', $this->_editOptions);
     }
@@ -280,7 +295,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     if ($this->_contactSubType && ($this->_action & CRM_Core_Action::ADD)) {
       $buildContactSubType = FALSE;
     }
-    elseif(!empty($this->_availableSubtypes)){
+    elseif (!empty($this->_availableSubtypes)) {
       $buildContactSubType = TRUE;
     }
     $this->assign('buildContactSubType', $buildContactSubType);
@@ -288,8 +303,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // get the location blocks.
     $this->_blocks = $this->get('blocks');
     if (CRM_Utils_System::isNull($this->_blocks)) {
-      $this->_blocks = CRM_Core_BAO_Preferences::valueOptions('contact_edit_options', TRUE, NULL,
-        FALSE, 'name', TRUE, 'AND v.filter = 1'
+      $this->_blocks = CRM_Core_BAO_Preferences::valueOptions(
+        'contact_edit_options',
+        TRUE,
+        NULL,
+        FALSE,
+        'name',
+        TRUE,
+        'AND v.filter = 1'
       );
       unset($this->_blocks['OpenID']);
       $this->set('blocks', $this->_blocks);
@@ -318,8 +339,13 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
           $contactSubType = $_POST['contact_sub_type'];
         }
         //only custom data has preprocess hence directly call it
-        CRM_Custom_Form_CustomData::preProcess($this, NULL, $contactSubType,
-          1, $this->_contactType, $this->_contactId
+        CRM_Custom_Form_CustomData::preProcess(
+          $this,
+          NULL,
+          $contactSubType,
+          1,
+          $this->_contactType,
+          $this->_contactId
         );
       }
     }
@@ -333,7 +359,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $this->_values;
     $params = [];
 
@@ -357,7 +383,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       $defaults['current_employer_id'] = CRM_Utils_Array::value('org_id', $currentEmployer[$this->_contactId]);
       $this->assign('currentEmployer', $defaults['current_employer_id']);
 
-      foreach ($defaults['email'] as $dontCare => & $val) {
+      foreach ($defaults['email'] as $dontCare => &$val) {
         if (isset($val['signature_text'])) {
           $val['signature_text_hidden'] = $val['signature_text'];
         }
@@ -371,7 +397,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     foreach ($this->_editOptions as $name => $label) {
       if (!in_array($name, ['Address', 'Notes'])) {
         $className = 'CRM_Contact_Form_Edit_' . $name;
-        $className::setDefaultValues( $this, $defaults );
+        $className::setDefaultValues($this, $defaults);
       }
     }
 
@@ -409,7 +435,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       // build street address, CRM-5450.
       if ($this->_parseStreetAddress) {
         $parseFields = ['street_address', 'street_number', 'street_name', 'street_unit'];
-        foreach ($defaults['address'] as $cnt => & $address) {
+        foreach ($defaults['address'] as $cnt => &$address) {
           $streetAddress = NULL;
           foreach (['street_number', 'street_number_suffix', 'street_name', 'street_unit'] as $fld) {
             if (in_array($fld, ['street_name', 'street_unit'])) {
@@ -430,7 +456,9 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
           // don't load fields, use js to populate.
           foreach (['street_number', 'street_name', 'street_unit'] as $f) {
-            if (isset($address[$f]))unset($address[$f]);
+            if (isset($address[$f])) {
+              unset($address[$f]);
+            }
           }
         }
         $this->assign('allAddressFieldValues', json_encode($addressValues));
@@ -459,7 +487,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     if (CRM_Utils_Array::value('image_URL', $defaults)) {
-      $contactImage = CRM_Utils_Image::getImageVars($defaults['image_URL']); 
+      $contactImage = CRM_Utils_Image::getImageVars($defaults['image_URL']);
       $this->assign('contactImage', $contactImage);
     }
 
@@ -469,16 +497,15 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
   }
 
   /*
-     * do the set default related to location type id, 
+     * do the set default related to location type id,
      * primary location,  default country
      *
      */
-  function blockSetDefaults(&$defaults) {
+  public function blockSetDefaults(&$defaults) {
     $locationTypeKeys = array_filter(array_keys(CRM_Core_PseudoConstant::locationType()), 'is_int');
     sort($locationTypeKeys);
 
     // get the default location type
-
 
     $locationType = CRM_Core_BAO_LocationType::getDefault();
 
@@ -492,11 +519,19 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // get default phone and im provider id.
 
     $defPhoneTypeId = key(CRM_Core_OptionGroup::values('phone_type', FALSE, FALSE, FALSE, ' AND is_default = 1'));
-    $defIMProviderId = key(CRM_Core_OptionGroup::values('instant_messenger_service',
-      FALSE, FALSE, FALSE, ' AND is_default = 1'
+    $defIMProviderId = key(CRM_Core_OptionGroup::values(
+      'instant_messenger_service',
+      FALSE,
+      FALSE,
+      FALSE,
+      ' AND is_default = 1'
     ));
-    $defWebsiteTypeId = key(CRM_Core_OptionGroup::values('website_type',
-      FALSE, FALSE, FALSE, ' AND is_default = 1'
+    $defWebsiteTypeId = key(CRM_Core_OptionGroup::values(
+      'website_type',
+      FALSE,
+      FALSE,
+      FALSE,
+      ' AND is_default = 1'
     ));
 
     $allBlocks = $this->_blocks;
@@ -568,11 +603,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     if (CRM_Utils_Array::value('address', $defaults) && is_array($defaults['address'])) {
 
       foreach ($defaults['address'] as $blockId => $values) {
-        CRM_Contact_Form_Edit_Address::fixStateSelect($this,
+        CRM_Contact_Form_Edit_Address::fixStateSelect(
+          $this,
           "address[$blockId][country_id]",
           "address[$blockId][state_province_id]",
-          CRM_Utils_Array::value('country_id',
-            $values, $config->defaultContactCountry
+          CRM_Utils_Array::value(
+            'country_id',
+            $values,
+            $config->defaultContactCountry
           )
         );
       }
@@ -587,7 +625,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * @access public
    * @see valid_date
    */
-  function addRules() {
+  public function addRules() {
     // skip adding formRules when custom data is build
     if ($this->_addBlockName || ($this->_action & CRM_Core_Action::DELETE)) {
       return;
@@ -612,7 +650,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $errors, $contactId = NULL) {
+  public static function formRule($fields, $errors, $contactId = NULL) {
     $config = CRM_Core_Config::singleton();
 
     // validations.
@@ -623,12 +661,24 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     //5. also get primaryID from email or open id block.
 
     // take the location blocks.
-    $blocks = CRM_Core_BAO_Preferences::valueOptions('contact_edit_options', TRUE, NULL,
-      FALSE, 'name', TRUE, 'AND v.filter = 1'
+    $blocks = CRM_Core_BAO_Preferences::valueOptions(
+      'contact_edit_options',
+      TRUE,
+      NULL,
+      FALSE,
+      'name',
+      TRUE,
+      'AND v.filter = 1'
     );
 
-    $otherEditOptions = CRM_Core_BAO_Preferences::valueOptions('contact_edit_options', TRUE, NULL,
-      FALSE, 'name', TRUE, 'AND v.filter = 0'
+    $otherEditOptions = CRM_Core_BAO_Preferences::valueOptions(
+      'contact_edit_options',
+      TRUE,
+      NULL,
+      FALSE,
+      'name',
+      TRUE,
+      'AND v.filter = 0'
     );
     //get address block inside.
     if (CRM_Utils_Array::arrayKeyExists('Address', $otherEditOptions)) {
@@ -685,7 +735,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         }
 
         if (count($hasPrimary) > 1) {
-          $errors["{$name}[" . array_pop($hasPrimary) . "][is_primary]"] = ts('Only one %1 can be marked as primary.',
+          $errors["{$name}[" . array_pop($hasPrimary) . "][is_primary]"] = ts(
+            'Only one %1 can be marked as primary.',
             [1 => $label]
           );
         }
@@ -702,7 +753,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     // street number should be digit + suffix, CRM-5450
-    $parseStreetAddress = CRM_Utils_Array::value('street_address_parsing',
+    $parseStreetAddress = CRM_Utils_Array::value(
+      'street_address_parsing',
       CRM_Core_BAO_Preferences::valueOptions('address_options')
     );
     if ($parseStreetAddress) {
@@ -719,7 +771,9 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
         if (!empty($invalidStreetNumbers)) {
           $first = $invalidStreetNumbers[0];
-          foreach ($invalidStreetNumbers as & $num) $num = CRM_Contact_Form_Contact::ordinalNumber($num);
+          foreach ($invalidStreetNumbers as &$num) {
+            $num = CRM_Contact_Form_Contact::ordinalNumber($num);
+          }
           $errors["address[$first][street_number]"] = ts('The street number you entered for the %1 address block(s) is not in an expected format. Street numbers may include numeric digit(s) followed by other characters. You can still enter the complete street address (unparsed) by clicking "Edit Complete Street Address".', [1 => CRM_Utils_Array::implode(', ', $invalidStreetNumbers)]);
         }
       }
@@ -738,7 +792,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     //load form for child blocks
     if ($this->_addBlockName) {
       $className = 'CRM_Contact_Form_Edit_' . $this->_addBlockName;
-      return $className::buildQuickForm( $this );
+      return $className::buildQuickForm($this);
     }
 
     if ($this->_action == CRM_Core_Action::UPDATE) {
@@ -752,7 +806,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
           'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) this.href+=\'&confirmed=1\'; else return false;"',
         ],
       ];
-      $deleteURL = CRM_Core_Action::formLink($deleteURL,
+      $deleteURL = CRM_Core_Action::formLink(
+        $deleteURL,
         CRM_Core_Action::DELETE,
         ['id' => $this->_contactId,
         ]
@@ -762,7 +817,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     //build contact type specific fields
     $className = 'CRM_Contact_Form_Edit_' . $this->_contactType;
-    $className::buildQuickForm( $this, $this->_action );
+    $className::buildQuickForm($this, $this->_action);
 
     // build Custom data if Custom data present in edit option
     $buildCustomData = NULL;
@@ -772,8 +827,11 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     // subtype is a common field. lets keep it here
     $typeLabel = CRM_Contact_BAO_ContactType::getLabel($this->_contactType);
-    $subtypeElem = &$this->addElement('select', 'contact_sub_type',
-      ts('Contact Type'), ['' => $typeLabel] + $this->_availableSubtypes,
+    $subtypeElem = &$this->addElement(
+      'select',
+      'contact_sub_type',
+      ts('Contact Type'),
+      ['' => $typeLabel] + $this->_availableSubtypes,
       ['onchange' => $buildCustomData]
     );
 
@@ -792,7 +850,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         continue;
       }
       $className = 'CRM_Contact_Form_Edit_' . $name;
-      $className::buildQuickForm( $this );
+      $className::buildQuickForm($this);
     }
 
     // build location blocks.
@@ -803,15 +861,18 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     $this->addUploadElement('image_URL');
 
     // add the dedupe button
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->_dedupeButtonName,
       ts('Check for Matching Contact(s)')
     );
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->_duplicateButtonName,
       ts('Save Matching Contact')
     );
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->getButtonName('next', 'sharedHouseholdDuplicate'),
       ts('Save With Duplicate Household')
     );
@@ -867,7 +928,9 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // don't carry current_employer_id field,
     // since we don't want to directly update DAO object without
     // handling related business logic ( eg related membership )
-    if (isset($params['current_employer_id']))unset($params['current_employer_id']);
+    if (isset($params['current_employer_id'])) {
+      unset($params['current_employer_id']);
+    }
 
     $params['contact_type'] = $this->_contactType;
     if ($this->_contactSubType &&
@@ -905,14 +968,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       CRM_Utils_Hook::pre('create', $params['contact_type'], NULL, $params);
     }
 
-
     $customFields = CRM_Core_BAO_CustomField::getFields($params['contact_type'], FALSE, TRUE);
 
     //CRM-5143
     //if subtype is set, send subtype as extend to validate subtype customfield
     $customFieldExtends = (CRM_Utils_Array::value('contact_sub_type', $params)) ? $params['contact_sub_type'] : $params['contact_type'];
 
-    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customFields,
       $this->_contactId,
       $customFieldExtends,
@@ -934,14 +997,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     if (!empty($params['group'])) {
       $groups = [];
-      foreach($params['group'] as $idx => $groupId) {
+      foreach ($params['group'] as $idx => $groupId) {
         $groups[$groupId] = 1;
       }
       $params['group'] = $groups;
     }
     if (!empty($params['tag'])) {
       $tags = [];
-      foreach($params['tag'] as $idx => $tagId) {
+      foreach ($params['tag'] as $idx => $tagId) {
         $tags[$tagId] = 1;
       }
       $params['tag'] = $tags;
@@ -969,7 +1032,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     // Allow un-setting of location info, CRM-5969
     $params['updateBlankLocInfo'] = TRUE;
 
-
     $contact = &CRM_Contact_BAO_Contact::create($params, TRUE, FALSE, TRUE);
 
     // set the contact ID
@@ -978,7 +1040,9 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     if (CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $this->_editOptions)) {
       //add contact to tags
 
-      CRM_Core_BAO_EntityTag::create($params['tag'], 'civicrm_contact',
+      CRM_Core_BAO_EntityTag::create(
+        $params['tag'],
+        'civicrm_contact',
         $params['contact_id']
       );
 
@@ -1003,10 +1067,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     $session = CRM_Core_Session::singleton();
     CRM_Core_Session::setStatus($statusMsg);
 
-
     // add the recently viewed contact
     $displayName = CRM_Contact_BAO_Contact::displayName($contact->id);
-
 
     $recentOther = [];
 
@@ -1020,7 +1082,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/delete', 'reset=1&delete=1&cid=' . $contact->id);
     }
 
-    CRM_Utils_Recent::add($displayName,
+    CRM_Utils_Recent::add(
+      $displayName,
       CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $contact->id),
       $contact->id,
       $this->_contactType,
@@ -1070,7 +1133,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function blockDataExists(&$fields) {
+  public static function blockDataExists(&$fields) {
     if (!is_array($fields)) {
       return FALSE;
     }
@@ -1113,15 +1176,13 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
    *  @param int    $contactID   contact id
    *  @param string $contactType contact type
    */
-  static function checkDuplicateContacts(&$fields, &$errors, $contactID, $contactType) {
+  public static function checkDuplicateContacts(&$fields, &$errors, $contactID, $contactType) {
     // if this is a forced save, ignore find duplicate rule
     if (!CRM_Utils_Array::value('_qf_Contact_upload_duplicate', $fields)) {
-
 
       $dedupeParams = CRM_Dedupe_Finder::formatParams($fields, $contactType);
       $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $contactType, 'Fuzzy', [$contactID]);
       if ($ids) {
-
 
         $contactLinks = CRM_Contact_BAO_Contact_Utils::formatContactIDSToLinks($ids, TRUE, TRUE, $contactID);
 
@@ -1162,8 +1223,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
         $errors['_qf_default'] = $duplicateContactsLinks;
 
-
-
         // let smarty know that there are duplicates
         $template = CRM_Core_Smarty::singleton();
         $template->assign('isDuplicate', 1);
@@ -1175,7 +1234,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->_contactSubType) {
       $templateFile = "CRM/Contact/Form/Edit/SubType/{$this->_contactSubType}.tpl";
       $template = CRM_Core_Form::getTemplate();
@@ -1188,14 +1247,14 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
   /* Parse all address blocks present in given params
      * and return parse result for all address blocks,
-     * This function either parse street address in to child 
+     * This function either parse street address in to child
      * elements or build street address from child elements.
      *
      * @params $params an array of key value consist of address  blocks.
      *
      * @return $parseSuccess as array of sucess/fails for every address block.
      */
-  function parseAddress(&$params) {
+  public function parseAddress(&$params) {
     $parseSuccess = $parsedFields = [];
     if (!is_array($params['address']) ||
       CRM_Utils_System::isNull($params['address'])
@@ -1203,10 +1262,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       return $parseSuccess;
     }
 
-
-
     $buildStreetAddress = FALSE;
-    foreach ($params['address'] as $instance => & $address) {
+    foreach ($params['address'] as $instance => &$address) {
       $parseFieldName = 'street_address';
       foreach (['street_number', 'street_name', 'street_unit'] as $fld) {
         if (CRM_Utils_Array::value($fld, $address)) {
@@ -1277,12 +1334,12 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
   /* check parse result and if some address block fails then this
      * function return the status message for all address blocks.
-     * 
+     *
      * @param  $parseResult an array of address blk instance and its status.
      *
-     * @return $statusMsg   string status message for all address blocks. 
+     * @return $statusMsg   string status message for all address blocks.
      */
-  function parseAddressStatusMsg($parseResult) {
+  public function parseAddressStatusMsg($parseResult) {
     $statusMsg = NULL;
     if (!is_array($parseResult) || empty($parseResult)) {
       return $statusMsg;
@@ -1296,7 +1353,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     if (!empty($parseFails)) {
-      $statusMsg = ts("Complete street address(es) have been saved. However we were unable to split the address in the %1 address block(s) into address elements (street number, street name, street unit) due to an unrecognized address format. You can set the address elements manually by clicking 'Edit Address Elements' next to the Street Address field while in edit mode.",
+      $statusMsg = ts(
+        "Complete street address(es) have been saved. However we were unable to split the address in the %1 address block(s) into address elements (street number, street name, street unit) due to an unrecognized address format. You can set the address elements manually by clicking 'Edit Address Elements' next to the Street Address field while in edit mode.",
         [1 => CRM_Utils_Array::implode(', ', $parseFails)]
       );
     }
@@ -1304,7 +1362,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     return $statusMsg;
   }
 
-  /* 
+  /*
      * Convert normal number to ordinal number format.
      * like 1 => 1st, 2 => 2nd and so on...
      *
@@ -1312,7 +1370,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
      *
      * @return ordinal number for given number.
      */
-  function ordinalNumber($number) {
+  public function ordinalNumber($number) {
     if (empty($number)) {
       return NULL;
     }
@@ -1341,12 +1399,12 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
   /* Update membership status to deceased
      * function return the status message for updated membership.
-     * 
+     *
      * @param  $deceasedParams array  having contact id and deceased value.
      *
-     * @return $updateMembershipMsg string  status message for updated membership. 
+     * @return $updateMembershipMsg string  status message for updated membership.
      */
-  function updateMembershipStatus($deceasedParams) {
+  public function updateMembershipStatus($deceasedParams) {
     $updateMembershipMsg = NULL;
     $contactId = CRM_Utils_Array::value('contact_id', $deceasedParams);
     $deceasedDate = CRM_Utils_Array::value('deceased_date', $deceasedParams);
@@ -1362,11 +1420,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       if (!$userId) {
         $userId = $contactId;
       }
-
-
-
-
-
 
       // get deceased status id
       $allStatus = CRM_Member_PseudoConstant::membershipStatus();
@@ -1389,8 +1442,11 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
       $memCount = 0;
       while ($dao->fetch()) {
         // update status to deceased (for both active/inactive membership )
-        CRM_Core_DAO::setFieldValue('CRM_Member_DAO_Membership', $dao->id,
-          'status_id', $deceasedStatusId
+        CRM_Core_DAO::setFieldValue(
+          'CRM_Member_DAO_Membership',
+          $dao->id,
+          'status_id',
+          $deceasedStatusId
         );
 
         // add membership log
@@ -1403,7 +1459,6 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
           'modified_date' => date('Ymd'),
         ];
 
-
         CRM_Member_BAO_MembershipLog::add($membershipLog, CRM_Core_DAO::$_nullArray);
 
         $memCount++;
@@ -1411,7 +1466,8 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
       // set status msg
       if ($memCount) {
-        $updateMembershipMsg = ts("%1 Current membership(s) for this contact have been set to 'Deceased' status.",
+        $updateMembershipMsg = ts(
+          "%1 Current membership(s) for this contact have been set to 'Deceased' status.",
           [1 => $memCount]
         );
       }
@@ -1420,4 +1476,3 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     return $updateMembershipMsg;
   }
 }
-

@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
 
   /**
@@ -42,14 +41,14 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
     // get the primary city, state and zip for the contact
 
     $ids = [$this->_contactId];
     $locations = CRM_Contact_BAO_Contact_Location::getMapInfo($ids);
 
-
-    $rows = &CRM_Utils_Sunlight::getInfo($locations[0]['city'],
+    $rows = &CRM_Utils_Sunlight::getInfo(
+      $locations[0]['city'],
       $locations[0]['state'],
       $locations[0]['postal_code']
     );
@@ -64,7 +63,7 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $this->browse();
@@ -72,4 +71,3 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
     return parent::run();
   }
 }
-

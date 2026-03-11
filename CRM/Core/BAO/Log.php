@@ -33,15 +33,13 @@
  *
  */
 
-
-
 /**
  * BAO object for crm_log table
  */
 class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
-  static $_processed = NULL;
+  public static $_processed = NULL;
 
-  static function lastModified($id, $table = 'civicrm_contact', $order = 'desc') {
+  public static function lastModified($id, $table = 'civicrm_contact', $order = 'desc') {
     $log = new CRM_Core_DAO_Log();
 
     $log->entity_table = $table;
@@ -72,8 +70,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
    *
    * @static
    */
-  static function add(&$params) {
-
+  public static function add(&$params) {
 
     $log = new CRM_Core_DAO_Log();
     $log->copyValues($params);
@@ -81,7 +78,7 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
     return $log;
   }
 
-  static function register($contactID, $tableName, $tableID, $userID = NULL, $data = NULL) {
+  public static function register($contactID, $tableName, $tableID, $userID = NULL, $data = NULL) {
     if (!self::$_processed) {
       self::$_processed = [];
     }
@@ -137,12 +134,12 @@ UPDATE civicrm_log
    * Write audit log on specific entity
    *
    * @param int $entityId       entity id that associate the table
-   * @param string $auditType the given string will be auto prepend 'audit.' 
+   * @param string $auditType the given string will be auto prepend 'audit.'
    * @param string $data
    * @return void
    */
-  static function audit($entityId, $auditType, $data) {
-    if (!$entityId || !$auditType|| empty($data)) {
+  public static function audit($entityId, $auditType, $data) {
+    if (!$entityId || !$auditType || empty($data)) {
       return;
     }
     $userID = CRM_Core_Session::singleton()->get('userID');
@@ -166,10 +163,9 @@ UPDATE civicrm_log
    * @access public
    * @static
    */
-  static function getContactLogCount($contactID) {
+  public static function getContactLogCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_log 
                    WHERE civicrm_log.entity_table = 'civicrm_contact' AND civicrm_log.entity_id = {$contactID}";
     return CRM_Core_DAO::singleValueQuery($query);
   }
 }
-

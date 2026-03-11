@@ -376,8 +376,16 @@ class CRM_Core_PseudoConstant {
    * @access public
    * @static
    */
-  public static function populate(&$var, $name, $all = FALSE, $retrieve = 'name',
-    $filter = 'is_active', $condition = NULL, $orderby = NULL, $key = 'id', $force = NULL
+  public static function populate(
+    &$var,
+    $name,
+    $all = FALSE,
+    $retrieve = 'name',
+    $filter = 'is_active',
+    $condition = NULL,
+    $orderby = NULL,
+    $key = 'id',
+    $force = NULL
   ) {
     $cacheKey = "CRM_PC_{$name}_{$all}_{$key}_{$retrieve}_{$filter}_{$condition}_{$orderby}";
     $cache = CRM_Utils_Cache::singleton();
@@ -441,7 +449,7 @@ class CRM_Core_PseudoConstant {
   public static function &contactType() {
     if (!self::$contactType) {
       $types = CRM_Contact_BAO_ContactType::basicTypeInfo();
-      foreach($types as $type => $info) {
+      foreach ($types as $type => $info) {
         self::$contactType[$type] = $info['label'];
       }
     }
@@ -456,7 +464,7 @@ class CRM_Core_PseudoConstant {
   public static function &contactSubType($parentType = NULL) {
     if (!self::$contactSubType) {
       $types = CRM_Contact_BAO_ContactType::subTypeInfo();
-      foreach($types as $type => $info) {
+      foreach ($types as $type => $info) {
         self::$contactSubType[$info['id']] = [
           'id' => $info['id'],
           'name' => $info['name'],
@@ -467,7 +475,7 @@ class CRM_Core_PseudoConstant {
     }
     if ($parentType) {
       $return = [];
-      foreach(self::$contactSubType as $type => $info) {
+      foreach (self::$contactSubType as $type => $info) {
         if ($info['parent'] == $parentType) {
           $return[$info['id']] = [
             'id' => $info['id'],
@@ -532,7 +540,8 @@ class CRM_Core_PseudoConstant {
    *
    * @return array - array reference of all activty types.
    */
-  public static function &activityType($all = TRUE,
+  public static function &activityType(
+    $all = TRUE,
     $includeCaseActivities = FALSE,
     $reset = FALSE,
     $returnColumn = 'label',
@@ -577,8 +586,13 @@ class CRM_Core_PseudoConstant {
       }
       $condition = $condition . ' AND ' . $componentClause;
 
-      self::$activityType[$index] = CRM_Core_OptionGroup::values('activity_type', FALSE, FALSE,
-        FALSE, $condition, $returnColumn
+      self::$activityType[$index] = CRM_Core_OptionGroup::values(
+        'activity_type',
+        FALSE,
+        FALSE,
+        FALSE,
+        $condition,
+        $returnColumn
       );
     }
     return self::$activityType[$index];
@@ -761,7 +775,7 @@ class CRM_Core_PseudoConstant {
 
       $default = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 1', 'label', TRUE, $refresh);
       $others = CRM_Core_OptionGroup::values('from_email_address', NULL, NULL, NULL, ' AND is_default = 0', 'label', TRUE, $refresh);
-      if(!empty($default)){
+      if (!empty($default)) {
         $default_mail = ['default' => reset($default)];
         $others = array_merge($default_mail, $others);
       }
@@ -769,7 +783,7 @@ class CRM_Core_PseudoConstant {
     }
     if ($separateNameEmail) {
       $pluckedFromEmail = [];
-      foreach(self::$fromEmailAddress as $idx => $addr) {
+      foreach (self::$fromEmailAddress as $idx => $addr) {
         preg_match('/"([^"]+)"\s*<([^<]*)>$/', $addr, $matches);
         $pluckedFromEmail[$idx]['name'] = trim($matches[1]);
         $pluckedFromEmail[$idx]['email'] = $matches[2];
@@ -1009,8 +1023,11 @@ WHERE  id = %1";
    */
   public static function &countryIsoCode($id = FALSE) {
     if (!self::$countryIsoCode) {
-      self::populate(self::$countryIsoCode, 'CRM_Core_DAO_Country',
-        TRUE, 'iso_code'
+      self::populate(
+        self::$countryIsoCode,
+        'CRM_Core_DAO_Country',
+        TRUE,
+        'iso_code'
       );
     }
     if ($id) {
@@ -1076,8 +1093,13 @@ WHERE  id = %1";
 
     if (!isset(self::$group[$groupKey])) {
       self::$group[$groupKey] = NULL;
-      self::populate(self::$group[$groupKey], 'CRM_Contact_DAO_Group', FALSE, 'title',
-        'is_active', $condition
+      self::populate(
+        self::$group[$groupKey],
+        'CRM_Contact_DAO_Group',
+        FALSE,
+        'title',
+        'is_active',
+        $condition
       );
     }
     return self::$group[$groupKey];
@@ -1114,7 +1136,6 @@ WHERE  id = %1";
              When used as an object, GroupNesting implements Iterator
              and iterates nested groups in a logical manner for us
             */
-
 
       self::$groupIterator = new CRM_Contact_BAO_GroupNesting($styledLabels);
     }
@@ -1159,7 +1180,8 @@ WHERE  id = %1";
    * @return array - array reference of all groups.
    *
    */
-  public static function &staticGroup($onlyPublic = FALSE,
+  public static function &staticGroup(
+    $onlyPublic = FALSE,
     $groupType = NULL
   ) {
     if (!self::$staticGroup) {
@@ -1245,7 +1267,6 @@ WHERE  id = %1";
       //now we have name/label columns CRM-3336
       $column_a_b = "{$valueColumnName}_a_b";
       $column_b_a = "{$valueColumnName}_b_a";
-
 
       $relationshipTypeDAO = new CRM_Contact_DAO_RelationshipType();
       $relationshipTypeDAO->selectAdd();
@@ -1392,8 +1413,14 @@ WHERE  id = %1";
     }
 
     if (!self::$paymentProcessor) {
-      self::populate(self::$paymentProcessor, 'CRM_Core_DAO_PaymentProcessor', $all,
-        'name', 'is_active', $condition, 'is_default desc, name'
+      self::populate(
+        self::$paymentProcessor,
+        'CRM_Core_DAO_PaymentProcessor',
+        $all,
+        'name',
+        'is_active',
+        $condition,
+        'is_default desc, name'
       );
     }
     return self::$paymentProcessor;
@@ -1414,8 +1441,15 @@ WHERE  id = %1";
    */
   public static function &paymentProcessorType($all = FALSE) {
     if (!self::$paymentProcessorType) {
-      self::populate(self::$paymentProcessorType, 'CRM_Core_DAO_PaymentProcessorType', $all,
-        'title', 'is_active', NULL, 'is_default, title', 'name'
+      self::populate(
+        self::$paymentProcessorType,
+        'CRM_Core_DAO_PaymentProcessorType',
+        $all,
+        'title',
+        'is_active',
+        NULL,
+        'is_default, title',
+        'name'
       );
     }
     return self::$paymentProcessorType;
@@ -1481,9 +1515,13 @@ WHERE  id = %1";
     if (!CRM_Utils_Array::arrayKeyExists($column, self::$activityStatus)) {
       self::$activityStatus[$column] = [];
 
-
-      self::$activityStatus[$column] = CRM_Core_OptionGroup::values('activity_status', FALSE,
-        FALSE, FALSE, NULL, $column
+      self::$activityStatus[$column] = CRM_Core_OptionGroup::values(
+        'activity_status',
+        FALSE,
+        FALSE,
+        FALSE,
+        NULL,
+        $column
       );
     }
 
@@ -1626,9 +1664,13 @@ ORDER BY name";
         $filterCondition .= "AND (v.filter = 0 OR {$filterVal}) ";
       }
 
-
-      self::$greeting[$index] = CRM_Core_OptionGroup::values($filter['greeting_type'], NULL, NULL, NULL,
-        $filterCondition, $columnName
+      self::$greeting[$index] = CRM_Core_OptionGroup::values(
+        $filter['greeting_type'],
+        NULL,
+        NULL,
+        NULL,
+        $filterCondition,
+        $columnName
       );
     }
     return self::$greeting[$index];
@@ -1697,4 +1739,3 @@ ORDER BY name";
     return self::$referrerTypes;
   }
 }
-

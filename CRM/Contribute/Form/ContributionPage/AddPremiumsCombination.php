@@ -38,8 +38,8 @@
  */
 class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Contribute_Form_ContributionPage_AddProduct {
 
-  static $_combinations;
-  static $_combination_id;
+  public static $_combinations;
+  public static $_combination_id;
   protected $_action;
   protected $_isEdit = FALSE;
 
@@ -79,16 +79,18 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_isEdit && $this->_combination_id) {
       // For editing existing combination
       $defaults = $this->_loadCombinationDefaults();
-    } elseif (!$this->_isEdit && $this->_combination_id) {
+    }
+    elseif (!$this->_isEdit && $this->_combination_id) {
       // For adding existing combination to page
       $defaults = $this->_loadSelectionDefaults();
-    } else {
+    }
+    else {
       // For creating new combination
       $defaults = $this->_loadNewCombinationDefaults();
     }
@@ -127,7 +129,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       $this->assign('thumbnailUrl', $dao->thumbnail);
       $this->assign('thumbURL', $dao->thumbnail);
       $this->assign('imageURL', $dao->image);
-    } else {
+    }
+    else {
       $defaults['imageOption'] = 'noImage';
     }
 
@@ -211,7 +214,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     if ($this->_isEdit) {
       $this->_buildCombinationForm();
       $this->_addCombinationButtons();
-    } else {
+    }
+    else {
       $this->_buildSelectionForm();
       parent::buildQuickForm();
     }
@@ -229,14 +233,20 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
       $session->pushUserContext($url);
 
-      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-          CRM_Core_DAO::$_nullObject, '', '', 'GET'
-        )) {
+      if (CRM_Utils_Request::retrieve(
+        'confirmed',
+        'Boolean',
+        CRM_Core_DAO::$_nullObject,
+        '',
+        '',
+        'GET'
+      )) {
         if ($this->_isEdit) {
           // Delete combination and products
           CRM_Contribute_BAO_PremiumsCombination::del($this->_combination_id);
           CRM_Core_Session::setStatus(ts('Selected Premium Combination has been deleted.'));
-        } else {
+        }
+        else {
           // Only remove the page association
           $dao = new CRM_Contribute_DAO_PremiumsCombination();
           $dao->id = $this->_combination_id;
@@ -247,7 +257,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
         CRM_Utils_System::redirect($url);
       }
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -261,7 +272,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     }
     elseif ($this->_action & CRM_Core_Action::PREVIEW) {
       CRM_Contribute_BAO_Premium::buildCombinationPreviewBlock($this, $this->_combination_id);
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Done with Preview'),
             'isDefault' => TRUE,
@@ -296,7 +308,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     $this->addElement('text', 'weight', ts('Weight'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'weight'));
     $this->addRule('weight', ts('Please enter integer value for weight'), 'integer');
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'upload',
           'name' => ts('Save'),
@@ -319,19 +332,46 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
    */
   private function _buildCombinationForm() {
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text', 'combination_name', ts('Premium Combination Name'), 
-      CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'combination_name'), TRUE);
+    $this->add(
+      'text',
+      'combination_name',
+      ts('Premium Combination Name'),
+      CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'combination_name'),
+      TRUE
+    );
 
-    $this->add('text', 'sku', ts('SKU'), 
-      CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'sku'));
+    $this->add(
+      'text',
+      'sku',
+      ts('SKU'),
+      CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'sku')
+    );
     $this->add('textarea', 'description', ts('Description'), 'rows=3, cols=60');
 
-    $image['image'] = $this->createElement('radio', NULL, NULL, ts('Upload from my computer'), 'image', 
-      'onclick="add_upload_file_block(\'image\');"');
-    $image['thumbnail'] = $this->createElement('radio', NULL, NULL, ts('Display image and thumbnail from these locations on the web:'), 'thumbnail', 
-      'onclick="add_upload_file_block(\'thumbnail\');"');
-    $image['noImage'] = $this->createElement('radio', NULL, NULL, ts('Do not display an image'), 'noImage', 
-      'onclick="add_upload_file_block(\'noImage\');"');
+    $image['image'] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Upload from my computer'),
+      'image',
+      'onclick="add_upload_file_block(\'image\');"'
+    );
+    $image['thumbnail'] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Display image and thumbnail from these locations on the web:'),
+      'thumbnail',
+      'onclick="add_upload_file_block(\'thumbnail\');"'
+    );
+    $image['noImage'] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Do not display an image'),
+      'noImage',
+      'onclick="add_upload_file_block(\'noImage\');"'
+    );
 
     $this->addGroup($image, 'imageOption', ts('Premium Image'));
     $this->addRule('imageOption', ts('Please select an option for the premium image.'), 'required');
@@ -346,8 +386,12 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     // Set upload element for correct file handling
     $this->addUploadElement('uploadFile');
 
-    $this->addNumber('min_contribution', ts('Min Contribution'), 
-      CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'min_contribution'), TRUE);
+    $this->addNumber(
+      'min_contribution',
+      ts('Min Contribution'),
+      CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_PremiumsCombination', 'min_contribution'),
+      TRUE
+    );
     $this->addRule('min_contribution', ts('Please enter the Minimum Contribution Amount for this combination.'), 'money');
 
     $options = [
@@ -364,10 +408,15 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     // Create array-based form elements for products (up to 6 products)
     for ($i = 1; $i <= 6; $i++) {
-      $this->add('select', "product[{$i}]", ts('Product'), 
-        ['' => ts('-- Select --')] + $availableProducts, FALSE);
+      $this->add(
+        'select',
+        "product[{$i}]",
+        ts('Product'),
+        ['' => ts('-- Select --')] + $availableProducts,
+        FALSE
+      );
       $this->add('text', "quantity[{$i}]", ts('Quantity'), [
-        'size' => 3, 
+        'size' => 3,
         'maxlength' => 3,
         'value' => '1'
       ]);
@@ -451,7 +500,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     }
     if ($this->_isEdit) {
       $this->_processCombinationEdit($params);
-    } else {
+    }
+    else {
       $this->_processCombinationSelection($params);
     }
   }
@@ -481,7 +531,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
 
     // Save combination details
     $this->_saveCombinationDetails($params, $premiumID);
-    
+
     $urlParams = 'civicrm/admin/contribute/premium';
     $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
     CRM_Utils_System::redirect($url);
@@ -536,13 +586,13 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
           $imageFileName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $imageFileName);
           $ext = str_replace($imageFileName, '', basename($imageFile));
           $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
-          if($gdSupport) {
-            $error = false;
+          if ($gdSupport) {
+            $error = FALSE;
             $params['image'] = $this->_resizeImage($imageFile, $config->imageUploadDir . $imageFileName."_full".$ext, 1200, 1200);
             $params['thumbnail'] = $this->_resizeImage($imageFile, $config->imageUploadDir . $imageFileName."_thumb".$ext, 480, 480);
           }
           else {
-            $error = true;
+            $error = TRUE;
             $params['image'] = $config->resourceBase . 'i/contribute/default_premium.jpg';
             $params['thumbnail'] = $config->resourceBase . 'i/contribute/default_premium_thumb.jpg';
           }
@@ -571,7 +621,8 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
     $dao = new CRM_Contribute_DAO_PremiumsCombination();
     if ($this->_combination_id) {
       $params['id'] = $this->_combination_id;
-    } else {
+    }
+    else {
       // Set premiums_id for new combinations
       $params['premiums_id'] = $premiumID;
     }
@@ -590,7 +641,7 @@ class CRM_Contribute_Form_ContributionPage_AddPremiumsCombination extends CRM_Co
       foreach ($params['product'] as $index => $productId) {
         if ($productId) {
           $quantity = CRM_Utils_Array::value($index, $params['quantity'], 1);
-          
+
           $productDao = new CRM_Contribute_DAO_PremiumsCombinationProducts();
           $productDao->combination_id = $combinationId;
           $productDao->product_id = $productId;

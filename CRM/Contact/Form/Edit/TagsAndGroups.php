@@ -46,7 +46,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    *
    * Used by both profile and edit contact
    */
-  CONST GROUP = 1, TAG = 2, ALL = 3;
+  public const GROUP = 1, TAG = 2, ALL = 3;
 
   /**
    * This function is to build form elements
@@ -63,7 +63,8 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    * @static
    * @access public
    */
-  static function buildQuickForm(&$form,
+  public static function buildQuickForm(
+    &$form,
     $contactId = 0,
     $type = CRM_Contact_Form_Edit_TagsandGroups::ALL,
     $visibility = FALSE,
@@ -126,12 +127,12 @@ class CRM_Contact_Form_Edit_TagsandGroups {
 
         if (!empty($elements)) {
           if ($classContext == 'CRM_Contact_Form_Contact') {
-            $form->addSelect($fName, ts($groupName), $elements, ['multiple'=>'multiple']);
+            $form->addSelect($fName, ts($groupName), $elements, ['multiple' => 'multiple']);
             if (!empty($form->_entityId)) {
               $contactGroup = CRM_Contact_BAO_GroupContact::getContactGroup($form->_entityId, 'Added', NULL, FALSE, TRUE);
               if (!empty($contactGroup)) {
                 $defaultGroups = [];
-                foreach($contactGroup as $gp) {
+                foreach ($contactGroup as $gp) {
                   $defaultGroups[] = $gp['group_id'];
                 }
                 $form->setDefaults([$fName => $defaultGroups]);
@@ -169,7 +170,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       }
       if (!empty($elements)) {
         if ($classContext == 'CRM_Contact_Form_Contact') {
-          $form->addSelect($fName, ts($tagName), $elements, ['multiple'=>'multiple']);
+          $form->addSelect($fName, ts($tagName), $elements, ['multiple' => 'multiple']);
           if (!empty($form->_entityId)) {
             $contactTag = CRM_Core_BAO_EntityTag::getTag($form->_entityId);
             if (!empty($contactTag)) {
@@ -188,7 +189,6 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       }
 
       // build tag widget
-
 
       $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
 
@@ -209,7 +209,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    * @access public
    * @static
    */
-  static function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
+  public static function setDefaults($id, &$defaults, $type = CRM_Contact_Form_Edit_TagsandGroups::ALL, $fieldName = NULL) {
     $type = (int ) $type;
     if ($type & self::GROUP) {
       unset($defaults['group']);
@@ -217,7 +217,6 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       if ($fieldName) {
         $fName = $fieldName;
       }
-
 
       $contactGroup = &CRM_Contact_BAO_GroupContact::getContactGroup($id, 'Added', NULL, FALSE, TRUE);
       if ($contactGroup) {
@@ -232,7 +231,6 @@ class CRM_Contact_Form_Edit_TagsandGroups {
       if ($fieldName) {
         $fName = $fieldName;
       }
-
 
       $contactTag = &CRM_Core_BAO_EntityTag::getTag($id);
       if ($contactTag) {
@@ -251,7 +249,7 @@ class CRM_Contact_Form_Edit_TagsandGroups {
    *
    * @return None
    */
-  static function setDefaultValues(&$form, &$defaults) {
+  public static function setDefaultValues(&$form, &$defaults) {
     $contactEditOptions = $form->get('contactEditOptions');
     if ($form->_action & CRM_Core_Action::ADD) {
       if (CRM_Utils_Array::arrayKeyExists('TagsAndGroups', $contactEditOptions)) {
@@ -272,4 +270,3 @@ class CRM_Contact_Form_Edit_TagsandGroups {
     }
   }
 }
-

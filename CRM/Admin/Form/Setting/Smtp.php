@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class generates form components for Smtp Server
  *
@@ -193,7 +189,7 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
    * @static
    * @access  public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     if ($fields['outBound_option'] == 0) {
       if (!$fields['smtpServer']) {
         $errors['smtpServer'] = 'SMTP Server name is a required field.';
@@ -230,10 +226,9 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (!$this->_defaults) {
       $this->_defaults = [];
-
 
       $mailingPref = CRM_Core_BAO_Preferences::mailingPreferences();
 
@@ -261,4 +256,3 @@ class CRM_Admin_Form_Setting_Smtp extends CRM_Admin_Form_Setting {
     return $this->_defaults;
   }
 }
-

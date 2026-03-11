@@ -33,8 +33,6 @@
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
 
   public $_columnHeaders;
@@ -54,7 +52,8 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ]; function __construct() {
+  ];
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -202,11 +201,11 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -274,12 +273,12 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  public function from() {
     $alias_constituent = 'constituentname';
     $alias_creditor = 'contact_civireport';
     $this->_from = "
@@ -339,7 +338,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
     $alias_constituent = 'constituentname';
     $alias_creditor = 'contact_civireport';
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contribution_soft']}.contact_id,
@@ -347,12 +346,12 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
                                        {$alias_creditor}.sort_name";
   }
 
-  function where() {
+  public function where() {
     parent::where();
     $this->_where .= " AND {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
   }
 
-  function statistics(&$rows) {
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $select = "
@@ -381,7 +380,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     return $statistics;
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->beginPostProcess();
 
     $this->buildACLClause(['constituentname', 'contact_civireport']);
@@ -408,7 +407,7 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
@@ -421,9 +420,11 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id_constituent', $row)
       ) {
 
-        $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id_constituent'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_sort_name_constituent_link'] = $url;
         $rows[$rowNum]['civicrm_contact_sort_name_constituent_hover'] = ts("List all direct contribution(s) from this contact.");
@@ -451,9 +452,11 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
             unset($rows[$rowNum]['civicrm_contact_sort_name_creditor']);
           }
           else {
-            $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+            $url = CRM_Report_Utils_Report::getNextUrl(
+              'contribute/detail',
               'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id_creditor'],
-              $this->_absoluteUrl, $this->_id
+              $this->_absoluteUrl,
+              $this->_id
             );
             $rows[$rowNum]['civicrm_contact_sort_name_creditor_link'] = $url;
             $rows[$rowNum]['civicrm_contact_sort_name_creditor_hover'] = ts("List direct contribution(s) from this contact.");
@@ -543,4 +546,3 @@ class CRM_Report_Form_Contribute_SoftCredit extends CRM_Report_Form {
     }
   }
 }
-

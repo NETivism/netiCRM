@@ -44,7 +44,7 @@ class CRM_Utils_Geocode_Google {
    * @var string
    * @static
    */
-  static protected $_server = 'maps.googleapis.com';
+  protected static $_server = 'maps.googleapis.com';
 
   /**
    * uri of service
@@ -52,7 +52,7 @@ class CRM_Utils_Geocode_Google {
    * @var string
    * @static
    */
-  static protected $_uri = '/maps/api/geocode/xml?address=';
+  protected static $_uri = '/maps/api/geocode/xml?address=';
 
   /**
    * function that takes an address object and gets the latitude / longitude for this
@@ -64,7 +64,7 @@ class CRM_Utils_Geocode_Google {
    * @return boolean true if we modified the address, false otherwise
    * @static
    */
-  static function format(&$values, $stateName = FALSE) {
+  public static function format(&$values, $stateName = FALSE) {
 
     // we need a valid country, else we ignore
     if (!CRM_Utils_Array::value('country', $values)) {
@@ -126,7 +126,6 @@ class CRM_Utils_Geocode_Google {
       $query = 'https://' . self::$_server . self::$_uri . $add;
     }
 
-
     $request = new HTTP_Request($query);
     $request->sendRequest();
     $string = $request->getResponseBody();
@@ -157,4 +156,3 @@ class CRM_Utils_Geocode_Google {
     return FALSE;
   }
 }
-

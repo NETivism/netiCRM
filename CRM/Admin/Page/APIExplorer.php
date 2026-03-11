@@ -36,10 +36,10 @@
  * Page for displaying list of contact Subtypes
  */
 class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
-  const PUBLIC_API = 'Activity,Contact,Contribution,ContributionPage,Event,Participant,Membership,Address,Email,Phone,CustomValue,Group,GroupContact,Tag,EntityTag';
+  public const PUBLIC_API = 'Activity,Contact,Contribution,ContributionPage,Event,Participant,Membership,Address,Email,Phone,CustomValue,Group,GroupContact,Tag,EntityTag';
 
-  function run() {
-    if($this->allowVisit()){
+  public function run() {
+    if ($this->allowVisit()) {
       $config = CRM_Core_Config::singleton();
       CRM_Utils_System::setTitle(ts('API explorer and generator'));
       $publicAPI = explode(',', self::PUBLIC_API);
@@ -55,12 +55,12 @@ class CRM_Admin_Page_APIExplorer extends CRM_Core_Page {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/apibrowser';
   }
 
-  function allowVisit() {
-    if(defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1){
+  public function allowVisit() {
+    if (defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED == 1) {
       return TRUE;
     }
     return FALSE;

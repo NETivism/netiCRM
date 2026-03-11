@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * State machine for managing different states of the Import process.
  *
@@ -49,7 +47,7 @@ class CRM_Mailing_StateMachine_Send extends CRM_Core_StateMachine {
    *
    * @return object CRM_Mailing_StateMachine
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $this->_pages = [
@@ -58,7 +56,6 @@ class CRM_Mailing_StateMachine_Send extends CRM_Core_StateMachine {
       'CRM_Mailing_Form_Upload' => NULL,
       'CRM_Mailing_Form_Test' => NULL,
     ];
-
 
     if (CRM_Mailing_Info::workflowEnabled()) {
       if (CRM_Core_Permission::check('schedule mailings')) {
@@ -76,4 +73,3 @@ class CRM_Mailing_StateMachine_Send extends CRM_Core_StateMachine {
     $this->addSequentialPages($this->_pages);
   }
 }
-

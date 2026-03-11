@@ -34,11 +34,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class generates form components for processing Event Location
  * civicrm_event_page.
@@ -52,7 +47,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @var int
    * @const
    */
-  CONST LOCATION_BLOCKS = 1;
+  public const LOCATION_BLOCKS = 1;
 
   /**
    * the variable, for storing the location array
@@ -80,13 +75,12 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $blockCount = CRM_Utils_Request::retrieve('count', 'Positive', CRM_Core_DAO::$_nullObject);
-    if(empty($blockCount)){
+    if (empty($blockCount)) {
       // for ajax , don't do extra things. refs #20631
       parent::preProcess();
     }
-
 
     $this->_values = $this->get('values');
     if ($this->_id && empty($this->_values)) {
@@ -116,7 +110,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $this->_values;
 
     if (CRM_Utils_Array::value('loc_block_id', $defaults)) {
@@ -132,13 +126,15 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
       $defaults['address'][1]['country_id'] = $config->defaultContactCountry;
     }
 
-
     if (!empty($defaults['address'])) {
       foreach ($defaults['address'] as $key => $value) {
-        CRM_Contact_Form_Edit_Address::fixStateSelect($this,
+        CRM_Contact_Form_Edit_Address::fixStateSelect(
+          $this,
           "address[$key][country_id]",
           "address[$key][state_province_id]",
-          CRM_Utils_Array::value('country_id', $value,
+          CRM_Utils_Array::value(
+            'country_id',
+            $value,
             $config->defaultContactCountry
           )
         );
@@ -156,7 +152,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Event_Form_ManageEvent_Location', 'formRule']);
   }
 
@@ -169,7 +165,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     // check for state/country mapping
     CRM_Contact_Form_Edit_Address::formRule($fields, $errors);
@@ -187,7 +183,7 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     //load form for child blocks
     if ($this->_addBlockName) {
       $className = 'CRM_Contact_Form_Edit_' . $this->_addBlockName;
-      $className::buildQuickForm( $this );
+      $className::buildQuickForm($this);
     }
 
     $this->applyFilter('__ALL__', 'trim');
@@ -199,8 +195,10 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     $this->assign('action', $this->_action);
 
     if ($this->_id) {
-      $this->_oldLocBlockId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
-        $this->_id, 'loc_block_id'
+      $this->_oldLocBlockId = CRM_Core_DAO::getFieldValue(
+        'CRM_Event_DAO_Event',
+        $this->_id,
+        'loc_block_id'
       );
     }
 
@@ -228,8 +226,13 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
         '2' => ts('Use existing location'),
       ];
 
-      $this->addRadio('location_option', ts("Choose Location"), $optionTypes,
-        ['onclick' => "showLocFields();"], '<br/>', FALSE
+      $this->addRadio(
+        'location_option',
+        ts("Choose Location"),
+        $optionTypes,
+        ['onclick' => "showLocFields();"],
+        '<br/>',
+        FALSE
       );
 
       if (!isset($locationEvents[$this->_oldLocBlockId]) || (!$this->_oldLocBlockId)) {
@@ -260,8 +263,11 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
       // if new selected loc is different from old loc, update the loc_block_id
       // so that loc update would affect the selected loc and not the old one.
       $deleteOldBlock = TRUE;
-      CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Event', $this->_id,
-        'loc_block_id', $params['loc_event_id']
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Event_DAO_Event',
+        $this->_id,
+        'loc_block_id',
+        $params['loc_event_id']
       );
     }
 
@@ -269,8 +275,11 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     // so that an update would result in creating a new loc.
     if ($this->_oldLocBlockId && ($params['location_option'] == 1)) {
       $deleteOldBlock = TRUE;
-      CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Event', $this->_id,
-        'loc_block_id', 'null'
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Event_DAO_Event',
+        $this->_id,
+        'loc_block_id',
+        'null'
       );
     }
 
@@ -285,13 +294,12 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     $params['entity_table'] = 'civicrm_event';
     $params['entity_id'] = $this->_id;
 
-
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
     foreach (['address', 'phone', 'email'] as $block) {
       if (!CRM_Utils_Array::value($block, $params) || !is_array($params[$block])) {
         continue;
       }
-      foreach ($params[$block] as $count => & $values) {
+      foreach ($params[$block] as $count => &$values) {
         if ($count == 1) {
           $values['is_primary'] = 1;
         }
@@ -323,4 +331,3 @@ class CRM_Event_Form_ManageEvent_Location extends CRM_Event_Form_ManageEvent {
     return ts('Event Location');
   }
 }
-

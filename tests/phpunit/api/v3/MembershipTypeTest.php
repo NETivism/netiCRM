@@ -33,7 +33,7 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
 
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'MembershipType Create',
       'description' => 'Test all Membership Type Create API methods.',
@@ -41,34 +41,36 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
     $this->_apiversion = 3;
     $this->_contactID = $this->organizationCreate(NULL);
   }
 
-  function tearDown() {
+  public function tearDown() {
     $tablesToTruncate = ['civicrm_contact'];
     $this->quickCleanup($tablesToTruncate);
   }
 
   ///////////////// civicrm_membership_type_get methods
-  function testGetWithWrongParamsType() {
+  public function testGetWithWrongParamsType() {
     $params = 'a string';
     $membershiptype = civicrm_api('membership_type', 'create', $params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
 
-  function testGetWithEmptyParams() {
+  public function testGetWithEmptyParams() {
     $params = [];
     $membershiptype = civicrm_api('membership_type', 'get', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
     $this->assertEquals($membershiptype['error_message'], 'Mandatory key(s) missing from params array: version');
   }
 
-  function testGetWithoutId() {
+  public function testGetWithoutId() {
     $params = [
       'name' => '60+ Membership',
       'description' => 'people above 60 are given health instructions',
@@ -85,7 +87,7 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     $this->assertEquals($membershiptype['count'], 0);
   }
 
-  function testGet() {
+  public function testGet() {
     $id = $this->membershipTypeCreate($this->_contactID, 1);
 
     $params = [
@@ -105,24 +107,27 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_membership_type_create methods
-  function testCreateWithEmptyParams() {
+  public function testCreateWithEmptyParams() {
     $params = ['version' => $this->_apiversion];
     $membershiptype = civicrm_api('membership_type', 'create', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
-    $this->assertEquals($membershiptype['error_message'],
+    $this->assertEquals(
+      $membershiptype['error_message'],
       'Mandatory key(s) missing from params array: domain_id, member_of_contact_id, contribution_type_id, duration_unit, duration_interval, name'
     );
   }
 
-  function testCreateWithWrongParamsType() {
+  public function testCreateWithWrongParamsType() {
     $params = 'a string';
     $membershiptype = civicrm_api('membership_type', 'create', $params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
 
-  function testCreateWithoutMemberOfContactId() {
+  public function testCreateWithoutMemberOfContactId() {
     $params = [
       'name' => '60+ Membership',
       'description' => 'people above 60 are given health instructions',
@@ -141,7 +146,7 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     $this->assertEquals($membershiptype['error_message'], 'Mandatory key(s) missing from params array: member_of_contact_id');
   }
 
-  function testCreateWithoutContributionTypeId() {
+  public function testCreateWithoutContributionTypeId() {
     $params = [
       'name' => '70+ Membership',
       'description' => 'people above 70 are given health instructions',
@@ -156,12 +161,13 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     ];
     $membershiptype = civicrm_api('membership_type', 'create', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
-    $this->assertEquals($membershiptype['error_message'],
+    $this->assertEquals(
+      $membershiptype['error_message'],
       'Mandatory key(s) missing from params array: contribution_type_id'
     );
   }
 
-  function testCreateWithoutDurationUnit() {
+  public function testCreateWithoutDurationUnit() {
     $params = [
       'name' => '80+ Membership',
       'description' => 'people above 80 are given health instructions',
@@ -176,12 +182,13 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
 
     $membershiptype = civicrm_api('membership_type', 'create', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
-    $this->assertEquals($membershiptype['error_message'],
+    $this->assertEquals(
+      $membershiptype['error_message'],
       'Mandatory key(s) missing from params array: duration_unit'
     );
   }
 
-  function testCreateWithoutDurationInterval() {
+  public function testCreateWithoutDurationInterval() {
     $params = [
       'name' => '70+ Membership',
       'description' => 'people above 70 are given health instructions',
@@ -195,12 +202,13 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     ];
     $membershiptype = civicrm_api('membership_type', 'create', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
-    $this->assertEquals($membershiptype['error_message'],
+    $this->assertEquals(
+      $membershiptype['error_message'],
       'Mandatory key(s) missing from params array: contribution_type_id, duration_interval'
     );
   }
 
-  function testCreateWithoutNameandDomainIDandDurationUnit() {
+  public function testCreateWithoutNameandDomainIDandDurationUnit() {
     $params = [
       'description' => 'people above 50 are given health instructions',
       'member_of_contact_id' => $this->_contactID,
@@ -214,12 +222,13 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
 
     $membershiptype = civicrm_api('membership_type', 'create', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
-    $this->assertEquals($membershiptype['error_message'],
+    $this->assertEquals(
+      $membershiptype['error_message'],
       'Mandatory key(s) missing from params array: domain_id, duration_unit, name'
     );
   }
 
-  function testCreateWithoutName() {
+  public function testCreateWithoutName() {
     $params = [
       'description' => 'people above 50 are given health instructions',
       'member_of_contact_id' => $this->_contactID,
@@ -238,7 +247,7 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     $this->assertEquals($membershiptype['error_message'], 'Mandatory key(s) missing from params array: name');
   }
 
-  function testCreate() {
+  public function testCreate() {
     $params = [
       'name' => '40+ Membership',
       'description' => 'people above 40 are given health instructions',
@@ -261,24 +270,27 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_membership_type_update methods
-  function testUpdateWithWrongParamsType() {
+  public function testUpdateWithWrongParamsType() {
     $params = 'a string';
     $membershiptype = civicrm_api('membership_type', 'create', $params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
 
-  function testUpdateWithEmptyParams() {
+  public function testUpdateWithEmptyParams() {
     $params = [];
     $membershiptype = civicrm_api('membership_type', 'create', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
-    $this->assertEquals($membershiptype['error_message'],
+    $this->assertEquals(
+      $membershiptype['error_message'],
       'Mandatory key(s) missing from params array: version, domain_id, member_of_contact_id, contribution_type_id, duration_unit, duration_interval, name'
     );
   }
 
-  function testUpdateWithoutId() {
+  public function testUpdateWithoutId() {
     $params = [
       'name' => '60+ Membership',
       'description' => 'people above 60 are given health instructions',
@@ -297,7 +309,7 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     $this->assertEquals($membershiptype['error_message'], 'Mandatory key(s) missing from params array: domain_id');
   }
 
-  function testUpdate() {
+  public function testUpdate() {
     $id = $this->membershipTypeCreate($this->_contactID, 2);
     $newMembOrgParams = [
       'organization_name' => 'New membership organisation',
@@ -333,22 +345,24 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
   }
 
   ///////////////// civicrm_membership_type_delete methods
-  function testDeleteWithWrongParamsType() {
+  public function testDeleteWithWrongParamsType() {
     $params = 'a string';
     $membershiptype = civicrm_api('membership_type', 'delete', $params);
-    $this->assertEquals($membershiptype['is_error'], 1,
+    $this->assertEquals(
+      $membershiptype['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
 
-  function testDeleteWithEmptyParams() {
+  public function testDeleteWithEmptyParams() {
     $params = [];
     $membershiptype = civicrm_api('membership_type', 'delete', $params);
     $this->assertEquals($membershiptype['is_error'], 1);
     $this->assertEquals($membershiptype['error_message'], 'Mandatory key(s) missing from params array: version, id');
   }
 
-  function testDeleteNotExists() {
+  public function testDeleteNotExists() {
     $params = [
       'id' => 'doesNotExist',
       'version' => $this->_apiversion,
@@ -358,7 +372,7 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     $this->assertEquals($membershiptype['error_message'], 'Error while deleting membership type. id : ' . $params['id']);
   }
 
-  function testDelete() {
+  public function testDelete() {
     $orgID            = $this->organizationCreate(NULL);
     $membershipTypeID = $this->membershipTypeCreate($orgID, 1);
     $params           = [
@@ -371,4 +385,3 @@ class api_v3_MembershipTypeTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 0);
   }
 }
-

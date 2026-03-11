@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * Business object for managing custom data groups
  *
@@ -44,7 +42,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -59,7 +57,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     // create custom group dao, populate fields and then save.
     $group = new CRM_Core_DAO_CustomGroup();
     $group->title = $params['title'];
@@ -69,16 +67,18 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     }
     else {
       $maxLength = CRM_Core_DAO::getAttribute('CRM_Core_DAO_CustomGroup', 'name');
-      $group->name = CRM_Utils_String::titleToVar($params['title'],
+      $group->name = CRM_Utils_String::titleToVar(
+        $params['title'],
         CRM_Utils_Array::value('maxlength', $maxLength)
       );
     }
-    if (in_array($params['extends'][0],
-        ['ParticipantRole',
+    if (in_array(
+      $params['extends'][0],
+      ['ParticipantRole',
           'ParticipantEventName',
           'ParticipantEventType',
         ]
-      )) {
+    )) {
       $group->extends = 'Participant';
     }
     else {
@@ -129,7 +129,8 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     foreach ($fields as $field) {
       $group->$field = CRM_Utils_Array::value($field, $params, FALSE);
     }
-    $group->max_multiple = isset($params['is_multiple']) ? (isset($params['max_multiple']) &&
+    $group->max_multiple = isset($params['is_multiple']) ? (
+      isset($params['max_multiple']) &&
       $params['max_multiple'] >= '0'
     ) ? $params['max_multiple'] : 'null' : 'null';
 
@@ -137,13 +138,15 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     if (isset($params['id'])) {
       $group->id = $params['id'];
       //check whether custom group was changed from single-valued to multiple-valued
-      $isMultiple = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup',
+      $isMultiple = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_CustomGroup',
         $params['id'],
         'is_multiple'
       );
 
       if (($params['is_multiple'] != $isMultiple) && (CRM_Utils_Array::value('is_multiple', $params) || $isMultiple)) {
-        $oldTableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup',
+        $oldTableName = CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_CustomGroup',
           $params['id'],
           'table_name'
         );
@@ -152,8 +155,6 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     else {
       $group->created_id = CRM_Utils_Array::value('created_id', $params);
       $group->created_date = CRM_Utils_Array::value('created_date', $params);
-
-
 
       // lets create the table associated with the group and save it
       $tableName = $group->table_name = "civicrm_value_" . strtolower(CRM_Utils_String::munge($group->title, '_', 32));
@@ -172,7 +173,8 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       // like CRM-2742
       $tableName .= "_{$group->id}";
       $group->table_name = $tableName;
-      CRM_Core_DAO::setFieldValue('CRM_Core_DAO_CustomGroup',
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Core_DAO_CustomGroup',
         $group->id,
         'table_name',
         $tableName
@@ -186,7 +188,8 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
       CRM_Core_BAO_SchemaHandler::changeUniqueToIndex($oldTableName, CRM_Utils_Array::value('is_multiple', $params));
     }
     if (CRM_Utils_Array::value('overrideFKConstraint', $params) == 1) {
-      $table = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup',
+      $table = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_CustomGroup',
         $params['id'],
         'table_name'
       );
@@ -195,7 +198,6 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
     }
     $transaction->commit();
     CRM_Utils_System::flushCache();
-
 
     if ($tableName) {
       CRM_Utils_Hook::post('create', 'CustomGroup', $group->id, $group);
@@ -221,7 +223,7 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_CustomGroup', $params, $defaults);
   }
 
@@ -235,10 +237,9 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @static
    * @access public
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     // reset the cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
-
 
     if ($is_active) {
       //CRM_Core_BAO_UFField::setUFFieldStatus($id, $is_active);
@@ -271,7 +272,8 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
    * @static
    *
    */
-  public static function &getTree($entityType,
+  public static function &getTree(
+    $entityType,
     $deprecated = NULL,
     $entityID = NULL,
     $groupID = NULL,
@@ -287,15 +289,14 @@ class CRM_Core_BAO_CustomGroup extends CRM_Core_DAO_CustomGroup {
         $subTypes = [];
       }
       else {
-        if(strpos($subTypes, CRM_Core_DAO::VALUE_SEPARATOR) !== -1) {
+        if (strpos($subTypes, CRM_Core_DAO::VALUE_SEPARATOR) !== -1) {
           $subTypes = explode(CRM_Core_DAO::VALUE_SEPARATOR, trim($subTypes, CRM_Core_DAO::VALUE_SEPARATOR));
         }
-        else{
+        else {
           $subTypes = explode(',', $subTypes);
         }
       }
     }
-
 
     // create a new tree
     $groupTree = [];
@@ -374,7 +375,7 @@ LEFT JOIN civicrm_custom_field ON (civicrm_custom_field.custom_group_id = civicr
           $subTypeClauses[] = self::whereListHas("civicrm_custom_group.extends_entity_column_value", $validatedSubType);
         }
       }
-      if(!empty($subTypeClauses)) {
+      if (!empty($subTypeClauses)) {
         $subTypeClause = '(' .  CRM_Utils_Array::implode(' OR ', $subTypeClauses) . ')';
         if (!$onlySubType) {
           $subTypeClause = '(' . $subTypeClause . '  OR civicrm_custom_group.extends_entity_column_value IS NULL )';
@@ -392,7 +393,7 @@ LEFT JOIN civicrm_custom_field ON (civicrm_custom_field.custom_group_id = civicr
       }
     }
 
-    if(empty($strWhere)) {
+    if (empty($strWhere)) {
       $strWhere = "
 WHERE civicrm_custom_group.is_active = 1
   AND civicrm_custom_field.is_active = 1
@@ -413,9 +414,9 @@ WHERE civicrm_custom_group.is_active = 1
       $strWhere .= " AND civicrm_custom_group.style = 'Inline'";
     }
 
-
     // ensure that the user has access to these custom groups
-    $strWhere .= " AND " . CRM_Core_Permission::customGroupClause(CRM_Core_Permission::VIEW,
+    $strWhere .= " AND " . CRM_Core_Permission::customGroupClause(
+      CRM_Core_Permission::VIEW,
       'civicrm_custom_group.'
     );
 
@@ -475,7 +476,7 @@ ORDER BY civicrm_custom_group.weight,
             // that one contact sub-type exists.
             if ($fieldName == 'extends_entity_column_value' && !empty($subTypes[0])) {
               $validatedSubType = self::validateSubTypeByEntity($entityType, $subType);
-              if($validatedSubType) {
+              if ($validatedSubType) {
                 $groupTree[$groupID]['subtype'] = $validatedSubType;
               }
             }
@@ -611,7 +612,8 @@ SELECT $select
                           'onclick = "if (confirm( \'' . $deleteExtra . '\' ) ) this.href+=\'&confirmed=1\'; else return false;"',
                         ],
                       ];
-                      $customValue['deleteURL'] = CRM_Core_Action::formLink($deleteURL,
+                      $customValue['deleteURL'] = CRM_Core_Action::formLink(
+                        $deleteURL,
                         CRM_Core_Action::DELETE,
                         [
                           'id' => $fileDAO->id,
@@ -628,7 +630,7 @@ SELECT $select
                         $fileDAO->mime_type == "image/x-png" ||
                         $fileDAO->mime_type == "image/png"
                       ) {
-                        $customImage = CRM_Utils_Image::getImageVars($customValue['fileURL']); 
+                        $customImage = CRM_Utils_Image::getImageVars($customValue['fileURL']);
                         $customValue['image'] = $customImage;
                       }
                     }
@@ -662,7 +664,6 @@ SELECT $select
 
     return $groupTree;
   }
-
 
   /**
    * Clean and validate the filter before it is used in a db query.
@@ -702,7 +703,7 @@ SELECT $select
    * @return string
    *   SQL condition.
    */
-  static private function whereListHas($column, $value, $delimiter = CRM_Core_DAO::VALUE_SEPARATOR) {
+  private static function whereListHas($column, $value, $delimiter = CRM_Core_DAO::VALUE_SEPARATOR) {
     $bareValue = trim($value, $delimiter); // ?
     $escapedValue = CRM_Utils_Type::escape("%{$delimiter}{$bareValue}{$delimiter}%", 'String', FALSE);
     return "($column LIKE \"$escapedValue\")";
@@ -824,9 +825,9 @@ SELECT $select
       }
     }
 
-
     // ensure that the user has access to these custom groups
-    $where .= " AND " . CRM_Core_Permission::customGroupClause(CRM_Core_Permission::VIEW,
+    $where .= " AND " . CRM_Core_Permission::customGroupClause(
+      CRM_Core_Permission::VIEW,
       'civicrm_custom_group.'
     );
 
@@ -876,7 +877,6 @@ SELECT $select
 
     return $groupTree;
   }
-
 
   public static function &getActiveGroups($entityType, $path, $cidToken = '%%cid%%') {
     // for Group's
@@ -943,7 +943,7 @@ SELECT $select
       case 'Group':
         $tableName = 'civicrm_group';
         break;
-      // DRAFTING: Verify if we cannot make it pluggable
+        // DRAFTING: Verify if we cannot make it pluggable
 
       case 'Activity':
         $tableName = 'civicrm_activity';
@@ -968,7 +968,7 @@ SELECT $select
       case 'Grant':
         $tableName = 'civicrm_grant';
         break;
-      // need to add cases for Location, Address
+        // need to add cases for Location, Address
     }
 
     return $tableName;
@@ -1056,7 +1056,6 @@ SELECT $select
    */
   public static function deleteGroup($group, $force = FALSE) {
 
-
     //check wheter this contain any custom fields
     $customField = new CRM_Core_DAO_CustomField();
     $customField->custom_group_id = $group->id;
@@ -1078,13 +1077,12 @@ SELECT $select
     //delete  custom group
     $group->delete();
 
-
     CRM_Utils_Hook::post('delete', 'CustomGroup', $group->id, $group);
 
     return TRUE;
   }
 
-  static function setDefaults(&$groupTree, &$defaults, $viewMode = FALSE, $inactiveNeeded = FALSE, $action = CRM_Core_Action::NONE) {
+  public static function setDefaults(&$groupTree, &$defaults, $viewMode = FALSE, $inactiveNeeded = FALSE, $action = CRM_Core_Action::NONE) {
 
     foreach ($groupTree as $id => $group) {
       if (!isset($group['fields'])) {
@@ -1164,7 +1162,9 @@ SELECT $select
           case 'Select Date':
             if (isset($value)) {
               if (!$field['time_format']) {
-                list($defaults[$elementName]) = CRM_Utils_Date::setDateDefaults($value, NULL,
+                list($defaults[$elementName]) = CRM_Utils_Date::setDateDefaults(
+                  $value,
+                  NULL,
                   $field['date_format']
                 );
               }
@@ -1231,7 +1231,7 @@ SELECT $select
     }
   }
 
-  static function postProcess(&$groupTree, &$params, $skipFile = FALSE) {
+  public static function postProcess(&$groupTree, &$params, $skipFile = FALSE) {
     // Get the Custom form values and groupTree
     // first reset all checkbox and radio data
     foreach ($groupTree as $groupID => $group) {
@@ -1269,7 +1269,7 @@ SELECT $select
             }
             break;
 
-          //added for Advanced Multi-Select
+            //added for Advanced Multi-Select
 
           case 'AdvMulti-Select':
             //added for Multi-Select
@@ -1303,7 +1303,8 @@ SELECT $select
 
               $fileParams['uri'] = $v['name'];
               $fileParams['mime_type'] = $v['type'];
-              CRM_Core_BAO_File::filePostProcess($v['name'],
+              CRM_Core_BAO_File::filePostProcess(
+                $v['name'],
                 $groupTree[$groupID]['fields'][$fieldId]['customValue']['fid'],
                 $groupTree[$groupID]['table_name'],
                 trim($entityId[1]),
@@ -1319,7 +1320,8 @@ SELECT $select
               'entity_id' => $entityId[1],
             ];
 
-            CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_EntityFile',
+            CRM_Core_DAO::commonRetrieve(
+              'CRM_Core_DAO_EntityFile',
               $paramsFile,
               $defaults
             );
@@ -1347,14 +1349,13 @@ SELECT $select
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form,
+  public static function buildQuickForm(
+    &$form,
     &$groupTree,
     $inactiveNeeded = FALSE,
     $groupCount = 1,
     $prefix = ''
   ) {
-
-
 
     $form->assign_by_ref("{$prefix}groupTree", $groupTree);
     $sBlocks = [];
@@ -1362,7 +1363,6 @@ SELECT $select
 
     // this is fix for date field
     $form->assign('currentYear', date('Y'));
-
 
     foreach ($groupTree as $id => $group) {
 
@@ -1402,7 +1402,7 @@ SELECT $select
    * @access public
    * @static
    */
-  static function extractGetParams(&$form, $type) {
+  public static function extractGetParams(&$form, $type) {
     // if not GET params return
     if (empty($_GET)) {
       return;
@@ -1418,7 +1418,9 @@ SELECT $select
       }
       foreach ($group['fields'] as $key => $field) {
         $fieldName = 'custom_' . $key;
-        $value = CRM_Utils_Request::retrieve($fieldName, 'String',
+        $value = CRM_Utils_Request::retrieve(
+          $fieldName,
+          'String',
           $form
         );
 
@@ -1452,7 +1454,8 @@ SELECT $select
             }
           }
           elseif ($field['html_type'] == 'Select' ||
-            ($field['html_type'] == 'Radio' &&
+            (
+              $field['html_type'] == 'Radio' &&
               $field['data_type'] != 'Boolean'
             )
           ) {
@@ -1500,7 +1503,7 @@ SELECT $select
    * @static
    * @access public
    */
-  static function checkCustomField($customFieldId, &$removeCustomFieldTypes) {
+  public static function checkCustomField($customFieldId, &$removeCustomFieldTypes) {
     $query = "SELECT cg.extends as extends
                   FROM civicrm_custom_group as cg, civicrm_custom_field as cf
                   WHERE cg.id = cf.custom_group_id
@@ -1514,7 +1517,7 @@ SELECT $select
     return TRUE;
   }
 
-  static function mapTableName($table) {
+  public static function mapTableName($table) {
     switch ($table) {
       case 'Contact':
       case 'Individual':
@@ -1579,16 +1582,14 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
     }
   }
 
-  static function createTable($group) {
+  public static function createTable($group) {
     $params = [
       'name' => $group->table_name,
       'is_multiple' => $group->is_multiple ? 1 : 0,
       'extends_name' => self::mapTableName($group->extends),
     ];
 
-
     $tableParams = &CRM_Core_BAO_CustomField::defaultCustomTableSchema($params);
-
 
     CRM_Core_BAO_SchemaHandler::createTable($tableParams);
   }
@@ -1602,7 +1603,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    *
    * @return array $formattedGroupTree
    */
-  static function formatGroupTree(&$groupTree, $groupCount, &$form) {
+  public static function formatGroupTree(&$groupTree, $groupCount, &$form) {
     $formattedGroupTree = [];
     $uploadNames = [];
 
@@ -1666,7 +1667,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    *  @param array   $groupTree associated array
    *  @param boolean $returnCount true if customValue count needs to be returned
    */
-  static function buildCustomDataView(&$form, &$groupTree, $returnCount = FALSE, $groupID = NULL, $prefix = NULL) {
+  public static function buildCustomDataView(&$form, &$groupTree, $returnCount = FALSE, $groupID = NULL, $prefix = NULL) {
     foreach ($groupTree as $key => $group) {
       if ($key === 'info') {
         continue;
@@ -1683,16 +1684,20 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
             $details[$groupID][$values['id']]['collapse_display'] = CRM_Utils_Array::value('collapse_display', $group);
             $details[$groupID][$values['id']]['collapse_adv_display'] = CRM_Utils_Array::value('collapse_adv_display', $group);
             $details[$groupID][$values['id']]['fields'][$k] = ['field_title' => CRM_Utils_Array::value('label', $properties),
-              'field_type' => CRM_Utils_Array::value('html_type',
+              'field_type' => CRM_Utils_Array::value(
+                'html_type',
                 $properties
               ),
-              'field_data_type' => CRM_Utils_Array::value('data_type',
+              'field_data_type' => CRM_Utils_Array::value(
+                'data_type',
                 $properties
               ),
-              'field_value' => self::formatCustomValues($values,
+              'field_value' => self::formatCustomValues(
+                $values,
                 $properties
               ),
-              'options_per_line' => CRM_Utils_Array::value('options_per_line',
+              'options_per_line' => CRM_Utils_Array::value(
+                'options_per_line',
                 $properties
               ),
             ];
@@ -1733,7 +1738,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    * @param boolean $dncOptionPerLine true if optionPerLine should not be consider
    *
    */
-  static function formatCustomValues(&$values, &$field, $dncOptionPerLine = FALSE) {
+  public static function formatCustomValues(&$values, &$field, $dncOptionPerLine = FALSE) {
     $value = $values['data'];
 
     //changed isset CRM-4601
@@ -1809,18 +1814,21 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
           $retValue = (float)$value;
           break;
         }
+        // no break
       case 'Money':
         if ($htmlType == 'Text') {
 
           $retValue = CRM_Utils_Money::format($value, NULL, '%a');
           break;
         }
+        // no break
       case 'String':
       case 'Int':
         if (in_array($htmlType, ['Text', 'TextArea'])) {
           $retValue = $value;
           break;
         }
+        // no break
       case 'StateProvince':
       case 'Country':
         //added check for Multi-Select in the below if-statement
@@ -1832,13 +1840,13 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
           case 'Select Country':
             $customData = $value;
             if (!is_array($value)) {
-                $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
-              }
-              $query = "
+              $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
+            }
+            $query = "
                     SELECT id as value, name as label  
                     FROM civicrm_country";
-              $coDAO = CRM_Core_DAO::executeQuery($query);
-              break;
+            $coDAO = CRM_Core_DAO::executeQuery($query);
+            break;
 
           case 'Select State/Province':
           case 'Multi-Select State/Province':
@@ -1869,6 +1877,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
           case 'AdvMulti-Select':
           case 'Multi-Select':
             $customData = explode(CRM_Core_DAO::VALUE_SEPARATOR, $value);
+            // no break
           default:
             if ($option_group_id) {
               $query = "
@@ -1892,7 +1901,6 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
         else {
           CRM_Core_Error::fatal(ts('You have hit issue CRM-4716. Please post a report with as much detail as possible on the CiviCRM forums. You can truncate civicr_cache to get around this problem'));
         }
-
 
         CRM_Utils_Hook::customFieldOptions($field['id'], $options, FALSE);
 
@@ -1951,7 +1959,7 @@ SELECT IF( EXISTS(SELECT name FROM civicrm_contact_type WHERE name like %1), 1, 
    * @return array $groupLabels - array consisting of groups and fields labels with ids.
    * @access public
    */
-  static function getGroupTitles($fieldIds) {
+  public static function getGroupTitles($fieldIds) {
     if (!is_array($fieldIds) && empty($fieldIds)) {
       return;
     }
@@ -1978,7 +1986,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
     return $groupLabels;
   }
 
-  static function dropAllTables() {
+  public static function dropAllTables() {
     $query = "SELECT table_name FROM civicrm_custom_group";
     $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -1996,12 +2004,13 @@ AND  civicrm_custom_field.id IN {$fIds}";
     * @return boolean true if empty otherwise false.
     * @access public
     */
-  static function isGroupEmpty($gID) {
+  public static function isGroupEmpty($gID) {
     if (!$gID) {
       return;
     }
 
-    $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup',
+    $tableName = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_CustomGroup',
       $gID,
       'table_name'
     );
@@ -2016,7 +2025,6 @@ AND  civicrm_custom_field.id IN {$fIds}";
     return FALSE;
   }
 
-  
   /**
    * Get custom groups/fields for type of entity.
    *
@@ -2041,22 +2049,22 @@ AND  civicrm_custom_field.id IN {$fIds}";
    */
   public static function getTreeWithOptions($entityType, $entityID = NULL, $groupID = NULL, $subTypes = [], $subName = NULL, $fromCache = TRUE) {
     $tree =  self::getTree($entityType, NULL, $entityID, $groupID, $subTypes, $subName, $fromCache);
-    foreach($tree as $groupId => &$group) {
+    foreach ($tree as $groupId => &$group) {
       if (is_numeric($groupId) && !empty($group['fields'])) {
-        foreach($group['fields'] as $fieldId => &$field) {
+        foreach ($group['fields'] as $fieldId => &$field) {
           if (!empty($field['option_group_id'])) {
             $field['options'] = CRM_Core_BAO_CustomOption::valuesByID($fieldId, $field['option_group_id']);
           }
-          elseif($field['data_type'] == 'Boolean') {
+          elseif ($field['data_type'] == 'Boolean') {
             $field['options'] = [
               0 => ts('No'),
               1 => ts('Yes'),
             ];
           }
-          elseif($field['data_type'] == 'Country') {
+          elseif ($field['data_type'] == 'Country') {
             $field['options'] = CRM_Core_PseudoConstant::country();
           }
-          elseif($field['data_type'] == 'StateProvince') {
+          elseif ($field['data_type'] == 'StateProvince') {
             $field['options'] = CRM_Core_PseudoConstant::stateProvince();
           }
         }
@@ -2067,7 +2075,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
 
   /**
    * Match label-value of all custom fields in specific type
-   * 
+   *
    * Limited in select entity type. This will loop all custom fields and trying
    * to match options by custom field data type and html type
    *
@@ -2078,13 +2086,13 @@ AND  civicrm_custom_field.id IN {$fIds}";
    */
   public static function matchFieldValues($entityType, $items, &$matches) {
     $tree = self::getTreeWithOptions($entityType);
-    foreach($items as $label => $value) {
+    foreach ($items as $label => $value) {
       $label = (string) $label;
-      foreach($tree as $groupId => $group) {
+      foreach ($tree as $groupId => $group) {
         if (!is_numeric($groupId)) {
           continue;
         }
-        foreach($group['fields'] as $field) {
+        foreach ($group['fields'] as $field) {
           if ($label === $field['label']) {
             if ($field['data_type'] == 'Boolean') {
               $val = CRM_Utils_String::strtoboolstr($value);
@@ -2099,7 +2107,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
                 $matches[0][$label] = 1;
                 $matches[1]['custom_'.$field['id']] = $val;
               }
-              elseif(CRM_Utils_Array::arrayKeyExists($value, $field['options'])) {
+              elseif (CRM_Utils_Array::arrayKeyExists($value, $field['options'])) {
                 $matches[0][$label] = 1;
                 $matches[1]['custom_'.$field['id']] = $value;
               }
@@ -2116,7 +2124,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
               }
             }
             elseif ($field['data_type'] == 'Link') {
-              if(CRM_Utils_Rule::url($value)) {
+              if (CRM_Utils_Rule::url($value)) {
                 $matches[0][$label] = 1;
                 $matches[1]['custom_'.$field['id']] = $value;
               }
@@ -2131,7 +2139,7 @@ AND  civicrm_custom_field.id IN {$fIds}";
               }
             }
             elseif ($field['html_type'] == 'Text') {
-              switch($field['data_type']) {
+              switch ($field['data_type']) {
                 case 'String':
                   $matches[0][$label] = 1;
                   $matches[1]['custom_'.$field['id']] = "$value";
@@ -2140,13 +2148,13 @@ AND  civicrm_custom_field.id IN {$fIds}";
                   if (CRM_Utils_Rule::integer($value)) {
                     $matches[1]['custom_'.$field['id']] = (int) $value;
                   }
-                  break;  
+                  break;
                 case 'Float':
                   if (CRM_Utils_Rule::numeric($value)) {
                     $matches[0][$label] = 1;
                     $matches[1]['custom_'.$field['id']] = $value;
                   }
-                  break;  
+                  break;
                 case 'Money':
                   if (CRM_Utils_Rule::money($value)) {
                     $matches[0][$label] = 1;
@@ -2161,4 +2169,3 @@ AND  civicrm_custom_field.id IN {$fIds}";
     }
   }
 }
-

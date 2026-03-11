@@ -49,7 +49,7 @@ class CRM_Utils_PagerAToZ {
    * @access public
    * @static
    */
-  static function getAToZBar(&$query, $sortByCharacter, $isDAO = FALSE) {
+  public static function getAToZBar(&$query, $sortByCharacter, $isDAO = FALSE) {
     $AToZBar = self::createLinks($query, $sortByCharacter, $isDAO);
     return $AToZBar;
   }
@@ -62,7 +62,7 @@ class CRM_Utils_PagerAToZ {
    * @static
    */
 
-  static function getStaticCharacters() {
+  public static function getStaticCharacters() {
     $staticAlphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     return $staticAlphabets;
   }
@@ -74,7 +74,7 @@ class CRM_Utils_PagerAToZ {
    * @access private
    * @static
    */
-  static function getDynamicCharacters(&$query, $isDAO) {
+  public static function getDynamicCharacters(&$query, $isDAO) {
     if ($isDAO) {
       $result = $query;
     }
@@ -102,7 +102,7 @@ class CRM_Utils_PagerAToZ {
    * @access private
    * @static
    */
-  static function createLinks(&$query, $sortByCharacter, $isDAO) {
+  public static function createLinks(&$query, $sortByCharacter, $isDAO) {
     $AToZBar = self::getStaticCharacters();
     $dynamicAlphabets = self::getDynamicCharacters($query, $isDAO);
 
@@ -115,7 +115,7 @@ class CRM_Utils_PagerAToZ {
     //get the current path
     $path = CRM_Utils_System::currentPath();
 
-    if(!empty($query->_formValues)){
+    if (!empty($query->_formValues)) {
       $qfKey = CRM_Utils_Array::value('qfKey', $query->_formValues);
       $aToZBar = [];
       foreach ($AToZBar as $key => $link) {
@@ -134,7 +134,8 @@ class CRM_Utils_PagerAToZ {
           // we do it this way since we want the url to be encoded but not the link character
           // since that seems to mess up drupal utf-8 encoding etc
           $url .= $link;
-          $element['item'] = sprintf('<a href="%s" %s>%s</a>',
+          $element['item'] = sprintf(
+            '<a href="%s" %s>%s</a>',
             $url,
             $klass,
             $link
@@ -146,16 +147,16 @@ class CRM_Utils_PagerAToZ {
         $aToZBar[] = $element;
       }
 
-      $url = sprintf('<a href="%s">%s</a>',
+      $url = sprintf(
+        '<a href="%s">%s</a>',
         CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=1"),
         'All'
       );
       $aToZBar[] = ['item' => $url];
       return $aToZBar;
     }
-    else{
+    else {
       return NULL;
     }
   }
 }
-

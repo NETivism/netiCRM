@@ -33,21 +33,19 @@
  *
  */
 
-
-
 class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
    * Create a new forward event, create a new contact if necessary
    */
-  static function &forward($job_id, $queue_id, $hash, $forward_email, $fromEmail = NULL, $comment = NULL) {
+  public static function &forward($job_id, $queue_id, $hash, $forward_email, $fromEmail = NULL, $comment = NULL) {
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
 
     $successfulForward = FALSE;
@@ -57,7 +55,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     }
 
     /* Find the email address/contact, if it exists */
-
 
     $contact = CRM_Contact_BAO_Contact::getTableName();
     $location = CRM_Core_BAO_Location::getTableName();
@@ -70,7 +67,8 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     $domain = CRM_Core_BAO_Domain::getDomain();
 
     $dao = new CRM_Core_Dao();
-    $dao->query("
+    $dao->query(
+      "
                 SELECT      $contact.id as contact_id,
                             $email.id as email_id,
                             $contact.do_not_email as do_not_email,
@@ -90,7 +88,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
     $dao->fetch();
 
-
     $transaction = new CRM_Core_Transaction();
 
     if (isset($dao->queue_id) ||
@@ -99,10 +96,8 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
       /* We already sent this mailing to $forward_email, or we should
              * never email this contact.  Give up. */
 
-
       return $successfulForward;
     }
-
 
     $contactParams = [
       'email' => $forward_email,
@@ -114,7 +109,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     if ($count == 0) {
 
       /* If the contact does not exist, create one. */
-
 
       $formatted = [
         'contact_type' => 'Individual',
@@ -147,7 +141,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
     /* Create a new queue event */
 
-
     $queue_params = [
       'email_id' => $email_id,
       'contact_id' => $contact_id,
@@ -163,7 +156,8 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     $forward->save();
 
     $dao->reset();
-    $dao->query("   SELECT  $job.mailing_id as mailing_id 
+    $dao->query(
+      "   SELECT  $job.mailing_id as mailing_id 
                         FROM    $job
                         WHERE   $job.id = " .
       CRM_Utils_Type::escape($job_id, 'Integer')
@@ -178,8 +172,18 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
 
     $recipient = NULL;
     $attachments = NULL;
-    $message = &$mailing_obj->compose($job_id, $queue->id, $queue->hash,
-      $queue->contact_id, $forward_email, $recipient, FALSE, NULL, $attachments, TRUE, $fromEmail
+    $message = &$mailing_obj->compose(
+      $job_id,
+      $queue->id,
+      $queue->hash,
+      $queue->contact_id,
+      $forward_email,
+      $recipient,
+      FALSE,
+      NULL,
+      $attachments,
+      TRUE,
+      $fromEmail
     );
     //append comment if added while forwarding.
     if (count($comment)) {
@@ -206,8 +210,8 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     if (is_a($result, 'PEAR_Error')) {
       /* Register the bounce event */
 
-
-      $params = array_merge($params,
+      $params = array_merge(
+        $params,
         CRM_Mailing_BAO_BouncePattern::match($result->getMessage())
       );
       CRM_Mailing_Event_BAO_Bounce::create($params);
@@ -215,7 +219,6 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     else {
       $successfulForward = TRUE;
       /* Register the delivery event */
-
 
       CRM_Mailing_Event_BAO_Delivered::create($params);
     }
@@ -236,7 +239,9 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
    * @access public
    * @static
    */
-  public static function getTotalCount($mailing_id, $job_id = NULL,
+  public static function getTotalCount(
+    $mailing_id,
+    $job_id = NULL,
     $is_distinct = FALSE
   ) {
     $dao = new CRM_Core_DAO();
@@ -290,8 +295,13 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
    * @access public
    * @static
    */
-  public static function &getRows($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $is_distinct = FALSE,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -360,10 +370,12 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     $results = [];
 
     while ($dao->fetch()) {
-      $from_url = CRM_Utils_System::url('civicrm/contact/view',
+      $from_url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->from_id}"
       );
-      $dest_url = CRM_Utils_System::url('civicrm/contact/view',
+      $dest_url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->dest_id}"
       );
       $results[] = [
@@ -376,4 +388,3 @@ class CRM_Mailing_Event_BAO_Forward extends CRM_Mailing_Event_DAO_Forward {
     return $results;
   }
 }
-

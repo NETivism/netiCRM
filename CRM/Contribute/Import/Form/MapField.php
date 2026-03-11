@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -189,13 +182,14 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
       // When user choose update contribution.
       $updateMapperFields = $this->get('fields');
       foreach ($updateMapperFields as $key) {
-        if (strpos($key,'聯絡人') !==  false){
-          $index = array_search($key,$updateMapperFields);
+        if (strpos($key, '聯絡人') !==  FALSE) {
+          $index = array_search($key, $updateMapperFields);
           unset($updateMapperFields[$index]);
         }
       }
       $this->_mapperFields = $updateMapperFields;
-    } else {
+    }
+    else {
       $this->_mapperFields = $this->get('fields');
     }
 
@@ -231,7 +225,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     //invoice id or trxn id or contribution id is required.
     if ($this->_onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE) {
       $remove = [
-        'contribution_contact_id', 'email', 'first_name', 'last_name', 'external_identifier', 
+        'contribution_contact_id', 'email', 'first_name', 'last_name', 'external_identifier',
         'soft_credit', 'pcp_id', 'pcp_page', 'pcp_creator', 'pcp_display_in_roll', 'pcp_roll_nickname', 'pcp_personal_note',
       ];
       foreach ($remove as $value) {
@@ -247,10 +241,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     elseif ($this->_onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_SKIP) {
       unset($this->_mapperFields['contribution_id']);
       $dedupeRuleGroup = $this->get('dedupeRuleGroup');
-      if(!empty($dedupeRuleGroup)) {
+      if (!empty($dedupeRuleGroup)) {
         $ruleParams = ['id' => $dedupeRuleGroup];
       }
-      else{
+      else {
         // default rule group
         $ruleParams = [
           'contact_type' => $contactType,
@@ -294,7 +288,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @access public
    */
   public function buildQuickForm() {
-
 
     //to save the current mappings
     if (!$this->get('savedMapping')) {
@@ -443,7 +436,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $softCreditFields['external_identifier'] = ts('External Identifier');
     $sel2['soft_credit'] = $softCreditFields;
 
-
     $pcpCreatorFields['pcp_contact_id'] = ts('Contact ID');
     $pcpCreatorFields['pcp_external_identifier'] = ts('External Identifier');
     $sel2['pcp_creator'] = $pcpCreatorFields;
@@ -575,7 +567,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
           $mappedLocationId = !empty($mappedHeaderKey) && !empty($this->_locationFields[$mappedHeaderKey]) ? $defaultLocationType->id : 0;
         }
         if ($mappedLocationId) {
-          switch($mappedHeaderKey){
+          switch ($mappedHeaderKey) {
             case 'im':
               $mappedTypeId = key($imProviders);
               break;
@@ -588,7 +580,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
           }
         }
         if ($mappedHeaderKey == 'url') {
-          $mappedLocationId = key($websiteTypes); 
+          $mappedLocationId = key($websiteTypes);
           $defaults["mapper[$i]"] = [$mappedHeaderKey, $mappedLocationId];
           $js .= "{$formName}['mapper[$i][2]'].style.display = 'none';\n";
         }
@@ -633,7 +625,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
 
     $this->setDefaults($defaults);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -658,7 +651,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $fieldMessage = NULL;
 
@@ -675,10 +668,10 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         CRM_Contribute_Import_Parser::CONTACT_ORGANIZATION => 'Organization',
       ];
       $dedupeRuleGroup = $self->get('dedupeRuleGroup');
-      if(!empty($dedupeRuleGroup)) {
+      if (!empty($dedupeRuleGroup)) {
         $ruleParams = ['id' => $dedupeRuleGroup];
       }
-      else{
+      else {
         // default rule group
         $ruleParams = [
           'contact_type' => $contactType,
@@ -718,7 +711,6 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
         'contribution_type' => ts('Contribution Type'),
       ];
 
-
       foreach ($requiredFields as $field => $title) {
         if (!in_array($field, $importKeys)) {
           if ($field == 'contribution_contact_id') {
@@ -728,7 +720,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
               $errors['_qf_default'] .= ts('Missing required contact matching fields.') . " $fieldMessage " . ts('(Sum of all weights should be greater than or equal to threshold: %1).', [1 => $threshold]) . '<br />';
             }
             elseif ($self->_onDuplicate == CRM_Contribute_Import_Parser::DUPLICATE_UPDATE &&
-              !(in_array('invoice_id', $importKeys) || in_array('trxn_id', $importKeys) ||
+              !(
+                in_array('invoice_id', $importKeys) || in_array('trxn_id', $importKeys) ||
                 in_array('contribution_id', $importKeys)
               )
             ) {
@@ -815,7 +808,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $pcpCreatorFieldsWords = $this->get('pcpCreatorFieldsWords');
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);
@@ -838,7 +831,9 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     }
 
     for ($i = 0; $i < $this->_columnCount; $i++) {
-      foreach (array_values($mapperParams) as $mapperParam)$$mapperParam = NULL;
+      foreach (array_values($mapperParams) as $mapperParam) {
+        $$mapperParam = NULL;
+      }
 
       $fldName = CRM_Utils_Array::value(0, $mapperKeys[$i]);
       $selOne = CRM_Utils_Array::value(1, $mapperKeys[$i]);
@@ -958,7 +953,8 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = ['name' => $params['saveMappingName'],
         'description' => $params['saveMappingDesc'],
-        'mapping_type_id' => CRM_Core_OptionGroup::getValue('mapping_type',
+        'mapping_type_id' => CRM_Core_OptionGroup::getValue(
+          'mapping_type',
           'Import Contribution',
           'name'
         ),
@@ -1007,7 +1003,7 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     $importTableName = $this->get('importTableName');
     $primaryKeyName = $this->get('primaryKeyName');
     $statusFieldName = $this->get('statusFieldName');
-    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType,  $mapperPhoneType, $mapperWebsiteType, $mapperImProvidea, $mapperPCP);
+    $parser = new CRM_Contribute_Import_Parser_Contribution($mapperKeysMain, $mapperSoftCredit, $mapperLocType, $mapperPhoneType, $mapperWebsiteType, $mapperImProvidea, $mapperPCP);
 
     $parser->_dateFormats = $this->get('dateFormats');
     $parser->_skipColumnHeader = $this->get('skipColumnHeader');
@@ -1039,4 +1035,3 @@ class CRM_Contribute_Import_Form_MapField extends CRM_Core_Form {
     return ts('Match Fields');
   }
 }
-

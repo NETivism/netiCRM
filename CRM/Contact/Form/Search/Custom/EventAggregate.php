@@ -33,11 +33,10 @@
  *
  */
 
-
-
 class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
-  protected $_formValues; function __construct(&$formValues) {
+  protected $_formValues;
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -53,7 +52,7 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     ];
   }
 
-  function buildForm(&$form) {
+  public function buildForm(&$form) {
     /**
      * Define the search form fields here
      */
@@ -83,14 +82,17 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/EventDetails.tpl';
   }
 
   /**
    * Construct the search query
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     // SELECT clause must include contact_id as an alias for civicrm_contact.id if you are going to use "tasks" like export etc.
@@ -106,7 +108,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
 
     $from = $this->from();
 
-    $onLine = CRM_Utils_Array::value('paid_online',
+    $onLine = CRM_Utils_Array::value(
+      'paid_online',
       $this->_formValues
     );
     if ($onLine) {
@@ -115,7 +118,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
         on (civicrm_entity_financial_trxn.entity_id = civicrm_participant_payment.contribution_id and civicrm_entity_financial_trxn.entity_type='contribution')";
     }
 
-    $showPayees = CRM_Utils_Array::value('show_payees',
+    $showPayees = CRM_Utils_Array::value(
+      'show_payees',
       $this->_formValues
     );
     if ($showPayees) {
@@ -162,7 +166,7 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return $sql;
   }
 
-  function from() {
+  public function from() {
     return "
         civicrm_participant_payment
         left join civicrm_participant
@@ -182,12 +186,13 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
      * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
      *
      */
-  function where($includeContactIDs = FALSE) {
+  public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
     $clauses[] = "civicrm_participant.status_id in ( 1 )";
     $clauses[] = "civicrm_contribution.is_test = 0";
-    $onLine = CRM_Utils_Array::value('paid_online',
+    $onLine = CRM_Utils_Array::value(
+      'paid_online',
       $this->_formValues
     );
     if ($onLine) {
@@ -230,9 +235,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-
   /* This function does a query to get totals for some of the search result columns and returns a totals array. */
-  function summary() {
+  public function summary() {
     $totalSelect = "
         SUM(civicrm_contribution.total_amount) as payment_amount,COUNT(civicrm_participant.id) as participant_count,
         format(sum(if(civicrm_contribution.payment_instrument_id <>0,(civicrm_contribution.total_amount *.034) +.45,0)),2) as fee,
@@ -240,7 +244,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
 
     $from = $this->from();
 
-    $onLine = CRM_Utils_Array::value('paid_online',
+    $onLine = CRM_Utils_Array::value(
+      'paid_online',
       $this->_formValues
     );
     if ($onLine) {
@@ -248,7 +253,6 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
         inner join civicrm_entity_financial_trxn
         on (civicrm_entity_financial_trxn.entity_id = civicrm_participant_payment.contribution_id and civicrm_entity_financial_trxn.entity_type='contribution')";
     }
-
 
     $where = $this->where();
 
@@ -259,7 +263,8 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
         ";
 
     //CRM_Core_Error::debug('sql',$sql);
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     $totals = [];
@@ -272,24 +277,24 @@ class CRM_Contact_Form_Search_Custom_EventAggregate extends CRM_Contact_Form_Sea
     return $totals;
   }
 
-  /* 
+  /*
      * Functions below generally don't need to be modified
      */
-  function count() {
+  public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort);
   }
 
-  function &columns() {
+  public function &columns() {
     return $this->_columns;
   }
 }
-

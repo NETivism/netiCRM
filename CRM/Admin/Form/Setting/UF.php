@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Site Url
  *
@@ -51,9 +49,10 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
     $config = CRM_Core_Config::singleton();
     $uf = $config->userFramework;
 
-    CRM_Utils_System::setTitle(ts('Settings - %1 Integration',
-        [1 => $uf]
-      ));
+    CRM_Utils_System::setTitle(ts(
+      'Settings - %1 Integration',
+      [1 => $uf]
+    ));
 
     $ele = $this->addElement('text', 'userSystemVersion', ts('%1 Version', [1 => $uf]));
     $ele->freeze();
@@ -91,4 +90,3 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
     return $defaults;
   }
 }
-

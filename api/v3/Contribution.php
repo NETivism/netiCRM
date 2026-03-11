@@ -75,7 +75,7 @@ function civicrm_api3_contribution_create($params) {
 
   if (is_a($contribution, 'CRM_Core_Error')) {
     return civicrm_api3_create_error($contribution->_errors[0]['message']);
-  } 
+  }
   _civicrm_api3_object_to_array($contribution, $contributeArray[$contribution->id]);
 
   return civicrm_api3_create_success($contributeArray, $params, 'contribution', 'create', $contribution);
@@ -105,11 +105,11 @@ function _civicrm_api3_contribution_create_spec(&$params) {
   ];
   // note this is a recommended option but not adding as a default to avoid
   // creating unecessary changes for the dev
-    $params['skipRecentView'] = [
-    'name' => 'skipRecentView',
-    'title' => 'Skip adding to recent view',
-    'type' => 1,
-    'description' => 'Do not add to recent view (setting this improves performance)',
+  $params['skipRecentView'] = [
+  'name' => 'skipRecentView',
+  'title' => 'Skip adding to recent view',
+  'type' => 1,
+  'description' => 'Do not add to recent view (setting this improves performance)',
   ];
 }
 
@@ -165,7 +165,7 @@ function civicrm_api3_contribution_get($params) {
   if (!empty($contributions)) {
     foreach ($contributions as $id => $contribution) {
       $soft_params = ['contribution_id' => $id];
-      $soft_contribution = CRM_Contribute_BAO_Contribution::getSoftContribution ( $soft_params , true);
+      $soft_contribution = CRM_Contribute_BAO_Contribution::getSoftContribution($soft_params, TRUE);
       if (!empty($soft_contribution)) {
         $contributions[$id] = array_merge($contributions[$id], $soft_contribution);
       }
@@ -216,18 +216,18 @@ function _civicrm_api3_contribute_format_params($params, &$values, $create = FAL
     }
 
     switch ($key) {
-			case 'financial_type_id' :
-				if (! CRM_Utils_Array::value ( $value, CRM_Contribute_PseudoConstant::financialType() )) {
+      case 'financial_type_id' :
+        if (!CRM_Utils_Array::value($value, CRM_Contribute_PseudoConstant::financialType())) {
           throw new Exception("Invalid Financial Type Id");
         }
         break;
-			case 'financial_type' :
-				$contributionTypeId = CRM_Utils_Array::key ( ucfirst ( $value ), CRM_Contribute_PseudoConstant::financialType() );
+      case 'financial_type' :
+        $contributionTypeId = CRM_Utils_Array::key(ucfirst($value), CRM_Contribute_PseudoConstant::financialType());
         if ($contributionTypeId) {
           if (CRM_Utils_Array::value('financial_type_id', $values) && $contributionTypeId != $values['financial_type_id']) {
             throw new Exception("Mismatched Financial Type and Financial Type Id");
           }
-					$values ['financial_type_id'] = $contributionTypeId;
+          $values ['financial_type_id'] = $contributionTypeId;
         }
         else {
           throw new Exception("Invalid Financial Type");
@@ -332,12 +332,12 @@ function civicrm_api3_contribution_transact($params) {
 function civicrm_api3_contribution_sendconfirmation($params) {
   $contribution = new CRM_Contribute_BAO_Contribution();
   $contribution->id = $params['id'];
-  if (! $contribution->find(true)) {
+  if (!$contribution->find(TRUE)) {
     throw new Exception('Contribution does not exist');
-}
+  }
   $input = $ids = $cvalues = [];
-  $contribution->loadRelatedObjects($input, $ids, FALSE, true);
-  $contribution->composeMessageArray($input, $ids, $cvalues, false, false);
+  $contribution->loadRelatedObjects($input, $ids, FALSE, TRUE);
+  $contribution->composeMessageArray($input, $ids, $cvalues, FALSE, FALSE);
 }
 
 /*

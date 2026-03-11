@@ -37,18 +37,6 @@
  * Files required
  */
 
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Base Search / View form for *all* listing of multiple
  * contacts
@@ -70,7 +58,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
      * @static
      */
 
-  static $_validContext = NULL;
+  public static $_validContext = NULL;
 
   /**
    * list of values used when we want to display other objects
@@ -78,7 +66,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @var array
    * @static
    */
-  static $_modeValues = NULL;
+  public static $_modeValues = NULL;
 
   /**
    * The context that we are working on
@@ -220,7 +208,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
      * @static
      */
 
-  static $csv = ['contact_type', 'group', 'tag'];
+  public static $csv = ['contact_type', 'group', 'tag'];
 
   protected $_componentMode;
   protected $_modeValue;
@@ -247,7 +235,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @access protected
    * @static
    */
-  static function &validContext() {
+  public static function &validContext() {
     if (!(self::$_validContext)) {
       self::$_validContext = [
         'smog' => 'Show members of group',
@@ -262,19 +250,19 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     return self::$_validContext;
   }
 
-  static function isSearchContext($context) {
+  public static function isSearchContext($context) {
     $searchContext = CRM_Utils_Array::value($context, self::validContext());
     return $searchContext ? TRUE : FALSE;
   }
 
-  function setModeValues() {
+  public function setModeValues() {
     if (!self::$_modeValues) {
       $selectorName = (property_exists($this, '_selectorName') && $this->_selectorName) ? $this->_selectorName : 'CRM_Contact_Selector';
       self::setModeValuesCommon($selectorName);
     }
   }
 
-  function getModeValue($mode = 1) {
+  public function getModeValue($mode = 1) {
     $this->setModeValues();
 
     if (!CRM_Utils_Array::arrayKeyExists($mode, self::$_modeValues)) {
@@ -342,12 +330,11 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     ];
   }
 
-
-  function getModeSelect() {
+  public function getModeSelect() {
     $this->setModeValues();
 
     $select = [];
-    foreach (self::$_modeValues as $id => & $value) {
+    foreach (self::$_modeValues as $id => &$value) {
       $select[$id] = $value['selectorLabel'];
     }
 
@@ -379,21 +366,23 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $permission = CRM_Core_Permission::getPermission();
 
     // some tasks.. what do we want to do with the selected contacts ?
     $tasks = ['' => ts('- actions -')];
     if ($this->_componentMode == CRM_Contact_BAO_Query::MODE_CONTACTS) {
-      $tasks += CRM_Contact_Task::permissionedTaskTitles($permission,
-        CRM_Utils_Array::value('deleted_contacts',
+      $tasks += CRM_Contact_Task::permissionedTaskTitles(
+        $permission,
+        CRM_Utils_Array::value(
+          'deleted_contacts',
           $this->_formValues
         )
       );
     }
     else {
       $taskClassName = $this->_modeValue['taskClassName'];
-      $tasks += $taskClassName::permissionedTaskTitles( $permission );
+      $tasks += $taskClassName::permissionedTaskTitles($permission);
     }
 
     if (isset($this->_ssID)) {
@@ -452,17 +441,18 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
           $group_contact_status[] = $this->createElement('checkbox', $k, NULL, $v);
         }
       }
-      $this->addGroup($group_contact_status,
-        'group_contact_status', ts('Group Status')
+      $this->addGroup(
+        $group_contact_status,
+        'group_contact_status',
+        ts('Group Status')
       );
 
-      /* 
+      /*
              * commented out to fix CRM-4268
              *
              * $this->addGroupRule( 'group_contact_status',
              *                  ts( 'Please select at least Group Status value.' ), 'required', null, 1 );
             */
-
 
       // Set dynamic page title for 'Show Members of Group'
       CRM_Utils_System::setTitle(ts('Contacts in Group: %1', [1 => $this->_group[$this->_groupID]]));
@@ -489,7 +479,10 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       // also set the group title and freeze the action task with Add Members to Group
       $groupValues = ['id' => $this->_amtgID, 'title' => $this->_group[$this->_amtgID]];
       $this->assign_by_ref('group', $groupValues);
-      $this->add('submit', $this->_actionButtonName, ts('Add Contacts to %1', [1 => $this->_group[$this->_amtgID]]),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Add Contacts to %1', [1 => $this->_group[$this->_amtgID]]),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
         ]
@@ -498,7 +491,10 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
     else {
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
-      $this->add('submit', $this->_actionButtonName, ts('Go'),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Go'),
         ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
@@ -527,7 +523,8 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
 
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
@@ -535,7 +532,10 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
       ]
     );
 
-    $this->add('submit', $this->_printButtonName, ts('Print'),
+    $this->add(
+      'submit',
+      $this->_printButtonName,
+      ts('Print'),
       ['class' => 'form-submit',
         'id' => 'Print',
         'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
@@ -551,7 +551,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
 
     /**
      * set the varios class variables
@@ -566,11 +566,15 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
          * driven by the wizard framework
          */
 
-    $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean',
+    $this->_reset = CRM_Utils_Request::retrieve(
+      'reset',
+      'Boolean',
       CRM_Core_DAO::$_nullObject
     );
 
-    $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean',
+    $this->_force = CRM_Utils_Request::retrieve(
+      'force',
+      'Boolean',
       CRM_Core_DAO::$_nullObject
     );
 
@@ -580,8 +584,8 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter', 'String', $this);
     $this->_ufGroupID = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_componentMode = CRM_Utils_Request::retrieve('component_mode', 'Positive', $this, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS, $_REQUEST);
-    $this->_tagID = CRM_Utils_Request::retrieve( 'tid' , 'Positive', $this);
-    
+    $this->_tagID = CRM_Utils_Request::retrieve('tid', 'Positive', $this);
+
     if (!empty($this->_ssID) && !CRM_Core_Permission::check('edit groups')) {
       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
     }
@@ -701,7 +705,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
     $modeValues = $this->getModeValue($this->_componentMode);
 
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $this->_modeValue['selectorName']) . '.php');
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $this->_modeValue['selectorName']) . '.php');
     $this->_selectorName = $this->_modeValue['selectorName'];
 
     if (strpos($this->_selectorName, 'CRM_Contact_Selector') !== FALSE) {
@@ -709,22 +713,31 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
         $this->controller->set('customSearchClass', $this->_customSearchClass);
       }
       $selectorName = $this->_selectorName;
-      $selector = new $selectorName( $this->_customSearchClass,
-                     $this->_formValues,
-                     $this->_params,
-                     $this->_returnProperties,
-                     $this->_action,
-                     false, true,
-                     $this->_context );
+      $selector = new $selectorName(
+        $this->_customSearchClass,
+        $this->_formValues,
+        $this->_params,
+        $this->_returnProperties,
+        $this->_action,
+        FALSE,
+        TRUE,
+        $this->_context
+      );
     }
     else {
       $selectorName = $this->_selectorName;
-      $selector = new $selectorName( $this->_params,
-                     $this->_action,
-                     null, false, null,
-                     "search", "advanced" );
+      $selector = new $selectorName(
+        $this->_params,
+        $this->_action,
+        NULL,
+        FALSE,
+        NULL,
+        "search",
+        "advanced"
+      );
     }
-    $controller = new CRM_Contact_Selector_Controller($selector,
+    $controller = new CRM_Contact_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $this->get(CRM_Utils_Sort::SORT_ID),
       CRM_Core_Action::VIEW,
@@ -753,14 +766,18 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
       $sortID = NULL;
       if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-        $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+        $sortID = CRM_Utils_Sort::sortIDValue(
+          $this->get(CRM_Utils_Sort::SORT_ID),
           $this->get(CRM_Utils_Sort::SORT_DIRECTION)
         );
       }
-      $controller = new CRM_Contact_Selector_Controller($selector,
+      $controller = new CRM_Contact_Selector_Controller(
+        $selector,
         $this->get(CRM_Utils_Pager::PAGE_ID),
         $sortID,
-        CRM_Core_Action::VIEW, $this, CRM_Core_Selector_Controller::TRANSFER
+        CRM_Core_Action::VIEW,
+        $this,
+        CRM_Core_Selector_Controller::TRANSFER
       );
       $controller->setEmbedded(TRUE);
     }
@@ -768,7 +785,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     $controller->moveFromSessionToTemplate();
   }
 
-  function &getFormValues() {
+  public function &getFormValues() {
     return $this->_formValues;
   }
 
@@ -778,7 +795,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     /*
          * sometime we do a postProcess early on, so we dont need to repeat it
          * this will most likely introduce some more bugs :(
@@ -843,7 +860,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
           $this->_params,
           $this->_returnProperties,
           $this->_action,
-          false,
+          FALSE,
           $searchChildGroups,
           $this->_context,
           $this->_contextMenu
@@ -870,11 +887,13 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
 
       $sortID = NULL;
       if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-        $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+        $sortID = CRM_Utils_Sort::sortIDValue(
+          $this->get(CRM_Utils_Sort::SORT_ID),
           $this->get(CRM_Utils_Sort::SORT_DIRECTION)
         );
       }
-      $controller = new CRM_Contact_Selector_Controller($selector,
+      $controller = new CRM_Contact_Selector_Controller(
+        $selector,
         $this->get(CRM_Utils_Pager::PAGE_ID),
         $sortID,
         CRM_Core_Action::VIEW,
@@ -886,7 +905,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
     }
   }
 
-  function &returnProperties() {
+  public function &returnProperties() {
     return CRM_Core_DAO::$_nullObject;
   }
 
@@ -896,8 +915,7 @@ class CRM_Contact_Form_Search extends CRM_Core_Form {
    * @return string
    * @access public
    */
-  function getTitle() {
+  public function getTitle() {
     return ts('Search');
   }
 }
-

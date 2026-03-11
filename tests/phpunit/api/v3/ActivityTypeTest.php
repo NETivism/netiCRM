@@ -37,7 +37,7 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
 
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'Activity Type',
       'description' => 'Test all ActivityType Get/Create/Delete methods.',
@@ -45,7 +45,7 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     CRM_Core_PseudoConstant::activityType(TRUE, TRUE, TRUE, 'name');
     parent::setUp();
@@ -54,7 +54,7 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_type_get()
    */
-  function testActivityTypeGet() {
+  public function testActivityTypeGet() {
     $params = ['version' => $this->_apiversion];
     $result = civicrm_api('activity_type', 'get', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
@@ -65,7 +65,7 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_type_create()
    */
-  function testActivityTypeCreate() {
+  public function testActivityTypeCreate() {
 
     $params = [
       'weight' => '2',
@@ -84,7 +84,7 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_type_create - check id
    */
-  function testActivityTypecreatecheckId() {
+  public function testActivityTypecreatecheckId() {
 
     $params = [
       'label' => 'type_create',
@@ -101,7 +101,7 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_type_delete()
    */
-  function testActivityTypeDelete() {
+  public function testActivityTypeDelete() {
 
     $params = [
       'label' => 'type_create_delete',
@@ -118,4 +118,3 @@ class api_v3_ActivityTypeTest extends CiviUnitTestCase {
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 }
-

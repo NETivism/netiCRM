@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality for batch profile update
  */
@@ -71,7 +69,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -87,7 +85,6 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
       CRM_Core_Session::setStatus("The maximum number of contacts you can select for Batch Update is {$this->_maxContacts}. You have selected " . count($this->_contactIds) . ". Please select fewer contacts from your search results and try again.");
       $validate = TRUE;
     }
-
 
     if (CRM_Contact_BAO_Contact_Utils::checkContactType($this->_contactIds)) {
       CRM_Core_Session::setStatus(ts("Batch update requires that all selected contacts be the same type (e.g. all Individuals OR all Organizations...). Please modify your selected contacts and try again."));
@@ -107,7 +104,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Batch Profile Update for Contact'));
 
     if (CRM_Core_Permission::access('Quest')) {
@@ -120,7 +117,6 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
 
     //add Contact type profiles
     $this->_contactTypes[] = 'Contact';
-
 
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($this->_contactTypes);
 
@@ -141,7 +137,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Task_PickProfile', 'formRule']);
   }
 
@@ -154,7 +150,7 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
 
     if (CRM_Core_BAO_UFField::checkProfileType($fields['uf_group_id'])) {
       $errorMsg['uf_group_id'] = "You cannot select mix profile for batch update.";
@@ -184,4 +180,3 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

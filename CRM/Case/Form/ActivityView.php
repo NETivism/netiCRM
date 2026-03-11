@@ -33,10 +33,6 @@
  *
  */
 
-
-
-
-
 /**
  * This class does pre processing for viewing an activity or their revisions
  *
@@ -55,7 +51,8 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
     $activityID = CRM_Utils_Request::retrieve('aid', 'Integer', $this, TRUE);
     $revs = CRM_Utils_Request::retrieve('revs', 'Boolean', CRM_Core_DAO::$_nullObject);
     $caseID = CRM_Utils_Request::retrieve('caseID', 'Boolean', CRM_Core_DAO::$_nullObject);
-    $activitySubject = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity',
+    $activitySubject = CRM_Core_DAO::getFieldValue(
+      'CRM_Activity_DAO_Activity',
       $activityID,
       'subject'
     );
@@ -72,10 +69,8 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
     $this->assign('caseID', $caseID);
     $this->assign('type', $type);
 
-
     $xmlProcessor = new CRM_Case_XMLProcessor_Report();
     $report = $xmlProcessor->getActivityInfo($contactID, $activityID, TRUE);
-
 
     $attachmentUrl = CRM_Core_BAO_File::attachmentInfo('civicrm_activity', $activityID);
     if ($attachmentUrl) {
@@ -84,7 +79,6 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
         'type' => 'Link',
       ];
     }
-
 
     $tags = CRM_Core_BAO_EntityTag::getTag($activityID, 'civicrm_activity');
     if (!empty($tags)) {
@@ -147,11 +141,10 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
       $caseID = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_CaseActivity', $activityID, 'case_id', 'activity_id');
     }
 
-
-    $url = CRM_Utils_System::url('civicrm/case/activity/view',
+    $url = CRM_Utils_System::url(
+      'civicrm/case/activity/view',
       "reset=1&aid={$activityID}&cid={$recentContactId}&caseID={$caseID}&context=home"
     );
-
 
     $recentContactDisplay = CRM_Contact_BAO_Contact::displayName($recentContactId);
     // add the recently created Activity
@@ -164,20 +157,22 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
 
     $title = $title . $recentContactDisplay . ' (' . $activityTypes[$activityTypeID] . ')';
 
-
     $recentOther = [];
     if (CRM_Case_BAO_Case::checkPermission($activityID, 'edit')) {
-      $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/case/activity',
+      $recentOther['editUrl'] = CRM_Utils_System::url(
+        'civicrm/case/activity',
         "reset=1&action=update&id={$activityID}&cid={$recentContactId}&caseid={$caseID}&context=home"
       );
     }
     if (CRM_Case_BAO_Case::checkPermission($activityID, 'delete')) {
-      $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/case/activity',
+      $recentOther['deleteUrl'] = CRM_Utils_System::url(
+        'civicrm/case/activity',
         "reset=1&action=delete&id={$activityID}&cid={$recentContactId}&caseid={$caseID}&context=home"
       );
     }
 
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $activityID,
       'Activity',
@@ -187,4 +182,3 @@ class CRM_Case_Form_ActivityView extends CRM_Core_Form {
     );
   }
 }
-

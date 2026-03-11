@@ -37,9 +37,6 @@
  *
  */
 
-
-
-
 /**
  * This class print the name badges for the participants
  * It isn't supposed to be called directly, but is the parent class of the classes in CRM/Event/Badges/XXX.php
@@ -67,7 +64,7 @@ class CRM_Event_Badge {
    * @var float|int
    */
   public $lMarginLogo;
-  function __construct() {
+  public function __construct() {
     $this->style = ['width' => 0.1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,2', 'color' => [0, 0, 200]];
     $this->format = '5160';
     $this->imgExtension = 'png';
@@ -76,7 +73,7 @@ class CRM_Event_Badge {
     $this->setDebug(FALSE);
   }
 
-  function setDebug($debug = TRUE) {
+  public function setDebug($debug = TRUE) {
     if (!$debug) {
       $this->debug = FALSE;
       $this->border = 0;
@@ -115,7 +112,7 @@ class CRM_Event_Badge {
     return NULL;
   }
 
-  function getImageFileName($eventID, $img = FALSE) {
+  public function getImageFileName($eventID, $img = FALSE) {
     global $civicrm_root;
 
     $config = CRM_Core_Config::singleton();
@@ -158,7 +155,7 @@ class CRM_Event_Badge {
     return $imgFile;
   }
 
-  function printBackground($img = FALSE) {
+  public function printBackground($img = FALSE) {
     $x = $this->pdf->GetAbsX();
     $y = $this->pdf->GetY();
     if ($this->debug) {
@@ -175,7 +172,7 @@ class CRM_Event_Badge {
         $newH = 10; // Use 1 cm height for the card.
         $newW = $w * $newH / $h;
         $this->lMarginLogo = $newW + 4;
-        $this->pdf->Image($img, $this->pdf->GetAbsX()+2, $this->pdf->GetY()+2, $newW, $newH, strtoupper($this->imgExtension), '', '', FALSE, 75, '', FALSE, FALSE, $this->debug, TRUE, FALSE, FALSE);
+        $this->pdf->Image($img, $this->pdf->GetAbsX() + 2, $this->pdf->GetY() + 2, $newW, $newH, strtoupper($this->imgExtension), '', '', FALSE, 75, '', FALSE, FALSE, $this->debug, TRUE, FALSE, FALSE);
       }
       else {
         $this->lMarginLogo = 2;
@@ -195,7 +192,8 @@ class CRM_Event_Badge {
     $this->pdf->MultiCell($this->pdf->width, $this->pdf->lineHeight, $txt);
   }
 
-  function pdfExtraFormat() {}
+  public function pdfExtraFormat() {
+  }
 
   /**
    * function to create labels (pdf)
@@ -206,8 +204,7 @@ class CRM_Event_Badge {
    * @return  null
    * @access  public
    */
-  function createLabels(&$participants) {
-
+  public function createLabels(&$participants) {
 
     $this->pdf = new CRM_Utils_PDF_Label($this->format, 'mm');
     $this->pdfExtraFormat();
@@ -225,4 +222,3 @@ class CRM_Event_Badge {
     $this->pdf->Output($this->event->title . '.pdf', 'I');
   }
 }
-

@@ -41,8 +41,8 @@ abstract class CRM_Core_Payment {
    * FORM   - we collect it on the same page
    * BUTTON - the processor collects it and sends it back to us via some protocol
    */
-  CONST BILLING_MODE_FORM = 1, BILLING_MODE_BUTTON = 2, BILLING_MODE_NOTIFY = 4, BILLING_MODE_DUMMY = 7, BILLING_MODE_IFRAME = 8;
-  CONST PAY_LATER_DEFAULT_EXPIRED_DAY = 7; // day, refs #22026
+  public const BILLING_MODE_FORM = 1, BILLING_MODE_BUTTON = 2, BILLING_MODE_NOTIFY = 4, BILLING_MODE_DUMMY = 7, BILLING_MODE_IFRAME = 8;
+  public const PAY_LATER_DEFAULT_EXPIRED_DAY = 7; // day, refs #22026
 
   /**
    * which payment type(s) are we using?
@@ -52,14 +52,14 @@ abstract class CRM_Core_Payment {
    * or both
    *
    */
-  CONST PAYMENT_TYPE_CREDIT_CARD = 1, PAYMENT_TYPE_DIRECT_DEBIT = 2;
+  public const PAYMENT_TYPE_CREDIT_CARD = 1, PAYMENT_TYPE_DIRECT_DEBIT = 2;
 
   /**
    * Subscription / Recurring payment Status
    * START, END
    *
    */
-  CONST RECURRING_PAYMENT_START = 'START', RECURRING_PAYMENT_END = 'END';
+  public const RECURRING_PAYMENT_START = 'START', RECURRING_PAYMENT_END = 'END';
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -68,7 +68,7 @@ abstract class CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   protected $_paymentProcessor;
 
@@ -85,20 +85,19 @@ abstract class CRM_Core_Payment {
    * @static
    *
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     if (self::$_singleton === NULL) {
       $config = CRM_Core_Config::singleton();
-
 
       $ext = new CRM_Core_Extensions();
 
       if ($ext->isExtensionKey($paymentProcessor['class_name'])) {
         $paymentClass = $ext->keyToClass($paymentProcessor['class_name'], 'payment');
-        require_once ($ext->classToPath($paymentClass));
+        require_once($ext->classToPath($paymentClass));
       }
       else {
         $paymentClass = 'CRM_Core_' . $paymentProcessor['class_name'];
-        require_once (str_replace('_', DIRECTORY_SEPARATOR, $paymentClass) . '.php');
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $paymentClass) . '.php');
       }
 
       self::$_singleton = call_user_func_array([$paymentClass, 'singleton'], [$mode, $paymentProcessor]);
@@ -116,7 +115,7 @@ abstract class CRM_Core_Payment {
    * @param obj $paymentForm
    *
    */
-  function setForm(&$paymentForm) {
+  public function setForm(&$paymentForm) {
     $this->_paymentForm = $paymentForm;
   }
 
@@ -125,7 +124,7 @@ abstract class CRM_Core_Payment {
    *
    * @return obj  A form object
    */
-  function getForm() {
+  public function getForm() {
     return $this->_paymentForm;
   }
 
@@ -133,7 +132,7 @@ abstract class CRM_Core_Payment {
    * Getter for accessing member vars
    *
    */
-  function getVar($name) {
+  public function getVar($name) {
     return $this->$name ?? NULL;
   }
 
@@ -146,7 +145,7 @@ abstract class CRM_Core_Payment {
    * @return array the result in an nice formatted array (or an error object)
    * @abstract
    */
-  abstract function doDirectPayment(&$params);
+  abstract public function doDirectPayment(&$params);
 
   /**
    * This function checks to see if we have the right config values
@@ -156,7 +155,7 @@ abstract class CRM_Core_Payment {
    * @return string the error message if any
    * @public
    */
-  abstract function checkConfig();
+  abstract public function checkConfig();
 
   /**
    * This function returns the URL used to cancel recurring subscriptions
@@ -164,11 +163,11 @@ abstract class CRM_Core_Payment {
    * @return string the url of the payment processor cancel page
    * @public
    */
-  function cancelSubscriptionURL() {
+  public function cancelSubscriptionURL() {
     return NULL;
   }
 
-  static function paypalRedirect(&$paymentProcessor) {
+  public static function paypalRedirect(&$paymentProcessor) {
     if (!$paymentProcessor) {
       return FALSE;
     }
@@ -188,36 +187,34 @@ abstract class CRM_Core_Payment {
    * Function to get Payment Processor Info
    *
    */
-  static function getPaymentProcessorInfo() {
+  public static function getPaymentProcessorInfo() {
     $ppID = CRM_Utils_Type::escape($_POST['ppID'], 'Positive');
     $action = CRM_Utils_Type::escape($_POST['action'], 'String');
 
     $mode = ($action == 1024) ? 'test' : 'live';
 
-
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $mode);
 
     echo json_encode($paymentProcessor);
 
-
     CRM_Utils_System::civiExit();
   }
 
-  function prepareTransferCheckoutParams($contrib, $params){
-    if(is_object($contrib)){
+  public function prepareTransferCheckoutParams($contrib, $params) {
+    if (is_object($contrib)) {
       $values = [];
-      if(strstr(get_class($contrib), 'DAO')){
+      if (strstr(get_class($contrib), 'DAO')) {
         $contrib = CRM_Core_DAO::storeValues($contrib, $values);
       }
     }
-    else{
+    else {
       $values = $contrib;
     }
 
-    if(!empty($this->_paymentForm) && isset($this->_paymentForm->_ids)){
+    if (!empty($this->_paymentForm) && isset($this->_paymentForm->_ids)) {
       $details = $this->_paymentForm->_ids;
     }
-    else{
+    else {
       $details = CRM_Contribute_BAO_Contribution::getComponentDetails([$values['id']]);
       $details = reset($details);
     }
@@ -234,7 +231,7 @@ abstract class CRM_Core_Payment {
       'currencyID' => $values['currency'],
     ];
 
-    if(!empty($details['participant'])){
+    if (!empty($details['participant'])) {
       $vars += [
         'contributionID' => $values['id'],
         'contributionTypeID' => $values['contribution_type_id'],
@@ -243,13 +240,13 @@ abstract class CRM_Core_Payment {
         'participantID' => $details['participant'],
       ];
     }
-    elseif(!empty($details['membership'])){
+    elseif (!empty($details['membership'])) {
       // TODO
     }
-    else{
-      // TODO 
+    else {
+      // TODO
     }
-    return $vars;  
+    return $vars;
   }
 
   /**
@@ -262,7 +259,7 @@ abstract class CRM_Core_Payment {
    * @access public
    * @static
    */
-  static function calcExpirationDate($baseTime, $plusDay = self::PAY_LATER_DEFAULT_EXPIRED_DAY) {
+  public static function calcExpirationDate($baseTime, $plusDay = self::PAY_LATER_DEFAULT_EXPIRED_DAY) {
     // refs #22026
     if (empty($baseTime)) {
       $baseTime = CRM_REQUEST_TIME;
@@ -272,4 +269,3 @@ abstract class CRM_Core_Payment {
     return strtotime($expiredDate.' 23:59:59'); // timestamp
   }
 }
-

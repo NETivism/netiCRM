@@ -3,7 +3,7 @@ class CRM_Event_Page_EventLinks extends CRM_Core_Page {
 
   protected $_id;
 
-  function run() {
+  public function run() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
     $params = ['id' => $this->_id];
     $defaults = [];

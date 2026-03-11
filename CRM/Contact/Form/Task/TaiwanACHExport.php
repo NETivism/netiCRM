@@ -10,7 +10,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
 
   protected $_formValues = [];
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     // get selector defined form values
     $this->_formValues = $this->get('formValues');
@@ -36,7 +36,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
       if (empty($processor_id)) {
         $processor_id = $achData['processor_id'];
       }
-      else if ($processor_id != $achData['processor_id']) {
+      elseif ($processor_id != $achData['processor_id']) {
         $this->_hasProblem = TRUE;
         $messages[] = ts('All ACH you selected needs same payment processor setting.');
         break;
@@ -50,7 +50,7 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
       if (empty($paymentType)) {
         $paymentType = $achData['payment_type'];
       }
-      else if ($paymentType != $achData['payment_type']) {
+      elseif ($paymentType != $achData['payment_type']) {
         $this->_hasProblem = TRUE;
         $messages[] = ts('All ACH you selected needs same payment type.');
         break;
@@ -62,9 +62,9 @@ class CRM_Contact_Form_Task_TaiwanACHExport extends CRM_Contact_Form_Task {
     $messages = array_unique($messages);
     if ($this->_hasProblem) {
       $message = CRM_Utils_Array::implode('<br>', $messages);
-       return CRM_Core_Error::statusBounce($message);
+      return CRM_Core_Error::statusBounce($message);
     }
-    else if(!empty($messages)) {
+    elseif (!empty($messages)) {
       foreach ($messages as $message) {
         CRM_Core_Session::setStatus($message);
       }

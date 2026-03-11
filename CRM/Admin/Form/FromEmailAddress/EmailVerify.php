@@ -1,7 +1,7 @@
 <?php
 
 class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEmailAddress {
-  
+
   /**
    * Return a descriptive name for the page, used in wizard header
    *
@@ -16,7 +16,7 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
@@ -24,7 +24,7 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
    * This function sets the default values for the form. MobileProvider that in edit/view mode
    * the default values are retrieved from the database
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
@@ -37,7 +37,8 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
 
     if ($this->_values['filter'] & self::VALID_EMAIL) {
       $this->assign('email_status', TRUE);
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'back',
             'name' => ts('<< Previous'),
             'isDefault' => TRUE,
@@ -55,7 +56,8 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
     else {
       $this->assign('email_status', FALSE);
       $this->addButton('refresh', ts('Re-send Validation Email'));
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'jump',
             'name' => ts('Refresh'),

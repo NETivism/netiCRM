@@ -33,11 +33,6 @@
  *
  */
 
-
-
-
-
-
 /**
  * This class is to build the form for adding Group
  */
@@ -112,12 +107,13 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    * @return void
    * @acess protected
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
 
     if ($this->_id) {
       $breadCrumb = [['title' => ts('Manage Groups'),
-          'url' => CRM_Utils_System::url('civicrm/group',
+          'url' => CRM_Utils_System::url(
+            'civicrm/group',
             'reset=1'
           ),
         ]];
@@ -125,7 +121,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
       $this->_groupValues = [];
       $params = ['id' => $this->_id];
-      $this->_group = &CRM_Contact_BAO_Group::retrieve($params,
+      $this->_group = &CRM_Contact_BAO_Group::retrieve(
+        $params,
         $this->_groupValues
       );
       $this->_title = $this->_groupValues['title'];
@@ -149,12 +146,14 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
           $this->_groupValues['saved_search_id'] ?? '',
         ];
         if (isset($this->_groupValues['saved_search_id'])) {
-          $groupValues['mapping_id'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch',
+          $groupValues['mapping_id'] = CRM_Core_DAO::getFieldValue(
+            'CRM_Contact_DAO_SavedSearch',
             $this->_groupValues['saved_search_id'],
             'mapping_id'
           );
           // Get saved search form values to determine if it's from custom search
-          $formValues = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_SavedSearch',
+          $formValues = CRM_Core_DAO::getFieldValue(
+            'CRM_Contact_DAO_SavedSearch',
             $this->_groupValues['saved_search_id'],
             'form_values'
           );
@@ -187,7 +186,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       else {
         $syncData = CRM_Core_DAO::executeQuery("SELECT id, sync_data FROM civicrm_group WHERE NULLIF(sync_data, '') IS NOT NULL");
       }
-      while($syncData->fetch()) {
+      while ($syncData->fetch()) {
         $data = json_decode($syncData->sync_data, TRUE);
         if (!empty($data['remote_group_id'])) {
           $this->_smartMarketingFreezed[$data['remote_group_id']] = 1;
@@ -203,13 +202,14 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
      * @access public
      * @return None
      */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if (isset($this->_id)) {
       $defaults = $this->_groupValues;
       if (CRM_Utils_Array::value('group_type', $defaults)) {
-        $types = explode(CRM_Core_DAO::VALUE_SEPARATOR,
+        $types = explode(
+          CRM_Core_DAO::VALUE_SEPARATOR,
           substr($defaults['group_type'], 1, -1)
         );
         $defaults['group_type'] = [];
@@ -241,7 +241,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
       }
 
       // last public mailing list group
-      if (!empty($this->_id) && !empty($defaults['group_type'][2])){
+      if (!empty($this->_id) && !empty($defaults['group_type'][2])) {
         $publicSubsGroupCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_group WHERE visibility = 'Public Pages' AND id != %1 AND group_type LIKE CONCAT('%', CHAR(1), '2', CHAR(1), '%')", [
           1 => [$this->_id, 'Integer']
         ]);
@@ -270,7 +270,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete Group'),
             'isDefault' => TRUE,
@@ -284,20 +285,27 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     }
 
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text', 'title', ts('Name') . ' ',
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title'), TRUE
+    $this->add(
+      'text',
+      'title',
+      ts('Name') . ' ',
+      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title'),
+      TRUE
     );
 
-    $this->add('textarea', 'description', ts('Description') . ' ',
+    $this->add(
+      'textarea',
+      'description',
+      ts('Description') . ' ',
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
     );
 
-
     $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
     $config = CRM_Core_Config::singleton();
-    if ((isset($this->_id) &&
+    if ((
+      isset($this->_id) &&
         CRM_Utils_Array::value('saved_search_id', $this->_groupValues)
-      )
+    )
       || ($config->userFramework == 'Joomla')
     ) {
       unset($groupTypes['Access Control']);
@@ -314,13 +322,18 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
         $tsGroupTypes[$gt] = $v;
         $filterGroupTypes[$v] = str_replace(' ', '-', $k);
       }
-      $this->addCheckBox('group_type',
+      $this->addCheckBox(
+        'group_type',
         ts('Group Type'),
         $tsGroupTypes,
-        NULL, NULL, NULL, NULL, '&nbsp;&nbsp;&nbsp;'
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        '&nbsp;&nbsp;&nbsp;'
       );
       $groupTypeItems = $this->getElement('group_type');
-      foreach($groupTypeItems->_elements as &$ele) {
+      foreach ($groupTypeItems->_elements as &$ele) {
         $gtId = $ele->_attributes['id'];
         $ele->_attributes['data-filter'] = $filterGroupTypes[$gtId];
         if (strstr($filterGroupTypes[$gtId], 'Smart-Marketing')) {
@@ -334,10 +347,10 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
     if (isset($this->_smartMarketingService)) {
       // dropdown box
-      $remoteGroups = CRM_Core_BAO_Cache::getItem('group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME-180);
+      $remoteGroups = CRM_Core_BAO_Cache::getItem('group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME - 180);
       if (empty($remoteGroups)) {
         $remoteGroups = $this->_smartMarketingService->getRemoteGroups();
-        CRM_Core_BAO_Cache::setItem($remoteGroups, 'group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME+180);
+        CRM_Core_BAO_Cache::setItem($remoteGroups, 'group editing', 'remote-groups-'.get_class($this->_smartMarketingService), NULL, CRM_REQUEST_TIME + 180);
       }
       // flydove doesn't support create group
       $remoteGroups = array_diff_key($remoteGroups, $this->_smartMarketingFreezed);
@@ -371,7 +384,9 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
         $parentGroups[$parentGroupId] = $groupNames[$parentGroupId];
         if (CRM_Utils_Array::arrayKeyExists($parentGroupId, $groupNames)) {
           $parentGroupElements[$parentGroupId] = $groupNames[$parentGroupId];
-          $this->addElement('checkbox', "remove_parent_group_$parentGroupId",
+          $this->addElement(
+            'checkbox',
+            "remove_parent_group_$parentGroupId",
             $groupNames[$parentGroupId]
           );
         }
@@ -381,7 +396,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
 
     if (isset($this->_id)) {
 
-      $potentialParentGroupIds = CRM_Contact_BAO_GroupNestingCache::getPotentialCandidates($this->_id,
+      $potentialParentGroupIds = CRM_Contact_BAO_GroupNestingCache::getPotentialCandidates(
+        $this->_id,
         $groupNames
       );
     }
@@ -399,7 +415,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     if (count($parentGroupSelectValues) > 1) {
       if (defined('CIVICRM_MULTISITE') && CIVICRM_MULTISITE) {
         $required = empty($parentGroups) ? TRUE : FALSE;
-        $required = (($this->_id && CRM_Core_BAO_Domain::isDomainGroup($this->_id)) ||
+        $required = (
+          ($this->_id && CRM_Core_BAO_Domain::isDomainGroup($this->_id)) ||
           !isset($this->_id)
         ) ? FALSE : $required;
       }
@@ -422,7 +439,8 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
     CRM_Custom_Form_CustomData::buildQuickForm($this);
     $js = ['data' => 'click-once'];
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' =>
           ($this->_action == CRM_Core_Action::ADD) ?
@@ -457,7 +475,7 @@ class CRM_Group_Form_Edit extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields, $fileParams, $options) {
+  public static function formRule($fields, $fileParams, $options) {
     $errors = [];
 
     $doParentCheck = $options['doParentCheck'];
@@ -535,14 +553,15 @@ AND    id <> %3
       }
 
       $customFields = CRM_Core_BAO_CustomField::getFields('Group');
-      $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+      $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+        $params,
         $customFields,
         $this->_id,
         'Group'
       );
 
       if (!empty($params['group_type']) && !empty($this->_smartMarketingTypeId)) {
-        foreach($params['group_type'] as $typeId => $dontCare) {
+        foreach ($params['group_type'] as $typeId => $dontCare) {
           if ($typeId == $this->_smartMarketingTypeId) {
             // save smart marketing related fields
             $params['is_sync'] = 1;
@@ -555,7 +574,6 @@ AND    id <> %3
           }
         }
       }
-
 
       $group = &CRM_Contact_BAO_Group::create($params);
 
@@ -602,7 +620,7 @@ AND    id <> %3
    */
   private function initSmartMarketingGroup() {
     $groupTypes = CRM_Core_OptionGroup::values('group_type');
-    foreach($groupTypes as $typeId => $smartMarketingName) {
+    foreach ($groupTypes as $typeId => $smartMarketingName) {
       if (strstr($smartMarketingName, 'Smart Marketing')) {
         $this->_smartMarketingTypeId = $typeId;
         list($smartMarketingVendor) = explode(' ', $smartMarketingName);
@@ -622,4 +640,3 @@ AND    id <> %3
     }
   }
 }
-

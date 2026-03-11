@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class provides the functionality to save a search
  * Saved Searches are used for saving frequently used queries
@@ -47,7 +45,7 @@ class CRM_Case_Form_Task_Print extends CRM_Case_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preprocess();
 
     // set print view, so that print templates are called
@@ -58,7 +56,8 @@ class CRM_Case_Form_Task_Print extends CRM_Case_Form_Task {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -78,11 +77,12 @@ class CRM_Case_Form_Task_Print extends CRM_Case_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     //
     // just need to add a javacript to popup the window for printing
     //
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Print Case List'),
           'js' => ['onclick' => 'window.print()'],
@@ -106,4 +106,3 @@ class CRM_Case_Form_Task_Print extends CRM_Case_Form_Task {
     // redirect to the main search page after printing is over
   }
 }
-

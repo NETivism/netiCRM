@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * This class handles mail account settings.
  *
@@ -72,7 +69,9 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     $this->add('text', 'return_path', ts('Return-Path'), $attributes['return_path']);
     $this->addRule('return_path', ts('Return-Path must use a valid email address format.'), 'email');
 
-    $this->add('select', 'protocol',
+    $this->add(
+      'select',
+      'protocol',
       ts('Protocol'),
       ['' => ts('- select -')] + CRM_Core_PseudoConstant::mailProtocol() + ['smtp' => 'SMTP'],
       TRUE
@@ -90,7 +89,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
     $this->add('checkbox', 'is_ssl', ts('Use SSL?'));
     $usedFor = CRM_Core_BAO_MailSettings::$_mailerTypes;
-    foreach($usedFor as $k => $v) {
+    foreach ($usedFor as $k => $v) {
       $usedFor[$k] = ts($v);
     }
     // remove bounce process when exists
@@ -99,15 +98,15 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
       if ($this->_action & CRM_Core_Action::UPDATE && $this->_id != $bounceExists) {
         unset($usedFor[1]);
       }
-      elseif($this->_action & CRM_Core_Action::ADD ) {
+      elseif ($this->_action & CRM_Core_Action::ADD) {
         unset($usedFor[1]);
       }
     }
     $this->add('select', 'is_default', ts('Used For?'), $usedFor);
     $this->addFormRule(['CRM_Admin_Form_MailSettings', 'formRule'], $this);
   }
-  
-  static function formRule($fields, $files, $self) {
+
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($fields['is_default'] != 1 && !empty($fields['localpart'])) {
       $test = preg_match('/'.$fields['localpart'].'/i', 'test');
@@ -118,7 +117,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     // prevent modify global $civicrm_conf['mailing_mailstore'] variable
     if ($this->_action & CRM_Core_Action::UPDATE && $defaults['is_default'] == 1) {
@@ -126,7 +125,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
       $mailSettings->id = $this->_id;
       $mailSettings->find(TRUE);
       if ($mailSettings->domain) {
-        foreach($defaults as $eleName => $val) {
+        foreach ($defaults as $eleName => $val) {
           if ($mailSettings->$eleName == $val && $this->_elementIndex[$eleName]) {
             $this->getElement($eleName)->freeze();
           }
@@ -137,7 +136,6 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
 
     return $defaults;
   }
-  
 
   /**
    * Function to process the form
@@ -146,7 +144,7 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
    *
    * @return None
    */
-  function postProcess() {
+  public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Core_BAO_MailSettings::deleteMailSettings($this->_id);
       CRM_Core_Session::setStatus(ts('Selected Mail Setting has been deleted.'));
@@ -200,4 +198,3 @@ class CRM_Admin_Form_MailSettings extends CRM_Admin_Form {
     }
   }
 }
-

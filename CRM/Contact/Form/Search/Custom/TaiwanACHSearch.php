@@ -45,15 +45,15 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
   protected $_filled = NULL;
   protected $_context = NULL;
   protected $_cpage = NULL;
-  
-  function __construct(&$formValues){
+
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_tableName = 'civicrm_temp_custom_achsearch';
     $this->buildColumn();
   }
 
-  function buildColumn(){
-    $this->_queryColumns = [ 
+  public function buildColumn() {
+    $this->_queryColumns = [
       'r.id' => 'id',
       'r.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -99,7 +99,7 @@ class CRM_Contact_Form_Search_Custom_TaiwanACHSearch extends CRM_Contact_Form_Se
     ];
   }
 
-  function buildTempTable() {
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -112,10 +112,10 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (strstr($field, 'amount') || preg_match('/.*id$/', $field)) {
         $type = "INTEGER(10) default NULL";
       }
-      elseif(strstr($field, '_date')){
+      elseif (strstr($field, '_date')) {
         $type = 'DATETIME NULL default NULL';
       }
-      else{
+      else {
         $type = "VARCHAR(32) default ''";
       }
       $sql .= "{$field} {$type},\n";
@@ -127,8 +127,8 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  
-  function dropTempTable() {
+
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
@@ -136,15 +136,15 @@ PRIMARY KEY (id)
   /**
    * fill temp table for further use
    */
-  function fillTable(){
+  public function fillTable() {
     $this->dropTempTable();
     $this->buildTempTable();
 
     $select = [];
-    foreach($this->_queryColumns as $k => $v){
+    foreach ($this->_queryColumns as $k => $v) {
       $select[] = $k.' as '.$v;
     }
-    $select = CRM_Utils_Array::implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n", $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -163,25 +163,24 @@ $having
 
     while ($dao->fetch()) {
       $values = [];
-      foreach($this->_queryColumns as $name){
-        if($name == 'id'){
+      foreach ($this->_queryColumns as $name) {
+        if ($name == 'id') {
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
         }
-        elseif(isset($dao->$name)){
+        elseif (isset($dao->$name)) {
           $values[] = "'". CRM_Utils_Type::escape($dao->$name, 'String')."'";
         }
-        else{
+        else {
           $values[] = 'NULL';
         }
       }
-      $values = CRM_Utils_Array::implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ', $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
   }
 
-
-  function tempFrom() {
+  public function tempFrom() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
     INNER JOIN civicrm_contribution_taiwanach ach ON r.id = ach.contribution_recur_id
@@ -193,17 +192,17 @@ $having
   /**
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
-  function tempWhere(){
+  public function tempWhere() {
     $clauses = [];
     $clauses[] = "(r.is_test = 0)";
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  public function tempHaving() {
     return '';
   }
 
-  function buildForm(&$form){
+  public function buildForm(&$form) {
     // parent include start_date, status, installments, sort_name, email, contribution_page_id
     parent::buildForm($form);
 
@@ -230,7 +229,7 @@ $having
     // so using exists start_date element
     $ele = $form->getElement('start_date_from');
     $ele->_label = ts('Stamp Verication Date') .'/'.ts('Recurring Contribution').' - '.ts('Start Date');
-    
+
     $form->assign('elements', [
       'create_date',
       'status',
@@ -246,19 +245,19 @@ $having
     ]);
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return [];
   }
 
-  function setTitle() {
+  public function setTitle() {
     CRM_utils_System::setTitle(ts('ACH Search'));
   }
 
-  function setBreadcrumb() {
+  public function setBreadcrumb() {
   }
 
-  function count(){
-    if(!$this->_filled){
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -273,17 +272,17 @@ $having
   /**
    * Construct the search query
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -296,11 +295,11 @@ $having
   /**
    * Functions below generally don't need to be modified
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
     $dateFields = [
@@ -308,7 +307,7 @@ $having
       'start_date',
       'end_date',
     ];
-    foreach($dateFields as $fieldName) {
+    foreach ($dateFields as $fieldName) {
       if (!empty($this->_formValues[$fieldName.'_from'])) {
         $dateFrom = CRM_Utils_Date::processDate($this->_formValues[$fieldName.'_from']);
         $clauses[] = "($fieldName >= '$dateFrom')";
@@ -334,14 +333,14 @@ $having
       'identifier_number',
     ];
 
-    foreach($achFields as $fieldName) {
+    foreach ($achFields as $fieldName) {
       if (isset($this->_formValues[$fieldName]) && !empty($this->_formValues[$fieldName])) {
         $clauses[] = "($fieldName LIKE '{$this->_formValues[$fieldName]}')";
       }
     }
 
     $sort_name = $this->_formValues['sort_name'];
-    if($sort_name){
+    if ($sort_name) {
       $clauses[] = "(sort_name LIKE '%$sort_name%')";
     }
 
@@ -358,12 +357,12 @@ $having
     }
 
     if ($includeContactIDs) {
-      self::includeContactIDs($sql, $this->_formValues,$this->_isExport);
+      self::includeContactIDs($sql, $this->_formValues, $this->_isExport);
     }
     return $sql;
   }
 
-  function having(){
+  public function having() {
     return '';
   }
 
@@ -392,13 +391,13 @@ $having
     }
   }
 
-  function &columns(){
+  public function &columns() {
     return $this->_columns;
   }
-  
-  function summary(){
+
+  public function summary() {
     $summary = [];
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -410,7 +409,7 @@ $having
     ];
     $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE ".$this->where());
     $query->fetch();
-    
+
     if ($query->amount) {
       $amount = CRM_Utils_Money::format($query->amount);
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', [1 => $amount]);
@@ -419,9 +418,9 @@ $having
     return $summary;
   }
 
-  function alterRow(&$row) {
+  public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
-    
+
     if ($row['completed_count']) {
       $row['completed_count'] = $row['completed_count'].' / '.$row['total_count'];
     }
@@ -451,8 +450,8 @@ $having
     }
 
     $date = ['start_date', 'end_date', 'cancel_date'];
-    foreach($date as $d){
-      if(!empty($row[$d])){
+    foreach ($date as $d) {
+      if (!empty($row[$d])) {
         $row[$d] = CRM_Utils_Date::customFormat($row[$d], $this->_config->dateformatFull);
       }
     }
@@ -465,7 +464,9 @@ $having
     $links[CRM_Core_Action::ADD]['url'] = 'civicrm/contribute/taiwanach';
     $links[CRM_Core_Action::ADD]['qs'] = 'reset=1&action=update&id=%%ach_id%%&cid=%%cid%%';
     $action = array_sum(array_keys($links));
-    $row['action'] = CRM_Core_Action::formLink($links, $action,
+    $row['action'] = CRM_Core_Action::formLink(
+      $links,
+      $action,
       [
         'cid' => $row['contact_id'],
         'id' => $row['id'],
@@ -478,7 +479,7 @@ $having
   /**
    * Define the smarty template used to layout the search form and results listings.
    */
-  function templateFile(){
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/TaiwanACHSearch.tpl';
   }
 
@@ -497,4 +498,3 @@ $having
     ];
   }
 }
-

@@ -25,9 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
@@ -39,7 +36,6 @@
  *
  */
 class CRM_Case_Info extends CRM_Core_Component_Info {
-
 
   // docs inherited from interface
   protected $keyword = 'case';
@@ -94,7 +90,8 @@ class CRM_Case_Info extends CRM_Core_Component_Info {
       CRM_Core_Permission::check('add contacts')
     ) {
 
-      $atype = CRM_Core_OptionGroup::getValue('activity_type',
+      $atype = CRM_Core_OptionGroup::getValue(
+        'activity_type',
         'Open Case',
         'name'
       );
@@ -108,4 +105,3 @@ class CRM_Case_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

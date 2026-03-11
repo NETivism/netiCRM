@@ -33,13 +33,6 @@
  *
  */
 
-
-
-
-
-
-
-
 /**
  * This class gets the name of the file to upload
  */
@@ -204,7 +197,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    */
   public function buildQuickForm() {
 
-
     //to save the current mappings
     if (!$this->get('savedMapping')) {
       $saveDetailsName = ts('Save this field mapping');
@@ -256,7 +248,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
     $dataPatterns = $this->get('dataPatterns');
     $hasLocationTypes = $this->get('fieldTypes');
 
-
     /* Initialize all field usages to false */
 
     foreach ($mapperKeys as $key) {
@@ -272,7 +263,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
 
     //used to warn for mismatch column count or mismatch mapping
     $warning = 0;
-
 
     for ($i = 0; $i < $this->_columnCount; $i++) {
       $this->add('hidden', "weight[$i]");
@@ -314,9 +304,10 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
           $js .= "swapOptions($formName, 'mapper[$i]', 0, 3, 'hs_mapper_" . $i . "_');\n";
 
           if ($hasHeaders) {
-            $defaults["mapper[$i]"] = [$this->defaultFromHeader($this->_columnHeaders[$i],
-                $headerPatterns
-              )];
+            $defaults["mapper[$i]"] = [$this->defaultFromHeader(
+              $this->_columnHeaders[$i],
+              $headerPatterns
+            )];
           }
           else {
             $defaults["mapper[$i]"] = [$this->defaultFromData($dataPatterns, $i)];
@@ -329,7 +320,8 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
         if ($hasHeaders) {
           // Infer the default from the skipped headers if we have them
           $defaults["mapper[$i]"] = [
-            $this->defaultFromHeader($this->_columnHeaders[$i],
+            $this->defaultFromHeader(
+              $this->_columnHeaders[$i],
               $headerPatterns
             ),
             //                     $defaultLocationType->id
@@ -364,7 +356,8 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
 
     $this->setDefaults($defaults);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -389,7 +382,7 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
    * @static
    * @access public
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     $fieldMessage = NULL;
     if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {
@@ -435,7 +428,8 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
               continue;
             }
             else {
-              $errors['_qf_default'] .= ts('Missing required field: Provide %1 or %2',
+              $errors['_qf_default'] .= ts(
+                'Missing required field: Provide %1 or %2',
                 [1 => $title,
                   2 => 'Activity Type Label',
                 ]
@@ -505,7 +499,7 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
     $mapperPhoneType = [];
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);
@@ -563,7 +557,8 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
     if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = ['name' => $params['saveMappingName'],
         'description' => $params['saveMappingDesc'],
-        'mapping_type_id' => CRM_Core_OptionGroup::getValue('mapping_type',
+        'mapping_type_id' => CRM_Core_OptionGroup::getValue(
+          'mapping_type',
           'Import Activity',
           'name'
         ),
@@ -581,7 +576,6 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
       }
       $this->set('savedMapping', $saveMappingFields->mapping_id);
     }
-
 
     $errorFilenamePrefix = CRM_Activity_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
     $this->set('errorFilenamePrefix', $errorFilenamePrefix);
@@ -611,4 +605,3 @@ class CRM_Activity_Import_Form_MapField extends CRM_Core_Form {
     return ts('Match Fields');
   }
 }
-

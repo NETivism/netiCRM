@@ -33,7 +33,6 @@
  *
  */
 
-
 class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
 
   /**
@@ -54,7 +53,8 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
   public $_outputMode;
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Contact', 'Individual']; function __construct() {
+  protected $_customGroupExtends = ['Contact', 'Individual'];
+  public function __construct() {
 
     $this->_columns = [
       'civicrm_employer' =>
@@ -176,11 +176,11 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  public function select() {
 
     $select = $this->_columnHeaders = [];
 
@@ -202,7 +202,7 @@ class CRM_Report_Form_Contact_CurrentEmployer extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  public function from() {
     $this->_from = "
 FROM civicrm_contact {$this->_aliases['civicrm_contact']} 
 
@@ -223,7 +223,7 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
              AND {$this->_aliases['civicrm_email']}.is_primary = 1) ";
   }
 
-  function where() {
+  public function where() {
 
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -240,7 +240,8 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -268,18 +269,18 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
     }
   }
 
-  function groupBy() {
+  public function groupBy() {
 
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_employer']}.id,{$this->_aliases['civicrm_contact']}.id";
   }
 
-  function postProcess() {
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause([$this->_aliases['civicrm_contact'], $this->_aliases['civicrm_employer']]);
     parent::postProcess();
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $checkList = [];
     $entryFound = FALSE;
@@ -290,9 +291,11 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       if (CRM_Utils_Array::arrayKeyExists('civicrm_employer_organization_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_employer_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_employer_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_employer_organization_name_link'] = $url;
         $entryFound = TRUE;
@@ -327,9 +330,11 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $entryFound = TRUE;
@@ -358,4 +363,3 @@ FROM civicrm_contact {$this->_aliases['civicrm_contact']}
     }
   }
 }
-

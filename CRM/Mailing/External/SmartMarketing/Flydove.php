@@ -1,8 +1,8 @@
 <?php
 
 class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_SmartMarketing {
-  const API_BASE_PATH = 'https://api.flydove.net/index.php?r=api/';
-  const BATCH_NUM = 500;
+  public const API_BASE_PATH = 'https://api.flydove.net/index.php?r=api/';
+  public const BATCH_NUM = 500;
 
   /**
    * Remote group cache
@@ -62,13 +62,13 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
     $groups = [];
     try {
       $results = $this->apiRequestSend('GetGroupList');
-      foreach($results as $group) {
+      foreach ($results as $group) {
         $groups[$group['id']] = $group['name'];
       }
     }
-    catch(CRM_Core_Exception $e) {
-      $errorMessage =$e->getMessage();
-      $errorCode =$e->getErrorCode();
+    catch (CRM_Core_Exception $e) {
+      $errorMessage = $e->getMessage();
+      $errorCode = $e->getErrorCode();
       CRM_Core_Error::debug_log_message("Flydove error - getRemoteGroups: $errorCode $errorMessage");
       CRM_Core_Session::setStatus(ts('Cannot retrieve remote group, try again later'), TRUE, 'warning');
     }
@@ -93,7 +93,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
       throw new CRM_Core_Exception("Flydove: API type not supported. Provided api type: $apiType");
     }
     $token = '';
-    switch($apiType) {
+    switch ($apiType) {
       case 'GetGroupList':
       case 'BatchCreateCustomer':
         $token = !empty($this->_tokens['group']) ? $this->_tokens['group'] : '';
@@ -101,11 +101,11 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
       case 'DeleteCustomer':
         $token = !empty($this->_tokens['subscribe']) ? $this->_tokens['subscribe'] : '';
         break;
-      /*
-      case 'BatchCreateCustomer':
-        $token = !empty($this->_tokens['import']) ? $this->_tokens['import'] : '';
-        break;
-        */
+        /*
+        case 'BatchCreateCustomer':
+          $token = !empty($this->_tokens['import']) ? $this->_tokens['import'] : '';
+          break;
+          */
     }
     if (empty($token)) {
       throw new CRM_Core_Exception("Flydove: The API you call is $apiType. Do not have matches token.");
@@ -129,7 +129,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
       'Content-Type: application/x-www-form-urlencoded',
     ]);
     $responseData = curl_exec($ch);
-    if(curl_errno($ch)){
+    if (curl_errno($ch)) {
       throw new CRM_Core_Exception('Flydove: connection error. CURL:'.curl_error($ch));
     }
     curl_close($ch);
@@ -218,9 +218,9 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
       try {
         $remoteGroups = $flydove->getRemoteGroups();
       }
-      catch(CRM_Core_Exception $e) {
-        $errorMessage =$e->getMessage();
-        $errorCode =$e->getErrorCode();
+      catch (CRM_Core_Exception $e) {
+        $errorMessage = $e->getMessage();
+        $errorCode = $e->getErrorCode();
         if ($civicrm_batch) {
           CRM_Core_Error::debug_log_message("Flydove error - : $errorCode $errorMessage");
           return FALSE;
@@ -243,7 +243,7 @@ class CRM_Mailing_External_SmartMarketing_Flydove extends CRM_Mailing_External_S
           $limit = 10;
         }
         $skippedCount = 0;
-        for($i = 0; $i < $limit; $i++) {
+        for ($i = 0; $i < $limit; $i++) {
           $ids = array_slice($contactIds, $offset, self::BATCH_NUM);
           if (empty($ids)) {
             break;
@@ -285,7 +285,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             $details[0][$mobilePhoneResult->contact_id]['phone'] = $mobilePhoneResult->phone;
           }
           $skipped = [];
-          foreach($details[0] as $contactId => $detail) {
+          foreach ($details[0] as $contactId => $detail) {
             if (!CRM_Utils_Rule::email($detail['email']) || empty($detail['email'])) {
               $skipped['invalid_or_empty_email'][] = $contactId;
               $skippedCount++;
@@ -331,9 +331,9 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
               $civicrm_batch->data['processed'] += self::BATCH_NUM;
             }
           }
-          catch(CRM_Core_Exception $e) {
-            $errorMessage =$e->getMessage();
-            $errorCode =$e->getErrorCode();
+          catch (CRM_Core_Exception $e) {
+            $errorMessage = $e->getMessage();
+            $errorCode = $e->getErrorCode();
             CRM_Core_Error::debug_log_message("Flydove error - BatchCreateCustomer: $errorCode $errorMessage");
             if ($civicrm_batch) {
               return FALSE;
@@ -364,12 +364,12 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             $civicrm_batch->data['processed'] = $civicrm_batch->data['total'];
             $civicrm_batch->data['isCompleted'] = TRUE;
           }
-          foreach($report as $rep) {
+          foreach ($report as $rep) {
             CRM_Core_Error::debug_log_message($rep);
           }
         }
         else {
-          foreach($report as $rep) {
+          foreach ($report as $rep) {
             CRM_Core_Error::debug_log_message($rep);
           }
           $sliceResults['#report'] = $report;
@@ -405,9 +405,9 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     $groups = CRM_Core_PseudoConstant::group();
     $skippedText = [];
     if (!empty($meta['#count']) && !empty($meta['#count']['skipped'])) {
-      foreach($meta as $idx => $slice) {
+      foreach ($meta as $idx => $slice) {
         if (is_numeric($idx) && isset($slice['skipped']) && is_array($slice['skipped'])) {
-          foreach($slice['skipped'] as $reason => $ids) {
+          foreach ($slice['skipped'] as $reason => $ids) {
             $skippedText[] = $reason.'('.count($ids).')';
           }
         }

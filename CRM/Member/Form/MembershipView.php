@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Payment-Instrument
  *
@@ -49,9 +47,6 @@ class CRM_Member_Form_MembershipView extends CRM_Core_Form {
    */
   public function preProcess() {
 
-
-
-
     $values = [];
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
 
@@ -65,19 +60,22 @@ class CRM_Member_Form_MembershipView extends CRM_Core_Form {
       CRM_Member_BAO_Membership::retrieve($params, $values);
 
       //Provide information about membership source when it is the result of a relationship (CRM-1901)
-      $values['owner_membership_id'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_Membership',
+      $values['owner_membership_id'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_Membership',
         $id,
         'owner_membership_id'
       );
 
       if (isset($values['owner_membership_id'])) {
-        $values['owner_contact_id'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_Membership',
+        $values['owner_contact_id'] = CRM_Core_DAO::getFieldValue(
+          'CRM_Member_DAO_Membership',
           $values['owner_membership_id'],
           'contact_id',
           'id'
         );
 
-        $values['owner_display_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+        $values['owner_display_name'] = CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
           $values['owner_contact_id'],
           'display_name',
           'id'
@@ -104,7 +102,8 @@ END AS 'relType'
             if ($values['relationship']) {
               $values['relationship'] .= ',';
             }
-            $values['relationship'] .= CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType',
+            $values['relationship'] .= CRM_Core_DAO::getFieldValue(
+              'CRM_Contact_DAO_RelationshipType',
               $membershipType['relationship_type_id'],
               "name_$direction",
               'id'
@@ -113,7 +112,8 @@ END AS 'relType'
         }
       }
 
-      $displayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $displayName = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
         $values['contact_id'],
         'display_name'
       );
@@ -121,25 +121,28 @@ END AS 'relType'
 
       // add viewed membership to recent items list
 
-      $url = CRM_Utils_System::url('civicrm/contact/view/membership',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view/membership',
         "action=view&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
 
       $title = $displayName . ' - ' . ts('Membership Type:') . ' ' . $values['membership_type'];
 
-
       $recentOther = [];
       if (CRM_Core_Permission::checkActionPermission('CiviMember', CRM_Core_Action::UPDATE)) {
-        $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/membership',
+        $recentOther['editUrl'] = CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
           "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
         );
       }
       if (CRM_Core_Permission::checkActionPermission('CiviMember', CRM_Core_Action::DELETE)) {
-        $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/membership',
+        $recentOther['deleteUrl'] = CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
           "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
         );
       }
-      CRM_Utils_Recent::add($title,
+      CRM_Utils_Recent::add(
+        $title,
         $url,
         $values['id'],
         'Membership',
@@ -168,7 +171,8 @@ END AS 'relType'
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -178,4 +182,3 @@ END AS 'relType'
     );
   }
 }
-

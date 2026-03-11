@@ -33,8 +33,6 @@
  *
  */
 
-
-
 /**
  * This class generates form components for Premiums
  *
@@ -60,7 +58,7 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     $defaults = parent::setDefaultValues();
     if ($this->_id) {
@@ -107,7 +105,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
       CRM_Contribute_BAO_Premium::buildPremiumPreviewBlock($this, $this->_id);
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Done with Preview'),
             'isDefault' => TRUE,
@@ -119,7 +118,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     }
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -154,7 +154,6 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->add('file', 'uploadFile', ts('Image File Name'), 'onChange="select_option();"');
     $this->addRule('uploadFile', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '1000x1000');
 
-
     $this->addNumber('price', ts('Market Value'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'price'), TRUE);
     $this->addRule('price', ts('Please enter the Market Value for this product.'), 'money');
 
@@ -178,7 +177,6 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
 
     $this->add('text', 'fixed_period_start_day', ts('Fixed Period Start Day'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'fixed_period_start_day'));
 
-
     $this->add('Select', 'duration_unit', ts('Duration Unit'), ['' => ts('- select -'), 'day' => ts('day'), 'week' => ts('week'), 'month' => ts('month'), 'year' => ts('year')]);
 
     $this->add('text', 'duration_interval', ts('Duration'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Product', 'duration_interval'));
@@ -195,7 +193,8 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
     $this->addFormRule(['CRM_Contribute_Form_ManagePremiums', 'formRule']);
 
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'upload',
           'name' => ts('Save'),
@@ -307,13 +306,13 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
             $ext = str_replace($imageFileName, '', $imageFile);
             // to check wether GD is installed or not
             $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
-            if($gdSupport) {
-              $error = false;
+            if ($gdSupport) {
+              $error = FALSE;
               $params['image'] = $this->_resizeImage($imageFile, $imageFileName."_full".$ext, 1200, 1200);
               $params['thumbnail'] = $this->_resizeImage($imageFile, $imageFileName."_thumb".$ext, 480, 480);
             }
             else {
-              $error = true;
+              $error = TRUE;
               $params['image'] = $config->resourceBase . 'i/contribute/default_premium.jpg';
               $params['thumbnail'] = $config->resourceBase . 'i/contribute/default_premium_thumb.jpg';
             }
@@ -372,4 +371,3 @@ class CRM_Contribute_Form_ManagePremiums extends CRM_Contribute_Form {
   }
 
 }
-

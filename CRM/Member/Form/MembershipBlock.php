@@ -33,9 +33,6 @@
  *
  */
 
-
-
-
 /**
  * form to process actions on Membership
  */
@@ -49,7 +46,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    *
    * @return void
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     //parent::setDefaultValues();
     $defaults = [];
     if (isset($this->_id)) {
@@ -89,7 +86,6 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    */
   public function buildQuickForm() {
 
-
     $membershipTypes = CRM_Member_BAO_MembershipType::getMembershipTypes();
 
     if (!empty($membershipTypes)) {
@@ -123,7 +119,8 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
     $session = CRM_Core_Session::singleton();
     $single = $session->get('singleForm');
     if ($single) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -150,7 +147,7 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
    * @access public
    * @static
    */
-  static function formRule($params, $files, $contributionPageId = NULL) {
+  public static function formRule($params, $files, $contributionPageId = NULL) {
     $errors = [];
     if (CRM_Utils_Array::value('is_active', $params)) {
 
@@ -256,4 +253,3 @@ class CRM_Member_Form_MembershipBlock extends CRM_Contribute_Form_ContributionPa
     return ts('Memberships');
   }
 }
-
