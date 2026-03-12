@@ -50866,3 +50866,167 @@ msgstr ""
 #: neticrmp/themes/neticrmp_next
 msgid "Web Administrator Settings"
 msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Latest Contributions"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "New Event Registrants"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Recurring Contributions Expiring Soon"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Memberships Expiring Soon"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "CRM Basics: Forms and Fields"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Start Fundraising"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Invite Supporters to Events"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Recruit Members"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Send Newsletter to Communicate with Supporters"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Manage Contact Groups"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Form"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Copywriting Assistant: A smart writing tool and your personal editor. Set up Organization Profile and Role Style to auto-generate effective content for any scenario."
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "More Info"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Fields: The foundation for CRM to record contact data"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Forms: Use online forms to collect data directly into CRM"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "There are two types of fields: Default fields,"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Set Up Contribution Types"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Manually Add a Contribution"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Set Up Contribution Thank-you Gifts"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Online Contribution Page"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View All Contribution Pages"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "More Features"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Add/Manage Event Types"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Online Registration Page"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View Created Event Registration Pages"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View Event Registration Status"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Basic Settings"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Membership Fee Settings/Membership Status Change"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Add/Edit Membership Types"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Invite to Join"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Membership Signup Page"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Add Member"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Introduction to the Newsletter System"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Header/Footer/Auto-Reply Messages"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Newsletter Template"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Offer Subscription"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Newsletter Group"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Online Subscription Page"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Edit/Send Newsletter"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Go Now"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View Online Manual"
+msgstr ""
