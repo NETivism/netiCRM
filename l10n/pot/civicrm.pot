@@ -51030,3 +51030,11 @@ msgstr ""
 #: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
 msgid "View Online Manual"
 msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.module
+msgid "netiCRM is a free software licensed under %1"
+msgstr ""
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.module
+msgid "%1 is a CRM service for nonprofits provided by NETivism"
+msgstr ""

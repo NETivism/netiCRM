@@ -51717,3 +51717,11 @@ msgstr "立即前往"
 #: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
 msgid "View Online Manual"
 msgstr "參閱線上手冊"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.module
+msgid "netiCRM is a free software licensed under %1"
+msgstr "netiCRM 是一套採用 %1 授權的自由軟體"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.module
+msgid "%1 is a CRM service for nonprofits provided by NETivism"
+msgstr "%1 是由網絡行動科技提供的非營利組織CRM服務"
