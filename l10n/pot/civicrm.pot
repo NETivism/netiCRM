@@ -50826,3 +50826,43 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Source IP"
 msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Site Name and Welcome"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Logo and Background"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "User Accounts"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "User Permissions"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Login IP Restriction"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Toggle Sidebar Toolbar"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Back to Admin Home"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Quick Search"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Start Using netiCRM"
+msgstr ""
+
+#: neticrmp/themes/neticrmp_next
+msgid "Web Administrator Settings"
+msgstr ""
