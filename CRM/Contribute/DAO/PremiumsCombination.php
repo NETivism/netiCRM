@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -171,18 +172,16 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
    */
   public $modified_date;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_premiums_combination
-  */
+   * class constructor
+   *
+   * @return civicrm_premiums_combination
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -194,11 +193,11 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -207,11 +206,10 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -219,107 +217,107 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'premiums_id' => [
           'name' => 'premiums_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contribute_DAO_Premium',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_Premium',
+        ],
         'combination_name' => [
           'name' => 'combination_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Combination Name') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-                  ] ,
+        ],
         'sku' => [
           'name' => 'sku',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SKU') ,
-           'maxlength' => 50,
-           'size' => CRM_Utils_Type::BIG,
-              'export' => TRUE,
+          'maxlength' => 50,
+          'size' => CRM_Utils_Type::BIG,
+          'export' => TRUE,
           'where' => 'civicrm_premiums_combination.sku',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'min_contribution' => [
           'name' => 'min_contribution',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Min Contribution') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'min_contribution_recur' => [
           'name' => 'min_contribution_recur',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Min Contribution Recur') ,
-                  ] ,
+        ],
         'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'default' => 'UL',
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-                  ] ,
+        ],
         'calculate_mode' => [
           'name' => 'calculate_mode',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Calculate Mode') ,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'default' => 'UL',
+        ],
         'installments' => [
           'name' => 'installments',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Installments') ,
-                  ] ,
+        ],
         'image' => [
           'name' => 'image',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Image') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'thumbnail' => [
           'name' => 'thumbnail',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Thumbnail') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_TIMESTAMP,
           'title' => ts('Created Date') ,
           'required' => TRUE,
-                  'default' => 'URRENT_TIMESTAM',
-          ] ,
+          'default' => 'URRENT_TIMESTAM',
+        ],
         'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_TIMESTAMP,
           'title' => ts('Modified Date') ,
           'required' => TRUE,
-                  'default' => 'URRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAM',
-          ] ,
+          'default' => 'URRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAM',
+        ],
       ];
     }
     return self::$_fields;
@@ -327,7 +325,6 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -337,7 +334,6 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -346,14 +342,13 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['premiums_combination'] = &$fields[$name];
@@ -369,14 +364,13 @@ class CRM_Contribute_DAO_PremiumsCombination extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['premiums_combination'] = &$fields[$name];

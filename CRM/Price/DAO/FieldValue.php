@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -148,18 +149,16 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
    */
   public $is_active;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_price_field_value
-  */
+   * class constructor
+   *
+   * @return civicrm_price_field_value
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -171,11 +170,11 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -184,11 +183,10 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -196,76 +194,76 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'price_field_id' => [
           'name' => 'price_field_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Price_DAO_Field',
-        ] ,
+          'FKClassName' => 'CRM_Price_DAO_Field',
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-             'rows' => 2,
-           'cols' => 60,
-              'default' => 'UL',
-          ] ,
+          'rows' => 2,
+          'cols' => 60,
+          'default' => 'UL',
+        ],
         'amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Amount') ,
           'required' => TRUE,
-           'maxlength' => 512,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 512,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'count' => [
           'name' => 'count',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Count') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'max_value' => [
           'name' => 'max_value',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Max Value') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_member' => [
           'name' => 'is_member',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
       ];
     }
     return self::$_fields;
@@ -273,7 +271,6 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -283,7 +280,6 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -292,14 +288,13 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['price_field_value'] = &$fields[$name];
@@ -315,14 +310,13 @@ class CRM_Price_DAO_FieldValue extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['price_field_value'] = &$fields[$name];

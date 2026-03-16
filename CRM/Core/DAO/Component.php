@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_Component extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -95,18 +96,16 @@ namespace.
    */
   public $namespace;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_component
-  */
+   * class constructor
+   *
+   * @return civicrm_component
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -116,22 +115,22 @@ namespace.
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component name') ,
           'required' => TRUE,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'namespace' => [
           'name' => 'namespace',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Namespace reserved for component.') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
       ];
     }
     return self::$_fields;
@@ -139,7 +138,6 @@ namespace.
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -148,7 +146,6 @@ namespace.
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -157,14 +154,13 @@ namespace.
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['component'] = &$fields[$name];
@@ -180,14 +176,13 @@ namespace.
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['component'] = &$fields[$name];

@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -172,18 +173,16 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
    */
   public $result_id;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_survey
-  */
+   * class constructor
+   *
+   * @return civicrm_survey
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -197,11 +196,11 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -212,11 +211,10 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -224,103 +222,103 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Survey Title') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_survey.title',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'campaign_id' => [
           'name' => 'campaign_id',
           'type' => CRM_Utils_Type::T_INT,
-                  'default' => 'UL',
-            'FKClassName' => 'CRM_Campaign_DAO_Campaign',
-        ] ,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Campaign_DAO_Campaign',
+        ],
         'activity_type_id' => [
           'name' => 'activity_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Activity Type ID') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_survey.activity_type_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            'default' => 'UL',
-          ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+        ],
         'recontact_interval' => [
           'name' => 'recontact_interval',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recontact Interval') ,
-             'rows' => 20,
-           'cols' => 80,
-              ] ,
+          'rows' => 20,
+          'cols' => 80,
+        ],
         'instructions' => [
           'name' => 'instructions',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Instructions') ,
-             'rows' => 20,
-           'cols' => 80,
-              ] ,
+          'rows' => 20,
+          'cols' => 80,
+        ],
         'release_frequency' => [
           'name' => 'release_frequency',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Release Frequency') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'max_number_of_contacts' => [
           'name' => 'max_number_of_contacts',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Maximum number of contacts') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'default_number_of_contacts' => [
           'name' => 'default_number_of_contacts',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Default number of contacts') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign Created Date') ,
-                  ] ,
+        ],
         'last_modified_id' => [
           'name' => 'last_modified_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'last_modified_date' => [
           'name' => 'last_modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Modified Date') ,
-                  ] ,
+        ],
         'result_id' => [
           'name' => 'result_id',
           'type' => CRM_Utils_Type::T_INT,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
       ];
     }
     return self::$_fields;
@@ -328,7 +326,6 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -337,7 +334,6 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -346,14 +342,13 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['survey'] = &$fields[$name];
@@ -369,14 +364,13 @@ class CRM_Campaign_DAO_Survey extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['survey'] = &$fields[$name];

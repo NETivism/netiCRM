@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -137,18 +138,16 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
    */
   public $domain_id;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_sms_provider
-  */
+   * class constructor
+   *
+   * @return civicrm_sms_provider
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -160,11 +159,11 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -173,11 +172,10 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -186,69 +184,69 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Provider ID') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Title') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'username' => [
           'name' => 'username',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Username') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'password' => [
           'name' => 'password',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider Password') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'api_type' => [
           'name' => 'api_type',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Provider API') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'api_url' => [
           'name' => 'api_url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('SMS Provider API URL') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'api_params' => [
           'name' => 'api_params',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('SMS Provider API Params') ,
-                  ] ,
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('SMS Provider is Default?') ,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('SMS Provider is Active?') ,
-                  ] ,
+        ],
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('SMS Domain') ,
-                    'FKClassName' => 'CRM_Core_DAO_Domain',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_Domain',
+        ],
       ];
     }
     return self::$_fields;
@@ -256,7 +254,6 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -265,7 +262,6 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -274,14 +270,13 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['sms_provider'] = &$fields[$name];
@@ -297,14 +292,13 @@ class CRM_SMS_DAO_Provider extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['sms_provider'] = &$fields[$name];

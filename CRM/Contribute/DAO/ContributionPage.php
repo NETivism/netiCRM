@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -100,7 +101,7 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
    */
   public $contribution_type_id;
   /**
-   * Payment Processors configured for this contribution Page
+   * Payment Processors configured for this contribution Page 
    *
    * @var string
    */
@@ -364,18 +365,16 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
    */
   public $sms_text;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_contribution_page
-  */
+   * class constructor
+   *
+   * @return civicrm_contribution_page
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -388,11 +387,11 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -402,11 +401,10 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -414,284 +412,284 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'intro_text' => [
           'name' => 'intro_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Intro Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'contribution_type_id' => [
           'name' => 'contribution_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
+        ],
         'payment_processor' => [
           'name' => 'payment_processor',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_credit_card_only' => [
           'name' => 'is_credit_card_only',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_monetary' => [
           'name' => 'is_monetary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_recur' => [
           'name' => 'is_recur',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'recur_frequency_unit' => [
           'name' => 'recur_frequency_unit',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Recur Frequency Unit') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_recur_interval' => [
           'name' => 'is_recur_interval',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_pay_later' => [
           'name' => 'is_pay_later',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'pay_later_text' => [
           'name' => 'pay_later_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Pay Later Text') ,
-                  ] ,
+        ],
         'pay_later_receipt' => [
           'name' => 'pay_later_receipt',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Pay Later Receipt') ,
-                  ] ,
+        ],
         'is_allow_other_amount' => [
           'name' => 'is_allow_other_amount',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'default_amount_id' => [
           'name' => 'default_amount_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'min_amount' => [
           'name' => 'min_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Min Amount') ,
-                  ] ,
+        ],
         'max_amount' => [
           'name' => 'max_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Max Amount') ,
-                  ] ,
+        ],
         'goal_amount' => [
           'name' => 'goal_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Goal Amount') ,
-                  ] ,
+        ],
         'goal_recurring' => [
           'name' => 'goal_recurring',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Goal Recurring') ,
-                  ] ,
+        ],
         'thankyou_title' => [
           'name' => 'thankyou_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Thank-you Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'thankyou_text' => [
           'name' => 'thankyou_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Thank-you Text') ,
-             'rows' => 8,
-           'cols' => 60,
-              ] ,
+          'rows' => 8,
+          'cols' => 60,
+        ],
         'thankyou_footer' => [
           'name' => 'thankyou_footer',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Thank-you Footer') ,
-             'rows' => 8,
-           'cols' => 60,
-              ] ,
+          'rows' => 8,
+          'cols' => 60,
+        ],
         'is_for_organization' => [
           'name' => 'is_for_organization',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'for_organization' => [
           'name' => 'for_organization',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('On Behalf Of Organization') ,
-             'rows' => 2,
-           'cols' => 50,
-              ] ,
+          'rows' => 2,
+          'cols' => 50,
+        ],
         'is_email_receipt' => [
           'name' => 'is_email_receipt',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'receipt_from_name' => [
           'name' => 'receipt_from_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Notification From Name') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'receipt_from_email' => [
           'name' => 'receipt_from_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Notification From Email') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'cc_receipt' => [
           'name' => 'cc_receipt',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('CC Payment Notification to') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'bcc_receipt' => [
           'name' => 'bcc_receipt',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('BCC Payment Notification to') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'receipt_text' => [
           'name' => 'receipt_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Payment Notification Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'recur_fail_notify' => [
           'name' => 'recur_fail_notify',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Recurring Failed Notification to') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_internal' => [
           'name' => 'is_internal',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'footer_text' => [
           'name' => 'footer_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Footer Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'amount_block_is_active' => [
           'name' => 'amount_block_is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'honor_block_is_active' => [
           'name' => 'honor_block_is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'honor_block_title' => [
           'name' => 'honor_block_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Honor Block Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'honor_block_text' => [
           'name' => 'honor_block_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Honor Block Text') ,
-             'rows' => 2,
-           'cols' => 50,
-              ] ,
+          'rows' => 2,
+          'cols' => 50,
+        ],
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Contribution Page Start Date') ,
-                  ] ,
+        ],
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Contribution Page End Date') ,
-                  ] ,
+        ],
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Contribution Page Created Date') ,
-                  ] ,
+        ],
         'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-             'import' => TRUE,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'import' => TRUE,
           'where' => 'civicrm_contribution_page.currency',
           'headerPattern' => '/cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/i',
-           'export' => TRUE,
-            'default' => 'UL',
-          ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+        ],
         'installments_option' => [
           'name' => 'installments_option',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Installments Option') ,
-             'rows' => 4,
-           'cols' => 60,
-              ] ,
+          'rows' => 4,
+          'cols' => 60,
+        ],
         'background_URL' => [
           'name' => 'background_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Background Url') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ],
         'mobile_background_URL' => [
           'name' => 'mobile_background_URL',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Mobile Background Url') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ],
         'is_send_sms' => [
           'name' => 'is_send_sms',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'sms_text' => [
           'name' => 'sms_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Sms Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
       ];
     }
     return self::$_fields;
@@ -699,7 +697,6 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -709,7 +706,6 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -718,14 +714,13 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution_page'] = &$fields[$name];
@@ -741,14 +736,13 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution_page'] = &$fields[$name];

@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -190,18 +191,16 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
    */
   public $created_date;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_custom_group
-  */
+   * class constructor
+   *
+   * @return civicrm_custom_group
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -213,11 +212,11 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -226,11 +225,10 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -238,112 +236,112 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'extends' => [
           'name' => 'extends',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Extends') ,
-                  'default' => 'Contact',
-           'enumValues' => 'Contact, Individual, Household, Organization, Location, Address, Contribution, ContributionPage, ContributionRecur, Activity, Relationship, Group, Membership, Participant, Event, Grant, Pledge, Case, PriceField',
-         ] ,
+          'default' => 'Contact',
+          'enumValues' => 'Contact, Individual, Household, Organization, Location, Address, Contribution, ContributionPage, ContributionRecur, Activity, Relationship, Group, Membership, Participant, Event, Grant, Pledge, Case, PriceField',
+        ],
         'extends_entity_column_id' => [
           'name' => 'extends_entity_column_id',
           'type' => CRM_Utils_Type::T_INT,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'extends_entity_column_value' => [
           'name' => 'extends_entity_column_value',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Extends Entity Column Value') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'style' => [
           'name' => 'style',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Style') ,
-                   'enumValues' => 'Tab, Inline',
-         ] ,
+          'enumValues' => 'Tab, Inline',
+        ],
         'collapse_display' => [
           'name' => 'collapse_display',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Collapse Display') ,
-                  ] ,
+        ],
         'help_pre' => [
           'name' => 'help_pre',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Pre') ,
-             'rows' => 4,
-           'cols' => 80,
-              ] ,
+          'rows' => 4,
+          'cols' => 80,
+        ],
         'help_post' => [
           'name' => 'help_post',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Post') ,
-             'rows' => 4,
-           'cols' => 80,
-              ] ,
+          'rows' => 4,
+          'cols' => 80,
+        ],
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
           'required' => TRUE,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'table_name' => [
           'name' => 'table_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Table Name') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_multiple' => [
           'name' => 'is_multiple',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'min_multiple' => [
           'name' => 'min_multiple',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Min Multiple') ,
-                  ] ,
+        ],
         'max_multiple' => [
           'name' => 'max_multiple',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Max Multiple') ,
-                  ] ,
+        ],
         'collapse_adv_display' => [
           'name' => 'collapse_adv_display',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Collapse Adv Display') ,
-                  ] ,
+        ],
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Custom Group Created Date') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -351,7 +349,6 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -361,7 +358,6 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -370,14 +366,13 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['custom_group'] = &$fields[$name];
@@ -393,14 +388,13 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['custom_group'] = &$fields[$name];
@@ -418,11 +412,12 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums() {
+  public static function &getEnums()
+  {
     static $enums = [
-                                                        'extends',
-                                                  'style',
-                                                                                                                                                                ];
+        'extends',
+        'style',
+    ];
     return $enums;
   }
   /**
@@ -437,32 +432,32 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                        'extends' => [
-                  'Contact' => ts('Contact'),
-                  'Individual' => ts('Individual'),
-                  'Household' => ts('Household'),
-                  'Organization' => ts('Organization'),
-                  'Location' => ts('Location'),
-                  'Address' => ts('Address'),
-                  'Contribution' => ts('Contribution'),
-                  'ContributionPage' => ts('ContributionPage'),
-                  'ContributionRecur' => ts('ContributionRecur'),
-                  'Activity' => ts('Activity'),
-                  'Relationship' => ts('Relationship'),
-                  'Group' => ts('Group'),
-                  'Membership' => ts('Membership'),
-                  'Participant' => ts('Participant'),
-                  'Event' => ts('Event'),
-                  'Grant' => ts('Grant'),
-                  'Pledge' => ts('Pledge'),
-                  'Case' => ts('Case'),
-                  'PriceField' => ts('PriceField'),
-                ],
-                                                  'style' => [
-                  'Tab' => ts('Tab'),
-                  'Inline' => ts('Inline'),
-                ],
-                                                                                                                                                                  ];
+        'extends' => [
+          'Contact' => ts('Contact'),
+          'Individual' => ts('Individual'),
+          'Household' => ts('Household'),
+          'Organization' => ts('Organization'),
+          'Location' => ts('Location'),
+          'Address' => ts('Address'),
+          'Contribution' => ts('Contribution'),
+          'ContributionPage' => ts('ContributionPage'),
+          'ContributionRecur' => ts('ContributionRecur'),
+          'Activity' => ts('Activity'),
+          'Relationship' => ts('Relationship'),
+          'Group' => ts('Group'),
+          'Membership' => ts('Membership'),
+          'Participant' => ts('Participant'),
+          'Event' => ts('Event'),
+          'Grant' => ts('Grant'),
+          'Pledge' => ts('Pledge'),
+          'Case' => ts('Case'),
+          'PriceField' => ts('PriceField'),
+        ],
+        'style' => [
+          'Tab' => ts('Tab'),
+          'Inline' => ts('Inline'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -474,7 +469,7 @@ class CRM_Core_DAO_CustomGroup extends CRM_Core_DAO {
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Core_DAO_CustomGroup::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Core_DAO_CustomGroup::tsEnum($enum, $values[$enum]);
       }

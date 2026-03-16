@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_Track extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -179,18 +180,16 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO {
    */
   public $entity_id;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_track
-  */
+   * class constructor
+   *
+   * @return civicrm_track
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -200,160 +199,160 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'session_key' => [
           'name' => 'session_key',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Session Key') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'counter' => [
           'name' => 'counter',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Counter') ,
           'required' => TRUE,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'visit_date' => [
           'name' => 'visit_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Visit Date') ,
           'required' => TRUE,
-                'export' => TRUE,
+          'export' => TRUE,
           'where' => 'civicrm_track.visit_date',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'page_type' => [
           'name' => 'page_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Page Type') ,
           'required' => TRUE,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'page_id' => [
           'name' => 'page_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'state' => [
           'name' => 'state',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('State') ,
-                  ] ,
+        ],
         'referrer_type' => [
           'name' => 'referrer_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Referrer Type') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-              'export' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'export' => TRUE,
           'where' => 'civicrm_track.referrer_type',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'referrer_network' => [
           'name' => 'referrer_network',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Referrer Network') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-              'export' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'export' => TRUE,
           'where' => 'civicrm_track.referrer_network',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'referrer_url' => [
           'name' => 'referrer_url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Referrer URL') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_track.referrer_url',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'landing' => [
           'name' => 'landing',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Landing Page') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_track.landing',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'utm_source' => [
           'name' => 'utm_source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('UTM Source') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_track.utm_source',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'utm_medium' => [
           'name' => 'utm_medium',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('UTM Medium') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_track.utm_medium',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'utm_campaign' => [
           'name' => 'utm_campaign',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('UTM Campaign') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_track.utm_campaign',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'utm_term' => [
           'name' => 'utm_term',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('UTM Term') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_track.utm_term',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'utm_content' => [
           'name' => 'utm_content',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('UTM Content') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_track.utm_content',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -361,7 +360,6 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -370,7 +368,6 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -379,14 +376,13 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['track'] = &$fields[$name];
@@ -402,14 +398,13 @@ class CRM_Core_DAO_Track extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['track'] = &$fields[$name];

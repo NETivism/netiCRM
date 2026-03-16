@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -117,17 +118,17 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
    */
   public $search_args;
   /**
-   * Class constructor.
+   * class constructor
    *
-   * @return CRM_Mailing_DAO_Group
+   * @return civicrm_mailing_group
    */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * Return foreign links.
+   * return foreign links
    *
-   * @return array Array of foreign links.
+   * @return array
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -140,7 +141,8 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * Returns foreign keys and entity references.
    *
-   * @return array Array of CRM_Core_Reference_Interface objects.
+   * @return array
+   *   [CRM_Core_Reference_Interface]
    */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
@@ -151,9 +153,9 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-   * Returns all the column names of this table.
+   * returns all the column names of this table
    *
-   * @return array Array of column names.
+   * @return array
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -162,49 +164,49 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'mailing_id' => [
           'name' => 'mailing_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Mailing_DAO_Mailing',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Mailing',
+        ],
         'group_type' => [
           'name' => 'group_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Group Type') ,
-                   'enumValues' => 'Include, Exclude, Base',
-         ] ,
+          'enumValues' => 'Include, Exclude, Base',
+        ],
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => TRUE,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'search_id' => [
           'name' => 'search_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'search_args' => [
           'name' => 'search_args',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Search Args') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
   }
   /**
-   * Returns the name of this table.
+   * returns the names of this table
    *
-   * @return string The table name.
+   * @return string
    */
   public static function getTableName() {
     return self::$_tableName;
@@ -212,24 +214,21 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * Returns the list of fields that can be imported.
+   * returns the list of fields that can be imported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of importable fields.
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_group'] = &$fields[$name];
@@ -243,17 +242,15 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * Returns the list of fields that can be exported.
+   * returns the list of fields that can be exported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of exportable fields.
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_group'] = &$fields[$name];
@@ -267,47 +264,47 @@ class CRM_Mailing_DAO_Group extends CRM_Core_DAO {
     return self::$_export;
   }
   /**
-   * Returns an array containing the enum fields of this table.
+   * returns an array containing the enum fields of the civicrm_mailing_group table
    *
-   * @return array Reference to the array of enum fields.
+   * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums() {
+  public static function &getEnums()
+  {
     static $enums = [
-                                            'group_type',
-                                                                ];
+        'group_type',
+    ];
     return $enums;
   }
   /**
-   * Returns a translated enum value for display purposes.
+   * returns a ts()-translated enum value for display purposes
    *
-   * @param string $field The enum field in question.
-   * @param string $value The enum value up for translation.
+   * @param string $field  the enum field in question
+   * @param string $value  the enum value up for translation
    *
-   * @return string The display value of the enum.
+   * @return string  the display value of the enum
    */
   public static function tsEnum($field, $value) {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                            'group_type' => [
-                  'Include' => ts('Include'),
-                  'Exclude' => ts('Exclude'),
-                  'Base' => ts('Base'),
-                ],
-                                                                  ];
+        'group_type' => [
+          'Include' => ts('Include'),
+          'Exclude' => ts('Exclude'),
+          'Base' => ts('Base'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
   /**
-   * Adds display labels for enum fields to the values array.
+   * adds $value['foo_display'] for each $value['foo'] enum from civicrm_mailing_group
    *
-   * @param array $values (reference) The array to enhance.
-   *
+   * @param array $values (reference)  the array up for enhancing
    * @return void
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Mailing_DAO_Group::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_Group::tsEnum($enum, $values[$enum]);
       }

@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -99,17 +100,17 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
    */
   public $hold_threshold;
   /**
-   * Class constructor.
+   * class constructor
    *
-   * @return CRM_Mailing_DAO_BounceType
+   * @return civicrm_mailing_bounce_type
    */
   public function __construct() {
     parent::__construct();
   }
-  /**
-   * Returns all the column names of this table.
+   /**
+   * returns all the column names of this table
    *
-   * @return array Array of column names.
+   * @return array
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -118,35 +119,35 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Name') ,
           'required' => TRUE,
-                   'enumValues' => 'AOL, Away, DNS, Host, Inactive, Invalid, Loop, Quota, Relay, Spam, Syntax, Unknown',
-         ] ,
+          'enumValues' => 'AOL, Away, DNS, Host, Inactive, Invalid, Loop, Quota, Relay, Spam, Syntax, Unknown',
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'hold_threshold' => [
           'name' => 'hold_threshold',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Hold Threshold') ,
           'required' => TRUE,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
   }
   /**
-   * Returns the name of this table.
+   * returns the names of this table
    *
-   * @return string The table name.
+   * @return string
    */
   public static function getTableName() {
     return self::$_tableName;
@@ -154,24 +155,21 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * Returns the list of fields that can be imported.
+   * returns the list of fields that can be imported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of importable fields.
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_bounce_type'] = &$fields[$name];
@@ -185,17 +183,15 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * Returns the list of fields that can be exported.
+   * returns the list of fields that can be exported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of exportable fields.
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_bounce_type'] = &$fields[$name];
@@ -209,56 +205,56 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     return self::$_export;
   }
   /**
-   * Returns an array containing the enum fields of this table.
+   * returns an array containing the enum fields of the civicrm_mailing_bounce_type table
    *
-   * @return array Reference to the array of enum fields.
+   * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums() {
+  public static function &getEnums()
+  {
     static $enums = [
-                                'name',
-                                        ];
+        'name',
+    ];
     return $enums;
   }
   /**
-   * Returns a translated enum value for display purposes.
+   * returns a ts()-translated enum value for display purposes
    *
-   * @param string $field The enum field in question.
-   * @param string $value The enum value up for translation.
+   * @param string $field  the enum field in question
+   * @param string $value  the enum value up for translation
    *
-   * @return string The display value of the enum.
+   * @return string  the display value of the enum
    */
   public static function tsEnum($field, $value) {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                'name' => [
-                  'AOL' => ts('AOL'),
-                  'Away' => ts('Away'),
-                  'DNS' => ts('DNS'),
-                  'Host' => ts('Host'),
-                  'Inactive' => ts('Inactive'),
-                  'Invalid' => ts('Invalid'),
-                  'Loop' => ts('Loop'),
-                  'Quota' => ts('Quota'),
-                  'Relay' => ts('Relay'),
-                  'Spam' => ts('Spam'),
-                  'Syntax' => ts('Syntax'),
-                  'Unknown' => ts('Unknown'),
-                ],
-                                          ];
+        'name' => [
+          'AOL' => ts('AOL'),
+          'Away' => ts('Away'),
+          'DNS' => ts('DNS'),
+          'Host' => ts('Host'),
+          'Inactive' => ts('Inactive'),
+          'Invalid' => ts('Invalid'),
+          'Loop' => ts('Loop'),
+          'Quota' => ts('Quota'),
+          'Relay' => ts('Relay'),
+          'Spam' => ts('Spam'),
+          'Syntax' => ts('Syntax'),
+          'Unknown' => ts('Unknown'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
   /**
-   * Adds display labels for enum fields to the values array.
+   * adds $value['foo_display'] for each $value['foo'] enum from civicrm_mailing_bounce_type
    *
-   * @param array $values (reference) The array to enhance.
-   *
+   * @param array $values (reference)  the array up for enhancing
    * @return void
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Mailing_DAO_BounceType::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_BounceType::tsEnum($enum, $values[$enum]);
       }

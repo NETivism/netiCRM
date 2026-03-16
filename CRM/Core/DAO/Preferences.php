@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -195,18 +196,16 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
    */
   public $contact_autocomplete_options;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_preferences
-  */
+   * class constructor
+   *
+   * @return civicrm_preferences
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -219,11 +218,11 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -233,11 +232,10 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -245,121 +243,121 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Core_DAO_Domain',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_Domain',
+        ],
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'is_domain' => [
           'name' => 'is_domain',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'contact_view_options' => [
           'name' => 'contact_view_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact View Options') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'contact_edit_options' => [
           'name' => 'contact_edit_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Edit Options') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'advanced_search_options' => [
           'name' => 'advanced_search_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Advanced Search Options') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'user_dashboard_options' => [
           'name' => 'user_dashboard_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('User Dashboard Options') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'address_options' => [
           'name' => 'address_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Options') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'address_format' => [
           'name' => 'address_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Address Format') ,
-                  ] ,
+        ],
         'mailing_format' => [
           'name' => 'mailing_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Mailing Format') ,
-                  ] ,
+        ],
         'display_name_format' => [
           'name' => 'display_name_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Display Name Format') ,
-                  ] ,
+        ],
         'sort_name_format' => [
           'name' => 'sort_name_format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Sort Name Format') ,
-                  ] ,
+        ],
         'address_standardization_provider' => [
           'name' => 'address_standardization_provider',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Standardization Provider') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'address_standardization_userid' => [
           'name' => 'address_standardization_userid',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Standardization Userid') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'address_standardization_url' => [
           'name' => 'address_standardization_url',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Address Standardization Url') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'editor_id' => [
           'name' => 'editor_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'mailing_backend' => [
           'name' => 'mailing_backend',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Mailing Backend') ,
-             'rows' => 20,
-           'cols' => 80,
-              ] ,
+          'rows' => 20,
+          'cols' => 80,
+        ],
         'navigation' => [
           'name' => 'navigation',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Navigation') ,
-                  ] ,
+        ],
         'contact_autocomplete_options' => [
           'name' => 'contact_autocomplete_options',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Autocomplete Options') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
       ];
     }
     return self::$_fields;
@@ -367,7 +365,6 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -376,7 +373,6 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -385,14 +381,13 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['preferences'] = &$fields[$name];
@@ -408,14 +403,13 @@ class CRM_Core_DAO_Preferences extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['preferences'] = &$fields[$name];

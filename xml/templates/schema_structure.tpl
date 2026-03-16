@@ -27,60 +27,71 @@
 */
 
 /**
+ * Defines the internationalization schema structure for translatable database columns
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-class CRM_Core_I18n_SchemaStructure
-{ldelim}
-    public static function &columns()
-    {ldelim}
-        static $result = null;
-        if (!$result) {ldelim}
-          $result = [
+class CRM_Core_I18n_SchemaStructure {ldelim}
+  /**
+   * Returns the list of internationalized columns.
+   *
+   * @return array
+   */
+  public static function &columns() {ldelim}
+    static $result = NULL;
+    if (!$result) {ldelim}
+      $result = [
 {foreach from=$columns key=table item=types}
-            '{$table}' => [
+        '{$table}' => [
 {foreach from=$types key=column item=type}
-              '{$column}' => "{$type}",
+          '{$column}' => "{$type}",
 {/foreach}
-            ],
+        ],
 {/foreach}
-          ];
-        {rdelim}
-        return $result;
+      ];
     {rdelim}
-    public static function &indices()
-    {ldelim}
-        static $result = null;
-        if (!$result) {ldelim}
-          $result = [
+    return $result;
+  {rdelim}
+  /**
+   * Returns the list of internationalized indices.
+   *
+   * @return array
+   */
+  public static function &indices() {ldelim}
+    static $result = NULL;
+    if (!$result) {ldelim}
+      $result = [
 {foreach from=$indices key=table item=tableIndices}
-            '{$table}' => [
+        '{$table}' => [
 {foreach from=$tableIndices key=name item=info}
-              '{$name}' => [
-                'name' => '{$info.name}',
-                'field' => [
+          '{$name}' => [
+            'name' => '{$info.name}',
+            'field' => [
 {foreach from=$info.field item=field}
-                  '{$field}',
-{/foreach}
-                ],
-{if $info.unique}                'unique' => 1,{"\n"}{/if}
-              ],
+              '{$field}',
 {/foreach}
             ],
+{if $info.unique}            'unique' => 1,{"\n"}{/if}
+          ],
 {/foreach}
-          ];
-        {rdelim}
-        return $result;
+        ],
+{/foreach}
+      ];
     {rdelim}
-    public static function &tables()
-    {ldelim}
-        static $result = null;
-        if (!$result) {ldelim}
-            $result = array_keys(self::columns());
-        {rdelim}
-        return $result;
+    return $result;
+  {rdelim}
+  /**
+   * Returns the list of internationalized tables.
+   *
+   * @return array
+   */
+  public static function &tables() {ldelim}
+    static $result = NULL;
+    if (!$result) {ldelim}
+      $result = array_keys(self::columns());
     {rdelim}
+    return $result;
+  {rdelim}
 {rdelim}
+

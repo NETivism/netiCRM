@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_Instrument extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -100,18 +101,16 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO {
    */
   public $payment_instruments;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_instrument
-  */
+   * class constructor
+   *
+   * @return civicrm_instrument
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -121,24 +120,24 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'payment_instruments' => [
           'name' => 'payment_instruments',
           'type' => CRM_Utils_Type::T_BLOB,
           'title' => ts('Payment Instruments') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -146,7 +145,6 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -155,7 +153,6 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -164,14 +161,13 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['instrument'] = &$fields[$name];
@@ -187,14 +183,13 @@ class CRM_Core_DAO_Instrument extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['instrument'] = &$fields[$name];

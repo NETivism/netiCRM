@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -100,18 +101,16 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
    */
   public $modified_date;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_acl_cache
-  */
+   * class constructor
+   *
+   * @return civicrm_acl_cache
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -124,11 +123,11 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -138,11 +137,10 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -150,23 +148,23 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'acl_id' => [
           'name' => 'acl_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_ACL_DAO_ACL',
-        ] ,
+          'FKClassName' => 'CRM_ACL_DAO_ACL',
+        ],
         'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Modified Date') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -174,7 +172,6 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -183,7 +180,6 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -192,14 +188,13 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['acl_cache'] = &$fields[$name];
@@ -215,14 +210,13 @@ class CRM_ACL_DAO_Cache extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['acl_cache'] = &$fields[$name];

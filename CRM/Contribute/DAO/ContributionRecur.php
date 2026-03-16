@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -220,18 +221,16 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
    */
   public $last_execute_date;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_contribution_recur
-  */
+   * class constructor
+   *
+   * @return civicrm_contribution_recur
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -244,11 +243,11 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -258,11 +257,10 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -270,151 +268,151 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Amount') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'default' => 'UL',
+        ],
         'frequency_unit' => [
           'name' => 'frequency_unit',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Frequency Unit') ,
-                  'default' => 'month',
-           'enumValues' => 'day,week,month,year',
-         ] ,
+          'default' => 'month',
+          'enumValues' => 'day,week,month,year',
+        ],
         'frequency_interval' => [
           'name' => 'frequency_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Frequency Interval') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'installments' => [
           'name' => 'installments',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Installments') ,
-                  ] ,
+        ],
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'create_date' => [
           'name' => 'create_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Create Date') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Modified Date') ,
-                  ] ,
+        ],
         'cancel_date' => [
           'name' => 'cancel_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Cancel Date') ,
-                  ] ,
+        ],
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('End Date') ,
-                  ] ,
+        ],
         'processor_id' => [
           'name' => 'processor_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
+        ],
         'external_id' => [
           'name' => 'external_id',
           'type' => CRM_Utils_Type::T_STRING,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Transaction ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'invoice_id' => [
           'name' => 'invoice_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Invoice ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'contribution_status_id' => [
           'name' => 'contribution_status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Recurring Contribution Status') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution_recur.contribution_status_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            'default' => '',
-          ] ,
+          'export' => TRUE,
+          'default' => '',
+        ],
         'is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution_recur.is_test',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'cycle_day' => [
           'name' => 'cycle_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Cycle Day') ,
           'required' => TRUE,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'next_sched_contribution' => [
           'name' => 'next_sched_contribution',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Next Sched Contribution') ,
-                  ] ,
+        ],
         'failure_count' => [
           'name' => 'failure_count',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Failure Count') ,
-                  ] ,
+        ],
         'failure_retry_date' => [
           'name' => 'failure_retry_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Failure Retry Date') ,
-                  ] ,
+        ],
         'auto_renew' => [
           'name' => 'auto_renew',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Auto Renew') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'last_execute_date' => [
           'name' => 'last_execute_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Execute Date') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -422,7 +420,6 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -431,7 +428,6 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -440,14 +436,13 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution_recur'] = &$fields[$name];
@@ -463,14 +458,13 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution_recur'] = &$fields[$name];
@@ -488,10 +482,11 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums() {
+  public static function &getEnums()
+  {
     static $enums = [
-                                                                    'frequency_unit',
-                                                                                                                                                                                                                                                    ];
+        'frequency_unit',
+    ];
     return $enums;
   }
   /**
@@ -506,13 +501,13 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                                    'frequency_unit' => [
-                  'day' => ts('day'),
-                  'week' => ts('week'),
-                  'month' => ts('month'),
-                  'year' => ts('year'),
-                ],
-                                                                                                                                                                                                                                                      ];
+        'frequency_unit' => [
+          'day' => ts('day'),
+          'week' => ts('week'),
+          'month' => ts('month'),
+          'year' => ts('year'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -524,7 +519,7 @@ class CRM_Contribute_DAO_ContributionRecur extends CRM_Core_DAO {
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Contribute_DAO_ContributionRecur::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contribute_DAO_ContributionRecur::tsEnum($enum, $values[$enum]);
       }

@@ -26,20 +26,18 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 {if $table.foreignKey}
-  {foreach from=$table.foreignKey item=foreign}
-    {if $foreign.import}
+{foreach from=$table.foreignKey item=foreign}
+{if $foreign.import}
 require_once '{$foreign.fileName}';
-    {/if}
-  {/foreach}
 {/if}
-class {$table.className} extends CRM_Core_DAO
-{ldelim}
+{/foreach}
+{/if}
+
+class {$table.className} extends CRM_Core_DAO {ldelim}
   /**
    * static instance to hold the table name
    *
@@ -53,14 +51,14 @@ class {$table.className} extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  public static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -68,7 +66,7 @@ class {$table.className} extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -76,7 +74,7 @@ class {$table.className} extends CRM_Core_DAO
    * @var array
    * @static
    */
-  public static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -84,15 +82,15 @@ class {$table.className} extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  public static $_log = {$table.log};
-  {if $table.primaryKey.name != "id"}
+  public static $_log = {$table.log|upper};
+{if $table.primaryKey.name != "id"}
   /**
    * table primary key
    *
    * @var string
    */
   public $_primaryKey = '{$table.primaryKey.name}';
-  {/if}
+{/if}
 {foreach from=$table.fields item=field}
   /**
 {if $field.comment}
@@ -102,26 +100,22 @@ class {$table.className} extends CRM_Core_DAO
    * @var {$field.phpType}
    */
   public ${$field.name};
-{/foreach} {* table.fields *}
+{/foreach}{* table.fields *}
   /**
    * class constructor
    *
-   * @access public
    * @return {$table.name}
    */
-  public function __construct()
-  {ldelim}
+  public function __construct() {ldelim}
     parent::__construct();
   {rdelim}
 {if $table.foreignKey}
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  public function &links()
-  {ldelim}
+  public function &links() {ldelim}
     if (!(self::$_links)) {ldelim}
       self::$_links = [
 {foreach from=$table.foreignKey item=foreign}
@@ -133,34 +127,31 @@ class {$table.className} extends CRM_Core_DAO
   {rdelim}
 {/if} {* table.foreignKey *}
 {if $table.foreignKey || $table.dynamicForeignKey}
-  /**
+ /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {ldelim}
+  public static function getReferenceColumns() {ldelim}
     if (!isset(Civi::$statics[__CLASS__]['links'])) {ldelim}
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
 {foreach from=$table.foreignKey item=foreign}
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , '{$foreign.name}', '{$foreign.table}', '{$foreign.key}');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), '{$foreign.name}', '{$foreign.table}', '{$foreign.key}');
 {/foreach}
 {foreach from=$table.dynamicForeignKey item=foreign}
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName() , '{$foreign.idColumn}', NULL, '{$foreign.key|default:'id'}', '{$foreign.typeColumn}');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Dynamic(self::getTableName(), '{$foreign.idColumn}', NULL, '{$foreign.key|default:'id'}', '{$foreign.typeColumn}');
 {/foreach}
     {rdelim}
     return Civi::$statics[__CLASS__]['links'];
   {rdelim}
-{/if} {* table.foreignKey *}
+{/if}{* table.foreignKey *}
   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  public static function &fields()
-  {ldelim}
+  public static function &fields() {ldelim}
     if (!(self::$_fields)) {ldelim}
       self::$_fields = [
 {foreach from=$table.fields item=field}
@@ -171,88 +162,82 @@ class {$table.className} extends CRM_Core_DAO
           'title' => ts('{$field.title}') ,
 {/if}
 {if $field.required}
-          'required' => {$field.required},
-{/if} {* field.required *}
+          'required' => {$field.required|upper},
+{/if}{* field.required *}
 {if $field.length}
           'maxlength' => {$field.length},
-{/if} {* field.length *}
+{/if}{* field.length *}
 {if $field.size}
           'size' => {$field.size},
-{/if} {* field.size *}
+{/if}{* field.size *}
 {if $field.rows}
           'rows' => {$field.rows},
-{/if} {* field.rows *}
+{/if}{* field.rows *}
 {if $field.cols}
           'cols' => {$field.cols},
-{/if} {* field.cols *}
+{/if}{* field.cols *}
 {if $field.import}
-          'import' => {$field.import},
+          'import' => {$field.import|upper},
           'where' => '{$table.name}.{$field.name}',
           'headerPattern' => '{$field.headerPattern}',
           'dataPattern' => '{$field.dataPattern}',
-{/if} {* field.import *}
+{/if}{* field.import *}
 {if $field.export}
-          'export' => {$field.export},
+          'export' => {$field.export|upper},
 {if ! $field.import}
           'where' => '{$table.name}.{$field.name}',
           'headerPattern' => '{$field.headerPattern}',
           'dataPattern' => '{$field.dataPattern}',
 {/if}
-{/if} {* field.export *}
+{/if}{* field.export *}
 {if $field.rule}
           'rule' => '{$field.rule}',
-{/if} {* field.rule *}
+{/if}{* field.rule *}
 {if $field.default}
           'default' => '{$field.default|substring:1:-1}',
-{/if} {* field.default *}
+{/if}{* field.default *}
 {if $field.enumValues}
           'enumValues' => '{$field.enumValues}',
-{/if} {* field.enumValues *}
+{/if}{* field.enumValues *}
 {if $field.FKClassName}
           'FKClassName' => '{$field.FKClassName}',
-{/if} {* field.FKClassName *}
+{/if}{* field.FKClassName *}
 {if $field.usage}
           'usage' => '{$field.usage}',
-{/if} {* field.usage *}
-      ] ,
-{/foreach} {* table.fields *}
-     ];
+{/if}{* field.usage *}
+        ],
+{/foreach}{* table.fields *}
+      ];
     {rdelim}
     return self::$_fields;
   {rdelim}
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  public static function getTableName()
-  {ldelim}
-    {if $table.localizable}
+  public static function getTableName() {ldelim}
+{if $table.localizable}
     global $dbLocale;
     return self::$_tableName . $dbLocale;
-    {else}
+{else}
     return self::$_tableName;
-    {/if}
+{/if}
   {rdelim}
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  public function getLog()
-  {ldelim}
+  public function getLog() {ldelim}
     return self::$_log;
   {rdelim}
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  public static function &import($prefix = false)
-  {ldelim}
+  public static function &import($prefix = FALSE) {ldelim}
     if (!(self::$_import)) {ldelim}
       self::$_import = [];
       $fields = &self::fields();
@@ -260,30 +245,29 @@ class {$table.className} extends CRM_Core_DAO
         if (CRM_Utils_Array::value('import', $field)) {ldelim}
           if ($prefix) {ldelim}
             self::$_import['{$table.labelName}'] = &$fields[$name];
-          {rdelim} else {ldelim}
+          {rdelim}
+          else {ldelim}
             self::$_import[$name] = &$fields[$name];
           {rdelim}
         {rdelim}
       {rdelim}
-      {if $table.foreignKey}
-      {foreach from=$table.foreignKey item=foreign}
-      {if $foreign.import}
+{if $table.foreignKey}
+{foreach from=$table.foreignKey item=foreign}
+{if $foreign.import}
       self::$_import = array_merge( self::$_import,
-      {$foreign.className}::import( true ) );
-      {/if}
-      {/foreach}
-      {/if}
+      {$foreign.className}::import(TRUE) );
+{/if}
+{/foreach}
+{/if}
     {rdelim}
     return self::$_import;
   {rdelim}
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  public static function &export($prefix = false)
-  {ldelim}
+  public static function &export($prefix = FALSE) {ldelim}
     if (!(self::$_export)) {ldelim}
       self::$_export = [];
       $fields = &self::fields();
@@ -291,19 +275,20 @@ class {$table.className} extends CRM_Core_DAO
         if (CRM_Utils_Array::value('export', $field)) {ldelim}
           if ($prefix) {ldelim}
             self::$_export['{$table.labelName}'] = &$fields[$name];
-          {rdelim} else {ldelim}
+          {rdelim}
+          else {ldelim}
             self::$_export[$name] = &$fields[$name];
           {rdelim}
         {rdelim}
       {rdelim}
-      {if $table.foreignKey}
-      {foreach from=$table.foreignKey item=foreign}
-      {if $foreign.export}
+{if $table.foreignKey}
+{foreach from=$table.foreignKey item=foreign}
+{if $foreign.export}
       self::$_export = array_merge( self::$_export,
-      {$foreign.className}::export( true ) );
-      {/if}
-      {/foreach}
-      {/if}
+      {$foreign.className}::export(TRUE) );
+{/if}
+{/foreach}
+{/if}
     {rdelim}
     return self::$_export;
   {rdelim}
@@ -316,11 +301,11 @@ class {$table.className} extends CRM_Core_DAO
   public static function &getEnums()
   {ldelim}
     static $enums = [
-      {foreach from=$table.fields item=field}
-      {if $field.crmType == 'CRM_Utils_Type::T_ENUM'}
+{foreach from=$table.fields item=field}
+{if $field.crmType == 'CRM_Utils_Type::T_ENUM'}
         '{$field.name}',
-      {/if}
-      {/foreach}
+{/if}
+{/foreach}
     ];
     return $enums;
   {rdelim}
@@ -332,20 +317,19 @@ class {$table.className} extends CRM_Core_DAO
    *
    * @return string  the display value of the enum
    */
-  public static function tsEnum($field, $value)
-  {ldelim}
-    static $translations = null;
+  public static function tsEnum($field, $value) {ldelim}
+    static $translations = NULL;
     if (!$translations) {ldelim}
       $translations = [
-      {foreach from=$table.fields item=field}
-      {if $field.crmType == 'CRM_Utils_Type::T_ENUM'}
+{foreach from=$table.fields item=field}
+{if $field.crmType == 'CRM_Utils_Type::T_ENUM'}
         '{$field.name}' => [
-        {foreach from=$field.values item=value}
+{foreach from=$field.values item=value}
           '{$value}' => ts('{$value}'),
-        {/foreach}
+{/foreach}
         ],
-      {/if}
-      {/foreach}
+{/if}
+{/foreach}
       ];
     {rdelim}
     return $translations[$field][$value];
@@ -356,10 +340,9 @@ class {$table.className} extends CRM_Core_DAO
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  public static function addDisplayEnums(&$values)
-  {ldelim}
+  public static function addDisplayEnums(&$values) {ldelim}
     $enumFields = &{$table.className}::getEnums();
-    foreach ($enumFields as $enum) {ldelim}
+    foreach($enumFields as $enum) {ldelim}
       if (isset($values[$enum])) {ldelim}
         $values[$enum . '_display'] = {$table.className}::tsEnum($enum, $values[$enum]);
       {rdelim}

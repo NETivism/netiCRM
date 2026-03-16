@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -135,18 +136,16 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
    */
   public $notify_email;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_pcp_block
-  */
+   * class constructor
+   *
+   * @return civicrm_pcp_block
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -159,11 +158,11 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -174,11 +173,10 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -186,63 +184,63 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+        ],
         'supporter_profile_id' => [
           'name' => 'supporter_profile_id',
           'type' => CRM_Utils_Type::T_INT,
-                  'default' => 'UL',
-            'FKClassName' => 'CRM_Core_DAO_UFGroup',
-        ] ,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Core_DAO_UFGroup',
+        ],
         'is_approval_needed' => [
           'name' => 'is_approval_needed',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'is_tellfriend_enabled' => [
           'name' => 'is_tellfriend_enabled',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'tellfriend_limit' => [
           'name' => 'tellfriend_limit',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Tellfriend Limit') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'link_text' => [
           'name' => 'link_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Link Text') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'notify_email' => [
           'name' => 'notify_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Notify Email') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ],
       ];
     }
     return self::$_fields;
@@ -250,7 +248,6 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -259,7 +256,6 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -268,14 +264,13 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['pcp_block'] = &$fields[$name];
@@ -291,14 +286,13 @@ class CRM_Contribute_DAO_PCPBlock extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['pcp_block'] = &$fields[$name];

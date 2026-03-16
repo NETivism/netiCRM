@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -169,18 +170,16 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
    */
   public $color_homepage_link;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_contribution_widget
-  */
+   * class constructor
+   *
+   * @return civicrm_contribution_widget
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -192,11 +191,11 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -205,11 +204,10 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -217,112 +215,112 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'url_logo' => [
           'name' => 'url_logo',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url Logo') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'button_title' => [
           'name' => 'button_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Button Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'about' => [
           'name' => 'about',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('About') ,
-                  ] ,
+        ],
         'url_homepage' => [
           'name' => 'url_homepage',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Url Homepage') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'color_title' => [
           'name' => 'color_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Title') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_button' => [
           'name' => 'color_button',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Button') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_bar' => [
           'name' => 'color_bar',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Bar') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_main_text' => [
           'name' => 'color_main_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Main Text') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_main' => [
           'name' => 'color_main',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Main') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_main_bg' => [
           'name' => 'color_main_bg',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Main Bg') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_bg' => [
           'name' => 'color_bg',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Bg') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_about_link' => [
           'name' => 'color_about_link',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color About Link') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
         'color_homepage_link' => [
           'name' => 'color_homepage_link',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Color Homepage Link') ,
-           'maxlength' => 10,
-           'size' => CRM_Utils_Type::TWELVE,
-                ] ,
+          'maxlength' => 10,
+          'size' => CRM_Utils_Type::TWELVE,
+        ],
       ];
     }
     return self::$_fields;
@@ -330,7 +328,6 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -339,7 +336,6 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -348,14 +344,13 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution_widget'] = &$fields[$name];
@@ -371,14 +366,13 @@ class CRM_Contribute_DAO_Widget extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution_widget'] = &$fields[$name];

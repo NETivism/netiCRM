@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Event_DAO_Event extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -417,18 +418,16 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
    */
   public $currency;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_event
-  */
+   * class constructor
+   *
+   * @return civicrm_event
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -441,11 +440,11 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -455,11 +454,10 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -467,367 +465,367 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'event_title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Event Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_event.title',
           'headerPattern' => '/(event.)?title$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'summary' => [
           'name' => 'summary',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Event Summary') ,
-             'rows' => 4,
-           'cols' => 60,
-              ] ,
+          'rows' => 4,
+          'cols' => 60,
+        ],
         'event_description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Event Description') ,
-             'rows' => 8,
-           'cols' => 60,
-              ] ,
+          'rows' => 8,
+          'cols' => 60,
+        ],
         'event_type_id' => [
           'name' => 'event_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Event Type ID') ,
-                  ] ,
+        ],
         'participant_listing_id' => [
           'name' => 'participant_listing_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant Listing ID') ,
-                  ] ,
+        ],
         'is_public' => [
           'name' => 'is_public',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Event Public') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'event_start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Event Start Date') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_event.start_date',
           'headerPattern' => '/^start|(s(tart\s)?date)$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'event_end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Event End Date') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_event.end_date',
           'headerPattern' => '/^end|(e(nd\s)?date)$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'is_online_registration' => [
           'name' => 'is_online_registration',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Online Registration') ,
-                  ] ,
+        ],
         'is_qrcode' => [
           'name' => 'is_qrcode',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is qrcode checkin enabled') ,
-                  ] ,
+        ],
         'registration_link_text' => [
           'name' => 'registration_link_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Event Registration Link Text') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'registration_start_date' => [
           'name' => 'registration_start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Registration Start Date') ,
-                  ] ,
+        ],
         'registration_end_date' => [
           'name' => 'registration_end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Registration End Date') ,
-                  ] ,
+        ],
         'max_participants' => [
           'name' => 'max_participants',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Max Participants') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'event_full_text' => [
           'name' => 'event_full_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Event Information') ,
-             'rows' => 4,
-           'cols' => 60,
-              ] ,
+          'rows' => 4,
+          'cols' => 60,
+        ],
         'is_monetary' => [
           'name' => 'is_monetary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'contribution_type_id' => [
           'name' => 'contribution_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'payment_processor' => [
           'name' => 'payment_processor',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_map' => [
           'name' => 'is_map',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'fee_label' => [
           'name' => 'fee_label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Fee Label') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_event.fee_label',
           'headerPattern' => '/^fee|(f(ee\s)?label)$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'is_show_location' => [
           'name' => 'is_show_location',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('show location') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'loc_block_id' => [
           'name' => 'loc_block_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_LocBlock',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_LocBlock',
+        ],
         'default_role_id' => [
           'name' => 'default_role_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant Role') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_event.default_role_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            'default' => '',
-          ] ,
+          'export' => TRUE,
+          'default' => '',
+        ],
         'intro_text' => [
           'name' => 'intro_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Introductory Message') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'footer_text' => [
           'name' => 'footer_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Footer Message') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'confirm_title' => [
           'name' => 'confirm_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Confirmation Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ],
         'confirm_text' => [
           'name' => 'confirm_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Confirm Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'confirm_footer_text' => [
           'name' => 'confirm_footer_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Footer Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'is_email_confirm' => [
           'name' => 'is_email_confirm',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is confirm email') ,
-                  ] ,
+        ],
         'confirm_email_text' => [
           'name' => 'confirm_email_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Confirmation Email Text') ,
-             'rows' => 4,
-           'cols' => 50,
-              ] ,
+          'rows' => 4,
+          'cols' => 50,
+        ],
         'confirm_from_name' => [
           'name' => 'confirm_from_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Confirm From Name') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'confirm_from_email' => [
           'name' => 'confirm_from_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Confirm From Email') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'cc_confirm' => [
           'name' => 'cc_confirm',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Cc Confirm') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'bcc_confirm' => [
           'name' => 'bcc_confirm',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bcc Confirm') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'allow_cancel_by_link' => [
           'name' => 'allow_cancel_by_link',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Allow Cancel By Link') ,
-                  ] ,
+        ],
         'default_fee_id' => [
           'name' => 'default_fee_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'default_discount_fee_id' => [
           'name' => 'default_discount_fee_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'thankyou_title' => [
           'name' => 'thankyou_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('ThankYou Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'default' => 'UL',
+        ],
         'thankyou_text' => [
           'name' => 'thankyou_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('ThankYou Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'thankyou_footer_text' => [
           'name' => 'thankyou_footer_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Footer Text') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'is_pay_later' => [
           'name' => 'is_pay_later',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'pay_later_text' => [
           'name' => 'pay_later_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Pay Later Text') ,
-                  ] ,
+        ],
         'pay_later_receipt' => [
           'name' => 'pay_later_receipt',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Pay Later Receipt') ,
-                  ] ,
+        ],
         'is_multiple_registrations' => [
           'name' => 'is_multiple_registrations',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'allow_same_participant_emails' => [
           'name' => 'allow_same_participant_emails',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Does Event allow multiple registrations from same email address?') ,
-                  ] ,
+        ],
         'has_waitlist' => [
           'name' => 'has_waitlist',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Has Waitlist') ,
-                  ] ,
+        ],
         'requires_approval' => [
           'name' => 'requires_approval',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Requires Approval') ,
-                  ] ,
+        ],
         'expiration_time' => [
           'name' => 'expiration_time',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Expiration Time') ,
-                  ] ,
+        ],
         'waitlist_text' => [
           'name' => 'waitlist_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Waitlist Text') ,
-             'rows' => 4,
-           'cols' => 60,
-              ] ,
+          'rows' => 4,
+          'cols' => 60,
+        ],
         'approval_req_text' => [
           'name' => 'approval_req_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Approval Req Text') ,
-             'rows' => 4,
-           'cols' => 60,
-              ] ,
+          'rows' => 4,
+          'cols' => 60,
+        ],
         'is_template' => [
           'name' => 'is_template',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'template_title' => [
           'name' => 'template_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Event Template Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_event.template_title',
           'headerPattern' => '/(template.)?title$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Event Created Date') ,
-                  ] ,
+        ],
         'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-             'import' => TRUE,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'import' => TRUE,
           'where' => 'civicrm_event.currency',
           'headerPattern' => '/cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/i',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
       ];
     }
     return self::$_fields;
@@ -835,7 +833,6 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -845,7 +842,6 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -854,14 +850,13 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['event'] = &$fields[$name];
@@ -877,14 +872,13 @@ class CRM_Event_DAO_Event extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['event'] = &$fields[$name];

@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -117,7 +118,7 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
    */
   public $is_test;
   /**
-   * Type of mailling job: null | child
+   * Type of mailling job: null | child 
    *
    * @var string
    */
@@ -141,17 +142,17 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
    */
   public $job_limit;
   /**
-   * Class constructor.
+   * class constructor
    *
-   * @return CRM_Mailing_DAO_Job
+   * @return civicrm_mailing_job
    */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * Return foreign links.
+   * return foreign links
    *
-   * @return array Array of foreign links.
+   * @return array
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -165,7 +166,8 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
   /**
    * Returns foreign keys and entity references.
    *
-   * @return array Array of CRM_Core_Reference_Interface objects.
+   * @return array
+   *   [CRM_Core_Reference_Interface]
    */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
@@ -176,9 +178,9 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-   * Returns all the column names of this table.
+   * returns all the column names of this table
    *
-   * @return array Array of column names.
+   * @return array
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -187,69 +189,69 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'mailing_id' => [
           'name' => 'mailing_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Mailing_DAO_Mailing',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Mailing',
+        ],
         'scheduled_date' => [
           'name' => 'scheduled_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Scheduled Date') ,
-                  ] ,
+        ],
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
-                  ] ,
+        ],
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('End Date') ,
-                  ] ,
+        ],
         'status' => [
           'name' => 'status',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Status') ,
-                   'enumValues' => 'Scheduled, Running, Complete, Paused, Canceled',
-         ] ,
+          'enumValues' => 'Scheduled, Running, Complete, Paused, Canceled',
+        ],
         'is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'job_type' => [
           'name' => 'job_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Job Type') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
-                  'default' => 'UL',
-            'FKClassName' => 'CRM_Mailing_DAO_Job',
-        ] ,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Mailing_DAO_Job',
+        ],
         'job_offset' => [
           'name' => 'job_offset',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Job Offset') ,
-                  ] ,
+        ],
         'job_limit' => [
           'name' => 'job_limit',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Job Limit') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
   }
   /**
-   * Returns the name of this table.
+   * returns the names of this table
    *
-   * @return string The table name.
+   * @return string
    */
   public static function getTableName() {
     return self::$_tableName;
@@ -257,24 +259,21 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * Returns the list of fields that can be imported.
+   * returns the list of fields that can be imported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of importable fields.
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_job'] = &$fields[$name];
@@ -288,17 +287,15 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * Returns the list of fields that can be exported.
+   * returns the list of fields that can be exported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of exportable fields.
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_job'] = &$fields[$name];
@@ -312,49 +309,49 @@ class CRM_Mailing_DAO_Job extends CRM_Core_DAO {
     return self::$_export;
   }
   /**
-   * Returns an array containing the enum fields of this table.
+   * returns an array containing the enum fields of the civicrm_mailing_job table
    *
-   * @return array Reference to the array of enum fields.
+   * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums() {
+  public static function &getEnums()
+  {
     static $enums = [
-                                                                                'status',
-                                                                            ];
+        'status',
+    ];
     return $enums;
   }
   /**
-   * Returns a translated enum value for display purposes.
+   * returns a ts()-translated enum value for display purposes
    *
-   * @param string $field The enum field in question.
-   * @param string $value The enum value up for translation.
+   * @param string $field  the enum field in question
+   * @param string $value  the enum value up for translation
    *
-   * @return string The display value of the enum.
+   * @return string  the display value of the enum
    */
   public static function tsEnum($field, $value) {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                                                'status' => [
-                  'Scheduled' => ts('Scheduled'),
-                  'Running' => ts('Running'),
-                  'Complete' => ts('Complete'),
-                  'Paused' => ts('Paused'),
-                  'Canceled' => ts('Canceled'),
-                ],
-                                                                              ];
+        'status' => [
+          'Scheduled' => ts('Scheduled'),
+          'Running' => ts('Running'),
+          'Complete' => ts('Complete'),
+          'Paused' => ts('Paused'),
+          'Canceled' => ts('Canceled'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
   /**
-   * Adds display labels for enum fields to the values array.
+   * adds $value['foo_display'] for each $value['foo'] enum from civicrm_mailing_job
    *
-   * @param array $values (reference) The array to enhance.
-   *
+   * @param array $values (reference)  the array up for enhancing
    * @return void
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Mailing_DAO_Job::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_Job::tsEnum($enum, $values[$enum]);
       }

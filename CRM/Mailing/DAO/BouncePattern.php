@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -93,17 +94,17 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
    */
   public $pattern;
   /**
-   * Class constructor.
+   * class constructor
    *
-   * @return CRM_Mailing_DAO_BouncePattern
+   * @return civicrm_mailing_bounce_pattern
    */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * Return foreign links.
+   * return foreign links
    *
-   * @return array Array of foreign links.
+   * @return array
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -114,11 +115,11 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -127,9 +128,9 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-   * Returns all the column names of this table.
+   * returns all the column names of this table
    *
-   * @return array Array of column names.
+   * @return array
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -138,28 +139,28 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'bounce_type_id' => [
           'name' => 'bounce_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Mailing_DAO_BounceType',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_BounceType',
+        ],
         'pattern' => [
           'name' => 'pattern',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Pattern') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
       ];
     }
     return self::$_fields;
   }
   /**
-   * Returns the name of this table.
+   * returns the names of this table
    *
-   * @return string The table name.
+   * @return string
    */
   public static function getTableName() {
     return self::$_tableName;
@@ -167,24 +168,21 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * Returns the list of fields that can be imported.
+   * returns the list of fields that can be imported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of importable fields.
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_bounce_pattern'] = &$fields[$name];
@@ -198,17 +196,15 @@ class CRM_Mailing_DAO_BouncePattern extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * Returns the list of fields that can be exported.
+   * returns the list of fields that can be exported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of exportable fields.
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_bounce_pattern'] = &$fields[$name];

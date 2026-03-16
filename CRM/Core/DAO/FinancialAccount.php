@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -92,18 +93,16 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO {
    */
   public $account_type_id;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_financial_account
-  */
+   * class constructor
+   *
+   * @return civicrm_financial_account
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -113,25 +112,25 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
           'required' => TRUE,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_financial_account.name',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'account_type_id' => [
           'name' => 'account_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -139,7 +138,6 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -148,7 +146,6 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -157,14 +154,13 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['financial_account'] = &$fields[$name];
@@ -180,14 +176,13 @@ class CRM_Core_DAO_FinancialAccount extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['financial_account'] = &$fields[$name];

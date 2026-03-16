@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Mailing_DAO_Recipients extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -99,17 +100,17 @@ class CRM_Mailing_DAO_Recipients extends CRM_Core_DAO {
    */
   public $email_id;
   /**
-   * Class constructor.
+   * class constructor
    *
-   * @return CRM_Mailing_DAO_Recipients
+   * @return civicrm_mailing_recipients
    */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * Return foreign links.
+   * return foreign links
    *
-   * @return array Array of foreign links.
+   * @return array
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -124,7 +125,8 @@ class CRM_Mailing_DAO_Recipients extends CRM_Core_DAO {
   /**
    * Returns foreign keys and entity references.
    *
-   * @return array Array of CRM_Core_Reference_Interface objects.
+   * @return array
+   *   [CRM_Core_Reference_Interface]
    */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
@@ -136,9 +138,9 @@ class CRM_Mailing_DAO_Recipients extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-   * Returns all the column names of this table.
+   * returns all the column names of this table
    *
-   * @return array Array of column names.
+   * @return array
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -147,33 +149,33 @@ class CRM_Mailing_DAO_Recipients extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'mailing_id' => [
           'name' => 'mailing_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Mailing_DAO_Mailing',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Mailing',
+        ],
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'email_id' => [
           'name' => 'email_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Core_DAO_Email',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_Email',
+        ],
       ];
     }
     return self::$_fields;
   }
   /**
-   * Returns the name of this table.
+   * returns the names of this table
    *
-   * @return string The table name.
+   * @return string
    */
   public static function getTableName() {
     return self::$_tableName;
@@ -181,24 +183,21 @@ class CRM_Mailing_DAO_Recipients extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * Returns the list of fields that can be imported.
+   * returns the list of fields that can be imported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of importable fields.
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_recipients'] = &$fields[$name];
@@ -212,17 +211,15 @@ class CRM_Mailing_DAO_Recipients extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * Returns the list of fields that can be exported.
+   * returns the list of fields that can be exported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of exportable fields.
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_recipients'] = &$fields[$name];

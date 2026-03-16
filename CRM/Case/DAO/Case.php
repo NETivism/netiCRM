@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Case_DAO_Case extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -123,18 +124,16 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO {
    */
   public $is_deleted;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_case
-  */
+   * class constructor
+   *
+   * @return civicrm_case
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -145,80 +144,80 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Case ID') ,
           'required' => TRUE,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_case.id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'case_type_id' => [
           'name' => 'case_type_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Case Type Id') ,
           'required' => TRUE,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_case.case_type_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => FALSE,
-            ] ,
+          'export' => FALSE,
+        ],
         'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'case_start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Case Start Date') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_case.start_date',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'case_end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE,
           'title' => ts('Case End Date') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_case.end_date',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'details' => [
           'name' => 'details',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Details') ,
-             'rows' => 8,
-           'cols' => 60,
-              ] ,
+          'rows' => 8,
+          'cols' => 60,
+        ],
         'case_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Case Status Id') ,
           'required' => TRUE,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_case.status_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => FALSE,
-            ] ,
+          'export' => FALSE,
+        ],
         'case_deleted' => [
           'name' => 'is_deleted',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Case is in the Trash') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_case.is_deleted',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
       ];
     }
     return self::$_fields;
@@ -226,7 +225,6 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -235,7 +233,6 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -244,14 +241,13 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['case'] = &$fields[$name];
@@ -267,14 +263,13 @@ class CRM_Case_DAO_Case extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['case'] = &$fields[$name];

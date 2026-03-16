@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_File extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -118,18 +119,16 @@ class CRM_Core_DAO_File extends CRM_Core_DAO {
    */
   public $upload_date;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_file
-  */
+   * class constructor
+   *
+   * @return civicrm_file
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -139,42 +138,42 @@ class CRM_Core_DAO_File extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'file_type_id' => [
           'name' => 'file_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'mime_type' => [
           'name' => 'mime_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Mime Type') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'uri' => [
           'name' => 'uri',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Uri') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'document' => [
           'name' => 'document',
           'type' => CRM_Utils_Type::T_MEDIUMBLOB,
           'title' => ts('Document') ,
-                  ] ,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'upload_date' => [
           'name' => 'upload_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Upload Date') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -182,7 +181,6 @@ class CRM_Core_DAO_File extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -191,7 +189,6 @@ class CRM_Core_DAO_File extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -200,14 +197,13 @@ class CRM_Core_DAO_File extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['file'] = &$fields[$name];
@@ -223,14 +219,13 @@ class CRM_Core_DAO_File extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['file'] = &$fields[$name];

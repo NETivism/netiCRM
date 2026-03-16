@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -130,18 +131,16 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO {
    */
   public $is_active;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_contribution_type
-  */
+   * class constructor
+   *
+   * @return civicrm_contribution_type
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -151,61 +150,61 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'contribution_type' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Type') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-             'import' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'import' => TRUE,
           'where' => 'civicrm_contribution_type.name',
           'headerPattern' => '/(contrib(ution)?)?type/i',
           'dataPattern' => '/donation|member|campaign/i',
-           'export' => TRUE,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'accounting_code' => [
           'name' => 'accounting_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Accounting Code') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-              'export' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_type.accounting_code',
           'headerPattern' => '',
           'dataPattern' => '',
-               'usage' => 'System',
-       ] ,
+          'usage' => 'System',
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'tax_rate' => [
           'name' => 'tax_rate',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Tax Rate') ,
-                  ] ,
+        ],
         'is_taxreceipt' => [
           'name' => 'is_taxreceipt',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_deductible' => [
           'name' => 'is_deductible',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -213,7 +212,6 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -222,7 +220,6 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -231,14 +228,13 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution_type'] = &$fields[$name];
@@ -254,14 +250,13 @@ class CRM_Contribute_DAO_ContributionType extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution_type'] = &$fields[$name];

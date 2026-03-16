@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -140,20 +141,19 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
    */
   public $premiums_combination;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_premiums
-  */
+   * class constructor
+   *
+   * @return civicrm_premiums
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -162,11 +162,10 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -174,70 +173,70 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
           'required' => TRUE,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'premiums_active' => [
           'name' => 'premiums_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Active') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'premiums_intro_title' => [
           'name' => 'premiums_intro_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title for Premiums section') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'premiums_intro_text' => [
           'name' => 'premiums_intro_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Premiums Intro Text') ,
-                  ] ,
+        ],
         'premiums_contact_email' => [
           'name' => 'premiums_contact_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Contact Email') ,
-           'maxlength' => 100,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 100,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'premiums_contact_phone' => [
           'name' => 'premiums_contact_phone',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Contact Phone') ,
-           'maxlength' => 50,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 50,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'premiums_display_min_contribution' => [
           'name' => 'premiums_display_min_contribution',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Display Min Contribution') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'premiums_nothanks_text' => [
           'name' => 'premiums_nothanks_text',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Premiums Nothanks Text') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'premiums_combination' => [
           'name' => 'premiums_combination',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Premiums Combination') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -245,7 +244,6 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -255,7 +253,6 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -264,14 +261,13 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['premiums'] = &$fields[$name];
@@ -287,14 +283,13 @@ class CRM_Contribute_DAO_Premium extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['premiums'] = &$fields[$name];

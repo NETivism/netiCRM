@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Core_DAO_AddressFormat extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -88,18 +89,16 @@ class CRM_Core_DAO_AddressFormat extends CRM_Core_DAO {
    */
   public $format;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_address_format
-  */
+   * class constructor
+   *
+   * @return civicrm_address_format
+   */
   public function __construct() {
     parent::__construct();
   }
-  /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
   public static function &fields() {
@@ -109,12 +108,12 @@ class CRM_Core_DAO_AddressFormat extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'format' => [
           'name' => 'format',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Address Format') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -122,7 +121,6 @@ class CRM_Core_DAO_AddressFormat extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -131,7 +129,6 @@ class CRM_Core_DAO_AddressFormat extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -140,14 +137,13 @@ class CRM_Core_DAO_AddressFormat extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['address_format'] = &$fields[$name];
@@ -163,14 +159,13 @@ class CRM_Core_DAO_AddressFormat extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['address_format'] = &$fields[$name];

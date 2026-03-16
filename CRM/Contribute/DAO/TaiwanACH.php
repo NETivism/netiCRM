@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -154,18 +155,16 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
    */
   public $data;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_contribution_taiwanach
-  */
+   * class constructor
+   *
+   * @return civicrm_contribution_taiwanach
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -179,11 +178,11 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -194,11 +193,10 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -207,117 +205,117 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Taiwan ACH ID') ,
           'required' => TRUE,
-                  ] ,
+        ],
         'contribution_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'contribution_recur_id' => [
           'name' => 'contribution_recur_id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
+        ],
         'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Page ID') ,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+        ],
         'payment_type' => [
           'name' => 'payment_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Type') ,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-              'export' => TRUE,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.payment_type',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'bank_code' => [
           'name' => 'bank_code',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bank Code') ,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-              'export' => TRUE,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.bank_code',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'postoffice_acc_type' => [
           'name' => 'postoffice_acc_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Post Office Account Type') ,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-              'export' => TRUE,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.postoffice_acc_type',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'bank_branch' => [
           'name' => 'bank_branch',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bank Branch') ,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-              'export' => TRUE,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.bank_branch',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'bank_account' => [
           'name' => 'bank_account',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Bank Account') ,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-              'export' => TRUE,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.bank_account',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'identifier_number' => [
           'name' => 'identifier_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Identifier Number') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.identifier_number',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'order_number' => [
           'name' => 'order_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Order Number') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-              'export' => TRUE,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.order_number',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'stamp_verification' => [
           'name' => 'stamp_verification',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Stamp Verification') ,
-                'export' => TRUE,
+          'export' => TRUE,
           'where' => 'civicrm_contribution_taiwanach.stamp_verification',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'data' => [
           'name' => 'data',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Custom Data') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -325,7 +323,6 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -334,7 +331,6 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -343,14 +339,13 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution_taiwanach'] = &$fields[$name];
@@ -366,14 +361,13 @@ class CRM_Contribute_DAO_TaiwanACH extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution_taiwanach'] = &$fields[$name];

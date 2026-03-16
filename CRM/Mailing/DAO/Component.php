@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -122,17 +123,17 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
    */
   public $is_active;
   /**
-   * Class constructor.
+   * class constructor
    *
-   * @return CRM_Mailing_DAO_Component
+   * @return civicrm_mailing_component
    */
   public function __construct() {
     parent::__construct();
   }
-  /**
-   * Returns all the column names of this table.
+   /**
+   * returns all the column names of this table
    *
-   * @return array Array of column names.
+   * @return array
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -141,57 +142,57 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Component Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'component_type' => [
           'name' => 'component_type',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Component Type') ,
-                   'enumValues' => 'Header, Footer, Subscribe, Welcome, Unsubscribe, OptOut, Reply, Resubscribe',
-         ] ,
+          'enumValues' => 'Header, Footer, Subscribe, Welcome, Unsubscribe, OptOut, Reply, Resubscribe',
+        ],
         'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'body_html' => [
           'name' => 'body_html',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Body Html') ,
-             'rows' => 8,
-           'cols' => 80,
-              ] ,
+          'rows' => 8,
+          'cols' => 80,
+        ],
         'body_text' => [
           'name' => 'body_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Body Text') ,
-             'rows' => 8,
-           'cols' => 80,
-              ] ,
+          'rows' => 8,
+          'cols' => 80,
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
   }
   /**
-   * Returns the name of this table.
+   * returns the names of this table
    *
-   * @return string The table name.
+   * @return string
    */
   public static function getTableName() {
     global $dbLocale;
@@ -200,24 +201,21 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * Returns the list of fields that can be imported.
+   * returns the list of fields that can be imported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of importable fields.
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_component'] = &$fields[$name];
@@ -231,17 +229,15 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * Returns the list of fields that can be exported.
+   * returns the list of fields that can be exported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of exportable fields.
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_component'] = &$fields[$name];
@@ -255,52 +251,52 @@ class CRM_Mailing_DAO_Component extends CRM_Core_DAO {
     return self::$_export;
   }
   /**
-   * Returns an array containing the enum fields of this table.
+   * returns an array containing the enum fields of the civicrm_mailing_component table
    *
-   * @return array Reference to the array of enum fields.
+   * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums() {
+  public static function &getEnums()
+  {
     static $enums = [
-                                            'component_type',
-                                                                            ];
+        'component_type',
+    ];
     return $enums;
   }
   /**
-   * Returns a translated enum value for display purposes.
+   * returns a ts()-translated enum value for display purposes
    *
-   * @param string $field The enum field in question.
-   * @param string $value The enum value up for translation.
+   * @param string $field  the enum field in question
+   * @param string $value  the enum value up for translation
    *
-   * @return string The display value of the enum.
+   * @return string  the display value of the enum
    */
   public static function tsEnum($field, $value) {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                            'component_type' => [
-                  'Header' => ts('Header'),
-                  'Footer' => ts('Footer'),
-                  'Subscribe' => ts('Subscribe'),
-                  'Welcome' => ts('Welcome'),
-                  'Unsubscribe' => ts('Unsubscribe'),
-                  'OptOut' => ts('OptOut'),
-                  'Reply' => ts('Reply'),
-                  'Resubscribe' => ts('Resubscribe'),
-                ],
-                                                                              ];
+        'component_type' => [
+          'Header' => ts('Header'),
+          'Footer' => ts('Footer'),
+          'Subscribe' => ts('Subscribe'),
+          'Welcome' => ts('Welcome'),
+          'Unsubscribe' => ts('Unsubscribe'),
+          'OptOut' => ts('OptOut'),
+          'Reply' => ts('Reply'),
+          'Resubscribe' => ts('Resubscribe'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
   /**
-   * Adds display labels for enum fields to the values array.
+   * adds $value['foo_display'] for each $value['foo'] enum from civicrm_mailing_component
    *
-   * @param array $values (reference) The array to enhance.
-   *
+   * @param array $values (reference)  the array up for enhancing
    * @return void
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Mailing_DAO_Component::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_Component::tsEnum($enum, $values[$enum]);
       }

@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -271,17 +272,17 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
    */
   public $is_hidden;
   /**
-   * Class constructor.
+   * class constructor
    *
-   * @return CRM_Mailing_DAO_Mailing
+   * @return civicrm_mailing
    */
   public function __construct() {
     parent::__construct();
   }
   /**
-   * Return foreign links.
+   * return foreign links
    *
-   * @return array Array of foreign links.
+   * @return array
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -302,7 +303,8 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
   /**
    * Returns foreign keys and entity references.
    *
-   * @return array Array of CRM_Core_Reference_Interface objects.
+   * @return array
+   *   [CRM_Core_Reference_Interface]
    */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
@@ -320,9 +322,9 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-   * Returns all the column names of this table.
+   * returns all the column names of this table
    *
-   * @return array Array of column names.
+   * @return array
    */
   public static function &fields() {
     if (!(self::$_fields)) {
@@ -331,185 +333,185 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'required' => TRUE,
-                  ] ,
+        ],
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_Domain',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_Domain',
+        ],
         'header_id' => [
           'name' => 'header_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Component',
+        ],
         'footer_id' => [
           'name' => 'footer_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Component',
+        ],
         'reply_id' => [
           'name' => 'reply_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Component',
+        ],
         'unsubscribe_id' => [
           'name' => 'unsubscribe_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Component',
+        ],
         'resubscribe_id' => [
           'name' => 'resubscribe_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'optout_id' => [
           'name' => 'optout_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Mailing_DAO_Component',
-        ] ,
+          'FKClassName' => 'CRM_Mailing_DAO_Component',
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'from_name' => [
           'name' => 'from_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('From Name') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'from_email' => [
           'name' => 'from_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('From Email') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'replyto_email' => [
           'name' => 'replyto_email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Replyto Email') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'body_preview' => [
           'name' => 'body_preview',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Body Preview') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'body_text' => [
           'name' => 'body_text',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Body Text') ,
-                  ] ,
+        ],
         'body_html' => [
           'name' => 'body_html',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Body Html') ,
-                  ] ,
+        ],
         'body_json' => [
           'name' => 'body_json',
           'type' => CRM_Utils_Type::T_LONGTEXT,
           'title' => ts('Body Json') ,
-                  ] ,
+        ],
         'url_tracking' => [
           'name' => 'url_tracking',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Url Tracking') ,
-                  ] ,
+        ],
         'forward_replies' => [
           'name' => 'forward_replies',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Forward Replies') ,
-                  ] ,
+        ],
         'auto_responder' => [
           'name' => 'auto_responder',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Auto Responder') ,
-                  ] ,
+        ],
         'open_tracking' => [
           'name' => 'open_tracking',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Open Tracking') ,
-                  ] ,
+        ],
         'is_completed' => [
           'name' => 'is_completed',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'msg_template_id' => [
           'name' => 'msg_template_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_MessageTemplates',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_MessageTemplates',
+        ],
         'override_verp' => [
           'name' => 'override_verp',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Override Verp') ,
-                  ] ,
+        ],
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Mailing Created Date') ,
-                  ] ,
+        ],
         'scheduled_id' => [
           'name' => 'scheduled_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'scheduled_date' => [
           'name' => 'scheduled_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Mailing Scheduled Date') ,
-                  ] ,
+        ],
         'is_archived' => [
           'name' => 'is_archived',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'visibility' => [
           'name' => 'visibility',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Visibility') ,
-                  'default' => 'User and User Admin Only',
-           'enumValues' => 'User and User Admin Only,Public Pages',
-         ] ,
+          'default' => 'User and User Admin Only',
+          'enumValues' => 'User and User Admin Only,Public Pages',
+        ],
         'dedupe_email' => [
           'name' => 'dedupe_email',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Dedupe Email') ,
-                  ] ,
+        ],
         'sms_provider_id' => [
           'name' => 'sms_provider_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Mailing SMS Provider') ,
-                  ] ,
+        ],
         'is_hidden' => [
           'name' => 'is_hidden',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
   }
   /**
-   * Returns the name of this table.
+   * returns the names of this table
    *
-   * @return string The table name.
+   * @return string
    */
   public static function getTableName() {
     global $dbLocale;
@@ -518,24 +520,21 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
     return self::$_log;
   }
   /**
-   * Returns the list of fields that can be imported.
+   * returns the list of fields that can be imported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of importable fields.
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing'] = &$fields[$name];
@@ -549,17 +548,15 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
     return self::$_import;
   }
   /**
-   * Returns the list of fields that can be exported.
+   * returns the list of fields that can be exported
    *
-   * @param bool $prefix Whether to prefix the field names.
-   *
-   * @return array Array of exportable fields.
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing'] = &$fields[$name];
@@ -573,46 +570,46 @@ class CRM_Mailing_DAO_Mailing extends CRM_Core_DAO {
     return self::$_export;
   }
   /**
-   * Returns an array containing the enum fields of this table.
+   * returns an array containing the enum fields of the civicrm_mailing table
    *
-   * @return array Reference to the array of enum fields.
+   * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums() {
+  public static function &getEnums()
+  {
     static $enums = [
-                                                                                                                                                                                                                                                                                                                                                                                'visibility',
-                                                    ];
+        'visibility',
+    ];
     return $enums;
   }
   /**
-   * Returns a translated enum value for display purposes.
+   * returns a ts()-translated enum value for display purposes
    *
-   * @param string $field The enum field in question.
-   * @param string $value The enum value up for translation.
+   * @param string $field  the enum field in question
+   * @param string $value  the enum value up for translation
    *
-   * @return string The display value of the enum.
+   * @return string  the display value of the enum
    */
   public static function tsEnum($field, $value) {
     static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                                                                                                                                                                                                                                                                                                                                                'visibility' => [
-                  'User and User Admin Only' => ts('User and User Admin Only'),
-                  'Public Pages' => ts('Public Pages'),
-                ],
-                                                      ];
+        'visibility' => [
+          'User and User Admin Only' => ts('User and User Admin Only'),
+          'Public Pages' => ts('Public Pages'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
   /**
-   * Adds display labels for enum fields to the values array.
+   * adds $value['foo_display'] for each $value['foo'] enum from civicrm_mailing
    *
-   * @param array $values (reference) The array to enhance.
-   *
+   * @param array $values (reference)  the array up for enhancing
    * @return void
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Mailing_DAO_Mailing::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_Mailing::tsEnum($enum, $values[$enum]);
       }

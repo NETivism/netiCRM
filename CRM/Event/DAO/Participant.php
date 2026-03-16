@@ -29,6 +29,7 @@
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
+
 class CRM_Event_DAO_Participant extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
@@ -158,18 +159,16 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
    */
   public $fee_currency;
   /**
-  * class constructor
-  *
-  * @access public
-  * @return civicrm_participant
-  */
+   * class constructor
+   *
+   * @return civicrm_participant
+   */
   public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
   public function &links() {
@@ -185,11 +184,11 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
     return self::$_links;
   }
   /**
-  * Returns foreign keys and entity references.
-  *
-  * @return array
-  *   [CRM_Core_Reference_Interface]
-  */
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
   public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
       Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
@@ -202,11 +201,10 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
     return Civi::$statics[__CLASS__]['links'];
   }
   /**
-  * returns all the column names of this table
-  *
-  * @access public
-  * @return array
-  */
+   * returns all the column names of this table
+   *
+   * @return array
+   */
   public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
@@ -215,165 +213,165 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant ID') ,
           'required' => TRUE,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.id',
           'headerPattern' => '/(^(participant(.)?)?id$)/i',
           'dataPattern' => '',
-           'export' => TRUE,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'participant_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.contact_id',
           'headerPattern' => '/contact(.?id)?/i',
           'dataPattern' => '',
-           'export' => TRUE,
-              'FKClassName' => 'CRM_Contact_DAO_Contact',
-           'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+          'usage' => 'System',
+        ],
         'event_id' => [
           'name' => 'event_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Event') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.event_id',
           'headerPattern' => '/event id$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-              'FKClassName' => 'CRM_Event_DAO_Event',
-           'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'FKClassName' => 'CRM_Event_DAO_Event',
+          'usage' => 'System',
+        ],
         'participant_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Participant Status Id') ,
           'required' => TRUE,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.status_id',
           'headerPattern' => '/(participant.)?(status)$/i',
           'dataPattern' => '',
-           'export' => FALSE,
-            'default' => '',
-            'FKClassName' => 'CRM_Event_DAO_ParticipantStatusType',
-           'usage' => 'System',
-       ] ,
+          'export' => FALSE,
+          'default' => '',
+          'FKClassName' => 'CRM_Event_DAO_ParticipantStatusType',
+          'usage' => 'System',
+        ],
         'participant_role_id' => [
           'name' => 'role_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Participant Role Id') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.role_id',
           'headerPattern' => '/(participant.)?(role)$/i',
           'dataPattern' => '',
-           'export' => FALSE,
-            'default' => 'UL',
-             'usage' => 'System',
-       ] ,
+          'export' => FALSE,
+          'default' => 'UL',
+          'usage' => 'System',
+        ],
         'participant_register_date' => [
           'name' => 'register_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Register date') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.register_date',
           'headerPattern' => '/^(r(egister\s)?date)$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'participant_source' => [
           'name' => 'source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Participant Source') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => TRUE,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.source',
           'headerPattern' => '/(participant.)?(source)$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'participant_fee_level' => [
           'name' => 'fee_level',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Fee level') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.fee_level',
           'headerPattern' => '/^(f(ee\s)?level)$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-            ] ,
+          'export' => TRUE,
+        ],
         'participant_is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.is_test',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'participant_is_pay_later' => [
           'name' => 'is_pay_later',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Pay Later') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.is_pay_later',
           'headerPattern' => '/(is.)?(pay(.)?later)$/i',
           'dataPattern' => '',
-           'export' => TRUE,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'participant_fee_amount' => [
           'name' => 'fee_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Fee Amount') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.fee_amount',
           'headerPattern' => '/fee(.?am(ou)?nt)?/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
-           'export' => TRUE,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'participant_registered_by_id' => [
           'name' => 'registered_by_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Registered By ID') ,
-               'import' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_participant.registered_by_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => TRUE,
-            'default' => 'UL',
-            'FKClassName' => 'CRM_Event_DAO_Participant',
-           'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Event_DAO_Participant',
+          'usage' => 'System',
+        ],
         'participant_discount_id' => [
           'name' => 'discount_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Discount ID') ,
-                  'default' => 'UL',
-            'FKClassName' => 'CRM_Core_DAO_Discount',
-        ] ,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Core_DAO_Discount',
+        ],
         'participant_fee_currency' => [
           'name' => 'fee_currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Fee Currency') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-             'import' => TRUE,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'import' => TRUE,
           'where' => 'civicrm_participant.fee_currency',
           'headerPattern' => '/(fee)?.?cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/i',
-           'export' => TRUE,
-            'default' => 'UL',
-             'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+          'usage' => 'System',
+        ],
       ];
     }
     return self::$_fields;
@@ -381,7 +379,6 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
   public static function getTableName() {
@@ -390,7 +387,6 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
   public function getLog() {
@@ -399,14 +395,13 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['participant'] = &$fields[$name];
@@ -422,14 +417,13 @@ class CRM_Event_DAO_Participant extends CRM_Core_DAO {
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
   public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach ($fields as $name => $field) {
+      foreach($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['participant'] = &$fields[$name];
