@@ -28,13 +28,9 @@
 /**
  * This is a part of CiviCRM extension management functionality.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This page displays the list of extensions registered in the system.
@@ -47,20 +43,18 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
-  static $_extInstalled = NULL;
+  public static $_extInstalled = NULL;
 
-  static $_extNotInstalled = NULL;
+  public static $_extNotInstalled = NULL;
 
   /**
-   * Obtains the group name from url and sets the title.
+   * Obtains the group name from URL and sets the title.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
 
     $ext = new CRM_Core_Extensions();
     if ($ext->enabled === TRUE) {
@@ -71,20 +65,20 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::ADD => [
@@ -117,24 +111,21 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the basic page (run essentially starts execution for that page).
+   * Runs the basic page.
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     parent::run();
   }
 
   /**
-   * Browse all options
-   *
+   * Browses all extensions.
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
 
     $this->assign('extEnabled', FALSE);
     if (self::$_extInstalled) {
@@ -152,7 +143,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
           $action -= CRM_Core_Action::DISABLE;
           $action -= CRM_Core_Action::ADD;
         }
-        $rows[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $rows[$id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $id,
             'key' => $obj->key,
           ]
@@ -170,7 +163,9 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::DISABLE;
         $action -= CRM_Core_Action::ENABLE;
         $action -= CRM_Core_Action::DELETE;
-        $rowsUpl[$id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $rowsUpl[$id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $id,
             'key' => $obj->key,
           ]
@@ -181,42 +176,42 @@ class CRM_Admin_Page_Extensions extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_Extensions';
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'CRM_Admin_Form_Extensions';
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/extensions';
   }
 
   /**
-   * function to get userContext params
+   * Gets user context params.
    *
-   * @param int $mode mode that we are in
+   * @param string|null $mode
    *
    * @return string
-   * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';
   }
 }
-

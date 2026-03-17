@@ -34,16 +34,9 @@
  * us to automate the export process. To use this class, the object has to
  * implement the Selector/Api.interface.php class
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
 
 class CRM_Core_Selector_Controller {
 
@@ -54,8 +47,8 @@ class CRM_Core_Selector_Controller {
    * @var int
    */
   // move the values from the session to the template
-  CONST SESSION = 1, TEMPLATE = 2,
-  TRANSFER = 4, EXPORT = 8, SCREEN = 16, PDF = 32;
+  public const SESSION = 1, TEMPLATE = 2,
+    TRANSFER = 4, EXPORT = 8, SCREEN = 16, PDF = 32;
 
   /**
    * a CRM Object that implements CRM_Core_Selector_API
@@ -182,19 +175,18 @@ class CRM_Core_Selector_Controller {
   public static $_properties = ['columnHeaders', 'rows', 'rowsEmpty'];
 
   /**
-   * Class constructor
+   * Class constructor.
    *
-   * @param CRM_Core_Selector_API $object  an object that implements the selector API
-   * @param int               $pageID  default pageID
-   * @param int               $sortID  default sortID
-   * @param int               $action  the actions to potentially support
-   * @param CRM_Core_Page|CRM_Core_Form $store   place in session to store some values
-   * @param int               $output  what do we so with the output, session/template//both
-   *
-   * @return Object
-   * @access public
+   * @param CRM_Core_Selector_API $object an object that implements the selector API
+   * @param int $pageID default page ID
+   * @param string|int|null $sortID default sort ID
+   * @param int $action the actions to potentially support
+   * @param CRM_Core_Page|CRM_Core_Form $store place in session to store some values
+   * @param int $output output target (SESSION, TEMPLATE, or both)
+   * @param string|null $prefix prefix for the selector variables
+   * @param int|null $case case ID
    */
-  function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
+  public function __construct($object, $pageID, $sortID, $action, $store = NULL, $output = self::TEMPLATE, $prefix = NULL, $case = NULL) {
 
     $this->_object = $object;
     $this->_pageID = $pageID ? $pageID : 1;
@@ -223,7 +215,7 @@ class CRM_Core_Selector_Controller {
     $this->_sort = new CRM_Utils_Sort($this->_sortOrder, $this->_sortID);
 
     /*
-         * if we are in transfer mode, do not goto database, use the 
+         * if we are in transfer mode, do not goto database, use the
          * session values instead
          */
 
@@ -254,14 +246,13 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * have the GET vars changed, i.e. pageId or sortId that forces us to recompute the search values
+   * Check if the GET variables have changed (e.g., pageId or sortId), forcing recomputation.
    *
-   * @param int $reset are we being reset
+   * @param int $reset whether the search is being reset
    *
-   * @return boolean   if the GET params are different from the session params
-   * @access public
+   * @return bool TRUE if GET params differ from session params
    */
-  function hasChanged($reset) {
+  public function hasChanged($reset) {
 
     /**
      * if we are in reset state, i.e the store is cleaned out, we return false
@@ -284,23 +275,11 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * Heart of the Controller. This is where all the action takes place
-   *
-   *   - The rows are fetched and stored depending on the type of output needed
-   *
-   *   - For export/printing all rows are selected.
-   *
-   *   - for displaying on screen paging parameters are used to display the
-   *     required rows.
-   *
-   *   - also depending on output type of session or template rows are appropriately stored in session
-   *     or template variables are updated.
-   *
+   * Heart of the Controller: fetch rows and store them based on output type.
    *
    * @return void
-   *
    */
-  function run() {
+  public function run() {
 
     // get the column headers
     $columnHeaders = &$this->_object->getColumnHeaders($this->_action, $this->_output);
@@ -363,31 +342,36 @@ class CRM_Core_Selector_Controller {
         self::$_template->assign("{$this->_prefix}summary", $summary);
       }
 
-
       // always store the current pageID and sortID
-      $this->_store->set($this->_prefix . CRM_Utils_Pager::PAGE_ID,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Pager::PAGE_ID,
         $this->_pager->getCurrentPageID()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_ID,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_ID,
         $this->_sort->getCurrentSortID()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_DIRECTION,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_DIRECTION,
         $this->_sort->getCurrentSortDirection()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Sort::SORT_ORDER,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Sort::SORT_ORDER,
         $this->_sort->orderBy()
       );
-      $this->_store->set($this->_prefix . CRM_Utils_Pager::PAGE_ROWCOUNT,
+      $this->_store->set(
+        $this->_prefix . CRM_Utils_Pager::PAGE_ROWCOUNT,
         $this->_pager->_perPage
       );
     }
   }
 
   /**
-   * function to retrieve rows.
+   * Retrieve rows based on current paging and sorting criteria.
    *
-   * @return array of rows
-   * @access public
+   * @param object $form (unused, should be this)
+   *
+   * @return array array of rows
    */
   public function getRows($form) {
     if ($form->_output == self::EXPORT || $form->_output == self::SCREEN) {
@@ -395,18 +379,21 @@ class CRM_Core_Selector_Controller {
       return $form->_object->getRows($form->_action, 0, 0, $form->_sort, $form->_output);
     }
     else {
-      return $form->_object->getRows($form->_action, $form->_pagerOffset, $form->_pagerRowCount,
-        $form->_sort, $form->_output, $form->_case
+      return $form->_object->getRows(
+        $form->_action,
+        $form->_pagerOffset,
+        $form->_pagerRowCount,
+        $form->_sort,
+        $form->_output,
+        $form->_case
       );
     }
   }
 
   /**
-   * default function for qill, if needed to be implemented, we
-   * expect the subclass to do it
+   * Default function for QILL (plain language search description).
    *
-   * @return string the status message
-   * @access public
+   * @return string|null the QILL description
    */
   public function getQill() {
     return $this->_object->getQill();
@@ -417,38 +404,36 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * getter for pager
+   * Get the pager object.
    *
-   * @return object CRM_Utils_Pager
-   * @access public
+   * @return CRM_Utils_Pager
    */
-  function getPager() {
+  public function getPager() {
     return $this->_pager;
   }
 
   /**
-   * getter for sort
+   * Get the sort object.
    *
-   * @return object CRM_Utils_Sort
-   * @access public
+   * @return CRM_Utils_Sort
    */
-  function getSort() {
+  public function getSort() {
     return $this->_sort;
   }
 
   /**
-   * Move the variables from the session to the template
+   * Move variables from the session to the template for display.
    *
-   * @return void
-   * @access public
+   * @return string|void HTML content if not embedded
    */
-  function moveFromSessionToTemplate() {
+  public function moveFromSessionToTemplate() {
     self::$_template->assign_by_ref("{$this->_prefix}pager", $this->_pager);
 
     $rows = $this->_store->get("{$this->_prefix}rows");
 
     if ($rows) {
-      self::$_template->assign("{$this->_prefix}aToZ",
+      self::$_template->assign(
+        "{$this->_prefix}aToZ",
         $this->_store->get("{$this->_prefix}AToZBar")
       );
     }
@@ -476,47 +461,42 @@ class CRM_Core_Selector_Controller {
   }
 
   /**
-   * setter for embedded
+   * Set whether the object is being embedded in another object.
    *
-   * @param boolean $embedded
+   * @param bool $embedded
    *
    * @return void
-   * @access public
    */
-  function setEmbedded($embedded) {
+  public function setEmbedded($embedded) {
     $this->_embedded = $embedded;
   }
 
   /**
-   * getter for embedded
+   * Get the embedded status.
    *
-   * @return boolean return the embedded value
-   * @access public
+   * @return bool
    */
-  function getEmbedded() {
+  public function getEmbedded() {
     return $this->_embedded;
   }
 
   /**
-   * setter for print
+   * Set whether the object is in print mode.
    *
-   * @param boolean $print
+   * @param bool $print
    *
    * @return void
-   * @access public
    */
-  function setPrint($print) {
+  public function setPrint($print) {
     $this->_print = $print;
   }
 
   /**
-   * getter for print
+   * Get the print mode status.
    *
-   * @return boolean return the print value
-   * @access public
+   * @return bool
    */
-  function getPrint() {
+  public function getPrint() {
     return $this->_print;
   }
 }
-

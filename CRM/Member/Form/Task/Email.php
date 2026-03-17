@@ -27,14 +27,10 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: Email.php 30684 2010-11-11 08:37:12Z yashodha $
  *
  */
-
-
-
 
 /**
  * This class provides the functionality to email a group of
@@ -66,12 +62,11 @@ class CRM_Member_Form_Task_Email extends CRM_Member_Form_Task {
   public $_templates = NULL;
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Contact_Form_Task_EmailCommon::preProcessFromAddress($this);
     parent::preProcess();
 
@@ -82,9 +77,7 @@ class CRM_Member_Form_Task_Email extends CRM_Member_Form_Task {
   }
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
@@ -96,11 +89,9 @@ class CRM_Member_Form_Task_Email extends CRM_Member_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     CRM_Contact_Form_Task_EmailCommon::postProcess($this);
@@ -116,4 +107,3 @@ class CRM_Member_Form_Task_Email extends CRM_Member_Form_Task {
     return $tokens;
   }
 }
-

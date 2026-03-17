@@ -27,37 +27,39 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * form for thank-you / success page - 2nd step of online contribution process
+ * Form for the thank-you / success page - the 2nd step of the payment process.
  */
 class CRM_Contribute_Form_Payment_ThankYou extends CRM_Contribute_Form_Payment {
 
   public $_values;
+
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method assigns the thank-you text (either from the event or contribution),
+   * transaction ID, and final contribution details (source, pay later status, amount)
+   * to the template.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
-    if(!empty($this->_values)){
-      if(!empty($this->_values['event'])){
+    if (!empty($this->_values)) {
+      if (!empty($this->_values['event'])) {
         $this->assign('thankyou_text', CRM_Utils_Array::value('thankyou_text', $this->_values['event']));
       }
-      else{
+      else {
         $this->assign('thankyou_text', CRM_Utils_Array::value('thankyou_text', $this->_values));
       }
     }
 
     $this->assign('trxn_id', CRM_Utils_Array::value('trxn_id', $this->_params));
-    if($this->_ids){
+    if ($this->_ids) {
       $this->_contrib = $this->get('contrib');
       $this->assign('source', CRM_Utils_Array::value('source', $this->_contrib));
       $this->assign('is_pay_later', CRM_Utils_Array::value('is_pay_later', $this->_contrib));
@@ -68,10 +70,11 @@ class CRM_Contribute_Form_Payment_ThankYou extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * This method freezes the form elements since it is a success display page.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
 
@@ -80,13 +83,14 @@ class CRM_Contribute_Form_Payment_ThankYou extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * overwrite action, since we are only showing elements in frozen mode
-   * no help display needed
+   * Determine the current action for the page.
    *
-   * @return int
-   * @access public
+   * Overwrites the parent action to ensure elements are shown in frozen mode
+   * without help displays.
+   *
+   * @return int the action code (VIEW or VIEW|PREVIEW)
    */
-  function getAction() {
+  public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
       return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
     }
@@ -95,4 +99,3 @@ class CRM_Contribute_Form_Payment_ThankYou extends CRM_Contribute_Form_Payment {
     }
   }
 }
-

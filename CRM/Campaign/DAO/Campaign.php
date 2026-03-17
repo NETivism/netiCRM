@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-                    class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO
-{
+
+class CRM_Campaign_DAO_Campaign extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_campaign';
+  public static $_tableName = 'civicrm_campaign';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    * Unique Campaign ID.
    *
    * @var int unsigned
@@ -168,24 +166,20 @@
    * @var datetime
    */
   public $last_modified_date;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_campaign
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'parent_id' => 'civicrm_campaign:id',
@@ -195,165 +189,162 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'parent_id', 'civicrm_campaign', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'created_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'last_modified_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'parent_id', 'civicrm_campaign', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'created_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'last_modified_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign ID') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Campaign Name') ,
-          'required' => true,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'required' => TRUE,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.name',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Campaign Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.title',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Campaign Description') ,
-             'rows' => 8,
-           'cols' => 60,
-              ] ,
+          'rows' => 8,
+          'cols' => 60,
+        ],
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign Start Date') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.start_date',
           'headerPattern' => '/^start|(s(tart\s)?date)$/i',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign End Date') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.end_date',
           'headerPattern' => '/^end|(e(nd\s)?date)$/i',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'campaign_type_id' => [
           'name' => 'campaign_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign Type ID') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.campaign_type_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            'default' => 'UL',
-          ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+        ],
         'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Campaign Status ID') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.status_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            'default' => 'UL',
-          ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+        ],
         'external_identifier' => [
           'name' => 'external_identifier',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('External Identifier') ,
-           'maxlength' => 32,
-           'size' => CRM_Utils_Type::MEDIUM,
-             'import' => true,
+          'maxlength' => 32,
+          'size' => CRM_Utils_Type::MEDIUM,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.external_identifier',
           'headerPattern' => '/external\s?id/i',
           'dataPattern' => '/^\d{11,}$/',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'parent_id' => [
           'name' => 'parent_id',
           'type' => CRM_Utils_Type::T_INT,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_campaign.parent_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            'default' => 'UL',
-            'FKClassName' => 'CRM_Campaign_DAO_Campaign',
-        ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Campaign_DAO_Campaign',
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'created_id' => [
           'name' => 'created_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Campaign Created Date') ,
-                  ] ,
+        ],
         'last_modified_id' => [
           'name' => 'last_modified_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'last_modified_date' => [
           'name' => 'last_modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Last Modified Date') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -361,31 +352,25 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -393,22 +378,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['campaign'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                                          }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -416,12 +400,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['campaign'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                                          }
+    }
     return self::$_export;
   }
 }

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class previews the uploaded file and returns summary
@@ -46,7 +41,6 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
@@ -67,7 +61,6 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
       $this->assign('loadedMapping', $mappingId);
       $this->assign('savedName', $mapDAO->name);
     }
-
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
@@ -99,8 +92,7 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $attr = [];
@@ -109,7 +101,8 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -130,7 +123,6 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Preview');
@@ -141,7 +133,6 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
    * preview the file and extract some summary statistics
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     if (PHP_SAPI != 'cli') {
@@ -197,10 +188,11 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
       CRM_Core_Error::debug_log_message("Trying acquire lock {$this->controller->_key} failed at line ".__LINE__);
     }
 
-
     $errorFilenamePrefix = CRM_Activity_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
     $this->set('errorFilenamePrefix', $errorFilenamePrefix);
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $fileName,
+      $seperator,
       $mapperFields,
       $skipColumnHeader,
       CRM_Activity_Import_Parser::MODE_IMPORT,
@@ -234,4 +226,3 @@ class CRM_Activity_Import_Form_Preview extends CRM_Core_Form {
     }
   }
 }
-

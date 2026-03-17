@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This is a dummy class that does nothing at the moment.
@@ -45,9 +41,9 @@
 class CRM_Contact_Page_SearchRedirect extends CRM_Core_Page {
 
   /**
-   * Find the path and go to Custom Search
+   * Find the path and go to Custom Search.
    */
-  function __construct() {
+  public function __construct() {
     $currentPath = CRM_Utils_System::currentPath();
     $split = explode('/', $currentPath);
     if ($split[0] == 'civicrm' && $split[1] == 'search' && !empty($split[2]) && CRM_Utils_Rule::alphanumeric($split[2])) {
@@ -56,7 +52,7 @@ class CRM_Contact_Page_SearchRedirect extends CRM_Core_Page {
         1 => ['CRM_Contact_Form_Search_Custom_'.$custom, 'String']
       ];
       $exists = CRM_Core_DAO::singleValueQuery("SELECT value FROM civicrm_option_value WHERE name LIKE %1", $find);
-      if(!empty($exists)){
+      if (!empty($exists)) {
         $args = $_GET;
         unset($args['q']);
         $args['reset'] = 1;

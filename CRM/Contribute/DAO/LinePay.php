@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
-{
+
+class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_contribution_linepay';
+  public static $_tableName = 'civicrm_contribution_linepay';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    * LinePay ID
    *
    * @var int unsigned
@@ -156,106 +154,102 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
    * @var text
    */
   public $recurring_expire;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_contribution_linepay
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
-    /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'linepay_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('LinePay ID') ,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'contribution_trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Trxn ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'transaction_id' => [
           'name' => 'transaction_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Transaction ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'query' => [
           'name' => 'query',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Query') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'request' => [
           'name' => 'request',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Request') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'confirm' => [
           'name' => 'confirm',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Confirm') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'refund' => [
           'name' => 'refund',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Refund') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'authorization' => [
           'name' => 'authorization',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Authorization') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'capture' => [
           'name' => 'capture',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Capture') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'void' => [
           'name' => 'void',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Void') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'recurring_payment' => [
           'name' => 'recurring_payment',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Payment') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'recurring_check' => [
           'name' => 'recurring_check',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Check') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
         'recurring_expire' => [
           'name' => 'recurring_expire',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Recurring Expire') ,
-                  'default' => 'UL',
-          ] ,
+          'default' => 'UL',
+        ],
       ];
     }
     return self::$_fields;
@@ -263,31 +257,25 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -295,22 +283,21 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution_linepay'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -318,12 +305,13 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution_linepay'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
 }

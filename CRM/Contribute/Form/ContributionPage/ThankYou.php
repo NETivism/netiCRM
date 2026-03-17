@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * form to configure thank-you messages and receipting features for an online contribution page
@@ -41,24 +37,26 @@
 class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_ContributionPage {
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing thank-you title, text, and receipt settings for the
+   * current contribution page from the database.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
     CRM_Utils_System::setTitle(ts('Thank-you and Receipting (%1)', [1 => $title]));
     return parent::setDefaultValues();
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Adds fields for thank-you title/text/footer, email receipt settings,
+   * from name/email selection, CC/BCC receipt lists, and SMS notification settings.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->registerRule('emailList', 'callback', 'emailList', 'CRM_Utils_Rule');
@@ -79,7 +77,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     );
     $selectableEmail = [];
     $hasVerified = FALSE;
-    foreach($availableFrom as $fromAddr) {
+    foreach ($availableFrom as $fromAddr) {
       $email = htmlspecialchars($fromAddr['email']);
       if (array_search($fromAddr['email'], $verifiedFrom) !== FALSE) {
         $email = ts('%1 Verified', [1 => '🛡️ '.htmlspecialchars($fromAddr['email'])]);
@@ -124,8 +122,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
     $tokens = array_merge(CRM_Core_SelectValues::contributionTokens(), $tokens);
     $this->assign('tokens', CRM_Utils_Token::formatTokensForDisplay($tokens));
 
-    $this->add('select', 'token1', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $this->add(
+      'select',
+      'token1',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -133,8 +135,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       ]
     );
 
-    $this->add('select', 'token2', ts('Insert Tokens'),
-      $tokens, FALSE,
+    $this->add(
+      'select',
+      'token2',
+      ts('Insert Tokens'),
+      $tokens,
+      FALSE,
       [
         'size' => "5",
         'multiple' => TRUE,
@@ -146,17 +152,18 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * Validates from email address and ensures it's not from restricted providers
+   * if email receipting is enabled.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param array $options additional user data/context
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
    */
-  static function formRule($fields, $files, $options) {
+  public static function formRule($fields, $files, $options) {
     $errors = [];
 
     // if is_email_receipt is set, the receipt message must be non-empty
@@ -168,7 +175,7 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       }
       else {
         if (!CRM_Utils_Rule::email($email)) {
-          $errors['receipt_from_email'] = ts('Please enter the valid email address.'); 
+          $errors['receipt_from_email'] = ts('Please enter the valid email address.');
         }
         if (!CRM_Utils_Mail::checkMailProviders($email)) {
           $errors['receipt_from_email'] = ts('Do not use free mail address as mail sender. (eg. %1)', [1 => str_replace('|', ', ', CRM_Utils_Mail::DMARC_MAIL_PROVIDERS)]);
@@ -179,10 +186,12 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Saves or updates the thank-you and receipt configuration for the
+   * current contribution page.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -203,18 +212,15 @@ class CRM_Contribute_Form_ContributionPage_ThankYou extends CRM_Contribute_Form_
       $params['sms_text'] = NULL;
     }
 
-
     $dao = CRM_Contribute_BAO_ContributionPage::create($params);
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Thanks and Receipt');
   }
 }
-

@@ -9,6 +9,13 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
   protected $_mapperSoftCredit;
   protected $_mapperPCP;
 
+  /**
+   * class constructor
+   *
+   * @param string|null $tableName
+   * @param string|null $createSql
+   * @param boolean $createTable
+   */
   public function __construct($tableName = NULL, $createSql = NULL, $createTable = FALSE) {
     parent::__construct($tableName);
 
@@ -26,6 +33,13 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     }
   }
 
+  /**
+   * Run the import process
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function runImport(&$form) {
     global $civicrm_batch;
     $allArgs = func_get_args();
@@ -119,7 +133,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       $this->_primaryKeyName,
       $this->_statusFieldName,
       $this->_onDuplicate,
-      $this->_statusID, 
+      $this->_statusID,
       $this->_totalRowCount,
       $this->_createContactOption,
       $this->_dedupeRuleGroupId
@@ -141,6 +155,13 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     }
   }
 
+  /**
+   * Prepare session object for batch process
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function prepareSessionObject(&$form) {
     $form->controller->initTemplate();
     $form->controller->initSession();
@@ -150,6 +171,11 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     CRM_Core_Session::registerAndRetrieveSessionObjects(["_{$name}_container", ['CiviCRM', $scope]]);
   }
 
+  /**
+   * Callback function for batch start
+   *
+   * @return void
+   */
   public function batchStartCallback() {
     global $civicrm_batch;
     if ($civicrm_batch) {
@@ -161,6 +187,11 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
     }
   }
 
+  /**
+   * Callback function for batch finish
+   *
+   * @return void
+   */
   public function batchFinishCallback() {
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {
@@ -168,7 +199,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
       $query = "SELECT $this->_statusFieldName as status, COUNT(*) as count FROM $this->_tableName WHERE 1 GROUP BY $this->_statusFieldName";
       $dao = CRM_Core_DAO::executeQuery($query);
       $statusCount = [];
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $name = CRM_Import_Parser::statusName($dao->status);
         $statusCount[$name] = $dao->count;
       }
@@ -194,7 +225,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::SOFT_CREDIT_ERROR, $fileName);
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::PLEDGE_PAYMENT_ERROR, $fileName);
         $errorFiles[] = CRM_Contribute_Import_Parser::errorFileName(CRM_Contribute_Import_Parser::PCP_ERROR, $fileName);
-        foreach($errorFiles as $idx => $fileName) {
+        foreach ($errorFiles as $idx => $fileName) {
           $filePath = $config->uploadDir.$fileName;
           if (is_file($filePath)) {
             $zip->addFile($filePath, $fileName);
@@ -206,7 +237,7 @@ class CRM_Contribute_Import_ImportJob_Contribution extends CRM_Import_ImportJob 
         $zip->close();
 
         // purge zipped files
-        foreach($errorFiles as $fileName) {
+        foreach ($errorFiles as $fileName) {
           unlink($config->uploadDir.$fileName);
         }
       }

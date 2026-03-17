@@ -27,10 +27,9 @@
 */
 
 /**
+ * Provides query-building and search functionality for Activity data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Activity_BAO_Query {
@@ -39,10 +38,11 @@ class CRM_Activity_BAO_Query {
   /**
    * build select for Case
    *
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
-   * @access public
    */
-  static function select(&$query) {
+  public static function select(&$query) {
     if (CRM_Utils_Array::value('activity_id', $query->_returnProperties)) {
       $query->_select['activity_id'] = "civicrm_activity.id as activity_id";
       $query->_element['activity_id'] = 1;
@@ -132,10 +132,11 @@ class CRM_Activity_BAO_Query {
    * Given a list of conditions in query generate the required
    * where clause
    *
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
-   * @access public
    */
-  static function where(&$query) {
+  public static function where(&$query) {
     $isTest = FALSE;
     $grouping = NULL;
     foreach (array_keys($query->_params) as $id) {
@@ -162,10 +163,12 @@ class CRM_Activity_BAO_Query {
   /**
    * where clause for a single field
    *
+   * @param array $values
+   * @param CRM_Contact_BAO_Query $query
+   *
    * @return void
-   * @access public
    */
-  static function whereClauseSingle(&$values, &$query) {
+  public static function whereClauseSingle(&$values, &$query) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
     $query->_tables['civicrm_activity'] = $query->_whereTables['civicrm_activity'] = 1;
@@ -289,8 +292,12 @@ class CRM_Activity_BAO_Query {
       case 'activity_date':
       case 'activity_date_low':
       case 'activity_date_high':
-        $query->dateQueryBuilder($values,
-          'civicrm_activity', 'activity_date', 'activity_date_time', ts('Activity Date')
+        $query->dateQueryBuilder(
+          $values,
+          'civicrm_activity',
+          'activity_date',
+          'activity_date_time',
+          ts('Activity Date')
         );
         break;
 
@@ -318,7 +325,16 @@ class CRM_Activity_BAO_Query {
     }
   }
 
-  static function from($name, $mode, $side) {
+  /**
+   * Build from clause
+   *
+   * @param string $name
+   * @param int $mode
+   * @param string $side
+   *
+   * @return string
+   */
+  public static function from($name, $mode, $side) {
     $from = NULL;
     switch ($name) {
       case 'civicrm_activity':
@@ -368,21 +384,19 @@ class CRM_Activity_BAO_Query {
    * getter for the qill object
    *
    * @return string
-   * @access public
    */
-  function qill() {
+  public function qill() {
     return (isset($this->_qill)) ? $this->_qill : "";
   }
 
   /**
    * add all the elements shared between case activity search  and advanaced search
    *
-   * @access public
+   * @param CRM_Core_Form $form
    *
    * @return void
-   * @static
    */
-  static function buildSearchForm(&$form) {
+  public static function buildSearchForm(&$form) {
     $form->addElement('text', 'activity_contact_name', ts('Contact Name'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
     $activityOptions = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'label', TRUE);
@@ -409,10 +423,8 @@ class CRM_Activity_BAO_Query {
       $form->addSelect('activity_tags', ts('Activity Tag(s)'), $activity_tags, $attrmultiple);
     }
 
-
     $surveys = ['' => ts('- none -')] + CRM_Campaign_BAO_Survey::getSurveyList();
     $form->add('select', 'activity_survey_id', ts('Survey'), $surveys, FALSE);
-
 
     $extends = ['Activity'];
     $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE, $extends);
@@ -429,12 +441,26 @@ class CRM_Activity_BAO_Query {
     }
   }
 
-  static function addShowHide(&$showHide) {
+  /**
+   * Add show/hide blocks
+   *
+   * @param CRM_Core_ShowHideBlocks $showHide
+   *
+   * @return void
+   */
+  public static function addShowHide(&$showHide) {
     $showHide->addHide('caseActivityForm');
     $showHide->addShow('caseActivityForm_show');
   }
 
-  static function defaultReturnProperties($mode) {
+  /**
+   * Get default return properties
+   *
+   * @param int $mode
+   *
+   * @return array|null
+   */
+  public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_ACTIVITY) {
       $properties = [
@@ -467,4 +493,3 @@ class CRM_Activity_BAO_Query {
     return $properties;
   }
 }
-

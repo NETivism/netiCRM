@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Relationship Type
@@ -42,10 +38,9 @@
 class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -57,35 +52,54 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
 
     $this->applyFilter('__ALL__', 'trim');
 
-    $this->add('text', 'label_a_b', ts('Relationship Label-A to B'),
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_RelationshipType', 'label_a_b'), TRUE
+    $this->add(
+      'text',
+      'label_a_b',
+      ts('Relationship Label-A to B'),
+      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_RelationshipType', 'label_a_b'),
+      TRUE
     );
-    $this->addRule('label_a_b', ts('Label already exists in Database.'),
-      'objectExists', ['CRM_Contact_DAO_RelationshipType', $this->_id, 'label_a_b']
+    $this->addRule(
+      'label_a_b',
+      ts('Label already exists in Database.'),
+      'objectExists',
+      ['CRM_Contact_DAO_RelationshipType', $this->_id, 'label_a_b']
     );
 
-    $this->add('text', 'label_b_a', ts('Relationship Label-B to A'),
+    $this->add(
+      'text',
+      'label_b_a',
+      ts('Relationship Label-B to A'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_RelationshipType', 'label_b_a')
     );
 
-    $this->addRule('label_b_a', ts('Label already exists in Database.'),
-      'objectExists', ['CRM_Contact_DAO_RelationshipType', $this->_id, 'label_b_a']
+    $this->addRule(
+      'label_b_a',
+      ts('Label already exists in Database.'),
+      'objectExists',
+      ['CRM_Contact_DAO_RelationshipType', $this->_id, 'label_b_a']
     );
 
-    $this->add('text', 'description', ts('Description'),
+    $this->add(
+      'text',
+      'description',
+      ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_RelationshipType', 'description')
     );
-
-
-
 
     $contactTypes = CRM_Contact_BAO_ContactType::getSelectElements();
 
     // add select for contact type
-    $contactTypeA = &$this->add('select', 'contact_types_a', ts('Contact Type A') . ' ',
+    $contactTypeA = &$this->add(
+      'select',
+      'contact_types_a',
+      ts('Contact Type A') . ' ',
       ['' => ts('- select -')] + $contactTypes
     );
-    $contactTypeB = &$this->add('select', 'contact_types_b', ts('Contact Type B') . ' ',
+    $contactTypeB = &$this->add(
+      'select',
+      'contact_types_b',
+      ts('Contact Type B') . ' ',
       ['' => ts('- select -')] + $contactTypes
     );
 
@@ -95,7 +109,9 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     if ($this->_id &&
       CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_RelationshipType', $this->_id, 'is_reserved')
     ) {
-      foreach (['contactTypeA', 'contactTypeB', 'isActive'] as $field)$$field->freeze();
+      foreach (['contactTypeA', 'contactTypeB', 'isActive'] as $field) {
+        $$field->freeze();
+      }
     }
 
     if ($this->_action & CRM_Core_Action::VIEW) {
@@ -106,14 +122,19 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
     }
   }
 
-  function setDefaultValues() {
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
+  public function setDefaultValues() {
     if ($this->_action != CRM_Core_Action::DELETE &&
       isset($this->_id)
     ) {
       $defaults = $params = [];
       $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
-      $baoName::retrieve( $params, $defaults );
+      $baoName::retrieve($params, $defaults);
 
       $defaults['contact_types_a'] = $defaults['contact_type_a'];
       if (CRM_Utils_Array::value('contact_sub_type_a', $defaults)) {
@@ -132,11 +153,9 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -155,11 +174,13 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
         $ids['relationshipType'] = $this->_id;
       }
 
-      $cTypeA = CRM_Utils_System::explode(CRM_Core_DAO::VALUE_SEPARATOR,
+      $cTypeA = CRM_Utils_System::explode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         $params['contact_types_a'],
         2
       );
-      $cTypeB = CRM_Utils_System::explode(CRM_Core_DAO::VALUE_SEPARATOR,
+      $cTypeB = CRM_Utils_System::explode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         $params['contact_types_b'],
         2
       );
@@ -177,4 +198,3 @@ class CRM_Admin_Form_RelationshipType extends CRM_Admin_Form {
   }
   //end of function
 }
-

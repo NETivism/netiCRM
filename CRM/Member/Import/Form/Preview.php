@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class previews the uploaded file and returns summary
@@ -43,10 +38,9 @@
 class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
@@ -67,7 +61,6 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       $this->assign('loadedMapping', $mappingId);
       $this->assign('savedName', $mapDAO->name);
     }
-
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
@@ -96,10 +89,9 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $attr = [];
@@ -108,7 +100,8 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -126,21 +119,18 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Preview');
   }
 
   /**
-   * Process the mapped fields and map it into the uploaded file
-   * preview the file and extract some summary statistics
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $fileName = $this->controller->exportValue('UploadFile', 'uploadFile');
@@ -168,7 +158,7 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
     foreach ($properties as $propertyName => $propertyVal) {
       $$propertyVal = $this->get($propertyName);
     }
-    $parser = new CRM_Member_Import_Parser_Membership($mapperKeys, $mapperLocType, $mapperPhoneType, $mapperWebsiteType,$mapperImProvider);
+    $parser = new CRM_Member_Import_Parser_Membership($mapperKeys, $mapperLocType, $mapperPhoneType, $mapperWebsiteType, $mapperImProvider);
 
     $mapFields = $this->get('fields');
     $parser->_dateFormats = $this->get('dateFormats');
@@ -189,7 +179,9 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
     $errorFilenamePrefix = CRM_Member_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
     $this->set('errorFilenamePrefix', $errorFilenamePrefix);
 
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $fileName,
+      $seperator,
       $mapperFields,
       $skipColumnHeader,
       CRM_Member_Import_Parser::MODE_IMPORT,
@@ -226,4 +218,3 @@ class CRM_Member_Import_Form_Preview extends CRM_Core_Form {
     }
   }
 }
-

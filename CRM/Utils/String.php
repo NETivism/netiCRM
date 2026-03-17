@@ -27,29 +27,26 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class contains string functions
- *
+ * Utility class for string manipulation, encoding detection,
+ * transliteration, masking, and URL handling.
  */
 class CRM_Utils_String {
-  CONST COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r", MASK = '*';
+  public const COMMA = ",", SEMICOLON = ";", SPACE = " ", TAB = "\t", LINEFEED = "\n", CARRIAGELINE = "\r\n", LINECARRIAGE = "\n\r", CARRIAGERETURN = "\r", MASK = '*';
 
   /**
    * List of all letters and numbers
    */
-  const ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-
+  public const ALPHANUMERIC = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 
   /**
    * Allowed HTML Tags
    */
-  const ALLOWED_TAGS = [
+  public const ALLOWED_TAGS = [
     'div[style]','b','strong','i','em','s','a[href|title]',
     'ul','ol','li','p[style]','blockquote','br','span[style]',
     'img[width|height|alt|src|style]','figure[class|style]',
@@ -59,21 +56,17 @@ class CRM_Utils_String {
   ];
 
   /**
-   * Convert a display name into a potential variable
-   * name that we could use in forms/code
+   * Convert a display name into a safe variable name for use in forms or code.
    *
-   * @param  name    Name of the string
+   * If the munged title does not pass validation, returns a truncated MD5 hash instead.
    *
-   * @return string  An equivalent variable name
+   * @param string $title the display name to convert
+   * @param int $maxLength maximum length of the resulting variable name
    *
-   * @access public
-   *
-   * @return string (or null)
-   * @static
+   * @return string the variable-safe name
    */
-  static function titleToVar($title, $maxLength = 31) {
+  public static function titleToVar($title, $maxLength = 31) {
     $variable = self::munge($title, '_', $maxLength);
-
 
     if (CRM_Utils_Rule::title($variable, $maxLength)) {
       return $variable;
@@ -85,19 +78,18 @@ class CRM_Utils_String {
   }
 
   /**
-   * given a string, replace all non alpha numeric characters and
-   * spaces with the replacement character
+   * Replace all non-alphanumeric characters and spaces with a replacement character.
    *
-   * @param string $name the name to be worked on
-   * @param string $char the character to use for non-valid chars
-   * @param int    $len  length of valid variables
+   * For strings containing non-ASCII characters (e.g. CJK), transliteration
+   * is applied before munging.
    *
-   * @access public
+   * @param string $name the string to be munged
+   * @param string $char the replacement character for non-valid characters
+   * @param int $len maximum length of the result (0 for unlimited)
    *
-   * @return string returns the manipulated string
-   * @static
+   * @return string the munged string
    */
-  static function munge($name, $char = '_', $len = 63) {
+  public static function munge($name, $char = '_', $len = 63) {
     // replace all white space and non-alpha numeric with $char
     $mungedName = '';
     $name = preg_replace('/[-.]+/', $char, $name);
@@ -107,7 +99,7 @@ class CRM_Utils_String {
 
     // any chinese appear, should go transliteration (to prevent duplication)
     if (!empty($matches) && trim($matches[0])) {
-			$mungedName = self::transliteration($name);
+      $mungedName = self::transliteration($name);
     }
 
     if (empty($mungedName)) {
@@ -124,36 +116,31 @@ class CRM_Utils_String {
     }
   }
 
-
-  /* 
-     * Takes a variable name and munges it randomly into another variable name
-     *  
-     * @param  string $name    Initial Variable Name
-     * @param int     $len  length of valid variables
-     *
-     * @return string  Randomized Variable Name
-     * @access public 
-     * @static
-     */
-
-  static function rename($name, $len = 4) {
+  /**
+   * Replace the last N characters of a variable name with a random string.
+   *
+   * @param string $name the original variable name
+   * @param int $len the number of trailing characters to replace with random characters
+   *
+   * @return string the randomized variable name
+   */
+  public static function rename($name, $len = 4) {
     $rand = substr(uniqid(), 0, $len);
     return substr_replace($name, $rand, -$len, $len);
   }
 
   /**
-   * takes a string and returns the last tuple of the string.
-   * useful while converting file names to class names etc
+   * Return the last segment of a delimited string.
+   *
+   * Useful for extracting a class name from a fully qualified name
+   * (e.g. 'CRM_Core_Form' returns 'Form').
    *
    * @param string $string the input string
-   * @param char   $char   the character used to demarcate the componets
+   * @param string $char the delimiter character
    *
-   * @access public
-   *
-   * @return string the last component
-   * @static
+   * @return string|null the last segment, or NULL if the input is an array
    */
-  static function getClassName($string, $char = '_') {
+  public static function getClassName($string, $char = '_') {
     if (!is_array($string)) {
       $names = explode($char, $string);
     }
@@ -163,18 +150,18 @@ class CRM_Utils_String {
   }
 
   /**
-   * appends a name to a string and seperated by delimiter.
-   * does the right thing for an empty string
+   * Append a value (or array of values) to a string using a delimiter.
    *
-   * @param string $str   the string to be appended to
-   * @param string $delim the delimiter to use
-   * @param mixed  $name  the string (or array of strings) to append
+   * Handles the case where the target string is initially empty,
+   * avoiding a leading delimiter.
+   *
+   * @param string $str the string to be appended to (passed by reference)
+   * @param string $delim the delimiter to insert between segments
+   * @param string|string[] $name the string or array of strings to append
    *
    * @return void
-   * @access public
-   * @static
    */
-  static function append(&$str, $delim, $name) {
+  public static function append(&$str, $delim, $name) {
     if (empty($name)) {
       return;
     }
@@ -203,22 +190,19 @@ class CRM_Utils_String {
   }
 
   /**
-   * determine if the string is composed only of ascii characters
+   * Determine if a string is composed only of ASCII (or optionally UTF-8) characters.
    *
-   * @param string  $str input string
-   * @param boolean $utf8 attempt utf8 match on failure (default yes)
+   * @param string $str the input string to check
+   * @param bool $utf8 if TRUE, also accept valid UTF-8 strings
    *
-   * @return boolean    true if string is ascii
-   * @access public
-   * @static
+   * @return bool TRUE if the string is ASCII (or valid UTF-8 when allowed)
    */
-  static function isAscii($str, $utf8 = TRUE) {
+  public static function isAscii($str, $utf8 = TRUE) {
     if (!function_exists('mb_detect_encoding')) {
       // eliminate all white space from the string
       $str = preg_replace('/\s+/', '', $str);
       /* FIXME:  This is a pretty brutal hack to make utf8 and 8859-1 work.
              */
-
 
       /* match low- or high-ascii characters */
 
@@ -248,17 +232,17 @@ class CRM_Utils_String {
   }
 
   /**
-   * determine the string replacements for redaction
-   * on the basis of the regular expressions
+   * Determine string replacements for redaction based on regular expressions.
    *
-   * @param string $str        input string
-   * @param array  $regexRules regular expression to be matched w/ replacements
+   * Matches the input string against the given regex rules and builds a
+   * mapping of matched strings to their redacted replacement values.
    *
-   * @return array $match      array of strings w/ corresponding redacted outputs
-   * @access public
-   * @static
+   * @param string $str the input string to scan for matches
+   * @param array $regexRules associative array of regex patterns to replacement prefixes
+   *
+   * @return array associative array mapping matched strings to redacted replacements
    */
-  static function regex($str, $regexRules) {
+  public static function regex($str, $regexRules) {
     //redact the regular expressions
     if (!empty($regexRules) && isset($str)) {
       static $matches, $totalMatches, $match = [];
@@ -277,7 +261,7 @@ class CRM_Utils_String {
     }
 
     if (!empty($match)) {
-      foreach ($match as $matchKey => & $dontCare) {
+      foreach ($match as $matchKey => &$dontCare) {
         foreach ($regexRules as $pattern => $replacement) {
           if (preg_match($pattern, $matchKey)) {
             $dontCare = $replacement . substr(md5($matchKey), 0, 5);
@@ -290,7 +274,17 @@ class CRM_Utils_String {
     return CRM_Core_DAO::$_nullArray;
   }
 
-  static function redaction($str, $stringRules) {
+  /**
+   * Apply string-based redaction rules to the input text.
+   *
+   * Performs case-insensitive replacement of matched strings.
+   *
+   * @param string $str the input string to redact
+   * @param array $stringRules associative array mapping strings to their redacted replacements
+   *
+   * @return string the redacted string
+   */
+  public static function redaction($str, $stringRules) {
     //redact the strings
     if (!empty($stringRules)) {
       foreach ($stringRules as $match => $replace) {
@@ -303,15 +297,13 @@ class CRM_Utils_String {
   }
 
   /**
-   * Determine if a string is composed only of utf8 characters
+   * Determine if a string is composed only of UTF-8 characters.
    *
-   * @param string $str  input string
-   * @access public
-   * @static
+   * @param string $str the input string to check
    *
-   * @return boolean
+   * @return bool TRUE if the string is valid UTF-8
    */
-  static function isUtf8($str) {
+  public static function isUtf8($str) {
     if (!function_exists('mb_detect_encoding')) {
       // eliminate all white space from the string
       $str = preg_replace('/\s+/', '', $str);
@@ -332,16 +324,16 @@ class CRM_Utils_String {
   }
 
   /**
-   * determine if two href's are equivalent (fuzzy match)
+   * Determine if two URLs are equivalent (fuzzy match).
    *
-   * @param string $url1 the first url to be matched
-   * @param string $url2 the second url to be matched against
+   * Compares the path and the CiviCRM-specific query parameter.
    *
-   * @return boolean true if the urls match, else false
-   * @access public
-   * @static
+   * @param string $url1 the first URL to be matched
+   * @param string $url2 the second URL to be matched against
+   *
+   * @return bool TRUE if the URLs match
    */
-  static function match($url1, $url2) {
+  public static function match($url1, $url2) {
     $url1 = strtolower($url1);
     $url2 = strtolower($url2);
 
@@ -357,14 +349,13 @@ class CRM_Utils_String {
   }
 
   /**
-   * Function to extract variable values
+   * Extract the value of the framework-specific URL variable from a query string.
    *
-   * @param  string $query this is basically url
+   * @param string $query the URL query string
    *
-   * @return mix $v  returns civicrm url (eg: civicrm/contact/search/...)
-   * @access public
+   * @return string|null the value of the URL variable, or NULL if not found
    */
-  static function extractURLVarValue($query) {
+  public static function extractURLVarValue($query) {
     $config = CRM_Core_Config::singleton();
     $urlVar = $config->userFrameworkURLVar;
 
@@ -381,15 +372,13 @@ class CRM_Utils_String {
   }
 
   /**
-   * translate a true/false/yes/no string to a 0 or 1 value
+   * Translate a boolean-like string (true/yes/1) to a boolean value.
    *
-   * @param string $str  the string to be translated
+   * @param string $str the string to be translated
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return bool TRUE if the string represents a true value, otherwise FALSE
    */
-  static function strtobool($str) {
+  public static function strtobool($str) {
     if (preg_match('/^(y(es)?|t(rue)?|1)$/i', $str)) {
       return TRUE;
     }
@@ -397,15 +386,15 @@ class CRM_Utils_String {
   }
 
   /**
-   * returns string '1' for a true/yes/1 string, and '0' for no/false/0 else returns false
+   * Translate a boolean-like string to '1' or '0', or FALSE if not a boolean-like string.
    *
-   * @param string $str  the string to be translated
+   * Supports localized 'Yes'/'No' as well as common boolean strings.
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @param string $str the string to be translated
+   *
+   * @return string|false '1' for true-like, '0' for false-like, FALSE otherwise
    */
-  static function strtoboolstr($str) {
+  public static function strtoboolstr($str) {
     $tsstr = ts($str);
     if ($tsstr == ts('Yes')) {
       return '1';
@@ -424,7 +413,15 @@ class CRM_Utils_String {
     }
   }
 
-  static function xssFilter($str, $decodeFirst = FALSE) {
+  /**
+   * Filter a string to prevent XSS attacks.
+   *
+   * @param string $str the string to be filtered
+   * @param bool $decodeFirst whether to URL-decode the string before filtering
+   *
+   * @return string the filtered string
+   */
+  public static function xssFilter($str, $decodeFirst = FALSE) {
     if ($decodeFirst) {
       $str = urldecode($str);
     }
@@ -432,21 +429,27 @@ class CRM_Utils_String {
   }
 
   /**
-   * Convert a HTML string into a text one using html2text
+   * Convert an HTML string into plain text.
    *
-   * @param string $html  the tring to be converted
+   * @param string $html the HTML string to be converted
    *
-   * @return string       the converted string
-   * @access public
-   * @static
+   * @return string the converted plain text
    */
-  static function htmlToText($html) {
+  public static function htmlToText($html) {
     require_once 'packages/html2text/rcube_html2text.php';
     $converter = new rcube_html2text($html, FALSE, TRUE, 0);
     return $converter->get_text();
   }
 
-  static function htmlPurifier($html, $allowedTags = []) {
+  /**
+   * Purify HTML content to remove unsafe tags and attributes.
+   *
+   * @param string $html the HTML content to purify
+   * @param string[] $allowedTags list of allowed HTML tags
+   *
+   * @return string the purified HTML
+   */
+  public static function htmlPurifier($html, $allowedTags = []) {
     require_once 'packages/IDS/vendors/htmlpurifier/HTMLPurifier.auto.php';
     static $_purifier;
     $hash = md5(CRM_Utils_Array::implode(',', $allowedTags));
@@ -485,7 +488,15 @@ class CRM_Utils_String {
     return $_purifier[$hash]->purify($html);
   }
 
-  static function extractName($string, &$params) {
+  /**
+   * Extract name components (first, middle, last) from a single string.
+   *
+   * @param string $string the full name string
+   * @param array $params the array to store extracted name components (passed by reference)
+   *
+   * @return void
+   */
+  public static function extractName($string, &$params) {
     $name = trim($string);
     if (empty($name)) {
       return;
@@ -506,7 +517,14 @@ class CRM_Utils_String {
     }
   }
 
-  static function &makeArray($string) {
+  /**
+   * Parse a string of key=value pairs separated by newlines into an associative array.
+   *
+   * @param string $string the input string to parse
+   *
+   * @return array associative array of parsed values
+   */
+  public static function &makeArray($string) {
     $string = trim($string);
 
     $values = explode("\n", $string);
@@ -521,20 +539,24 @@ class CRM_Utils_String {
   }
 
   /**
-   * Function to add include files needed for jquery
+   * Prepend jQuery and related CSS files to an HTML string.
+   *
+   * @param string $html the HTML content to prepend files to (passed by reference)
+   *
+   * @return string the resulting HTML string with jQuery files prepended
    */
-  static function addJqueryFiles(&$html) {
+  public static function addJqueryFiles(&$html) {
     $config = CRM_Core_Config::singleton();
     $smarty = CRM_Core_Smarty::singleton();
     $buffer = $smarty->fetch('CRM/common/jquery.files.tpl');
-    $lines  = preg_split( '/\s+/', $buffer );
+    $lines  = preg_split('/\s+/', $buffer);
     $jquery = '';
     $css = '';
-    foreach ( $lines as $line ) {
-      if ( strpos( $line, '.js' ) !== false ) {
+    foreach ($lines as $line) {
+      if (strpos($line, '.js') !== FALSE) {
         $jquery .= '<script type="text/javascript" src="'.$config->resourceBase.$line.'"></script>'."\n";
       }
-      else if ( strpos( $line, '.css' ) !== false ) {
+      elseif (strpos($line, '.css') !== FALSE) {
         $css .= '<link crossorigin="anonymous" media="all" rel="stylesheet" href="'.$config->resourceBase.$line.'" itemprop="url" />';
       }
     }
@@ -543,14 +565,15 @@ class CRM_Utils_String {
   }
 
   /**
-   * Given an ezComponents-parsed representation of
-   * a text with alternatives return only the first one
+   * Extract the first alternative from a string containing multiple alternatives.
    *
-   * @param string $full  all alternatives as a long string (or some other text)
+   * Used for parsing text with alternatives (e.g., from ezComponents).
    *
-   * @return string       only the first alternative found (or the text without alternatives)
+   * @param string $full the string containing alternatives
+   *
+   * @return string the first alternative, or the original string if no alternatives found
    */
-  static function stripAlternatives($full) {
+  public static function stripAlternatives($full) {
     $matches = [];
     preg_match('/-ALTERNATIVE ITEM 0-(.*?)-ALTERNATIVE ITEM 1-.*-ALTERNATIVE END-/s', $full, $matches);
 
@@ -563,16 +586,13 @@ class CRM_Utils_String {
   }
 
   /**
-   * strip leading, trailing, double spaces from string
-   * used for postal/greeting/addressee
+   * Strip leading, trailing, and consecutive spaces from a string.
    *
-   * @param string  $string input string to be cleaned
+   * @param string $string the input string to be cleaned
    *
-   * @return cleaned string
-   * @access public
-   * @static
+   * @return string the cleaned string
    */
-  static function stripSpaces($string) {
+  public static function stripSpaces($string) {
     if (empty($string)) {
       return $string;
     }
@@ -591,11 +611,12 @@ class CRM_Utils_String {
   }
 
   /**
-   * Generate a random string
+   * Generate a random string of a specified length.
    *
-   * @param $len
-   * @param $alphabet
-   * @return string
+   * @param int $len the length of the string to generate
+   * @param string $alphabet the set of characters to use for generation
+   *
+   * @return string the generated random string
    */
   public static function createRandom($len, $alphabet = self::ALPHANUMERIC) {
     $alphabetSize = strlen($alphabet);
@@ -607,18 +628,16 @@ class CRM_Utils_String {
   }
 
   /**
-   * This function is used to clean the URL 'path' variable that we use
-   * to construct CiviCRM urls by removing characters from the path variable
+   * Sanitize a URL path string by replacing reserved characters.
    *
-   * @param string $string  the input string to be sanitized
-   * @param array  $search  the characters to be sanitized
-   * @param string $replace the character to replace it with
+   * @param string $string the input string to be sanitized
+   * @param array|null $search the characters to search for (defaults to a predefined set)
+   * @param string|null $replace the character to replace matches with (defaults to '_')
    *
    * @return string the sanitized string
-   * @access public
-   * @static
    */
-  static function stripPathChars($string,
+  public static function stripPathChars(
+    $string,
     $search = NULL,
     $replace = NULL
   ) {
@@ -639,7 +658,6 @@ class CRM_Utils_String {
       $_replaceChar = '_';
     }
 
-
     if ($search == NULL) {
       $search = $_searchChars;
     }
@@ -651,15 +669,31 @@ class CRM_Utils_String {
     return str_replace($search, $replace, $string);
   }
 
-  static function removeImageHeight($html){
-    $html = preg_replace('/(<img[^>]+)(line-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
-    $html = preg_replace('/(<img[^>]+)(min-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
-    $html = preg_replace('/(<img[^>]+)(height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html); 
-    $html = preg_replace('/(<img[^>]+)(height=[\'"][^\'"]+[\'"])([^>]+>)/i', '$1 $3', $html); 
+  /**
+   * Remove height-related attributes and styles from <img> tags in HTML.
+   *
+   * @param string $html the HTML content to process
+   *
+   * @return string the processed HTML
+   */
+  public static function removeImageHeight($html) {
+    $html = preg_replace('/(<img[^>]+)(line-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html);
+    $html = preg_replace('/(<img[^>]+)(min-height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html);
+    $html = preg_replace('/(<img[^>]+)(height\s*:[^;]+;)([^>]+>)/i', '$1$3', $html);
+    $html = preg_replace('/(<img[^>]+)(height=[\'"][^\'"]+[\'"])([^>]+>)/i', '$1 $3', $html);
     return $html;
   }
 
-  static function toNumber($str) {
+  /**
+   * Convert a string to a numeric value (int or float) if possible.
+   *
+   * Handles scientific notation and leading zeros.
+   *
+   * @param string $str the string to convert
+   *
+   * @return int|float|string the converted numeric value, or the original string
+   */
+  public static function toNumber($str) {
     $str = trim($str);
     if (preg_match('/[eE]/', $str)) {
       return $str;
@@ -682,18 +716,34 @@ class CRM_Utils_String {
     return $str;
   }
 
-  static function parseUrl($url) {
+  /**
+   * Parse a URL and return its components.
+   *
+   * Wrapper for PHP's parse_url().
+   *
+   * @param string $url the URL to parse
+   *
+   * @return array|false associative array of URL components, or FALSE on failure
+   */
+  public static function parseUrl($url) {
     return parse_url($url);
   }
 
-  static function parseUrlUtm($url) {
+  /**
+   * Extract UTM parameters from a URL.
+   *
+   * @param string $url the URL to extract UTM parameters from
+   *
+   * @return array associative array of UTM parameters
+   */
+  public static function parseUrlUtm($url) {
     $utms = [];
     $original = CRM_Utils_String::parseUrl($url);
     if (stristr($original['query'], 'utm_')) {
       $query = str_replace('&amp;', '&', $original['query']);
       $get = [];
       parse_str($query, $get);
-      foreach($get as $queryKey => $queryValue) {
+      foreach ($get as $queryKey => $queryValue) {
         if (stristr($queryKey, 'utm_')) {
           $utms[$queryKey] = $queryValue;
         }
@@ -702,20 +752,36 @@ class CRM_Utils_String {
     return $utms;
   }
 
-  static function buildUrl($parts) {
-    return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') . 
-      ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') . 
-      (isset($parts['user']) ? "{$parts['user']}" : '') . 
-      (isset($parts['pass']) ? ":{$parts['pass']}" : '') . 
-      (isset($parts['user']) ? '@' : '') . 
-      (isset($parts['host']) ? "{$parts['host']}" : '') . 
-      (isset($parts['port']) ? ":{$parts['port']}" : '') . 
-      (isset($parts['path']) ? "{$parts['path']}" : '') . 
-      (isset($parts['query']) ? "?{$parts['query']}" : '') . 
+  /**
+   * Build a URL from its components.
+   *
+   * @param array $parts associative array of URL components (scheme, host, path, etc.)
+   *
+   * @return string the constructed URL
+   */
+  public static function buildUrl($parts) {
+    return (isset($parts['scheme']) ? "{$parts['scheme']}:" : '') .
+      ((isset($parts['user']) || isset($parts['host'])) ? '//' : '') .
+      (isset($parts['user']) ? "{$parts['user']}" : '') .
+      (isset($parts['pass']) ? ":{$parts['pass']}" : '') .
+      (isset($parts['user']) ? '@' : '') .
+      (isset($parts['host']) ? "{$parts['host']}" : '') .
+      (isset($parts['port']) ? ":{$parts['port']}" : '') .
+      (isset($parts['path']) ? "{$parts['path']}" : '') .
+      (isset($parts['query']) ? "?{$parts['query']}" : '') .
       (isset($parts['fragment']) ? "#{$parts['fragment']}" : '');
   }
 
-  static function safeFilename($str) {
+  /**
+   * Convert a string into a safe filename.
+   *
+   * Removes unsafe characters and replaces spaces with underscores.
+   *
+   * @param string $str the input string
+   *
+   * @return string the safe filename
+   */
+  public static function safeFilename($str) {
     $str = preg_replace("/([^\w\s\d\.\-_~\[\]\(\)]|[\.]{2,})/u", '', $str);
     $str = preg_replace("/\s+/u", '_', $str);
     $str = CRM_Utils_File::sanitizeFileName($str);
@@ -723,19 +789,16 @@ class CRM_Utils_String {
   }
 
   /**
-   * Mask string with spcific char
+   * Mask a portion of a string with a mask character.
    *
-   * @param  string $str string need to modify
-   * @param  string $mode auto or custom, if use custom, need further parameter
-   * @param  int    $start when mode = custom, specify mask start position, can be negative which calc from end of str
-   * @param  int    $end   when mode = custom, specify mask end position calculate from end of string
+   * @param string $str the string to be masked
+   * @param string $mode masking mode ('auto' or 'custom')
+   * @param int|null $start starting position for custom masking
+   * @param int|null $end end position for custom masking (calculated from end)
    *
-   * @return string A masked string
-   *
-   * @access public
-   * @static
+   * @return string|null the masked string
    */
-  static function mask($str, $mode = 'auto', $start = NULL, $end = NULL) {
+  public static function mask($str, $mode = 'auto', $start = NULL, $end = NULL) {
     if (empty($str)) {
       return;
     }
@@ -756,9 +819,10 @@ class CRM_Utils_String {
       $str = mb_substr($str, 0, $start) . str_repeat(self::MASK, $repeat) . mb_substr($str, -1 * $end, $end);
     }
     else {
-      switch($length) {
+      switch ($length) {
         case 2:
           $str = mb_substr($str, 0, 1) . self::MASK;
+          // no break
         case 3:
         case 4:
           $str = mb_substr($str, 0, 1) . str_repeat(self::MASK, $length - 2) . mb_substr($str, -1, 1);
@@ -778,12 +842,13 @@ class CRM_Utils_String {
   }
 
   /**
-   * Transliteration string to ascii
+   * Transliterate a UTF-8 string to ASCII.
    *
-   * @param string $string
-   * @param string $unknown
-   * @param string $source_langcode
-   * @return string
+   * @param string $string the string to transliterate
+   * @param string $unknown replacement for unknown characters
+   * @param string|null $source_langcode optional source language code
+   *
+   * @return string the transliterated ASCII string
    */
   public static function transliteration($string, $unknown = '?', $source_langcode = NULL) {
     // ASCII is always valid NFC! If we're only ever given plain ASCII, we can
@@ -850,7 +915,7 @@ class CRM_Utils_String {
       // Counting down is faster. I'm *so* sorry.
       $len = $chunk + 1;
 
-      for ($i = -1; --$len; ) {
+      for ($i = -1; --$len;) {
         $c = $str[++$i];
         if ($remaining = $tail_bytes[$c]) {
           // UTF-8 head byte!
@@ -878,7 +943,8 @@ class CRM_Utils_String {
                 continue 2;
               }
             }
-          } while (--$remaining);
+          }
+          while (--$remaining);
 
           $n = ord($head);
           if ($n <= 0xdf) {
@@ -931,6 +997,15 @@ class CRM_Utils_String {
     return $result;
   }
 
+  /**
+   * Replace a character code with its transliterated equivalent.
+   *
+   * @param int $ord the character code
+   * @param string $unknown replacement for unknown characters
+   * @param string|null $langcode the language code for language-specific mapping
+   *
+   * @return string the transliterated character
+   */
   private static function transliterationReplace($ord, $unknown = '?', $langcode = NULL) {
     static $map = [];
 
@@ -965,13 +1040,14 @@ class CRM_Utils_String {
   }
 
   /**
-   * Truncate UTF8 string to length
+   * Truncate a UTF-8 string to a specified length.
    *
-   * @param string $utf8String
-   * @param int $length
-   * @return string
+   * @param string $utf8String the string to truncate
+   * @param int $length the maximum length
+   *
+   * @return string the truncated string
    */
-  function truncate($utf8String, $length) {
+  public function truncate($utf8String, $length) {
     if (extension_loaded('mbstring')) {
       return mb_substr($utf8String, 0, $length, 'UTF-8');
     }
@@ -989,4 +1065,3 @@ class CRM_Utils_String {
     }
   }
 }
-

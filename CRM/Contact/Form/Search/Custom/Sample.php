@@ -26,21 +26,27 @@
 */
 
 /**
+ * Sample custom search form demonstrating how to build custom searches
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
   public $_stateID;
-  function __construct(&$formValues) {
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
     if (!isset($formValues['state_province_id'])) {
-      $this->_stateID = CRM_Utils_Request::retrieve('stateID', 'Integer',
+      $this->_stateID = CRM_Utils_Request::retrieve(
+        'stateID',
+        'Integer',
         CRM_Core_DAO::$_nullObject
       );
       if ($this->_stateID) {
@@ -55,9 +61,15 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     ];
   }
 
-  function buildForm(&$form) {
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
+  public function buildForm(&$form) {
 
-    $form->add('text',
+    $form->add(
+      'text',
       'household_name',
       ts('Household Name'),
       TRUE
@@ -78,14 +90,32 @@ class CRM_Contact_Form_Search_Custom_Sample extends CRM_Contact_Form_Search_Cust
     $form->assign('elements', ['household_name', 'state_province_id']);
   }
 
-  function summary() {
+  /**
+   * Get summary data.
+   *
+   * @return array<string, string|float>
+   */
+  public function summary() {
     $summary = ['summary' => 'This is a summary',
       'total' => 50.0,
     ];
     return $summary;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -94,13 +124,22 @@ contact_a.contact_type as contact_type,
 contact_a.sort_name    as sort_name,
 state_province.name    as state_province
 ";
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
-  function from() {
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
+  public function from() {
     return "
 FROM      civicrm_contact contact_a
 LEFT JOIN civicrm_address address ON ( address.contact_id       = contact_a.id AND
@@ -111,13 +150,21 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
 ";
   }
 
-  function where($includeContactIDs = FALSE) {
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function where($includeContactIDs = FALSE) {
     $params = [];
     $where = "contact_a.contact_type   = 'Household'";
 
     $count = 1;
     $clause = [];
-    $name = CRM_Utils_Array::value('household_name',
+    $name = CRM_Utils_Array::value(
+      'household_name',
       $this->_formValues
     );
     if ($name != NULL) {
@@ -129,7 +176,8 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
       $count++;
     }
 
-    $state = CRM_Utils_Array::value('state_province_id',
+    $state = CRM_Utils_Array::value(
+      'state_province_id',
       $this->_formValues
     );
     if (!$state &&
@@ -150,17 +198,31 @@ LEFT JOIN civicrm_state_province state_province ON state_province.id = address.s
     return $this->whereClause($where, $params);
   }
 
-  function templateFile() {
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
-  function setDefaultValues() {
+  /**
+   * Set the default values for the form.
+   *
+   * @return array
+   */
+  public function setDefaultValues() {
     return ['household_name' => '',
     ];
   }
 
-  function alterRow(&$row) {
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
+  public function alterRow(&$row) {
     $row['sort_name'] .= ' ( altered )';
   }
 }
-

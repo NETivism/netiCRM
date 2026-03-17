@@ -5,7 +5,7 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
   /**
    * Return a descriptive name for the page, used in wizard header
    *
-   * @return string
+   * @return string The form title.
    */
   public function getTitle() {
     return ts('Done');
@@ -14,18 +14,19 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
   /**
    * Preprocess Form
    *
-   * @return void
+   * @return void None.
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('action', CRM_Core_Action::UPDATE);
     parent::preProcess();
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
+   *
+   * @return array<string, mixed> The default values for the form.
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['is_active'] = $this->_values['is_active'];
     $defaults['is_default'] = $this->_values['is_default'];
@@ -33,7 +34,9 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
+   *
+   * @return void None.
    */
   public function buildQuickForm() {
     $eleActive = $this->addCbx('is_active', ts('Enabled?'));
@@ -43,7 +46,8 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
       $eleDefault->freeze();
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'back',
           'name' => ts('<< Previous'),
@@ -58,7 +62,9 @@ class CRM_Admin_Form_FromEmailAddress_Finish extends CRM_Admin_Form_FromEmailAdd
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
+   *
+   * @return void None.
    */
   public function postProcess() {
     $this->_values['is_active'] = $this->exportValue('is_active');

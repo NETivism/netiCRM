@@ -27,31 +27,31 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
-
-
 
 class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
 
   public $bounces;
   public $threshold;
   /**
-   * class constructor
+   * Class constructor.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Create a new bounce event, update the email address if necessary
+   * Create a new bounce event, update the email address if necessary.
+   *
+   * @param array $params (reference) Associative array of bounce event values.
+   *
+   * @return bool|null True on success, null otherwise.
    */
-  static function &create(&$params) {
-    $q = &CRM_Mailing_Event_BAO_Queue::verify($params['job_id'],
+  public static function &create(&$params) {
+    $q = &CRM_Mailing_Event_BAO_Queue::verify(
+      $params['job_id'],
       $params['event_queue_id'],
       $params['hash']
     );
@@ -60,7 +60,6 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     if (!$q) {
       return $success;
     }
-
 
     $transaction = new CRM_Core_Transaction();
     $bounce = new CRM_Mailing_Event_BAO_Bounce();
@@ -123,17 +122,17 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
   }
 
   /**
-   * Get row count for the event selector
+   * Get row count for the event selector.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           Optional ID of a job to filter on
-   * @param boolean $is_distinct  Group by queue ID?
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of a job to filter on.
+   * @param bool $is_distinct Group by queue ID?
    *
-   * @return int                  Number of rows in result set
-   * @access public
-   * @static
+   * @return int|null Number of rows in result set.
    */
-  public static function getTotalCount($mailing_id, $job_id = NULL,
+  public static function getTotalCount(
+    $mailing_id,
+    $job_id = NULL,
     $is_distinct = FALSE
   ) {
     $dao = new CRM_Core_DAO();
@@ -173,21 +172,24 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
   }
 
   /**
-   * Get rows for the event browser
+   * Get rows for the event browser.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           optional ID of the job
-   * @param boolean $is_distinct  Group by queue id?
-   * @param int $offset           Offset
-   * @param int $rowCount         Number of rows
-   * @param array $sort           sort array
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of the job.
+   * @param bool $is_distinct Group by queue id?
+   * @param int|null $offset Offset for the query.
+   * @param int|null $rowCount Number of rows to return.
+   * @param CRM_Utils_Sort|string|null $sort Sort object or string.
    *
-   * @return array                Result set
-   * @access public
-   * @static
+   * @return array Result set of bounce events.
    */
-  public static function &getRows($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $is_distinct = FALSE,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -254,14 +256,16 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     $bounceType['Spam'] = ts('Message caught by a content filter');
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
         'name' => "<a href=\"$url\">{$dao->display_name}</a>",
         'email' => $dao->email,
         // FIXME: translate this
-        'type' => (empty($dao->bounce_type)
+        'type' => (
+          empty($dao->bounce_type)
            ? ts('Unknown') : $bounceType[$dao->bounce_type]."($dao->bounce_type)"
         ),
         'reason' => $dao->reason,
@@ -271,6 +275,15 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     return $results;
   }
 
+  /**
+   * Get the bounce type for a given queue or email.
+   *
+   * @param int|null $queueId Optional queue ID.
+   * @param int|null $emailId Optional email ID.
+   * @param string|null $bounceTypeFilter Optional bounce type name filter.
+   *
+   * @return array|null Array containing bounce type info, or null if parameters are missing.
+   */
   public static function getEmailBounceType($queueId = NULL, $emailId = NULL, $bounceTypeFilter = NULL) {
     $where = $params = [];
     $select = "SELECT bt.id, bt.name, j.mailing_id FROM civicrm_mailing_event_bounce b INNER JOIN civicrm_mailing_event_queue q ON b.event_queue_id = q.id INNER JOIN civicrm_mailing_job j ON j.id = q.job_id INNER JOIN civicrm_mailing_bounce_type bt ON bt.id = b.bounce_type_id ";
@@ -309,4 +322,3 @@ class CRM_Mailing_Event_BAO_Bounce extends CRM_Mailing_Event_DAO_Bounce {
     return [];
   }
 }
-

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * vCard export class
@@ -49,7 +44,7 @@ class CRM_Contact_Page_View_Vcard extends CRM_Contact_Page_View {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $params = [];
@@ -65,7 +60,8 @@ class CRM_Contact_Page_View_Vcard extends CRM_Contact_Page_View {
     $vcard = new Contact_Vcard_Build('2.1');
 
     if ($defaults['contact_type'] == 'Individual') {
-      $vcard->setName(CRM_Utils_Array::value('last_name', $defaults),
+      $vcard->setName(
+        CRM_Utils_Array::value('last_name', $defaults),
         CRM_Utils_Array::value('first_name', $defaults),
         CRM_Utils_Array::value('middle_name', $defaults),
         CRM_Utils_Array::value('prefix', $defaults),
@@ -167,4 +163,3 @@ class CRM_Contact_Page_View_Vcard extends CRM_Contact_Page_View {
     CRM_Utils_System::civiExit();
   }
 }
-

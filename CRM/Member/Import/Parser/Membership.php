@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -107,9 +105,15 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   protected $_parserContact;
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param array $mapperKeys
+   * @param array $mapperLocType
+   * @param array $mapperPhoneType
+   * @param array $mapperWebsiteType
+   * @param array $mapperImProvider
    */
-  function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL) {
+  public function __construct(&$mapperKeys, $mapperLocType = NULL, $mapperPhoneType = NULL, $mapperWebsiteType = NULL, $mapperImProvider = NULL) {
     parent::__construct();
     $this->_mapperKeys = &$mapperKeys;
     $this->_mapperLocType = &$mapperLocType;
@@ -119,12 +123,11 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * the initializer code, called before the processing
+   * The initializer code, called before the processing.
    *
    * @return void
-   * @access public
    */
-  function init() {
+  public function init() {
     $fields = &CRM_Member_BAO_Membership::importableFields($this->_contactType, FALSE);
     $this->_importableContactFields = $fields;
 
@@ -178,13 +181,13 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         $this->_externalIdentifierIndex = $index;
         $this->_allExternalIdentifiers = [];
       }
-      elseif($key == 'membership_contact_id'){
+      elseif ($key == 'membership_contact_id') {
         $this->_contactIdIndex = $index;
       }
-      elseif($key == 'membership_type_id'){
+      elseif ($key == 'membership_type_id') {
         $this->_membershipTypeIndex = $index;
       }
-      elseif($key == 'status_id'){
+      elseif ($key == 'status_id') {
         $this->_membershipStatusIndex = $index;
       }
       $index++;
@@ -205,7 +208,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $this->_parserContact->_dateFormats = $session->get("dateTypes");
     $this->_parserContact->_contactLog = ts('Import Contact').' '.ts('From').' '.ts('Import Membership');
     $this->_parserContact->init();
-    
+
     // create dedupe fields mapping to prevent each loop query
     if (!empty($this->_dedupeRuleGroupId)) {
       $ruleParams = [
@@ -222,38 +225,35 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * handle the values in mapField mode
+   * Handle the values in mapField mode.
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean
-   * @access public
+   * @return int
    */
-  function mapField(&$values) {
+  public function mapField(&$values) {
     return CRM_Member_Import_Parser::VALID;
   }
 
   /**
-   * handle the values in preview mode
+   * Handle the values in preview mode.
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
-  function preview(&$values) {
+  public function preview(&$values) {
     return $this->summary($values);
   }
 
   /**
-   * handle the values in summary mode
+   * Handle the values in summary mode.
    *
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
-  function summary(&$values) {
+  public function summary(&$values) {
     $erroneousField = NULL;
     $response = $this->setActiveFieldValues($values, $erroneousField);
 
@@ -278,7 +278,6 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     $params = &$this->getActiveFieldParams();
 
     $errorMessage = NULL;
-
 
     //To check whether start date or join date is provided
     if (!$params['membership_start_date'] && !$params['join_date']) {
@@ -372,8 +371,8 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       $csType = CRM_Utils_Array::value('contact_sub_type', $params);
     }
     $contactFields = CRM_Core_BAO_CustomField::getFields($this->_contactType, FALSE, FALSE, $csType);
-    if(!empty($contactFields)){
-      foreach(array_keys($contactFields) as $customKey) {
+    if (!empty($contactFields)) {
+      foreach (array_keys($contactFields) as $customKey) {
         if (isset($params['custom_'.$customKey])) {
           $contactParams['custom_'.$customKey] = $params['custom_'.$customKey];
         }
@@ -392,15 +391,14 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * handle the values in import mode
+   * Handle the values in import mode.
    *
    * @param int $onDuplicate the code for what action to take on duplicates
    * @param array $values the array of values belonging to this line
    *
-   * @return boolean      the result of this processing
-   * @access public
+   * @return int the result of this processing
    */
-  function import($onDuplicate, &$values) {
+  public function import($onDuplicate, &$values) {
     $contactValues = $values;
     // first make sure this is a valid line
     $response = $this->summary($values);
@@ -505,7 +503,8 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     }
 
     if ($onDuplicate != CRM_Member_Import_Parser::DUPLICATE_UPDATE) {
-      $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
+      $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess(
+        $formatted,
         CRM_Core_DAO::$_nullObject,
         NULL,
         'Membership'
@@ -520,10 +519,10 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
         array_unshift($values, "Required parameter missing: Status");
         return CRM_Member_Import_Parser::ERROR;
       }
-      if($this->_dataReferenceField == 'membership_id' && $paramValues['membership_id']){
+      if ($this->_dataReferenceField == 'membership_id' && $paramValues['membership_id']) {
         $membership_id = $paramValues['membership_id'];
       }
-      else if(preg_match('/^custom_/', $this->_dataReferenceField) && !empty($paramValues[$this->_dataReferenceField])){
+      elseif (preg_match('/^custom_/', $this->_dataReferenceField) && !empty($paramValues[$this->_dataReferenceField])) {
         $field_id = str_replace('custom_', '', $this->_dataReferenceField);
         list($custom_table, $custom_field, $ignore) = CRM_Core_BAO_CustomField::getTableColumnGroup($field_id);
         $sql = "SELECT entity_id FROM $custom_table WHERE $custom_field = %1";
@@ -541,7 +540,8 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
               $formatted[$v] = $dao->$v;
             }
           }
-          $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess($formatted,
+          $formatted['custom'] = CRM_Core_BAO_CustomField::postProcess(
+            $formatted,
             CRM_Core_DAO::$_nullObject,
             $membership_id,
             'Membership'
@@ -554,24 +554,24 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
           $newMembership = &CRM_Member_BAO_Membership::create($formatted, $ids, TRUE, 'Membership Renewal');
           // Workaround: why $formatted have reminder_date value 'null'
           // reference: CRM_Member_BAO_Membership::add(&$params, &$ids)
-          if($formatted['reminder_date'] == 'null'){
+          if ($formatted['reminder_date'] == 'null') {
             unset($formatted['reminder_date']);
           }
           $this->_newMemberships[] = $newMembership->id;
-          if(empty($paramValues['membership_contact_id'])){
+          if (empty($paramValues['membership_contact_id'])) {
             $paramValues['membership_contact_id'] = $newMembership->contact_id;
           }
 
           if (civicrm_error($newMembership)) {
-            if($this->_dataReferenceField == 'membership_id'){
+            if ($this->_dataReferenceField == 'membership_id') {
               array_unshift($values, $newMembership['is_error'] . " for Membership ID " . $paramValues['membership_id'] . ". Row was skipped.");
             }
-            else{
+            else {
               array_unshift($values, $newMembership['is_error'] . " for Custom field and ID: " . $this->_dataReferenceField . ": " . $paramValues[$this->_dataReferenceField] . ". Row was skipped.");
             }
             return CRM_Member_Import_Parser::ERROR;
           }
-          else{
+          else {
             $this->_newMemberships[] = $newMembership->id;
             return CRM_Member_Import_Parser::VALID;
           }
@@ -611,7 +611,7 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     elseif ($this->_createContactOption == self::CONTACT_AUTOCREATE) {
       $doCreateContact = TRUE;
     }
-    
+
     // using duplicate rule when we don't have contact id and external identifier
     if (empty($checkContactId)) {
       //retrieve contact id using contact dedupe rule
@@ -699,33 +699,31 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
   }
 
   /**
-   * Get the array of succesfully imported membership id's
+   * Get the array of successfully imported membership ID's.
    *
    * @return array
-   * @access public
    */
-  function &getImportedMemberships() {
+  public function &getImportedMemberships() {
     return $this->_newMemberships;
   }
 
   /**
-   * the initializer code, called before the processing
+   * The finalizer code, called after the processing.
    *
    * @return void
-   * @access public
    */
-  function fini() {}
+  public function fini() {
+  }
 
   /**
-   *  to calculate join, start and end dates
+   * To calculate join, start and end dates.
    *
-   *  @param Array $calcDates array of dates returned by getDatesForMembershipType()
+   * @param array $calcDates array of dates returned by getDatesForMembershipType()
+   * @param array $formatted formatted containing date values
    *
-   *  @return Array formatted containing date values
-   *
-   *  @access public
+   * @return void
    */
-  function formattedDates($calcDates, &$formatted) {
+  public function formattedDates($calcDates, &$formatted) {
     $dates = ['join_date',
       'start_date',
       'end_date',
@@ -744,12 +742,21 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     }
   }
 
-  function importMembership($formatted, &$values) {
+  /**
+   * Import membership.
+   *
+   * @param array $formatted
+   * @param array $values
+   *
+   * @return int
+   */
+  public function importMembership($formatted, &$values) {
     $startDate = CRM_Utils_Date::customFormat($formatted['start_date'], '%Y-%m-%d');
     $endDate = CRM_Utils_Date::customFormat($formatted['end_date'], '%Y-%m-%d');
     $joinDate = CRM_Utils_Date::customFormat($formatted['join_date'], '%Y-%m-%d');
     //to calculate dates
-    $calcDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($formatted['membership_type_id'],
+    $calcDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType(
+      $formatted['membership_type_id'],
       $joinDate,
       $startDate,
       $endDate
@@ -763,7 +770,8 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     if (!CRM_Utils_Array::value('is_override', $formatted)) {
       $formatted['exclude_is_admin'] = $excludeIsAdmin = TRUE;
     }
-    $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($startDate,
+    $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate(
+      $startDate,
       $endDate,
       $joinDate,
       'today',
@@ -793,21 +801,27 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
     return CRM_Member_Import_Parser::VALID;
   }
 
-
-  function checkContactById($params) {
+  /**
+   * Check contact by ID.
+   *
+   * @param array $params
+   *
+   * @return int|bool
+   */
+  public function checkContactById($params) {
     $pass = $contactID = 0;
     $checkCid = new CRM_Contact_DAO_Contact();
     if (!empty($params['external_identifier'])) {
       $checkCid->external_identifier = $params['external_identifier'];
       $checkCid->is_deleted = 0;
-      if($checkCid->find(TRUE)){
+      if ($checkCid->find(TRUE)) {
         $contactID = $checkCid->id;
       }
     }
 
     if (!empty($params['membership_contact_id'])) {
       if (!empty($contactID)) {
-        if ($contactID != $params['membership_contact_id'] ){
+        if ($contactID != $params['membership_contact_id']) {
           $pass = FALSE;
         }
         else {
@@ -817,13 +831,13 @@ class CRM_Member_Import_Parser_Membership extends CRM_Member_Import_Parser {
       else {
         $checkCid->id = $params['membership_contact_id'];
         $checkCid->is_deleted = 0;
-        if($checkCid->find(TRUE)){
+        if ($checkCid->find(TRUE)) {
           $contactID = $checkCid->id;
           $pass = $contactID;
         }
       }
     }
-    elseif(!empty($contactID)) {
+    elseif (!empty($contactID)) {
       $pass = $contactID;
     }
     $checkCid->free();

@@ -27,19 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  * Files required
  */
-
-
-
-
 
 /**
  * advanced search, extends basic search
@@ -154,12 +148,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
   protected $_prefix = "contribute_";
 
   /**
-   * processing needed for buildForm and later
+   * Pre-process the form
    *
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('searchFormName', 'Search');
 
     /**
@@ -173,9 +167,9 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->_done = FALSE;
     $this->defaults = [];
 
-    /* 
-     * we allow the controller to set force/reset externally, useful when we are being 
-     * driven by the wizard framework 
+    /*
+     * we allow the controller to set force/reset externally, useful when we are being
+     * driven by the wizard framework
      */
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
@@ -213,13 +207,15 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-    $selector = new CRM_Contribute_Selector_Search($this->_queryParams,
+    $selector = new CRM_Contribute_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -236,7 +232,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->assign("{$prefix}single", $this->_single);
     $this->assign("page_id", $this->_pageId);
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -251,10 +248,17 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $this->assign('contributionSummary', $this->get('summary'));
   }
 
-  function setDefaultValues() {
-    if (!CRM_Utils_Array::value('contribution_status',
-        $this->_defaults
-      )) {
+  /**
+   * Set default values for the form
+   *
+   * @return array
+   * @access public
+   */
+  public function setDefaultValues() {
+    if (!CRM_Utils_Array::value(
+      'contribution_status',
+      $this->_defaults
+    )) {
       $this->_defaults['contribution_status'][1] = 1;
     }
     return $this->_defaults;
@@ -263,22 +267,19 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
   /**
    * Build the form
    *
-   * @access public
-   *
    * @return void
+   * @access public
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // text for sort_name
     $this->addElement('text', 'sort_name', ts('Contributor Name, Phone or Email'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
 
-
     CRM_Contribute_BAO_Query::buildSearchForm($this);
 
-    /* 
-     * add form checkboxes for each row. This is needed out here to conform to QF protocol 
-     * of all elements being declared in builQuickForm 
+    /*
+     * add form checkboxes for each row. This is needed out here to conform to QF protocol
+     * of all elements being declared in builQuickForm
      */
-
 
     $rows = $this->get('rows');
     if (is_array($rows)) {
@@ -291,20 +292,24 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-
       $permission = CRM_Core_Permission::getPermission();
-
 
       $tasks = ['' => ts('- actions -')] + CRM_Contribute_Task::permissionedTaskTitles($permission);
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
-      $this->add('submit', $this->_actionButtonName, ts('Go'),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Go'),
         ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
         ]
       );
 
-      $this->add('submit', $this->_printButtonName, ts('Print'),
+      $this->add(
+        'submit',
+        $this->_printButtonName,
+        ts('Print'),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
         ]
@@ -312,7 +317,10 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
       // override default task
       $this->addElement('hidden', 'task_force', 4);
-      $this->add('submit', $this->_exportButtonName, ts('Export Contributions'),
+      $this->add(
+        'submit',
+        $this->_exportButtonName,
+        ts('Export Contributions'),
         ['class' => 'form-submit',
           'id' => 'export',
         ]
@@ -321,13 +329,14 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
       $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
       $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
-      
+
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
       $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
 
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
@@ -337,23 +346,12 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
   }
 
   /**
-   * The post processing of the form gets done here.
-   *
-   * Key things done during post processing are
-   *      - check for reset or next request. if present, skip post procesing.
-   *      - now check if user requested running a saved search, if so, then
-   *        the form values associated with the saved search are used for searching.
-   *      - if user has done a submit with new values the regular post submissing is
-   *        done.
-   * The processing consists of using a Selector / Controller framework for getting the
-   * search results.
-   *
-   * @param
+   * Process the form
    *
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     if ($this->_done) {
       return;
     }
@@ -368,9 +366,10 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
     // we don't show test contributions in Contact Summary / User Dashboard
     // in Search mode by default we hide test contributions
-    if (!CRM_Utils_Array::value('contribution_test',
-        $this->_formValues
-      )) {
+    if (!CRM_Utils_Array::value(
+      'contribution_test',
+      $this->_formValues
+    )) {
       $this->_formValues["contribution_test"] = 0;
     }
 
@@ -380,9 +379,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       }
     }
 
-
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
-
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
@@ -395,7 +392,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
       // refs #18784, take sortOrder to CRM_Contribute_Form_Task
       $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-      $selector = new CRM_Contribute_Selector_Search($this->_queryParams,
+      $selector = new CRM_Contribute_Selector_Search(
+        $this->_queryParams,
         $this->_action,
         NULL,
         $this->_single,
@@ -404,7 +402,7 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
         $this->_compContext
       );
       $sortOrder = $selector->getSortOrder(CRM_Core_Action::VIEW);
-      $this->controller->set('sortOrder',$sortOrder);
+      $this->controller->set('sortOrder', $sortOrder);
 
       // hack, make sure we reset the task values
       $stateMachine = &$this->controller->getStateMachine();
@@ -419,16 +417,17 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       return;
     }
 
-
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-    $selector = new CRM_Contribute_Selector_Search($this->_queryParams,
+    $selector = new CRM_Contribute_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -443,7 +442,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $prefix = $this->_prefix;
     }
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -463,7 +463,13 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     $controller->run();
   }
 
-  function fixFormValues() {
+  /**
+   * Fix form values from request if forced
+   *
+   * @return void
+   * @access public
+   */
+  public function fixFormValues() {
     // if this search has been forced
     // then see if there are any get values, and if so over-ride the post values
     // note that this means that GET over-rides POST :)
@@ -499,7 +505,9 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
 
         $this->_formValues['contact_id'] = $cid;
         list($display, $image) = CRM_Contact_BAO_Contact::getDisplayAndImage($cid);
-        $this->_defaults['sort_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $cid,
+        $this->_defaults['sort_name'] = CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
+          $cid,
           'sort_name'
         );
         // also assign individual mode to the template
@@ -507,7 +515,9 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       }
     }
 
-    $lowDate = CRM_Utils_Request::retrieve('start', 'Timestamp',
+    $lowDate = CRM_Utils_Request::retrieve(
+      'start',
+      'Timestamp',
       CRM_Core_DAO::$_nullObject
     );
     if ($lowDate) {
@@ -516,7 +526,9 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $this->_formValues['contribution_date_low'] = $this->_defaults['contribution_date_low'] = $date[0];
     }
 
-    $highDate = CRM_Utils_Request::retrieve('end', 'Timestamp',
+    $highDate = CRM_Utils_Request::retrieve(
+      'end',
+      'Timestamp',
       CRM_Core_DAO::$_nullObject
     );
     if ($highDate) {
@@ -525,7 +537,9 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
       $this->_formValues['contribution_date_high'] = $this->_defaults['contribution_date_high'] = $date[0];
     }
 
-    $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive',
+    $this->_limit = CRM_Utils_Request::retrieve(
+      'limit',
+      'Positive',
       $this
     );
 
@@ -539,7 +553,8 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     if ($recur) {
       $this->_formValues['contribution_recur_id'] = $recur;
       $this->_formValues['contribution_recurring'] = 1;
-    }else if($recur === '0'){
+    }
+    elseif ($recur === '0') {
       $this->_formValues['contribution_recurring'] = 2;
     }
 
@@ -563,4 +578,3 @@ class CRM_Contribute_Form_Search extends CRM_Core_Form {
     return ts('Find Contributions');
   }
 }
-

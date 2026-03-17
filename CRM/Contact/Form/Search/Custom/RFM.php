@@ -1,8 +1,8 @@
 <?php
 
 class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
-  const RECURRING_NONRECURRING = 'all', RECURRING = 'recurring', NONRECURRING = 'non-recurring';
-  const DATE_RANGE_DEFAULT = 'last 1 years to yesterday';
+  public const RECURRING_NONRECURRING = 'all', RECURRING = 'recurring', NONRECURRING = 'non-recurring';
+  public const DATE_RANGE_DEFAULT = 'last 1 years to yesterday';
 
   /**
    * @var mixed[]
@@ -27,7 +27,12 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   protected $_segmentStats = [];
   protected $_showResults = TRUE;
 
-  function __construct(&$formValues){
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_template = CRM_Core_Smarty::singleton();
     $this->_filled = FALSE;
@@ -46,7 +51,10 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->buildColumn();
   }
 
-  function buildColumn(){
+  /**
+   * Build the columns for the search results.
+   */
+  public function buildColumn() {
     $this->_queryColumns = [
       'contact_a.id' => 'id',
       'contact_a.sort_name' => 'sort_name',
@@ -64,7 +72,12 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     ];
   }
 
-  function buildForm(&$form){
+  /**
+   * Build the form object and dashboard.
+   *
+   * @param CRM_Core_Form $form
+   */
+  public function buildForm(&$form) {
     $this->_form = $form;
     $this->_form->addDateRange('receive_date', ts('Receive Date').' - '.ts('From'), NULL, FALSE);
     $this->_form->addRadio('recurring', ts('Recurring Contribution'), $this->_recurringStatus);
@@ -117,15 +130,15 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
 
     // Sort segments by numeric_id DESC for display (7→0)
     $sortedRfmSegments = $rfmSegments;
-    usort($sortedRfmSegments, function($a, $b) {
+    usort($sortedRfmSegments, function ($a, $b) {
       return $b['numeric_id'] - $a['numeric_id']; // DESC sorting
     });
 
-    $highRfmSegments = array_filter($sortedRfmSegments, function($segment) {
+    $highRfmSegments = array_filter($sortedRfmSegments, function ($segment) {
       return $segment['numeric_id'] >= 4;
     });
 
-    $lowRfmSegments = array_filter($sortedRfmSegments, function($segment) {
+    $lowRfmSegments = array_filter($sortedRfmSegments, function ($segment) {
       return $segment['numeric_id'] <= 3;
     });
 
@@ -148,17 +161,18 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   /**
-   * Prepare RFM segment data for frontend consumption
-   * Transform backend format to frontend expected format
+   * Prepare RFM segment data for frontend consumption.
+   * Transform backend format to frontend expected format.
    *
    * @param array $segments RFM segments from prepareRfmSegments()
+   *
    * @return array Frontend-formatted segment data (array indexed by numeric_id)
    */
   private function prepareRfmSegmentDataForFrontend($segments) {
     $frontendData = [];
 
     // Sort segments by numeric_id to ensure correct array order (0-7)
-    usort($segments, function($a, $b) {
+    usort($segments, function ($a, $b) {
       return $a['numeric_id'] - $b['numeric_id'];
     });
 
@@ -174,10 +188,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   /**
-   * Parse RFM states from segment ID
-   * Extract R/F/M status (low/high) from ID like 'RlFlMl'
+   * Parse RFM states from segment ID.
+   * Extract R/F/M status (low/high) from ID like 'RlFlMl'.
    *
    * @param string $segmentId RFM segment ID
+   *
    * @return array RFM states array
    */
   private function parseRfmStatesFromId($segmentId) {
@@ -193,11 +208,12 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   /**
-   * Prepare RFM segment data for quick search links
-   * Maintains original array order (by RFM binary sequence 0→7)
-   * Enhanced with description and parsed RFM states
+   * Prepare RFM segment data for quick search links.
    *
-   * @return array Array of segment data with calculated numeric IDs
+   * Maintains original array order (by RFM binary sequence 0→7).
+   * Enhanced with description and parsed RFM states.
+   *
+   * @return array<int, array<string, mixed>> Array of segment data with calculated numeric IDs
    */
   private function prepareRfmSegments() {
     $segments = [
@@ -267,7 +283,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       if (isset($this->_segmentStats[$numericId])) {
         $segment['count'] = $this->_segmentStats[$numericId]['count'];
         $segment['percentage'] = $this->_segmentStats[$numericId]['percentage'];
-      } else {
+      }
+      else {
         $segment['count'] = 0;
         $segment['percentage'] = 0;
       }
@@ -276,7 +293,12 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     return $segments;
   }
 
-  function setDefaultValues() {
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, mixed>
+   */
+  public function setDefaultValues() {
     // First try to get values from form values (for saved searches)
     $dateFrom = CRM_Utils_Array::value('receive_date_from', $this->_formValues);
     $dateTo = CRM_Utils_Array::value('receive_date_to', $this->_formValues);
@@ -305,7 +327,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $dateRange = '';
     if (!empty($dateFrom) && !empty($dateTo)) {
       $dateRange = $dateFrom . '_to_' . $dateTo;
-    } elseif (!empty($dateFrom)) {
+    }
+    elseif (!empty($dateFrom)) {
       $dateRange = $dateFrom . '_to_' . date('Y-m-d');
     }
 
@@ -322,7 +345,8 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     if (empty($segment)) {
       $segment = CRM_Utils_Request::retrieve('segment', 'String', CRM_Core_DAO::$_nullObject, FALSE, '');
       $this->_showResults = FALSE;
-    } else {
+    }
+    else {
       $this->_showResults = TRUE;
       $parsedSegment = self::parseRfmSegment($segment);
       if ($parsedSegment) {
@@ -365,7 +389,12 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     return $defaults;
   }
 
-  function qill(){
+  /**
+   * Get data for the 'qill' display.
+   *
+   * @return array<int, array<string, string>>
+   */
+  public function qill() {
     $qill = [];
     $from = !empty($this->_formValues['receive_date_from']) ? $this->_formValues['receive_date_from'] : NULL;
     $to = !empty($this->_formValues['receive_date_to']) ? $this->_formValues['receive_date_to'] : NULL;
@@ -391,15 +420,23 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     return $qill;
   }
 
-  function setBreadcrumb() {
+  /**
+   * Set the breadcrumb for the search page.
+   */
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-  function count(){
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
+  public function count() {
     if (!$this->_showResults) {
-        return 0;
+      return 0;
     }
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
     }
     $sql = $this->all();
@@ -408,21 +445,41 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     if (!$this->_showResults) {
       return "SELECT contact_a.id as contact_id FROM civicrm_contact contact_a WHERE 1 = 0";
     }
     $fields = !$onlyIDs ? "*" : "contact_a.id as contact_id" ;
-    if(!$this->_filled){
+    if (!$this->_filled) {
       // prepare rfm talbe
       $this->fillTable();
     }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  /**
+   * Generic SQL builder.
+   *
+   * @param string $selectClause
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param null|string $groupBy
+   *
+   * @return string
+   */
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     if ($selectClause == '*') {
       $select = [];
       foreach ($this->_queryColumns as $tableDotColumn => $alias) {
@@ -439,9 +496,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   /**
-   * Functions below generally don't need to be modified
+   * Build the FROM clause for the main query.
+   *
+   * @return string
    */
-  function from() {
+  public function from() {
     $from = "
     FROM civicrm_contact contact_a
     INNER JOIN {$this->_tableName} rfm ON contact_a.id = rfm.contact_id
@@ -449,7 +508,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     return $from;
   }
 
-  function where($includeContactIDs = false) {
+  /**
+   * Build the WHERE clause for the main query.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function where($includeContactIDs = FALSE) {
     $sql = '';
     $clauses = [];
     $clauses[] = "contact_a.is_deleted = 0";
@@ -466,11 +532,23 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     return $sql;
   }
 
-  function having(){
+  /**
+   * Build the HAVING clause for the main query.
+   *
+   * @return string
+   */
+  public function having() {
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
+  /**
+   * Append a list of contact IDs to the WHERE clause of a query.
+   *
+   * @param string $sql
+   * @param array $formValues
+   * @param bool $isExport
+   */
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -485,24 +563,47 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     }
   }
 
-  function &columns(){
+  /**
+   * Getter for the display columns.
+   *
+   * @return array
+   */
+  public function &columns() {
     return $this->_columns;
   }
 
-  function alterRow(&$row) {
+  /**
+   * Alter a single result row for display.
+   *
+   * @param array $row
+   */
+  public function alterRow(&$row) {
     if (!empty($row['monetary_amount']) && empty($this->_isExport)) {
       $row['monetary_amount'] = CRM_Utils_Money::format($row['monetary_amount']);
     }
   }
 
   /**
+   * Get the path to the template file.
+   *
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
    */
-  function templateFile(){
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/RFM.tpl';
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  /**
+   * Get the SQL for retrieving contact IDs.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
+   */
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
@@ -514,13 +615,13 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
    */
   public static function parseRfmSegment($segment) {
     // Add null check at the beginning
-    if ($segment === null || !isset($segment) || strlen($segment) !== 6) {
-      return null;
+    if ($segment === NULL || !isset($segment) || strlen($segment) !== 6) {
+      return NULL;
     }
     // Parse format like "RlFhMl" -> ['r' => 'low', 'f' => 'high', 'm' => 'low']
     $pattern = '/^R([lh])F([lh])M([lh])$/i';
     if (!preg_match($pattern, $segment, $matches)) {
-      return null;
+      return NULL;
     }
 
     return [
@@ -530,13 +631,13 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     ];
   }
 
-/**
-   * Convert RFM code (e.g., "RlFlMl") to numeric ID (0-7)
-   * Using binary encoding: R×4 + F×2 + M×1
-   *
-   * @param string $rfmCode RFM code in format "RlFlMl"
-   * @return int Numeric ID (0-7)
-   */
+  /**
+     * Convert RFM code (e.g., "RlFlMl") to numeric ID (0-7)
+     * Using binary encoding: R×4 + F×2 + M×1
+     *
+     * @param string $rfmCode RFM code in format "RlFlMl"
+     * @return int Numeric ID (0-7)
+     */
   public static function rfmCodeToNumericId($rfmCode) {
     if (strlen($rfmCode) !== 6) {
       return 0; // Default fallback
@@ -570,7 +671,10 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     return "R{$r}F{$f}M{$m}";
   }
 
-  function fillTable(){
+  /**
+   * Fill the RFM temporary table.
+   */
+  public function fillTable() {
     if ($this->_filled) {
       return;
     }
@@ -606,14 +710,26 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
       $mThreshold = CRM_Utils_Array::value('rfm_m_value', $currentDefaults);
 
       // Use parsedSegment to make thresholds positive or negative
-      if ($parsedSegment['r'] === 'low') $rThreshold = -abs($rThreshold);
-      else $rThreshold = abs($rThreshold);
+      if ($parsedSegment['r'] === 'low') {
+        $rThreshold = -abs($rThreshold);
+      }
+      else {
+        $rThreshold = abs($rThreshold);
+      }
 
-      if ($parsedSegment['f'] === 'low') $fThreshold = -abs($fThreshold);
-      else $fThreshold = abs($fThreshold);
+      if ($parsedSegment['f'] === 'low') {
+        $fThreshold = -abs($fThreshold);
+      }
+      else {
+        $fThreshold = abs($fThreshold);
+      }
 
-      if ($parsedSegment['m'] === 'low') $mThreshold = -abs($mThreshold);
-      else $mThreshold = abs($mThreshold);
+      if ($parsedSegment['m'] === 'low') {
+        $mThreshold = -abs($mThreshold);
+      }
+      else {
+        $mThreshold = abs($mThreshold);
+      }
     }
     else {
       $rThreshold = $fThreshold = $mThreshold = 0.0;
@@ -628,7 +744,14 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $this->_filled = TRUE;
   }
 
-  function prepareUrlParams($formValues) {
+  /**
+   * Prepare URL parameters for redirects.
+   *
+   * @param array $formValues
+   *
+   * @return array<string, mixed>
+   */
+  public function prepareUrlParams($formValues) {
     $dateFrom = CRM_Utils_Array::value('receive_date_from', $formValues);
     $dateTo = CRM_Utils_Array::value('receive_date_to', $formValues);
     $ct = CRM_Utils_Array::value('ct', $formValues);
@@ -650,9 +773,11 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     $dateParam = '';
     if (!empty($dateFrom) && !empty($dateTo)) {
       $dateParam = $dateFrom . '_to_' . $dateTo;
-    } elseif (!empty($dateFrom)) {
+    }
+    elseif (!empty($dateFrom)) {
       $dateParam = $dateFrom . '_to_' . date('Y-m-d');
-    } else {
+    }
+    else {
       $dateParam = self::DATE_RANGE_DEFAULT;
     }
 
@@ -681,7 +806,7 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   /**
    * Calculate RFM segment statistics from the existing RFM data table
    */
-  function calculateSegmentStatsFromTable($formValues) {
+  public function calculateSegmentStatsFromTable($formValues) {
     // Check if a specific segment is selected
     $segment = CRM_Utils_Array::value('segment', $formValues, '');
     $parsedSegment = self::parseRfmSegment($segment);
@@ -744,10 +869,15 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
     }
     $this->_segmentStats['total'] = $totalCount;
   }
+
   /**
-   * get Rfm model name
+   * Get the display name for a given RFM segment.
+   *
+   * @param string $segment
+   *
+   * @return string
    */
-  function getRfmModelName($segment) {
+  public function getRfmModelName($segment) {
     $rfmModel = '';
     if (!empty($segment)) {
       $parsedSegment = self::parseRfmSegment($segment);
@@ -768,16 +898,18 @@ class CRM_Contact_Form_Search_Custom_RFM extends CRM_Contact_Form_Search_Custom_
   }
 
   /**
-   * Handle form submission and redirect with URL parameters
+   * Handle form submission and redirect with URL parameters.
+   *
+   * @param CRM_Core_Form $form
    */
-  function postCustomSearchProcess(&$form) {
+  public function postCustomSearchProcess(&$form) {
     $buttonName = $form->controller->getButtonName();
     if (strpos($buttonName, '_qf_Custom_refresh') !== FALSE) {
       $formValues = $form->exportValues();
       $urlParams = $this->prepareUrlParams($formValues);
       if (empty($urlParams['csid'])) {
-         $customSearchID = $form->get('customSearchID');
-         $urlParams['csid'] = $customSearchID;
+        $customSearchID = $form->get('customSearchID');
+        $urlParams['csid'] = $customSearchID;
       }
       $queryString = http_build_query($urlParams);
       $redirectUrl = CRM_Utils_System::url('civicrm/contact/search/custom', $queryString, TRUE);

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -90,7 +88,10 @@ class CRM_Core_Config_Defaults {
    * @var int
    */
   public $maxImportFileSize;
-  function setCoreVariables() {
+  /**
+   * Set core variables based on CiviCRM root.
+   */
+  public function setCoreVariables() {
     global $civicrm_root;
     $crm_root = rtrim($civicrm_root, DIRECTORY_SEPARATOR);
 
@@ -140,8 +141,10 @@ class CRM_Core_Config_Defaults {
 
         case 'g':
           $size *= 1024;
+          // no break
         case 'm':
           $size *= 1024;
+          // no break
         case 'k':
           $size *= 1024;
       }
@@ -150,25 +153,20 @@ class CRM_Core_Config_Defaults {
   }
 
   /**
-   * Function to set the default values
+   * Function to set the default values for configuration settings.
    *
-   * @param array   $defaults  associated array of form elements
-   * @param boolena $formMode  this funtion is called to set default
-   *                           values in an empty db, also called when setting component using GUI
-   *                           this variable is set true for GUI
-   *                           mode (eg: Global setting >> Components)
-   *
-   * @access public
+   * @param array $defaults The associative array of settings to be updated.
+   * @param bool $formMode Whether the function is called during GUI setting operations.
    */
   public static function setValues(&$defaults, $formMode = FALSE) {
     global $civicrm_root;
     $config = CRM_Core_Config::singleton();
 
     $scheme = CRM_Utils_System::isSSL() ? 'https://' : 'http://';
-    if(!empty($_SERVER['HTTP_HOST'])){
+    if (!empty($_SERVER['HTTP_HOST'])) {
       $baseURL = CRM_Utils_File::addTrailingSlash($scheme.$_SERVER['HTTP_HOST'], '/');
     }
-    else{
+    else {
       $baseURL = $config->userFrameworkBaseURL;
     }
 
@@ -253,10 +251,9 @@ class CRM_Core_Config_Defaults {
       $defaults['customFileUploadDir'] = $customDir;
     }
 
-    /* FIXME: hack to bypass the step for generating defaults for components, 
-                  while running upgrade, to avoid any serious non-recoverable error 
+    /* FIXME: hack to bypass the step for generating defaults for components,
+                  while running upgrade, to avoid any serious non-recoverable error
                   which might hinder the upgrade process. */
-
 
     $args = [];
     if (isset($_GET[$config->userFrameworkURLVar])) {
@@ -274,4 +271,3 @@ class CRM_Core_Config_Defaults {
     }
   }
 }
-

@@ -26,62 +26,81 @@
 */
 
 /**
+ * Form handler for saving, updating, and managing report instances
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Report_Form_Instance {
 
-  static function buildForm(&$form) {
+  /**
+   * Adds the report instance configuration fields to a report form.
+   * Fields include: title, description, email_subject, email_to, email_cc,
+   * report_header, report_footer, is_navigation (with parent menu selector),
+   * addToDashboard, and permission.
+   *
+   * @param CRM_Report_Form &$form The report form object to add elements to.
+   *
+   * @return void
+   */
+  public static function buildForm(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Report_DAO_Instance');
 
-    $form->add('text',
+    $form->add(
+      'text',
       'title',
       ts('Report Title'),
       $attributes['title']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'description',
       ts('Report Description'),
       $attributes['description']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'email_subject',
       ts('Subject'),
       $attributes['email_subject']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'email_to',
       ts('To'),
       $attributes['email_to']
     );
 
-    $form->add('text',
+    $form->add(
+      'text',
       'email_cc',
       ts('CC'),
       $attributes['email_subject']
     );
 
-    $form->add('textarea',
+    $form->add(
+      'textarea',
       'report_header',
       ts('Report Header'),
       $attributes['header']
     );
 
-    $form->add('textarea',
+    $form->add(
+      'textarea',
       'report_footer',
       ts('Report Footer'),
       $attributes['footer']
     );
 
-    $form->addElement('checkbox', 'is_navigation', ts('Include Report in Navigation Menu?'), NULL,
+    $form->addElement(
+      'checkbox',
+      'is_navigation',
+      ts('Include Report in Navigation Menu?'),
+      NULL,
       ['onclick' => "return showHideByValue('is_navigation','','navigation_menu','table-row','radio',false);"]
     );
 
@@ -89,7 +108,8 @@ class CRM_Report_Form_Instance {
 
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework != 'Joomla') {
-      $form->addElement('select',
+      $form->addElement(
+        'select',
         'permission',
         ts('Permission'),
         ['0' => '- Any One -'] + CRM_Core_Permission::basicPermissions()
@@ -100,7 +120,8 @@ class CRM_Report_Form_Instance {
 
     $form->add('select', 'parent_id', ts('Parent Menu'), ['' => ts('-- select --')] + $parentMenu);
 
-    $form->addButtons([
+    $form->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Save Report'),
           'isDefault' => TRUE,
@@ -114,7 +135,17 @@ class CRM_Report_Form_Instance {
     $form->addFormRule(['CRM_Report_Form_Instance', 'formRule'], $form);
   }
 
-  static function formRule($fields, $errors, $self) {
+  /**
+   * Validates instance form submission. Requires 'title' when the instance save button
+   * is clicked.
+   *
+   * @param array $fields Submitted form values.
+   * @param array $errors Unused; a fresh errors array is built internally.
+   * @param CRM_Report_Form $self The form object, used to check which button was clicked.
+   *
+   * @return array<string, mixed> Associative array of field => error message; empty if valid.
+   */
+  public static function formRule($fields, $errors, $self) {
     $buttonName = $self->controller->getButtonName();
     $selfButtonName = $self->getVar('_instanceButtonName');
 
@@ -129,7 +160,18 @@ class CRM_Report_Form_Instance {
     return $errors;
   }
 
-  static function setDefaultValues(&$form, &$defaults) {
+  /**
+   * Populates default values for the instance form fields.
+   * Sets default HTML header/footer. For existing instances, maps stored header/footer
+   * and navigation settings into form defaults. For new instances, copies the report
+   * description from the form object.
+   *
+   * @param CRM_Report_Form &$form The report form object; provides _id and _description.
+   * @param array &$defaults The defaults array to populate with instance field values.
+   *
+   * @return void
+   */
+  public static function setDefaultValues(&$form, &$defaults) {
     $instanceID = $form->getVar('_id');
     $navigationDefaults = [];
 
@@ -179,7 +221,16 @@ class CRM_Report_Form_Instance {
     }
   }
 
-  static function postProcess(&$form) {
+  /**
+   * Saves or updates the report instance record from submitted form values.
+   * Handles navigation menu entry creation/update, dashboard dashlet creation,
+   * and displays a status message with a link to the instance listing.
+   *
+   * @param CRM_Report_Form &$form The report form object; provides _params, _id, _navigation.
+   *
+   * @return void|never Redirects to the current report URL when navigation was changed.
+   */
+  public static function postProcess(&$form) {
     $params = $form->getVar('_params');
     $config = CRM_Core_Config::singleton();
     $params['header'] = $params['report_header'];
@@ -220,7 +271,6 @@ class CRM_Report_Form_Instance {
       unset($params['addToDashboard']);
     }
 
-
     $dao = new CRM_Report_DAO_Instance();
     $dao->copyValues($params);
 
@@ -241,7 +291,6 @@ class CRM_Report_Form_Instance {
     if ($instanceID) {
       $dao->id = $instanceID;
     }
-
 
     $dao->report_id = CRM_Report_Utils_Report::getValueFromUrl($instanceID);
 
@@ -285,20 +334,25 @@ class CRM_Report_Form_Instance {
       $instanceDefaults = [];
       $cmpName = "Contact";
       $statusMsg = "null";
-      CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_OptionValue',
+      CRM_Core_DAO::commonRetrieve(
+        'CRM_Core_DAO_OptionValue',
         $instanceParams,
         $instanceDefaults
       );
 
       if ($cmpID = CRM_Utils_Array::value('component_id', $instanceDefaults)) {
-        $cmpName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Component', $cmpID,
-          'name', 'id'
+        $cmpName = CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_Component',
+          $cmpID,
+          'name',
+          'id'
         );
         $cmpName = substr($cmpName, 4);
       }
 
       // Url to view this report and others created FROM this template
-      $instanceUrl = CRM_Utils_System::url('civicrm/report/list',
+      $instanceUrl = CRM_Utils_System::url(
+        'civicrm/report/list',
         "reset=1&ovid={$instanceDefaults['id']}"
       );
       $statusMsg = ts('Report "%1" has been created and is now available in the <a href="%3">report listings under "%2" Reports</a>.', [1 => $dao->title, 2 => $cmpName, 3 => $instanceUrl]);
@@ -314,4 +368,3 @@ class CRM_Report_Form_Instance {
     }
   }
 }
-

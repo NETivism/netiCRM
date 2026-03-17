@@ -26,15 +26,11 @@
 */
 
 /**
+ * Manages database schema modifications for multilingual support
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 class CRM_Core_I18n_Schema {
 
@@ -43,7 +39,7 @@ class CRM_Core_I18n_Schema {
    *
    * @return void
    */
-  static function dropAllViews() {
+  public static function dropAllViews() {
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     if (!$domain->locales) {
@@ -61,14 +57,12 @@ class CRM_Core_I18n_Schema {
   }
 
   /**
-   * Switch database from single-lang to multi (by adding
-   * the first language and dropping the original columns).
+   * Switch database from single-lang to multi-lang by adding
+   * the first language and dropping the original columns.
    *
-   * @param $locale string  the first locale to create (migrate to)
-   *
-   * @return void
+   * @param string $locale The first locale to create (migrate to).
    */
-  static function makeMultilingual($locale) {
+  public static function makeMultilingual($locale) {
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
 
@@ -115,15 +109,13 @@ class CRM_Core_I18n_Schema {
   }
 
   /**
-   * Switch database from multi-lang back to single (by dropping
-   * additional columns and views and retaining only the selected locale).
+   * Switch database from multi-lang back to single-lang by dropping
+   * additional columns and views and retaining only the selected locale.
    *
-   * @param $retain string  the locale to retain
-   *
-   * @return void
+   * @param string $retain The locale to retain.
    */
-  static function makeSinglelingual($retain) {
-    $domain = new CRM_Core_DAO_Domain;
+  public static function makeSinglelingual($retain) {
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
@@ -169,7 +161,7 @@ class CRM_Core_I18n_Schema {
     }
 
     // execute the queries without i18n rewriting
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->query($query, FALSE);
     }
@@ -184,15 +176,13 @@ class CRM_Core_I18n_Schema {
   }
 
   /**
-   * Add a new locale to a multi-lang db, setting
+   * Add a new locale to a multi-lang DB, setting
    * its values to the current default locale.
    *
-   * @param $locale string  the new locale to add
-   * @param $source string  the locale to copy from
-   *
-   * @return void
+   * @param string $locale The new locale to add.
+   * @param string $source The locale to copy from.
    */
-  static function addLocale($locale, $source) {
+  public static function addLocale($locale, $source) {
     // get the current supported locales
     $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
@@ -238,14 +228,12 @@ class CRM_Core_I18n_Schema {
   }
 
   /**
-   * Rebuild multilingual indices, views and triggers (useful for upgrades)
+   * Rebuild multilingual indices, views and triggers (useful for upgrades).
    *
-   * @param $locales array  locales to be rebuilt
-   * @param $version string version of schema structure to use
-   *
-   * @return void
+   * @param array $locales Locales to be rebuilt.
+   * @param string|null $version Version of schema structure to use.
    */
-  static function rebuildMultilingualSchema($locales, $version = NULL) {
+  public static function rebuildMultilingualSchema($locales, $version = NULL) {
     if ($version) {
       // fetch all the SchemaStructure versions we ship and sort by version
       $schemas = [];
@@ -260,7 +248,8 @@ class CRM_Core_I18n_Schema {
       // find the latest schema structure older than (or equal to) $version
       do {
         $latest = array_pop($schemas);
-      } while (version_compare($latest, $version, '>'));
+      }
+      while (version_compare($latest, $version, '>'));
       $latest = str_replace('.', '_', $latest);
 
       $class = "CRM_Core_I18n_SchemaStructure_{$latest}";
@@ -270,10 +259,10 @@ class CRM_Core_I18n_Schema {
       $class = 'CRM_Core_I18n_SchemaStructure';
 
     }
-    $indices =& $class::indices();
-    $tables  =& $class::tables();
+    $indices = &$class::indices();
+    $tables  = &$class::tables();
     $queries = [];
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
 
     // get all of the already existing indices
     $existing = [];
@@ -318,11 +307,11 @@ class CRM_Core_I18n_Schema {
   /**
    * Rewrite SQL query to use views to access tables with localized columns.
    *
-   * @param $query string  the query for rewrite
+   * @param string $query The query for rewrite.
    *
-   * @return string        the rewritten query
+   * @return string The rewritten query.
    */
-  static function rewriteQuery($query) {
+  public static function rewriteQuery($query) {
     static $tables = NULL;
     if ($tables === NULL) {
       $tables = &CRM_Core_I18n_SchemaStructure::tables();
@@ -337,17 +326,17 @@ class CRM_Core_I18n_Schema {
   }
 
   /**
-   * CREATE INDEX queries for a given locale and table
+   * CREATE INDEX queries for a given locale and table.
    *
-   * @param $locale string  locale for which the queries should be created (null to create original indices)
-   * @param $table string   table for which the queries should be created
-   * @param $class string   schema structure class to use
+   * @param string|null $locale Locale for which the queries should be created (null to create original indices).
+   * @param string $table Table for which the queries should be created.
+   * @param string $class Schema structure class to use.
    *
-   * @return array          array of CREATE INDEX queries
+   * @return array Array of CREATE INDEX queries.
    */
   private static function createIndexQueries($locale, $table, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $indices =& $class::indices();
-    $columns =& $class::columns();
+    $indices = &$class::indices();
+    $columns = &$class::columns();
     if (!isset($indices[$table])) {
       return [];
     }
@@ -372,16 +361,16 @@ class CRM_Core_I18n_Schema {
   }
 
   /**
-   * CREATE TRIGGER queries for a given set of locales
+   * CREATE TRIGGER queries for a given set of locales.
    *
-   * @param $locales array  array of current database locales
-   * @param $locale string  new locale to add
-   * @param $class string   schema structure class to use
+   * @param array $locales Array of current database locales.
+   * @param string $locale New locale to add.
+   * @param string $class Schema structure class to use.
    *
-   * @return array          array of CREATE TRIGGER queries
+   * @return array Array of CREATE TRIGGER queries.
    */
   private static function createTriggerQueries($locales, $locale, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $columns =& $class::columns();
+    $columns = &$class::columns();
     $queries = [];
     $namesTrigger = [];
     $individualNamesTrigger = [];
@@ -456,17 +445,17 @@ class CRM_Core_I18n_Schema {
   }
 
   /**
-   * CREATE VIEW query for a given locale and table
+   * CREATE VIEW query for a given locale and table.
    *
-   * @param $locale string  locale of the view
-   * @param $table string   table of the view
-   * @param $dao object     a DAO object to run DESCRIBE queries
-   * @param $class string   schema structure class to use
+   * @param string $locale Locale of the view.
+   * @param string $table Table of the view.
+   * @param CRM_Core_DAO $dao A DAO object to run DESCRIBE queries.
+   * @param string $class Schema structure class to use.
    *
-   * @return array          array of CREATE INDEX queries
+   * @return string The CREATE VIEW query.
    */
   private static function createViewQuery($locale, $table, &$dao, $class = 'CRM_Core_I18n_SchemaStructure') {
-    $columns =& $class::columns();
+    $columns = &$class::columns();
     $cols = [];
     $dao->query("DESCRIBE {$table}", FALSE);
     while ($dao->fetch()) {
@@ -484,4 +473,3 @@ class CRM_Core_I18n_Schema {
     return "CREATE OR REPLACE VIEW {$table}_{$locale} AS SELECT " . CRM_Utils_Array::implode(', ', $cols) . " FROM {$table}";
   }
 }
-

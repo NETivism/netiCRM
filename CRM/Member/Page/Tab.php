@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Member_Page_Tab extends CRM_Core_Page {
 
@@ -46,21 +42,19 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
-  static $_links = NULL;
-  static $_membershipTypesLinks = NULL;
+  public static $_links = NULL;
+  public static $_membershipTypesLinks = NULL;
 
   public $_permission = NULL;
   public $_contactId = NULL;
 
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function browse() {
+  public function browse() {
     $links = &self::links('all', $this->_isPaymentProcessor, $this->_accessContribution);
 
     $membership = [];
@@ -106,7 +100,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
           $currentMask = $currentMask & ~CRM_Core_Action::RENEW & ~CRM_Core_Action::FOLLOWUP;
         }
 
-        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(self::links('all'),
+        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links('all'),
           $currentMask,
           ['id' => $dao->id,
             'cid' => $this->_contactId,
@@ -114,7 +109,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
         );
       }
       else {
-        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(self::links('view'),
+        $membership[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links('view'),
           $mask,
           ['id' => $dao->id,
             'cid' => $this->_contactId,
@@ -128,7 +124,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     include_once 'CRM/Member/BAO/MembershipType.php';
     $membershipTypes = CRM_Member_BAO_MembershipType::getMembershipTypesByOrg($this->_contactId);
     foreach ($membershipTypes as $key => $value) {
-      $membershipTypes[$key]['action'] = CRM_Core_Action::formLink(self::membershipTypeslinks(),
+      $membershipTypes[$key]['action'] = CRM_Core_Action::formLink(
+        self::membershipTypeslinks(),
         $mask,
         ['id' => $value['id'],
           'cid' => $this->_contactId,
@@ -162,25 +159,25 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is view
+   * This function is called when action is view.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function view() {
+  public function view() {
     // prevent contribution controller override membership button
     // we need call contribution first
     $this->associatedContribution();
 
     // membership controller here
-    $controller = new CRM_Core_Controller_Simple('CRM_Member_Form_MembershipView', 'View Membership',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Member_Form_MembershipView',
+      'View Membership',
       $this->_action
     );
     $controller->setEmbedded(TRUE);
     $controller->set('id', $this->_id);
     $controller->set('cid', $this->_contactId);
     $controller->run();
-
 
     $search_values = [
       'membership_id' => $this->_id,
@@ -195,15 +192,18 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
 
     $sortID = NULL;
     if ($this->get($prefix.CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get($prefix.CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get($prefix.CRM_Utils_Sort::SORT_ID),
         $this->get($prefix.CRM_Utils_Sort::SORT_DIRECTION)
       );
-    }else{
+    }
+    else {
       $sortID = CRM_Utils_Sort::sortIDValue(5, CRM_Utils_Sort::DESCENDING);
     }
 
     // Use another controller
-    $memberLogController = new CRM_Core_Selector_Controller($selector,
+    $memberLogController = new CRM_Core_Selector_Controller(
+      $selector,
       $pageID,
       $sortID,
       CRM_Core_Action::VIEW,
@@ -219,12 +219,11 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is update or new
+   * This function is called when action is update or new.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function edit() {
+  public function edit() {
     // set https for offline cc transaction
     $mode = CRM_Utils_Request::retrieve('mode', 'String', $this);
     if ($mode == 'test' || $mode == 'live') {
@@ -253,7 +252,12 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function preProcess() {
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -285,14 +289,15 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   /**
    * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     // check if we can process credit card membership
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(
+      FALSE,
+      FALSE,
       "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
@@ -330,9 +335,20 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
-  function setContext($contactId = NULL) {
-    $context = CRM_Utils_Request::retrieve('context',
-      'String', $this, FALSE, 'search'
+  /**
+   * Set context.
+   *
+   * @param int|null $contactId
+   *
+   * @return void
+   */
+  public function setContext($contactId = NULL) {
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
@@ -348,13 +364,15 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
 
     switch ($context) {
       case 'dashboard':
-        $url = CRM_Utils_System::url('civicrm/member',
+        $url = CRM_Utils_System::url(
+          'civicrm/member',
           'reset=1'
         );
         break;
 
       case 'membership':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$contactId}&selectedChild=member"
         );
         break;
@@ -374,7 +392,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$contactId}&selectedChild=activity"
         );
         break;
@@ -408,7 +427,8 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
         if ($contactId) {
           $cid = '&cid=' . $contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/member/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/member/search',
           'force=1' . $cid
         );
         break;
@@ -419,12 +439,15 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * Get action links
+   * Get action links.
+   *
+   * @param string $status
+   * @param bool|null $isPaymentProcessor
+   * @param bool|null $accessContribution
    *
    * @return array (reference) of action links
-   * @static
    */
-  static function &links($status = 'all', $isPaymentProcessor = NULL, $accessContribution = NULL) {
+  public static function &links($status = 'all', $isPaymentProcessor = NULL, $accessContribution = NULL) {
     if (!CRM_Utils_Array::value('view', self::$_links)) {
       self::$_links['view'] = [
         CRM_Core_Action::VIEW => [
@@ -475,12 +498,11 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * Function to define action links for membership types of related organization
+   * Function to define action links for membership types of related organization.
    *
    * @return array self::$_membershipTypesLinks array of action links
-   * @access public
    */
-  static function &membershipTypesLinks() {
+  public static function &membershipTypesLinks() {
     if (!self::$_membershipTypesLinks) {
       self::$_membershipTypesLinks = [
         CRM_Core_Action::VIEW => [
@@ -501,13 +523,15 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * This function is used for the to show the associated
-   * contribution for the membership
-   * @form array $form (ref.) an assoc array of name/value pairs
-   * return null
-   * @access public
+   * This function is used for the to show the associated contribution for the membership.
+   *
+   * @param int|null $contactId
+   * @param int|null $membershipId
+   * @param bool|null $is_test
+   *
+   * @return void
    */
-  function associatedContribution($contactId = NULL, $membershipId = NULL, $is_test = NULL) {
+  public function associatedContribution($contactId = NULL, $membershipId = NULL, $is_test = NULL) {
     if (!$contactId) {
       $contactId = $this->_contactId;
     }
@@ -543,12 +567,11 @@ class CRM_Member_Page_Tab extends CRM_Core_Page {
   }
 
   /**
-   * Get BAO Name
+   * Get BAO Name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Member_BAO_Membership';
   }
 }
-

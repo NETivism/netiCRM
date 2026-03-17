@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components generic to Mobile provider
@@ -55,8 +51,13 @@ class CRM_Member_Form extends CRM_Core_Form {
    * @var string
    */
   protected $_BAOName;
- 
-  function preProcess() {
+
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->_id = $this->get('id');
     $this->_BAOName = $this->get('BAOName');
     if (!empty($this->_id)) {
@@ -68,16 +69,15 @@ class CRM_Member_Form extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (!empty($this->_defaults)) {
-      $defaults =& $this->_defaults;
+      $defaults = &$this->_defaults;
     }
     else {
       $defaults = [];
@@ -87,7 +87,6 @@ class CRM_Member_Form extends CRM_Core_Form {
 
       $defaults['minimum_fee'] = CRM_Utils_Money::format($defaults['minimum_fee'], NULL, '%a');
     }
-
 
     if (isset($defaults['status'])) {
       $this->assign('membershipStatus', $defaults['status']);
@@ -100,18 +99,19 @@ class CRM_Member_Form extends CRM_Core_Form {
     if (isset($defaults['member_of_contact_id']) &&
       $defaults['member_of_contact_id']
     ) {
-      $defaults['member_org'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-        $defaults['member_of_contact_id'], 'display_name'
+      $defaults['member_org'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
+        $defaults['member_of_contact_id'],
+        'display_name'
       );
     }
     return $defaults;
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::RENEW) {
@@ -122,7 +122,8 @@ class CRM_Member_Form extends CRM_Core_Form {
     }
 
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => $name,
           'isDefault' => TRUE,
@@ -140,7 +141,8 @@ class CRM_Member_Form extends CRM_Core_Form {
     );
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -153,4 +155,3 @@ class CRM_Member_Form extends CRM_Core_Form {
     }
   }
 }
-

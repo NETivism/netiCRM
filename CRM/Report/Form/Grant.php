@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Report_Form_Grant extends CRM_Report_Form {
 
@@ -50,7 +46,11 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
   public $_groupBy;
   protected $_addressField = FALSE;
 
-  protected $_customGroupExtends = ['Grant']; function __construct() {
+  protected $_customGroupExtends = ['Grant'];
+  /**
+   * Class constructor.
+   */
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -218,7 +218,12 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function select() {
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
 
     $this->_columnHeaders = [];
@@ -244,7 +249,12 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = "
         FROM civicrm_grant {$this->_aliases['civicrm_grant']}
                         LEFT JOIN civicrm_contact {$this->_aliases['civicrm_contact']} 
@@ -258,7 +268,12 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -277,7 +292,8 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -294,7 +310,12 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = "";
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
       is_array($this->_params['group_bys']) &&
@@ -315,7 +336,14 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
@@ -349,4 +377,3 @@ class CRM_Report_Form_Grant extends CRM_Report_Form {
     }
   }
 }
-

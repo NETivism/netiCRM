@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * form for thank-you / success page - 3rd step of online contribution process
@@ -47,11 +43,15 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
    * @var mixed[]
    */
   public $_submitValues;
+
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method retrieves contribution and line item data from the session,
+   * handles "do not notify" checks for contacts, and assigns transaction details
+   * and GTM data layers to the template.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     parent::preProcess();
@@ -70,7 +70,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     $this->assign_by_ref('contributionPage', $this->_values);
 
     $instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
-    if($this->_params['payment_instrument_id']){
+    if ($this->_params['payment_instrument_id']) {
       $this->assign('payment_instrument', $instruments[$this->_params['payment_instrument_id']]);
     }
     CRM_Utils_System::setTitle($this->_values['thankyou_title']);
@@ -80,17 +80,17 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       $paymentResultStatus = CRM_Contribute_BAO_Contribution_Utils::paymentResultType($this, $params);
 
       // refs #29618, record one-time donate again link used
-      if ($paymentResultStatus == 1 && $this->get('originalId')){
+      if ($paymentResultStatus == 1 && $this->get('originalId')) {
         $cs = $this->get('cs');
         $dao = new CRM_Core_DAO_Sequence();
         $dao->name = 'DA_'.$cs;
         if ($dao->find(TRUE)) {
-          $dao->timestamp = microtime(true);
+          $dao->timestamp = microtime(TRUE);
           $dao->value = $this->_contributionID;
           $dao->update();
         }
         else {
-          $dao->timestamp = microtime(true);
+          $dao->timestamp = microtime(TRUE);
           $dao->value = $this->_contributionID;
           $dao->insert();
         }
@@ -108,7 +108,7 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
     // add dataLayer for gtm
     if (!$this->get('dataLayerAdded')) {
-      if(CRM_Utils_Array::value('trxn_id', $this->_params)) {
+      if (CRM_Utils_Array::value('trxn_id', $this->_params)) {
         $transactionId = $this->_params['trxn_id'];
       }
       else {
@@ -138,8 +138,8 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
       $this->assign('product_quantity', 1);
       $membershipAmount = $this->get('membership_amount');
       if ($membershipAmount) {
-        $this->assign('product_amount', $this->_params['amount']+$membershipAmount);
-        $this->assign('total_amount', $this->_params['amount']+$membershipAmount);
+        $this->assign('product_amount', $this->_params['amount'] + $membershipAmount);
+        $this->assign('total_amount', $this->_params['amount'] + $membershipAmount);
       }
       else {
         $this->assign('product_amount', $this->_params['amount']);
@@ -158,19 +158,20 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
           'markup' => $dataLayer."\n",
         ];
         CRM_Utils_System::addHTMLHead($obj);
-        $this->set('dataLayerAdded', true);
+        $this->set('dataLayerAdded', TRUE);
       }
     }
   }
 
   /**
-   * overwrite action, since we are only showing elements in frozen mode
-   * no help display needed
+   * Determine the current action for the page.
    *
-   * @return int
-   * @access public
+   * Overwrites the parent action to ensure elements are shown in frozen mode
+   * without help displays.
+   *
+   * @return int the action code (VIEW or VIEW|PREVIEW)
    */
-  function getAction() {
+  public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
       return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
     }
@@ -180,10 +181,12 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * This method assigns contribution, premium, honor roll, membership,
+   * and custom field details to the template. It also sets up "Tell a Friend" links.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->assignToTemplate();
@@ -214,13 +217,13 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
     $honor_block_is_active = $this->get('honor_block_is_active');
     if ($honor_block_is_active &&
-      ((!empty($params["honor_first_name"]) && !empty($params["honor_last_name"])) ||
+      (
+        (!empty($params["honor_first_name"]) && !empty($params["honor_last_name"])) ||
         (!empty($params["honor_email"]))
       )
     ) {
       $this->assign('honor_block_is_active', $honor_block_is_active);
       $this->assign('honor_block_title', CRM_Utils_Array::value('honor_block_title', $this->_values));
-
 
       $prefix = CRM_Core_PseudoConstant::individualPrefix();
       $honor = CRM_Core_PseudoConstant::honor();
@@ -241,18 +244,20 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     }
 
     if ($membershipTypeID) {
-      $memberTrxnId= $this->get('membership_trx_id');
+      $memberTrxnId = $this->get('membership_trx_id');
       $membershipAmount = $this->get('membership_amount');
       $renewalMode = $this->get('renewal_mode');
       $this->assign('membership_trx_id', $memberTrxnId);
       $this->assign('membership_amount', $membershipAmount);
       $this->assign('renewal_mode', $renewalMode);
 
-      CRM_Member_BAO_Membership::buildMembershipBlock($this,
+      CRM_Member_BAO_Membership::buildMembershipBlock(
+        $this,
         $this->_id,
         FALSE,
         $membershipTypeID,
-        TRUE, NULL,
+        TRUE,
+        NULL,
         $this->_membershipContactID
       );
     }
@@ -338,12 +343,14 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
 
     if ($tellAFriend) {
       if ($this->_action & CRM_Core_Action::PREVIEW) {
-        $url = CRM_Utils_System::url("civicrm/friend",
+        $url = CRM_Utils_System::url(
+          "civicrm/friend",
           "reset=1&action=preview&{$subUrl}"
         );
       }
       else {
-        $url = CRM_Utils_System::url("civicrm/friend",
+        $url = CRM_Utils_System::url(
+          "civicrm/friend",
           "reset=1&{$subUrl}"
         );
       }
@@ -354,4 +361,3 @@ class CRM_Contribute_Form_Contribution_ThankYou extends CRM_Contribute_Form_Cont
     // can we blow away the session now to prevent hackery
   }
 }
-

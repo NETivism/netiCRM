@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -45,16 +43,11 @@
 class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
 
   /**
-   * pre processing work done here.
-   *
-   * @param
+   * Pre-process form.
    *
    * @return void
-   *
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     if ($this->get('register')) {
       $this->_mode = CRM_Profile_Form::MODE_REGISTER;
     }
@@ -73,13 +66,13 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -95,17 +88,15 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
    * @param array $fields the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $files the uploaded files if any
+   * @param CRM_Core_Form $form
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
 
     // if no values, return
@@ -119,12 +110,9 @@ class CRM_Profile_Form_Dynamic extends CRM_Profile_Form {
   /**
    * Process the user submitted custom data values.
    *
-   * @access public
-   *
    * @return void
    */
   public function postProcess() {
     parent::postProcess();
   }
 }
-

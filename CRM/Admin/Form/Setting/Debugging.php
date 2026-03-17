@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Error Handling and Debugging
@@ -42,10 +38,9 @@
 class CRM_Admin_Form_Setting_Debugging extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts(' Settings - Debugging and Error Handling '));
@@ -61,17 +56,14 @@ class CRM_Admin_Form_Setting_Debugging extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * Function to process the form
+   * Pre-processes the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Pre-processes the form.
    */
   public function preProcess() {
     // Reference from CRM/Core/Error.php Line.397
     $config = CRM_Core_Config::singleton();
     $fileName = "{$config->configAndLogDir}CiviCRM." . $comp . md5($config->dsn . $config->userFrameworkResourceURL) . '.log';
-    $this->assign('logPath',$fileName);
+    $this->assign('logPath', $fileName);
   }
 }
-

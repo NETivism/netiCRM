@@ -27,35 +27,87 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
-
-
 class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 
-  public $_aliases;
-  public $_from;
-  public $_where;
   /**
-   * @var never[]
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
+  public $_aliases;
+
+  /**
+   * The SQL FROM clause built by from().
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * The SQL WHERE clause built by where().
+   *
+   * @var string
+   */
+  public $_where;
+
+  /**
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
-  public $_groupBy;
-  public $groupBy;
+
   /**
+   * The SQL GROUP BY clause built by groupBy().
+   *
+   * @var string|string[]
+   */
+  public $_groupBy;
+
+  /**
+   * Legacy alias for $_groupBy (unused).
+   *
+   * @var string
+   */
+  public $groupBy;
+
+  /**
+   * The SQL ORDER BY clause built by orderBy().
+   *
    * @var string
    */
   public $_orderBy;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Participant']; function __construct() {
+  /**
+   * Entity type whose custom fields are available in this report.
+   *
+   * @var string[]
+   */
+  protected $_customGroupExtends = ['Participant'];
+
+  /**
+   * Initialises column definitions for contact, email, address, participant, event,
+   * and line item tables.
+   */
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -194,12 +246,24 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  //Add The statistics
-  function statistics(&$rows) {
+  /**
+   * Computes report statistics by delegating to the parent, then adds a 'Total Participants'
+   * count derived from a separate COUNT query on the assembled FROM/WHERE clauses.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array with 'counts' and 'filters' entries.
+   */
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
     $avg = NULL;
     $select = " SELECT COUNT( {$this->_aliases['civicrm_participant']}.id ) as count	";
@@ -218,7 +282,13 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     return $statistics;
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields, then appends a
+   * COUNT(participant.id) as participant_count column. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
 
@@ -240,12 +310,27 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Form validation callback. No validation rules for this report.
+   *
+   * @param array $fields Submitted form values (unused).
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Contact_Participate $self The form instance (unused).
+   *
+   * @return array Empty array (no errors).
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining contact to participant, event, address, and email tables.
+   * Non-template events are excluded via the is_template condition. Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = "
        FROM civicrm_contact {$this->_aliases['civicrm_contact']}
          LEFT JOIN civicrm_participant {$this->_aliases['civicrm_participant']}
@@ -261,7 +346,15 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 							  {$this->_aliases['civicrm_email']}.is_primary = 1)";
   }
 
-  function where() {
+  /**
+   * Builds the WHERE clause from submitted filter values. The 'rid' (role ID) filter uses
+   * a REGEXP match against a separator-delimited field. The participant_count filter is
+   * handled in groupBy() via HAVING, not here. Always excludes test participants.
+   * Appends ACL restrictions. Populates $_where.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -288,10 +381,11 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
             }
 
             if ($op) {
-              if($field['name'] == 'participant_count') {
+              if ($field['name'] == 'participant_count') {
                 continue;
               }
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -318,7 +412,14 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause grouping by participant contact_id. When a participant_count
+   * filter is provided, appends a HAVING clause comparing COUNT(participant.id) to the
+   * specified value. Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = "";
     if (CRM_Utils_Array::value('group_bys', $this->_params) &&
       is_array($this->_params['group_bys']) &&
@@ -339,8 +440,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
 
     $op = CRM_Utils_Array::value("participant_count_op", $this->_params);
     $value = CRM_Utils_Array::value("participant_count_value", $this->_params);
-    if(!empty($op) && !empty($value) && is_numeric($value)) {
-      if(!empty($this->_columns['civicrm_participant']['filters']['participant_count'])) {
+    if (!empty($op) && !empty($value) && is_numeric($value)) {
+      if (!empty($this->_columns['civicrm_participant']['filters']['participant_count'])) {
         $pcount = $this->_columns['civicrm_participant']['filters']['participant_count'];
         $pcount['dbAlias'] = "COUNT({$pcount['alias']}.id)";
         $clause = $this->whereClause($pcount, $op, $value, NULL, NULL);
@@ -349,12 +450,23 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       }
     }
   }
-  
-  function orderBy() {
+
+  /**
+   * Builds the ORDER BY clause sorting by participant_count descending. Populates $_orderBy.
+   *
+   * @return void
+   */
+  public function orderBy() {
     $this->_orderBy = " ORDER BY participant_count DESC ";
   }
 
-  function postProcess() {
+  /**
+   * Builds the ACL clause, assembles and runs the query, formats and assigns
+   * result rows to the template, then finalises the output.
+   *
+   * @return void
+   */
+  public function postProcess() {
 
     // get ready with post process params
     $this->beginPostProcess();
@@ -378,7 +490,16 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Post-processes result rows to linkify contact names and participant IDs,
+   * resolve event IDs (with link to income report), event type IDs,
+   * participant status IDs, and participant role IDs to human-readable labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
 
     $entryFound = FALSE;
     $eventType = CRM_Core_OptionGroup::values('event_type');
@@ -390,7 +511,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         if ($value = $row['civicrm_contact_sort_name']) {
-          $url = CRM_Utils_System::url("civicrm/contact/view",
+          $url = CRM_Utils_System::url(
+            "civicrm/contact/view",
             'reset=1&cid=' . $row['civicrm_contact_id'],
             $this->_absoluteUrl
           );
@@ -405,7 +527,8 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
         if ($value = $row['civicrm_participant_participant_id']) {
-          $url = CRM_Utils_System::url("civicrm/contact/view/participant",
+          $url = CRM_Utils_System::url(
+            "civicrm/contact/view/participant",
             'reset=1&id=' . $row['civicrm_participant_participant_id'] . '&cid=' . $row['civicrm_contact_id'] . '&action=view',
             $this->_absoluteUrl
           );
@@ -419,9 +542,11 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_participant_event_id', $row)) {
         if ($value = $row['civicrm_participant_event_id']) {
           $rows[$rowNum]['civicrm_participant_event_id'] = CRM_Event_PseudoConstant::event($value, FALSE);
-          $url = CRM_Report_Utils_Report::getNextUrl('event/Income',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'event/Income',
             'reset=1&force=1&event_id_op=eq&event_id_value=' . $value,
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_participant_event_id_link'] = $url;
           $rows[$rowNum]['civicrm_participant_event_id_hover'] = ts("View Event Income Details for this Event");
@@ -458,7 +583,6 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -467,4 +591,3 @@ class CRM_Report_Form_Contact_Participate extends CRM_Report_Form {
     }
   }
 }
-

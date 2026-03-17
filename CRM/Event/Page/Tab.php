@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Event_Page_Tab extends CRM_Core_Page {
 
@@ -44,10 +41,9 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is browse
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function browse() {
+  public function browse() {
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Search', ts('Events'), $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -69,15 +65,15 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is view
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function view() {
+  public function view() {
     // build associated contributions
     $is_test = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Participant', $this->_id, 'is_test', 'id');
     $this->associatedContribution($is_test);
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_ParticipantView',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Event_Form_ParticipantView',
       'View Participant',
       $this->_action
     );
@@ -91,10 +87,9 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is update or new
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function edit() {
+  public function edit() {
     // set https for offline cc transaction
     $mode = CRM_Utils_Request::retrieve('mode', 'String', $this);
     if ($mode == 'test' || $mode == 'live') {
@@ -106,7 +101,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
       $this->associatedContribution();
     }
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Participant',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Event_Form_Participant',
       'Create Participation',
       $this->_action
     );
@@ -118,7 +114,12 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function preProcess() {
+  /**
+   * Pre process
+   *
+   * @return void
+   */
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -150,14 +151,15 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
   /**
    * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     // check if we can process credit card registration
-    $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
+    $processors = CRM_Core_PseudoConstant::paymentProcessor(
+      FALSE,
+      FALSE,
       "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
     );
     if (count($processors) > 0) {
@@ -190,12 +192,23 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
-  function setContext() {
-    $context = CRM_Utils_Request::retrieve('context',
-      'String', $this, FALSE, 'search'
+  /**
+   * Set context
+   *
+   * @return void
+   */
+  public function setContext() {
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
-    $compContext = CRM_Utils_Request::retrieve('compContext',
-      'String', $this
+    $compContext = CRM_Utils_Request::retrieve(
+      'compContext',
+      'String',
+      $this
     );
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
@@ -231,7 +244,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'participant':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=participant"
         );
         break;
@@ -241,7 +255,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
         );
         break;
@@ -274,7 +289,8 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
         if ($this->_contactId) {
           $cid = '&cid=' . $this->_contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/event/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/event/search',
           'force=1' . $cid
         );
         break;
@@ -287,10 +303,11 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
    * This function is used for the to show the associated
    * contribution for the participant
    *
-   * return null
-   * @access public
+   * @param int $is_test
+   *
+   * @return void
    */
-  function associatedContribution($is_test = 0) {
+  public function associatedContribution($is_test = 0) {
     if (CRM_Core_Permission::access('CiviContribute')) {
       $this->assign('accessContribution', TRUE);
       $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), NULL);
@@ -308,4 +325,3 @@ class CRM_Event_Page_Tab extends CRM_Core_Page {
     }
   }
 }
-

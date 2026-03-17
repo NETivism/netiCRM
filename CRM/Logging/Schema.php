@@ -26,13 +26,11 @@
 */
 
 /**
+ * Manages database logging schema by creating and maintaining change-tracking trigger tables
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Logging_Schema {
   private $logs = [];
@@ -43,7 +41,7 @@ class CRM_Logging_Schema {
   /**
    * Populate $this->tables and $this->logs with current db state.
    */
-  function __construct() {
+  public function __construct() {
     $dsn = defined('CIVICRM_LOGGING_DSN') ? DB::parseDSN(CIVICRM_LOGGING_DSN) : DB::parseDSN(CIVICRM_DSN);
     $this->loggingDB = $dsn['database'];
 
@@ -64,8 +62,10 @@ class CRM_Logging_Schema {
 
   /**
    * Disable logging by dropping the triggers (but keep the log tables intact).
+   *
+   * @return void
    */
-  function disableLogging() {
+  public function disableLogging() {
     if (!$this->isEnabled()) {
       return;
     }
@@ -76,8 +76,10 @@ class CRM_Logging_Schema {
 
   /**
    * Enable logging by creating the log tables (where needed) and creating the triggers.
+   *
+   * @return void
    */
-  function enableLogging() {
+  public function enableLogging() {
     if ($this->isEnabled()) {
       return;
     }
@@ -91,8 +93,10 @@ class CRM_Logging_Schema {
 
   /**
    * Add missing log table columns.
+   *
+   * @return void
    */
-  function fixSchemaDifferences() {
+  public function fixSchemaDifferences() {
     if (!$this->isEnabled()) {
       return;
     }
@@ -105,10 +109,12 @@ class CRM_Logging_Schema {
   /**
    * Add missing (potentially specified) log table columns for the given table.
    *
-   * param $table string  name of the relevant table
-   * param $cols mixed    array of columns to add or null (to check for the missing columns)
+   * @param string $table name of the relevant table
+   * @param array|null $cols array of columns to add or null (to check for the missing columns)
+   *
+   * @return void
    */
-  function fixSchemaDifferencesFor($table, $cols = NULL) {
+  public function fixSchemaDifferencesFor($table, $cols = NULL) {
     if (!$this->isEnabled()) {
       return;
     }
@@ -139,9 +145,12 @@ class CRM_Logging_Schema {
 
   /**
    * Find missing log table columns by comparing columns of the relevant tables.
+   *
    * Returns table-name-keyed array of arrays of missing columns, e.g. array('civicrm_value_foo_1' => array('bar_1', 'baz_2'))
+   *
+   * @return array
    */
-  function schemaDifferences() {
+  public function schemaDifferences() {
     $diffs = [];
     foreach ($this->tables as $table) {
       $diffs[$table] = array_diff($this->columnsOf($table), $this->columnsOf("log_$table"));
@@ -149,6 +158,11 @@ class CRM_Logging_Schema {
     return array_filter($diffs);
   }
 
+  /**
+   * Add reports.
+   *
+   * @return void
+   */
   private function addReports() {
     // enable logging templates
     $dao = &CRM_Core_DAO::executeQuery("UPDATE civicrm_option_value SET is_active = 1 WHERE value = 'logging/contact/summary' OR value = 'logging/contact/detail'");
@@ -158,19 +172,20 @@ class CRM_Logging_Schema {
     $templates = CRM_Core_OptionGroup::values('report_template');
     if (!isset($templates['logging/contact/summary']) or
       !isset($templates['logging/contact/detail'])
-    ) return;
+    ) {
+      return;
+    }
 
     // add report instances
 
-
-    $bao = new CRM_Report_BAO_Instance;
+    $bao = new CRM_Report_BAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->title = ts('Contact Logging Report (Summary)');
     $bao->report_id = 'logging/contact/summary';
     $bao->permission = 'administer CiviCRM';
     $bao->insert();
 
-    $bao = new CRM_Report_BAO_Instance;
+    $bao = new CRM_Report_BAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->title = ts('Contact Logging Report (Detail)');
     $bao->report_id = 'logging/contact/detail';
@@ -180,6 +195,10 @@ class CRM_Logging_Schema {
 
   /**
    * Get an array of column names of the given table.
+   *
+   * @param string $table
+   *
+   * @return array
    */
   private function columnsOf($table) {
     static $columnsOf = [];
@@ -198,7 +217,11 @@ class CRM_Logging_Schema {
   }
 
   /**
-   * Create a log table with schema mirroring the given table’s structure and seeding it with the given table’s contents.
+   * Create a log table with schema mirroring the given table structure and seeding it with the given table contents.
+   *
+   * @param string $table
+   *
+   * @return void
    */
   private function createLogTableFor($table) {
     CRM_Core_DAO::executeQuery("DROP TABLE IF EXISTS {$this->loggingDB}.log_$table");
@@ -236,6 +259,10 @@ class CRM_Logging_Schema {
 
   /**
    * Create triggers populating the relevant log table every time the given table changes.
+   *
+   * @param string $table
+   *
+   * @return void
    */
   private function createTriggersFor($table) {
     $columns = $this->columnsOf($table);
@@ -256,7 +283,7 @@ class CRM_Logging_Schema {
       $queries[] = $query;
     }
 
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->executeQuery($query);
     }
@@ -264,6 +291,8 @@ class CRM_Logging_Schema {
 
   /**
    * Create triggers for all logged tables.
+   *
+   * @return void
    */
   private function createTriggers() {
     foreach ($this->tables as $table) {
@@ -271,19 +300,23 @@ class CRM_Logging_Schema {
     }
   }
 
+  /**
+   * Delete reports.
+   *
+   * @return void
+   */
   private function deleteReports() {
     // disable logging templates
     $dao = &CRM_Core_DAO::executeQuery("UPDATE civicrm_option_value SET is_active = 0 WHERE value = 'logging/contact/summary' OR value = 'logging/contact/detail'");
 
     // delete report instances
 
-
-    $bao = new CRM_Report_DAO_Instance;
+    $bao = new CRM_Report_DAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->report_id = 'logging/contact/summary';
     $bao->delete();
 
-    $bao = new CRM_Report_DAO_Instance;
+    $bao = new CRM_Report_DAO_Instance();
     $bao->domain_id = CRM_Core_Config::domainID();
     $bao->report_id = 'logging/contact/details';
     $bao->delete();
@@ -291,9 +324,11 @@ class CRM_Logging_Schema {
 
   /**
    * Drop triggers for all logged tables.
+   *
+   * @return void
    */
   private function dropTriggers() {
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($this->tables as $table) {
       $dao->executeQuery("DROP TRIGGER IF EXISTS {$table}_after_insert");
       $dao->executeQuery("DROP TRIGGER IF EXISTS {$table}_after_update");
@@ -303,6 +338,8 @@ class CRM_Logging_Schema {
 
   /**
    * Predicate whether logging is enabled.
+   *
+   * @return bool
    */
   private function isEnabled() {
     return $this->tablesExist() and $this->triggersExist();
@@ -310,6 +347,8 @@ class CRM_Logging_Schema {
 
   /**
    * Predicate whether any log tables exist.
+   *
+   * @return bool
    */
   private function tablesExist() {
     return !empty($this->logs);
@@ -317,10 +356,11 @@ class CRM_Logging_Schema {
 
   /**
    * Predicate whether the logging triggers are in place.
+   *
+   * @return bool
    */
   private function triggersExist() {
     // FIXME: probably should be a bit more thorough…
     return (bool) CRM_Core_DAO::singleValueQuery("SHOW TRIGGERS LIKE 'civicrm_contact'");
   }
 }
-

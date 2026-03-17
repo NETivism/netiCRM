@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Create a page for displaying Custom Fields.
@@ -49,7 +45,6 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    * The group id of the field
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
@@ -57,19 +52,15 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @access private
    */
   private static $_actionLinks;
 
   /**
    * Get the action links for this page.
    *
-   * @param null
-   *
-   * @return array  array of action links that we need to display for the browse screen
-   * @access public
+   * @return array array of action links that we need to display for the browse screen
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this custom data field?');
       self::$_actionLinks = [
@@ -118,13 +109,9 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
   /**
    * Browse all custom group fields.
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
-  function browse() {
-
+  public function browse() {
     $customField = [];
     $customFieldBAO = new CRM_Core_BAO_CustomField();
 
@@ -170,7 +157,9 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $customFieldDataType = CRM_Core_BAO_CustomField::dataType();
       $customField[$customFieldBAO->id]['data_type'] = $customFieldDataType[$customField[$customFieldBAO->id]['data_type']];
       $customField[$customFieldBAO->id]['order'] = $customField[$customFieldBAO->id]['weight'];
-      $customField[$customFieldBAO->id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $customField[$customFieldBAO->id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         ['id' => $customFieldBAO->id,
           'gid' => $this->_gid,
         ]
@@ -180,8 +169,12 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
     $returnURL = CRM_Utils_System::url('civicrm/admin/custom/group/field', "reset=1&action=browse&gid={$this->_gid}");
     $filter = "custom_group_id = {$this->_gid}";
 
-    CRM_Utils_Weight::addOrder($customField, 'CRM_Core_DAO_CustomField',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $customField,
+      'CRM_Core_DAO_CustomField',
+      'id',
+      $returnURL,
+      $filter
     );
 
     $this->assign('customField', $customField);
@@ -192,12 +185,11 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    *
    * editing would involved modifying existing fields + adding data to new fields.
    *
-   * @param string  $action    the action to be invoked
+   * @param int $action the action to be invoked
    *
    * @return void
-   * @access public
    */
-  function edit($action) {
+  public function edit($action) {
     // create a simple controller for editing custom dataCRM/Custom/Page/Field.php
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Field', ts('Custom Field'), $action);
 
@@ -217,21 +209,23 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
-  function run() {
-
+  public function run() {
 
     // get the group id
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
+    $this->_gid = CRM_Utils_Request::retrieve(
+      'gid',
+      'Positive',
       $this
     );
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     if ($action & CRM_Core_Action::DELETE) {
@@ -239,8 +233,12 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $session = &CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field', 'reset=1&action=browse&gid=' . $this->_gid));
       $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_DeleteField', "Delete Custom Field", '');
-      $id = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, FALSE, 0
+      $id = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        FALSE,
+        0
       );
       $controller->set('id', $id);
       $controller->setEmbedded(TRUE);
@@ -260,8 +258,12 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
     // assign vars to templates
     $this->assign('action', $action);
 
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -273,7 +275,6 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
       $this->preview($id);
     }
     else {
-
 
       $this->browse();
     }
@@ -288,9 +289,8 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
    * @param int  $id    custom field id
    *
    * @return void
-   * @access public
    */
-  function preview($id) {
+  public function preview($id) {
     $controller = new CRM_Core_Controller_Simple('CRM_Custom_Form_Preview', ts('Preview Custom Data'), CRM_Core_Action::PREVIEW);
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field', 'reset=1&action=browse&gid=' . $this->_gid));
@@ -301,4 +301,3 @@ class CRM_Custom_Page_Field extends CRM_Core_Page {
     $controller->run();
   }
 }
-

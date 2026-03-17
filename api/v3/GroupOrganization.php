@@ -38,7 +38,6 @@
  *
  */
 
-
 require_once 'CRM/Contact/BAO/GroupOrganization.php';
 
 /**
@@ -80,7 +79,7 @@ function civicrm_api3_group_organization_create($params) {
 
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -106,4 +105,3 @@ function civicrm_api3_group_organization_delete($params) {
   $result = CRM_Contact_BAO_GroupOrganization::deleteGroupOrganization($params['id']);
   return $result ? civicrm_api3_create_success('Deleted Group Organization successfully') : civicrm_api3_create_error('Could not delete Group Organization');
 }
-

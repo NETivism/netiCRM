@@ -27,21 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Page for displaying Surveys
  */
 class CRM_Campaign_Page_Survey extends CRM_Core_Page {
 
-  private static $_actionLinks; function &actionLinks() {
+  private static $_actionLinks;
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
 
@@ -75,13 +71,11 @@ class CRM_Campaign_Page_Survey extends CRM_Core_Page {
     return self::$_actionLinks;
   }
 
-  function browse() {
-
+  public function browse() {
 
     $surveys = CRM_Campaign_BAO_Survey::getSurvey(TRUE);
 
     if (!empty($surveys)) {
-
 
       $surveyType = CRM_Campaign_BAO_Survey::getSurveyActivityType();
       $campaigns = CRM_Campaign_BAO_Campaign::getAllCampaign();
@@ -107,13 +101,17 @@ class CRM_Campaign_Page_Survey extends CRM_Core_Page {
     $this->assign('addSurveyUrl', CRM_Utils_System::url('civicrm/survey/add', 'reset=1&action=add'));
   }
 
-  function run() {
+  public function run() {
     if (!CRM_Core_Permission::check('administer CiviCampaign')) {
       CRM_Utils_System::permissionDenied();
     }
 
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 0
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('action', $action);
     $this->browse();
@@ -121,4 +119,3 @@ class CRM_Campaign_Page_Survey extends CRM_Core_Page {
     parent::run();
   }
 }
-

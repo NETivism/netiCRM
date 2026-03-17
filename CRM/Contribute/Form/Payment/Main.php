@@ -27,15 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 /**
- * form for thank-you / success page - 1st step of payment
+ * Form for the first step of the payment process.
  */
 class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   /**
@@ -47,18 +44,20 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   protected $_preventMultipleSubmission;
 
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method initializes the payment process, checks if the user has passed
+   * the entry criteria, and handles payment processor form initialization.
    *
    * @return void
-   * @access public
    */
-  public function preProcess(){
+  public function preProcess() {
     parent::preProcess();
-    if(!$this->_pass){
+    if (!$this->_pass) {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();
     }
-    else{
+    else {
       $this->assign('ppType', FALSE);
       $this->_ppType = CRM_Utils_Array::value('type', $_GET);
       if ($this->_ppType) {
@@ -70,10 +69,12 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds radio buttons for selecting payment methods or pay later options
+   * based on the current context (contribution or event).
+   *
+   * @return mixed the built form components
    */
   public function buildQuickForm() {
     if ($this->_ppType) {
@@ -82,7 +83,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
 
     if (!empty($this->_paymentProcessors)) {
       $pps = $this->_paymentProcessors;
-      foreach ($pps as $key => & $name) {
+      foreach ($pps as $key => &$name) {
         $pps[$key] = $name['name'];
       }
     }
@@ -101,7 +102,8 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
       $this->addRadio('payment_processor', ts('Payment Method'), $pps, NULL, "&nbsp;", TRUE);
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Change Payment Method'),
@@ -112,46 +114,46 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array list of errors to be posted back to the form (currently empty)
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     return $errors;
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Copies the original contribution, updates the selected payment processor,
+   * generates a new invoice ID, and initiates the transfer checkout process.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $processor = $this->_paymentProcessors[$params['payment_processor']];
     $contrib = CRM_Contribute_BAO_Contribution::copy($this->_id);
-    if(!empty($params['payment_processor'])){
+    if (!empty($params['payment_processor'])) {
       $contrib->payment_processor_id = $params['payment_processor'];
     }
-    if(!empty($params['payment_instrument_id'])){
+    if (!empty($params['payment_instrument_id'])) {
       $contrib->payment_instrument_id = $params['payment_instrument_id'];
     }
-    if(!empty($contrib->source)){
+    if (!empty($contrib->source)) {
       $contrib->source = str_replace(' '. ts('Change Payment Method'), '', $contrib->source).' '.ts('Change Payment Method');
     }
-    else{
+    else {
       $contrib->source = ' '.ts('Change Payment Method');
     }
-    if(!empty($contrib->invoice_id)){
+    if (!empty($contrib->invoice_id)) {
       $invoice_id = md5(uniqid((string)rand(), TRUE));
-      $contrib->invoice_id = $invoice_id;;
+      $contrib->invoice_id = $invoice_id;
+      ;
       $this->set('invoiceID', $invoiceID);
     }
     $contrib->save();
@@ -160,7 +162,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     $this->set('contrib', $values);
     $ids = $this->getVar('_ids');
     $pid = $ids['participant'];
-    if(!empty($pid)) {
+    if (!empty($pid)) {
       $this->payLaterProcessor($pid);
     }
     if (!empty($params['payment_processor'])) {
@@ -171,7 +173,7 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
     // before leave to transfercheckout, call hook
     CRM_Utils_Hook::postProcess(get_class($this), $this);
 
-    // TODO: we have to redirect to correct thank you page 
+    // TODO: we have to redirect to correct thank you page
     // maybe create own controller for that
     if (!empty($params['payment_processor'])) {
       $payment->doTransferCheckout($vars, $this->_component);
@@ -179,9 +181,11 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * Function to process when payment data is event registration and pay later.
-   * @param int $pid for participant id.
-   * @param object $contrib A CRM_Contrib_DAO_Contribution object.
+   * Update participant status when pay later is selected.
+   *
+   * Sets the participant status to 'Pending from pay later'.
+   *
+   * @param int $pid the participant ID to update
    *
    * @return void
    */
@@ -200,13 +204,14 @@ class CRM_Contribute_Form_Payment_Main extends CRM_Contribute_Form_Payment {
   }
 
   /**
-   * overwrite action, since we are only showing elements in frozen mode
-   * no help display needed
+   * Determine the current action for the page.
    *
-   * @return int
-   * @access public
+   * Overwrites the parent action to ensure elements are shown in frozen mode
+   * without help displays.
+   *
+   * @return int the action code (VIEW or VIEW|PREVIEW)
    */
-  function getAction() {
+  public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
       return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
     }

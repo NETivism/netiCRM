@@ -26,10 +26,9 @@
 */
 
 /**
+ * Unit test permission checking implementation that grants all permissions by default
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,14 +37,37 @@
  */
 class CRM_Core_Permission_UnitTests {
 
+  /**
+   * Get the current permission of this user.
+   *
+   * @return int The permission level.
+   */
   public static function getPermission() {
     return CRM_Core_Permission::EDIT;
   }
 
+  /**
+   * Get the permissioned where clause for the user.
+   *
+   * @param int $type The type of permission needed.
+   * @param array $tables (reference) The tables that are needed for the select clause.
+   * @param array $whereTables (reference) The tables that are needed for the where clause.
+   *
+   * @return string The group where clause for this user.
+   */
   public static function whereClause($type, &$tables, &$whereTables) {
     return '( 1 )';
   }
 
+  /**
+   * Get all groups from database, filtered by permissions
+   * for this user.
+   *
+   * @param string|null $groupType Type of group (Access/Mailing).
+   * @param bool $excludeHidden Whether to exclude hidden groups.
+   *
+   * @return array List of all groups.
+   */
   public static function &group($groupType = NULL, $excludeHidden = TRUE) {
     return CRM_Core_PseudoConstant::allGroup($groupType, $excludeHidden);
   }
@@ -53,9 +75,15 @@ class CRM_Core_Permission_UnitTests {
   // permission mapping to stub check() calls
   public static $permissions = NULL;
 
-  static function check($str) {
+  /**
+   * Given a permission string, check for access requirements.
+   *
+   * @param string $str The permission to check.
+   *
+   * @return bool True if yes, else false.
+   */
+  public static function check($str) {
     // return the stubbed permission (defaulting to true if the array is missing)
     return is_array(self::$permissions) ? in_array($str, self::$permissions) : TRUE;
   }
 }
-

@@ -27,25 +27,20 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
 
   public $_contactId;
   public $_action;
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function browse() {
-
+  public function browse() {
     $count = CRM_Contact_BAO_GroupContact::getContactGroup($this->_contactId, NULL, NULL, TRUE);
 
     $in = &CRM_Contact_BAO_GroupContact::getContactGroup($this->_contactId, 'Added');
@@ -59,15 +54,15 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is update
+   * This function is called when action is update.
    *
-   * @param int    $groupID group id
+   * @param int $groupId group id
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function edit($groupId = NULL) {
-    $controller = new CRM_Core_Controller_Simple('CRM_Contact_Form_GroupContact',
+  public function edit($groupId = NULL) {
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Contact_Form_GroupContact',
       ts('Contact\'s Groups'),
       $this->_action
     );
@@ -76,7 +71,9 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
 
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/contact/view',
+    $session->pushUserContext(
+      CRM_Utils_System::url(
+        'civicrm/contact/view',
         "action=browse&selectedChild=group&cid={$this->_contactId}"
       ),
       FALSE
@@ -90,7 +87,12 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     $controller->run();
   }
 
-  function preProcess() {
+  /**
+   * Build all the data structures needed to build the page.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
 
@@ -107,18 +109,23 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
    * when the page loads, it decides the which action has
    * to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     if ($this->_action == CRM_Core_Action::DELETE) {
-      $groupContactId = CRM_Utils_Request::retrieve('gcid', 'Positive',
-        CRM_Core_DAO::$_nullObject, TRUE
+      $groupContactId = CRM_Utils_Request::retrieve(
+        'gcid',
+        'Positive',
+        CRM_Core_DAO::$_nullObject,
+        TRUE
       );
-      $status = CRM_Utils_Request::retrieve('st', 'String',
-        CRM_Core_DAO::$_nullObject, TRUE
+      $status = CRM_Utils_Request::retrieve(
+        'st',
+        'String',
+        CRM_Core_DAO::$_nullObject,
+        TRUE
       );
       if (is_numeric($groupContactId) && $status) {
         $this->del($groupContactId, $status, $this->_contactId);
@@ -133,14 +140,15 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
   }
 
   /**
-   * function to remove/ rejoin the group
+   * Function to remove/ rejoin the group.
    *
    * @param int $groupContactId id of crm_group_contact
    * @param string $status this is the status that should be updated.
+   * @param int $contactID
    *
-   * $access public
+   * @return bool|void
    */
-  static function del($groupContactId, $status, $contactID) {
+  public static function del($groupContactId, $status, $contactID) {
     $groupId = CRM_Contact_BAO_GroupContact::getGroupId($groupContactId);
 
     switch ($status) {
@@ -180,4 +188,3 @@ class CRM_Contact_Page_View_GroupContact extends CRM_Core_Page {
     CRM_Contact_BAO_GroupContact::removeContactsFromGroup($ids, $groupId, $method, $groupStatus);
   }
 }
-

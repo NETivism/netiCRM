@@ -28,26 +28,23 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 require_once __DIR__.'/extern.inc';
 
-CRM_Core_Config::singleton( );
-$cpageId  = CRM_Utils_Request::retrieve( 'cpageId', 'Positive', CRM_Core_DAO::$_nullObject);
+CRM_Core_Config::singleton();
+$cpageId  = CRM_Utils_Request::retrieve('cpageId', 'Positive', CRM_Core_DAO::$_nullObject);
 if (empty($cpageId)) {
   http_response_code(400);
   exit;
 }
 
-$language = CRM_Utils_Request::retrieve( 'language', 'String', CRM_Core_DAO::$_nullObject);
+$language = CRM_Utils_Request::retrieve('language', 'String', CRM_Core_DAO::$_nullObject);
 if (!empty($language)) {
   global $tsLocale;
   $tsLocale = $language;
 }
-
 
 if (!CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Widget', $cpageId, 'is_active', 'contribution_page_id')) {
   CRM_Utils_System::civiExit();
@@ -56,9 +53,9 @@ if (!CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Widget', $cpageId, 'is_acti
 $data = CRM_Contribute_BAO_Widget::getContributionPageData($cpageId);
 
 $output = '
-  var jsondata = '.json_encode( $data ) .';
+  var jsondata = '.json_encode($data) .';
 ';
 
 header('Content-type: application/javascript');
 echo $output;
-CRM_Utils_System::civiExit( );
+CRM_Utils_System::civiExit();

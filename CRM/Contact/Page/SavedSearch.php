@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Main page for viewing all Saved searches.
@@ -48,17 +43,16 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
-   * delete a saved search.
+   * Delete a saved search.
    *
-   * @param int $id - id of saved search
+   * @param int $id id of saved search
    *
    * @return void
-   *
    */
-  function delete($id) {
+  public function delete($id) {
     // first delete the group associated with this saved search
     $group = new CRM_Contact_DAO_Group();
     $group->saved_search_id = $id;
@@ -76,10 +70,9 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
   /**
    * Browse all saved searches.
    *
-   * @return content of the parents run method
-   *
+   * @return void
    */
-  function browse() {
+  public function browse() {
     $rows = [];
 
     $savedSearch = new CRM_Contact_DAO_SavedSearch();
@@ -119,20 +112,27 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
   }
 
   /**
-   * run this page (figure out the action needed and perform it).
+   * Run this page (figure out the action needed and perform it).
    *
    * @return void
    */
-  function run() {
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'browse'
+  public function run() {
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'browse'
     );
 
     $this->assign('action', $action);
 
     if ($action & CRM_Core_Action::DELETE) {
-      $id = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, TRUE
+      $id = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        TRUE
       );
       $this->delete($id);
     }
@@ -140,12 +140,11 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
   }
 
   /**
-   * Get action Links
+   * Get action Links.
    *
-   * @return array (reference) of action links
-   * @static
+   * @return array
    */
-  static function &links() {
+  public static function &links() {
 
     if (!(self::$_links)) {
 
@@ -169,4 +168,3 @@ class CRM_Contact_Page_SavedSearch extends CRM_Core_Page {
     return self::$_links;
   }
 }
-

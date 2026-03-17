@@ -26,19 +26,28 @@
 */
 
 /**
+ * Utility class for interacting with the Sunlight Labs API.
  *
- * @package CRM
+ * Provides methods to look up U.S. congressional representatives and
+ * senators by city, state, or zipcode using the Sunlight Labs web service.
+ *
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
- *
  */
 
-
 class CRM_Utils_Sunlight {
-  static $_apiURL = 'http://api.sunlightlabs.com/';
-  static $_apiKey = NULL;
+  public static $_apiURL = 'http://api.sunlightlabs.com/';
+  public static $_apiKey = NULL;
 
-  static function makeAPICall($uri) {
+  /**
+   * Make an API call to the Sunlight Labs API.
+   *
+   * @param string $uri
+   *   The URI path to append to the API base URL.
+   *
+   * @return \SimpleXMLElement|false
+   *   The parsed XML response, or FALSE on parse failure.
+   */
+  public static function makeAPICall($uri) {
 
     $params = ['method' => HTTP_REQUEST_METHOD_GET,
       'allowRedirects' => FALSE,
@@ -50,15 +59,25 @@ class CRM_Utils_Sunlight {
       CRM_Core_Error::fatal($result->getMessage());
     }
     if ($request->getResponseCode() != 200) {
-      CRM_Core_Error::fatal(ts('Invalid response code received from Sunlight servers: %1',
-          [1 => $request->getResponseCode()]
-        ));
+      CRM_Core_Error::fatal(ts(
+        'Invalid response code received from Sunlight servers: %1',
+        [1 => $request->getResponseCode()]
+      ));
     }
     $string = $request->getResponseBody();
     return simplexml_load_string($string);
   }
 
-  static function getCityState($zipcode) {
+  /**
+   * Get city and state for a given zipcode.
+   *
+   * @param string $zipcode
+   *   The zipcode to look up.
+   *
+   * @return array
+   *   A two-element array containing [city, state] as SimpleXMLElement values.
+   */
+  public static function getCityState($zipcode) {
     $key = self::$_apiKey;
     $uri = "places.getCityStateFromZip.php?zip={$zipcode}&apikey={$key}&output=xml";
     $xml = self::makeAPICall($uri);
@@ -66,7 +85,18 @@ class CRM_Utils_Sunlight {
     return [$xml->city, $xml->state];
   }
 
-  static function getDetailedInfo($peopleID) {
+  /**
+   * Get detailed information for a given person ID.
+   *
+   * @param string|\SimpleXMLElement $peopleID
+   *   The Sunlight person ID.
+   *
+   * @return array<string, string>
+   *   Associative array of person details with keys: title, first_name,
+   *   last_name, gender, party, address, phone, email, url, image_url,
+   *   contact_url.
+   */
+  public static function getDetailedInfo($peopleID) {
     $key = self::$_apiKey;
     $uri = "people.getPersonInfo.php?id={$peopleID}&apikey={$key}&output=xml";
     $xml = self::makeAPICall($uri);
@@ -94,7 +124,16 @@ class CRM_Utils_Sunlight {
     return $result;
   }
 
-  static function getPeopleInfo($uri) {
+  /**
+   * Get people information from a given API URI.
+   *
+   * @param string $uri
+   *   The API URI to call.
+   *
+   * @return array<int, array<string, string>>
+   *   Array of person detail arrays as returned by getDetailedInfo().
+   */
+  public static function getPeopleInfo($uri) {
     $xml = self::makeAPICall($uri);
 
     $result = [];
@@ -104,7 +143,18 @@ class CRM_Utils_Sunlight {
     return $result;
   }
 
-  static function getRepresentativeInfo($city, $state) {
+  /**
+   * Get representative information for a given city and state.
+   *
+   * @param string $city
+   *   The city name.
+   * @param string $state
+   *   The two-letter state abbreviation.
+   *
+   * @return array<int, array<string, string>>|null
+   *   Array of representative details, or NULL if city or state is empty.
+   */
+  public static function getRepresentativeInfo($city, $state) {
     if (!$city ||
       !$state
     ) {
@@ -116,7 +166,16 @@ class CRM_Utils_Sunlight {
     return self::getPeopleInfo($uri);
   }
 
-  static function getSenatorInfo($state) {
+  /**
+   * Get senator information for a given state.
+   *
+   * @param string $state
+   *   The two-letter state abbreviation.
+   *
+   * @return array<int, array<string, string>>|null
+   *   Array of senator details, or NULL if state is empty.
+   */
+  public static function getSenatorInfo($state) {
     if (!$state) {
       return NULL;
     }
@@ -126,7 +185,23 @@ class CRM_Utils_Sunlight {
     return self::getPeopleInfo($uri);
   }
 
-  static function getInfo($city, $state, $zipcode = NULL) {
+  /**
+   * Get combined representative and senator information for a location.
+   *
+   * If a zipcode is provided, city and state are resolved from it
+   * via the Sunlight API, overriding the passed-in values.
+   *
+   * @param string $city
+   *   The city name.
+   * @param string $state
+   *   The two-letter state abbreviation.
+   * @param string|null $zipcode
+   *   Optional zipcode to resolve city and state from.
+   *
+   * @return array<int, array<string, string>>
+   *   Array of combined representative and senator details.
+   */
+  public static function getInfo($city, $state, $zipcode = NULL) {
     if ($zipcode) {
       list($city, $state) = self::getCityState($zipcode);
     }
@@ -145,4 +220,3 @@ class CRM_Utils_Sunlight {
     return $result;
   }
 }
-

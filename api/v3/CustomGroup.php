@@ -37,7 +37,6 @@
  * @version $Id: CustomGroup.php 30879 2010-11-22 15:45:55Z shot $
  */
 
-
 require_once 'CRM/Core/BAO/CustomGroup.php';
 
 /**
@@ -81,7 +80,6 @@ function civicrm_api3_custom_group_create($params) {
     $params['extends_entity_column_value'] = CRM_Utils_Array::explodePadded($params['extends_entity_column_value']);
   }
 
-
   $customGroup = CRM_Core_BAO_CustomGroup::create($params);
 
   _civicrm_api3_object_to_array($customGroup, $values[$customGroup->id]);
@@ -102,7 +100,7 @@ function civicrm_api3_custom_group_create($params) {
 
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_custom_group_create_spec(&$params) {
@@ -144,4 +142,3 @@ function civicrm_api3_custom_group_delete($params) {
 function civicrm_api3_custom_group_get($params) {
   return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
-

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying custom data
@@ -52,22 +48,18 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
   public $_groupId;
 
   /**
-   * class constructor
-   *
-   * @return CRM_Contact_Page_View_CustomData
+   * Class constructor.
    */
   public function __construct() {
     parent::__construct();
   }
 
   /**
-   * add a few specific things to view contact
+   * Add a few specific things to view contact.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
     $this->assign('contactId', $this->_contactId);
 
@@ -88,15 +80,9 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    *
-   * @access public
-   *
-   * @param object $page - the view page which created this one
-   *
-   * @return none
-   * @static
-   *
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     //set the userContext stack
@@ -121,14 +107,19 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
       //Custom Groups Inline
       $entityType = CRM_Contact_BAO_Contact::getContactType($this->_contactId);
       $entitySubType = CRM_Contact_BAO_Contact::getContactSubType($this->_contactId);
-      $groupTree = &CRM_Core_BAO_CustomGroup::getTree($entityType, $this, $this->_contactId,
-        $this->_groupId, $entitySubType
+      $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+        $entityType,
+        $this,
+        $this->_contactId,
+        $this->_groupId,
+        $entitySubType
       );
       CRM_Core_BAO_CustomGroup::buildCustomDataView($this, $groupTree);
     }
     else {
 
-      $controller = new CRM_Core_Controller_Simple('CRM_Contact_Form_CustomData',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Contact_Form_CustomData',
         ts('Custom Data'),
         $this->_action
       );
@@ -144,4 +135,3 @@ class CRM_Contact_Page_View_CustomData extends CRM_Core_Page {
     return parent::run();
   }
 }
-

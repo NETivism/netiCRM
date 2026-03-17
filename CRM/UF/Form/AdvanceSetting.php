@@ -27,25 +27,19 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
 
   /**
-   * Function to build the form for Advance Settings.
-   *
-   * @access public
-   *
-   * @return None
-   */
-  static function buildAdvanceSetting(&$form) {
+ * Build the form for Advance Settings.
+ *
+ * @param CRM_Core_Form $form
+ *   The form object.
+ */
+  public static function buildAdvanceSetting(&$form) {
     // should mapping be enabled for this group
     $form->addElement('checkbox', 'is_map', ts('Enable mapping for this profile?'));
 
@@ -107,4 +101,3 @@ class CRM_UF_Form_AdvanceSetting extends CRM_UF_Form_Group {
     }
   }
 }
-

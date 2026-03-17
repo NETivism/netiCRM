@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Page for invoking report templates
@@ -42,22 +37,23 @@
 class CRM_Report_Page_Report extends CRM_Core_Page {
 
   /**
-   * run this page (figure out the action needed and perform it).
+   * Run this page (figure out the action needed and perform it).
    *
    * @return void
    */
-  function run() {
+  public function run() {
     if (!CRM_Core_Permission::check('administer Reports')) {
       return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/report/list', "reset=1"));
     }
 
     $optionVal = CRM_Report_Utils_Report::getValueFromUrl();
 
-
-
-
-    $templateInfo = CRM_Core_OptionGroup::getRowValues('report_template', "{$optionVal}", 'value',
-      'String', FALSE
+    $templateInfo = CRM_Core_OptionGroup::getRowValues(
+      'report_template',
+      "{$optionVal}",
+      'value',
+      'String',
+      FALSE
     );
 
     $extKey = strpos($templateInfo['name'], '.');
@@ -89,4 +85,3 @@ class CRM_Report_Page_Report extends CRM_Core_Page {
     return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/report/list', "reset=1"));
   }
 }
-

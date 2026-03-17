@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Form for managing Taiwan ACH (Automated Clearing House) contribution details.
+ */
 class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   public $_context;
   public $_processors;
@@ -8,7 +11,16 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
-  function preProcess() {
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes IDs for contact, Taiwan ACH record, and recurring
+   * contribution. It also retrieves available TaiwanACH payment processors and
+   * sets up custom data.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -27,7 +39,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     if ($this->_id) {
       $this->_contributionRecurId = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_TaiwanACH', $this->_id, 'contribution_recur_id');
     }
-    $this->_processors = CRM_Core_PseudoConstant::paymentProcessor(False, False, 'payment_processor_type = "TaiwanACH"');
+    $this->_processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, 'payment_processor_type = "TaiwanACH"');
     if (empty($this->_processors)) {
       CRM_Core_Error::fatal("You need setup TaiwanACH Payment Processor first.");
     }
@@ -37,14 +49,23 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     $this->addFormRule(['CRM_Contribute_Form_TaiwanACH', 'formRule'], $this);
   }
 
-  function buildQuickForm() {
+  /**
+   * Actually build the form components.
+   *
+   * Adds fields for contribution page selection, amount, ACH type (Bank/Post),
+   * payment processor, bank code, post office account type, stamp verification
+   * status, and account details.
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::ADD) {
       if (empty($this->_contactId)) {
         CRM_Contact_Form_NewContact::buildQuickForm($this);
       }
     }
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
-    foreach($pages as $pid => $page) {
+    foreach ($pages as $pid => $page) {
       $pages[$pid] = $page." (ID:$pid)";
     }
     $this->addSelect('ach_contribution_page_id', ts('Contribution Page'), $pages, NULL, TRUE);
@@ -80,7 +101,8 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
     CRM_Custom_Form_CustomData::buildQuickForm($this);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -92,6 +114,18 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Global form rule for validation.
+   *
+   * Validates contact selection, required bank/post office fields, legal
+   * identifier format, and custom order number requirements.
+   *
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
 
@@ -107,9 +141,9 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $errors['ach_postoffice_acc_type'] = ts('%1 is a required field.', [1 => ts('Post Office Account Type')]);
     }
 
-    if($fields['ach_identifier_number']) {
+    if ($fields['ach_identifier_number']) {
       $err = FALSE;
-      if(strlen($fields['ach_identifier_number']) != 10 && strlen($fields['ach_identifier_number']) != 8) {
+      if (strlen($fields['ach_identifier_number']) != 10 && strlen($fields['ach_identifier_number']) != 8) {
         $err = TRUE;
       }
       if (!preg_match('/[a-z]{0,2}[0-9]{8,9}/i', $fields['ach_identifier_number'])) {
@@ -120,20 +154,28 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       }
     }
 
-    if(!empty($fields['is_custom_order_number']) && empty($fields['ach_order_number'])) {
+    if (!empty($fields['is_custom_order_number']) && empty($fields['ach_order_number'])) {
       $errors['ach_order_number'] = ts('%1 is a required field.', [1 => ts('User Number')]);
     }
 
     return $errors;
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves existing ACH details for the recurring contribution record or
+   * loads the contact's legal identifier.
+   *
+   * @return array the array of default values for form elements
+   */
+  public function setDefaultValues() {
     $defaults = [];
     if ($this->_id && $this->_contributionRecurId) {
       $achValues = CRM_Contribute_BAO_TaiwanACH::getValue($this->_contributionRecurId);
-      foreach($achValues as $idx => $val) {
+      foreach ($achValues as $idx => $val) {
         if ($idx == 'data') {
-          foreach($val as $fld => $valCustom) {
+          foreach ($val as $fld => $valCustom) {
             if (strstr($fld, 'custom_')) {
               $defaults[$fld.'_-'] = $valCustom;
             }
@@ -147,7 +189,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
 
       return $defaults;
     }
-    elseif($this->_contactId) {
+    elseif ($this->_contactId) {
       $legalIdentitifer = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_contactId, 'legal_identifier');
       if (!empty($legalIdentitifer)) {
         $defaults['ach_identifier_number'] = $legalIdentitifer;
@@ -156,8 +198,16 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     return $defaults;
   }
 
-
-  function postProcess() {
+  /**
+   * Process the form submission.
+   *
+   * Updates or creates the Taiwan ACH record, handles status changes based on
+   * stamp verification, and manages redirections back to contact view or
+   * contribution list.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $submittedValues = $this->controller->exportValues($this->_name);
 
     // set the contact, when contact is selected
@@ -170,7 +220,7 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
       $params['contribution_recur_id'] = $this->_contributionRecurId;
     }
     $params['contact_id'] = $this->_contactId;
-    foreach($submittedValues as $key => $value) {
+    foreach ($submittedValues as $key => $value) {
       if (in_array($key, ['hidden_custom', 'MAX_FILE_SIZE', 'qfKey', 'contact', 'contact_select_id', 'profiles'])) {
         continue;
       }
@@ -192,12 +242,12 @@ class CRM_Contribute_Form_TaiwanACH extends CRM_Core_Form {
     }
     // if stampVerification Change, check status_id and stamp verification.
     if ($stampVerification != $params['stamp_verification']) {
-      if($params['contribution_status_id'] == 2) {
+      if ($params['contribution_status_id'] == 2) {
         if ($params['stamp_verification'] == 1) {
           $params['contribution_status_id'] = 5;
         }
       }
-      else if ($params['stamp_verification'] == 0 || $params['stamp_verification'] == 2){
+      elseif ($params['stamp_verification'] == 0 || $params['stamp_verification'] == 2) {
         $params['contribution_status_id'] = 2;
       }
     }

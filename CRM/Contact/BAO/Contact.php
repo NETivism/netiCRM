@@ -27,35 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
 
@@ -64,14 +38,14 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    *
    * @var array
    */
-  static $_commPrefs = ['do_not_phone', 'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_trade', 'do_not_notify', 'is_opt_out'];
+  public static $_commPrefs = ['do_not_phone', 'do_not_email', 'do_not_mail', 'do_not_sms', 'do_not_trade', 'do_not_notify', 'is_opt_out'];
 
   /**
    * types of greetings
    *
    * @var array
    */
-  static $_greetingTypes = ['addressee', 'email_greeting', 'postal_greeting'];
+  public static $_greetingTypes = ['addressee', 'email_greeting', 'postal_greeting'];
 
   /**
    * static field for all the contact information that we can potentially import
@@ -79,7 +53,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    * @var array
    * @static
    */
-  static $_importableFields = NULL;
+  public static $_importableFields = NULL;
 
   /**
    * static field for all the contact information that we can potentially export
@@ -87,8 +61,8 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    * @var array
    * @static
    */
-  static $_exportableFields = NULL;
-  function __construct() {
+  public static $_exportableFields = NULL;
+  public function __construct() {
     parent::__construct();
   }
 
@@ -101,11 +75,11 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    *
    * @param array  $params (reference ) an assoc array of name/value pairs
    *
-   * @return object CRM_Contact_BAO_Contact object
+   * @return CRM_Contact_DAO_Contact|void
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $contact = new CRM_Contact_DAO_Contact();
 
     if (empty($params)) {
@@ -230,12 +204,13 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    * @param array   $params      (reference ) an assoc array of name/value pairs
    * @param boolean $fixAddress  if we need to fix address
    * @param boolean $invokeHooks if we need to invoke hooks
+   * @param boolean $skipDelete  if we need to skip delete of related entities
    *
-   * @return object CRM_Contact_BAO_Contact object
+   * @return CRM_Contact_DAO_Contact|null
    * @access public
    * @static
    */
-  static function &create(&$params, $fixAddress = TRUE, $invokeHooks = TRUE, $skipDelete = FALSE) {
+  public static function &create(&$params, $fixAddress = TRUE, $invokeHooks = TRUE, $skipDelete = FALSE) {
     $contact = NULL;
     if (!CRM_Utils_Array::value('contact_type', $params) &&
       !CRM_Utils_Array::value('contact_id', $params)
@@ -423,12 +398,13 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
    * Get the display name and image of a contact
    *
    * @param int $id the contactId
+   * @param bool $type if true, return extended info including contact_type and contact_sub_type
    *
-   * @return array the displayName and contactImage for this contact
+   * @return array|null the displayName and contactImage for this contact
    * @access public
    * @static
    */
-  static function getDisplayAndImage($id, $type = FALSE) {
+  public static function getDisplayAndImage($id, $type = FALSE) {
     if (empty($id)) {
       return NULL;
     }
@@ -445,11 +421,17 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
     $dao->query($sql);
     if ($dao->fetch()) {
 
-      $image = CRM_Contact_BAO_Contact_Utils::getImage($dao->contact_sub_type ?
-        $dao->contact_sub_type : $dao->contact_type, FALSE, $id
+      $image = CRM_Contact_BAO_Contact_Utils::getImage(
+        $dao->contact_sub_type ?
+        $dao->contact_sub_type : $dao->contact_type,
+        FALSE,
+        $id
       );
-      $imageUrl = CRM_Contact_BAO_Contact_Utils::getImage($dao->contact_sub_type ?
-        $dao->contact_sub_type : $dao->contact_type, TRUE, $id
+      $imageUrl = CRM_Contact_BAO_Contact_Utils::getImage(
+        $dao->contact_sub_type ?
+        $dao->contact_sub_type : $dao->contact_type,
+        TRUE,
+        $id
       );
 
       // use email if display_name is empty
@@ -470,11 +452,11 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    * @param array   $defaults (reference) the default values, some of which need to be resolved.
    * @param boolean $reverse  true if we want to resolve the values in the reverse direction (value -> name)
    *
-   * @return none
+   * @return void
    * @access public
    * @static
    */
-  static function resolveDefaults(&$defaults, $reverse = FALSE) {
+  public static function resolveDefaults(&$defaults, $reverse = FALSE) {
     // hack for birth_date
     if (CRM_Utils_Array::value('birth_date', $defaults)) {
       if (is_array($defaults['birth_date'])) {
@@ -491,8 +473,11 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
       $filterCondition = ['contact_type' => CRM_Utils_Array::value('contact_type', $defaults),
         'greeting_type' => $greeting,
       ];
-      CRM_Utils_Array::lookupValue($defaults, $greeting,
-        CRM_Core_PseudoConstant::greeting($filterCondition), $reverse
+      CRM_Utils_Array::lookupValue(
+        $defaults,
+        $greeting,
+        CRM_Core_PseudoConstant::greeting($filterCondition),
+        $reverse
       );
     }
 
@@ -501,7 +486,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
       if (!CRM_Utils_Array::arrayKeyExists($name, $defaults) || !is_array($defaults[$name])) {
         continue;
       }
-      foreach ($defaults[$name] as $count => & $values) {
+      foreach ($defaults[$name] as $count => &$values) {
 
         //get location type id.
         CRM_Utils_Array::lookupValue($values, 'location_type', CRM_Core_PseudoConstant::locationType(), $reverse);
@@ -513,32 +498,37 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
             $values['vcard_name'] = $vcardNames[$values['location_type_id']];
           }
 
-          if (!CRM_Utils_Array::lookupValue($values,
-              'state_province',
-              CRM_Core_PseudoConstant::stateProvince(),
-              $reverse
-            ) && $reverse) {
+          if (!CRM_Utils_Array::lookupValue(
+            $values,
+            'state_province',
+            CRM_Core_PseudoConstant::stateProvince(),
+            $reverse
+          ) && $reverse) {
 
-            CRM_Utils_Array::lookupValue($values,
+            CRM_Utils_Array::lookupValue(
+              $values,
               'state_province',
               CRM_Core_PseudoConstant::stateProvinceAbbreviation(),
               $reverse
             );
           }
 
-          if (!CRM_Utils_Array::lookupValue($values,
-              'country',
-              CRM_Core_PseudoConstant::country(),
-              $reverse
-            ) && $reverse) {
+          if (!CRM_Utils_Array::lookupValue(
+            $values,
+            'country',
+            CRM_Core_PseudoConstant::country(),
+            $reverse
+          ) && $reverse) {
 
-            CRM_Utils_Array::lookupValue($values,
+            CRM_Utils_Array::lookupValue(
+              $values,
               'country',
               CRM_Core_PseudoConstant::countryIsoCode(),
               $reverse
             );
           }
-          CRM_Utils_Array::lookupValue($values,
+          CRM_Utils_Array::lookupValue(
+            $values,
             'county',
             CRM_Core_PseudoConstant::county(),
             $reverse
@@ -546,7 +536,8 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
         }
 
         if ($name == 'im') {
-          CRM_Utils_Array::lookupValue($values,
+          CRM_Utils_Array::lookupValue(
+            $values,
             'provider',
             CRM_Core_PseudoConstant::IMProvider(),
             $reverse
@@ -554,7 +545,8 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
         }
 
         if ($name == 'phone') {
-          CRM_Utils_Array::lookupValue($values,
+          CRM_Utils_Array::lookupValue(
+            $values,
             'phone_type',
             CRM_Core_PseudoConstant::phoneType(),
             $reverse
@@ -577,14 +569,13 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    * @param array   $params   (reference ) an assoc array of name/value pairs
    * @param array   $defaults (reference ) an assoc array to hold the name / value pairs
    *                        in a hierarchical manner
-   * @param array   $ids      (reference) the array that holds all the db ids
    * @param boolean $microformat  for location in microformat
    *
-   * @return object CRM_Contact_BAO_Contact object
+   * @return CRM_Contact_BAO_Contact
    * @access public
    * @static
    */
-  static function &retrieve(&$params, &$defaults, $microformat = FALSE) {
+  public static function &retrieve(&$params, &$defaults, $microformat = FALSE) {
     if (CRM_Utils_Array::arrayKeyExists('contact_id', $params)) {
       $params['id'] = $params['contact_id'];
     }
@@ -600,7 +591,9 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
     $entityBlock = ['contact_id' => $params['contact_id']];
     $blocks = CRM_Core_BAO_Location::getValues($entityBlock, $microformat);
     $defaults = array_merge($defaults, $blocks);
-    foreach ($blocks as $block => $value) $contact->$block = $value;
+    foreach ($blocks as $block => $value) {
+      $contact->$block = $value;
+    }
 
     if (!isset($params['noNotes'])) {
       $contact->notes = &CRM_Core_BAO_Note::getValues($params, $defaults);
@@ -631,7 +624,7 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    * @static
    * @access public
    */
-  static function displayName($id) {
+  public static function displayName($id) {
     $displayName = NULL;
     if ($id) {
       $displayName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $id, 'display_name');
@@ -646,13 +639,13 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
    * @param  int  $id id of the contact to delete
    * @param  bool $restore       whether to actually restore, not delete
    * @param  bool $skipUndelete  whether to force contact delete or not
+   * @param  string|null $reason reason for delete/restore action
    *
-   * @return boolean true if contact deleted, false otherwise
+   * @return bool true if contact deleted, false otherwise
    * @access public
    * @static
    */
-  static function deleteContact($id, $restore = FALSE, $skipUndelete = FALSE, $reason = NULL) {
-
+  public static function deleteContact($id, $restore = FALSE, $skipUndelete = FALSE, $reason = NULL) {
 
     if (!$id) {
       return FALSE;
@@ -666,7 +659,8 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
     }
 
     // make sure this contact_id does not have any membership types
-    $membershipTypeID = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+    $membershipTypeID = CRM_Core_DAO::getFieldValue(
+      'CRM_Member_DAO_MembershipType',
       $id,
       'id',
       'member_of_contact_id'
@@ -694,7 +688,6 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
 
       CRM_Contact_BAO_Contact_Utils::clearAllEmployee($id);
     }
-
 
     CRM_Utils_Hook::pre('delete', $contactType, $id, CRM_Core_DAO::$_nullArray);
 
@@ -774,9 +767,9 @@ WHERE id={$id}; ";
   /**
    * function to return relative path
    *
-   * @param String $absPath absolute path
+   * @param string $absolutePath absolute path
    *
-   * @return String $relativePath Relative url of uploaded image
+   * @return string|null Relative url of uploaded image
    */
   public static function getRelativePath($absolutePath) {
     $relativePath = NULL;
@@ -803,17 +796,15 @@ WHERE id={$id}; ";
   /**
    * function to validate type of contact image
    *
-   * @param  Array  $param      array of contact/profile field to be edited/added
+   * @param  array  $params     (reference) array of contact/profile field to be edited/added
+   * @param  string $imageIndex index of image field
+   * @param  string|null $statusMsg  status message to be set after operation
+   * @param  string $opType     type of operation like fatal, bounce etc
    *
-   * @param  String $imageIndex index of image field
-   *
-   * @param  String $statusMsg  status message to be set after operation
-   *
-   * @opType String $opType     type of operation like fatal, bounce etc
-   *
-   * @return boolean true if valid image extension
+   * @return bool true if valid image extension
    */
-  public static function processImageParams(&$params,
+  public static function processImageParams(
+    &$params,
     $imageIndex = 'image_URL',
     $statusMsg = NULL,
     $opType = 'status'
@@ -846,10 +837,10 @@ WHERE id={$id}; ";
 
   /**
    * function to extract contact id from url for deleting contact image
+   *
+   * @return void
    */
   public static function processImage() {
-
-
 
     $action = CRM_Utils_Request::retrieve('action', 'String', CRM_Core_DAO::$_nullObject);
     $cid = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject);
@@ -857,7 +848,7 @@ WHERE id={$id}; ";
     $id = CRM_Utils_Request::retrieve('id', 'Positive', CRM_Core_DAO::$_nullObject);
     $cid = $cid ? $cid : $id;
     if ($action & CRM_Core_Action::DELETE) {
-      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',CRM_Core_DAO::$_nullObject)) {
+      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean', CRM_Core_DAO::$_nullObject)) {
         CRM_Contact_BAO_Contact::deleteContactImage($cid);
         CRM_Core_Session::setStatus(ts('Contact Image is deleted successfully'));
         $session = CRM_Core_Session::singleton();
@@ -873,10 +864,11 @@ WHERE id={$id}; ";
    *  @param int     $contactId  contact id
    *  @param boolean $restore true to set the is_delete = 1 else false to restore deleted contact,
    *                                i.e. is_delete = 0
+   *  @param string|null $reason reason for the trash/restore action
    *
    *  @return void
    */
-  static function contactTrashRestore($contactId, $restore = FALSE, $reason = NULL) {
+  public static function contactTrashRestore($contactId, $restore = FALSE, $reason = NULL) {
 
     $params = [1 => [$contactId, 'Integer']];
     $isDelete = ' is_deleted = 1 ';
@@ -891,7 +883,6 @@ WHERE id={$id}; ";
       CRM_Core_BAO_Log::register($contactId, 'civicrm_contact', $contactId, NULL, $reason);
     }
 
-
     $query = "UPDATE civicrm_contact SET {$isDelete} WHERE id = %1";
     CRM_Core_DAO::executeQuery($query, $params);
   }
@@ -901,7 +892,7 @@ WHERE id={$id}; ";
    *
    * @param int $id - id of the contact whose contact type is needed
    *
-   * @return string contact_type if $id found else null ""
+   * @return string|null contact_type if $id found else null
    *
    * @access public
    *
@@ -917,7 +908,7 @@ WHERE id={$id}; ";
    *
    * @param int $id - id of the contact whose contact sub type is needed
    *
-   * @return string contact_sub_type if $id found else null ""
+   * @return string|null contact_sub_type if $id found else null
    *
    * @access public
    *
@@ -943,7 +934,8 @@ WHERE id={$id}; ";
   public static function getContactTypes($id) {
     $params = ['id' => $id];
     $details = [];
-    $contact = CRM_Core_DAO::commonRetrieve('CRM_Contact_DAO_Contact',
+    $contact = CRM_Core_DAO::commonRetrieve(
+      'CRM_Contact_DAO_Contact',
       $params,
       $details,
       ['contact_type', 'contact_sub_type']
@@ -973,7 +965,10 @@ WHERE id={$id}; ";
    * @return array array of importable Fields
    * @access public
    */
-  static function &importableFields($contactType = 'Individual', $status = FALSE, $showAll = FALSE,
+  public static function &importableFields(
+    $contactType = 'Individual',
+    $status = FALSE,
+    $showAll = FALSE,
     $isProfile = FALSE
   ) {
     if (empty($contactType)) {
@@ -998,20 +993,21 @@ WHERE id={$id}; ";
       if (!$fields) {
         $fields = CRM_Contact_DAO_Contact::import();
 
-
         // get the fields thar are meant for contact types
         if (in_array($contactType, ['Individual', 'Household', 'Organization', 'All'])) {
           $fields = array_merge($fields, CRM_Core_OptionValue::getFields('', $contactType));
         }
 
-        $locationFields = array_merge(CRM_Core_DAO_Address::import(),
+        $locationFields = array_merge(
+          CRM_Core_DAO_Address::import(),
           CRM_Core_DAO_Phone::import(),
           CRM_Core_DAO_Email::import(),
           CRM_Core_DAO_IM::import(TRUE),
           CRM_Core_DAO_OpenID::import()
         );
 
-        $locationFields = array_merge($locationFields,
+        $locationFields = array_merge(
+          $locationFields,
           CRM_Core_BAO_CustomField::getFieldsForImport('Address')
         );
 
@@ -1021,10 +1017,12 @@ WHERE id={$id}; ";
 
         $fields = array_merge($fields, $locationFields);
 
-        $fields = array_merge($fields,
+        $fields = array_merge(
+          $fields,
           CRM_Contact_DAO_Contact::import()
         );
-        $fields = array_merge($fields,
+        $fields = array_merge(
+          $fields,
           CRM_Core_DAO_Note::import()
         );
 
@@ -1051,7 +1049,8 @@ WHERE id={$id}; ";
         }
 
         if ($contactType != 'All') {
-          $fields = array_merge($fields,
+          $fields = array_merge(
+            $fields,
             CRM_Core_BAO_CustomField::getFieldsForImport($contactType, $showAll, TRUE)
           );
           //unset the fields, which are not related to their
@@ -1101,12 +1100,14 @@ WHERE id={$id}; ";
 
     if (!$isProfile) {
       if (!$status) {
-        $fields = array_merge(['do_not_import' => ['title' => ts('- do not import -')]],
+        $fields = array_merge(
+          ['do_not_import' => ['title' => ts('- do not import -')]],
           self::$_importableFields[$cacheKeyString]
         );
       }
       else {
-        $fields = array_merge(['' => ['title' => ts('- Contact Fields -')]],
+        $fields = array_merge(
+          ['' => ['title' => ts('- Contact Fields -')]],
           self::$_importableFields[$cacheKeyString]
         );
       }
@@ -1120,13 +1121,13 @@ WHERE id={$id}; ";
    * currentlty we are using importable fields as exportable fields
    *
    * @param int     $contactType contact Type
-   * $param boolean $status true while exporting primary contacts
-   * $param boolean $export true when used during export
+   * @param boolean $status true while exporting primary contacts
+   * @param boolean $export true when used during export
    *
    * @return array array of exportable Fields
    * @access public
    */
-  static function &exportableFields($contactType = 'Individual', $status = FALSE, $export = FALSE) {
+  public static function &exportableFields($contactType = 'Individual', $status = FALSE, $export = FALSE) {
     if (empty($contactType)) {
       $contactType = 'All';
     }
@@ -1186,7 +1187,8 @@ WHERE id={$id}; ";
           ];
         }
 
-        $locationFields = array_merge($locationType,
+        $locationFields = array_merge(
+          $locationType,
           CRM_Core_DAO_Address::export(),
           CRM_Core_DAO_Phone::export(),
           CRM_Core_DAO_Email::export(),
@@ -1195,7 +1197,8 @@ WHERE id={$id}; ";
           CRM_Core_DAO_OpenID::export()
         );
 
-        $locationFields = array_merge($locationFields,
+        $locationFields = array_merge(
+          $locationFields,
           CRM_Core_BAO_CustomField::getFieldsForImport('Address')
         );
 
@@ -1207,12 +1210,13 @@ WHERE id={$id}; ";
 
         //add world region
 
-        $fields = array_merge($fields,
+        $fields = array_merge(
+          $fields,
           CRM_Core_DAO_Worldregion::export()
         );
 
-
-        $fields = array_merge($fields,
+        $fields = array_merge(
+          $fields,
           CRM_Contact_DAO_Contact::export()
         );
 
@@ -1220,13 +1224,15 @@ WHERE id={$id}; ";
         $fields = array_merge($fields, CRM_Core_DAO_Website::export());
 
         if ($contactType != 'All') {
-          $fields = array_merge($fields,
+          $fields = array_merge(
+            $fields,
             CRM_Core_BAO_CustomField::getFieldsForImport($contactType, $status, TRUE)
           );
         }
         else {
           foreach (['Individual', 'Household', 'Organization'] as $type) {
-            $fields = array_merge($fields,
+            $fields = array_merge(
+              $fields,
               CRM_Core_BAO_CustomField::getFieldsForImport($type)
             );
           }
@@ -1287,7 +1293,8 @@ WHERE id={$id}; ";
       $fields = self::$_exportableFields[$cacheKeyString];
     }
     else {
-      $fields = array_merge(['' => ['title' => ts('- Contact Fields -')]],
+      $fields = array_merge(
+        ['' => ['title' => ts('- Contact Fields -')]],
         self::$_exportableFields[$cacheKeyString]
       );
     }
@@ -1301,11 +1308,11 @@ WHERE id={$id}; ";
    * @param int   $contactId contact id
    * @param array $fields fields array
    *
-   * @return $values array contains the contact details
+   * @return array contains the contact details
    * @static
    * @access public
    */
-  static function getHierContactDetails($contactId, &$fields) {
+  public static function getHierContactDetails($contactId, &$fields) {
     $params = [['contact_id', '=', $contactId, 0, 0]];
     $options = [];
 
@@ -1328,7 +1335,7 @@ WHERE id={$id}; ";
    * @access public
    * @static
    */
-  static function &makeHierReturnProperties($fields, $contactId = NULL) {
+  public static function &makeHierReturnProperties($fields, $contactId = NULL) {
 
     $locationTypes = CRM_Core_PseudoConstant::locationType(NULL, 'name');
 
@@ -1387,15 +1394,15 @@ WHERE id={$id}; ";
   /**
    * Function to return the primary location type of a contact
    *
-   * $params int     $contactId contact_id
-   * $params boolean $isPrimaryExist if true, return primary contact location type otherwise null
-   * $params boolean $skipDefaultPriamry if true, return primary contact location type otherwise null
+   * @param int     $contactId contact_id
+   * @param boolean $skipDefaultPriamry if true, return null when no primary location found
+   * @param string|null $block optional block name to search for primary location
    *
-   * @return int $locationType location_type_id
+   * @return int|null location_type_id
    * @access public
    * @static
    */
-  static function getPrimaryLocationType($contactId, $skipDefaultPriamry = FALSE, $block = NULL) {
+  public static function getPrimaryLocationType($contactId, $skipDefaultPriamry = FALSE, $block = NULL) {
     if ($block) {
       $entityBlock = ['contact_id' => $contactId];
       $blocks = CRM_Core_BAO_Location::getValues($entityBlock);
@@ -1425,7 +1432,7 @@ FROM civicrm_contact
      LEFT JOIN civicrm_im      ON ( civicrm_im.is_primary      = 1 AND civicrm_im.contact_id = civicrm_contact.id)
      LEFT JOIN civicrm_openid  ON ( civicrm_openid.is_primary  = 1 AND civicrm_openid.contact_id = civicrm_contact.id)
 WHERE  civicrm_contact.id = %1 ";
-    
+
       $params = [1 => [$contactId, 'Integer']];
 
       $dao = CRM_Core_DAO::executeQuery($query, $params);
@@ -1459,7 +1466,7 @@ WHERE  civicrm_contact.id = %1 ";
    * @static
    * @access public
    */
-  static function getContactDetails($id) {
+  public static function getContactDetails($id) {
     // check if the contact type
     $contactType = self::getContactType($id);
 
@@ -1488,19 +1495,24 @@ ORDER BY civicrm_email.is_primary DESC";
   /**
    * function to add/edit/register contacts through profile.
    *
-   * @params  array  $params        Array of profile fields to be edited/added.
-   * @params  int    $contactID     contact_id of the contact to be edited/added.
-   * @params  array  $fields        array of fields from UFGroup
-   * @params  int    $addToGroupID  specifies the default group to which contact is added.
-   * @params  int    $ufGroupId     uf group id (profile id)
-   * @param   string $ctype         contact type
+   * @param  array  $params        (reference) Array of profile fields to be edited/added.
+   * @param  array  $fields        (reference) array of fields from UFGroup
+   * @param  int|null $contactID   contact_id of the contact to be edited/added.
+   * @param  int|array|null $addToGroupID  specifies the default group to which contact is added.
+   * @param  int|null $ufGroupId   uf group id (profile id)
+   * @param  string|null $ctype    contact type
+   * @param  bool   $visibility    if true, use 'Web' method for group contact
    *
    * @return  int                   contact id created/edited
    * @static
    * @access public
    */
-  static function createProfileContact(&$params, &$fields, $contactID = NULL,
-    $addToGroupID = NULL, $ufGroupId = NULL,
+  public static function createProfileContact(
+    &$params,
+    &$fields,
+    $contactID = NULL,
+    $addToGroupID = NULL,
+    $ufGroupId = NULL,
     $ctype = NULL,
     $visibility = FALSE
   ) {
@@ -1508,7 +1520,6 @@ ORDER BY civicrm_email.is_primary DESC";
     if ($ufGroupId) {
       $params['uf_group_id'] = $ufGroupId;
     }
-
 
     if ($contactID) {
       $editHook = TRUE;
@@ -1537,11 +1548,10 @@ ORDER BY civicrm_email.is_primary DESC";
       }
     }
 
-
     $config = CRM_Core_Config::singleton();
     $config->doNotResetCache = TRUE;
     if ($data['contact_type'] != 'Student') {
-      if(!empty($params['log_data'])) {
+      if (!empty($params['log_data'])) {
         $data['log_data'] = $params['log_data'];
       }
       $contact = &self::create($data);
@@ -1565,7 +1575,7 @@ ORDER BY civicrm_email.is_primary DESC";
       if ($visibility) {
         $method = 'Web';
       }
-      foreach($params['group'] as $groupId => $add) {
+      foreach ($params['group'] as $groupId => $add) {
         if ($add) {
           CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $groupId, $method);
         }
@@ -1588,7 +1598,6 @@ ORDER BY civicrm_email.is_primary DESC";
       $contactIds = [$contactID];
       CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $addToGroupID, 'Web');
     }
-
 
     //to update student record
     if (CRM_Core_Permission::access('Quest') && $studentFieldPresent) {
@@ -1636,8 +1645,27 @@ ORDER BY civicrm_email.is_primary DESC";
     return $contactID;
   }
 
-  static function formatProfileContactParams(&$params, &$fields, $contactID = NULL,
-    $ufGroupId = NULL, $ctype = NULL, $skipCustom = FALSE
+  /**
+   * Format profile contact params for creating or updating a contact.
+   *
+   * @param array $params (reference) profile field values
+   * @param array $fields (reference) array of fields from UFGroup
+   * @param int|null $contactID contact id if editing existing contact
+   * @param int|null $ufGroupId uf group id (profile id)
+   * @param string|null $ctype contact type
+   * @param bool $skipCustom if true, skip processing of custom fields
+   *
+   * @return array [$data, $contactDetails] formatted data and contact details
+   * @access public
+   * @static
+   */
+  public static function formatProfileContactParams(
+    &$params,
+    &$fields,
+    $contactID = NULL,
+    $ufGroupId = NULL,
+    $ctype = NULL,
+    $skipCustom = FALSE
   ) {
 
     $data = $contactDetails = [];
@@ -1672,11 +1700,11 @@ ORDER BY civicrm_email.is_primary DESC";
     }
 
     //fix contact sub type CRM-5125
-    if ( $subType = CRM_Utils_Array::value('contact_sub_type', $params) ) {
+    if ($subType = CRM_Utils_Array::value('contact_sub_type', $params)) {
       $data['contact_sub_type'] = $subType;
     }
-    elseif ( $subType = CRM_Utils_Array::value('contact_sub_type_hidden', $params ) ) {
-      // if profile was used, and had any subtype, we obtain it from there 
+    elseif ($subType = CRM_Utils_Array::value('contact_sub_type_hidden', $params)) {
+      // if profile was used, and had any subtype, we obtain it from there
       $data['contact_sub_type'] = $subType;
     }
 
@@ -1879,7 +1907,8 @@ ORDER BY civicrm_email.is_primary DESC";
 
           $type = CRM_Utils_Array::value('contact_sub_type', $data) ? $data['contact_sub_type'] : $data['contact_type'];
 
-          CRM_Core_BAO_CustomField::formatCustomField($customFieldId,
+          CRM_Core_BAO_CustomField::formatCustomField(
+            $customFieldId,
             $data['custom'],
             $value,
             $type,
@@ -1940,7 +1969,7 @@ ORDER BY civicrm_email.is_primary DESC";
     if ($contactID) {
       $contactParams = ['id' => $contactID];
       $returnProperties = $retrieved = [];
-      foreach(self::$_greetingTypes as $greeting) {
+      foreach (self::$_greetingTypes as $greeting) {
         if (empty($data[$greeting.'_id'])) {
           $returnProperties[] = $greeting.'_id';
         }
@@ -1949,7 +1978,7 @@ ORDER BY civicrm_email.is_primary DESC";
         }
       }
       CRM_Core_DAO::commonRetrieve('CRM_Contact_DAO_Contact', $contactParams, $retrieved, $returnProperties);
-      foreach($retrieved as $key => $value) {
+      foreach ($retrieved as $key => $value) {
         if ($key != 'id') {
           $data[$key] = $value;
         }
@@ -1972,10 +2001,10 @@ ORDER BY civicrm_email.is_primary DESC";
    * @param string $mail  primary email address of the contact
    * @param string $ctype contact type
    *
-   * @return object $dao contact details
+   * @return CRM_Core_DAO contact details
    * @static
    */
-  static function &matchContactOnEmail($mail, $ctype = NULL) {
+  public static function &matchContactOnEmail($mail, $ctype = NULL) {
     $mail = mb_strtolower(trim($mail), 'UTF-8');
     $query = "
 SELECT     civicrm_contact.id as contact_id,
@@ -2021,10 +2050,10 @@ WHERE      civicrm_email.email = %1 AND civicrm_contact.is_deleted=0";
    * @param string $openId openId of the contact
    * @param string $ctype  contact type
    *
-   * @return object $dao contact details
+   * @return CRM_Core_DAO contact details
    * @static
    */
-  static function &matchContactOnOpenId($openId, $ctype = NULL) {
+  public static function &matchContactOnOpenId($openId, $ctype = NULL) {
     $openId = mb_strtolower(trim($openId), 'UTF-8');
     $query = "
 SELECT     civicrm_contact.id as contact_id,
@@ -2056,7 +2085,7 @@ WHERE      civicrm_openid.openid = %1";
    *
    * @param int $contactID contact id
    *
-   * @return string $dao->email  email address if present else null
+   * @return string|null email address if present else null
    * @static
    * @access public
    */
@@ -2084,7 +2113,7 @@ LEFT JOIN civicrm_email ON ( civicrm_contact.id = civicrm_email.contact_id )
    *
    * @param int $contactID contact id
    *
-   * @return string $dao->openid   OpenID if present else null
+   * @return string|null OpenID if present else null
    * @static
    * @access public
    */
@@ -2112,11 +2141,11 @@ AND       civicrm_openid.is_primary = 1";
    *
    * @param int $contactId contact id
    *
-   * @return int $locationCount max locations for the contact
+   * @return int max locations for the contact
    * @static
    * @access public
    */
-  static function getContactLocations($contactId) {
+  public static function getContactLocations($contactId) {
     // find the system config related location blocks
 
     $locationCount = CRM_Core_BAO_Preferences::value('location_count');
@@ -2186,7 +2215,6 @@ UNION
           'groupName' => 'preferred_communication_method',
         ]];
 
-
       CRM_Core_OptionGroup::lookupValues($temp, $names, FALSE);
 
       $values['preferred_communication_method'] = $preffComm;
@@ -2233,12 +2261,11 @@ UNION
    * @param integer $contactId input contact id
    * @param string  $tableName optional tableName if component is custom group
    *
-   * @return total number of count of occurence in database
+   * @return int|null total number of count of occurence in database
    * @access public
    * @static
    */
-
-  static function getCountComponent($component, $contactId, $tableName = NULL) {
+  public static function getCountComponent($component, $contactId, $tableName = NULL) {
     $object = NULL;
     switch ($component) {
       case 'tag':
@@ -2305,8 +2332,11 @@ UNION
   /**
    * Function to process greetings and cache
    *
+   * @param CRM_Contact_DAO_Contact $contact (reference) the contact object
+   *
+   * @return void
    */
-  static function processGreetings(&$contact) {
+  public static function processGreetings(&$contact) {
     // store object values to an array
     $contactDetails = [];
     CRM_Core_DAO::storeValues($contact, $contactDetails);
@@ -2314,7 +2344,6 @@ UNION
 
     $emailGreetingString = $postalGreetingString = $addresseeString = NULL;
     $updateQueryString = [];
-
 
     //email greeting
     if ($contact->contact_type == 'Individual' || $contact->contact_type == 'Household') {
@@ -2402,10 +2431,10 @@ UNION
    *                              fulfill by return record ids.
    * @param  string $condOperator operator use for grouping multiple conditions.
    *
-   * @return array  $locBlockIds  loc block ids which fulfill condition.
+   * @return array loc block ids which fulfill condition.
    * @static
    */
-  static function getLocBlockIds($contactId, $criteria = [], $condOperator = "AND") {
+  public static function getLocBlockIds($contactId, $criteria = [], $condOperator = "AND") {
     $locBlockIds = [];
     if (!$contactId) {
       return $locBlockIds;
@@ -2418,7 +2447,7 @@ UNION
 
       // build the condition.
       if (is_array($criteria)) {
-        $fields =& $daoName::fields( );
+        $fields = &$daoName::fields();
         $conditions = [];
         foreach ($criteria as $field => $value) {
           if (CRM_Utils_Array::arrayKeyExists($field, $fields)) {
@@ -2449,10 +2478,10 @@ UNION
   /**
    * Function to build context menu items.
    *
-   * @return array of context menu for logged in user.
+   * @return array<string, non-empty-array<(int | string), array<string, mixed>>> of context menu for logged in user.
    * @static
    */
-  static function contextMenu() {
+  public static function contextMenu() {
     $menu = [
       'view' => ['title' => ts('View Contact'),
         'weight' => 0,
@@ -2478,7 +2507,8 @@ UNION
         'ref' => 'new-contribution',
         'key' => 'contribution',
         'component' => 'CiviContribute',
-        'href' => CRM_Utils_System::url('civicrm/contact/view/contribution',
+        'href' => CRM_Utils_System::url(
+          'civicrm/contact/view/contribution',
           'reset=1&action=add&context=contribution'
         ),
         'permissions' => ['access CiviContribute',
@@ -2505,7 +2535,8 @@ UNION
         'weight' => 15,
         'ref' => 'new-pledge',
         'key' => 'pledge',
-        'href' => CRM_Utils_System::url('civicrm/contact/view/pledge',
+        'href' => CRM_Utils_System::url(
+          'civicrm/contact/view/pledge',
           'reset=1&action=add&context=pledge'
         ),
         'component' => 'CiviPledge',
@@ -2518,7 +2549,8 @@ UNION
         'ref' => 'new-membership',
         'key' => 'membership',
         'component' => 'CiviMember',
-        'href' => CRM_Utils_System::url('civicrm/contact/view/membership',
+        'href' => CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
           'reset=1&action=add&context=membership'
         ),
         'permissions' => ['access CiviMember',
@@ -2530,7 +2562,8 @@ UNION
         'ref' => 'new-case',
         'key' => 'case',
         'component' => 'CiviCase',
-        'href' => CRM_Utils_System::url('civicrm/contact/view/case',
+        'href' => CRM_Utils_System::url(
+          'civicrm/contact/view/case',
           'reset=1&action=add&context=case'
         ),
         'permissions' => ['access all cases and activities'],
@@ -2540,7 +2573,8 @@ UNION
         'ref' => 'new-grant',
         'key' => 'grant',
         'component' => 'CiviGrant',
-        'href' => CRM_Utils_System::url('civicrm/contact/view/grant',
+        'href' => CRM_Utils_System::url(
+          'civicrm/contact/view/grant',
           'reset=1&action=add&context=grant'
         ),
         'permissions' => ['edit grants'],
@@ -2549,7 +2583,8 @@ UNION
         'weight' => 30,
         'ref' => 'new-relationship',
         'key' => 'rel',
-        'href' => CRM_Utils_System::url('civicrm/contact/view/rel',
+        'href' => CRM_Utils_System::url(
+          'civicrm/contact/view/rel',
           'reset=1&action=add'
         ),
         'permissions' => ['edit all contacts'],
@@ -2558,7 +2593,8 @@ UNION
         'weight' => 40,
         'ref' => 'new-note',
         'key' => 'note',
-        'href' => CRM_Utils_System::url('civicrm/contact/view/note',
+        'href' => CRM_Utils_System::url(
+          'civicrm/contact/view/note',
           'reset=1&action=add'
         ),
         'permissions' => ['edit all contacts'],
@@ -2583,7 +2619,6 @@ UNION
       ],
     ];
 
-
     $providersCount = CRM_SMS_BAO_Provider::activeProviderCount();
     if ($providersCount) {
       $menu['sms'] = [
@@ -2599,7 +2634,6 @@ UNION
     //2. check for user permissions.
     //3. check for acls.
     //3. edit and view contact are directly accessible to user.
-
 
     $aclPermissionedTasks = ['view-contact', 'edit-contact', 'new-activity',
       'new-email', 'group-add-contact', 'tag-contact', 'delete-contact',
@@ -2686,11 +2720,11 @@ UNION
    * @param  int    $masterAddressId    master id.
    * @param  int    $contactId   contact id.
    *
-   * @return display name |null the found display name or null.
+   * @return string|null the found display name or null.
    * @access public
    * @static
    */
-  static function getMasterDisplayName($masterAddressId = NULL, $contactId = NULL) {
+  public static function getMasterDisplayName($masterAddressId = NULL, $contactId = NULL) {
     $masterDisplayName = NULL;
     $sql = NULL;
     if (!$masterAddressId && !$contactId) {
@@ -2714,18 +2748,26 @@ LEFT JOIN civicrm_address add2 ON ( add1.master_id = add2.id )
     return $masterDisplayName;
   }
 
-  static function redirectPreferredLanguage($id, $url = NULL){
-    if($_SERVER['REQUEST_METHOD'] == 'GET'){
+  /**
+   * Redirect to preferred language URL based on contact's preferred language.
+   *
+   * @param int $id contact id
+   * @param string|null $url optional URL to redirect to
+   *
+   * @return void
+   */
+  public static function redirectPreferredLanguage($id, $url = NULL) {
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $contact = new CRM_Contact_DAO_Contact();
       $contact->id = $id;
       if ($contact->find(TRUE)) {
         $config = CRM_Core_Config::singleton();
         $ufLocale = $config->userSystem->getUFLocale();
-        if(!empty($contact->preferred_language) && $contact->preferred_language != $ufLocale){
-          if(empty($url)){
+        if (!empty($contact->preferred_language) && $contact->preferred_language != $ufLocale) {
+          if (empty($url)) {
             $uri = parse_url($_SERVER['REQUEST_URI']);
           }
-          else{
+          else {
             $uri = parse_url($url);
           }
 
@@ -2746,4 +2788,3 @@ LEFT JOIN civicrm_address add2 ON ( add1.master_id = add2.id )
     }
   }
 }
-

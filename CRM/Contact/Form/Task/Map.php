@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to map
@@ -56,18 +52,30 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
-      $this, FALSE
+  public function preProcess() {
+    $cid = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
+      $this,
+      FALSE
     );
-    $lid = CRM_Utils_Request::retrieve('lid', 'Positive',
-      $this, FALSE
+    $lid = CRM_Utils_Request::retrieve(
+      'lid',
+      'Positive',
+      $this,
+      FALSE
     );
-    $eid = CRM_Utils_Request::retrieve('eid', 'Positive',
-      $this, FALSE
+    $eid = CRM_Utils_Request::retrieve(
+      'eid',
+      'Positive',
+      $this,
+      FALSE
     );
-    $profileGID = CRM_Utils_Request::retrieve('profileGID', 'Integer',
-      $this, FALSE
+    $profileGID = CRM_Utils_Request::retrieve(
+      'profileGID',
+      'Integer',
+      $this,
+      FALSE
     );
     $this->assign('profileGID', $profileGID);
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
@@ -117,7 +125,8 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
    * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -127,25 +136,29 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
   //end of function
 
   /**
-   * assign smarty variables to the template that will be used by google api to plot the contacts
+   * Assign smarty variables to the template that will be used by google api to plot the contacts.
    *
-   * @param array $contactIds list of contact ids that we need to plot
-   * @param int   $locationId location_id
+   * @param array|int $ids list of contact or event ids that we need to plot
+   * @param int $locationId location_id
+   * @param CRM_Core_Form|CRM_Core_Page $page
+   * @param bool $addBreadCrumb
+   * @param string $type
    *
-   * @return string           the location of the file we have created
-   * @access protected
+   * @return void
+   * @access public
    */
-  static function createMap($ids, $locationId, &$page, $addBreadCrumb, $type = 'Contact') {
+  public static function createMap($ids, $locationId, &$page, $addBreadCrumb, $type = 'Contact') {
     $config = CRM_Core_Config::singleton();
 
     CRM_Utils_System::setTitle(ts('Map Location(s)'));
@@ -168,7 +181,7 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
     }
 
     if (empty($locations)) {
-       return CRM_Core_Error::statusBounce(ts('This address does not contain latitude/longitude information and cannot be mapped.'));
+      return CRM_Core_Error::statusBounce(ts('This address does not contain latitude/longitude information and cannot be mapped.'));
     }
 
     if ($addBreadCrumb) {
@@ -179,8 +192,11 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
       }
       else {
         $bcTitle = ts('Event Info');
-        $action = CRM_Utils_Request::retrieve('action', 'String',
-          $page, FALSE
+        $action = CRM_Utils_Request::retrieve(
+          'action',
+          'String',
+          $page,
+          FALSE
         );
         if ($action) {
           $args = 'reset=1&action=preview&id=';
@@ -198,7 +214,7 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
 
     $sumLat = $sumLng = 0;
     $maxLat = $maxLng = -400;
-    $minLat = $minLng = + 400;
+    $minLat = $minLng = +400;
     foreach ($locations as $location) {
       $sumLat += $location['lat'];
       $sumLng += $location['lng'];
@@ -228,4 +244,3 @@ class CRM_Contact_Form_Task_Map extends CRM_Contact_Form_Task {
     $page->assign_by_ref('span', $span);
   }
 }
-

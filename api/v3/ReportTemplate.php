@@ -17,7 +17,10 @@
 function civicrm_api3_report_template_get($params) {
   require_once 'api/v3/OptionValue.php';
   $params['option_group_id'] = CRM_Core_DAO::getFieldValue(
-    'CRM_Core_DAO_OptionGroup', 'report_template', 'id', 'name'
+    'CRM_Core_DAO_OptionGroup',
+    'report_template',
+    'id',
+    'name'
   );
   return civicrm_api3_option_value_get($params);
 }
@@ -36,7 +39,10 @@ function civicrm_api3_report_template_get($params) {
 function civicrm_api3_report_template_create($params) {
   require_once 'api/v3/OptionValue.php';
   $params['option_group_id'] = CRM_Core_DAO::getFieldValue(
-    'CRM_Core_DAO_OptionGroup', 'report_template', 'id', 'name'
+    'CRM_Core_DAO_OptionGroup',
+    'report_template',
+    'id',
+    'name'
   );
   return civicrm_api3_option_value_create($params);
 }

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for synchronizing CMS users
@@ -51,11 +47,16 @@ class CRM_Admin_Page_CMSUser extends CRM_Core_Page {
    * @access public
    *
    */
-  function run() {
+  public function run() {
     //if javascript is enabled
-    if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-        $this, '', '', 'GET'
-      )) {
+    if (CRM_Utils_Request::retrieve(
+      'confirmed',
+      'Boolean',
+      $this,
+      '',
+      '',
+      'GET'
+    )) {
 
       CRM_Core_BAO_CMSUser::synchronize();
       return;
@@ -73,4 +74,3 @@ class CRM_Admin_Page_CMSUser extends CRM_Core_Page {
     parent::run();
   }
 }
-

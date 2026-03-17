@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components generic to CiviCRM settings
@@ -44,14 +40,11 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
   protected $_defaults;
 
   /**
-   * This function sets the default values for the form.
-   * default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array The default values.
    */
-   function setDefaultValues() {
+  public function setDefaultValues() {
     if (!$this->_defaults) {
       $this->_defaults = [];
       $formArray = ['Component', 'Localization'];
@@ -63,15 +56,18 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
       CRM_Core_BAO_ConfigSetting::retrieve($this->_defaults);
       CRM_Core_Config_Defaults::setValues($this->_defaults, $formMode);
       $config = CRM_Core_Config::singleton();
-      foreach($config as $name => $value) {
+      foreach ($config as $name => $value) {
         $this->_defaults[$name] = $value;
       }
 
-
-      $list = array_flip(CRM_Core_OptionGroup::values('contact_autocomplete_options',
-          FALSE, FALSE, TRUE, NULL, 'name'
-        ));
-
+      $list = array_flip(CRM_Core_OptionGroup::values(
+        'contact_autocomplete_options',
+        FALSE,
+        FALSE,
+        TRUE,
+        NULL,
+        'name'
+      ));
 
       $listEnabled = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
 
@@ -87,13 +83,13 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -106,11 +102,9 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     // store the submitted values in an array
@@ -119,6 +113,13 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     self::commonProcess($params);
   }
 
+  /**
+   * Common process function.
+   *
+   * @param array $params The input form values.
+   *
+   * @return void Common process function.
+   */
   public function commonProcess(&$params) {
     $vars = $params;
     CRM_Core_BAO_ConfigSetting::add($vars);
@@ -132,7 +133,8 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
       $config = new CRM_Core_DAO_Preferences();
       $config->domain_id = CRM_Core_Config::domainID();
       $config->find(TRUE);
-      $config->contact_autocomplete_options = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR,
+      $config->contact_autocomplete_options = CRM_Core_DAO::VALUE_SEPARATOR . CRM_Utils_Array::implode(
+        CRM_Core_DAO::VALUE_SEPARATOR,
         array_keys($params['autocompleteContactSearch'])
       ) . CRM_Core_DAO::VALUE_SEPARATOR;
       $config->save();
@@ -149,6 +151,11 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     CRM_Core_Session::setStatus(ts('Your changes have been saved.'));
   }
 
+  /**
+   * Rebuilds the navigation menu.
+   *
+   * @return void Rebuilds the navigation menu.
+   */
   public function rebuildMenu() {
     // ensure config is set with new values
     $config = CRM_Core_Config::singleton(TRUE, TRUE);
@@ -158,4 +165,3 @@ class CRM_Admin_Form_Setting extends CRM_Core_Form {
     CRM_Core_Menu::store();
   }
 }
-

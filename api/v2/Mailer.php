@@ -34,14 +34,12 @@
  * @package CiviCRM_APIv2
  * @subpackage API_Mailer
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
 /**
  * Files required for this package
  */
-
 
 require_once 'api/v2/utils.php';
 
@@ -198,7 +196,6 @@ function civicrm_mailer_event_subscribe($params) {
 
   if ($subscribe !== NULL) {
     /* Ask the contact for confirmation */
-
 
     $subscribe->send_confirm_request($email);
 
@@ -386,4 +383,3 @@ function _civicrm_mailer_check_params(&$params, $required) {
 
   return NULL;
 }
-

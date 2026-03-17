@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for Tell A Friend
@@ -49,6 +44,11 @@ class CRM_Friend_Form_Event extends CRM_Event_Form_ManageEvent {
    */
   private $_friendId;
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
@@ -56,9 +56,8 @@ class CRM_Friend_Form_Event extends CRM_Event_Form_ManageEvent {
   /**
    * This function sets the default values for the form.
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -86,8 +85,7 @@ class CRM_Friend_Form_Event extends CRM_Event_Form_ManageEvent {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Friend_BAO_Friend::buildFriendForm($this);
@@ -97,9 +95,8 @@ class CRM_Friend_Form_Event extends CRM_Event_Form_ManageEvent {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // get the submitted form values.
@@ -126,10 +123,8 @@ class CRM_Friend_Form_Event extends CRM_Event_Form_ManageEvent {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Tell a Friend');
   }
 }
-

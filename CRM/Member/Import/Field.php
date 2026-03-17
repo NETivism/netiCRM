@@ -26,19 +26,15 @@
 */
 
 /**
+ * Defines field mappings for Membership data import
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Member_Import_Field {
 
   /**#@+
-   * @access protected
    * @var string
    */
 
@@ -86,7 +82,17 @@ class CRM_Member_Import_Field {
    * value of this field
    * @var object
    */
-  public $_value; function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
+  public $_value;
+  /**
+   * Class constructor.
+   *
+   * @param string $name
+   * @param string $title
+   * @param int $type
+   * @param string $headerPattern
+   * @param string $dataPattern
+   */
+  public function __construct($name, $title, $type = CRM_Utils_Type::T_INT, $headerPattern = '//', $dataPattern = '//') {
     $this->_name = $name;
     $this->_title = $title;
     $this->_type = $type;
@@ -96,19 +102,33 @@ class CRM_Member_Import_Field {
     $this->_value = NULL;
   }
 
-  function resetValue() {
+  /**
+   * Reset the value of the field.
+   *
+   * @return void
+   */
+  public function resetValue() {
     $this->_value = NULL;
   }
 
   /**
-   * the value is in string format. convert the value to the type of this field
-   * and set the field value with the appropriate type
+   * The value is in string format. convert the value to the type of this field
+   * and set the field value with the appropriate type.
+   *
+   * @param mixed $value
+   *
+   * @return void
    */
-  function setValue($value) {
+  public function setValue($value) {
     $this->_value = $value;
   }
 
-  function validate() {
+  /**
+   * Validate the field value.
+   *
+   * @return bool
+   */
+  public function validate() {
 
     if (CRM_Utils_System::isNull($this->_value)) {
       return TRUE;
@@ -196,4 +216,3 @@ class CRM_Member_Import_Field {
     return TRUE;
   }
 }
-

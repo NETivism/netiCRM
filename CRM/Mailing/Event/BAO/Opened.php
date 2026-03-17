@@ -27,35 +27,28 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
 
 class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
 
   /**
-   * class constructor
+   * Class constructor.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Register an open event
+   * Register an open event.
    *
-   * @param int $queue_id     The Queue Event ID of the recipient
+   * @param int $queue_id The Queue Event ID of the recipient.
    *
-   * @return void
-   * @access public
-   * @static
+   * @return bool True on success.
    */
   public static function open($queue_id) {
     /* First make sure there's a matching queue event */
-
-
 
     $success = FALSE;
 
@@ -73,17 +66,16 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
   }
 
   /**
-   * Get row count for the event selector
+   * Get row count for the event selector.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           Optional ID of a job to filter on
-   * @param boolean $is_distinct  Group by queue ID?
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of a job to filter on.
+   * @param bool $is_distinct Group by queue ID?
    *
-   * @return int                  Number of rows in result set
-   * @access public
-   * @static
+   * @return int|null Number of rows in result set.
    */
-  public static function getTotalCount($mailing_id,
+  public static function getTotalCount(
+    $mailing_id,
     $job_id = NULL,
     $is_distinct = FALSE
   ) {
@@ -125,21 +117,24 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
   }
 
   /**
-   * Get rows for the event browser
+   * Get rows for the event browser.
    *
-   * @param int $mailing_id       ID of the mailing
-   * @param int $job_id           optional ID of the job
-   * @param boolean $is_distinct  Group by queue id?
-   * @param int $offset           Offset
-   * @param int $rowCount         Number of rows
-   * @param array $sort           sort array
+   * @param int $mailing_id ID of the mailing.
+   * @param int|null $job_id Optional ID of the job.
+   * @param bool $is_distinct Group by queue id?
+   * @param int|null $offset Offset for the query.
+   * @param int|null $rowCount Number of rows to return.
+   * @param CRM_Utils_Sort|string|null $sort Sort object or string.
    *
-   * @return array                Result set
-   * @access public
-   * @static
+   * @return array Result set of open events.
    */
-  public static function &getRows($mailing_id, $job_id = NULL,
-    $is_distinct = FALSE, $offset = NULL, $rowCount = NULL, $sort = NULL
+  public static function &getRows(
+    $mailing_id,
+    $job_id = NULL,
+    $is_distinct = FALSE,
+    $offset = NULL,
+    $rowCount = NULL,
+    $sort = NULL
   ) {
 
     $dao = new CRM_Core_Dao();
@@ -200,7 +195,8 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
     $results = [];
 
     while ($dao->fetch()) {
-      $url = CRM_Utils_System::url('civicrm/contact/view',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view',
         "reset=1&cid={$dao->contact_id}"
       );
       $results[] = [
@@ -212,4 +208,3 @@ class CRM_Mailing_Event_BAO_Opened extends CRM_Mailing_Event_DAO_Opened {
     return $results;
   }
 }
-

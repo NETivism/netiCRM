@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class is for building membership block on user dashboard
@@ -41,12 +37,11 @@
 class CRM_Member_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
 
   /**
-   * Function to list memberships for the UF user
+   * Function to list memberships for the UF user.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function listMemberships() {
+  public function listMemberships() {
     $membership = [];
 
     $dao = new CRM_Member_DAO_Membership();
@@ -78,15 +73,12 @@ class CRM_Member_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard 
   }
 
   /**
-   * This function is the main function that is called when the page
-   * loads, it decides the which action has to be taken for the page.
+   * Run the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     parent::preProcess();
     $this->listMemberships();
   }
 }
-

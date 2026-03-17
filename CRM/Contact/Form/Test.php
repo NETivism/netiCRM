@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components generic to all the contact types.
@@ -44,7 +40,14 @@
  *
  */
 class CRM_Contact_Form_Test extends CRM_Core_Form {
-  function preProcess() {}
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
+  public function preProcess() {
+  }
 
   /**
    * This function sets the default values for the form. Note that in edit/view mode
@@ -52,9 +55,9 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return array defaults array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $params = [];
   }
@@ -62,7 +65,7 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -80,8 +83,8 @@ class CRM_Contact_Form_Test extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
 }
-

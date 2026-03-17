@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-        class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO
-{
+
+class CRM_Core_DAO_PaymentProcessor extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_payment_processor';
+  public static $_tableName = 'civicrm_payment_processor';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    * Payment Processor ID
    *
    * @var int unsigned
@@ -189,24 +187,20 @@
    * @var int unsigned
    */
   public $payment_type;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_payment_processor
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'domain_id' => 'civicrm_domain:id',
@@ -214,153 +208,150 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'domain_id', 'civicrm_domain', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'domain_id', 'civicrm_domain', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'domain_id' => [
           'name' => 'domain_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                    'FKClassName' => 'CRM_Core_DAO_Domain',
-        ] ,
+          'required' => TRUE,
+          'FKClassName' => 'CRM_Core_DAO_Domain',
+        ],
         'name' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'payment_processor_type' => [
           'name' => 'payment_processor_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Payment Processor Type') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'user_name' => [
           'name' => 'user_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('User Name') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'password' => [
           'name' => 'password',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Password') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'signature' => [
           'name' => 'signature',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Signature') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'url_site' => [
           'name' => 'url_site',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Site URL') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'url_api' => [
           'name' => 'url_api',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('API URL') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'url_recur' => [
           'name' => 'url_recur',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Recurring Payments URL') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'url_button' => [
           'name' => 'url_button',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Button URL') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'subject' => [
           'name' => 'subject',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Subject') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'class_name' => [
           'name' => 'class_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Suffix for PHP clas name implementation') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'billing_mode' => [
           'name' => 'billing_mode',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Billing Mode') ,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'is_recur' => [
           'name' => 'is_recur',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'payment_type' => [
           'name' => 'payment_type',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment Type') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
       ];
     }
     return self::$_fields;
@@ -368,31 +359,25 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -400,22 +385,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['payment_processor'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -423,12 +407,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['payment_processor'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_export;
   }
 }

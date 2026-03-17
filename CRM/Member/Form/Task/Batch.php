@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class provides the functionality for batch profile update for members
@@ -62,12 +57,11 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
   protected $_userContext;
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -100,7 +94,7 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
     if (!empty($config->externalMembershipIdFieldId)) {
       $externalMembershipIds = CRM_Core_BAO_CustomValueTable::getEntitiesValues($this->_memberIds, 'Membership', [$config->externalMembershipIdFieldId]);
     }
-    while($membershipDAO->fetch()) {
+    while ($membershipDAO->fetch()) {
       $contactDetails[$membershipDAO->membership_id]['membership_id'] = $membershipDAO->membership_id;
       if (!empty($externalMembershipIds)) {
         $contactDetails[$membershipDAO->membership_id]['external_membership_id'] = $externalMembershipIds[$membershipDAO->membership_id]['custom_'.$config->externalMembershipIdFieldId];
@@ -111,19 +105,16 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
   }
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $ufGroupId = $this->get('ufGroupId');
 
     if (!$ufGroupId) {
       CRM_Core_Error::fatal('ufGroupId is missing');
     }
-
 
     $this->_title = ts('Batch Update for Members') . ' - ' . CRM_Core_BAO_UFGroup::getTitle($ufGroupId);
     CRM_Utils_System::setTitle($this->_title);
@@ -152,7 +143,8 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Update Members(s)'),
           'isDefault' => TRUE,
@@ -163,11 +155,9 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
       ]
     );
 
-
     $this->assign('profileTitle', $this->_title);
     $this->assign('componentIds', $this->_memberIds);
     $fileFieldExists = FALSE;
-
 
     $customFields = CRM_Core_BAO_CustomField::getFields('Membership');
     foreach ($this->_memberIds as $memberId) {
@@ -176,7 +166,8 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
         if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
           $customValue = CRM_Utils_Array::value($customFieldID, $customFields);
           if (CRM_Utils_Array::value('extends_entity_column_value', $customValue)) {
-            $entityColumnValue = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+            $entityColumnValue = explode(
+              CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
               $customValue['extends_entity_column_value']
             );
           }
@@ -206,13 +197,11 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
   }
 
   /**
-   * This function sets the default values for the form.
+   * Set the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (empty($this->_fields)) {
       return;
     }
@@ -227,11 +216,9 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -258,14 +245,21 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
           // membership type custom data
           $customFields = CRM_Core_BAO_CustomField::getFields('Membership', FALSE, FALSE, $membership->membership_type_id);
 
-          $customFields = CRM_Utils_Array::arrayMerge($customFields,
-            CRM_Core_BAO_CustomField::getFields('Membership',
-              FALSE, FALSE, NULL, NULL, TRUE
+          $customFields = CRM_Utils_Array::arrayMerge(
+            $customFields,
+            CRM_Core_BAO_CustomField::getFields(
+              'Membership',
+              FALSE,
+              FALSE,
+              NULL,
+              NULL,
+              TRUE
             )
           );
         }
         //check for custom data
-        $value['custom'] = CRM_Core_BAO_CustomField::postProcess($params['field'][$key],
+        $value['custom'] = CRM_Core_BAO_CustomField::postProcess(
+          $params['field'][$key],
           $customFields,
           $key,
           'Membership',
@@ -290,4 +284,3 @@ class CRM_Member_Form_Task_Batch extends CRM_Member_Form_Task {
   }
   //end of function
 }
-

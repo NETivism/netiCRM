@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components generic to all the contact types.
@@ -47,28 +42,21 @@
 class CRM_Profile_Form_Search extends CRM_Profile_Form {
 
   /**
-   * pre processing work done here.
-   *
-   * @param
+   * Pre-process form.
    *
    * @return void
-   *
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_mode = CRM_Profile_Form::MODE_SEARCH;
     parent::preProcess();
   }
 
   /**
-   * Set the default form values
-   *
-   * @access protected
+   * Set the default values for the form.
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     // note we intentionally overwrite value since we use it as defaults
     // and its all pass by value
@@ -103,17 +91,18 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // Is proximity search enabled for this profile?
 
-    $proxSearch = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup',
+    $proxSearch = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_UFGroup',
       $this->get('gid'),
-      'is_proximity_search', 'id'
+      'is_proximity_search',
+      'id'
     );
     if ($proxSearch) {
 
@@ -131,12 +120,10 @@ class CRM_Profile_Form_Search extends CRM_Profile_Form {
   }
 
   /**
-   *
-   *
-   * @access public
+   * Process the form.
    *
    * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
 }
-

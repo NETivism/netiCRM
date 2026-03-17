@@ -28,9 +28,7 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,24 +39,23 @@
 class CRM_Core_BAO_ConfigSetting {
 
   /**
-   * Function to add civicrm settings
+   * Add or update CiviCRM settings in the database.
    *
-   * @params array $params associated array of civicrm variables
+   * @param array &$params associative array of setting variables
    *
-   * @return null
-   * @static
+   * @return void
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     CRM_Core_BAO_ConfigSetting::fixParams($params);
 
     // also set a template url so js files can use this
     // CRM-6194
     $params['civiRelativeURL'] = CRM_Utils_System::url('CIVI_BASE_TEMPLATE');
-    $params['civiRelativeURL'] = str_replace('CIVI_BASE_TEMPLATE',
+    $params['civiRelativeURL'] = str_replace(
+      'CIVI_BASE_TEMPLATE',
       '',
       $params['civiRelativeURL']
     );
-
 
     $domain = new CRM_Core_DAO_Domain();
     $domain->id = CRM_Core_Config::domainID();
@@ -83,7 +80,6 @@ class CRM_Core_BAO_ConfigSetting {
       unset($params[$var]);
     }
 
-
     CRM_Core_BAO_Preferences::fixAndStoreDirAndURL($params);
 
     // also skip all Dir Params, we dont need to store those in the DB!
@@ -98,14 +94,13 @@ class CRM_Core_BAO_ConfigSetting {
   }
 
   /**
-   * Function to fix civicrm setting variables
+   * Normalize setting variables (e.g., convert ISO country codes to IDs).
    *
-   * @params array $params associated array of civicrm variables
+   * @param array &$params associative array of setting variables
    *
-   * @return null
-   * @static
+   * @return void
    */
-  static function fixParams(&$params) {
+  public static function fixParams(&$params) {
     // in our old civicrm.settings.php we were using ISO code for country and
     // province limit, now we have changed it to use ids
 
@@ -130,15 +125,14 @@ class CRM_Core_BAO_ConfigSetting {
   }
 
   /**
-   * Function to format the array containing before inserting in db
+   * Merge new setting values with existing ones stored in the database.
    *
-   * @param  array $params associated array of civicrm variables(submitted)
-   * @param  array $values associated array of civicrm variables stored in db
+   * @param array &$params associative array of new setting variables
+   * @param array &$values associative array of existing setting variables
    *
-   * @return null
-   * @static
+   * @return void
    */
-  static function formatParams(&$params, &$values) {
+  public static function formatParams(&$params, &$values) {
     if (empty($params) ||
       !is_array($params)
     ) {
@@ -155,12 +149,13 @@ class CRM_Core_BAO_ConfigSetting {
   }
 
   /**
-   * Function to retrieve the settings values from db
+   * Retrieve setting values from the database.
    *
-   * @return array $defaults
-   * @static
+   * @param array &$defaults associative array to store the retrieved settings
+   *
+   * @return void
    */
-  static function retrieve(&$defaults) {
+  public static function retrieve(&$defaults) {
 
     $domain = new CRM_Core_BAO_Domain();
     $domain->selectAdd();
@@ -191,7 +186,6 @@ class CRM_Core_BAO_ConfigSetting {
       if (CRM_Utils_Array::value('q', $_GET) == 'civicrm/upgrade') {
         return;
       }
-
 
       // check if there are any locale strings
       if ($domain->locale_custom_strings) {
@@ -315,8 +309,12 @@ class CRM_Core_BAO_ConfigSetting {
     }
   }
 
-
-  static function getConfigSettings() {
+  /**
+   * Get current configuration settings for URLs and directories.
+   *
+   * @return array [url, dir, siteName, siteRoot]
+   */
+  public static function getConfigSettings() {
     $config = &CRM_Core_Config::singleton();
 
     $url = $dir = $siteName = $siteRoot = NULL;
@@ -353,7 +351,12 @@ class CRM_Core_BAO_ConfigSetting {
     return [$url, $dir, $siteName, $siteRoot];
   }
 
-  static function getBestGuessSettings() {
+  /**
+   * Get guessed configuration settings based on environment.
+   *
+   * @return array [url, dir, siteName, siteRoot]
+   */
+  public static function getBestGuessSettings() {
     $config = &CRM_Core_Config::singleton();
 
     $url = $config->userFrameworkBaseURL;
@@ -382,13 +385,18 @@ class CRM_Core_BAO_ConfigSetting {
     return [$url, $dir, $siteName, $siteRoot];
   }
 
-  static function doSiteMove($defaultValues = []) {
+  /**
+   * Perform site move logic by updating base URLs and directories in settings.
+   *
+   * @param array $defaultValues optional default values for old/new URLs and paths
+   *
+   * @return string status message of the site move process
+   */
+  public static function doSiteMove($defaultValues = []) {
     $moveStatus = ts('Beginning site move process...') . '<br />';
     // get the current and guessed values
     list($oldURL, $oldDir, $oldSiteName, $oldSiteRoot) = self::getConfigSettings();
     list($newURL, $newDir, $newSiteName, $newSiteRoot) = self::getBestGuessSettings();
-
-
 
     // retrieve these values from the argument list
     $variables = ['URL', 'Dir', 'SiteName', 'SiteRoot', 'Val_1', 'Val_2', 'Val_3'];
@@ -404,7 +412,8 @@ class CRM_Core_BAO_ConfigSetting {
             $$var = NULL;
           }
         }
-        $$var = CRM_Utils_Request::retrieve($var,
+        $$var = CRM_Utils_Request::retrieve(
+          $var,
           'String',
           CRM_Core_DAO::$_nullArray,
           FALSE,
@@ -440,7 +449,8 @@ WHERE  id = %1
     }
     $configBackend = unserialize($configBackend);
 
-    $configBackend = str_replace($from,
+    $configBackend = str_replace(
+      $from,
       $to,
       $configBackend
     );
@@ -466,7 +476,8 @@ WHERE  id = %1
     CRM_Core_Config::clearDBCache();
     $moveStatus .= ts('Database cache tables cleared.') . '<br />';
 
-    $resetSessionTable = CRM_Utils_Request::retrieve('resetSessionTable',
+    $resetSessionTable = CRM_Utils_Request::retrieve(
+      'resetSessionTable',
       'Boolean',
       CRM_Core_DAO::$_nullArray,
       FALSE,
@@ -474,9 +485,9 @@ WHERE  id = %1
       'REQUEST'
     );
     if ($config->userFramework == 'Drupal' && $resetSessionTable) {
-			$dbUf = CRM_Core_BAO_CMSUser::dbHandle($config);
-			$dbUf->query("DELETE FROM sessions WHERE 1");
-			$dbUf->disconnect();
+      $dbUf = CRM_Core_BAO_CMSUser::dbHandle($config);
+      $dbUf->query("DELETE FROM sessions WHERE 1");
+      $dbUf->disconnect();
       $moveStatus .= ts('Drupal session table cleared.') . '<br />';
     }
     else {
@@ -489,9 +500,11 @@ WHERE  id = %1
   }
 
   /**
-   * @return array
+   * Get a list of variables that should be skipped when storing settings in the database.
+   *
+   * @return string[] array of variable names
    */
-  static function skipVars() {
+  public static function skipVars() {
     return [
       'dsn', 'templateCompileDir',
       'userSystem',
@@ -509,4 +522,3 @@ WHERE  id = %1
     ];
   }
 }
-

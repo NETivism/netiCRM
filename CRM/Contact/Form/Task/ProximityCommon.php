@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to support Proximity Searches
@@ -62,27 +58,27 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
   protected $_title;
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
-         * initialize the task and row fields
-         */
+     * Initialize the task and row fields.
+     */
 
     parent::preProcess();
   }
 
   /**
-   * Build the form
+   * Build the form.
    *
-   * @access public
+   * @param CRM_Core_Form $form
+   * @param int|bool $proxSearch
    *
    * @return void
    */
-  static function buildQuickForm($form = NULL, $proxSearch = NULL) {
+  public static function buildQuickForm($form = NULL, $proxSearch = NULL) {
     // is proximity search required (2) or optional (1)?
     $proxRequired = ($proxSearch == 2 ? TRUE : FALSE);
     $form->assign('proximity_search', TRUE);
@@ -123,17 +119,15 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Core_Form $form the form object
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array true if no errors, else array of errors
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     // If Distance is present, make sure state, country and city or postal code are populated.
     if (CRM_Utils_Array::value('prox_distance', $fields)) {
@@ -142,7 +136,7 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
       ) {
         $errors["prox_state_province_id"] = ts("Country AND State/Province are required to search by distance.");
       }
-      if (!CRM_Utils_Array::value('prox_postal_code', $fields) AND
+      if (!CRM_Utils_Array::value('prox_postal_code', $fields) and
         !CRM_Utils_Array::value('prox_city', $fields)
       ) {
         $errors["prox_distance"] = ts("City OR Postal Code are required to search by distance.");
@@ -153,13 +147,13 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Set the default form values
+   * Set the default form values.
    *
-   * @access protected
+   * @param CRM_Core_Form $form
    *
-   * @return array the default array reference
+   * @return void
    */
-  function &setDefaultValues($form = NULL) {
+  public function &setDefaultValues($form = NULL) {
     $defaults = [];
 
     $config = CRM_Core_Config::singleton();
@@ -177,4 +171,3 @@ class CRM_Contact_Form_Task_ProximityCommon extends CRM_Contact_Form_Task {
     $form->setDefaults($defaults);
   }
 }
-

@@ -11,10 +11,8 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
-
 
 /**
  * Drupal specific stuff goes here.

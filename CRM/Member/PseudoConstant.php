@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,30 +40,33 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * membership types
    * @var array
-   * @static
    */
   private static $membershipType;
 
   /**
    * membership types
    * @var array
-   * @static
    */
   private static $membershipStatus;
 
   /**
-   * Get all the membership types
+   * Get all the membership types.
    *
-   * @access public
+   * @param int|null $id
+   * @param bool $force
    *
-   * @return array - array reference of all membership types if any
-   * @static
+   * @return array|string|null - array reference of all membership types if any
    */
   public static function &membershipType($id = NULL, $force = FALSE) {
     if (!self::$membershipType || $force) {
-      CRM_Core_PseudoConstant::populate(self::$membershipType,
+      CRM_Core_PseudoConstant::populate(
+        self::$membershipType,
         'CRM_Member_DAO_MembershipType',
-        FALSE, 'name', 'is_active', NULL, 'weight'
+        FALSE,
+        'name',
+        'is_active',
+        NULL,
+        'weight'
       );
     }
     if ($id) {
@@ -81,12 +82,13 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all the membership status
+   * Get all the membership status.
    *
-   * @access public
+   * @param int|null $id
+   * @param string|null $cond
+   * @param string $column
    *
-   * @return array - array reference of all membership statuss if any
-   * @static
+   * @return array|string|null - array reference of all membership statuss if any
    */
   public static function &membershipStatus($id = NULL, $cond = NULL, $column = 'name') {
     if (self::$membershipStatus === NULL) {
@@ -98,9 +100,14 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
       $cacheKey .= "_{$cond}";
     }
     if (!isset(self::$membershipStatus[$cacheKey])) {
-      CRM_Core_PseudoConstant::populate(self::$membershipStatus[$cacheKey],
+      CRM_Core_PseudoConstant::populate(
+        self::$membershipStatus[$cacheKey],
         'CRM_Member_DAO_MembershipStatus',
-        FALSE, $column, 'is_active', $cond, 'weight'
+        FALSE,
+        $column,
+        'is_active',
+        $cond,
+        'weight'
       );
     }
 
@@ -116,15 +123,15 @@ class CRM_Member_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   /**
-   * Alias of membershipStatus for getoptions API
+   * Alias of membershipStatus for getoptions API.
    *
-   * @access public
+   * @param int|null $id
+   * @param string|null $cond
+   * @param string $column
    *
-   * @return array - array reference of all membership statuss if any
-   * @static
+   * @return array|string|null - array reference of all membership statuss if any
    */
   public static function &status($id = NULL, $cond = NULL, $column = 'label') {
     return self::membershipStatus($id, $cond, $column);
   }
 }
-

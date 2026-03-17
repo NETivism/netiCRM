@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -38,15 +36,15 @@
  *
  */
 class CRM_Export_BAO_Export {
-  CONST EXPORT_ROW_COUNT = 2000;
-  CONST EXPORT_BATCH_THRESHOLD = 10000;
-  CONST EXPORT_BATCH_CSV_THRESHOLD = 100000;
-  CONST VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
-  CONST DISPLAY_SEPARATOR = '|';
-  CONST EXPORT_TEMP_TABLE = 'civicrm_export';
+  public const EXPORT_ROW_COUNT = 2000;
+  public const EXPORT_BATCH_THRESHOLD = 10000;
+  public const EXPORT_BATCH_CSV_THRESHOLD = 100000;
+  public const VALUE_SEPARATOR = CRM_Core_DAO::VALUE_SEPARATOR;
+  public const DISPLAY_SEPARATOR = '|';
+  public const EXPORT_TEMP_TABLE = 'civicrm_export';
 
   /**
-   * Function to get the list the export fields
+   * Function to get the list the export fields.
    *
    * @param int    $selectAll user preference while export
    * @param array  $ids  contact ids
@@ -59,11 +57,14 @@ class CRM_Export_BAO_Export {
    * @param string $componentTable component table
    * @param bool   $mergeSameAddress merge records if they have same address
    * @param bool   $mergeSameHousehold merge records if they belong to the same household
+   * @param int    $mappingId mapping id
+   * @param bool   $separateMode separate mode
+   * @param array  $exportCustomVars export custom variables
    *
-   * @static
-   * @access public
+   * @return void
    */
-  static function exportComponents($selectAll,
+  public static function exportComponents(
+    $selectAll,
     $ids,
     $params,
     $order = NULL,
@@ -75,7 +76,7 @@ class CRM_Export_BAO_Export {
     $mergeSameAddress = FALSE,
     $mergeSameHousehold = FALSE,
     $mappingId = NULL,
-    $separateMode = FALSE, 
+    $separateMode = FALSE,
     $exportCustomVars = []
   ) {
     global $civicrm_batch;
@@ -248,7 +249,7 @@ class CRM_Export_BAO_Export {
         $returnProperties['contribution_id'] = $index++;
       }
       elseif ($exportMode == CRM_Export_Form_Select::EVENT_EXPORT) {
-        if(empty($returnProperties['participant_id'])){
+        if (empty($returnProperties['participant_id'])) {
           $returnProperties['participant_id'] = $index++;
         }
         if ($returnProperties['participant_role']) {
@@ -403,8 +404,13 @@ class CRM_Export_BAO_Export {
       if ($relationReturnProperties = CRM_Utils_Array::value($rel, $returnProperties)) {
         $allRelContactArray[$rel] = [];
         // build Query for each relationship
-        $relationQuery[$rel] = new CRM_Contact_BAO_Query(0, $relationReturnProperties,
-          NULL, FALSE, FALSE, CRM_Contact_BAO_Query::MODE_CONTACTS
+        $relationQuery[$rel] = new CRM_Contact_BAO_Query(
+          0,
+          $relationReturnProperties,
+          NULL,
+          FALSE,
+          FALSE,
+          CRM_Contact_BAO_Query::MODE_CONTACTS
         );
         list($relationSelect, $relationFrom, $relationWhere) = $relationQuery[$rel]->query();
         $relationSelect = str_replace('civicrm_state_province.abbreviation', 'civicrm_state_province.name', $relationSelect);
@@ -493,7 +499,8 @@ class CRM_Export_BAO_Export {
       $oldClause = "contact_a.id = civicrm_group_contact.contact_id";
       $newClause = " ( $oldClause AND civicrm_group_contact.status = 'Added' OR civicrm_group_contact.status IS NULL ) ";
       // total hack for export, CRM-3618
-      $from = str_replace($oldClause,
+      $from = str_replace(
+        $oldClause,
         $newClause,
         $from
       );
@@ -503,7 +510,8 @@ class CRM_Export_BAO_Export {
     if (CRM_Utils_Array::value('notes', $returnProperties)) {
       $oldClause = "contact_a.id = civicrm_note.entity_id";
       $newClause = " ( $oldClause AND (civicrm_note.privacy = 0 OR civicrm_note.privacy IS NULL )) ";
-      $from = str_replace($oldClause,
+      $from = str_replace(
+        $oldClause,
         $newClause,
         $from
       );
@@ -649,7 +657,7 @@ class CRM_Export_BAO_Export {
         }
         $batch->start($batchParams);
 
-        // refs #32446, 
+        // refs #32446,
         self::audit($exportMode, $fileName, $totalNumRows, $returnProperties);
 
         // redirect to notice page
@@ -926,7 +934,7 @@ class CRM_Export_BAO_Export {
             }
           }
           elseif (CRM_Utils_Array::arrayKeyExists($field, $contactRelationshipTypes)) {
-            $relDAO = isset($allRelContactArray[$field][$dao->contact_id]) ? $allRelContactArray[$field][$dao->contact_id] : null;
+            $relDAO = $allRelContactArray[$field][$dao->contact_id] ?? NULL;
 
             if (is_array($value)) {
               foreach ($value as $relationField => $relationValue) {
@@ -975,10 +983,11 @@ class CRM_Export_BAO_Export {
                 elseif (isset($fieldValue) && $fieldValue != '') {
                   //check for custom data
                   if ($cfID = CRM_Core_BAO_CustomField::getKeyID($relationField)) {
-                    if($relationQuery[$field]->_fields[$relationField]['data_type'] == 'File'){
+                    if ($relationQuery[$field]->_fields[$relationField]['data_type'] == 'File') {
                       list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($fieldValue, NULL);
                       $row[$field . $relationField] = $url;
-                    }else{
+                    }
+                    else {
                       $row[$field . $relationField] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $relationQuery[$field]->_options, NULL, $separateMode);
                     }
                   }
@@ -1017,10 +1026,11 @@ class CRM_Export_BAO_Export {
           elseif (isset($fieldValue) && $fieldValue != '') {
             //check for custom data
             if ($cfID = CRM_Core_BAO_CustomField::getKeyID($field)) {
-              if($query->_fields[$field]['data_type'] == 'File' && !empty($dao->$field)){
+              if ($query->_fields[$field]['data_type'] == 'File' && !empty($dao->$field)) {
                 list($url, $ignore1, $ignore2) = CRM_Core_BAO_File::url($dao->$field, NULL);
                 $row[$field] = $url;
-              }else{
+              }
+              else {
                 $row[$field] = CRM_Core_BAO_CustomField::getDisplayValue($fieldValue, $cfID, $query->_options, NULL, $separateMode);
               }
             }
@@ -1207,7 +1217,7 @@ class CRM_Export_BAO_Export {
           }
           $values .= ", %{$i}";
           $params[$i] = [
-            $value, 
+            $value,
             'String'
           ];
           $i++;
@@ -1252,7 +1262,7 @@ class CRM_Export_BAO_Export {
 
     // now write the CSV file
     if ($civicrm_batch) {
-      $fileUri = $civicrm_batch->data['exportFile']; 
+      $fileUri = $civicrm_batch->data['exportFile'];
       $query = "SELECT * FROM $exportTempTable";
       $dao = CRM_Core_DAO::executeQuery($query);
       if (strpos($exportTempTable, self::EXPORT_TEMP_TABLE) === FALSE) {
@@ -1272,23 +1282,22 @@ class CRM_Export_BAO_Export {
   }
 
   /**
-   * name of the export file based on mode
+   * Name of the export file based on mode.
    *
-   * @param string  $output type of output
-   * @param int     $mode export mode
+   * @param int $mode export mode
    *
    * @return string name of the file
    */
-  static function getExportFileName($mode = NULL) {
+  public static function getExportFileName($mode = NULL) {
     $rand = substr(md5(microtime(TRUE)), 0, 4);
     $name = self::getExportName($mode);
-    return date('Ymd_').str_replace([' ', '.', '/', '-'] , '_', $name) . "_" . $rand . '.xlsx';
+    return date('Ymd_').str_replace([' ', '.', '/', '-'], '_', $name) . "_" . $rand . '.xlsx';
   }
 
   /**
-   * Name of the export mode
+   * Name of the export mode.
    *
-   * @param int     $mode export mode
+   * @param int $mode export mode
    *
    * @return string name of export mode
    */
@@ -1326,7 +1335,7 @@ class CRM_Export_BAO_Export {
   }
 
   /**
-   * Alias of importError to support old menu
+   * Alias of importError to support old menu.
    *
    * @deprecated
    * @return void
@@ -1338,7 +1347,8 @@ class CRM_Export_BAO_Export {
   /**
    * Function to handle import error file creation.
    *
-   **/
+   * @return void
+   */
   public static function importError() {
     $type = CRM_Utils_Request::retrieve('type', 'Positive', CRM_Core_DAO::$_nullObject, TRUE);
     $parserName = CRM_Utils_Request::retrieve('parser', 'String', CRM_Core_DAO::$_nullObject, TRUE);
@@ -1373,19 +1383,32 @@ class CRM_Export_BAO_Export {
     CRM_Utils_System::civiExit();
   }
 
-  static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE, $exportMode = NULL) {
+  /**
+   * Export custom search results.
+   *
+   * @param string $customSearchClass custom search class name
+   * @param array $formValues form values
+   * @param string $order order by clause
+   * @param string|bool $primaryIDName primary id name
+   * @param bool $returnRows whether to return rows
+   * @param bool $exportFile whether to export to file
+   * @param int $exportMode export mode
+   *
+   * @return array|void
+   */
+  public static function exportCustom($customSearchClass, $formValues, $order, $primaryIDName = FALSE, $returnRows = TRUE, $exportFile = FALSE, $exportMode = NULL) {
     if ($exportMode === NULL) {
       $exportMode = CRM_Export_Form_Select::CONTACT_EXPORT;
     }
 
     $ext = new CRM_Core_Extensions();
     if (!$ext->isExtensionClass($customSearchClass)) {
-      if(!class_exists($customSearchClass)){
-        require_once (str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
+      if (!class_exists($customSearchClass)) {
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $customSearchClass) . '.php');
       }
     }
     else {
-      require_once ($ext->classToPath($customSearchClass));
+      require_once($ext->classToPath($customSearchClass));
     }
     $search = new $customSearchClass($formValues);
     $search->_isExport = TRUE;
@@ -1459,7 +1482,7 @@ class CRM_Export_BAO_Export {
     // remove the fields which key is numeric. refs #19235
     foreach ($header as $key => $value) {
       $header[$key] = strip_tags($value);
-      if(is_numeric($value)){
+      if (is_numeric($value)) {
         unset($header[$key]);
         foreach ($rows as &$row) {
           unset($row[$fields[$key]]);
@@ -1468,7 +1491,7 @@ class CRM_Export_BAO_Export {
       }
       else {
         if ($value == ts('CiviCRM Contact ID')) {
-          $customHeader['contact_id'] = $value;  
+          $customHeader['contact_id'] = $value;
         }
         elseif ($key == 0 && $fields[0] == 'contact_id') {
           // If primary field is 'contact_id', than don't use column_0.
@@ -1511,7 +1534,17 @@ class CRM_Export_BAO_Export {
     }
   }
 
-  static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {
+  /**
+   * Define SQL column for a field.
+   *
+   * @param object $query query object
+   * @param array $sqlColumns sql columns
+   * @param string $field field name
+   * @param int $index index
+   *
+   * @return void
+   */
+  public static function sqlColumnDefn(&$query, &$sqlColumns, $field, $index = 1) {
     if (substr($field, -4) == '_a_b' ||
       substr($field, -4) == '_b_a'
     ) {
@@ -1600,14 +1633,24 @@ class CRM_Export_BAO_Export {
       }
     }
 
-    if($index == 1){
+    if ($index == 1) {
       $sqlColumns[] = $newColumn;
-    }else{
+    }
+    else {
       $sqlColumns[$index] = $newColumn;
     }
   }
 
-  static function writeDetailsToTable($tableName, &$details, &$sqlColumns) {
+  /**
+   * Write details to temporary table.
+   *
+   * @param string $tableName table name
+   * @param array $details details
+   * @param array $sqlColumns sql columns
+   *
+   * @return void
+   */
+  public static function writeDetailsToTable($tableName, &$details, &$sqlColumns) {
     if (empty($details)) {
       return;
     }
@@ -1656,7 +1699,14 @@ VALUES $sqlValueString
     CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function createTempTable(&$sqlColumns) {
+  /**
+   * Create temporary table for export.
+   *
+   * @param array $sqlColumns sql columns
+   *
+   * @return string temporary table name
+   */
+  public static function createTempTable(&$sqlColumns) {
     //creating a temporary table for the search result that need be exported
     $exportTempTable = CRM_Core_DAO::createTempTableName(self::EXPORT_TEMP_TABLE, FALSE);
 
@@ -1676,8 +1726,8 @@ CREATE TEMPORARY TABLE {$exportTempTable} (
     // add indexes for street_address and household_name if present
     $addIndices = ['street_address', 'household_name', 'civicrm_primary_id'];
     foreach ($addIndices as $index) {
-      foreach($sqlColumns as $column){
-        if($column == $index){
+      foreach ($sqlColumns as $column) {
+        if ($column == $index) {
           $sql .= ",
   INDEX index_{$index}( $index )
 ";
@@ -1694,7 +1744,17 @@ CREATE TEMPORARY TABLE {$exportTempTable} (
     return $exportTempTable;
   }
 
-  static function mergeSameAddress($tableName, &$headerRows, &$sqlColumns, $drop = FALSE) {
+  /**
+   * Merge records that have the same address.
+   *
+   * @param string $tableName table name
+   * @param array $headerRows header rows
+   * @param array $sqlColumns sql columns
+   * @param string|bool $drop whether to drop a column
+   *
+   * @return void
+   */
+  public static function mergeSameAddress($tableName, &$headerRows, &$sqlColumns, $drop = FALSE) {
     // find all the records that have the same street address BUT not in a household
     $sql = "
 SELECT    r1.id as master_id,
@@ -1814,14 +1874,16 @@ DROP  $drop";
 
   /**
    * Function to merge household record into the individual record
-   * if exists
+   * if exists.
    *
    * @param string $exportTempTable temporary temp table that stores the records
    * @param array  $headerRows array of headers for the export file
    * @param array  $sqlColumns array of names of the table columns of the temp table
    * @param string $prefix name of the relationship type that is prefixed to the table columns
+   *
+   * @return void
    */
-  static function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
+  public static function mergeSameHousehold($exportTempTable, &$headerRows, &$sqlColumns, $prefix) {
     $prefixColumn = $prefix . '_';
     $allKeys = [];
     foreach ($sqlColumns as $value) {
@@ -1908,7 +1970,18 @@ GROUP BY civicrm_primary_id ";
     $dao = CRM_Core_DAO::executeQuery($query);
   }
 
-  static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
+  /**
+   * Write CSV from table.
+   *
+   * @param string $exportTempTable temporary table name
+   * @param array $headerRows header rows
+   * @param array $sqlColumns sql columns
+   * @param int $exportMode export mode
+   * @param string $fileName file name
+   *
+   * @return void
+   */
+  public static function writeCSVFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
 
     $query = "SELECT * FROM $exportTempTable";
     $componentDetails = [];
@@ -1930,15 +2003,15 @@ GROUP BY civicrm_primary_id ";
         $arr = explode(' ', $sqlColumn);
         $column = $arr[0];
         $fieldValue = $dao->$column;
-        if (strstr($fieldValue, self::VALUE_SEPARATOR)){
+        if (strstr($fieldValue, self::VALUE_SEPARATOR)) {
           $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
           $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
           $fieldValue = CRM_Utils_Array::implode(self::DISPLAY_SEPARATOR, $fieldValue);
         }
-        if(strlen($fieldValue) < 15){
+        if (strlen($fieldValue) < 15) {
           $row[$column] = CRM_Utils_String::toNumber($fieldValue);
         }
-        else{
+        else {
           $row[$column] = $fieldValue;
         }
       }
@@ -1954,10 +2027,21 @@ GROUP BY civicrm_primary_id ";
     }
   }
 
-  static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
+  /**
+   * Write batch from table.
+   *
+   * @param string $exportTempTable temporary table name
+   * @param array $headerRows header rows
+   * @param array $sqlColumns sql columns
+   * @param int $exportMode export mode
+   * @param string $fileName file name
+   *
+   * @return void
+   */
+  public static function writeBatchFromTable($exportTempTable, $headerRows, $sqlColumns, $exportMode, $fileName) {
     if (strstr($fileName, '.csv')) {
       // export csv. use Spout to add header row and BOM
-      if (!is_file($fileName)){
+      if (!is_file($fileName)) {
         $writer = CRM_Core_Report_Excel::singleton('csv');
         $writer->openToFile($fileName);
         $writer->addRow($headerRows);
@@ -1975,15 +2059,15 @@ GROUP BY civicrm_primary_id ";
           $arr = explode(' ', $sqlColumn);
           $column = $arr[0];
           $fieldValue = $dao->$column;
-          if (strstr($fieldValue, self::VALUE_SEPARATOR)){
+          if (strstr($fieldValue, self::VALUE_SEPARATOR)) {
             $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
             $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
             $fieldValue = CRM_Utils_Array::implode(self::DISPLAY_SEPARATOR, $fieldValue);
           }
-          if(strlen($fieldValue) < 15){
+          if (strlen($fieldValue) < 15) {
             $row[$column] = CRM_Utils_String::toNumber($fieldValue);
           }
-          else{
+          else {
             $row[$column] = $fieldValue;
           }
         }
@@ -1994,7 +2078,7 @@ GROUP BY civicrm_primary_id ";
     else {
       $new = $fileName.'.new';
       $sleepCounter = 0;
-      while(file_exists($new)) {
+      while (file_exists($new)) {
         $sleepCounter++;
         sleep(2);
         // timeout
@@ -2013,10 +2097,10 @@ GROUP BY civicrm_primary_id ";
       $writer = CRM_Core_Report_Excel::singleton('excel');
       $writer->openToFile($fileName.'.new');
 
-      if (!is_file($fileName)){
+      if (!is_file($fileName)) {
         $writer->addRow($headerRows);
       }
-      else{
+      else {
         $tmpDir = rtrim(CRM_Utils_System::cmsDir('temp'), '/').'/';
         $reader = CRM_Core_Report_Excel::reader('excel');
         $reader->setTempFolder($tmpDir);
@@ -2042,22 +2126,22 @@ GROUP BY civicrm_primary_id ";
           $arr = explode(' ', $sqlColumn);
           $column = $arr[0];
           $fieldValue = $dao->$column;
-          if (strstr($fieldValue, self::VALUE_SEPARATOR)){
+          if (strstr($fieldValue, self::VALUE_SEPARATOR)) {
             $fieldValue = trim($dao->$column, self::VALUE_SEPARATOR);
             $fieldValue = explode(self::VALUE_SEPARATOR, $fieldValue);
             $fieldValue = CRM_Utils_Array::implode(self::DISPLAY_SEPARATOR, $fieldValue);
           }
-          if(strlen($fieldValue) < 15){
+          if (strlen($fieldValue) < 15) {
             $row[$column] = CRM_Utils_String::toNumber($fieldValue);
           }
-          else{
+          else {
             $row[$column] = $fieldValue;
           }
         }
         $writer->addRow($row);
       }
       $writer->close();
-      if (is_file($fileName)){
+      if (is_file($fileName)) {
         unlink($fileName);
       }
       rename($fileName.'.new', $fileName);
@@ -2065,11 +2149,15 @@ GROUP BY civicrm_primary_id ";
   }
 
   /**
-   * Function to manipulate header rows for relationship fields
+   * Function to manipulate header rows for relationship fields.
    *
+   * @param array $headerRows header rows
+   * @param array $contactRelationshipTypes contact relationship types
+   *
+   * @return void
    */
-  static function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
-    foreach ($headerRows as & $header) {
+  public static function manipulateHeaderRows(&$headerRows, $contactRelationshipTypes) {
+    foreach ($headerRows as &$header) {
       $split = explode('-', $header);
       if ($relationTypeName = CRM_Utils_Array::value($split[0], $contactRelationshipTypes)) {
         $split[0] = $relationTypeName;
@@ -2078,6 +2166,11 @@ GROUP BY civicrm_primary_id ";
     }
   }
 
+  /**
+   * Batch finish.
+   *
+   * @return void
+   */
   public static function batchFinish() {
     global $civicrm_batch;
     $batchData = $civicrm_batch->data;
@@ -2091,6 +2184,16 @@ GROUP BY civicrm_primary_id ";
     }
   }
 
+  /**
+   * Audit export.
+   *
+   * @param int $exportMode export mode
+   * @param string $fileName file name
+   * @param int $totalNumRow total number of rows
+   * @param array $fields fields
+   *
+   * @return void
+   */
   public static function audit($exportMode, $fileName, $totalNumRow, $fields) {
     $serial = CRM_REQUEST_TIME;
     $flatten = [];
@@ -2104,4 +2207,3 @@ GROUP BY civicrm_primary_id ";
     CRM_Core_BAO_Log::audit($serial, 'civicrm.export', json_encode($data));
   }
 }
-

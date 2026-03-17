@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-              class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO
-{
+
+class CRM_Contact_DAO_SubscriptionHistory extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_subscription_history';
+  public static $_tableName = 'civicrm_subscription_history';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Internal Id
    *
    * @var int unsigned
@@ -120,24 +118,20 @@
    * @var string
    */
   public $tracking;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_subscription_history
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'contact_id' => 'civicrm_contact:id',
@@ -146,72 +140,69 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'group_id', 'civicrm_group', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'group_id', 'civicrm_group', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'required' => TRUE,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'group_id' => [
           'name' => 'group_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Group',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Group',
+        ],
         'date' => [
           'name' => 'date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Date') ,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'method' => [
           'name' => 'method',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Method') ,
-                   'enumValues' => 'Admin, Email, Web, API',
-         ] ,
+          'enumValues' => 'Admin, Email, Web, API',
+        ],
         'status' => [
           'name' => 'status',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Status') ,
-                   'enumValues' => 'Added, Removed, Pending',
-         ] ,
+          'enumValues' => 'Added, Removed, Pending',
+        ],
         'tracking' => [
           'name' => 'tracking',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Tracking') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
       ];
     }
     return self::$_fields;
@@ -219,31 +210,25 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -251,22 +236,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['subscription_history'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -274,12 +258,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['subscription_history'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_export;
   }
   /**
@@ -287,12 +272,12 @@
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {
     static $enums = [
-                                                                    'method',
-                          'status',
-                            ];
+        'method',
+        'status',
+    ];
     return $enums;
   }
   /**
@@ -303,23 +288,22 @@
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                                    'method' => [
-                  'Admin' => ts('Admin'),
-                  'Email' => ts('Email'),
-                  'Web' => ts('Web'),
-                  'API' => ts('API'),
-                ],
-                          'status' => [
-                  'Added' => ts('Added'),
-                  'Removed' => ts('Removed'),
-                  'Pending' => ts('Pending'),
-                ],
-                              ];
+        'method' => [
+          'Admin' => ts('Admin'),
+          'Email' => ts('Email'),
+          'Web' => ts('Web'),
+          'API' => ts('API'),
+        ],
+        'status' => [
+          'Added' => ts('Added'),
+          'Removed' => ts('Removed'),
+          'Pending' => ts('Pending'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -329,10 +313,9 @@
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Contact_DAO_SubscriptionHistory::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_SubscriptionHistory::tsEnum($enum, $values[$enum]);
       }

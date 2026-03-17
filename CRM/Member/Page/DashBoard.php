@@ -27,15 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
 
 /**
  * Page for displaying list of Payment-Instrument
@@ -43,15 +37,11 @@
 class CRM_Member_Page_DashBoard extends CRM_Core_Page {
 
   /**
-   * Heart of the viewing process. The runner gets all the meta data for
-   * the contact and calls the appropriate type of page to view.
+   * Pre-process page.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
-
+  public function preProcess() {
 
     CRM_Utils_System::setTitle(ts('CiviMember'));
     $membershipSummary = [];
@@ -88,7 +78,9 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
     //$membership = new CRM_Member_BAO_Membership;
     foreach ($membershipTypes as $key => $value) {
       $membershipSummary[$key]['premonth'] = [
-        'count' => CRM_Member_BAO_Membership::getMembershipStarts($key, $preMonth,
+        'count' => CRM_Member_BAO_Membership::getMembershipStarts(
+          $key,
+          $preMonth,
           $preMonthEnd
         ),
         'name' => $value,
@@ -136,12 +128,14 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
 
           case 'total':
             if (!$isCurrentMonth) {
-              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url('civicrm/member/search',
+              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url(
+                'civicrm/member/search',
                 "reset=1&force=1&start=&end=$ymd&status=$status&type=$typeID"
               );
             }
             else {
-              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url('civicrm/member/search',
+              $membershipSummary[$typeID][$key]['url'] = CRM_Utils_System::url(
+                'civicrm/member/search',
                 "reset=1&force=1&status=$status"
               );
             }
@@ -160,35 +154,40 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
       $totalCountTotal = $totalCountTotal + $value['total']['count'];
     }
 
-
     $totalCount['premonth'] = ["count" => $totalCountPreMonth,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status&start=$preMonth&end=$preMonthEnd"
       ),
     ];
     $totalCount['month'] = ["count" => $totalCountMonth,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status&start=$monthStart&end=$ymd"
       ),
     ];
     $totalCount['year'] = ["count" => $totalCountYear,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status&start=$yearStart&end=$ymd"
       ),
     ];
     $totalCount['current'] = ["count" => $totalCountCurrent,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status"
       ),
     ];
     $totalCount['total'] = ["count" => $totalCountTotal,
-      "url" => CRM_Utils_System::url('civicrm/member/search',
+      "url" => CRM_Utils_System::url(
+        'civicrm/member/search',
         "reset=1&force=1&status=$status"
       ),
     ];
     if (!$isCurrentMonth) {
       $totalCount['total'] = ["count" => $totalCountTotal,
-        "url" => CRM_Utils_System::url('civicrm/member/search',
+        "url" => CRM_Utils_System::url(
+          'civicrm/member/search',
           "reset=1&force=1&status=$status&start=&end=$ymd"
         ),
       ];
@@ -206,13 +205,11 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
   }
 
   /**
-   * This function is the main function that is called when the page loads,
-   * it decides the which action has to be taken for the page.
+   * Run the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $controller = new CRM_Core_Controller_Simple('CRM_Member_Form_Search', ts('Member'), NULL);
@@ -227,4 +224,3 @@ class CRM_Member_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

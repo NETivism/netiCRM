@@ -27,21 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Given one of: ( page, title, text ) parameters, generates
- * an HTML link to documentation.
+ * Generate an HTML link to documentation based on (page, title, text) parameters.
  *
- * @param array  $params the function params
- * @param object $smarty reference to the smarty object
+ * @param array $params (page, title, text)
+ * @param Smarty &$smarty reference to the Smarty object
  *
- * @return string HTML code of a link to documentation
- * @access public
+ * @return string|void HTML code of a link to documentation
  */
 function smarty_function_docURL($params, &$smarty) {
   if (!isset($smarty)) {
@@ -52,4 +48,3 @@ function smarty_function_docURL($params, &$smarty) {
     return CRM_Utils_System::docURL($params);
   }
 }
-

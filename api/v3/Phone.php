@@ -58,7 +58,7 @@ function civicrm_api3_phone_create($params) {
 
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -103,4 +103,3 @@ function civicrm_api3_phone_delete($params) {
  *  Could have been implemented here in this file too, but we moved it to illustrate the feature with a real usage.
  *
  */
-

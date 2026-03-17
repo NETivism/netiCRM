@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for Membership Renewal
@@ -61,20 +56,33 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   public $_params;
   public $_membershipId;
   public $_groupTree;
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     // check for edit permission
     if (!CRM_Core_Permission::check('edit memberships')) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     // action
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'add'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'add'
     );
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive',
+    $this->_id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
       $this
     );
-    $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive',
+    $this->_contactID = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
       $this
     );
     if ($this->_id) {
@@ -82,13 +90,16 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $this->_memTypeDetails = CRM_Member_BAO_MembershipType::getMembershipTypeDetails($this->_memType);
     }
 
-    
     $this->_endDate = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $this->_id, "end_date");
     $this->assign("endDate", $this->_endDate);
-    $this->assign("membershipStatus",
-      CRM_Core_DAO::getFieldValue("CRM_Member_DAO_MembershipStatus",
-        CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership",
-          $this->_id, "status_id"
+    $this->assign(
+      "membershipStatus",
+      CRM_Core_DAO::getFieldValue(
+        "CRM_Member_DAO_MembershipStatus",
+        CRM_Core_DAO::getFieldValue(
+          "CRM_Member_DAO_Membership",
+          $this->_id,
+          "status_id"
         ),
         "name"
       )
@@ -106,9 +117,10 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       if (!$membershipFee) {
         $statusMsg = ts('Membership Renewal using credit card required Membership fee, since this memebrship type have no fee, you can use normal renew mode');
         CRM_Core_Session::setStatus($statusMsg);
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contact/view/membership',
-            "reset=1&action=renew&cid={$this->_contactID}&id={$this->_id}&context=membership"
-          ));
+        CRM_Utils_System::redirect(CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
+          "reset=1&action=renew&cid={$this->_contactID}&id={$this->_id}&context=membership"
+        ));
       }
       $this->assign('membershipMode', $this->_mode);
 
@@ -117,7 +129,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
 
       foreach ($processors as $ppID => $label) {
-
 
         $paymentProcessor = &CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $this->_mode);
         if ($paymentProcessor['payment_processor_type'] == 'PayPal' && !$paymentProcessor['user_name']) {
@@ -136,7 +147,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         }
       }
       if (empty($validProcessors)) {
-         return CRM_Core_Error::statusBounce(ts('Could not find valid payment processor for this page'));
+        return CRM_Core_Error::statusBounce(ts('Could not find valid payment processor for this page'));
       }
       else {
         $this->_processors = $validProcessors;
@@ -146,13 +157,12 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-         return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', [1 => 'Billing']));
+        return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', [1 => 'Billing']));
       }
       $this->set('bltID', $this->_bltID);
       $this->assign('bltID', $this->_bltID);
 
       $this->_fields = [];
-
 
       CRM_Core_Payment_Form::setCreditCardFields($this);
 
@@ -167,12 +177,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -182,19 +191,22 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     $defaults['renewal_date'] = $renewalDate;
 
     if ($defaults['id']) {
-      $defaults['record_contribution'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipPayment',
+      $defaults['record_contribution'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipPayment',
         $defaults['id'],
         'contribution_id',
         'membership_id'
       );
     }
 
-    $defaults['contribution_type_id'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+    $defaults['contribution_type_id'] = CRM_Core_DAO::getFieldValue(
+      'CRM_Member_DAO_MembershipType',
       $this->_memType,
       'contribution_type_id'
     );
 
-    $defaults['total_amount'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+    $defaults['total_amount'] = CRM_Core_DAO::getFieldValue(
+      'CRM_Member_DAO_MembershipType',
       $this->_memType,
       'minimum_fee'
     );
@@ -204,14 +216,14 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $contributionParams = ['id' => $defaults['record_contribution']];
       $contributionIds = [];
 
-
       CRM_Contribute_BAO_Contribution::getValues($contributionParams, $defaults, $contributionIds);
     }
 
     $defaults['send_receipt'] = 0;
 
     if ($defaults['membership_type_id']) {
-      $defaults['receipt_text_renewal'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+      $defaults['receipt_text_renewal'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
         $defaults['membership_type_id'],
         'receipt_text_renewal'
       );
@@ -239,7 +251,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $fields["email-{$this->_bltID}"] = 1;
       $fields["email-Primary"] = 1;
 
-
       CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactID, $fields, $this->_defaults);
 
       // use primary email address if billing email address is empty
@@ -259,10 +270,9 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -276,28 +286,44 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     if (!$this->_mode) {
       $this->addElement('checkbox', 'record_contribution', ts('Record Renewal Payment?'), NULL);
 
-      $this->add('select', 'contribution_type_id', ts('Contribution Type'),
+      $this->add(
+        'select',
+        'contribution_type_id',
+        ts('Contribution Type'),
         ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType()
       );
 
       $this->add('text', 'total_amount', ts('Amount'));
       $this->addRule('total_amount', ts('Please enter a valid amount.'), 'money');
 
-      $this->add('select', 'payment_instrument_id', ts('Paid By'),
+      $this->add(
+        'select',
+        'payment_instrument_id',
+        ts('Paid By'),
         ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::paymentInstrument(),
-        FALSE, ['onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);"]
+        FALSE,
+        ['onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);"]
       );
 
       $this->add('text', 'trxn_id', ts('Transaction ID'));
-      $this->addRule('trxn_id', ts('Transaction ID already exists in Database.'),
-        'objectExists', ['CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id']
+      $this->addRule(
+        'trxn_id',
+        ts('Transaction ID already exists in Database.'),
+        'objectExists',
+        ['CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id']
       );
 
-      $this->add('select', 'contribution_status_id', ts('Payment Status'),
+      $this->add(
+        'select',
+        'contribution_status_id',
+        ts('Payment Status'),
         CRM_Contribute_PseudoConstant::contributionStatus()
       );
 
-      $this->add('text', 'check_number', ts('Check Number'),
+      $this->add(
+        'text',
+        'check_number',
+        ts('Check Number'),
         CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'check_number')
       );
     }
@@ -312,11 +338,15 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $this->getElement('receipt_date')->freeze();
       $this->getElement('receipt_date_time')->freeze();
     }
-    $sendReceiptEle = $this->addElement('checkbox', 'send_receipt', ts('Send Confirmation and Receipt?'), NULL,
+    $sendReceiptEle = $this->addElement(
+      'checkbox',
+      'send_receipt',
+      ts('Send Confirmation and Receipt?'),
+      NULL,
       ['onclick' => "return showHideByValue('send_receipt','','notice','table-row','radio',false);"]
     );
 
-      // do_not_notify check
+    // do_not_notify check
     if (!empty($this->_contactID)) {
       $contactDetail = CRM_Contact_BAO_Contact::getContactDetails($this->_contactID);
       if (!empty($contactDetail[5])) {
@@ -333,13 +363,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       CRM_Core_Payment_Form::buildCreditCard($this, TRUE);
     }
 
-
     // Retrieve the name and email of the contact - this will be the TO for receipt email
     list($this->_contributorDisplayName,
       $this->_contributorEmail
     ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactID);
     $this->assign('email', $this->_contributorEmail);
-
 
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $this->assign('outBound_option', $mailingInfo['outBound_option']);
@@ -348,15 +376,13 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * Function for validation
+   * Function for validation.
    *
    * @param array $params (ref.) an assoc array of name/value pairs
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @return array|bool true or array of errors
    */
-  static function formRule($params) {
+  public static function formRule($params) {
     $errors = [];
     //total amount condition arise when membership type having no
     //minimum fee
@@ -373,16 +399,11 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
   }
 
   /**
-   * Function to process the renewal form
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
-
-
-
 
     // get the submitted form values.
     $this->_params = $formValues = $this->controller->exportValues($this->_name);
@@ -392,14 +413,19 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     $config = CRM_Core_Config::singleton();
     $params['contact_id'] = $this->_contactID;
     if ($this->_mode) {
-      $formValues['total_amount'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-        $this->_memType, 'minimum_fee'
+      $formValues['total_amount'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
+        $this->_memType,
+        'minimum_fee'
       );
-      $formValues['contribution_type_id'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-        $this->_memType, 'contribution_type_id'
+      $formValues['contribution_type_id'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
+        $this->_memType,
+        'contribution_type_id'
       );
 
-      $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($formValues['payment_processor_id'],
+      $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment(
+        $formValues['payment_processor_id'],
         $this->_mode
       );
 
@@ -459,7 +485,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         $paymentParams['email'] = $this->_contributorEmail;
       }
 
-
       CRM_Core_Payment_Form::mapParams($this->_bltID, $this->_params, $paymentParams, TRUE);
 
       $payment = &CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
@@ -468,9 +493,10 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
       if (is_a($result, 'CRM_Core_Error')) {
         CRM_Core_Error::displaySessionError($result);
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contact/view/membership',
-            "reset=1&action=renew&cid={$this->_contactID}&id={$this->_id}&context=membership&mode={$this->_mode}"
-          ));
+        CRM_Utils_System::redirect(CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
+          "reset=1&action=renew&cid={$this->_contactID}&id={$this->_id}&context=membership&mode={$this->_mode}"
+        ));
       }
 
       if ($result) {
@@ -516,7 +542,6 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     $endDate = CRM_Utils_Date::processDate($renewMembership->end_date);
 
-
     // Retrieve the name and email of the current user - this will be the FROM for the receipt email
     list($userName, $userEmail) = CRM_Contact_BAO_Contact_Location::getEmailDetails($userID);
 
@@ -544,10 +569,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         $contributionParams[$f] = CRM_Utils_Array::value($f, $formValues);
       }
 
-
       $contribution = &CRM_Contribute_BAO_Contribution::create($contributionParams, $ids);
-
-
 
       $mpDAO = new CRM_Member_DAO_MembershipPayment();
       $mpDAO->membership_id = $renewMembership->id;
@@ -576,7 +598,8 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     if (CRM_Utils_Array::value('send_receipt', $formValues)) {
 
-      CRM_Core_DAO::setFieldValue('CRM_Member_DAO_MembershipType',
+      CRM_Core_DAO::setFieldValue(
+        'CRM_Member_DAO_MembershipType',
         CRM_Utils_Array::value('membership_type_id', $params),
         'receipt_text_renewal',
         $formValues['receipt_text_renewal']
@@ -591,10 +614,10 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         $this->_contributorEmail
       ) = CRM_Contact_BAO_Contact_Location::getEmailDetails($this->_contactID);
       $fromEmail = CRM_Core_PseudoConstant::fromEmailAddress();
-      if(!empty($fromEmail['default'])){
+      if (!empty($fromEmail['default'])) {
         $receiptFrom = reset($fromEmail);
       }
-      else{
+      else {
         $receiptFrom = '"' . $userName . '" <' . $userEmail . '>';
       }
 
@@ -617,9 +640,14 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         }
       }
 
-      CRM_Core_BAO_UFGroup::getValues($this->_contactID, $customFields, $customValues, FALSE,
-        [['member_id', '=', $renewMembership->id, 0, 0]]
-      , CRM_Core_BAO_UFGroup::MASK_ALL);
+      CRM_Core_BAO_UFGroup::getValues(
+        $this->_contactID,
+        $customFields,
+        $customValues,
+        FALSE,
+        [['member_id', '=', $renewMembership->id, 0, 0]],
+        CRM_Core_BAO_UFGroup::MASK_ALL
+      );
 
       $this->assign_by_ref('formValues', $formValues);
       $this->assign('receive_date', $formValues['receive_date']);
@@ -627,9 +655,10 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
       $this->assign('receiptType', 'membership renewal');
       $this->assign('mem_start_date', CRM_Utils_Date::customFormat($renewMembership->start_date));
       $this->assign('mem_end_date', CRM_Utils_Date::customFormat($renewMembership->end_date));
-      $this->assign('membership_name', CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-          $renewMembership->membership_type_id
-        ));
+      $this->assign('membership_name', CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
+        $renewMembership->membership_type_id
+      ));
       $this->assign('customValues', $customValues);
       if ($this->_mode) {
         if (CRM_Utils_Array::value('billing_first_name', $this->_params)) {
@@ -664,7 +693,8 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
         $date = CRM_Utils_Date::format($this->_params['credit_card_exp_date']);
         $date = CRM_Utils_Date::mysqlToIso($date);
         $this->assign('credit_card_exp_date', $date);
-        $this->assign('credit_card_number',
+        $this->assign(
+          'credit_card_number',
           CRM_Utils_System::mungeCreditCard($this->_params['credit_card_number'])
         );
         $this->assign('credit_card_type', $this->_params['credit_card_type']);
@@ -701,7 +731,7 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
 
     $statusMsg = ts('%1 membership for %2 has been renewed.', [1 => $memType, 2 => $this->_contributorDisplayName]);
 
-    $endDate = $endDate ?  CRM_Utils_Date::customFormat($endDate) : CRM_Utils_Date::customFormat($renewMembership->end_date);
+    $endDate = $endDate ? CRM_Utils_Date::customFormat($endDate) : CRM_Utils_Date::customFormat($renewMembership->end_date);
     if ($endDate) {
       $statusMsg .= ' ' . ts('The new membership End Date is %1.', [1 => $endDate]);
     }
@@ -713,4 +743,3 @@ class CRM_Member_Form_MembershipRenewal extends CRM_Member_Form {
     CRM_Core_Session::setStatus($statusMsg);
   }
 }
-

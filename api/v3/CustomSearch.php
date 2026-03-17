@@ -17,7 +17,10 @@
 function civicrm_api3_custom_search_get($params) {
   require_once 'api/v3/OptionValue.php';
   $params['option_group_id'] = CRM_Core_DAO::getFieldValue(
-    'CRM_Core_DAO_OptionGroup', 'custom_search', 'id', 'name'
+    'CRM_Core_DAO_OptionGroup',
+    'custom_search',
+    'id',
+    'name'
   );
   return civicrm_api3_option_value_get($params);
 }
@@ -36,7 +39,10 @@ function civicrm_api3_custom_search_get($params) {
 function civicrm_api3_custom_search_create($params) {
   require_once 'api/v3/OptionValue.php';
   $params['option_group_id'] = CRM_Core_DAO::getFieldValue(
-    'CRM_Core_DAO_OptionGroup', 'custom_search', 'id', 'name'
+    'CRM_Core_DAO_OptionGroup',
+    'custom_search',
+    'id',
+    'name'
   );
   // empirically, class name goes to both 'name' and 'label'
   if (CRM_Utils_Array::arrayKeyExists('name', $params)) {

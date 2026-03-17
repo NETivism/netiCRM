@@ -26,8 +26,7 @@
 */
 
 /**
- *  Class to print labels in Avery or custom formats
- * functionality and smarts to the base PDF_Label.
+ * Class to print labels in Avery or custom formats, extending TCPDF with label layout functionality.
  *
  * @copyright CiviCRM LLC (c) 2004-2010
  *
@@ -126,7 +125,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
    *
    * @access public
    */
-  function __construct($format, $unit = 'mm') {
+  public function __construct($format, $unit = 'mm') {
     if (is_array($format)) {
       // Custom format
       $tFormat = $format;
@@ -158,11 +157,15 @@ class CRM_Utils_PDF_Label extends TCPDF {
       if ($averyLabels['lMargin'] > 1) {
         $averyLabels['lMargin']--;
       }
-      else $averyLabels['lMargin'] = 0;
+      else {
+        $averyLabels['lMargin'] = 0;
+      }
       if ($averyLabels['tMargin'] > 1) {
         $averyLabels['tMargin']--;
       }
-      else $averyLabels['tMargin'] = 0;
+      else {
+        $averyLabels['tMargin'] = 0;
+      }
       if ($averyLabels['lMargin'] >= $this->xNumber) {
         $averyLabels['lMargin'] = $this->xNumber - 1;
       }
@@ -178,7 +181,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
     * function to convert units (in to mm, mm to in)
     *
     */
-  function ConvertMetric($value, $src, $dest) {
+  public function ConvertMetric($value, $src, $dest) {
     if ($src != $dest) {
       $tab['in'] = 39.37008;
       $tab['mm'] = 1000;
@@ -191,7 +194,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
   /*
      * function to Give the height for a char size given.
      */
-  function GetHeightChars($pt) {
+  public function GetHeightChars($pt) {
     // Array matching character sizes and line heights
     $tableHauteurChars = [6 => 2, 7 => 2.5, 8 => 3, 9 => 4, 10 => 5, 11 => 6, 12 => 7, 13 => 8, 14 => 9, 15 => 10];
     if (in_array($pt, array_keys($tableHauteurChars))) {
@@ -203,12 +206,12 @@ class CRM_Utils_PDF_Label extends TCPDF {
     }
   }
 
-  function SetGenerator($objectinstance, $methodname = 'generateLabel') {
+  public function SetGenerator($objectinstance, $methodname = 'generateLabel') {
     $this->generatorMethod = $methodname;
     $this->generatorObject = $objectinstance;
   }
 
-  function getFormat($averyName) {
+  public function getFormat($averyName) {
     return self::$averyLabels[$averyName];
   }
 
@@ -216,7 +219,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
      * function to convert units (in to mm, mm to in)
      * $format Type of $averyName
      */
-  function SetFormat($format) {
+  public function SetFormat($format) {
     $this->metric = $format['metric'];
     $this->averyName = $format['name'];
     $this->marginLeft = $this->ConvertMetric($format['lMargin'], $this->metric, $this->metricDoc);
@@ -233,7 +236,7 @@ class CRM_Utils_PDF_Label extends TCPDF {
      * function to set the character size
      * $pt weight of character
      */
-  function LabelSetFontSize($pt) {
+  public function LabelSetFontSize($pt) {
     if ($pt > 3) {
       $this->charSize = $pt;
       $this->lineHeight = $this->GetHeightChars($pt);
@@ -243,9 +246,9 @@ class CRM_Utils_PDF_Label extends TCPDF {
   /*
      * Method to change font name
      *
-     * $fontname name of font 
+     * $fontname name of font
      */
-  function SetFontName($fontname) {
+  public function SetFontName($fontname) {
     if ($fontname != '') {
       $this->fontName = $fontname;
       $this->SetFont($this->fontName);
@@ -255,17 +258,16 @@ class CRM_Utils_PDF_Label extends TCPDF {
   /*
      * function to Generate the pdf of one label (can be modified using SetGenerator)
      */
-  function generateLabel($var) {
+  public function generateLabel($var) {
     //wrap the text if it's width is greater than maxwidth
     //      $this->wordWrap( $texte, $maxwidth); not supported by TCPDF, which does its own wrapping
     $this->MultiCell($this->width, $this->lineHeight, $var, '', 'L');
   }
 
-
   /*
      * function to Print a label
      */
-  function AddPdfLabel($texte) {
+  public function AddPdfLabel($texte) {
     $posX = $this->marginLeft + ($this->countX * ($this->width + $this->xSpace));
     $posY = $this->marginTop + ($this->countY * ($this->height + $this->ySpace));
     $this->SetXY($posX + 3, $posY + 3);
@@ -296,4 +298,3 @@ class CRM_Utils_PDF_Label extends TCPDF {
     }
   }
 }
-

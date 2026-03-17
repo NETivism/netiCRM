@@ -28,12 +28,9 @@
 /**
  * This class stores logic for managing CiviCRM extensions.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Core_Extensions_Report {
 
@@ -43,12 +40,15 @@ class CRM_Core_Extensions_Report {
   /**
    *
    */
-  CONST REPORT_GROUP_NAME = 'report_template';
+  public const REPORT_GROUP_NAME = 'report_template';
 
   public function __construct($ext) {
     $this->ext = $ext;
-    $this->groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-      self::REPORT_GROUP_NAME, 'id', 'name'
+    $this->groupId = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
+      self::REPORT_GROUP_NAME,
+      'id',
+      'name'
     );
     $this->customReports = CRM_Core_OptionGroup::values(self::REPORT_GROUP_NAME, TRUE, FALSE, FALSE, NULL, 'name', FALSE);
   }
@@ -68,7 +68,8 @@ class CRM_Core_Extensions_Report {
     if (empty($compId)) {
       CRM_Core_Error::fatal("Component for which you're trying to install the extension (" . $this->ext->typeInfo['component'] . ") is currently disabled.");
     }
-    $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+    $weight = CRM_Utils_Weight::getDefaultWeight(
+      'CRM_Core_DAO_OptionValue',
       ['option_group_id' => $this->groupId]
     );
     $ids = [];
@@ -108,4 +109,3 @@ class CRM_Core_Extensions_Report {
     $optionValue = CRM_Core_BAO_OptionValue::setIsActive($id, 1);
   }
 }
-

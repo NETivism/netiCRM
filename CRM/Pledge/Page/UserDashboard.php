@@ -27,22 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Pledge_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
 
   /**
-   * This function is called when action is browse
+   * Function to list pledges for the user.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function listPledges() {
+  public function listPledges() {
     $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Search', ts('Pledges'), NULL);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -68,15 +64,12 @@ class CRM_Pledge_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard 
   }
 
   /**
-   * This function is the main function that is called when the page
-   * loads, it decides the which action has to be taken for the page.
+   * Run the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     parent::preProcess();
     $this->listPledges();
   }
 }
-

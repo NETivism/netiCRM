@@ -1,33 +1,156 @@
 <?php
 class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
+  /**
+   * Total row count.
+   * @var int
+   */
   public $_totalRowCount;
+
+  /**
+   * Contact type.
+   * @var string
+   */
   public $_contactType;
+
+  /**
+   * Status ID.
+   * @var string
+   */
   public $_statusID;
+
+  /**
+   * Contact sub type.
+   * @var string
+   */
   public $_contactSubType;
+
+  /**
+   * Whether to geocode address.
+   * @var bool
+   */
   protected $_doGeocodeAddress;
 
+  /**
+   * New group name.
+   * @var string
+   */
   public $_newGroupName;
+
+  /**
+   * New group description.
+   * @var string
+   */
   public $_newGroupDesc;
+
+  /**
+   * New group ID.
+   * @var int
+   */
   public $_newGroupId;
+
+  /**
+   * Groups to add contacts to.
+   * @var array
+   */
   public $_groups;
+
+  /**
+   * All groups.
+   * @var array
+   */
   public $_allGroups;
+
+  /**
+   * New tag name.
+   * @var string
+   */
   public $_newTagName;
+
+  /**
+   * New tag description.
+   * @var string
+   */
   public $_newTagDesc;
+
+  /**
+   * New tag ID.
+   * @var int
+   */
   public $_newTagId;
+
+  /**
+   * Tags to add to contacts.
+   * @var array
+   */
   public $_tag;
+
+  /**
+   * All tags.
+   * @var array
+   */
   public $_allTags;
 
+  /**
+   * Mapper related.
+   * @var array
+   */
   protected $_mapperRelated;
+
+  /**
+   * Mapper related contact type.
+   * @var array
+   */
   protected $_mapperRelatedContactType;
+
+  /**
+   * Mapper related contact details.
+   * @var array
+   */
   protected $_mapperRelatedContactDetails;
+
+  /**
+   * Mapper related contact location type.
+   * @var array
+   */
   protected $_mapperRelatedContactLocType;
+
+  /**
+   * Mapper related contact phone type.
+   * @var array
+   */
   protected $_mapperRelatedContactPhoneType;
+
+  /**
+   * Mapper related contact IM provider.
+   * @var array
+   */
   protected $_mapperRelatedContactImProvider;
+
+  /**
+   * Mapper related contact website type.
+   * @var array
+   */
   protected $_mapperRelatedContactWebsiteType;
 
+  /**
+   * Group additions.
+   * @var array
+   */
   protected $_groupAdditions;
+
+  /**
+   * Tag additions.
+   * @var array
+   */
   protected $_tagAdditions;
 
+  /**
+   * Class constructor.
+   *
+   * @param string $tableName
+   * @param string $createSql
+   * @param bool $createTable
+   */
   public function __construct($tableName = NULL, $createSql = NULL, $createTable = FALSE) {
     parent::__construct($tableName);
 
@@ -52,6 +175,13 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     $this->_tagAdditions = [];
   }
 
+  /**
+   * Run the import process.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function runImport(&$form) {
     global $civicrm_batch;
     $allArgs = func_get_args();
@@ -125,7 +255,9 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
 
     foreach ($mapper as $key => $value) {
       //set respective mapper value to null.
-      foreach (array_values($mapperPeroperties) as $perpertyVal)$$perpertyVal = NULL;
+      foreach (array_values($mapperPeroperties) as $perpertyVal) {
+        $$perpertyVal = NULL;
+      }
 
       $fldName = CRM_Utils_Array::value(0, $mapper[$key]);
       $selOne = CRM_Utils_Array::value(1, $mapper[$key]);
@@ -201,7 +333,6 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       }
     }
 
-
     $this->_parser = new CRM_Import_Parser_Contact(
       $this->_mapperKeys,
       $this->_mapperLocTypes,
@@ -227,7 +358,9 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
     $this->_parser->_skipColumnHeader = $this->_skipColumnHeader ? $this->_skipColumnHeader : $form->get('skipColumnHeader');
     $this->_parser->_dateFormats = $this->_dateFormats ? $this->_dateFormats : $form->get('dateFormats');
-    $this->_parser->run($this->_tableName, $mapperFields,
+    $this->_parser->run(
+      $this->_tableName,
+      $mapperFields,
       CRM_Import_Parser::MODE_IMPORT,
       $this->_contactType,
       $this->_primaryKeyName,
@@ -288,6 +421,13 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Prepare session object.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function prepareSessionObject(&$form) {
     $form->controller->initTemplate();
     $form->controller->initSession();
@@ -297,6 +437,11 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     CRM_Core_Session::registerAndRetrieveSessionObjects(["_{$name}_container", ['CiviCRM', $scope]]);
   }
 
+  /**
+   * Batch start callback.
+   *
+   * @return void
+   */
   public function batchStartCallback() {
     global $civicrm_batch;
     if ($civicrm_batch) {
@@ -308,6 +453,11 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Batch finish callback.
+   *
+   * @return void
+   */
   public function batchFinishCallback() {
     global $civicrm_batch;
     if (!empty($civicrm_batch)) {
@@ -315,7 +465,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       $query = "SELECT $this->_statusFieldName as status, COUNT(*) as count FROM $this->_tableName WHERE 1 GROUP BY $this->_statusFieldName";
       $dao = CRM_Core_DAO::executeQuery($query);
       $statusCount = [];
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $name = CRM_Import_Parser::statusName($dao->status);
         $statusCount[$name] = $dao->count;
       }
@@ -338,7 +488,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::DUPLICATE, $fileName);
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::NO_MATCH, $fileName);
         $errorFiles[] = CRM_Import_Parser::errorFileName(CRM_Import_Parser::UNPARSED_ADDRESS_WARNING, $fileName);
-        foreach($errorFiles as $idx => $fileName) {
+        foreach ($errorFiles as $idx => $fileName) {
           $filePath = $config->uploadDir.$fileName;
           if (is_file($filePath)) {
             $zip->addFile($filePath, $fileName);
@@ -350,24 +500,33 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
         $zip->close();
 
         // purge zipped files
-        foreach($errorFiles as $fileName) {
+        foreach ($errorFiles as $fileName) {
           unlink($config->uploadDir.$fileName);
         }
       }
     }
   }
 
+  /**
+   * Add contact to group and/or tag.
+   *
+   * @param int $contactId
+   * @param array $groups
+   * @param array $tags
+   *
+   * @return void
+   */
   public function addContactToGroupTag($contactId, $groups = [], $tags = []) {
     static $existsGroups, $existsTag;
 
     $contactIds = [$contactId];
-    if(!empty($groups) && is_array($groups)) {
+    if (!empty($groups) && is_array($groups)) {
       foreach ($groups as $groupName) {
         $groupId = 0;
         if ($existsGroups[$groupName]) {
           $groupId = $existsGroups[$groupName];
         }
-        else{
+        else {
           $query = "SELECT id FROM civicrm_group WHERE title LIKE %1";
           $groupId = CRM_Core_DAO::singleValueQuery($query, [1 => [$groupName, 'String']]);
           if (empty($groupId)) {
@@ -385,7 +544,7 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
       }
     }
 
-    if(!empty($tags) && is_array($tags)) {
+    if (!empty($tags) && is_array($tags)) {
       foreach ($tags as $tagName) {
         if ($existsTag[$tagName]) {
           $tagId = $existsTag[$tagName];
@@ -412,6 +571,15 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Add imported contacts to a new or existing group.
+   *
+   * @param array $contactIds
+   * @param string $newGroupName
+   * @param string $newGroupDesc
+   *
+   * @return bool
+   */
   public function addImportedContactsToNewGroup($contactIds, $newGroupName, $newGroupDesc) {
     static $newGroupId;
     if ($this->_newGroupId) {
@@ -465,7 +633,15 @@ class CRM_Import_ImportJob_Contact extends CRM_Import_ImportJob {
     return FALSE;
   }
 
-
+  /**
+   * Tag imported contacts with a new or existing tag.
+   *
+   * @param array $contactIds
+   * @param string $newTagName
+   * @param string $newTagDesc
+   *
+   * @return bool
+   */
   public function tagImportedContactsWithNewTag($contactIds, $newTagName, $newTagDesc) {
     static $newTagId;
     if ($this->_newTagId) {

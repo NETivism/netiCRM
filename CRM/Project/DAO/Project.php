@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-class CRM_Project_DAO_Project extends CRM_Core_DAO
-{
+
+class CRM_Project_DAO_Project extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_project';
+  public static $_tableName = 'civicrm_project';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Project ID
    *
    * @var int unsigned
@@ -138,86 +136,82 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
    * @var int unsigned
    */
   public $status_id;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_project
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
-    /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'title' => [
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Title') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Description') ,
-             'rows' => 6,
-           'cols' => 50,
-              ] ,
+          'rows' => 6,
+          'cols' => 50,
+        ],
         'logo' => [
           'name' => 'logo',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Logo') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'owner_entity_table' => [
           'name' => 'owner_entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Owner Entity Table') ,
-          'required' => true,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'required' => TRUE,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'owner_entity_id' => [
           'name' => 'owner_entity_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Project Owner ID') ,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
-                  ] ,
+        ],
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('End Date') ,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Active?') ,
-                  ] ,
+        ],
         'status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Status') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -225,31 +219,25 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -257,22 +245,21 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['project'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -280,12 +267,13 @@ class CRM_Project_DAO_Project extends CRM_Core_DAO
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['project'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
 }

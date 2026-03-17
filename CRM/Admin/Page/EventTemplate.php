@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Page for displaying list of event templates.
@@ -47,23 +42,23 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Event_BAO_Event';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       // helper variable for nicer formatting
       self::$_links = [
@@ -86,19 +81,15 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all event templates.
+   * Browses all event templates.
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
     //get all event templates.
     $allEventTemplates = [];
 
-
     $eventTemplate = new CRM_Event_DAO_Event();
-
 
     $eventTypes = CRM_Event_PseudoConstant::eventType();
     $participantRoles = CRM_Event_PseudoConstant::participantRole();
@@ -127,43 +118,47 @@ class CRM_Admin_Page_EventTemplate extends CRM_Core_Page_Basic {
       $action = array_sum(array_keys($this->links()));
 
       //add action links.
-      $allEventTemplates[$eventTemplate->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $allEventTemplates[$eventTemplate->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $eventTemplate->id]
       );
     }
     $this->assign('rows', $allEventTemplates);
 
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
-        'reset=1&action=browse'
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      CRM_Utils_System::currentPath(),
+      'reset=1&action=browse'
+    ));
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_EventTemplate';
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Event Templates';
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/eventTemplate';
   }
 }
-

@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Case_Page_CaseDetails extends CRM_Core_Page {
 
@@ -46,7 +43,7 @@ class CRM_Case_Page_CaseDetails extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $type = CRM_Utils_Request::retrieve('type', 'String', CRM_Core_DAO::$_nullObject);
@@ -58,10 +55,8 @@ class CRM_Case_Page_CaseDetails extends CRM_Core_Page {
 
     $caseId = CRM_Utils_Request::retrieve('caseId', 'Positive', $this);
 
-
     $pageTab = new CRM_Case_Page_Tab();
     $pageTab->setContext();
-
 
     $params = ['date_range' => 0];
 
@@ -77,4 +72,3 @@ class CRM_Case_Page_CaseDetails extends CRM_Core_Page {
     return parent::run();
   }
 }
-

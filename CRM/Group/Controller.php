@@ -27,20 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Group_Controller extends CRM_Core_Controller {
-  /**
-   * class constructor
-   */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
-    parent::__construct($title, $modal);
 
+  /**
+   * Class constructor.
+   *
+   * @param string $title
+   * @param int $action
+   * @param bool $modal
+   */
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+    parent::__construct($title, $modal);
 
     $this->_stateMachine = new CRM_Group_StateMachine($this, $action);
 
@@ -56,10 +57,10 @@ class CRM_Group_Controller extends CRM_Core_Controller {
     // to handle file type custom data
     $uploadDir = $config->uploadDir;
 
-
     $uploadNames = $this->get('uploadNames');
     if (!empty($uploadNames)) {
-      $uploadNames = array_merge($uploadNames,
+      $uploadNames = array_merge(
+        $uploadNames,
         CRM_Core_BAO_File::uploadNames()
       );
     }
@@ -71,12 +72,21 @@ class CRM_Group_Controller extends CRM_Core_Controller {
     $this->addActions($uploadDir, $uploadNames);
   }
 
-  function run() {
+  /**
+   * Run the controller.
+   *
+   * @return void
+   */
+  public function run() {
     return parent::run();
   }
 
+  /**
+   * Get the selector name.
+   *
+   * @return string
+   */
   public function selectorName() {
     return $this->get('selectorName');
   }
 }
-

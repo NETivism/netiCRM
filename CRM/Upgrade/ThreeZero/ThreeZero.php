@@ -27,17 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
-
 class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $latestVer = CRM_Utils_System::version();
 
     $errorMessage = ts('Pre-condition failed for upgrade to %1.', [1 => $latestVer]);
@@ -88,14 +83,14 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
     return TRUE;
   }
 
-  function upgrade($rev) {
+  public function upgrade($rev) {
 
     // fix CRM-5270: if civicrm_report_instance.description is localised,
     // recreate it based on the first locale’s description_xx_YY contents
     // and drop all the description_xx_YY columns
     if (!CRM_Core_DAO::checkFieldExists('civicrm_report_instance', 'description')) {
 
-      $domain = new CRM_Core_DAO_Domain;
+      $domain = new CRM_Core_DAO_Domain();
       $domain->find(TRUE);
       $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
@@ -211,8 +206,13 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
       //else compare individual name format with default individual addressee.
       $individualNameFormat = CRM_Core_BAO_Preferences::value('individual_name_format');
 
-      $defaultAddressee = CRM_Core_OptionGroup::values('addressee', FALSE, FALSE, FALSE,
-        " AND v.filter = 1 AND v.is_default =  1", 'label'
+      $defaultAddressee = CRM_Core_OptionGroup::values(
+        'addressee',
+        FALSE,
+        FALSE,
+        FALSE,
+        " AND v.filter = 1 AND v.is_default =  1",
+        'label'
       );
 
       if (array_search($individualNameFormat, $defaultAddressee) !== FALSE) {
@@ -220,12 +220,12 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
       }
     }
 
-
     $docURL = CRM_Utils_System::docURL2('Update Greetings and Address Data for Contacts', FALSE, NULL, NULL, 'color: white; text-decoration: underline;');
 
     if ($addNewAddressee) {
       //otherwise insert new token in addressee and set as a default
-      $addresseeGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+      $addresseeGroupId = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_OptionGroup',
         'addressee',
         'id',
         'name'
@@ -245,8 +245,11 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
       $weight = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
 
       $optionValueParams['weight'] = $weight;
-      $addresseeToken = CRM_Core_OptionValue::addOptionValue($optionValueParams, $addresseeGroupParams,
-        $action, $optionId = NULL
+      $addresseeToken = CRM_Core_OptionValue::addOptionValue(
+        $optionValueParams,
+        $addresseeGroupParams,
+        $action,
+        $optionId = NULL
       );
 
       $afterUpgradeMessage = ts("During this upgrade, Postal Addressee values have been stored for each contact record using the system default format - %2.You will need to run the included command-line script to update your Individual contact records to use the \"Individual Name Format\" previously specified for your site %1", [1 => $docURL, 2 => array_pop($defaultAddressee)]);
@@ -275,4 +278,3 @@ class CRM_Upgrade_ThreeZero_ThreeZero extends CRM_Upgrade_Form {
     $template->assign('afterUpgradeMessage', $afterUpgradeMessage);
   }
 }
-

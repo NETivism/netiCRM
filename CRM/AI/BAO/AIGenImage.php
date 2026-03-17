@@ -124,7 +124,7 @@ class CRM_AI_BAO_AIGenImage {
    * @param CRM_AI_BAO_AITransPrompt $translator Optional prompt translator
    * @param CRM_AI_GenImageService $imageService Optional image service
    */
-  public function __construct($translator = null, $imageService = null) {
+  public function __construct($translator = NULL, $imageService = NULL) {
     $this->translator = $translator ?? new CRM_AI_BAO_AITransPrompt();
     $this->imageService = $imageService ?? new CRM_AI_GenImageService_ITRIICL();
     $this->config = CRM_Core_Config::singleton();
@@ -157,27 +157,27 @@ class CRM_AI_BAO_AIGenImage {
 
       // Extract translated prompt and AI completion ID if available
       $translatedPrompt = $translationResponse;
-      $aiCompletionId = null;
+      $aiCompletionId = NULL;
 
       // Handle different response formats from translator
       if (is_array($translationResponse)) {
         // Check for direct error in array response first
-        if (isset($translationResponse['success']) && $translationResponse['success'] === false) {
+        if (isset($translationResponse['success']) && $translationResponse['success'] === FALSE) {
           $errorMessage = $translationResponse['error'] ?? $translationResponse['message'] ?? 'Unknown translation error';
           CRM_Core_Error::debug_log_message('AI Image Generation translation error: Direct response failure: ' . $errorMessage);
           throw new Exception("Prompt translation failed: {$errorMessage}");
         }
 
         $translatedPrompt = $translationResponse['message'] ?? $translationResponse['translated_prompt'] ?? '';
-        $aiCompletionId = $translationResponse['id'] ?? $translationResponse['aicompletion_id'] ?? null;
+        $aiCompletionId = $translationResponse['id'] ?? $translationResponse['aicompletion_id'] ?? NULL;
 
         // Parse JSON response if message contains JSON
         if (!empty($translatedPrompt) && is_string($translatedPrompt)) {
           $parsedData = $this->translator->parseJsonResponse($translatedPrompt);
 
-          if ($parsedData !== false) {
+          if ($parsedData !== FALSE) {
             // Check for security violations or errors in the response
-            if (isset($parsedData['success']) && $parsedData['success'] === false) {
+            if (isset($parsedData['success']) && $parsedData['success'] === FALSE) {
               // Handle security violations and other errors
               $errorCode = $parsedData['error']['code'] ?? 'UNKNOWN_ERROR';
               $errorMessage = $parsedData['error']['message'] ?? 'Unknown error occurred';
@@ -218,7 +218,7 @@ class CRM_AI_BAO_AIGenImage {
       $advancedParams = $imageData['data']['advanced'] ?? [];
 
       return [
-        'success' => true,
+        'success' => TRUE,
         'image_path' => $imagePath,
         'translated_prompt' => $translatedPrompt,
         'original_prompt' => $params['text'],
@@ -228,10 +228,11 @@ class CRM_AI_BAO_AIGenImage {
         'generation_id' => $this->generationRecordId
       ];
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       // Step 9: Handle errors and update database status
       $this->updateErrorStatus($e->getMessage());
-      return ['success' => false, 'error' => $e->getMessage()];
+      return ['success' => FALSE, 'error' => $e->getMessage()];
     }
   }
 
@@ -264,7 +265,7 @@ class CRM_AI_BAO_AIGenImage {
       $image = imagecreatefromstring($binaryData);
       if ($image !== FALSE) {
         ob_start();
-        imagewebp($image, null, 80); // 80% quality for good balance of size/quality
+        imagewebp($image, NULL, 80); // 80% quality for good balance of size/quality
         $webpData = ob_get_contents();
         ob_end_clean();
         imagedestroy($image);
@@ -395,7 +396,6 @@ class CRM_AI_BAO_AIGenImage {
     return $serviceParams;
   }
 
-
   /**
    * Create initial generation record with pending status
    *
@@ -421,9 +421,10 @@ class CRM_AI_BAO_AIGenImage {
    *
    * @param string $translatedPrompt Translated prompt
    * @param int $aiCompletionId AI completion ID from translation process
+   * @return void None.
    * @throws Exception On database update failure
    */
-  protected function updateTranslationResult($translatedPrompt, $aiCompletionId = null) {
+  protected function updateTranslationResult($translatedPrompt, $aiCompletionId = NULL) {
     if ($this->generationRecordId) {
       $updateData = [
         'translated_prompt' => $translatedPrompt,
@@ -448,6 +449,7 @@ class CRM_AI_BAO_AIGenImage {
    * Uses try-catch to prevent database issues from affecting main workflow
    *
    * @param string $imagePath Generated image path (relative to public directory)
+   * @return void None.
    */
   protected function updateFinalResult($imagePath) {
     if ($this->generationRecordId && !empty($imagePath)) {
@@ -463,11 +465,13 @@ class CRM_AI_BAO_AIGenImage {
             CRM_AI_BAO_AIImageGeneration::STATUS_SUCCESS,
             ['image_path' => $imagePath]
           );
-        } else {
+        }
+        else {
           // File doesn't exist, mark as failed but don't throw exception
           $this->updateErrorStatus('Generated image file could not be saved to: ' . $fullPath);
         }
-      } catch (Exception $e) {
+      }
+      catch (Exception $e) {
         // Log database update error but don't propagate to main workflow
         // This prevents double JSON response issue
         CRM_Core_Error::debug_log_message("Database update error in updateFinalResult: " . $e->getMessage());
@@ -475,7 +479,8 @@ class CRM_AI_BAO_AIGenImage {
         // Try to update error status without throwing exception
         try {
           $this->updateErrorStatus('Database update failed: ' . $e->getMessage());
-        } catch (Exception $innerE) {
+        }
+        catch (Exception $innerE) {
           // Even error status update failed, just log it
           CRM_Core_Error::debug_log_message("Error status update also failed: " . $innerE->getMessage());
         }
@@ -488,6 +493,7 @@ class CRM_AI_BAO_AIGenImage {
    * Uses try-catch to prevent database issues from causing additional errors
    *
    * @param string $errorMessage Error message to store
+   * @return void None.
    */
   protected function updateErrorStatus($errorMessage) {
     if ($this->generationRecordId) {
@@ -497,7 +503,8 @@ class CRM_AI_BAO_AIGenImage {
           CRM_AI_BAO_AIImageGeneration::STATUS_FAILED,
           ['error_message' => $errorMessage]
         );
-      } catch (Exception $e) {
+      }
+      catch (Exception $e) {
         // Log database update error but don't throw exception
         CRM_Core_Error::debug_log_message("Failed to update error status: " . $e->getMessage());
       }
@@ -510,6 +517,7 @@ class CRM_AI_BAO_AIGenImage {
    * @param array $params Original parameters
    * @param string $imagePath Stored image path
    * @param string $translatedPrompt Translated prompt
+   * @return void None.
    */
   private function saveGenerationRecord($params, $imagePath, $translatedPrompt) {
     // TODO: Implement database record saving
@@ -523,7 +531,7 @@ class CRM_AI_BAO_AIGenImage {
    * @return string Absolute directory path
    */
   private function getUploadDirectory() {
-    $configDir = $this->config->aiGenImageUploadDir ?? null;
+    $configDir = $this->config->aiGenImageUploadDir ?? NULL;
 
     if ($configDir && is_dir($configDir)) {
       return $configDir;
@@ -539,11 +547,12 @@ class CRM_AI_BAO_AIGenImage {
    * Creates directory recursively if needed
    *
    * @param string $directory Directory path
+   * @return void None.
    * @throws Exception If directory cannot be created or is not writable
    */
   private function ensureDirectoryExists($directory) {
     if (!is_dir($directory)) {
-      if (!mkdir($directory, 0755, true)) {
+      if (!mkdir($directory, 0755, TRUE)) {
         CRM_Core_Error::debug_log_message('AI Image Generation directory error: Cannot create upload directory: ' . $directory);
         throw new Exception('Cannot create upload directory: ' . $directory);
       }
@@ -564,7 +573,7 @@ class CRM_AI_BAO_AIGenImage {
    */
   private function generateUniqueFilename($format = 'png') {
     $timestamp = date('Ymd_His');
-    $random = substr(md5(uniqid(rand(), true)), 0, 8);
+    $random = substr(md5(uniqid(rand(), TRUE)), 0, 8);
     return "genimg_{$timestamp}_{$random}.{$format}";
   }
 

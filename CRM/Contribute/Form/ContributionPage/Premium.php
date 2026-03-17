@@ -27,29 +27,24 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
-
 /**
- * form to process actions on Premiums
+ * form to process actions on the premiums section of Contribution Page
  */
 class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_ContributionPage {
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing premium settings (intro title, text, contact info, etc.)
+   * for the current contribution page from the database.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (isset($this->_id)) {
       $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
@@ -64,12 +59,13 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Adds fields for enabling premiums, gift combinations, intro title/text,
+   * contact email/phone, and minimum contribution display settings.
    *
    * @return void
-   * @access public
    */
-
   public function buildQuickForm() {
     $this->addElement('checkbox', 'premiums_active', ts('Premiums Section Enabled?'));
     $this->addElement('checkbox', 'premiums_combination', ts('Enable Gift Combination Feature'));
@@ -112,15 +108,16 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
     $this->assign('enablePremiumsCombination', $enablePremiumsCombination);
     $this->assign('activePremiums', $activePremiums);
 
-
     parent::buildQuickForm();
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Saves or updates the `civicrm_premium` record associated with the
+   * current contribution page.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -149,13 +146,11 @@ class CRM_Contribute_Form_ContributionPage_Premium extends CRM_Contribute_Form_C
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Premiums');
   }
 }
-

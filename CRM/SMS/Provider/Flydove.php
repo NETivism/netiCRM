@@ -9,7 +9,7 @@ class CRM_SMS_Provider_Flydove extends CRM_SMS_Provider {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   public $_bulkMode = FALSE;
 
@@ -27,7 +27,7 @@ class CRM_SMS_Provider_Flydove extends CRM_SMS_Provider {
     return self::$_singleton;
   }
 
-  function __construct($providerId) {
+  public function __construct($providerId) {
   }
 
   /**
@@ -41,9 +41,9 @@ class CRM_SMS_Provider_Flydove extends CRM_SMS_Provider {
    *  'guid' => string,
    *  'activityId' => int,
    * ]
-   * @return array response of self::doRequest
+   * @return array{} response of self::doRequest
    */
-  public function send(&$messages){
+  public function send(&$messages) {
     $response = [];
     return $response;
   }

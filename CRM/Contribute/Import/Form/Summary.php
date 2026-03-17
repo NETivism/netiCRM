@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class summarizes the import results
@@ -45,7 +40,6 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // set the error message path to display
@@ -89,7 +83,9 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
       $dupeActionString = ts('These records have not been imported.');
       $this->assign('dupeError', TRUE);
     }
-    $this->set('validRowCount', $totalRowCount - $invalidRowCount -
+    $this->set(
+      'validRowCount',
+      $totalRowCount - $invalidRowCount -
       $conflictRowCount - $duplicateRowCount - $mismatchCount - $invalidSoftCreditRowCount - $invalidPledgePaymentRowCount - $invalidPCPRowCount
     );
     $this->assign('dupeActionString', $dupeActionString);
@@ -103,11 +99,11 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -120,10 +116,8 @@ class CRM_Contribute_Import_Form_Summary extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Summary');
   }
 }
-

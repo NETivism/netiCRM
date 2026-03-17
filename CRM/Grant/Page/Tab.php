@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class handle grant related functions
@@ -47,7 +43,7 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
   public $_permission = NULL;
   public $_contactId = NULL;
 
@@ -57,7 +53,7 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function browse() {
+  public function browse() {
     $controller = new CRM_Core_Controller_Simple('CRM_Grant_Form_Search', ts('Grants'), $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -79,7 +75,7 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function view() {
+  public function view() {
     $controller = new CRM_Core_Controller_Simple('CRM_Grant_Form_GrantView', 'View Grant', $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->set('id', $this->_id);
@@ -94,7 +90,7 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function edit() {
+  public function edit() {
     $controller = new CRM_Core_Controller_Simple('CRM_Grant_Form_Grant', 'Create grant', $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->set('id', $this->_id);
@@ -109,7 +105,7 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -147,7 +143,7 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $this->setContext();
@@ -164,7 +160,7 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
     return parent::run();
   }
 
-  function setContext() {
+  public function setContext() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this);
     $session = CRM_Core_Session::singleton();
@@ -213,13 +209,14 @@ class CRM_Grant_Page_Tab extends CRM_Contact_Page_View {
     }
     $session->pushUserContext($url);
 
-    if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-        CRM_Core_DAO::$_nullObject
-      )) {
+    if (CRM_Utils_Request::retrieve(
+      'confirmed',
+      'Boolean',
+      CRM_Core_DAO::$_nullObject
+    )) {
 
       CRM_Grant_BAO_Grant::del($this->_id);
       CRM_Utils_System::redirect($url);
     }
   }
 }
-

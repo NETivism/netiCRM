@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Main page for viewing contact.
@@ -46,13 +42,10 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
    * the contact and calls the appropriate type of page to view.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     //fetch the dedupe exception contacts.
     $dedupeExceptions = [];
-
 
     $exception = new CRM_Dedupe_DAO_Exception();
     $exception->find();
@@ -73,7 +66,7 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
       while ($contact->fetch()) {
         $displayNames[$contact->id] = $contact->display_name;
       }
-      foreach ($dedupeExceptions as $key => & $values) {
+      foreach ($dedupeExceptions as $key => &$values) {
         $values['main']['name'] = CRM_Utils_Array::value($values['main']['id'], $displayNames);
         $values['other']['name'] = CRM_Utils_Array::value($values['other']['id'], $displayNames);
       }
@@ -85,12 +78,10 @@ class CRM_Contact_Page_DedupeException extends CRM_Core_Page {
    * This function is the main function that is called when the page loads,
    * it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     return parent::run();
   }
 }
-

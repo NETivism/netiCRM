@@ -28,40 +28,33 @@
 /**
  * Redefine the back action.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Core_QuickForm_Action_Done extends CRM_Core_QuickForm_Action {
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param object $stateMachine reference to state machine object
-   *
-   * @return object
-   * @access public
+   * @param CRM_Core_StateMachine &$stateMachine reference to state machine object
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     parent::__construct($stateMachine);
   }
 
   /**
    * Processes the request.
-   * this is basically a self submit, so validate the page
-   * and if success, call post process
-   * when done processing pop to user context
    *
-   * @param  object    $page       CRM_Core_Form the current form-page
-   * @param  string    $actionName Current action name, as one Action object can serve multiple actions
+   * Validates the page and, if successful, calls post-process before
+   * popping the user context stack.
+   *
+   * @param CRM_Core_Form &$page the current form-page
+   * @param string $actionName current action name
    *
    * @return void
-   * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     $page->isFormBuilt() or $page->buildForm();
 
     $pageName = $page->getAttribute('name');
@@ -83,4 +76,3 @@ class CRM_Core_QuickForm_Action_Done extends CRM_Core_QuickForm_Action {
     $this->popUserContext();
   }
 }
-

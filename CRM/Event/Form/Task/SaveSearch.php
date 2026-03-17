@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to save a search
@@ -55,7 +51,7 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $this->_id = NULL;
   }
@@ -69,7 +65,7 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Smart Group'));
 
     // get the qill
@@ -80,11 +76,18 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
     $this->assign('qill', $qill);
 
     // the name and description are actually stored with the group and not the saved search
-    $this->add('text', 'title', ts('Name'),
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title'), TRUE
+    $this->add(
+      'text',
+      'title',
+      ts('Name'),
+      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title'),
+      TRUE
     );
 
-    $this->addElement('text', 'description', ts('Description'),
+    $this->addElement(
+      'text',
+      'description',
+      ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'description')
     );
 
@@ -102,8 +105,11 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
       $this->addDefaultButtons(ts('Save Smart Group'));
     }
 
-    $this->addRule('title', ts('Name already exists in Database.'),
-      'objectExists', ['CRM_Contact_DAO_Group', $groupId, 'title']
+    $this->addRule(
+      'title',
+      ts('Name already exists in Database.'),
+      'objectExists',
+      ['CRM_Contact_DAO_Group', $groupId, 'title']
     );
   }
 
@@ -145,4 +151,3 @@ class CRM_Event_Form_Task_SaveSearch extends CRM_Event_Form_Task {
     $group = &CRM_Contact_BAO_Group::create($params);
   }
 }
-

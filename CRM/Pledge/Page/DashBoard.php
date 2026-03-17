@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This is page is for Pledge Dashboard
@@ -41,14 +37,11 @@
 class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
 
   /**
-   * Heart of the viewing process. The runner gets all the meta data for
-   * the contact and calls the appropriate type of page to view.
+   * Pre-process page.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('CiviPledge'));
 
     $startToDate = [];
@@ -85,8 +78,6 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
     $previousMonth = date("F Y", mktime(0, 0, 0, intval(date("m")) - 1, 1, intval(date("Y"))));
     $this->assign('previousMonthYear', $previousMonth);
 
-
-
     foreach ($prefixes as $prefix) {
       $aName = $prefix . 'ToDate';
       $startName = $prefix . 'Date';
@@ -99,16 +90,15 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
   }
 
   /**
-   * This function is the main function that is called when the page loads,
-   * it decides the which action has to be taken for the page.
+   * Run the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
-    $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Search',
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Pledge_Form_Search',
       ts('Pledge'),
       NULL
     );
@@ -123,4 +113,3 @@ class CRM_Pledge_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

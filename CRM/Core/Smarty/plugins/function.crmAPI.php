@@ -27,13 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright TTTP
- * $Id$
  *
  */
 
 /**
+ * Smarty function to call CiviCRM API v2 from templates.
+ *
+ * @param array $params parameters for the API call
+ * @param Smarty &$smarty the Smarty object
+ *
+ * @return void
  */
 function smarty_function_crmAPI($params, &$smarty) {
 
@@ -87,7 +91,3 @@ function smarty_function_crmAPI($params, &$smarty) {
     $smarty->assign($params["var"], $result);
   }
 }
-
-
-
-

@@ -90,7 +90,7 @@ function civicrm_api3_relationship_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * @param array $params array or parameters determined by getfields
  */
 function _civicrm_api3_relationship_create_spec(&$params) {
@@ -150,17 +150,18 @@ function civicrm_api3_relationship_get($params) {
   }
   else {
     $relationships = [];
-    $relationships = CRM_Contact_BAO_Relationship::getRelationship($params['contact_id'],
+    $relationships = CRM_Contact_BAO_Relationship::getRelationship(
+      $params['contact_id'],
       CRM_Utils_Array::value('status_id', $params),
       0,
       0,
-      CRM_Utils_Array::value('id', $params), NULL
+      CRM_Utils_Array::value('id', $params),
+      NULL
     );
   }
   foreach ($relationships as $relationshipId => $values) {
-    _civicrm_api3_custom_data_get($relationships[$relationshipId], 'Relationship', $relationshipId, NULL, CRM_Utils_Array::value('relationship_type_id',$values));
+    _civicrm_api3_custom_data_get($relationships[$relationshipId], 'Relationship', $relationshipId, NULL, CRM_Utils_Array::value('relationship_type_id', $values));
   }
-
 
   return civicrm_api3_create_success($relationships, $params);
 }
@@ -201,7 +202,8 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -228,6 +230,7 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
         else {
           throw new Exception('Invalid Relationship Type');
         }
+        // no break
       case 'relationship_type_id':
         if ($key == 'relationship_type_id' && !CRM_Utils_Array::arrayKeyExists($value, $relationTypes)) {
           throw new Exception("$key not a valid: $value");
@@ -264,7 +267,6 @@ function _civicrm_api3_relationship_format_params($params, &$values) {
  */
 function _civicrm_api3_relationship_check_params(&$params) {
 
-
   // check params for validity of Relationship id
   if (CRM_Utils_Array::value('id', $params)) {
     $relation = new CRM_Contact_BAO_Relationship();
@@ -290,4 +292,3 @@ function _civicrm_api3_relationship_check_params(&$params) {
 
   return [];
 }
-

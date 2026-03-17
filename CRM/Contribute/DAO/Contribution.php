@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-                                            class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO
-{
+
+class CRM_Contribute_DAO_Contribution extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_contribution';
+  public static $_tableName = 'civicrm_contribution';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Unique Contribution ID
    *
    * @var int unsigned
@@ -268,24 +266,20 @@
    * @var string
    */
   public $source_ip;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_contribution
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'contact_id' => 'civicrm_contact:id',
@@ -299,379 +293,376 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_type_id', 'civicrm_contribution_type', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_page_id', 'civicrm_contribution_page', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'payment_processor_id', 'civicrm_payment_processor', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_recur_id', 'civicrm_contribution_recur', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'honor_contact_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'address_id', 'civicrm_address', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contribution_type_id', 'civicrm_contribution_type', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contribution_page_id', 'civicrm_contribution_page', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'payment_processor_id', 'civicrm_payment_processor', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contribution_recur_id', 'civicrm_contribution_recur', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'honor_contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'address_id', 'civicrm_address', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'contribution_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution ID') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'contribution_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.contact_id',
           'headerPattern' => '/contact(.?id)?/i',
           'dataPattern' => '/^\d+$/',
-           'export' => true,
-              'FKClassName' => 'CRM_Contact_DAO_Contact',
-           'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+          'usage' => 'System',
+        ],
         'contribution_type_id' => [
           'name' => 'contribution_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                'export' => false,
+          'export' => FALSE,
           'where' => 'civicrm_contribution.contribution_type_id',
           'headerPattern' => '',
           'dataPattern' => '',
-              'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
-           'usage' => 'System',
-       ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
+          'usage' => 'System',
+        ],
         'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Page ID') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.contribution_page_id',
           'headerPattern' => '',
           'dataPattern' => '/^\d+$/',
-           'export' => true,
-              'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-           'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+          'usage' => 'System',
+        ],
         'payment_processor_id' => [
           'name' => 'payment_processor_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Payment Processor') ,
-                'export' => true,
+          'export' => TRUE,
           'where' => 'civicrm_contribution.payment_processor_id',
           'headerPattern' => '',
           'dataPattern' => '',
-              'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
-           'usage' => 'System',
-       ] ,
+          'FKClassName' => 'CRM_Core_DAO_PaymentProcessor',
+          'usage' => 'System',
+        ],
         'payment_instrument_id' => [
           'name' => 'payment_instrument_id',
           'type' => CRM_Utils_Type::T_INT,
-                     'usage' => 'System',
-       ] ,
+          'usage' => 'System',
+        ],
         'created_date' => [
           'name' => 'created_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Contribution Created Date') ,
-               'import' => false,
+          'import' => FALSE,
           'where' => 'civicrm_contribution.created_date',
           'headerPattern' => '/created(.?date)?/i',
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'receive_date' => [
           'name' => 'receive_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Receive Date') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.receive_date',
           'headerPattern' => '/receive(.?date)?/i',
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'non_deductible_amount' => [
           'name' => 'non_deductible_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Non-deductible Amount') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.non_deductible_amount',
           'headerPattern' => '/non?.?deduct/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'total_amount' => [
           'name' => 'total_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Total Amount') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.total_amount',
           'headerPattern' => '/^total|(.?^am(ou)?nt)/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'fee_amount' => [
           'name' => 'fee_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Transaction Fee Amount') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.fee_amount',
           'headerPattern' => '/fee(.?am(ou)?nt)?/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'net_amount' => [
           'name' => 'net_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Net Amount') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.net_amount',
           'headerPattern' => '/net(.?am(ou)?nt)?/i',
           'dataPattern' => '/^\d+(\.\d{2})?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'trxn_id' => [
           'name' => 'trxn_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Transaction ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.trxn_id',
           'headerPattern' => '/tr(ansactio|x)n(.?id)?/i',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'invoice_id' => [
           'name' => 'invoice_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Invoice ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.invoice_id',
           'headerPattern' => '/invoice(.?id)?/i',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-             'import' => true,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.currency',
           'headerPattern' => '/cur(rency)?/i',
           'dataPattern' => '/^[A-Z]{3}$/i',
-           'export' => true,
-            'default' => 'UL',
-             'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+          'usage' => 'System',
+        ],
         'cancel_date' => [
           'name' => 'cancel_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Cancel Date') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.cancel_date',
           'headerPattern' => '/cancel(.?date)?/i',
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'cancel_reason' => [
           'name' => 'cancel_reason',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Cancel Reason') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.cancel_reason',
           'headerPattern' => '/(cancel.?)?reason/i',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'receipt_date' => [
           'name' => 'receipt_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Receipt Date') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.receipt_date',
           'headerPattern' => '/receipt(.?date)?/i',
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'thankyou_date' => [
           'name' => 'thankyou_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Thank-you Date') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.thankyou_date',
           'headerPattern' => '/thank(s|(.?you))?(.?date)?/i',
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'contribution_source' => [
           'name' => 'source',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contribution Source') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.source',
           'headerPattern' => '/source/i',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'amount_level' => [
           'name' => 'amount_level',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Amount Label') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.amount_level',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'contribution_recur_id' => [
           'name' => 'contribution_recur_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
+        ],
         'honor_contact_id' => [
           'name' => 'honor_contact_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-           'usage' => 'System',
-       ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+          'usage' => 'System',
+        ],
         'is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.is_test',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'is_pay_later' => [
           'name' => 'is_pay_later',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Pay Later') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.is_pay_later',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'contribution_status_id' => [
           'name' => 'contribution_status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contribution Status Id') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.contribution_status_id',
           'headerPattern' => '/status/i',
           'dataPattern' => '',
-           'export' => false,
-            'default' => '',
-             'usage' => 'System',
-       ] ,
+          'export' => FALSE,
+          'default' => '',
+          'usage' => 'System',
+        ],
         'honor_type_id' => [
           'name' => 'honor_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Honor Type') ,
-                     'usage' => 'System',
-       ] ,
+          'usage' => 'System',
+        ],
         'address_id' => [
           'name' => 'address_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_Address',
-           'usage' => 'System',
-       ] ,
+          'FKClassName' => 'CRM_Core_DAO_Address',
+          'usage' => 'System',
+        ],
         'check_number' => [
           'name' => 'check_number',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Check Number') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.check_number',
           'headerPattern' => '/check(.?number)?/i',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'receipt_id' => [
           'name' => 'receipt_id',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Receipt ID') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.receipt_id',
           'headerPattern' => '/receipt(.?number)?/i',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'expire_date' => [
           'name' => 'expire_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Expire Date') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_contribution.expire_date',
           'headerPattern' => '/expire(.?date)?/i',
           'dataPattern' => '/^\d{4}-?\d{2}-?\d{2} ?(\d{2}:?\d{2}:?(\d{2})?)?$/',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'source_ip' => [
           'name' => 'source_ip',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Source IP'),
-           'maxlength' => 45,
-           'size' => CRM_Utils_Type::BIG,
-             'import' => false,
+          'title' => ts('Source Ip') ,
+          'maxlength' => 45,
+          'size' => CRM_Utils_Type::BIG,
+          'import' => FALSE,
           'where' => 'civicrm_contribution.source_ip',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
       ];
     }
     return self::$_fields;
@@ -679,31 +670,25 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -711,22 +696,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['contribution'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                                                                                          }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -734,12 +718,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['contribution'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                                                                                          }
+    }
     return self::$_export;
   }
 }

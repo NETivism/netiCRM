@@ -17,8 +17,9 @@ function civicrm_api3_generic_setValue($apiRequest) {
 
   $fields = civicrm_api($entity, 'getFields', ['version' => 3, 'action' => 'create', "sequential"]);
   // getfields error, shouldn't happen.
-  if ($fields['is_error'])
-  return $fields;
+  if ($fields['is_error']) {
+    return $fields;
+  }
   $fields = $fields['values'];
 
   if (!CRM_Utils_Array::arrayKeyExists($field, $fields)) {
@@ -37,22 +38,24 @@ function civicrm_api3_generic_setValue($apiRequest) {
         return civicrm_api3_create_error("Param '$field' must be a number", ['error_code' => 'NaN']);
       }
 
+      // no break
     case 2:
       //string
-      require_once ("CRM/Utils/Rule.php");
+      require_once("CRM/Utils/Rule.php");
       if (!CRM_Utils_Rule::xssString($value)) {
         return civicrm_api3_create_error(ts('Illegal characters in input (potential scripting attack)'), ['error_code' => 'XSS']);
       }
-    if (CRM_Utils_Array::arrayKeyExists('maxlength', $def)) {
-      $value = substr($value, 0, $def['maxlength']);
-    }
-    break;
+      if (CRM_Utils_Array::arrayKeyExists('maxlength', $def)) {
+        $value = substr($value, 0, $def['maxlength']);
+      }
+      break;
 
     case 12:
       //date
-      $value = CRM_Utils_Type::escape($value,"Date",false);
-      if (!$value)
+      $value = CRM_Utils_Type::escape($value, "Date", FALSE);
+      if (!$value) {
         return civicrm_api3_create_error("Param '$field' is not a date. format YYYYMMDD or YYYYMMDDHHMMSS");
+      }
       break;
 
     case 16:
@@ -73,4 +76,3 @@ function civicrm_api3_generic_setValue($apiRequest) {
     return civicrm_api3_create_error("error assigning $field=$value for $entity (id=$id)");
   }
 }
-

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class is for building event(participation) block on user dashboard
@@ -43,10 +39,9 @@ class CRM_Event_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
   /**
    * Function to list participations for the UF user
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function listParticipations() {
+  public function listParticipations() {
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Search', ts('Events'), NULL);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -61,12 +56,10 @@ class CRM_Event_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
    * This function is the main function that is called when the page
    * loads, it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     parent::preProcess();
     $this->listParticipations();
   }
 }
-

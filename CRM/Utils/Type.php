@@ -26,26 +26,24 @@
 */
 
 /**
+ * Provides data type validation, escaping, and type-safe input handling
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: $
  *
  */
 class CRM_Utils_Type {
-  CONST T_INT = 1, T_STRING = 2, T_ENUM = 2, T_DATE = 4, T_TIME = 8, T_BOOL = 16, T_BOOLEAN = 16, T_TEXT = 32, T_LONGTEXT = 32, T_BLOB = 64, T_TIMESTAMP = 256, T_FLOAT = 512, T_MONEY = 1024, T_EMAIL = 2048, T_URL = 4096, T_CCNUM = 8192, T_MEDIUMBLOB = 16384, T_DOUBLE = 32768;
-  CONST TWO = 2, FOUR = 4, EIGHT = 8, TWELVE = 12, SIXTEEN = 16, TWENTY = 20, MEDIUM = 20, THIRTY = 30, BIG = 30, FORTYFIVE = 45, HUGE = 45;
+  public const T_INT = 1, T_STRING = 2, T_ENUM = 2, T_DATE = 4, T_TIME = 8, T_BOOL = 16, T_BOOLEAN = 16, T_TEXT = 32, T_LONGTEXT = 32, T_BLOB = 64, T_TIMESTAMP = 256, T_FLOAT = 512, T_MONEY = 1024, T_EMAIL = 2048, T_URL = 4096, T_CCNUM = 8192, T_MEDIUMBLOB = 16384, T_DOUBLE = 32768;
+  public const TWO = 2, FOUR = 4, EIGHT = 8, TWELVE = 12, SIXTEEN = 16, TWENTY = 20, MEDIUM = 20, THIRTY = 30, BIG = 30, FORTYFIVE = 45, HUGE = 45;
 
   /**
-   * Convert Constant Data type to String
+   * Convert a type constant to its string representation.
    *
-   * @param  $type       integer datatype
+   * @param int $type  One of the T_* type constants defined in this class.
    *
-   * @return $string     String datatype respective to integer datatype
-   *
-   * @access public
+   * @return string  The string name of the type (e.g. 'Int', 'String', 'Date'), or empty string if unrecognized.
    */
-  static function typeToString($type) {
+  public static function typeToString($type) {
     switch ($type) {
       case 1:
         $string = 'Int';
@@ -104,7 +102,7 @@ class CRM_Utils_Type {
         $string = 'Mediumblob';
         break;
 
-      case 32768;
+      case 32768:
         $string = 'Double';
         break;
 
@@ -114,15 +112,17 @@ class CRM_Utils_Type {
   }
 
   /**
-   * Verify that a variable is of a given type and apply a bit of processing
+   * Verify that a variable is of a given type and apply a bit of processing.
    *
-   * @param mixed   $data         The variable
-   * @param string  $type         The type
-   * @param boolean $abort        Should we abort if invalid
+   * For string types, the value is escaped for safe database use. For numeric
+   * and date types, the value is cast or reformatted. Returns NULL (or calls
+   * CRM_Core_Error::fatal) if the value does not match the expected type.
    *
-   * @return mixed                The data, escaped if necessary
-   * @access public
-   * @static
+   * @param mixed  $data   The value to escape/validate.
+   * @param string $type   The type name (e.g. 'Integer', 'String', 'Date', 'Boolean').
+   * @param bool   $abort  Whether to call fatal() on type mismatch; defaults to TRUE.
+   *
+   * @return mixed|null  The escaped/cast value, or NULL if invalid and $abort is FALSE.
    */
   public static function escape($data, $type, $abort = TRUE) {
 
@@ -242,7 +242,6 @@ class CRM_Utils_Type {
         break;
     }
 
-
     if ($abort) {
       CRM_Core_Error::fatal("Provided data is not of the type $type");
     }
@@ -250,16 +249,17 @@ class CRM_Utils_Type {
   }
 
   /**
-   * Verify that a variable is of a given type
+   * Verify that a variable is of a given type without escaping for database use.
    *
-   * @param mixed   $data         The variable
-   * @param string  $type         The type
-   * @param boolean $abort        Should we abort if invalid
-   * @name string   $name	    The name of the attribute
+   * Similar to escape() but does not escape strings; instead it validates and
+   * returns the value as-is (or cast to the appropriate native PHP type).
    *
-   * @return mixed                The data, escaped if necessary
-   * @access public
-   * @static
+   * @param mixed  $data   The value to validate.
+   * @param string $type   The type name (e.g. 'Integer', 'String', 'Date', 'Boolean').
+   * @param bool   $abort  Whether to call fatal() on type mismatch; defaults to TRUE.
+   * @param string $name   Label for the attribute, used in the fatal error message.
+   *
+   * @return mixed|null  The validated value, or NULL if invalid and $abort is FALSE.
    */
   public static function validate($data, $type, $abort = TRUE, $name = 'One of parameters ') {
 
@@ -326,9 +326,10 @@ class CRM_Utils_Type {
           $yyyymmdd = date('Ymd', $timestamp);
           return $yyyymmdd;
         }
-        if ((preg_match('/^\d{14}$/', $data) ||
+        if ((
+          preg_match('/^\d{14}$/', $data) ||
             preg_match('/^\d{8}$/', $data)
-          ) &&
+        ) &&
           CRM_Utils_Rule::mysqlDate($data)
         ) {
           return $data;
@@ -386,4 +387,3 @@ class CRM_Utils_Type {
     return NULL;
   }
 }
-

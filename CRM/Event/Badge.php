@@ -31,14 +31,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class print the name badges for the participants
@@ -67,7 +62,10 @@ class CRM_Event_Badge {
    * @var float|int
    */
   public $lMarginLogo;
-  function __construct() {
+  /**
+   * class constructor
+   */
+  public function __construct() {
     $this->style = ['width' => 0.1, 'cap' => 'round', 'join' => 'round', 'dash' => '2,2', 'color' => [0, 0, 200]];
     $this->format = '5160';
     $this->imgExtension = 'png';
@@ -76,7 +74,14 @@ class CRM_Event_Badge {
     $this->setDebug(FALSE);
   }
 
-  function setDebug($debug = TRUE) {
+  /**
+   * Set debug
+   *
+   * @param bool $debug
+   *
+   * @return void
+   */
+  public function setDebug($debug = TRUE) {
     if (!$debug) {
       $this->debug = FALSE;
       $this->border = 0;
@@ -91,10 +96,9 @@ class CRM_Event_Badge {
    * function to create the labels (pdf)
    * It assumes the participants are from the same event
    *
-   * @param   array    $participants
+   * @param array $participants
    *
-   * @return  null
-   * @access  public
+   * @return void
    */
   public function run(&$participants) {
     // fetch the 1st participant, and take her event to retrieve its attributes
@@ -106,6 +110,13 @@ class CRM_Event_Badge {
     CRM_Utils_System::civiExit(1);
   }
 
+  /**
+   * Retrieve event
+   *
+   * @param int $eventID
+   *
+   * @return CRM_Event_BAO_Event|null
+   */
   protected function retrieveEvent($eventID) {
 
     $bao = new CRM_Event_BAO_Event();
@@ -115,7 +126,15 @@ class CRM_Event_Badge {
     return NULL;
   }
 
-  function getImageFileName($eventID, $img = FALSE) {
+  /**
+   * Get image file name
+   *
+   * @param int $eventID
+   * @param bool|string $img
+   *
+   * @return string|bool
+   */
+  public function getImageFileName($eventID, $img = FALSE) {
     global $civicrm_root;
 
     $config = CRM_Core_Config::singleton();
@@ -158,7 +177,14 @@ class CRM_Event_Badge {
     return $imgFile;
   }
 
-  function printBackground($img = FALSE) {
+  /**
+   * Print background
+   *
+   * @param bool|string $img
+   *
+   * @return void
+   */
+  public function printBackground($img = FALSE) {
     $x = $this->pdf->GetAbsX();
     $y = $this->pdf->GetY();
     if ($this->debug) {
@@ -175,7 +201,7 @@ class CRM_Event_Badge {
         $newH = 10; // Use 1 cm height for the card.
         $newW = $w * $newH / $h;
         $this->lMarginLogo = $newW + 4;
-        $this->pdf->Image($img, $this->pdf->GetAbsX()+2, $this->pdf->GetY()+2, $newW, $newH, strtoupper($this->imgExtension), '', '', FALSE, 75, '', FALSE, FALSE, $this->debug, TRUE, FALSE, FALSE);
+        $this->pdf->Image($img, $this->pdf->GetAbsX() + 2, $this->pdf->GetY() + 2, $newW, $newH, strtoupper($this->imgExtension), '', '', FALSE, 75, '', FALSE, FALSE, $this->debug, TRUE, FALSE, FALSE);
       }
       else {
         $this->lMarginLogo = 2;
@@ -186,7 +212,11 @@ class CRM_Event_Badge {
 
   /**
    * this is supposed to be overrided
-   **/
+   *
+   * @param array $participant
+   *
+   * @return void
+   */
   public function generateLabel($participant) {
     $txt = "{$this->event['title']}
 {$participant['first_name']} {$participant['last_name']}
@@ -195,19 +225,22 @@ class CRM_Event_Badge {
     $this->pdf->MultiCell($this->pdf->width, $this->pdf->lineHeight, $txt);
   }
 
-  function pdfExtraFormat() {}
+  /**
+   * PDF extra format
+   *
+   * @return void
+   */
+  public function pdfExtraFormat() {
+  }
 
   /**
    * function to create labels (pdf)
    *
-   * @param   array    $contactRows   assciated array of contact data
-   * @param   string   $format   format in which labels needs to be printed
+   * @param array $participants assciated array of contact data
    *
-   * @return  null
-   * @access  public
+   * @return void
    */
-  function createLabels(&$participants) {
-
+  public function createLabels(&$participants) {
 
     $this->pdf = new CRM_Utils_PDF_Label($this->format, 'mm');
     $this->pdfExtraFormat();
@@ -225,4 +258,3 @@ class CRM_Event_Badge {
     $this->pdf->Output($this->event->title . '.pdf', 'I');
   }
 }
-

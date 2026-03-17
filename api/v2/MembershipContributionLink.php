@@ -1,7 +1,6 @@
 <?php
 // $Id: MembershipContributionLink.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -128,4 +127,3 @@ function &civicrm_membershipcontributionlink_get(&$params) {
 
   return $values;
 }
-

@@ -27,24 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
 
   /**
    * static holder for the default LT
    */
-  static $_defaultContributionType = NULL;
+  public static $_defaultContributionType = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -58,11 +55,11 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contribute_BAO_ManagePremium object
+   * @return CRM_Contribute_DAO_Product|null CRM_Contribute_DAO_Product object
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $premium = new CRM_Contribute_DAO_Product();
     $premium->copyValues($params);
     if ($premium->find(TRUE)) {
@@ -79,10 +76,10 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    * @param int      $id        id of the database record
    * @param boolean  $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean             TRUE on success, FALSE otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     if (!$is_active) {
 
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
@@ -101,9 +98,9 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    * @access public
    * @static
    *
-   * @return object
+   * @return CRM_Contribute_DAO_Product
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_deductible'] = CRM_Utils_Array::value('is_deductible', $params, FALSE);
@@ -129,10 +126,11 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
    * Function to delete premium Types
    *
    * @param int $productID
+   *
+   * @return void|string
    * @static
    */
-
-  static function del($productID) {
+  public static function del($productID) {
     //check dependencies
 
     $premiumsProduct = new CRM_Contribute_DAO_PremiumsProduct();
@@ -236,4 +234,3 @@ class CRM_Contribute_BAO_ManagePremiums extends CRM_Contribute_DAO_Product {
     ];
   }
 }
-

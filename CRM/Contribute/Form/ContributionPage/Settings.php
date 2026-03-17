@@ -27,24 +27,25 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
+/**
+ * form to process actions on the title and settings section of Contribution Page
+ */
 class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_ContributionPage {
 
   public $_cdType;
   protected $_contributionType = NULL;
 
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method handles custom data types, initializes titles and entity IDs,
+   * and processes custom data if it was submitted.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     //custom data related code
@@ -75,14 +76,14 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves existing settings like background URLs, contribution type,
+   * and custom data values from the database.
    *
-   * @return void
+   * @return array the array of default values for form elements
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     // custom data related
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
@@ -112,10 +113,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Adds fields for title, contribution type, intro/footer text, organization settings,
+   * goal amounts, active status, honor roll, and background image uploads.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // custom data related
@@ -125,15 +128,15 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     //need to assign custom data type and subtype to the template
     $this->assign('customDataType', 'ContributionPage');
 
-
-
     $this->_first = TRUE;
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionPage');
 
     // name
     $this->add('text', 'title', ts('Title'), $attributes['title'], TRUE);
 
-    $this->add('select', 'contribution_type_id',
+    $this->add(
+      'select',
+      'contribution_type_id',
       ts('Contribution Type'),
       CRM_Contribute_PseudoConstant::contributionType(NULL, FALSE, TRUE),
       TRUE,
@@ -169,7 +172,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       $this->addElement('checkbox', 'is_internal', ts('Is this Online Contribution Page are internal use only?'));
     }
 
-
     $this->addElement('checkbox', 'is_special', ts('Is this Online Contribution Page in the Special Style?'), NULL, ['onclick' => "showSpecial()"]);
 
     // should the honor be enabled
@@ -185,7 +187,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
     $this->addFormRule(['CRM_Contribute_Form_ContributionPage_Settings', 'formRule']);
 
-
     $this->addElement('file', 'uploadBackgroundImage', ts('Background image'));
     $this->addElement('file', 'uploadMobileBackgroundImage', ts('Background image of mobile'));
     $this->addUploadElement('uploadBackgroundImage');
@@ -194,7 +195,6 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     $this->addRule('uploadMobileBackgroundImage', ts('Image could not be uploaded due to invalid type extension.'), 'imageFile', '2000x2000');
 
     $config = CRM_Core_Config::singleton();
-
 
     $this->add('hidden', 'deleteBackgroundImage');
     $this->add('hidden', 'deleteMobileBackgroundImage');
@@ -209,15 +209,17 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * global validation rules for the form
+   * Global form rule for validation.
+   *
+   * Validates that the contribution page title does not contain forward slashes.
    *
    * @param array $values posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array<string, mixed> list of errors to be posted back to the form
    */
-  static function formRule($values, $files, $self) {
+  public static function formRule($values, $files, $self) {
     $errors = [];
 
     //CRM-4286
@@ -229,10 +231,12 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Handles saving the contribution page settings, processing dates,
+   * goal amounts, custom fields, and background image uploads.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -251,7 +255,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     }
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
-    if($params['is_active'] && $params['is_special']){
+    if ($params['is_active'] && $params['is_special']) {
       $params['is_active'] = 3;
     }
     if ($this->get('internalExists')) {
@@ -280,12 +284,10 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
       $params['goal_recuramount'] = 'null';
     }
 
-
     if (!$params['honor_block_is_active']) {
       $params['honor_block_title'] = NULL;
       $params['honor_block_text'] = NULL;
     }
-
 
     $customFields = CRM_Core_BAO_CustomField::getFields('ContributionPage', FALSE, FALSE, CRM_Utils_Array::value('contribution_type_id', $params));
     $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params, $customFields, $this->_id, 'ContributionPage');
@@ -297,16 +299,16 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     unset($params['deleteBackgroundImage']);
     unset($params['deleteMobileBackgroundImage']);
 
-    if(!empty($deleteBackgroundImage)){
+    if (!empty($deleteBackgroundImage)) {
       $params['background_URL'] = '';
     }
-    if(!empty($deleteMobileBackgroundImage)){
+    if (!empty($deleteMobileBackgroundImage)) {
       $params['mobile_background_URL'] = '';
     }
-    if(!empty($params['uploadBackgroundImage']['name'])){
+    if (!empty($params['uploadBackgroundImage']['name'])) {
       $params['background_URL'] = $config->customFileUploadURL.basename($params['uploadBackgroundImage']['name']);
     }
-    if(!empty($params['uploadMobileBackgroundImage']['name'])){
+    if (!empty($params['uploadMobileBackgroundImage']['name'])) {
       $params['mobile_background_URL'] = $config->customFileUploadURL.basename($params['uploadMobileBackgroundImage']['name']);
     }
 
@@ -318,13 +320,11 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Title and Settings');
   }
 }
-

@@ -28,40 +28,32 @@
 /**
  * Redefine the cancel action
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Core_QuickForm_Action_Cancel extends CRM_Core_QuickForm_Action {
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param object $stateMachine reference to state machine object
-   *
-   * @return object
-   * @access public
+   * @param CRM_Core_StateMachine &$stateMachine reference to state machine object
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     parent::__construct($stateMachine);
   }
 
   /**
    * Processes the request.
    *
-   * @param  object    $page       CRM_Core_Form the current form-page
-   * @param  string    $actionName Current action name, as one Action object can serve multiple actions
+   * @param CRM_Core_Form &$page the current form-page
+   * @param string $actionName current action name
    *
    * @return void
-   * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     // $this->_stateMachine->reset( );
 
     $this->popUserContext();
   }
 }
-

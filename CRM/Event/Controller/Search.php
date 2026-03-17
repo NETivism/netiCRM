@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class is used by the Search functionality.
@@ -51,9 +46,12 @@ class CRM_Event_Controller_Search extends CRM_Core_Controller {
 
   /**
    * class constructor
+   *
+   * @param string $title
+   * @param int $action
+   * @param bool $modal
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
-
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
     parent::__construct($title, $modal);
 
@@ -62,12 +60,11 @@ class CRM_Event_Controller_Search extends CRM_Core_Controller {
     // create and instantiate the pages
     $this->addPages($this->_stateMachine, $action);
 
-
-
     $session = CRM_Core_Session::singleton();
     $uploadNames = $session->get('uploadNames');
     if (!empty($uploadNames)) {
-      $uploadNames = array_merge($uploadNames,
+      $uploadNames = array_merge(
+        $uploadNames,
         CRM_Core_BAO_File::uploadNames()
       );
     }
@@ -82,4 +79,3 @@ class CRM_Event_Controller_Search extends CRM_Core_Controller {
     $this->addActions($uploadDir, $uploadNames);
   }
 }
-

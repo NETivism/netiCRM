@@ -27,41 +27,133 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
   /**
-   * @var never[]
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
-  public $_component;
-  public $_aliases;
-  public $_selectComponent;
-  public $_from;
-  public $_formComponent;
-  public $_where;
-  public $_contactSelected;
-  public $_columnHeadersComponent;
-  public $_absoluteUrl;
-  public $_absoluteUr;
-  CONST ROW_COUNT_LIMIT = 1;
 
+  /**
+   * List of component alias suffixes used to isolate per-component SELECT clauses.
+   *
+   * @var string[]
+   */
+  public $_component;
+
+  /**
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
+  public $_aliases;
+
+  /**
+   * Per-component SELECT clause strings, keyed by component alias.
+   *
+   * @var array<string, string>
+   */
+  public $_selectComponent;
+
+  /**
+   * The SQL FROM clause built by from().
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * Per-component FROM clause strings, keyed by component alias.
+   *
+   * @var array<string, string>
+   */
+  public $_formComponent;
+
+  /**
+   * The SQL WHERE clause built by where().
+   *
+   * @var string
+   */
+  public $_where;
+
+  /**
+   * Contact IDs collected from the main query result, used for per-component sub-queries.
+   *
+   * @var int[]
+   */
+  public $_contactSelected;
+
+  /**
+   * Per-component column headers, keyed by component alias then column alias.
+   *
+   * @var array<string, array<string, array<string, mixed>>>
+   */
+  public $_columnHeadersComponent;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
+  public $_absoluteUrl;
+
+  /**
+   * Alternate absolute-URL flag used for single-contact view links (note: likely a typo of $_absoluteUrl).
+   *
+   * @var bool
+   */
+  public $_absoluteUr;
+
+  /**
+   * Default row limit per page for this report.
+   */
+  public const ROW_COUNT_LIMIT = 1;
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
   protected $_summary = NULL;
 
+  /**
+   * Whether the email table is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_emailField = FALSE;
 
+  /**
+   * Whether the phone table is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_phoneField = FALSE;
 
+  /**
+   * Whether the address table is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_addressField = FALSE;
 
+  /**
+   * Contact sub-types whose custom fields are available in this report.
+   *
+   * @var string[]
+   */
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
-  function __construct() {
+  /**
+   * Initialises column definitions for contact, address, email, contribution, membership,
+   * participant, relationship, activity, and group tables.
+   */
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -302,12 +394,26 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Disables CSV export support for this report, then delegates to the parent preProcess().
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->_csvSupported = FALSE;
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause, separating component-specific fields (contribution, membership,
+   * participant, relationship, activity) into per-component select strings stored in
+   * $_selectComponent. Activity target/assignment contact names are aliased and appended
+   * to the activity component select. Populates $_select, $_columnHeaders, and
+   * $_columnHeadersComponent.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     $this->_component = ['contribution_civireport', 'membership_civireport', 'participant_civireport', 'relationship_civireport', 'activity_civireport'];
@@ -367,18 +473,32 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function buildQuickForm() {
+  /**
+   * Builds the report form, then restricts the contact ID operator to 'equals' only,
+   * removing all other operator options from the id_op select element.
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
     parent::buildQuickForm();
 
     $idOperator = $this->getElement('id_op');
-    foreach($idOperator->_options as $idx => $opt) {
+    foreach ($idOperator->_options as $idx => $opt) {
       if (!empty($opt['attr']['value']) && $opt['attr']['value'] != 'eq') {
         unset($idOperator->_options[$idx]);
       }
     }
   }
 
-  function setDefaultValues($freeze = TRUE) {
+  /**
+   * Sets default form values. If no contact ID is provided, defaults to the first
+   * non-deleted contact in the database.
+   *
+   * @param bool $freeze Whether to freeze (disable) form elements (passed to parent).
+   *
+   * @return array Default form values.
+   */
+  public function setDefaultValues($freeze = TRUE) {
     parent::setDefaultValues($freeze);
     if (empty($this->_defaults['id_value'])) {
       $this->_params['id_value'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contact WHERE is_deleted = 0");
@@ -387,7 +507,16 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     return $this->_defaults;
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validates that a contact ID filter value is provided.
+   *
+   * @param array $fields Submitted form values.
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Contact_Detail $self The form instance (unused).
+   *
+   * @return array<string, mixed> Associative array of field => error message; empty if valid.
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (empty($fields['id_value'])) {
       $errors['id_value'] = ts('%1 is a required field.', [1 => ts('Contact ID')]);
@@ -395,7 +524,14 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  /**
+   * Builds the main FROM clause joining contact and optionally address, email, and phone
+   * tables. Also builds per-component FROM clauses for contribution, membership,
+   * participant, activity, and relationship sub-queries, storing them in $_formComponent.
+   *
+   * @return void
+   */
+  public function from() {
     $group = " ";
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}";
@@ -483,7 +619,13 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  /**
+   * Builds the WHERE clause from submitted filter values, then appends an ACL clause
+   * and a GROUP BY on contact ID. Populates $_where.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
 
     foreach ($this->_columns as $tableName => $table) {
@@ -492,7 +634,8 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
           $clause = NULL;
           $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
           if ($op) {
-            $clause = $this->whereClause($field,
+            $clause = $this->whereClause(
+              $field,
               $op,
               CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
               CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -520,7 +663,15 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->_where .= " GROUP BY {$this->_aliases['civicrm_contact']}.id ";
   }
 
-  function clauseComponent() {
+  /**
+   * Runs per-component sub-queries (contribution, membership, participant, activity,
+   * relationship) for the contacts selected in the main query. Activity results are
+   * limited to 10 rows and filtered by enabled components. Relationship results are
+   * expanded in both directions (a→b and b→a).
+   *
+   * @return array Nested array keyed by contact ID → component alias → list of row arrays.
+   */
+  public function clauseComponent() {
     $selectedContacts = CRM_Utils_Array::implode(',', $this->_contactSelected);
     $contribution = $membership = $participant = NULL;
     $eligibleResult = $rows = $tempArray = [];
@@ -553,7 +704,6 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
 
     if (CRM_Utils_Array::value('relationship_civireport', $this->_selectComponent)) {
-
 
       $relTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, 'null', NULL, NULL, TRUE);
 
@@ -658,7 +808,15 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     return $rows;
   }
 
-  function statistics(&$rows) {
+  /**
+   * Computes report statistics: total row count and applied filters.
+   * Increments count by 1 when a rollup row is present.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array with 'count' and 'filters' entries.
+   */
+  public function statistics(&$rows) {
     $statistics = [];
 
     $count = count($rows);
@@ -672,17 +830,36 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     return $statistics;
   }
 
-  //Override to set limit is 10
-  function limit($rowCount = self::ROW_COUNT_LIMIT) {
+  /**
+   * Overrides parent limit() to enforce this report's ROW_COUNT_LIMIT default.
+   *
+   * @param int $rowCount Maximum number of rows per page.
+   *
+   * @return void
+   */
+  public function limit($rowCount = self::ROW_COUNT_LIMIT) {
     parent::limit($rowCount);
   }
 
-  //Override to set pager with limit is 10
-  function setPager($rowCount = self::ROW_COUNT_LIMIT) {
+  /**
+   * Overrides parent setPager() to enforce this report's ROW_COUNT_LIMIT default.
+   *
+   * @param int $rowCount Maximum number of rows per page.
+   *
+   * @return void
+   */
+  public function setPager($rowCount = self::ROW_COUNT_LIMIT) {
     parent::setPager($rowCount);
   }
 
-  function postProcess() {
+  /**
+   * Builds the ACL clause, assembles and runs the main query, collects selected contact IDs,
+   * then runs per-component sub-queries for single-contact views. Strips internal ID columns
+   * from component headers before assigning results to the template.
+   *
+   * @return void
+   */
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -726,7 +903,16 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     $this->endPostProcess();
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Post-processes main result rows to linkify contact names. For multiple contacts,
+   * links to the report filtered by that contact ID; for a single contact, links to
+   * the contact summary view. Also resolves country and state/province IDs to labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
@@ -764,7 +950,6 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -773,7 +958,17 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
   }
 
-  function alterComponentDisplay(&$componentRows) {
+  /**
+   * Post-processes per-component sub-query rows by resolving IDs to human-readable labels.
+   * Handles contribution type/status, membership type/status, participant event/status/role,
+   * and activity type/status. Adds event income report links for participant event IDs.
+   *
+   * @param array &$componentRows Nested component rows keyed by contactID → component → rows,
+   *                              as returned by clauseComponent(). Modified in place.
+   *
+   * @return void
+   */
+  public function alterComponentDisplay(&$componentRows) {
     // custom code to alter rows
 
     $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, FALSE);
@@ -812,9 +1007,11 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
 
             if ($val = CRM_Utils_Array::value('civicrm_participant_event_id', $row)) {
               $componentRows[$contactID][$component][$rowNum]['civicrm_participant_event_id'] = CRM_Event_PseudoConstant::event($val, FALSE);
-              $url = CRM_Report_Utils_Report::getNextUrl('event/income',
+              $url = CRM_Report_Utils_Report::getNextUrl(
+                'event/income',
                 'reset=1&force=1&id_op=in&id_value=' . $val,
-                $this->_absoluteUrl, $this->_id
+                $this->_absoluteUrl,
+                $this->_id
               );
               $componentRows[$contactID][$component][$rowNum]['civicrm_participant_event_id_link'] = $url;
               $componentRows[$contactID][$component][$rowNum]['civicrm_participant_event_id_hover'] = ts("View Event Income details for this Event.");
@@ -863,4 +1060,3 @@ class CRM_Report_Form_Contact_Detail extends CRM_Report_Form {
     }
   }
 }
-

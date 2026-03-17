@@ -27,17 +27,26 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
 /**
- * Helper class to build navigation links
+ * Helper class to build navigation links for contribution page tabs.
  */
 class CRM_Contribute_Form_ContributionPage_TabHeader {
-  static function build(&$form) {
+
+  /**
+   * Build the tab header for the contribution page.
+   *
+   * This method retrieves existing tabs from the form state or generates them,
+   * assigns them to the template, and determines the selected tab.
+   *
+   * @param CRM_Core_Form $form the form object to which the tabs belong
+   *
+   * @return array the array of tab definitions
+   */
+  public static function build(&$form) {
     $tabs = $form->get('tabHeader');
     if (!$tabs || !CRM_Utils_Array::value('reset', $_GET)) {
       $tabs = self::process($form);
@@ -48,7 +57,17 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     return $tabs;
   }
 
-  static function process(&$form) {
+  /**
+   * Process and define the tabs for the contribution page.
+   *
+   * This method initializes the list of available tabs (Settings, Amounts,
+   * Memberships, etc.), calculates their links, and determines which one is active.
+   *
+   * @param CRM_Core_Form $form the form object
+   *
+   * @return array|null the array of processed tabs, or null if no contribution page ID is found
+   */
+  public static function process(&$form) {
     if ($form->getVar('_id') <= 0) {
       return NULL;
     }
@@ -141,7 +160,8 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
       $reset = CRM_Utils_Array::value('reset', $_GET) ? 'reset=1&' : '';
 
       foreach ($tabs as $key => $value) {
-        $tabs[$key]['link'] = CRM_Utils_System::url("civicrm/admin/contribute/{$key}",
+        $tabs[$key]['link'] = CRM_Utils_System::url(
+          "civicrm/admin/contribute/{$key}",
           "{$reset}action=update&snippet=4&id={$contribPageId}&qfKey={$qfKey}"
         );
         $tabs[$key]['active'] = $tabs[$key]['valid'] = TRUE;
@@ -158,12 +178,30 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     return $tabs;
   }
 
-  static function reset(&$form) {
+  /**
+   * Reset the tab header configuration.
+   *
+   * Recalculates the tab definitions and updates the form state.
+   *
+   * @param CRM_Core_Form $form the form object
+   *
+   * @return void
+   */
+  public static function reset(&$form) {
     $tabs = self::process($form);
     $form->set('tabHeader', $tabs);
   }
 
-  static function getCurrentTab($tabs) {
+  /**
+   * Get the name of the currently selected tab.
+   *
+   * Iterates through the provided tabs to find the one marked as 'current'.
+   *
+   * @param array $tabs the array of tab definitions
+   *
+   * @return string the machine name of the current tab (e.g., 'settings')
+   */
+  public static function getCurrentTab($tabs) {
     static $current = FALSE;
 
     if ($current) {
@@ -183,4 +221,3 @@ class CRM_Contribute_Form_ContributionPage_TabHeader {
     return $current;
   }
 }
-

@@ -1,7 +1,6 @@
 <?php
 // $Id: EntityTag.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -227,4 +226,3 @@ function civicrm_entity_tag_common(&$params, $op = 'add') {
   }
   return $values;
 }
-

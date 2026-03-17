@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,41 +38,38 @@
 class CRM_Utils_PagerAToZ {
 
   /**
-   * returns the alphabetic array for sorting by character
+   * Build the A-to-Z navigation bar for alphabetical contact browsing.
    *
-   * @param array  $query           The query object
-   * @param string $sortByCharacter The character that we are potentially sorting on
+   * @param object|CRM_Core_DAO $query           The query object (or a DAO result set when $isDAO is TRUE).
+   * @param string              $sortByCharacter  The character currently selected for filtering.
+   * @param bool                $isDAO            When TRUE, $query is treated as a DAO result rather than a query object.
    *
-   * @return string                 The html formatted string
-   * @access public
-   * @static
+   * @return array|null  An array of link element arrays, or NULL if no dynamic characters exist.
    */
-  static function getAToZBar(&$query, $sortByCharacter, $isDAO = FALSE) {
+  public static function getAToZBar(&$query, $sortByCharacter, $isDAO = FALSE) {
     $AToZBar = self::createLinks($query, $sortByCharacter, $isDAO);
     return $AToZBar;
   }
 
   /**
-   * Function to return the all the static characters
+   * Return the full static A-to-Z alphabet array.
    *
-   * @return array $staticAlphabets is a array of static characters
-   * @access private
-   * @static
+   * @return array<int, string> An array of uppercase letters A through Z.
    */
-
-  static function getStaticCharacters() {
+  public static function getStaticCharacters() {
     $staticAlphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     return $staticAlphabets;
   }
 
   /**
-   * Function to return the all the dynamic characters
+   * Return the set of first-letter characters that actually appear in the query results.
    *
-   * @return array $dynamicAlphabets is a array of dynamic characters
-   * @access private
-   * @static
+   * @param object|CRM_Core_DAO $query  The query object or a DAO result set (when $isDAO is TRUE).
+   * @param bool                $isDAO  When TRUE, $query is used directly as a DAO result.
+   *
+   * @return array|null  An array of uppercase letters present in the data, or NULL if the query returned no results.
    */
-  static function getDynamicCharacters(&$query, $isDAO) {
+  public static function getDynamicCharacters(&$query, $isDAO) {
     if ($isDAO) {
       $result = $query;
     }
@@ -93,16 +88,16 @@ class CRM_Utils_PagerAToZ {
   }
 
   /**
-   * create the links
+   * Build the array of A-to-Z link elements combining static and dynamic alphabets.
    *
-   * @param array  $query          The form values for search
-   * @param string $sortByCharacter The character that we are potentially sorting on
+   * @param object $query           The query object providing form values and alphabetQuery().
+   * @param string $sortByCharacter The currently active letter filter.
+   * @param bool   $isDAO           When TRUE, $query is treated as a DAO result set.
    *
-   * @return array with links
-   * @access private
-   * @static
+   * @return array|null  An array of element arrays (each with an 'item' HTML string and optional 'class'),
+   *                     or NULL if no dynamic alphabets exist or form values are absent.
    */
-  static function createLinks(&$query, $sortByCharacter, $isDAO) {
+  public static function createLinks(&$query, $sortByCharacter, $isDAO) {
     $AToZBar = self::getStaticCharacters();
     $dynamicAlphabets = self::getDynamicCharacters($query, $isDAO);
 
@@ -115,7 +110,7 @@ class CRM_Utils_PagerAToZ {
     //get the current path
     $path = CRM_Utils_System::currentPath();
 
-    if(!empty($query->_formValues)){
+    if (!empty($query->_formValues)) {
       $qfKey = CRM_Utils_Array::value('qfKey', $query->_formValues);
       $aToZBar = [];
       foreach ($AToZBar as $key => $link) {
@@ -134,7 +129,8 @@ class CRM_Utils_PagerAToZ {
           // we do it this way since we want the url to be encoded but not the link character
           // since that seems to mess up drupal utf-8 encoding etc
           $url .= $link;
-          $element['item'] = sprintf('<a href="%s" %s>%s</a>',
+          $element['item'] = sprintf(
+            '<a href="%s" %s>%s</a>',
             $url,
             $klass,
             $link
@@ -146,16 +142,16 @@ class CRM_Utils_PagerAToZ {
         $aToZBar[] = $element;
       }
 
-      $url = sprintf('<a href="%s">%s</a>',
+      $url = sprintf(
+        '<a href="%s">%s</a>',
         CRM_Utils_System::url($path, "force=1&qfKey=$qfKey&sortByCharacter=1"),
         'All'
       );
       $aToZBar[] = ['item' => $url];
       return $aToZBar;
     }
-    else{
+    else {
       return NULL;
     }
   }
 }
-

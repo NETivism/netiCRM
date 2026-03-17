@@ -27,20 +27,33 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * this class builds custom data
  */
 class CRM_Custom_Form_CustomData {
-  static function preProcess(&$form, $subName = NULL, $subType = NULL,
-    $groupCount = NULL, $type = NULL, $entityID = NULL
+  /**
+   * Pre process
+   *
+   * @param CRM_Core_Form $form
+   * @param string $subName
+   * @param string $subType
+   * @param int $groupCount
+   * @param string $type
+   * @param int $entityID
+   *
+   * @return void
+   */
+  public static function preProcess(
+    &$form,
+    $subName = NULL,
+    $subType = NULL,
+    $groupCount = NULL,
+    $type = NULL,
+    $entityID = NULL
   ) {
     if ($type) {
       $form->_type = $type;
@@ -94,7 +107,8 @@ class CRM_Custom_Form_CustomData {
 
     $form->_groupID = CRM_Utils_Request::retrieve('groupID', 'Positive', $form);
 
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree($form->_type,
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+      $form->_type,
       $form,
       $form->_entityId,
       $form->_groupID,
@@ -116,16 +130,29 @@ class CRM_Custom_Form_CustomData {
     }
   }
 
-  static function setDefaultValues(&$form) {
+  /**
+   * Set default values
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return array
+   */
+  public static function setDefaultValues(&$form) {
     $defaults = [];
     CRM_Core_BAO_CustomGroup::setDefaults($form->_groupTree, $defaults, FALSE, FALSE, $form->get('action'));
     return $defaults;
   }
 
-  static function buildQuickForm(&$form) {
+  /**
+   * Build quick form
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
+  public static function buildQuickForm(&$form) {
     $form->addElement('hidden', 'hidden_custom', 1);
     $form->addElement('hidden', "hidden_custom_group_count[{$form->_groupID}]", $form->_groupCount);
     CRM_Core_BAO_CustomGroup::buildQuickForm($form, $form->_groupTree, FALSE, $form->_groupCount);
   }
 }
-

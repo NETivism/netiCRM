@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -92,11 +90,10 @@ class CRM_Grant_PseudoConstant extends CRM_Core_PseudoConstant {
       self::$grantType = CRM_Core_OptionGroup::values("grant_type");
     }
 
-    If ($id) {
+    if ($id) {
       return self::$grantType[$id];
     }
 
     return self::$grantType;
   }
 }
-

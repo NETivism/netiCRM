@@ -27,20 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
-
-
-
 
 /**
  * This class is used to retrieve and display a range of
@@ -54,23 +43,20 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * array of supported links, currenly view and edit
    *
    * @var array
-   * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
    *
    * @var array
-   * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * The sql params we use to get the list of contacts
    *
    * @var string
-   * @access protected
    */
   protected $_params;
 
@@ -78,7 +64,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * the public visible fields to be shown to the user
    *
    * @var array
-   * @access protected
    */
   protected $_fields;
 
@@ -86,7 +71,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * the custom fields for this domain
    *
    * @var array
-   * @access protected
    */
   protected $_customFields;
 
@@ -94,7 +78,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * cache the query object
    *
    * @var object
-   * @access protected
    */
   protected $_query;
 
@@ -102,7 +85,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
    * cache the expanded options list if any
    *
    * @var object
-   * @access protected
    */
   protected $_options;
 
@@ -141,15 +123,24 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
   protected $_profileIds = [];
 
   /**
-   * Class constructor
+   * Class constructor.
    *
-   * @param string params the params for the where clause
+   * @param array $params the params for the where clause
+   * @param array $customFields the custom fields for this domain
+   * @param int|array|null $ufGroupIds profile group ids
+   * @param bool $map do we enable mapping of users
+   * @param bool $editLink do we enable edit link
+   * @param bool $linkToUF should we link to the UF Profile
    *
-   * @return CRM_Contact_Selector_Profile
-   * @access public
+   * @return CRM_Profile_Selector_Listings
    */
-  function __construct(&$params, &$customFields, $ufGroupIds = NULL, $map = FALSE,
-    $editLink = FALSE, $linkToUF = FALSE
+  public function __construct(
+    &$params,
+    &$customFields,
+    $ufGroupIds = NULL,
+    $map = FALSE,
+    $editLink = FALSE,
+    $linkToUF = FALSE
   ) {
     $this->_params = $params;
 
@@ -168,8 +159,10 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
 
     //get the details of the uf group
     if ($this->_gid) {
-      $groupId = CRM_Core_DAO::getFieldValue('CRM_Core_BAO_UFGroup',
-        $this->_gid, 'limit_listings_group_id'
+      $groupId = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_BAO_UFGroup',
+        $this->_gid,
+        'limit_listings_group_id'
       );
     }
 
@@ -183,10 +176,12 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
       }
     }
 
-    $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(CRM_Core_Action::VIEW,
+    $this->_fields = CRM_Core_BAO_UFGroup::getListingFields(
+      CRM_Core_Action::VIEW,
       CRM_Core_BAO_UFGroup::PUBLIC_VISIBILITY |
       CRM_Core_BAO_UFGroup::LISTINGS_VISIBILITY,
-      FALSE, $this->_profileIds
+      FALSE,
+      $this->_profileIds
     );
     $this->_customFields = &$customFields;
 
@@ -200,15 +195,17 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
     $this->_options = &$this->_query->_options;
   }
   //end of constructor
-
   /**
    * This method returns the links that are given for each search row.
    *
-   * @return array
-   * @access public
+   * @param bool $map
+   * @param bool $editLink
+   * @param bool $ufLink
+   * @param array|null $gids
    *
+   * @return array (reference) of action links
    */
-  static function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
+  public static function &links($map = FALSE, $editLink = FALSE, $ufLink = FALSE, $gids = NULL) {
     if (!self::$_links) {
       self::$_links = [];
 
@@ -265,12 +262,14 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
   //end of function
 
   /**
-   * getter for array of the parameters required for creating pager.
+   * Getter for array of the parameters required for creating pager.
    *
-   * @param
-   * @access public
+   * @param int $action
+   * @param array $params
+   *
+   * @return void
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Contact %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
@@ -279,18 +278,16 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
     $params['buttonBottom'] = 'PagerBottomButton';
   }
   //end of function
-
   /**
-   * returns the column headers as an array of tuples:
+   * Returns the column headers as an array of tuples:
    * (name, sortName (key to the sort array))
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param string|null $action the action being performed
+   * @param string|null $output what should the result set include (web/email/csv)
    *
    * @return array the column headers that need to be displayed
-   * @access public
    */
-  function &getColumnHeaders($action = NULL, $output = NULL) {
+  public function &getColumnHeaders($action = NULL, $output = NULL) {
     static $skipFields = ['group', 'tag'];
     $multipleFields = ['url'];
     $direction = CRM_Utils_Sort::ASCENDING;
@@ -303,7 +300,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
           'direction' => CRM_Utils_Sort::ASCENDING,
         ],
       ];
-
 
       $locationTypes = CRM_Core_PseudoConstant::locationType();
 
@@ -368,37 +364,34 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
   /**
    * Returns total number of rows for the query.
    *
-   * @param
+   * @param int $action
    *
    * @return int Total number of rows
-   * @access public
    */
-  function getTotalCount($action) {
+  public function getTotalCount($action) {
     return $this->_query->searchQuery(0, 0, NULL, TRUE, NULL, NULL, NULL, NULL);
   }
 
   /**
-   * Return the qill for this selector
+   * Return the qill for this selector.
    *
    * @return string
-   * @access public
    */
-  function getQill() {
+  public function getQill() {
     return $this->_query->qill();
   }
-
   /**
-   * returns all the rows in the given offset and rowCount
+   * Returns all the rows in the given offset and rowCount.
    *
-   * @param enum   $action   the action being performed
-   * @param int    $offset   the row number to start from
-   * @param int    $rowCount the number of rows to return
-   * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param int $action the action being performed
+   * @param int $offset the row number to start from
+   * @param int $rowCount the number of rows to return
+   * @param string|object $sort the sql string that describes the sort order or sort object
+   * @param string|null $output what should the result set include (web/email/csv)
    *
-   * @return int   the total number of rows for this action
+   * @return array the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
 
     $multipleFields = ['url'];
     //$sort object processing for location fields
@@ -450,7 +443,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
       }
     }
     $links = &self::links($this->_map, $this->_editLink, $this->_linkToUF, $this->_profileIds);
-
 
     $locationTypes = CRM_Core_PseudoConstant::locationType();
 
@@ -507,8 +499,6 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
       }
     }
 
-
-
     $multipleSelectFields = ['preferred_communication_method' => 1];
     if (CRM_Core_Permission::access('Quest')) {
 
@@ -531,7 +521,8 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
       }
       $row = [];
       $empty = TRUE;
-      $row[] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
+      $row[] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
         $result->contact_sub_type : $result->contact_type,
         FALSE,
         $result->contact_id
@@ -546,7 +537,8 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
 
       foreach ($names as $name) {
         if ($cfID = CRM_Core_BAO_CustomField::getKeyID($name)) {
-          $row[] = CRM_Core_BAO_CustomField::getDisplayValue($result->$name,
+          $row[] = CRM_Core_BAO_CustomField::getDisplayValue(
+            $result->$name,
             $cfID,
             $this->_options,
             $result->contact_id
@@ -630,7 +622,8 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
         }
       }
 
-      $row[] = CRM_Core_Action::formLink($newLinks,
+      $row[] = CRM_Core_Action::formLink(
+        $newLinks,
         $mask,
         $params
       );
@@ -643,15 +636,14 @@ class CRM_Profile_Selector_Listings extends CRM_Core_Selector_Base implements CR
   }
 
   /**
-   * name of export file.
+   * Name of export file.
    *
    * @param string $output type of output
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Profile Listings');
   }
 }
 //end of class
-

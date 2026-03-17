@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
 
@@ -44,30 +39,29 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
-   * Get BAO Name
+   * Get BAO Name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Dedupe_BAO_RuleGroup';
   }
 
   /**
-   * Get action Links
+   * Get action Links.
    *
-   * @return array (reference) of action links
+   * @return array
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       $deleteExtra = ts('Are you sure you want to delete this Rule?');
       $defaultExtra = ts('Are you sure you want to make this Rule default?');
 
       // helper variable for nicer formatting
       $links = [];
-
 
       if (CRM_Core_Permission::check('merge duplicate contacts')) {
         $links[CRM_Core_Action::VIEW] = [
@@ -99,17 +93,15 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the page
+   * Run the page.
    *
    * This method is called after the page is created. It checks for the type
    * of action and executes that action. Finally it calls the parent's run
    * method.
    *
    * @return void
-   * @access public
-   *
    */
-  function run() {
+  public function run() {
     // get the requested action, default to 'browse'
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
 
@@ -147,12 +139,11 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all rule groups
+   * Browse all rule groups.
    *
    * @return void
-   * @access public
    */
-  function browse() {
+  public function browse() {
     // get all rule groups
     $ruleGroups = [];
     $dao = new CRM_Dedupe_DAO_RuleGroup();
@@ -176,33 +167,42 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Get name of edit form.
    *
-   * @return string  classname of edit form
+   * @return string classname of edit form
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Contact_Form_DedupeRules';
   }
 
   /**
-   * Get edit form name
+   * Get edit form name.
    *
-   * @return string  name of this page
+   * @return string name of this page
    */
-  function editName() {
+  public function editName() {
     return 'DedupeRules';
   }
 
   /**
-   * Get user context
+   * Get user context.
    *
-   * @return string  user context
+   * @param int $mode
+   *
+   * @return string user context
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/contact/deduperules';
   }
 
-  function delete($id) {
+  /**
+   * Delete a rule group.
+   *
+   * @param int $id
+   *
+   * @return void
+   */
+  public function delete($id) {
     $ruleDao = new CRM_Dedupe_DAO_Rule();
     $ruleDao->dedupe_rule_group_id = $id;
     $ruleDao->delete();
@@ -212,4 +212,3 @@ class CRM_Contact_Page_DedupeRules extends CRM_Core_Page_Basic {
     $rgDao->delete();
   }
 }
-

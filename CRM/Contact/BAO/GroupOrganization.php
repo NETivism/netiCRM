@@ -27,32 +27,29 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganization {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
    * takes an associative array and creates a groupOrganization object
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array $params (reference) an assoc array of name/value pairs
    *
-   * @return void
+   * @return CRM_Contact_DAO_GroupOrganization|null group organization object
    * @access public
    * @static
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $formatedValues = [];
     self::formatValues($params, $formatedValues);
     $dataExists = self::dataExists($formatedValues);
@@ -68,14 +65,14 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
   /**
    * Format the params
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
-   * @param array  $formatedValues (reference ) an assoc array of name/value pairs
+   * @param array $params         (reference) an assoc array of name/value pairs
+   * @param array $formatedValues (reference) an assoc array of name/value pairs
    *
    * @return void
    * @access public
    * @static
    */
-  static function formatValues(&$params, &$formatedValues) {
+  public static function formatValues(&$params, &$formatedValues) {
     if (CRM_Utils_Array::value('group_organization', $params)) {
       $formatedValues['id'] = $params['group_organization'];
     }
@@ -92,13 +89,13 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
   /**
    * Check if there is data to create the object
    *
-   * @param array  $params  (reference ) an assoc array of name/value pairs
+   * @param array $params an assoc array of name/value pairs
    *
    * @return boolean
    * @access public
    * @static
    */
-  static function dataExists($params) {
+  public static function dataExists($params) {
     // return if no data present
     if (CRM_Utils_Array::value('organization_id', $params) &&
       CRM_Utils_Array::value('group_id', $params)
@@ -108,7 +105,17 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
     return FALSE;
   }
 
-  static function &retrieve($groupID, &$defaults) {
+  /**
+   * Retrieve group organization record
+   *
+   * @param int   $groupID  group id
+   * @param array $defaults (reference) defaults array
+   *
+   * @return void
+   * @static
+   * @access public
+   */
+  public static function &retrieve($groupID, &$defaults) {
     $dao = new CRM_Contact_DAO_GroupOrganization();
     $dao->group_id = $groupID;
     if ($dao->find(TRUE)) {
@@ -120,15 +127,18 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
   /**
    * Method to check group organization relationship exist
    *
-   * @param  int  $contactId
+   * @param int $contactID contact id
    *
    * @return boolean
    * @access public
    * @static
    */
-  static function hasGroupAssociated($contactID) {
-    $orgID = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_GroupOrganization',
-      $contactID, 'group_id', 'organization_id'
+  public static function hasGroupAssociated($contactID) {
+    $orgID = CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_GroupOrganization',
+      $contactID,
+      'group_id',
+      'organization_id'
     );
     if ($orgID) {
       return TRUE;
@@ -141,10 +151,10 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
    *
    * @param int $groupOrganizationID group organization id that needs to be deleted
    *
-   * @return $results   no of deleted group organization on success, false otherwise
+   * @return int|boolean no of deleted group organization on success, false otherwise
    * @access public
    */
-  function delete($groupOrganizationID = NULL) {
+  public function delete($groupOrganizationID = NULL) {
     $results = NULL;
 
     $groupOrganization = new CRM_Contact_DAO_GroupOrganization();
@@ -155,4 +165,3 @@ class CRM_Contact_BAO_GroupOrganization extends CRM_Contact_DAO_GroupOrganizatio
     return $results;
   }
 }
-

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class is used by the Search functionality.
@@ -51,9 +46,12 @@ class CRM_Contact_Controller_Search extends CRM_Core_Controller {
 
   /**
    * class constructor
+   *
+   * @param string  $title  title
+   * @param boolean $modal  modal
+   * @param int     $action action
    */
-  function __construct($title = NULL, $modal = TRUE, $action = CRM_Core_Action::NONE) {
-
+  public function __construct($title = NULL, $modal = TRUE, $action = CRM_Core_Action::NONE) {
 
     parent::__construct($title, $modal);
 
@@ -66,8 +64,13 @@ class CRM_Contact_Controller_Search extends CRM_Core_Controller {
     $this->addActions();
   }
 
+  /**
+   * Get selector name
+   *
+   * @return string|null selector name
+   * @access public
+   */
   public function selectorName() {
     return $this->get('selectorName');
   }
 }
-

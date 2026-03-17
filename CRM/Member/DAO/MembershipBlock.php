@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-              class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO
-{
+
+class CRM_Member_DAO_MembershipBlock extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_membership_block';
+  public static $_tableName = 'civicrm_membership_block';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Membership Id
    *
    * @var int unsigned
@@ -162,24 +160,20 @@
    * @var boolean
    */
   public $is_renewal_only;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_membership_block
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'entity_id' => 'civicrm_contribution_page:id',
@@ -188,113 +182,110 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'entity_id', 'civicrm_contribution_page', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'membership_type_default', 'civicrm_membership_type', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'entity_id', 'civicrm_contribution_page', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'membership_type_default', 'civicrm_membership_type', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'entity_table' => [
           'name' => 'entity_table',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Entity Table') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'entity_id' => [
           'name' => 'entity_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ] ,
+          'required' => TRUE,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+        ],
         'membership_types' => [
           'name' => 'membership_types',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Membership Types') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'membership_type_default' => [
           'name' => 'membership_type_default',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Membership Type Default') ,
-                    'FKClassName' => 'CRM_Member_DAO_MembershipType',
-        ] ,
+          'FKClassName' => 'CRM_Member_DAO_MembershipType',
+        ],
         'display_min_fee' => [
           'name' => 'display_min_fee',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Display Min Fee') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_separate_payment' => [
           'name' => 'is_separate_payment',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'new_title' => [
           'name' => 'new_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('New Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'new_text' => [
           'name' => 'new_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('New Text') ,
-                  ] ,
+        ],
         'renewal_title' => [
           'name' => 'renewal_title',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Renewal Title') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'renewal_text' => [
           'name' => 'renewal_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Renewal Text') ,
-                  ] ,
+        ],
         'is_required' => [
           'name' => 'is_required',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Required') ,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Active') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_renewal_only' => [
           'name' => 'is_renewal_only',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Renewal Only') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -302,32 +293,26 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -335,22 +320,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['membership_block'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -358,12 +342,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['membership_block'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_export;
   }
 }

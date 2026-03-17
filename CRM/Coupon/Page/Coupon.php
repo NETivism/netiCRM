@@ -3,7 +3,7 @@
 class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
 
   /**
-   * The action links that we need to display for the browse screen
+   * The action links that we need to display for the browse screen.
    *
    * @var array
    */
@@ -12,14 +12,12 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
   protected $_pager = NULL;
 
   /**
-   * Get the action links for this page.
+   * Get the action links available for the coupon listing page.
    *
-   * @param null
-   *
-   * @return  array   array of action links that we need to display for the browse screen
+   * @return array An array of action links (Edit, Copy, Disable, Enable, Delete).
    * @access public
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       // helper variable for nicer formatting
@@ -62,7 +60,11 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     return self::$_actionLinks;
   }
 
-  function run() {
+  /**
+   * Executes the main logic for the coupon page based on the action parameter.
+   * Handles browsing, editing, copying, deleting, and exporting coupons.
+   */
+  public function run() {
     $action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
 
     // assign vars to templates
@@ -103,13 +105,17 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         }
       }
 
-      // finally browse 
+      // finally browse
       $this->browse();
     }
     parent::run();
   }
-  
-  function browse() {
+
+  /**
+   * Displays a browseable list of coupons, with filtering and pagination.
+   * Fetches coupon data, applies filters, and assigns them to the template.
+   */
+  public function browse() {
     // get all coupon
     $coupon = [];
     $usedFor = [
@@ -120,14 +126,14 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
 
     $priceSets = CRM_Price_BAO_Field::getPriceLevels();
     $priceOptions = [];
-    foreach($priceSets as $set => &$field) {
-      foreach($field as $key => $val) {
+    foreach ($priceSets as $set => &$field) {
+      foreach ($field as $key => $val) {
         $field_id = str_replace('priceset:', '', $key);
         if (is_numeric($field_id)) {
           $priceOptions[$field_id] = $val;
         }
       }
-      if(is_string($field)){
+      if (is_string($field)) {
         $field_id = str_replace('priceset:', '', $set);
         if (is_numeric($field_id)) {
           $priceOptions[$field_id] = $field;
@@ -144,8 +150,8 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
     $filter['description'] = CRM_Utils_Request::retrieve('description', 'String', $this);
     $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-    foreach($filter as $f => $v) {
-      if(empty($v)) {
+    foreach ($filter as $f => $v) {
+      if (empty($v)) {
         unset($filter[$f]);
       }
     }
@@ -165,21 +171,21 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $dao = CRM_Coupon_BAO_Coupon::getCouponList($filter);
     while ($dao->fetch()) {
       if (!empty($coupon[$dao->id]) && !empty($dao->entity_table)) {
-        if($dao->entity_table == 'civicrm_event'){
+        if ($dao->entity_table == 'civicrm_event') {
           $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $dao->entity_id, 'title');
         }
-        elseif($dao->entity_table == 'civicrm_price_field_value'){
+        elseif ($dao->entity_table == 'civicrm_price_field_value') {
           $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = $priceOptions[$dao->entity_id];
         }
         continue;
       }
       $coupon[$dao->id] = [];
-      foreach($dao as $field => $value) {
+      foreach ($dao as $field => $value) {
         if ($field == 'entity_table') {
-          if($dao->entity_table == 'civicrm_event'){
+          if ($dao->entity_table == 'civicrm_event') {
             $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $dao->entity_id, 'title');
           }
-          elseif($dao->entity_table == 'civicrm_price_field_value'){
+          elseif ($dao->entity_table == 'civicrm_price_field_value') {
             $coupon[$dao->id]['used_for'][$dao->entity_table][$dao->entity_id] = $priceOptions[$dao->entity_id];
           }
         }
@@ -217,22 +223,26 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     }
     $couponIds = array_keys($coupon);
     $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed($couponIds);
-    foreach($couponUses as $couponId => $count) {
+    foreach ($couponUses as $couponId => $count) {
       $coupon[$couponId]['count_max'] = $count." / ".$coupon[$couponId]['count_max'];
     }
     $this->assign('rows', $coupon);
     return $coupon;
   }
 
-  function export() {
+  /**
+   * Exports coupon data to an Excel file (.xlsx format).
+   * Applies current filters and generates a downloadable report.
+   */
+  public function export() {
     $filter = [];
     $filter['entity_table'] = CRM_Utils_Request::retrieve('entity_table', 'String', $this);
     $filter['entity_id'] = CRM_Utils_Request::retrieve('entity_id', 'Positive', $this);
     $filter['code'] = CRM_Utils_Request::retrieve('code', 'String', $this);
     $filter['description'] = CRM_Utils_Request::retrieve('description', 'String', $this);
     $filter['id'] = CRM_Utils_Request::retrieve('id', 'Positive', $this);
-    foreach($filter as $f => $v) {
-      if(empty($v)) {
+    foreach ($filter as $f => $v) {
+      if (empty($v)) {
         unset($filter[$f]);
       }
     }
@@ -265,7 +275,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       }
       $exists[$dao->id] = 1;
       $coupon = [];
-      foreach($dao as $field => $value) {
+      foreach ($dao as $field => $value) {
         if ($field == 'entity_table' || $field == 'entity_id' || $field[0] == '_' || $field == 'N') {
           continue;
         }
@@ -274,7 +284,7 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
         }
       }
       $coupon['discount'] = $coupon['coupon_type'] == 'percentage' ? $coupon['discount'].'%' : (int)$coupon['discount'];
--     $coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
+      -$coupon['coupon_type'] = ts(ucfirst($coupon['coupon_type']));
 
       $couponUses = CRM_Coupon_BAO_Coupon::getCouponUsed([$coupon['id']]);
       $coupon['count_max'] = $couponUses[$coupon['id']]." / ".$coupon['count_max'];
@@ -285,7 +295,13 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $writer->close();
   }
 
-  function edit($id, $action) {
+  /**
+   * Handles the editing or adding of a coupon using a simple controller.
+   *
+   * @param int $id The ID of the coupon to edit, or 0 for adding a new one.
+   * @param int $action The action to perform (UPDATE or ADD).
+   */
+  public function edit($id, $action) {
     // create a simple controller for editing price sets
     $controller = new CRM_Core_Controller_Simple('CRM_Coupon_Form_Coupon', ts('Coupon'), $action);
 
@@ -298,17 +314,20 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     $controller->run();
   }
 
-
   /**
-   * This function is to make a copy of a coupon, including
-   * all the fields in the page
+   * Creates a copy of an existing coupon, including all its associated fields.
+   * Redirects after successful copy.
    *
-   * @return void
    * @access public
    */
-  function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+  public function copy() {
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -316,8 +335,13 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
       return CRM_Core_Error::statusBounce(ts('Sorry, we cannot process this request for security reasons. The request may have expired or is invalid. Please return to the coupon list and try again.'));
     }
 
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, TRUE, 0, 'GET'
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      TRUE,
+      0,
+      'GET'
     );
 
     CRM_Coupon_BAO_Coupon::copy($id);
@@ -325,8 +349,13 @@ class CRM_Coupon_Page_Coupon extends CRM_Core_Page {
     CRM_Utils_System::redirect(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1'));
   }
 
-  function pager($total) {
-    $params = []; 
+  /**
+   * Initializes and assigns a pager object for managing large lists of coupons.
+   *
+   * @param int $total The total number of items to paginate.
+   */
+  public function pager($total) {
+    $params = [];
     $params['status'] = '';
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';

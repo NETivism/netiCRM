@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Location Type
@@ -45,16 +41,15 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
    * This function sets the default values for the form. MobileProvider that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (isset($this->_id) && empty($this->_values)) {
       $this->_values = [];
       $params = ['id' => $this->_id];
       $baoName = $this->_BAOName;
-      $baoName::retrieve( $params, $this->_values );
+      $baoName::retrieve($params, $this->_values);
     }
     $defaults = $this->_values;
 
@@ -89,8 +84,7 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
@@ -102,11 +96,10 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
 
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'label', ts('Label'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'label'), TRUE);
-    $this->addRule('label', ts('Lable already exists in Database.'), 'objectExists',  ['CRM_Core_DAO_LocationType', $this->_id]);
+    $this->addRule('label', ts('Lable already exists in Database.'), 'objectExists', ['CRM_Core_DAO_LocationType', $this->_id]);
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'name'), TRUE);
-    $this->addRule('name', ts('Name already exists in Database.'), 'objectExists',  ['CRM_Core_DAO_LocationType', $this->_id]);
-    $this->addRule('name', ts('Name should only have alpha numeric characters.'), 'alphanumeric',  ['CRM_Core_DAO_LocationType', $this->_id]);
-
+    $this->addRule('name', ts('Name already exists in Database.'), 'objectExists', ['CRM_Core_DAO_LocationType', $this->_id]);
+    $this->addRule('name', ts('Name should only have alpha numeric characters.'), 'alphanumeric', ['CRM_Core_DAO_LocationType', $this->_id]);
 
     $this->add('text', 'vcard_name', ts('vCard Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_LocationType', 'vcard_name'));
 
@@ -122,9 +115,8 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -163,10 +155,10 @@ class CRM_Admin_Form_LocationType extends CRM_Admin_Form {
     $cache = &CRM_Utils_Cache::singleton();
     $cache->delete('*CRM_Core_DAO_LocationType*');
 
-    CRM_Core_Session::setStatus(ts('The location type \'%1\' has been saved.',
-        [1 => $locationType->name]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      'The location type \'%1\' has been saved.',
+      [1 => $locationType->name]
+    ));
   }
   //end of function
 }
-

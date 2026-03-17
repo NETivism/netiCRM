@@ -27,19 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
-
-
 
 /**
  * This class is used to retrieve and display a range of
@@ -53,24 +43,21 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * This defines two actions- View and Edit.
    *
    * @var array
-   * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
    *
    * @var array
-   * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
-   * @static
    */
-  static $_properties = ['contact_id',
+  public static $_properties = ['contact_id',
     'contact_type',
     'sort_name',
     'event_id',
@@ -95,7 +82,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_single = FALSE;
@@ -103,7 +89,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_limit = NULL;
@@ -111,7 +96,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * what context are we being invoked from
    *
-   * @access protected
    * @var string
    */
   protected $_context = NULL;
@@ -119,7 +103,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * what component context are we being invoked from
    *
-   * @access protected
    * @var string
    */
   protected $_compContext = NULL;
@@ -129,7 +112,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * the HTML_QuickForm_Controller for that page.
    *
    * @var array
-   * @access protected
    */
   public $_queryParams;
 
@@ -137,7 +119,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * represent the type of selector
    *
    * @var int
-   * @access protected
    */
   protected $_action;
 
@@ -158,16 +139,16 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * Class constructor
    *
-   * @param array   $queryParams array of parameters for query
-   * @param int     $action - action of search basic or advanced.
-   * @param string  $eventClause if the caller wants to further restrict the search (used in participations)
-   * @param boolean $single are we dealing only with one contact?
-   * @param int     $limit  how many participations do we want returned
-   *
-   * @return CRM_Contact_Selector
-   * @access public
+   * @param array $queryParams array of parameters for query
+   * @param int $action action of search basic or advanced.
+   * @param string $eventClause if the caller wants to further restrict the search (used in participations)
+   * @param bool $single are we dealing only with one contact?
+   * @param int $limit how many participations do we want returned
+   * @param string $context
+   * @param string $compContext
    */
-  function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $eventClause = NULL,
     $single = FALSE,
@@ -188,7 +169,12 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_EVENT
     );
     $this->_query->_distinctComponentClause = " DISTINCT(civicrm_participant.id)";
@@ -199,10 +185,9 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * Can be used to alter the number of participation returned from a buildForm hook
    *
    * @param int     $limit  how many participations do we want returned
-   * @access public
    *
    */
-  function setLimit($limit) {
+  public function setLimit($limit) {
     $this->_limit = $limit;
   }
 
@@ -213,11 +198,14 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * - View
    * - Edit
    *
+   * @param string $qfKey       the quick form key
+   * @param string $context     the context of the search
+   * @param string $compContext the component context
+   *
    * @return array
-   * @access public
    *
    */
-  static function &links($qfKey = NULL, $context = NULL, $compContext = NULL) {
+  public static function &links($qfKey = NULL, $context = NULL, $compContext = NULL) {
     $extraParams = NULL;
     if ($compContext) {
       $extraParams .= "&compContext={$compContext}";
@@ -229,7 +217,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     if ($qfKey) {
       $extraParams .= "&key={$qfKey}";
     }
-
 
     if (!(self::$_links)) {
       self::$_links = [
@@ -260,10 +247,13 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * getter for array of the parameters required for creating pager.
    *
-   * @param
-   * @access public
+   * @param int $action
+   * @param array $params
+   *
+   *
+   * @return void
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Event') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
     if ($this->_limit) {
@@ -281,15 +271,19 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * Returns total number of rows for the query.
    *
-   * @param
+   * @param int $action
    *
    * @return int Total number of rows
-   * @access public
    */
-  function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+  public function getTotalCount($action) {
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_eventClause
     );
@@ -298,18 +292,23 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   /**
    * returns all the rows in the given offset and rowCount
    *
-   * @param enum   $action   the action being performed
+   * @param int    $action   the action being performed
    * @param int    $offset   the row number to start from
    * @param int    $rowCount the number of rows to return
-   * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param string|array $sort the sql string or array that describes the sort order
+   * @param string $output   what should the result set include (web/email/csv)
    *
    * @return array  rows in the given offset and rowCount
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_eventClause
     );
@@ -325,8 +324,6 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
       $permissions[] = CRM_Core_Permission::DELETE;
     }
     $mask = CRM_Core_Action::mask($permissions);
-
-
 
     $statusTypes = CRM_Event_PseudoConstant::participantStatus();
     $statusContribution = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -359,7 +356,8 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->participant_id;
 
-      $row['action'] = CRM_Core_Action::formLink(self::links($this->_key, $this->_context, $this->_compContext),
+      $row['action'] = CRM_Core_Action::formLink(
+        self::links($this->_key, $this->_context, $this->_compContext),
         $mask,
         ['id' => $result->participant_id,
           'cid' => $result->contact_id,
@@ -367,10 +365,11 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         ]
       );
 
-
-
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
 
       $row['contribution_total_amount'] = NULL;
@@ -398,12 +397,12 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
         $lineItems[$row['participant_id']] = CRM_Price_BAO_LineItem::getLineItems($row['participant_id']);
       }
 
-      if(!empty($row['contribution_id'])){
+      if (!empty($row['contribution_id'])) {
         $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy([$row['contribution_id']], 'contribution_id');
         $dao->fetch();
         if ($dao->N > 0) {
           $coupon = [];
-          foreach($dao as $idx => $value) {
+          foreach ($dao as $idx => $value) {
             if ($idx[0] != '_') {
               $coupon[$idx] = $value;
             }
@@ -427,9 +426,9 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
   }
 
   /**
+   * Returns strings to describe the query criteria
    *
    * @return array              $qill         which contains an array of strings
-   * @access public
    */
 
   // the current internationalisation is bad, but should more or less work
@@ -442,11 +441,10 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    * returns the column headers as an array of tuples:
    * (name, sortName (key to the sort array))
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param int    $action the action being performed
+   * @param string $output what should the result set include (web/email/csv)
    *
    * @return array the column headers that need to be displayed
-   * @access public
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
@@ -503,11 +501,21 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
     return self::$_columnHeaders;
   }
 
-  function alphabetQuery() {
+  /**
+   * Alphabet query
+   *
+   * @return CRM_Core_DAO
+   */
+  public function alphabetQuery() {
     return $this->_query->searchQuery(NULL, NULL, NULL, FALSE, FALSE, TRUE);
   }
 
-  function &getQuery() {
+  /**
+   * Returns the query object
+   *
+   * @return CRM_Contact_BAO_Query
+   */
+  public function &getQuery() {
     return $this->_query;
   }
 
@@ -518,9 +526,8 @@ class CRM_Event_Selector_Search extends CRM_Core_Selector_Base implements CRM_Co
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Event Search');
   }
 }
 //end of class
-

@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/v3/Domain.php';
 
@@ -43,8 +40,6 @@ class api_v3_DomainTest extends CiviUnitTestCase {
   /* This test case doesn't require DB reset - apart from
        where cleanDB() is called. */
 
-
-
   public $DBResetRequired = FALSE;
 
   protected $_apiversion = 3;
@@ -55,7 +50,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
    *  Constructor
    *
    *  Initialize configuration
-   */ function __construct() {
+   */ public function __construct() {
     parent::__construct();
   }
 
@@ -71,7 +66,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
     // taken from form code - couldn't find good method to use
     $params['entity_id'] = 1;
     $params['entity_table'] = CRM_Core_BAO_Domain::getTableName();
-    $domain = 1;    
+    $domain = 1;
     $defaultLocationType = CRM_Core_BAO_LocationType::getDefault();
     $location = [];
     $params['address'][1]['location_type_id'] = $defaultLocationType->id;
@@ -82,7 +77,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
     $params['phone'][1]['phone'] = '456-456';
     $params['address'][1]['street_address'] = '45 Penny Lane';
     $location = CRM_Core_BAO_Location::create($params, TRUE, 'domain');
-    $domUpdate = civicrm_api('domain','create',['id' => 1, 'loc_block_id' => $location['id'], 'version' => $this->_apiversion]);
+    $domUpdate = civicrm_api('domain', 'create', ['id' => 1, 'loc_block_id' => $location['id'], 'version' => $this->_apiversion]);
     $this->_apiversion = 3;
     $this->params = [
       'name' => 'A-team domain',
@@ -91,7 +86,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
       'domain_version' => '4.2',
       'loc_block_id' => $location['id'],
     ];
- }
+  }
 
   /**
    * Tears down the fixture, for example, closes a network connection.
@@ -110,7 +105,6 @@ class api_v3_DomainTest extends CiviUnitTestCase {
    * Testing mainly for format.
    */
   public function testGet() {
-    
 
     $params = ['version' => 3];
     $result = civicrm_api('domain', 'get', $params);
@@ -125,7 +119,7 @@ class api_v3_DomainTest extends CiviUnitTestCase {
 
       $this->assertEquals("info@FIXME.ORG", $domain['from_email'], 'In line ' . __LINE__);
       $this->assertEquals("FIXME", $domain['from_name'], 'In line' . __LINE__);
-     
+
       // checking other important parts of domain information
       // test will fail if backward incompatible changes happen
       $this->assertArrayHasKey('id', $domain, 'In line' . __LINE__);
@@ -157,9 +151,9 @@ class api_v3_DomainTest extends CiviUnitTestCase {
       $this->assertArrayHasKey('domain_email', $domain, 'In line' . __LINE__);
       $this->assertArrayHasKey('domain_phone', $domain, 'In line' . __LINE__);
       $this->assertArrayHasKey('domain_address', $domain, 'In line' . __LINE__);
-      $this->assertEquals("my@email.com",$domain['domain_email']);
-      $this->assertEquals("456-456",$domain['domain_phone']['phone']);
-      $this->assertEquals("45 Penny Lane",$domain['domain_address']['street_address']);
+      $this->assertEquals("my@email.com", $domain['domain_email']);
+      $this->assertEquals("456-456", $domain['domain_phone']['phone']);
+      $this->assertEquals("45 Penny Lane", $domain['domain_address']['street_address']);
     }
   }
 
@@ -167,8 +161,6 @@ class api_v3_DomainTest extends CiviUnitTestCase {
   /*
     * This test checks for a memory leak observed when doing 2 gets on current domain
     */
-
-
 
   public function testGetCurrentDomainTwice() {
     $domain = civicrm_api('domain', 'getvalue', [
@@ -206,7 +198,9 @@ class api_v3_DomainTest extends CiviUnitTestCase {
   public function testCreateWithEmptyParams() {
     $params = [];
     $result = civicrm_api('domain', 'create', $params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -217,9 +211,10 @@ class api_v3_DomainTest extends CiviUnitTestCase {
   public function testCreateWithWrongParams() {
     $params = 1;
     $result = civicrm_api('domain', 'create', $params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
 }
-

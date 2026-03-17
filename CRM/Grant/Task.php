@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,7 +37,7 @@
  *
  */
 class CRM_Grant_Task {
-  CONST DELETE_GRANTS = 1, PRINT_GRANTS = 2, EXPORT_GRANTS = 3;
+  public const DELETE_GRANTS = 1, PRINT_GRANTS = 2, EXPORT_GRANTS = 3;
 
   /**
    * the task array
@@ -47,7 +45,7 @@ class CRM_Grant_Task {
    * @var array
    * @static
    */
-  static $_tasks = NULL;
+  public static $_tasks = NULL;
 
   /**
    * the optional task array
@@ -55,7 +53,7 @@ class CRM_Grant_Task {
    * @var array
    * @static
    */
-  static $_optionalTasks = NULL;
+  public static $_optionalTasks = NULL;
 
   /**
    * These tasks are the core set of tasks that the user can perform
@@ -65,7 +63,7 @@ class CRM_Grant_Task {
    * @static
    * @access public
    */
-  static function &tasks() {
+  public static function &tasks() {
     if (!(self::$_tasks)) {
       self::$_tasks = [1 => ['title' => ts('Delete Grants'),
           'class' => 'CRM_Grant_Form_Task_Delete',
@@ -99,7 +97,7 @@ class CRM_Grant_Task {
    * @static
    * @access public
    */
-  static function &taskTitles() {
+  public static function &taskTitles() {
     self::tasks();
     $titles = [];
     foreach (self::$_tasks as $id => $value) {
@@ -120,7 +118,7 @@ class CRM_Grant_Task {
    * @return array set of tasks that are valid for the user
    * @access public
    */
-  static function &permissionedTaskTitles($permission) {
+  public static function &permissionedTaskTitles($permission) {
     $tasks = [];
     if (($permission == CRM_Core_Permission::EDIT)
       || CRM_Core_Permission::check('edit grants')
@@ -148,7 +146,7 @@ class CRM_Grant_Task {
    * @static
    * @access public
    */
-  static function getTask($value) {
+  public static function getTask($value) {
     self::tasks();
     if (!$value || !CRM_Utils_Array::value($value, self::$_tasks)) {
       // make the print task by default
@@ -159,4 +157,3 @@ class CRM_Grant_Task {
     ];
   }
 }
-

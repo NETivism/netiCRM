@@ -1,8 +1,14 @@
 <?php
+/**
+ * Handles Instant Payment Notifications (IPN) from the MyPay payment gateway for one-time and recurring transactions.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
-  static $_payment_processor = NULL;
-  static $_input = NULL;
+  public static $_payment_processor = NULL;
+  public static $_input = NULL;
   public $_post = NULL;
   public $_get = NULL;
 
@@ -36,23 +42,25 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     "B500" => "Execution Failed",
   ];
   /**
-   * @param array $post Input $_POST alternative.
-   * @param array $get Input $_GET alternative.
+   * Class constructor.
+   *
+   * @param array $post input $_POST alternative
+   * @param array $get input $_GET alternative
    */
-  function __construct($post = [], $get = []) {
+  public function __construct($post = [], $get = []) {
     parent::__construct();
     $this->_post = $post;
     $this->_get = $get;
   }
 
   /**
-   * Main function
+   * Main entry point for processing IPN requests.
    *
-   * @param array $instrument The instrument, like 'Credit', 'BARCODE'... etc.
+   * @param string $instrument instrument code (e.g., 'Credit', 'BARCODE')
    *
-   * @return void
+   * @return string result code
    */
-  function main($instrument){
+  public function main($instrument) {
     // get the contribution and contact ids from the GET params
     $objects = $ids = $input = [];
     $this->getIds($ids);
@@ -63,20 +71,20 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     if (empty($input['nois']) || $input['nois'] == 1) {
       CRM_Core_Payment_MyPay::doRecordData($ids['contribution'], ['ipn_result_data' => json_encode($this->_post)]);
     }
-    if(empty($ids['contributionRecur'])){
+    if (empty($ids['contributionRecur'])) {
       $isRecur = FALSE;
     }
-    else{
+    else {
       $isRecur = TRUE;
     }
 
     // now, retrieve full object by validateData, or false fallback
-    if ( ! $this->validateData( $input, $ids, $objects, FALSE ) ) {
-      return false;
+    if (!$this->validateData($input, $ids, $objects, FALSE)) {
+      return FALSE;
     }
 
     // set global variable for paymentProcessor
-    self::$_payment_processor =& $objects['paymentProcessor'];
+    self::$_payment_processor = &$objects['paymentProcessor'];
     self::$_input = $input;
     $updateStatus = TRUE;
     if ($objects['contribution']->contribution_status_id == 1 && empty($input['nois']) && CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
@@ -99,9 +107,9 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     if ($updateStatus) {
       // start validation
       $note = '';
-      if( $this->validateOthers($input, $ids, $objects, $note, $instrument) ){
-        $contribution =& $objects['contribution'];
-        if(empty($contribution->receive_date)){
+      if ($this->validateOthers($input, $ids, $objects, $note, $instrument)) {
+        $contribution = &$objects['contribution'];
+        if (empty($contribution->receive_date)) {
           if (!empty($input['finishtime'])) {
             $contribution->receive_date = date('YmdHis', strtotime($input['finishtime']));
           }
@@ -113,7 +121,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         // assign trxn_id before complete transaction
         $input['trxn_id'] = $objects['contribution']->trxn_id;
         $transaction = new CRM_Core_Transaction();
-        $this->completeTransaction( $input, $ids, $objects, $transaction, $isRecur );
+        $this->completeTransaction($input, $ids, $objects, $transaction, $isRecur);
         $note .= "\n".ts('Completed').' - '.$input['retmsg']."({$input['prc']}: ".ts(self::$_successMessage[$input['prc']]).")\n";
         $this->addNote($note, $contribution);
       }
@@ -142,7 +150,18 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     return '8888';
   }
 
-  function validateOthers(&$input, &$ids, &$objects, &$note, $instrument) {
+  /**
+   * Perform additional validation on the IPN request.
+   *
+   * @param array &$input input parameters
+   * @param array &$ids extracted IDs
+   * @param array &$objects object references
+   * @param string &$note string to store validation notes
+   * @param string $instrument instrument code
+   *
+   * @return bool TRUE if validation passes
+   */
+  public function validateOthers(&$input, &$ids, &$objects, &$note, $instrument) {
     $contribution = &$objects['contribution'];
     $pass = TRUE;
 
@@ -157,7 +176,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
 
     // check amount
     $amount = $input['cost'];
-    if ( round($contribution->total_amount) != $amount) {
+    if (round($contribution->total_amount) != $amount) {
       $msg = "MyPay: Amount values dont match between database and IPN request. {$contribution->trxn_id} amount is '{$contribution->total_amount}', but return data is '{$input['cost']}'";
       CRM_Core_Error::debug_log_message($msg);
       $note .= ts("Failuare: $msg")."\n";
@@ -168,9 +187,9 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
     // the 'key' in request curl result must be same as 'uid_key' in `civicrm_contribution_mypay`.
     // If it's recurring , there are not key in the db. So this validation is only for single or first recurring.
     if (empty($input['nois']) || $input['nois'] == '1') {
-      if(!empty($input['key'])){
+      if (!empty($input['key'])) {
         $key = CRM_Core_Payment_MyPay::getKey($contribution->id);
-        if($key != $input['key']) {
+        if ($key != $input['key']) {
           $note .= ts("Failuare: Key not match. Contact system admin.")."\n";
           $msg = "MyPay: Failuare: Key not match. Should be '{$key}', but '{$input['key']}' displayed.";
           CRM_Core_Error::debug_log_message($msg);
@@ -181,7 +200,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
 
     // recurring validation
     // certainly this is recurring contribution
-    if($ids['contributionRecur']){
+    if ($ids['contributionRecur']) {
       $recur = &$objects['contributionRecur'];
       $params = $null = [];
       // see if we are first time, if not first time, save new contribution
@@ -194,10 +213,10 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
 
       // Todo: Validate Recurring.
       // Is Recurring
-      if($this->_post['group_id']){
+      if ($this->_post['group_id']) {
         $query_params = [1 => [$recur->id, 'Integer']];
         $new_trxn_id = CRM_Core_Payment_MyPay::getTrxnIdByPost($input);
-        if(CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)){
+        if (CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_errorMessage)) {
           $contribution->contribution_status_id = 4; // Failed
           $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", [
             1 => [$new_trxn_id, 'String'],
@@ -213,8 +232,8 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
             $c->find(TRUE);
           }
         }
-        elseif($input['nois'] != '1'){
-           // Completed
+        elseif ($input['nois'] != '1') {
+          // Completed
           $contribution->contribution_status_id = 1; // Completed
           $id_from_trxn_id = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution WHERE trxn_id = %1", [
             1 => [$new_trxn_id, 'String'],
@@ -230,7 +249,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
             $c->find(TRUE);
           }
         }
-        if(!empty($c)){
+        if (!empty($c)) {
           unset($objects['contribution']);
           // After retrive contribution object, first save db data via contribution_id.
           if ($input['nois'] > 1) {
@@ -253,7 +272,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
             CRM_Contribute_BAO_ContributionRecur::add($params, $null);
           }
         }
-        else{
+        else {
           // is first time
           if ($input['nois'] == 1) {
             if (CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage)) {
@@ -263,7 +282,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
               $params['modified_date'] = date('YmdHis');
               CRM_Contribute_BAO_ContributionRecur::add($params, $null);
             }
-            else{
+            else {
               CRM_Contribute_BAO_ContributionRecur::cancelRecurContribution($recur->id, CRM_Core_DAO::$_nullObject, 4);
             }
           }
@@ -271,7 +290,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       }
     }
     // process fail response
-    if(!CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage) && $pass){
+    if (!CRM_Utils_Array::arrayKeyExists($input['prc'], self::$_successMessage) && $pass) {
       if (!empty($input['finishtime'])) {
         $time = strtotime($input['finishtime']);
         $objects['contribution']->cancel_date = date('YmdHis', $time);
@@ -294,27 +313,35 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
   }
 
   /**
-   * MyPay ids doesn't be carried in GET params.
-   * If it's recurring, The contribution should be the first time one.
+   * Extract contribution and contact IDs.
+   *
+   * @param array &$ids array to store extracted IDs
+   *
+   * @return void
    */
-  function getIds(&$ids = []) {
+  public function getIds(&$ids = []) {
     $trxnId = $this->_post['order_id'];
     $contributionId = CRM_Core_DAO::singleValueQuery('SELECT id FROM civicrm_contribution WHERE trxn_id = %1', [1 => [$trxnId, 'String']]);
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contributionId, '');
   }
 
   /**
-   * 
+   * Add a note to the contribution record.
+   *
+   * @param string $note note content
+   * @param CRM_Contribute_BAO_Contribution &$contribution contribution object
+   *
+   * @return void
    */
-  function addNote($note, &$contribution){
+  public function addNote($note, &$contribution) {
     require_once 'CRM/Core/BAO/Note.php';
     $note = date("Y/m/d H:i:s"). ts("Transaction record").": \n".$note."\n===============================\n";
-    $note_exists = CRM_Core_BAO_Note::getNote( $contribution->id, 'civicrm_contribution' );
-    if(count($note_exists)){
+    $note_exists = CRM_Core_BAO_Note::getNote($contribution->id, 'civicrm_contribution');
+    if (count($note_exists)) {
       $note_id = [ 'id' => reset(array_keys($note_exists)) ];
       $note = $note . reset($note_exists);
     }
-    else{
+    else {
       $note_id = NULL;
     }
 
@@ -325,6 +352,6 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
       'contact_id'    => $contribution->contact_id,
       'modified_date' => date('Ymd')
     ];
-    CRM_Core_BAO_Note::add( $noteParams, $note_id );
+    CRM_Core_BAO_Note::add($noteParams, $note_id);
   }
 }

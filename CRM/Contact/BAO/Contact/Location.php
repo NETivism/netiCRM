@@ -26,10 +26,9 @@
 */
 
 /**
+ * Handles retrieval and formatting of contact location (address, phone, email) data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_BAO_Contact_Location {
@@ -37,18 +36,19 @@ class CRM_Contact_BAO_Contact_Location {
   /**
    * function to get the display name, primary email, location type and location id of a contact
    *
-   * @param  int    $id id of the contact
+   * @param  int     $id             id of the contact
+   * @param  boolean $isPrimary      whether to fetch primary email
+   * @param  int     $locationTypeID location type id
    *
    * @return array  of display_name, email, location type and location id if found, or (null,null,null, null)
    * @static
    * @access public
    */
-  static function getEmailDetails($id, $isPrimary = TRUE, $locationTypeID = NULL) {
+  public static function getEmailDetails($id, $isPrimary = TRUE, $locationTypeID = NULL) {
     $primaryClause = NULL;
     if ($isPrimary) {
       $primaryClause = " AND civicrm_email.is_primary = 1";
     }
-
 
     $locationClause = NULL;
     if ($locationTypeID) {
@@ -75,13 +75,14 @@ WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
   /**
    * function to get the sms number and display name of a contact
    *
-   * @param  int    $id id of the contact
+   * @param  int    $id   id of the contact
+   * @param  string $type type of phone
    *
    * @return array    tuple of display_name and sms if found, or (null,null)
    * @static
    * @access public
    */
-  static function getPhoneDetails($id, $type = NULL) {
+  public static function getPhoneDetails($id, $type = NULL) {
     if (!$id) {
       return [NULL, NULL];
     }
@@ -90,7 +91,6 @@ WHERE     civicrm_contact.id = %1 ORDER BY civicrm_email.is_primary DESC";
     if ($type) {
       $cond = " AND civicrm_phone.phone_type = '$type'";
     }
-
 
     $sql = "
    SELECT civicrm_contact.display_name, civicrm_phone.phone
@@ -111,14 +111,15 @@ LEFT JOIN civicrm_phone ON ( civicrm_phone.contact_id = civicrm_contact.id )
   /**
    * function to get the information to map a contact
    *
-   * @param  array  $ids    the list of ids for which we want map info
-   * $param  int    $locationTypeID
+   * @param  array   $ids            the list of ids for which we want map info
+   * @param  int     $locationTypeID location type id
+   * @param  boolean $imageUrlOnly   whether to return only image url
    *
-   * @return null|string     display name of the contact if found
+   * @return array   array of location information for each contact
    * @static
    * @access public
    */
-  static function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
+  public static function &getMapInfo($ids, $locationTypeID = NULL, $imageUrlOnly = FALSE) {
 
     $idString = ' ( ' . CRM_Utils_Array::implode(',', $ids) . ' ) ';
     $sql = "
@@ -182,9 +183,9 @@ WHERE civicrm_contact.id IN $idString ";
           $dao->longitude = $reverseGeoDecode['geo_code_2'];
         }
       }
-      if (empty($dao->latitude) || empty($dao->longitude)){
+      if (empty($dao->latitude) || empty($dao->longitude)) {
         continue;
-      } 
+      }
       $location['contactID'] = $dao->contact_id;
       $location['displayName'] = $dao->display_name;
       $location['photo'] = $dao->image_url;
@@ -208,11 +209,13 @@ WHERE civicrm_contact.id IN $idString ";
       $location['url'] = CRM_Utils_System::url('civicrm/contact/view', 'reset=1&cid=' . $dao->contact_id);
       $location['location_type'] = $dao->location_type;
 
-      $location['image'] = CRM_Contact_BAO_Contact_Utils::getImage($dao->contact_sub_type ?? $dao->contact_type, $imageUrlOnly, $dao->contact_id
+      $location['image'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $dao->contact_sub_type ?? $dao->contact_type,
+        $imageUrlOnly,
+        $dao->contact_id
       );
       $locations[] = $location;
     }
     return $locations;
   }
 }
-

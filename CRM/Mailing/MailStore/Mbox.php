@@ -26,10 +26,9 @@
 */
 
 /**
+ * Mail store implementation for reading messages from an mbox format file
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -46,10 +45,8 @@ class CRM_Mailing_MailStore_Mbox extends CRM_Mailing_MailStore {
    * Connect to and lock the supplied file and make sure the two mail dirs exist
    *
    * @param string $file  mbox to operate upon
-   *
-   * @return void
    */
-  function __construct($file) {
+  public function __construct($file) {
     $this->_transport = new ezcMailMboxTransport($file);
     flock($this->_transport->fh, LOCK_EX);
 
@@ -61,10 +58,8 @@ class CRM_Mailing_MailStore_Mbox extends CRM_Mailing_MailStore {
 
   /**
    * Empty the mail source (if it was processed fully) and unlock the file
-   *
-   * @return void
    */
-  function __destruct() {
+  public function __destruct() {
     if ($this->_leftToProcess === 0) {
       // FIXME: the ftruncate() call does not work for some reason
       if ($this->_debug) {
@@ -82,12 +77,12 @@ class CRM_Mailing_MailStore_Mbox extends CRM_Mailing_MailStore {
    *
    * @return void
    */
-  function markIgnored($nr) {
+  public function markIgnored($nr) {
     if ($this->_debug) {
       print "copying message $nr to ignored folder\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_ignored);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_leftToProcess--;
   }
@@ -99,14 +94,13 @@ class CRM_Mailing_MailStore_Mbox extends CRM_Mailing_MailStore {
    *
    * @return void
    */
-  function markProcessed($nr) {
+  public function markProcessed($nr) {
     if ($this->_debug) {
       print "copying message $nr to processed folder\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_processed);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_leftToProcess--;
   }
 }
-

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,10 +37,13 @@
 class CRM_Pledge_Page_AJAX {
 
   /**
-   * Function for building Pledge Name combo box
+   * Function for building Pledge Name combo box.
+   *
+   * @param object $config
+   *
+   * @return void
    */
-  static function pledgeName(&$config) {
-
+  public static function pledgeName(&$config) {
 
     $getRecords = FALSE;
     if (isset($_GET['name']) && $_GET['name']) {
@@ -84,9 +85,7 @@ WHERE {$whereClause}
       ];
     }
 
-
     echo CRM_Utils_JSON::encode($elements, 'value');
     CRM_Utils_System::civiExit();
   }
 }
-

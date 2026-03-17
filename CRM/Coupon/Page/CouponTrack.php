@@ -2,7 +2,11 @@
 
 class CRM_Coupon_Page_CouponTrack extends CRM_Core_Page {
 
-  function run() {
+  /**
+   * Executes the main logic for the Coupon Track page.
+   * Displays coupon usage details, optionally filtered by coupon ID.
+   */
+  public function run() {
     $couponId = CRM_Utils_Request::retrieve('coupon_id', 'Positive', $this);
     if ($couponId) {
       $dao = CRM_Coupon_BAO_Coupon::getCouponUsedBy([$couponId]);
@@ -13,7 +17,7 @@ class CRM_Coupon_Page_CouponTrack extends CRM_Core_Page {
 
     while ($dao->fetch()) {
       $used[$dao->id] = [];
-      foreach($dao as $field => $value) {
+      foreach ($dao as $field => $value) {
         if ($field[0] == '_') {
           continue;
         }

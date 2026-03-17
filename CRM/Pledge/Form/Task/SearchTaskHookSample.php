@@ -26,13 +26,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to save a search
@@ -41,12 +37,11 @@
 class CRM_Pledge_Form_Task_SearchTaskHookSample extends CRM_Pledge_Form_Task {
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $rows = [];
     // display name and pledge details of all selected contacts
@@ -72,13 +67,13 @@ INNER JOIN civicrm_contact ct ON ( plg.contact_id = ct.id )
   }
 
   /**
-   * Function to actually build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -87,4 +82,3 @@ INNER JOIN civicrm_contact ct ON ( plg.contact_id = ct.id )
     );
   }
 }
-

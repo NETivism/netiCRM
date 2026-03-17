@@ -258,7 +258,9 @@ function _civicrm_api3_contact_get_supportanomalies(&$params, &$options) {
     if (is_array($params['filter.group_id'])) {
       $groups = $params['filter.group_id'];
     }
-    else $groups = explode(',', $params['filter.group_id']);
+    else {
+      $groups = explode(',', $params['filter.group_id']);
+    }
     unset($params['filter.group_id']);
     $groups = array_flip($groups);
     $groups[key($groups)] = 1;
@@ -296,33 +298,34 @@ function civicrm_api3_contact_delete($params) {
   }
 }
 
-
-function _civicrm_api3_contact_check_params( &$params, $dupeCheck = true, $dupeErrorArray = false, $obsoletevalue = true, $dedupeRuleGroupID = null )
-{
+function _civicrm_api3_contact_check_params(&$params, $dupeCheck = TRUE, $dupeErrorArray = FALSE, $obsoletevalue = TRUE, $dedupeRuleGroupID = NULL) {
 
   switch (strtolower(CRM_Utils_Array::value('contact_type', $params))) {
     case 'household':
-      civicrm_api3_verify_mandatory($params, null, ['household_name']);
+      civicrm_api3_verify_mandatory($params, NULL, ['household_name']);
       break;
     case 'organization':
-      civicrm_api3_verify_mandatory($params, null, ['organization_name']);
+      civicrm_api3_verify_mandatory($params, NULL, ['organization_name']);
       break;
     case 'individual':
-      civicrm_api3_verify_one_mandatory($params, null, [
+      civicrm_api3_verify_one_mandatory(
+        $params,
+        NULL,
+        [
         'first_name',
         'last_name',
         'email',
         'display_name',
       ]
-    );
-    break;
+      );
+      break;
   }
 
   if (CRM_Utils_Array::value('contact_sub_type', $params) && CRM_Utils_Array::value('contact_type', $params)) {
-      if (!(CRM_Contact_BAO_ContactType::isExtendsContactType($params['contact_sub_type'], $params['contact_type']))) {
-        return civicrm_api3_create_error("Invalid or Mismatched Contact SubType: " . CRM_Utils_Array::implode(', ', (array)$params['contact_sub_type']));
-      }
+    if (!(CRM_Contact_BAO_ContactType::isExtendsContactType($params['contact_sub_type'], $params['contact_type']))) {
+      return civicrm_api3_create_error("Invalid or Mismatched Contact SubType: " . CRM_Utils_Array::implode(', ', (array)$params['contact_sub_type']));
     }
+  }
 
   if ($dupeCheck) {
     // check for record already existing
@@ -338,8 +341,8 @@ function _civicrm_api3_contact_check_params( &$params, $dupeCheck = true, $dupeE
 
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, $params['contact_type'], 'Strict', []);
 
-    if (count($ids) >0) {
-      throw new API_Exception("Found matching contacts: ". CRM_Utils_Array::implode(',',$ids),"duplicate",["ids"=>$ids]);
+    if (count($ids) > 0) {
+      throw new API_Exception("Found matching contacts: ". CRM_Utils_Array::implode(',', $ids), "duplicate", ["ids" => $ids]);
     }
   }
 
@@ -446,17 +449,19 @@ function _civicrm_api3_greeting_format_params($params) {
     if ($customGreeting && $greetingId &&
       ($greetingId != array_search('Customized', $greetings))
     ) {
-      return civicrm_api3_create_error(ts('Provide either %1 greeting id and/or %1 greeting or custom %1 greeting',
-          [1 => $key]
-        ));
+      return civicrm_api3_create_error(ts(
+        'Provide either %1 greeting id and/or %1 greeting or custom %1 greeting',
+        [1 => $key]
+      ));
     }
 
     if ($greetingVal && $greetingId &&
       ($greetingId != CRM_Utils_Array::key($greetingVal, $greetings))
     ) {
-      return civicrm_api3_create_error(ts('Mismatch in %1 greeting id and %1 greeting',
-          [1 => $key]
-        ));
+      return civicrm_api3_create_error(ts(
+        'Mismatch in %1 greeting id and %1 greeting',
+        [1 => $key]
+      ));
     }
 
     if ($greetingId) {
@@ -466,9 +471,10 @@ function _civicrm_api3_greeting_format_params($params) {
       }
 
       if (!$customGreeting && ($greetingId == array_search('Customized', $greetings))) {
-        return civicrm_api3_create_error(ts('Please provide a custom value for %1 greeting',
-            [1 => $key]
-          ));
+        return civicrm_api3_create_error(ts(
+          'Please provide a custom value for %1 greeting',
+          [1 => $key]
+        ));
       }
     }
     elseif ($greetingVal) {
@@ -484,7 +490,8 @@ function _civicrm_api3_greeting_format_params($params) {
       $greetingId = CRM_Utils_Array::key('Customized', $greetings);
     }
 
-    $customValue = $params['contact_id'] ? CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+    $customValue = $params['contact_id'] ? CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_Contact',
       $params['contact_id'],
       "{$key}{$greeting}_custom"
     ) : FALSE;
@@ -539,7 +546,7 @@ function civicrm_api3_contact_getquick($params) {
   $setting->add($params);
   // get the autocomplete options from settings
 
-  $acpref = [1=>1, 2=>1];
+  $acpref = [1 => 1, 2 => 1];
 
   // get the option values for contact autocomplete
   $acOptions = CRM_Core_OptionGroup::values('contact_autocomplete_options', FALSE, FALSE, FALSE, NULL, 'name');
@@ -554,7 +561,7 @@ function civicrm_api3_contact_getquick($params) {
   if (!empty($params['field_name'])) {
     // phone_numeric should be phone
     $searchField = str_replace('_numeric', '', $params['field_name']);
-    if(!in_array($searchField, $list)) {
+    if (!in_array($searchField, $list)) {
       $list[] = $searchField;
     }
   }
@@ -571,6 +578,7 @@ function civicrm_api3_contact_getquick($params) {
         $selectText = $value;
         $value      = "address";
         $suffix     = 'sts';
+        // no break
       case 'phone':
       case 'email':
         $actualSelectElements[] = $select[] = ($value == 'address') ? $selectText : $value;
@@ -629,10 +637,11 @@ function civicrm_api3_contact_getquick($params) {
     // employee_id is present.
     $currEmpDetails = [];
     if (CRM_Utils_Array::value('employee_id', $params)) {
-      if ($currentEmployer = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
-          CRM_Utils_Array::value('employee_id', $params),
-          'employer_id'
-        )) {
+      if ($currentEmployer = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
+        CRM_Utils_Array::value('employee_id', $params),
+        'employer_id'
+      )) {
         if ($config->includeWildCardInName) {
           $strSearch = "%$name%";
         }
@@ -747,7 +756,8 @@ ORDER BY exactFirst, sort_name
 LIMIT    0, {$limit}
     ";
   // send query to hook to be modified if needed
-  CRM_Utils_Hook::contactListQuery($query,
+  CRM_Utils_Hook::contactListQuery(
+    $query,
     $name,
     CRM_Utils_Array::value('context', $params),
     CRM_Utils_Array::value('id', $params)
@@ -885,7 +895,6 @@ WHERE     $whereClause
   return civicrm_api3_create_success($contacts, $params, 'contact', 'get_by_location', $dao);
 }
 
-
 function _civicrm_api3_contact_checksum_spec(&$params) {
   $params['contact_id']['api.required'] = 1;
   $params['live']['api.required'] = 1;
@@ -945,19 +954,20 @@ function civicrm_api3_contact_duplicatecheck($params) {
     if (!$rgBao->find(TRUE)) {
       return civicrm_api3_create_error('Please specify the correct rule ID corresponding to contact type.');
     }
-    $foundDupes = CRM_Dedupe_Finder::dupesByParams($dedupeParams,
+    $foundDupes = CRM_Dedupe_Finder::dupesByParams(
+      $dedupeParams,
       $params['contact_type'],
       'Strict',
       [],
       $params['dedupe_rule_id']
     );
   }
-  elseif(!empty($params['dedupe_rules']) && is_array($params['dedupe_rules'])) {
+  elseif (!empty($params['dedupe_rules']) && is_array($params['dedupe_rules'])) {
     if (empty($params['threshold']) || !is_numeric($params['threshold']) || $params['threshold'] <= 0) {
       return civicrm_api3_create_error('Please specify numeric threshold and greater than zero of this dedupe.');
     }
     $supportedFields = CRM_Dedupe_BAO_RuleGroup::supportedFields($params['contact_type']);
-    foreach($params['dedupe_rules'] as $rule) {
+    foreach ($params['dedupe_rules'] as $rule) {
       if (!empty($rule['table']) && !empty($rule['field']) && !empty($rule['weight'])) {
         if (!isset($supportedFields[$rule['table']])) {
           return civicrm_api3_create_error('Rule table should be in supported table. Your rule table: '.$rule['table']." doesn't be supported.");

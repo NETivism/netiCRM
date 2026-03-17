@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to delete a group of
@@ -43,13 +39,11 @@
 class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // add select for groups
     $group = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::group();
     $groupElement = $this->add('select', 'group_id', ts('Select Group'), $group, TRUE);
@@ -67,13 +61,11 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Set the default form values
+   * Set the default form values.
    *
-   * @access protected
-   *
-   * @return array the default array reference
+   * @return array<string, mixed> the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
 
     if ($this->get('context') === 'smog') {
@@ -83,11 +75,9 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $groupId = $this->controller->exportValue('RemoveFromGroup', 'group_id');
@@ -109,4 +99,3 @@ class CRM_Contact_Form_Task_RemoveFromGroup extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

@@ -10,8 +10,8 @@ abstract class CRM_AI_CompletionService {
    *
    * Should set to default model when provide model name not available
    *
-   * @param string $model
-   * @return string the real model name set on this function
+   * @param string $model The model name.
+   * @return void
    */
   abstract public function setModel($model);
 
@@ -20,8 +20,8 @@ abstract class CRM_AI_CompletionService {
    *
    * Should set to max tokens when value not provided
    *
-   * @param int $maxTokens
-   * @return int the real token set on this function
+   * @param int $maxTokens The maximum number of tokens.
+   * @return void
    */
   abstract public function setMaxTokens($maxTokens);
 
@@ -44,16 +44,15 @@ abstract class CRM_AI_CompletionService {
    *
    * Error handling should using try - catch when doing request
    *
-   * @param array $params
-   * @return string
+   * @param array $params The request parameters.
+   * @return array|void The response data.
    */
   abstract public function request($params);
-
 
   /**
    * Format parameters before sending via request
    *
-   * @param array $params(reference)
+   * @param array $params The request parameters (reference).
    * @return void
    */
   abstract protected function formatParams(&$params);
@@ -61,16 +60,16 @@ abstract class CRM_AI_CompletionService {
   /**
    * Format response before saving to CRM_AI_DAO_AICompletion
    *
-   * @param string $responseString
-   * @return array
+   * @param string $responseString The raw response string.
+   * @return array The formatted response data.
    */
   abstract protected function formatResponse($responseString);
 
   /**
    * Low level function to determine if result in response is an error.
    *
-   * @param array $response
-   * @return boolean
+   * @param array $response The response data.
+   * @return boolean True if the response contains an error.
    */
   abstract protected function isError($response);
 }

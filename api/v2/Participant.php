@@ -1,7 +1,6 @@
 <?php
 // $Id: Participant.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -125,11 +124,11 @@ function &civicrm_participant_get(&$params) {
 
   $participant = &civicrm_participant_search($params);
 
-
   if (count($participant) != 1 &&
     !CRM_Utils_Array::value('returnFirst', $params)
   ) {
-    $error = civicrm_create_error(ts('%1 participant matching input params', [1 => count($participant)]),
+    $error = civicrm_create_error(
+      ts('%1 participant matching input params', [1 => count($participant)]),
       $participant
     );
     return $error;
@@ -344,12 +343,15 @@ function civicrm_participant_check_params(&$params, $checkDuplicate = FALSE) {
     if (CRM_Event_BAO_Participant::checkDuplicate($params, $result)) {
       $participantID = array_pop($result);
 
-      $error = CRM_Core_Error::createError("Found matching participant record.",
+      $error = CRM_Core_Error::createError(
+        "Found matching participant record.",
         CRM_Core_Error::DUPLICATE_PARTICIPANT,
-        'Fatal', $participantID
+        'Fatal',
+        $participantID
       );
 
-      return civicrm_create_error($error->pop(),
+      return civicrm_create_error(
+        $error->pop(),
         [
           'contactID' => $params['contact_id'],
           'participantID' => $participantID,
@@ -359,4 +361,3 @@ function civicrm_participant_check_params(&$params, $checkDuplicate = FALSE) {
   }
   return TRUE;
 }
-

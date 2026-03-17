@@ -1,6 +1,13 @@
 <?php
 class CRM_Core_Page_Payment_TapPay extends CRM_Core_Page {
-  function run() {
+  /**
+   * Run the TapPay payment page flow.
+   *
+   * Initializes the payment session and assigns necessary variables for frontend processing.
+   *
+   * @return void
+   */
+  public function run() {
     $qfKey = CRM_Utils_Array::value('qfKey', $_REQUEST, NULL);
     $id = CRM_Utils_Array::value('id', $_REQUEST, NULL);
 
@@ -8,8 +15,8 @@ class CRM_Core_Page_Payment_TapPay extends CRM_Core_Page {
     if ($component == 'contribute') {
       $className = 'CRM_Contribute_Controller_Contribution';  // these class use to store session variable name
     }
-    elseif($component == 'event') {
-      $className = 'CRM_Event_Controller_Registration'; 
+    elseif ($component == 'event') {
+      $className = 'CRM_Event_Controller_Registration';
     }
     else {
       $className = $component;

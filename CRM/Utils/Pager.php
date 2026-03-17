@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,41 +41,38 @@
  *
  */
 
-
 class CRM_Utils_Pager extends Pager_Sliding {
 
   /**
-   * constants for static parameters of the pager
+   * Constants for pager configuration parameters.
    */
-  CONST ROWCOUNT = 50, PAGE_ID = 'crmPID', PAGE_ID_TOP = 'crmPID', PAGE_ID_BOTTOM = 'crmPID_B', PAGE_ROWCOUNT = 'crmRowCount';
+  public const ROWCOUNT = 50, PAGE_ID = 'crmPID', PAGE_ID_TOP = 'crmPID', PAGE_ID_BOTTOM = 'crmPID_B', PAGE_ROWCOUNT = 'crmRowCount';
 
   /**
-   * the output of the pager. This is a name/value array with various keys
-   * that an application could use to display the pager
-   * @var array
+   * The output of the pager. A name/value array with various keys
+   * that an application uses to render the pager display.
+   *
+   * @var array<string, mixed>
    */
   public $_response;
 
   /**
-   * The pager constructor. Takes a few values, and then assigns a lot of defaults
-   * to the PEAR pager class
-   * We have embedded some html in this class. Need to figure out how to export this
-   * to the top level at some point in time
+   * Construct and initialize the pager with default PEAR pager settings.
    *
-   * @param int     total        the total count of items to be displayed
-   * @param int     currentPage  the page currently being displayed
-   * @param string  status       the status message to be displayed. It embeds a token
-   *                             %%statusMessage%% that will be replaced with which items
-   *                             are currently being displayed
-   * @param string  csvString    the title of the link to be displayed for the export
-   * @param int     perPage      the number of items displayed per page
+   * Accepts a parameter array and assigns default values for PEAR
+   * Pager_Sliding. Also computes the status message displaying
+   * the current item range (e.g. "1 - 50 of 200").
    *
-   * @return object              the newly created and initialized pager object
-   *
-   * @access public
-   *
+   * @param array<string, mixed> $params Configuration array with keys:
+   *   - 'total' (int): Total count of items to be displayed.
+   *   - 'status' (string|null): Status message template with %%StatusMessage%% token.
+   *   - 'csvString' (string): Title of the CSV export link.
+   *   - 'rowCount' (int): Number of items per page.
+   *   - 'buttonTop' (string): Name of the top submit button.
+   *   - 'buttonBottom' (string): Name of the bottom submit button.
+   *   - 'pageID' (int): Optional initial page number.
    */
-  function __construct($params) {
+  public function __construct($params) {
     if ($params['status'] === NULL) {
       $params['status'] = ts('Contacts %%StatusMessage%%');
     }
@@ -130,18 +125,16 @@ class CRM_Utils_Pager extends Pager_Sliding {
   }
 
   /**
-   * helper function to assign remaining pager options as good default
-   * values
+   * Assign default pager options to the parameter array.
    *
-   * @param array   $params      the set of options needed to initialize the parent
-   *                             constructor
+   * Sets mode, URL variable, navigation labels, page size,
+   * and other PEAR Pager_Sliding configuration values.
    *
-   * @access public
+   * @param array<string, mixed> $params The pager configuration array, modified by reference.
    *
-   * @return void
-   *
+   * @return array<string, mixed> The modified parameter array.
    */
-  function initialize(&$params) {
+  public function initialize(&$params) {
     /* set the mode for the pager to Sliding */
 
     $params['mode'] = 'Sliding';
@@ -168,7 +161,6 @@ class CRM_Utils_Pager extends Pager_Sliding {
     $params['prevImg'] = ' ' . ts('&lt; Previous');
     $params['nextImg'] = ts('Next &gt;') . ' ';
 
-
     // set first and last text fragments
     $params['firstPagePre'] = '';
     $params['firstPageText'] = ' ' . ts('&lt;&lt; First');
@@ -188,18 +180,17 @@ class CRM_Utils_Pager extends Pager_Sliding {
   }
 
   /**
-   * Figure out the current page number based on value of
-   * GET / POST variables. Hierarchy rules are followed,
-   * POST over-rides a GET, a POST at the top overrides
-   * a POST at the bottom (of the page)
+   * Determine the current page number from GET/POST variables.
    *
-   * @param int defaultPageId   current pageId
+   * Follows a priority hierarchy: POST overrides GET, and a POST
+   * from the top pager overrides a POST from the bottom pager.
    *
-   * @return int                new pageId to display to the user
-   * @access public
+   * @param int $defaultPageId The fallback page ID if none is found in request variables.
+   * @param array<string, mixed> $params The pager configuration array (passed by reference).
    *
+   * @return int The resolved page number to display.
    */
-  function getPageID($defaultPageId, &$params) {
+  public function getPageID($defaultPageId, &$params) {
     // POST has higher priority than GET vars
     // else if a value is set that has higher priority and finally the GET var
     $currentPage = $defaultPageId;
@@ -224,15 +215,15 @@ class CRM_Utils_Pager extends Pager_Sliding {
   }
 
   /**
-   * Get the number of rows to display from either a GET / POST variable
+   * Get the number of rows to display from GET/POST variables.
    *
-   * @param int $defaultPageRowCount the default value if not set
+   * POST takes priority over GET. Falls back to the provided default.
    *
-   * @return int                     the rowCount value to use
-   * @access public
+   * @param int $defaultPageRowCount The default row count if not set in request variables.
    *
+   * @return int The row count value to use.
    */
-  function getPageRowCount($defaultPageRowCount = self::ROWCOUNT) {
+  public function getPageRowCount($defaultPageRowCount = self::ROWCOUNT) {
     // POST has higher priority than GET vars
     if (isset($_POST[self::PAGE_ROWCOUNT])) {
       $rowCount = max((int )@$_POST[self::PAGE_ROWCOUNT], 1);
@@ -247,16 +238,11 @@ class CRM_Utils_Pager extends Pager_Sliding {
   }
 
   /**
-   * Use the pager class to get the pageId and Offset
+   * Calculate the SQL offset and row count for the current page.
    *
-   * @param void
-   *
-   * @return array: an array of the pageID and offset
-   *
-   * @access public
-   *
+   * @return array{0: int, 1: int} An array of [offset, rowCount].
    */
-  function getOffsetAndRowCount() {
+  public function getOffsetAndRowCount() {
     $pageId = $this->getCurrentPageID();
     if (!$pageId) {
       $pageId = 1;
@@ -268,18 +254,20 @@ class CRM_Utils_Pager extends Pager_Sliding {
   }
 
   /**
-   * given a number create a link that will display the number of
-   * rows as specified by that link
+   * Generate an HTML link to change the number of rows displayed per page.
    *
-   * @param int $perPage the number of rows
+   * If the requested per-page value matches the current value, returns
+   * plain text instead of a link.
    *
-   * @return string      the link
-   * @access void
+   * @param int $perPage The number of rows per page for this link.
+   *
+   * @return string The HTML link or plain text.
    */
-  function getPerPageLink($perPage) {
+  public function getPerPageLink($perPage) {
     if ($perPage != $this->_perPage) {
       $href = CRM_Utils_System::makeURL(self::PAGE_ROWCOUNT) . $perPage;
-      $link = sprintf('<a href="%s" %s>%s</a>',
+      $link = sprintf(
+        '<a href="%s" %s>%s</a>',
         $href,
         $this->_classString,
         $perPage
@@ -292,18 +280,20 @@ class CRM_Utils_Pager extends Pager_Sliding {
   }
 
   /**
-   * Renders a link using the appropriate method
+   * Render a pager navigation link using the appropriate HTTP method.
    *
-   * @param string $altText  Alternative text for this link (title property)
-   * @param string $linkText Text contained by this link
+   * Generates an anchor tag for either GET or POST navigation,
+   * applying XSS filtering and proper URL construction.
    *
-   * @return string The link in string form
-   * @access private
+   * @param string $altText Alternative text for the link (used as the title attribute).
+   * @param string $linkText The visible text content of the link.
+   *
+   * @return string The rendered HTML link, or empty string if HTTP method is unsupported.
    */
-  function _renderLink($altText, $linkText) {
+  public function _renderLink($altText, $linkText) {
     if ($this->_httpMethod == 'GET') {
       $query = [];
-      foreach($this->_linkData as $key => $val) {
+      foreach ($this->_linkData as $key => $val) {
         $val = CRM_Utils_String::xssFilter($val);
         $key = CRM_Utils_String::xssFilter($key);
         if ($key === 'q') {
@@ -319,12 +309,13 @@ class CRM_Utils_Pager extends Pager_Sliding {
       if (CRM_Utils_Array::arrayKeyExists($this->_urlVar, $this->_linkData)) {
         $onclick = str_replace('%d', $this->_linkData[$this->_urlVar], $this->_onclick);
       }
-      return sprintf('<a href="%s"%s%s%s%s title="%s">%s</a>',
+      return sprintf(
+        '<a href="%s"%s%s%s%s title="%s">%s</a>',
         htmlentities($this->_url . $href, ENT_COMPAT, 'UTF-8'),
         empty($this->_classString) ? '' : ' '.$this->_classString,
-        empty($this->_attributes)  ? '' : ' '.$this->_attributes,
-        empty($this->_accesskey)   ? '' : ' accesskey="'.$this->_linkData[$this->_urlVar].'"',
-        empty($onclick)            ? '' : ' onclick="'.$onclick.'"',
+        empty($this->_attributes) ? '' : ' '.$this->_attributes,
+        empty($this->_accesskey) ? '' : ' accesskey="'.$this->_linkData[$this->_urlVar].'"',
+        empty($onclick) ? '' : ' onclick="'.$onclick.'"',
         $altText,
         $linkText
       );
@@ -334,11 +325,12 @@ class CRM_Utils_Pager extends Pager_Sliding {
       if (!empty($_GET)) {
         $href .= '?' . $this->_http_build_query_wrapper($_GET);
       }
-      return sprintf("<a href='javascript:void(0)' onclick='%s'%s%s%s title='%s'>%s</a>",
+      return sprintf(
+        "<a href='javascript:void(0)' onclick='%s'%s%s%s title='%s'>%s</a>",
         $this->_generateFormOnClick($href, $this->_linkData),
         empty($this->_classString) ? '' : ' '.$this->_classString,
-        empty($this->_attributes)  ? '' : ' '.$this->_attributes,
-        empty($this->_accesskey)   ? '' : ' accesskey=\''.$this->_linkData[$this->_urlVar].'\'',
+        empty($this->_attributes) ? '' : ' '.$this->_attributes,
+        empty($this->_accesskey) ? '' : ' accesskey=\''.$this->_linkData[$this->_urlVar].'\'',
         $altText,
         $linkText
       );
@@ -346,4 +338,3 @@ class CRM_Utils_Pager extends Pager_Sliding {
     return '';
   }
 }
-

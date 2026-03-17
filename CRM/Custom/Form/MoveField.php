@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class is to build the form for Deleting Group
@@ -80,44 +75,48 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
    * set up variables to build the form
    *
    * @return void
-   * @acess protected
    */
-  function preProcess() {
-    $this->_srcFID = CRM_Utils_Request::retrieve('fid', 'Positive',
-      $this, TRUE
+  public function preProcess() {
+    $this->_srcFID = CRM_Utils_Request::retrieve(
+      'fid',
+      'Positive',
+      $this,
+      TRUE
     );
 
-    $this->_srcGID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+    $this->_srcGID = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_CustomField',
       $this->_srcFID,
       'custom_group_id'
     );
 
-    $this->_label = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+    $this->_label = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_CustomField',
       $this->_srcFID,
       'label'
     );
 
-    CRM_Utils_System::setTitle(ts('Custom Field Move: %1',
-        [1 => $this->_label]
-      ));
+    CRM_Utils_System::setTitle(ts(
+      'Custom Field Move: %1',
+      [1 => $this->_label]
+    ));
   }
 
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-
     $customGroup = CRM_Core_PseudoConstant::customGroup();
     unset($customGroup[$this->_srcGID]);
     if (empty($customGroup)) {
-       return CRM_Core_Error::statusBounce(ts('You need more than one custom group to move fields'));
+      return CRM_Core_Error::statusBounce(ts('You need more than one custom group to move fields'));
     }
 
     $customGroup = ['' => ts('- select -')] + $customGroup;
-    $this->add('select',
+    $this->add(
+      'select',
       'dst_group_id',
       ts('Destination Custom Group'),
       $customGroup,
@@ -125,7 +124,8 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
     );
     $this->add('checkbox', 'is_copy', ts('Copy?'));
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Move Custom Field'),
           'isDefault' => TRUE,
@@ -139,7 +139,16 @@ class CRM_Custom_Form_MoveField extends CRM_Core_Form {
     $this->addFormRule(['CRM_Custom_Form_MoveField', 'formRule'], $this);
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * global validation rules for the form
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Custom_Form_MoveField $self
+   *
+   * @return array|bool
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     $query = "
@@ -156,11 +165,13 @@ AND    label = %2
       $errors['dst_group_id'] = ts('A field of the same label exists in the destination group');
     }
 
-    $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup',
+    $tableName = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_CustomGroup',
       $self->_srcGID,
       'table_name'
     );
-    $columnName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+    $columnName = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_CustomField',
       $self->_srcFID,
       'column_name'
     );
@@ -170,7 +181,8 @@ SELECT count(*)
 FROM   $tableName
 WHERE  $columnName is not null
 ";
-    $count = CRM_Core_DAO::singleValueQuery($query,
+    $count = CRM_Core_DAO::singleValueQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
     if ($count > 0) {
@@ -200,7 +212,6 @@ WHERE  id IN ( %1, %2 )
    * Process the form when submitted
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // step 1: copy and create dstField and column
@@ -229,4 +240,3 @@ ON DUPLICATE KEY UPDATE $dstColumn = $srcColumn";
     CRM_Core_BAO_CustomField::deleteField($field);
   }
 }
-

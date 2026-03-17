@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality for batch profile update
@@ -77,7 +73,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -92,7 +88,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $ufGroupId = $this->get('ufGroupId');
 
     if (!$ufGroupId) {
@@ -120,7 +116,8 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
 
     $this->_fields = array_slice($this->_fields, 0, $this->_maxFields);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'submit',
           'name' => ts('Update Contact(s)'),
           'isDefault' => TRUE,
@@ -130,7 +127,6 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
         ],
       ]
     );
-
 
     $this->assign('profileTitle', $this->_title);
     $this->assign('componentIds', $this->_contactIds);
@@ -170,9 +166,9 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
    *
    * @access public
    *
-   * @return None
+   * @return array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if (empty($this->_fields)) {
       return;
     }
@@ -181,7 +177,8 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
       $details[$contactId] = [];
 
       //build sortname
-      $sortName[$contactId] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $sortName[$contactId] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
         $contactId,
         'sort_name'
       );
@@ -195,15 +192,18 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
+   * Checks for duplicate external identifiers.
    *
-   * @return true if no errors, else array of errors
+   * @param array $fields The input form values.
+   *
+   * @return array
+   *   true if no errors, else array of errors
    * @access public
    * @static
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
     $externalIdentifiers = [];
     foreach ($fields['field'] as $componentId => $field) {
@@ -223,11 +223,11 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -252,7 +252,7 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
         $values = CRM_Core_BAO_UFGroup::checkFieldsEmptyValues($ufGroupId, $key, NULL);
         $fields = CRM_Core_BAO_UFGroup::getFields($ufGroupId, FALSE, CRM_Core_Action::VIEW);
         foreach ($fields as $k => $v) {
-          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values['values'][$v['title']] )){
+          if ((CRM_Utils_Array::value('data_type', $v, '') == 'File' || CRM_Utils_Array::value('name', $v, '') == 'image_URL') && !empty($values['values'][$v['title']])) {
             $values['values'][$v['title']] = ts("Uploaded files received");
           }
         }
@@ -269,4 +269,3 @@ class CRM_Contact_Form_Task_Batch extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 //require_once 'CRM/Price/BAO/Set.php';
 //
@@ -56,16 +53,13 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
   protected $_groupTree;
 
   /**
-   * pre processing work done here.
+   * Pre processing work done here.
    *
-   * gets session variables for group or field id
-   *
-   * @param null
+   * Gets session variables for group or field id.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // get the controller vars
     $groupId = $this->get('groupId');
     $fieldId = $this->get('fieldId');
@@ -95,14 +89,11 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Set the default form values
+   * Set the default form values.
    *
-   * @param null
-   *
-   * @return array   the default array reference
-   * @access protected
+   * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $groupId = $this->get('groupId');
     $fieldId = $this->get('fieldId');
@@ -124,18 +115,14 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->assign('groupTree', $this->_groupTree);
 
     // add the form elements
-
 
     foreach ($this->_groupTree as $group) {
       if (is_array($group['fields']) && !empty($group['fields'])) {
@@ -147,7 +134,8 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
@@ -156,4 +144,3 @@ class CRM_Price_Form_Preview extends CRM_Core_Form {
     );
   }
 }
-

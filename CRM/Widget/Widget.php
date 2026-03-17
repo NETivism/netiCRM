@@ -5,10 +5,27 @@
  *
  * Modified and improved upon by CiviCRM LLC (c) 2007
  */
+
+/**
+ * Widget class providing contribution page data and embed code for embeddable donation widgets
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Widget_Widget {
 
-  static $_methodTable;
-  function initialize() {
+  /**
+   * Method table for remote access.
+   *
+   * @var array
+   */
+  public static $_methodTable;
+
+  /**
+   * Initialize the method table.
+   */
+  public function initialize() {
     if (!self::$_methodTable) {
       self::$_methodTable = [
         'getContributionPageData' =>
@@ -32,14 +49,22 @@ class CRM_Widget_Widget {
     }
   }
 
-  function &methodTable() {
+  /**
+   * Get the method table.
+   *
+   * @return array
+   *   A reference to the method table.
+   */
+  public function &methodTable() {
     self::initialize();
 
     return self::$_methodTable;
   }
 
   /**
-   * Not implemented - registers an action and unique widget ID.  Useful for stats and debugging
+   * Not implemented - registers an action and unique widget ID.
+   *
+   * Useful for stats and debugging.
    *
    * @param int $contributionPageID
    * @param string $widgetID
@@ -47,17 +72,17 @@ class CRM_Widget_Widget {
    *
    * @return string
    */
-  function registerRequest($contributionPageID, $widgetID, $action) {
+  public function registerRequest($contributionPageID, $widgetID, $action) {
     return "I registered a request to $action on $contributionPageID from $widgetID";
   }
 
   /**
-   * Gets all campaign related data and returns it as a std class.
+   * Gets all contribution page related data and returns it as a std class.
    *
    * @param int $contributionPageID
    * @param string $widgetID
    *
-   * @return stdClass
+   * @return object
    */
   public function getContributionPageData($contributionPageID, $widgetID) {
     $config = CRM_Core_Config::singleton();
@@ -73,7 +98,6 @@ class CRM_Widget_Widget {
       CRM_Core_Error::debug_log_message("$contributionPageID is not set");
       return $data;
     }
-
 
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->contribution_page_id = $contributionPageID;
@@ -92,9 +116,13 @@ class CRM_Widget_Widget {
     $data->title = $widget->title;
     $data->logo = $widget->url_logo;
     $data->button_title = $widget->button_title;
-    $data->button_url = CRM_Utils_System::url('civicrm/contribute/transact',
+    $data->button_url = CRM_Utils_System::url(
+      'civicrm/contribute/transact',
       "reset=1&id=$contributionPageID",
-      TRUE, NULL, FALSE, TRUE
+      TRUE,
+      NULL,
+      FALSE,
+      TRUE
     );
     $data->about = $widget->about;
 
@@ -139,7 +167,7 @@ WHERE  id = %1";
       }
 
       if ($dao->end_date) {
-        $endDate = CRM_Utils_Date::unixTime($dao->end_date, true);
+        $endDate = CRM_Utils_Date::unixTime($dao->end_date, TRUE);
         if ($endDate &&
           $endDate < $now
         ) {
@@ -171,23 +199,24 @@ WHERE  id = %1";
     $data->colors["about_link"] = str_replace('#', $hexPrefix, $widget->color_about_link);
     $data->colors["homepage_link"] = str_replace('#', $hexPrefix, $widget->color_homepage_link);
 
-
     return $data;
   }
 
   /**
-   * Gets embed code.  Perhaps overkill, but we can track dropoffs in this case.
+   * Gets embed code.
+   *
+   * Perhaps overkill, but we can track dropoffs in this case
    * by # of people reqeusting emebed code / number of unique instances.
    *
    * @param int $contributionPageID
    * @param string $widgetID
-   * @param string $format - either myspace or normal
+   * @param string $format
+   *   Either myspace or normal.
    *
    * @return string
    */
   public function getEmbedCode($contributionPageID, $widgetID, $format = "normal") {
     self::registerRequest($contributionPageID, $widgetID, __FUNCTION__);
-    return "<embed>.......................</embed>" . print_r(func_get_args(), true);
+    return "<embed>.......................</embed>" . print_r(func_get_args(), TRUE);
   }
 }
-

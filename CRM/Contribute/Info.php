@@ -25,26 +25,24 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
  * abstract class.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contribute_Info extends CRM_Core_Component_Info {
 
-
   // docs inherited from interface
   protected $keyword = 'contribute';
 
-  // docs inherited from interface
+  /**
+   * Get component info
+   *
+   * @return array
+   */
   public function getInfo() {
     return ['name' => 'CiviContribute',
       'translatedName' => ts('CiviContribute'),
@@ -54,7 +52,11 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Get permissions for this component
+   *
+   * @return array
+   */
   public function getPermissions() {
     return ['access CiviContribute',
       'edit contributions',
@@ -63,8 +65,11 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
     ];
   }
 
-
-  // docs inherited from interface
+  /**
+   * Get user dashboard element for this component
+   *
+   * @return array
+   */
   public function getUserDashboardElement() {
     return ['name' => ts('Contributions'),
       'title' => ts('Your Contribution(s)'),
@@ -73,7 +78,11 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Register tab for this component
+   *
+   * @return array
+   */
   public function registerTab() {
     return ['title' => ts('Contributions'),
       'url' => 'contribution',
@@ -81,19 +90,33 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Register advanced search pane for this component
+   *
+   * @return array
+   */
   public function registerAdvancedSearchPane() {
     return ['title' => ts('Contributions'),
       'weight' => 20,
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Get activity types for this component
+   *
+   * @return array|null
+   */
   public function getActivityTypes() {
     return NULL;
   }
 
-  // add shortcut to Create New
+  /**
+   * Add shortcut to Create New
+   *
+   * @param array $shortCuts
+   *
+   * @return void
+   */
   public function creatNewShortcut(&$shortCuts) {
     if (CRM_Core_Permission::check('access CiviContribute') &&
       CRM_Core_Permission::check('edit contributions')
@@ -106,4 +129,3 @@ class CRM_Contribute_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

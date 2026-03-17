@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for OpenCase Activity
@@ -52,7 +47,7 @@ class CRM_Case_Form_Activity_OpenCase {
    */
   public $_contactID;
 
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     //get multi client case configuration
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
@@ -74,12 +69,11 @@ class CRM_Case_Form_Activity_OpenCase {
    *
    * @return None
    */
-  function setDefaultValues(&$form) {
+  public function setDefaultValues(&$form) {
     $defaults = [];
     if ($form->_context == 'caseActivity') {
       return $defaults;
     }
-
 
     list($defaults['start_date']) = CRM_Utils_Date::setDateDefaults();
 
@@ -92,7 +86,6 @@ class CRM_Case_Form_Activity_OpenCase {
     if (count($medium) == 1) {
       $defaults['medium_id'] = key($medium);
     }
-
 
     $defaultLocationType = &CRM_Core_BAO_LocationType::getDefault();
     if ($defaultLocationType->id) {
@@ -107,7 +100,7 @@ class CRM_Case_Form_Activity_OpenCase {
     return $defaults;
   }
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     if ($form->_context == 'caseActivity') {
       return;
     }
@@ -116,20 +109,26 @@ class CRM_Case_Form_Activity_OpenCase {
       CRM_Contact_Form_NewContact::buildQuickForm($form);
     }
 
-
     $caseType = CRM_Case_PseudoConstant::caseType();
-    $form->add('select', 'case_type_id', ts('Case Type'),
-      $caseType, TRUE
+    $form->add(
+      'select',
+      'case_type_id',
+      ts('Case Type'),
+      $caseType,
+      TRUE
     );
 
     $caseStatus = CRM_Case_PseudoConstant::caseStatus();
-    $form->add('select', 'status_id', ts('Case Status'),
-      $caseStatus, TRUE
+    $form->add(
+      'select',
+      'status_id',
+      ts('Case Status'),
+      $caseStatus,
+      TRUE
     );
 
     $form->add('text', 'duration', ts('Duration'), ['size' => 4, 'maxlength' => 8]);
     $form->addRule('duration', ts('Please enter the duration as number of minutes (integers only).'), 'positiveInteger');
-
 
     if ($form->_currentlyViewedContactId) {
       list($displayName) = CRM_Contact_BAO_Contact::getDisplayAndImage($form->_currentlyViewedContactId);
@@ -138,18 +137,26 @@ class CRM_Case_Form_Activity_OpenCase {
 
     $form->addDate('start_date', ts('Case Start Date'), TRUE, ['formatType' => 'activityDate']);
 
-    $form->add('select', 'medium_id', ts('Medium'),
-      CRM_Case_PseudoConstant::encounterMedium(), TRUE
+    $form->add(
+      'select',
+      'medium_id',
+      ts('Medium'),
+      CRM_Case_PseudoConstant::encounterMedium(),
+      TRUE
     );
 
     // calling this field activity_location to prevent conflict with contact location fields
     $form->add('text', 'activity_location', ts('Location'), CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity', 'location'));
 
-    $form->add('textarea', 'activity_details', ts('Details'),
+    $form->add(
+      'textarea',
+      'activity_details',
+      ts('Details'),
       CRM_Core_DAO::getAttribute('CRM_Activity_DAO_Activity', 'details')
     );
 
-    $form->addButtons([
+    $form->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -209,7 +216,7 @@ class CRM_Case_Form_Activity_OpenCase {
    * @static
    * @access public
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     if ($form->_context == 'caseActivity') {
       return TRUE;
     }
@@ -238,8 +245,6 @@ class CRM_Case_Form_Activity_OpenCase {
     if ($form->_context == 'caseActivity') {
       return;
     }
-
-
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
@@ -276,8 +281,6 @@ class CRM_Case_Form_Activity_OpenCase {
       $client = $form->_currentlyViewedContactId;
     }
 
-
-
     // 2. initiate xml processor
     $xmlProcessor = new CRM_Case_XMLProcessor_Process();
 
@@ -307,16 +310,17 @@ class CRM_Case_Form_Activity_OpenCase {
     $session = CRM_Core_Session::singleton();
     if ($buttonName == $this->getButtonName('upload', 'new')) {
       if ($this->_context == 'standalone') {
-        $session->replaceUserContext(CRM_Utils_System::url('civicrm/case/add',
-            'reset=1&action=add&context=standalone'
-          ));
+        $session->replaceUserContext(CRM_Utils_System::url(
+          'civicrm/case/add',
+          'reset=1&action=add&context=standalone'
+        ));
       }
       else {
-        $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/case',
-            "reset=1&action=add&context=case&cid={$form->_contactID}"
-          ));
+        $session->replaceUserContext(CRM_Utils_System::url(
+          'civicrm/contact/view/case',
+          "reset=1&action=add&context=case&cid={$form->_contactID}"
+        ));
       }
     }
   }
 }
-

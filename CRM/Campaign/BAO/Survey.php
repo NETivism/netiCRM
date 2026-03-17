@@ -27,14 +27,11 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
+class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
 
   /**
    * Takes a bunch of params that are needed to match certain criteria and
@@ -53,7 +50,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @var array
    */
 
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $dao = new CRM_Campaign_DAO_Survey();
 
     $dao->copyValues($params);
@@ -76,7 +73,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     if (empty($params)) {
       return;
     }
@@ -111,11 +108,11 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @param int $id
    * @static
    */
-  static function getSurvey($all = FALSE,
+  public static function getSurvey(
+    $all = FALSE,
     $id = NULL,
     $defaultOnly = FALSE
   ) {
-
 
     $petitionTypeID = CRM_Core_OptionGroup::getValue('activity_type', 'petition', 'name');
 
@@ -148,8 +145,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @param int $id
    * @static
    */
-  static function getSurveyList($all = FALSE) {
-
+  public static function getSurveyList($all = FALSE) {
 
     $survey = [];
     $dao = new CRM_Campaign_DAO_Survey();
@@ -172,7 +168,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    *
    * @static
    */
-  static function getSurveyActivityType() {
+  public static function getSurveyActivityType() {
 
     $activityTypes = [];
 
@@ -190,7 +186,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    *
    * @static
    */
-  static function getSurveyCustomGroups($surveyTypes = []) {
+  public static function getSurveyCustomGroups($surveyTypes = []) {
     $customGroups = [];
     if (!is_array($surveyTypes)) {
       $surveyTypes = [$surveyTypes];
@@ -231,7 +227,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Campaign_DAO_Survey', $id, 'is_active', $is_active);
   }
 
@@ -244,7 +240,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @static
    *
    */
-  static function del($id) {
+  public static function del($id) {
     if (!$id) {
       return NULL;
     }
@@ -263,7 +259,7 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
    * @return $voterDetails array of contact info.
    * @static
    */
-  static function voterDetails($voterIds, $returnProperties = []) {
+  public static function voterDetails($voterIds, $returnProperties = []) {
     $voterDetails = [];
     if (!is_array($voterIds) || empty($voterIds)) {
       return $voterDetails;
@@ -272,12 +268,13 @@ Class CRM_Campaign_BAO_Survey extends CRM_Campaign_DAO_Survey {
     if (empty($returnProperties)) {
 
       $autocompleteContactSearch = CRM_Core_BAO_Preferences::valueOptions('contact_autocomplete_options');
-      $returnProperties = array_fill_keys(array_merge(['contact_type',
+      $returnProperties = array_fill_keys(array_merge(
+        ['contact_type',
             'contact_sub_type',
             'sort_name',
           ],
-          array_keys($autocompleteContactSearch)
-        ), 1);
+        array_keys($autocompleteContactSearch)
+      ), 1);
     }
 
     $select = $from = [];
@@ -329,7 +326,8 @@ Group By  contact.id";
         foreach ($returnProperties as $property => $ignore) {
           $voterDetails[$contact->contactId][$property] = $contact->$property;
         }
-        $image = CRM_Contact_BAO_Contact_Utils::getImage($contact->contact_sub_type ?
+        $image = CRM_Contact_BAO_Contact_Utils::getImage(
+          $contact->contact_sub_type ?
           $contact->contact_sub_type : $contact->contact_type,
           FALSE,
           $contact->contactId
@@ -351,7 +349,7 @@ Group By  contact.id";
    * @return $activityDetails array of survey activity.
    * @static
    */
-  static function voterActivityDetails($surveyId, $voterIds, $interviewerId = NULL, $statusIds = []) {
+  public static function voterActivityDetails($surveyId, $voterIds, $interviewerId = NULL, $statusIds = []) {
     $activityDetails = [];
     if (!$surveyId ||
       !is_array($voterIds) || empty($voterIds)
@@ -406,7 +404,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
    * @return $activities an array of survey activity.
    * @static
    */
-  static function getSurveyActivities($surveyId, $interviewerId = NULL, $statusIds = []) {
+  public static function getSurveyActivities($surveyId, $interviewerId = NULL, $statusIds = []) {
     $activities = [];
     if (!$surveyId) {
       return $activities;
@@ -470,7 +468,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
    * @return survey related contact ids.
    * @static
    */
-  static function getSurveyVoterInfo($surveyId, $interviewerId = NULL, $statusIds = []) {
+  public static function getSurveyVoterInfo($surveyId, $interviewerId = NULL, $statusIds = []) {
     $voterIds = [];
     if (!$surveyId) {
       return $voterIds;
@@ -497,13 +495,13 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
   }
 
   /*
-     * This function retrieve all option groups which are created as a result set 
+     * This function retrieve all option groups which are created as a result set
      *
      * @return $resultSets an array of option groups.
      * @static
      */
 
-  static function getResultSets() {
+  public static function getResultSets() {
     $resultSets = [];
     $query = "SELECT id, label FROM civicrm_option_group WHERE name LIKE 'civicrm_survey_%' AND is_active=1";
     $dao = CRM_Core_DAO::executeQuery($query);
@@ -515,7 +513,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
   }
 
   /*
-     * This function is to check survey activity.  
+     * This function is to check survey activity.
      *
      * @param int $activityId activity id.
      * @param int $activityTypeId activity type id.
@@ -523,12 +521,11 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
      * @static
      */
 
-  static function isSurveyActivity($activityId) {
+  public static function isSurveyActivity($activityId) {
     $isSurveyActivity = FALSE;
     if (!$activityId) {
       return $isSurveyActivity;
     }
-
 
     $activity = new CRM_Activity_DAO_Activity();
     $activity->id = $activityId;
@@ -553,7 +550,7 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
      * @static
      */
 
-  static function getResponsesOptions($surveyId) {
+  public static function getResponsesOptions($surveyId) {
     $responseOptions = [];
     if (!$surveyId) {
       return $responseOptions;
@@ -569,13 +566,15 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
   }
 
   /*
-     * This function return all voter links with respecting permissions
-     *
-     * @return $url array of permissioned links
-     * @static
-     */
-
-  static function buildPermissionLinks($surveyId) {
+   * This function return all voter links with respecting permissions
+   *
+   * @return $url array of permissioned links
+   * @static
+   */
+  /**
+   * @return string[]
+   */
+  public static function buildPermissionLinks($surveyId) {
     $menuLinks = [];
     if (!$surveyId) {
       return $menuLinks;
@@ -614,16 +613,17 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
       }
     }
 
-
     $ids = ['id' => $surveyId];
     foreach ($voterLinks as $link) {
       if (CRM_Utils_Array::value('qs', $link) &&
         !CRM_Utils_System::isNull($link['qs'])
       ) {
-        $urlPath = CRM_Utils_System::url(CRM_Core_Action::replace($link['url'], $ids),
+        $urlPath = CRM_Utils_System::url(
+          CRM_Core_Action::replace($link['url'], $ids),
           CRM_Core_Action::replace($link['qs'], $ids)
         );
-        $menuLinks[] = sprintf('<a href="%s" class="action-item" title="%s">%s</a>',
+        $menuLinks[] = sprintf(
+          '<a href="%s" class="action-item" title="%s">%s</a>',
           $urlPath,
           CRM_Utils_Array::value('title', $link),
           $link['title']
@@ -634,4 +634,3 @@ INNER JOIN  civicrm_activity_assignment activityAssignment ON ( activityAssignme
     return $menuLinks;
   }
 }
-

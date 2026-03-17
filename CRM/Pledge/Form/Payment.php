@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for processing a pledge payment
@@ -51,29 +46,25 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   public $_id;
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // check for edit permission
     if (!CRM_Core_Permission::check('edit pledges')) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     $this->_id = CRM_Utils_Request::retrieve('ppId', 'Positive', $this);
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if ($this->_id) {
       $params['id'] = $this->_id;
@@ -91,16 +82,16 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     //add various dates
     $this->addDate('scheduled_date', ts('Scheduled Date'), TRUE);
 
-    $this->add('text',
+    $this->add(
+      'text',
       'scheduled_amount',
       ts('Scheduled Amount'),
       ['READONLY' => TRUE,
@@ -112,13 +103,16 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     $optionTypes = ['1' => ts('Adjust Pledge Payment Schedule?'),
       '2' => ts('Adjust Total Pledge Amount?'),
     ];
-    $element = $this->addRadio('option_type',
+    $element = $this->addRadio(
+      'option_type',
       NULL,
       $optionTypes,
-      [], '<br/>'
+      [],
+      '<br/>'
     );
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -133,11 +127,9 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the submitted form values.
@@ -159,15 +151,14 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     $params['id'] = $this->_id;
     $pledgeId = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment', $params['id'], 'pledge_id');
 
-
     CRM_Pledge_BAO_Payment::add($params);
     $adjustTotalAmount = FALSE;
     if (CRM_Utils_Array::value('option_type', $formValues) == 2) {
       $adjustTotalAmount = TRUE;
     }
 
-
-    $pledgeScheduledAmount = CRM_Core_DAO::getFieldValue('CRM_Pledge_DAO_Payment',
+    $pledgeScheduledAmount = CRM_Core_DAO::getFieldValue(
+      'CRM_Pledge_DAO_Payment',
       $params['id'],
       'scheduled_amount',
       'id'
@@ -181,7 +172,8 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
       $adjustTotalAmount = TRUE;
     }
     //update pledge status
-    CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($pledgeId,
+    CRM_Pledge_BAO_Payment::updatePledgePaymentStatus(
+      $pledgeId,
       [$params['id']],
       $params['status_id'],
       NULL,
@@ -193,4 +185,3 @@ class CRM_Pledge_Form_Payment extends CRM_Core_Form {
     CRM_Core_Session::setStatus($statusMsg);
   }
 }
-

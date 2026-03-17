@@ -29,23 +29,26 @@
  * Component stores all the static and dynamic information of the various
  * CiviCRM components
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_Component {
 
   /*
-     * End part (filename) of the component information class'es name 
+     * End part (filename) of the component information class'es name
      * that needs to be present in components main directory.
      */
-  CONST COMPONENT_INFO_CLASS = 'Info';
+  public const COMPONENT_INFO_CLASS = 'Info';
 
   private static $_info = NULL;
 
-  static $_contactSubTypes = NULL;
+  public static $_contactSubTypes = NULL;
 
+  /**
+   * Returns information about enabled components.
+   *
+   * @return array List of enabled component information objects.
+   */
   private static function &_info() {
     if (self::$_info == NULL) {
       self::$_info = [];
@@ -64,7 +67,15 @@ class CRM_Core_Component {
     return self::$_info;
   }
 
-  static function get($name, $attribute = NULL) {
+  /**
+   * Gets a component object or a specific attribute of its info.
+   *
+   * @param string $name Component name.
+   * @param string|null $attribute Specific attribute name from component info.
+   *
+   * @return mixed The component object or attribute value.
+   */
+  public static function get($name, $attribute = NULL) {
     $comp = CRM_Utils_Array::value($name, self::_info());
     if ($attribute) {
       return CRM_Utils_Array::value($attribute, $comp->info);
@@ -72,18 +83,24 @@ class CRM_Core_Component {
     return $comp;
   }
 
+  /**
+   * Returns all registered components.
+   *
+   * @param bool $force Whether to force a reload of components from the registry.
+   *
+   * @return array List of component objects.
+   */
   public static function &getComponents($force = FALSE) {
     static $_cache = NULL;
 
     if (!$_cache || $force) {
       $_cache = [];
 
-
       $cr = new CRM_Core_DAO_Component();
       $cr->find(FALSE);
       while ($cr->fetch()) {
         $infoClass = $cr->namespace . '_' . self::COMPONENT_INFO_CLASS;
-        require_once (str_replace('_', DIRECTORY_SEPARATOR, $infoClass) . '.php');
+        require_once(str_replace('_', DIRECTORY_SEPARATOR, $infoClass) . '.php');
         $infoObject = new $infoClass($cr->name, $cr->namespace, $cr->id);
         if ($infoObject->info['name'] !== $cr->name) {
           CRM_Core_Error::fatal("There is a discrepancy between name in component registry and in info file ({$cr->name}).");
@@ -96,10 +113,22 @@ class CRM_Core_Component {
     return $_cache;
   }
 
+  /**
+   * Returns all enabled components.
+   *
+   * @return array List of enabled component objects.
+   */
   public static function &getEnabledComponents() {
     return self::_info();
   }
 
+  /**
+   * Returns names of enabled components.
+   *
+   * @param bool $translated Whether to return translated names.
+   *
+   * @return array Associative array of component IDs and names.
+   */
   public static function &getNames($translated = FALSE) {
     $allComponents = self::getComponents();
 
@@ -115,7 +144,15 @@ class CRM_Core_Component {
     return $names;
   }
 
-  static function invoke(&$args, $type) {
+  /**
+   * Invokes a method on a component's invoke object.
+   *
+   * @param array $args Arguments passed to the component method.
+   * @param string $type Invocation type (e.g., 'main', 'admin').
+   *
+   * @return bool True if a component was successfully invoked.
+   */
+  public static function invoke(&$args, $type) {
     $info = &self::_info();
     $config = CRM_Core_Config::singleton();
 
@@ -123,7 +160,8 @@ class CRM_Core_Component {
     $secondArg = CRM_Utils_Array::value(2, $args, '');
     foreach ($info as $name => $comp) {
       if (in_array($name, $config->enableComponents) &&
-        (($comp->info['url'] === $firstArg && $type == 'main') ||
+        (
+          ($comp->info['url'] === $firstArg && $type == 'main') ||
           ($comp->info['url'] === $secondArg && $type == 'admin')
         )
       ) {
@@ -153,14 +191,20 @@ class CRM_Core_Component {
     return FALSE;
   }
 
-  static function xmlMenu() {
+  /**
+   * Collects all XML menu files from all components.
+   *
+   * @return array List of menu file paths.
+   */
+  public static function xmlMenu() {
 
     // lets build the menu for all components
     $info = &self::getComponents(TRUE);
 
     $files = [];
     foreach ($info as $name => $comp) {
-      $files = array_merge($files,
+      $files = array_merge(
+        $files,
         $comp->menuFiles()
       );
     }
@@ -168,7 +212,12 @@ class CRM_Core_Component {
     return $files;
   }
 
-  static function &menu() {
+  /**
+   * Collects menu items from all enabled components.
+   *
+   * @return array List of menu items.
+   */
+  public static function &menu() {
     $info = &self::_info();
     $items = [];
     foreach ($info as $name => $comp) {
@@ -183,7 +232,13 @@ class CRM_Core_Component {
     return $items;
   }
 
-  static function addConfig(&$config, $oldMode = FALSE) {
+  /**
+   * Adds configuration from all enabled components.
+   *
+   * @param CRM_Core_Config $config The system config object.
+   * @param bool $oldMode Whether to use old mode.
+   */
+  public static function addConfig(&$config, $oldMode = FALSE) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -193,13 +248,27 @@ class CRM_Core_Component {
     return;
   }
 
-  static function getComponentID($componentName) {
+  /**
+   * Gets the component ID for a given name.
+   *
+   * @param string $componentName The component name.
+   *
+   * @return int The component ID.
+   */
+  public static function getComponentID($componentName) {
     $info = &self::_info();
 
     return $info[$componentName]->componentID;
   }
 
-  static function getComponentName($componentID) {
+  /**
+   * Gets the component name for a given ID.
+   *
+   * @param int $componentID The component ID.
+   *
+   * @return string|null The component name.
+   */
+  public static function getComponentName($componentID) {
     $info = &self::_info();
 
     $componentName = NULL;
@@ -213,7 +282,12 @@ class CRM_Core_Component {
     return $componentName;
   }
 
-  static function &getQueryFields() {
+  /**
+   * Collects search query fields from all components that use search.
+   *
+   * @return array List of search query fields.
+   */
+  public static function &getQueryFields() {
     $info = &self::_info();
     $fields = [];
     foreach ($info as $name => $comp) {
@@ -226,7 +300,13 @@ class CRM_Core_Component {
     return $fields;
   }
 
-  static function alterQuery(&$query, $fnName) {
+  /**
+   * Alters search queries via component BAO query objects.
+   *
+   * @param CRM_Contact_BAO_Query $query The query object.
+   * @param string $fnName The method name to call on BAO query objects.
+   */
+  public static function alterQuery(&$query, $fnName) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -237,7 +317,16 @@ class CRM_Core_Component {
     }
   }
 
-  static function from($fieldName, $mode, $side) {
+  /**
+   * Determines FROM clause contribution for a search field from components.
+   *
+   * @param string $fieldName Field name.
+   * @param int $mode Mode.
+   * @param int $side Side.
+   *
+   * @return string|null The FROM clause fragment.
+   */
+  public static function from($fieldName, $mode, $side) {
     $info = &self::_info();
 
     $from = NULL;
@@ -253,7 +342,14 @@ class CRM_Core_Component {
     return $from;
   }
 
-  static function &defaultReturnProperties($mode) {
+  /**
+   * Gets default return properties for search from components.
+   *
+   * @param int $mode Mode.
+   *
+   * @return array|null Default return properties.
+   */
+  public static function &defaultReturnProperties($mode) {
     $info = &self::_info();
 
     $properties = NULL;
@@ -269,7 +365,12 @@ class CRM_Core_Component {
     return $properties;
   }
 
-  static function &buildSearchForm(&$form) {
+  /**
+   * Builds search form elements from components.
+   *
+   * @param CRM_Core_Form $form The form object.
+   */
+  public static function &buildSearchForm(&$form) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -280,7 +381,12 @@ class CRM_Core_Component {
     }
   }
 
-  static function &addShowHide(&$showHide) {
+  /**
+   * Adds show/hide JavaScript from components.
+   *
+   * @param CRM_Core_ShowHide $showHide The show/hide object.
+   */
+  public static function &addShowHide(&$showHide) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -291,7 +397,13 @@ class CRM_Core_Component {
     }
   }
 
-  static function searchAction(&$row, $id) {
+  /**
+   * Performs search actions for components.
+   *
+   * @param array $row Row data.
+   * @param int $id ID.
+   */
+  public static function searchAction(&$row, $id) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -302,7 +414,12 @@ class CRM_Core_Component {
     }
   }
 
-  static function &contactSubTypes() {
+  /**
+   * Returns registered contact subtypes.
+   *
+   * @return array List of contact subtypes.
+   */
+  public static function &contactSubTypes() {
     if (self::$_contactSubTypes == NULL) {
       self::$_contactSubTypes = [];
 
@@ -322,8 +439,15 @@ class CRM_Core_Component {
     return self::$_contactSubTypes;
   }
 
-
-  static function &contactSubTypeProperties($subType, $op) {
+  /**
+   * Gets properties for a specific contact subtype and operation.
+   *
+   * @param string $subType Contact subtype.
+   * @param string $op Operation name.
+   *
+   * @return array Properties array.
+   */
+  public static function &contactSubTypeProperties($subType, $op) {
     $properties = &self::contactSubTypes();
     if (CRM_Utils_Array::arrayKeyExists($subType, $properties) &&
       CRM_Utils_Array::arrayKeyExists($op, $properties[$subType])
@@ -333,7 +457,12 @@ class CRM_Core_Component {
     return CRM_Core_DAO::$_nullObject;
   }
 
-  static function &taskList() {
+  /**
+   * Collects task lists from all enabled components.
+   *
+   * @return array List of tasks.
+   */
+  public static function &taskList() {
     $info = &self::_info();
 
     $tasks = [];
@@ -346,15 +475,11 @@ class CRM_Core_Component {
   }
 
   /**
-   * Function to handle table dependencies of components
+   * Function to handle table dependencies of components.
    *
-   * @param array $tables  array of tables
-   *
-   * @return null
-   * @access public
-   * @static
+   * @param array $tables Array of tables.
    */
-  static function tableNames(&$tables) {
+  public static function tableNames(&$tables) {
     $info = &self::_info();
 
     foreach ($info as $name => $comp) {
@@ -365,4 +490,3 @@ class CRM_Core_Component {
     }
   }
 }
-

@@ -26,14 +26,11 @@
 */
 
 /**
+ * Custom search form for searching contributions by price set line items
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
@@ -49,7 +46,12 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Fo
 
   public static $_isExportFileDirectly = TRUE;
 
-  function __construct(&$formValues) {
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_price_set_id = CRM_Utils_Array::value('price_set_id', $this->_formValues);
     $this->setColumns();
@@ -61,7 +63,10 @@ class CRM_Contact_Form_Search_Custom_PriceSetContribution extends CRM_Contact_Fo
     $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
   }
 
-  function buildTempTable() {
+  /**
+   * Build the temporary table for storing search results.
+   */
+  public function buildTempTable() {
     $randomNum = md5($this->_formValues['price_set_id']);
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
     $sql = "
@@ -89,7 +94,10 @@ UNIQUE INDEX unique_entity ( entity_table, entity_id )
     CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
   }
 
-  function fillTable() {
+  /**
+   * Populate the temporary table with contribution and contact data.
+   */
+  public function fillTable() {
     $sql = "
 SELECT c.id as contact_id,
        l.price_field_value_id as price_field_value_id, 
@@ -159,7 +167,14 @@ ORDER BY l.entity_table, l.entity_id ASC
     }
   }
 
-  function priceSetDAO($price_set_id = NULL) {
+  /**
+   * Get the DAO for price sets.
+   *
+   * @param int|null $price_set_id
+   *
+   * @return CRM_Core_DAO
+   */
+  public function priceSetDAO($price_set_id = NULL) {
     // get all the events that have a price set associated with it
     $sql = "
 SELECT p.id as id,
@@ -176,13 +191,21 @@ WHERE p.extends LIKE '%2%'
       $sql .= " AND p.id = $price_set_id";
     }
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       $params
     );
     return $dao;
   }
 
-  function buildForm(&$form) {
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
+  public function buildForm(&$form) {
     $dao = $this->priceSetDAO();
 
     $price_set = [];
@@ -196,7 +219,8 @@ WHERE p.extends LIKE '%2%'
       return;
     }
 
-    $form->add('select',
+    $form->add(
+      'select',
       'price_set_id',
       ts('Price Set'),
       $price_set,
@@ -215,7 +239,14 @@ WHERE p.extends LIKE '%2%'
     $form->assign('elements', ['price_set_id']);
   }
 
-  function setColumns() {
+  /**
+   * Set up the columns for the result display.
+   *
+   * This is dynamic, adding columns for each field and option in the selected price set.
+   *
+   * @return void
+   */
+  public function setColumns() {
     $this->_columns = [
       ts('Contact Id') => 'contact_id',
       ts('Contribution ID') => 'entity_id',
@@ -265,12 +296,22 @@ WHERE p.extends LIKE '%2%'
     }
   }
 
-  function summary() {
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
+  public function summary() {
     return NULL;
   }
 
-  function count(){
-    if(!$this->_filled){
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -278,7 +319,17 @@ WHERE p.extends LIKE '%2%'
     return $value;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE) {
     $selectClause = "
 contact_a.id             as contact_id  ,
 contact_a.display_name   as display_name";
@@ -292,38 +343,68 @@ contact_a.display_name   as display_name";
       $selectClause .= ",\ntempTable.{$fieldName} as {$fieldName}";
     }
 
-    $sql = $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    $sql = $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
     return $sql;
   }
 
-  function from() {
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
+  public function from() {
     return "FROM civicrm_contact contact_a INNER JOIN {$this->_tableName} tempTable ON contact_a.id = tempTable.contact_id";
   }
 
-  function where($includeContactIDs = FALSE) {
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function where($includeContactIDs = FALSE) {
     return ' ( 1 ) ';
   }
 
-  function templateFile() {
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
-  function setDefaultValues() {
+  /**
+   * Get the default values for the search form.
+   *
+   * @return array
+   */
+  public function setDefaultValues() {
     return [];
   }
 
-  function alterRow(&$row) {
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
+  public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
     $action = [
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=view").'" class="action-item" target="_blank">'.ts('View').'</a>',
       '<a href="'.CRM_Utils_System::url('civicrm/contact/view/contribution', "reset=1&id={$row['entity_id']}&cid={$row['contact_id']}&action=update").'" class="action-item" target="_blank">'.ts('Edit').'</a>',
-    ];                                      
-    if(isset($row['action'])){
+    ];
+    if (isset($row['action'])) {
       $row['action'] = CRM_Utils_Array::implode('<br>', $action);
     }
-  } 
+  }
 }
-

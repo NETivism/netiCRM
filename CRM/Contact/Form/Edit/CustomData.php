@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,10 +39,13 @@ class CRM_Contact_Form_Edit_CustomData {
   /**
    * build all the data structures needed to build the form
    *
+   * @param object $form (reference) form object
+   *
    * @return void
    * @access public
+   * @static
    */
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     $form->_type = CRM_Utils_Request::retrieve('type', 'String', CRM_Core_DAO::$_nullObject);
     $form->_subType = CRM_Utils_Request::retrieve('subType', 'String', CRM_Core_DAO::$_nullObject);
 
@@ -56,7 +57,11 @@ class CRM_Contact_Form_Edit_CustomData {
       $form->assign("blockName", $form->_addBlockName);
     }
 
-    CRM_Custom_Form_CustomData::preProcess($form, NULL, $form->_subType, NULL,
+    CRM_Custom_Form_CustomData::preProcess(
+      $form,
+      NULL,
+      $form->_subType,
+      NULL,
       ($form->_type) ? $form->_type : $form->_contactType
     );
 
@@ -67,13 +72,13 @@ class CRM_Contact_Form_Edit_CustomData {
   /**
    * build the form elements for CustomData object
    *
-   * @param CRM_Core_Form $form       reference to the form object
+   * @param object $form (reference) reference to the form object
    *
    * @return void
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     CRM_Custom_Form_CustomData::buildQuickForm($form);
 
     //build custom data.
@@ -94,12 +99,14 @@ class CRM_Contact_Form_Edit_CustomData {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
+   * @param object $form     (reference) form object
+   * @param array  $defaults (reference) defaults array
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
-  static function setDefaultValues(&$form, &$defaults) {
+  public static function setDefaultValues(&$form, &$defaults) {
     $defaults += CRM_Custom_Form_CustomData::setDefaultValues($form);
   }
 }
-

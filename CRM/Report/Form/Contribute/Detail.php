@@ -27,39 +27,56 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
-  /**
-   * @var never[]
-   */
+
+  /** @var array Column headers for report output. */
   public $_columnHeaders;
+
+  /** @var string FROM clause for the report query. */
   public $_from;
+
+  /** @var array Table alias mapping. */
   public $_aliases;
-  /**
-   * @var string
-   */
+
+  /** @var string GROUP BY clause for the report query. */
   public $_groupBy;
-  /**
-   * @var string
-   */
+
+  /** @var string ORDER BY clause for the report query. */
   public $_orderBy;
+
+  /** @var string WHERE clause for the report query. */
   public $_where;
+
+  /** @var string Output mode such as html, csv, or pdf. */
   public $_outputMode;
+
+  /** @var bool Whether to generate absolute URLs for links. */
   public $_absoluteUrl;
+
+  /** @var bool Whether address fields are selected for display. */
   protected $_addressField = FALSE;
 
+  /** @var bool Whether email field is selected for display. */
   protected $_emailField = FALSE;
 
+  /** @var mixed Summary statistics for the report. */
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Contribution']; function __construct() {
+  /** @var array Custom data group extensions supported by this report. */
+  protected $_customGroupExtends = ['Contribution'];
+
+  /**
+   * Constructor for contribution detail report.
+   *
+   * Initializes column definitions for contact, email, phone, address,
+   * contribution, group, ordinality, and contribution page tables.
+   * Enables tag filter and calls parent constructor.
+   */
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -242,11 +259,26 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Pre-process the report form.
+   *
+   * Delegates to parent preProcess.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields.
+   *
+   * Populates $_select and $_columnHeaders. Handles statistics
+   * aggregations (sum, count, avg) for fields that define them.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
 
     $this->_columnHeaders = [];
@@ -302,7 +334,15 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining civicrm_contact, civicrm_contribution,
+   * civicrm_contribution_ordinality, civicrm_phone, and civicrm_contribution_page.
+   * Conditionally joins civicrm_address and civicrm_email.
+   * Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = NULL;
 
     $this->_from = "
@@ -317,7 +357,7 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
                LEFT JOIN civicrm_contribution_page  {$this->_aliases['civicrm_contribution_page']} 
                      ON {$this->_aliases['civicrm_contribution']}.contribution_page_id ={$this->_aliases['civicrm_contribution_page']}.id";
 
-    if ($this->_addressField OR (!empty($this->_params['state_province_id_value']) OR !empty($this->_params['country_id_value']))) {
+    if ($this->_addressField or (!empty($this->_params['state_province_id_value']) or !empty($this->_params['country_id_value']))) {
       $this->_from .= "
             LEFT JOIN civicrm_address {$this->_aliases['civicrm_address']} 
                    ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_address']}.contact_id AND 
@@ -332,15 +372,34 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause grouping by contact ID and contribution ID.
+   * Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_contact']}.id, {$this->_aliases['civicrm_contribution']}.id ";
   }
 
-  function orderBy() {
+  /**
+   * Builds the ORDER BY clause ordering by contact ID.
+   * Populates $_orderBy.
+   *
+   * @return void
+   */
+  public function orderBy() {
     $this->_orderBy = " ORDER BY {$this->_aliases['civicrm_contact']}.id ";
   }
 
-  function statistics(&$rows) {
+  /**
+   * Generates report statistics including total amount and average.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array.
+   */
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $select = "
@@ -366,13 +425,33 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     return $statistics;
   }
 
-  function postProcess() {
+  /**
+   * Processes the report after form submission.
+   *
+   * Builds ACL clause and delegates to parent postProcess for query
+   * execution, formatting, and output rendering.
+   *
+   * @return void
+   */
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Modifies report result rows for display.
+   *
+   * Resolves state_province_id, country_id, contribution_type_id, and
+   * payment_instrument_id to their labels. Adds links to contact
+   * summary and contribution detail pages. Suppresses repeated
+   * contact fields in non-CSV output.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $checkList = [];
     $entryFound = FALSE;
@@ -416,10 +495,12 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         if ($value = $row['civicrm_address_state_province_id']) {
           $rows[$rowNum]['civicrm_address_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
 
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&" .
             "state_province_id_op=in&state_province_id_value={$value}",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_address_state_province_id_link'] = $url;
           $rows[$rowNum]['civicrm_address_state_province_id_hover'] = ts("List all contribution(s) for this State.");
@@ -432,10 +513,12 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         if ($value = $row['civicrm_address_country_id']) {
           $rows[$rowNum]['civicrm_address_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
 
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&" .
             "country_id_op=in&country_id_value={$value}",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['civicrm_address_country_id_link'] = $url;
           $rows[$rowNum]['civicrm_address_country_id_hover'] = ts("List all contribution(s) for this Country.");
@@ -449,7 +532,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
         CRM_Utils_Array::value('civicrm_contact_sort_name', $rows[$rowNum]) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -464,7 +548,8 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
       if (($value = CRM_Utils_Array::value('civicrm_contribution_total_amount_sum', $row)) &&
         CRM_Core_Permission::check('access CiviContribute')
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view/contribution",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view/contribution",
           "reset=1&id=" . $row['civicrm_contribution_contribution_id'] . "&cid=" . $row['civicrm_contact_id'] . "&action=view&context=contribution&selectedChild=contribute",
           $this->_absoluteUrl
         );
@@ -488,4 +573,3 @@ class CRM_Report_Form_Contribute_Detail extends CRM_Report_Form {
     }
   }
 }
-

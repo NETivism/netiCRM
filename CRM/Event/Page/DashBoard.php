@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This is page is for Event Dashboard
@@ -45,12 +41,10 @@ class CRM_Event_Page_DashBoard extends CRM_Core_Page {
    * the contact and calls the appropriate type of page to view.
    *
    * @return void
-   * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('CiviEvent'));
-
 
     $eventSummary = CRM_Event_BAO_Event::getEventSummary();
 
@@ -75,10 +69,9 @@ class CRM_Event_Page_DashBoard extends CRM_Core_Page {
    * This function is the main function that is called when the page loads,
    * it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_Search', ts('events'), NULL);
@@ -93,4 +86,3 @@ class CRM_Event_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

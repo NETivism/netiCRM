@@ -26,11 +26,10 @@
 */
 
 /**
+ * Provides nested database transaction management with automatic rollback on errors
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * @copyright David Strauss <david@fourkitchens.com> (c) 2007
- * $Id$
  *
  * This file has its origins in Donald Lobo's conversation with David
  * Strauss over IRC and the CRM_Core_DAO::transaction() function.
@@ -42,7 +41,7 @@
  * http://drupal.org/project/pressflow_transaction
  */
 class CRM_Core_Transaction {
-  const ISOLATION_LEVEL = 'READ UNCOMMITTED,READ COMMITTED,REPEATABLE READ,SERIALIZABLE';
+  public const ISOLATION_LEVEL = 'READ UNCOMMITTED,READ COMMITTED,REPEATABLE READ,SERIALIZABLE';
 
   /**
    * Keep track of the number of opens and close
@@ -78,7 +77,12 @@ class CRM_Core_Transaction {
    */
   private $_pseudoCommitted = FALSE;
 
-  function __construct($isolationLevel = NULL) {
+  /**
+   * Class constructor.
+   *
+   * @param string|null $isolationLevel The transaction isolation level.
+   */
+  public function __construct($isolationLevel = NULL) {
     if (!self::$_dao) {
       self::$_dao = new CRM_Core_DAO();
     }
@@ -94,11 +98,19 @@ class CRM_Core_Transaction {
     self::$_count++;
   }
 
-  function __destruct() {
+  /**
+   * Class destructor. Commits the transaction if not already committed.
+   */
+  public function __destruct() {
     $this->commit();
   }
 
-  function commit($resetIsolation = NULL) {
+  /**
+   * Commit the transaction.
+   *
+   * @param bool|null $resetIsolation Whether to reset the isolation level.
+   */
+  public function commit($resetIsolation = NULL) {
     if (self::$_count > 0 && !$this->_pseudoCommitted) {
       $this->_pseudoCommitted = TRUE;
       self::$_count--;
@@ -120,12 +132,20 @@ class CRM_Core_Transaction {
     }
   }
 
-  static public function rollbackIfFalse($flag) {
+  /**
+   * Set rollback flag if the provided flag is false.
+   *
+   * @param bool $flag The flag to check.
+   */
+  public static function rollbackIfFalse($flag) {
     if ($flag === FALSE) {
       self::$_doCommit = FALSE;
     }
   }
 
+  /**
+   * Mark the transaction for rollback.
+   */
   public function rollback() {
     self::$_doCommit = FALSE;
   }
@@ -141,7 +161,7 @@ class CRM_Core_Transaction {
    * callstack will not wind-down normally -- e.g. before
    * a call to exit().
    */
-  static public function forceRollbackIfEnabled() {
+  public static function forceRollbackIfEnabled() {
     if (self::$_count > 0) {
       self::$_dao->query('ROLLBACK');
       self::$_count = 0;
@@ -149,8 +169,12 @@ class CRM_Core_Transaction {
     }
   }
 
-  static public function willCommit() {
+  /**
+   * Check if the transaction will be committed.
+   *
+   * @return bool
+   */
+  public static function willCommit() {
     return self::$_doCommit;
   }
 }
-

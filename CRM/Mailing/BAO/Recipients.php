@@ -27,23 +27,27 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
 
 class CRM_Mailing_BAO_Recipients extends CRM_Mailing_DAO_Recipients {
 
   /**
-   * class constructor
+   * Class constructor.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
-  static function mailingSize($mailingID) {
+  /**
+   * Get the number of recipients for a mailing.
+   *
+   * @param int $mailingID The mailing ID.
+   *
+   * @return int The number of recipients.
+   */
+  public static function mailingSize($mailingID) {
     $sql = "
 SELECT count(*) as count
 FROM   civicrm_mailing_recipients
@@ -53,8 +57,19 @@ WHERE  mailing_id = %1
     return CRM_Core_DAO::singleValueQuery($sql, $params);
   }
 
-  static function mailingQuery($mailingID,
-    $offset = NULL, $limit = NULL
+  /**
+   * Get the recipients for a mailing.
+   *
+   * @param int $mailingID The mailing ID.
+   * @param int|null $offset The offset for the query.
+   * @param int|null $limit The limit for the query.
+   *
+   * @return CRM_Core_DAO The DAO object containing the recipients.
+   */
+  public static function mailingQuery(
+    $mailingID,
+    $offset = NULL,
+    $limit = NULL
   ) {
     $limitString = NULL;
     if ($limit && $offset !== NULL) {
@@ -72,4 +87,3 @@ WHERE  mailing_id = %1
     return CRM_Core_DAO::executeQuery($sql, $params);
   }
 }
-

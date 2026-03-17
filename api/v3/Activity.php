@@ -58,7 +58,8 @@ function civicrm_api3_activity_create($params) {
 
   if (!CRM_Utils_Array::value('id', $params)) {
     // an update does not require any mandatory parameters
-    civicrm_api3_verify_one_mandatory($params,
+    civicrm_api3_verify_one_mandatory(
+      $params,
       NULL,
       [
         'activity_name', 'activity_type_id', 'activity_label',
@@ -74,7 +75,6 @@ function civicrm_api3_activity_create($params) {
   if (!empty($errors)) {
     return $errors;
   }
-
 
   // processing for custom data
   $values = [];
@@ -295,7 +295,8 @@ function civicrm_api3_activity_delete($params) {
  */
 function _civicrm_api3_activity_check_params(&$params) {
 
-  $contactIDFields = array_intersect_key($params,
+  $contactIDFields = array_intersect_key(
+    $params,
     [
       'source_contact_id' => 1,
       'assignee_contact_id' => 1,
@@ -319,7 +320,6 @@ function _civicrm_api3_activity_check_params(&$params) {
       }
     }
 
-
     $sql = '
 SELECT  count(*)
   FROM  civicrm_contact
@@ -328,7 +328,6 @@ SELECT  count(*)
       return civicrm_api3_create_error('Invalid ' .  ' Contact Id');
     }
   }
-
 
   $activityIds = ['activity' => CRM_Utils_Array::value('id', $params),
     'parent' => CRM_Utils_Array::value('parent_id', $params),
@@ -342,7 +341,6 @@ SELECT  count(*)
       return civicrm_api3_create_error('Invalid ' . ucfirst($id) . ' Id');
     }
   }
-
 
   require_once 'CRM/Core/PseudoConstant.php';
   $activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'name', TRUE);
@@ -390,13 +388,10 @@ SELECT  count(*)
     }
   }
 
-
-
   // check for activity duration minutes
   if (isset($params['duration_minutes']) && !is_numeric($params['duration_minutes'])) {
     return civicrm_api3_create_error('Invalid Activity Duration (in minutes)');
   }
-
 
   //if adding a new activity & date_time not set make it now
   if (!CRM_Utils_Array::value('id', $params) &&
@@ -407,4 +402,3 @@ SELECT  count(*)
 
   return NULL;
 }
-

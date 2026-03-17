@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to update a saved search
@@ -45,9 +41,8 @@ class CRM_Event_Form_Task_SaveSearch_Update extends CRM_Event_Form_Task_SaveSear
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     $this->_id = $this->get('ssID');
@@ -62,11 +57,10 @@ class CRM_Event_Form_Task_SaveSearch_Update extends CRM_Event_Form_Task_SaveSear
    * This function sets the default values for the form.
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     $defaults = [];
     $params = [];
@@ -77,4 +71,3 @@ class CRM_Event_Form_Task_SaveSearch_Update extends CRM_Event_Form_Task_SaveSear
     return $defaults;
   }
 }
-

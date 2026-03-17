@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/v2/Membership.php';
 require_once 'CiviTest/CiviUnitTestCase.php';
@@ -33,7 +32,8 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
 
   protected $_contactID;
   protected $_membershipTypeID;
-  protected $_membershipStatusID; function get_info() {
+  protected $_membershipStatusID;
+  public function get_info() {
     return [
       'name' => 'Membership',
       'description' => 'Test all Membership API methods.',
@@ -54,7 +54,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
     CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'name', TRUE);
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->membershipStatusDelete($this->_membershipStatusID);
     $this->membershipTypeDelete(['id' => $this->_membershipTypeID]);
     $this->contactDelete($this->_contactID);
@@ -63,7 +63,7 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_membership_delete()
    */
-  function testMembershipDelete() {
+  public function testMembershipDelete() {
     $params = [
       'contact_id' => $this->_contactID,
       'membership_type_id' => $this->_membershipTypeID,
@@ -78,11 +78,15 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
 
     $result = civicrm_membership_delete($membershipID);
 
-    $this->assertEquals($result['is_error'], 0,
+    $this->assertEquals(
+      $result['is_error'],
+      0,
       "In line " . __LINE__
     );
 
-    $this->assertEquals($result['result'], 1,
+    $this->assertEquals(
+      $result['result'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -90,10 +94,12 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
   /**
    * check civicrm_membership_delete() with empty parameter
    */
-  function testMembershipDeleteEmpty() {
+  public function testMembershipDeleteEmpty() {
     $membershipId = NULL;
     $result = civicrm_membership_delete($membershipId);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -101,10 +107,12 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_membership_delete() with invalid Membership Id
    */
-  function testMembershipDeleteWithInvalidMembershipId() {
+  public function testMembershipDeleteWithInvalidMembershipId() {
     $membershipId = 'membership';
     $result = civicrm_membership_delete($membershipId);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -115,40 +123,47 @@ class api_v2_MembershipTest extends CiviUnitTestCase {
    *  these methods for backwards compatibility, also verifying basic
    *  behaviour is the same as new methods.
    */
-  function testContactMembershipsGet() {
+  public function testContactMembershipsGet() {
     $this->assertTrue(function_exists('civicrm_contact_memberships_get'));
     $params = [];
     $result = civicrm_contact_memberships_get($params);
-    $this->assertEquals(1, $result['is_error'],
+    $this->assertEquals(
+      1,
+      $result['is_error'],
       "In line " . __LINE__
     );
   }
 
-  function testContactMembershipCreate() {
+  public function testContactMembershipCreate() {
     $this->assertTrue(function_exists('civicrm_contact_membership_create'));
     $params = [];
     $result = civicrm_contact_membership_create($params);
-    $this->assertEquals(1, $result['is_error'],
+    $this->assertEquals(
+      1,
+      $result['is_error'],
       "In line " . __LINE__
     );
   }
 
-  function testContactMembershipGet() {
+  public function testContactMembershipGet() {
     $this->assertTrue(function_exists('civicrm_membership_types_get'));
     $params = [];
     $result = civicrm_membership_types_get($params);
-    $this->assertEquals(1, $result['is_error'],
+    $this->assertEquals(
+      1,
+      $result['is_error'],
       "In line " . __LINE__
     );
   }
 
-  function testMembershipStatusesGet() {
+  public function testMembershipStatusesGet() {
     $this->assertTrue(function_exists('civicrm_membership_statuses_get'));
     $params = 'wrong type';
     $result = civicrm_membership_statuses_get($params);
-    $this->assertEquals(1, $result['is_error'],
+    $this->assertEquals(
+      1,
+      $result['is_error'],
       "In line " . __LINE__
     );
   }
 }
-

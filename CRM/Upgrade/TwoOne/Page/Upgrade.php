@@ -27,21 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
-  function run() {
+  public function run() {
     $upgrade = new CRM_Upgrade_Form();
 
     $message = ts('CiviCRM upgrade successful');
     if ($upgrade->checkVersion($upgrade->latestVersion)) {
-      $message = ts('Your database has already been upgraded to CiviCRM %1',
+      $message = ts(
+        'Your database has already been upgraded to CiviCRM %1',
         [1 => $upgrade->latestVersion]
       );
     }
@@ -78,11 +75,14 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
     $template = CRM_Core_Smarty::singleton();
 
     $template->assign('message', $message);
-    $template->assign('pageTitle', ts('Upgrade CiviCRM to Version %1',
-        [1 => $upgrade->latestVersion]
-      ));
-    $template->assign('menuRebuildURL',
-      CRM_Utils_System::url('civicrm/menu/rebuild',
+    $template->assign('pageTitle', ts(
+      'Upgrade CiviCRM to Version %1',
+      [1 => $upgrade->latestVersion]
+    ));
+    $template->assign(
+      'menuRebuildURL',
+      CRM_Utils_System::url(
+        'civicrm/menu/rebuild',
         'reset=1'
       )
     );
@@ -90,7 +90,7 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
     echo $contents;
   }
 
-  function runForm($stepID) {
+  public function runForm($stepID) {
 
     $formName = "CRM_Upgrade_TwoOne_Form_Step{$stepID}";
     $form = new $formName();
@@ -117,10 +117,10 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
     }
   }
 
-  function runTwoOneTwo() {
+  public function runTwoOneTwo() {
 
     $formName = "CRM_Upgrade_TwoOne_Form_TwoOneTwo";
-    $form = new $formName( '2.1.4' );
+    $form = new $formName('2.1.4');
 
     $error = NULL;
     if (!$form->verifyPreDBState($error)) {
@@ -140,4 +140,3 @@ class CRM_Upgrade_TwoOne_Page_Upgrade extends CRM_Core_Page {
     }
   }
 }
-

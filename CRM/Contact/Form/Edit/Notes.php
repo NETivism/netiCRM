@@ -26,26 +26,25 @@
 */
 
 /**
+ * Form handler for editing contact notes
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-Class CRM_Contact_Form_Edit_Notes {
+class CRM_Contact_Form_Edit_Notes {
 
   /**
    * This function is to build form elements
-   * params object $form object of the form
    *
+   * @param object $form (reference) object of the form
+   *
+   * @return void
    * @static
    * @access public
    */
-
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $form->applyFilter('__ALL__', 'trim');
     $form->add('text', 'subject', ts('Subject'), ['size' => 60, 'maxlength' => 254]);
     $form->add('textarea', 'note', ts('Notes'), ['cols' => '60', 'rows' => '3']);
   }
 }
-

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class holds all the Pseudo constants that are specific to Contributions. This avoids
@@ -117,7 +112,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
    * @static
    */
   private static $taiwanACH;
-  
+
   /**
    * Taiwan ACH return failed code and reason
    * @var array
@@ -128,11 +123,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the financial types
    *
+   * @param int|null $id
+   *
+   * @return string|array - array reference of all financial types if any
    * @access public
-   *
-   * @param null $id
-   *
-   * @return array - array reference of all financial types if any
    * @static
    */
   public static function &financialType($id = NULL) {
@@ -142,13 +136,12 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the contribution types
    *
+   * @param int|null $id - specify id for return
+   * @param string|false $receiptType - limit option based on receipt type
+   * @param boolean $receiptTypeLabel - display receipt type label
+   *
+   * @return string|array - array reference of all contribution types if any
    * @access public
-   *
-   * @param null $id - specify id for return
-   * @param false $receiptType - limit option based on receipt type
-   * @param false $receiptTypeLabel - display receipt type label
-   *
-   * @return array - array reference of all contribution types if any
    * @static
    */
   public static function &contributionType($id = NULL, $receiptType = FALSE, $receiptTypeLabel = FALSE) {
@@ -161,7 +154,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if ($receiptType == 'is_deductible') {
       $types = array_intersect_key(self::$contributionType, self::$deductibleType);
     }
-    elseif($receiptType == 'is_taxreceipt'){
+    elseif ($receiptType == 'is_taxreceipt') {
       $types = array_intersect_key(self::$contributionType, self::$taxType);
     }
     else {
@@ -170,10 +163,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
     if ($receiptTypeLabel) {
       foreach ($types as $k => $v) {
-        if(!empty(self::$deductibleType[$k])) {
+        if (!empty(self::$deductibleType[$k])) {
           $types[$k] .= ' (' . ts('Deductible') . ')';
         }
-        elseif(!empty(self::$taxType[$k])) {
+        elseif (!empty(self::$taxType[$k])) {
           $types[$k] .= ' (' . ts('Tax Receipt') . ')';
         }
       }
@@ -188,9 +181,11 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the contribution pages
    *
-   * @access public
+   * @param int|null $id
+   * @param boolean $isActive
    *
-   * @return array - array reference of all contribution pages if any
+   * @return string|array - array reference of all contribution pages if any
+   * @access public
    * @static
    */
   public static function &contributionPage($id = NULL, $isActive = FALSE) {
@@ -211,15 +206,21 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the payment instruments
    *
-   * @access public
+   * @param string $columnName
    *
    * @return array - array reference of all payment instruments if any
+   * @access public
    * @static
    */
   public static function &paymentInstrument($columnName = 'label') {
     if (!isset(self::$paymentInstrument[$columnName])) {
-      self::$paymentInstrument[$columnName] = CRM_Core_OptionGroup::values('payment_instrument',
-        FALSE, FALSE, FALSE, NULL, $columnName
+      self::$paymentInstrument[$columnName] = CRM_Core_OptionGroup::values(
+        'payment_instrument',
+        FALSE,
+        FALSE,
+        FALSE,
+        NULL,
+        $columnName
       );
     }
 
@@ -229,9 +230,8 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the valid accepted credit cards
    *
-   * @access public
-   *
    * @return array - array reference of all payment instruments if any
+   * @access public
    * @static
    */
   public static function &creditCard() {
@@ -250,9 +250,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all premiums
    *
-   * @access public
+   * @param int|null $pageID
    *
    * @return array - array of all Premiums if any
+   * @access public
    * @static
    */
   public static function products($pageID = NULL) {
@@ -276,7 +277,6 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
 
       $productID = [];
 
-
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->premiums_id = $premiumID;
       $dao->find();
@@ -297,6 +297,13 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     return $products;
   }
 
+  /**
+   * Get all enabled currencies
+   *
+   * @return array
+   * @access public
+   * @static
+   */
   public static function &currency() {
     if (!isset(self::$currency)) {
       self::$currency = CRM_Core_OptionGroup::values('currencies_enabled', FALSE, FALSE, FALSE, NULL);
@@ -307,16 +314,23 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the contribution statuses
    *
-   * @access public
+   * @param int|null $id
+   * @param string $columnName
    *
-   * @return array - array reference of all contribution statuses
+   * @return string|array - array reference of all contribution statuses
+   * @access public
    * @static
    */
   public static function &contributionStatus($id = NULL, $columnName = 'label') {
     $cacheKey = $columnName;
     if (!isset(self::$contributionStatus[$cacheKey])) {
-      self::$contributionStatus[$cacheKey] = CRM_Core_OptionGroup::values('contribution_status',
-        FALSE, FALSE, FALSE, NULL, $columnName
+      self::$contributionStatus[$cacheKey] = CRM_Core_OptionGroup::values(
+        'contribution_status',
+        FALSE,
+        FALSE,
+        FALSE,
+        NULL,
+        $columnName
       );
     }
     $result = self::$contributionStatus[$cacheKey];
@@ -330,9 +344,10 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the pcp status
    *
-   * @access public
+   * @param string $columnName
    *
    * @return array - array reference of all pcp status
+   * @access public
    * @static
    */
   public static function &pcpStatus($columnName = 'label') {
@@ -346,16 +361,17 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all the Personal campaign pages
    *
-   * @access public
+   * @param int|null $id
    *
-   * @return array - array reference of all pcp if any
+   * @return string|array - array reference of all pcp if any
+   * @access public
    * @static
    */
   public static function &pcPage($id = NULL) {
     if (!self::$pcPage) {
       self::$pcPage = [];
       $dao = CRM_Core_DAO::executeQuery("SELECT pcp.id, pcp.title, pcp.contact_id, c.sort_name, pcp.contact_id, c.external_identifier FROM civicrm_pcp pcp INNER JOIN civicrm_contact c ON c.id = pcp.contact_id");
-      while($dao->fetch()){
+      while ($dao->fetch()) {
         if ($dao->external_identifier) {
           self::$pcPage[$dao->id] = "$dao->title by $dao->sort_name ($dao->contact_id - $dao->external_identifier)";
         }
@@ -371,11 +387,12 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   }
 
   /**
-   * Get all Taiwan ACH Bank Code
+   * Get all Taiwan ACH bank code and name
    *
+   * @param string $code
+   *
+   * @return array|string - array reference of all pcp if any
    * @access public
-   *
-   * @return array - array reference of all pcp if any
    * @static
    */
   public static function &taiwanACH($code = '') {
@@ -383,7 +400,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$taiwanACH) {
       $fp = fopen($civicrm_root.'xml/templates/taiwan_ach.tpl', 'r');
       $parent = '';
-      while(($data = fgetcsv($fp, 100)) !== FALSE) {
+      while (($data = fgetcsv($fp, 100)) !== FALSE) {
         if (empty($data[1])) {
           $parent = $data[0];
           continue;
@@ -392,7 +409,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
           self::$taiwanACH[$parent][$data[0]] = $data[0].' '.$data[1];
         }
       }
-      fclose($fp); 
+      fclose($fp);
     }
     if (!empty($code)) {
       foreach (self::$taiwanACH as $banks) {
@@ -404,6 +421,12 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     return self::$taiwanACH;
   }
 
+  /**
+   * Get Taiwan ACH stamp verification statuses
+   *
+   * @return array
+   * @static
+   */
   public static function taiwanACHStampVerification() {
     return [
       0 => ts('Pending'),
@@ -415,9 +438,8 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
   /**
    * Get all Taiwan ACH failed code and reason
    *
-   * @access public
-   *
    * @return array - array reference of all pcp if any
+   * @access public
    * @static
    */
   public static function &taiwanACHFailedReason() {
@@ -425,7 +447,7 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     if (!self::$taiwanACHFailedReason) {
       $fp = fopen($civicrm_root.'xml/templates/taiwan_ach_failed_reason.tpl', 'r');
       $parent = '';
-      while(($data = fgetcsv($fp, 100)) !== FALSE) {
+      while (($data = fgetcsv($fp, 100)) !== FALSE) {
         if (empty($data[1])) {
           $parent = explode('_', $data[0]);
           $instrumentName = $parent[0];
@@ -442,4 +464,3 @@ class CRM_Contribute_PseudoConstant extends CRM_Core_PseudoConstant {
     return self::$taiwanACHFailedReason;
   }
 }
-

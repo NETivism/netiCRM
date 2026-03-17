@@ -18,9 +18,10 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
 
   /**
    * Run the page.
+   *
    * @return void
    */
-  function run() {
+  public function run() {
     // Get product_id from request
     $this->_productId = CRM_Utils_Request::retrieve('product_id', 'Positive', $this, TRUE);
 
@@ -61,8 +62,10 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
         'modified_date' => $log['modified_date'],
         'stock_change' => $this->formatStockChange($log['type'], $log['quantity']),
         'contribution_id' => $log['contribution_id'],
-        'contribution_url' => CRM_Utils_System::url('civicrm/contact/view/contribution',
-          "action=view&reset=1&id={$log['contribution_id']}&cid={$contactId}&context=search"),
+        'contribution_url' => CRM_Utils_System::url(
+          'civicrm/contact/view/contribution',
+          "action=view&reset=1&id={$log['contribution_id']}&cid={$contactId}&context=search"
+        ),
         'reason' => $log['reason'] ?: '-',
         'modified_by' => $log['modified_by'] ?: '',
       ];
@@ -80,7 +83,8 @@ class CRM_Contribute_Page_ProductStockLog extends CRM_Core_Page {
    * Format stock change for display
    *
    * @param string $type 'deduct' or 'restock'
-   * @param int $quantity
+   * @param int $quantity the stock quantity
+   *
    * @return string Formatted stock change description
    */
   protected function formatStockChange($type, $quantity) {

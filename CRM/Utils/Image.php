@@ -58,10 +58,8 @@ class CRM_Utils_Image {
    * @param string $destination
    * @param integer $quality
    * @param boolean $replace
-   *
-   * @return void
    */
-  function __construct($source, $destination, $quality = 90, $replace = FALSE) {
+  public function __construct($source, $destination, $quality = 90, $replace = FALSE) {
     $this->_prepared = FALSE;
     if (!is_file($source) && !is_uploaded_file($source)) {
       return;
@@ -169,46 +167,46 @@ class CRM_Utils_Image {
    */
   private function gdCreateTmp($width, $height) {
     unset($this->_tmp);
-		$res = @imagecreatetruecolor($width, $height);
+    $res = @imagecreatetruecolor($width, $height);
 
-		if ($this->_info['extension'] == 'gif') {
-			// Find out if a transparent color is set, will return -1 if no
-			// transparent color has been defined in the image.
-			$transparent = imagecolortransparent($this->_resource);
+    if ($this->_info['extension'] == 'gif') {
+      // Find out if a transparent color is set, will return -1 if no
+      // transparent color has been defined in the image.
+      $transparent = imagecolortransparent($this->_resource);
 
-			if ($transparent >= 0) {
-				// Find out the number of colors in the image palette. It will be 0 for
-				// truecolor images.
-				$palette_size = imagecolorstotal($this->_resource);
-				if ($palette_size == 0 || $transparent < $palette_size) {
-					// Set the transparent color in the new resource, either if it is a
-					// truecolor image or if the transparent color is part of the palette.
-					// Since the index of the transparency color is a property of the
-					// image rather than of the palette, it is possible that an image
-					// could be created with this index set outside the palette size (see
-					// http://stackoverflow.com/a/3898007).
-					$transparent_color = imagecolorsforindex($this->_resource, $transparent);
-					$transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
+      if ($transparent >= 0) {
+        // Find out the number of colors in the image palette. It will be 0 for
+        // truecolor images.
+        $palette_size = imagecolorstotal($this->_resource);
+        if ($palette_size == 0 || $transparent < $palette_size) {
+          // Set the transparent color in the new resource, either if it is a
+          // truecolor image or if the transparent color is part of the palette.
+          // Since the index of the transparency color is a property of the
+          // image rather than of the palette, it is possible that an image
+          // could be created with this index set outside the palette size (see
+          // http://stackoverflow.com/a/3898007).
+          $transparent_color = imagecolorsforindex($this->_resource, $transparent);
+          $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
 
-					// Flood with our new transparent color.
-					imagefill($res, 0, 0, $transparent);
-					imagecolortransparent($res, $transparent);
-				}
-				else {
-					imagefill($res, 0, 0, imagecolorallocate($res, 255, 255, 255));
-				}
-			}
-		}
-		elseif ($this->_info['extension'] == 'png') {
-			imagealphablending($res, FALSE);
-			$transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
-			imagefill($res, 0, 0, $transparency);
-			imagealphablending($res, TRUE);
-			imagesavealpha($res, TRUE);
-		}
-		else {
-			imagefill($res, 0, 0, imagecolorallocate($res, 255, 255, 255));
-		}
+          // Flood with our new transparent color.
+          imagefill($res, 0, 0, $transparent);
+          imagecolortransparent($res, $transparent);
+        }
+        else {
+          imagefill($res, 0, 0, imagecolorallocate($res, 255, 255, 255));
+        }
+      }
+    }
+    elseif ($this->_info['extension'] == 'png') {
+      imagealphablending($res, FALSE);
+      $transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
+      imagefill($res, 0, 0, $transparency);
+      imagealphablending($res, TRUE);
+      imagesavealpha($res, TRUE);
+    }
+    else {
+      imagefill($res, 0, 0, imagecolorallocate($res, 255, 255, 255));
+    }
     $this->_tmp = $res;
   }
 
@@ -232,12 +230,12 @@ class CRM_Utils_Image {
         $success = $function($this->_resource, $tempName, $this->_convert['quality']);
       }
       else {
-				// Always save PNG images with full transparency.
-				if ($extension == 'png') {
-					imagealphablending($this->_resource, FALSE);
-					imagesavealpha($this->_resource, TRUE);
-				}
-				$success = $function($this->_resource, $tempName);
+        // Always save PNG images with full transparency.
+        if ($extension == 'png') {
+          imagealphablending($this->_resource, FALSE);
+          imagesavealpha($this->_resource, TRUE);
+        }
+        $success = $function($this->_resource, $tempName);
       }
     }
 
@@ -322,8 +320,8 @@ class CRM_Utils_Image {
    * @return void
    */
   private function crop($x, $y, $width, $height) {
-		$width = (int) round($width);
-		$height = (int) round($height);
+    $width = (int) round($width);
+    $height = (int) round($height);
     $this->_convert['width'] = $width;
     $this->_convert['height'] = $height;
     $this->gdCreateTmp($width, $height);
@@ -404,7 +402,7 @@ class CRM_Utils_Image {
   /**
    * Destructor
    */
-  function __destruct() {
+  public function __destruct() {
     if (!empty($this->_resource)) {
       imagedestroy($this->_resource);
     }
@@ -477,9 +475,9 @@ class CRM_Utils_Image {
    * @param int $userId Optional user ID, if not provided will get current logged in user
    * @return array Result array with success status and details
    */
-  public static function processBlobImagesInContent(&$submitValues, $formElements, $userId = null) {
+  public static function processBlobImagesInContent(&$submitValues, $formElements, $userId = NULL) {
     $result = [
-      'success' => true,
+      'success' => TRUE,
       'processed_fields' => [],
       'moved_files' => [],
       'errors' => [],
@@ -491,7 +489,7 @@ class CRM_Utils_Image {
       if (empty($userId)) {
         $userId = CRM_Utils_System_Drupal::getBestUFID();
         if (empty($userId)) {
-          $result['success'] = false;
+          $result['success'] = FALSE;
           $result['errors'][] = 'User not logged in or user ID not available';
           return $result;
         }
@@ -500,7 +498,7 @@ class CRM_Utils_Image {
       // Get directory paths
       $tempDir = CRM_Core_Config::singleton()->uploadDir;
       if (!$tempDir || !is_dir($tempDir)) {
-        $result['success'] = false;
+        $result['success'] = FALSE;
         $result['errors'][] = 'Temporary directory not found or not accessible';
         return $result;
       }
@@ -508,7 +506,7 @@ class CRM_Utils_Image {
       // Get CMS public directory - no fallback, strict error handling
       $cmsPublicDir = CRM_Utils_System::cmsDir('public');
       if (!$cmsPublicDir || !is_dir($cmsPublicDir)) {
-        $result['success'] = false;
+        $result['success'] = FALSE;
         $result['errors'][] = 'CMS public directory not found or not accessible';
         return $result;
       }
@@ -518,8 +516,8 @@ class CRM_Utils_Image {
 
       // Check if user directory exists, create if not
       if (!is_dir($userDir)) {
-        if (!mkdir($userDir, 0755, true)) {
-          $result['success'] = false;
+        if (!mkdir($userDir, 0755, TRUE)) {
+          $result['success'] = FALSE;
           $result['errors'][] = 'Cannot create user directory: ' . $userDir;
           return $result;
         }
@@ -527,7 +525,7 @@ class CRM_Utils_Image {
 
       // Check if user directory is writable
       if (!is_writable($userDir)) {
-        $result['success'] = false;
+        $result['success'] = FALSE;
         $result['errors'][] = 'User directory not writable: ' . $userDir;
         return $result;
       }
@@ -573,8 +571,9 @@ class CRM_Utils_Image {
         ]);
       }
 
-    } catch (Exception $e) {
-      $result['success'] = false;
+    }
+    catch (Exception $e) {
+      $result['success'] = FALSE;
       $result['errors'][] = 'Exception in blob image processing: ' . $e->getMessage();
       CRM_Core_Error::debug('Exception in processBlobImagesInContent', $e);
     }
@@ -602,10 +601,11 @@ class CRM_Utils_Image {
           $element->_type === 'CKeditor') {
 
         // Get field name from element attributes
-        $fieldName = null;
+        $fieldName = NULL;
         if (isset($element->_attributes['name'])) {
           $fieldName = $element->_attributes['name'];
-        } elseif (isset($element->_name)) {
+        }
+        elseif (isset($element->_name)) {
           $fieldName = $element->_name;
         }
 
@@ -675,9 +675,10 @@ class CRM_Utils_Image {
                 'final_path' => $movedFile['final_path'],
                 'final_name' => $movedFile['final_name'],
                 'public_url' => $publicUrl,
-                'img_tag_replaced' => true
+                'img_tag_replaced' => TRUE
               ];
-            } else {
+            }
+            else {
               $result['warnings'][] = "Generated URL failed for field '{$fieldName}': " . $urlResult['error'];
 
               $result['moved_files'][] = [
@@ -686,14 +687,16 @@ class CRM_Utils_Image {
                 'temp_name' => $tempFileName,
                 'final_path' => $movedFile['final_path'],
                 'final_name' => $movedFile['final_name'],
-                'public_url' => null,
-                'img_tag_replaced' => false
+                'public_url' => NULL,
+                'img_tag_replaced' => FALSE
               ];
             }
-          } else {
+          }
+          else {
             $result['errors'][] = "Failed to move file for field '{$fieldName}': " . $movedFile['error'];
           }
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
           $result['errors'][] = "Exception processing image in field '{$fieldName}': " . $e->getMessage();
         }
       }
@@ -773,7 +776,7 @@ class CRM_Utils_Image {
    * @return array Result with success status and file details
    */
   private static function moveTemporaryFile($tempFileName, $originalName, $tempDir, $userDir, $userId) {
-    $result = ['success' => false, 'error' => ''];
+    $result = ['success' => FALSE, 'error' => ''];
 
     try {
       // Find temporary file with any extension (from EditorImageUpload.php processing)
@@ -806,7 +809,7 @@ class CRM_Utils_Image {
         // Set appropriate file permissions
         chmod($finalPath, 0644);
 
-        $result['success'] = true;
+        $result['success'] = TRUE;
         $result['final_path'] = $finalPath;
         $result['final_name'] = $finalFileName;
         $result['source_file'] = $sourceFile;
@@ -819,11 +822,13 @@ class CRM_Utils_Image {
             'user_dir' => basename($userDir) // Just log u[uid] part
           ]);
         }
-      } else {
+      }
+      else {
         $result['error'] = 'Failed to move file from ' . $sourceFile . ' to ' . $finalPath;
       }
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       $result['error'] = 'Exception in moveTemporaryFile: ' . $e->getMessage();
     }
 
@@ -895,7 +900,7 @@ class CRM_Utils_Image {
    * @return array Result with success status and URL
    */
   private static function generatePublicUrl($filePath) {
-    $result = ['success' => false, 'url' => '', 'error' => ''];
+    $result = ['success' => FALSE, 'url' => '', 'error' => ''];
 
     try {
       // Get CMS public directory
@@ -937,7 +942,7 @@ class CRM_Utils_Image {
 
       // Verify URL format is reasonable
       if (strlen($relativeUrl) > 0 && $relativeUrl !== '/') {
-        $result['success'] = true;
+        $result['success'] = TRUE;
         $result['url'] = $relativeUrl;
 
         // Debug log the URL generation process
@@ -951,11 +956,13 @@ class CRM_Utils_Image {
             'final_url' => $relativeUrl
           ]);
         }
-      } else {
+      }
+      else {
         $result['error'] = 'Generated URL is invalid: ' . $relativeUrl;
       }
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       $result['error'] = 'Exception in generatePublicUrl: ' . $e->getMessage();
       CRM_Core_Error::debug('imageUpload_Exception', [
         'file_path' => $filePath,

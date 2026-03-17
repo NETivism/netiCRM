@@ -26,15 +26,25 @@
 */
 
 /**
+ * Manages custom search class loading and execution for contact searches
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_BAO_SearchCustom {
 
-  static function details($csID, $ssID = NULL, $gID = NULL) {
+  /**
+   * Get details for custom search
+   *
+   * @param int $csID custom search id
+   * @param int $ssID saved search id
+   * @param int $gID  group id
+   *
+   * @return array [customSearchID, customSearchClass, formValues]
+   * @static
+   * @access public
+   */
+  public static function details($csID, $ssID = NULL, $gID = NULL) {
     $error = [NULL, NULL, NULL];
 
     if (!$csID &&
@@ -52,7 +62,8 @@ class CRM_Contact_BAO_SearchCustom {
       }
 
       $formValues = CRM_Contact_BAO_SavedSearch::getFormValues($ssID);
-      $customSearchID = CRM_Utils_Array::value('customSearchID',
+      $customSearchID = CRM_Utils_Array::value(
+        'customSearchID',
         $formValues
       );
     }
@@ -72,11 +83,11 @@ class CRM_Contact_BAO_SearchCustom {
       return $error;
     }
 
-
     $ext = new CRM_Core_Extensions();
 
     if (!$ext->isExtensionKey($customSearchClass)) {
-      $customSearchFile = str_replace('_',
+      $customSearchFile = str_replace(
+        '_',
         DIRECTORY_SEPARATOR,
         $customSearchClass
       ) . '.php';
@@ -86,8 +97,8 @@ class CRM_Contact_BAO_SearchCustom {
       $customSearchClass = $ext->keyToClass($customSearchClass);
     }
 
-    if(!class_exists($customSearchClass)){
-      $error = include_once ($customSearchFile);
+    if (!class_exists($customSearchClass)) {
+      $error = include_once($customSearchFile);
       if ($error == FALSE) {
         CRM_Core_Error::fatal('Custom search file: ' . $customSearchFile . ' does not exist. Please verify your custom search settings in CiviCRM administrative panel.');
       }
@@ -96,7 +107,17 @@ class CRM_Contact_BAO_SearchCustom {
     return [$customSearchID, $customSearchClass, $formValues];
   }
 
-  static function customClass($csID, $ssID) {
+  /**
+   * Get custom search class instance
+   *
+   * @param int $csID custom search id
+   * @param int $ssID saved search id
+   *
+   * @return object custom search class instance
+   * @static
+   * @access public
+   */
+  public static function customClass($csID, $ssID) {
     list($customSearchID, $customSearchClass, $formValues) = self::details($csID, $ssID);
 
     if (!$customSearchID) {
@@ -104,18 +125,37 @@ class CRM_Contact_BAO_SearchCustom {
     }
 
     // instantiate the new class
-    $customClass = new $customSearchClass( $formValues );
+    $customClass = new $customSearchClass($formValues);
     $customClass->_ssID = $ssID;
 
     return $customClass;
   }
 
-  static function contactIDSQL($csID, $ssID) {
+  /**
+   * Get contact ids sql for custom search
+   *
+   * @param int $csID custom search id
+   * @param int $ssID saved search id
+   *
+   * @return string contact ids sql
+   * @static
+   * @access public
+   */
+  public static function contactIDSQL($csID, $ssID) {
     $customClass = self::customClass($csID, $ssID);
     return $customClass->contactIDs();
   }
 
-  static function &buildFormValues($args) {
+  /**
+   * Build form values from string
+   *
+   * @param string $args arguments string
+   *
+   * @return array form values
+   * @static
+   * @access public
+   */
+  public static function &buildFormValues($args) {
     $args = trim($args);
 
     $values = explode("\n", $args);
@@ -129,14 +169,22 @@ class CRM_Contact_BAO_SearchCustom {
     return $formValues;
   }
 
-  static function fromWhereEmail($csID, $ssID) {
+  /**
+   * Get from and where clause for email search
+   *
+   * @param int $csID custom search id
+   * @param int $ssID saved search id
+   *
+   * @return array [from, where]
+   * @static
+   * @access public
+   */
+  public static function fromWhereEmail($csID, $ssID) {
     $customClass = self::customClass($csID, $ssID);
 
     $from = $customClass->from();
     $where = $customClass->where();
 
-
     return [$from, $where];
   }
 }
-

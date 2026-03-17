@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-              class CRM_Contact_DAO_ACLContactCache extends CRM_Core_DAO
-{
+
+class CRM_Contact_DAO_ACLContactCache extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_acl_contact_cache';
+  public static $_tableName = 'civicrm_acl_contact_cache';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = false;
-    /**
+  public static $_log = FALSE;
+  /**
    * primary key
    *
    * @var int unsigned
@@ -102,24 +100,20 @@
    * @var enum('All', 'View', 'Edit', 'Create', 'Delete', 'Grant', 'Revoke')
    */
   public $operation;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_acl_contact_cache
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'user_id' => 'civicrm_contact:id',
@@ -128,54 +122,51 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'user_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'user_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'user_id' => [
           'name' => 'user_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'required' => TRUE,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'operation' => [
           'name' => 'operation',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Operation') ,
-          'required' => true,
-                   'enumValues' => 'All,View,Edit,Create,Delete,Grant,Revoke',
-         ] ,
+          'required' => TRUE,
+          'enumValues' => 'All,View,Edit,Create,Delete,Grant,Revoke',
+        ],
       ];
     }
     return self::$_fields;
@@ -183,31 +174,25 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -215,22 +200,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['acl_contact_cache'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -238,12 +222,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['acl_contact_cache'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_export;
   }
   /**
@@ -251,11 +236,11 @@
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {
     static $enums = [
-                                                        'operation',
-                ];
+        'operation',
+    ];
     return $enums;
   }
   /**
@@ -266,21 +251,20 @@
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                        'operation' => [
-                  'All' => ts('All'),
-                  'View' => ts('View'),
-                  'Edit' => ts('Edit'),
-                  'Create' => ts('Create'),
-                  'Delete' => ts('Delete'),
-                  'Grant' => ts('Grant'),
-                  'Revoke' => ts('Revoke'),
-                ],
-                  ];
+        'operation' => [
+          'All' => ts('All'),
+          'View' => ts('View'),
+          'Edit' => ts('Edit'),
+          'Create' => ts('Create'),
+          'Delete' => ts('Delete'),
+          'Grant' => ts('Grant'),
+          'Revoke' => ts('Revoke'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -290,10 +274,9 @@
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Contact_DAO_ACLContactCache::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_ACLContactCache::tsEnum($enum, $values[$enum]);
       }

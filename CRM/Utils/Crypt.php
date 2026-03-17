@@ -26,17 +26,40 @@
 */
 
 /**
+ * Encryption and decryption utilities using the CIVICRM_SITE_KEY.
  *
- * @package CRM
+ * Supports OpenSSL (AES-128-CBC) encryption with backward compatibility
+ * for legacy mcrypt-based encryption.
+ *
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
- *
  */
 class CRM_Utils_Crypt {
-  const ALGORITHM = 'AES-128-CBC';
-  const VER2 = '$O$';
 
-  static function encrypt($string) {
+  /**
+   * OpenSSL cipher algorithm.
+   *
+   * @var string
+   */
+  public const ALGORITHM = 'AES-128-CBC';
+
+  /**
+   * Version prefix used to identify OpenSSL-encrypted strings.
+   *
+   * @var string
+   */
+  public const VER2 = '$O$';
+
+  /**
+   * Encrypt a string using OpenSSL AES-128-CBC with the site key.
+   *
+   * Returns the original string if OpenSSL is not available or
+   * CIVICRM_SITE_KEY is not defined.
+   *
+   * @param string $string the plaintext string to encrypt
+   *
+   * @return string the encrypted string prefixed with VER2, or the original string on failure
+   */
+  public static function encrypt($string) {
     if (!self::checkAvailableCrypt('openssl')) {
       return $string;
     }
@@ -53,7 +76,17 @@ class CRM_Utils_Crypt {
     return $string;
   }
 
-  static function decrypt($string) {
+  /**
+   * Decrypt a string encrypted by this class.
+   *
+   * Automatically detects whether the string was encrypted with OpenSSL
+   * (VER2 prefix) or the legacy mcrypt method, and dispatches accordingly.
+   *
+   * @param string $string the encrypted string to decrypt
+   *
+   * @return string the decrypted plaintext, or the original string if decryption is unavailable
+   */
+  public static function decrypt($string) {
     if (substr($string, 0, strlen(self::VER2)) !== self::VER2 && self::checkAvailableCrypt('mcrypt')) {
       return self::deprecatedDecrypt($string);
     }
@@ -73,12 +106,15 @@ class CRM_Utils_Crypt {
   }
 
   /**
-   * Deprecated mcrypt encrypt
+   * Encrypt a string using the legacy mcrypt RIJNDAEL-256 algorithm.
    *
-   * @param string $string
-   * @return string
+   * @deprecated Use encrypt() with OpenSSL instead.
+   *
+   * @param string $string the plaintext string to encrypt
+   *
+   * @return string the base64-encoded encrypted string
    */
-  static function deprecatedEncrypt($string) {
+  public static function deprecatedEncrypt($string) {
     if (!self::checkAvailableCrypt('mcrypt')) {
       return base64_encode($string);
     }
@@ -101,12 +137,15 @@ class CRM_Utils_Crypt {
   }
 
   /**
-   * Deprecated mcrypt decrypt
+   * Decrypt a string encrypted with the legacy mcrypt RIJNDAEL-256 algorithm.
    *
-   * @param string $string
-   * @return string
+   * @deprecated Use decrypt() with OpenSSL instead.
+   *
+   * @param string $string the base64-encoded encrypted string
+   *
+   * @return string the decrypted plaintext
    */
-  static function deprecatedDecrypt($string) {
+  public static function deprecatedDecrypt($string) {
     if (!self::checkAvailableCrypt('mcrypt')) {
       return base64_decode($string);
     }
@@ -132,12 +171,13 @@ class CRM_Utils_Crypt {
   }
 
   /**
-   * Check current available crypt function for migration
+   * Check whether a given cryptographic extension is available.
    *
-   * @param string $type  openssl or mcrypt
-   * @return void
+   * @param string $type the extension name to check ('openssl' or 'mcrypt')
+   *
+   * @return bool|null TRUE if the extension is loaded, FALSE if not, NULL if type is unrecognized
    */
-  static function checkAvailableCrypt($type) {
+  public static function checkAvailableCrypt($type) {
     if ($type == 'openssl') {
       return extension_loaded('openssl');
     }
@@ -146,4 +186,3 @@ class CRM_Utils_Crypt {
     }
   }
 }
-

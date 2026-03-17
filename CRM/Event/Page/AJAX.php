@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -40,8 +38,10 @@ class CRM_Event_Page_AJAX {
 
   /**
    * Function for building Event combo box
+   *
+   * @return void
    */
-  static function event() {
+  public static function event() {
 
     $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " title LIKE '%$name%' AND ( civicrm_event.is_template IS NULL OR civicrm_event.is_template = 0 )";
@@ -66,8 +66,10 @@ LIMIT 0, 50
 
   /**
    * Function for building Event Type combo box
+   *
+   * @return void
    */
-  static function eventType() {
+  public static function eventType() {
 
     $name = trim(CRM_Utils_Type::escape($_GET['name'], 'String'));
     $whereClause = " v.label LIKE '%$name%' ";
@@ -93,8 +95,10 @@ ORDER by v.weight";
 
   /**
    * Function for building EventFee combo box
+   *
+   * @return void
    */
-  static function eventFee() {
+  public static function eventFee() {
 
     $name = trim(CRM_Utils_Type::escape($_GET['s'], 'String'));
     if (!$name) {
@@ -117,7 +121,12 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
     CRM_Utils_System::civiExit();
   }
 
-  static function eventList() {
+  /**
+   * Function for building Event List
+   *
+   * @return void
+   */
+  public static function eventList() {
 
     $events = CRM_Event_BAO_Event::getEvents(TRUE);
 
@@ -130,24 +139,24 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
       ];
     }
 
-
     echo json_encode($elements);
     CRM_Utils_System::civiExit();
   }
 
   /**
    * Function to get default participant role
+   *
+   * @return void
    */
-  static function participantRole() {
-
-
+  public static function participantRole() {
 
     $eventID = $_GET['eventId'];
     if (!CRM_Utils_Rule::positiveInteger($eventID)) {
       CRM_Utils_System::civiExit();
     }
 
-    $defaultRoleId = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $defaultRoleId = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $eventID,
       'default_role_id',
       'id'
@@ -160,8 +169,10 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
 
   /**
    * Function to get Event Full or left seat
+   *
+   * @return void
    */
-  static function eventFull() {
+  public static function eventFull() {
     $id = $_GET['id'] ? $_GET['id'] : ($_GET['eventId'] ? $_GET['eventId'] : NULL);
     $info = [];
     if (CRM_Utils_Rule::positiveInteger($id)) {
@@ -172,4 +183,3 @@ WHERE cg.name LIKE 'civicrm_event.amount%'
     CRM_Utils_System::civiExit();
   }
 }
-

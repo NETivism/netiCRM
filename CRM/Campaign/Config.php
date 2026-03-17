@@ -30,12 +30,9 @@
  * Typically we'll have different values for a user's sandbox, a qa sandbox and a production area.
  * The default values in general, should reflect production values (minimizes chances of screwing up)
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-class CRM_Campaign_Config extends CRM_Core_Component_Config {}
-
+class CRM_Campaign_Config extends CRM_Core_Component_Config {
+}

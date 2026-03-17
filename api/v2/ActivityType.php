@@ -1,7 +1,6 @@
 <?php
 // $Id: ActivityType.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -110,4 +109,3 @@ function civicrm_activity_type_delete($params) {
 
   return CRM_Core_BAO_OptionValue::del($activityTypeId);
 }
-

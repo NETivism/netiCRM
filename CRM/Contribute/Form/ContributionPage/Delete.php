@@ -27,16 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 /**
- * This class is to build the form for Deleting Group
+ * This class is to build the form for Deleting Group.
  */
 class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_ContributionPage {
 
@@ -60,12 +56,13 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
    */
   protected $_defaulRenwaltPage;
 
-
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method checks for related contributions and prevents deletion if any
+   * exist. It also checks if the page is the default renewal page.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     //Check if there are contributions related to Contribution Page
@@ -74,9 +71,8 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
 
     //check for delete
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', $this->_action)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
-
 
     $dao = new CRM_Contribute_DAO_Contribution();
     $dao->contribution_page_id = $this->_id;
@@ -97,10 +93,12 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds the 'Delete Contribution Page' button if deletion is allowed,
+   * otherwise only shows the 'Cancel' button.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     $this->_title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
@@ -124,10 +122,13 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Process the form when submitted
+   * Process the form submission.
+   *
+   * Performs a cascading delete of all related records (UF joins, amount blocks,
+   * membership blocks, PCP blocks, premiums, and price sets) before deleting
+   * the contribution page itself.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
 
@@ -142,7 +143,6 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
     ];
     $dao->copyValues($params);
     $dao->delete();
-
 
     $groupName = "civicrm_contribution_page.amount.{$this->_id}";
     CRM_Core_OptionGroup::deleteAssoc($groupName);
@@ -180,4 +180,3 @@ class CRM_Contribute_Form_ContributionPage_Delete extends CRM_Contribute_Form_Co
     CRM_Core_Session::setStatus(ts('The contribution page \'%1\' has been deleted.', [1 => $this->_title]));
   }
 }
-

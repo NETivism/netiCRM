@@ -27,26 +27,24 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Upgrade_Controller extends CRM_Core_Controller {
 
   /**
    * class constructor
    */
-  function __construct($title = NULL,
+  public function __construct(
+    $title = NULL,
     $action = CRM_Core_Action::NONE,
     $modal = TRUE
   ) {
     parent::__construct($title, $modal);
 
-
-    $this->_stateMachine = new CRM_Upgrade_StateMachine($this,
+    $this->_stateMachine = new CRM_Upgrade_StateMachine(
+      $this,
       $this->getPages(),
       $action
     );
@@ -59,4 +57,3 @@ class CRM_Upgrade_Controller extends CRM_Core_Controller {
     $this->addActions();
   }
 }
-

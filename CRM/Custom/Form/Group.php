@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * form to process actions on the set aspect of Custom Data
@@ -44,7 +40,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * the set id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
@@ -52,7 +47,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    *  set is empty or not
    *
    * @var bool
-   * @access protected
    */
   protected $_isGroupEmpty = TRUE;
 
@@ -60,7 +54,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * array of existing subtypes set for a custom set
    *
    * @var array
-   * @access protected
    */
   protected $_subtypes = [];
 
@@ -68,20 +61,15 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * array of default params
    *
    * @var array
-   * @access protected
    */
   protected $_defaults = [];
 
   /**
    * Function to set variables up before form is built
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function preProcess() {
-
     // current set id
     $this->_id = $this->get('id');
 
@@ -117,15 +105,13 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
+   * @param CRM_Custom_Form_Group $self additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     //validate group title as well as name.
@@ -192,23 +178,17 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * This function is used to add the rules (mainly global rules) for form.
    * All local rules are added near the element
    *
-   * @param null
-   *
    * @return void
-   * @access public
    * @see valid_date
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Custom_Form_Group', 'formRule'], $this);
   }
 
   /**
    * Function to actually build the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->applyFilter('__ALL__', 'trim');
@@ -219,11 +199,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $this->add('text', 'title', ts('Set Name'), $attributes['title'], TRUE);
 
     //Fix for code alignment, CRM-3058
-
-
-
-
-
 
     $contactTypes = ['Contact', 'Individual', 'Household', 'Organization'];
     $this->assign('contactTypes', json_encode($contactTypes));
@@ -246,7 +221,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $newExtends = [ ts('Common') => $extendsTop , ts('Other') => $extendsBottom];
       if ($this->_action & CRM_Core_Action::UPDATE) {
         if (strstr($this->_defaults['extends'], 'Participant')) {
-          foreach($extends as $ext => $dontcare) {
+          foreach ($extends as $ext => $dontcare) {
             if (strpos($ext, $this->_defaults['extends']) === FALSE) {
               unset($newExtends[ts('Common')][$ext]);
               unset($newExtends[ts('Other')][$ext]);
@@ -254,7 +229,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
           }
         }
         else {
-          foreach($extends as $ext => $dontcare) {
+          foreach ($extends as $ext => $dontcare) {
             if ($this->_defaults['extends'] != $ext) {
               unset($newExtends[ts('Common')][$ext]);
               unset($newExtends[ts('Other')][$ext]);
@@ -289,8 +264,15 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $subTypes = CRM_Contact_BAO_ContactType::subTypeInfo();
 
     foreach ($subTypes as $subType => $val) {
-      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, $val['parent'],
-        FALSE, 'label', TRUE, $subType
+      $subTypeRelationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(
+        NULL,
+        NULL,
+        NULL,
+        $val['parent'],
+        FALSE,
+        'label',
+        TRUE,
+        $subType
       );
       $allRelationshipType = array_merge($allRelationshipType, $subTypeRelationshipTypes);
     }
@@ -315,7 +297,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
 
     $priceSets = CRM_Price_BAO_Set::getAssoc();
     $priceFields = [];
-    foreach($priceSets as $sid => $dontcare) {
+    foreach ($priceSets as $sid => $dontcare) {
       $priceFields += CRM_Price_BAO_Set::getFields($sid);
     }
     $sel2['PriceField'] = $priceFields;
@@ -331,7 +313,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
         }
       }
     }
-
 
     $cSubTypes = CRM_Core_Component::contactSubTypes();
 
@@ -353,7 +334,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       }
     }
 
-    $sel = &$this->add('hierselect',
+    $sel = &$this->add(
+      'hierselect',
       'extends',
       ts('Used For'),
       ['onClick' => 'showHideStyle();',
@@ -386,7 +368,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       $this->_isGroupEmpty = CRM_Core_BAO_CustomGroup::isGroupEmpty($this->_id);
       if (!$this->_isGroupEmpty) {
         if (!empty($this->_subtypes) &&
-          (count(array_intersect($this->_subtypes, $sel2[$this->_defaults['extends']])) <
+          (
+            count(array_intersect($this->_subtypes, $sel2[$this->_defaults['extends']])) <
             count($sel2[$this->_defaults['extends']])
           )
         ) {
@@ -423,7 +406,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $this->addElement('checkbox', 'is_active', ts('Is this Custom Data Set active?'));
 
     // does this set have multiple record?
-    $multiple = $this->addElement('checkbox',
+    $multiple = $this->addElement(
+      'checkbox',
       'is_multiple',
       ts('Does this Custom Field Set allow multiple records?'),
       NULL,
@@ -447,7 +431,8 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     $this->assign('showStyle', FALSE);
     $this->assign('showMultiple', FALSE);
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -471,12 +456,9 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @param null
-   *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = &$this->_defaults;
     $this->assign('showMaxMultiple', TRUE);
     if ($this->_action == CRM_Core_Action::ADD) {
@@ -503,7 +485,6 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
         $defaults['extends'][1] = [0 => ''];
       }
 
-
       $subName = CRM_Utils_Array::value('extends_entity_column_id', $defaults);
 
       if ($extends == 'Relationship' && !empty($this->_subtypes)) {
@@ -522,10 +503,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
   /**
    * Process the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -536,7 +514,7 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
       if ($this->_defaults['extends'][0] != $params['extends'][0]) {
         $params['overrideFKConstraint'] = 1;
       }
-      
+
       // refs #30705, special case for participant
       if ($params['extends'][0] === 'Participant') {
         $params['extends_entity_column_id'] = 'null';
@@ -561,22 +539,23 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     }
     else {
       $url = CRM_Utils_System::url('civicrm/admin/custom/group/field/add', 'reset=1&action=add&gid=' . $group->id);
-      CRM_Core_Session::setStatus(ts('Your custom field set \'%1\' has been added. You can add it custom fields now.',
-          [1 => $group->title]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'Your custom field set \'%1\' has been added. You can add it custom fields now.',
+        [1 => $group->title]
+      ));
       $session = CRM_Core_Session::singleton();
       $session->replaceUserContext($url);
     }
   }
 
-  /*
-     * Function to return a formatted list of relationship name.
-     * @param $list array array of relationship name.
-     * @static 
-     * return array array of relationship name.
-     */
-
-  static function getFormattedList(&$list) {
+  /**
+   * Function to return a formatted list of relationship name.
+   *
+   * @param array $list array of relationship name.
+   *
+   * @return array array of relationship name.
+   */
+  public static function getFormattedList(&$list) {
     $relName = [];
     foreach ($list as $listItemKey => &$itemValue) {
       // Extract the relationship ID.
@@ -601,4 +580,3 @@ class CRM_Custom_Form_Group extends CRM_Core_Form {
     return $relName;
   }
 }
-

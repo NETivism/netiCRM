@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of categories
@@ -46,23 +42,23 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
-   * Get BAO
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_Tag';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -83,60 +79,66 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_Tag';
   }
 
   /**
-   * Get form name for edit form
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Tag';
   }
 
   /**
-   * Get form name for delete form
+   * Gets the name of the delete form.
    *
    * @return string name of this page.
    */
-  function deleteName() {
+  public function deleteName() {
     return 'Tag';
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/tag';
   }
 
   /**
-   * Get name of delete form
+   * Gets the name of the delete form.
    *
    * @return string Classname of delete form.
    */
-  function deleteForm() {
+  public function deleteForm() {
     return 'CRM_Admin_Form_Tag';
   }
 
   /**
-   * override function browse()
+   * Browses all tags.
+   *
+   * @param int|null $action
+   * @param string|null $sort
+   *
+   * @return void
    */
-  function browse($action = NULL, $sort = NULL) {
+  public function browse($action = NULL, $sort = NULL) {
     $adminTagSet = FALSE;
     if (CRM_Core_Permission::check('administer Tagsets')) {
       $adminTagSet = TRUE;
     }
     $this->assign('adminTagSet', $adminTagSet);
-
 
     $usedFor = CRM_Core_OptionGroup::values('tag_used_for');
 
@@ -193,4 +195,3 @@ class CRM_Admin_Page_Tag extends CRM_Core_Page_Basic {
     }
   }
 }
-

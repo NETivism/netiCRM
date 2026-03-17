@@ -1,4 +1,10 @@
 <?php
+/**
+ * Autoloader for CiviCRM classes that registers with the SPL autoload stack
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
 
 require_once __DIR__.'/../../functions.php';
 class CRM_Core_ClassLoader {
@@ -13,11 +19,13 @@ class CRM_Core_ClassLoader {
   private static $_include_paths = [];
 
   /**
-   * @param bool $force
+   * Singleton function used to manage this object.
    *
-   * @return object
+   * @param bool $force Whether to force a reconstruction of the singleton instance.
+   *
+   * @return CRM_Core_ClassLoader The class loader instance.
    */
-  static function &singleton($force = FALSE) {
+  public static function &singleton($force = FALSE) {
     if ($force || self::$_singleton === NULL) {
       self::$_singleton = new CRM_Core_ClassLoader();
     }
@@ -32,21 +40,21 @@ class CRM_Core_ClassLoader {
   /**
    * Initializer
    */
-  function __construct() {
+  public function __construct() {
     global $civicrm_root;
 
     $this->_registered = FALSE;
-    if(isset($_ENV['CIVICRM_COMPOSER_DIR'])){
+    if (isset($_ENV['CIVICRM_COMPOSER_DIR'])) {
       $composer_classmap = $_ENV['CIVICRM_COMPOSER_DIR'] . '/vendor/composer/autoload_classmap.php';
     }
-    elseif(defined('CIVICRM_COMPOSER_DIR')){
+    elseif (defined('CIVICRM_COMPOSER_DIR')) {
       $composer_classmap = CIVICRM_COMPOSER_DIR . '/vendor/composer/autoload_classmap.php';
     }
-    else{
+    else {
       $civicrm_path = rtrim($civicrm_root, '/') .  DIRECTORY_SEPARATOR;
       $composer_classmap = $civicrm_path. '/vendor/composer/autoload_classmap.php';
     }
-    if(file_exists($composer_classmap)){
+    if (file_exists($composer_classmap)) {
       $this->_composer_classmap = include_once($composer_classmap);
     }
   }
@@ -54,11 +62,9 @@ class CRM_Core_ClassLoader {
   /**
    * Registers this instance as an autoloader.
    *
-   * @param Boolean $prepend Whether to prepend the autoloader or not
-   *
-   * @api
+   * @param bool $prepend Whether to prepend the autoloader to the SPL stack.
    */
-  function register($prepend = FALSE) {
+  public function register($prepend = FALSE) {
     if ($this->_registered) {
       return;
     }
@@ -67,17 +73,22 @@ class CRM_Core_ClassLoader {
 
   }
 
-  function loadClass($class) {
+  /**
+   * Autoloads a class.
+   *
+   * @param string $class Name of the class to load.
+   */
+  public function loadClass($class) {
     self::$_include_paths = explode(PATH_SEPARATOR, get_include_path());
-    if ( FALSE === strpos($class, '\\') ) {
-      if(isset($this->_composer_classmap[$class])){
+    if (FALSE === strpos($class, '\\')) {
+      if (isset($this->_composer_classmap[$class])) {
         require $this->_composer_classmap[$class];
         return;
       }
       $file = strtr($class, '_', '/') . '.php';
       foreach (self::$_include_paths as $base_dir) {
         $filename = rtrim($base_dir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.ltrim($file, DIRECTORY_SEPARATOR);
-        if (file_exists($filename) ){
+        if (file_exists($filename)) {
           require $filename;
           return;
         }
@@ -85,4 +96,3 @@ class CRM_Core_ClassLoader {
     }
   }
 }
-

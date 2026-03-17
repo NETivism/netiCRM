@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
 
@@ -48,7 +44,11 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
   protected $_emailField = FALSE;
   protected $_phoneField = FALSE;
   protected $_charts = ['' => 'Tabular'];
-  protected $_customGroupExtends = ['Membership']; function __construct() {
+  protected $_customGroupExtends = ['Membership'];
+  /**
+   * Class constructor.
+   */
+  public function __construct() {
     // UI for selecting columns to appear in the report list
     // array conatining the columns, group_bys and filters build and provided to Form
     $this->_columns = ['civicrm_contact' =>
@@ -159,11 +159,21 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -192,7 +202,16 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     //check for searching combination of dispaly columns and
     //grouping criteria
@@ -200,7 +219,12 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = NULL;
 
     $this->_from = "
@@ -238,7 +262,12 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -257,7 +286,8 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -289,7 +319,12 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     }
   }
 
-  function postProcess() {
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $this->beginPostProcess();
 
     // get the acl clauses built before we assemble the query
@@ -315,7 +350,14 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     $checkList = [];
@@ -369,9 +411,11 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('member/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'member/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Membership Detail for this Contact.");
@@ -385,4 +429,3 @@ class CRM_Report_Form_Member_Lapse extends CRM_Report_Form {
     }
   }
 }
-

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class contains payment processor related functions.
@@ -43,28 +39,24 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
   /**
    * static holder for the default payment processor
    */
-  static $_defaultPaymentProcessor = NULL;
+  public static $_defaultPaymentProcessor = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a payment processor record based on the provided parameters.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
-   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object CRM_Core_DAO_PaymentProcessor object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_PaymentProcessor|null matching DAO object
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $paymentProcessor = new CRM_Core_DAO_PaymentProcessor();
     $paymentProcessor->copyValues($params);
     if ($paymentProcessor->find(TRUE)) {
@@ -75,31 +67,23 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag for a payment processor in the database.
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * @param int $id ID of the database record
+   * @param bool $is_active value to set for the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
-   *
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_PaymentProcessor|null updated DAO object
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_PaymentProcessor', $id, 'is_active', $is_active);
   }
 
   /**
-   * retrieve the default payment processor
+   * Retrieve the default payment processor.
    *
-   * @param NULL
-   *
-   * @return object           The default payment processor object on success,
-   *                          null otherwise
-   * @static
-   * @access public
+   * @return CRM_Core_BAO_PaymentProcessor the default payment processor object
    */
-  static function &getDefault() {
+  public static function &getDefault() {
     if (self::$_defaultPaymentProcessor == NULL) {
       $params = ['is_default' => 1];
       $defaults = [];
@@ -109,14 +93,13 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
   }
 
   /**
-   * Function  to delete payment processor
+   * Delete a payment processor and its corresponding test processor.
    *
-   * @param  int  $paymentProcessorId     ID of the processor to be deleted.
+   * @param int $paymentProcessorID ID of the processor to delete
    *
-   * @access public
-   * @static
+   * @return void
    */
-  static function del($paymentProcessorID) {
+  public static function del($paymentProcessorID) {
     if (!$paymentProcessorID) {
       CRM_Core_Error::fatal(ts('Invalid value passed to delete function'));
     }
@@ -136,16 +119,14 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
   }
 
   /**
-   * Function to get the payment processor details
+   * Get detailed information for a specific payment processor.
    *
-   * @param  int    $paymentProcessorID payment processor id
-   * @param  string $mode               payment mode ie test or live
+   * @param int $paymentProcessorID payment processor ID
+   * @param string $mode payment mode ('test' or 'live')
    *
-   * @return array  associated array with payment processor related fields
-   * @static
-   * @access public
+   * @return array|null associative array of processor details
    */
-  static function getPayment($paymentProcessorID, $mode) {
+  public static function getPayment($paymentProcessorID, $mode) {
     if (!$paymentProcessorID) {
       CRM_Core_Error::fatal(ts('Invalid value passed to getPayment function'));
     }
@@ -172,8 +153,15 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
     }
   }
 
-
-  static function getPayments($paymentProcessorIDs, $mode) {
+  /**
+   * Get detailed information for multiple payment processors.
+   *
+   * @param array $paymentProcessorIDs array of payment processor IDs
+   * @param string $mode payment mode ('test' or 'live')
+   *
+   * @return array|null nested array of processor details
+   */
+  public static function getPayments($paymentProcessorIDs, $mode) {
     if (!$paymentProcessorIDs) {
       CRM_Core_Error::fatal(ts('Invalid value passed to getPayment function'));
     }
@@ -194,18 +182,18 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
         if (!$testDAO->find(TRUE)) {
           CRM_Core_Error::fatal(ts('Could not retrieve payment processor details'));
         }
-        if($testDAO->is_default){
+        if ($testDAO->is_default) {
           $paymentDefault[$testDAO->id] = self::buildPayment($testDAO);
         }
-        else{
+        else {
           $paymentDAO[$testDAO->id] = self::buildPayment($testDAO);
         }
       }
       else {
-        if($dao->is_default){
+        if ($dao->is_default) {
           $paymentDefault[$dao->id] = self::buildPayment($dao);
         }
-        else{
+        else {
           $paymentDAO[$dao->id] = self::buildPayment($dao);
         }
       }
@@ -217,7 +205,15 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
     return $paymentDAO;
   }
 
-  static function getPaymentsByType($processorType, $mode) {
+  /**
+   * Get all active payment processors of a specific type.
+   *
+   * @param string $processorType processor type name
+   * @param string $mode payment mode ('test' or 'live')
+   *
+   * @return array array of processor details
+   */
+  public static function getPaymentsByType($processorType, $mode) {
     if (!$processorType) {
       return [];
     }
@@ -234,7 +230,7 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
       if ($mode == 'test' && $dao->is_test) {
         $paymentDAO[$dao->id] = self::buildPayment($dao);
       }
-      elseif($mode != 'test' && !$dao->is_test) {
+      elseif ($mode != 'test' && !$dao->is_test) {
         $paymentDAO[$dao->id] = self::buildPayment($dao);
       }
     }
@@ -245,15 +241,13 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
   }
 
   /**
-   * Function to build payment processor details
+   * Build an associative array of payment processor details from a DAO object.
    *
-   * @param object $dao payment processor object
+   * @param CRM_Core_DAO_PaymentProcessor $dao payment processor DAO object
    *
-   * @return array  associated array with payment processor related fields
-   * @static
-   * @access public
+   * @return array associative array of processor details
    */
-  static function buildPayment($dao) {
+  public static function buildPayment($dao) {
     $fields = [
       'id', 'name', 'description', 'payment_processor_type', 'user_name', 'password',
       'signature', 'url_site', 'url_api', 'url_recur', 'url_button',
@@ -282,4 +276,3 @@ class CRM_Core_BAO_PaymentProcessor extends CRM_Core_DAO_PaymentProcessor {
     return $result;
   }
 }
-

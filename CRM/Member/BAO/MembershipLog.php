@@ -27,27 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
 
   /**
-   * function to add the membership log record
+   * Function to add the membership log record.
    *
    * @param array $params reference array contains the values submitted by the form
-   * @param array $ids    reference array contains the id
+   * @param array $ids reference array contains the id
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Member_DAO_MembershipLog
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     $membershipLog = new CRM_Member_DAO_MembershipLog();
     $membershipLog->copyValues($params);
     $membershipLog->modified_date = date('Ymd');
@@ -59,19 +53,26 @@ class CRM_Member_BAO_MembershipLog extends CRM_Member_DAO_MembershipLog {
   }
 
   /**
-   * Function to delete membership log record
+   * Function to delete membership log record.
    *
-   * @param int $membershipTypeId
-   * @static
+   * @param int $membershipID
+   *
+   * @return bool
    */
-
-  static function del($membershipID) {
+  public static function del($membershipID) {
     $membershipLog = new CRM_Member_DAO_MembershipLog();
     $membershipLog->membership_id = $membershipID;
     return $membershipLog->delete();
   }
 
-  static function resetModifiedID($contactID) {
+  /**
+   * Reset modified ID.
+   *
+   * @param int $contactID
+   *
+   * @return void
+   */
+  public static function resetModifiedID($contactID) {
     $query = "
 UPDATE civicrm_membership_log
    SET modified_id = null
@@ -81,4 +82,3 @@ UPDATE civicrm_membership_log
     CRM_Core_DAO::executeQuery($query, $params);
   }
 }
-

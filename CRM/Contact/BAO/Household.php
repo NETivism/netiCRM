@@ -27,33 +27,30 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact {
 
   /**
    * This is a contructor of the class.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
    * function to update the household with primary contact id
    *
-   * @param integer $primaryContactId     null if deleting primary contact
-   * @param integer $contactId            contact id
+   * @param int $primaryContactId null if deleting primary contact
+   * @param int $contactId        contact id
    *
-   * @return Object     DAO object on success
+   * @return CRM_Core_DAO DAO object on success
    * @access public
    * @static
    */
-  static function updatePrimaryContact($primaryContactId, $contactId) {
+  public static function updatePrimaryContact($primaryContactId, $contactId) {
     $queryString = "UPDATE civicrm_contact
                            SET primary_contact_id = ";
 
@@ -72,4 +69,3 @@ class CRM_Contact_BAO_Household extends CRM_Contact_DAO_Contact {
     return CRM_Core_DAO::executeQuery($queryString, $params);
   }
 }
-

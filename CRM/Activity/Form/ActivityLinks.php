@@ -27,28 +27,41 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Activity Links
  *
  */
 class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
+  /**
+   * Build the form
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     self::commonBuildQuickForm($this);
   }
+
+  /**
+   * Common build quick form
+   *
+   * @param CRM_Core_Form $self
+   *
+   * @return void
+   */
   public static function commonBuildQuickForm($self) {
     $contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $self);
     $urlParams = "action=add&reset=1&cid={$contactId}&selectedChild=activity&atype=";
 
-    $url = CRM_Utils_System::url('civicrm/contact/view/activity',
-      $urlParams, FALSE, NULL, FALSE
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/activity',
+      $urlParams,
+      FALSE,
+      NULL,
+      FALSE
     );
 
     $activityTypes = [];
@@ -79,4 +92,3 @@ class CRM_Activity_Form_ActivityLinks extends CRM_Core_Form {
     $self->assign('suppressForm', TRUE);
   }
 }
-

@@ -28,12 +28,9 @@
 /**
  * Redefine the upload action.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
 
@@ -50,16 +47,13 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
   protected $_uploadDir;
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * @param object $stateMachine reference to state machine object
-   * @param string $uploadDir    directory to store the uploaded files
-   * @param array  $uploadNames  element names of the various uploadable files
-   *
-   * @return object
-   * @access public
+   * @param CRM_Core_StateMachine &$stateMachine reference to state machine object
+   * @param string $uploadDir directory to store the uploaded files
+   * @param string[] $uploadNames element names of the various uploadable files
    */
-  function __construct(&$stateMachine, $uploadDir, $uploadNames) {
+  public function __construct(&$stateMachine, $uploadDir, $uploadNames) {
     parent::__construct($stateMachine);
 
     $this->_uploadDir = $uploadDir;
@@ -67,17 +61,16 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
   }
 
   /**
-   * upload and move the file if valid to the uploaded directory
+   * Upload and move the file if valid to the uploaded directory.
    *
-   * @param object $page       the CRM_Core_Form object
-   * @param object $data       the QFC data container
-   * @param string $pageName   the name of the page which index the data container with
-   * @param string $uploadName the name of the uploaded file
+   * @param CRM_Core_Form &$page the form object
+   * @param array &$data the QFC data container
+   * @param string $pageName the name of the page indexing the data container
+   * @param string $uploadName the name of the uploaded file element
    *
    * @return void
-   * @access private
    */
-  function upload(&$page, &$data, $pageName, $uploadName) {
+  public function upload(&$page, &$data, $pageName, $uploadName) {
     // make sure uploadName exists in the QF array
     // else we skip, CRM-3427
     if (empty($uploadName) ||
@@ -95,7 +88,7 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
 
         if (is_array($value['name'])) {
           $newName = [];
-          foreach($value['name'] as $idx => $name) {
+          foreach ($value['name'] as $idx => $name) {
             $newName[$idx] = CRM_Utils_File::makeFileName($name);
           }
         }
@@ -107,7 +100,7 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
           return CRM_Core_Error::statusBounce(ts('We could not move the uploaded file %1 to the upload directory %2. Please verify that the \'Temporary Files\' setting points to a valid path which is writable by your web server.', [1 => $newName, 2 => $this->_uploadDir]));
         }
         if (is_array($newName)) {
-          foreach($newName as $idx => $name) {
+          foreach ($newName as $idx => $name) {
             $data['values'][$pageName][$uploadName][$idx] = [
               'name' => $this->_uploadDir . $name,
               'type' => $value['type'][$idx],
@@ -127,13 +120,12 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
   /**
    * Processes the request.
    *
-   * @param  object    $page       CRM_Core_Form the current form-page
-   * @param  string    $actionName Current action name, as one Action object can serve multiple actions
+   * @param CRM_Core_Form &$page the current form-page
+   * @param string $actionName current action name
    *
    * @return void
-   * @access public
    */
-  function perform(&$page, $actionName) {
+  public function perform(&$page, $actionName) {
     // like in Action_Next
     $page->isFormBuilt() or $page->buildForm();
 
@@ -145,7 +137,15 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
     $page->controller->_actions['upload']->realPerform($page, $actionName);
   }
 
-  function realPerform(&$page, $actionName) {
+  /**
+   * Real processing of the request after buildForm check.
+   *
+   * @param CRM_Core_Form &$page the current form-page
+   * @param string $actionName current action name
+   *
+   * @return void
+   */
+  public function realPerform(&$page, $actionName) {
     $pageName = $page->getAttribute('name');
     $data = &$page->controller->container();
     $data['values'][$pageName] = $page->exportValues();
@@ -170,4 +170,3 @@ class CRM_Core_QuickForm_Action_Upload extends CRM_Core_QuickForm_Action {
     $state->handleNextState($page);
   }
 }
-

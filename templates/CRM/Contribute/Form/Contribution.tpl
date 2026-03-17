@@ -252,9 +252,6 @@
         <tr class="crm-contribution-form-block-soft_credit_to"><td class="label">{$form.soft_credit_to.label}</td>
             <td>{$form.soft_credit_to.html} {help id="id-soft_credit"}</td>
         </tr>
-        {if $form.source_ip}
-          <tr class="crm-contribution-form-block-source_ip"><td class="label">{$form.source_ip.label}</td><td{$valueStyle}>{$form.source_ip.html}</td></tr>
-        {/if}
 	    {if $action eq 2 and $form.soft_credit_to.value} {* Include PCP honor roll fields if contrib came from PCP page *}
           <tr class="crm-contribution-form-block-pcp_made_through_id"><td class="label">{$form.pcp_made_through_id.label}</td>
             <td>{$form.pcp_made_through_id.html}</td>

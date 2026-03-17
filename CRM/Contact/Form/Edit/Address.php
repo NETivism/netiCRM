@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,16 +39,14 @@ class CRM_Contact_Form_Edit_Address {
   /**
    * build form for address input fields
    *
-   * @param object $form - CRM_Core_Form (or subclass)
-   * @param array reference $location - location array
-   * @param int $locationId - location id whose block needs to be built.
+   * @param object $form               (reference) CRM_Core_Form (or subclass)
+   * @param int    $addressBlockCount  address block count
    *
-   * @return none
-   *
+   * @return void
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form, $addressBlockCount = NULL) {
+  public static function buildQuickForm(&$form, $addressBlockCount = NULL) {
 
     // passing this via the session is AWFUL. we need to fix this
     if (!$addressBlockCount) {
@@ -69,10 +65,12 @@ class CRM_Contact_Form_Edit_Address {
     $form->applyFilter('__ALL__', 'trim');
 
     $js = ['onChange' => 'checkLocation( this.id );'];
-    $form->addElement('select',
+    $form->addElement(
+      'select',
       "address[$blockId][location_type_id]",
       ts('Location Type'),
-      ['' => ts('- select -')] + CRM_Core_PseudoConstant::locationType(), $js
+      ['' => ts('- select -')] + CRM_Core_PseudoConstant::locationType(),
+      $js
     );
 
     $js = ['id' => "Address_" . $blockId . "_IsPrimary", 'onClick' => 'singleSelect( this.id );'];
@@ -95,8 +93,6 @@ class CRM_Contact_Form_Edit_Address {
 
     // hidden element to store master address id
     $form->addElement('hidden', "address[$blockId][master_id]");
-
-
 
     $addressOptions = CRM_Core_BAO_Preferences::valueOptions('address_options', TRUE, NULL, TRUE);
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_Address');
@@ -155,12 +151,13 @@ class CRM_Contact_Form_Edit_Address {
             $stateCountryMap[$blockId]['state_province'] = "address_{$blockId}_{$name}";
             $enabledCountry = CRM_Core_PseudoConstant::country();
             $stateOptions = [];
-            foreach($enabledCountry as $cid => $country) {
+            foreach ($enabledCountry as $cid => $country) {
               $stateOptions += CRM_Core_PseudoConstant::stateProvinceForCountry($cid);
             }
             $selectOptions = ['' => ts('- select a country -')] + $stateOptions;
           }
-          $form->addElement('select',
+          $form->addElement(
+            'select',
             "address[$blockId][$name]",
             $title,
             $selectOptions
@@ -171,7 +168,8 @@ class CRM_Contact_Form_Edit_Address {
             $name = "name";
           }
 
-          $form->addElement('text',
+          $form->addElement(
+            'text',
             "address[$blockId][$name]",
             $title,
             $attributes
@@ -179,15 +177,14 @@ class CRM_Contact_Form_Edit_Address {
         }
       }
       else {
-        $form->addElement('select',
+        $form->addElement(
+          'select',
           "address[$blockId][$name]",
           $title,
           ['' => ts('- select -')] + CRM_Core_PseudoConstant::$select()
         );
       }
     }
-
-
 
     CRM_Core_BAO_Address::addStateCountryMap($stateCountryMap);
 
@@ -196,7 +193,8 @@ class CRM_Contact_Form_Edit_Address {
       $entityId = $form->_values['address'][$blockId]['id'];
     }
     // Process any address custom data -
-    $groupTree = CRM_Core_BAO_CustomGroup::getTree('Address',
+    $groupTree = CRM_Core_BAO_CustomGroup::getTree(
+      'Address',
       $form,
       $entityId
     );
@@ -251,23 +249,20 @@ class CRM_Contact_Form_Edit_Address {
       return CRM_Core_Error::statusBounce(ts('Your install is missing required "Shared Address" profile.'));
     }
 
-
     CRM_Contact_Form_NewContact::buildQuickForm($form, $blockId, [$profileId]);
   }
 
   /**
    * check for correct state / country mapping.
    *
-   * @param array reference $fields - submitted form values.
-   * @param array reference $errors - if any errors found add to this array. please.
+   * @param array $fields (reference) submitted form values.
+   * @param array $errors (reference) if any errors found add to this array.
    *
-   * @return true if no errors
-   *         array of errors if any present.
-   *
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
-  static function formRule($fields, $errors) {
+  public static function formRule($fields, $errors) {
     $errors = [];
     // check for state/county match if not report error to user.
     if (is_array($fields['address'])) {
@@ -303,7 +298,8 @@ class CRM_Contact_Form_Edit_Address {
             // countries mismatch hence display error
             $stateProvinces = CRM_Core_PseudoConstant::stateProvince();
             $countries = &CRM_Core_PseudoConstant::country();
-            $errors["address[$instance][state_province_id]"] = ts('State/Province %1 is not part of %2. It belongs to %3.',
+            $errors["address[$instance][state_province_id]"] = ts(
+              'State/Province %1 is not part of %2. It belongs to %3.',
               [1 => $stateProvinces[$stateProvinceId],
                 2 => $countries[$countryId],
                 3 => $countries[$stateProvinceDAO->country_id],
@@ -321,7 +317,8 @@ class CRM_Contact_Form_Edit_Address {
           $countyDAO->find(TRUE);
           if ($countyDAO->state_province_id != $stateProvinceId) {
             $counties = &CRM_Core_PseudoConstant::county();
-            $errors["address[$instance][county_id]"] = ts('County %1 is not part of %2. It belongs to %3.',
+            $errors["address[$instance][county_id]"] = ts(
+              'County %1 is not part of %2. It belongs to %3.',
               [1 => $counties[$countyId],
                 2 => $stateProvinces[$stateProvinceId],
                 3 => $stateProvinces[$countyDAO->state_province_id],
@@ -339,7 +336,20 @@ class CRM_Contact_Form_Edit_Address {
     return empty($errors) ? TRUE : $errors;
   }
 
-  static function fixStateSelect(&$form,
+  /**
+   * Fix state select based on country
+   *
+   * @param object $form                (reference) form object
+   * @param string $countryElementName country element name
+   * @param string $stateElementName   state element name
+   * @param int    $countryDefaultValue default country id
+   *
+   * @return void
+   * @access public
+   * @static
+   */
+  public static function fixStateSelect(
+    &$form,
     $countryElementName,
     $stateElementName,
     $countryDefaultValue
@@ -370,7 +380,8 @@ class CRM_Contact_Form_Edit_Address {
     if ($countryID &&
       isset($form->_elementIndex[$stateElementName])
     ) {
-      $form->addElement('select',
+      $form->addElement(
+        'select',
         $stateElementName,
         $stateTitle,
         ['' => ts('- select -')] +
@@ -379,4 +390,3 @@ class CRM_Contact_Form_Edit_Address {
     }
   }
 }
-

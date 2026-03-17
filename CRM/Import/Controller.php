@@ -27,26 +27,26 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Import_Controller extends CRM_Core_Controller {
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param string $title
+   * @param int $action
+   * @param bool $modal
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);
 
     // lets get around the time limit issue if possible, CRM-2113
     if (!ini_get('safe_mode')) {
       set_time_limit(0);
     }
-
 
     $this->_stateMachine = new CRM_Import_StateMachine($this, $action);
 
@@ -58,4 +58,3 @@ class CRM_Import_Controller extends CRM_Core_Controller {
     $this->addActions($config->uploadDir, ['uploadFile']);
   }
 }
-

@@ -27,34 +27,66 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
 
-  public $activityTypes;
   /**
-   * @var never[]
+   * All activity types, keyed by ID, used for label resolution.
+   *
+   * @var array<int, string>
+   */
+  public $activityTypes;
+
+  /**
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
+
   /**
+   * The SQL FROM clause built by from().
+   *
    * @var string
    */
   public $_from;
+
   /**
+   * The SQL WHERE clause built by where().
+   *
    * @var string
    */
   public $_where;
+
   /**
+   * The SQL ORDER BY clause built by orderBy().
+   *
    * @var string
    */
   public $_orderBy;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
-  protected $_summary = NULL; function __construct() {
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
+  protected $_summary = NULL;
+
+  /**
+   * Loads sorted activity types and initialises column definitions for contact (modifier),
+   * touched contact, activity, and log tables.
+   */
+  public function __construct() {
 
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
@@ -141,11 +173,22 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields.
+   * Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -166,12 +209,28 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Form validation callback. No validation rules for this report.
+   *
+   * @param array $fields Submitted form values (unused).
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Contact_Log $self The form instance (unused).
+   *
+   * @return array Empty array (no errors).
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining civicrm_log with the modifier contact (INNER JOIN),
+   * and left-joining the touched contact and activity records based on entity_table type.
+   * Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = "
         FROM civicrm_log {$this->_aliases['civicrm_log']}
         inner join civicrm_contact {$this->_aliases['civicrm_contact']} on {$this->_aliases['civicrm_log']}.modified_id = {$this->_aliases['civicrm_contact']}.id
@@ -180,7 +239,13 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
         ";
   }
 
-  function where() {
+  /**
+   * Builds the WHERE clause from submitted filter values. Always excludes log entries
+   * for the 'civicrm_domain' entity table. Populates $_where.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
@@ -197,7 +262,8 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -217,7 +283,12 @@ class CRM_Report_Form_Contact_Log extends CRM_Report_Form {
     $this->_where = "WHERE " . CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function orderBy() {
+  /**
+   * Builds the ORDER BY clause sorting by modified_date descending. Populates $_orderBy.
+   *
+   * @return void
+   */
+  public function orderBy() {
     $this->_orderBy = "
 ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
 ";
@@ -228,16 +299,24 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         $this->beginPostProcess( );
 
         $sql  = $this->buildQuery( true );
-//CRM_Core_Error::debug('sql', $sql);             
+//CRM_Core_Error::debug('sql', $sql);
         $rows = $graphRows = array();
         $this->buildRows ( $sql, $rows );
-        
+
         $this->formatDisplay( $rows );
         $this->doTemplateAssignment( $rows );
-        $this->endPostProcess( $rows );	
+        $this->endPostProcess( $rows );
     }
 */
-  function alterDisplay(&$rows) {
+  /**
+   * Post-processes result rows to linkify the modifier contact, touched contact,
+   * and activity subject. Also resolves activity type IDs to human-readable labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
@@ -245,7 +324,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -258,7 +338,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_touched_id', $row) &&
         $row['civicrm_contact_touched_display_name_touched'] !== ''
       ) {
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           'reset=1&cid=' . $row['civicrm_contact_touched_id'],
           $this->_absoluteUrl
         );
@@ -271,7 +352,8 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
         CRM_Utils_Array::arrayKeyExists('civicrm_activity_id', $row) &&
         $row['civicrm_activity_subject'] !== ''
       ) {
-        $url = CRM_Utils_System::url('civicrm/contact/view/activity',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/activity',
           'reset=1&action=view&id=' . $row['civicrm_activity_id'] . '&cid=' . $row['civicrm_activity_source_contact_id'] . '&atype=' . $row['civicrm_activity_activity_type_id'],
           $this->_absoluteUrl
         );
@@ -295,4 +377,3 @@ ORDER BY {$this->_aliases['civicrm_log']}.modified_date DESC
     }
   }
 }
-

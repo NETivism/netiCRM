@@ -27,28 +27,25 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 /**
- * Administer Personal Campaign Pages - Search form
+ * Search form for administering Personal Campaign Pages (PCP).
  */
 class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
 
   public $_id;
   public $_submitValues;
+
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
    *
-   * @param null
+   * Handles PCP deletion, disabling, and enabling based on the action provided.
+   * Also performs permission checks for destructive actions.
    *
-   * @return void
-   * @access public
+   * @return mixed false if access is denied, or continues processing
    */
   public function preProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -116,15 +113,11 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @param null
-   *
-   * @return array   array of default values
-   * @access public
+   * @return array<string, mixed> the array of default values for form elements
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (!empty($_REQUEST['contribution_page_id'])) {
       $defaults['contribution_page_id'] = $_REQUEST['contribution_page_id'];
@@ -136,16 +129,17 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
    *
-   * @param null
+   * Adds selection fields for status, contribution page, contact, and title
+   * to filter PCP records.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete Campaign'),
             'isDefault' => TRUE,
@@ -165,7 +159,7 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $contribution_page = [ts('- select -')] + CRM_Contribute_PseudoConstant::contributionPage();
       $dao = CRM_Core_DAO::executeQuery("SELECT p.contact_id, c.sort_name, c.external_identifier FROM civicrm_pcp p INNER JOIN civicrm_contact c ON p.contact_id = c.id GROUP BY p.contact_id");
       $contacts = [ts('- select -')];
-      while($dao->fetch()) {
+      while ($dao->fetch()) {
         $exid = '';
         if ($dao->external_identifier) {
           $exid = ' - '.$dao->external_identifier;
@@ -177,7 +171,8 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
       $this->addSelect('contribution_page_id', ts('Belonging Main Contribution Page'), $contribution_page);
       $this->addSelect('contact_id', ts('Created by'), $contacts);
       $this->add('text', 'title', ts('Page Title'));
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'refresh',
             'name' => ts('Search'),
@@ -197,23 +192,25 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global form rule for validation.
    *
    * @param array $fields posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $form the form object
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array list of errors to be posted back to the form (currently empty)
    */
-  static function formRule($fields, $files, $form) {}
+  public static function formRule($fields, $files, $form) {
+    return [];
+  }
 
   /**
-   * Process the form
+   * Process the form submission.
    *
-   * @param null
+   * Handles deletion of PCP records or updates search parameters in the parent
+   * controller to filter the displayed records.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -247,4 +244,3 @@ class CRM_Contribute_Form_PCP_PCP extends CRM_Core_Form {
     }
   }
 }
-

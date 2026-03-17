@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Extensions
@@ -45,15 +41,18 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   /**
    * Function to for pre-processing
    *
-   * @return None
+   * @return void None.
    * @access public
    */
   public function preProcess() {
     parent::preProcess();
 
-
-    $this->_key = CRM_Utils_Request::retrieve('key', 'String',
-      $this, FALSE, 0
+    $this->_key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      $this,
+      FALSE,
+      0
     );
 
     $session = CRM_Core_Session::singleton();
@@ -62,7 +61,6 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     $this->assign('id', $this->_id);
     $this->assign('key', $this->_key);
 
-
     $ext = new CRM_Core_Extensions();
     $extension = $ext->getExtensionsByKey(TRUE);
 
@@ -70,27 +68,24 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array{} The default values for the form.
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void None.
    */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Uninstall'),
             'isDefault' => TRUE,
@@ -102,7 +97,8 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
       );
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Install'),
             'isDefault' => TRUE,
@@ -116,28 +112,24 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $self    this object.
+   * @param array $fields The submitted form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return true if no errors, else an array of errors
-   * @access public
-   * @static
+   * @return bool|array True or error array.
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     return empty($errors) ? TRUE : $errors;
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void None.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -155,4 +147,3 @@ class CRM_Admin_Form_Extensions extends CRM_Admin_Form {
     }
   }
 }
-

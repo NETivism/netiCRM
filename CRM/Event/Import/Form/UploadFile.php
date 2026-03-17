@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class gets the name of the file to upload
@@ -45,7 +40,6 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
@@ -55,8 +49,7 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     //Setting Upload File Size
@@ -81,30 +74,44 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
     $duplicateOptions = [];
-    $duplicateOptions[] = $this->createElement('radio',
-      NULL, NULL, ts('Skip'), CRM_Event_Import_Parser::DUPLICATE_SKIP
+    $duplicateOptions[] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Skip'),
+      CRM_Event_Import_Parser::DUPLICATE_SKIP
     );
-    $duplicateOptions[] = $this->createElement('radio',
-      NULL, NULL, ts('Update'), CRM_Event_Import_Parser::DUPLICATE_UPDATE
+    $duplicateOptions[] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Update'),
+      CRM_Event_Import_Parser::DUPLICATE_UPDATE
     );
-    $duplicateOptions[] = $this->createElement('radio',
-      NULL, NULL, ts('No Duplicate Checking'), CRM_Event_Import_Parser::DUPLICATE_NOCHECK
+    $duplicateOptions[] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('No Duplicate Checking'),
+      CRM_Event_Import_Parser::DUPLICATE_NOCHECK
     );
     // for contributions NOCHECK == SKIP
     //      $duplicateOptions[] = $this->createElement('radio',
     //          null, null, ts('No Duplicate Checking'), CRM_Contribute_Import_Parser::DUPLICATE_NOCHECK);
 
-    $this->addGroup($duplicateOptions, 'onDuplicate',
+    $this->addGroup(
+      $duplicateOptions,
+      'onDuplicate',
       ts('On Duplicate Entries')
     );
 
     //get the saved mapping details
 
-
-    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue('mapping_type',
-        'Import Participant',
-        'name'
-      ));
+    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue(
+      'mapping_type',
+      'Import Participant',
+      'name'
+    ));
     $this->assign('savedMapping', $mappingArray);
     $this->add('select', 'savedMapping', ts('Mapping Option'), ['' => ts('- select -')] + $mappingArray);
 
@@ -121,23 +128,36 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
 
     $contactOptions = [];
     if (CRM_Contact_BAO_ContactType::isActive('Individual')) {
-      $contactOptions[] = $this->createElement('radio',
-        NULL, NULL, ts('Individual'), CRM_Event_Import_Parser::CONTACT_INDIVIDUAL
+      $contactOptions[] = $this->createElement(
+        'radio',
+        NULL,
+        NULL,
+        ts('Individual'),
+        CRM_Event_Import_Parser::CONTACT_INDIVIDUAL
       );
     }
     if (CRM_Contact_BAO_ContactType::isActive('Household')) {
-      $contactOptions[] = $this->createElement('radio',
-        NULL, NULL, ts('Household'), CRM_Event_Import_Parser::CONTACT_HOUSEHOLD
+      $contactOptions[] = $this->createElement(
+        'radio',
+        NULL,
+        NULL,
+        ts('Household'),
+        CRM_Event_Import_Parser::CONTACT_HOUSEHOLD
       );
     }
     if (CRM_Contact_BAO_ContactType::isActive('Organization')) {
-      $contactOptions[] = $this->createElement('radio',
-        NULL, NULL, ts('Organization'), CRM_Event_Import_Parser::CONTACT_ORGANIZATION
+      $contactOptions[] = $this->createElement(
+        'radio',
+        NULL,
+        NULL,
+        ts('Organization'),
+        CRM_Event_Import_Parser::CONTACT_ORGANIZATION
       );
     }
     $this->addGroup($contactOptions, 'contactType', ts('Contact Type'));
 
-    $this->setDefaults(['contactType' =>
+    $this->setDefaults(
+      ['contactType' =>
         CRM_Event_Import_Parser::CONTACT_INDIVIDUAL,
       ]
     );
@@ -146,7 +166,8 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
 
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -163,7 +184,6 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
    * Process the uploaded file
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $this->controller->resetPage('MapField');
@@ -190,10 +210,13 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
 
     $parser = new CRM_Event_Import_Parser_Participant($mapper);
     $parser->setMaxLinesToProcess(100);
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $fileName,
+      $seperator,
       $mapper,
       $skipColumnHeader,
-      CRM_Event_Import_Parser::MODE_MAPFIELD, $contactType
+      CRM_Event_Import_Parser::MODE_MAPFIELD,
+      $contactType
     );
 
     // add all the necessary variables to the form
@@ -204,10 +227,8 @@ class CRM_Event_Import_Form_UploadFile extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Upload Data');
   }
 }
-

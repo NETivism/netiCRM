@@ -26,18 +26,17 @@
 */
 
 /**
+ * Database upgrade routines for CiviCRM version 3.2
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Upgrade_Incremental_php_ThreeTwo {
-  function verifyPreDBstate(&$errors) {
+  public function verifyPreDBstate(&$errors) {
     return TRUE;
   }
 
-  function upgrade_3_2_alpha1($rev) {
+  public function upgrade_3_2_alpha1($rev) {
     //CRM-5666 -if user already have 'access CiviCase'
     //give all new permissions and drop access CiviCase.
     $config = CRM_Core_Config::singleton();
@@ -77,8 +76,8 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
     $upgrade->processSQL($rev);
   }
 
-  function upgrade_3_2_beta4($rev) {
-    $upgrade = new CRM_Upgrade_Form;
+  public function upgrade_3_2_beta4($rev) {
+    $upgrade = new CRM_Upgrade_Form();
 
     $config = &CRM_Core_Config::singleton();
     $seedLocale = $config->lcMessages;
@@ -88,7 +87,7 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
 
     // CRM-6451: for multilingual sites we need to find the optimal
     // locale to use as the final civicrm_membership_status.name column
-    $domain = new CRM_Core_DAO_Domain;
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     $locales = [];
     if ($domain->locales) {
@@ -199,11 +198,10 @@ class CRM_Upgrade_Incremental_php_ThreeTwo {
       ],
     ];
 
-
     $statusIds = [];
     $insertedNewRecord = FALSE;
     foreach ($statuses as $status) {
-      $dao = new CRM_Member_DAO_MembershipStatus;
+      $dao = new CRM_Member_DAO_MembershipStatus();
 
       // try to find an existing English status
       $dao->name = $status['name'];
@@ -248,7 +246,7 @@ UPDATE  civicrm_membership_status
     }
   }
 
-  function upgrade_3_2_1($rev) {
+  public function upgrade_3_2_1($rev) {
     //CRM-6565 check if Activity Index is already exists or not.
     $addActivityTypeIndex = TRUE;
     $indexes = CRM_Core_DAO::executeQuery('SHOW INDEXES FROM civicrm_activity');
@@ -262,9 +260,8 @@ UPDATE  civicrm_membership_status
 
     CRM_Utils_File::restrictAccess($config->uploadDir);
     CRM_Utils_File::restrictAccess($config->configAndLogDir);
-    $upgrade = new CRM_Upgrade_Form;
+    $upgrade = new CRM_Upgrade_Form();
     $upgrade->assign('addActivityTypeIndex', $addActivityTypeIndex);
     $upgrade->processSQL($rev);
   }
 }
-

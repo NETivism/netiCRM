@@ -26,17 +26,14 @@
 */
 
 /**
+ * Mail store implementation for reading messages from a local directory
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
-
 require_once 'ezc/Base/src/ezc_bootstrap.php';
 require_once 'ezc/autoload/mail_autoload.php';
-
 
 class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
 
@@ -47,10 +44,8 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
    * Connect to the supplied dir and make sure the two mail dirs exist
    *
    * @param string $dir  dir to operate upon
-   *
-   * @return void
    */
-  function __construct($dir) {
+  public function __construct($dir) {
     $this->_dir = $dir;
 
     $this->_ignored = $this->maildir(CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, ['CiviMail.ignored', date('Y'), date('m'), date('d')]));
@@ -65,7 +60,7 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
    *
    * @return array      array of ezcMail objects
    */
-  function fetchNext($count = 0) {
+  public function fetchNext($count = 0) {
     $mails = [];
     $path = rtrim($this->_dir, DIRECTORY_SEPARATOR);
 
@@ -79,8 +74,9 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
       if ($entry->isDot()) {
         continue;
       }
-      if (count($mails) >= $count)
-      break;
+      if (count($mails) >= $count) {
+        break;
+      }
 
       $file = $path . DIRECTORY_SEPARATOR . $entry->getFilename();
       if ($this->_debug) {
@@ -88,16 +84,17 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
       }
 
       $set = new ezcMailFileSet([$file]);
-      $parser = new ezcMailParser;
+      $parser = new ezcMailParser();
       //set property text attachment as file CRM-5408
       $parser->options->parseTextAttachmentsAsFiles = TRUE;
 
       $mail = $parser->parseMail($set);
 
       if (!$mail) {
-        return CRM_Core_Error::createAPIError(ts('%1 could not be parsed',
-            [1 => $file]
-          ));
+        return CRM_Core_Error::createAPIError(ts(
+          '%1 could not be parsed',
+          [1 => $file]
+        ));
       }
       $mails[$file] = $mail[0];
     }
@@ -117,7 +114,7 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
    *
    * @return void
    */
-  function markIgnored($file) {
+  public function markIgnored($file) {
     if ($this->_debug) {
       print "moving $file to ignored folder\n";
     }
@@ -134,7 +131,7 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
    *
    * @return void
    */
-  function markProcessed($file) {
+  public function markProcessed($file) {
     if ($this->_debug) {
       print "moving $file to processed folder\n";
     }
@@ -144,4 +141,3 @@ class CRM_Mailing_MailStore_Localdir extends CRM_Mailing_MailStore {
     }
   }
 }
-

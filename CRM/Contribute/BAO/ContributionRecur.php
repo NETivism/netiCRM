@@ -27,30 +27,27 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_ContributionRecur {
 
   /**
-   * takes an associative array and creates a contribution object
+   * takes an associative array and creates a recurring contribution object
    *
    * the function extract all the params it needs to initialize the create a
    * contribution object. the params array could contain additional unused name/value
    * pairs
    *
    * @param array  $params (reference ) an assoc array of name/value pairs
-   * @param array $ids    the array that holds all the db ids
+   * @param array|null $ids    the array that holds all the db ids
    *
-   * @return object CRM_Contribute_BAO_Contribution object
+   * @return CRM_Contribute_DAO_ContributionRecur|CRM_Core_Error CRM_Contribute_DAO_ContributionRecur object
    * @access public
    * @static
    */
-  static function add(&$params, &$ids = NULL) {
+  public static function add(&$params, &$ids = NULL) {
     $transaction = new CRM_Core_Transaction();
 
     // pre-processing hooks
@@ -67,7 +64,8 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     if (self::checkDuplicate($params, $duplicates)) {
       $error = &CRM_Core_Error::singleton();
       $d = CRM_Utils_Array::implode(', ', $duplicates);
-      $error->push(CRM_Core_Error::DUPLICATE_CONTRIBUTION,
+      $error->push(
+        CRM_Core_Error::DUPLICATE_CONTRIBUTION,
         'Fatal',
         [$d],
         "Found matching recurring contribution(s): $d"
@@ -119,15 +117,16 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
   }
 
   /**
-   * Check if there is a contribution with the same trxn_id or invoice_id
+   * Check if there is a recurring contribution with the same trxn_id or invoice_id
    *
    * @param array  $params (reference ) an assoc array of name/value pairs
    * @param array  $duplicates (reference ) store ids of duplicate contribs
    *
    * @return boolean true if duplicate, false otherwise
    * @access public
-   * static  */
-  static function checkDuplicate($params, &$duplicates) {
+   * @static
+   */
+  public static function checkDuplicate($params, &$duplicates) {
     $id = CRM_Utils_Array::value('id', $params);
     $trxn_id = CRM_Utils_Array::value('trxn_id', $params);
     $invoice_id = CRM_Utils_Array::value('invoice_id', $params);
@@ -165,16 +164,25 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     return $result;
   }
 
-  static function getPaymentProcessor($id, $mode) {
+  /**
+   * Get payment processor for a recurring contribution
+   *
+   * @param int $id
+   * @param string $mode
+   *
+   * @return array|null
+   * @static
+   */
+  public static function getPaymentProcessor($id, $mode) {
     $sql = "SELECT c.payment_processor_id, r.processor_id FROM civicrm_contribution c INNER JOIN civicrm_contribution_recur r ON c.contribution_recur_id = r.id WHERE c.payment_processor_id IS NOT NULL AND r.id = %1 ORDER BY c.id ASC LiMIT 0, 1";
 
     $params = [1 => [$id, 'Integer']];
     $query = CRM_Core_DAO::executeQuery($sql, $params);
     $query->fetch();
-    if(empty($query->payment_processor_id) && empty($query->processor_id)){
+    if (empty($query->payment_processor_id) && empty($query->processor_id)) {
       return NULL;
     }
-    else{
+    else {
       $pid = $query->processor_id ? $query->processor_id : $query->payment_processor_id;
     }
 
@@ -188,8 +196,9 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    *
    * @return array $totalCount an array of recurring ids count
    * @access public
-   * static  */
-  static function getCount(&$ids) {
+   * @static
+   */
+  public static function getCount(&$ids) {
     $recurID = CRM_Utils_Array::implode(',', $ids);
     $totalCount = [];
 
@@ -210,11 +219,13 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
   /**
    * Delete Recurring contribution.
    *
-   * @return true / false.
+   * @param int $recurId
+   *
+   * @return boolean
    * @access public
    * @static
    */
-  static function deleteRecurContribution($recurId) {
+  public static function deleteRecurContribution($recurId) {
     $result = FALSE;
     if (!$recurId) {
       return $result;
@@ -231,14 +242,15 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * Cancel Recurring contribution.
    *
    * @param integer  $recurId recur contribution id.
-   * @param array    $objects an array of objects that is to be cancelled like
+   * @param array|object    $objects an array of objects that is to be cancelled like
    *                          contribution, membership, event. At least contribution object is a must.
+   * @param int $canceledId
    *
-   * @return true / false.
+   * @return boolean
    * @access public
    * @static
    */
-  static function cancelRecurContribution($recurId, $objects, $canceledId = 2) {
+  public static function cancelRecurContribution($recurId, $objects, $canceledId = 2) {
     if (!$recurId) {
       return FALSE;
     }
@@ -277,12 +289,12 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    *
    * @param int $contactId Contact ID
    *
-   * @return return the list of recurring contribution fields
+   * @return array the list of recurring contribution fields
    *
    * @access public
    * @static
    */
-  static function getRecurContributions($contactId) {
+  public static function getRecurContributions($contactId) {
     $params = [];
 
     $recurDAO = new CRM_Contribute_DAO_ContributionRecur();
@@ -323,10 +335,10 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * @param int      $id        id of the database record
    * @param boolean  $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean             TRUE on success, FALSE otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     if (!$is_active) {
       return self::cancelRecurContribution($id, CRM_Core_DAO::$_nullObject, 2);
     }
@@ -337,9 +349,12 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
    * Sync custom field from first recurring contrib to others
    *
    * @param int      $id             id of the recurring
-   * @param int      $contributionId id of the contribution target to sync
+   * @param int|null $contributionId id of the contribution target to sync
+   *
+   * @return void
+   * @static
    */
-  static function syncContribute($id, $contributionId = NULL) {
+  public static function syncContribute($id, $contributionId = NULL) {
     $config = CRM_Core_Config::singleton();
     if (!empty($config->recurringCopySetting) && $config->recurringCopySetting == 'latest') {
       if (!empty($contributionId)) {
@@ -393,14 +408,14 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       foreach ($children as $cid) {
         $params = ['entityID' => $cid];
         $params = array_merge($params, $params_parent);
-        foreach($exclude as $e){
-          if(isset($params['custom_'.$e])) {
+        foreach ($exclude as $e) {
+          if (isset($params['custom_'.$e])) {
             unset($params['custom_'.$e]);
           }
         }
         $exists = CRM_Core_BAO_CustomValueTable::getValues($params);
-        foreach($exists as $k => $e){
-          if(!empty($e) && strstr($k, 'custom_') && isset($params[$k])) {
+        foreach ($exists as $k => $e) {
+          if (!empty($e) && strstr($k, 'custom_') && isset($params[$k])) {
             unset($params[$k]);
           }
         }
@@ -409,11 +424,11 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     }
 
     // Duplicate contribution soft .For #22323
-    if(!empty($parent_soft->id) && !empty($children)){
+    if (!empty($parent_soft->id) && !empty($children)) {
       foreach ($children as $cid) {
         $cs = new CRM_Contribute_DAO_ContributionSoft();
         $cs->contribution_id = $cid;
-        if(!$cs->find(TRUE)){
+        if (!$cs->find(TRUE)) {
           $cs = clone $parent_soft;
           unset($cs->id);
           $cs->contribution_id = $cid;
@@ -428,7 +443,7 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
       foreach ($children as $cid) {
         $mp = new CRM_Member_DAO_MembershipPayment();
         $mp->contribution_id = $cid;
-        if(!$mp->find(TRUE)){
+        if (!$mp->find(TRUE)) {
           $mp = clone $membership_payment;
           unset($mp->id);
           $mp->contribution_id = $cid;
@@ -439,17 +454,33 @@ class CRM_Contribute_BAO_ContributionRecur extends CRM_Contribute_DAO_Contributi
     }
   }
 
-  static function calculateRecurDay($id, $today = NULL, $base = 'start_date'){
+  /**
+   * Calculate next recurring day
+   *
+   * @param int $id
+   * @param string|null $today
+   * @param string $base
+   *
+   * @return string|false
+   * @static
+   */
+  public static function calculateRecurDay($id, $today = NULL, $base = 'start_date') {
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $id;
-    if($recur->find(TRUE) && !empty($recur->$base)){
+    if ($recur->find(TRUE) && !empty($recur->$base)) {
       $result = CRM_Utils_Date::intervalAdd($recur->frequency_unit, $recur->frequency_interval, $recur->$base);
       return $result;
     }
     return FALSE;
   }
 
-  static function currentRunningSummary(){
+  /**
+   * Get current running summary of recurring contributions
+   *
+   * @return array
+   * @static
+   */
+  public static function currentRunningSummary() {
     $sql = " SELECT SUM( c.contributions ) AS contributions, SUM( c.amount ) AS amount, SUM( c.groupby ) AS contacts, c.currency
 FROM (
   SELECT COUNT( r.id ) AS contributions, SUM( r.amount ) AS amount,  '1' AS groupby, r.currency
@@ -461,7 +492,7 @@ FROM (
 GROUP BY c.currency";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $summary = [];
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $summary[$dao->currency] = [
         'contacts' => $dao->contacts,
         'contributions' => $dao->contributions,
@@ -471,24 +502,32 @@ GROUP BY c.currency";
     return $summary;
   }
 
-  static function chartEstimateMonthly($limit = 12){
+  /**
+   * Get monthly estimate chart for recurring contributions
+   *
+   * @param int $limit
+   *
+   * @return array<string, mixed>
+   * @static
+   */
+  public static function chartEstimateMonthly($limit = 12) {
     $frequency_unit = 'month';
     $sql = "SELECT SUM(result.amount) as amount, result.installments FROM (SELECT r.amount, CAST(r.installments AS SIGNED) - CAST(count(c.id) AS SIGNED) as installments FROM civicrm_contribution_recur r INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id WHERE r.contribution_status_id = 5 AND r.is_test = 0 AND r.frequency_unit = 'month' AND c.contribution_status_id = 1 AND c.is_test = 0 GROUP BY r.id ORDER BY installments ASC) as result WHERE result.installments > 0 OR result.installments IS NULL GROUP BY result.installments DESC";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $unlimit = $over = NULL;
     $slot = array_fill(1, $limit, 0);
     krsort($slot);
-    while($dao ->fetch()){
-      if(empty($dao->installments)){
+    while ($dao ->fetch()) {
+      if (empty($dao->installments)) {
         $unlimit = $dao->amount;
       }
-      elseif($dao->installments > $limit) {
+      elseif ($dao->installments > $limit) {
         $over += $dao->amount;
       }
-      elseif(isset($slot[$dao->installments])){
+      elseif (isset($slot[$dao->installments])) {
         $slot[$dao->installments] = $dao->amount;
       }
-      else{
+      else {
         break;
       }
     }
@@ -501,7 +540,7 @@ GROUP BY c.currency";
       'year' => 'Y',
       'day' => 'd',
     ];
-    foreach($slot as $installment => $amount){
+    foreach ($slot as $installment => $amount) {
       $increment += $amount;
       $amount = $unlimit + $over + $increment;
       $labels[$installment] = strftime('%b', strtotime('+'.$installment.' '.$frequency_unit));
@@ -509,7 +548,7 @@ GROUP BY c.currency";
     }
     ksort($values);
     ksort($labels);
-    
+
     $chart = [
       'id' => 'chart-recur',
       'selector' => '#chart-recur',
@@ -521,12 +560,23 @@ GROUP BY c.currency";
     return $chart;
   }
 
-  static function saveLogData($params, $before = NULL, &$logId = NULL, $message = NULL) {
+  /**
+   * Save log data for recurring contribution
+   *
+   * @param array|object $params
+   * @param array|object|null $before
+   * @param int|null $logId
+   * @param string|null $message
+   *
+   * @return void
+   * @static
+   */
+  public static function saveLogData($params, $before = NULL, &$logId = NULL, $message = NULL) {
     $params = (object) $params;
     if (empty($params->id)) {
       CRM_Core_Error::debug_log_message(ts('Lack of ID in parameters when saving log data.'), TRUE);
     }
-    else if (!empty($before)) {
+    elseif (!empty($before)) {
       $recurDAO = (object) $before;
     }
     else {
@@ -543,7 +593,7 @@ GROUP BY c.currency";
       $after[$field] = empty($params->$field) ? NULL : $params->$field;
       // $params Only save modified value, So copy from before.
       if (!empty($recurDAO->$field) && $after[$field] === NULL) {
-        $after[$field] = $recurDAO->$field; 
+        $after[$field] = $recurDAO->$field;
       }
     }
     $data = ['before' => $before, 'after' => $after];
@@ -562,10 +612,20 @@ GROUP BY c.currency";
     if (!empty($logId)) {
       $logParams['id'] = $logId;
     }
-    $log = CRM_Core_BAO_Log::add( $logParams );
+    $log = CRM_Core_BAO_Log::add($logParams);
   }
 
-  static function addNote($recurringId, $title, $body = NULL) {
+  /**
+   * Add note to recurring contribution
+   *
+   * @param int $recurringId
+   * @param string $title
+   * @param string|null $body
+   *
+   * @return void
+   * @static
+   */
+  public static function addNote($recurringId, $title, $body = NULL) {
     $session = CRM_Core_Session::singleton();
     $userId = $session->get('userID');
     if (empty($userId)) {
@@ -579,7 +639,6 @@ GROUP BY c.currency";
       'contact_id'    => $userId,
       'modified_date' => date('YmdHis', CRM_REQUEST_TIME),
     ];
-    $note = CRM_Core_BAO_Note::add( $noteParams, NULL );
+    $note = CRM_Core_BAO_Note::add($noteParams, NULL);
   }
 }
-

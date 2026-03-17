@@ -1,7 +1,6 @@
 <?php
 // $Id: CustomGroup.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -244,4 +243,3 @@ function civicrm_custom_field_delete($params) {
   $customFieldDelete = CRM_Core_BAO_CustomField::deleteField($field);
   return $customFieldDelete ? civicrm_create_error('Error while deleting custom field') : civicrm_create_success();
 }
-

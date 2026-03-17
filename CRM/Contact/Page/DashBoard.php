@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * CiviCRM Dashboard
@@ -42,12 +38,11 @@
 class CRM_Contact_Page_DashBoard extends CRM_Core_Page {
 
   /**
-   * Run dashboard
+   * Run dashboard.
    *
-   * @return none
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $resetCache = CRM_Utils_Request::retrieve('resetCache', 'Positive', CRM_Core_DAO::$_nullObject);
 
     if ($resetCache) {
@@ -72,4 +67,3 @@ class CRM_Contact_Page_DashBoard extends CRM_Core_Page {
     return parent::run();
   }
 }
-

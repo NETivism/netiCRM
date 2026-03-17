@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Page for displaying list of events
@@ -55,11 +50,10 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
-  static $_actionLinks = NULL;
+  public static $_actionLinks = NULL;
 
-  static $_links = NULL;
+  public static $_links = NULL;
 
   protected $_pager = NULL;
 
@@ -72,7 +66,7 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_actionLinks)) {
       // helper variable for nicer formatting
       $copyExtra = ts('Are you sure you want to make a copy of this Event?');
@@ -118,20 +112,28 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0, 'REQUEST'
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0,
+      'REQUEST'
     );
 
     // figure out whether we’re handling an event or an event template
@@ -151,7 +153,8 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
     if ($action & CRM_Core_Action::DELETE) {
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(), 'reset=1&action=browse'));
-      $controller = new CRM_Core_Controller_Simple('CRM_Event_Form_ManageEvent_Delete',
+      $controller = new CRM_Core_Controller_Simple(
+        'CRM_Event_Form_ManageEvent_Delete',
         'Delete Event',
         $action
       );
@@ -175,8 +178,9 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
    *
    * @return void
    */
-  function browse() {
-    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
+  public function browse() {
+    $this->_sortByCharacter = CRM_Utils_Request::retrieve(
+      'sortByCharacter',
       'String',
       $this
     );
@@ -191,7 +195,6 @@ class CRM_Event_Page_ManageEvent extends CRM_Core_Page {
     $this->_force = $this->_searchResult = NULL;
 
     $this->search();
-
 
     $params = [];
     $this->_force = CRM_Utils_Request::retrieve('force', 'Boolean', $this, FALSE);
@@ -254,7 +257,8 @@ ORDER BY start_date desc
           $action -= CRM_Core_Action::UPDATE;
         }
 
-        $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(),
+        $manageEvent[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
           $action,
           [
             'id' => $dao->id,
@@ -264,12 +268,10 @@ ORDER BY start_date desc
           TRUE
         );
 
-
         $manageEvent[$dao->id]['friend'] = CRM_Friend_BAO_Friend::getValues($params);
       }
     }
     $this->assign('rows', $manageEvent);
-
 
     $statusTypes = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 1', 'label');
     $statusTypesPending = CRM_Event_PseudoConstant::participantStatus(NULL, 'is_counted = 0', 'label');
@@ -283,11 +285,15 @@ ORDER BY start_date desc
    * all the fields in the event wizard
    *
    * @return void
-   * @access public
    */
-  function copy() {
-    $key = CRM_Utils_Request::retrieve('key', 'String',
-      CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST'
+  public function copy() {
+    $key = CRM_Utils_Request::retrieve(
+      'key',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      TRUE,
+      NULL,
+      'REQUEST'
     );
 
     $name = get_class($this);
@@ -310,9 +316,15 @@ ORDER BY start_date desc
     return CRM_Utils_System::redirect(CRM_Utils_System::url($urlString, $urlParams));
   }
 
-  function search() {
+  /**
+   * Search
+   *
+   * @return void
+   */
+  public function search() {
     if (isset($this->_action) &
-      (CRM_Core_Action::ADD |
+      (
+        CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE |
         CRM_Core_Action::DELETE
       )
@@ -327,7 +339,16 @@ ORDER BY start_date desc
     $controller->run();
   }
 
-  function whereClause(&$params, $sortBy, $force) {
+  /**
+   * Where clause
+   *
+   * @param array $params
+   * @param bool $sortBy
+   * @param bool $force
+   *
+   * @return string
+   */
+  public function whereClause(&$params, $sortBy, $force) {
     $values = [];
     $clauses = [];
     $title = $this->get('title');
@@ -355,8 +376,8 @@ ORDER BY start_date desc
       }
       else {
         $value = explode(',', $value);
-        foreach($value as $v) {
-            $val[$v] = $v;
+        foreach ($value as $v) {
+          $val[$v] = $v;
         }
         $type = CRM_Utils_Array::implode(',', $val);
       }
@@ -365,8 +386,15 @@ ORDER BY start_date desc
     return !empty($clauses) ? CRM_Utils_Array::implode(' AND ', $clauses) : '(1)';
   }
 
-  function pager($whereClause, $whereParams) {
-
+  /**
+   * Pager
+   *
+   * @param string $whereClause
+   * @param array $whereParams
+   *
+   * @return void
+   */
+  public function pager($whereClause, $whereParams) {
 
     $params['status'] = ts('Event %%StatusMessage%%');
     $params['csvString'] = NULL;
@@ -388,4 +416,3 @@ SELECT count(id)
     $this->assign_by_ref('pager', $this->_pager);
   }
 }
-

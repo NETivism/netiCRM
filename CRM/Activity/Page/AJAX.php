@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  *
  */
@@ -36,7 +35,12 @@
  * This class contains all the function that are called using AJAX (jQuery)
  */
 class CRM_Activity_Page_AJAX {
-  static function getCaseActivity() {
+  /**
+   * Get case activity
+   *
+   * @return void
+   */
+  public static function getCaseActivity() {
     $caseID = CRM_Utils_Type::escape($_GET['caseID'], 'Integer');
     $contactID = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
     $userID = CRM_Utils_Type::escape($_GET['userID'], 'Integer');
@@ -64,7 +68,6 @@ class CRM_Activity_Page_AJAX {
 
     $activities = CRM_Case_BAO_Case::getCaseActivity($caseID, $params, $contactID, $context, $userID);
 
-
     $iFilteredTotal = $iTotal = $params['total'];
     $selectorElements = ['display_date', 'subject', 'type', 'with_contacts', 'reporter', 'status', 'links', 'class'];
 
@@ -72,7 +75,12 @@ class CRM_Activity_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 
-  static function convertToCaseActivity() {
+  /**
+   * Convert to case activity
+   *
+   * @return void
+   */
+  public static function convertToCaseActivity() {
     $params = ['caseID', 'activityID', 'contactID', 'newSubject', 'targetContactIds', 'mode'];
     foreach ($params as $param) {
       $$param = CRM_Utils_Array::value($param, $_POST);
@@ -82,7 +90,6 @@ class CRM_Activity_Page_AJAX {
       echo json_encode(['error_msg' => 'required params missing.']);
       CRM_Utils_System::civiExit();
     }
-
 
     $otherActivity = new CRM_Activity_DAO_Activity();
     $otherActivity->id = $activityID;
@@ -124,7 +131,6 @@ class CRM_Activity_Page_AJAX {
     }
     $otherActivity->free();
 
-
     $targetContacts = [];
     if (!empty($targetContactIds)) {
       $targetContacts = array_unique(explode(',', $targetContactIds));
@@ -149,4 +155,3 @@ class CRM_Activity_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 }
-

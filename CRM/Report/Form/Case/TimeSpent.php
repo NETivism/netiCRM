@@ -27,33 +27,63 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
-  public $activityTypes;
+
   /**
-   * @var mixed[]
+   * @var array Activity type labels keyed by activity type ID.
+   */
+  public $activityTypes;
+
+  /**
+   * @var array Activity status labels keyed by status ID.
    */
   public $activityStatuses;
+
   /**
-   * @var never[]
+   * @var array Report column headers keyed by column alias.
    */
   public $_columnHeaders;
-  public $has_grouping;
-  public $has_activity_type;
+
   /**
-   * @var string
+   * @var bool Whether grouping (totals) is enabled.
+   */
+  public $has_grouping;
+
+  /**
+   * @var bool Whether activity type column is selected.
+   */
+  public $has_activity_type;
+
+  /**
+   * @var string SQL FROM clause.
    */
   public $_from;
+
+  /**
+   * @var string SQL WHERE clause.
+   */
   public $_where;
+
+  /**
+   * @var array Table alias mapping keyed by table name.
+   */
   public $_aliases;
+
+  /**
+   * @var string SQL GROUP BY clause.
+   */
   public $_groupBy;
-  function __construct() {
+  /**
+   * Class constructor.
+   *
+   * Initializes activity type and status options.
+   * Defines column definitions for contact, activity, and case activity tables.
+   */
+  public function __construct() {
 
     $this->activityTypes = CRM_Core_PseudoConstant::activityType(TRUE, TRUE);
     asort($this->activityTypes);
@@ -170,7 +200,13 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields. Populates $_select and $_columnHeaders.
+   * Applies SUM, COUNT, and EXTRACT aggregations when grouping is enabled.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
 
@@ -181,7 +217,8 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
         foreach ($table['fields'] as $fieldName => $field) {
           if (CRM_Utils_Array::value('required', $field) ||
-            (CRM_Utils_Array::value($fieldName, $this->_params['fields'])
+            (
+              CRM_Utils_Array::value($fieldName, $this->_params['fields'])
               && ((!$this->has_grouping) || !in_array($fieldName, ['case_id', 'subject', 'status_id']))
             )
           ) {
@@ -216,7 +253,12 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining activity, contact, and case activity tables. Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
 
     $this->_from = "
         FROM civicrm_activity {$this->_aliases['civicrm_activity']}
@@ -228,7 +270,13 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
 ";
   }
 
-  function where() {
+  /**
+   * Builds the WHERE clause from submitted filter values. Populates $_where.
+   * Includes base conditions for current revision, not deleted, and not test activities.
+   *
+   * @return void
+   */
+  public function where() {
     $this->_where = " WHERE {$this->_aliases['civicrm_activity']}.is_current_revision = 1 AND 
                                 {$this->_aliases['civicrm_activity']}.is_deleted = 0 AND
                                 {$this->_aliases['civicrm_activity']}.is_test = 0";
@@ -259,7 +307,8 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
                 }
               }
               else {
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -284,7 +333,12 @@ class CRM_Report_Form_Case_TimeSpent extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause by contact, optional activity type, and month/year. Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = '';
     if ($this->has_grouping) {
       $this->_groupBy = "
@@ -296,11 +350,25 @@ GROUP BY {$this->_aliases['civicrm_contact']}.id,
     }
   }
 
-  function postProcess() {
+  /**
+   * Delegates post-processing to the parent report form.
+   *
+   * @return void
+   */
+  public function postProcess() {
     parent::postProcess();
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validates that activity ID, date, and duration fields are selected when totals grouping is enabled.
+   *
+   * @param array $fields Submitted form field values.
+   * @param array $files Uploaded files.
+   * @param CRM_Report_Form_Case_TimeSpent $self The report form instance.
+   *
+   * @return array<string, mixed> Validation errors keyed by field name.
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!empty($fields['group_bys']) &&
       (!CRM_Utils_Array::arrayKeyExists('id', $fields['fields']) || !CRM_Utils_Array::arrayKeyExists('activity_date_time', $fields['fields']) || !CRM_Utils_Array::arrayKeyExists('duration', $fields['fields']))
@@ -311,7 +379,15 @@ GROUP BY {$this->_aliases['civicrm_contact']}.id,
     return $errors;
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Modifies report output rows for display. Converts activity type and status IDs to labels,
+   * defaults empty duration and case ID values to zero.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
@@ -352,4 +428,3 @@ GROUP BY {$this->_aliases['civicrm_contact']}.id,
     }
   }
 }
-

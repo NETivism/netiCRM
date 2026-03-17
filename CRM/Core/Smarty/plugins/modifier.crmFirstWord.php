@@ -27,28 +27,19 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Replace the value of an attribute in the input string. Assume
- * the the attribute is well formed, of the type name="value". If
- * no replacement is mentioned the value is inserted at the end of
- * the form element
+ * Return the first word of a string.
  *
- * @param string $string    the html to be tweaked with
- * @param string $attribute the attribute to modify
- * @param string $value     the new attribute value
+ * @param string $string the input string
  *
- * @return string        the new modified html string
- * @access public
+ * @return string the first word
  */
 function smarty_modifier_crmFirstWord($string) {
   $string = trim($string);
   $words = explode(' ', $string);
   return $words[0];
 }
-

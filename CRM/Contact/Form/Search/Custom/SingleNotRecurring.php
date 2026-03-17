@@ -8,20 +8,28 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  
-  function __construct(&$formValues){
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_instruments = CRM_Contribute_PseudoConstant::paymentInstrument();
     $this->_filled = FALSE;
-    if(empty($this->_tableName)){
+    if (empty($this->_tableName)) {
       $this->_tableName = 'civicrm_custom_search_singlenotrecurring';
       $this->_config = CRM_Core_Config::singleton();
       $this->buildColumn();
     }
   }
 
-  function buildColumn(){
-    $this->_queryColumns = [ 
+  /**
+   * Build the columns for the search results.
+   */
+  public function buildColumn() {
+    $this->_queryColumns = [
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -38,7 +46,11 @@ class CRM_Contact_Form_Search_Custom_SingleNotRecurring extends CRM_Contact_Form
       ts('Completed Donation') => 'completed_count',
     ];
   }
-  function buildTempTable() {
+
+  /**
+   * Build the temporary table.
+   */
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -48,13 +60,13 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, ['id'])) {
         continue;
       }
-      if(strstr($field,'amount') || strstr($field, 'count') || strstr($field, '_id')){
+      if (strstr($field, 'amount') || strstr($field, 'count') || strstr($field, '_id')) {
         $type = "INTEGER(10) default NULL";
       }
-      else{
+      else {
         $type = "VARCHAR(32) default ''";
       }
-      if(strstr($field, '_date')){
+      if (strstr($field, '_date')) {
         $type = 'DATETIME NULL default NULL';
       }
       $sql .= "{$field} {$type},\n";
@@ -66,21 +78,25 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  function dropTempTable() {
+
+  /**
+   * Drop the temporary table.
+   */
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
 
   /**
-   * fill temp table for further use
+   * Fill temp table for further use.
    */
-  function fillTable(){
+  public function fillTable() {
     $this->buildTempTable();
     $select = [];
-    foreach($this->_queryColumns as $k => $v){
+    foreach ($this->_queryColumns as $k => $v) {
       $select[] = $k.' as '.$v;
     }
-    $select = CRM_Utils_Array::implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n", $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -100,32 +116,41 @@ $having
 
     while ($dao->fetch()) {
       $values = [];
-      foreach($this->_queryColumns as $name){
-        if($name == 'id'){
+      foreach ($this->_queryColumns as $name) {
+        if ($name == 'id') {
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
         }
-        elseif(isset($dao->$name)){
+        elseif (isset($dao->$name)) {
           $values[] = "'". CRM_Utils_Type::escape($dao->$name, 'String')."'";
         }
-        else{
+        else {
           $values[] = 'NULL';
         }
       }
-      $values = CRM_Utils_Array::implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ', $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
   }
 
-
-  function tempFrom() {
+  /**
+   * Get the FROM clause for the temporary table query.
+   *
+   * @return string
+   */
+  public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 AND c.contribution_status_id = 1 LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
   }
 
   /**
-   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   * Get the WHERE clause for the temporary table query.
+   *
+   * WHERE clause is an array built from any required JOINS plus conditional
+   * filters based on search criteria field values.
+   *
+   * @return string
    */
-  function tempWhere(){
+  public function tempWhere() {
     $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
 
@@ -148,7 +173,12 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  /**
+   * Get the HAVING clause for the temporary table query.
+   *
+   * @return string
+   */
+  public function tempHaving() {
     $count = $this->_formValues['contribution_count'];
     $clauses = [];
     $clauses[] = "COUNT(c.id) >= $count";
@@ -157,7 +187,12 @@ $having
     return '';
   }
 
-  function buildForm(&$form){
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
+  public function buildForm(&$form) {
     for ($i = 1; $i <= 10; $i++) {
       $option[$i] = $i;
     }
@@ -166,13 +201,23 @@ $having
     $form->addDateRange('receive_date', ts('Received Date').' - '.ts('From'), NULL, FALSE);
   }
 
-  function setDefaultValues() {
+  /**
+   * Set the default values for the form.
+   *
+   * @return array
+   */
+  public function setDefaultValues() {
     return [
       'contribution_count' => 3,
     ];
   }
 
-  function qill(){
+  /**
+   * Get data for the 'qill' display.
+   *
+   * @return array<int, array<string, mixed>>
+   */
+  public function qill() {
     $qill = [];
 
     $count = $this->_formValues['contribution_count'];
@@ -188,46 +233,77 @@ $having
 
     $instrument = $this->_formValues['payment_instrument_id'];
     $qill[1]['paymentInstrument'] = ts("Payment Instrument").' = '. $this->_instruments[$instrument];
-    return $qill;  
+    return $qill;
   }
 
-  function setBreadcrumb() {
+  /**
+   * Set the breadcrumb for the search page.
+   */
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-  function setTitle(){
+  /**
+   * Set the page title.
+   */
+  public function setTitle() {
     $count = $this->_formValues['contribution_count'];
     $title = ts('Single donation over %1 times', [1 => $count]);
     CRM_Utils_System::setTitle($title);
   }
 
-  function count(){
-    if(!$this->_filled){
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
     $sql = $this->all();
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
   }
 
-
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  /**
+   * Generic SQL builder.
+   *
+   * @param string $selectClause
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param null|string $groupBy
+   *
+   * @return string
+   */
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -238,21 +314,42 @@ $having
   }
 
   /**
-   * Functions below generally don't need to be modified
+   * Build the FROM clause for the main query.
+   *
+   * @return string
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  /**
+   * Build the WHERE clause for the main query.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function where($includeContactIDs = FALSE) {
     return ' (1) ';
   }
 
-  function having(){
+  /**
+   * Build the HAVING clause for the main query.
+   *
+   * @return string
+   */
+  public function having() {
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
+  /**
+   * Append a list of contact IDs to the WHERE clause of a query.
+   *
+   * @param string $sql
+   * @param array $formValues
+   * @param bool $isExport
+   */
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -267,28 +364,56 @@ $having
     }
   }
 
-  function &columns(){
+  /**
+   * Getter for the display columns.
+   *
+   * @return array
+   */
+  public function &columns() {
     return $this->_columns;
   }
-  
-  function summary(){
+
+  /**
+   * Get a summary of the search criteria.
+   *
+   * @return void
+   */
+  public function summary() {
     // return $summary;
   }
 
-  function alterRow(&$row) {
+  /**
+   * Alter a single result row for display.
+   *
+   * @param array $row
+   */
+  public function alterRow(&$row) {
     if (!empty($row['payment_instrument_id'])) {
       $row['payment_instrument_id'] = $this->_instruments[$row['payment_instrument_id']];
     }
   }
 
   /**
+   * Get the path to the template file.
+   *
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
    */
-  function templateFile(){
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/SingleNotRecurring.tpl';
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  /**
+   * Get the SQL for retrieving contact IDs.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
+   */
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }

@@ -27,20 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Grab the button type from a passed button element 'name' by checking for reserved QF button type strings
+ * Grab the button type from a passed button element 'name'.
  *
- * @param string $btnId
+ * Checks for reserved QF button type strings.
  *
- * @return string  button type, one of: 'upload', 'next', 'back', 'cancel', 'refresh'
- *                                      'submit', 'done', 'display', 'jump' 'process'
- * @access public
+ * @param string $btnName button element name
+ *
+ * @return string button type (e.g., 'upload', 'next', 'back', 'cancel', 'refresh')
  */
 function smarty_modifier_crmBtnType($btnName) {
   // split the string into 5 or more
@@ -51,4 +49,3 @@ function smarty_modifier_crmBtnType($btnName) {
 
   return $substr[3];
 }
-

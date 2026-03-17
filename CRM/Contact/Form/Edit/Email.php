@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,16 +39,14 @@ class CRM_Contact_Form_Edit_Email {
   /**
    * build the form elements for an email object
    *
-   * @param CRM_Core_Form $form       reference to the form object
-   * @param array         $location   the location object to store all the form elements in
-   * @param int           $locationId the locationId we are dealing with
-   * @param int           $count      the number of blocks to create
+   * @param object $form              (reference) reference to the form object
+   * @param int    $addressBlockCount address block count
    *
    * @return void
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form, $addressBlockCount = NULL) {
+  public static function buildQuickForm(&$form, $addressBlockCount = NULL) {
     // passing this via the session is AWFUL. we need to fix this
     if (!$addressBlockCount) {
       $blockId = ($form->get('Email_Block_Count')) ? $form->get('Email_Block_Count') : 1;
@@ -97,15 +93,19 @@ class CRM_Contact_Form_Edit_Email {
 
       if (CRM_Utils_System::getClassName($form) == 'CRM_Contact_Form_Contact') {
 
-        $form->add('textarea', "email[$blockId][signature_text]", ts('Signature (Text)'),
+        $form->add(
+          'textarea',
+          "email[$blockId][signature_text]",
+          ts('Signature (Text)'),
           ['rows' => 2, 'cols' => 40]
         );
 
-        $form->addWysiwyg("email[$blockId][signature_html]", ts('Signature (HTML)'),
+        $form->addWysiwyg(
+          "email[$blockId][signature_html]",
+          ts('Signature (HTML)'),
           ['rows' => 2, 'cols' => 40]
         );
       }
     }
   }
 }
-

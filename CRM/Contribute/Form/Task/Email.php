@@ -27,18 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: Email.php 30684 2010-11-11 08:37:12Z yashodha $
  *
  */
 
-
-
-
 /**
- * This class provides the functionality to email a group of
- * contacts.
+ * This class provides the functionality to email a group of contacts associated with contributions.
  */
 class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
 
@@ -60,12 +55,14 @@ class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
   public $_templates = NULL;
 
   /**
-   * build all the data structures needed to build the form
+   * Set up variables before the form is built.
+   *
+   * Initializes the 'from' email address, retrieves selected contribution IDs,
+   * and maps them to contact IDs for emailing.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Contact_Form_Task_EmailCommon::preProcessFromAddress($this);
     parent::preProcess();
 
@@ -76,9 +73,10 @@ class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
   }
 
   /**
-   * Build the form
+   * Actually build the form components.
    *
-   * @access public
+   * Utilizes the common email task components to add fields for subject,
+   * message body, and attachments.
    *
    * @return void
    */
@@ -90,11 +88,11 @@ class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form submission.
    *
-   * @access public
+   * Invokes the common email post-processing logic to send the emails.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     CRM_Contact_Form_Task_EmailCommon::postProcess($this);
@@ -103,7 +101,9 @@ class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
   /**
    * List available tokens for this form.
    *
-   * @return array
+   * Merges contact and contribution tokens for use in the email template.
+   *
+   * @return array the array of available tokens
    */
   public function listTokens() {
     $tokens = CRM_Core_SelectValues::contactTokens();
@@ -111,4 +111,3 @@ class CRM_Contribute_Form_Task_Email extends CRM_Contribute_Form_Task {
     return $tokens;
   }
 }
-

@@ -33,7 +33,6 @@
  */
 require_once 'CiviTest/CiviUnitTestCase.php';
 
-
 /**
  *  Test APIv3 civicrm_activity_* functions
  *
@@ -52,7 +51,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *
    *  Initialize configuration
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -76,7 +75,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->_contributionTypeId = $this->contributionTypeCreate();
   }
 
-  function tearDown() {
+  public function tearDown() {
     // truncate a few tables
     $tablesToTruncate = [
       'civicrm_contact',
@@ -97,7 +96,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with only
    *  first and last names succeeds
    */
-  function testAddCreateIndividual() {
+  public function testAddCreateIndividual() {
     $params = [
       'first_name' => 'abc1',
       'contact_type' => 'Individual',
@@ -110,7 +109,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
     unset($params['version']);
-    $this->assertDBState('CRM_Contact_DAO_Contact',
+    $this->assertDBState(
+      'CRM_Contact_DAO_Contact',
       $contact['id'],
       $params
     );
@@ -121,7 +121,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *
    *  Verify that sub-types are created successfully and not deleted by subsequent updates
    */
-  function testIndividualSubType() {
+  public function testIndividualSubType() {
     $params = [
       'first_name' => 'test abc',
       'contact_type' => 'Individual',
@@ -131,7 +131,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
     $contact = civicrm_api('contact', 'create', $params);
     $cid = $contact['id'];
-    
+
     $params = [
       'id' => $cid,
       'middle_name' => 'foo',
@@ -139,19 +139,21 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
     civicrm_api('contact', 'create', $params);
     unset($params['middle_name']);
-    
+
     $contact = civicrm_api('contact', 'get', $params);
-    
+
     $this->assertEquals(['Student', 'Staff'], $contact['values'][$cid]['contact_sub_type'], "In line " . __LINE__);
   }
 
   /**
    *  Verify that attempt to create contact with empty params fails
    */
-  function testCreateEmptyContact() {
+  public function testCreateEmptyContact() {
     $params = [];
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertEquals($contact['is_error'], 1,
+    $this->assertEquals(
+      $contact['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -159,7 +161,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Verify that attempt to create contact with bad contact type fails
    */
-  function testCreateBadTypeContact() {
+  public function testCreateBadTypeContact() {
     $params = [
       'email' => 'man1@yahoo.com',
       'contact_type' => 'Does not Exist',
@@ -174,14 +176,16 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with required
    *  fields missing fails
    */
-  function testCreateBadRequiredFieldsIndividual() {
+  public function testCreateBadRequiredFieldsIndividual() {
     $params = [
       'middle_name' => 'This field is not required',
       'contact_type' => 'Individual',
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertEquals($contact['is_error'], 1,
+    $this->assertEquals(
+      $contact['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -190,14 +194,16 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create household contact with required
    *  fields missing fails
    */
-  function testCreateBadRequiredFieldsHousehold() {
+  public function testCreateBadRequiredFieldsHousehold() {
     $params = [
       'middle_name' => 'This field is not required',
       'contact_type' => 'Household',
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertEquals($contact['is_error'], 1,
+    $this->assertEquals(
+      $contact['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -206,14 +212,16 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create organization contact with
    *  required fields missing fails
    */
-  function testCreateBadRequiredFieldsOrganization() {
+  public function testCreateBadRequiredFieldsOrganization() {
     $params = [
       'middle_name' => 'This field is not required',
       'contact_type' => 'Organization',
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertEquals($contact['is_error'], 1,
+    $this->assertEquals(
+      $contact['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -222,7 +230,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with only an
    *  email succeeds
    */
-  function testCreateEmailIndividual() {
+  public function testCreateEmailIndividual() {
 
     $params = [
       'email' => 'man3@yahoo.com',
@@ -232,7 +240,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
     $email = civicrm_api('email', 'get', ['contact_id' => $contact['id'], 'version' => $this->_apiversion]);
@@ -248,7 +258,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with only
    *  first and last names succeeds
    */
-  function testCreateNameIndividual() {
+  public function testCreateNameIndividual() {
     $params = [
       'first_name' => 'abc1',
       'contact_type' => 'Individual',
@@ -257,7 +267,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -269,7 +281,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with
    *  first and last names and old key values works
    */
-  function testCreateNameIndividualOldKeys() {
+  public function testCreateNameIndividualOldKeys() {
     $params = [
       'individual_prefix' => 'Dr.',
       'first_name' => 'abc1',
@@ -280,7 +292,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -292,7 +306,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with
    *  first and last names and old key values works
    */
-  function testCreateNameIndividualOldKeys2() {
+  public function testCreateNameIndividualOldKeys2() {
     $params = [
       'prefix_id' => 'Dr.',
       'first_name' => 'abc1',
@@ -304,7 +318,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -316,7 +332,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create household contact with only
    *  household name succeeds
    */
-  function testCreateNameHousehold() {
+  public function testCreateNameHousehold() {
     $params = [
       'household_name' => 'The abc Household',
       'contact_type' => 'Household',
@@ -324,7 +340,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -336,14 +354,16 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create organization contact with only
    *  organization name succeeds
    */
-  function testCreateNameOrganization() {
+  public function testCreateNameOrganization() {
     $params = [
       'organization_name' => 'The abc Organization',
       'contact_type' => 'Organization',
       'version' => $this->_apiversion,
     ];
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -354,7 +374,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create organization contact with only
    *  organization name succeeds
    */
-  function testCreateNoNameOrganization() {
+  public function testCreateNoNameOrganization() {
     $params = [
       'first_name' => 'The abc Organization',
       'contact_type' => 'Organization',
@@ -369,7 +389,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    * variables specific to participant so it can be replicated into other entities
    * and / or moved to the automated test suite
    */
-  function testCreateWithCustom() {
+  public function testCreateWithCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
 
     $params = $this->_params;
@@ -389,7 +409,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
      * Test that sort works - old syntax
      */
-  function testGetSort() {
+  public function testGetSort() {
     $c1 = civicrm_api($this->_entity, 'create', $this->_params);
     $this->assertAPISuccess($c1, 'in line ' . __LINE__);
     $c2 = civicrm_api($this->_entity, 'create', ['version' => $this->_apiversion, 'first_name' => 'bb', 'last_name' => 'ccc', 'contact_type' => 'Individual']);
@@ -418,7 +438,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
    * Test variants on deleted behaviour
    */
-  function testGetDeleted() {
+  public function testGetDeleted() {
     $params = $this->_params;
     $contact1 = civicrm_api('contact', 'create', $params);
     $params['is_deleted'] = 1;
@@ -448,7 +468,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
      * Test that sort works - new syntax
      */
-  function testGetSortNewSYntax() {
+  public function testGetSortNewSYntax() {
     $c1     = civicrm_api($this->_entity, 'create', $this->_params);
     $c2     = civicrm_api($this->_entity, 'create', ['version' => $this->_apiversion, 'first_name' => 'bb', 'last_name' => 'ccc', 'contact_type' => 'Individual']);
     $result = civicrm_api($this->_entity, 'getvalue', [
@@ -481,7 +501,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    * variables specific to participant so it can be replicated into other entities
    * and / or moved to the automated test suite
    */
-  function testGetWithCustom() {
+  public function testGetWithCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
 
     $params = $this->_params;
@@ -506,7 +526,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
      * variables specific to participant so it can be replicated into other entities
      * and / or moved to the automated test suite
      */
-  function testGetWithCustomReturnSyntax() {
+  public function testGetWithCustomReturnSyntax() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
 
     $params = $this->_params;
@@ -525,7 +545,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->customGroupDelete($ids['custom_group_id']);
   }
 
-  function testGetGroupIDFromContact() {
+  public function testGetGroupIDFromContact() {
     $groupId     = $this->groupCreate(NULL);
     $description = "Get all from group and display contacts";
     $subfile     = "GroupFilterUsingContactAPI";
@@ -536,7 +556,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       'version' => $this->_apiversion,
       'api.group_contact.create' => ['group_id' => $groupId],
     ];
-
 
     $contact = civicrm_api('contact', 'create', $params);
     // testing as integer
@@ -583,9 +602,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->assertEquals(1, $result['count']);
 
     //test in conjunction with other criteria
-      $params = ['filter.group_id' => [$groupId, 26],
-      'version' => $this->_apiversion,
-      'contact_type' => 'Organization',
+    $params = ['filter.group_id' => [$groupId, 26],
+    'version' => $this->_apiversion,
+    'contact_type' => 'Organization',
     ];
     $result = civicrm_api('contact', 'get', $params);
     $this->assertEquals(0, $result['count']);
@@ -600,7 +619,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Verify that attempt to create individual contact with two chained websites succeeds
    */
-  function testCreateIndividualWithContributionDottedSyntax() {
+  public function testCreateIndividualWithContributionDottedSyntax() {
     $description = "test demonstrates the syntax to create 2 chained entities";
     $subfile     = "ChainTwoWebsites";
     $params      = [
@@ -632,7 +651,10 @@ class api_v3_ContactTest extends CiviUnitTestCase {
 
     $result = civicrm_api('Contact', 'create', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile);
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
     $this->assertEquals(1, $result['id'], "In line " . __LINE__);
     $this->assertEquals(0, $result['values'][$result['id']]['api.website.create']['is_error'], "In line " . __LINE__);
@@ -646,7 +668,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Verify that attempt to create individual contact with chained contribution and website succeeds
    */
-  function testCreateIndividualWithContributionChainedArrays() {
+  public function testCreateIndividualWithContributionChainedArrays() {
     $params = [
       'first_name' => 'abc3',
       'last_name' => 'xyz3',
@@ -680,7 +702,10 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $subfile     = "ChainTwoWebsitesSyntax2";
     $result      = civicrm_api('Contact', 'create', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile);
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
     $this->assertEquals(1, $result['id'], "In line " . __LINE__);
     $this->assertEquals(0, $result['values'][$result['id']]['api.website.create'][0]['is_error'], "In line " . __LINE__);
@@ -695,7 +720,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with first
    *  and last names and email succeeds
    */
-  function testCreateIndividualWithNameEmail() {
+  public function testCreateIndividualWithNameEmail() {
     $params = [
       'first_name' => 'abc3',
       'last_name' => 'xyz3',
@@ -705,7 +730,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -715,7 +742,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Verify that attempt to create individual contact with no data fails
    */
-  function testCreateIndividualWithOutNameEmail() {
+  public function testCreateIndividualWithOutNameEmail() {
     $params = [
       'contact_type' => 'Individual',
       'version' => $this->_apiversion,
@@ -728,7 +755,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create individual contact with first
    *  and last names, email and location type succeeds
    */
-  function testCreateIndividualWithNameEmailLocationType() {
+  public function testCreateIndividualWithNameEmailLocationType() {
     $params = [
       'first_name' => 'abc4',
       'last_name' => 'xyz4',
@@ -739,7 +766,10 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('contact', 'create', $params);
 
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
     $this->assertEquals(1, $result['id'], "In line " . __LINE__);
 
@@ -751,7 +781,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    * Verify that when changing employers
    * the old employer relationship becomes inactive
    */
-  function testCreateIndividualWithEmployer() {
+  public function testCreateIndividualWithEmployer() {
     $employer = $this->organizationCreate();
     $employer2 = $this->organizationCreate();
 
@@ -805,7 +835,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create household contact with details
    *  succeeds
    */
-  function testCreateHouseholdDetails() {
+  public function testCreateHouseholdDetails() {
     $params = [
       'household_name' => 'abc8\'s House',
       'nick_name' => 'x House',
@@ -815,7 +845,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -826,7 +858,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
    *  Verify that attempt to create household contact with inadequate details
    *  fails
    */
-  function testCreateHouseholdInadequateDetails() {
+  public function testCreateHouseholdInadequateDetails() {
     $params = [
       'nick_name' => 'x House',
       'email' => 'man8@yahoo.com',
@@ -841,20 +873,20 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contact_check_params with params and no checkss
    */
-  function testCheckParamsWithNoCheckss() {
+  public function testCheckParamsWithNoCheckss() {
     $params = [];
     $contact = _civicrm_api3_contact_check_params($params, FALSE, FALSE, FALSE);
     $this->assertNull($contact, "In line " . __LINE__);
   }
 
-
   /**
    *  Verify successful update of individual contact
    */
-  function testUpdateIndividualWithAll() {
+  public function testUpdateIndividualWithAll() {
     //  Insert a row in civicrm_contact creating individual contact
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_ind.xml'
       )
@@ -903,10 +935,11 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Verify successful update of organization contact
    */
-  function testUpdateOrganizationWithAll() {
+  public function testUpdateOrganizationWithAll() {
     //  Insert a row in civicrm_contact creating organization contact
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_org.xml'
       )
@@ -929,7 +962,10 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     //  Result should indicate successful update
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
 
     //  Check updated civicrm_contact against expected
@@ -946,10 +982,11 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Verify successful update of household contact
    */
-  function testUpdateHouseholdwithAll() {
+  public function testUpdateHouseholdwithAll() {
     //  Insert a row in civicrm_contact creating household contact
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_hld.xml'
       )
@@ -971,7 +1008,10 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     //  Result should indicate successful update
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
 
     //  Check updated civicrm_contact against expected
@@ -993,13 +1033,12 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   public function testUpdateCreateWithID() {
     //  Insert a row in civicrm_contact creating individual contact
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_ind.xml'
       )
     );
-
-
 
     $params = [
       'id' => 23,
@@ -1016,33 +1055,40 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_contact_delete() with no contact ID
    */
-  function testContactDeleteNoID() {
+  public function testContactDeleteNoID() {
     $params = [
       'foo' => 'bar',
       'version' => $this->_apiversion,
     ];
     $result = civicrm_api('contact', 'delete', $params);
-    $this->assertEquals(1, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      1,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
   }
 
   /**
    *  Test civicrm_contact_delete() with error
    */
-  function testContactDeleteError() {
+  public function testContactDeleteError() {
     $params = ['contact_id' => 17];
     $result = civicrm_api('contact', 'delete', $params);
-    $this->assertEquals(1, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      1,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
   }
 
   /**
    *  Test civicrm_contact_delete()
    */
-  function testContactDelete() {
+  public function testContactDelete() {
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_17.xml'
       )
@@ -1053,7 +1099,10 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
     $result = civicrm_api('contact', 'delete', $params);
     $this->documentMe($params, $result, __FUNCTION__, __FILE__);
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
   }
 
@@ -1063,7 +1112,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   public function testContactGetRetFirst() {
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_17.xml'
       )
@@ -1086,7 +1136,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   public function testContactGetRetDefault() {
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_17.xml'
       )
@@ -1119,12 +1170,14 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   public function testContactGetQuick() {
     //  Insert a row in civicrm_contact creating individual contact
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_17.xml'
       )
     );
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/email_contact_17.xml'
       )
@@ -1159,7 +1212,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $result = civicrm_api('contact', 'get', $params, TRUE);
     $this->assertTrue(is_array($result));
     $this->assertEquals(1, $result['is_error']);
-    $this->assertRegexp("/not.*array/s",
+    $this->assertRegexp(
+      "/not.*array/s",
       CRM_Utils_Array::value('error_message', $result)
     );
   }
@@ -1170,7 +1224,8 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   public function testContactGetOldParamsNoMatches() {
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_17.xml'
       )
@@ -1192,8 +1247,10 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   public function testContactGetOldParamsOneMatch() {
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
-      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(dirname(__FILE__) . '/dataset/contact_17.xml'
+    $op->execute(
+      $this->_dbconn,
+      new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
+        dirname(__FILE__) . '/dataset/contact_17.xml'
       )
     );
 
@@ -1253,7 +1310,9 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     ];
 
     $contact = civicrm_api('contact', 'create', $params);
-    $this->assertApiSuccess($contact, "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
+    $this->assertApiSuccess(
+      $contact,
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $contact)
     );
     $this->assertEquals(1, $contact['id'], "In line " . __LINE__);
 
@@ -1273,7 +1332,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /**
    *  Verify attempt to create individual with chained arrays
    */
-  function testGetIndividualWithChainedArrays() {
+  public function testGetIndividualWithChainedArrays() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
     $params['custom_' . $ids['custom_field_id']] = "custom string";
 
@@ -1319,7 +1378,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       ],
     ];
 
-
     $result = civicrm_api('Contact', 'create', $params);
     $params = [
       'id' => $result['id'], 'version' => $this->_apiversion,
@@ -1335,14 +1393,17 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     civicrm_api('contact', 'delete', $result);
     $this->customGroupDelete($ids['custom_group_id']);
     $this->customGroupDelete($moreids['custom_group_id']);
-    $this->assertEquals(0, $result['is_error'], "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
+    $this->assertEquals(
+      0,
+      $result['is_error'],
+      "In line " . __LINE__ . " error message: " . CRM_Utils_Array::value('error_message', $result)
     );
     $this->assertEquals(1, $result['id'], "In line " . __LINE__);
     $this->assertEquals(0, $result['values'][$result['id']]['api.website.get']['is_error'], "In line " . __LINE__);
     $this->assertEquals("http://civicrm.org", $result['values'][$result['id']]['api.website.get']['values'][0]['url'], "In line " . __LINE__);
   }
 
-  function testGetIndividualWithChainedArraysFormats() {
+  public function testGetIndividualWithChainedArraysFormats() {
     $description = "/*this demonstrates the usage of chained api functions. A variety of return formats are used. Note that no notes
     *custom fields or memberships exist";
     $subfile = "APIChainedArrayFormats";
@@ -1385,7 +1446,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       ],
     ];
 
-
     $result = civicrm_api('Contact', 'create', $params);
     $this->assertAPISuccess($result, 'in line ' . __LINE__);
     $this->assertAPISuccess($result['values'][$result['id']]['api.contribution.create'], 'in line ' . __LINE__);
@@ -1425,7 +1485,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->customGroupDelete($moreids['custom_group_id']);
   }
 
-  function testGetIndividualWithChainedArraysAndMultipleCustom() {
+  public function testGetIndividualWithChainedArraysAndMultipleCustom() {
     $ids = $this->entityCustomGroupWithSingleFieldCreate(__FUNCTION__, __FILE__);
     $params['custom_' . $ids['custom_field_id']] = "custom string";
     $moreids = $this->CustomGroupMultipleCreateWithFields();
@@ -1475,7 +1535,6 @@ class api_v3_ContactTest extends CiviUnitTestCase {
       'custom_' . $andmoreids['custom_field_id'][1] => "vegemite",
     ];
 
-
     $result = civicrm_api('Contact', 'create', $params);
     $result = civicrm_api('Contact', 'create', [
       'contact_type' => 'Individual', 'id' => $result['id'], 'version' => $this->_apiversion, 'custom_' . $moreids['custom_field_id'][0] => "value 3", 'custom_' . $ids['custom_field_id'] => "value 4",
@@ -1502,7 +1561,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
    * Test checks siusage of $values to pick & choose inputs
    */
-  function testChainingValuesCreate() {
+  public function testChainingValuesCreate() {
     $description = "/*this demonstrates the usage of chained api functions.  Specifically it has one 'parent function' &
     2 child functions - one receives values from the parent (Contact) and the other child (Tag). ";
     $subfile = "APIChainedArrayValuesFromSiblingFunction";
@@ -1528,7 +1587,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
    * test TrueFalse format - I couldn't come up with an easy way to get an error on Get
    */
-  function testContactGetFormatIsSuccessTrue() {
+  public function testContactGetFormatIsSuccessTrue() {
     $this->createContactFromXML();
     $description = "This demonstrates use of the 'format.is_success' param.
     This param causes only the success or otherwise of the function to be returned as BOOLEAN";
@@ -1542,7 +1601,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
    * test TrueFalse format
    */
-  function testContactCreateFormatIsSuccessFalse() {
+  public function testContactCreateFormatIsSuccessFalse() {
 
     $description = "This demonstrates use of the 'format.is_success' param.
     This param causes only the success or otherwise of the function to be returned as BOOLEAN";
@@ -1555,7 +1614,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
    * test Single Entity format
    */
-  function testContactGetSingle_entity_array() {
+  public function testContactGetSingle_entity_array() {
     $this->createContactFromXML();
     $description = "This demonstrates use of the 'format.single_entity_array' param.
     /* This param causes the only contact to be returned as an array without the other levels.
@@ -1571,7 +1630,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
    * test Single Entity format
    */
-  function testContactGetFormatcount_only() {
+  public function testContactGetFormatcount_only() {
     $this->createContactFromXML();
     $description = "/*This demonstrates use of the 'getCount' action
     /*  This param causes the count of the only function to be returned as an integer";
@@ -1585,7 +1644,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
     * Test id only format
     */
-  function testContactGetFormatID_only() {
+  public function testContactGetFormatID_only() {
     $this->createContactFromXML();
     $description = "This demonstrates use of the 'format.id_only' param.
     /* This param causes the id of the only entity to be returned as an integer.
@@ -1601,7 +1660,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
   /*
     * Test id only format
     */
-  function testContactGetFormatSingleValue() {
+  public function testContactGetFormatSingleValue() {
     $this->createContactFromXML();
     $description = "This demonstrates use of the 'format.single_value' param.
     /* This param causes only a single value of the only entity to be returned as an string.
@@ -1609,12 +1668,12 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $subfile = "FormatSingleValue";
     $params  = ['version' => $this->_apiversion, 'id' => 17, 'return' => 'display_name'];
     $result  = civicrm_api('Contact', 'getvalue', $params);
-    $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile,'getvalue');
+    $this->documentMe($params, $result, __FUNCTION__, __FILE__, $description, $subfile, 'getvalue');
     $this->assertEquals('Test Contact', $result, "in line " . __LINE__);
     civicrm_api('Contact', 'Delete', $params);
   }
 
-  function testContactCreationPermissions() {
+  public function testContactCreationPermissions() {
     $params = [
       'contact_type' => 'Individual', 'first_name' => 'Foo',
       'last_name' => 'Bear',
@@ -1632,7 +1691,7 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['is_error'], 'overfluous permissions should be enough to create a contact');
   }
 
-  function testContactUpdatePermissions() {
+  public function testContactUpdatePermissions() {
     $params = ['contact_type' => 'Individual', 'first_name' => 'Foo', 'last_name' => 'Bear', 'check_permissions' => TRUE, 'version' => $this->_apiversion];
     $result = civicrm_api('contact', 'create', $params);
 
@@ -1649,17 +1708,18 @@ class api_v3_ContactTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['is_error'], 'overfluous permissions should be enough to update a contact');
   }
 
-  function createContactFromXML() {
+  public function createContactFromXML() {
     //  Insert a row in civicrm_contact creating contact 17
     $op = new PHPUnit_Extensions_Database_Operation_Insert();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_XMLDataSet(
         dirname(__FILE__) . '/dataset/contact_17.xml'
       )
     );
   }
 
-  function testContactProximity() {
+  public function testContactProximity() {
     // first create a contact with a SF location with a specific
     // geocode
     $contactID = $this->organizationCreate();

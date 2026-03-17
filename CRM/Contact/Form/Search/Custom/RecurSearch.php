@@ -26,14 +26,13 @@
 */
 
 /**
+ * Custom search form for searching recurring contributions
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
+class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
   public $_mode;
   public $_queryColumns;
@@ -48,12 +47,17 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
   protected $_cpage = NULL;
 
   public static $_primaryIDName = 'id';
-  
-  function __construct(&$formValues){
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
-    if(empty($this->_tableName)){
+    if (empty($this->_tableName)) {
       $this->_tableName = "civicrm_temp_custom_recursearch";
       $this->_cpage = CRM_Contribute_PseudoConstant::contributionPage();
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
@@ -63,7 +67,9 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       $this->buildColumn();
     }
 
-    $lowDate = CRM_Utils_Request::retrieve('start', 'Timestamp',
+    $lowDate = CRM_Utils_Request::retrieve(
+      'start',
+      'Timestamp',
       CRM_Core_DAO::$_nullObject
     );
     if ($lowDate) {
@@ -72,7 +78,9 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       $this->_formValues['start_date_from'] = $date[0];
     }
 
-    $highDate = CRM_Utils_Request::retrieve('end', 'Timestamp',
+    $highDate = CRM_Utils_Request::retrieve(
+      'end',
+      'Timestamp',
       CRM_Core_DAO::$_nullObject
     );
     if ($highDate) {
@@ -81,13 +89,16 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
       $this->_formValues['start_date_to'] = $date[0];
     }
     $cstatus_id = CRM_Utils_Request::retrieve('status', 'Int', CRM_Core_DAO::$_nullObject);
-    if (!empty($cstatus_id)){
+    if (!empty($cstatus_id)) {
       $this->_formValues['status'] = $cstatus_id;
     }
   }
 
-  function buildColumn(){
-    $this->_queryColumns = [ 
+  /**
+   * Build the columns for the search results.
+   */
+  public function buildColumn() {
+    $this->_queryColumns = [
       'r.id' => 'id',
       'contact.sort_name' => 'sort_name',
       'r.contact_id' => 'contact_id',
@@ -127,7 +138,10 @@ class CRM_Contact_Form_Search_Custom_RecurSearch  extends CRM_Contact_Form_Searc
     ];
   }
 
-  function buildTempTable() {
+  /**
+   * Build the temporary table.
+   */
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -140,10 +154,10 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if ($field == 'remain_installments' || strstr($field, 'amount') || strstr($field, '_id')) {
         $type = "INTEGER(10) default NULL";
       }
-      else{
+      else {
         $type = "VARCHAR(32) default ''";
       }
-      if(strstr($field, '_date')){
+      if (strstr($field, '_date')) {
         $type = 'DATETIME NULL default NULL';
       }
       $sql .= "{$field} {$type},\n";
@@ -155,24 +169,27 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  
-  function dropTempTable() {
+
+  /**
+   * Drop the temporary table.
+   */
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
 
   /**
-   * fill temp table for further use
+   * Fill temp table for further use.
    */
-  function fillTable(){
+  public function fillTable() {
     $this->dropTempTable();
     $this->buildTempTable();
 
     $select = [];
-    foreach($this->_queryColumns as $k => $v){
+    foreach ($this->_queryColumns as $k => $v) {
       $select[] = $k.' as '.$v;
     }
-    $select = CRM_Utils_Array::implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n", $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -191,25 +208,29 @@ $having
 
     while ($dao->fetch()) {
       $values = [];
-      foreach($this->_queryColumns as $name){
-        if($name == 'id'){
+      foreach ($this->_queryColumns as $name) {
+        if ($name == 'id') {
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
         }
-        elseif(isset($dao->$name)){
+        elseif (isset($dao->$name)) {
           $values[] = "'". CRM_Utils_Type::escape($dao->$name, 'String')."'";
         }
-        else{
+        else {
           $values[] = 'NULL';
         }
       }
-      $values = CRM_Utils_Array::implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ', $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
   }
 
-
-  function tempFrom() {
+  /**
+   * Get the FROM clause for the temporary table query.
+   *
+   * @return string
+   */
+  public function tempFrom() {
     return "civicrm_contribution_recur AS r 
     INNER JOIN civicrm_contribution AS c ON c.contribution_recur_id = r.id
     INNER JOIN civicrm_contact AS contact ON contact.id = r.contact_id
@@ -219,9 +240,14 @@ $having
   }
 
   /**
-   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   * Get the WHERE clause for the temporary table query.
+   *
+   * WHERE clause is an array built from any required JOINS plus conditional
+   * filters based on search criteria field values.
+   *
+   * @return string
    */
-  function tempWhere(){
+  public function tempWhere() {
     $clauses = [];
     $clauses[] = "(r.contact_id = contact.id)";
     $clauses[] = "(r.is_test = 0)";
@@ -240,12 +266,12 @@ $having
     }
 
     $sort_name = $this->_formValues['sort_name'];
-    if($sort_name){
+    if ($sort_name) {
       $clauses[] = "(`sort_name` LIKE '%$sort_name%')";
     }
 
     $email = $this->_formValues['email'];
-    if($email){
+    if ($email) {
       $clauses[] = "(`email` LIKE '%$email%')";
     }
     $installments = $this->_formValues['installments'];
@@ -261,7 +287,12 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  /**
+   * Get the HAVING clause for the temporary table query.
+   *
+   * @return string
+   */
+  public function tempHaving() {
     $clauses = [];
     $installments = $this->_formValues['installments'];
     if (is_numeric($installments) && $installments != 'none') {
@@ -274,23 +305,33 @@ $having
       }
 
     }
-    if(count($clauses)){
+    if (count($clauses)) {
       return CRM_Utils_Array::implode(' AND ', $clauses);
     }
     return '';
   }
 
-  function prepareForm(&$form) {
+  /**
+   * Prepare the form.
+   *
+   * @param CRM_Core_Form $form
+   */
+  public function prepareForm(&$form) {
     $this->_mode = CRM_Utils_Request::retrieve('mode', 'String', $form);
   }
 
-  function buildForm(&$form){
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
+  public function buildForm(&$form) {
     // Define the search form fields here
     if (!empty($this->_mode)) {
       $form->set('mode', $this->_mode);
       $form->assign('mode', $this->_mode);
     }
-    
+
     if ($this->_mode != 'booster') {
       $form->addDateRange('start_date', ts('First recurring date'), NULL, FALSE);
       $form->addElement('text', 'sort_name', ts('Contact Name'));
@@ -300,9 +341,9 @@ $having
       $defaults = $this->setDefaultValues();
       $form->setDefaults($defaults);
     }
-    
+
     $status = $this->_cstatus;
-    foreach([5,2,3,6,7,1] as $key) {
+    foreach ([5,2,3,6,7,1] as $key) {
       $statuses[$key] = $status[$key];
     }
     $form->addRadio('status', ts('Recurring Status'), $statuses, ['allowClear' => TRUE]);
@@ -328,7 +369,12 @@ $having
     $form->assign('elements', ['status', 'installments', 'sort_name', 'email', 'contribution_page_id']);
   }
 
-  function setDefaultValues() {
+  /**
+   * Set the default values for the form.
+   *
+   * @return array
+   */
+  public function setDefaultValues() {
     if ($this->_mode == 'booster') {
       return [
         'status' => 5,
@@ -338,7 +384,10 @@ $having
     return [];
   }
 
-  function setTitle() {
+  /**
+   * Set the page title.
+   */
+  public function setTitle() {
     if ($this->_mode == 'booster') {
       CRM_Utils_System::setTitle(ts('End of recurring contribution'));
     }
@@ -347,12 +396,20 @@ $having
     }
   }
 
-  function setBreadcrumb() {
+  /**
+   * Set the breadcrumb for the search page.
+   */
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-  function count(){
-    if(!$this->_filled){
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -360,20 +417,36 @@ $having
     return $value;
   }
 
-
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  /**
+   * Get the SQL for retrieving contact IDs.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
+   */
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
   /**
-   * This will call by search tasks
-   * Which not only provide contact id, but also provide additional id
-   * Mostly used by custom search support multiple record of one contact
+   * Get the SQL for retrieving contact IDs and additional IDs.
+   *
+   * This will be called by search tasks which not only need contact id,
+   * but also provide additional id. Mostly used by custom search
+   * supporting multiple records of one contact.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
    */
-  function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     $fields = "contact_a.contact_id, id" ;
 
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -381,19 +454,39 @@ $having
   }
 
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  /**
+   * Generic SQL builder.
+   *
+   * @param string $selectClause
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param null|string $groupBy
+   *
+   * @return string
+   */
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -404,13 +497,24 @@ $having
   }
 
   /**
-   * Functions below generally don't need to be modified
+   * Build the FROM clause for the main query.
+   *
+   * Functions below generally don't need to be modified.
+   *
+   * @return string
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  /**
+   * Build the WHERE clause for the main query.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function where($includeContactIDs = FALSE) {
     $sql = ' ( 1 ) ';
     if ($includeContactIDs) {
       self::includeContactIDs($sql, $this->_formValues, $this->_isExport);
@@ -418,10 +522,22 @@ $having
     return $sql;
   }
 
-  function having(){
+  /**
+   * Build the HAVING clause for the main query.
+   *
+   * @return string
+   */
+  public function having() {
     return '';
   }
 
+  /**
+   * Append a list of contact IDs to the WHERE clause of a query.
+   *
+   * @param string $sql
+   * @param array $formValues
+   * @param bool $isExport
+   */
   public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
@@ -447,13 +563,23 @@ $having
     }
   }
 
-  function &columns(){
+  /**
+   * Getter for the display columns.
+   *
+   * @return array
+   */
+  public function &columns() {
     return $this->_columns;
   }
-  
-  function summary(){
+
+  /**
+   * Get a summary of the search results.
+   *
+   * @return array<string, array<string, mixed>>
+   */
+  public function summary() {
     $summary = [];
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -465,7 +591,7 @@ $having
     ];
     $query = CRM_Core_DAO::executeQuery("SELECT SUM(receive_amount) as amount FROM {$this->_tableName} WHERE 1");
     $query->fetch();
-    
+
     if ($query->amount) {
       $amount = CRM_Utils_Money::format($query->amount);
       $summary['search_results']['value'] .= ' '.ts('Total amount of completed contributions is %1.', [1 => $amount]);
@@ -474,20 +600,25 @@ $having
     return $summary;
   }
 
-  function alterRow(&$row) {
+  /**
+   * Alter a single result row for display.
+   *
+   * @param array $row
+   */
+  public function alterRow(&$row) {
     $row['contribution_status_id'] = $this->_cstatus[$row['contribution_status_id']];
     $processedInstallments = $row['installments'] - $row['remain_installments'];
-    if(empty($row['installments'])){
+    if (empty($row['installments'])) {
       $row['remain_installments'] = ts('no limit');
       $row['installments'] = $row['completed_count'].' / '.ts('no limit');
     }
     else {
       $row['installments'] = $processedInstallments.' / '.$row['installments'];
     }
-    if($row['remain_installments'] < 0){
-       $row['remain_installments'] = ts('Over %1',[ 1 => -$row['remain_installments']]);
+    if ($row['remain_installments'] < 0) {
+      $row['remain_installments'] = ts('Over %1', [ 1 => -$row['remain_installments']]);
     }
-    
+
     if ($row['completed_count']) {
       $row['completed_count'] = $row['completed_count'].' / '.$row['total_count'];
     }
@@ -505,8 +636,8 @@ $having
     }
 
     $date = ['start_date', 'end_date', 'cancel_date'];
-    foreach($date as $d){
-      if(!empty($row[$d])){
+    foreach ($date as $d) {
+      if (!empty($row[$d])) {
         $row[$d] = CRM_Utils_Date::customFormat($row[$d], $this->_config->dateformatFull);
       }
     }
@@ -514,7 +645,9 @@ $having
     $recurLinks = CRM_Contribute_Page_Tab::recurLinks();
     if (!empty($recurLinks) && is_array($recurLinks)) {
       $action = array_sum(array_keys($recurLinks));
-      $row['action'] = CRM_Core_Action::formLink($recurLinks, $action,
+      $row['action'] = CRM_Core_Action::formLink(
+        $recurLinks,
+        $action,
         ['cid' => $row['contact_id'],
           'id' => $row['id'],
           'cxt' => 'contribution',
@@ -533,10 +666,13 @@ $having
   }
 
   /**
+   * Get the path to the template file.
+   *
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
    */
-  function templateFile(){
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/RecurSearch.tpl';
   }
 }
-

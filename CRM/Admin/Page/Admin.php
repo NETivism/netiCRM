@@ -27,20 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying Administer CiviCRM Control Panel
  */
 class CRM_Admin_Page_Admin extends CRM_Core_Page {
   public $_showHide;
-  function run() {
+  /**
+   * Runs the page.
+   *
+   * @return void
+   */
+  public function run() {
     $groups = ['Customize' => ts('Customize'),
       'Configure' => ts('Configure'),
       'Manage' => ts('Manage'),
@@ -76,9 +77,7 @@ class CRM_Admin_Page_Admin extends CRM_Core_Page {
       $groups['CiviCampaign'] = ts('CiviCampaign');
     }
 
-
     $values = &CRM_Core_Menu::getAdminLinks();
-
 
     $this->_showHide = new CRM_Core_ShowHideBlocks();
     foreach ($groups as $group => $title) {
@@ -96,4 +95,3 @@ class CRM_Admin_Page_Admin extends CRM_Core_Page {
     return parent::run();
   }
 }
-

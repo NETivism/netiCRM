@@ -27,42 +27,38 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
 
 class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
 
   /**
-   * class constructor
+   * Class constructor.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
    * Store Mails into Spool table.
    *
-   * @param mixed $recipients Either a comma-seperated list of recipients
+   * @param string|array $recipient Either a comma-separated list of recipients
    *              (RFC822 compliant), or an array of recipients,
    *              each RFC822 valid. This may contain recipients not
    *              specified in the headers, for Bcc:, resending
    *              messages, etc.
    *
-   * @param array $headers The string of headers to send with the mail.
+   * @param array $headers The array of headers to send with the mail.
    *
    * @param string $body The full text of the message body, including any
-   *               Mime parts, etc.
+   *               MIME parts, etc.
    *
-   * @return mixed Returns true on success, or a CRM_Eore_Error
-   *               containing a descriptive error message on
-   *               failure.
-   * @access public
+   * @param int $job_id The job ID.
+   *
+   * @return bool Returns true on success.
    */
-  function send($recipient, $headers, $body, $job_id) {
+  public function send($recipient, $headers, $body, $job_id) {
 
     $headerStr = [];
     foreach ($headers as $name => $value) {
@@ -88,4 +84,3 @@ class CRM_Mailing_BAO_Spool extends CRM_Mailing_DAO_Spool {
     return TRUE;
   }
 }
-

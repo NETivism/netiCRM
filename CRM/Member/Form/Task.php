@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Class for civimember task actions
@@ -77,18 +73,23 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
   protected $_memberIds;
 
   /**
-   * build all the data structures needed to build the form
-   *
-   * @param
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     self::preProcessCommon($this);
   }
 
-  static function preProcessCommon(&$form, $useTable = FALSE) {
+  /**
+   * Common pre-process function.
+   *
+   * @param CRM_Core_Form $form
+   * @param bool $useTable
+   *
+   * @return void
+   */
+  public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_memberIds = [];
 
     $values = $form->controller->exportValues($form->get('searchFormName'));
@@ -113,7 +114,12 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
         $sortOrder = $form->get(CRM_Utils_Sort::SORT_ORDER);
       }
 
-      $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
+      $query = new CRM_Contact_BAO_Query(
+        $queryParams,
+        NULL,
+        NULL,
+        FALSE,
+        FALSE,
         CRM_Contact_BAO_Query::MODE_MEMBER
       );
       $result = $query->searchQuery(0, 0, $sortOrder);
@@ -145,34 +151,40 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
       $session->replaceUserContext(CRM_Utils_System::url('civicrm/member/search', $urlParams));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
-          $urlParams
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        "civicrm/contact/search/$searchFormName",
+        $urlParams
+      ));
     }
   }
 
   /**
-   * Given the membership id, compute the contact id
-   * since its used for things like send email
+   * Given the membership ID, compute the contact ID
+   * since its used for things like send email.
+   *
+   * @return void
    */
   public function setContactIDs() {
-    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent($this->_memberIds,
+    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent(
+      $this->_memberIds,
       'civicrm_membership'
     );
   }
 
   /**
-   * simple shell that derived classes can call to add buttons to
-   * the form with a customized title for the main Submit
+   * Simple shell that derived classes can call to add buttons to
+   * the form with a customized title for the main Submit.
    *
    * @param string $title title of the main button
-   * @param string $type  button type for the form after processing
+   * @param string $nextType button type for the form after processing
+   * @param string $backType button type for the form after processing
+   * @param bool|null $submitOnce
    *
    * @return void
-   * @access public
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -184,4 +196,3 @@ class CRM_Member_Form_Task extends CRM_Core_Form {
     );
   }
 }
-

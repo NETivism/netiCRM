@@ -26,10 +26,9 @@
 */
 
 /**
+ * Interface for custom contact search implementations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 interface CRM_Contact_Form_Search_Interface {
@@ -37,12 +36,17 @@ interface CRM_Contact_Form_Search_Interface {
   /**
    * The constructor gets the submitted form values
    */
-  function __construct(&$formValues);
+  public function __construct(&$formValues);
 
   /**
    * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @abstract
    */
-  function buildForm(&$form);
+  public function buildForm(&$form);
 
   /**
    * Builds the search query for various cases. We break it down into finer cases
@@ -55,26 +59,29 @@ interface CRM_Contact_Form_Search_Interface {
    * Count of records that match the current input parameters
    * Used by pager
    */
-  function count();
+  public function count();
 
   /**
    * Summary information for the query that can be displayed in the template
    * This is useful to pass total / sub total information if needed
    */
-  function summary();
+  public function summary();
 
   /**
    * List of contact ids that match the current input parameters
    * Used by different tasks. Will be also used to optimize the
    * 'all' query below to avoid excessive LEFT JOIN blowup
    */
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL);
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL);
 
   /**
    * Retrieve all the values that match the current input parameters
    * Used by the selector
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   );
 
@@ -91,21 +98,20 @@ interface CRM_Contact_Form_Search_Interface {
   /**
    * The from clause for the query
    */
-  function from();
+  public function from();
 
   /**
    * The where clause for the query
    */
-  function where($includeContactIDs = FALSE);
+  public function where($includeContactIDs = FALSE);
 
   /**
    * The template FileName to use to display the results
    */
-  function templateFile();
+  public function templateFile();
 
   /**
    * Returns an array of column headers and field names and sort options
    */
-  function &columns();
+  public function &columns();
 }
-

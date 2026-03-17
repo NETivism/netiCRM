@@ -27,16 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 /**
- * This class generates form components for processing a ontribution
- *
+ * Form for managing the contact information of a PCP supporter.
  */
 class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
 
@@ -62,6 +58,15 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
 
   private $_context;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes IDs for the PCP, contribution page, and contact.
+   * It also handles permission checks to ensure only authorized users can
+   * edit contact information.
+   *
+   * @return void
+   */
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
@@ -134,14 +139,21 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves profile defaults for the contact and handles custom field
+   * default values.
+   *
+   * @return array the array of default values for form elements
+   */
+  public function setDefaultValues() {
     if (!$this->_contactID) {
       return;
     }
     foreach ($this->_fields as $name => $dontcare) {
       $fields[$name] = 1;
     }
-
 
     CRM_Core_BAO_UFGroup::setProfileDefaults($this->_contactID, $fields, $this->_defaults);
 
@@ -150,8 +162,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     foreach ($this->_fields as $name => $field) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
         if (!isset($this->_defaults[$name])) {
-          CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID, $name, $this->_defaults,
-            NULL, CRM_Profile_Form::MODE_REGISTER
+          CRM_Core_BAO_CustomField::setProfileDefaults(
+            $customFieldID,
+            $name,
+            $this->_defaults,
+            NULL,
+            CRM_Profile_Form::MODE_REGISTER
           );
         }
       }
@@ -161,10 +177,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds profile fields from the designated supporter profile, handles CMS
+   * account creation if the user is anonymous, and adds CAPTCHA if required.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     $session = CRM_Core_Session::singleton();
@@ -181,9 +199,9 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       $this->addFormRule(['CRM_Contribute_Form_PCP_PCPAccount', 'formRule'], $this);
     }
     else {
-			if (!$session->get('userID')) {
-				CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
-			}
+      if (!$session->get('userID')) {
+        CRM_Core_BAO_CMSUser::buildForm($this, $id, TRUE);
+      }
       $fields = CRM_Core_BAO_UFGroup::getFields($id, FALSE, CRM_Core_Action::ADD);
     }
 
@@ -205,7 +223,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
         $this->assign("isCaptcha", TRUE);
       }
     }
-
 
     $this->assign('campaignName', CRM_Contribute_PseudoConstant::contributionPage($this->_pageId));
 
@@ -233,17 +250,17 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * Validates email uniqueness if the user doesn't have administrative permissions.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array list of errors to be posted back to the form
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       foreach ($fields as $key => $value) {
@@ -259,11 +276,12 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Updates or creates the contact record using the profile data, handles deduplication,
+   * and processes CMS user account creation if requested.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $session = CRM_Core_Session::singleton();
@@ -291,7 +309,6 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
       }
     }
 
-
     $dedupeParams = CRM_Dedupe_Finder::formatParams($params, 'Individual');
     $ids = CRM_Dedupe_Finder::dupesByParams($dedupeParams, 'Individual', 'Strict');
     if ($ids) {
@@ -309,4 +326,3 @@ class CRM_Contribute_Form_PCP_PCPAccount extends CRM_Core_Form {
     }
   }
 }
-

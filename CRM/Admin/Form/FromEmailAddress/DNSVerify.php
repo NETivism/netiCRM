@@ -19,7 +19,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   /**
    * Return a descriptive name for the page, used in wizard header
    *
-   * @return string
+   * @return string The form title.
    */
   public function getTitle() {
     return ts('Verify %1', [1 => ts('Domain')]);
@@ -28,9 +28,9 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   /**
    * Preprocess Form
    *
-   * @return void
+   * @return void None.
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('action', CRM_Core_Action::UPDATE);
     parent::preProcess();
 
@@ -58,9 +58,9 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
    * @param array $files  the uploaded files if any
    * @param object $self   current form object.
    *
-   * @return array array of errors / empty array.
+   * @return array<string, string> array of errors / empty array.
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     global $civicrm_conf;
     $errors = [];
     // verify on every submission
@@ -113,18 +113,20 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     return $errors;
   }
 
-
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
+   *
+   * @return array{} The default values for the form.
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
+   *
+   * @return void None.
    */
   public function buildQuickForm() {
     $this->assign_by_ref('values', $this->_values);
@@ -135,7 +137,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     $spfRecord = CRM_Utils_Mail::getSPF($this->_values['email']);
     if (!empty($spfRecord)) {
       $record = [];
-      foreach($spfRecord as $spf) {
+      foreach ($spfRecord as $spf) {
         $record[] = $spf['host'].' '.$spf['type'].' '.$spf['txt'];
       }
       $this->assign('spf_record', CRM_Utils_Array::implode("\n", $record));
@@ -144,7 +146,7 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
       $this->assign('spf_record', ts('None'));
     }
 
-    $dkimRecord= CRM_Utils_Mail::getDKIM($this->_values['email']);
+    $dkimRecord = CRM_Utils_Mail::getDKIM($this->_values['email']);
     if (!empty($dkimRecord)) {
       $record = $dkimRecord[0]['host'].' '.$dkimRecord[0]['type'].' '.$dkimRecord[0]['target'];
       $this->assign('dkim_record', $record);
@@ -154,7 +156,8 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     }
 
     if ($this->_spfStatus && $this->_dkimStatus) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'back',
             'name' => ts('<< Previous'),
@@ -174,7 +177,8 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
     }
     else {
       $this->addButton('refresh', ts('Refresh'));
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'cancel',
             'name' => ts('Cancel'),
@@ -185,7 +189,9 @@ class CRM_Admin_Form_FromEmailAddress_DNSVerify extends CRM_Admin_Form_FromEmail
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
+   *
+   * @return void None.
    */
   public function postProcess() {
     $buttonName = $this->controller->getButtonName();

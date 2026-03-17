@@ -34,15 +34,12 @@
  * @package CiviCRM_APIv3
  * @subpackage API_MailerGroup
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
 /**
  * Files required for this package
  */
-
-
 
 require_once 'CRM/Contact/BAO/Group.php';
 require_once 'CRM/Mailing/Event/BAO/Queue.php';
@@ -102,18 +99,17 @@ function civicrm_api3_mailing_group_event_subscribe($params) {
 function civicrm_api3_mailing_group_getfields($params) {
   $dao = _civicrm_api3_get_DAO('Subscribe');
   $file = str_replace('_', '/', $dao) . ".php";
-  require_once ($file);
+  require_once($file);
   $d = new $dao();
   $fields = $d->fields();
   $d->free();
 
   $dao = _civicrm_api3_get_DAO('Unsubscribe');
   $file = str_replace('_', '/', $dao) . ".php";
-  require_once ($file);
+  require_once($file);
   $d = new $dao();
   $fields = $fields + $d->fields();
   $d->free();
 
   return civicrm_api3_create_success($fields);
 }
-

@@ -26,18 +26,24 @@
 */
 
 /**
+ * Custom search form for listing contacts by employer organization
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
-  protected $_formValues; function __construct(&$formValues) {
+  protected $_formValues;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -51,11 +57,20 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     ];
   }
 
-  function buildForm(&$form) {
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
+  public function buildForm(&$form) {
     /**
      * Define the search form fields here
      */
-    $form->add('text',
+    $form->add(
+      'text',
       'sort_name',
       ts('Individual\'s Name (last, first)')
     );
@@ -70,10 +85,13 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     $form->assign('elements', ['sort_name', 'state_province_id']);
   }
 
-  /*
-     * Set search form field defaults here.
-     */
-  function setDefaultValues() {
+  /**
+   * Set search form field defaults here.
+   *
+   * @return array
+   * @access public
+   */
+  public function setDefaultValues() {
     // Setting default search state to California
     return ['state_province_id' => 1004,
     ];
@@ -81,15 +99,29 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
 
   /**
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
+   * @access public
    */
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
   /**
    * Construct the search query
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
 
@@ -142,7 +174,13 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     return $sql;
   }
 
-  function from() {
+  /**
+   * Get from
+   *
+   * @return string
+   * @access public
+   */
+  public function from() {
     return "
             civicrm_relationship cR,
             civicrm_contact cInd
@@ -156,11 +194,15 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
             ";
   }
 
-  /*
-     * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
-     *
-     */
-  function where($includeContactIDs = FALSE) {
+  /**
+   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
+  public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
     // These are required filters for our query.
@@ -171,7 +213,8 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     $clauses[] = "cR.is_active = 1";
 
     // These are conditional filters based on user input
-    $name = CRM_Utils_Array::value('sort_name',
+    $name = CRM_Utils_Array::value(
+      'sort_name',
       $this->_formValues
     );
     if ($name != NULL) {
@@ -181,7 +224,8 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
       $clauses[] = "cInd.sort_name LIKE '$name'";
     }
 
-    $state = CRM_Utils_Array::value('state_province_id',
+    $state = CRM_Utils_Array::value(
+      'state_province_id',
       $this->_formValues
     );
     if ($state) {
@@ -206,33 +250,66 @@ class CRM_Contact_Form_Search_Custom_EmployerListing implements CRM_Contact_Form
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function having($includeContactIDs = FALSE) {
+  /**
+   * Get having
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
+  public function having($includeContactIDs = FALSE) {
     $clauses = [];
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /* 
-     * Functions below generally don't need to be modified
-     */
-  function count() {
+  /**
+   * Functions below generally don't need to be modified
+   *
+   * @return int
+   * @access public
+   */
+  public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort);
   }
 
-  function &columns() {
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
+  public function &columns() {
     return $this->_columns;
   }
 
-  function summary() {
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
+  public function summary() {
     return NULL;
   }
 }
-

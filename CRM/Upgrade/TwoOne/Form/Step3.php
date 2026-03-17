@@ -27,24 +27,22 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '3']);
 
     return $this->checkVersion('2.02');
   }
 
-  function upgrade() {
+  public function upgrade() {
     $currentDir = dirname(__FILE__);
 
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'misc.mysql']
     );
     $this->source($sqlFile);
@@ -82,7 +80,7 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
     $this->setVersion('2.03');
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     if (!CRM_Core_DAO::checkTableExists('civicrm_cache') ||
       !CRM_Core_DAO::checkTableExists('civicrm_discount') ||
       !CRM_Core_DAO::checkTableExists('civicrm_group_contact_cache') ||
@@ -113,16 +111,15 @@ class CRM_Upgrade_TwoOne_Form_Step3 extends CRM_Upgrade_Form {
     return $this->checkVersion('2.03');
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('CiviCRM 2.1 Upgrade: Step Three (Miscellaneous)');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     return '<p>' . ts('Step Three will upgrade rest of your database.') . '</p>';
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Upgrade & Continue');
   }
 }
-

@@ -27,26 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Add thousands separator to numeric strings using
- * PHP number_format() function.
+ * Add thousands separator to numeric strings using PHP number_format().
  *
- * @param float  $number        numeric value to be formatted
- * @param int    $decimals      number of decimal places
- * @param string $dec_point     decimal point character (if other than ".")
- * @param string $thousands_sep thousands sep character (if other than ",")
+ * EXAMPLE: {$number|crmNumberFormat:2:',':' '} for French notation - 1234.56 becomes 1 234,56
  *
- * @return string        the formatted string
- * @access public
+ * @param float|string $number numeric value to be formatted
+ * @param int|null $decimals number of decimal places
+ * @param string|null $dec_point decimal point character
+ * @param string|null $thousands_sep thousands separator character
  *
- * For alternate decimal point and thousands separator, delimit values with single quotes in the template.
- * EXAMPLE:   {$number|crmNumberFormat:2:',':' '} for French notation - 1234.56 becomes 1 234,56
+ * @return string formatted string or empty
  */
 function smarty_modifier_crmNumberFormat($number, $decimals = NULL, $dec_point = NULL, $thousands_sep = NULL) {
   // If $decimals is negative, treat it as 0 to mimic PHP 8.2 behavior
@@ -66,4 +61,3 @@ function smarty_modifier_crmNumberFormat($number, $decimals = NULL, $dec_point =
     return '';
   }
 }
-

@@ -26,14 +26,11 @@
 */
 
 /**
+ * CiviCRM Smarty template engine initialization and configuration
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Fix for bug CRM-392. Not sure if this is the best fix or it will impact
@@ -47,7 +44,7 @@ if (!class_exists('Smarty')) {
  *
  */
 class CRM_Core_Smarty extends Smarty {
-  CONST PRINT_PAGE = 1, PRINT_SNIPPET = 2, PRINT_PDF = 3, PRINT_NOFORM = 4;
+  public const PRINT_PAGE = 1, PRINT_SNIPPET = 2, PRINT_PDF = 3, PRINT_NOFORM = 4;
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -56,21 +53,19 @@ class CRM_Core_Smarty extends Smarty {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
-   * class constructor
-   *
-   * @return CRM_Core_Smarty
-   * @access private
+   * Class constructor.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
 
     $config = CRM_Core_Config::singleton();
 
     if (isset($config->customTemplateDir) && $config->customTemplateDir) {
-      $this->template_dir = array_merge([$config->customTemplateDir],
+      $this->template_dir = array_merge(
+        [$config->customTemplateDir],
         $config->templateDir
       );
     }
@@ -148,7 +143,7 @@ class CRM_Core_Smarty extends Smarty {
 
     $this->register_function('crmURL', ['CRM_Utils_System', 'crmURL']);
 
-    if(CRM_Utils_System::isUserLoggedIn() || $this->isAssigned('browserPrint')) {
+    if (CRM_Utils_System::isUserLoggedIn() || $this->isAssigned('browserPrint')) {
       $printerFriendly = CRM_Utils_System::makeURL('snippet', FALSE, FALSE) . '2';
       $printerFriendly = str_replace(['&#60;', '&#62;', '#gt;', '&lt;', '<', '>'], '', $printerFriendly);
     }
@@ -181,10 +176,9 @@ class CRM_Core_Smarty extends Smarty {
   /**
    * Static instance provider.
    *
-   * Method providing static instance of SmartTemplate, as
-   * in Singleton pattern.
+   * @return CRM_Core_Smarty
    */
-  static function &singleton() {
+  public static function &singleton() {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_Core_Smarty();
     }
@@ -192,21 +186,29 @@ class CRM_Core_Smarty extends Smarty {
   }
 
   /**
-   * executes & returns or displays the template results
+   * Executes & returns or displays the template results.
    *
    * @param string $resource_name
-   * @param string $cache_id
-   * @param string $compile_id
-   * @param boolean $display
+   * @param string|null $cache_id
+   * @param string|null $compile_id
+   * @param bool $display
+   *
+   * @return string|null
    */
-  function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
+  public function fetch($resource_name, $cache_id = NULL, $compile_id = NULL, $display = FALSE) {
 
-    $all_vars =& $this->get_template_vars();
+    $all_vars = &$this->get_template_vars();
     CRM_Utils_Hook::alterTemplateVars($resource_name, $all_vars);
     return parent::fetch($resource_name, $cache_id, $compile_id, $display);
   }
 
-  function appendValue($name, $value) {
+  /**
+   * Appends a value to a template variable.
+   *
+   * @param string $name
+   * @param mixed $value
+   */
+  public function appendValue($name, $value) {
     $currentValue = $this->get_template_vars($name);
     if (!$currentValue) {
       $this->assign($name, $value);
@@ -218,7 +220,10 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 
-  function clearTemplateVars() {
+  /**
+   * Clears all template variables except config and session.
+   */
+  public function clearTemplateVars() {
     foreach (array_keys($this->_tpl_vars) as $key) {
       if ($key == 'config' || $key == 'session') {
         continue;
@@ -227,25 +232,37 @@ class CRM_Core_Smarty extends Smarty {
     }
   }
 
-  function isAssigned($var, $value = NULL) { 
-    if(isset($this->_tpl_vars[$var])) {
+  /**
+   * Check if a template variable is assigned.
+   *
+   * @param string $var
+   * @param mixed $value
+   *
+   * @return bool
+   */
+  public function isAssigned($var, $value = NULL) {
+    if (isset($this->_tpl_vars[$var])) {
       $exists = $this->_tpl_vars[$var];
-      if($value) {
+      if ($value) {
         if ($value === $exits) {
           return TRUE;
-        } 
+        }
       }
-      else{
+      else {
         return TRUE;
       }
     }
     return FALSE;
   }
 
-  function addTemplateDirs($dirs = []) {
+  /**
+   * Add template directories.
+   *
+   * @param array $dirs
+   */
+  public function addTemplateDirs($dirs = []) {
     if (!empty($dirs) && is_array($dirs)) {
       $this->template_dir = array_merge($dirs, $this->template_dir);
     }
   }
 }
-

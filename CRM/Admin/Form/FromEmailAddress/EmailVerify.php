@@ -1,11 +1,11 @@
 <?php
 
 class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEmailAddress {
-  
+
   /**
    * Return a descriptive name for the page, used in wizard header
    *
-   * @return string
+   * @return string The form title.
    */
   public function getTitle() {
     return ts('Verify %1', [1 => ts('Email')]);
@@ -14,30 +14,34 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
   /**
    * Preprocess Form
    *
-   * @return void
+   * @return void None.
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
+   *
+   * @return array{} The default values for the form.
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
+   *
+   * @return void None.
    */
   public function buildQuickForm() {
     $this->assign_by_ref('values', $this->_values);
 
     if ($this->_values['filter'] & self::VALID_EMAIL) {
       $this->assign('email_status', TRUE);
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'back',
             'name' => ts('<< Previous'),
             'isDefault' => TRUE,
@@ -55,7 +59,8 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
     else {
       $this->assign('email_status', FALSE);
       $this->addButton('refresh', ts('Re-send Validation Email'));
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'jump',
             'name' => ts('Refresh'),
@@ -70,7 +75,9 @@ class CRM_Admin_Form_FromEmailAddress_EmailVerify extends CRM_Admin_Form_FromEma
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
+   *
+   * @return void None.
    */
   public function postProcess() {
     $buttonName = $this->controller->getButtonName();

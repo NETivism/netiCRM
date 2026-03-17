@@ -27,19 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
-
-
 
 /**
  * This class create activities for a case
@@ -82,7 +72,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    * @return None
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_caseId = CRM_Utils_Request::retrieve('caseid', 'Positive', $this);
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     if (!$this->_context) {
@@ -101,8 +91,11 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     }
 
     if (!$this->_caseId && $this->_activityId) {
-      $this->_caseId = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_CaseActivity', $this->_activityId,
-        'case_id', 'activity_id'
+      $this->_caseId = CRM_Core_DAO::getFieldValue(
+        'CRM_Case_DAO_CaseActivity',
+        $this->_activityId,
+        'case_id',
+        'activity_id'
       );
     }
     if ($this->_caseId) {
@@ -134,7 +127,9 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     if ($this->_activityId &&
       ($this->_action & CRM_Core_Action::UPDATE)
     ) {
-      $valid = CRM_Case_BAO_Case::checkPermission($this->_activityId, 'edit',
+      $valid = CRM_Case_BAO_Case::checkPermission(
+        $this->_activityId,
+        'edit',
         $this->_activityTypeId
       );
       if (!$valid) {
@@ -144,7 +139,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
     $this->_caseType = CRM_Case_BAO_Case::getCaseType($this->_caseId, 'name');
     $this->assign('caseType', $this->_caseType);
-
 
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
@@ -161,7 +155,8 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     // set context for pushUserContext and for statusBounce
     if ($this->_context == 'fulltext') {
       if ($this->_action == CRM_Core_Action::UPDATE || $this->_action == CRM_Core_Action::DELETE) {
-        $url = CRM_Utils_System::url('civicrm/contact/view/case',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/case',
           "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$this->_caseId}&show=1&context={$this->_context}"
         );
       }
@@ -170,7 +165,8 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       }
     }
     else {
-      $url = CRM_Utils_System::url('civicrm/contact/view/case',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/view/case',
         "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$this->_caseId}&show=1"
       );
     }
@@ -179,7 +175,8 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       $caseTypes = CRM_Case_PseudoConstant::caseType();
 
       if (empty($caseTypes) && ($this->_activityTypeName == 'Change Case Type') && !$this->_caseId) {
-        $url = CRM_Utils_System::url('civicrm/contact/view/case',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/case',
           "reset=1&action=view&cid={$this->_currentlyViewedContactId}&id={$this->_caseId}&show=1"
         );
         $session = CRM_Core_Session::singleton();
@@ -199,17 +196,21 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
             $atArray = ['activity_type_id' =>
               $this->_activityTypeId,
             ];
-            $activities = CRM_Case_BAO_Case::getCaseActivity($this->_caseId,
+            $activities = CRM_Case_BAO_Case::getCaseActivity(
+              $this->_caseId,
               $atArray,
               $this->_currentUserId
             );
             $activities = array_keys($activities);
             $activities = $activities[0];
-            $editUrl = CRM_Utils_System::url('civicrm/case/activity',
+            $editUrl = CRM_Utils_System::url(
+              'civicrm/case/activity',
               "reset=1&cid={$this->_currentlyViewedContactId}&caseid={$this->_caseId}&action=update&id={$activities}"
             );
           }
-          return CRM_Core_Error::statusBounce(ts("You can not add another '%1' activity to this case. %2",
+          return CRM_Core_Error::statusBounce(
+            ts(
+              "You can not add another '%1' activity to this case. %2",
               [1 => $this->_activityTypeName,
                 2 => "Do you want to <a href='$editUrl'>edit the existing activity</a> ?",
               ]
@@ -234,7 +235,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $this->_defaults = parent::setDefaultValues();
     $targetContactValues = [];
 
@@ -242,7 +243,8 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     $clients = CRM_Case_BAO_Case::getContactNames($this->_caseId);
     if (isset($this->_activityId) && empty($_POST)) {
       if (!CRM_Utils_Array::isEmpty($this->_defaults['target_contact'])) {
-        $targetContactValues = array_combine(array_unique($this->_defaults['target_contact']),
+        $targetContactValues = array_combine(
+          array_unique($this->_defaults['target_contact']),
           explode(';', trim($this->_defaults['target_contact_value']))
         );
 
@@ -311,11 +313,14 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
     $encounterMediums = CRM_Case_PseudoConstant::encounterMedium();
     if ($this->_activityTypeFile == 'OpenCase') {
-      $this->_encounterMedium = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $this->_activityId,
+      $this->_encounterMedium = CRM_Core_DAO::getFieldValue(
+        'CRM_Activity_DAO_Activity',
+        $this->_activityId,
         'medium_id'
       );
       if (!CRM_Utils_Array::arrayKeyExists($this->_encounterMedium, $encounterMediums)) {
-        $encounterMediums[$this->_encounterMedium] = CRM_Core_OptionGroup::getLabel('encounter_medium',
+        $encounterMediums[$this->_encounterMedium] = CRM_Core_OptionGroup::getLabel(
+          'encounter_medium',
           $this->_encounterMedium,
           FALSE
         );
@@ -340,7 +345,11 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       }
 
       $this->addGroup($checkBoxes, 'contact_check');
-      $this->addElement('checkbox', 'toggleSelect', NULL, NULL,
+      $this->addElement(
+        'checkbox',
+        'toggleSelect',
+        NULL,
+        NULL,
         ['onclick' => "return toggleCheckboxVals('contact_check',this);"]
       );
       $this->assign('searchRows', $this->_relatedContacts);
@@ -360,7 +369,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     // skip form rule if deleting
     if (CRM_Utils_Array::value('_qf_Activity_next_', $fields) == 'Delete' || CRM_Utils_Array::value('_qf_Activity_next_', $fields) == 'Restore') {
       return TRUE;
@@ -376,7 +385,7 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
    *
    * @return None
    */
-  public function postProcess($params = null) {
+  public function postProcess($params = NULL) {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $statusMsg = NULL;
 
@@ -395,7 +404,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       else {
         $statusMsg = ts("Selected Activity cannot be deleted.");
       }
-
 
       $tagParams = ['entity_table' => 'civicrm_activity',
         'entity_id' => $this->_activityId,
@@ -435,7 +443,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     $params['activity_date_time'] = CRM_Utils_Date::processDate($params['activity_date_time'], $params['activity_date_time_time']);
     $params['activity_type_id'] = $this->_activityTypeId;
 
-
     $xmlProcessorProcess = new CRM_Case_XMLProcessor_Process();
     $isMultiClient = $xmlProcessorProcess->getAllowMultipleCaseClients();
     $this->assign('multiClient', $isMultiClient);
@@ -470,12 +477,19 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
       // build custom data getFields array
       $customFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE, $this->_activityTypeId);
-      $customFields = CRM_Utils_Array::arrayMerge($customFields,
-        CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
-          NULL, NULL, TRUE
+      $customFields = CRM_Utils_Array::arrayMerge(
+        $customFields,
+        CRM_Core_BAO_CustomField::getFields(
+          'Activity',
+          FALSE,
+          FALSE,
+          NULL,
+          NULL,
+          TRUE
         )
       );
-      $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+      $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+        $params,
         $customFields,
         $this->_activityId,
         'Activity'
@@ -512,7 +526,8 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
     if (!isset($newActParams)) {
       // add more attachments if needed for old activity
-      CRM_Core_BAO_File::formatAttachment($params,
+      CRM_Core_BAO_File::formatAttachment(
+        $params,
         $params,
         'civicrm_activity'
       );
@@ -550,7 +565,8 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       //is_current_revision will be set to 1 by default.
 
       // add attachments if any
-      CRM_Core_BAO_File::formatAttachment($newActParams,
+      CRM_Core_BAO_File::formatAttachment(
+        $newActParams,
         $newActParams,
         'civicrm_activity'
       );
@@ -567,8 +583,11 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       // copy files attached to old activity if any, to new one,
       // as long as users have not selected the 'delete attachment' option.
       if (!CRM_Utils_Array::value('is_delete_attachment', $newActParams)) {
-        CRM_Core_BAO_File::copyEntityFile('civicrm_activity', $this->_activityId,
-          'civicrm_activity', $activity->id
+        CRM_Core_BAO_File::copyEntityFile(
+          'civicrm_activity',
+          $this->_activityId,
+          'civicrm_activity',
+          $activity->id
         );
       }
 
@@ -620,7 +639,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     ];
     CRM_Case_BAO_Case::processCaseActivity($caseParams);
 
-
     // create activity assignee records
     $assigneeParams = ['activity_id' => $activity->id];
 
@@ -643,7 +661,6 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
     // Insert civicrm_log record for the activity (e.g. store the
     // created / edited by contact id and date for the activity)
     // Note - civicrm_log is already created by CRM_Activity_BAO_Activity::create()
-
 
     // send copy to selected contacts.
     $mailStatus = '';
@@ -685,12 +702,17 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
 
     if (!CRM_Utils_array::crmIsEmptyArray($mailToContacts)) {
       //include attachments while sendig a copy of activity.
-      $attachments = &CRM_Core_BAO_File::getEntityFile('civicrm_activity',
+      $attachments = &CRM_Core_BAO_File::getEntityFile(
+        'civicrm_activity',
         $activity->id
       );
 
-      $result = CRM_Case_BAO_Case::sendActivityCopy($this->_currentlyViewedContactId,
-        $activity->id, $mailToContacts, $attachments, $this->_caseId
+      $result = CRM_Case_BAO_Case::sendActivityCopy(
+        $this->_currentlyViewedContactId,
+        $activity->id,
+        $mailToContacts,
+        $attachments,
+        $this->_caseId
       );
 
       if (empty($result)) {
@@ -715,13 +737,13 @@ class CRM_Case_Form_Activity extends CRM_Activity_Form_Activity {
       }
     }
 
-    CRM_Core_Session::setStatus(ts("'%1' activity has been %2. %3 %4",
-        [1 => $this->_activityTypeName,
+    CRM_Core_Session::setStatus(ts(
+      "'%1' activity has been %2. %3 %4",
+      [1 => $this->_activityTypeName,
           2 => $recordStatus,
           3 => $followupStatus,
           4 => $mailStatus,
         ]
-      ));
+    ));
   }
 }
-

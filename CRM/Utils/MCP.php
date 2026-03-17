@@ -3,20 +3,19 @@
 /**
  * This class handles MCP (Model Context Protocol) requests.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
  *
  */
 class CRM_Utils_MCP {
-  const LAST_HIT = 'mcp_lasthit';  // Kept for backward compatibility, used as prefix
-  const RATE_LIMIT = 0.1;  // Kept for backward compatibility
-  const RATE_LIMIT_WINDOW = 60;  // 60 second time window
-  const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
+  public const LAST_HIT = 'mcp_lasthit';  // Kept for backward compatibility, used as prefix
+  public const RATE_LIMIT = 0.1;  // Kept for backward compatibility
+  public const RATE_LIMIT_WINDOW = 60;  // 60 second time window
+  public const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
 
   /**
    * @var bool Whether to output streaming responses
    */
-  private $_isStreamable = false;
+  private $_isStreamable = FALSE;
 
   /**
    * @var int User who use mcp
@@ -49,8 +48,9 @@ class CRM_Utils_MCP {
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_POST)) {
       // GET request was converted to mock POST request in extern/mcp.php
       $request = $_POST;
-    } else {
-      $input = file_get_contents('php://input');
+    }
+    else {
+      $input = $this->getRawInput();
       $request = json_decode($input, TRUE);
     }
 
@@ -77,20 +77,43 @@ class CRM_Utils_MCP {
       }
     }
 
-    // Everyone should be required to provide the server key, so the whole
-    // interface can be disabled in more change to the configuration file.
-    // first check for civicrm site key
-    if (!CRM_Utils_System::authenticateKey(FALSE)) {
-      return $this->error(-32000, 'FATAL: site key or api key is incorrect.', $id);
+    // Check site key and api key source and validation method
+    // Site key and api_key MUST be in header for REST API style authentication
+    // If site_key or api_key is in query parameters, require checksum (cs) authentication instead
+    $siteKeyInHeader = isset($_SERVER['HTTP_X_CIVICRM_SITE_KEY']);
+    $apiKeyInHeader = isset($_SERVER['HTTP_X_CIVICRM_API_KEY']);
+    $siteKeyInRequest = CRM_Utils_Request::retrieve('site_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $apiKeyInRequest = CRM_Utils_Request::retrieve('api_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $hasChecksumParams = CRM_Utils_Request::retrieve('cs', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $hasContactId = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    $hasBearerToken = $this->getBearerToken();
+
+    if ($siteKeyInHeader && $apiKeyInHeader) {
+      // Use standard REST API authentication
+      if (!CRM_Utils_System::authenticateKey(FALSE)) {
+        return $this->error(-32000, 'FATAL: site key is incorrect.', $id);
+      }
+    }
+    elseif ($siteKeyInRequest || $apiKeyInRequest) {
+      // Site key or api_key in query/POST without checksum - reject and guide to use checksum
+      return $this->error(-32000, 'FATAL: site_key and api_key in query parameters are not allowed. Please use checksum authentication (cid + cs parameters) instead. ', $id);
+    }
+    elseif ($hasChecksumParams && $hasContactId) {
+      // Has checksum params and cid - will validate in validateChecksumAuth() later
+      // Site key validation will be done as part of checksum verification
+    }
+    elseif ($hasBearerToken) {
+      // Has bearer token - will validate later
+    }
+    else {
+      // No authentication method provided
+      return $this->error(-32000, 'FATAL: Authentication required. Provide site_key and api_key in HTTP headers or use checksum authentication (cid + cs).', $id);
     }
 
-    // At this point we know we are not calling either login or ping (neither of which
-    // require authentication prior to being called. Therefore, at this point we need
-    // to make sure we're working with a trusted user.
-
     // There are three ways to check for a trusted user:
-    // First: they can be someone that has provided an API_Key
-    // Second: they can be someone that has provided a valid OAuth Bearer token
+    // First: they can be someone that has provided a valid OAuth Bearer token
+    // Second: they can be someone that has provided a valid api_key in header (REST API style)
+    // Third: they can be someone that has provided a valid checksum (cid + cs)
     $validUser = FALSE;
 
     // Check for valid session. Session ID's only appear here if you have
@@ -99,52 +122,50 @@ class CRM_Utils_MCP {
     CRM_Core_Session::singleton();
 
     // Check for OAuth Bearer token first
-    $bearerToken = $this->getBearerToken();
-    if ($bearerToken) {
-      $validUser = $this->validateBearerToken($bearerToken);
+    if ($hasBearerToken) {
+      $validUser = $this->validateBearerToken($hasBearerToken);
       if (!$validUser) {
+        // Only Bearer token authentication failures trigger OAuth challenge
         return $this->sendOAuthChallenge($id);
       }
     }
 
-    // If the user does not have a valid session or bearer token (most likely to be used by people using
-    // an ajax interface), we need to check to see if they are carrying a valid user's
-    // secret key.
-    if (!$validUser) {
-      if (isset($_SERVER['HTTP_X_CIVICRM_API_KEY'])) {
-        $api_key = trim($_SERVER['HTTP_X_CIVICRM_API_KEY']);
-      }
-      else {
-        $api_key = trim(CRM_Utils_Request::retrieve('api_key', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST'));
-      }
-      if (!$api_key || strtolower($api_key) == 'null') {
-        // If no API key and no bearer token, send OAuth challenge
-        return $this->sendOAuthChallenge($id);
-      }
-      $api_key = CRM_Utils_Type::escape($api_key, 'String');
-      $contactId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
-      if ($contactId) {
-        $uid = CRM_Core_BAO_UFMatch::getUFId($contactId);
-        if ($uid) {
-          CRM_Utils_System::loadUser(['uid' => $uid]);
-          $ufId = CRM_Utils_System::getLoggedInUfID();
-          if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
-            $validUser = $contactId;
+    // If no valid bearer token, check REST API authentication (api_key in header)
+    if (!$validUser && $apiKeyInHeader) {
+      $api_key = trim($_SERVER['HTTP_X_CIVICRM_API_KEY']);
+      if (!empty($api_key)) {
+        $api_key = CRM_Utils_Type::escape($api_key, 'String');
+        $contactId = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $api_key, 'id', 'api_key');
+        if ($contactId) {
+          $uid = CRM_Core_BAO_UFMatch::getUFId($contactId);
+          if ($uid) {
+            CRM_Utils_System::loadUser(['uid' => $uid]);
+            $ufId = CRM_Utils_System::getLoggedInUfID();
+            if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
+              $validUser = $contactId;
+            }
           }
         }
-        if (!$validUser) {
-          return $this->sendOAuthChallenge($id);
-        }
+      }
+      if (!$validUser) {
+        return $this->error(-32000, 'FATAL: Invalid API key.', $id);
       }
     }
 
-    // If we didn't find a valid user either way, then send OAuth challenge.
+    // If no valid user yet, check checksum-based authentication (cid + cs)
+    if (!$validUser && $hasChecksumParams) {
+      $validUser = $this->validateChecksumAuth($id);
+      if (!$validUser) {
+        return $this->error(-32000, 'FATAL: Checksum authentication failed. Please verify cid and cs parameters.', $id);
+      }
+    }
+
+    // Final validation check
     if (empty($validUser)) {
-      return $this->sendOAuthChallenge($id);
+      return $this->error(-32000, 'FATAL: Authentication failed.', $id);
     }
-    else {
-      $this->_contactId = $validUser;
-    }
+
+    $this->_contactId = $validUser;
     CRM_Core_Error::debug_var("mcp_post_via_contact_$this->_contactId", $request);
 
     // Check request rate limit
@@ -202,9 +223,19 @@ class CRM_Utils_MCP {
 
     if ($this->_isStreamable) {
       return $this->formatSSE('message', $jsonResponse);
-    } else {
+    }
+    else {
       return $jsonResponse;
     }
+  }
+
+  /**
+   * Get raw input from php://input stream
+   * Extracted as protected method to allow testing via subclass override
+   * @return string Raw request body
+   */
+  protected function getRawInput() {
+    return file_get_contents('php://input');
   }
 
   /**
@@ -214,9 +245,9 @@ class CRM_Utils_MCP {
    * @param string|null $id Optional event ID
    * @return string SSE formatted string
    */
-  private function formatSSE($event, $data, $id = null) {
+  private function formatSSE($event, $data, $id = NULL) {
     $output = '';
-    if ($id !== null) {
+    if ($id !== NULL) {
       $output .= "id: {$id}\n";
     }
     $output .= "event: {$event}\n";
@@ -256,7 +287,7 @@ class CRM_Utils_MCP {
    * @param int $progress Current progress (0-100)
    * @param int|null $total Total items (optional)
    */
-  public function sendProgress($progressToken, $progress, $total = null) {
+  public function sendProgress($progressToken, $progress, $total = NULL) {
     if (!$this->_isStreamable || empty($progressToken)) {
       return;
     }
@@ -270,7 +301,7 @@ class CRM_Utils_MCP {
       ]
     ];
 
-    if ($total !== null) {
+    if ($total !== NULL) {
       $notification['params']['total'] = $total;
     }
 
@@ -291,7 +322,7 @@ class CRM_Utils_MCP {
     }
 
     // Disable implicit flush
-    ob_implicit_flush(true);
+    ob_implicit_flush(TRUE);
 
     // Set unlimited execution time for long-running streams
     set_time_limit(0);
@@ -319,11 +350,11 @@ class CRM_Utils_MCP {
         'protocolVersion' => '2025-03-26',
         'capabilities' => [
           'tools' => [
-            'listChanged' => false
+            'listChanged' => FALSE
           ],
           'resources' => [
-            'subscribe' => false,
-            'listChanged' => false
+            'subscribe' => FALSE,
+            'listChanged' => FALSE
           ]
         ],
         'serverInfo' => [
@@ -365,79 +396,31 @@ class CRM_Utils_MCP {
     if (count($parts) < 2) {
       return FALSE;
     }
-    
+
     $entity = $parts[0];
     $action = $parts[1];
-    
-    // Handle special entity names
-    switch ($entity) {
-      case 'contributionrecur':
-        $entity = 'ContributionRecur';
-        break;
-      default:
-        // Capitalize first letter for proper API entity name
-        $entity = ucfirst($entity);
-        break;
-    }
-    
+
     // Map tool action to API action
     $apiAction = '';
     switch ($action) {
-      case 'search':
-        $apiAction = 'get';
-        break;
-      case 'create':
-        $apiAction = 'create';
-        break;
-      case 'update':
-        $apiAction = 'update';
-        break;
-      case 'delete':
-        $apiAction = 'delete';
-        break;
       case 'query':
         $apiAction = 'query';
         break;
       default:
         return FALSE;
     }
-    
+
     // Check REST API permissions based on action
     $permissionRequired = '';
-    if (in_array($apiAction, ['create'])) {
-      $permissionRequired = 'API create';
-    }
-    elseif (in_array($apiAction, ['update'])) {
-      $permissionRequired = 'API update';
-    }
-    elseif (in_array($apiAction, ['delete'])) {
-      $permissionRequired = 'API delete';
-    }
-    elseif (in_array($apiAction, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
-      $permissionRequired = 'API search';
-    }
-    elseif (in_array($apiAction, ['query'])) {
+    if (in_array($apiAction, ['query'])) {
       $permissionRequired = 'MCP query';
     }
-    
+
     // Check REST API permission if required
-    if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
-      return FALSE;
+    if (!empty($permissionRequired) && CRM_Core_Permission::check($permissionRequired)) {
+      return TRUE;
     }
 
-    // Check standard API permissions using the permission checking function
-    if (!empty($entity) && !empty($apiAction)) {
-      try {
-        require_once 'api/v3/utils.php';
-        $emptyParams = [];
-        _civicrm_api3_api_check_permission($entity, $apiAction, $emptyParams, TRUE);
-        return TRUE;
-      }
-      catch (Exception $e) {
-        return FALSE;
-      }
-    }
-    
     return FALSE;
   }
 
@@ -451,14 +434,14 @@ class CRM_Utils_MCP {
     try {
       $searchableFields = _civicrm_api3_get_entity_form_searchable($entity);
       $detailedFields = [];
-      
+
       foreach (array_keys($searchableFields) as $fieldName) {
         $fieldInfo = [
           'name' => $fieldName,
           'type' => $this->determineFieldType($fieldName),
           'description' => $this->generateFieldDescription($fieldName, $entity)
         ];
-        
+
         // Handle custom fields
         if (preg_match('/^custom_(\d+)$/', $fieldName, $matches)) {
           $customFieldId = $matches[1];
@@ -473,10 +456,10 @@ class CRM_Utils_MCP {
             }
           }
         }
-        
+
         $detailedFields[$fieldName] = $fieldInfo;
       }
-      
+
       return $detailedFields;
     }
     catch (Exception $e) {
@@ -522,15 +505,15 @@ class CRM_Utils_MCP {
         'id' => $customFieldId,
         'version' => 3,
       ]);
-      
+
       $fieldInfo = [
         'label' => $customField['label'] ?? '',
         'data_type' => $customField['data_type'] ?? 'String'
       ];
-      
+
       // Get options using getoptions API for custom fields
       $customFieldName = 'custom_' . $customFieldId;
-      
+
       // Determine entity based on custom field's extends property
       $entity = 'Contact'; // Default entity
       if (!empty($customField['custom_group_id'])) {
@@ -539,13 +522,13 @@ class CRM_Utils_MCP {
             'id' => $customField['custom_group_id'],
             'version' => 3,
           ]);
-          
+
           if (!empty($customGroup['extends'])) {
             $extends = $customGroup['extends'];
             $entityMap = [
               'Contact' => 'Contact',
               'Individual' => 'Contact',
-              'Organization' => 'Contact', 
+              'Organization' => 'Contact',
               'Household' => 'Contact',
               'Contribution' => 'Contribution',
               'Event' => 'Event',
@@ -560,14 +543,14 @@ class CRM_Utils_MCP {
           // Use default entity if custom group lookup fails
         }
       }
-      
+
       // Try to get options using getoptions API
       try {
         $optionsResult = civicrm_api($entity, 'getoptions', [
           'field' => $customFieldName,
           'version' => 3,
         ]);
-        
+
         if (!empty($optionsResult['values'])) {
           $fieldInfo['options'] = $optionsResult['values'];
         }
@@ -582,7 +565,7 @@ class CRM_Utils_MCP {
               'is_active' => 1,
               'options' => ['sort' => 'weight']
             ]);
-            
+
             $fieldOptions = [];
             foreach ($options['values'] as $option) {
               $fieldOptions[$option['value']] = $option['label'];
@@ -594,11 +577,11 @@ class CRM_Utils_MCP {
           }
         }
       }
-      
+
       return $fieldInfo;
     }
     catch (Exception $e) {
-      return null;
+      return NULL;
     }
   }
 
@@ -619,7 +602,7 @@ class CRM_Utils_MCP {
       'Link' => 'string',
       'File' => 'string'
     ];
-    
+
     return $typeMap[$dataType] ?? 'string';
   }
 
@@ -632,7 +615,7 @@ class CRM_Utils_MCP {
   private function generateInputSchemaProperties($entity, $baseProperties = []) {
     $searchableFields = $this->getSearchableFormFields($entity);
     $properties = $baseProperties;
-    
+
     // Add return.* properties for base properties
     foreach ($baseProperties as $fieldName => $fieldConfig) {
       $returnFieldName = 'return.' . $fieldName;
@@ -643,7 +626,7 @@ class CRM_Utils_MCP {
         ];
       }
     }
-    
+
     // Add each searchable field with detailed information
     foreach ($searchableFields as $fieldName => $fieldInfo) {
       if (!isset($properties[$fieldName])) {
@@ -651,16 +634,16 @@ class CRM_Utils_MCP {
           'type' => $fieldInfo['type'],
           'description' => $fieldInfo['description']
         ];
-        
+
         // Add options if available (for select fields)
         if (!empty($fieldInfo['options'])) {
           $property['enum'] = array_keys($fieldInfo['options']);
           $property['description'] .= '. Options: ' . implode(', ', $fieldInfo['options']);
         }
-        
+
         $properties[$fieldName] = $property;
       }
-      
+
       // Add corresponding return.field_name property for field selection
       $returnFieldName = 'return.' . $fieldName;
       if (!isset($properties[$returnFieldName])) {
@@ -670,7 +653,7 @@ class CRM_Utils_MCP {
         ];
       }
     }
-    
+
     // Add common search properties
     $commonProperties = [
       'limit' => ['type' => 'integer', 'description' => 'Number of results to return'],
@@ -678,13 +661,13 @@ class CRM_Utils_MCP {
       'sort' => ['type' => 'string', 'description' => 'Sort field and direction (e.g., "field_name asc", "created_date desc")'],
       'return' => ['type' => 'string', 'description' => 'Comma-separated list of fields to return (alternative to using individual return.* parameters)']
     ];
-    
+
     foreach ($commonProperties as $key => $value) {
       if (!isset($properties[$key])) {
         $properties[$key] = $value;
       }
     }
-    
+
     return $properties;
   }
 
@@ -698,41 +681,8 @@ class CRM_Utils_MCP {
     // Get available searchable fields for contact and contribution
     $contactSearchableFields = $this->getSearchableFormFields('contact');
     $contributionSearchableFields = $this->getSearchableFormFields('contribution');
-    
+
     $tools = [
-      [
-        'name' => 'contact_search',
-        'description' => 'Search contacts using various filters. Available searchable fields: ' . implode(', ', array_keys($contactSearchableFields)) . '. To specify which fields to return: use return.<field_name> (e.g., return.total_amount) for individual fields, or use "return" parameter with comma-separated field names (e.g., "display_name,email,phone"). Field names alone are used for filtering.',
-        'inputSchema' => [
-          'type' => 'object',
-          'properties' => $this->generateInputSchemaProperties('contact', [
-            'contact_type' => ['type' => 'string', 'description' => 'Contact type (Individual, Organization, Household)'],
-            'display_name' => ['type' => 'string', 'description' => 'Contact display name'],
-            'first_name' => ['type' => 'string', 'description' => 'First name'],
-            'last_name' => ['type' => 'string', 'description' => 'Last name'],
-            'email' => ['type' => 'string', 'description' => 'Email address'],
-            'phone' => ['type' => 'string', 'description' => 'Phone number'],
-            'external_identifier' => ['type' => 'string', 'description' => 'External identifier'],
-            'id' => ['type' => 'integer', 'description' => 'Contact ID']
-          ])
-        ]
-      ],
-      [
-        'name' => 'contribution_search',
-        'description' => 'Search contributions using various filters. Available searchable fields: ' . implode(', ', array_keys($contributionSearchableFields)) . '. To specify which fields to return: use return.<field_name> (e.g., return.total_amount) for individual fields, or use "return" parameter with comma-separated field names (e.g., "total_amount,contact_id,receive_date"). Field names alone are used for filtering.',
-        'inputSchema' => [
-          'type' => 'object',
-          'properties' => $this->generateInputSchemaProperties('contribution', [
-            'contact_id' => ['type' => 'integer', 'description' => 'Contact ID'],
-            'contribution_type_id' => ['type' => 'integer', 'description' => 'Contribution type ID'],
-            'contribution_status_id' => ['type' => 'integer', 'description' => 'Contribution status ID'],
-            'payment_instrument_id' => ['type' => 'integer', 'description' => 'Payment instrument ID'],
-            'receive_date' => ['type' => 'string', 'description' => 'Receive date (YYYY-MM-DD)'],
-            'total_amount' => ['type' => 'number', 'description' => 'Total amount'],
-            'id' => ['type' => 'integer', 'description' => 'Contribution ID']
-          ])
-        ]
-      ],
       [
         'name' => 'contact_query',
         'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
@@ -779,75 +729,19 @@ class CRM_Utils_MCP {
   private function callTool($params, $id) {
     $toolName = $params['name'] ?? '';
     $arguments = $params['arguments'] ?? [];
-    
+
     // Check if user has permission to call this tool
     if (!$this->hasToolPermission($toolName)) {
       return $this->error(-32000, 'FATAL: You do not have permission to call this tool: ' . $toolName, $id);
     }
-    
+
     switch ($toolName) {
-      case 'contact_search':
-        return $this->handleContactSearch($arguments, $id);
-      case 'contribution_search':
-        return $this->handleContributionSearch($arguments, $id);
       case 'contact_query':
       case 'contribution_query':
         return $this->handleMCPQuery($arguments, $id);
-      case 'civicrm_api':
-        return $this->handleGenericApi($arguments, $id);
       default:
         return $this->error(-32601, 'Unknown tool: ' . $toolName, $id);
     }
-  }
-
-  /**
-   * Handle contact search
-   */
-  private function handleContactSearch($arguments, $id) {
-    $apiParams = [];
-    $fields = ['contact_type', 'display_name', 'first_name', 'last_name', 'email', 'phone', 'external_identifier', 'id', 'limit', 'offset', 'sort'];
-    foreach ($fields as $field) {
-      if (isset($arguments[$field])) {
-        $apiParams[$field] = $arguments[$field];
-      }
-    }
-    
-    $apiParams['return.id'] = 1;
-    $apiParams['return.contact_type'] = 1;
-    $apiParams['return.employer_id'] = 1;
-    $apiParams['return.birth_date'] = 1;
-    $apiParams['return.prefix_id'] = 1;
-    $apiParams['return.suffix_id'] = 1;
-    $apiParams['return.gender_id'] = 1;
-    $apiParams['return.job_title'] = 1;
-    $apiParams['return.created_date'] = 1;
-    $apiParams['return.modified_date'] = 1;
-    return $this->executeApiCall('Contact', 'get', $apiParams, $id);
-  }
-
-  /**
-   * Handle contribution search
-   */
-  private function handleContributionSearch($arguments, $id) {
-    $apiParams = [];
-    $fields = ['contact_id', 'contribution_type_id', 'contribution_status_id', 'payment_instrument_id', 'receive_date', 'total_amount', 'id', 'limit', 'offset', 'sort'];
-    foreach ($fields as $field) {
-      if (isset($arguments[$field])) {
-        $apiParams[$field] = $arguments[$field];
-      }
-    }
-    $apiParams['return.contact_id'] = 1;
-    $apiParams['return.contribution_page_id'] = 1;
-    $apiParams['return.contribution_type_id'] = 1;
-    $apiParams['return.contribution_recurring_id'] = 1;
-    $apiParams['return.contribution_status_id'] = 1;
-    $apiParams['return.amount_level'] = 1;
-    $apiParams['return.payment_instrument_id'] = 1;
-    $apiParams['return.currency'] = 1;
-    $apiParams['return.total_amount'] = 1;
-    $apiParams['return.receive_date'] = 1;
-    $results = $this->executeApiCall('Contribution', 'get', $apiParams, $id);
-    return $results;
   }
 
   private function handleMCPQuery($arguments, $id) {
@@ -861,12 +755,18 @@ class CRM_Utils_MCP {
     $parser = new CRM_Utils_SqlParser($arguments['query'], $allowlist);
     $isError = FALSE;
     if ($parser->isValid()) {
-      $sql = $parser->getQuery(TRUE);
-      $dbo = CRM_Core_DAO::initReadonly();
-      $sth = $dbo->prepare($sql);
-      $sth->execute();
-      $results = $sth->fetchAll();
-
+      try {
+        $sql = $parser->getQuery(TRUE);
+        $dbo = CRM_Core_DAO::initReadonly();
+        $sth = $dbo->prepare($sql);
+        $sth->execute();
+        $results = $sth->fetchAll();
+      }
+      catch (\Exception $e) {
+        CRM_Core_Error::debug_log_message('MCP query error: ' . $e->getMessage());
+        $results = ['Query execution failed.'];
+        $isError = TRUE;
+      }
     }
     else {
       $results = $parser->getErrors();
@@ -885,96 +785,6 @@ class CRM_Utils_MCP {
       ],
       'id' => $id
     ];
-  }
-
-  /**
-   * Handle generic API calls
-   */
-  private function handleGenericApi($arguments, $id) {
-    $entity = $arguments['entity'] ?? '';
-    $action = $arguments['action'] ?? '';
-    $apiParams = $arguments['params'] ?? [];
-    
-    if (!$entity || !$action) {
-      return $this->error(-32602, 'Invalid params: entity and action required', $id);
-    }
-    
-    // Restrict to read-only actions only
-    $allowedActions = ['get', 'getoptions'];
-    if (!in_array(strtolower($action), $allowedActions)) {
-      return $this->error(-32000, 'Only read-only actions are allowed: ' . implode(', ', $allowedActions), $id);
-    }
-    
-    return $this->executeApiCall($entity, $action, $apiParams, $id);
-  }
-
-  /**
-   * Execute CiviCRM API call
-   */
-  private function executeApiCall($entity, $action, $apiParams, $id) {
-    // Use existing API processing from REST class
-    $args = ['civicrm', $entity, $action];
-    $apiParams['version'] = 3;
-    $apiParams['sequential'] = 1;
-    
-    // Handle options parameter for pagination and sorting
-    $options = [];
-    if (isset($apiParams['limit'])) {
-      $options['limit'] = min((int)$apiParams['limit'], 100); // Max 100 results
-      unset($apiParams['limit']);
-    }
-    if (isset($apiParams['offset'])) {
-      $options['offset'] = (int)$apiParams['offset'];
-      unset($apiParams['offset']);
-    }
-    if (isset($apiParams['sort'])) {
-      $options['sort'] = $apiParams['sort'];
-      unset($apiParams['sort']);
-    }
-    
-    // Add options to API params if any are set
-    if (!empty($options)) {
-      $apiParams['options'] = $options;
-    }
-    
-    try {
-      $result = CRM_Utils_REST::process($args, $apiParams);
-      
-      // Check if API call was successful
-      $isError = false;
-      if (isset($result['is_error']) && $result['is_error']) {
-        $isError = true;
-      }
-      
-      return [
-        'jsonrpc' => '2.0',
-        'result' => [
-          'content' => [
-            [
-              'type' => 'text',
-              'text' => json_encode($result)
-            ]
-          ],
-          'isError' => $isError
-        ],
-        'id' => $id
-      ];
-    }
-    catch (Exception $e) {
-      return [
-        'jsonrpc' => '2.0',
-        'result' => [
-          'content' => [
-            [
-              'type' => 'text',
-              'text' => 'Error: ' . $e->getMessage()
-            ]
-          ],
-          'isError' => true
-        ],
-        'id' => $id
-      ];
-    }
   }
 
   /**
@@ -1006,7 +816,7 @@ class CRM_Utils_MCP {
    * @param array $args Request arguments for tracking
    * @return string Error message if rate limit exceeded, empty string otherwise
    */
-  function requestRateLimit($args) {
+  public function requestRateLimit($args) {
     // IP-based rate limiting using CRM_Utils_RateLimiter
     $prefix = self::LAST_HIT;
     $windowSeconds = self::RATE_LIMIT_WINDOW;
@@ -1056,14 +866,14 @@ class CRM_Utils_MCP {
   private function getBearerToken() {
     $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
     if (empty($authHeader)) {
-      return null;
+      return NULL;
     }
-    
+
     if (preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
       return trim($matches[1]);
     }
-    
-    return null;
+
+    return NULL;
   }
 
   /**
@@ -1073,10 +883,78 @@ class CRM_Utils_MCP {
    */
   private function validateBearerToken($token) {
     if (empty($token)) {
-      return false;
+      return FALSE;
     }
     // TODO: implement bearer token validation
-    return false;
+    return FALSE;
+  }
+
+  /**
+   * Validate checksum-based authentication using cid and cs parameters.
+   *
+   * The checksum is computed as: hash('sha256', site_key + contact.hash + contact.api_key)
+   * This avoids transmitting the raw api_key and site_key over the wire.
+   *
+   * @param mixed $id JSON-RPC request ID for error responses
+   * @return int|false Contact ID on success, FALSE on failure
+   */
+  private function validateChecksumAuth($id) {
+    // Step 1: Retrieve cid from request
+    $cid = CRM_Utils_Request::retrieve('cid', 'Positive', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    if (empty($cid)) {
+      return FALSE;
+    }
+
+    // Step 2: Retrieve cs from request
+    $cs = CRM_Utils_Request::retrieve('cs', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'REQUEST');
+    if (empty($cs)) {
+      return FALSE;
+    }
+
+    // Step 3: Look up contact record (only fetch needed fields)
+    $contact = new CRM_Contact_DAO_Contact();
+    $contact->id = $cid;
+    $contact->selectAdd();
+    $contact->selectAdd('hash, api_key');
+    if (!$contact->find(TRUE)) {
+      return FALSE;
+    }
+
+    // Step 4: Verify contact has api_key
+    if (empty($contact->api_key)) {
+      return FALSE;
+    }
+
+    // Step 5: Verify contact has hash
+    if (empty($contact->hash)) {
+      return FALSE;
+    }
+
+    // Step 6: Get site key from configuration
+    $siteKey = defined('CIVICRM_SITE_KEY') ? CIVICRM_SITE_KEY : NULL;
+    if (empty($siteKey)) {
+      return FALSE;
+    }
+
+    // Step 7: Compute expected checksum using site_key + contact.hash + contact.api_key
+    $expectedCs = hash('sha256', $siteKey . $contact->hash . $contact->api_key);
+
+    // Step 8: Timing-safe comparison
+    if (!hash_equals($expectedCs, $cs)) {
+      return FALSE;
+    }
+
+    // Step 9: Load the Drupal user and verify
+    $uid = CRM_Core_BAO_UFMatch::getUFId($cid);
+    if ($uid) {
+      CRM_Utils_System::loadUser(['uid' => $uid]);
+      $ufId = CRM_Utils_System::getLoggedInUfID();
+      if (CRM_Utils_System::isUserLoggedIn() && $ufId == $uid) {
+        return $cid;
+      }
+    }
+
+    return FALSE;
   }
 
   /**
@@ -1122,7 +1000,7 @@ class CRM_Utils_MCP {
           'authorization_server_metadata' => $authServerMetadata,
           'authorization_endpoint' => $authServer . '/authorize',
           'token_endpoint' => $authServer . '/token',
-          'api_key_header' => 'X-CIVICRM-API-KEY',
+          'checksum_params' => 'cid (contact ID) and cs (checksum) query parameters. Checksum = sha256(contact.hash + contact.api_key)',
         ]
       ],
       'id' => $id

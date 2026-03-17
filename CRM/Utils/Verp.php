@@ -26,10 +26,9 @@
 */
 
 /**
- * Class to handle encoding and decoding Variable Enveleope Return Path (VERP)
+ * Class to handle encoding and decoding Variable Envelope Return Path (VERP)
  * headers.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: $
  *
@@ -37,7 +36,7 @@
 class CRM_Utils_Verp {
   /* Mapping of reserved characters to hex codes */
 
-  static $encodeMap = [
+  public static $encodeMap = [
     '+' => '2B',
     '@' => '40',
     ':' => '3A',
@@ -50,7 +49,7 @@ class CRM_Utils_Verp {
 
   /* Mapping of hex codes to reserved characters */
 
-  static $decodeMap = [
+  public static $decodeMap = [
     '40' => '@',
     '3A' => ':',
     '25' => '%',
@@ -67,9 +66,7 @@ class CRM_Utils_Verp {
    * @param string $sender    The address of the sender
    * @param string $recipient The address of the recipient
    *
-   * @return string           The VERP encoded address
-   * @access public
-   * @static
+   * @return string  The VERP encoded address.
    */
   public static function encode($sender, $recipient) {
     preg_match('/(.+)\@([^\@]+)$/', $sender, $match);
@@ -93,9 +90,7 @@ class CRM_Utils_Verp {
    *
    * @param string $address   The address to be decoded
    *
-   * @return array            The tuple ($sender, $recipient)
-   * @access public
-   * @static
+   * @return array  A two-element array [$sender, $recipient] with the decoded addresses.
    */
   public static function &verpdecode($address) {
     preg_match('/^(.+)-([^=]+)=([^\@]+)\@(.+)/', $address, $match);
@@ -113,4 +108,3 @@ class CRM_Utils_Verp {
     return ["$slocal@$sdomain", "$rlocal@$rdomain"];
   }
 }
-

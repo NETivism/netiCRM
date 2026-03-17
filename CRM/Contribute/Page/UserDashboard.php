@@ -27,22 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBoard {
 
   /**
    * This function is called when action is browse
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function listContribution() {
+  public function listContribution() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_Search', ts('Contributions'), NULL);
     $controller->setEmbedded(TRUE);
     $controller->reset();
@@ -64,9 +60,6 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
       $this->assign('honor', TRUE);
     }
 
-
-
-
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->contact_id = $this->_contactId;
     $recur->is_test = 0;
@@ -75,8 +68,6 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
     $config = CRM_Core_Config::singleton();
 
     $recurStatus = CRM_Contribute_PseudoConstant::contributionStatus();
-
-
 
     require_once 'api/v3/utils.php';
     $recurRow = [];
@@ -123,12 +114,10 @@ class CRM_Contribute_Page_UserDashboard extends CRM_Contact_Page_View_UserDashBo
    * This function is the main function that is called when the page
    * loads, it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     parent::preProcess();
     $this->listContribution();
   }
 }
-

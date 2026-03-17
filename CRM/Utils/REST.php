@@ -28,26 +28,25 @@
 /**
  * This class handles all REST client requests.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2012
  *
  */
 class CRM_Utils_REST {
-  const LAST_HIT = 'rest_lasthit';  // Kept for backward compatibility, used as prefix
-  const RATE_LIMIT = 0.2;  // Kept for backward compatibility
-  const RATE_LIMIT_WINDOW = 60;  // 60 second time window
-  const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
+  public const LAST_HIT = 'rest_lasthit';  // Kept for backward compatibility, used as prefix
+  public const RATE_LIMIT = 0.2;  // Kept for backward compatibility
+  public const RATE_LIMIT_WINDOW = 60;  // 60 second time window
+  public const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
 
   /**
    * Response row limit per request
    */
-  static $limitRows = 100;
+  public static $limitRows = 100;
 
   /**
    * Number of seconds we should let a REST process idle
    * @static
    */
-  static $rest_timeout = 0;
+  public static $rest_timeout = 0;
 
   /**
    * Cache the actual UF Class
@@ -123,6 +122,9 @@ class CRM_Utils_REST {
   }
 
   // Generates values needed for error messages
+  /**
+   * @return array<string, mixed>
+   */
   public static function error($message = 'Unknown Error') {
 
     $values = [
@@ -139,16 +141,16 @@ class CRM_Utils_REST {
     return $values;
   }
 
-  function run() {
+  public function run() {
     $result = self::handle();
     return self::output($result);
   }
 
-  function bootAndRun() {
+  public function bootAndRun() {
     return $this->run();
   }
 
-  function requestRateLimit($args) {
+  public function requestRateLimit($args) {
     // IP-based rate limiting using CRM_Utils_RateLimiter
     $prefix = self::LAST_HIT;
     $windowSeconds = self::RATE_LIMIT_WINDOW;
@@ -172,7 +174,7 @@ class CRM_Utils_REST {
     CRM_Utils_RateLimiter::cleanup($prefix, $windowSeconds);
   }
 
-  static function output(&$result) {
+  public static function output(&$result) {
     $hier = FALSE;
     if (is_scalar($result)) {
       if (!$result) {
@@ -196,10 +198,11 @@ class CRM_Utils_REST {
       header('Content-Type: text/xml');
       if (isset($result['count'])) {
 
-
         $count = ' count="' . $result['count'] . '" ';
       }
-      else $count = "";
+      else {
+        $count = "";
+      }
       $xml = "<?xml version=\"1.0\"?>
         <ResultSet xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" $count>
         ";
@@ -230,7 +233,7 @@ class CRM_Utils_REST {
     }
   }
 
-  function handle() {
+  public function handle() {
     // block ajax request REST API to prevent database info leak
     /* It's not reliable way to detect, and shouldn't block whole connection
     if(CRM_Utils_Array::arrayKeyExists('HTTP_X_REQUESTED_WITH', $_SERVER) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
@@ -332,7 +335,7 @@ class CRM_Utils_REST {
     $action = strtolower($args[2] ?? '');
     /*
     $permissionRequired = 'API search';
-    
+
     // Map actions to REST API permissions
     if (in_array($action, ['create'])) {
       $permissionRequired = 'API create';
@@ -346,7 +349,7 @@ class CRM_Utils_REST {
     elseif (in_array($action, ['get', 'getsingle', 'getvalue', 'getcount', 'getoptions', 'getfields'])) {
       $permissionRequired = 'API search';
     }
-    
+
     // Check API permission if required
     if (!empty($permissionRequired) && !CRM_Core_Permission::check($permissionRequired)) {
       return self::error("FATAL: You do not have permission to perform this action via REST API. Required permission: " . $permissionRequired);
@@ -368,7 +371,7 @@ class CRM_Utils_REST {
     return self::process($args);
   }
 
-  static function process(&$args, $params = []) {
+  public static function process(&$args, $params = []) {
     if (empty($params)) {
       $params = self::buildParamList();
     }
@@ -399,7 +402,8 @@ class CRM_Utils_REST {
     if ($_SERVER['REQUEST_METHOD'] == 'GET' && !strstr(strtolower((string)$args[2]), 'get') && strtolower((string)$args[2]) != 'check') {
       // get only valid for non destructive methods
 
-      return civicrm_api3_create_error("SECURITY: All requests that modify the database must be http POST, not GET.",
+      return civicrm_api3_create_error(
+        "SECURITY: All requests that modify the database must be http POST, not GET.",
         [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
@@ -413,13 +417,19 @@ class CRM_Utils_REST {
     $disableOptions = [
       'sort', 'limit', 'rowCount', 'offset'
     ];
-    foreach($disableOptions as $opt) {
-      if (isset($params[$opt])) unset($params[$opt]);
-      if (isset($params['option.'.$opt])) unset($params['option.'.$opt]);
-      if (isset($params['option_'.$opt])) unset($params['option_'.$opt]);
+    foreach ($disableOptions as $opt) {
+      if (isset($params[$opt])) {
+        unset($params[$opt]);
+      }
+      if (isset($params['option.'.$opt])) {
+        unset($params['option.'.$opt]);
+      }
+      if (isset($params['option_'.$opt])) {
+        unset($params['option_'.$opt]);
+      }
     }
     if (isset($params['options'])) {
-      $options =& $params['options'];
+      $options = &$params['options'];
       // don't allow sort for query security concern
       if (isset($options['sort'])) {
         if (!self::validateSortParameter($options['sort'])) {
@@ -455,7 +465,7 @@ class CRM_Utils_REST {
     return $result;
   }
 
-  static function buildParamList() {
+  public static function buildParamList() {
     $params = [];
 
     $skipVars = [
@@ -467,7 +477,7 @@ class CRM_Utils_REST {
       'action' => 1,
     ];
 
-    if($_SERVER["CONTENT_TYPE"] === strtolower('application/json')) {
+    if ($_SERVER["CONTENT_TYPE"] === strtolower('application/json')) {
       $input = file_get_contents('php://input');
       $params = json_decode($input, TRUE);
       if (empty($params)) {
@@ -489,12 +499,14 @@ class CRM_Utils_REST {
       }
     }
     if (CRM_Utils_Array::arrayKeyExists('return', $_REQUEST) && is_array($_REQUEST['return'])) {
-      foreach ($_REQUEST['return'] as $key => $v) $params['return.' . $key] = 1;
+      foreach ($_REQUEST['return'] as $key => $v) {
+        $params['return.' . $key] = 1;
+      }
     }
     return $params;
   }
 
-  static function fatal($pearError) {
+  public static function fatal($pearError) {
     header('Content-Type: text/xml');
     $error = [];
     $error['code'] = $pearError->getCode();
@@ -511,7 +523,7 @@ class CRM_Utils_REST {
     CRM_Utils_System::civiExit();
   }
 
-  static function APIDoc() {
+  public static function APIDoc() {
 
     CRM_Utils_System::setTitle("API Parameters");
     $template = CRM_Core_Smarty::singleton();
@@ -520,17 +532,18 @@ class CRM_Utils_REST {
   }
 
   /** used to load a template "inline", eg. for ajax, without having to build a menu for each template */
-  static function loadTemplate() {
+  public static function loadTemplate() {
   }
 
-  static function ajax() {
+  public static function ajax() {
     // this is driven by the menu system, so we can use permissioning to
     // restrict calls to this etc
     // the request has to be sent by an ajax call. First line of protection against csrf
     $config = CRM_Core_Config::singleton();
     if (!$config->debug && !self::isWebServiceRequest()) {
       require_once 'api/v3/utils.php';
-      $error = civicrm_api3_create_error("SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
+      $error = civicrm_api3_create_error(
+        "SECURITY ALERT: Ajax requests can only be issued by javascript clients, eg. $().crmAPI().",
         [
           'IP' => CRM_Utils_System::ipAddress(),
           'level' => 'security',
@@ -547,14 +560,14 @@ class CRM_Utils_REST {
     if (!empty($className)) {
       $className = CRM_Utils_String::munge($className);
       $fnName = CRM_Utils_Array::value('fnName', $_REQUEST);
-      
+
       // Security check: functions that are defined only in AJAX.php can be called via ajax interface
       if (!CRM_Core_Page_AJAX::checkAuthz('method', $className, $fnName)) {
         $err = ['error_message' => 'Unknown function invocation.', 'is_error' => 1];
         echo self::output($err);
         CRM_Utils_System::civiExit();
       }
-      
+
       $params = self::buildParamList();
       $result = call_user_func([$className, $fnName], $params);
       echo self::output($result);
@@ -625,7 +638,7 @@ class CRM_Utils_REST {
     return TRUE;
   }
 
-    /**
+  /**
    * Does this request appear to be a web-service request?
    *
    * It is important to distinguish regular browser-page-loads from web-service-requests. Regular
@@ -652,4 +665,3 @@ class CRM_Utils_REST {
   }
 
 }
-

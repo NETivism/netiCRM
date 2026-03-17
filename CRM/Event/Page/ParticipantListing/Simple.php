@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Event_Page_ParticipantListing_Simple extends CRM_Core_Page {
 
@@ -42,11 +39,18 @@ class CRM_Event_Page_ParticipantListing_Simple extends CRM_Core_Page {
 
   protected $_eventTitle;
 
-  protected $_pager; function preProcess() {
+  protected $_pager;
+  /**
+   * Pre process
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
 
     // retrieve Event Title and include it in page title
-    $this->_eventTitle = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event',
+    $this->_eventTitle = CRM_Core_DAO::getFieldValue(
+      'CRM_Event_DAO_Event',
       $this->_id,
       'title'
     );
@@ -56,7 +60,12 @@ class CRM_Event_Page_ParticipantListing_Simple extends CRM_Core_Page {
     $this->assign('displayRecent', FALSE);
   }
 
-  function run() {
+  /**
+   * Run
+   *
+   * @return void
+   */
+  public function run() {
     $this->preProcess();
 
     $fromClause = "
@@ -102,8 +111,16 @@ LIMIT    $offset, $rowCount";
     return parent::run();
   }
 
-  function pager($fromClause, $whereClause, $whereParams) {
-
+  /**
+   * Pager
+   *
+   * @param string $fromClause
+   * @param string $whereClause
+   * @param array $whereParams
+   *
+   * @return void
+   */
+  public function pager($fromClause, $whereClause, $whereParams) {
 
     $params = [];
 
@@ -127,7 +144,12 @@ SELECT count( civicrm_contact.id )
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  function orderBy() {
+  /**
+   * Order by
+   *
+   * @return string
+   */
+  public function orderBy() {
     static $headers = NULL;
 
     if (!$headers) {
@@ -145,21 +167,23 @@ SELECT count( civicrm_contact.id )
     }
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
     $sort = new CRM_Utils_Sort($headers, $sortID);
     $this->assign_by_ref('headers', $headers);
     $this->assign_by_ref('sort', $sort);
-    $this->set(CRM_Utils_Sort::SORT_ID,
+    $this->set(
+      CRM_Utils_Sort::SORT_ID,
       $sort->getCurrentSortID()
     );
-    $this->set(CRM_Utils_Sort::SORT_DIRECTION,
+    $this->set(
+      CRM_Utils_Sort::SORT_DIRECTION,
       $sort->getCurrentSortDirection()
     );
 
     return $sort->orderBy();
   }
 }
-

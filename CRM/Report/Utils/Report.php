@@ -26,17 +26,26 @@
 */
 
 /**
+ * Utility methods for report generation including CSV export and chart rendering
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Report_Utils_Report {
 
-  static function getValueFromUrl($instanceID = NULL) {
+  /**
+   * Returns the report template value (report_id) from the URL or from a saved instance.
+   * When $instanceID is provided, reads report_id from the database for that instance.
+   * Otherwise parses the current URL path, stripping the leading 'civicrm/report' segments.
+   *
+   * @param int|null $instanceID The report instance ID, or NULL to read from current URL.
+   *
+   * @return string The option value string identifying the report template (e.g. 'contact/summary').
+   */
+  public static function getValueFromUrl($instanceID = NULL) {
     if ($instanceID) {
-      $optionVal = CRM_Core_DAO::getFieldValue('CRM_Report_DAO_Instance',
+      $optionVal = CRM_Core_DAO::getFieldValue(
+        'CRM_Report_DAO_Instance',
         $instanceID,
         'report_id'
       );
@@ -56,7 +65,15 @@ class CRM_Report_Utils_Report {
     return $optionVal;
   }
 
-  static function getValueIDFromUrl($instanceID = NULL) {
+  /**
+   * Returns the option value row ID and option value string for the current report template URL.
+   *
+   * @param int|null $instanceID The report instance ID, or NULL to read from current URL.
+   *
+   * @return array|false Two-element array: [0] => option value row ID, [1] => option value string.
+   *   Returns FALSE if no matching option value is found.
+   */
+  public static function getValueIDFromUrl($instanceID = NULL) {
     $optionVal = self::getValueFromUrl($instanceID);
 
     if ($optionVal) {
@@ -68,7 +85,15 @@ class CRM_Report_Utils_Report {
     return FALSE;
   }
 
-  static function getInstanceIDForValue($optionVal) {
+  /**
+   * Returns the highest report instance ID for a given report template value (report_id).
+   * Results are cached in a static variable for the duration of the request.
+   *
+   * @param string $optionVal The report template option value (e.g. 'contact/summary').
+   *
+   * @return string|null The instance ID as a string, or NULL if none exists.
+   */
+  public static function getInstanceIDForValue($optionVal) {
     static $valId = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($optionVal, $valId)) {
@@ -82,7 +107,16 @@ WHERE  report_id = %1";
     return $valId[$optionVal];
   }
 
-  static function getInstanceIDForPath($path = NULL) {
+  /**
+   * Returns the highest report instance ID whose concatenated report_id/name matches
+   * the current URL path. Reads the path from the URL via getInstancePath().
+   * Results are cached in a static variable for the duration of the request.
+   *
+   * @param string|null $path Unused; the path is always resolved from the current URL.
+   *
+   * @return string|null The instance ID as a string, or NULL if none exists.
+   */
+  public static function getInstanceIDForPath($path = NULL) {
     static $valId = [];
 
     // if $path is null, try to get it from url
@@ -99,13 +133,28 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
     return $valId[$path];
   }
 
-  static function getNextUrl($urlValue, $query = 'reset=1', $absolute = FALSE, $instanceID = NULL) {
+  /**
+   * Returns the URL to navigate to a report template or instance.
+   * When $instanceID is truthy, resolves the highest instance ID for $urlValue and
+   * returns its instance URL; returns FALSE if no instance is found.
+   * Otherwise returns the direct template URL.
+   *
+   * @param string $urlValue The report template option value (e.g. 'contact/summary').
+   * @param string $query Query string to append (default 'reset=1').
+   * @param bool $absolute Whether to return an absolute URL (default FALSE).
+   * @param int|null $instanceID Pass a truthy value to force instance URL resolution.
+   *
+   * @return string|false The report URL, or FALSE if instance resolution fails.
+   */
+  public static function getNextUrl($urlValue, $query = 'reset=1', $absolute = FALSE, $instanceID = NULL) {
     if ($instanceID) {
       $instanceID = self::getInstanceIDForValue($urlValue);
 
       if ($instanceID) {
-        return CRM_Utils_System::url("civicrm/report/instance/{$instanceID}",
-          "{$query}", $absolute
+        return CRM_Utils_System::url(
+          "civicrm/report/instance/{$instanceID}",
+          "{$query}",
+          $absolute
         );
       }
       else {
@@ -113,14 +162,22 @@ WHERE  TRIM(BOTH '/' FROM CONCAT(report_id, '/', name)) = %1";
       }
     }
     else {
-      return CRM_Utils_System::url("civicrm/report/" . trim($urlValue, '/'),
-        $query, $absolute
+      return CRM_Utils_System::url(
+        "civicrm/report/" . trim($urlValue, '/'),
+        $query,
+        $absolute
       );
     }
   }
 
-  // get instance count for a template
-  static function getInstanceCount($optionVal) {
+  /**
+   * Returns the number of report instances created from a given report template.
+   *
+   * @param string $optionVal The report template option value (e.g. 'contact/summary').
+   *
+   * @return string|int The instance count (returned as a string from singleValueQuery).
+   */
+  public static function getInstanceCount($optionVal) {
     $sql = "
 SELECT count(inst.id)
 FROM   civicrm_report_instance inst
@@ -131,17 +188,28 @@ WHERE  inst.report_id = %1";
     return $count;
   }
 
-  static function mailReport($fileContent, $instanceID = NULL, $outputMode = 'html') {
+  /**
+   * Emails a rendered report to the addresses configured on the report instance.
+   * Prepends the report URL to the content and uses the domain's From address.
+   *
+   * @param string $fileContent The rendered HTML or text content of the report.
+   * @param int|null $instanceID The report instance ID. Returns FALSE if not provided.
+   * @param string $outputMode Output format; currently only 'html' is used (default 'html').
+   *
+   * @return bool Result of CRM_Utils_Mail::send(); FALSE if $instanceID is empty.
+   */
+  public static function mailReport($fileContent, $instanceID = NULL, $outputMode = 'html') {
     if (!$instanceID) {
       return FALSE;
     }
 
-    $url = CRM_Utils_System::url("civicrm/report/instance/{$instanceID}",
-      "reset=1", TRUE
+    $url = CRM_Utils_System::url(
+      "civicrm/report/instance/{$instanceID}",
+      "reset=1",
+      TRUE
     );
     $url = "Report Url: {$url} ";
     $fileContent = $url . $fileContent;
-
 
     list($domainEmailName,
       $domainEmailAddress
@@ -149,7 +217,8 @@ WHERE  inst.report_id = %1";
 
     $params = ['id' => $instanceID];
     $instanceInfo = [];
-    CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
+    CRM_Core_DAO::commonRetrieve(
+      'CRM_Report_DAO_Instance',
       $params,
       $instanceInfo
     );
@@ -166,12 +235,22 @@ WHERE  inst.report_id = %1";
     $params['text'] = '';
     $params['html'] = $fileContent;
 
-
     $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_usedFor);
     return CRM_Utils_Mail::send($params);
   }
 
-  static function export2xls(&$form, &$rows, $fileName = NULL) {
+  /**
+   * Exports the report rows as an Excel (.xlsx) file and triggers a browser download.
+   * Uses the form's _columnHeaders to build the header row and processes date/money fields.
+   * Calls CRM_Utils_System::civiExit() after writing the file.
+   *
+   * @param CRM_Report_Form &$form The report form instance, providing _columnHeaders.
+   * @param array &$rows Array of data rows keyed by column header names.
+   * @param string|null $fileName Optional file name; defaults to 'report_{timestamp}.xlsx'.
+   *
+   * @return void
+   */
+  public static function export2xls(&$form, &$rows, $fileName = NULL) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -181,7 +260,7 @@ WHERE  inst.report_id = %1";
     // Replace internal header names with friendly ones, where available.
     foreach ($columnHeaders as $header) {
       if (isset($form->_columnHeaders[$header])) {
-        if(CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024){
+        if (CRM_Utils_Array::value('type', $form->_columnHeaders[$header]) == 1024) {
           $headers[] = $form->_columnHeaders[$header]['title'] . ':' . ts('Currency');
         }
         $headers[] = html_entity_decode(strip_tags($form->_columnHeaders[$header]['title']));
@@ -233,7 +312,18 @@ WHERE  inst.report_id = %1";
     CRM_Utils_System::civiExit();
   }
 
-  static function add2group(&$form, $groupID) {
+  /**
+   * Adds contacts returned by the report's current query to a CiviCRM group.
+   * When the report uses GROUP BY or HAVING clauses, wraps the query in a subquery
+   * to correctly resolve HAVING conditions before collecting distinct contact IDs.
+   *
+   * @param CRM_Report_Form &$form The report form instance; must have an alias for
+   *   'civicrm_contact' in _aliases, and may have _groupBy, _having, _select, _from, _where.
+   * @param int $groupID The ID of the CiviCRM group to add contacts to.
+   *
+   * @return void
+   */
+  public static function add2group(&$form, $groupID) {
 
     if (is_numeric($groupID) && isset($form->_aliases['civicrm_contact'])) {
 
@@ -282,11 +372,16 @@ WHERE  inst.report_id = %1";
       CRM_Core_Session::setStatus(ts("Listed contact(s) have been added to the selected group."));
     }
   }
-  static function getInstanceID() {
+  /**
+   * Extracts the report instance ID from the current URL path.
+   * Expects a URL of the form 'civicrm/report/instance/{id}'.
+   *
+   * @return int|null The positive integer instance ID, or NULL if the URL does not match.
+   */
+  public static function getInstanceID() {
 
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
-
 
     if ($arg[1] == 'report' &&
       CRM_Utils_Array::value(2, $arg) == 'instance'
@@ -297,7 +392,13 @@ WHERE  inst.report_id = %1";
     }
   }
 
-  static function getInstancePath() {
+  /**
+   * Extracts the path suffix after 'civicrm/report/instance/' from the current URL.
+   * The returned path can be matched against civicrm_report_instance.name for lookup.
+   *
+   * @return string|null The sanitized path string, or NULL if the URL does not match.
+   */
+  public static function getInstancePath() {
     $config = CRM_Core_Config::singleton();
     $arg = explode('/', $_GET[$config->userFrameworkURLVar]);
 
@@ -310,22 +411,33 @@ WHERE  inst.report_id = %1";
     }
   }
 
-  static function isInstancePermissioned($instanceId) {
+  /**
+   * Checks whether the current user has permission to access a report instance.
+   * Returns TRUE when no instance is given, or when the instance has no permission
+   * set, or when the user has either the instance permission or 'administer Reports'.
+   *
+   * @param int|null $instanceId The report instance ID to check, or NULL/0 to skip.
+   *
+   * @return bool TRUE if access is allowed, FALSE otherwise.
+   */
+  public static function isInstancePermissioned($instanceId) {
     if (!$instanceId) {
       return TRUE;
     }
 
     $instanceValues = [];
     $params = ['id' => $instanceId];
-    CRM_Core_DAO::commonRetrieve('CRM_Report_DAO_Instance',
+    CRM_Core_DAO::commonRetrieve(
+      'CRM_Report_DAO_Instance',
       $params,
       $instanceValues
     );
 
     if (!empty($instanceValues['permission']) &&
-      (!(CRM_Core_Permission::check($instanceValues['permission']) ||
+      (!(
+        CRM_Core_Permission::check($instanceValues['permission']) ||
           CRM_Core_Permission::check('administer Reports')
-        ))
+      ))
     ) {
       return FALSE;
     }
@@ -333,4 +445,3 @@ WHERE  inst.report_id = %1";
     return TRUE;
   }
 }
-

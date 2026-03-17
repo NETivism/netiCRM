@@ -27,25 +27,26 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  *
  */
 class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
-  static private $_systemObject = NULL;
+  private static $_systemObject = NULL;
 
-  static private $_userObject = NULL;
+  private static $_userObject = NULL;
 
-  static private $_mailingPref = NULL;
+  private static $_mailingPref = NULL;
 
-  static function systemObject() {
+  /**
+   * Retrieve the system-wide preferences object.
+   *
+   * @return CRM_Core_DAO_Preferences system-wide preferences
+   */
+  public static function systemObject() {
     if (!self::$_systemObject) {
       self::$_systemObject = new CRM_Core_DAO_Preferences();
       self::$_systemObject->domain_id = CRM_Core_Config::domainID();
@@ -56,10 +57,15 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_systemObject;
   }
 
-  static function mailingPreferences() {
+  /**
+   * Retrieve the mailing backend preferences.
+   *
+   * @return array associative array of mailing configuration
+   */
+  public static function mailingPreferences() {
     global $civicrm_conf;
     if (!self::$_mailingPref) {
-      if(isset($civicrm_conf['mailing_backend'])){
+      if (isset($civicrm_conf['mailing_backend'])) {
         self::$_mailingPref = $civicrm_conf['mailing_backend'];
         return $civicrm_conf['mailing_backend'];
       }
@@ -75,8 +81,14 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_mailingPref;
   }
 
-
-  static function userObject($userID = NULL) {
+  /**
+   * Retrieve the preferences object for a specific user.
+   *
+   * @param int|null $userID optional user ID (defaults to logged in user)
+   *
+   * @return CRM_Core_DAO_Preferences user preferences object
+   */
+  public static function userObject($userID = NULL) {
     if (!self::$_userObject) {
       if (!$userID) {
         $session = CRM_Core_Session::singleton();
@@ -91,7 +103,16 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_userObject;
   }
 
-  static function value($name, $system = TRUE, $userID = NULL) {
+  /**
+   * Get the value of a specific preference.
+   *
+   * @param string $name preference name
+   * @param bool $system TRUE for system-wide, FALSE for user-specific
+   * @param int|null $userID optional user ID for user preferences
+   *
+   * @return mixed preference value
+   */
+  public static function value($name, $system = TRUE, $userID = NULL) {
     if ($system) {
       $object = self::systemObject();
     }
@@ -109,7 +130,14 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return self::$_systemObject->$name;
   }
 
-  static function addressSequence($format) {
+  /**
+   * Compute the address field sequence based on a format string.
+   *
+   * @param string $format address format string (e.g., with {street_address})
+   *
+   * @return string[] array of field names in order
+   */
+  public static function addressSequence($format) {
     // also compute and store the address sequence
     $addressSequence = ['address_name',
       'street_address',
@@ -139,8 +167,27 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return $newSequence;
   }
 
-  static function valueOptions($name, $system = TRUE, $userID = NULL, $localize = FALSE,
-    $returnField = 'name', $returnNameANDLabels = FALSE, $condition = NULL
+  /**
+   * Get the enabled options for a multi-choice preference.
+   *
+   * @param string $name preference name
+   * @param bool $system TRUE for system-wide, FALSE for user-specific
+   * @param int|null $userID optional user ID
+   * @param bool $localize whether to localize labels
+   * @param string $returnField field to use as key ('name' or 'label')
+   * @param bool $returnNameANDLabels whether to return name => label pairs
+   * @param string|null $condition optional SQL condition for options
+   *
+   * @return array associative array of enabled options
+   */
+  public static function valueOptions(
+    $name,
+    $system = TRUE,
+    $userID = NULL,
+    $localize = FALSE,
+    $returnField = 'name',
+    $returnNameANDLabels = FALSE,
+    $condition = NULL
   ) {
     if ($system) {
       $object = self::systemObject();
@@ -173,7 +220,8 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
 
     if ($optionValue && !empty($groupValues)) {
 
-      $dbValues = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $dbValues = explode(
+        CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
         substr($optionValue, 1, -1)
       );
 
@@ -192,7 +240,18 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     return ($returnNameANDLabels) ? $nameAndLabels : $returnValues;
   }
 
-  static function setValue($name, $value, $system = TRUE, $userID = NULL, $keyField = 'name') {
+  /**
+   * Set the value of a specific preference.
+   *
+   * @param string $name preference name
+   * @param mixed $value new value (string or array for multi-choice)
+   * @param bool $system TRUE for system-wide, FALSE for user-specific
+   * @param int|null $userID optional user ID for user preferences
+   * @param string $keyField field to use for mapping array values
+   *
+   * @return void
+   */
+  public static function setValue($name, $value, $system = TRUE, $userID = NULL, $keyField = 'name') {
     if ($system) {
       $object = self::systemObject();
     }
@@ -215,7 +274,8 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
       }
 
       if (!empty($cbValues)) {
-        $object->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $object->$name = CRM_Core_BAO_CustomOption::VALUE_SEPERATOR . CRM_Utils_Array::implode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           array_keys($cbValues)
         ) . CRM_Core_BAO_CustomOption::VALUE_SEPERATOR;
       }
@@ -230,7 +290,14 @@ class CRM_Core_BAO_Preferences extends CRM_Core_DAO_Preferences {
     $object->save();
   }
 
-  static function fixAndStoreDirAndURL(&$params) {
+  /**
+   * Extract and store directory and URL preferences from parameters.
+   *
+   * @param array &$params associative array of configuration parameters
+   *
+   * @return void
+   */
+  public static function fixAndStoreDirAndURL(&$params) {
     $sql = "
 SELECT v.name as valueName, g.name as optionName
 FROM   civicrm_option_value v,
@@ -266,7 +333,15 @@ AND    v.is_active = 1
     }
   }
 
-  static function storeDirectoryOrURLPreferences(&$params, $type = 'directory') {
+  /**
+   * Store directory or URL preferences in the option_value table.
+   *
+   * @param array &$params associative array of (name => value)
+   * @param string $type preference type ('directory' or 'url')
+   *
+   * @return void
+   */
+  public static function storeDirectoryOrURLPreferences(&$params, $type = 'directory') {
     $optionName = ($type == 'directory') ? 'directory_preferences' : 'url_preferences';
 
     $sql = "
@@ -278,7 +353,6 @@ WHERE  g.name = %2
 AND    v.option_group_id = g.id
 AND    v.name = %3
 ";
-
 
     foreach ($params as $name => $value) {
       // always try to store relative directory or url from CMS root
@@ -296,7 +370,15 @@ AND    v.name = %3
     }
   }
 
-  static function retrieveDirectoryAndURLPreferences(&$params, $setInConfig = FALSE) {
+  /**
+   * Retrieve directory and URL preferences from the database.
+   *
+   * @param array &$params associative array to store retrieved values
+   * @param bool $setInConfig whether to also set values in the global config object
+   *
+   * @return void
+   */
+  public static function retrieveDirectoryAndURLPreferences(&$params, $setInConfig = FALSE) {
     if ($setInConfig) {
       $config = &CRM_Core_Config::singleton();
     }
@@ -310,8 +392,6 @@ OR       g.name = 'url_preferences' )
 AND    v.option_group_id = g.id
 AND    v.is_active = 1
 ";
-
-
 
     $dao = CRM_Core_DAO::executeQuery($sql);
     while ($dao->fetch()) {
@@ -331,4 +411,3 @@ AND    v.is_active = 1
     }
   }
 }
-

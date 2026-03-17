@@ -8,15 +8,15 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * The option group id of from_email_address
-   * 
+   *
    * @var int
    * @static
    */
-  static $_optionGroupId = NULL;
+  public static $_optionGroupId = NULL;
 
   /**
    * The edit form controller
@@ -26,31 +26,29 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
   private $_controller = NULL;
 
   /**
-   * Obtains the group name from url and sets the title.
+   * Obtains the group name from URL and sets the title.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     self::$_optionGroupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup', 'from_email_address', 'id', 'name');
   }
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -71,11 +69,11 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the basic page (run essentially starts execution for that page).
+   * Runs the basic page.
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->assign('action', $this->_action);
@@ -124,20 +122,17 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all options
-   *
+   * Browses all options.
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
     $groupParams = ['name' => 'from_email_address'];
     $optionValues = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'component_id,weight');
     $returnURL = CRM_Utils_System::url("civicrm/admin/from_email_address", "reset=1");
     $filter = "option_group_id = " . self::$_optionGroupId;
     CRM_Utils_Weight::addOrder($optionValues, 'CRM_Core_DAO_OptionValue', 'id', $returnURL, $filter);
-    foreach($optionValues as $idx => $val) {
+    foreach ($optionValues as $idx => $val) {
       $email = CRM_Utils_Mail::pluckEmailFromHeader($val['name']);
       $pageCount = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_contribution_page WHERE receipt_from_email LIKE %1", [
         1 => [$email, 'String'],
@@ -163,14 +158,16 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Edit this entity.
+   * Edits this entity.
    *
-   * @param int $mode - what mode for the form ?
-   * @param int $id - id of the entity (for update, view operations)
+   * @param int $mode
+   * @param int|null $id
+   * @param bool $imageUpload
+   * @param bool $pushUserContext
    *
-   * @return $controller
+   * @return void
    */
-  function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
+  public function edit($mode, $id = NULL, $imageUpload = FALSE, $pushUserContext = TRUE) {
     $controllerName = $this->editForm();
     $this->_controller = new $controllerName();
 
@@ -188,7 +185,14 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
     $this->_controller->run();
   }
 
-  function delete($id) {
+  /**
+   * Deletes this entity.
+   *
+   * @param int|null $id
+   *
+   * @return void
+   */
+  public function delete($id) {
     $this->_controller = new CRM_Core_Controller_Simple('CRM_Admin_Form_FromEmailAddress', $this->editName(), $this->_action, FALSE);
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
@@ -203,41 +207,42 @@ class CRM_Admin_Page_FromEmailAddress extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Controller_FromEmailAddress';
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'from_email_address';
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/from_email_address';
   }
 
   /**
-   * function to get userContext params
+   * Gets user context params.
    *
-   * @param int $mode mode that we are in
+   * @param string|null $mode
    *
    * @return string
-   * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return '&reset=1&action=browse';
   }
 }

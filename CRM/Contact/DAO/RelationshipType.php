@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
-{
+
+class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_relationship_type';
+  public static $_tableName = 'civicrm_relationship_type';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Primary key
    *
    * @var int unsigned
@@ -150,101 +148,97 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    * @var boolean
    */
   public $is_active;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_relationship_type
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
-    /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'name_a_b' => [
           'name' => 'name_a_b',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name A B') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'label_a_b' => [
           'name' => 'label_a_b',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label A B') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'name_b_a' => [
           'name' => 'name_b_a',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Name B A') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'label_b_a' => [
           'name' => 'label_b_a',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label B A') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'description' => [
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Description') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'contact_type_a' => [
           'name' => 'contact_type_a',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Contact Type A') ,
-                   'enumValues' => 'Individual, Organization, Household',
-         ] ,
+          'enumValues' => 'Individual, Organization, Household',
+        ],
         'contact_type_b' => [
           'name' => 'contact_type_b',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Contact Type B') ,
-                   'enumValues' => 'Individual, Organization, Household',
-         ] ,
+          'enumValues' => 'Individual, Organization, Household',
+        ],
         'contact_sub_type_a' => [
           'name' => 'contact_sub_type_a',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Subtype A') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'contact_sub_type_b' => [
           'name' => 'contact_sub_type_b',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Contact Subtype B') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
       ];
     }
     return self::$_fields;
@@ -252,31 +246,25 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -284,22 +272,21 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['relationship_type'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -307,12 +294,13 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['relationship_type'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
   /**
@@ -320,12 +308,12 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {
     static $enums = [
-                                                                                            'contact_type_a',
-                          'contact_type_b',
-                                                                ];
+        'contact_type_a',
+        'contact_type_b',
+    ];
     return $enums;
   }
   /**
@@ -336,22 +324,21 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                                                            'contact_type_a' => [
-                  'Individual' => ts('Individual'),
-                  'Organization' => ts('Organization'),
-                  'Household' => ts('Household'),
-                ],
-                          'contact_type_b' => [
-                  'Individual' => ts('Individual'),
-                  'Organization' => ts('Organization'),
-                  'Household' => ts('Household'),
-                ],
-                                                                  ];
+        'contact_type_a' => [
+          'Individual' => ts('Individual'),
+          'Organization' => ts('Organization'),
+          'Household' => ts('Household'),
+        ],
+        'contact_type_b' => [
+          'Individual' => ts('Individual'),
+          'Organization' => ts('Organization'),
+          'Household' => ts('Household'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -361,10 +348,9 @@ class CRM_Contact_DAO_RelationshipType extends CRM_Core_DAO
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Contact_DAO_RelationshipType::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contact_DAO_RelationshipType::tsEnum($enum, $values[$enum]);
       }

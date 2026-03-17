@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class provides the functionality for batch profile update for event participations
@@ -64,9 +59,8 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -94,11 +88,10 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
   /**
    * Build the form
    *
-   * @access public
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     $types = ['Participant'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types, TRUE);
@@ -108,8 +101,12 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
       CRM_Utils_System::redirect($this->_userContext);
     }
 
-    $ufGroupElement = $this->add('select', 'uf_group_id', ts('Select Profile'),
-      ['' => ts('- select profile -')] + $profiles, TRUE
+    $ufGroupElement = $this->add(
+      'select',
+      'uf_group_id',
+      ts('Select Profile'),
+      ['' => ts('- select profile -')] + $profiles,
+      TRUE
     );
     $this->addDefaultButtons(ts('Continue >>'));
   }
@@ -117,11 +114,10 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
   /**
    * Add local and global form rules
    *
-   * @access protected
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Event_Form_Task_PickProfile', 'formRule']);
   }
 
@@ -130,20 +126,17 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
    *
    * @param array $fields posted values of the form
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     return TRUE;
   }
 
   /**
    * process the form after the input has been submitted and validated
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -155,4 +148,3 @@ class CRM_Event_Form_Task_PickProfile extends CRM_Event_Form_Task {
   }
   //end of function
 }
-

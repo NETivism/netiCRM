@@ -27,9 +27,6 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/api.php';
 
@@ -59,9 +56,10 @@ class api_v3_APITest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  protected function tearDown() {}
+  protected function tearDown() {
+  }
 
-  function testAPIReplaceVariables() {
+  public function testAPIReplaceVariables() {
     $result = [];
     $result['testfield'] = 6;
     $result['api.tag.get'] = 999;
@@ -94,29 +92,28 @@ class api_v3_APITest extends CiviUnitTestCase {
   /*
     * test that error doesn't occur for non-existant file
     */
-  function testAPIWrapperIncludeNoFile() {
-
+  public function testAPIWrapperIncludeNoFile() {
 
     $result = civicrm_api('RandomFile', 'get', ['version' => 3]);
     $this->assertEquals($result['is_error'], 1);
     $this->assertEquals($result['error_message'], 'API (RandomFile,get) does not exist (join the API team and implement it!)');
   }
 
-  function testAPIWrapperCamelCaseFunction() {
+  public function testAPIWrapperCamelCaseFunction() {
     $result = civicrm_api('OptionGroup', 'Get', [
       'version' => 3,
       ]);
     $this->assertEquals(0, $result['is_error']);
   }
 
-  function testAPIWrapperLcaseFunction() {
+  public function testAPIWrapperLcaseFunction() {
     $result = civicrm_api('OptionGroup', 'get', [
       'version' => 3,
       ]);
     $this->assertEquals(0, $result['is_error']);
   }
 
-  function testAPIResolver() {
+  public function testAPIResolver() {
     $oldpath = get_include_path();
     set_include_path($oldpath . PATH_SEPARATOR . dirname(__FILE__) . '/dataset/resolver');
 
@@ -136,7 +133,7 @@ class api_v3_APITest extends CiviUnitTestCase {
     set_include_path($oldpath);
   }
 
-  function testFromCamel() {
+  public function testFromCamel() {
     $cases = [
       'Contribution' => 'contribution',
       'contribution' => 'contribution',
@@ -153,7 +150,7 @@ class api_v3_APITest extends CiviUnitTestCase {
     }
   }
 
-  function testToCamel() {
+  public function testToCamel() {
     $cases = [
       'Contribution' => 'Contribution',
       'contribution' => 'Contribution',
@@ -170,4 +167,3 @@ class api_v3_APITest extends CiviUnitTestCase {
     }
   }
 }
-

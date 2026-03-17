@@ -27,17 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  *  This file contains functions for creating and altering CiviCRM-tables.
  */
-
-
 
 /**
  * structure, similar to what is used in GenCode.php
@@ -62,17 +58,13 @@
 class CRM_Core_BAO_SchemaHandler {
 
   /**
-   * Function for creating a civiCRM-table
+   * Create a CiviCRM database table.
    *
-   * @param  String  $tableName        name of the table to be created.
-   * @param  Array   $tableAttributes  array containing atrributes for the table that needs to be created
+   * @param array &$params table definition parameters (name, fields, indexes, attributes)
    *
-   * @return true if successfully created, false otherwise
-   *
-   * @static
-   * @access public
+   * @return bool TRUE on success
    */
-  static function createTable(&$params) {
+  public static function createTable(&$params) {
     $sql = self::buildTableSQL($params);
     // do not i18n-rewrite
     $dao = &CRM_Core_DAO::executeQuery($sql, [], TRUE, NULL, FALSE, FALSE);
@@ -80,13 +72,20 @@ class CRM_Core_BAO_SchemaHandler {
 
     // logging support
 
-    $logging = new CRM_Logging_Schema;
+    $logging = new CRM_Logging_Schema();
     $logging->fixSchemaDifferencesFor($params['name']);
 
     return TRUE;
   }
 
-  static function buildTableSQL(&$params) {
+  /**
+   * Build the SQL statement for creating a table.
+   *
+   * @param array &$params table definition parameters
+   *
+   * @return string the SQL CREATE TABLE statement
+   */
+  public static function buildTableSQL(&$params) {
     $sql = "CREATE TABLE {$params['name']} (";
     if (isset($params['fields']) &&
       is_array($params['fields'])
@@ -116,7 +115,16 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildFieldSQL(&$params, $separator, $prefix) {
+  /**
+   * Build the SQL fragment for a single table field.
+   *
+   * @param array &$params field definition parameters
+   * @param string $separator SQL separator (usually a comma)
+   * @param string|null $prefix optional SQL prefix (e.g., 'ADD COLUMN')
+   *
+   * @return string the SQL field fragment
+   */
+  public static function buildFieldSQL(&$params, $separator, $prefix) {
     $sql = '';
     $sql .= $separator;
     $sql .= str_repeat(' ', 8);
@@ -144,7 +152,16 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildPrimaryKeySQL(&$params, $separator, $prefix) {
+  /**
+   * Build the SQL fragment for a primary key constraint.
+   *
+   * @param array &$params field definition parameters
+   * @param string $separator SQL separator (usually a comma)
+   * @param string|null $prefix optional SQL prefix
+   *
+   * @return string|null the SQL primary key fragment
+   */
+  public static function buildPrimaryKeySQL(&$params, $separator, $prefix) {
     $sql = NULL;
     if (CRM_Utils_Array::value('primary', $params)) {
       $sql .= $separator;
@@ -155,7 +172,17 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildSearchIndexSQL(&$params, $separator, $prefix, $indexExist = FALSE) {
+  /**
+   * Build the SQL fragment for a search index.
+   *
+   * @param array &$params field definition parameters
+   * @param string $separator SQL separator (usually a comma)
+   * @param string|null $prefix optional SQL prefix
+   * @param bool $indexExist whether an index already exists for this field
+   *
+   * @return string|null the SQL index fragment
+   */
+  public static function buildSearchIndexSQL(&$params, $separator, $prefix, $indexExist = FALSE) {
     $sql = NULL;
 
     // dont index blob
@@ -180,7 +207,16 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function buildIndexSQL(&$params, $separator, $prefix) {
+  /**
+   * Build the SQL fragment for a general index or unique index.
+   *
+   * @param array &$params index definition parameters
+   * @param string $separator SQL separator (usually a comma)
+   * @param string|null $prefix optional SQL prefix
+   *
+   * @return string the SQL index fragment
+   */
+  public static function buildIndexSQL(&$params, $separator, $prefix) {
     $sql = '';
     $sql .= $separator;
     $sql .= str_repeat(' ', 8);
@@ -206,7 +242,15 @@ class CRM_Core_BAO_SchemaHandler {
     return $sql;
   }
 
-  static function changeFKConstraint($tableName, $fkTableName) {
+  /**
+   * Change a foreign key constraint on a table.
+   *
+   * @param string $tableName name of the table to modify
+   * @param string $fkTableName name of the referenced table
+   *
+   * @return bool TRUE on success
+   */
+  public static function changeFKConstraint($tableName, $fkTableName) {
     $fkName = "{$tableName}_entity_id";
     if (strlen($fkName) >= 48) {
       $fkName = substr($fkName, 0, 32) . "_" . substr(md5($fkName), 0, 16);
@@ -228,7 +272,17 @@ ALTER TABLE {$tableName}
     return TRUE;
   }
 
-  static function buildForeignKeySQL(&$params, $separator, $prefix, $tableName) {
+  /**
+   * Build the SQL fragment for a foreign key constraint.
+   *
+   * @param array &$params field/FK definition parameters
+   * @param string $separator SQL separator (usually a comma)
+   * @param string|null $prefix optional SQL prefix (e.g., 'ADD ')
+   * @param string $tableName name of the table containing the field
+   *
+   * @return string|null the SQL foreign key fragment
+   */
+  public static function buildForeignKeySQL(&$params, $separator, $prefix, $tableName) {
     $sql = NULL;
     if (CRM_Utils_Array::value('fk_table_name', $params) &&
       CRM_Utils_Array::value('fk_field_name', $params)
@@ -247,7 +301,15 @@ ALTER TABLE {$tableName}
     return $sql;
   }
 
-  static function alterFieldSQL(&$params, $indexExist = FALSE) {
+  /**
+   * Build the SQL statement for altering a field in a table.
+   *
+   * @param array &$params alter field parameters (table_name, operation, etc.)
+   * @param bool $indexExist whether an index already exists for this field
+   *
+   * @return bool TRUE on success
+   */
+  public static function alterFieldSQL(&$params, $indexExist = FALSE) {
     $sql = str_repeat(' ', 8);
     $sql .= "ALTER TABLE {$params['table_name']}";
 
@@ -291,7 +353,7 @@ ALTER TABLE {$tableName}
     // logging support: if we’re adding a column (but only then!) make sure the potential relevant log table gets a column as well
     if ($params['operation'] == 'add') {
 
-      $logging = new CRM_Logging_Schema;
+      $logging = new CRM_Logging_Schema();
       $logging->fixSchemaDifferencesFor($params['table_name'], [$params['name']]);
     }
 
@@ -299,26 +361,39 @@ ALTER TABLE {$tableName}
   }
 
   /**
-   * Function to delete a civiCRM-table
+   * Drop a database table.
    *
-   * @param  String  $tableName   name of the table to be created.
+   * @param string $tableName name of the table to drop
    *
-   * @return true if successfully deleted, false otherwise
-   *
-   * @static
-   * @access public
+   * @return void
    */
-  static function dropTable($tableName) {
+  public static function dropTable($tableName) {
     $sql = "DROP TABLE $tableName";
     $dao = &CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function dropColumn($tableName, $columnName) {
+  /**
+   * Drop a specific column from a table.
+   *
+   * @param string $tableName name of the table
+   * @param string $columnName name of the column to drop
+   *
+   * @return void
+   */
+  public static function dropColumn($tableName, $columnName) {
     $sql = "ALTER TABLE $tableName DROP COLUMN $columnName";
     $dao = &CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function changeUniqueToIndex($tableName, $dropUnique = TRUE) {
+  /**
+   * Change a unique index to a non-unique index (or vice versa).
+   *
+   * @param string $tableName name of the table
+   * @param bool $dropUnique TRUE to drop unique and add regular index, FALSE for opposite
+   *
+   * @return void
+   */
+  public static function changeUniqueToIndex($tableName, $dropUnique = TRUE) {
     if ($dropUnique) {
       $sql = "ALTER TABLE $tableName 
 DROP INDEX `unique_entity_id` ,
@@ -332,10 +407,21 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
     $dao = &CRM_Core_DAO::executeQuery($sql);
   }
 
-  static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = []) {
+  /**
+   * Create missing indexes for a set of tables and fields.
+   *
+   * Handles multilingual fields by creating indexes for each locale.
+   *
+   * @param array &$tables associative array of (table_name => [field_names])
+   * @param string $createIndexPrefix prefix for the new index names
+   * @param array $substrLengths associative array of substring lengths for indexing
+   *
+   * @return void
+   */
+  public static function createIndexes(&$tables, $createIndexPrefix = 'index', $substrLenghts = []) {
     $queries = [];
 
-    $domain = new CRM_Core_DAO_Domain;
+    $domain = new CRM_Core_DAO_Domain();
     $domain->find(TRUE);
     $locales = explode(CRM_Core_DAO::VALUE_SEPARATOR, $domain->locales);
 
@@ -387,12 +473,19 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
     }
 
     // run the queries without i18n-rewriting
-    $dao = new CRM_Core_DAO;
+    $dao = new CRM_Core_DAO();
     foreach ($queries as $query) {
       $dao->query($query, FALSE);
     }
   }
 
+  /**
+   * Get the count of indexes on a specific table.
+   *
+   * @param string $table table name
+   *
+   * @return int number of indexes found
+   */
   public static function checkIndexCountByTable($table) {
     $table = CRM_Utils_Type::escape($table, 'String');
     $dao = CRM_Core_DAO::executeQuery("SHOW INDEX FROM $table");
@@ -403,11 +496,10 @@ ADD UNIQUE INDEX `unique_entity_id` ( `entity_id` )";
 
     // in case no N return
     $count = 1;
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $count++;
     }
     return $count;
   }
 
 }
-

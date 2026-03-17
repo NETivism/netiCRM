@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 #require_once 'CRM/Import/Parser/Contact.php';
 
@@ -46,16 +43,15 @@ abstract class CRM_Import_DataSource {
    * Provides information about the data source
    *
    * @return array collection of info about this data source
-   *
-   * @access public
-   *
    */
   abstract public function getInfo();
 
   /**
    * Function to set variables up before form is built
    *
-   * @access public
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   abstract public static function preProcess(&$form);
 
@@ -64,23 +60,42 @@ abstract class CRM_Import_DataSource {
    * form snippet. It should add all fields necesarry to get the data
    * uploaded to the temporary table in the DB.
    *
-   * @return None (operates directly on form argument)
-   * @access public
+   * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   abstract public static function buildQuickForm(&$form);
 
   /**
    * Function to process the form
    *
-   * @access public
+   * @param CRM_Core_Form $form
+   * @param array $params
+   * @param object $db
+   *
+   * @return void
    */
   abstract public static function postProcess(&$form, &$params, &$db);
 
+  /**
+   * Check if the user has permission to use this data source.
+   *
+   * @return bool
+   */
   public function checkPermission() {
     $info = $this->getInfo();
     return empty($info['permissions']) || CRM_Core_Permission::check($info['permissions']);
   }
 
+  /**
+   * Prepare the import table by adding status and primary key columns.
+   *
+   * @param string $tableName
+   * @param string $statusFieldName
+   * @param string $primaryKeyName
+   *
+   * @return array
+   */
   public static function prepareImportTable($tableName, $statusFieldName = '_status', $primaryKeyName = '_id') {
     $alterQuery = "ALTER TABLE $tableName
       ADD COLUMN $statusFieldName INT DEFAULT 0 NOT NULL,
@@ -93,4 +108,3 @@ abstract class CRM_Import_DataSource {
   }
 
 }
-

@@ -1,15 +1,34 @@
 <?php
 
+/**
+ * Form for uploading Newebpay contribution data for import.
+ */
 class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
 
-  function preProcess() {
+  /**
+   * Set up variables before the form is built.
+   *
+   * Redirects users to the fee import page if they are on an old path and
+   * registers the global form validation rule.
+   *
+   * @return void
+   */
+  public function preProcess() {
     if (strstr(CRM_Utils_System::currentPath(), '/newebpay/')) {
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/fee/import', 'reset=1'));
     }
     $this->addFormRule(['CRM_Contribute_Form_NewebpayImport_Upload', 'formRule'], $this);
   }
 
-  function buildQuickForm() {
+  /**
+   * Actually build the form components.
+   *
+   * Adds the file upload field, disbursement date selection (based on custom
+   * contribution fields of type 'Date'), and standard Continue/Cancel buttons.
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
     $this->add('file', 'uploadFile', ts('Import Data File'), 'size=30 maxlength=60', TRUE);
 
     $this->addRule('uploadFile', ts('Input file must be in CSV format'), 'utf8File');
@@ -27,7 +46,8 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
       // $this->add('Select', 'accounting_date', ts('Accounting date'), array(), )
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
@@ -39,6 +59,17 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
     );
   }
 
+  /**
+   * Global form rule for validation.
+   *
+   * Ensures that a file is uploaded and that its format is either CSV or XLSX.
+   *
+   * @param array $fields posted values of the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if (empty($files)) {
@@ -61,13 +92,25 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values for the form.
+   *
+   * @return array{} the array of default values (currently empty)
+   */
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
-
-  function postProcess() {
+  /**
+   * Process the form submission.
+   *
+   * Parses the uploaded file (CSV or XLSX) and stores the result and the
+   * selected disbursement date in the session for the preview step.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $this->set('parseResult', NULL);
     $submittedValues = $this->controller->exportValues($this->_name);
     if ($submittedValues['uploadFile']['name']) {
@@ -80,6 +123,16 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Parse the uploaded file content.
+   *
+   * Reads the file based on its type (CSV or XLSX), converts rows into
+   * associative arrays using the first row as headers.
+   *
+   * @param array $file the file attributes from the upload element
+   *
+   * @return array the array of parsed data rows
+   */
   public static function parseUpload($file) {
     if (file_exists($file['name'])) {
       if ($file['type'] == 'text/csv') {
@@ -88,7 +141,7 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
         $config = CRM_Core_Config::singleton();
         $rowsFromSheet = [];
         $i = 1;
-        while($row = fgetcsv($fd, 0, $config->fieldSeparator)) {
+        while ($row = fgetcsv($fd, 0, $config->fieldSeparator)) {
           $rowsFromSheet[$i] = $row;
           $i++;
         }
@@ -118,10 +171,9 @@ class CRM_Contribute_Form_NewebpayImport_Upload extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Upload Data');

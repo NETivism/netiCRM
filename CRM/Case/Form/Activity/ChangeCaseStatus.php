@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for OpenCase Activity
@@ -41,7 +37,7 @@
  */
 class CRM_Case_Form_Activity_ChangeCaseStatus {
 
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     if (!isset($form->_caseId)) {
       CRM_Core_Error::fatal(ts('Case Id not found.'));
     }
@@ -55,26 +51,31 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
    *
    * @return None
    */
-  function setDefaultValues(&$form) {
+  public function setDefaultValues(&$form) {
     $defaults = [];
     // Retrieve current case status
     $defaults['case_status_id'] = $form->_defaultCaseStatus;
     return $defaults;
   }
 
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
 
     $form->_caseStatus = CRM_Case_PseudoConstant::caseStatus();
     $form->_defaultCaseStatus = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_Case', $form->_caseId, 'status_id');
 
     if (!CRM_Utils_Array::arrayKeyExists($form->_defaultCaseStatus, $form->_caseStatus)) {
-      $form->_caseStatus[$form->_defaultCaseStatus] = CRM_Core_OptionGroup::getLabel('case_status',
+      $form->_caseStatus[$form->_defaultCaseStatus] = CRM_Core_OptionGroup::getLabel(
+        'case_status',
         $form->_defaultCaseStatus,
         FALSE
       );
     }
-    $form->add('select', 'case_status_id', ts('Case Status'),
-      $form->_caseStatus, TRUE
+    $form->add(
+      'select',
+      'case_status_id',
+      ts('Case Status'),
+      $form->_caseStatus,
+      TRUE
     );
   }
 
@@ -87,7 +88,7 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
    * @static
    * @access public
    */
-  static function formRule($values, $files, $form) {
+  public static function formRule($values, $files, $form) {
     return TRUE;
   }
 
@@ -123,7 +124,9 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
     }
 
     if ($activity->subject == 'null') {
-      $activity->subject = ts('Case status changed from %1 to %2', [1 => CRM_Utils_Array::value($form->_defaults['case_status_id'], $form->_caseStatus),
+      $activity->subject = ts(
+        'Case status changed from %1 to %2',
+        [1 => CRM_Utils_Array::value($form->_defaults['case_status_id'], $form->_caseStatus),
           2 => CRM_Utils_Array::value($params['case_status_id'], $form->_caseStatus),
         ]
       );
@@ -134,4 +137,3 @@ class CRM_Case_Form_Activity_ChangeCaseStatus {
     $params['statusMsg'] = ts('Case Status changed successfully.');
   }
 }
-

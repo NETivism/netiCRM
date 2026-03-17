@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class previews the uploaded file and returns summary
@@ -45,7 +41,6 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
@@ -97,8 +92,7 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $attr = [];
@@ -107,7 +101,8 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -128,7 +123,6 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Preview');
@@ -139,7 +133,6 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
    * preview the file and extract some summary statistics
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $fileName = $this->controller->exportValue('UploadFile', 'uploadFile');
@@ -157,7 +150,6 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     foreach ($mapper as $key => $value) {
       $mapperKeys[$key] = $mapper[$key][0];
     }
-
 
     $parser = new CRM_Event_Import_Parser_Participant($mapperKeys);
 
@@ -180,7 +172,9 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     $errorFilenamePrefix = CRM_Event_Import_Parser::ERROR_FILE_PREFIX.'_'.date('YmdHis', CRM_REQUEST_TIME);
     $this->set('errorFilenamePrefix', $errorFilenamePrefix);
 
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $fileName,
+      $seperator,
       $mapperFields,
       $skipColumnHeader,
       CRM_Event_Import_Parser::MODE_IMPORT,
@@ -214,4 +208,3 @@ class CRM_Event_Import_Form_Preview extends CRM_Core_Form {
     }
   }
 }
-

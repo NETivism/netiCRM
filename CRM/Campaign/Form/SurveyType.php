@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Option Group
@@ -72,7 +68,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this);
 
     if ($this->_action & (CRM_Core_Action::UPDATE | CRM_Core_Action::DELETE)) {
@@ -89,7 +85,6 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     $session = CRM_Core_Session::singleton();
     $url = CRM_Utils_System::url('civicrm/admin/campaign/surveyType', 'reset=1');
     $session->pushUserContext($url);
-
 
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
@@ -108,7 +103,7 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
    * @return array    array of default values
    * @access public
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
 
     if (!isset($defaults['weight']) || !$defaults['weight']) {
@@ -134,11 +129,11 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     $this->applyFilter('__ALL__', 'trim');
     $this->add('text', 'label', ts('Title'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'label'), TRUE);
 
-    $this->addWysiwyg('description',
+    $this->addWysiwyg(
+      'description',
       ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
     );
-
 
     $this->add('checkbox', 'is_active', ts('Enabled?'));
 
@@ -160,7 +155,6 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
    * @return None
    */
   public function postProcess() {
-
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       $fieldValues = ['option_group_id' => $this->_gid];
@@ -188,4 +182,3 @@ class CRM_Campaign_Form_SurveyType extends CRM_Admin_Form {
     }
   }
 }
-

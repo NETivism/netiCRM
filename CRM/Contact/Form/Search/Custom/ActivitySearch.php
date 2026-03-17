@@ -26,19 +26,25 @@
 */
 
 /**
+ * Custom search form for finding contacts by activity criteria
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
   public $_groupId;
-  protected $_formValues; function __construct(&$formValues) {
+  protected $_formValues;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -60,7 +66,8 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
       ts('Assignee') => 'assignee',
     ];
 
-    $this->_groupId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
+    $this->_groupId = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
       'activity_status',
       'id',
       'name'
@@ -68,10 +75,14 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
 
     //Add custom fields to columns array for inclusion in export
 
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Activity', $form, NULL,
-      NULL, '', NULL
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+      'Activity',
+      $form,
+      NULL,
+      NULL,
+      '',
+      NULL
     );
-
 
     //use simplified formatted groupTree
     $groupTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, $form);
@@ -86,7 +97,15 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     //end custom fields
   }
 
-  function buildForm(&$form) {
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
+  public function buildForm(&$form) {
     /**
      * Define the search form fields here
      */
@@ -94,7 +113,8 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     $form->add('select', 'contact_type', ts('Find...'), CRM_Core_SelectValues::contactType());
 
     // Text box for Activity Subject
-    $form->add('text',
+    $form->add(
+      'text',
       'activity_subject',
       ts('Activity Subject')
     );
@@ -102,7 +122,10 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     // Select box for Activity Type
     $activityType = ['' => ' - select activity - '] + CRM_Core_PseudoConstant::activityType();
 
-    $form->add('select', 'activity_type_id', ts('Activity Type'),
+    $form->add(
+      'select',
+      'activity_type_id',
+      ts('Activity Type'),
       $activityType,
       FALSE
     );
@@ -110,7 +133,10 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     // textbox for Activity Status
     $activityStatus = ['' => ' - select status - '] + CRM_Core_PseudoConstant::activityStatus();
 
-    $form->add('select', 'activity_status_id', ts('Activity Status'),
+    $form->add(
+      'select',
+      'activity_status_id',
+      ts('Activity Status'),
       $activityStatus,
       FALSE
     );
@@ -118,7 +144,6 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     // Activity Date range
     $form->addDate('start_date', ts('Activity Date From'), FALSE, ['formatType' => 'custom']);
     $form->addDate('end_date', ts('...through'), FALSE, ['formatType' => 'custom']);
-
 
     // Contact Name field
     $form->add('text', 'sort_name', ts('Contact Name'));
@@ -134,16 +159,32 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
 
   /**
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
+   * @access public
    */
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/ActivitySearch.tpl';
   }
 
   /**
    * Construct the search query
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
+   * @access public
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE, $onlyIDs = FALSE
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
+    $includeContactIDs = FALSE,
+    $onlyIDs = FALSE
   ) {
 
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
@@ -215,14 +256,26 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     return $sql;
   }
 
-  // Alters the date display in the Activity Date Column. We do this after we already have
-  // the result so that sorting on the date column stays pertinent to the numeric date value
-  function alterRow(&$row) {
+  /**
+   * Alters the date display in the Activity Date Column. We do this after we already have
+   * the result so that sorting on the date column stays pertinent to the numeric date value
+   *
+   * @param array $row
+   *
+   * @return void
+   * @access public
+   */
+  public function alterRow(&$row) {
     $row['activity_date'] = CRM_Utils_Date::customFormat($row['activity_date'], '%B %E%f, %Y %l:%M %P');
   }
 
-  // Regular JOIN statements here to limit results to contacts who have activities.
-  function from() {
+  /**
+   * Regular JOIN statements here to limit results to contacts who have activities.
+   *
+   * @return string
+   * @access public
+   */
+  public function from() {
     return "
         civicrm_contact contact_a
             JOIN civicrm_activity activity 
@@ -241,11 +294,15 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
                  ON assignment.assignee_contact_id = contact_c.id ";
   }
 
-  /*
-     * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
-     *
-     */
-  function where($includeContactIDs = FALSE) {
+  /**
+   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
+  public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
     // add contact name search; search on primary name, source contact, assignee
@@ -299,7 +356,7 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     if ($includeContactIDs) {
       $contactIDs = [];
       foreach ($this->_formValues as $id => $value) {
-        list($id, $additionalID) = CRM_Core_Form::cbExtract($id); 
+        list($id, $additionalID) = CRM_Core_Form::cbExtract($id);
         if ($value && !empty($id)) {
           $contactIDs[] = $id;
         }
@@ -314,28 +371,53 @@ class CRM_Contact_Form_Search_Custom_ActivitySearch implements CRM_Contact_Form_
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /* 
-     * Functions below generally don't need to be modified
-     */
-  function count() {
+  /**
+   * Functions below generally don't need to be modified
+   *
+   * @return int
+   * @access public
+   */
+  public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
-  function &columns() {
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
+  public function &columns() {
     return $this->_columns;
   }
 
-  function summary() {
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
+  public function summary() {
     return NULL;
   }
 }
-

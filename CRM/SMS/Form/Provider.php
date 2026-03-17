@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 
@@ -38,6 +37,11 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
   public $_submitValues;
   protected $_id = NULL;
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
 
     $this->_id = $this->get('id');
@@ -45,15 +49,21 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
     // $this->setPageTitle(ts('SMS Provider'));
 
     if ($this->_id) {
-      $refreshURL = CRM_Utils_System::url('civicrm/admin/sms/provider',
+      $refreshURL = CRM_Utils_System::url(
+        'civicrm/admin/sms/provider',
         "reset=1&action=update&id={$this->_id}",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
     else {
-      $refreshURL = CRM_Utils_System::url('civicrm/admin/sms/provider',
+      $refreshURL = CRM_Utils_System::url(
+        'civicrm/admin/sms/provider',
         "reset=1&action=add",
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
     }
 
@@ -62,6 +72,8 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
 
   /**
    * Build the form object.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -92,8 +104,12 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
       $eleProviders->freeze();
     }
 
-    $this->add('text', 'title', ts('Title'),
-      $attributes['title'], TRUE
+    $this->add(
+      'text',
+      'title',
+      ts('Title'),
+      $attributes['title'],
+      TRUE
     );
 
     $this->addRule('title', ts('This title already exists in Database.'), 'objectExists', [
@@ -119,9 +135,10 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
   }
 
   /**
-   * Form rule
+   * Global form rule.
    *
    * @param array $fields
+   *
    * @return array
    */
   public static function formRule($fields) {
@@ -132,14 +149,14 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
         'username' => ts('Username'),
         'password' => ts('Password'),
       ];
-      foreach(array_keys($checkFields) as $field) {
+      foreach (array_keys($checkFields) as $field) {
         if (empty($fields[$field])) {
           $errors[$field] = ts('%1 is a required field.', [1 => $checkFields[$field]]);
         }
       }
     }
     if ($fields['name'] === 'CRM_SMS_Provider_Flydove' && !empty($fields['flydove_api_token'])) {
-      foreach($fields['flydove_api_token'] as $token) {
+      foreach ($fields['flydove_api_token'] as $token) {
         if (!preg_match('/^[0-9a-zA-Z]*$/', $token)) {
           $errors['qfKey'] = ts('Invalid value for field(s)');
         }
@@ -197,6 +214,8 @@ class CRM_SMS_Form_Provider extends CRM_Core_Form {
 
   /**
    * Process the form submission.
+   *
+   * @return void
    */
   public function postProcess() {
     CRM_Utils_System::flushCache('CRM_SMS_DAO_Provider');

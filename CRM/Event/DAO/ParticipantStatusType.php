@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
-{
+
+class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_participant_status_type';
+  public static $_tableName = 'civicrm_participant_status_type';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * unique participant status type id
    *
    * @var int unsigned
@@ -132,79 +130,75 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    * @var int unsigned
    */
   public $visibility_id;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_participant_status_type
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
-    /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'participant_status' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Participant Status') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-             'import' => true,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'import' => TRUE,
           'where' => 'civicrm_participant_status_type.name',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'class' => [
           'name' => 'class',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Class') ,
-                   'enumValues' => 'Positive, Pending, Waiting, Negative',
-         ] ,
+          'enumValues' => 'Positive, Pending, Waiting, Negative',
+        ],
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_counted' => [
           'name' => 'is_counted',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'visibility_id' => [
           'name' => 'visibility_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -212,32 +206,26 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -245,22 +233,21 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['participant_status_type'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -268,12 +255,13 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['participant_status_type'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
   /**
@@ -281,11 +269,11 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {
     static $enums = [
-                                                        'class',
-                                                                            ];
+        'class',
+    ];
     return $enums;
   }
   /**
@@ -296,18 +284,17 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                        'class' => [
-                  'Positive' => ts('Positive'),
-                  'Pending' => ts('Pending'),
-                  'Waiting' => ts('Waiting'),
-                  'Negative' => ts('Negative'),
-                ],
-                                                                              ];
+        'class' => [
+          'Positive' => ts('Positive'),
+          'Pending' => ts('Pending'),
+          'Waiting' => ts('Waiting'),
+          'Negative' => ts('Negative'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -317,10 +304,9 @@ class CRM_Event_DAO_ParticipantStatusType extends CRM_Core_DAO
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Event_DAO_ParticipantStatusType::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Event_DAO_ParticipantStatusType::tsEnum($enum, $values[$enum]);
       }

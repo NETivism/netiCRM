@@ -11,7 +11,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
 
@@ -20,7 +19,13 @@
  */
 class CRM_Batch_Form_Batch extends CRM_Core_Form {
   protected $_batch = NULL;
-  function preProcess() {
+
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this, TRUE);
     $defaults = [];
     $params = [
@@ -32,6 +37,12 @@ class CRM_Batch_Form_Batch extends CRM_Core_Form {
       CRM_Utils_System::setTitle(ts('Edit').' - '.$this->_batch->label);
     }
   }
+
+  /**
+   * Build the form.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     $ele = $this->add('text', 'label', ts('Label'));
     $ele->freeze();
@@ -54,6 +65,12 @@ class CRM_Batch_Form_Batch extends CRM_Core_Form {
     $defaults["status_id"] = $this->_batch->status_id;
     $this->setDefaults($defaults);
   }
+
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     unset($params['qfKey']);

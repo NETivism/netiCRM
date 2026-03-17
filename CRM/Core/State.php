@@ -31,9 +31,7 @@
  * determine what action to take on various user input. Actions include
  * things like going back / stepping forward / process etc
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_State {
@@ -74,21 +72,18 @@ class CRM_Core_State {
    * bring in more complexity to the framework. For now, lets keep it simple
    * @var int
    */
-  CONST START = 1, FINISH = 2, SIMPLE = 4;
+  public const START = 1, FINISH = 2, SIMPLE = 4;
 
   /**
-   * constructor
+   * Class constructor.
    *
-   * @param string the internal name of the state
-   * @param int    the state type
-   * @param object the state that precedes this state
-   * @param object the state that follows  this state
-   * @param object the statemachine that this states belongs to
-   *
-   * @return object
-   * @access public
+   * @param string $name The internal name of the state.
+   * @param int $type The state type.
+   * @param string|null $back The state that precedes this state.
+   * @param string|null $next The state that follows this state.
+   * @param CRM_Core_StateMachine $stateMachine The statemachine that this state belongs to.
    */
-  function __construct($name, $type, $back, $next, &$stateMachine) {
+  public function __construct($name, $type, $back, $next, &$stateMachine) {
     $this->_name = $name;
     $this->_type = $type;
     $this->_back = $back;
@@ -97,19 +92,21 @@ class CRM_Core_State {
     $this->_stateMachine = &$stateMachine;
   }
 
-  function debugPrint() {
+  /**
+   * Prints debug information about the state.
+   */
+  public function debugPrint() {
     CRM_Core_Error::debug("{$this->_name}, {$this->_type}", "{$this->_back}, {$this->_next}");
   }
 
   /**
-   * Given an CRM Form, jump to the previous page
+   * Given an CRM Form, jump to the previous page.
    *
-   * @param object the CRM_Core_Form element under consideration
+   * @param CRM_Core_Form $page The CRM_Core_Form element under consideration.
    *
-   * @return mixed does a jump to the back state
-   * @access public
+   * @return mixed Does a jump to the back state.
    */
-  function handleBackState(&$page) {
+  public function handleBackState(&$page) {
     if ($this->_type & self::START) {
       $page->handle('display');
     }
@@ -120,14 +117,13 @@ class CRM_Core_State {
   }
 
   /**
-   * Given an CRM Form, jump to the next page
+   * Given an CRM Form, jump to the next page.
    *
-   * @param object the CRM_Core_Form element under consideration
+   * @param CRM_Core_Form $page The CRM_Core_Form element under consideration.
    *
-   * @return mixed does a jump to the nextstate
-   * @access public
+   * @return mixed Does a jump to the next state.
    */
-  function handleNextState(&$page) {
+  public function handleNextState(&$page) {
     if ($this->_type & self::FINISH) {
       $page->handle('process');
     }
@@ -139,12 +135,11 @@ class CRM_Core_State {
 
   /**
    * Determine the name of the next state. This is useful when we want
-   * to display the navigation labels or potential path
+   * to display the navigation labels or potential path.
    *
-   * @return string
-   * @access public
+   * @return string|null
    */
-  function getNextState() {
+  public function getNextState() {
     if ($this->_type & self::FINISH) {
       return NULL;
     }
@@ -156,60 +151,48 @@ class CRM_Core_State {
 
   /**
    * Mark this page as valid for the QFC framework. This is needed as
-   * we build more advanced functionality into the StateMachine
+   * we build more advanced functionality into the StateMachine.
    *
-   * @param object the QFC data container
-   *
-   * @return void
-   * @access public
+   * @param array $data The QFC data container.
    */
-  function validate(&$data) {
+  public function validate(&$data) {
     $data['valid'][$this->_name] = TRUE;
   }
 
   /**
    * Mark this page as invalid for the QFC framework. This is needed as
-   * we build more advanced functionality into the StateMachine
+   * we build more advanced functionality into the StateMachine.
    *
-   * @param object the QFC data container
-   *
-   * @return void
-   * @access public
+   * @param array $data The QFC data container.
    */
-  function invalidate(&$data) {
+  public function invalidate(&$data) {
     $data['valid'][$this->_name] = NULL;
   }
 
   /**
-   * getter for name
+   * Getter for name.
    *
    * @return string
-   * @access public
    */
-  function getName() {
+  public function getName() {
     return $this->_name;
   }
 
   /**
-   * setter for name
+   * Setter for name.
    *
-   * @param string
-   *
-   * @return void
-   * @access public
+   * @param string $name
    */
-  function setName($name) {
+  public function setName($name) {
     $this->_name = $name;
   }
 
   /**
-   * getter for type
+   * Getter for type.
    *
    * @return int
-   * @access public
    */
-  function getType() {
+  public function getType() {
     return $this->_type;
   }
 }
-

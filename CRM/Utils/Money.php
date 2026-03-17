@@ -27,37 +27,47 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Money utilties
+ * Money utilities for formatting and converting monetary values.
  */
 class CRM_Utils_Money {
-  static $_currencySymbols = NULL;
 
   /**
-   * format a monetary string
+   * Cached map of currency ISO codes to their symbols.
    *
-   * Format a monetary string basing on the amount provided,
-   * ISO currency code provided and a format string consisting of:
-   *
-   * %a - the formatted amount
-   * %C - the currency ISO code (e.g., 'USD') if provided
-   * %c - the currency symbol (e.g., '$') if available
-   *
-   * @param float  $amount    the monetary amount to display (1234.56)
-   * @param string $currency  the three-letter ISO currency code ('USD')
-   * @param string $format    the desired currency format
-   *
-   * @return string  formatted monetary string
-   *
-   * @static
+   * @var array<string, string>|null
    */
-  static function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
+  public static $_currencySymbols = NULL;
+
+  /**
+   * Format a monetary string based on the amount, currency code, and format string.
+   *
+   * The format string supports the following placeholders:
+   * - %a - the formatted amount
+   * - %C - the currency ISO code (e.g., 'USD') if provided
+   * - %c - the currency symbol (e.g., '$') if available
+   *
+   * When $format is 'chinese' and $currency is 'TWD', the amount is
+   * converted to traditional Chinese numerals via toTaiwanDollar().
+   *
+   * @param float|string $amount     The monetary amount to display (e.g., 1234.56).
+   * @param string|null  $currency   The three-letter ISO currency code (e.g., 'USD').
+   *                                 Defaults to the site default currency.
+   * @param string|null  $format     The desired currency format string. Defaults to
+   *                                 the configured moneyformat. Use 'chinese' for
+   *                                 traditional Chinese numeral output (TWD only).
+   * @param bool         $onlyNumber If TRUE, return only the formatted numeric amount
+   *                                 without currency symbol or code.
+   *
+   * @return string The formatted monetary string, or empty string if amount is null.
+   *
+   * @throws CRM_Core_Exception If $currency is not a valid currency code.
+   */
+  public static function format($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
 
     if (CRM_Utils_System::isNull($amount)) {
       return '';
@@ -121,7 +131,6 @@ class CRM_Utils_Money {
       $money = $amount;
     }
 
-
     $replacements = [
       '%a' => $money,
       '%C' => $currency,
@@ -132,23 +141,25 @@ class CRM_Utils_Money {
   }
 
   /**
-   * Format numeric part of currency by the passed in format.
+   * Format the numeric part of a currency value according to the given format.
    *
-   * This is envisaged as an internal function, with wrapper functions defining valueFormat
-   * into easily understood functions / variables and handling separator conversions and
-   * rounding.
+   * This is an internal helper that applies number_format() based on the
+   * value format string. Wrapper functions handle separator conversions
+   * and rounding.
    *
-   * @param string $amount
-   * @param string $valueFormat
+   * @param float|string $amount      The numeric amount to format. Non-numeric
+   *                                  values are returned as-is.
+   * @param string       $valueFormat The format specifier (e.g., '%!i' for 2
+   *                                  decimal places, '%!.0n' for no decimals).
    *
-   * @return string
+   * @return string The formatted numeric string.
    */
   protected static function formatNumericByFormat($amount, $valueFormat) {
     if (!is_numeric($amount)) {
       return $amount;
     }
     $formatted = $amount;
-    switch($valueFormat) {
+    switch ($valueFormat) {
       case '%!i':
         $formatted = number_format((float)$amount, 2);
         break;
@@ -160,8 +171,20 @@ class CRM_Utils_Money {
     return $formatted;
   }
 
-
-  static function toTaiwanDollar($amount) {
+  /**
+   * Convert a numeric amount to traditional Chinese numeral representation (Taiwan Dollar).
+   *
+   * Produces an HTML string with Chinese numerals and unit markers
+   * (e.g., "壹仟貳佰參拾肆元整") suitable for formal financial documents.
+   * The amount is floored to an integer before conversion.
+   * Supports amounts up to 8 digits (i.e., less than 100,000,000).
+   *
+   * @param float|int|string $amount The monetary amount to convert.
+   *
+   * @return string HTML string with Chinese numerals and unit span elements,
+   *                or empty string if amount exceeds 8 digits.
+   */
+  public static function toTaiwanDollar($amount) {
     $amount = floor($amount);
     $amount = (string) $amount;
 
@@ -200,8 +223,8 @@ class CRM_Utils_Money {
               $output = '<span class="' . $class . '">' . $unit[$k] . '</span>' . $output;
             }
             else {
-              if (isset($amt[$k-1])) {
-                if ($amt[$k-1] != '零') {
+              if (isset($amt[$k - 1])) {
+                if ($amt[$k - 1] != '零') {
                   $output = $v . $output;
                 }
               }
@@ -214,7 +237,7 @@ class CRM_Utils_Money {
             $output = $v . '<span class="' . $class . '">' . $unit[$k] . '</span>' . $output;
           }
           else {
-            if ($amt[$k-1] != '零') {
+            if ($amt[$k - 1] != '零') {
               $output = '<span class="' . $class . '">' . $unit[$k] . '</span>' . $v . $output;
             }
             else {
@@ -228,8 +251,8 @@ class CRM_Utils_Money {
             $output = $v . '<span class="' . $class . '">' . str_replace("萬", "", $unit[$k]) . '</span>' . $output;
           }
           else {
-            if (isset($amt[$k-1])) {
-              if ($amt[$k-1] != '零') {
+            if (isset($amt[$k - 1])) {
+              if ($amt[$k - 1] != '零') {
                 $output = $v . $output;
               }
             }
@@ -241,4 +264,3 @@ class CRM_Utils_Money {
     return $output;
   }
 }
-

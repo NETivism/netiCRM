@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * CiviCRM Dashlet
@@ -42,12 +38,11 @@
 class CRM_Contact_Page_Dashlet extends CRM_Core_Page {
 
   /**
-   * Run dashboard
+   * Run dashboard.
    *
-   * @return none
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     CRM_Utils_System::setTitle(ts('Dashlets'));
 
     $this->assign('admin', CRM_Core_Permission::check('administer CiviCRM'));
@@ -84,4 +79,3 @@ class CRM_Contact_Page_Dashlet extends CRM_Core_Page {
     return parent::run();
   }
 }
-

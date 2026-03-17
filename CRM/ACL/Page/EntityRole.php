@@ -27,19 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
@@ -48,25 +42,24 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_ACL_BAO_EntityRole';
   }
 
   /**
    * Get action Links
    *
-   * @return array (reference) of action links
+   * @return array of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -106,25 +99,33 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // set breadcrumb to append to admin/access
     $breadCrumb = [['title' => ts('Access Control'),
-        'url' => CRM_Utils_System::url('civicrm/admin/access',
+        'url' => CRM_Utils_System::url(
+          'civicrm/admin/access',
           'reset=1'
         ),
       ]];
@@ -155,17 +156,13 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
    * Browse all acls
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
-
+  public function browse() {
 
     // get all acl's sorted by weight
     $entityRoles = [];
     $dao = new CRM_ACL_DAO_EntityRole();
     $dao->find();
-
 
     $aclRoles = CRM_Core_OptionGroup::values('acl_role');
     $groups = CRM_Core_PseudoConstant::staticGroup();
@@ -186,7 +183,9 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
         $action -= CRM_Core_Action::DISABLE;
       }
 
-      $entityRoles[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $entityRoles[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $dao->id]
       );
     }
@@ -198,7 +197,7 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_ACL_Form_EntityRole';
   }
 
@@ -207,17 +206,18 @@ class CRM_ACL_Page_EntityRole extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'ACL EntityRole';
   }
 
   /**
    * Get user context.
    *
+   * @param int $mode
+   *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/acl/entityrole';
   }
 }
-

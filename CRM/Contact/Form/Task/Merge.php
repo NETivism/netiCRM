@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to Merge Contacts.
@@ -42,12 +38,15 @@
 class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
 
   /**
-   * build all the data structures needed to build the form
+   * Pre-processes the merge task.
+   *
+   * This method validates the selection and then redirects to the appropriate
+   * merge UI (either the simple 2-contact merge or the multi-contact dedupe screen).
    *
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $statusMsg = NULL;
     $contactIds = [];
@@ -75,15 +74,16 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       $contact = CRM_Core_DAO::executeQuery($sql);
       while ($contact->fetch()) {
         $contactTypes[$contact->contact_type] = TRUE;
-        if (count($contactTypes) > 1)
-        break;
+        if (count($contactTypes) > 1) {
+          break;
+        }
       }
       if (count($contactTypes) > 1) {
         $statusMsg = ts('Please select same contact type records.');
       }
     }
     if ($statusMsg) {
-       return CRM_Core_Error::statusBounce($statusMsg);
+      return CRM_Core_Error::statusBounce($statusMsg);
     }
 
     $url = NULL;
@@ -105,20 +105,20 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
       $level = 'Fuzzy';
       $cType = key($contactTypes);
 
-
       $rgBao = new CRM_Dedupe_DAO_RuleGroup();
       $rgBao->level = $level;
       $rgBao->is_default = 1;
       $rgBao->contact_type = $cType;
       if (!$rgBao->find(TRUE)) {
-         return CRM_Core_Error::statusBounce("You can not merge contact records because $level rule for $cType does not exist.");
+        return CRM_Core_Error::statusBounce("You can not merge contact records because $level rule for $cType does not exist.");
       }
       $ruleGroupID = $rgBao->id;
       $session = CRM_Core_Session::singleton();
       $session->set('selectedSearchContactIds', $contactIds);
 
       // create a hidden group and poceed to merge
-      $url = CRM_Utils_System::url('civicrm/contact/dedupefind',
+      $url = CRM_Utils_System::url(
+        'civicrm/contact/dedupefind',
         "reset=1&action=update&rgid={$ruleGroupID}&context=search"
       );
     }
@@ -129,4 +129,3 @@ class CRM_Contact_Form_Task_Merge extends CRM_Contact_Form_Task {
     }
   }
 }
-

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * form to process actions on the field aspect of Price
@@ -45,13 +40,12 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   /**
    * Constants for number of options for data types of multiple option.
    */
-  CONST NUM_OPTION = 11;
+  public const NUM_OPTION = 11;
 
   /**
    * the custom set id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_sid;
 
@@ -59,7 +53,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * The field id, used when editing the field
    *
    * @var int
-   * @access protected
    */
   protected $_fid;
 
@@ -67,17 +60,13 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
    * The extended component Id
    *
    * @var array
-   * @access protected
    */
   protected $_extendComponentId;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @param null
+   * Function to set variables up before form is built.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // add custom field support
@@ -87,7 +76,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $this->assign('cdType', TRUE);
       return CRM_Custom_Form_CustomData::preProcess($this);
     }
-
 
     $this->_sid = CRM_Utils_Request::retrieve('sid', 'Positive', $this);
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
@@ -105,7 +93,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
 
     // when custom data is included in this page
-	  $this->assign('customDataType', 'PriceField');
+    $this->assign('customDataType', 'PriceField');
     if ($this->_fid) {
       $this->assign('entityID', $this->_fid);
       $this->assign('customDataSubType', $this->_fid);
@@ -124,15 +112,13 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @param null
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return array    array of default values
-   * @access public
+   * @return array array of default values
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     if ($this->_cdType) {
       return CRM_Custom_Form_CustomData::setDefaultValues($this);
     }
@@ -149,10 +135,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       if ($defaults['html_type'] == 'Text') {
         $valueParams = ['price_field_id' => $this->_fid];
 
-
         CRM_Price_BAO_FieldValue::retrieve($valueParams, $fieldValues);
         foreach ($fieldValues as $key => $value) {
-          if($key == 'is_active')continue;
+          if ($key == 'is_active') {
+            continue;
+          }
           $defaults[$key] = $value;
         }
 
@@ -161,7 +148,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
         $defaults['price'] = CRM_Utils_Money::format($defaults['amount'], NULL, '%a');
       }
 
-      if(isset($defaults['max_value']) && $defaults['max_value'] >= 0){
+      if (isset($defaults['max_value']) && $defaults['max_value'] >= 0) {
         $defaults['allow_count'] = 1;
       }
     }
@@ -181,10 +168,10 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $defaults['is_display_amounts'] = 1;
     }
 
-    if(!empty($defaults['active_on'])){
+    if (!empty($defaults['active_on'])) {
       list($defaults['active_on'], $defaults['active_on_time']) = CRM_Utils_Date::setDateDefaults(CRM_Utils_Array::value('active_on', $defaults), 'activityDateTime');
     }
-    if(!empty($defaults['expire_on'])){
+    if (!empty($defaults['expire_on'])) {
       list($defaults['expire_on'], $defaults['expire_on_time']) = CRM_Utils_Date::setDateDefaults(CRM_Utils_Array::value('expire_on', $defaults), 'activityDateTime');
     }
 
@@ -192,12 +179,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     // custom data related
@@ -214,11 +198,15 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     // html_type
     $javascript = 'onchange="option_html_type(this.form)";';
 
-
     $htmlTypes = CRM_Price_BAO_Field::htmlTypes();
 
-    $sel = $this->add('select', 'html_type', ts('Input Field Type'),
-      $htmlTypes, TRUE, $javascript
+    $sel = $this->add(
+      'select',
+      'html_type',
+      ts('Input Field Type'),
+      $htmlTypes,
+      TRUE,
+      $javascript
     );
 
     // Text box for Participant Count for a field
@@ -233,7 +221,7 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
       $this->addElement('checkbox', 'allow_count', ts('Allow Changing Count'), NULL, ['onclick' => 'onChangeAllowCount();']);
 
-      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value']+['min' => 0]);
+      $this->addNumber('max_value', ts('Max Participants'), $attributes['max_value'] + ['min' => 0]);
       $this->addRule('max_value', ts('Please enter a valid Max Participants.'), 'positiveInteger');
 
       $this->add('textArea', 'description', ts('Description'), $attributes['description']);
@@ -322,15 +310,17 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $this->addRule('options_per_line', ts('must be a numeric value'), 'numeric');
 
     // help post, mask, attributes, javascript ?
-    $this->addWysiwyg('help_post', ts('Field Help'),
+    $this->addWysiwyg(
+      'help_post',
+      ts('Field Help'),
       CRM_Core_DAO::getAttribute('CRM_Price_DAO_Field', 'help_post')
     );
 
     // active_on
-    $this->addDateTime('active_on', ts('Active On'), false, $date_options);
+    $this->addDateTime('active_on', ts('Active On'), FALSE, $date_options);
 
     // expire_on
-    $this->addDateTime('expire_on', ts('Expire On'), false, $date_options);
+    $this->addDateTime('expire_on', ts('Expire On'), FALSE, $date_options);
 
     // is required ?
     $this->add('checkbox', 'is_required', ts('Required?'));
@@ -342,7 +332,8 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $this->add('checkbox', 'is_active', ts('Active?'));
 
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -367,7 +358,8 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
       $url = CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&action=browse&sid=' . $this->_sid);
-      $this->addElement('button',
+      $this->addElement(
+        'button',
         'done',
         ts('Done'),
         ['onclick' => "location.href='$url'"]
@@ -376,16 +368,15 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array  $fields   (referance) posted values of the form
+   * @param array $fields (reference) posted values of the form
+   * @param array $files
+   * @param CRM_Core_Form $form
    *
-   * @return array    if errors then list of errors to be posted back to the form,
-   *                  true otherwise
-   * @static
-   * @access public
+   * @return array|bool if errors then list of errors to be posted back to the form, true otherwise
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
 
     // all option fields are of type "money"
     $errors = [];
@@ -413,18 +404,19 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       $errors['label'] = ts('Name already exists in Database.');
     }
 
-    if(($form->_action & CRM_Core_Action::ADD || $form->_action & CRM_Core_Action::UPDATE) && $fields['allow_count']){
-      if(!is_numeric($fields['max_value']) || $fields['max_value'] == ''){
+    if (($form->_action & CRM_Core_Action::ADD || $form->_action & CRM_Core_Action::UPDATE) && $fields['allow_count']) {
+      if (!is_numeric($fields['max_value']) || $fields['max_value'] == '') {
         $errors['max_value'] = ts('must be a numeric value');
       }
-      elseif($fields['max_value'] < 0){
+      elseif ($fields['max_value'] < 0) {
         $errors['max_value'] = ts("greater than or equal to '%1'", [1 => 0]);
       }
     }
 
-    if ((is_numeric(CRM_Utils_Array::value('count', $fields)) &&
+    if ((
+      is_numeric(CRM_Utils_Array::value('count', $fields)) &&
         CRM_Utils_Array::value('count', $fields) == 0
-      ) &&
+    ) &&
       (CRM_Utils_Array::value('html_type', $fields) == 'Text')
     ) {
       $errors['count'] = ts('Participant Count must be greater than zero.');
@@ -444,7 +436,8 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
           if (!empty($fields['option_label'][$index])) {
             $noLabel = 0;
 
-            $duplicateIndex = CRM_Utils_Array::key($fields['option_label'][$index],
+            $duplicateIndex = CRM_Utils_Array::key(
+              $fields['option_label'][$index],
               $fields['option_label']
             );
 
@@ -466,7 +459,8 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
           if (!empty($fields['option_weight'][$index])) {
             $noWeight = 0;
 
-            $duplicateIndex = CRM_Utils_Array::key($fields['option_weight'][$index],
+            $duplicateIndex = CRM_Utils_Array::key(
+              $fields['option_weight'][$index],
               $fields['option_weight']
             );
 
@@ -547,10 +541,10 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
       }
     }
 
-    if(!empty($fields['active_on']) && !empty($fields['expire_on'])){
+    if (!empty($fields['active_on']) && !empty($fields['expire_on'])) {
       $active_on = CRM_Utils_Date::processDate($fields['active_on'], $fields['active_on_time']);
       $expire_on = CRM_Utils_Date::processDate($fields['expire_on'], $fields['expire_on_time']);
-      if(strtotime($active_on) >= strtotime($expire_on)){
+      if (strtotime($active_on) >= strtotime($expire_on)) {
         $errors["active_on_time"] = ts('Expire time can\'t earlier than or as same as the active time.');
       }
     }
@@ -559,12 +553,9 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
-   *
-   * @param null
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // store the submitted values in an array
@@ -576,11 +567,11 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_member'] = CRM_Utils_Array::value('is_member', $params, FALSE);
     $params['active_on'] = CRM_Utils_Date::processDate($params['active_on'], $params['active_on_time']);
-    if(empty($params['active_on'])){
+    if (empty($params['active_on'])) {
       $params['active_on'] = 'NULL';
     }
     $params['expire_on'] = CRM_Utils_Date::processDate($params['expire_on'], $params['expire_on_time']);
-    if(empty($params['expire_on'])){
+    if (empty($params['expire_on'])) {
       $params['expire_on'] = 'NULL';
     }
     $params['visibility_id'] = CRM_Utils_Array::value('visibility_id', $params, FALSE);
@@ -588,7 +579,6 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
 
     // need the FKEY - price set id
     $params['price_set_id'] = $this->_sid;
-
 
     if ($this->_action & (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD)) {
       $fieldValues = ['price_set_id' => $this->_sid];
@@ -642,4 +632,3 @@ class CRM_Price_Form_Field extends CRM_Core_Form {
     }
   }
 }
-

@@ -26,16 +26,23 @@
 */
 
 /**
+ * Provides data validation rules for form input (email, phone, numeric, date formats)
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 class CRM_Utils_Rule {
 
-  static function title($str, $maxLength = 127) {
+  /**
+   * Validate a title string.
+   *
+   * @param string $str the title string to validate
+   * @param int $maxLength maximum allowed length
+   *
+   * @return bool true if valid title
+   */
+  public static function title($str, $maxLength = 127) {
 
     // check length etc
     if (empty($str) || strlen($str) > $maxLength) {
@@ -50,11 +57,25 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
-  static function longTitle($str) {
+  /**
+   * Validate a long title string (up to 255 characters).
+   *
+   * @param string $str the title string to validate
+   *
+   * @return bool true if valid title
+   */
+  public static function longTitle($str) {
     return self::title($str, 255);
   }
 
-  static function variable($str) {
+  /**
+   * Validate a variable name string.
+   *
+   * @param string $str the variable name to validate
+   *
+   * @return bool true if valid variable name
+   */
+  public static function variable($str) {
     // check length etc
     if (empty($str) || strlen($str) > 31) {
       return FALSE;
@@ -71,7 +92,7 @@ class CRM_Utils_Rule {
   /**
    * Validate an acceptable column name for sorting results.
    *
-   * @param $str
+   * @param string $str the column name to validate
    *
    * @return bool
    */
@@ -82,7 +103,7 @@ class CRM_Utils_Rule {
     }
 
     // Ensure it only contains valid characters (alphanumeric and underscores).
-   if (!preg_match('/^\w{1,64}(\.\w{1,64})?$/i', $str)) {
+    if (!preg_match('/^\w{1,64}(\.\w{1,64})?$/i', $str)) {
       return FALSE;
     }
 
@@ -94,7 +115,7 @@ class CRM_Utils_Rule {
    *
    * Empty string should be treated as invalid and ignored => default = ASC.
    *
-   * @param $str
+   * @param string $str the sort direction to validate
    * @return bool
    */
   public static function mysqlOrderByDirection($str) {
@@ -106,11 +127,13 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * @param $str
+   * Validate a QuickForm variable string.
+   *
+   * @param string $str the string to validate
    *
    * @return bool
    */
-  static function qfVariable($str) {
+  public static function qfVariable($str) {
     // check length etc
     //if ( empty( $str ) || strlen( $str ) > 31 ) {
     if (strlen(trim($str)) == 0 || strlen($str) > 31) {
@@ -126,7 +149,14 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
-  static function phone($phone) {
+  /**
+   * Validate a phone number string.
+   *
+   * @param string $phone the phone number to validate
+   *
+   * @return bool true if valid phone number
+   */
+  public static function phone($phone) {
     // check length etc
     if (empty($phone) || strlen($phone) > 16) {
       return FALSE;
@@ -139,7 +169,14 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 
-  static function query($query) {
+  /**
+   * Validate a query string.
+   *
+   * @param string $query the query string to validate
+   *
+   * @return bool true if valid query
+   */
+  public static function query($query) {
     // check length etc
     if (empty($query) || strlen($query) < 3 || strlen($query) > 127) {
       return FALSE;
@@ -154,14 +191,18 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * Only allow http / https scheme
+   * Validate a URL, allowing only http/https schemes.
    *
-   * @param string $url
-   * @param string $checkDomain check url has matching domain name
-   * @param bool $checkHTTPS to check if has https
-   * @return bool 
+   * Relative URLs beginning with "/" are also accepted (resolved against the current host).
+   * Returns TRUE for empty/falsy input (use a separate required check if needed).
+   *
+   * @param string $url        The URL to validate.
+   * @param string $checkDomain If non-empty, require the URL to match this domain name.
+   * @param bool   $checkHTTPS  If TRUE, require the URL to use HTTPS.
+   *
+   * @return bool TRUE if the URL is valid, FALSE otherwise.
    */
-  static function url($url, $checkDomain = '', $checkHTTPS = NULL) {
+  public static function url($url, $checkDomain = '', $checkHTTPS = NULL) {
     if (!$url) {
       // If this is required then that should be checked elsewhere - here we are not assuming it is required.
       return TRUE;
@@ -192,12 +233,26 @@ class CRM_Utils_Rule {
     return (bool) $valid;
   }
 
-  static function wikiURL($string) {
+  /**
+   * Validate a wiki URL string.
+   *
+   * @param string $string the wiki URL string to validate
+   *
+   * @return bool true if valid URL
+   */
+  public static function wikiURL($string) {
     $items = explode(' ', trim($string), 2);
     return self::url($items[0]);
   }
 
-  static function domain($domain) {
+  /**
+   * Validate a domain name.
+   *
+   * @param string $domain the domain name to validate
+   *
+   * @return bool true if valid domain
+   */
+  public static function domain($domain) {
     // not perfect, but better than the previous one; see CRM-1502
     if (!preg_match('/^[A-Za-z0-9]([A-Za-z0-9\.\-]*[A-Za-z0-9])?$/', $domain)) {
       return FALSE;
@@ -205,7 +260,15 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
-  static function date($value, $default = NULL) {
+  /**
+   * Validate a date string in YYYY-MM-DD format.
+   *
+   * @param string $value the date string to validate
+   * @param string|null $default default value to return if invalid
+   *
+   * @return string|null the validated date string or default
+   */
+  public static function date($value, $default = NULL) {
     if (is_string($value) &&
       preg_match('/^\d\d\d\d-?\d\d-?\d\d$/', $value)
     ) {
@@ -214,7 +277,15 @@ class CRM_Utils_Rule {
     return $default;
   }
 
-  static function dateTime($value, $default = NULL) {
+  /**
+   * Validate a datetime string.
+   *
+   * @param string $value the datetime string to validate
+   * @param string|null $default default value to return if invalid
+   *
+   * @return string|null the validated datetime string or default
+   */
+  public static function dateTime($value, $default = NULL) {
     $result = $default;
     if (is_string($value) &&
       preg_match('/^\d\d\d\d-?\d\d-?\d\d(\s\d\d:\d\d(:\d\d)?|\d\d\d\d(\d\d)?)?$/', $value)
@@ -226,19 +297,18 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * check the validity of the date (in qf format)
-   * note that only a year is valid, or a mon-year is
+   * Check the validity of the date (in qf format).
+   *
+   * Note that only a year is valid, or a mon-year is
    * also valid in addition to day-mon-year. The date
    * specified has to be beyond today. (i.e today or later)
    *
-   * @param array $date
-   * @param bool  $monthRequired check whether month is mandatory
+   * @param array $date the date array with keys 'd', 'M', 'Y'
+   * @param bool $monthRequired check whether month is mandatory
    *
    * @return bool true if valid date
-   * @static
-   * @access public
    */
-  static function currentDate($date, $monthRequired = TRUE) {
+  public static function currentDate($date, $monthRequired = TRUE) {
     $config = CRM_Core_Config::singleton();
 
     $d = CRM_Utils_Array::value('d', $date);
@@ -314,18 +384,16 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * check the validity of a date or datetime (timestamp)
-   * value which is in YYYYMMDD or YYYYMMDDHHMMSS format
+   * Check the validity of a date or datetime (timestamp)
+   * value which is in YYYYMMDD or YYYYMMDDHHMMSS format.
    *
    * Uses PHP checkdate() - params are ( int $month, int $day, int $year )
    *
-   * @param string $date
+   * @param string $date the date string to validate
    *
    * @return bool true if valid date
-   * @static
-   * @access public
    */
-  static function mysqlDate($date) {
+  public static function mysqlDate($date) {
     // allow date to be null
     if ($date == NULL) {
       return TRUE;
@@ -338,7 +406,14 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 
-  static function integer($value) {
+  /**
+   * Validate that a value is an integer.
+   *
+   * @param mixed $value the value to validate
+   *
+   * @return bool true if value is an integer
+   */
+  public static function integer($value) {
     if (is_int($value)) {
       return TRUE;
     }
@@ -366,7 +441,14 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 
-  static function positiveInteger($value) {
+  /**
+   * Validate that a value is a positive integer.
+   *
+   * @param mixed $value the value to validate
+   *
+   * @return bool true if value is a positive integer
+   */
+  public static function positiveInteger($value) {
     if (is_int($value)) {
       return ($value < 0) ? FALSE : TRUE;
     }
@@ -384,6 +466,13 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 
+  /**
+   * Validate a comma-separated list of positive integers.
+   *
+   * @param string $value the comma-separated string to validate
+   *
+   * @return bool true if all values are positive integers
+   */
   public static function commaSeparatedIntegers($value) {
     foreach (explode(',', $value) as $val) {
       $val = trim($val);
@@ -394,7 +483,14 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
-  static function numeric($value) {
+  /**
+   * Validate that a value is numeric.
+   *
+   * @param mixed $value the value to validate
+   *
+   * @return bool true if value is numeric
+   */
+  public static function numeric($value) {
     // lets use a php gatekeeper to ensure this is numeric
     if (!is_numeric($value)) {
       return FALSE;
@@ -414,9 +510,9 @@ class CRM_Utils_Rule {
    * potential security issues.
    *
    * @see \CRM_Utils_RuleTest::alphanumericData
-   *   for examples of vales that give TRUE/FALSE here
+   *   for examples of values that give TRUE/FALSE here
    *
-   * @param $value
+   * @param string $value The value to test.
    *
    * @return bool
    */
@@ -424,11 +520,26 @@ class CRM_Utils_Rule {
     return preg_match('/^[a-zA-Z0-9_-]*$/', $value) ? TRUE : FALSE;
   }
 
-  static function numberOfDigit($value, $noOfDigit) {
+  /**
+   * Validate that a value has a specific number of digits.
+   *
+   * @param mixed $value the value to validate
+   * @param int $noOfDigit the required number of digits
+   *
+   * @return bool true if value has the exact number of digits
+   */
+  public static function numberOfDigit($value, $noOfDigit) {
     return preg_match('/^\d{' . $noOfDigit . '}$/', $value) ? TRUE : FALSE;
   }
 
-  static function cleanMoney($value) {
+  /**
+   * Clean a money value by removing thousand separators and normalizing decimal point.
+   *
+   * @param string $value the money string to clean
+   *
+   * @return string the cleaned money value
+   */
+  public static function cleanMoney($value) {
     // first remove all white space
     $value = str_replace([' ', "\t", "\n"], '', $value);
 
@@ -442,7 +553,7 @@ class CRM_Utils_Rule {
     }
 
     // ugly fix for CRM-6391: do not drop the thousand separator if
-    // it looks like it’s separating decimal part (because a given
+    // it looks like it' s separating decimal part (because a given
     // value undergoes a second cleanMoney() call, for example)
     if ($mon_thousands_sep != '.' or substr($value, -3, 1) != '.') {
       $value = str_replace($mon_thousands_sep, '', $value);
@@ -459,7 +570,14 @@ class CRM_Utils_Rule {
     return $value;
   }
 
-  static function money($value) {
+  /**
+   * Validate a money value.
+   *
+   * @param string $value the money value to validate
+   *
+   * @return bool true if valid money value
+   */
+  public static function money($value) {
     $config = CRM_Core_Config::singleton();
 
     //only edge case when we have a decimal point in the input money
@@ -480,7 +598,15 @@ class CRM_Utils_Rule {
     return preg_match('/(^-?\d+\.\d?\d?$)|(^-?\.\d\d?$)/', $value) ? TRUE : FALSE;
   }
 
-  static function string($value, $maxLength = 0) {
+  /**
+   * Validate a string value with optional max length.
+   *
+   * @param mixed $value the value to validate
+   * @param int $maxLength maximum allowed length, 0 means no limit
+   *
+   * @return bool true if value is a valid string
+   */
+  public static function string($value, $maxLength = 0) {
     if (is_string($value) &&
       ($maxLength === 0 || strlen($value) <= $maxLength)
     ) {
@@ -489,17 +615,41 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 
-  static function boolean($value) {
+  /**
+   * Validate a boolean-like value.
+   *
+   * @param mixed $value the value to validate
+   *
+   * @return bool true if value represents a boolean
+   */
+  public static function boolean($value) {
     return preg_match(
-      '/(^(1|0)$)|(^(Y(es)?|N(o)?)$)|(^(T(rue)?|F(alse)?)$)/i', $value
+      '/(^(1|0)$)|(^(Y(es)?|N(o)?)$)|(^(T(rue)?|F(alse)?)$)/i',
+      $value
     ) ? TRUE : FALSE;
   }
 
-  static function email($value, $checkDomain = FALSE) {
+  /**
+   * Validate an email address.
+   *
+   * @param string $value the email address to validate
+   * @param bool $checkDomain whether to check the domain
+   *
+   * @return bool true if valid email address
+   */
+  public static function email($value, $checkDomain = FALSE) {
     return (bool) filter_var($value, FILTER_VALIDATE_EMAIL);
   }
 
-  static function emailList($list, $checkDomain = FALSE) {
+  /**
+   * Validate a comma-separated list of email addresses.
+   *
+   * @param string $list the comma-separated email list
+   * @param bool $checkDomain whether to check the domain
+   *
+   * @return bool true if all emails are valid
+   */
+  public static function emailList($list, $checkDomain = FALSE) {
     $emails = explode(',', $list);
     foreach ($emails as $email) {
       $email = trim($email);
@@ -510,10 +660,19 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
+  /**
+   * Validate a postal code.
+   *
+   * Allows between 4-6 digits since India needs 6 and US needs 5.
+   *
+   * @param string $value the postal code to validate
+   *
+   * @return bool true if valid postal code
+   */
   // allow between 4-6 digits as postal code since india needs 6 and US needs 5 (or
   // if u disregard the first 0, 4 (thanx excel!)
   // FIXME: we need to figure out how to localize such rules
-  static function postalCode($value) {
+  public static function postalCode($value) {
     if (preg_match('/^\d{4,6}(-\d{4})?$/', $value)) {
       return TRUE;
     }
@@ -521,18 +680,16 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * see how file rules are written in HTML/QuickForm/file.php
-   * Checks to make sure the uploaded file is ascii
+   * Checks to make sure the uploaded file is ascii.
    *
-   * @param     array     Uploaded file info (from $_FILES)
-   * @access    private
+   * @param array $elementValue uploaded file info (from $_FILES)
    *
-   * @return    bool      true if file has been uploaded, false otherwise
+   * @return bool true if file has been uploaded, false otherwise
    */
-  static function asciiFile($elementValue) {
+  public static function asciiFile($elementValue) {
     $valid = TRUE;
     if (is_array($elementValue['tmp_name'])) {
-      foreach($elementValue['tmp_name'] as $idx => $tmpName){
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
           (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
         ) {
@@ -554,17 +711,16 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * Checks to make sure the uploaded file is in UTF-8, recodes if it's not
+   * Checks to make sure the uploaded file is in UTF-8, recodes if it's not.
    *
-   * @param     array     Uploaded file info (from $_FILES)
-   * @access    private
+   * @param array $elementValue uploaded file info (from $_FILES)
    *
-   * @return    bool      whether file has been uploaded properly and is now in UTF-8
+   * @return bool whether file has been uploaded properly and is now in UTF-8
    */
-  static function utf8File($elementValue) {
+  public static function utf8File($elementValue) {
     $success = FALSE;
     if (is_array($elementValue['tmp_name'])) {
-      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
           (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
         ) {
@@ -603,18 +759,16 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * see how file rules are written in HTML/QuickForm/file.php
-   * Checks to make sure the uploaded file is html
+   * Checks to make sure the uploaded file is html.
    *
-   * @param     array     Uploaded file info (from $_FILES)
-   * @access    private
+   * @param array $elementValue uploaded file info (from $_FILES)
    *
-   * @return    bool      true if file has been uploaded, false otherwise
+   * @return bool true if file has been uploaded, false otherwise
    */
-  static function htmlFile($elementValue) {
+  public static function htmlFile($elementValue) {
     if (is_array($elementValue['tmp_name'])) {
       $valid = FALSE;
-      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if ((isset($elementValue['error'][$idx]) && $elementValue['error'][$idx] == 0) ||
           (!empty($elementValue['tmp_name'][$idx]) && $elementValue['tmp_name'][$idx] != 'none')
         ) {
@@ -637,16 +791,14 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * see how file rules are written in HTML/QuickForm/file.php
-   * Checks to make sure the uploaded file is html
+   * Checks to make sure the uploaded file is a valid image.
    *
-   * @param     array     Uploaded file info (from $_FILES)
-   *            string    WIDTH HEIGHT QUALITY SKIPVERIFY with x between
-   * @access    private
+   * @param array $elementValue uploaded file info (from $_FILES)
+   * @param string|null $format WIDTH HEIGHT QUALITY SKIPVERIFY separated by 'x'
    *
-   * @return    bool      true if file has been uploaded, false otherwise
+   * @return bool true if file has been uploaded, false otherwise
    */
-  static function imageFile($elementValue, $format = NULL) {
+  public static function imageFile($elementValue, $format = NULL) {
     if (!empty($format)) {
       list($maxWidth, $maxHeight, $quality, $skip) = explode('x', $format);
     }
@@ -658,7 +810,7 @@ class CRM_Utils_Rule {
     $skip = !empty($skip) ? TRUE : FALSE;
     $valid = TRUE;
     if (is_array($elementValue['tmp_name'])) {
-      foreach($elementValue['tmp_name'] as $idx => $tmpName) {
+      foreach ($elementValue['tmp_name'] as $idx => $tmpName) {
         if (!empty($tmpName)) {
           list($width, $height) = getimagesize($tmpName);
           if ($width && $height) {
@@ -697,16 +849,14 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * Check if there is a record with the same name in the db
+   * Check if there is a record with the same name in the db.
    *
-   * @param string $value     the value of the field we are checking
-   * @param array  $options   the daoName and fieldName (optional )
+   * @param string $value the value of the field we are checking
+   * @param array $options the daoName and fieldName (optional)
    *
-   * @return boolean     true if object exists
-   * @access public
-   * @static
+   * @return bool true if object exists
    */
-  static function objectExists($value, $options) {
+  public static function objectExists($value, $options) {
     $name = 'name';
     if (isset($options[2])) {
       $name = $options[2];
@@ -715,23 +865,53 @@ class CRM_Utils_Rule {
     return CRM_Core_DAO::objectExists($value, $options[0], $options[1], CRM_Utils_Array::value(2, $options, $name));
   }
 
-  static function optionExists($value, $options) {
+  /**
+   * Check if an option value exists.
+   *
+   * @param string $value the option value to check
+   * @param array $options the option group parameters
+   *
+   * @return bool true if option exists
+   */
+  public static function optionExists($value, $options) {
 
     return CRM_Core_OptionValue::optionExists($value, $options[0], $options[1], $options[2], CRM_Utils_Array::value(3, $options, 'name'));
   }
 
-  static function creditCardNumber($value, $type) {
+  /**
+   * Validate a credit card number.
+   *
+   * @param string $value the credit card number
+   * @param string $type the credit card type
+   *
+   * @return bool true if valid credit card number
+   */
+  public static function creditCardNumber($value, $type) {
 
     return Validate_Finance_CreditCard::number($value, $type);
   }
 
-  static function cvv($value, $type) {
-
+  /**
+   * Validate a credit card CVV code.
+   *
+   * @param string $value the CVV code
+   * @param string $type the credit card type
+   *
+   * @return bool true if valid CVV
+   */
+  public static function cvv($value, $type) {
 
     return Validate_Finance_CreditCard::cvv($value, $type);
   }
 
-  static function currencyCode($value) {
+  /**
+   * Validate a currency code.
+   *
+   * @param string $value the currency code to validate
+   *
+   * @return bool true if valid currency code
+   */
+  public static function currencyCode($value) {
     static $currencyCodes = NULL;
     if (!$currencyCodes) {
       $currencyCodes = CRM_Core_PseudoConstant::currencyCode();
@@ -742,9 +922,17 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 
-  static function xssString($value) {
+  /**
+   * Check if a string contains XSS script tags.
+   *
+   * @param mixed $value the value to check
+   *
+   * @return bool true if the string is safe (no XSS), false otherwise
+   */
+  public static function xssString($value) {
     if (is_string($value)) {
-      return preg_match('!<(vb)?script[^>]*>.*</(vb)?script.*>!ims',
+      return preg_match(
+        '!<(vb)?script[^>]*>.*</(vb)?script.*>!ims',
         $value
       ) ? FALSE : TRUE;
     }
@@ -772,11 +960,26 @@ class CRM_Utils_Rule {
     return self::arrayValue($array);
   }
 
-  static function fileExists($path) {
+  /**
+   * Check if a file exists at the given path.
+   *
+   * @param string $path the file path to check
+   *
+   * @return bool true if file exists
+   */
+  public static function fileExists($path) {
     return file_exists($path);
   }
 
-  static function autocomplete($value, $options) {
+  /**
+   * Validate an autocomplete value against custom options.
+   *
+   * @param string $value the autocomplete value to validate
+   * @param array $options the field and option group IDs
+   *
+   * @return bool true if valid autocomplete value
+   */
+  public static function autocomplete($value, $options) {
     if ($value) {
 
       $selectOption = &CRM_Core_BAO_CustomOption::valuesByID($options['fieldID'], $options['optionGroupID']);
@@ -788,7 +991,15 @@ class CRM_Utils_Rule {
     return TRUE;
   }
 
-  static function validContact($value, $actualElementValue = NULL) {
+  /**
+   * Validate a contact ID.
+   *
+   * @param mixed $value the contact ID to validate
+   * @param mixed $actualElementValue the actual element value if different
+   *
+   * @return bool true if valid contact ID
+   */
+  public static function validContact($value, $actualElementValue = NULL) {
     if ($actualElementValue) {
       $value = $actualElementValue;
     }
@@ -797,17 +1008,16 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * check the validity of the date (in qf format)
-   * note that only a year is valid, or a mon-year is
-   * also valid in addition to day-mon-year
+   * Check the validity of the date (in qf format).
    *
-   * @param array $date
+   * Note that only a year is valid, or a mon-year is
+   * also valid in addition to day-mon-year.
+   *
+   * @param array $date the date array with keys 'd', 'M', 'Y'
    *
    * @return bool true if valid date
-   * @static
-   * @access public
    */
-  static function qfDate($date) {
+  public static function qfDate($date) {
     $config = CRM_Core_Config::singleton();
 
     $d = CRM_Utils_Array::value('d', $date);
@@ -849,7 +1059,14 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 
-  static function qfKey($key) {
+  /**
+   * Validate a QuickForm key.
+   *
+   * @param string $key the key to validate
+   *
+   * @return bool true if valid key
+   */
+  public static function qfKey($key) {
     return ($key) ? CRM_Core_Key::valid($key) : FALSE;
   }
 
@@ -885,8 +1102,8 @@ class CRM_Utils_Rule {
    * @return bool
    */
   public static function checkIp($requestIp, $ips) {
-    if (null === $requestIp) {
-      return false;
+    if (NULL === $requestIp) {
+      return FALSE;
     }
     if (!is_array($ips)) {
       $ips = [
@@ -896,34 +1113,34 @@ class CRM_Utils_Rule {
     $method = substr_count($requestIp, ':') > 1 ? 'checkIp6' : 'checkIp4';
     foreach ($ips as $ip) {
       if (self::$method($requestIp, $ip)) {
-        return true;
+        return TRUE;
       }
     }
-    return false;
+    return FALSE;
   }
 
   /**
-   * Compares two IPv4 addresses
+   * Compares two IPv4 addresses.
    *
    * This is from symfony HttpFoundation/IpUtils::checkIp4
    * In case a subnet is given, it checks if it contains the request IP.
    *
    * @param string $requestIp the ip got to verify
-   * @param string $allowIp IPv4 address or subnet in CIDR notation
+   * @param string $ip IPv4 address or subnet in CIDR notation
    *
    * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
    */
   public static function checkIp4($requestIp, $ip) {
     if (!filter_var($requestIp, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-      return false;
+      return FALSE;
     }
-    if (false !== strpos($ip, '/')) {
+    if (FALSE !== strpos($ip, '/')) {
       list($address, $netmask) = explode('/', $ip, 2);
       if ($netmask === '0') {
         return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4);
       }
       if ($netmask < 0 || $netmask > 32) {
-        return false;
+        return FALSE;
       }
     }
     else {
@@ -934,13 +1151,13 @@ class CRM_Utils_Rule {
   }
 
   /**
-   * Compares two IPv6 addresses
+   * Compares two IPv6 addresses.
    *
    * This is from symfony HttpFoundation/IpUtils::checkIp6
    * In case a subnet is given, it checks if it contains the request IP.
    *
    * @param string $requestIp the ip got to verify
-   * @param string $allowIp IPv4 address or subnet in CIDR notation
+   * @param string $ip IPv6 address or subnet in CIDR notation
    *
    * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
    */
@@ -948,10 +1165,10 @@ class CRM_Utils_Rule {
     if (!(extension_loaded('sockets') && defined('AF_INET6') || @inet_pton('::1'))) {
       throw new \RuntimeException('Unable to check Ipv6. Check that PHP was not compiled with option "disable-ipv6".');
     }
-    if (false !== strpos($ip, '/')) {
+    if (FALSE !== strpos($ip, '/')) {
       list($address, $netmask) = explode('/', $ip, 2);
       if ($netmask < 1 || $netmask > 128) {
-        return false;
+        return FALSE;
       }
     }
     else {
@@ -965,10 +1182,10 @@ class CRM_Utils_Rule {
       $left = $left <= 16 ? $left : 16;
       $mask = ~(0xffff >> $left) & 0xffff;
       if (($bytesAddr[$i] & $mask) != ($bytesTest[$i] & $mask)) {
-        return false;
+        return FALSE;
       }
     }
-    return true;
+    return TRUE;
   }
 
   /**
@@ -999,4 +1216,3 @@ class CRM_Utils_Rule {
     return FALSE;
   }
 }
-

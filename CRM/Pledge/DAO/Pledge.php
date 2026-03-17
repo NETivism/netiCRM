@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-                          class CRM_Pledge_DAO_Pledge extends CRM_Core_DAO
-{
+
+class CRM_Pledge_DAO_Pledge extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_pledge';
+  public static $_tableName = 'civicrm_pledge';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Pledge ID
    *
    * @var int unsigned
@@ -221,24 +219,20 @@
    * @var boolean
    */
   public $is_test;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_pledge
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'contact_id' => 'civicrm_contact:id',
@@ -249,207 +243,204 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_type_id', 'civicrm_contribution_type', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contribution_page_id', 'civicrm_contribution_page', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'honor_contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contribution_type_id', 'civicrm_contribution_type', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contribution_page_id', 'civicrm_contribution_page', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'honor_contact_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'pledge_id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Pledge ID') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_pledge.id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'pledge_contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Contact ID') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_pledge.contact_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-              'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'export' => TRUE,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'contribution_type_id' => [
           'name' => 'contribution_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                'export' => false,
+          'export' => FALSE,
           'where' => 'civicrm_pledge.contribution_type_id',
           'headerPattern' => '',
           'dataPattern' => '',
-              'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionType',
+        ],
         'contribution_page_id' => [
           'name' => 'contribution_page_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
-        ] ,
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionPage',
+        ],
         'pledge_amount' => [
           'name' => 'amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Total Pledged') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_pledge.amount',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'pledge_original_installment_amount' => [
           'name' => 'original_installment_amount',
           'type' => CRM_Utils_Type::T_MONEY,
           'title' => ts('Original Installment Amount') ,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'currency' => [
           'name' => 'currency',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Currency') ,
-           'maxlength' => 3,
-           'size' => CRM_Utils_Type::FOUR,
-                'default' => 'UL',
-          ] ,
+          'maxlength' => 3,
+          'size' => CRM_Utils_Type::FOUR,
+          'default' => 'UL',
+        ],
         'frequency_unit' => [
           'name' => 'frequency_unit',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Frequency Unit') ,
-                  'default' => 'month',
-           'enumValues' => 'day,week,month,year',
-         ] ,
+          'default' => 'month',
+          'enumValues' => 'day,week,month,year',
+        ],
         'frequency_interval' => [
           'name' => 'frequency_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Frequency Interval') ,
-          'required' => true,
-                  'default' => '',
-          ] ,
+          'required' => TRUE,
+          'default' => '',
+        ],
         'frequency_day' => [
           'name' => 'frequency_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Frequency Day') ,
-          'required' => true,
-                  'default' => '',
-          ] ,
+          'required' => TRUE,
+          'default' => '',
+        ],
         'installments' => [
           'name' => 'installments',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Installments') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'start_date' => [
           'name' => 'start_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Start Date') ,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'pledge_create_date' => [
           'name' => 'create_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Pledge Made') ,
-          'required' => true,
-               'import' => true,
+          'required' => TRUE,
+          'import' => TRUE,
           'where' => 'civicrm_pledge.create_date',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
         'acknowledge_date' => [
           'name' => 'acknowledge_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Acknowledge Date') ,
-                  ] ,
+        ],
         'modified_date' => [
           'name' => 'modified_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Modified Date') ,
-                  ] ,
+        ],
         'cancel_date' => [
           'name' => 'cancel_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Cancel Date') ,
-                  ] ,
+        ],
         'end_date' => [
           'name' => 'end_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('End Date') ,
-                  ] ,
+        ],
         'honor_contact_id' => [
           'name' => 'honor_contact_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'honor_type_id' => [
           'name' => 'honor_type_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Honor Type') ,
-                  ] ,
+        ],
         'max_reminders' => [
           'name' => 'max_reminders',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Maximum Number of Reminders') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'initial_reminder_day' => [
           'name' => 'initial_reminder_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Initial Reminder Day') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'additional_reminder_day' => [
           'name' => 'additional_reminder_day',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Additional Reminder Days') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'pledge_status_id' => [
           'name' => 'status_id',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Pledge Status Id') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_pledge.status_id',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => false,
-            ] ,
+          'export' => FALSE,
+        ],
         'pledge_is_test' => [
           'name' => 'is_test',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Test') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_pledge.is_test',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            ] ,
+          'export' => TRUE,
+        ],
       ];
     }
     return self::$_fields;
@@ -457,31 +448,25 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -489,22 +474,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['pledge'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                                                      }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -512,12 +496,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['pledge'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                                                      }
+    }
     return self::$_export;
   }
   /**
@@ -525,11 +510,11 @@
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {
     static $enums = [
-                                                                                                        'frequency_unit',
-                                                                                                                                                                                                                ];
+        'frequency_unit',
+    ];
     return $enums;
   }
   /**
@@ -540,18 +525,17 @@
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                                                                        'frequency_unit' => [
-                  'day' => ts('day'),
-                  'week' => ts('week'),
-                  'month' => ts('month'),
-                  'year' => ts('year'),
-                ],
-                                                                                                                                                                                                                  ];
+        'frequency_unit' => [
+          'day' => ts('day'),
+          'week' => ts('week'),
+          'month' => ts('month'),
+          'year' => ts('year'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -561,10 +545,9 @@
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Pledge_DAO_Pledge::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Pledge_DAO_Pledge::tsEnum($enum, $values[$enum]);
       }

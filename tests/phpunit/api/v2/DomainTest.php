@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/v2/Domain.php';
 
@@ -36,7 +35,7 @@ require_once 'api/v2/Domain.php';
  */
 class api_v2_DomainTest extends CiviUnitTestCase {
 
-  /* This test case doesn't require DB reset - apart from 
+  /* This test case doesn't require DB reset - apart from
        where cleanDB() is called. */
 
   public $DBResetRequired = FALSE;
@@ -57,7 +56,8 @@ class api_v2_DomainTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  protected function tearDown() {}
+  protected function tearDown() {
+  }
 
   ///////////////// civicrm_domain_get methods
 
@@ -109,7 +109,9 @@ class api_v2_DomainTest extends CiviUnitTestCase {
   public function testCreateWithEmptyParams() {
     $params = [];
     $result = &civicrm_domain_create($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
@@ -120,10 +122,10 @@ class api_v2_DomainTest extends CiviUnitTestCase {
   public function testCreateWithWrongParams() {
     $params = 1;
     $result = &civicrm_domain_create($params);
-    $this->assertEquals($result['is_error'], 1,
+    $this->assertEquals(
+      $result['is_error'],
+      1,
       "In line " . __LINE__
     );
   }
 }
-
-

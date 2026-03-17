@@ -27,15 +27,11 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
-Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
+class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
 
   /**
    * takes an associative array and creates a campaign object
@@ -50,7 +46,7 @@ Class CRM_Campaign_BAO_Campaign extends CRM_Campaign_DAO_Campaign {
    * @access public
    * @static
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     if (empty($params)) {
       return;
     }
@@ -158,7 +154,7 @@ WHERE c.title IS NOT NULL" . $whereClause;
    *
    * @static
    */
-  static function getCampaign($all = FALSE, $id = FALSE) {
+  public static function getCampaign($all = FALSE, $id = FALSE) {
     $campaign = [];
     $dao = new CRM_Campaign_DAO_Campaign();
     if (!$all) {
@@ -183,12 +179,11 @@ WHERE c.title IS NOT NULL" . $whereClause;
    *
    * @static
    */
-  static function getCampaignGroups($campaignId) {
+  public static function getCampaignGroups($campaignId) {
     $campaignGroups = [];
     if (!$campaignId) {
       return $campaignGroups;
     }
-
 
     $campGrp = new CRM_Campaign_DAO_CampaignGroup();
     $campGrp->campaign_id = $campaignId;
@@ -210,11 +205,11 @@ WHERE c.title IS NOT NULL" . $whereClause;
    * @return Object             DAO object on sucess, null otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Campaign_DAO_Campaign', $id, 'is_active', $is_active);
   }
 
-  static function accessCampaignDashboard() {
+  public static function accessCampaignDashboard() {
     $allow = FALSE;
     if (CRM_Core_Permission::check('manage campaign') ||
       CRM_Core_Permission::check('administer CiviCampaign')
@@ -243,4 +238,3 @@ WHERE c.title IS NOT NULL" . $whereClause;
     return $isEnable;
   }
 }
-

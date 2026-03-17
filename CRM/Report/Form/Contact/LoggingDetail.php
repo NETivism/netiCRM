@@ -27,22 +27,45 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
   /**
-   * @var array<string, array<'title', mixed>>
+   * Column headers: 'field', 'from', and 'to'.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
+
+  /**
+   * The logging database name (may differ from the main CiviCRM database).
+   *
+   * @var string
+   */
   private $loggingDB;
 
+  /**
+   * The connection ID of the log entry to display, retrieved from 'log_conn_id' GET param.
+   *
+   * @var int|null
+   */
   private $log_conn_id;
-  private $log_date; function __construct() {
+
+  /**
+   * The log timestamp to display, retrieved from 'log_date' GET param.
+   *
+   * @var string|null
+   */
+  private $log_date;
+
+  /**
+   * Resolves the logging database, retrieves log_conn_id and log_date from the request
+   * (falling back to the most recent Update log entry), and sets up fixed column headers.
+   * Disables 'Add to Group' support.
+   */
+  public function __construct() {
     // don’t display the ‘Add these Contacts to Group’ button
     $this->_add2groupSupported = FALSE;
 
@@ -54,7 +77,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
 
     // make sure the report works even without the params
     if (!$this->log_conn_id or !$this->log_date) {
-      $dao = new CRM_Core_DAO;
+      $dao = new CRM_Core_DAO();
       $dao->query("SELECT log_conn_id, log_date FROM {$this->loggingDB}.log_civicrm_contact WHERE log_action = 'Update' ORDER BY log_date DESC LIMIT 1");
       $dao->fetch();
       $this->log_conn_id = $dao->log_conn_id;
@@ -70,7 +93,18 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function buildRows($sql, &$rows) {
+  /**
+   * Populates $rows with a field-by-field diff between the current and previous log state.
+   * Queries the logging database for the change record (within 10 seconds of log_date)
+   * and its previous state, then compares them field-by-field, skipping log_* columns.
+   * Also assigns template variables for who changed whom and a link back to the summary report.
+   *
+   * @param string|null $sql Unused; query is built internally.
+   * @param array &$rows Output rows, each with ‘field’, ‘from’, and ‘to’ keys.
+   *
+   * @return void
+   */
+  public function buildRows($sql, &$rows) {
     // safeguard for when there aren’t any log entries yet
     if (!$this->log_conn_id or !$this->log_date) {
       return;
@@ -110,8 +144,7 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     $originalSQL = "SELECT * FROM {$this->loggingDB}.log_civicrm_contact WHERE log_conn_id != %1 AND log_date < %2 AND id = %3 ORDER BY log_date DESC LIMIT 1";
     $original = $this->sqlToArray($originalSQL, $params);
 
-
-    $dao = new CRM_Contact_DAO_Contact;
+    $dao = new CRM_Contact_DAO_Contact();
     $fields = &$dao->fields();
 
     // populate $rows with only the differences between $changed and $original (skipping log_* columns)
@@ -127,12 +160,27 @@ class CRM_Report_Form_Contact_LoggingDetail extends CRM_Report_Form {
     }
   }
 
-  function buildQuery($applyLimit = null) {}
+  /**
+   * Overrides parent buildQuery(). No-op: this report builds its query directly in buildRows().
+   *
+   * @param bool|null $applyLimit Unused.
+   *
+   * @return void
+   */
+  public function buildQuery($applyLimit = NULL) {
+  }
 
+  /**
+   * Executes a parameterised SQL query and returns the first result row as an associative array.
+   *
+   * @param string $sql The SQL query with %1, %2, … placeholders.
+   * @param array $params CRM_Core_DAO::executeQuery-style parameter array.
+   *
+   * @return array Associative array of column => value for the first row.
+   */
   private function sqlToArray($sql, $params) {
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     $dao->fetch();
     return $dao->toArray();
   }
 }
-

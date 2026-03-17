@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for relationship
@@ -80,16 +75,21 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
   /**
    * build all the data structures needed to build the form
    *
-   * @param
-   *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     self::preProcessCommon($this);
   }
 
-  static function preProcessCommon(&$form, $useTable = FALSE) {
+  /**
+   * Common preProcess
+   *
+   * @param CRM_Core_Form $form the form object
+   * @param bool $useTable whether to use table structure
+   *
+   * @return void
+   */
+  public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_contributionIds = [];
 
     $values = $form->controller->exportValues($form->get('searchFormName'));
@@ -110,24 +110,28 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     }
     else {
       $queryParams = $form->get('queryParams');
-      $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
+      $query = new CRM_Contact_BAO_Query(
+        $queryParams,
+        NULL,
+        NULL,
+        FALSE,
+        FALSE,
         CRM_Contact_BAO_Query::MODE_CONTRIBUTE
       );
 
       $sortOrder = $form->controller->get('sortOrder');
 
-      if ( $form->get( CRM_Utils_Sort::SORT_ID  ) ) {
-        $sortID = CRM_Utils_Sort::sortIDValue( $form->get( CRM_Utils_Sort::SORT_ID  ),$form->get( CRM_Utils_Sort::SORT_DIRECTION ) );
+      if ($form->get(CRM_Utils_Sort::SORT_ID)) {
+        $sortID = CRM_Utils_Sort::sortIDValue($form->get(CRM_Utils_Sort::SORT_ID), $form->get(CRM_Utils_Sort::SORT_DIRECTION));
         $form->_sort = new CRM_Utils_Sort($sortOrder, $sortID);
       }
-
 
       // separate query to prevent memory peak
       $jobSize = 50000;
       if (is_numeric($rowCount) && $rowCount / $jobSize > 1) {
         $jobs = $rowCount / $jobSize;
-        for($i = 0; $i < $jobs; $i++) {
-          $offset = $i*$jobSize;
+        for ($i = 0; $i < $jobs; $i++) {
+          $offset = $i * $jobSize;
           $result = $query->searchQuery($offset, $jobSize, $form->_sort);
           while ($result->fetch()) {
             $ids[] = $result->contribution_id;
@@ -168,18 +172,22 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
       $session->replaceUserContext(CRM_Utils_System::url('civicrm/contribute/search', $urlParams));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
-          $urlParams
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        "civicrm/contact/search/$searchFormName",
+        $urlParams
+      ));
     }
   }
 
   /**
    * Given the contribution id, compute the contact id
    * since its used for things like send email
+   *
+   * @return void
    */
   public function setContactIDs() {
-    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent($this->_contributionIds,
+    $this->_contactIds = &CRM_Core_DAO::getContactIDsFromComponent(
+      $this->_contributionIds,
       'civicrm_contribution'
     );
   }
@@ -189,13 +197,15 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
    * the form with a customized title for the main Submit
    *
    * @param string $title title of the main button
-   * @param string $type  button type for the form after processing
+   * @param string $nextType button type for the form after processing
+   * @param string $backType button type for the cancel button
+   * @param bool $submitOnce whether to prevent multiple submissions
    *
    * @return void
-   * @access public
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -207,4 +217,3 @@ class CRM_Contribute_Form_Task extends CRM_Core_Form {
     );
   }
 }
-

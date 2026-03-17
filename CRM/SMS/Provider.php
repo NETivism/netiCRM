@@ -26,8 +26,8 @@
  */
 
 /**
+ * Abstract base class for SMS gateway provider implementations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 abstract class CRM_SMS_Provider {
@@ -38,7 +38,7 @@ abstract class CRM_SMS_Provider {
    *
    * @var object
    */
-  static private $_singleton = [];
+  private static $_singleton = [];
 
   /**
    * Each array element is a message constructor by provider prepared to send
@@ -80,12 +80,12 @@ abstract class CRM_SMS_Provider {
   /**
    * Max SMS Characters to send in 1 message
    */
-  const MAX_SMS_CHAR = 160;
+  public const MAX_SMS_CHAR = 160;
 
   /**
    * Max multi-bytes charactiers to send in 1 message
    */
-  const MAX_ZH_SMS_CHAR = 70;
+  public const MAX_ZH_SMS_CHAR = 70;
 
   /**
    * Singleton function used to manage this object.
@@ -112,7 +112,6 @@ abstract class CRM_SMS_Provider {
     if (!isset(self::$_singleton[$cacheKey]) || $force) {
       $providerClass = $providerName;
       $providerFile = str_replace('_', '/', $providerName);
-
 
       self::$_singleton[$cacheKey] = $providerClass::singleton($providerParams, $force);
     }

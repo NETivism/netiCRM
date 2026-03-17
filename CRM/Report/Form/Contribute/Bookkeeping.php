@@ -27,38 +27,52 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
-  /**
-   * @var never[]
-   */
+
+  /** @var array Column headers for the report output. */
   public $_columnHeaders;
+
+  /** @var string The FROM clause of the report query. */
   public $_from;
-  /**
-   * @var string
-   */
+
+  /** @var string The GROUP BY clause of the report query. */
   public $_groupBy;
-  /**
-   * @var string
-   */
+
+  /** @var string The ORDER BY clause of the report query. */
   public $_orderBy;
+
+  /** @var array Table alias mappings used in the query. */
   public $_aliases;
+
+  /** @var string The WHERE clause of the report query. */
   public $_where;
+
+  /** @var bool Whether to generate absolute URLs in output links. */
   public $_absoluteUrl;
+
+  /** @var bool Whether address fields are included in the SELECT. */
   protected $_addressField = FALSE;
 
+  /** @var bool Whether email fields are included in the SELECT. */
   protected $_emailField = FALSE;
 
+  /** @var array|null Summary statistics for the report. */
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Membership']; function __construct() {
+  /** @var array Custom group types this report extends. */
+  protected $_customGroupExtends = ['Membership'];
+
+  /**
+   * Constructor for the Bookkeeping report.
+   *
+   * Defines column definitions for civicrm_contact, civicrm_membership,
+   * and civicrm_contribution tables with their fields and filters.
+   */
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -150,11 +164,23 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Preprocesses the report form before building.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields.
+   *
+   * Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
 
     $this->_columnHeaders = [];
@@ -176,7 +202,15 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining civicrm_contact, civicrm_contribution,
+   * civicrm_membership_payment, and civicrm_membership tables.
+   *
+   * Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = NULL;
 
     $this->_from = "
@@ -189,21 +223,47 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
               		  ON payment.membership_id = {$this->_aliases['civicrm_membership']}.id ";
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause. Sets an empty GROUP BY for this report.
+   *
+   * Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = "";
   }
 
-  function orderBy() {
+  /**
+   * Builds the ORDER BY clause. Orders by contribution ID.
+   *
+   * @return void
+   */
+  public function orderBy() {
     $this->_orderBy = " ORDER BY {$this->_aliases['civicrm_contribution']}.id ";
   }
 
-  function postProcess() {
+  /**
+   * Processes the report after form submission.
+   *
+   * Builds the ACL clause and delegates to the parent postProcess.
+   *
+   * @return void
+   */
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function statistics(&$rows) {
+  /**
+   * Computes report statistics including total amount, count, and average.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array.
+   */
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $select = "
@@ -229,14 +289,13 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     return $statistics;
   }
 
-  function alterDisplay(&$rows) {
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $checkList = [];
     $entryFound = FALSE;
     $display_flag = $prev_cid = $cid = 0;
     $contributionTypes = CRM_Contribute_PseudoConstant::contributionType();
     $paymentInstruments = CRM_Contribute_PseudoConstant::paymentInstrument();
-
 
     foreach ($rows as $rowNum => $row) {
 
@@ -245,7 +304,8 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
         CRM_Utils_Array::value('civicrm_contact_display_name', $rows[$rowNum]) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Utils_System::url("civicrm/contact/view",
+        $url = CRM_Utils_System::url(
+          "civicrm/contact/view",
           'reset=1&cid=' . $row['civicrm_contact_id'],
           $this->_absoluteUrl
         );
@@ -283,4 +343,3 @@ class CRM_Report_Form_Contribute_Bookkeeping extends CRM_Report_Form {
     }
   }
 }
-

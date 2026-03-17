@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Create a page for displaying Custom Options.
@@ -49,7 +45,6 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * The field id of the option
    *
    * @var int
-   * @access protected
    */
   protected $_fid;
 
@@ -57,7 +52,6 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * The field id of the option
    *
    * @var int
-   * @access protected
    */
   protected $_sid;
 
@@ -65,19 +59,15 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @access private
    */
   private static $_actionLinks;
 
   /**
    * Get the action links for this page.
    *
-   * @param null
-   *
-   * @return array  array of action links that we need to display for the browse screen
-   * @access public
+   * @return array array of action links that we need to display for the browse screen
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     if (!isset(self::$_actionLinks)) {
       self::$_actionLinks = [
         CRM_Core_Action::UPDATE => [
@@ -118,14 +108,10 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
   /**
    * Browse all price fields.
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
-  function browse() {
+  public function browse() {
     $customOption = [];
-
 
     CRM_Price_BAO_FieldValue::getValues($this->_fid, $customOption);
 
@@ -147,7 +133,9 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
         $customOption[$id]['is_default'] = '';
       }
       $customOption[$id]['order'] = $customOption[$id]['weight'];
-      $customOption[$id]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+      $customOption[$id]['action'] = CRM_Core_Action::formLink(
+        self::actionLinks(),
+        $action,
         ['oid' => $id,
           'fid' => $this->_fid,
           'sid' => $this->_sid,
@@ -158,26 +146,33 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     $returnURL = CRM_Utils_System::url('civicrm/admin/price/field/option', "action=browse&reset=1&fid={$this->_fid}&sid={$this->_sid}");
     $filter = "price_field_id = {$this->_fid}";
 
-    CRM_Utils_Weight::addOrder($customOption, 'CRM_Price_DAO_FieldValue',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $customOption,
+      'CRM_Price_DAO_FieldValue',
+      'id',
+      $returnURL,
+      $filter
     );
 
     $this->assign('customOption', $customOption);
   }
 
   /**
-   * edit custom Option.
+   * Edit custom Option.
    *
-   * editing would involved modifying existing fields + adding data to new fields.
+   * Editing would involved modifying existing fields + adding data to new fields.
    *
-   * @param string  $action   the action to be invoked
+   * @param string $action the action to be invoked
    *
    * @return void
-   * @access public
    */
-  function edit($action) {
-    $oid = CRM_Utils_Request::retrieve('oid', 'Positive',
-      $this, FALSE, 0
+  public function edit($action) {
+    $oid = CRM_Utils_Request::retrieve(
+      'oid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     $params = [];
     if ($oid) {
@@ -185,9 +180,9 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
 
       $sid = CRM_Price_BAO_Set::getSetId($params);
 
-
       $usedBy = &CRM_Price_BAO_Set::getUsedBy($sid);
-    }else{
+    }
+    else {
       $params['fid'] = $this->_fid;
       $sid = CRM_Price_BAO_Set::getSetId($params);
       $this->set('sid', $sid);
@@ -195,15 +190,15 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     // set the userContext stack
     $session = CRM_Core_Session::singleton();
 
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/admin/price/field/option',
-        "reset=1&action=browse&fid={$this->_fid}&sid={$this->_sid}"
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      'civicrm/admin/price/field/option',
+      "reset=1&action=browse&fid={$this->_fid}&sid={$this->_sid}"
+    ));
     $controller = new CRM_Core_Controller_Simple('CRM_Price_Form_Option', ts('Price Field Option'), $action);
     $controller->set('fid', $this->_fid);
     $controller->setEmbedded(TRUE);
     $controller->process();
     $controller->run();
-
 
     $this->browse();
 
@@ -233,17 +228,17 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
-  function run() {
-
+  public function run() {
 
     // get the field id
-    $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive',
-      $this, FALSE, 0
+    $this->_fid = CRM_Utils_Request::retrieve(
+      'fid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     //get the price set id
     if (!$this->_sid) {
@@ -276,21 +271,30 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     }
 
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
 
-    $oid = CRM_Utils_Request::retrieve('oid', 'Positive',
-      $this, FALSE, 0
+    $oid = CRM_Utils_Request::retrieve(
+      'oid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     // what action to take ?
-    if ($action & (CRM_Core_Action::UPDATE | CRM_Core_Action::ADD |
+    if ($action & (
+      CRM_Core_Action::UPDATE | CRM_Core_Action::ADD |
         CRM_Core_Action::VIEW | CRM_Core_Action::DELETE
-      )) {
+    )) {
       // no browse for edit/update/view
       $this->edit($action);
     }
@@ -302,4 +306,3 @@ class CRM_Price_Page_Option extends CRM_Core_Page {
     parent::run();
   }
 }
-

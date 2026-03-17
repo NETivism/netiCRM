@@ -27,15 +27,14 @@
 */
 
 /**
+ * Provides query-building and search functionality for Campaign data
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Campaign_BAO_Query {
   //since normal activity clause clause get collides.
-  CONST civicrm_activity = 'civicrm_survey_activity', civicrm_activity_target = 'civicrm_survey_activity_target';
+  public const civicrm_activity = 'civicrm_survey_activity', civicrm_activity_target = 'civicrm_survey_activity_target';
 
   /**
    * static field for all the campaign fields
@@ -43,9 +42,9 @@ class CRM_Campaign_BAO_Query {
    * @var array
    * @static
    */
-  static $_campaignFields = NULL;
+  public static $_campaignFields = NULL;
 
-  static $_applySurveyClause;
+  public static $_applySurveyClause;
 
   /**
    * Function get the fields for campaign.
@@ -53,7 +52,7 @@ class CRM_Campaign_BAO_Query {
    * @return array self::$_campaignFields  an associative array of campaign fields
    * @static
    */
-  static function &getFields() {
+  public static function &getFields() {
     if (!isset(self::$_campaignFields)) {
       self::$_campaignFields = [];
     }
@@ -67,7 +66,7 @@ class CRM_Campaign_BAO_Query {
    * @return void
    * @access public
    */
-  static function select(&$query) {
+  public static function select(&$query) {
     self::$_applySurveyClause = FALSE;
     if (is_array($query->_params)) {
       foreach ($query->_params as $values) {
@@ -113,7 +112,7 @@ class CRM_Campaign_BAO_Query {
     $query->_whereTables['civicrm_campaign'] = 1;
   }
 
-  static function where(&$query) {
+  public static function where(&$query) {
     //get survey clause in force,
     //only when we have survey id.
     if (!self::$_applySurveyClause) {
@@ -130,7 +129,7 @@ class CRM_Campaign_BAO_Query {
     }
   }
 
-  static function whereClauseSingle(&$values, &$query) {
+  public static function whereClauseSingle(&$values, &$query) {
     //get survey clause in force,
     //only when we have survey id.
     if (!self::$_applySurveyClause) {
@@ -150,11 +149,17 @@ class CRM_Campaign_BAO_Query {
         $aType = $value;
         $query->_qill[$grouping][] = ts('Survey - %1', [1 => CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey', $value, 'title')]);
 
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_activity.source_record_id',
-          $op, $value, "Integer"
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          'civicrm_activity.source_record_id',
+          $op,
+          $value,
+          "Integer"
         );
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_survey.id',
-          $op, $value, "Integer"
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          'civicrm_survey.id',
+          $op,
+          $value,
+          "Integer"
         );
         return;
 
@@ -163,8 +168,11 @@ class CRM_Campaign_BAO_Query {
         $activityStatus = CRM_Core_PseudoConstant::activityStatus();
 
         $query->_qill[$grouping][] = ts('Survey Status - %1', [1 => $activityStatus[$value]]);
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_activity.status_id',
-          $op, $value, "Integer"
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          'civicrm_activity.status_id',
+          $op,
+          $value,
+          "Integer"
         );
         return;
 
@@ -184,14 +192,17 @@ class CRM_Campaign_BAO_Query {
         }
         $query->_qill[$grouping][] = ts('Survey Interviewer - %1', [1 => $surveyInterviewerName]);
         $query->_tables['civicrm_activity_assignment'] = $query->_whereTables['civicrm_activity_assignment'] = 1;
-        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause('civicrm_activity_assignment.assignee_contact_id',
-          $op, $value, "Integer"
+        $query->_where[$grouping][] = CRM_Contact_BAO_Query::buildClause(
+          'civicrm_activity_assignment.assignee_contact_id',
+          $op,
+          $value,
+          "Integer"
         );
         return;
     }
   }
 
-  static function from($name, $mode, $side) {
+  public static function from($name, $mode, $side) {
     $from = NULL;
     //get survey clause in force,
     //only when we have survey id.
@@ -227,7 +238,7 @@ INNER JOIN civicrm_activity_assignment ON ( civicrm_activity.id = civicrm_activi
     return $from;
   }
 
-  static function defaultReturnProperties($mode) {
+  public static function defaultReturnProperties($mode) {
     $properties = NULL;
     if ($mode & CRM_Contact_BAO_Query::MODE_CAMPAIGN) {
       $properties = [
@@ -258,10 +269,12 @@ INNER JOIN civicrm_activity_assignment ON ( civicrm_activity.id = civicrm_activi
     return $properties;
   }
 
-  static function tableNames(&$tables) {}
-  static function searchAction(&$row, $id) {}
+  public static function tableNames(&$tables) {
+  }
+  public static function searchAction(&$row, $id) {
+  }
 
-  static function info(&$tables) {
+  public static function info(&$tables) {
     //get survey clause in force,
     //only when we have survey id.
     if (!self::$_applySurveyClause) {
@@ -284,12 +297,15 @@ INNER JOIN civicrm_activity_assignment ON ( civicrm_activity.id = civicrm_activi
    * @return void
    * @static
    */
-  static function buildSearchForm(&$form) {
+  public static function buildSearchForm(&$form) {
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_Address');
     $className = CRM_Utils_System::getClassName($form);
 
-    $form->add('text', 'sort_name', ts('Contact Name'),
+    $form->add(
+      'text',
+      'sort_name',
+      ts('Contact Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name')
     );
     $form->add('text', 'street_name', ts('Street Name'), $attributes['street_name']);
@@ -308,9 +324,12 @@ INNER JOIN civicrm_activity_assignment ON ( civicrm_activity.id = civicrm_activi
       $className == 'CRM_Campaign_Form_Gotv'
     ) {
       //autocomplete url
-      $dataUrl = CRM_Utils_System::url('civicrm/ajax/rest',
+      $dataUrl = CRM_Utils_System::url(
+        'civicrm/ajax/rest',
         'className=CRM_Contact_Page_AJAX&fnName=getContactList&json=1&reset=1',
-        FALSE, NULL, FALSE
+        FALSE,
+        NULL,
+        FALSE
       );
 
       $form->assign('dataUrl', $dataUrl);
@@ -328,7 +347,8 @@ INNER JOIN civicrm_activity_assignment ON ( civicrm_activity.id = civicrm_activi
       if ($userId) {
         $defaults = [];
         $defaults['survey_interviewer_id'] = $userId;
-        $defaults['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+        $defaults['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue(
+          'CRM_Contact_DAO_Contact',
           $userId,
           'sort_name',
           'id'
@@ -364,10 +384,13 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
     if (empty($surveys) &&
       ($className == 'CRM_Campaign_Form_Search')
     ) {
-      return CRM_Core_Error::statusBounce(ts('Could not find survey for %1 respondents.',
+      return CRM_Core_Error::statusBounce(
+        ts(
+          'Could not find survey for %1 respondents.',
           [1 => $form->get('op')]
         ),
-        CRM_Utils_System::url('civicrm/survey/add',
+        CRM_Utils_System::url(
+          'civicrm/survey/add',
           'reset=1&action=add'
         )
       );
@@ -380,11 +403,11 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
      * Retrieve all valid voter ids,
      * and build respective clause to restrict search.
      *
-     * @param  array  $criteria an array 
-     * @return $voterClause as a string  
+     * @param  array  $criteria an array
+     * @return $voterClause as a string
      * @static
      */
-  static function voterClause($params) {
+  public static function voterClause($params) {
     $voterClause = NULL;
     if (!is_array($params) || empty($params)) {
       return $voterClause;
@@ -412,7 +435,6 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
       }
     }
 
-
     $voterActValues = CRM_Campaign_BAO_Survey::getSurveyVoterInfo($surveyId, NULL, $statusIds);
 
     if (!empty($voterActValues)) {
@@ -421,8 +443,10 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
       if ($searchVoterFor == 'reserve') {
         $operator = 'NOT IN';
         //filter out recontact survey contacts.
-        $recontactInterval = CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey',
-          $surveyId, 'recontact_interval'
+        $recontactInterval = CRM_Core_DAO::getFieldValue(
+          'CRM_Campaign_DAO_Survey',
+          $surveyId,
+          'recontact_interval'
         );
         $recontactInterval = unserialize($recontactInterval);
         if ($surveyId &&
@@ -457,4 +481,3 @@ INNER JOIN  civicrm_custom_group grp on fld.custom_group_id = grp.id
     return $voterClause;
   }
 }
-

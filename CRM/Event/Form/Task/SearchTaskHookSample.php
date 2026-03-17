@@ -26,13 +26,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to save a search
@@ -44,9 +40,8 @@ class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task {
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $rows = [];
     // display name and participation details of participants
@@ -76,11 +71,11 @@ class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -89,4 +84,3 @@ class CRM_Event_Form_Task_SearchTaskHookSample extends CRM_Event_Form_Task {
     );
   }
 }
-

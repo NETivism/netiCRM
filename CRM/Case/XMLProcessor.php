@@ -26,17 +26,15 @@
 */
 
 /**
+ * Base class for processing Case type XML configuration files
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Case_XMLProcessor {
 
-  static protected $_xml; function retrieve($caseType) {
-
-
+  protected static $_xml;
+  public function retrieve($caseType) {
 
     // trim all spaces from $caseType
     $caseType = str_replace('_', ' ', $caseType);
@@ -54,7 +52,8 @@ class CRM_Case_XMLProcessor {
         $config->customTemplateDir
       ) {
         // check if the file exists in the custom templates directory
-        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(
+          DIRECTORY_SEPARATOR,
           [$config->customTemplateDir,
             'CRM',
             'Case',
@@ -69,7 +68,8 @@ class CRM_Case_XMLProcessor {
         !file_exists($fileName)
       ) {
         // check if file exists locally
-        $fileName = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+        $fileName = CRM_Utils_Array::implode(
+          DIRECTORY_SEPARATOR,
           [dirname(__FILE__),
             'xml',
             'configuration',
@@ -90,7 +90,7 @@ class CRM_Case_XMLProcessor {
     return self::$_xml[$caseType];
   }
 
-  function &allActivityTypes($indexName = TRUE, $all = FALSE) {
+  public function &allActivityTypes($indexName = TRUE, $all = FALSE) {
     static $activityTypes = NULL;
     if (!$activityTypes) {
 
@@ -99,7 +99,7 @@ class CRM_Case_XMLProcessor {
     return $activityTypes;
   }
 
-  function &allRelationshipTypes() {
+  public function &allRelationshipTypes() {
     static $relationshipTypes = [];
 
     if (!$relationshipTypes) {
@@ -115,4 +115,3 @@ class CRM_Case_XMLProcessor {
     return $relationshipTypes;
   }
 }
-

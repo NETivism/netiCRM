@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,9 +41,12 @@ class CRM_Contact_Form_Edit_Household {
   /**
    * This function provides the HTML form elements that are specific to the Individual Contact Type
    *
-   * @access public
+   * @param object $form   (reference) form object
+   * @param int    $action action
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildQuickForm(&$form, $action = NULL) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact');
@@ -59,7 +60,8 @@ class CRM_Contact_Form_Edit_Household {
     $form->addElement('text', 'nick_name', ts('Nick Name'), $attributes['nick_name']);
     $form->addElement('text', 'contact_source', ts('Source'), CRM_Utils_Array::value('source', $attributes));
     $form->add('text', 'external_identifier', ts('External Id'), $attributes['external_identifier'], FALSE);
-    $form->addRule('external_identifier',
+    $form->addRule(
+      'external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
       ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
@@ -69,13 +71,15 @@ class CRM_Contact_Form_Edit_Household {
   /**
    * add rule for household
    *
-   * @params array $fields array of form values
+   * @param array $fields    array of form values
+   * @param array $files     array of files
+   * @param int   $contactID contact id
    *
-   * @return $error
+   * @return array|boolean true if no errors, else array of errors
    * @static
-   * @public
+   * @access public
    */
-  static function formRule($fields, $files, $contactID = NULL) {
+  public static function formRule($fields, $files, $contactID = NULL) {
     $errors = [];
 
     $primaryID = CRM_Contact_Form_Contact::formRule($fields, $errors, $contactID);
@@ -91,4 +95,3 @@ class CRM_Contact_Form_Edit_Household {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Page for invoking report templates
@@ -46,16 +41,16 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
 
     $cc_filter = [];
-    if($_GET['start_date']){
+    if ($_GET['start_date']) {
       $cc_filter['start_date'] = $_GET['start_date'];
     }
-    if($_GET['end_date']){
+    if ($_GET['end_date']) {
       $cc_filter['end_date'] = $_GET['end_date'];
     }
-    if(!empty($cc_filter)){
+    if (!empty($cc_filter)) {
       $filter = ['contribution' => $cc_filter];
     }
 
@@ -63,16 +58,16 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $path = get_class($this);
     $allData = CRM_Core_BAO_Cache::getItem('Report Page Summary', $path.'_reportPageSummary', $components['CiviReport']->componentID);
 
-    if(empty($allData) || time() - $allData['time'] > 86400 || $_GET['update']) {
+    if (empty($allData) || time() - $allData['time'] > 86400 || $_GET['update']) {
       $allData['contacts'] = CRM_Report_BAO_Summary::getContactSource();
       $allData['contribute'] = CRM_Report_BAO_Summary::getContributionData();
       $allData['participant'] = CRM_Report_BAO_Summary::getParitcipantData();
       $allData['mailing'] = CRM_Report_BAO_Summary::getMailingData();
       $params = ['contribution' => 1];
       $allData['statistic_by_condition'] = [
-        'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER,$params, $filter),
-        'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE,$params, $filter),
-        'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE,$params, $filter),
+        'gender' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::GENDER, $params, $filter),
+        'age' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::AGE, $params, $filter),
+        'province' => CRM_Report_BAO_Summary::getStaWithCondition(CRM_Report_BAO_Summary::PROVINCE, $params, $filter),
         ];
       // refs #32830, performance issue
       // $allData['participant_after_mailing'] = CRM_Report_BAO_Summary::getPartAfterMailData();
@@ -97,10 +92,10 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $template = CRM_Core_Smarty::singleton();
     $template->assign('contribute_total', CRM_Utils_Money::format($contribute['total_contribute']['sum']));
     $template->assign('contribute_online', CRM_Utils_Money::format($contribute['online_offline']['sum'][0]));
-    $template->assign('participant_total',$participant['Participants Count']['count']);
-    $template->assign('participant_online',$participant['online_offline']['count'][0]);
-    $template->assign('contact_total',$contacts['all']);
-    $template->assign('mailing',$mailing['count'][0]);
+    $template->assign('participant_total', $participant['Participants Count']['count']);
+    $template->assign('participant_online', $participant['online_offline']['count'][0]);
+    $template->assign('contact_total', $contacts['all']);
+    $template->assign('mailing', $mailing['count'][0]);
 
     /**
      * Online-offline contribution
@@ -111,7 +106,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'selector' => '#chart-pie-with-legend-contribution-online-offline',
       'type' => 'Pie',
       'series' => self::getDonutData($contribute['online_offline']['sum']),
-      'isFillDonut' => true,
+      'isFillDonut' => TRUE,
     ];
     $template->assign('chartConributeOnlineOffline', $chartContact);
 
@@ -124,10 +119,9 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'selector' => '#chart-pie-with-legend-participant-online-offline',
       'type' => 'Pie',
       'series' => self::getDonutData($participant['online_offline']['count']),
-      'isFillDonut' => true,
+      'isFillDonut' => TRUE,
     ];
     $template->assign('chartParticipantOnlineOffline', $chartContact);
-
 
     /**
      * Contribute
@@ -141,12 +135,11 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($contacts['filtered']['label']),
       'series' => json_encode($contacts['filtered']['people']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartContact', $chartContact);
-
 
     /**
      * Contribute
@@ -160,8 +153,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($contribute['instruments']['label']),
       'series' => json_encode($contribute['instruments']['sum']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartInsSum', $chartInsSum);
@@ -178,16 +171,16 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($contribute['times']['label']),
       'series' => json_encode($contribute['times']['sum']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartContribTimes', $chartContribTimes);
 
-    $this->assign('static_label',[ts("Total Amount"), ts("Percentage"),ts("Avg Amount"),ts("Count"),ts("People")]);
-    $this->assign('contribution_type_table',$contribute['contribution_type_table']);
+    $this->assign('static_label', [ts("Total Amount"), ts("Percentage"),ts("Avg Amount"),ts("Count"),ts("People")]);
+    $this->assign('contribution_type_table', $contribute['contribution_type_table']);
 
-    $this->assign('recur_table',$contribute['recur_table']);
+    $this->assign('recur_table', $contribute['recur_table']);
 
     $chartPeopleGender = [
       'id' => 'chart-pie-with-legend-people-by-gender',
@@ -197,8 +190,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['gender']['label']),
       'series' => json_encode($statistic_by_condition['gender']['people']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartPeopleGender', $chartPeopleGender);
@@ -211,8 +204,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['gender']['label']),
       'series' => json_encode($statistic_by_condition['gender']['sum']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartContributionGender', $chartContributionGender);
@@ -225,8 +218,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['age']['label']),
       'series' => json_encode($statistic_by_condition['age']['people']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartPeopleAge', $chartPeopleAge);
@@ -239,8 +232,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['age']['label']),
       'series' => json_encode($statistic_by_condition['age']['sum']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartContributionAge', $chartContributionAge);
@@ -253,8 +246,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['province']['label']),
       'series' => json_encode($statistic_by_condition['province']['people']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartPeopleProvince', $chartPeopleProvince);
@@ -267,8 +260,8 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'labels' => json_encode($statistic_by_condition['province']['label']),
       'series' => json_encode($statistic_by_condition['province']['sum']),
       'labelType' => 'percent',
-      'withLegend' => true,
-      'withToolTip' => true
+      'withLegend' => TRUE,
+      'withToolTip' => TRUE
     ];
 
     $template->assign('chartContributionProvince', $chartContributionProvince);
@@ -282,10 +275,10 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'classes' => ['ct-chart-bar'],
       'selector' => '#chart-bar-mailing-funnel',
       'type' => 'Bar',
-      'labels' => json_encode(array_slice($mailing['label'],1)),
+      'labels' => json_encode(array_slice($mailing['label'], 1)),
       'labelsTop' => json_encode($labelsTopMailing),
       'series' => json_encode($mailing['funnel']['count']),
-      'withToolTip' => true
+      'withToolTip' => TRUE
     ];
     $this->assign('chartMailingFunnel', $chartMailingFunnel);
 
@@ -319,13 +312,13 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     }
     */
 
-    $template->assign('update_time', date('n/j H:i',$time));
+    $template->assign('update_time', date('n/j H:i', $time));
 
     // $template->assign('chartInsSum', $chartInsSum);
     // $template->assign('chartTypeSum', $chartTypeSum);
     $template->assign('hasChart', TRUE);
 
-    if($_GET['showhidden'] == 1){
+    if ($_GET['showhidden'] == 1) {
       $template->assign('showhidden', TRUE);
       $this->showhiddenall($allData);
     }
@@ -335,23 +328,44 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     return parent::run();
   }
 
-  static private function getDonutData($data){
+  /**
+   * Converts a two-element array of values [online, offline] into a cumulative donut
+   * format expected by the chart library: [online, online+offline].
+   *
+   * @param array $data Numeric array; only the first two elements are used.
+   *
+   * @return string JSON-encoded array of cumulative values.
+   */
+  private static function getDonutData($data) {
     $i = 0;
     $returnData = [];
     foreach ($data as $value) {
-      if($i == 0){
+      if ($i == 0) {
         $returnData[0] = $value;
-      }elseif($i == 1){
+      }
+      elseif ($i == 1) {
         $returnData[] = $returnData[0] + $value;
-      }else{
+      }
+      else {
         break;
       }
-      $i ++;
+      $i++;
     }
     return json_encode($returnData);
   }
 
-  private function showhiddenall($data){
+  /**
+   * Builds chart definitions for the "show hidden" section of the summary page.
+   * Prepares bar charts for participant online/offline, contribution recur, contribution
+   * times, and contribution/application fee breakdowns, then assigns them to the template
+   * as 'showhiddenChart'.
+   *
+   * @param array $data The full allData array as stored in cache, containing contacts,
+   *   contribute, participant, and mailing sub-arrays.
+   *
+   * @return void
+   */
+  private function showhiddenall($data) {
     $contacts = $data['contacts'];
     $contribute = $data['contribute'];
     $participant =  $data['participant'];
@@ -395,7 +409,7 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     );
     $return_array['Sum amount by contribution and application fee.'] = $this->showhidden(
       'contrib_applicate_sum',
-      self::dataTransferShowHidden($array,['sum']),
+      self::dataTransferShowHidden($array, ['sum']),
       array_keys($array)
     );
 
@@ -429,7 +443,16 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
     $this->assign('showhiddenChart', $return_array);
   }
 
-  private function showhidden($name, $data, $labels){
+  /**
+   * Builds a single bar chart definition array for the hidden debug section.
+   *
+   * @param string $name Unique chart identifier used as the HTML element ID suffix.
+   * @param array $data Series data in the format expected by the chart library (array of arrays).
+   * @param array $labels Array of label strings for the X axis.
+   *
+   * @return array<string, string|bool> Chart definition array with keys: name, id, selector, type, labels, series, withToolTip.
+   */
+  private function showhidden($name, $data, $labels) {
     $chart = [
       'name' => $name,
       'id' => 'chart-bar-'.$name,
@@ -437,18 +460,31 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
       'type' => 'Bar',
       'labels' => json_encode($labels),
       'series' => json_encode($data),
-      'withToolTip' => true,
+      'withToolTip' => TRUE,
     ];
     // $this->assign('chart'.$name, $chart);
     return $chart;
   }
 
-  static private function arrayRemoveKey($arr, $types = ['count','people']){
+  /**
+   * Extracts only the specified type sub-arrays from a chart-ready pivoted array.
+   * For each requested type, collects values across all labels into a flat array.
+   * Returns an array of arrays, one per requested type.
+   *
+   * @param array $arr Chart-ready array with parallel keys (label, count, people, sum, ...).
+   * @param string[] $types Keys to extract from $arr (default: ['count', 'people']).
+   *
+   * @return array Array of arrays: each inner array contains values for one type across all labels.
+   *   Returns $arr unchanged if it is not an array.
+   */
+  private static function arrayRemoveKey($arr, $types = ['count','people']) {
     $return = [];
-    if(!is_array($arr))return $arr;
+    if (!is_array($arr)) {
+      return $arr;
+    }
     foreach ($types as $type) {
       foreach ($arr as $key => $value) {
-        if($key == $type){
+        if ($key == $type) {
           $set = [];
           foreach ($value as $key => $value2) {
             $set[] = self::arrayRemoveKey($value2);
@@ -461,24 +497,20 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
   }
 
   /**
-   * Let array(
-   * 'name1' => array('count' => 1, 'people' => 1),
-   * 'name2' => array('count' => 10, 'people' => 11),
-   * 'name3' => array('count' => 100,'people' => 111),
-   * 'name4' => array('count' => 1000,'people' => 1111),
-   * )
+   * Transposes a named associative array of data objects into parallel indexed arrays,
+   * one per requested type. For example:
    *
-   * Become
+   * Input:
+   *   ['name1' => ['count' => 1, 'people' => 1], 'name2' => ['count' => 10, 'people' => 11]]
+   * Output (types = ['count', 'people']):
+   *   [[1, 10], [1, 11]]
    *
-   * array(
-   *   array(1,10,100,1000),
-   *   array(1,11,111,1111),
-   * )
-   * @param  [type] $arr   [description]
-   * @param  array  $types [description]
-   * @return [type]        [description]
+   * @param array $arr Associative array where each value is a data array keyed by type.
+   * @param string[] $types Keys to extract from each value (default: ['count', 'people']).
+   *
+   * @return array Array of arrays: each inner array contains all values for one type.
    */
-  static private function dataTransferShowHidden($arr, $types = ['count','people']){
+  private static function dataTransferShowHidden($arr, $types = ['count','people']) {
     $return = [];
     foreach ($types as $type) {
       $set = [];
@@ -491,4 +523,3 @@ class CRM_Report_Page_Summary extends CRM_Core_Page {
   }
 
 }
-

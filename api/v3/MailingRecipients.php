@@ -34,14 +34,12 @@
  * @package CiviCRM_APIv3
  * @subpackage API_Mailing
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
 /**
  * Files required for this package
  */
-
 
 /**
  * Returns array of Mailing Recipients
@@ -54,4 +52,3 @@
 function civicrm_api3_mailing_recipients_get($params, $ids = []) {
   return _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
-

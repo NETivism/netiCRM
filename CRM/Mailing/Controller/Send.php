@@ -27,30 +27,39 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
 
 class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param string|null $title The title of the controller.
+   * @param int $action The action to perform.
+   * @param bool $modal Whether to use a modal dialog.
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
 
     parent::__construct($title, $modal, NULL, FALSE, TRUE);
 
     $mailingID = CRM_Utils_Request::retrieve('mid', 'String', $this, FALSE, NULL);
 
     // also get the text and html file
-    $txtFile = CRM_Utils_Request::retrieve('txtFile', 'String',
-      CRM_Core_DAO::$_nullObject, FALSE, NULL
+    $txtFile = CRM_Utils_Request::retrieve(
+      'txtFile',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      NULL
     );
-    $htmlFile = CRM_Utils_Request::retrieve('htmlFile', 'String',
-      CRM_Core_DAO::$_nullObject, FALSE, NULL
+    $htmlFile = CRM_Utils_Request::retrieve(
+      'htmlFile',
+      'String',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      NULL
     );
 
     $config = CRM_Core_Config::singleton();
@@ -73,14 +82,15 @@ class CRM_Mailing_Controller_Send extends CRM_Core_Controller {
 
     // add all the actions
 
-    $uploadNames = array_merge(['textFile', 'htmlFile'],
+    $uploadNames = array_merge(
+      ['textFile', 'htmlFile'],
       CRM_Core_BAO_File::uploadNames()
     );
 
     $config = CRM_Core_Config::singleton();
-    $this->addActions($config->uploadDir,
+    $this->addActions(
+      $config->uploadDir,
       $uploadNames
     );
   }
 }
-

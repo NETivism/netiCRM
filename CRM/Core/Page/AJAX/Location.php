@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class contains all the function that are called using AJAX
@@ -41,19 +37,18 @@
 class CRM_Core_Page_AJAX_Location {
 
   /**
-   * FIXME: we should make this method like getLocBlock() OR use the same method and
-   * remove this one.
+   * Obtain the location information for a specific contact ID.
    *
-   * Function to obtain the location of given contact-id.
-   * This method is used by on-behalf-of form to dynamically generate poulate the
-   * location field values for selected permissioned contact.
+   * This method is used by on-behalf-of forms to dynamically populate
+   * location field values for a selected contact.
+   *
+   * @return void
    */
-  function getPermissionedLocation() {
+  public function getPermissionedLocation() {
     if (!CRM_Core_Permission::check('access CiviContribute')) {
       CRM_Utils_System::civiExit();
     }
     $cid = CRM_Utils_Type::escape($_GET['cid'], 'Integer');
-
 
     $entityBlock = ['contact_id' => $cid];
     $location = &CRM_Core_BAO_Location::getValues($entityBlock);
@@ -94,6 +89,13 @@ class CRM_Core_Page_AJAX_Location {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Retrieve state/province options for a given country ID via AJAX.
+   *
+   * @param CRM_Core_Config $config (unused)
+   *
+   * @return void
+   */
   public static function jqState($config) {
     $elements = [];
     if (!isset($_GET['_value']) || empty($_GET['_value']) || !CRM_Utils_Type::validate($_GET['_value'], 'Positive', FALSE)) {
@@ -116,7 +118,12 @@ class CRM_Core_Page_AJAX_Location {
     CRM_Utils_System::civiExit();
   }
 
-  static function getLocBlock() {
+  /**
+   * Retrieve location block information based on a location block ID (passed via POST).
+   *
+   * @return void
+   */
+  public static function getLocBlock() {
     // i wish i could retrieve loc block info based on loc_block_id,
     // Anyway, lets retrieve an event which has loc_block_id set to 'lbid'.
     if ($_POST['lbid']) {
@@ -168,4 +175,3 @@ class CRM_Core_Page_AJAX_Location {
     exit();
   }
 }
-

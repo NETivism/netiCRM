@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for groupContact
@@ -55,7 +50,14 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
    *
    * @var int
    */
-  protected $_contactId; function preProcess() {
+  protected $_contactId;
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
+  public function preProcess() {
 
     $this->_contactId = $this->get('contactId');
     $this->_groupContactId = $this->get('groupContactId');
@@ -63,14 +65,12 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. GroupContact that in edit/view mode
-   * the default values are retrieved from the database
+   * This function sets the default values for the form.
    *
+   * @return array{} defaults array
    * @access public
-   *
-   * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $params = [];
 
@@ -80,15 +80,16 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   /**
    * This function is used to add the rules for form.
    *
-   * @return None
+   * @return void
    * @access public
    */
-  function addRules() {}
+  public function addRules() {
+  }
 
   /**
    * Function to build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -126,7 +127,8 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
 
       $this->add('select', 'group_id', $msg, $groupList, TRUE);
 
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Add'),
             'isDefault' => TRUE,
@@ -137,10 +139,10 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   }
 
   /**
+   * Process the form when submitted
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     $contactID = [$this->_contactId];
@@ -163,4 +165,3 @@ class CRM_Contact_Form_GroupContact extends CRM_Core_Form {
   }
   //end of function
 }
-

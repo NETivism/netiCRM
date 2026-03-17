@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   public $_soInstance;
@@ -40,10 +37,17 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
 
   protected $_stringName = NULL;
 
-  protected $_defaults = NULL; function preProcess() {
+  protected $_defaults = NULL;
+  /**
+   * Pre-processes the form.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->_soInstance = CRM_Utils_Array::value('instance', $_GET);
     $this->assign('soInstance', $this->_soInstance);
-    $breadCrumbUrl = CRM_Utils_System::url('civicrm/admin/options/wordreplacements',
+    $breadCrumbUrl = CRM_Utils_System::url(
+      'civicrm/admin/options/wordreplacements',
       "reset=1"
     );
     $breadCrumb = [['title' => ts('Word Replacements'),
@@ -52,6 +56,11 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array
+   */
   public function setDefaultValues() {
     if ($this->_defaults !== NULL) {
       return $this->_defaults;
@@ -102,10 +111,9 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
@@ -142,7 +150,8 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
 
     $this->assign('stringOverrideInstances', empty($stringOverrideInstances) ? FALSE : $stringOverrideInstances);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -156,15 +165,13 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array $values posted values of the form
+   * @param array $values
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return bool|array
    */
-  static function formRule($values) {
+  public static function formRule($values) {
     $errors = [];
 
     $oldValues = CRM_Utils_Array::value('old', $values);
@@ -189,15 +196,13 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
-    $this->_numStrings = sizeof($params['old']);
+    $this->_numStrings = count($params['old']);
 
     $enabled['exactMatch'] = $enabled['wildcardMatch'] = $disabled['exactMatch'] = $disabled['wildcardMatch'] = [];
     for ($i = 1; $i <= $this->_numStrings; $i++) {
@@ -244,7 +249,6 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
     $params = ['locale_custom_strings' => $stringOverride];
     $id = CRM_Core_Config::domainID();
 
-
     $wordReplacementSettings = CRM_Core_BAO_Domain::edit($params, $id);
 
     if ($wordReplacementSettings) {
@@ -253,10 +257,10 @@ class CRM_Admin_Form_WordReplacements extends CRM_Core_Form {
       CRM_Core_BAO_Navigation::resetNavigation();
 
       CRM_Core_Session::setStatus("Your Settings have been saved");
-      CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/options/wordreplacements',
-          "reset=1"
-        ));
+      CRM_Utils_System::redirect(CRM_Utils_System::url(
+        'civicrm/admin/options/wordreplacements',
+        "reset=1"
+      ));
     }
   }
 }
-

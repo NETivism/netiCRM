@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Pledge_Page_Payment extends CRM_Core_Page {
 
@@ -40,12 +37,11 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
   public $_context;
   public $_contactId;
   /**
-   * This function is the main function that is called when the page loads, it decides the which action has to be taken for the page.
+   * Run the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
 
@@ -53,7 +49,6 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     $this->assign('context', $this->_context);
 
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
-
 
     $this->setContext();
 
@@ -66,7 +61,6 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     else {
       $pledgeId = CRM_Utils_Request::retrieve('pledgeId', 'Positive', $this);
 
-
       $paymentDetails = CRM_Pledge_BAO_Payment::getPledgePayments($pledgeId);
 
       $this->assign('rows', $paymentDetails);
@@ -74,7 +68,9 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
       $this->assign('contactId', $this->_contactId);
 
       // check if we can process credit card contribs
-      $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE,
+      $processors = CRM_Core_PseudoConstant::paymentProcessor(
+        FALSE,
+        FALSE,
         "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'"
       );
       if (count($processors) > 0) {
@@ -96,13 +92,13 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
   }
 
   /**
-   * This function is called when action is update or new
+   * This function is called when action is update or new.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function edit() {
-    $controller = new CRM_Core_Controller_Simple('CRM_Pledge_Form_Payment',
+  public function edit() {
+    $controller = new CRM_Core_Controller_Simple(
+      'CRM_Pledge_Form_Payment',
       'Update Pledge Payment',
       $this->_action
     );
@@ -115,7 +111,12 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function setContext() {
+  /**
+   * Set context.
+   *
+   * @return void
+   */
+  public function setContext() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this, FALSE, 'search');
 
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
@@ -145,7 +146,8 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
         break;
 
       case 'pledge':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=pledge"
         );
         break;
@@ -155,7 +157,8 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
         );
         break;
@@ -169,7 +172,8 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
         if ($this->_contactId) {
           $cid = '&cid=' . $this->_contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/pledge/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/pledge/search',
           'force=1' . $cid
         );
         break;
@@ -178,4 +182,3 @@ class CRM_Pledge_Page_Payment extends CRM_Core_Page {
     $session->pushUserContext($url);
   }
 }
-

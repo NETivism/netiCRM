@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for Tell A Friend
@@ -49,6 +44,11 @@ class CRM_Friend_Form_Contribute extends CRM_Contribute_Form_ContributionPage {
    */
   private $_friendId;
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
@@ -57,9 +57,8 @@ class CRM_Friend_Form_Contribute extends CRM_Contribute_Form_ContributionPage {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @access public
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $this->_id, 'title');
@@ -90,8 +89,7 @@ class CRM_Friend_Form_Contribute extends CRM_Contribute_Form_ContributionPage {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Friend_BAO_Friend::buildFriendForm($this);
@@ -101,9 +99,8 @@ class CRM_Friend_Form_Contribute extends CRM_Contribute_Form_ContributionPage {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // get the submitted form values.
@@ -125,10 +122,8 @@ class CRM_Friend_Form_Contribute extends CRM_Contribute_Form_ContributionPage {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Tell a Friend');
   }
 }
-

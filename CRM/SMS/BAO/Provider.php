@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
@@ -40,23 +39,24 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   }
 
   /**
-   * @return null|string
+   * Active provider count.
+   *
+   * @return int|null|string
    */
   public static function activeProviderCount() {
-    $activeProviders = CRM_Core_DAO::singleValueQuery('SELECT count(id) FROM civicrm_sms_provider WHERE is_active = 1 AND (domain_id = %1 OR domain_id IS NULL)',
-       [1 => [CRM_Core_Config::domainID(), 'Positive']]);
+    $activeProviders = CRM_Core_DAO::singleValueQuery(
+      'SELECT count(id) FROM civicrm_sms_provider WHERE is_active = 1 AND (domain_id = %1 OR domain_id IS NULL)',
+      [1 => [CRM_Core_Config::domainID(), 'Positive']]
+    );
     return $activeProviders;
   }
 
   /**
    * Retrieves the list of providers from the database.
    *
-   * $selectArr array of coloumns to fetch
-   * $getActive boolean to get active providers
-   *
-   * @param null $selectArr
-   * @param null $filter
-   * @param bool $getActive
+   * @param array|null $selectArr array of columns to fetch
+   * @param array|null $filter
+   * @param bool $getActive boolean to get active providers
    * @param string $orderBy
    *
    * @return array
@@ -80,22 +80,24 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
     $dao->whereAdd("(domain_id = " . CRM_Core_Config::domainID() . " OR domain_id IS NULL)");
     $dao->orderBy($orderBy);
     $cacheId = md5(implode('|', $dao->_query));
-    $providers = CRM_Core_BAO_Cache::getItem('SMS Provider', $cacheId, NULL, CRM_REQUEST_TIME-3600);
+    $providers = CRM_Core_BAO_Cache::getItem('SMS Provider', $cacheId, NULL, CRM_REQUEST_TIME - 3600);
     if (empty($providers)) {
       $dao->find();
       while ($dao->fetch()) {
         CRM_Core_DAO::storeValues($dao, $temp);
         $providers[] = $temp;
       }
-      CRM_Core_BAO_Cache::setItem($providers, 'SMS Provider', $cacheId, NULL, CRM_REQUEST_TIME+3600);
+      CRM_Core_BAO_Cache::setItem($providers, 'SMS Provider', $cacheId, NULL, CRM_REQUEST_TIME + 3600);
     }
     return $providers;
   }
 
   /**
-   * Create or Update an SMS provider
+   * Create or Update an SMS provider.
+   *
    * @param array $params
-   * @return array saved values
+   *
+   * @return CRM_SMS_DAO_Provider saved values
    */
   public static function create(&$params) {
     $id = CRM_Utils_Array::value('id', $params);
@@ -130,8 +132,10 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   }
 
   /**
+   * Set is_active flag.
+   *
    * @param int $id
-   * @param $is_active
+   * @param bool $is_active
    *
    * @return bool
    */
@@ -141,14 +145,16 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
   }
 
   /**
+   * Delete SMS provider.
+   *
    * @param int $providerID
    *
-   * @return null
+   * @return void|null
    * @throws Exception
    */
   public static function del($providerID) {
     if (!$providerID) {
-       return CRM_Core_Error::statusBounce(ts('Invalid value passed to delete function.'));
+      return CRM_Core_Error::statusBounce(ts('Invalid value passed to delete function.'));
     }
 
     $dao = new CRM_SMS_DAO_Provider();
@@ -159,11 +165,12 @@ class CRM_SMS_BAO_Provider extends CRM_SMS_DAO_Provider {
     }
     $dao->delete();
   }
-
   /**
+   * Get provider info.
+   *
    * @param int $providerID
-   * @param null $returnParam
-   * @param null $returnDefaultString
+   * @param string|null $returnParam
+   * @param string|null $returnDefaultString
    *
    * @return mixed
    */

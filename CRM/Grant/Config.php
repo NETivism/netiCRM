@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-class CRM_Grant_Config extends CRM_Core_Component_Config {}
-
+class CRM_Grant_Config extends CRM_Core_Component_Config {
+}

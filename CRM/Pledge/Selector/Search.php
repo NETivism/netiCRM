@@ -27,17 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
 
 /**
  * This class is used to retrieve and display a range of
@@ -51,24 +43,21 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * This defines two actions- View and Edit.
    *
    * @var array
-   * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
    *
    * @var array
-   * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
-   * @static
    */
-  static $_properties = [
+  public static $_properties = [
     'contact_id',
     'sort_name',
     'display_name',
@@ -88,7 +77,6 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_single = FALSE;
@@ -96,7 +84,6 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_limit = NULL;
@@ -104,7 +91,6 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   /**
    * what context are we being invoked from
    *
-   * @access protected
    * @var string
    */
   protected $_context = NULL;
@@ -114,7 +100,6 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * the HTML_QuickForm_Controller for that page.
    *
    * @var array
-   * @access protected
    */
   public $_queryParams;
 
@@ -122,7 +107,6 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
    * represent the type of selector
    *
    * @var int
-   * @access protected
    */
   protected $_action;
 
@@ -141,18 +125,19 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   protected $_query;
 
   /**
-   * Class constructor
+   * Class constructor.
    *
-   * @param array   $queryParams array of parameters for query
-   * @param int     $action - action of search basic or advanced.
-   * @param string  $additionalClause if the caller wants to further restrict the search (used in participations)
-   * @param boolean $single are we dealing only with one contact?
-   * @param int     $limit  how many signers do we want returned
+   * @param array $queryParams array of parameters for query
+   * @param int $action - action of search basic or advanced.
+   * @param string|null $additionalClause if the caller wants to further restrict the search (used in participations)
+   * @param bool $single are we dealing only with one contact?
+   * @param int|null $limit how many signers do we want returned
+   * @param string $context context
    *
-   * @return CRM_Contact_Selector
-   * @access public
+   * @return CRM_Pledge_Selector_Search
    */
-  function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $additionalClause = NULL,
     $single = FALSE,
@@ -171,7 +156,12 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_PLEDGE
     );
 
@@ -181,16 +171,10 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
 
   /**
    * This method returns the links that are given for each search row.
-   * currently the links added for each row are
    *
-   * - View
-   * - Edit
-   *
-   * @return array
-   * @access public
-   *
+   * @return array (reference) of action links
    */
-  static function &links() {
+  public static function &links() {
     $args = func_get_args();
     $hideOption = $args[0] ?? NULL;
     $key = $args[1] ?? NULL;
@@ -225,7 +209,6 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
       ],
     ];
 
-
     if (in_array('Cancel', $hideOption)) {
       unset(self::$_links[CRM_Core_Action::DETACH]);
     }
@@ -235,12 +218,14 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   //end of function
 
   /**
-   * getter for array of the parameters required for creating pager.
+   * Getter for array of the parameters required for creating pager.
    *
-   * @param
-   * @access public
+   * @param int $action
+   * @param array $params
+   *
+   * @return void
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Pledge') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
     if ($this->_limit) {
@@ -258,35 +243,44 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   /**
    * Returns total number of rows for the query.
    *
-   * @param
+   * @param int $action
    *
    * @return int Total number of rows
-   * @access public
    */
-  function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+  public function getTotalCount($action) {
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_additionalClause
     );
   }
 
   /**
-   * returns all the rows in the given offset and rowCount
+   * Returns all the rows in the given offset and rowCount.
    *
-   * @param enum   $action   the action being performed
-   * @param int    $offset   the row number to start from
-   * @param int    $rowCount the number of rows to return
-   * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param int $action the action being performed
+   * @param int $offset the row number to start from
+   * @param int $rowCount the number of rows to return
+   * @param string|object $sort the sql string that describes the sort order or sort object
+   * @param string|null $output what should the result set include (web/email/csv)
    *
-   * @return int   the total number of rows for this action
+   * @return array the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_additionalClause
     );
@@ -294,8 +288,14 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     $rows = [];
 
     // get all pledge status
-    $pledgeStatuses = CRM_Core_OptionGroup::values('contribution_status',
-      FALSE, FALSE, FALSE, NULL, 'name', FALSE
+    $pledgeStatuses = CRM_Core_OptionGroup::values(
+      'contribution_status',
+      FALSE,
+      FALSE,
+      FALSE,
+      NULL,
+      'name',
+      FALSE
     );
 
     //4418 check for view, edit and delete
@@ -318,7 +318,8 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
       }
 
       // add pledge status name
-      $row['pledge_status_name'] = CRM_Utils_Array::value($row['pledge_status_id'],
+      $row['pledge_status_name'] = CRM_Utils_Array::value(
+        $row['pledge_status_id'],
         $pledgeStatuses
       );
       // append (test) to status label
@@ -335,7 +336,8 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
 
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->pledge_id;
 
-      $row['action'] = CRM_Core_Action::formLink(self::links($hideOption, $this->_key),
+      $row['action'] = CRM_Core_Action::formLink(
+        self::links($hideOption, $this->_key),
         $mask,
         ['id' => $result->pledge_id,
           'cid' => $result->contact_id,
@@ -343,10 +345,11 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
         ]
       );
 
-
-
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
-        $result->contact_sub_type : $result->contact_type, FALSE, $result->contact_id
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
+        $result->contact_sub_type : $result->contact_type,
+        FALSE,
+        $result->contact_id
       );
       $rows[] = $row;
     }
@@ -354,26 +357,22 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
   }
 
   /**
+   * Get QILL.
    *
-   * @return array  $qill    which contains an array of strings
-   * @access public
+   * @return array $qill which contains an array of strings
    */
-
-  // the current internationalisation is bad, but should more or less work
-  // for most of "European" languages
   public function getQILL() {
     return $this->_query->qill();
   }
 
   /**
-   * returns the column headers as an array of tuples:
+   * Returns the column headers as an array of tuples:
    * (name, sortName (key to the sort array))
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param string|null $action the action being performed
+   * @param string|null $output what should the result set include (web/email/csv)
    *
    * @return array the column headers that need to be displayed
-   * @access public
    */
   public function &getColumnHeaders($action = NULL, $output = NULL) {
     if (!isset(self::$_columnHeaders)) {
@@ -430,20 +429,24 @@ class CRM_Pledge_Selector_Search extends CRM_Core_Selector_Base {
     return self::$_columnHeaders;
   }
 
-  function &getQuery() {
+  /**
+   * Get query.
+   *
+   * @return CRM_Contact_BAO_Query
+   */
+  public function &getQuery() {
     return $this->_query;
   }
 
   /**
-   * name of export file.
+   * Name of export file.
    *
    * @param string $output type of output
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('Pledge Search');
   }
 }
 //end of class
-

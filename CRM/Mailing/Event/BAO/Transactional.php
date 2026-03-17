@@ -3,26 +3,24 @@
 class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transactional {
 
   /**
-   * class constructor
+   * Class constructor.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Create a new delivery event
+   * Create a new delivery event.
    *
-   * @param array $params     Associative array of delivery event values
+   * @param array $params (reference) Associative array of delivery event values.
    *
-   * @return object
-   * @access public
-   * @static
+   * @return CRM_Mailing_Event_BAO_Transactional|null The created event object or null on failure.
    */
   public static function create(&$params) {
     if (empty($params['activity_id'])) {
       return NULL;
     }
-    if(!CRM_Utils_Rule::positiveInteger($params['activity_id'])) {
+    if (!CRM_Utils_Rule::positiveInteger($params['activity_id'])) {
       return NULL;
     }
     $q = CRM_Mailing_Event_BAO_Queue::verify($params['job_id'], $params['event_queue_id'], $params['hash']);
@@ -39,10 +37,11 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
   }
 
   /**
-   * Get Transactional mailing events
+   * Get Transactional mailing events.
    *
-   * @param int $activityId
-   * @return void
+   * @param int $activityId The activity ID.
+   *
+   * @return array Array of mailing events.
    */
   public static function getEventsByActivity($activityId) {
     $eq = CRM_Mailing_Event_DAO_Queue::getTableName();
@@ -66,7 +65,7 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
       1 => [$activityId, 'Positive'],
     ]);
     $rows = [];
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $rows[] = [
         'act' => $dao->act,
         'time' => $dao->time_stamp,
@@ -78,14 +77,15 @@ class CRM_Mailing_Event_BAO_Transactional extends CRM_Mailing_Event_DAO_Transact
   }
 
   /**
-   * Format event got from database
+   * Format event got from database.
    *
-   * @param array $mailingEvents
-   * @return void
+   * @param array $mailingEvents The array of mailing events.
+   *
+   * @return array The formatted array of mailing events.
    */
   public static function formatMailingEvents($mailingEvents) {
-    foreach($mailingEvents as $idx => $event) {
-      switch($event['act']) {
+    foreach ($mailingEvents as $idx => $event) {
+      switch ($event['act']) {
         case 'delivered':
           $event['action'] = ts('Delivered');
           break;

@@ -27,29 +27,25 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
 
   /**
-   * This function is called when action is browse
+   * This function is called when action is browse.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function browse() {
+  public function browse() {
     // get the primary city, state and zip for the contact
 
     $ids = [$this->_contactId];
     $locations = CRM_Contact_BAO_Contact_Location::getMapInfo($ids);
 
-
-    $rows = &CRM_Utils_Sunlight::getInfo($locations[0]['city'],
+    $rows = &CRM_Utils_Sunlight::getInfo(
+      $locations[0]['city'],
       $locations[0]['state'],
       $locations[0]['postal_code']
     );
@@ -61,10 +57,9 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
    * This function is the main function that is called when the page loads,
    * it decides the which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     $this->browse();
@@ -72,4 +67,3 @@ class CRM_Contact_Page_View_Sunlight extends CRM_Contact_Page_View {
     return parent::run();
   }
 }
-

@@ -33,7 +33,7 @@ require_once 'api/v2/ActivityType.php';
  *  @package   CiviCRM
  */
 class api_v2_ActivityTypeTest extends CiviUnitTestCase {
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'Activity Type',
       'description' => 'Test all ActivityType Get/Create/Delete methods.',
@@ -41,7 +41,7 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
     parent::setUp();
   }
 
@@ -51,12 +51,13 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
    *
    * @access protected
    */
-  function tearDown() {}
+  public function tearDown() {
+  }
 
   /**
    *  Test civicrm_activity_type_get()
    */
-  function testActivityTypeCheckValues() {
+  public function testActivityTypeCheckValues() {
     $activitytypes = &civicrm_activity_type_get();
     $this->assertEquals($activitytypes['1'], 'Meeting', 'In line ' . __LINE__);
     $this->assertEquals($activitytypes['13'], 'Open Case', 'In line ' . __LINE__);
@@ -65,7 +66,7 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_type_create with no label()
    */
-  function testActivityTypeCreate() {
+  public function testActivityTypeCreate() {
 
     $params = [
       'weight' => '2',
@@ -78,7 +79,7 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_type_create - check id
    */
-  function testActivityTypeCreateCheckId() {
+  public function testActivityTypeCreateCheckId() {
 
     $params = [
       'label' => 'type_create',
@@ -96,7 +97,7 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
   /**
    *  Test civicrm_activity_type_delete()
    */
-  function testActivityTypeDelete() {
+  public function testActivityTypeDelete() {
 
     $params = [
       'label' => 'type_create_delete',
@@ -108,4 +109,3 @@ class api_v2_ActivityTypeTest extends CiviUnitTestCase {
     $this->assertEquals($activityTypeDelete, 1, 'In line ' . __LINE__);
   }
 }
-

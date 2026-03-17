@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
-
-
 
 /**
  * Page to display / edit the header / footer of a mailing
@@ -48,14 +43,14 @@ class CRM_Mailing_Page_Component extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Mailing_BAO_Component';
   }
 
@@ -64,7 +59,7 @@ class CRM_Mailing_Page_Component extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -95,7 +90,7 @@ class CRM_Mailing_Page_Component extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Mailing_Form_Component';
   }
 
@@ -104,7 +99,7 @@ class CRM_Mailing_Page_Component extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Mailing Components';
   }
 
@@ -113,12 +108,11 @@ class CRM_Mailing_Page_Component extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return CRM_Utils_System::currentPath();
   }
 
-  function run($args = NULL, $pageArgs = NULL, $sort = NULL) {
+  public function run($args = NULL, $pageArgs = NULL, $sort = NULL) {
     return parent::run($args, $pageArgs, "component_type, is_default desc, name");
   }
 }
-

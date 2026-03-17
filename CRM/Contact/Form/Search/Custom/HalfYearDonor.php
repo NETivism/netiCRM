@@ -12,8 +12,13 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
-  
-  function __construct(&$formValues){
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
     $this->_filled = FALSE;
     $this->_tableName = 'civicrm_temp_custom_halfyeardonor';
@@ -21,8 +26,11 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
     $this->buildColumn();
   }
 
-  function buildColumn(){
-    $this->_queryColumns = [ 
+  /**
+   * Build the columns for the search results.
+   */
+  public function buildColumn() {
+    $this->_queryColumns = [
       'contact.id' => 'id',
       'c.contact_id' => 'contact_id',
       'contact.sort_name' => 'sort_name',
@@ -39,7 +47,11 @@ class CRM_Contact_Form_Search_Custom_HalfYearDonor extends CRM_Contact_Form_Sear
       0 => 'total_count',
     ];
   }
-  function buildTempTable() {
+
+  /**
+   * Build the temporary table.
+   */
+  public function buildTempTable() {
     $sql = "
 CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
   id int unsigned NOT NULL,
@@ -49,13 +61,13 @@ CREATE TEMPORARY TABLE IF NOT EXISTS {$this->_tableName} (
       if (in_array($field, ['id'])) {
         continue;
       }
-      if($field == 'receive_amount' || $field == 'completed_count' || $field == 'total_count'){
+      if ($field == 'receive_amount' || $field == 'completed_count' || $field == 'total_count') {
         $type = "INTEGER(10) default NULL";
       }
-      elseif(strstr($field, '_date')){
+      elseif (strstr($field, '_date')) {
         $type = 'DATETIME NULL default NULL';
       }
-      else{
+      else {
         $type = "VARCHAR(32) default ''";
       }
       $sql .= "{$field} {$type},\n";
@@ -67,21 +79,25 @@ PRIMARY KEY (id)
 ";
     CRM_Core_DAO::executeQuery($sql);
   }
-  function dropTempTable() {
+
+  /**
+   * Drop the temporary table.
+   */
+  public function dropTempTable() {
     $sql = "DROP TEMPORARY TABLE IF EXISTS `{$this->_tableName}`" ;
     CRM_Core_DAO::executeQuery($sql);
   }
 
   /**
-   * fill temp table for further use
+   * Fill the temp table for further use.
    */
-  function fillTable(){
+  public function fillTable() {
     $this->buildTempTable();
     $select = [];
-    foreach($this->_queryColumns as $k => $v){
+    foreach ($this->_queryColumns as $k => $v) {
       $select[] = $k.' as '.$v;
     }
-    $select = CRM_Utils_Array::implode(", \n" , $select);
+    $select = CRM_Utils_Array::implode(", \n", $select);
     $from = $this->tempFrom();
     $where = $this->tempWhere();
     $having = $this->tempHaving();
@@ -100,32 +116,41 @@ $having
 
     while ($dao->fetch()) {
       $values = [];
-      foreach($this->_queryColumns as $name){
-        if($name == 'id'){
+      foreach ($this->_queryColumns as $name) {
+        if ($name == 'id') {
           $values[] = CRM_Utils_Type::escape($dao->id, 'Integer');
         }
-        elseif(isset($dao->$name)){
+        elseif (isset($dao->$name)) {
           $values[] = "'". CRM_Utils_Type::escape($dao->$name, 'String')."'";
         }
-        else{
+        else {
           $values[] = 'NULL';
         }
       }
-      $values = CRM_Utils_Array::implode(', ' , $values);
+      $values = CRM_Utils_Array::implode(', ', $values);
       $sql = "REPLACE INTO {$this->_tableName} VALUES ($values)";
       CRM_Core_DAO::executeQuery($sql, CRM_Core_DAO::$_nullArray);
     }
   }
 
-
-  function tempFrom() {
+  /**
+   * Get the FROM clause for the temporary table query.
+   *
+   * @return string
+   */
+  public function tempFrom() {
     return "civicrm_contact AS contact INNER JOIN civicrm_contribution c ON c.contact_id = contact.id AND c.is_test = 0 LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = c.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = c.id";
   }
 
   /**
-   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   * Get the WHERE clause for the temporary table query.
+   *
+   * This is an array built from any required JOINS plus conditional
+   * filters based on search criteria field values.
+   *
+   * @return string
    */
-  function tempWhere(){
+  public function tempWhere() {
     $month = $this->_formValues['month'];
     $halfyear = date('Y-m-01 00:00:00', strtotime('-'.$month.' month'));
     $clauses = [];
@@ -136,55 +161,98 @@ $having
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function tempHaving(){
+  /**
+   * Get the HAVING clause for the temporary table query.
+   *
+   * @return string
+   */
+  public function tempHaving() {
     return '';
   }
 
-  function buildForm(&$form){
-    for($i = 1; $i <= 12; $i++) {
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
+  public function buildForm(&$form) {
+    for ($i = 1; $i <= 12; $i++) {
       $option[$i] = $i;
-    } 
+    }
     $form->addSelect('month', ts('month'), $option);
   }
 
-  function setDefaultValues() {
+  /**
+   * Set the default values for the form.
+   *
+   * @return array
+   */
+  public function setDefaultValues() {
     return [
       'month' => 6,
     ];
   }
 
-  function setBreadcrumb() {
+  /**
+   * Set the breadcrumb for the search page.
+   */
+  public function setBreadcrumb() {
     CRM_Contribute_Page_Booster::setBreadcrumb();
   }
 
-  function count(){
-    if(!$this->_filled){
+  /**
+   * Get the count of contacts found.
+   *
+   * @return int
+   */
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
     $sql = $this->all();
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     $this->_count = $dao->N;
     return $dao->N;
   }
 
-
   /**
-   * Construct the search query
+   * Construct the search query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE){
+  public function all($offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $onlyIDs = FALSE) {
     $fields = !$onlyIDs ? "*" : "contact_a.contact_id" ;
 
-    if(!$this->_filled){
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
     return $this->sql($fields, $offset, $rowcount, $sort, $includeContactIDs);
   }
 
-  function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
+  /**
+   * Generic SQL builder.
+   *
+   * @param string $selectClause
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   * @param null|string $groupBy
+   *
+   * @return string
+   */
+  public function sql($selectClause, $offset = 0, $rowcount = 0, $sort = NULL, $includeContactIDs = FALSE, $groupBy = NULL) {
     $sql = "SELECT $selectClause " . $this->from() . " WHERE ". $this->where($includeContactIDs);
 
     if ($groupBy) {
@@ -195,21 +263,42 @@ $having
   }
 
   /**
-   * Functions below generally don't need to be modified
+   * Get the FROM clause for the main query.
+   *
+   * @return string
    */
-  function from() {
+  public function from() {
     return "FROM {$this->_tableName} contact_a";
   }
 
-  function where($includeContactIDs = false) {
+  /**
+   * Get the WHERE clause for the main query.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function where($includeContactIDs = FALSE) {
     return '(1)';
   }
 
-  function having(){
+  /**
+   * Get the HAVING clause for the main query.
+   *
+   * @return string
+   */
+  public function having() {
     return '';
   }
 
-  static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
+  /**
+   * Append a list of contact IDs to the WHERE clause of a query.
+   *
+   * @param string $sql
+   * @param array $formValues
+   * @param bool $isExport
+   */
+  public static function includeContactIDs(&$sql, &$formValues, $isExport = FALSE) {
     $contactIDs = [];
     foreach ($formValues as $id => $value) {
       list($contactID, $additionalID) = CRM_Core_Form::cbExtract($id);
@@ -224,17 +313,30 @@ $having
     }
   }
 
-  function &columns(){
+  /**
+   * Getter for the display columns.
+   *
+   * @return array
+   */
+  public function &columns() {
     return $this->_columns;
   }
-  
-  function setTitle(){
+
+  /**
+   * Set the page title.
+   */
+  public function setTitle() {
     $month = $this->_formValues['month'];
     $title = ts('Donor who donate in last %count month', ['count' => $month, 'plural' => 'Donor who donate in last %count months']);
     CRM_Utils_System::setTitle($title);
   }
 
-  function qill(){
+  /**
+   * Get data for the 'qill' display.
+   *
+   * @return array
+   */
+  public function qill() {
     // just add qill
     $month = $this->_formValues['month'];
     $past = date('Y-m-01', strtotime('-'.$month.' month'));
@@ -245,17 +347,35 @@ $having
     ];
   }
 
-  function alterRow(&$row) {
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
+  public function alterRow(&$row) {
   }
 
   /**
+   * Get the path to the template file.
+   *
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
    */
-  function templateFile(){
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom/HalfYearDonor.tpl';
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  /**
+   * Get the SQL for retrieving contact IDs.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
+   */
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 }

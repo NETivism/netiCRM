@@ -1,7 +1,6 @@
 <?php
 // $Id: Note.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -218,4 +217,3 @@ function &civicrm_note_tree_get(&$params) {
   $noteTree = CRM_Core_BAO_Note::getNoteTree($params['id'], $params['max_depth'], $params['snippet']);
   return $noteTree;
 }
-

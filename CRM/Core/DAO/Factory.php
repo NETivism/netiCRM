@@ -1,9 +1,14 @@
 <?php
-
+/**
+ * Factory class for creating Core DAO instances such as Domain, Country, and StateProvince
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
 
 class CRM_Core_DAO_Factory {
 
-  static $_classes = [
+  public static $_classes = [
     'Domain' => 'data',
     'Country' => 'singleton',
     'County' => 'singleton',
@@ -13,27 +18,26 @@ class CRM_Core_DAO_Factory {
     'MobileProvider' => 'singleton',
   ];
 
-  static $_prefix = [
+  public static $_prefix = [
     'business' => 'CRM/Core/BAO/',
     'data' => 'CRM/Core/DAO/',
   ];
 
-  static $_suffix = '.php';
+  public static $_suffix = '.php';
 
-  static $_preCall = [
+  public static $_preCall = [
     'singleton' => '',
     'business' => 'new',
     'data' => 'new',
   ];
 
-  static $_extCall = [
+  public static $_extCall = [
     'singleton' => '::singleton',
     'business' => '',
     'data' => '',
   ];
 
-
-  static function &create($className) {
+  public static function &create($className) {
     $type = CRM_Utils_Array::value($className, self::$_classes);
     if (!$type) {
       CRM_Core_Error::fatal("class $className not found");
@@ -42,7 +46,7 @@ class CRM_Core_DAO_Factory {
     $file = self::$_prefix[$type] . $className;
     $class = str_replace('/', '_', $file);
 
-    require_once ($file . self::$_suffix);
+    require_once($file . self::$_suffix);
     if ($type == 'singleton') {
       $newObj = $class::singleton();
     }
@@ -53,4 +57,3 @@ class CRM_Core_DAO_Factory {
     return $newObj;
   }
 }
-

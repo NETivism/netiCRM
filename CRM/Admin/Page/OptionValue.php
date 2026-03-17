@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of Option Value
@@ -46,9 +42,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
-  static $_gid = NULL;
+  public static $_gid = NULL;
 
   /**
    * The option group name
@@ -56,23 +52,23 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
    * @var string
    * @static
    */
-  static $_gName = NULL;
+  public static $_gName = NULL;
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -105,19 +101,17 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the page.
-   *
-   * This method is called after the page is created. It checks for the
-   * type of action and executes that action.
-   * Finally it calls the parent's run method.
+   * Runs the page.
    *
    * @return void
-   * @access public
-   *
    */
-  function run() {
-    $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive',
-      $this, FALSE, 0
+  public function run() {
+    $this->_gid = CRM_Utils_Request::retrieve(
+      'gid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('gid', $this->_gid);
 
@@ -141,24 +135,19 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Browse all options value.
-   *
+   * Browses all option values.
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
 
     $dao = new CRM_Core_DAO_OptionValue();
 
     $dao->option_group_id = $this->_gid;
 
-
     if (in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $dao->domain_id = CRM_Core_Config::domainID();
     }
-
 
     if ($this->_gName == 'encounter_medium') {
       $mediumIds = CRM_Case_BAO_Case::getUsedEncounterMediums();
@@ -208,7 +197,9 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
         }
       }
 
-      $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $optionValue[$dao->id]['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $dao->id, 'gid' => $this->_gid]
       );
     }
@@ -220,34 +211,38 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_OptionValue';
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Options Values';
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/optionValue';
   }
 
   /**
-   * Redirect to Specific Option Value Editing
+   * Redirects to specific option value editing.
+   *
+   * @return void
    */
   public static function redirect() {
     $path = CRM_Utils_System::currentPath();
@@ -255,11 +250,10 @@ class CRM_Admin_Page_OptionValue extends CRM_Core_Page_Basic {
     $groupName = $args[3] ?? NULL;
     $value = $args[4] ?? NULL;
     if (isset($groupName) && isset($value)) {
-      if(is_numeric($value)) {
+      if (is_numeric($value)) {
         CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/optionValue', "action=update&group={$groupName}&value={$value}&reset=1"));
       }
     }
     CRM_Utils_System::civiExit();
   }
 }
-

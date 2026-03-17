@@ -29,9 +29,7 @@
 /**
  * Class representing the table relationships
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_TableHierarchy {
@@ -41,7 +39,7 @@ class CRM_Core_TableHierarchy {
    * @var array
    * @static
    */
-  static $info = [
+  public static $info = [
     'civicrm_contact' => '01',
     'civicrm_address' => '09',
     'civicrm_county' => '10',
@@ -80,7 +78,12 @@ class CRM_Core_TableHierarchy {
 
   ];
 
-  static function &info() {
+  /**
+   * Returns the table hierarchy information.
+   *
+   * @return array
+   */
+  public static function &info() {
     //get the campaign related tables.
 
     CRM_Campaign_BAO_Query::info(self::$info);
@@ -88,4 +91,3 @@ class CRM_Core_TableHierarchy {
     return self::$info;
   }
 }
-

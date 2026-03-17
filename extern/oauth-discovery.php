@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 // Route based on path
-if (strpos($path, 'oauth-protected-resource') !== false) {
+if (strpos($path, 'oauth-protected-resource') !== FALSE) {
   // RFC draft-ietf-oauth-resource-metadata
   // Protected Resource Metadata
   echo json_encode([
@@ -67,7 +67,7 @@ if (strpos($path, 'oauth-protected-resource') !== false) {
     'resource_documentation' => $baseUrl . '/civicrm/admin/setting/mcp',
   ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 }
-elseif (strpos($path, 'oauth-authorization-server') !== false) {
+elseif (strpos($path, 'oauth-authorization-server') !== FALSE) {
   // RFC 8414 - OAuth 2.0 Authorization Server Metadata
   echo json_encode([
     'issuer' => $baseUrl,

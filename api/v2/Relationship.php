@@ -1,7 +1,6 @@
 <?php
 // $Id: Relationship.php 43419 2012-11-05 12:33:14Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -161,7 +160,6 @@ function civicrm_relationship_update($params) {
         * (CRM-6905) the relationship is retrieved with a direct query
         */
 
-
     civicrm_verify_mandatory($params, 'CRM_Contact_DAO_Relationship', ['relationship_id']);
 
     $names = [
@@ -184,10 +182,10 @@ function civicrm_relationship_update($params) {
 
     return civicrm_relationship_create($params);
   }
-  catch(PEAR_Exception$e) {
+  catch (PEAR_Exception$e) {
     return civicrm_create_error($e->getMessage());
   }
-  catch(Exception$e) {
+  catch (Exception$e) {
     return civicrm_create_error($e->getMessage());
   }
 }
@@ -279,7 +277,11 @@ function civicrm_contact_relationship_get($contact_a, $contact_b = NULL, $relati
   require_once 'CRM/Core/BAO/CustomGroup.php';
 
   foreach ($relationships as $relationshipId => $values) {
-    $groupTree = &CRM_Core_BAO_CustomGroup::getTree('Relationship', CRM_Core_DAO::$_nullObject, $relationshipId, FALSE,
+    $groupTree = &CRM_Core_BAO_CustomGroup::getTree(
+      'Relationship',
+      CRM_Core_DAO::$_nullObject,
+      $relationshipId,
+      FALSE,
       $values['civicrm_relationship_type_id']
     );
     $formatTree = CRM_Core_BAO_CustomGroup::formatGroupTree($groupTree, 1, CRM_Core_DAO::$_nullObject);
@@ -338,7 +340,8 @@ function _civicrm_relationship_format_params(&$params, &$values) {
         }
         $dao     = new CRM_Core_DAO();
         $qParams = [];
-        $svq     = $dao->singleValueQuery("SELECT id FROM civicrm_contact WHERE id = $value",
+        $svq     = $dao->singleValueQuery(
+          "SELECT id FROM civicrm_contact WHERE id = $value",
           $qParams
         );
         if (!$svq) {
@@ -372,6 +375,7 @@ function _civicrm_relationship_format_params(&$params, &$values) {
         else {
           return civicrm_create_error('Invalid Relationship Type');
         }
+        // no break
       case 'relationship_type_id':
         if ($key == 'relationship_type_id' && !CRM_Utils_Array::arrayKeyExists($value, $relationTypes)) {
           return civicrm_create_error("$key not a valid: $value");
@@ -467,4 +471,3 @@ function _civicrm_relationship_check_params(&$params) {
 
   return [];
 }
-

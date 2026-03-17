@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Used for displaying results
@@ -48,7 +44,7 @@ class CRM_Grant_Form_Task_Result extends CRM_Grant_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $session = CRM_Core_Session::singleton();
 
     $this->set('searchRows', '');
@@ -75,7 +71,8 @@ class CRM_Grant_Form_Task_Result extends CRM_Grant_Form_Task {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -84,4 +81,3 @@ class CRM_Grant_Form_Task_Result extends CRM_Grant_Form_Task {
     );
   }
 }
-

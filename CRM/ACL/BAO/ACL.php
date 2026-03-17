@@ -27,25 +27,27 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  *  Access Control List
  */
 class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
-  static $_entityTable = NULL;
-  static $_objectTable = NULL;
-  static $_operation = NULL;
+  public static $_entityTable = NULL;
+  public static $_objectTable = NULL;
+  public static $_operation = NULL;
 
-  static $_fieldKeys = NULL;
-  static $_groupCache = [];
-  static function entityTable() {
+  public static $_fieldKeys = NULL;
+  public static $_groupCache = [];
+
+  /**
+   * Get the entity tables
+   *
+   * @return array
+   */
+  public static function entityTable() {
     if (!self::$_entityTable) {
       self::$_entityTable = [
         'civicrm_contact' => ts('Contact'),
@@ -55,7 +57,12 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     return self::$_entityTable;
   }
 
-  static function objectTable() {
+  /**
+   * Get the object tables
+   *
+   * @return array
+   */
+  public static function objectTable() {
     if (!self::$_objectTable) {
       self::$_objectTable = [
         'civicrm_contact' => ts('Contact'),
@@ -68,7 +75,12 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     return self::$_objectTable;
   }
 
-  static function operation() {
+  /**
+   * Get the operations
+   *
+   * @return array
+   */
+  public static function operation() {
     if (!self::$_operation) {
       self::$_operation = [
         'View' => ts('View'),
@@ -85,22 +97,24 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
   /**
    * Construct a WHERE clause to handle permissions to $object_*
    *
-   * @param array ref $tables -   Any tables that may be needed in the FROM
-   * @param string $operation -   The operation being attempted
-   * @param string $object_table -    The table of the object in question
-   * @param int $object_id    -   The ID of the object in question
-   * @param int $acl_id   -       If it's a grant/revoke operation, the ACL ID
-   * @param boolean $acl_role -  For grant operations, this flag determines if we're granting a single acl (false) or an entire group.
+   * @param array $tables Any tables that may be needed in the FROM
+   * @param string $operation The operation being attempted
+   * @param string $object_table The table of the object in question
+   * @param int $object_id The ID of the object in question
+   * @param int $acl_id If it's a grant/revoke operation, the ACL ID
+   * @param bool $acl_role For grant operations, this flag determines if we're granting a single acl (false) or an entire group.
    *
-   * @return string           -   The WHERE clause, or 0 on failure
-   * @access public
-   * @static
+   * @return string The WHERE clause, or 0 on failure
    */
-  public static function permissionClause(&$tables, $operation,
-    $object_table = NULL, $object_id = NULL,
-    $acl_id = NULL, $acl_role = FALSE
+  public static function permissionClause(
+    &$tables,
+    $operation,
+    $object_table = NULL,
+    $object_id = NULL,
+    $acl_id = NULL,
+    $acl_role = FALSE
   ) {
-    $dao = new CRM_ACL_DAO_ACL;
+    $dao = new CRM_ACL_DAO_ACL();
 
     $t = [
       'ACL' => self::getTableName(),
@@ -215,7 +229,6 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
                         AND     {$t['GroupContact']}.contact_id = $contact_id
                         AND     {$t['GroupContact']}.status     = 'Added')";
 
-
     /* Query for permissions granted through an ACL group to a Contact
          * group */
 
@@ -257,8 +270,10 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
              */
 
       if (empty($dao->object_table) ||
-        ($dao->object_table == $object_table
-          && (empty($dao->object_id)
+        (
+          $dao->object_table == $object_table
+          && (
+            empty($dao->object_id)
             || $dao->object_id == $object_id
           )
         )
@@ -269,7 +284,9 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
         /* Otherwise try to generate a clause for this rule */
 
         $clause = self::getClause(
-          $dao->object_table, $dao->object_id, $tables
+          $dao->object_table,
+          $dao->object_id,
+          $tables
         );
 
         /* If the clause returned is null, then the rule is a blanket
@@ -308,14 +325,11 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
   /**
    * Given a table and id pair, return the filter clause
    *
-   * @param string $table -   The table owning the object
-   * @param int $id   -       The ID of the object
-   * @param array ref $tables - Tables that will be needed in the FROM
+   * @param string $table The table owning the object
+   * @param int $id The ID of the object
+   * @param array $tables Tables that will be needed in the FROM
    *
-   * @return string|null  -   WHERE-style clause to filter results,
-   or null if $table or $id is null
-   * @access public
-   * @static
+   * @return string|null WHERE-style clause to filter results, or null if $table or $id is null
    */
   public static function getClause($table, $id, &$tables) {
     $table = CRM_Utils_Type::escape($table, 'String');
@@ -340,12 +354,12 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
   /**
    * Construct an associative array of an ACL rule's properties
    *
-   * @param
+   * @param string $format
+   * @param bool $hideEmpty
    *
-   * @return array    - Assoc. array of the ACL rule's properties
-   * @access public
+   * @return array Assoc. array of the ACL rule's properties
    */
-  public function toArray($format = '%s', $hideEmpty = null) {
+  public function toArray($format = '%s', $hideEmpty = NULL) {
     $result = [];
 
     if (!self::$_fieldKeys) {
@@ -365,13 +379,11 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
    * directly to the contact, but not those granted to the contact through
    * any/all of his group memberships.
    *
-   * @param int $contact_id       -   ID of a contact to search for
-   * @param int $group_id         -   ID of a group to search for
-   * @param boolean $aclRoles    -   Should we include ACL Roles
+   * @param int $contact_id ID of a contact to search for
+   * @param int $group_id ID of a group to search for
+   * @param bool $aclRoles Should we include ACL Roles
    *
-   * @return array                -   Array of assoc. arrays of ACL rules
-   * @access public
-   * @static
+   * @return array Array of assoc. arrays of ACL rules
    */
   public static function &getACLs($contact_id = NULL, $group_id = NULL, $aclRoles = FALSE) {
     $results = [];
@@ -386,10 +398,6 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     }
 
     $rule = new CRM_ACL_BAO_ACL();
-
-
-
-
 
     $acl = self::getTableName();
     $contact = CRM_Contact_BAO_Contact::getTableName();
@@ -434,12 +442,10 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
   /**
    * Get all of the ACLs through ACL groups
    *
-   * @param int $contact_id   -   ID of a contact to search for
-   * @param int $group_id     -   ID of a group to search for
+   * @param int $contact_id ID of a contact to search for
+   * @param int $group_id ID of a group to search for
    *
-   * @return array            -   Array of assoc. arrays of ACL rules
-   * @access public
-   * @static
+   * @return array Array of assoc. arrays of ACL rules
    */
   public static function &getACLRoles($contact_id = NULL, $group_id = NULL) {
     $contact_id = CRM_Utils_Type::escape($contact_id, 'Integer');
@@ -448,7 +454,6 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
     }
 
     $rule = new CRM_ACL_BAO_ACL();
-
 
     $acl = self::getTableName();
     $aclRole = 'civicrm_acl_role';
@@ -500,20 +505,15 @@ class CRM_ACL_BAO_ACL extends CRM_ACL_DAO_ACL {
   /**
    * Get all ACLs granted to a contact through all group memberships
    *
-   * @param int $contact_id       -   The contact's ID
-   * @param boolean $aclRoles     -   Include ACL Roles?
+   * @param int $contact_id The contact's ID
+   * @param bool $aclRoles Include ACL Roles?
    *
-   * @return array                -   Assoc array of ACL rules
-   * @access public
-   * @static
+   * @return array Assoc array of ACL rules
    */
   public static function &getGroupACLs($contact_id, $aclRoles = FALSE) {
     $contact_id = CRM_Utils_Type::escape($contact_id, 'Integer');
 
     $rule = new CRM_ACL_BAO_ACL();
-
-
-
 
     $acl = self::getTableName();
     $c2g = CRM_Contact_BAO_GroupContact::getTableName();
@@ -548,11 +548,9 @@ INNER JOIN  $c2g
    * Get all of the ACLs for a contact through ACL groups owned by Contact
    * groups.
    *
-   * @param int $contact_id   -   ID of a contact to search for
+   * @param int $contact_id ID of a contact to search for
    *
-   * @return array            -   Array of assoc. arrays of ACL rules
-   * @access public
-   * @static
+   * @return array Array of assoc. arrays of ACL rules
    */
   public static function &getGroupACLRoles($contact_id) {
     $contact_id = CRM_Utils_Type::escape($contact_id, 'Integer');
@@ -561,8 +559,6 @@ INNER JOIN  $c2g
 
     $acl = self::getTableName();
     $aclRole = 'civicrm_acl_role';
-
-
 
     $aclER = CRM_ACL_DAO_EntityRole::getTableName();
     $c2g = CRM_Contact_BAO_GroupContact::getTableName();
@@ -622,11 +618,9 @@ SELECT $acl.*
   /**
    * Get all ACLs owned by a given contact, including domain and group-level.
    *
-   * @param int $contact_id   -   The contact ID
+   * @param int $contact_id The contact ID
    *
-   * @return array            -   Assoc array of ACL rules
-   * @access public
-   * @static
+   * @return array Assoc array of ACL rules
    */
   public static function &getAllByContact($contact_id) {
     $result = [];
@@ -642,26 +636,37 @@ SELECT $acl.*
     return $result;
   }
 
-  static function create(&$params) {
+
+  /**
+   * Create an ACL record
+   *
+   * @param array $params
+   */
+  public static function create(&$params) {
     $dao = new CRM_ACL_DAO_ACL();
     $dao->copyValues($params);
     $dao->save();
   }
 
-  static function retrieve(&$params, &$defaults) {
+  /**
+   * Retrieve an ACL record
+   *
+   * @param array $params
+   * @param array $defaults
+   */
+  public static function retrieve(&$params, &$defaults) {
     CRM_Core_DAO::commonRetrieve('CRM_ACL_DAO_ACL', $params, $defaults);
   }
 
   /**
    * update the is_active flag in the db
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * @param int $id id of the database record
+   * @param bool $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
-   * @static
+   * @return CRM_ACL_DAO_ACL|null DAO object on sucess, null otherwise
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
 
     // note this also resets any ACL cache
     CRM_Core_BAO_Cache::deleteGroup('contact fields');
@@ -669,8 +674,15 @@ SELECT $acl.*
     return CRM_Core_DAO::setFieldValue('CRM_ACL_DAO_ACL', $id, 'is_active', $is_active);
   }
 
-  static function check($str, $contactID) {
-
+  /**
+   * Check if the contact has the given permission
+   *
+   * @param string $str
+   * @param int $contactID
+   *
+   * @return bool
+   */
+  public static function check($str, $contactID) {
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
 
@@ -680,7 +692,6 @@ SELECT $acl.*
     if (empty($aclKeys)) {
       return FALSE;
     }
-
 
     $query = "
 SELECT count( a.id )
@@ -696,8 +707,17 @@ SELECT count( a.id )
     return ($count) ? TRUE : FALSE;
   }
 
+  /**
+   * Get the where clause for the contact
+   *
+   * @param int $type
+   * @param array $tables
+   * @param array $whereTables
+   * @param int $contactID
+   *
+   * @return string
+   */
   public static function whereClause($type, &$tables, &$whereTables, $contactID = NULL) {
-
 
     $acls = &CRM_ACL_BAO_Cache::build($contactID);
     //CRM_Core_Error::debug( "a: $contactID", $acls );
@@ -762,21 +782,24 @@ SELECT g.*
           if ($dao->where_clause) {
             $clauses[] = $dao->where_clause;
             if ($dao->select_tables) {
-              $tables = array_merge($tables,
+              $tables = array_merge(
+                $tables,
                 unserialize($dao->select_tables)
               );
             }
             if ($dao->where_tables) {
-              $whereTables = array_merge($whereTables,
+              $whereTables = array_merge(
+                $whereTables,
                 unserialize($dao->where_tables)
               );
             }
           }
 
-          if (($dao->saved_search_id ||
+          if ((
+            $dao->saved_search_id ||
               $dao->children ||
               $dao->parents
-            ) &&
+          ) &&
             $dao->cache_date == NULL
           ) {
 
@@ -800,21 +823,24 @@ SELECT g.*
           if ($dao->where_clause) {
             $denyClauses[] = $dao->where_clause;
             if ($dao->select_tables) {
-              $tables = array_merge($tables,
+              $tables = array_merge(
+                $tables,
                 unserialize($dao->select_tables)
               );
             }
             if ($dao->where_tables) {
-              $whereTables = array_merge($whereTables,
+              $whereTables = array_merge(
+                $whereTables,
                 unserialize($dao->where_tables)
               );
             }
           }
 
-          if (($dao->saved_search_id ||
+          if ((
+            $dao->saved_search_id ||
               $dao->children ||
               $dao->parents
-            ) &&
+          ) &&
             $dao->cache_date == NULL
           ) {
 
@@ -846,7 +872,19 @@ SELECT g.*
     return $whereClause;
   }
 
-  public static function group($type,
+  /**
+   * get all the groups the user has access to for the given operation
+   *
+   * @param int $type the type of permission needed
+   * @param int $contactID the contactID for whom the check is made
+   * @param string $tableName the table name
+   * @param array $allGroups the groups to check
+   * @param array $includedGroups the groups to include
+   *
+   * @return array the ids of the groups for which the user has permissions
+   */
+  public static function group(
+    $type,
     $contactID = NULL,
     $tableName = 'civicrm_uf_group',
     $allGroups = NULL,
@@ -903,7 +941,19 @@ ORDER BY a.object_id
     return $ids;
   }
 
-  public static function groupSavedSearch($type,
+  /**
+   * get all the groups the user has access to for the given operation (Saved Search)
+   *
+   * @param int $type the type of permission needed
+   * @param int $contactID the contactID for whom the check is made
+   * @param string $tableName the table name
+   * @param array $allGroups the groups to check
+   * @param array $includedGroups the groups to include
+   *
+   * @return array the ids of the groups for which the user has permissions
+   */
+  public static function groupSavedSearch(
+    $type,
     $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
@@ -1084,13 +1134,21 @@ ORDER BY a.object_id
     return $ids;
   }
 
-  private static function searchChildrenGroup($start_id, $is_visited){
-    if(!in_array($start_id, $is_visited)){
+  /**
+   * Search for children groups
+   *
+   * @param int $start_id
+   * @param array $is_visited
+   *
+   * @return array
+   */
+  private static function searchChildrenGroup($start_id, $is_visited) {
+    if (!in_array($start_id, $is_visited)) {
       $is_visited[] = $start_id;
       $query_children = "SELECT children FROM civicrm_group WHERE id = %1";
       $params_children = [1 => [$start_id, 'Integer']];
       $children = CRM_Core_DAO::singleValueQuery($query_children, $params_children);
-      if(!empty($children)){
+      if (!empty($children)) {
         $children = explode(',', $children);
         foreach ($children as $child_id) {
           $is_visited = self::searchChildrenGroup($child_id, $is_visited);
@@ -1100,7 +1158,15 @@ ORDER BY a.object_id
     return $is_visited;
   }
 
-  static function matchType($type, $operation) {
+  /**
+   * Match the operation with the type
+   *
+   * @param int $type
+   * @param string $operation
+   *
+   * @return bool
+   */
+  public static function matchType($type, $operation) {
     $typeCheck = FALSE;
     switch ($operation) {
       case 'All':
@@ -1143,12 +1209,10 @@ ORDER BY a.object_id
   /**
    * Function to delete ACL records
    *
-   * @param  int  $aclId     ID of the ACL record to be deleted.
+   * @param int $aclId ID of the ACL record to be deleted.
    *
-   * @access public
-   * @static
    */
-  static function del($aclId) {
+  public static function del($aclId) {
     // delete all entries from the acl cache
 
     CRM_ACL_BAO_Cache::resetCache();
@@ -1158,4 +1222,3 @@ ORDER BY a.object_id
     $acl->delete();
   }
 }
-

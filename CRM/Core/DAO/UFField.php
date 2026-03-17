@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-              class CRM_Core_DAO_UFField extends CRM_Core_DAO
-{
+
+class CRM_Core_DAO_UFField extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_uf_field';
+  public static $_tableName = 'civicrm_uf_field';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Unique table ID
    *
    * @var int unsigned
@@ -186,24 +184,20 @@
    * @var boolean
    */
   public $is_reserved;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_uf_field
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'uf_group_id' => 'civicrm_uf_group:id',
@@ -212,126 +206,123 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'uf_group_id', 'civicrm_uf_group', 'id');
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'location_type_id', 'civicrm_location_type', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'uf_group_id', 'civicrm_uf_group', 'id');
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'location_type_id', 'civicrm_location_type', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'uf_group_id' => [
           'name' => 'uf_group_id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                    'FKClassName' => 'CRM_Core_DAO_UFGroup',
-        ] ,
+          'required' => TRUE,
+          'FKClassName' => 'CRM_Core_DAO_UFGroup',
+        ],
         'field_name' => [
           'name' => 'field_name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Field Name') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-                ] ,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_view' => [
           'name' => 'is_view',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_required' => [
           'name' => 'is_required',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-          'required' => true,
-                  'default' => '',
-          ] ,
+          'required' => TRUE,
+          'default' => '',
+        ],
         'help_post' => [
           'name' => 'help_post',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Post') ,
-                  ] ,
+        ],
         'help_pre' => [
           'name' => 'help_pre',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Help Pre') ,
-                  ] ,
+        ],
         'visibility' => [
           'name' => 'visibility',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Visibility') ,
-                  'default' => 'User and User Admin Only',
-           'enumValues' => 'User and User Admin Only,Public Pages,Public Pages and Listings',
-         ] ,
+          'default' => 'User and User Admin Only',
+          'enumValues' => 'User and User Admin Only,Public Pages,Public Pages and Listings',
+        ],
         'in_selector' => [
           'name' => 'in_selector',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('In Selector') ,
-                  ] ,
+        ],
         'is_searchable' => [
           'name' => 'is_searchable',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Core_DAO_LocationType',
-        ] ,
+          'FKClassName' => 'CRM_Core_DAO_LocationType',
+        ],
         'phone_type_id' => [
           'name' => 'phone_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'website_type_id' => [
           'name' => 'website_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'field_type' => [
           'name' => 'field_type',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Field Type') ,
-           'maxlength' => 255,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -339,32 +330,26 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -372,22 +357,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['uf_field'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -395,12 +379,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['uf_field'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                              }
+    }
     return self::$_export;
   }
   /**
@@ -408,11 +393,11 @@
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {
     static $enums = [
-                                                                                                                                'visibility',
-                                                                                                                ];
+        'visibility',
+    ];
     return $enums;
   }
   /**
@@ -423,17 +408,16 @@
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                                                                                                'visibility' => [
-                  'User and User Admin Only' => ts('User and User Admin Only'),
-                  'Public Pages' => ts('Public Pages'),
-                  'Public Pages and Listings' => ts('Public Pages and Listings'),
-                ],
-                                                                                                                  ];
+        'visibility' => [
+          'User and User Admin Only' => ts('User and User Admin Only'),
+          'Public Pages' => ts('Public Pages'),
+          'Public Pages and Listings' => ts('Public Pages and Listings'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -443,10 +427,9 @@
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Core_DAO_UFField::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Core_DAO_UFField::tsEnum($enum, $values[$enum]);
       }

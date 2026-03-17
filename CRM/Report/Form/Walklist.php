@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Report_Form_Walklist extends CRM_Report_Form {
   /**
@@ -55,7 +52,11 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
 
   protected $_summary = NULL;
 
-  protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization']; function __construct() {
+  protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
+  /**
+   * Class constructor.
+   */
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -127,11 +128,21 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
 
     $this->_columnHeaders = [];
@@ -160,7 +171,12 @@ class CRM_Report_Form_Walklist extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(",\n", $select) . " ";
   }
 
-  function from() {
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = NULL;
 
     $this->_from = "
@@ -179,7 +195,12 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     }
   }
 
-  function where() {
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -196,7 +217,8 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -224,7 +246,12 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     }
   }
 
-  function orderBy() {
+  /**
+   * Set order by clause.
+   *
+   * @return void
+   */
+  public function orderBy() {
     $this->_orderBy = "";
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('order_bys', $table)) {
@@ -236,13 +263,25 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     $this->_orderBy = "ORDER BY " . CRM_Utils_Array::implode(', ', $this->_orderBy) . " ";
   }
 
-  function postProcess() {
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
@@ -266,9 +305,11 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $entryFound = TRUE;
@@ -282,4 +323,3 @@ FROM       civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom
     }
   }
 }
-

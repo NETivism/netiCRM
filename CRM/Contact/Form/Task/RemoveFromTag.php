@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class provides the functionality to remove tags of contact(s).
@@ -57,20 +52,16 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
   protected $_tags;
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // add select for tag
     $this->_tags = CRM_Core_BAO_Tag::getTags();
     foreach ($this->_tags as $tagID => $tagName) {
       $this->_tagElement = &$this->addElement('checkbox', "tag[$tagID]", NULL, $tagName);
     }
-
-
 
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_contact', NULL, TRUE);
@@ -78,11 +69,24 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
     $this->addDefaultButtons(ts('Remove Tag Contacts'));
   }
 
-  function addRules() {
+  /**
+   * Add local and global form rules.
+   *
+   * @return void
+   */
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Task_RemoveFromTag', 'formRule']);
   }
 
-  static function formRule($form, $rule) {
+  /**
+   * Global validation rules for the form.
+   *
+   * @param array $form posted values of the form
+   * @param array $rule the rules array
+   *
+   * @return array<string, string> list of errors to be posted back to the form
+   */
+  public static function formRule($form, $rule) {
     $errors = [];
     if (empty($form['tag']) && empty($form['taglist'])) {
       $errors['_qf_default'] = "Please select atleast one tag.";
@@ -91,11 +95,9 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the submitted values in an array
@@ -150,4 +152,3 @@ class CRM_Contact_Form_Task_RemoveFromTag extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

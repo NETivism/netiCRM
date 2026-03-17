@@ -27,30 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a persistent record based on the provided parameters.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
-   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object CRM_Core_BAO_Persistent object
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_Persistent|null matching DAO object
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $dao = new CRM_Core_DAO_Persistent();
     $dao->copyValues($params);
 
@@ -65,17 +56,14 @@ class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
   }
 
   /**
-   * function to add the Persistent Record
+   * Add or update a persistent record.
    *
-   * @param array $params reference array contains the values submitted by the form
-   * @param array $ids    reference array contains the id
+   * @param array $params associative array of persistent data
+   * @param array $ids associative array containing 'persistent' ID if updating
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Core_DAO_Persistent the created/updated persistent object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     if (CRM_Utils_Array::value('is_config', $params) == 1) {
       $params['data'] = serialize(explode(',', $params['data']));
     }
@@ -87,7 +75,15 @@ class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
     return $persistentDAO;
   }
 
-  static function getContext($context, $name = NULL) {
+  /**
+   * Retrieve persistent values associated with a specific context.
+   *
+   * @param string $context the context name
+   * @param string|null $name optional specific name within the context
+   *
+   * @return mixed the persistent data (string, array, or associative array of all context data)
+   */
+  public static function getContext($context, $name = NULL) {
     static $contextNameData = [];
 
     if (!CRM_Utils_Array::arrayKeyExists($context, $contextNameData)) {
@@ -108,4 +104,3 @@ class CRM_Core_BAO_Persistent extends CRM_Core_DAO_Persistent {
     }
   }
 }
-

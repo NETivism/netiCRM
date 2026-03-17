@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Site Url
@@ -42,18 +38,18 @@
 class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $config = CRM_Core_Config::singleton();
     $uf = $config->userFramework;
 
-    CRM_Utils_System::setTitle(ts('Settings - %1 Integration',
-        [1 => $uf]
-      ));
+    CRM_Utils_System::setTitle(ts(
+      'Settings - %1 Integration',
+      [1 => $uf]
+    ));
 
     $ele = $this->addElement('text', 'userSystemVersion', ts('%1 Version', [1 => $uf]));
     $ele->freeze();
@@ -73,12 +69,9 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array<string, mixed>
    */
   public function setDefaultValues() {
     $defaults = [];
@@ -91,4 +84,3 @@ class CRM_Admin_Form_Setting_UF extends CRM_Admin_Form_Setting {
     return $defaults;
   }
 }
-

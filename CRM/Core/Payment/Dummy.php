@@ -8,10 +8,11 @@
  */
 
 /**
+ * Dummy payment processor implementation for testing and development
  *
- * @package CRM
  * @author Marshal Newrock <marshal@idealso.com>
  * $Id: Dummy.php 30063 2010-10-06 10:33:02Z ashwini $
+ * @package CiviCRM_PaymentProcessor
  */
 
 /* NOTE:
@@ -19,18 +20,16 @@
  * begin at one, so always delete one from the "Position in Response"
  */
 
-
-
 class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   /**
    * @var mixed
    */
   public $_processorName;
-  CONST CHARSET = 'iso-8859-1';
+  public const CHARSET = 'iso-8859-1';
 
-  static protected $_mode = NULL;
+  protected static $_mode = NULL;
 
-  static protected $_params = [];
+  protected static $_params = [];
 
   /**
    * We only need one instance of this object. So we use the singleton
@@ -39,31 +38,30 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
    * @var object
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
-   * Constructor
+   * Class constructor.
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
+   * @param array &$paymentProcessor payment processor parameters
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Dummy Processor');
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_Dummy
    */
-  static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
+  public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
     if (self::$_singleton[$processorName] === NULL) {
       self::$_singleton[$processorName] = new CRM_Core_Payment_Dummy($mode, $paymentProcessor);
@@ -72,14 +70,13 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   }
 
   /**
-   * Submit a payment using Advanced Integration Method
+   * Submit a payment using Advanced Integration Method (AIM).
    *
-   * @param  array $params assoc array of input parameters for this transaction
+   * @param array &$params associative array of input parameters for this transaction
    *
-   * @return array the result in a nice formatted array (or an error object)
-   * @public
+   * @return array the result in a nice formatted array
    */
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     // Invoke hook_civicrm_paymentProcessor
     // In Dummy's case, there is no translation of parameters into
     // the back-end's canonical set of parameters.  But if a processor
@@ -88,7 +85,8 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
 
     // no translation in Dummy processor
     $cookedParams = $params;
-    CRM_Utils_Hook::alterPaymentProcessorParams($this,
+    CRM_Utils_Hook::alterPaymentProcessorParams(
+      $this,
       $params,
       $cookedParams
     );
@@ -114,7 +112,15 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
     return $params;
   }
 
-  function &error($errorCode = NULL, $errorMessage = NULL) {
+  /**
+   * Push an error to the error object.
+   *
+   * @param int|null $errorCode error code
+   * @param string|null $errorMessage error message
+   *
+   * @return CRM_Core_Error error object
+   */
+  public function &error($errorCode = NULL, $errorMessage = NULL) {
     $e = &CRM_Core_Error::singleton();
     if ($errorCode) {
       $e->push($errorCode, 0, NULL, $errorMessage);
@@ -126,13 +132,11 @@ class CRM_Core_Payment_Dummy extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
-  function checkConfig() {
+  public function checkConfig() {
     return NULL;
   }
 }
-

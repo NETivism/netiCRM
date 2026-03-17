@@ -1,7 +1,7 @@
 <?php
 class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
 
-  const
+  public const
     // default completion service
     COMPLETION_SERVICE = 'OpenAI',
     // default model base on above service
@@ -41,7 +41,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * completion class object which will handilng real http request ther
    *
-   * @var CRM_AI_Completion
+   * @var CRM_AI_CompletionService
    */
   public $_serviceProvider;
 
@@ -49,10 +49,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * We only need one instance of this object. So we use the singleton
    * pattern and cache the instance in this variable
    *
-   * @var object
+   * @var CRM_AI_BAO_AICompletion|null
    * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
    * This is a static function that returns a reference to a singleton instance of a class.
@@ -61,9 +61,9 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @param string $model (optional) The model to use for the singleton instance.
    * @param int $maxTokens (optional) The maximum number of tokens to use for the singleton instance.
    *
-   * @return object A reference to the singleton instance of the class.
+   * @return CRM_AI_BAO_AICompletion A reference to the singleton instance of the class.
    */
-  static function &singleton($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
+  public static function &singleton($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
     if (!isset(self::$_singleton)) {
       self::$_singleton = new CRM_AI_BAO_AICompletion($serviceProvider, $model, $maxTokens);
     }
@@ -73,9 +73,11 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * Saving chat parameters to DB, return the encrypted text about id.
    *
-   * @param array $params ['ai_role', 'tone_style', 'context', 'prompt']
+   * @param array $params The input chat parameters. ['ai_role', 'tone_style', 'context', 'prompt']
    *
-   * @return array ['token', 'id]
+   * @return array The prepared chat session data. ['token', 'id']
+   *
+   * @throws CRM_Core_Exception
    */
   public static function prepareChat($params = []) {
     // prepare saving data.
@@ -148,7 +150,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * @return array The validated parameters.
    *
-   * @throws Exception If the validation fails or required parameters are missing.
+   * @throws CRM_Core_Exception If the validation fails or required parameters are missing.
    */
   private static function validateChatParams($params) {
     $aicompletion = [];
@@ -213,12 +215,12 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * Usage information
    *
-   * @return array
+   * @return array The usage information.
    */
   public static function quota() {
     $config = CRM_Core_Config::singleton();
     $used = CRM_Core_DAO::singleValueQuery("SELECT count(*) FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00');");
-    $percent = $used < $config->openAICompletionQuota ? floor(($used/$config->openAICompletionQuota)*100) : 100;
+    $percent = $used < $config->openAICompletionQuota ? floor(($used / $config->openAICompletionQuota) * 100) : 100;
 
     return [
       'max' => $config->openAICompletionQuota,
@@ -237,18 +239,22 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @param array $params      (reference) an assoc array of name/value pairs
    * @param array $defaults    (reference) an assoc array to hold the flattened values
    *
-   * @return object   CRM_Core_DAO_UFGroup object
+   * @return CRM_AI_DAO_AICompletion|null
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_AI_DAO_AICompletion', $params, $defaults);
   }
 
   /**
    * Only use for database record saving
    *
-   * @return object
+   * @param array $data (reference) an assoc array of field values to save
+   *
+   * @return CRM_AI_DAO_AICompletion|null
+   *
+   * @throws CRM_Core_Exception
    */
   public static function create(&$data) {
     if (!is_array($data)) {
@@ -284,7 +290,10 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * Retrieve AI Completion data array by ID.
    *
    * @param int $aiCompletionID The ID of the AI Completion.
+   *
    * @return array The retrieved AI Completion data array.
+   *
+   * @throws CRM_Core_Exception
    */
   private static function retrieveAICompletionDataArray($aiCompletionID) {
     if (empty($aiCompletionID)) {
@@ -309,13 +318,14 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   public static function validateData() {
   }
 
-
   /**
    * Constructor for the AI Completion class.
    *
    * @param string|null $serviceProvider The service provider for AI completion. Default is NULL.
    * @param string|null $model The model for AI completion. Default is NULL.
    * @param int|null $maxTokens The maximum number of tokens for AI completion. Default is NULL.
+   *
+   * @throws CRM_Core_Exception
    */
   public function __construct($serviceProvider = NULL, $model = NULL, $maxTokens = NULL) {
     if (empty($serviceProvider)) {
@@ -347,8 +357,12 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    *
    * We should use chat() for fetching and saving result in most case
    *
-   * @return FALSE|array
+   * @param array $params request parameters
+   *
+   * @return array|false
    *  The return array should be compatible for function create
+   *
+   * @throws CRM_Core_Exception
    */
   public static function getCompletion($params) {
     if (!is_array($params)) {
@@ -366,9 +380,11 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
   /**
    * Retrieve AICompletion Template object(array) by AICompletion ID.
    *
-   * @param Int $acID The AICompletion ID in DB row.
+   * @param int $acID The AICompletion ID in DB row.
    *
-   * @return FALSE|array AICompletion data row.
+   * @return array AICompletion data row.
+   *
+   * @throws CRM_Core_Exception
    */
   public static function getTemplate($acID) {
     $retrieveAICompletionArray = self::retrieveAICompletionDataArray($acID);
@@ -384,6 +400,8 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * ]
    *
    * @return array AICompletion data rows.
+   *
+   * @throws CRM_Core_Exception
    */
   public static function getTemplateList($params = []) {
     if (!is_array($params)) {
@@ -443,7 +461,7 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * @return array Result data array.
    */
   public static function setTemplate($data) {
-    foreach($data as $key => $val) {
+    foreach ($data as $key => $val) {
       if (!in_array($key, ['id', 'is_template', 'template_title'])) {
         unset($data[$key]);
       }
@@ -492,12 +510,12 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
    * Set is_share_with_others value to 1 for AICompletion data by ID.
    * @param int $acId The ID of AiCompletion data.
    *
-   * @return int Return 1 when set successfully. 0 when failed. -1 for already
+   * @return int Return 1 when set successfully. 0 when failed. -1 when already shared.
    */
   public static function setShare($acId) {
     $isShare = CRM_Core_DAO::getFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others');
     if ($isShare == 0) {
-      return CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others', 1) ? 1 :0;
+      return CRM_Core_DAO::setFieldValue('CRM_AI_DAO_AICompletion', $acId, 'is_share_with_others', 1) ? 1 : 0;
     }
     else {
       return -1;
@@ -505,6 +523,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     return 0;
   }
 
+  /**
+   * Retrieve the default AI completion template for a given component.
+   *
+   * @param string $component The component name (e.g. 'CiviContribute', 'Activity').
+   *
+   * @return string The default template content as JSON string.
+   */
   public static function getDefaultTemplate($component) {
     global $tsLocale;
     $session = CRM_Core_Session::singleton();
@@ -542,6 +567,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     return $default;
   }
 
+  /**
+   * Retrieve the shared AI completion template for a given component.
+   *
+   * @param string $component The component name (e.g. 'CiviContribute', 'Activity').
+   *
+   * @return array|null The decoded shared template data, or NULL if not found.
+   */
   public static function getSharedTemplate($component) {
     global $tsLocale;
     $smarty = CRM_Core_Smarty::singleton();
@@ -556,13 +588,13 @@ class CRM_AI_BAO_AICompletion extends CRM_AI_DAO_AICompletion {
     }
     $path = 'CRM/AI/shared/'.$component.$suffix.$locale.'.tpl';
     $shared = $smarty->fetch($path);
-    $decodedShared = json_decode($shared, true);
+    $decodedShared = json_decode($shared, TRUE);
 
     if (!$decodedShared) {
       // fallback to non-locale template
       $path = 'CRM/AI/shared/'.$component.$suffix.'.tpl';
       $shared = $smarty->fetch($path);
-      $decodedShared = json_decode($shared, true);
+      $decodedShared = json_decode($shared, TRUE);
     }
 
     return $decodedShared;

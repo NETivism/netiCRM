@@ -26,7 +26,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /**
  * File for the CiviCRM APIv3 group functions
  *
@@ -47,11 +46,11 @@
  * @access public
  */
 function civicrm_api3_contribution_page_create($params) {
-  if(is_array($params['payment_processor']) && !empty($params['payment_processor'])){
-    if(is_numeric(reset($params['payment_processor']))){
+  if (is_array($params['payment_processor']) && !empty($params['payment_processor'])) {
+    if (is_numeric(reset($params['payment_processor']))) {
       $params['payment_processor'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $params['payment_processor']);
     }
-    else{
+    else {
       $params['payment_processor'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, array_keys($params['payment_processor']));
     }
   }
@@ -81,7 +80,7 @@ function _civicrm_api3_contribution_page_create_spec(&$params) {
 function civicrm_api3_contribution_page_get($params) {
   $result = _civicrm_api3_basic_get(_civicrm_api3_get_BAO(__FUNCTION__), $params);
   if (!empty($result['values'])) {
-    foreach($result['values'] as $idx => &$contributionPage) {
+    foreach ($result['values'] as $idx => &$contributionPage) {
       _civicrm_api3_contribution_page_getachieved($contributionPage, $contributionPage['id']);
       _civicrm_api3_contribution_page_getamount($contributionPage, $contributionPage['id']);
     }
@@ -108,12 +107,11 @@ function civicrm_api3_contribution_page_delete($params) {
   return _civicrm_api3_basic_delete(_civicrm_api3_get_BAO(__FUNCTION__), $params);
 }
 
-
 function _civicrm_api3_contribution_page_getamount(&$page, $pageId) {
   if ($pageId) {
     $fee = CRM_Contribute_BAO_ContributionPage::feeBlock($pageId);
     $feeBlock = [];
-    foreach($fee['label'] as $idx => $label) {
+    foreach ($fee['label'] as $idx => $label) {
       if (isset($fee['value'][$idx]) && $fee['value'][$idx] !== '') {
         $grouping = !empty($fee['grouping'][$idx]) ? $fee['grouping'][$idx] : "all";
         $feeBlock[$grouping][] = [

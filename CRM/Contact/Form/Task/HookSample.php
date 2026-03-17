@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to save a search
@@ -42,16 +38,16 @@
 class CRM_Contact_Form_Task_HookSample extends CRM_Contact_Form_Task {
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
 
     // display name and email of all contact ids
-    $contactIDs = CRM_Utils_Array::implode(',', $this->_contactIds);;
+    $contactIDs = CRM_Utils_Array::implode(',', $this->_contactIds);
+    ;
     $query = "
 SELECT c.id as contact_id, c.display_name as name,
        c.contact_type as contact_type, e.email as email
@@ -59,7 +55,6 @@ FROM   civicrm_contact c, civicrm_email e
 WHERE  e.contact_id = c.id
 AND    e.is_primary = 1
 AND    c.id IN ( $contactIDs )";
-
 
     $rows = [];
     $dao = CRM_Core_DAO::executeQuery($query);
@@ -75,23 +70,19 @@ AND    c.id IN ( $contactIDs )";
   }
 
   /**
-   * Build the form - it consists of
-   *
-   * @access public
+   * Build the form - it consists of.
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Back to Search'), 'done');
   }
 
   /**
-   * process the form after the input has been submitted and validated
-   *
-   * @access public
+   * Process the form after the input has been submitted and validated.
    *
    * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
 }
-

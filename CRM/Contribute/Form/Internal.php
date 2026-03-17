@@ -1,13 +1,20 @@
 <?php
+/**
+ * Form for internal contribution processing.
+ */
 class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   public $_contactId;
   public $_pageId;
   public $_ajax;
+
   /**
-   * Function to set variables up before form is built
+   * Set up variables before the form is built.
+   *
+   * This method retrieves contact and contribution page IDs from the request,
+   * handles AJAX requests, and ensures the internal contribution page feature
+   * is installed.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this);
@@ -27,15 +34,11 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @param null
-   *
-   * @return array   array of default values
-   * @access public
+   * @return array<string, mixed> the array of default values for form elements
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     if (!empty($this->_contactId)) {
       $defaults['contact_id'] = $this->_contactId;
@@ -47,12 +50,12 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
    *
-   * @param null
+   * Adds selection fields for contribution pages and original contribution records
+   * (if applicable). Also handles contact selection or creation.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_ajax) {
@@ -62,7 +65,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     }
     $pages = [];
     CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active', ' is_internal = 1');
-    foreach($pages as $id => &$page) {
+    foreach ($pages as $id => &$page) {
       $page .= " ($id)";
     }
     $records = [
@@ -85,7 +88,8 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     }
     $this->addSelect('contribution_page_id', ts('Contribution Page'), $pages, '', TRUE);
     $this->addCheckBox('is_test', '', [ ts('Test-drive') => 1]);
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'refresh',
           'name' => ts('Next >>'),
@@ -99,15 +103,17 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global form rule for validation.
    *
-   * @param array $fields posted values of the form
+   * Validates contact ID existence and ensuring a valid contribution page is selected.
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $form the form object
+   *
+   * @return array<string, mixed> list of errors to be posted back to the form
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     if (empty($fields['contact_select_id'][1])) {
       if (!ctype_digit($fields['contact_id']) || empty($fields['contact_id'])) {
@@ -130,12 +136,12 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
+   * Process the form submission.
    *
-   * @param null
+   * Generates a checksum for the selected contact and redirects the user
+   * to the contribution transaction page.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
@@ -159,6 +165,14 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 
+  /**
+   * Retrieve contribution details for the current contact.
+   *
+   * Fetches the most recent recurring and non-recurring contributions to allow
+   * the user to base a new transaction on a previous one.
+   *
+   * @return array the array of formatted contribution record labels and IDs
+   */
   public function getContributionDetails() {
     $records = [ts('-- select --')];
     // get exists contribution
@@ -166,7 +180,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
       1 => [$this->_contactId, 'Positive'],
     ]);
 
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       if ($dao->receive_date) {
         $date = CRM_Utils_Date::customFormat($dao->receive_date);
       }
@@ -179,7 +193,7 @@ class CRM_Contribute_Form_Internal extends CRM_Core_Form {
     $dao = CRM_Core_DAO::executeQuery("SELECT id, total_amount, receive_date FROM civicrm_contribution WHERE contribution_recur_id IS NULL AND contact_id = %1 AND is_test = 0 AND contribution_status_id = 1 ORDER BY receive_date DESC LIMIT 10", [
       1 => [$this->_contactId, 'Positive'],
     ]);
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       if ($dao->receive_date) {
         $date = CRM_Utils_Date::customFormat($dao->receive_date);
       }

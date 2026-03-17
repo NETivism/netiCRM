@@ -27,30 +27,79 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
 
   /**
-   * @var array<string, array<'no_display', bool>>
+   * Column header definitions keyed by column alias, each containing display metadata.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
-  public $_interval;
-  public $_from;
-  public $_aliases;
-  public $_where;
+
   /**
-   * @var never[]|mixed[]|string[]|string
+   * The human-readable frequency label for the current time-based group-by (e.g. 'Week', 'Month').
+   *
+   * @var string|null
+   */
+  public $_interval;
+
+  /**
+   * The SQL FROM clause built by from().
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
+  public $_aliases;
+
+  /**
+   * The SQL WHERE clause built by where().
+   *
+   * @var string
+   */
+  public $_where;
+
+  /**
+   * The SQL GROUP BY clause or a list of group-by expressions.
+   *
+   * @var string|string[]
    */
   public $_groupBy;
+
+  /**
+   * The current output mode (e.g. 'html', 'csv', 'pdf').
+   *
+   * @var string
+   */
   public $_outputMode;
+
+  /**
+   * Whether the email table is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_emailField = FALSE;
-  protected $_phoneField = FALSE; function __construct() {
+
+  /**
+   * Whether the phone table is joined in the current query.
+   *
+   * @var bool
+   */
+  protected $_phoneField = FALSE;
+
+  /**
+   * Initialises column definitions for contact, email, phone, and activity tables.
+   */
+  public function __construct() {
     $this->_columns = [
       'civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
@@ -159,7 +208,14 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause based on selected fields and group-by frequency settings.
+   * Handles date frequency grouping (YEARWEEK, YEAR, MONTH, QUARTER) and statistics
+   * (count, sum). Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -267,7 +323,14 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining activity, contact, case, and option value tables.
+   * Conditionally joins email and phone tables when those fields are selected.
+   * Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
 
     $this->_from = "
         FROM civicrm_activity {$this->_aliases['civicrm_activity']}
@@ -307,7 +370,14 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  /**
+   * Builds the WHERE clause filtering to valid activities only (not test, not deleted,
+   * current revision, activity_type option group). Appends user-submitted filter clauses
+   * and ACL restrictions. Populates $_where.
+   *
+   * @return void
+   */
+  public function where() {
     $this->_where = " WHERE civicrm_option_group.name = 'activity_type' AND 
                                 {$this->_aliases['civicrm_activity']}.is_test = 0 AND
                                 {$this->_aliases['civicrm_activity']}.is_deleted = 0 AND
@@ -329,7 +399,8 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -357,7 +428,14 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause from selected group-by fields and optional frequency
+   * modifiers (YEAR, MONTH, QUARTER, YEARWEEK). Falls back to grouping by contact ID
+   * when no group-by fields are selected. Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = [];
     if (is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])
@@ -374,9 +452,10 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
               ) {
 
                 $append = "YEAR({$field['dbAlias']}),";
-                if (in_array(strtolower($this->_params['group_bys_freq'][$fieldName]),
-                    ['year']
-                  )) {
+                if (in_array(
+                  strtolower($this->_params['group_bys_freq'][$fieldName]),
+                  ['year']
+                )) {
                   $append = '';
                 }
                 $this->_groupBy[] = "$append {$this->_params['group_bys_freq'][$fieldName]}({$field['dbAlias']})";
@@ -397,7 +476,18 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     }
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validates group-by and field selection combinations.
+   * Returns an error when contact fields are selected without the contact group-by,
+   * or when activity date and contact group-bys conflict.
+   *
+   * @param array $fields Submitted form values.
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_ActivitySummary $self The form instance (unused).
+   *
+   * @return array<string, mixed> Associative array of field => error message; empty if valid.
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $contactFields = ['display_name', 'email', 'phone'];
     if (CRM_Utils_Array::value('group_bys', $fields)) {
@@ -430,13 +520,27 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     return $errors;
   }
 
-  function postProcess() {
+  /**
+   * Builds the ACL clause for the contact alias then delegates to the parent postProcess().
+   *
+   * @return void
+   */
+  public function postProcess() {
     // get the acl clauses built before we assemble the query
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Post-processes result rows to linkify contact names and resolve activity type IDs
+   * to human-readable labels. Suppresses duplicate contact names for consecutive rows
+   * with the same contact. No-ops in CSV output mode.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
@@ -474,7 +578,8 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
             }
           }
           else {
-            $url = CRM_Utils_System::url('civicrm/contact/view',
+            $url = CRM_Utils_System::url(
+              'civicrm/contact/view',
               'reset=1&cid=' . $value
             );
 
@@ -503,4 +608,3 @@ class CRM_Report_Form_ActivitySummary extends CRM_Report_Form {
     }
   }
 }
-

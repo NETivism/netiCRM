@@ -3,7 +3,12 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
 
   public $_exportParams;
   public $_additionalIds;
-  function preProcess() {
+  /**
+   * Build all the data structures needed to build the form.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
     $this->_exportParams = [];
     CRM_Utils_System::setTitle(ts("Export ACH Verification File"));
@@ -30,7 +35,7 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
         $msgs[] = ts('All selected recurrings must be unverified. There are %1 recurrings not unverified.', [1 => count($notUnverified)]);
       }
       $msg = CRM_Utils_Array::implode('<br/>', $msgs);
-       return CRM_Core_Error::statusBounce($msg);
+      return CRM_Core_Error::statusBounce($msg);
     }
 
     if (!empty($this->_achDatas)) {
@@ -46,23 +51,47 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     parent::buildQuickForm();
     $this->addDate('datetime', ts('Verification Date'), TRUE, ['formatType' => 'searchDate']);
     $this->addYesNo('is_overwrite', ts('overwrite').'?');
   }
 
-  function setDefaultValues() {
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, string>
+   */
+  public function setDefaultValues() {
     $defaults = [
       'datetime' => date('Y-m-d'),
     ];
     return $defaults;
   }
 
+  /**
+   * Form rule.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array
+   */
   public static function formRule($fields, $files, $self) {
     return parent::formRule($fields, $files, $self);
   }
 
+  /**
+   * Validate the form.
+   *
+   * @return bool
+   */
   public function validate() {
     $pass = TRUE;
     $values = $this->exportValues();
@@ -86,6 +115,11 @@ class CRM_Contact_Form_Task_TaiwanACHExportVerification extends CRM_Contact_Form
     return $pass;
   }
 
+  /**
+   * Process the form after the input has been submitted and validated.
+   *
+   * @return void
+   */
   public function postProcess() {
     // $this->_contactIds  <== contact id
     // $this->_additionalIds <== recurring id

@@ -1,7 +1,7 @@
 <?php
 class CRM_Mailing_Form_Optout extends CRM_Core_Form {
 
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $this->controller->setDestination(NULL, TRUE);
 
@@ -44,7 +44,8 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
       $captcha->add($this);
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         [
           'type' => 'next',
           'name' => ts('Optout'),
@@ -58,7 +59,7 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+  public function postProcess() {
     $job_id = CRM_Utils_Request::retrieve('jid', 'Integer', $this);
     $queue_id = CRM_Utils_Request::retrieve('qid', 'Integer', $this);
     $hash = CRM_Utils_Request::retrieve('h', 'String', $this);
@@ -69,4 +70,3 @@ class CRM_Mailing_Form_Optout extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 }
-

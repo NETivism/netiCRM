@@ -27,13 +27,11 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_I18n_SchemaStructure_3_0_beta4 {
-  static function &columns() {
+  public static function &columns() {
     static $result = NULL;
     if (!$result) {
       $result = [
@@ -181,7 +179,7 @@ class CRM_Core_I18n_SchemaStructure_3_0_beta4 {
     }
     return $result;
   }
-  static function &indices() {
+  public static function &indices() {
     static $result = NULL;
     if (!$result) {
       $result = [
@@ -258,7 +256,7 @@ class CRM_Core_I18n_SchemaStructure_3_0_beta4 {
     }
     return $result;
   }
-  static function &tables() {
+  public static function &tables() {
     static $result = NULL;
     if (!$result) {
       $result = array_keys(self::columns());
@@ -266,4 +264,3 @@ class CRM_Core_I18n_SchemaStructure_3_0_beta4 {
     return $result;
   }
 }
-

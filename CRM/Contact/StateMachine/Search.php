@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
 
@@ -47,9 +42,12 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
   protected $_task;
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param CRM_Core_Controller $controller
+   * @param int $action
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $this->_pages = [];
@@ -88,15 +86,15 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
 
   /**
    * Determine the form name based on the action. This allows us
-   * to avoid using  conditional state machine, much more efficient
-   * and simpler
+   * to avoid using conditional state machine, much more efficient
+   * and simpler.
    *
    * @param CRM_Core_Controller $controller the controller object
+   * @param string $formName
    *
-   * @return string the name of the form that will handle the task
-   * @access protected
+   * @return array the name of the form that will handle the task and result
    */
-  function taskName($controller, $formName = 'Search') {
+  public function taskName($controller, $formName = 'Search') {
     // total hack, check POST vars and then session to determine stuff
     // fix value if print button is pressed
     if (CRM_Utils_Array::value('_qf_' . $formName . '_next_print', $_POST)) {
@@ -113,9 +111,8 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
     if ($value) {
       $componentMode = $this->_controller->get('component_mode');
 
-
       $modeValue = CRM_Contact_Form_Search::getModeValueCommon($componentMode);
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $modeValue['taskClassName']) . '.php');
+      require_once(str_replace('_', DIRECTORY_SEPARATOR, $modeValue['taskClassName']) . '.php');
       $taskClassName = $modeValue['taskClassName'];
 
       // build tasks for custom class
@@ -128,7 +125,7 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
           }
         }
       }
-      return $taskClassName::getTask( $value );
+      return $taskClassName::getTask($value);
     }
     else {
       return CRM_Contact_Task::getTask($value);
@@ -136,12 +133,11 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
   }
 
   /**
-   * return the form name of the task
+   * Return the form name of the task.
    *
    * @return string
-   * @access public
    */
-  function getTaskFormName() {
+  public function getTaskFormName() {
     if (is_array($this->_task)) {
       // return first page
       return CRM_Utils_String::getClassName($this->_task[0]);
@@ -151,4 +147,3 @@ class CRM_Contact_StateMachine_Search extends CRM_Core_StateMachine {
     }
   }
 }
-

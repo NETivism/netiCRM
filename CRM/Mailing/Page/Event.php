@@ -27,15 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
-
-
-
 
 /**
  * This implements the profile page for all contacts. It uses a selector
@@ -57,24 +51,34 @@ class CRM_Mailing_Page_Event extends CRM_Core_Page {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $mailing_id = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
     CRM_Mailing_BAO_Mailing::checkPermission($mailing_id);
 
     $selector = new CRM_Mailing_Selector_Event(
-      CRM_Utils_Request::retrieve('event', 'String',
+      CRM_Utils_Request::retrieve(
+        'event',
+        'String',
         $this
       ),
-      CRM_Utils_Request::retrieve('distinct', 'Boolean',
+      CRM_Utils_Request::retrieve(
+        'distinct',
+        'Boolean',
         $this
       ),
-      CRM_Utils_Request::retrieve('mid', 'Positive',
+      CRM_Utils_Request::retrieve(
+        'mid',
+        'Positive',
         $this
       ),
-      CRM_Utils_Request::retrieve('jid', 'Positive',
+      CRM_Utils_Request::retrieve(
+        'jid',
+        'Positive',
         $this
       ),
-      CRM_Utils_Request::retrieve('uid', 'Positive',
+      CRM_Utils_Request::retrieve(
+        'uid',
+        'Positive',
         $this
       )
     );
@@ -85,7 +89,8 @@ class CRM_Mailing_Page_Event extends CRM_Core_Page {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -105,4 +110,3 @@ class CRM_Mailing_Page_Event extends CRM_Core_Page {
     return parent::run();
   }
 }
-

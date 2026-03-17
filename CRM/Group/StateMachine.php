@@ -27,19 +27,19 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Group_StateMachine extends CRM_Core_StateMachine {
 
   /**
-   * class constructor
+   * Class constructor.
+   *
+   * @param CRM_Core_Controller $controller
+   * @param int $action
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $this->_pages = [
@@ -53,13 +53,11 @@ class CRM_Group_StateMachine extends CRM_Core_StateMachine {
   }
 
   /**
-   * return the form name of the task. This is
+   * return the form name of the task.
    *
    * @return string
-   * @access public
    */
-  function getTaskFormName() {
+  public function getTaskFormName() {
     return CRM_Utils_String::getClassName('CRM_Contact_Form_Task_AddToGroup');
   }
 }
-

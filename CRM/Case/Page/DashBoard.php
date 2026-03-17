@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This page is for Case Dashboard
@@ -49,7 +44,7 @@ class CRM_Case_Page_DashBoard extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     //check for civicase access.
     if (!CRM_Case_BAO_Case::accessCiviCase()) {
       return CRM_Core_Error::statusBounce(ts('You are not authorized to access this page.'));
@@ -110,10 +105,9 @@ class CRM_Case_Page_DashBoard extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     return parent::run();
   }
 }
-

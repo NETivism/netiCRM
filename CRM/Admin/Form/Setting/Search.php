@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Search Parameters
@@ -42,10 +38,9 @@
 class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Contacts Search'));
@@ -57,15 +52,20 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
     $this->addYesNo('includeAlphabeticalPager', ts('Include Alphabetical Pager'));
     $this->addYesNo('includeOrderByClause', ts('Include Order By Clause'));
 
-    $this->addElement('text', 'smartGroupCacheTimeout', ts('Smart group cache timeout'),
+    $this->addElement(
+      'text',
+      'smartGroupCacheTimeout',
+      ts('Smart group cache timeout'),
       ['size' => 3, 'maxlength' => 5]
     );
-
 
     $types = ['Contact', 'Individual', 'Organization', 'Household'];
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($types);
 
-    $this->add('select', 'defaultSearchProfileID', ts('Default Contact Search Profile'),
+    $this->add(
+      'select',
+      'defaultSearchProfileID',
+      ts('Default Contact Search Profile'),
       ['' => ts('- select -')] + $profiles
     );
 
@@ -76,4 +76,3 @@ class CRM_Admin_Form_Setting_Search extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 }
-

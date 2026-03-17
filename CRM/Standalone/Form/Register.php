@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
@@ -41,8 +38,11 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
   protected $_fields = [];
 
   protected $_openID;
-  
-  function preProcess() {
+
+  /**
+   * Pre-process the form.
+   */
+  public function preProcess() {
     $config = CRM_Core_Config::singleton();
     if ($config->userFramework !== "Standalone") {
       CRM_Utils_System::redirect();
@@ -52,19 +52,25 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     $ufGroups = &CRM_Core_BAO_UFGroup::getModuleUFGroup('User Registration');
 
     if (count($ufGroups) > 1) {
-       return CRM_Core_Error::statusBounce(ts('You have more than one profile that has been enabled for user registration.'));
+      return CRM_Core_Error::statusBounce(ts('You have more than one profile that has been enabled for user registration.'));
     }
 
     foreach ($ufGroups as $id => $dontCare) {
       $this->_profileID = $id;
     }
 
-
     $session = CRM_Core_Session::singleton();
     $this->_openID = $session->get('openid');
   }
 
-  function setDefaultValues() {
+
+  /**
+   * Set the default values for the form.
+   *
+   * @return array<string, mixed>
+   *   The default values
+   */
+  public function setDefaultValues() {
     $defaults = [];
 
     $defaults['user_unique_id'] = $this->_openID;
@@ -72,39 +78,50 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     return $defaults;
   }
 
-  function buildQuickForm() {
-    $this->add('text',
+
+  /**
+   * Build the form.
+   */
+  public function buildQuickForm() {
+    $this->add(
+      'text',
       'user_unique_id',
       ts('OpenID'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'user_unique_id'),
       TRUE
     );
 
-    $this->add('text',
+    $this->add(
+      'text',
       'email',
       ts('Email'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'email'),
       TRUE
     );
 
-    $fields = CRM_Core_BAO_UFGroup::getFields($this->_profileID,
+    $fields = CRM_Core_BAO_UFGroup::getFields(
+      $this->_profileID,
       FALSE,
       CRM_Core_Action::ADD,
-      NULL, NULL, FALSE,
-      NULL, TRUE
+      NULL,
+      NULL,
+      FALSE,
+      NULL,
+      TRUE
     );
     $this->assign('custom', $fields);
 
-
     foreach ($fields as $key => $field) {
-      CRM_Core_BAO_UFGroup::buildProfile($this,
+      CRM_Core_BAO_UFGroup::buildProfile(
+        $this,
         $field,
         CRM_Profile_Form::MODE_CREATE
       );
       $this->_fields[$key] = $field;
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -116,20 +133,20 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+
+  /**
+   * Process the form submission.
+   */
+  public function postProcess() {
     $formValues = $this->controller->exportValues($this->_name);
 
-
-
-
-
-    $user = new CRM_Standalone_User($formValues['user_unique_id'],
+    $user = new CRM_Standalone_User(
+      $formValues['user_unique_id'],
       $formValues['email'],
       $formValues['first_name'],
       $formValues['last_name']
     );
     CRM_Utils_System_Standalone::getUserID($user);
-
 
     $session = CRM_Core_Session::singleton();
     $contactId = $session->get('userID');
@@ -148,14 +165,16 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     // add first user to admin group
     if ($ufCount == 1) {
 
-
       $group = new CRM_Contact_DAO_Group();
       $group->name = 'Administrators';
       $group->is_active = 1;
       if ($group->find(TRUE)) {
         $contactIds = [$contactId];
-        CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds, $group->id,
-          'Web', 'Added'
+        CRM_Contact_BAO_GroupContact::addContactsToGroup(
+          $contactIds,
+          $group->id,
+          'Web',
+          'Added'
         );
       }
     }
@@ -171,4 +190,3 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     CRM_Utils_System::civiExit();
   }
 }
-

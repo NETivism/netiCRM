@@ -26,18 +26,24 @@
 */
 
 /**
+ * Custom search form for searching contacts by aggregate contribution amounts
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contact_Form_Search_Interface {
 
   public $_columns;
-  protected $_formValues; function __construct(&$formValues) {
+  protected $_formValues;
+  /**
+   * The constructor gets the submitted form values
+   *
+   * @param array $formValues
+   *
+   * @access public
+   */
+  public function __construct(&$formValues) {
     $this->_formValues = $formValues;
 
     /**
@@ -50,17 +56,27 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
     ];
   }
 
-  function buildForm(&$form) {
+  /**
+   * Builds the quickform for this search
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   * @access public
+   */
+  public function buildForm(&$form) {
     /**
      * Define the search form fields here
      */
-    $form->add('text',
+    $form->add(
+      'text',
       'min_amount',
       ts('Aggregate Total Between $')
     );
     $form->addRule('min_amount', ts('Please enter a valid amount (numbers and decimal point only).'), 'money');
 
-    $form->add('text',
+    $form->add(
+      'text',
       'max_amount',
       ts('...and $')
     );
@@ -83,21 +99,37 @@ class CRM_Contact_Form_Search_Custom_ContributionAggregate implements CRM_Contac
      * If you are using the sample template, this array tells the template fields to render
      * for the search form.
      */
-    $form->assign( 'elements', [ 'min_amount', 'max_amount', 'start_date', 'end_date','top_contributors','contribution_recurring'] );
+    $form->assign('elements', [ 'min_amount', 'max_amount', 'start_date', 'end_date','top_contributors','contribution_recurring']);
   }
 
   /**
    * Define the smarty template used to layout the search form and results listings.
+   *
+   * @return string
+   * @access public
    */
-  function templateFile() {
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
   /**
    * Construct the search query
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   * @param bool $includeContactIDs
+   * @param bool $onlyIDs
+   *
+   * @return string
+   * @access public
    */
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
-    $includeContactIDs = FALSE, $onlyIDs = FALSE
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
+    $includeContactIDs = FALSE,
+    $onlyIDs = FALSE
   ) {
 
     // SELECT clause must include contact_id as an alias for civicrm_contact.id
@@ -116,9 +148,10 @@ count(contrib.id) AS donation_count
 
     $where = $this->where($includeContactIDs);
 
-    if($this->_formValues['contribution_recurring'] == 'recur'){
+    if ($this->_formValues['contribution_recurring'] == 'recur') {
       $where .= ' AND contrib.contribution_recur_id IS NOT NULL';
-    }else if($this->_formValues['contribution_recurring'] == 'not_recur'){
+    }
+    elseif ($this->_formValues['contribution_recurring'] == 'not_recur') {
       $where .= ' AND contrib.contribution_recur_id IS NULL';
     }
 
@@ -136,7 +169,7 @@ $having
 ";
     //for only contact ids ignore order.
     if (!$onlyIDs) {
-      if(!empty($this->_formValues['top_contributors'])){
+      if (!empty($this->_formValues['top_contributors'])) {
         $top_amount = $this->_formValues['top_contributors'];
         $sql .= "ORDER BY donation_amount DESC LIMIT $top_amount ";
         $sql = "SELECT * FROM ($sql) orig ";
@@ -155,7 +188,7 @@ $having
       }
     }
     else {
-      if(!empty($this->_formValues['top_contributors'])){
+      if (!empty($this->_formValues['top_contributors'])) {
         $top_amount = $this->_formValues['top_contributors'];
         $sql .= "ORDER BY sum(contrib.total_amount) DESC LIMIT $top_amount ";
       }
@@ -167,18 +200,28 @@ $having
     return $sql;
   }
 
-  function from() {
+  /**
+   * Get from
+   *
+   * @return string
+   * @access public
+   */
+  public function from() {
     return "
 civicrm_contribution AS contrib,
 civicrm_contact AS contact_a
 ";
   }
 
-  /*
-      * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
-      *
-      */
-  function where($includeContactIDs = FALSE) {
+  /**
+   * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
+  public function where($includeContactIDs = FALSE) {
     $clauses = [];
 
     $clauses[] = "contrib.contact_id = contact_a.id";
@@ -214,7 +257,15 @@ civicrm_contact AS contact_a
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  function having($includeContactIDs = FALSE) {
+  /**
+   * Get having
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   * @access public
+   */
+  public function having($includeContactIDs = FALSE) {
     $clauses = [];
     $min = CRM_Utils_Array::value('min_amount', $this->_formValues);
     if ($min) {
@@ -231,27 +282,53 @@ civicrm_contact AS contact_a
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 
-  /* 
-     * Functions below generally don't need to be modified
-     */
-  function count() {
+  /**
+   * Functions below generally don't need to be modified
+   *
+   * @return int
+   * @access public
+   */
+  public function count() {
     $sql = $this->all();
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
     return $dao->N;
   }
 
-  function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  /**
+   * Get contact IDs
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null $sort
+   *
+   * @return string
+   * @access public
+   */
+  public function contactIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     return $this->all($offset, $rowcount, $sort, FALSE, TRUE);
   }
 
-  function &columns() {
+  /**
+   * Get columns
+   *
+   * @return array
+   * @access public
+   */
+  public function &columns() {
     return $this->_columns;
   }
 
-  function summary() {
+  /**
+   * Get summary
+   *
+   * @return null
+   * @access public
+   */
+  public function summary() {
     return NULL;
   }
 }

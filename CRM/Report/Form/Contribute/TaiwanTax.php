@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -59,10 +57,13 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
   protected $_receiptSerial = NULL;
   protected $_columnSort = NULL;
 
-  function __construct() {
+  /**
+   * Class constructor.
+   */
+  public function __construct() {
     $config = CRM_Core_Config::singleton();
     $contactTypes = CRM_Contact_BAO_ContactType::basicTypePairs();
-    foreach($contactTypes as $key => $name) {
+    foreach ($contactTypes as $key => $name) {
       if ($key !== 'Individual') {
         unset($contactTypes[$key]);
       }
@@ -107,7 +108,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             'no_repeat' => FALSE,
           ],
         ],
-        'filters' => 
+        'filters' =>
         [
           'contact_type' =>
           ['title' => ts('Contact Type'),
@@ -115,7 +116,7 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
             'options' => $contactTypes,
             'default' => ['Individual'],
           ],
-          'legal_identifier' => 
+          'legal_identifier' =>
           [
             'title' => ts('Legal Identifier'),
             'operationPair' => [
@@ -183,13 +184,13 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
       $this->_receiptTitle,
       $this->_receiptSerial,
     ];
-    foreach($this->_columns as $key => $column){
-      if(isset($column['extends']) && $column['extends'] == 'Contribution' && !empty($column['fields'])){
-        foreach($column['fields'] as $field_name => $values){
-          if(in_array($field_name, $allowedFields)){
+    foreach ($this->_columns as $key => $column) {
+      if (isset($column['extends']) && $column['extends'] == 'Contribution' && !empty($column['fields'])) {
+        foreach ($column['fields'] as $field_name => $values) {
+          if (in_array($field_name, $allowedFields)) {
             $this->_columns[$key]['fields'][$field_name]['required'] = TRUE;
           }
-          else{
+          else {
             unset($this->_columns[$key]['fields'][$field_name]);
           }
         }
@@ -197,11 +198,21 @@ class CRM_Report_Form_Contribute_TaiwanTax extends CRM_Report_Form {
     }
   }
 
-  function preProcess() {
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $columnHeaders = [];
     $this->_specialCase = '';
@@ -302,27 +313,51 @@ END)
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function modifyColumnHeaders(){
+  /**
+   * Modify column headers.
+   *
+   * @return void
+   */
+  public function modifyColumnHeaders() {
     $this->_columnHeaders["civicrm_contribution_total_amount"]['type'] = 1;
     $this->_columnHeaders["civicrm_contribution_receive_date"]['type'] = 1;
     $this->_columnHeaders["receipt_title"]['type'] = 1;
     $this->_columnHeaders["receipt_serial"]['type'] = 1;
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array{}
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     return $errors;
   }
 
-  function from() {
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = "
 FROM civicrm_contribution {$this->_aliases['civicrm_contribution']}
 INNER JOIN civicrm_contact {$this->_aliases['civicrm_contact']}
 ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribution']}.contact_id AND {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
   }
 
-  function where() {
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
+  public function where() {
     $params = $this->_params;
 
     // #27716, remove default null operation, because we will use REGEXP after parent build query
@@ -343,21 +378,43 @@ ON {$this->_aliases['civicrm_contact']}.id = {$this->_aliases['civicrm_contribut
     }
   }
 
-  function groupBy(){
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = "
 GROUP BY receipt_title, receipt_serial";
   }
 
-  function orderBy() {
+  /**
+   * Set order by clause.
+   *
+   * @return void
+   */
+  public function orderBy() {
     $this->_orderBy = " ORDER BY receipt_title ASC";
   }
 
-  function postProcess() {
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $this->buildACLClause($this->_aliases['civicrm_contact']);
     parent::postProcess();
   }
 
-  function endPostProcess(&$rows = NULL) {
+  /**
+   * End post-process form.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function endPostProcess(&$rows = NULL) {
     if ($this->_outputMode == 'csv') {
       $year = $rows[0]['civicrm_contribution_receive_date'];
       CRM_Report_Utils_Report::export2xls($this, $rows, $year . '_' . ts('Your SIC Code'). '.xlsx');
@@ -367,7 +424,14 @@ GROUP BY receipt_title, receipt_serial";
     }
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // change columnheader
     $columnHeaders = $this->_columnHeaders;
     $this->_columnHeaders = [];
@@ -378,9 +442,9 @@ GROUP BY receipt_title, receipt_serial";
       'total_amount' => '捐款金額',
       'other1' => '受捐贈單位統一編號',
     ];
-    foreach($this->_columnSort as $c => $name){
-      foreach($columnHeaders as $header => $value){
-        if(preg_match('/'.$c.'$/', $header)){
+    foreach ($this->_columnSort as $c => $name) {
+      foreach ($columnHeaders as $header => $value) {
+        if (preg_match('/'.$c.'$/', $header)) {
           $value['title'] = $name;
           $this->_columnHeaders[$header] = $value;
           $this->_receiptColumn[$c] = $header;
@@ -399,30 +463,36 @@ GROUP BY receipt_title, receipt_serial";
     if (!empty($rows)) {
       foreach ($rows as $n => $row) {
         // chinese year
-        if(!empty($row['civicrm_contribution_receive_date'])){
+        if (!empty($row['civicrm_contribution_receive_date'])) {
           $rows[$n]['civicrm_contribution_receive_date'] = $this->_chineseYear($row['civicrm_contribution_receive_date']);
         }
 
-        if(!empty($row['receipt_title'])) {
+        if (!empty($row['receipt_title'])) {
           $rows[$n]['receipt_title'] = mb_strtoupper($row['receipt_title']);
         }
 
-        if(!empty($row['receipt_serial'])) {
+        if (!empty($row['receipt_serial'])) {
           $rows[$n]['receipt_serial'] = mb_strtoupper($row['receipt_serial']);
         }
 
         // donor's name when not enough personal id
-        if(!empty($row['civicrm_contribution_total_amount'])){
+        if (!empty($row['civicrm_contribution_total_amount'])) {
           $rows[$n]['civicrm_contribution_total_amount'] = round($row['civicrm_contribution_total_amount']);
         }
       }
     }
   }
 
-  function _chineseYear($date){
+  /**
+   * Convert date to Chinese year.
+   *
+   * @param string $date
+   *
+   * @return string
+   */
+  public function _chineseYear($date) {
     $year = (int) date('Y', strtotime($date));
     $year -= 1911;
     return sprintf('%03s', $year);
   }
 }
-

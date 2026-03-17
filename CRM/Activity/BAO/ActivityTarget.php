@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class is for activity assignment functions
@@ -44,18 +40,16 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
    * funtion to add activity target
    *
-   * @param array  $activity_id           (reference ) an assoc array of name/value pairs
-   * @param array  $target_contact_id     (reference ) the array that holds all the db ids
+   * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return object activity type of object that is added
-   * @access public
+   * @return CRM_Activity_BAO_ActivityTarget activity type of object that is added
    *
    */
   public static function create(&$params) {
@@ -65,8 +59,8 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
     $target->copyValues($params);
 
     // prevent duplicate
-    if(empty($params['id']) && !empty($params['activity_id']) && !empty($params['target_contact_id'])){
-      if($target->find(TRUE)){
+    if (empty($params['id']) && !empty($params['activity_id']) && !empty($params['target_contact_id'])) {
+      if ($target->find(TRUE)) {
         return $target;
       }
     }
@@ -77,14 +71,13 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
   /**
    * function to retrieve id of target contact by activity_id
    *
-   * @param int    $id  ID of the activity
+   * @param int $activity_id ID of the activity
    *
-   * @return mixed
+   * @return array
    *
-   * @access public
    *
    */
-  static function retrieveTargetIdsByActivityId($activity_id) {
+  public static function retrieveTargetIdsByActivityId($activity_id) {
     $targetArray = [];
 
     if (!CRM_Utils_Rule::positiveInteger($activity_id)) {
@@ -107,14 +100,13 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
   /**
    * function to retrieve names of target contact by activity_id
    *
-   * @param int    $id  ID of the activity
+   * @param int $activityID ID of the activity
    *
    * @return array
    *
-   * @access public
    *
    */
-  static function getTargetNames($activityID) {
+  public static function getTargetNames($activityID) {
     $targetNames = [];
 
     if (empty($activityID)) {
@@ -136,4 +128,3 @@ class CRM_Activity_BAO_ActivityTarget extends CRM_Activity_DAO_ActivityTarget {
     return $targetNames;
   }
 }
-

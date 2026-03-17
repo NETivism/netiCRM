@@ -29,9 +29,7 @@
  * This interface defines methods that need to be implemented
  * for a component to introduce itself to the system.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,52 +39,52 @@ abstract class CRM_Core_Component_Info {
   public $namespace;
   public $componentID;
   /*
-     * Name of the class (minus component namespace path) 
-     * of the component invocation class'es name. 
+     * Name of the class (minus component namespace path)
+     * of the component invocation class'es name.
      */
-  CONST COMPONENT_INVOKE_CLASS = 'Invoke';
+  public const COMPONENT_INVOKE_CLASS = 'Invoke';
 
   /*
-     * Name of the class (minus component namespace path) 
+     * Name of the class (minus component namespace path)
      * of the component configuration class'es name.
      */
-  CONST COMPONENT_CONFIG_CLASS = 'Config';
+  public const COMPONENT_CONFIG_CLASS = 'Config';
 
   /*
-     * Name of the class (minus component namespace path) 
+     * Name of the class (minus component namespace path)
      * of the component BAO Query class'es name.
      */
-  CONST COMPONENT_BAO_QUERY_CLASS = 'BAO_Query';
+  public const COMPONENT_BAO_QUERY_CLASS = 'BAO_Query';
 
   /*
-     * Name of the class (minus component namespace path) 
+     * Name of the class (minus component namespace path)
      * of the component user dashboard plugin.
      */
-  CONST COMPONENT_USERDASHBOARD_CLASS = 'Page_UserDashboard';
+  public const COMPONENT_USERDASHBOARD_CLASS = 'Page_UserDashboard';
 
   /*
-     * Name of the class (minus component namespace path) 
+     * Name of the class (minus component namespace path)
      * of the component tab offered to contact record view.
      */
-  CONST COMPONENT_TAB_CLASS = 'Page_Tab';
+  public const COMPONENT_TAB_CLASS = 'Page_Tab';
 
   /*
-     * Name of the class (minus component namespace path) 
+     * Name of the class (minus component namespace path)
      * of the component tab offered to contact record view.
      */
-  CONST COMPONENT_ADVSEARCHPANE_CLASS = 'Form_Search_AdvancedSearchPane';
+  public const COMPONENT_ADVSEARCHPANE_CLASS = 'Form_Search_AdvancedSearchPane';
 
   /*
-     * Name of the directory (assumed in component directory) 
+     * Name of the directory (assumed in component directory)
      * where xml resources used by this component live.
      */
-  CONST COMPONENT_XML_RESOURCES = 'xml';
+  public const COMPONENT_XML_RESOURCES = 'xml';
 
   /*
-     * Name of the directory (assumed in xml resources path) 
+     * Name of the directory (assumed in xml resources path)
      * containing component menu definition XML file names.
      */
-  CONST COMPONENT_MENU_XML = 'Menu';
+  public const COMPONENT_MENU_XML = 'Menu';
 
   /*
      * Stores component information.
@@ -102,17 +100,15 @@ abstract class CRM_Core_Component_Info {
 
   protected $keyword;
 
-  /*
-     * Class constructor, sets name and namespace (those are stored
-     * in the component registry (database) and no need to duplicate
-     * them here, as well as populates the info variable.
-     * 
-     * @param string $name name of the component
-     * @param string $namespace namespace prefix for component's files
-     * @access public
-     * 
-     */
-
+  /**
+   * Class constructor, sets name and namespace (those are stored
+   * in the component registry (database) and no need to duplicate
+   * them here, as well as populates the info variable.
+   *
+   * @param string $name Name of the component.
+   * @param string $namespace Namespace prefix for component's files.
+   * @param int $componentID ID of the component.
+   */
   public function __construct($name, $namespace, $componentID) {
     $this->name = $name;
     $this->namespace = $namespace;
@@ -123,68 +119,47 @@ abstract class CRM_Core_Component_Info {
 
   /**
    * Provides base information about the component.
-   * Needs to be implemented in component's information
-   * class.
+   * Needs to be implemented in component's information class.
    *
-   * @return array collection of required component settings
-   * @access public
-   *
+   * @return array Collection of required component settings.
    */
   abstract public function getInfo();
 
   /**
    * Provides permissions that are used by component.
-   * Needs to be implemented in component's information
-   * class.
+   * Needs to be implemented in component's information class.
    *
-   * @return array|null collection of permissions, null if none
-   * @access public
-   *
+   * @return array|null Collection of permissions, null if none.
    */
   abstract public function getPermissions();
 
   /**
-   * Provides information about user dashboard element
-   * offered by this component.
+   * Provides information about user dashboard element offered by this component.
    *
-   * @return array|null collection of required dashboard settings,
-   *                    null if no element offered
-   * @access public
-   *
+   * @return array|null Collection of required dashboard settings, null if no element offered.
    */
   abstract public function getUserDashboardElement();
 
   /**
-   * Provides information about user dashboard element
-   * offered by this component.
+   * Provides information about user dashboard element offered by this component.
    *
-   * @return array|null collection of required dashboard settings,
-   *                    null if no element offered
-   * @access public
-   *
+   * @return array|null Collection of required dashboard settings, null if no element offered.
    */
   abstract public function registerTab();
 
   /**
-   * Provides information about advanced search pane
-   * offered by this component.
+   * Provides information about advanced search pane offered by this component.
    *
-   * @return array|null collection of required pane settings,
-   *                    null if no element offered
-   * @access public
-   *
+   * @return array|null Collection of required pane settings, null if no element offered.
    */
   abstract public function registerAdvancedSearchPane();
 
   /**
    * Provides potential activity types that this
    * component might want to register in activity history.
-   * Needs to be implemented in component's information
-   * class.
+   * Needs to be implemented in component's information class.
    *
-   * @return array|null collection of activity types
-   * @access public
-   *
+   * @return array|null Collection of activity types.
    */
   abstract public function getActivityTypes();
 
@@ -192,9 +167,7 @@ abstract class CRM_Core_Component_Info {
    * Provides information whether given component is currently
    * marked as enabled in configuration.
    *
-   * @return boolean true if component is enabled, false if not
-   * @access public
-   *
+   * @return bool True if component is enabled, false if not.
    */
   public function isEnabled() {
 
@@ -208,9 +181,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides component's configuration object.
    *
-   * @return mixed component's configuration object
-   * @access public
-   *
+   * @return mixed Component's configuration object.
    */
   public function getConfigObject() {
     return $this->_instantiate(self::COMPONENT_CONFIG_CLASS);
@@ -219,9 +190,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides component's menu definition object.
    *
-   * @return mixed component's menu definition object
-   * @access public
-   *
+   * @return mixed Component's menu definition object.
    */
   public function getMenuObject() {
     return $this->_instantiate(self::COMPONENT_MENU_CLASS);
@@ -230,9 +199,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides component's invocation object.
    *
-   * @return mixed component's invocation object
-   * @access public
-   *
+   * @return mixed Component's invocation object.
    */
   public function getInvokeObject() {
     return $this->_instantiate(self::COMPONENT_INVOKE_CLASS);
@@ -241,9 +208,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides component's BAO Query object.
    *
-   * @return mixed component's BAO Query object
-   * @access public
-   *
+   * @return mixed Component's BAO Query object.
    */
   public function getBAOQueryObject() {
     return $this->_instantiate(self::COMPONENT_BAO_QUERY_CLASS);
@@ -252,8 +217,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Builds advanced search form's component specific pane.
    *
-   * @access public
-   *
+   * @param CRM_Core_Form $form The form object.
    */
   public function buildAdvancedSearchPaneForm(&$form) {
     $bao = $this->getBAOQueryObject();
@@ -263,9 +227,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides component's user dashboard page object.
    *
-   * @return mixed component's User Dashboard applet object
-   * @access public
-   *
+   * @return mixed Component's User Dashboard applet object.
    */
   public function getUserDashboardObject() {
     return $this->_instantiate(self::COMPONENT_USERDASHBOARD_CLASS);
@@ -274,9 +236,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides component's contact record tab object.
    *
-   * @return mixed component's contact record tab object
-   * @access public
-   *
+   * @return mixed Component's contact record tab object.
    */
   public function getTabObject() {
     return $this->_instantiate(self::COMPONENT_TAB_CLASS);
@@ -285,9 +245,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides component's advanced search pane's template path.
    *
-   * @return string component's advanced search pane's template path
-   * @access public
-   *
+   * @return string Component's advanced search pane's template path.
    */
   public function getAdvancedSearchPaneTemplatePath() {
     $fullpath = $this->namespace . '_' . self::COMPONENT_ADVSEARCHPANE_CLASS;
@@ -297,20 +255,16 @@ abstract class CRM_Core_Component_Info {
   /**
    * Provides information whether given component uses system wide search.
    *
-   * @return boolean true if component needs search integration
-   * @access public
-   *
+   * @return bool True if component needs search integration.
    */
   public function usesSearch() {
     return $this->info['search'] ? TRUE : FALSE;
   }
 
   /**
-   * Provides the xml menu files
+   * Provides the XML menu files.
    *
-   * @return array array of menu files
-   * @access public
-   *
+   * @return array Array of menu files.
    */
   public function menuFiles() {
     return CRM_Utils_File::getFilesByExtension($this->_getMenuXMLPath(), 'xml');
@@ -321,9 +275,7 @@ abstract class CRM_Core_Component_Info {
    * FIXME: It should be protected so the keyword is not
    * FIXME: accessed from beyond component infrastructure.
    *
-   * @return string component keyword
-   * @access public
-   *
+   * @return string|null Component keyword.
    */
   public function getKeyword() {
     return $this->keyword;
@@ -332,9 +284,7 @@ abstract class CRM_Core_Component_Info {
   /**
    * Helper for figuring out menu XML file location.
    *
-   * @return mixed component's element as class instance
-   * @access private
-   *
+   * @return string Component's menu XML path.
    */
   private function _getMenuXMLPath() {
     global $civicrm_root;
@@ -345,14 +295,13 @@ abstract class CRM_Core_Component_Info {
   /**
    * Helper for instantiating component's elements.
    *
-   * @return mixed component's element as class instance
-   * @access private
+   * @param string $cl Class suffix to instantiate.
    *
+   * @return object Component's element as class instance.
    */
   private function _instantiate($cl) {
     $className = $this->namespace . '_' . $cl;
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php');
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php');
     return new $className();
   }
 }
-

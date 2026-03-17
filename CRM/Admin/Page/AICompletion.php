@@ -10,7 +10,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Database uniq id
@@ -22,7 +22,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
   /**
    * constants for static parameters of the pager
    */
-  const ROWCOUNT = 20;
+  public const ROWCOUNT = 20;
 
   /**
    * Action of current page
@@ -39,14 +39,11 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
   private $_pager;
 
   /**
-   * This function is the main function that is called
-   * when the page loads, it decides the which action has
-   * to be taken for the page.
+   * Main function that is called when the page loads, it decides which action has to be taken for the page.
    *
-   * return null
-   * @access public
+   * @return void
    */
-  function run() {
+  public function run() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->assign('action', $this->_action);
     if ($this->_action & CRM_Core_Action::VIEW) {
@@ -60,7 +57,12 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
     return parent::run();
   }
 
-  function browse() {
+  /**
+   * Browses all records.
+   *
+   * @return void
+   */
+  public function browse() {
     // filter
     $filters = [];
     $filters['is_template'] = CRM_Utils_Request::retrieve('is_template', 'Integer', $this);
@@ -89,7 +91,7 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
         'selector' => '#chart-pie-with-legend-aicompletion-usage',
         'type' => 'Pie',
         'series' => json_encode([$quota['used'], $quota['max']]),
-        'isFillDonut' => true,
+        'isFillDonut' => TRUE,
       ]);
       $stats = $this->getStats();
       $this->assign('chartAICompletionUsedfor', [
@@ -100,11 +102,10 @@ class CRM_Admin_Page_AICompletion extends CRM_Core_Page {
         'series' => json_encode(array_values($stats['component'])),
         'labels' => json_encode(array_keys($stats['component'])),
         'labelType' => 'percent',
-        'withLegend' => true,
-        'withToolTip' => true,
+        'withLegend' => TRUE,
+        'withToolTip' => TRUE,
       ]);
     }
-
 
     // query
     $sql = "
@@ -153,7 +154,7 @@ DESC
       if (mb_strlen($dao->output_text) > 30) {
         $output = mb_substr($dao->output_text, 0, 30). ' ...';
       }
-      else{
+      else {
         $output = $dao->output_text;
       }
 
@@ -184,11 +185,21 @@ DESC
     $this->assign('rows', $rows);
   }
 
-  function view() {
+  /**
+   * Views a record.
+   *
+   * @return void
+   */
+  public function view() {
     $this->edit();
   }
 
-  function edit() {
+  /**
+   * Edits a record.
+   *
+   * @return void
+   */
+  public function edit() {
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
     $controller = new CRM_Core_Controller_Simple('CRM_AI_Form_AICompletion', ts('AI Copywriter'), $this->_action);
     $controller->setEmbedded(TRUE);
@@ -205,15 +216,14 @@ DESC
   }
 
   /**
-   * Get action links
+   * Gets action links.
    *
-   * @return array (reference) of action links
-   * @static
+   * @return array
    */
-  static function &links() {
+  public static function &links() {
     if (!(self::$_links)) {
       self::$_links = [
-        CRM_Core_Action::VIEW=> [
+        CRM_Core_Action::VIEW => [
           'name' => ts('View'),
           'url' => 'civicrm/admin/aicompletion',
           'qs' => 'action=view&reset=1&id=%%id%%',
@@ -230,8 +240,15 @@ DESC
     return self::$_links;
   }
 
-  function pager($total) {
-    $params = []; 
+  /**
+   * Sets up the pager.
+   *
+   * @param int $total
+   *
+   * @return void
+   */
+  public function pager($total) {
+    $params = [];
     $params['status'] = '';
     $params['csvString'] = NULL;
     $params['buttonTop'] = 'PagerTopButton';
@@ -242,8 +259,17 @@ DESC
     $this->assign_by_ref('pager', $this->_pager);
   }
 
-  function buildWhere($filters, &$where, &$params) {
-    foreach($filters as $ele => $filterValue) {
+  /**
+   * Builds the WHERE clause.
+   *
+   * @param array $filters
+   * @param array $where
+   * @param array $params
+   *
+   * @return void
+   */
+  public function buildWhere($filters, &$where, &$params) {
+    foreach ($filters as $ele => $filterValue) {
       if ($ele == 'is_template') {
         $where[] = 'is_template = 1';
       }
@@ -265,7 +291,14 @@ DESC
     }
   }
 
-  function validateFilters(&$filters) {
+  /**
+   * Validates the filters.
+   *
+   * @param array $filters
+   *
+   * @return void
+   */
+  public function validateFilters(&$filters) {
     $filters = array_filter($filters);
     $available = [];
     $available['role'] = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(ai_role) FROM civicrm_aicompletion GROUP BY ai_role");
@@ -273,7 +306,7 @@ DESC
     $available['component'] = CRM_Core_DAO::singleValueQuery("SELECT GROUP_CONCAT(component) FROM civicrm_aicompletion GROUP BY component");
 
     $unset = [];
-    foreach(['role', 'tone', 'components'] as $ele) {
+    foreach (['role', 'tone', 'components'] as $ele) {
       if (!empty($available[$ele])) {
         $elements = explode(',', $available[$ele]);
         if (!in_array($filters['role'], $elements)) {
@@ -284,17 +317,22 @@ DESC
         $unset[$ele] = TRUE;
       }
     }
-    foreach($unset as $ele) {
+    foreach ($unset as $ele) {
       unset($filters[$ele]);
     }
   }
 
-  function getStats() {
+  /**
+   * Gets statistics.
+   *
+   * @return array<string, non-empty-array<mixed>>
+   */
+  public function getStats() {
     $stats = [
       'component' => []
     ];
     $dao = CRM_Core_DAO::executeQuery("SELECT component, count(*) as count FROM civicrm_aicompletion WHERE created_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01 00:00:00') AND created_date < DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-01 00:00:00') GROUP BY component");
-    while($dao->fetch()) {
+    while ($dao->fetch()) {
       $stats['component'][ts($dao->component)] = $dao->count;
     }
     return $stats;

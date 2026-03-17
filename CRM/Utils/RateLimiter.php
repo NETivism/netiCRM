@@ -31,7 +31,6 @@
  * Provides IP-based rate limiting using the civicrm_sequence table (MEMORY engine).
  * Uses a sliding window approach to limit requests per IP address.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
  */
 class CRM_Utils_RateLimiter {
@@ -39,35 +38,41 @@ class CRM_Utils_RateLimiter {
   /**
    * Default time window in seconds
    */
-  const DEFAULT_WINDOW_SECONDS = 60;
+  public const DEFAULT_WINDOW_SECONDS = 60;
 
   /**
    * Default maximum requests per window
    */
-  const DEFAULT_MAX_REQUESTS = 10;
+  public const DEFAULT_MAX_REQUESTS = 10;
 
   /**
    * Probability of running cleanup (1 in N requests)
    */
-  const CLEANUP_PROBABILITY = 100;
+  public const CLEANUP_PROBABILITY = 100;
 
   /**
    * Maximum key length for civicrm_sequence.name column
    */
-  const MAX_KEY_LENGTH = 64;
+  public const MAX_KEY_LENGTH = 64;
 
   /**
-   * Check if the current request should be rate limited
+   * Check if the current request should be rate limited.
+   *
+   * Records the request against the client's IP address and checks
+   * whether the number of requests within the sliding window exceeds
+   * the maximum allowed. Fails open (returns FALSE) if the IP address
+   * cannot be determined.
    *
    * @param string $prefix
-   *   Unique prefix for the rate limit context (e.g., 'username_check')
+   *   Unique prefix for the rate limit context (e.g., 'username_check').
    * @param int|null $windowSeconds
-   *   Time window in seconds (default: 60)
+   *   Time window in seconds. Defaults to DEFAULT_WINDOW_SECONDS (60).
    * @param int|null $maxRequests
-   *   Maximum requests allowed per window (default: 10)
+   *   Maximum requests allowed per window. Defaults to DEFAULT_MAX_REQUESTS (10).
    *
    * @return bool
-   *   TRUE if request should be blocked (rate limited), FALSE if allowed
+   *   TRUE if the request should be blocked (rate limit exceeded),
+   *   FALSE if the request is allowed.
    */
   public static function isRateLimited($prefix, $windowSeconds = NULL, $maxRequests = NULL) {
     $windowSeconds = $windowSeconds !== NULL ? (int) $windowSeconds : self::DEFAULT_WINDOW_SECONDS;
@@ -164,18 +169,19 @@ class CRM_Utils_RateLimiter {
   }
 
   /**
-   * Clean up expired rate limit records
+   * Clean up expired rate limit records.
    *
-   * This method uses probabilistic execution (1/100 chance) to avoid
-   * running cleanup on every request.
+   * Uses probabilistic execution (1 in CLEANUP_PROBABILITY chance)
+   * to avoid running cleanup on every request. Deletes all records
+   * matching the given prefix whose timestamp has exceeded the window.
    *
    * @param string $prefix
-   *   Unique prefix for the rate limit context
+   *   Unique prefix for the rate limit context.
    * @param int|null $windowSeconds
-   *   Time window in seconds (default: 60)
+   *   Time window in seconds. Defaults to DEFAULT_WINDOW_SECONDS (60).
    *
    * @return bool
-   *   TRUE if cleanup was executed, FALSE if skipped
+   *   TRUE if cleanup was executed, FALSE if skipped due to probability.
    */
   public static function cleanup($prefix, $windowSeconds = NULL) {
     // Probabilistic execution: only run 1 in CLEANUP_PROBABILITY times
@@ -202,15 +208,19 @@ class CRM_Utils_RateLimiter {
   }
 
   /**
-   * Generate a storage key from prefix and IP address
+   * Generate a storage key from prefix and IP address.
+   *
+   * Combines the prefix and a sanitized IP address. If the resulting
+   * key exceeds MAX_KEY_LENGTH (64 characters), falls back to using
+   * an MD5 hash of the IP.
    *
    * @param string $prefix
-   *   The prefix for the rate limit context
+   *   The prefix for the rate limit context.
    * @param string $ip
-   *   The IP address
+   *   The client IP address (IPv4 or IPv6).
    *
    * @return string
-   *   The generated key (max 64 characters)
+   *   The generated key, guaranteed to be at most MAX_KEY_LENGTH characters.
    */
   private static function generateKey($prefix, $ip) {
     // Sanitize IP: replace non-alphanumeric characters with underscore
@@ -230,13 +240,17 @@ class CRM_Utils_RateLimiter {
   }
 
   /**
-   * Parse the stored JSON value
+   * Parse the stored JSON value into a rate limit data array.
    *
-   * @param string $value
-   *   The JSON value from database
+   * Validates that the JSON contains the required 'count' and
+   * 'window_start' fields with numeric values.
    *
-   * @return array|null
-   *   Parsed array with 'count' and 'window_start', or NULL if invalid
+   * @param string|null $value
+   *   The JSON string from the database.
+   *
+   * @return array{count: int, window_start: float}|null
+   *   Parsed data array, or NULL if the value is empty, malformed,
+   *   or missing required fields.
    */
   private static function parseValue($value) {
     if (empty($value)) {

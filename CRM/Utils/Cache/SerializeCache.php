@@ -24,6 +24,14 @@
 | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
 +--------------------------------------------------------------------+
 */
+
+/**
+ * File-based cache implementation that serializes data to PHP files in the template compile directory
+ *
+ * @copyright CiviCRM LLC (c) 2004-2010
+ *
+ */
+
 class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
 
   /**
@@ -35,21 +43,19 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
    * Constructor
    *
    * @param array   $config  an array of configuration params
-   *
-   * @return void
    */
-  function __construct($config) {
+  public function __construct($config) {
     $this->_cache = [];
   }
 
-  function fileName($key) {
+  public function fileName($key) {
     if (strlen($key) > 50) {
       return CIVICRM_TEMPLATE_COMPILEDIR ."CRM_".md5($key).".php";
     }
     return CIVICRM_TEMPLATE_COMPILEDIR . $key . ".php";
   }
 
-  function get($key) {
+  public function get($key) {
     if (CRM_Utils_Array::arrayKeyExists($key, $this->_cache)) {
       return $this->_cache[$key];
     }
@@ -61,7 +67,7 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
     return $this->_cache[$key];
   }
 
-  function set($key, &$value) {
+  public function set($key, &$value) {
     if (file_exists($this->fileName($key))) {
       return;
     }
@@ -69,14 +75,14 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
     file_put_contents($this->fileName($key), "<?php //" . serialize($value));
   }
 
-  function delete($key) {
+  public function delete($key) {
     if (file_exists($this->fileName($key))) {
       unlink($this->fileName($key));
     }
     unset($this->_cache[$key]);
   }
 
-  function flush($key = NULL) {
+  public function flush($key = NULL) {
     $prefix = "CRM_";
     if (!$handle = opendir(CIVICRM_TEMPLATE_COMPILEDIR)) {
       // die? Error?
@@ -92,4 +98,3 @@ class CRM_Utils_Cache_SerializeCache implements CRM_Utils_Cache_Interface {
     $this->_cache = [];
   }
 }
-

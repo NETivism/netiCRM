@@ -31,20 +31,18 @@
  * Template elements tagged {js}...{/js} are hidden unless action is create
  * or update (this facilitates using form templates for read-only display).
  *
- * @package CRM
  * @author Poliphilo <poliphilo@netivism.com.tw>
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  */
 
 /**
- * Smarty block function providing js-only display support
+ * Smarty block function providing js-only display support.
  *
- * @param array $params   template call's parameters
- * @param string $text    {js} block contents from the template
- * @param object $smarty  the Smarty object
+ * @param array $params template call's parameters
+ * @param string|null $text {js} block contents from the template
+ * @param Smarty &$smarty the Smarty object
  *
- * @return string  
+ * @return string script tag or empty
  */
 function smarty_block_js($params, $text, &$smarty) {
   $params['smarty_block_js'] = TRUE;

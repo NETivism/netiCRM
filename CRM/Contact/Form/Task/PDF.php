@@ -27,19 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
-
-
 
 /**
  * This class provides the functionality to create PDF letter for a group of
@@ -69,7 +59,7 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Contact_Form_Task_PDFLetterCommon::preProcess($this);
 
     // store case id if present
@@ -91,7 +81,15 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
     $this->assign('single', $this->_single);
   }
 
-  function setDefaultValues() {
+  /**
+   * Set the default values for the form.
+   *
+   * If an activity ID is provided, the letter content is pre-filled
+   * from the activity details.
+   *
+   * @return array|void
+   */
+  public function setDefaultValues() {
     if (isset($this->_activityId)) {
       $params = ['id' => $this->_activityId];
       CRM_Activity_BAO_Activity::retrieve($params, $defaults);
@@ -114,11 +112,11 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     CRM_Contact_Form_Task_PDFLetterCommon::postProcess($this);
@@ -134,4 +132,3 @@ class CRM_Contact_Form_Task_PDF extends CRM_Contact_Form_Task {
     return $tokens;
   }
 }
-

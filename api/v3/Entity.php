@@ -14,26 +14,26 @@ function civicrm_api3_entity_get($params) {
   #$include_dirs = array(dirname(__FILE__). '/../../');
   foreach ($include_dirs as $include_dir) {
     $api_dir = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR, [$include_dir, 'api', 'v3']);
-    if (! is_dir($api_dir)) {
+    if (!is_dir($api_dir)) {
       continue;
     }
     $iterator = new DirectoryIterator($api_dir);
-  foreach ($iterator as $fileinfo) {
-    $file = $fileinfo->getFilename();
+    foreach ($iterator as $fileinfo) {
+      $file = $fileinfo->getFilename();
 
       // Check for entities with a master file ("api/v3/MyEntity.php")
-    $parts = explode(".", $file);
+      $parts = explode(".", $file);
       if (end($parts) == "php" && $file != "utils.php" && !preg_match('/Tests?.php$/', $file) && $file != 'DeprecatedUtils.php') {
-      // without the ".php"
-      $entities[] = substr($file, 0, -4);
-    }
+        // without the ".php"
+        $entities[] = substr($file, 0, -4);
+      }
 
       // Check for entities with standalone action files ("api/v3/MyEntity/MyAction.php")
       $action_dir = $api_dir . DIRECTORY_SEPARATOR . $file;
       if (preg_match('/^[A-Z][A-Za-z0-9]*$/', $file) && is_dir($action_dir)) {
         if (count(glob("$action_dir/[A-Z]*.php")) > 0) {
           $entities[] = $file;
-  }
+        }
       }
     }
   }
@@ -65,4 +65,3 @@ function civicrm_api3_entity_getfields($params) {
   // without putting an exception in for entity
   return civicrm_api3_create_success([]);
 }
-

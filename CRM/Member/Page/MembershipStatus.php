@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of membership types
@@ -44,25 +40,24 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
    * The action links that we need to display for the browse screen
    *
    * @var array
-   * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
-   * Get BAO Name
+   * Get BAO Name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Member_BAO_MembershipStatus';
   }
 
   /**
-   * Get action Links
+   * Get action Links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -102,20 +97,26 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
-   *
    */
-  function run() {
+  public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     // what action to take ?
@@ -132,12 +133,9 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
   /**
    * Browse all custom data groups.
    *
-   *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
     // get all custom groups sorted by weight
     $membershipStatus = [];
 
@@ -160,7 +158,9 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
         else {
           $action -= CRM_Core_Action::DISABLE;
         }
-        $membershipStatus[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $membershipStatus[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $dao->id]
         );
       }
@@ -173,38 +173,42 @@ class CRM_Member_Page_MembershipStatus extends CRM_Core_Page_Basic {
     // Add order changing widget to selector
     $returnURL = CRM_Utils_System::url('civicrm/admin/member/membershipStatus', "reset=1&action=browse");
 
-    CRM_Utils_Weight::addOrder($membershipStatus, 'CRM_Member_DAO_MembershipStatus',
-      'id', $returnURL
+    CRM_Utils_Weight::addOrder(
+      $membershipStatus,
+      'CRM_Member_DAO_MembershipStatus',
+      'id',
+      $returnURL
     );
 
     $this->assign('rows', $membershipStatus);
   }
 
   /**
-   * Get name of edit form
+   * Get name of edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Member_Form_MembershipStatus';
   }
 
   /**
-   * Get edit form name
+   * Get edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Membership Status';
   }
 
   /**
    * Get user context.
    *
+   * @param int|null $mode
+   *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/member/membershipStatus';
   }
 }
-

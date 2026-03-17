@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of Gender
@@ -46,7 +42,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * The option group name
@@ -54,7 +50,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_gName = NULL;
+  public static $_gName = NULL;
 
   /**
    * The option group name in display format (capitalized, without underscores...etc)
@@ -62,7 +58,7 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_GName = NULL;
+  public static $_GName = NULL;
 
   /**
    * The option group id
@@ -70,16 +66,14 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_gId = NULL;
+  public static $_gId = NULL;
 
   /**
-   * Obtains the group name from url and sets the title.
+   * Obtains the group name from URL and sets the title.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     if (!self::$_gName) {
       self::$_gName = CRM_Utils_Request::retrieve('group', 'String', CRM_Core_DAO::$_nullObject, FALSE, NULL, 'GET');
     }
@@ -105,7 +99,8 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
       CRM_Utils_System::setTitle(ts('Manage ACL Roles'));
       // set breadcrumb to append to admin/access
       $breadCrumb = [['title' => ts('Access Control'),
-          'url' => CRM_Utils_System::url('civicrm/admin/access',
+          'url' => CRM_Utils_System::url(
+            'civicrm/admin/access',
             'reset=1'
           ),
         ]];
@@ -138,20 +133,20 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -194,77 +189,78 @@ class CRM_Admin_Page_Options extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Run the basic page (run essentially starts execution for that page).
+   * Runs the basic page.
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     parent::run();
   }
 
   /**
-   * Browse all options
-   *
+   * Browses all options.
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
-
+  public function browse() {
 
     $groupParams = ['name' => self::$_gName];
     $optionValue = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'component_id,weight');
     $gName = self::$_gName;
-    $returnURL = CRM_Utils_System::url("civicrm/admin/options/$gName",
+    $returnURL = CRM_Utils_System::url(
+      "civicrm/admin/options/$gName",
       "reset=1&group=$gName"
     );
     $filter = "option_group_id = " . self::$_gId;
 
-    CRM_Utils_Weight::addOrder($optionValue, 'CRM_Core_DAO_OptionValue',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $optionValue,
+      'CRM_Core_DAO_OptionValue',
+      'id',
+      $returnURL,
+      $filter
     );
     $this->assign('rows', $optionValue);
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_Options';
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return self::$_GName;
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/options/' . self::$_gName;
   }
 
   /**
-   * function to get userContext params
+   * Gets user context params.
    *
-   * @param int $mode mode that we are in
+   * @param string|null $mode
    *
    * @return string
-   * @access public
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'group=' . self::$_gName . '&reset=1&action=browse';
   }
 }
-

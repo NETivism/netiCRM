@@ -8,7 +8,6 @@
  * @docmaker_intro_end
  */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_PhoneTest extends CiviUnitTestCase {
   protected $_apiversion;
@@ -20,7 +19,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   /**
    * @before
    */
-  function setUpTest() {
+  public function setUpTest() {
     $this->_apiversion = 3;
     parent::setUp();
     $this->_contactID    = $this->organizationCreate();
@@ -40,7 +39,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   /**
    * @after
    */
-  function tearDownTest() {
+  public function tearDownTest() {
     $this->locationTypeDelete($this->_locationType);
     // $this->contactDelete($this->_contactID);
   }
@@ -298,7 +297,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
   /**
    * Test civicrm_phone_create with wrong params type.
    */
-  function testCreateWrongParamsType() {
+  public function testCreateWrongParamsType() {
     $params = 'a string';
     $result = civicrm_api('Phone', 'Create', $params);
     $this->assertEquals(1, $result['is_error'], "In line " . __LINE__);
@@ -306,11 +305,9 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
 
   /*
    * If a new email is set to is_primary the prev should no longer be
-   * 
+   *
    * If is_primary is not set then it should become is_primary is no others exist
    */
-
-
 
   public function testCreatePhonePrimaryHandlingChangeToPrimary() {
     $params = $this->_params;
@@ -364,7 +361,7 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
     $this->assertApiSuccess($created, 'In line ' . __LINE__);
     $this->assertEquals(1, $created['count'], 'In line ' . __LINE__);
     $this->assertNotNull($created['id'], 'In line ' . __LINE__);
-    foreach($created['values'] as $value) {
+    foreach ($created['values'] as $value) {
       $this->assertNotNull($value, 'In line ' . __LINE__);
     }
 
@@ -379,9 +376,8 @@ class api_v3_PhoneTest extends CiviUnitTestCase {
 
     $this->assertEquals(1, $result['count'], 'In line ' . __LINE__);
     $this->assertNotNull($result['id'], 'In line ' . __LINE__);
-    foreach($result['values'] as $value) {
+    foreach ($result['values'] as $value) {
       $this->assertNotNull($value, 'In line ' . __LINE__);
     }
   }
 }
-

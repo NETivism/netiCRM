@@ -25,17 +25,12 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
  * abstract class.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Campaign_Info extends CRM_Core_Component_Info {
@@ -53,7 +48,6 @@ class CRM_Campaign_Info extends CRM_Core_Component_Info {
     ];
   }
 
-
   // docs inherited from interface
   public function getPermissions() {
     return ['administer CiviCampaign',
@@ -65,7 +59,6 @@ class CRM_Campaign_Info extends CRM_Core_Component_Info {
       'sign CiviCRM Petition',
     ];
   }
-
 
   // docs inherited from interface
   public function getUserDashboardElement() {
@@ -115,4 +108,3 @@ class CRM_Campaign_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

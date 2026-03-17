@@ -27,15 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
 
 /**
  * This class provides the functionality to add contacts for
@@ -73,7 +67,7 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_interviewToRelease = $this->get('interviewToRelease');
     if ($this->_interviewToRelease) {
       //user came from interview form.
@@ -109,7 +103,6 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
     $params = ['id' => $this->_surveyId];
     $this->_surveyDetails = CRM_Campaign_BAO_Survey::retrieve($params, $surveyDetails);
 
-
     $activityStatus = CRM_Core_PseudoConstant::activityStatus('name');
     $statusIds = [];
     foreach (['Scheduled'] as $name) {
@@ -118,7 +111,8 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
       }
     }
     //fetch the target survey activities.
-    $this->_surveyActivities = CRM_Campaign_BAO_Survey::voterActivityDetails($this->_surveyId,
+    $this->_surveyActivities = CRM_Campaign_BAO_Survey::voterActivityDetails(
+      $this->_surveyId,
       $this->_contactIds,
       $this->_interviewerId,
       $statusIds
@@ -147,12 +141,12 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     $this->addDefaultButtons(ts('Release Respondents'), 'done');
   }
 
-  function postProcess() {
+  public function postProcess() {
     $deleteActivityIds = [];
     foreach ($this->_contactIds as $cid) {
       if (CRM_Utils_Array::arrayKeyExists($cid, $this->_surveyActivities)) {
@@ -167,7 +161,8 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
 
       $status = [ts("%1 respondent(s) have been released.", [1 => count($deleteActivityIds)])];
       if (count($this->_contactIds) > count($deleteActivityIds)) {
-        $status[] = ts("%1 respondents did not release.",
+        $status[] = ts(
+          "%1 respondents did not release.",
           [1 => (count($this->_contactIds) - count($deleteActivityIds))]
         );
       }
@@ -175,4 +170,3 @@ class CRM_Campaign_Form_Task_Release extends CRM_Campaign_Form_Task {
     }
   }
 }
-

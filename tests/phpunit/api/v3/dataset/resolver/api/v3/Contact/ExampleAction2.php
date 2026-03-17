@@ -9,4 +9,3 @@ function civicrm_api3_contact_example_action2($params) {
     'example_action2'
   );
 }
-

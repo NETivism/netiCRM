@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality for batch profile update
@@ -66,15 +62,14 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
   protected $_userContext;
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     /*
-         * initialize the task and row fields
-         */
+     * Initialize the task and row fields.
+     */
 
     parent::preProcess();
 
@@ -88,7 +83,6 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
       $validate = TRUE;
     }
 
-
     if (CRM_Contact_BAO_Contact_Utils::checkContactType($this->_contactIds)) {
       CRM_Core_Session::setStatus(ts("Batch update requires that all selected contacts be the same type (e.g. all Individuals OR all Organizations...). Please modify your selected contacts and try again."));
       $validate = TRUE;
@@ -101,13 +95,11 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build the form.
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Batch Profile Update for Contact'));
 
     if (CRM_Core_Permission::access('Quest')) {
@@ -120,7 +112,6 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
 
     //add Contact type profiles
     $this->_contactTypes[] = 'Contact';
-
 
     $profiles = CRM_Core_BAO_UFGroup::getProfiles($this->_contactTypes);
 
@@ -135,26 +126,22 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Add local and global form rules
-   *
-   * @access protected
+   * Add local and global form rules.
    *
    * @return void
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Task_PickProfile', 'formRule']);
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
    * @param array $fields posted values of the form
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form, or TRUE if valid
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
 
     if (CRM_Core_BAO_UFField::checkProfileType($fields['uf_group_id'])) {
       $errorMsg['uf_group_id'] = "You cannot select mix profile for batch update.";
@@ -168,11 +155,9 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -184,4 +169,3 @@ class CRM_Contact_Form_Task_PickProfile extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

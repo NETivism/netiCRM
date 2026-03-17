@@ -27,25 +27,27 @@
 
 /**
  *
- * @package CRM
  * @copyright TTTP
- * $Id$
  *
  */
 
 /**
- * Function to load a context. If name is asked for only name data is returned.
- * And if name is not provided whole context is returned.
+ * Smarty function to load a context.
  *
+ * If 'name' is provided, only that data is returned.
+ * If 'name' is not provided, the whole context is returned.
+ *
+ * @param array $params 'context', 'name' (optional), 'var'
+ * @param Smarty &$smarty the Smarty object
+ *
+ * @return void
  */
 function smarty_function_crmDBTpl($params, &$smarty) {
   // $vars = array( 'context', 'name', 'assign' ); out of which name is optional
 
-
-  $contextNameData = CRM_Core_BAO_Persistent::getContext($params['context'],
+  $contextNameData = CRM_Core_BAO_Persistent::getContext(
+    $params['context'],
     CRM_Utils_Array::value('name', $params)
   );
   $smarty->assign($params['var'], $contextNameData);
 }
-
-

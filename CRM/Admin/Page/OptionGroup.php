@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of Option Groups
@@ -46,23 +42,23 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionGroup';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::BROWSE => [
@@ -101,41 +97,40 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_OptionGroup';
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Options';
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/optionGroup';
   }
 
   /**
-   * browse all entities.
-   *
-   * @param int $action
+   * Browses all entities.
    *
    * @return void
-   * @access public
    */
-  function browse() {
+  public function browse() {
     $thisArgs = func_get_args();
     $action = $thisArgs[0] ?? NULL;
     $sort = $thisArgs[1] ?? NULL;
@@ -187,7 +182,6 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
       $object->orderBy($key . ' asc');
     }
 
-
     // find all objects
     $object->find();
     while ($object->fetch()) {
@@ -202,7 +196,6 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
         if ($permission) {
           $values[$object->id] = [];
           CRM_Core_DAO::storeValues($object, $values[$object->id]);
-
 
           CRM_Contact_DAO_RelationshipType::addDisplayEnums($values[$object->id]);
 
@@ -220,4 +213,3 @@ class CRM_Admin_Page_OptionGroup extends CRM_Core_Page_Basic {
     $this->assign('rows', $values);
   }
 }
-

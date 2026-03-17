@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * form to process actions on Price Sets
@@ -45,17 +40,13 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
    * the set id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_sid;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @param null
+   * Function to set variables up before form is built.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // current set id
@@ -82,17 +73,15 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
+   * @param array $fields the input form values
+   * @param array $files the uploaded files if any
    * @param array $options additional user data
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return array|bool true if no errors, else array of errors
    */
-  static function formRule($fields, $files, $options) {
+  public static function formRule($fields, $files, $options) {
     $errors = [];
 
     //checks the given price set doesnot start with digit
@@ -106,12 +95,9 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $this->applyFilter('__ALL__', 'trim');
@@ -120,16 +106,17 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
 
     // title
     $this->add('text', 'title', ts('Set Name'), CRM_Core_DAO::getAttribute('CRM_Price_DAO_Set', 'title'), TRUE);
-    $this->addRule('title', ts('Name already exists in Database.'),
-      'objectExists', ['CRM_Price_DAO_Set', $this->_sid, 'title']
+    $this->addRule(
+      'title',
+      ts('Name already exists in Database.'),
+      'objectExists',
+      ['CRM_Price_DAO_Set', $this->_sid, 'title']
     );
 
     $priceSetUsedTables = $extends = [];
     if ($this->_action == CRM_Core_Action::UPDATE && $this->_sid) {
       $priceSetUsedTables = CRM_Price_BAO_Set::getUsedBy($this->_sid, TRUE);
     }
-
-
 
     $config = CRM_Core_Config::singleton();
     $components = ['CiviEvent' => ['title' => ts('Event'),
@@ -176,10 +163,16 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     $this->addRule('extends', ts('%1 is a required field.', [1 => ts('Used For')]), 'required');
 
     // help text
-    $this->add('textarea', 'help_pre', ts('Pre-form Help'),
+    $this->add(
+      'textarea',
+      'help_pre',
+      ts('Pre-form Help'),
       CRM_Core_DAO::getAttribute('CRM_Price_DAO_Set', 'help_pre')
     );
-    $this->add('textarea', 'help_post', ts('Post-form Help'),
+    $this->add(
+      'textarea',
+      'help_post',
+      ts('Post-form Help'),
       CRM_Core_DAO::getAttribute('CRM_Price_DAO_Set', 'help_post')
     );
 
@@ -192,7 +185,8 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     }
 
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -215,34 +209,31 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @param null
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = ['is_active' => TRUE];
     if ($this->_sid) {
       $params = ['id' => $this->_sid];
       CRM_Price_BAO_Set::retrieve($params, $defaults);
       $extends = explode(CRM_Core_DAO::VALUE_SEPARATOR, $defaults['extends']);
       unset($defaults['extends']);
-      foreach ($extends as $compId) $defaults['extends'][$compId] = 1;
+      foreach ($extends as $compId) {
+        $defaults['extends'][$compId] = 1;
+      }
     }
 
     return $defaults;
   }
 
   /**
-   * Process the form
-   *
-   * @param null
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
@@ -254,7 +245,11 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     $compIds = [];
     $extends = CRM_Utils_Array::value('extends', $params);
     if (is_array($extends)) {
-      foreach ($extends as $compId => $selected) if ($selected) {   $compIds[] = $compId; }
+      foreach ($extends as $compId => $selected) {
+        if ($selected) {
+          $compIds[] = $compId;
+        }
+      }
     }
     $params['extends'] = CRM_Utils_Array::implode(CRM_Core_DAO::VALUE_SEPARATOR, $compIds);
 
@@ -268,12 +263,12 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     }
     else {
       $url = CRM_Utils_System::url('civicrm/admin/price/field', 'reset=1&action=add&sid=' . $set->id);
-      CRM_Core_Session::setStatus(ts('Your Set \'%1\' has been added. You can add fields to this set now.',
-          [1 => $set->title]
-        ));
+      CRM_Core_Session::setStatus(ts(
+        'Your Set \'%1\' has been added. You can add fields to this set now.',
+        [1 => $set->title]
+      ));
       $session = CRM_Core_Session::singleton();
       $session->replaceUserContext($url);
     }
   }
 }
-

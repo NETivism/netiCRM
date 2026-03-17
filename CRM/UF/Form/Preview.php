@@ -27,15 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
 
 /**
  * This class generates form components
@@ -59,18 +53,11 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
   public $_fields;
 
   /**
-   * pre processing work done here.
+   * Pre processing work done here.
    *
-   * gets session variables for group or field id
-   *
-   * @param
-   *
-   * @return void
-   *
-   * @access public
-   *
+   * Gets session variables for group or field id.
    */
-  function preProcess() {
+  public function preProcess() {
     $flag = FALSE;
     $this->_gid = $this->get('id');
     $this->set('gid', $this->_gid);
@@ -84,10 +71,10 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       $fieldDAO->find(TRUE);
 
       if ($fieldDAO->is_active == 0) {
-         return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not be displayed on profile form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not be displayed on profile form.'));
       }
       elseif ($fieldDAO->is_view == 1) {
-         return CRM_Core_Error::statusBounce(ts('This field is view only so it will not be displayed on profile form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is view only so it will not be displayed on profile form.'));
       }
       $name = $fieldDAO->field_name;
       // preview for field
@@ -127,13 +114,12 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Set the default form values
+   * Set the default form values.
    *
-   * @access protected
-   *
-   * @return array the default array reference
+   * @return array
+   *   The default array reference.
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $stateCountryMap = [];
     foreach ($this->_fields as $name => $field) {
@@ -168,10 +154,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @return void
-   * @access public
+   * Build the form.
    */
   public function buildQuickForm() {
     foreach ($this->_fields as $name => $field) {
@@ -180,7 +163,8 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       }
     }
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
@@ -189,4 +173,3 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
     );
   }
 }
-

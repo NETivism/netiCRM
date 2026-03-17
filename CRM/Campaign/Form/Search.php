@@ -27,18 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  * Files required
  */
-
-
-
 
 class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
@@ -134,7 +129,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
    */
   protected $_prefix = "survey_";
 
-
   private $_operation = 'reserve';
 
   /**
@@ -143,7 +137,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('searchFormName', 'Search');
 
     $this->_done = FALSE;
@@ -197,7 +191,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -205,10 +200,10 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     //get the voter clause.
     $voterClause = $this->voterClause();
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
-    $selector = new CRM_Campaign_Selector_Search($this->_queryParams,
+    $selector = new CRM_Campaign_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       $voterClause,
       $this->_single,
@@ -223,7 +218,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -246,7 +242,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     CRM_Utils_System::setTitle(ts('Find Respondents To %1', [1 => ucfirst($this->_operation)]));
   }
 
-  function setDefaultValues() {
+  public function setDefaultValues() {
     //load the default survey for all actions.
     if (empty($this->_defaults)) {
       $defaultSurveyId = key(CRM_Campaign_BAO_Survey::getSurvey(FALSE, NULL, TRUE));
@@ -265,16 +261,15 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     //build the search form.
 
     CRM_Campaign_BAO_Query::buildSearchForm($this);
 
-    /* 
-         * add form checkboxes for each row. This is needed out here to conform to QF protocol 
-         * of all elements being declared in builQuickForm 
+    /*
+         * add form checkboxes for each row. This is needed out here to conform to QF protocol
+         * of all elements being declared in builQuickForm
          */
-
 
     $rows = $this->get('rows');
     if (is_array($rows)) {
@@ -286,7 +281,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
       }
 
       $total = $cancel = 0;
-
 
       $permission = CRM_Core_Permission::getPermission();
 
@@ -306,25 +300,33 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
         $activityTypes = CRM_Core_PseudoConstant::activityType(FALSE, TRUE, FALSE, 'label', TRUE);
 
-        $surveyTypeId = CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey',
+        $surveyTypeId = CRM_Core_DAO::getFieldValue(
+          'CRM_Campaign_DAO_Survey',
           $this->_formValues['campaign_survey_id'],
           'activity_type_id'
         );
-        $taskValue = [$currentTaskValue => ts('Record %1 Responses',
-            [1 => $activityTypes[$surveyTypeId]]
-          )];
+        $taskValue = [$currentTaskValue => ts(
+          'Record %1 Responses',
+          [1 => $activityTypes[$surveyTypeId]]
+        )];
       }
 
       $this->add('select', 'task', ts('Actions:') . ' ', $taskValue);
       $this->setDefaults(['task' => $currentTaskValue]);
 
-      $this->add('submit', $this->_actionButtonName, ts('Go'),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Go'),
         ['class' => 'form-submit',
           'id' => 'Go',
         ]
       );
 
-      $this->add('submit', $this->_printButtonName, ts('Print'),
+      $this->add(
+        'submit',
+        $this->_printButtonName,
+        ts('Print'),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
         ]
@@ -332,14 +334,15 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
       // need to perform tasks on all or selected items ? using radio_ts(task selection) for it
       $selectedRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_sel', ['checked' => 'checked']);
-      $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);      
+      $this->assign('ts_sel_id', $selectedRowsRadio->_attributes['id']);
 
       $allRowsRadio = $this->addElement('radio', 'radio_ts', NULL, '', 'ts_all');
       $this->assign('ts_all_id', $allRowsRadio->_attributes['id']);
     }
 
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'refresh',
           'name' => ts('Search'),
           'isDefault' => TRUE,
@@ -365,7 +368,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     if ($this->_done) {
       return;
     }
@@ -380,7 +383,6 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
     //format params as per task.
     $this->formatParams();
-
 
     $this->_queryParams = CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
@@ -401,7 +403,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -409,7 +412,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     //get the voter clause.
     $voterClause = $this->voterClause();
 
-    $selector = new CRM_Campaign_Selector_Search($this->_queryParams,
+    $selector = new CRM_Campaign_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       $voterClause,
       $this->_single,
@@ -425,7 +429,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
       $prefix = $this->_prefix;
     }
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -441,7 +446,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     $controller->run();
   }
 
-  function formatParams() {
+  public function formatParams() {
     $interviewerId = CRM_Utils_Array::value('survey_interviewer_id', $this->_formValues);
     if (!$interviewerId) {
       $session = &CRM_Core_Session::singleton();
@@ -449,7 +454,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     }
     $this->set('interviewerId', $interviewerId);
     if (!CRM_Utils_Array::value('survey_interviewer_name', $this->_formValues)) {
-      $this->_formValues['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+      $this->_formValues['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contact_DAO_Contact',
         $interviewerId,
         'sort_name',
         'id'
@@ -458,7 +464,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
 
     if ($this->_operation == 'reserve') {
       if (CRM_Utils_Array::value('campaign_survey_id', $this->_formValues)) {
-        $campaignId = CRM_Core_DAO::getFieldValue('CRM_Campaign_DAO_Survey',
+        $campaignId = CRM_Core_DAO::getFieldValue(
+          'CRM_Campaign_DAO_Survey',
           $this->_formValues['campaign_survey_id'],
           'campaign_id'
         );
@@ -492,7 +499,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     $this->_formValues['campaign_search_voter_for'] = $this->_operation;
   }
 
-  function fixFormValues() {
+  public function fixFormValues() {
     // if this search has been forced
     // then see if there are any get values, and if so over-ride the post values
     // note that this means that GET over-rides POST :)
@@ -523,8 +530,12 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     $userId = $session->get('userID');
 
     // get interviewer id
-    $cid = CRM_Utils_Request::retrieve('cid', 'Positive',
-      CRM_Core_DAO::$_nullObject, FALSE, $userId
+    $cid = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      $userId
     );
     //to force other contact as interviewer, user should be admin.
     if ($cid != $userId &&
@@ -535,7 +546,8 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     }
 
     $this->_formValues['survey_interviewer_id'] = $cid;
-    $this->_formValues['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+    $this->_formValues['survey_interviewer_name'] = CRM_Core_DAO::getFieldValue(
+      'CRM_Contact_DAO_Contact',
       $cid,
       'sort_name',
       'id'
@@ -545,7 +557,7 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     $this->_limit = CRM_Utils_Request::retrieve('limit', 'Positive', $this);
   }
 
-  function voterClause() {
+  public function voterClause() {
 
     $params = ['campaign_search_voter_for' => $this->_operation];
 
@@ -576,4 +588,3 @@ class CRM_Campaign_Form_Search extends CRM_Core_Form {
     return ts('Find Respondents');
   }
 }
-

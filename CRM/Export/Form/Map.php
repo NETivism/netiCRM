@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class gets the name of the file to upload
@@ -45,7 +40,6 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * mapper fields
    *
    * @var array
-   * @access protected
    */
   protected $_mapperFields;
 
@@ -53,7 +47,6 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * number of columns in import file
    *
    * @var int
-   * @access protected
    */
   protected $_exportColumnCount;
 
@@ -61,7 +54,6 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * loaded mapping ID
    *
    * @var int
-   * @access protected
    */
   protected $_mappingId;
 
@@ -69,15 +61,13 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
    * mapping object when we don't have mapping id
    *
    * @var int
-   * @access protected
    */
   public $_mappingObject;
 
   /**
-   * Function to actually build the form
+   * Pre-process form values.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function preProcess() {
 
@@ -87,23 +77,29 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
       $this->_mappingObject = $this->get('mappingObject');
     }
 
-    if (! $this->_exportColumnCount ) {
-      if( $this->_mappingId ){
+    if (!$this->_exportColumnCount) {
+      if ($this->_mappingId) {
         $mapping = CRM_Core_BAO_Mapping::getMappingFields($this->_mappingId);
         $mappingFields = $mapping[0][1];
         $this->_exportColumnCount = count($mappingFields) + 5;
       }
-      elseif (!empty($this->_mappingObject)){
+      elseif (!empty($this->_mappingObject)) {
         $this->_exportColumnCount = count($this->_mappingObject['mappingName'][1]) + 5;
       }
       else {
         $this->_exportColumnCount = 10;
       }
-    } else {
+    }
+    else {
       $this->_exportColumnCount = $this->_exportColumnCount + 10;
     }
   }
 
+  /**
+   * Build the form object.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
 
     $customSearchID = $this->get('customSearchID');
@@ -113,7 +109,8 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
     CRM_Core_BAO_Mapping::buildMappingForm($this, 'Export', $this->_mappingId, $this->_exportColumnCount, $blockCnt = 2, $this->get('exportMode'));
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -129,15 +126,15 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
    * @param array $fields posted values of the form
+   * @param array $values values
+   * @param int $mappingTypeId mapping type id
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
-  static function formRule($fields, $values, $mappingTypeId) {
+  public static function formRule($fields, $values, $mappingTypeId) {
     $errors = [];
 
     if (CRM_Utils_Array::value('saveMapping', $fields)) {
@@ -166,10 +163,9 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   }
 
   /**
-   * Process the uploaded file
+   * Process the form submission.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
@@ -200,7 +196,7 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
 
     $mapperKeysOrigin = $params['mapper'][1];
     $mapperWeight = $params['weight'][1];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
 
@@ -258,17 +254,19 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
         }
       }
       if ($isSelectorEmpty) {
-        CRM_Export_BAO_Export::exportCustom($this->get('customSearchClass'),
+        CRM_Export_BAO_Export::exportCustom(
+          $this->get('customSearchClass'),
           $this->get('formValues'),
-          $this->get(CRM_Utils_Sort::SORT_ORDER), 
-          $primaryIDName, 
+          $this->get(CRM_Utils_Sort::SORT_ORDER),
+          $primaryIDName,
           TRUE,
           TRUE,
           $this->get('exportMode')
         );
       }
     }
-    CRM_Export_BAO_Export::exportComponents($this->get('selectAll'),
+    CRM_Export_BAO_Export::exportComponents(
+      $this->get('selectAll'),
       $this->get('componentIds'),
       $this->get('queryParams'),
       $this->get(CRM_Utils_Sort::SORT_ORDER),
@@ -286,34 +284,35 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Select Fields to Export');
   }
 
   /**
-   * Execute when press "Export"( name = _qf_Map_next ) and "Done"( name = _qf_Map_done ) buttom.
-   * @param  $params  The parameters in postProcess();
-   * @return none
+   * Execute when press "Export"( name = _qf_Map_next ) and "Done"( name = _qf_Map_done ) button.
+   *
+   * @param array $params The parameters in postProcess()
+   *
+   * @return void
    */
-  private function updateAndSaveMapping($params){
-    if ( CRM_Utils_Array::value('updateMapping', $params)) {
+  private function updateAndSaveMapping($params) {
+    if (CRM_Utils_Array::value('updateMapping', $params)) {
       //save mapping fields
-      CRM_Core_BAO_Mapping::saveMappingFields($params, $params['mappingId'] );
+      CRM_Core_BAO_Mapping::saveMappingFields($params, $params['mappingId']);
     }
 
-    if ( CRM_Utils_Array::value('saveMapping', $params) ) {
+    if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = [
         'name'      => $params['saveMappingName'],
         'description'   => $params['saveMappingDesc'],
-        'mapping_type_id' => $this->get( 'mappingTypeId'),
+        'mapping_type_id' => $this->get('mappingTypeId'),
       ];
 
-      $saveMapping = CRM_Core_BAO_Mapping::add( $mappingParams );
+      $saveMapping = CRM_Core_BAO_Mapping::add($mappingParams);
       $this->set('mappingId', $saveMapping->id);
 
       //save mapping fields
@@ -321,6 +320,4 @@ class CRM_Export_Form_Map extends CRM_Core_Form {
     }
   }
 
-
 }
-

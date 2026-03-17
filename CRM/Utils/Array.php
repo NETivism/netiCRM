@@ -26,29 +26,23 @@
 */
 
 /**
+ * Utility methods for array manipulation, traversal, and transformation
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Utils_Array {
 
   /**
-   * if the key exists in the list returns the associated value
+   * Return the value for a key in an array, or a default if the key does not exist.
    *
-   * @access public
+   * @param string|int $key      The key to look up.
+   * @param array      $list     The array to search.
+   * @param mixed      $default  Value to return when the key is not found (default NULL).
    *
-   * @param string $key   the key value
-   * @param array $list  the array to be searched
-   * @param mixed $default the default value when no value found, default NULL
-   *
-   * @return mixed if exists return array value, else null
-   * @static
-   * @access public
-   *
+   * @return mixed  The value at $key, or $default if not found.
    */
-  static function value($key, $list, $default = NULL) {
+  public static function value($key, $list, $default = NULL) {
     if (is_array($list)) {
       // faster
       if (isset($list[$key])) {
@@ -59,17 +53,14 @@ class CRM_Utils_Array {
   }
 
   /**
-   * Given a parameter array and a key to search for,
-   * search recursively for that key's value.
+   * Recursively search a nested array for the first occurrence of a key and return its value.
    *
-   * @param array $values     The parameter array
-   * @param string $key       The key to search for
+   * @param array  $params  The array to search (passed by reference).
+   * @param string $key     The key to search for.
    *
-   * @return mixed            The value of the key, or null.
-   * @access public
-   * @static
+   * @return mixed|null  The value of the key, or NULL if not found.
    */
-  static function retrieveValueRecursive(&$params, $key) {
+  public static function retrieveValueRecursive(&$params, $key) {
     if (!is_array($params)) {
       return NULL;
     }
@@ -89,19 +80,14 @@ class CRM_Utils_Array {
   }
 
   /**
-   * if the value exists in the list returns the associated key
+   * Find the key associated with a given value in an array.
    *
-   * @access public
+   * @param mixed $value The value to search for.
+   * @param array $list  The array to be searched (passed by reference).
    *
-   * @param string $value the key of array
-   * @param array $list pass by referenced, the array to be searched
-   *
-   * @return string|null if exists else null
-   * @static
-   * @access public
-   *
+   * @return string|int|null The key if found, or NULL otherwise.
    */
-  static function key($value, &$list) {
+  public static function key($value, &$list) {
     if (is_array($list)) {
       $key = array_search($value, $list);
 
@@ -114,7 +100,16 @@ class CRM_Utils_Array {
     return NULL;
   }
 
-  static function &xml(&$list, $depth = 1, $seperator = "\n") {
+  /**
+   * Convert an associative array to an XML string.
+   *
+   * @param array  $list      The array to convert (passed by reference).
+   * @param int    $depth     Current nesting depth for indentation.
+   * @param string $seperator Line separator between XML elements.
+   *
+   * @return string The generated XML string.
+   */
+  public static function &xml(&$list, $depth = 1, $seperator = "\n") {
     $xml = '';
     foreach ($list as $name => $value) {
       $xml .= str_repeat(' ', $depth * 4);
@@ -133,7 +128,16 @@ class CRM_Utils_Array {
     return $xml;
   }
 
-  static function escapeXML($value) {
+  /**
+   * Escape special XML characters in a string.
+   *
+   * Replaces &, <, > and null bytes with their XML entity equivalents.
+   *
+   * @param string $value The string to escape.
+   *
+   * @return string The escaped string.
+   */
+  public static function escapeXML($value) {
     static $src = NULL;
     static $dst = NULL;
 
@@ -145,7 +149,20 @@ class CRM_Utils_Array {
     return str_replace($src, $dst, $value);
   }
 
-  static function flatten(&$list, &$flat, $prefix = '', $seperator = ".") {
+  /**
+   * Flatten a nested associative array into a single-level array with compound keys.
+   *
+   * Non-empty leaf values are stored with keys formed by joining nested
+   * key names using the specified separator.
+   *
+   * @param array  $list      The nested array to flatten (passed by reference).
+   * @param array  $flat      The resulting flat array (passed by reference, populated in place).
+   * @param string $prefix    Key prefix for the current recursion level.
+   * @param string $seperator Separator used to join key segments.
+   *
+   * @return void
+   */
+  public static function flatten(&$list, &$flat, $prefix = '', $seperator = ".") {
     foreach ($list as $name => $value) {
       $newPrefix = ($prefix) ? $prefix . $seperator . $name : $name;
       if (is_array($value)) {
@@ -160,15 +177,17 @@ class CRM_Utils_Array {
   }
 
   /**
-   * Funtion to merge to two arrays recursively
+   * Merge two arrays recursively, combining sub-arrays that share the same key.
    *
-   * @param array $a1
-   * @param array $a2
+   * Unlike array_merge_recursive(), values from $a1 take precedence for
+   * non-array keys, and sub-arrays are merged (not nested).
    *
-   * @return  $a3
-   * @static
+   * @param array $a1 The first array.
+   * @param array $a2 The second array.
+   *
+   * @return array The merged array.
    */
-  static function arrayMerge($a1, $a2) {
+  public static function arrayMerge($a1, $a2) {
     if (empty($a1)) {
       return $a2;
     }
@@ -200,7 +219,14 @@ class CRM_Utils_Array {
     return $a3;
   }
 
-  static function isHierarchical(&$list) {
+  /**
+   * Determine whether an array contains any nested arrays (i.e. is hierarchical).
+   *
+   * @param array $list The array to check (passed by reference).
+   *
+   * @return bool TRUE if at least one element is an array, FALSE otherwise.
+   */
+  public static function isHierarchical(&$list) {
     foreach ($list as $n => $v) {
       if (is_array($v)) {
         return TRUE;
@@ -210,18 +236,15 @@ class CRM_Utils_Array {
   }
 
   /**
-   * Array deep copy
+   * Create a deep copy of an array up to a maximum recursion depth.
    *
-   * @param  array  $array
-   * @param  int    $maxdepth
-   * @param  int    $depth
+   * @param array $array    The array to copy (passed by reference).
+   * @param int   $maxdepth Maximum recursion depth to prevent infinite loops.
+   * @param int   $depth    Current recursion depth (used internally).
    *
-   * @return  array  copy of the array
-   *
-   * @static
-   * @access public
+   * @return array A deep copy of the array.
    */
-  static function arrayDeepCopy(&$array, $maxdepth = 50, $depth = 0) {
+  public static function arrayDeepCopy(&$array, $maxdepth = 50, $depth = 0) {
     if ($depth > $maxdepth) {
       return $array;
     }
@@ -238,18 +261,19 @@ class CRM_Utils_Array {
   }
 
   /**
-   * Array splice function that preserves associative keys
-   * defauly php array_splice function doesnot preserve keys
-   * So specify start and end of the array that you want to remove
+   * Remove a range of elements from an associative array while preserving keys.
    *
-   * @param  array $params  array to slice
-   * @param  int $start
-   * @param  int $end
+   * Unlike PHP's built-in array_splice(), this function preserves
+   * associative keys. Specify the start and end indices (0-based)
+   * of the elements to remove.
    *
-   * @return  void
-   * @static
+   * @param array $params The array to modify (passed by reference).
+   * @param int   $start  The start index (inclusive).
+   * @param int   $end    The end index (exclusive).
+   *
+   * @return void
    */
-  static function arraySplice(&$params, $start, $end) {
+  public static function arraySplice(&$params, $start, $end) {
     // verify start and end date
     if ($start < 0) {
       $start = 0;
@@ -270,16 +294,15 @@ class CRM_Utils_Array {
   }
 
   /**
-   * Function for case insensitive in_array search
+   * Search for a value in an array, optionally case-insensitive and recursive.
    *
-   * @param string $value value or search string
-   * @param array $params array that need to be searched
-   * @param boolean $caseInsensitive   boolean true or false
+   * @param string $value           The value to search for.
+   * @param array  $params          The array to search.
+   * @param bool   $caseInsensitive Whether to perform a case-insensitive comparison.
    *
-   * @return bool
-   * @static
+   * @return bool TRUE if the value is found, FALSE otherwise.
    */
-  static function inArray($value, $params, $caseInsensitive = TRUE) {
+  public static function inArray($value, $params, $caseInsensitive = TRUE) {
     foreach ($params as $item) {
       if (is_array($item)) {
         $ret = self::inArray($value, $item, $caseInsensitive);
@@ -327,17 +350,20 @@ class CRM_Utils_Array {
   }
 
   /**
-   * look up property from given lookup, and padding to defaults
+   * Look up a value from a mapping array and store the result back in $defaults.
    *
-   * Use one array value to search another array's value. Then padding retrieved value back to original array
+   * Uses a value from $defaults (keyed by $property or $property_id) to find
+   * the corresponding entry in $lookup, then writes the result back into
+   * $defaults under the complementary key.
    *
-   * @param array $defaults the referenced array that retrive needle value from property
-   * @param string $property array key name of defaults array. Will using retrieved value to 
-   * @param array $lookup haystack. Value found here will padding back to defaults
-   * @param boolean $reverse will flip lookup before search
-   * @return void 
+   * @param array  $defaults The array containing the source value and receiving the result (passed by reference).
+   * @param string $property The base property name (e.g. 'prefix'). The ID key is derived as "{$property}_id".
+   * @param array  $lookup   The mapping array to search.
+   * @param bool   $reverse  If TRUE, flip $lookup before searching (swap keys and values).
+   *
+   * @return bool TRUE if the lookup succeeded, FALSE if the source key or value was not found.
    */
-  static function lookupValue(&$defaults, $property, $lookup, $reverse) {
+  public static function lookupValue(&$defaults, $property, $lookup, $reverse) {
     $id = $property . '_id';
 
     $src = $reverse ? $property : $id;
@@ -370,14 +396,13 @@ class CRM_Utils_Array {
   }
 
   /**
-   *  Function to check if give array is empty
+   * Check whether an array is empty or not actually an array.
    *
-   *  @param array $array array that needs to be check for empty condition
+   * @param mixed $array The value to check.
    *
-   *  @return boolean true is array is empty else false
-   *  @static
+   * @return bool TRUE if $array is not an array or is empty, FALSE otherwise.
    */
-  static function isEmpty($array = []) {
+  public static function isEmpty($array = []) {
     if (!is_array($array)) {
       return TRUE;
     }
@@ -501,28 +526,30 @@ class CRM_Utils_Array {
   }
 
   /**
-   * Deprecated function, use inArray instead
+   * Deprecated: use inArray() instead.
    *
-   * @param string $value value or search string
-   * @param array $params array that need to be searched
-   * @param boolean $caseInsensitive   boolean true or false
+   * @param string $value           The value to search for.
+   * @param array  $params          The array to search.
+   * @param bool   $caseInsensitive Whether to perform a case-insensitive comparison.
    *
-   * @static
+   * @return bool TRUE if found, FALSE otherwise.
+   *
+   * @deprecated
    */
   public static function crmInArray($value, $params, $caseInsensitive = TRUE) {
     self::inArray($value, $params, $caseInsensitive);
   }
 
   /**
-   * Deprecated function, use isEmpty
+   * Deprecated: use isEmpty() instead.
    *
-   * @param array $array array that needs to be check for empty condition
+   * @param mixed $array The value to check.
    *
-   * @return bool
-   * @static
+   * @return bool TRUE if empty or not an array.
+   *
+   * @deprecated
    */
-  static function crmIsEmptyArray($array = []) {
+  public static function crmIsEmptyArray($array = []) {
     return self::isEmpty($array);
   }
 }
-

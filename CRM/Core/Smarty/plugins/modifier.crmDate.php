@@ -27,19 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Convert the date string "YYYY-MM-DD" to "MM<long> DD, YYYY".
+ * Convert a date string to a human-readable format.
  *
- * @param string $dateString date which needs to converted to human readable format
+ * @param string|null $dateString date to be converted
+ * @param string|int|null $dateFormat format string or predefined format ID
+ * @param bool $onlyTime whether to only display the time part
  *
- * @return string human readable date format | invalid date message
- * @access public
+ * @return string human-readable date or empty string
  */
 function smarty_modifier_crmDate($dateString, $dateFormat = NULL, $onlyTime = FALSE) {
   if ($dateString) {
@@ -57,4 +56,3 @@ function smarty_modifier_crmDate($dateString, $dateFormat = NULL, $onlyTime = FA
   }
   return '';
 }
-

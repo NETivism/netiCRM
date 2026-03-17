@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class is for activity assignment functions
@@ -44,19 +40,16 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
    * Add activity assignment.
    *
-   * @param array  $params       (reference ) an assoc array of name/value pairs
-   * @param array  $ids          (reference ) the array that holds all the db ids
+   * @param array $params (reference ) an assoc array of name/value pairs
    *
-   * @return object activity type of object that is added
-   * @access public
-   *
+   * @return CRM_Activity_BAO_ActivityAssignment activity type of object that is added
    */
   public static function create(&$params) {
 
@@ -69,14 +62,12 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
   /**
    * Retrieve assignee_id by activity_id
    *
-   * @param int    $id  ID of the activity
+   * @param int $activity_id ID of the activity
    *
-   * @return void
-   *
-   * @access public
+   * @return array
    *
    */
-  static function retrieveAssigneeIdsByActivityId($activity_id) {
+  public static function retrieveAssigneeIdsByActivityId($activity_id) {
     $assigneeArray = [];
 
     if (!CRM_Utils_Rule::positiveInteger($activity_id)) {
@@ -100,16 +91,14 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
   /**
    * Retrieve assignee names by activity_id
    *
-   * @param int      $id             ID of the activity
-   * @param boolean  $isDisplayName  if set returns display names of assignees
-   * @param boolean  $skipDetails    if false returns all details of assignee contact.
+   * @param int $activityID ID of the activity
+   * @param bool $isDisplayName if set returns display names of assignees
+   * @param bool $skipDetails if false returns all details of assignee contact.
    *
    * @return array
    *
-   * @access public
-   *
    */
-  static function getAssigneeNames($activityID, $isDisplayName = FALSE, $skipDetails = TRUE) {
+  public static function getAssigneeNames($activityID, $isDisplayName = FALSE, $skipDetails = TRUE) {
     $assigneeNames = [];
     if (empty($activityID)) {
       return $assigneeNames;
@@ -152,4 +141,3 @@ class CRM_Activity_BAO_ActivityAssignment extends CRM_Activity_DAO_ActivityAssig
     return $assigneeNames;
   }
 }
-

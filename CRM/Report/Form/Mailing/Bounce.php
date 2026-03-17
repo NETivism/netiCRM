@@ -27,43 +27,62 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
 
-  /**
-   * @var never[]
-   */
+  /** @var array Column headers for report display. */
   public $_columnHeaders;
+
+  /** @var string FROM clause for the report query. */
   public $_from;
+
+  /** @var array Table alias mappings. */
   public $_aliases;
+
+  /** @var int Relationship type ID used in filter clauses. */
   public $relationshipId;
+
+  /** @var string WHERE clause for the report query. */
   public $_where;
-  /**
-   * @var string
-   */
+
+  /** @var string GROUP BY clause for the report query. */
   public $_groupBy;
+
+  /** @var string Base URL used for generating absolute links. */
   public $_absoluteUrl;
+
+  /** @var array|null Report summary data. */
   protected $_summary = NULL;
 
+  /** @var bool Whether the email field is selected. */
   protected $_emailField = FALSE;
 
+  /** @var bool Whether the phone field is selected. */
   protected $_phoneField = FALSE;
 
-  # just a toggle we use to build the from
+  /** @var bool Toggle to control mailing join in the FROM clause. */
   protected $_mailingidField = FALSE;
 
+  /** @var array Custom group entity types this report extends. */
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
+  /** @var array Available chart types for this report. */
   protected $_charts = ['' => 'Tabular',
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
-  ]; function __construct() {
+  ];
+
+  /**
+   * Constructor for the Mailing Bounce report.
+   *
+   * Defines column definitions for civicrm_contact, civicrm_mailing,
+   * civicrm_mailing_event_bounce, civicrm_mailing_bounce_type,
+   * civicrm_email, and civicrm_group tables.
+   */
+  public function __construct() {
     $this->_columns = [];
 
     $this->_columns['civicrm_contact'] = [
@@ -197,12 +216,27 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Prepares the report form before rendering.
+   *
+   * Enables chart support and calls parent preProcess.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->assign('chartSupported', TRUE);
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields.
+   *
+   * Populates $_select and $_columnHeaders. When chart mode is active,
+   * adds a bounce count aggregate column.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
 
@@ -231,7 +265,6 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
       }
     }
 
-
     if (CRM_Utils_Array::value('charts', $this->_params)) {
       $select[] = "COUNT({$this->_aliases['civicrm_mailing_event_bounce']}.id) as civicrm_mailing_bounce_count";
       $this->_columnHeaders["civicrm_mailing_bounce_count"]['title'] = ts('Bounce Count');
@@ -241,12 +274,29 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     //print_r($this->_select);
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validates form fields for the report.
+   *
+   * @param array $fields Submitted form field values.
+   * @param array $files Uploaded files.
+   * @param CRM_Report_Form_Mailing_Bounce $self The form instance.
+   *
+   * @return array Associative array of field => error message; empty if valid.
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining civicrm_contact with mailing event
+   * queue, bounce, bounce type, job, and mailing tables.
+   *
+   * Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}";
     // LEFT JOIN civicrm_address {$this->_aliases['civicrm_address']}
@@ -278,9 +328,6 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     // {$this->_aliases['civicrm_email']}.is_primary = 1) ";
     // }
 
-
-
-
     // if ( $this->_phoneField ) {
     // $this->_from .= "
     // LEFT JOIN civicrm_phone {$this->_aliases['civicrm_phone']}
@@ -288,12 +335,17 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     // {$this->_aliases['civicrm_phone']}.is_primary = 1 ";
     // }
 
-
-
     //print_r($this->_from);
   }
 
-  function where() {
+  /**
+   * Builds the WHERE clause from submitted filter values.
+   *
+   * Populates $_where.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -313,7 +365,8 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
                 $clause = "{$this->_aliases['civicrm_relationship']}.relationship_type_id=" . $this->relationshipId;
               }
               else {
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -342,14 +395,29 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause when chart mode is active, grouping by mailing ID.
+   *
+   * Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
 
     if (CRM_Utils_Array::value('charts', $this->_params)) {
       $this->_groupBy = " GROUP BY {$this->_aliases['civicrm_mailing']}.id";
     }
   }
 
-  function postProcess() {
+  /**
+   * Processes the report after form submission.
+   *
+   * Builds ACL clauses, assembles the query, fetches rows,
+   * formats the display, and assigns data to the template.
+   *
+   * @return void
+   */
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -368,7 +436,14 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function buildChart(&$rows) {
+  /**
+   * Builds chart data from report rows for bounce statistics.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function buildChart(&$rows) {
     if (empty($rows)) {
       return;
     }
@@ -387,7 +462,17 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     $this->assign('chartType', $this->_params['charts']);
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Modifies report rows for display.
+   *
+   * Converts contact display names to links and resolves country
+   * and state/province IDs to their labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
@@ -396,9 +481,11 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Contact details for this contact.");
@@ -419,7 +506,6 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -428,8 +514,12 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     }
   }
 
-  function mailing_select() {
-
+  /**
+   * Retrieves all mailing names for use as filter options.
+   *
+   * @return array Associative array of mailing name => mailing name.
+   */
+  public function mailing_select() {
 
     $data = [];
 
@@ -444,8 +534,12 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     return $data;
   }
 
-  function bounce_type() {
-
+  /**
+   * Retrieves all bounce type names for use as filter options.
+   *
+   * @return array Associative array of bounce type name => bounce type name.
+   */
+  public function bounce_type() {
 
     $data = ['' => '--Please Select--'];
 
@@ -460,4 +554,3 @@ class CRM_Report_Form_Mailing_Bounce extends CRM_Report_Form {
     return $data;
   }
 }
-

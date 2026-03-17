@@ -27,15 +27,15 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Controller extends CRM_Upgrade_Controller {
-  function &getPages() {
+  /**
+   * @return array<string, null>
+   */
+  public function &getPages() {
     $pages = ['CRM_Upgrade_TwoOne_Form_Step1' => NULL,
       'CRM_Upgrade_TwoOne_Form_Step2' => NULL,
       'CRM_Upgrade_TwoOne_Form_Step3' => NULL,
@@ -44,4 +44,3 @@ class CRM_Upgrade_TwoOne_Controller extends CRM_Upgrade_Controller {
     return $pages;
   }
 }
-

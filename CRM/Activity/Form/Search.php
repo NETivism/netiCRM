@@ -20,25 +20,19 @@
  | License along with this program; if not, contact CiviCRM LLC       |
  | at info[AT]civicrm[DOT]org. If you have questions about the        |
  | GNU Affero General Public License or the licensing of CiviCRM,     |
- | see the CiviCRM license FAQ at http://civicrm.org/licensing        |    
+ | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
  +--------------------------------------------------------------------+
 */
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  * Files required
  */
-
-
-
-
 
 /**
  * This file is for activity search
@@ -57,7 +51,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * Are we forced to run a search
    *
    * @var int
-   * @access protected
    */
   protected $_force;
 
@@ -65,7 +58,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * name of search button
    *
    * @var string
-   * @access protected
    */
   protected $_searchButtonName;
 
@@ -73,7 +65,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * name of print button
    *
    * @var string
-   * @access protected
    */
   protected $_printButtonName;
 
@@ -81,7 +72,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * name of action button
    *
    * @var string
-   * @access protected
    */
   protected $_actionButtonName;
 
@@ -89,7 +79,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * form values that we will be using
    *
    * @var array
-   * @access protected
    */
   protected $_formValues;
 
@@ -97,14 +86,12 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * the params that are sent to the query
    *
    * @var array
-   * @access protected
    */
   protected $_queryParams;
 
   /**
    * have we already done this search
    *
-   * @access protected
    * @var boolean
    */
   protected $_done;
@@ -112,7 +99,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_single = FALSE;
@@ -120,7 +106,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
   /**
    * are we restricting ourselves to a single contact
    *
-   * @access protected
    * @var boolean
    */
   protected $_limit = NULL;
@@ -128,7 +113,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
   /**
    * what context are we being invoked from
    *
-   * @access protected
    * @var string
    */
   protected $_context = NULL;
@@ -145,7 +129,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * the saved search ID retrieved from the GET vars
    *
    * @var int
-   * @access protected
    */
   protected $_ssID;
 
@@ -153,9 +136,8 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * processing needed for buildForm and later
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('searchFormName', 'Search');
 
     /**
@@ -169,9 +151,9 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
     $this->_done = FALSE;
     $this->defaults = [];
 
-    /* 
-         * we allow the controller to set force/reset externally, useful when we are being 
-         * driven by the wizard framework 
+    /*
+         * we allow the controller to set force/reset externally, useful when we are being
+         * driven by the wizard framework
          */
 
     $this->_reset = CRM_Utils_Request::retrieve('reset', 'Boolean', CRM_Core_DAO::$_nullObject);
@@ -203,14 +185,15 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
-    $selector = new CRM_Activity_Selector_Search($this->_queryParams,
+    $selector = new CRM_Activity_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -225,7 +208,8 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
     $this->assign("{$prefix}limit", $this->_limit);
     $this->assign("{$prefix}single", $this->_single);
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -242,19 +226,17 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
   /**
    * Build the form
    *
-   * @access public
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addElement('text', 'sort_name', ts('With (name or email)'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'sort_name'));
-
 
     CRM_Activity_BAO_Query::buildSearchForm($this);
 
-    /* 
-         * add form checkboxes for each row. This is needed out here to conform to QF protocol 
-         * of all elements being declared in builQuickForm 
+    /*
+         * add form checkboxes for each row. This is needed out here to conform to QF protocol
+         * of all elements being declared in builQuickForm
          */
 
     $rows = $this->get('rows');
@@ -268,21 +250,25 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
 
       $total = $cancel = 0;
 
-
       $permission = CRM_Core_Permission::getPermission();
-
 
       $tasks = ['' => ts('- actions -')] + CRM_Activity_Task::permissionedTaskTitles($permission);
 
       $this->add('select', 'task', ts('Actions:') . ' ', $tasks);
-      $this->add('submit', $this->_actionButtonName, ts('Go'),
+      $this->add(
+        'submit',
+        $this->_actionButtonName,
+        ts('Go'),
         ['class' => 'form-submit',
           'id' => 'Go',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 0);",
         ]
       );
 
-      $this->add('submit', $this->_printButtonName, ts('Print'),
+      $this->add(
+        'submit',
+        $this->_printButtonName,
+        ts('Print'),
         ['class' => 'form-submit',
           'onclick' => "return checkPerformAction('mark_x', '" . $this->getName() . "', 1);",
         ]
@@ -317,12 +303,9 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * The processing consists of using a Selector / Controller framework for getting the
    * search results.
    *
-   * @param
-   *
    * @return void
-   * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     if ($this->_done) {
       return;
     }
@@ -357,7 +340,6 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
 
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
     $this->set('formValues', $this->_formValues);
@@ -375,15 +357,16 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
 
-
     $this->_queryParams = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
 
-    $selector = new CRM_Activity_Selector_Search($this->_queryParams,
+    $selector = new CRM_Activity_Selector_Search(
+      $this->_queryParams,
       $this->_action,
       NULL,
       $this->_single,
@@ -397,7 +380,8 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
       $prefix = $this->_prefix;
     }
 
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       $this->get(CRM_Utils_Pager::PAGE_ID),
       $sortID,
       CRM_Core_Action::VIEW,
@@ -418,11 +402,10 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * This function is used to add the rules (mainly global rules) for form.
    * All local rules are added near the element
    *
-   * @return None
-   * @access public
+   * @return void
    * @see valid_date
    */
-  function addRules() {
+  public function addRules() {
     $this->addFormRule(['CRM_Activity_Form_Search', 'formRule']);
   }
 
@@ -430,13 +413,10 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * global validation rules for the form
    *
    * @param array $fields posted values of the form
-   * @param array $errors list of errors to be posted back to the form
    *
-   * @return void
-   * @static
-   * @access public
+   * @return array|bool
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
 
     if (!empty($errors)) {
@@ -449,17 +429,21 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
   /**
    * Set the default form values
    *
-   * @access protected
    *
-   * @return array the default array reference
+   * @return array
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
     $defaults = $this->_formValues;
     return $defaults;
   }
 
-  function fixFormValues() {
+  /**
+   * Fix form values
+   *
+   * @return void
+   */
+  public function fixFormValues() {
     if (!$this->_force) {
       return;
     }
@@ -469,7 +453,9 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
       $this->_defaults['activity_status_id'] = $status;
     }
 
-    $survey = CRM_Utils_Request::retrieve('survey', 'Positive',
+    $survey = CRM_Utils_Request::retrieve(
+      'survey',
+      'Positive',
       CRM_Core_DAO::$_nullObject
     );
     if ($survey) {
@@ -490,7 +476,12 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
     }
   }
 
-  function getFormValues() {
+  /**
+   * Get form values
+   *
+   * @return null
+   */
+  public function getFormValues() {
     return NULL;
   }
 
@@ -498,10 +489,8 @@ class CRM_Activity_Form_Search extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Find Activities');
   }
 }
-

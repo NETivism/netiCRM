@@ -34,18 +34,17 @@
  *
  */
 
-
 class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
 
-  static function availableHooks($hook) {
+  public static function availableHooks($hook) {
     return CRM_Utils_System::moduleImplements($hook);
   }
 
-  static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
+  public static function invoke($numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5, $fnSuffix, $fnPrefix = '') {
     static $functions = [];
     $config = CRM_Core_Config::singleton();
     $result = [];
-    if ($config->userSystem->version < 8 ){
+    if ($config->userSystem->version < 8) {
       // copied from user_module_invoke
       if (function_exists('module_list')) {
         $procceed = FALSE;
@@ -87,7 +86,7 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
     }
   }
 
-  static function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5) {
+  public static function runHook($fnName, $numParams, &$arg1, &$arg2, &$arg3, &$arg4, &$arg5) {
     if ($numParams == 1) {
       $fResult = $fnName($arg1);
     }
@@ -106,4 +105,3 @@ class CRM_Utils_Hook_Drupal extends CRM_Utils_Hook {
     return $fResult;
   }
 }
-

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for ContactSub Type
@@ -43,10 +39,9 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
 
   public $_parentId;
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void None.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -54,11 +49,17 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
       return;
     }
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text', 'label', ts('Name'),
+    $this->add(
+      'text',
+      'label',
+      ts('Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_ContactType', 'label'),
       TRUE
     );
-    $contactType = $this->add('select', 'parent_id', ts('Basic Contact Type'),
+    $contactType = $this->add(
+      'select',
+      'parent_id',
+      ts('Basic Contact Type'),
       CRM_Contact_BAO_ContactType::basicTypePairs(FALSE, 'id')
     );
     $enabled = $this->add('checkbox', 'is_active', ts('Enabled?'));
@@ -75,7 +76,10 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
       }
     }
     $this->addElement('text', 'image_URL', ts('Image URL'));
-    $this->add('text', 'description', ts('Description'),
+    $this->add(
+      'text',
+      'description',
+      ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_ContactType', 'description')
     );
 
@@ -84,15 +88,15 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
+   * @param array $fields The submitted form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array True or error array.
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
 
     $errors = [];
 
@@ -110,11 +114,9 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void None.
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -141,9 +143,9 @@ class CRM_Admin_Form_ContactType extends CRM_Admin_Form {
       $params['name'] = ucfirst(CRM_Utils_String::munge($params['label']));
     }
     $contactType = CRM_Contact_BAO_ContactType::add($params);
-    CRM_Core_Session::setStatus(ts("The Contact Type '%1' has been saved.",
-        [1 => $contactType->label]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      "The Contact Type '%1' has been saved.",
+      [1 => $contactType->label]
+    ));
   }
 }
-

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Navigation
@@ -52,10 +48,9 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
   protected $_defaults = [];
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -70,7 +65,8 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     }
 
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text',
+    $this->add(
+      'text',
       'label',
       ts('Title'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_Navigation', 'label'),
@@ -80,8 +76,11 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     $this->add('text', 'url', ts('Url'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_Navigation', 'url'));
 
     $permissions = CRM_Core_Permission::basicPermissions(TRUE);
-    $include = &$this->addElement('advmultiselect', 'permission',
-      ts('Permission') . ' ', $permissions,
+    $include = &$this->addElement(
+      'advmultiselect',
+      'permission',
+      ts('Permission') . ' ',
+      $permissions,
       ['size' => 5,
         'style' => 'width:150px',
         'class' => 'advmultiselect',
@@ -115,6 +114,11 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
     }
   }
 
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
   public function setDefaultValues() {
     $defaults = $this->_defaults;
     if (isset($this->_id)) {
@@ -139,11 +143,9 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     // get the submitted form values.
@@ -160,10 +162,10 @@ class CRM_Admin_Form_Navigation extends CRM_Admin_Form {
 
     CRM_Core_BAO_Navigation::resetNavigation();
 
-    CRM_Core_Session::setStatus(ts('Menu \'%1\' has been saved.',
-        [1 => $navigation->label]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      'Menu \'%1\' has been saved.',
+      [1 => $navigation->label]
+    ));
   }
   //end of function
 }
-

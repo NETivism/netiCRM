@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,16 +39,16 @@ class CRM_Contact_Form_NewContact {
   /**
    * Function used to build form element for new contact or select contact widget
    *
-   * @param object   $form form object
-   * @param int      $blocNo by default it is one, except for address block where it is
+   * @param CRM_Core_Form $form form object
+   * @param int $blockNo by default it is one, except for address block where it is
    *                 build for each block
-   * @param array    $extrProfiles extra profiles that should be included besides reserved
+   * @param array $extraProfiles extra profiles that should be included besides reserved
    *
    * @access public
    *
    * @return void
    */
-  static function buildQuickForm(&$form, $blockNo = 1, $extraProfiles = NULL) {
+  public static function buildQuickForm(&$form, $blockNo = 1, $extraProfiles = NULL) {
     // call to build contact autocomplete
     $attributes = ['width' => '200px'];
     $form->add('text', "contact[{$blockNo}]", ts('Select Contact'), $attributes);
@@ -62,13 +60,16 @@ class CRM_Contact_Form_NewContact {
       // build select for new contact
 
       $contactProfiles = CRM_Core_BAO_UFGroup::getReservedProfiles('Contact', $extraProfiles);
-      $form->add('select', "profiles[{$blockNo}]", ts('Create New Contact'),
+      $form->add(
+        'select',
+        "profiles[{$blockNo}]",
+        ts('Create New Contact'),
         ['' => ts('- create new contact -')] + $contactProfiles,
-        FALSE, ['onChange' => "if (this.value) {  newContact{$blockNo}( this.value, {$blockNo} );}"]
+        FALSE,
+        ['onChange' => "if (this.value) {  newContact{$blockNo}( this.value, {$blockNo} );}"]
       );
     }
 
     $form->assign('blockNo', $blockNo);
   }
 }
-

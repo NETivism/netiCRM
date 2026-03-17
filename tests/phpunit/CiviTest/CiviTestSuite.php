@@ -31,7 +31,7 @@
  */
 // require_once 'PHPUnit/Framework/TestSuite.php';
 global $civicrm_root;
-$civicrm_root = dirname (dirname (dirname (dirname( __FILE__ ) )));
+$civicrm_root = dirname(__FILE__, 4);
 $include_path = '.' . PATH_SEPARATOR .
                 $civicrm_root . PATH_SEPARATOR .
                 $civicrm_root . DIRECTORY_SEPARATOR . 'packages' . PATH_SEPARATOR . get_include_path();
@@ -46,9 +46,10 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
   /**
    * Simple name based constructor
    */
-  function __construct($theClass = '', $name = '') {
+  public function __construct($theClass = '', $name = '') {
     if (empty($name)) {
-      $name = str_replace('_',
+      $name = str_replace(
+        '_',
         ' ',
         get_class($this)
       );
@@ -81,13 +82,15 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
    *  suppress failed test error issued by phpunit when it finds
    *  a test suite with no tests
    */
-  function testNothing() {}
+  public function testNothing() {
+  }
 
   /**
    *
    */
   protected function implSuite($myfile) {
-    $name = str_replace('_',
+    $name = str_replace(
+      '_',
       ' ',
       get_class($this)
     );
@@ -96,7 +99,9 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
     $name = str_replace('AllTests', 'All Tests', $name);
 
     $suite = new PHPUnit_Framework_TestSuite($name);
-    $this->addAllTests($suite, $myfile,
+    $this->addAllTests(
+      $suite,
+      $myfile,
       new SplFileInfo(dirname($myfile))
     );
     return $suite;
@@ -109,8 +114,10 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
    *  @param  object  Directory to scan
    *  @return Test suite has been updated
    */
-  protected function addAllTests(PHPUnit_Framework_TestSuite & $suite,
-    $myfile, SplFileInfo $dirInfo
+  protected function addAllTests(
+    PHPUnit_Framework_TestSuite &$suite,
+    $myfile,
+    SplFileInfo $dirInfo
   ) {
     //echo get_class($this)."::addAllTests($myfile,".$dirInfo->getRealPath().")\n";
     if (!$dirInfo->isReadable()
@@ -124,7 +131,8 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
     $dir = new DirectoryIterator($dirInfo->getRealPath());
     foreach ($dir as $fileInfo) {
       if ($fileInfo->isReadable() && $fileInfo->isFile()
-        && preg_match('/Tests.php$/',
+        && preg_match(
+          '/Tests.php$/',
           $fileInfo->getFilename()
         )
       ) {
@@ -140,9 +148,10 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
         $oldClassNames = get_declared_classes();
         require_once $fileInfo->getRealPath();
         $newClassNames = get_declared_classes();
-        foreach (array_diff($newClassNames,
-            $oldClassNames
-          ) as $name) {
+        foreach (array_diff(
+          $newClassNames,
+          $oldClassNames
+        ) as $name) {
           if (preg_match('/Tests$/', $name)) {
             //echo "adding test $name\n";
             $suite->addTest(call_user_func($name . '::suite'));
@@ -170,7 +179,8 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
     $dir = new DirectoryIterator($dirInfo->getRealPath());
     foreach ($dir as $fileInfo) {
       if ($fileInfo->isReadable() && $fileInfo->isFile()
-        && preg_match('/Test.php$/',
+        && preg_match(
+          '/Test.php$/',
           $fileInfo->getFilename()
         )
       ) {
@@ -181,9 +191,10 @@ class CiviTestSuite extends PHPUnit_Framework_TestSuite {
         $oldClassNames = get_declared_classes();
         require_once $fileInfo->getRealPath();
         $newClassNames = get_declared_classes();
-        foreach (array_diff($newClassNames,
-            $oldClassNames
-          ) as $name) {
+        foreach (array_diff(
+          $newClassNames,
+          $oldClassNames
+        ) as $name) {
           if (preg_match('/Test$/', $name)) {
             //echo "adding suite $name\n";
             $suite->addTestSuite($name);

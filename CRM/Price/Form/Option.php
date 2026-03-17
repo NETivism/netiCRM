@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * form to process actions on the field aspect of Custom
@@ -44,7 +40,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
    * the price field id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_fid;
 
@@ -52,40 +47,37 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
    * option value  id, used when editing the Option
    *
    * @var int
-   * @access protected
    */
   protected $_oid;
 
   /**
-   * Function to set variables up before form is built
-   *
-   * @param null
+   * Function to set variables up before form is built.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
 
-    $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive',
+    $this->_fid = CRM_Utils_Request::retrieve(
+      'fid',
+      'Positive',
       $this
     );
-    $this->_oid = CRM_Utils_Request::retrieve('oid', 'Positive',
+    $this->_oid = CRM_Utils_Request::retrieve(
+      'oid',
+      'Positive',
       $this
     );
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @param null
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
-
 
     if (isset($this->_oid)) {
       $params = ['id' => $this->_oid];
@@ -97,9 +89,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
       $defaults['value'] = CRM_Utils_Money::format($defaults['value'], NULL, '%a');
     }
 
-
-
-
     if (!isset($defaults['weight']) || !$defaults['weight']) {
       $fieldValues = ['price_field_id' => $this->_fid];
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Price_DAO_FieldValue', $fieldValues);
@@ -110,16 +99,14 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   }
 
   /**
-   * Function to actually build the form
-   *
-   * @param null
+   * Function to actually build the form.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
           ],
@@ -151,7 +138,6 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
                             array( 'CRM_Core_DAO_OptionValue', $this->_oid, $this->_ogId, 'label' ) );
             */
 
-
       // value
       $this->add('text', 'amount', ts('Option Amount'), NULL, TRUE);
 
@@ -168,14 +154,15 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
       if ($this->_fid) {
         $maxValue = CRM_Core_DAO::getFieldValue('CRM_Price_BAO_Field', $this->_fid, 'max_value');
         if ($maxValue) {
-          $readonly = ['readonly' => true];
+          $readonly = ['readonly' => TRUE];
           $number = ['min' => 0, 'max' => 1];
         }
         $this->assign('field_max_value', $maxValue);
       }
-      if($maxValue){
+      if ($maxValue) {
         $ele = $this->addNumber('count', ts('Participants Count'), $number);
-      }else{
+      }
+      else {
         $ele = $this->add('text', 'count', ts('Participants Count'));
       }
       $this->addRule('count', ts('Please enter a valid Max Participants.'), 'positiveInteger');
@@ -205,7 +192,8 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
         }
       }
       // add buttons
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
           ],
@@ -218,7 +206,8 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
       // if view mode pls freeze it with the done button.
       if ($this->_action & CRM_Core_Action::VIEW) {
         $this->freeze();
-        $this->addButtons([
+        $this->addButtons(
+          [
             ['type' => 'cancel',
               'name' => ts('Done with Preview'),
               'isDefault' => TRUE,
@@ -232,16 +221,15 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   }
 
   /**
-   * global validation rules for the form
+   * Global validation rules for the form.
    *
-   * @param array  $fields   (referance) posted values of the form
+   * @param array $fields (reference) posted values of the form
+   * @param array $files
+   * @param CRM_Core_Form $form
    *
-   * @return array    if errors then list of errors to be posted back to the form,
-   *                  true otherwise
-   * @static
-   * @access public
+   * @return array|bool if errors then list of errors to be posted back to the form, true otherwise
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     if ($fields['count'] && $fields['max_value'] &&
       $fields['count'] > $fields['max_value']
@@ -253,21 +241,20 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
   }
 
   /**
-   * Process the form
-   *
-   * @param null
+   * Process the form.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
 
     if ($this->_action == CRM_Core_Action::DELETE) {
       $fieldValues = ['price_field_id' => $this->_fid];
       $wt = CRM_Utils_Weight::delWeight('CRM_Price_DAO_FieldValue', $this->_oid, $fieldValues);
-      $label = CRM_Core_DAO::getFieldValue("CRM_Price_DAO_FieldValue",
+      $label = CRM_Core_DAO::getFieldValue(
+        "CRM_Price_DAO_FieldValue",
         $this->_oid,
-        'label', 'id'
+        'label',
+        'id'
       );
 
       if (CRM_Price_BAO_FieldValue::del($this->_oid)) {
@@ -296,4 +283,3 @@ class CRM_Price_Form_Option extends CRM_Core_Form {
     }
   }
 }
-

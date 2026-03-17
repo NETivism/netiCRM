@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to add contact(s) to Organization
@@ -41,13 +37,11 @@
 class CRM_Contact_Form_Task_AddToOrganization extends CRM_Contact_Form_Task {
 
   /**
-   * Build the form
-   *
-   * @access public
+   * Build all the data structures needed to build the form.
    *
    * @return void
    */
-  function preProcess() {
+  public function preProcess() {
     /*
          * initialize the task and row fields
          */
@@ -62,16 +56,18 @@ class CRM_Contact_Form_Task_AddToOrganization extends CRM_Contact_Form_Task {
    *
    * @return None
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
 
     CRM_Utils_System::setTitle(ts('Add Contacts to Organization'));
     $this->addElement('text', 'name', ts('Find Target Organization'));
 
-    $this->add('select',
+    $this->add(
+      'select',
       'relationship_type_id',
       ts('Relationship Type'),
       ['' => ts('- select -')] +
-      CRM_Contact_BAO_Relationship::getRelationType("Organization"), TRUE
+      CRM_Contact_BAO_Relationship::getRelationType("Organization"),
+      TRUE
     );
 
     $searchRows = $this->get('searchRows');
@@ -94,15 +90,14 @@ class CRM_Contact_Form_Task_AddToOrganization extends CRM_Contact_Form_Task {
       $this->assign('searchRows', $searchRows);
     }
 
-
     $this->assign('searchCount', $searchCount);
     $this->assign('searchDone', $this->get('searchDone'));
     $this->assign('contact_type_display', ts('Organization'));
     $this->addElement('submit', $this->getButtonName('refresh'), ts('Search'), ['class' => 'form-submit']);
     $this->addElement('submit', $this->getButtonName('cancel'), ts('Cancel'), ['class' => 'form-submit']);
 
-
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Add to Organization'),
           'isDefault' => TRUE,
@@ -154,11 +149,12 @@ class CRM_Contact_Form_Task_AddToOrganization extends CRM_Contact_Form_Task {
           continue;
         }
 
-        if (CRM_Contact_BAO_Relationship::checkDuplicateRelationship($params,
-            CRM_Utils_Array::value('contact', $ids),
-            // step 2
-            $params['contact_check']
-          )) {
+        if (CRM_Contact_BAO_Relationship::checkDuplicateRelationship(
+          $params,
+          CRM_Utils_Array::value('contact', $ids),
+          // step 2
+          $params['contact_check']
+        )) {
           $duplicate++;
           continue;
         }
@@ -184,4 +180,3 @@ class CRM_Contact_Form_Task_AddToOrganization extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

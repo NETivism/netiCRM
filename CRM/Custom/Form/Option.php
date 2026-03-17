@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * form to process actions on the field aspect of Custom
@@ -45,7 +41,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * the custom field id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_fid;
 
@@ -53,7 +48,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * the custom group id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
@@ -66,17 +60,13 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * The Option id, used when editing the Option
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
   /**
    * Function to set variables up before form is built
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_fid = CRM_Utils_Request::retrieve('fid', 'Positive', $this);
@@ -103,13 +93,15 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
 
     $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
     if (!isset($this->_gid) && $this->_fid) {
-      $this->_gid = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+      $this->_gid = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_CustomField',
         $this->_fid,
         'custom_group_id'
       );
     }
     if ($this->_fid) {
-      $this->_optionGroupID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomField',
+      $this->_optionGroupID = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_DAO_CustomField',
         $this->_fid,
         'option_group_id'
       );
@@ -122,12 +114,9 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @param null
-   *
-   * @return array   array of default values
-   * @access public
+   * @return array array of default values
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $fieldDefaults = [];
     if (isset($this->_id)) {
       $params = ['id' => $this->_id];
@@ -140,7 +129,8 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
         || $fieldDefaults['html_type'] == 'Multi-Select'
         || $fieldDefaults['html_type'] == 'AdvMulti-Select'
       ) {
-        $defaultCheckValues = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+        $defaultCheckValues = explode(
+          CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
           substr($fieldDefaults['default_value'], 1, -1)
         );
         if (in_array($defaults['value'], $defaultCheckValues)) {
@@ -157,7 +147,6 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
       $defaults['is_active'] = 1;
     }
 
-
     if ($this->_action & CRM_Core_Action::ADD) {
       $fieldValues = ['option_group_id' => $this->_optionGroupID];
       $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue', $fieldValues);
@@ -169,14 +158,12 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_action == CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'isDefault' => TRUE,
@@ -221,7 +208,8 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
       $this->addFormRule(['CRM_Custom_Form_Option', 'formRule'], $this);
 
       // add buttons
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'isDefault' => TRUE,
@@ -236,15 +224,18 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
         ]
       );
 
-
       // if view mode pls freeze it with the done button.
       if ($this->_action & CRM_Core_Action::VIEW) {
         $this->freeze();
-        $url = CRM_Utils_System::url('civicrm/admin/custom/group/field/option',
+        $url = CRM_Utils_System::url(
+          'civicrm/admin/custom/group/field/option',
           'reset=1&action=browse&fid=' . $this->_fid . '&gid=' . $this->_gid,
-          TRUE, NULL, FALSE
+          TRUE,
+          NULL,
+          FALSE
         );
-        $this->addElement('button',
+        $this->addElement(
+          'button',
           'done',
           ts('Done'),
           ['onclick' => "location.href='$url'", 'class' => 'form-submit']
@@ -258,12 +249,12 @@ class CRM_Custom_Form_Option extends CRM_Core_Form {
    * global validation rules for the form
    *
    * @param array $fields posted values of the form
+   * @param array $files
+   * @param CRM_Custom_Form_Option $form
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
-  static function formRule($fields, $files, $form) {
+  public static function formRule($fields, $files, $form) {
     $optionLabel = CRM_Utils_Type::escape($fields['label'], 'String');
     $optionValue = CRM_Utils_Type::escape($fields['value'], 'String');
     $fieldId = $form->_fid;
@@ -403,18 +394,13 @@ SELECT count(*)
   /**
    * Process the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
-
   public function postProcess() {
     // store the submitted values in an array
     $params = $this->controller->exportValues('Option');
 
     // set values for custom field properties and save
-
 
     $customOption = new CRM_Core_DAO_OptionValue();
     $customOption->label = $params['label'];
@@ -448,12 +434,14 @@ SELECT count(*)
     $customField = new CRM_Core_DAO_CustomField();
     $customField->id = $this->_fid;
     if ($customField->find(TRUE) &&
-      ($customField->html_type == 'CheckBox' ||
+      (
+        $customField->html_type == 'CheckBox' ||
         $customField->html_type == 'AdvMulti-Select' ||
         $customField->html_type == 'Multi-Select'
       )
     ) {
-      $defVal = explode(CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
+      $defVal = explode(
+        CRM_Core_BAO_CustomOption::VALUE_SEPERATOR,
         substr($customField->default_value, 1, -1)
       );
       if (CRM_Utils_Array::value('default_value', $params)) {
@@ -514,10 +502,10 @@ SELECT count(*)
     $session = CRM_Core_Session::singleton();
     if ($buttonName == $this->getButtonName('next', 'new')) {
       CRM_Core_Session::setStatus(ts(' You can add another option.'));
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field/option',
-          'reset=1&action=add&fid=' . $this->_fid . '&gid=' . $this->_gid
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/admin/custom/group/field/option',
+        'reset=1&action=add&fid=' . $this->_fid . '&gid=' . $this->_gid
+      ));
     }
   }
 }
-

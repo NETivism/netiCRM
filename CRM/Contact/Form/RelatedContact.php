@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components generic to all the contact types.
@@ -73,10 +68,14 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // reset action from the session
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'update'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'update'
     );
     $this->_contactId = CRM_Utils_Request::retrieve('cid', 'Positive', $this, TRUE);
 
@@ -114,16 +113,16 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return array defaults array
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -131,13 +130,16 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
     $params['id'] = $params['contact_id'] = $this->_contactId;
     $contact = CRM_Contact_BAO_Contact::retrieve($params, $this->_defaults);
 
-    $countryID = CRM_Utils_Array::value('country_id',
+    $countryID = CRM_Utils_Array::value(
+      'country_id',
       $this->_defaults['address'][1]
     );
-    $stateID = CRM_Utils_Array::value('state_province_id',
+    $stateID = CRM_Utils_Array::value(
+      'state_province_id',
       $this->_defaults['address'][1]
     );
-    CRM_Contact_BAO_Contact_Utils::buildOnBehalfForm($this,
+    CRM_Contact_BAO_Contact_Utils::buildOnBehalfForm(
+      $this,
       $this->_contactType,
       $countryID,
       $stateID,
@@ -161,12 +163,11 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // store the submitted values in an array
     $params = $this->controller->exportValues($this->_name);
-
 
     $locType = CRM_Core_BAO_LocationType::getDefault();
     foreach (['phone', 'email', 'address'] as $locFld) {
@@ -183,7 +184,6 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
     $params['contact_type'] = $this->_contactType;
     $params['contact_id'] = $this->_contactId;
 
-
     $contact = &CRM_Contact_BAO_Contact::create($params, TRUE, FALSE);
 
     if ($this->_contactType == 'Household' && ($this->_action & CRM_Core_Action::UPDATE)) {
@@ -192,9 +192,9 @@ class CRM_Contact_Form_RelatedContact extends CRM_Core_Form {
     }
 
     // set status message.
-    CRM_Core_Session::setStatus(ts('Your %1 contact record has been saved.',
-        [1 => $contact->contact_type_display]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      'Your %1 contact record has been saved.',
+      [1 => $contact->contact_type_display]
+    ));
   }
 }
-

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for File System Path
@@ -42,10 +38,9 @@
 class CRM_Admin_Form_Setting_Path extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Upload Directories'));
@@ -59,8 +54,10 @@ class CRM_Admin_Form_Setting_Path extends CRM_Admin_Form_Setting {
     ];
     foreach ($directories as $name => $title) {
       $this->add('text', $name, $title);
-      $this->addRule($name,
-        ts("'%1' directory does not exist",
+      $this->addRule(
+        $name,
+        ts(
+          "'%1' directory does not exist",
           [1 => $title]
         ),
         'fileExists'
@@ -70,10 +67,14 @@ class CRM_Admin_Form_Setting_Path extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void
+   */
   public function postProcess() {
     parent::postProcess();
 
     parent::rebuildMenu();
   }
 }
-

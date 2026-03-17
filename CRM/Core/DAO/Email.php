@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-        class CRM_Core_DAO_Email extends CRM_Core_DAO
-{
+
+class CRM_Core_DAO_Email extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_email';
+  public static $_tableName = 'civicrm_email';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Unique Email ID
    *
    * @var int unsigned
@@ -150,24 +148,20 @@
    * @var text
    */
   public $signature_html;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_email
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
   /**
    * return foreign links
    *
-   * @access public
    * @return array
    */
-  function &links()
-  {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         'contact_id' => 'civicrm_contact:id',
@@ -175,117 +169,114 @@
     }
     return self::$_links;
   }
-   /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
    *   [CRM_Core_Reference_Interface]
    */
-  public static function getReferenceColumns()
-  {
+  public static function getReferenceColumns() {
     if (!isset(Civi::$statics[__CLASS__]['links'])) {
-      Civi::$statics[__CLASS__]['links'] = static ::createReferenceColumns(__CLASS__);
-      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName() , 'contact_id', 'civicrm_contact', 'id');
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contact_id', 'civicrm_contact', 'id');
     }
     return Civi::$statics[__CLASS__]['links'];
   }
-   /**
+  /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'contact_id' => [
           'name' => 'contact_id',
           'type' => CRM_Utils_Type::T_INT,
-                    'FKClassName' => 'CRM_Contact_DAO_Contact',
-        ] ,
+          'FKClassName' => 'CRM_Contact_DAO_Contact',
+        ],
         'location_type_id' => [
           'name' => 'location_type_id',
           'type' => CRM_Utils_Type::T_INT,
-                  ] ,
+        ],
         'email' => [
           'name' => 'email',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Email') ,
-           'maxlength' => 64,
-           'size' => CRM_Utils_Type::BIG,
-             'import' => true,
+          'maxlength' => 64,
+          'size' => CRM_Utils_Type::BIG,
+          'import' => TRUE,
           'where' => 'civicrm_email.email',
           'headerPattern' => '/e.?mail/i',
           'dataPattern' => '/^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/',
-           'export' => true,
-           'rule' => 'email',
-           ] ,
+          'export' => TRUE,
+          'rule' => 'email',
+        ],
         'is_primary' => [
           'name' => 'is_primary',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'is_billing' => [
           'name' => 'is_billing',
           'type' => CRM_Utils_Type::T_BOOLEAN,
-                  ] ,
+        ],
         'on_hold' => [
           'name' => 'on_hold',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('On Hold') ,
-          'required' => true,
-                'export' => true,
+          'required' => TRUE,
+          'export' => TRUE,
           'where' => 'civicrm_email.on_hold',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'is_bulkmail' => [
           'name' => 'is_bulkmail',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Use for Bulk Mail') ,
-          'required' => true,
-                'export' => true,
+          'required' => TRUE,
+          'export' => TRUE,
           'where' => 'civicrm_email.is_bulkmail',
           'headerPattern' => '',
           'dataPattern' => '',
-            ] ,
+        ],
         'hold_date' => [
           'name' => 'hold_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Hold Date') ,
-                  ] ,
+        ],
         'reset_date' => [
           'name' => 'reset_date',
           'type' => CRM_Utils_Type::T_DATE + CRM_Utils_Type::T_TIME,
           'title' => ts('Reset Date') ,
-                  ] ,
+        ],
         'signature_text' => [
           'name' => 'signature_text',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Signature Text') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_email.signature_text',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            'default' => 'UL',
-          ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+        ],
         'signature_html' => [
           'name' => 'signature_html',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Signature Html') ,
-               'import' => true,
+          'import' => TRUE,
           'where' => 'civicrm_email.signature_html',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-            'default' => 'UL',
-          ] ,
+          'export' => TRUE,
+          'default' => 'UL',
+        ],
       ];
     }
     return self::$_fields;
@@ -293,31 +284,25 @@
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        return self::$_tableName;
-      }
+  public static function getTableName() {
+    return self::$_tableName;
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -325,22 +310,21 @@
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['email'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -348,12 +332,13 @@
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['email'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-                                  }
+    }
     return self::$_export;
   }
 }

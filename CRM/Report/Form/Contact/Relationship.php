@@ -27,34 +27,95 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
 
   /**
-   * @var never[]
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
-  public $_from;
-  public $_aliases;
-  public $_where;
+
   /**
+   * The SQL FROM clause built by from().
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
+  public $_aliases;
+
+  /**
+   * The SQL WHERE clause built by where().
+   *
+   * @var string
+   */
+  public $_where;
+
+  /**
+   * The SQL GROUP BY clause built by groupBy().
+   *
    * @var string
    */
   public $_groupBy;
+
+  /**
+   * The relationship direction extracted from the relationship_type_id filter value
+   * (e.g. 'a_b' or 'b_a'). Set during postProcess().
+   *
+   * @var string|null
+   */
   public $relationType;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
   protected $_summary = NULL;
+
+  /**
+   * Whether the email table for contact A is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_emailField_a = FALSE;
+
+  /**
+   * Whether the email table for contact B is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_emailField_b = FALSE;
-  protected $_customGroupExtends = ['Relationship']; function __construct() {
+
+  /**
+   * Entity type whose custom fields are available in this report.
+   *
+   * @var string[]
+   */
+  protected $_customGroupExtends = ['Relationship'];
+
+  /**
+   * Initialises column definitions for contact A, contact B, email A, email B,
+   * relationship type, relationship, address, and group tables.
+   */
+  public function __construct() {
 
     $contact_type = CRM_Contact_BAO_ContactType::getSelectElements(FALSE, TRUE, '_');
 
@@ -225,11 +286,22 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields, tracking which email
+   * tables need to be joined. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
+  public function select() {
     $select = $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('fields', $table)) {
@@ -255,7 +327,14 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining relationship to both contact A and contact B. Conditionally
+   * inner-joins address when country/state filters are active, and left-joins email tables
+   * when the corresponding email fields are selected. Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = "
         FROM civicrm_relationship {$this->_aliases['civicrm_relationship']}
  
@@ -303,7 +382,15 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  /**
+   * Builds the WHERE and HAVING clauses from submitted filter values. For contact_type_a
+   * and contact_type_b filters, the combined value (e.g. 'Individual_Student') is split
+   * into main type and sub-type and matched separately with an OR clause. Appends ACL
+   * restrictions. Populates $_where and $_having.
+   *
+   * @return void
+   */
+  public function where() {
     $whereClauses = $havingClauses = [];
     foreach ($this->_columns as $tableName => $table) {
       if (CRM_Utils_Array::arrayKeyExists('filters', $table)) {
@@ -339,7 +426,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
                 }
 
                 if (!empty($contactTypes)) {
-                  $clause = $this->whereClause($field,
+                  $clause = $this->whereClause(
+                    $field,
                     $op,
                     $contactTypes,
                     CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -355,7 +443,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
                     $field['name'] = 'contact_sub_type_b';
                   }
                   $field['dbAlias'] = $field['alias'] . '.' . $field['name'];
-                  $subTypeClause = $this->whereClause($field,
+                  $subTypeClause = $this->whereClause(
+                    $field,
                     $op,
                     $contactSubTypes,
                     CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -371,7 +460,8 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
               }
               else {
 
-                $clause = $this->whereClause($field,
+                $clause = $this->whereClause(
+                  $field,
                   $op,
                   CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                   CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -411,7 +501,15 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 
-  function statistics(&$rows) {
+  /**
+   * Computes report statistics by delegating to the parent, then enriches the filters
+   * summary with human-readable relationship type and relationship status labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return array Statistics array with 'count' and 'filters' entries.
+   */
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     $isStatusFilter = FALSE;
@@ -446,7 +544,14 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     return $statistics;
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause. When a specific relationship direction is selected
+   * (a_b or b_a), groups by the primary contact side plus relationship ID.
+   * Otherwise groups by relationship ID only. Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = " ";
     $groupBy = [];
     if ($this->relationType == 'a_b') {
@@ -464,7 +569,15 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 
-  function postProcess() {
+  /**
+   * Parses the relationship_type_id filter to extract direction (a_b/b_a) and stores
+   * it in $relationType. Builds ACL clauses for both contact aliases, assembles and runs
+   * the query, restores the original filter value (preserving it across form submissions),
+   * then finalises display output.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $this->beginPostProcess();
 
     $this->relationType = NULL;
@@ -490,7 +603,15 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Post-processes result rows to resolve country and state/province IDs to labels,
+   * and linkify contact A and contact B names to the contact detail report.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
 
@@ -514,9 +635,11 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name_a', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_a_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_a_hover'] = ts("View Contact details for this contact.");
@@ -526,9 +649,11 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_b_display_name_b', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_b_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_b_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_b_display_name_b_link'] = $url;
         $rows[$rowNum]['civicrm_contact_b_display_name_b_hover'] = ts("View Contact details for this contact.");
@@ -543,4 +668,3 @@ class CRM_Report_Form_Contact_Relationship extends CRM_Report_Form {
     }
   }
 }
-

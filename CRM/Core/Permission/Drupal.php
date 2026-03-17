@@ -26,10 +26,9 @@
 */
 
 /**
+ * Drupal-specific permission checking and management implementation
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,36 +42,32 @@ class CRM_Core_Permission_Drupal {
    *
    * @var boolean
    */
-  static protected $_viewAdminUser = FALSE;
-  static protected $_editAdminUser = FALSE;
+  protected static $_viewAdminUser = FALSE;
+  protected static $_editAdminUser = FALSE;
 
   /**
    * am in in view permission or edit permission?
    * @var boolean
    */
-  static protected $_viewPermission = FALSE;
-  static protected $_editPermission = FALSE;
+  protected static $_viewPermission = FALSE;
+  protected static $_editPermission = FALSE;
 
   /**
    * the current set of permissioned groups for the user
    *
    * @var array
    */
-  static protected $_viewPermissionedGroups;
-  static protected $_editPermissionedGroups;
+  protected static $_viewPermissionedGroups;
+  protected static $_editPermissionedGroups;
 
   /**
    * Get all groups from database, filtered by permissions
-   * for this user
+   * for this user.
    *
-   * @param string $groupType     type of group(Access/Mailing)
-   * @param boolen $excludeHidden exclude hidden groups.
+   * @param string|null $groupType Type of group (Access/Mailing).
+   * @param bool $excludeHidden Whether to exclude hidden groups.
    *
-   * @access public
-   * @static
-   *
-   * @return array - array reference of all groups.
-   *
+   * @return array List of all groups.
    */
   public static function &group($groupType = NULL, $excludeHidden = TRUE) {
     if (!isset(self::$_viewPermissionedGroups)) {
@@ -95,8 +90,6 @@ class CRM_Core_Permission_Drupal {
         self::$_viewPermissionedGroups = $groups;
       }
 
-
-
       $ids = CRM_ACL_API::group(CRM_Core_Permission::VIEW, NULL, 'civicrm_saved_search', $groups);
       foreach (array_values($ids) as $id) {
         $title = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Group', $id, 'title');
@@ -118,14 +111,14 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * Get group clause for this user
+   * Get group clause for this user.
    *
-   * @param int $type the type of permission needed
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int $type The type of permission needed.
+   * @param array $tables (reference) The tables that are needed for the select clause.
+   * @param array $whereTables (reference) The tables that are needed for the where clause.
+   * @param string $context The context.
    *
-   * @return string the group where clause for this user
-   * @access public
+   * @return string The group where clause for this user.
    */
   public static function groupClause($type, &$tables, &$whereTables, $context) {
     if (!isset(self::$_viewPermissionedGroups)) {
@@ -147,13 +140,14 @@ class CRM_Core_Permission_Drupal {
         $whereTables['civicrm_group_contact'] = 1;
 
         // foreach group that is potentially a saved search, add the saved search clause
-        if($context == 'contact'){
+        if ($context == 'contact') {
           foreach (array_keys(self::$_editPermissionedGroups) as $id) {
             $group = new CRM_Contact_DAO_Group();
             $group->id = $id;
             if ($group->find(TRUE) && $group->saved_search_id) {
 
-              $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
+              $clause = CRM_Contact_BAO_SavedSearch::whereClause(
+                $group->saved_search_id,
                 $tables,
                 $whereTables
               );
@@ -180,15 +174,15 @@ class CRM_Core_Permission_Drupal {
         $tables['civicrm_group_contact'] = 1;
         $whereTables['civicrm_group_contact'] = 1;
 
-
         // foreach group that is potentially a saved search, add the saved search clause
-        if($context == 'contact'){
+        if ($context == 'contact') {
           foreach (array_keys(self::$_viewPermissionedGroups) as $id) {
             $group = new CRM_Contact_DAO_Group();
             $group->id = $id;
             if ($group->find(TRUE) && $group->saved_search_id) {
 
-              $clause = CRM_Contact_BAO_SavedSearch::whereClause($group->saved_search_id,
+              $clause = CRM_Contact_BAO_SavedSearch::whereClause(
+                $group->saved_search_id,
                 $tables,
                 $whereTables
               );
@@ -206,9 +200,9 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * get the current permission of this user
+   * Get the current permission of this user.
    *
-   * @return string the permission of the user (edit or view or null)
+   * @return int|null The permission level.
    */
   public static function getPermission() {
     self::group();
@@ -223,14 +217,14 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * Get the permissioned where clause for the user
+   * Get the permissioned where clause for the user.
    *
-   * @param int $type the type of permission needed
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int $type The type of permission needed.
+   * @param array $tables (reference) The tables that are needed for the select clause.
+   * @param array $whereTables (reference) The tables that are needed for the where clause.
+   * @param string $context The context.
    *
-   * @return string the group where clause for this user
-   * @access public
+   * @return string The group where clause for this user.
    */
   public static function whereClause($type, &$tables, &$whereTables, $context) {
     self::group();
@@ -239,15 +233,14 @@ class CRM_Core_Permission_Drupal {
   }
 
   /**
-   * given a permission string, check for access requirements
+   * Given a permission string, check for access requirements.
    *
-   * @param string $str the permission to check
+   * @param string $permission The permission to check.
+   * @param int|null $contactID Optional contact ID to check for.
    *
-   * @return boolean true if yes, else false
-   * @static
-   * @access public
+   * @return bool True if yes, else false.
    */
-  static function check($permission, $contactID = NULL) {
+  public static function check($permission, $contactID = NULL) {
     $ufID = NULL;
     if ($contactID) {
       $ufID = CRM_Core_BAO_UFMatch::getUFId($contactID);
@@ -255,4 +248,3 @@ class CRM_Core_Permission_Drupal {
     return CRM_Core_Config::$_userSystem->permissionCheck($permission, $ufID);
   }
 }
-

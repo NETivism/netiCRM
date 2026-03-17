@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Main page for viewing all Saved searches.
@@ -47,8 +43,13 @@ class CRM_Contact_Page_CustomSearch extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
+  /**
+   * Get info about custom searches.
+   *
+   * @return array
+   */
   public static function &info() {
     $sql = "
 SELECT v.value, v.label, v.name, v.description
@@ -59,7 +60,8 @@ AND    g.name = 'custom_search'
 AND    v.is_active = 1
 ORDER By  v.weight
 ";
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -78,28 +80,29 @@ ORDER By  v.weight
   /**
    * Browse all custom searches.
    *
-   * @return content of the parents run method
-   *
+   * @return void
    */
-  function browse() {
+  public function browse() {
     $rows = &self::info();
     $this->assign('rows', $rows);
     return parent::run();
   }
 
   /**
-   * run this page (figure out the action needed and perform it).
+   * Run this page (figure out the action needed and perform it).
    *
    * @return void
    */
-  function run() {
-    $action = CRM_Utils_Request::retrieve('action',
+  public function run() {
+    $action = CRM_Utils_Request::retrieve(
+      'action',
       'String',
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     $this->assign('action', $action);
     $this->browse();
   }
 }
-

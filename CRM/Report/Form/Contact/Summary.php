@@ -27,35 +27,79 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
 
   /**
-   * @var never[]
+   * Column header definitions keyed by column alias.
+   *
+   * @var array<string, array<string, mixed>>
    */
   public $_columnHeaders;
-  public $_from;
-  public $_aliases;
+
   /**
+   * The SQL FROM clause built by from().
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * Table alias map keyed by table name.
+   *
+   * @var array<string, string>
+   */
+  public $_aliases;
+
+  /**
+   * The SQL GROUP BY clause.
+   *
    * @var string
    */
   public $_groupBy;
+
+  /**
+   * Whether to generate absolute URLs in alterDisplay().
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
+  /**
+   * Summary value (unused placeholder).
+   *
+   * @var null
+   */
   protected $_summary = NULL;
 
+  /**
+   * Whether the email table is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_emailField = FALSE;
 
+  /**
+   * Whether the phone table is joined in the current query.
+   *
+   * @var bool
+   */
   protected $_phoneField = FALSE;
 
+  /**
+   * Contact sub-types whose custom fields are available in this report.
+   *
+   * @var string[]
+   */
   protected $_customGroupExtends = ['Contact', 'Individual', 'Household', 'Organization'];
 
-  function __construct() {
+  /**
+   * Initialises column definitions for contact, email, address, phone, and group tables.
+   */
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'fields' =>
@@ -148,11 +192,22 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Delegates to the parent preProcess().
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected fields, tracking whether email and phone
+   * tables need to be joined. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -179,12 +234,27 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Form validation callback. No validation rules for this report.
+   *
+   * @param array $fields Submitted form values (unused).
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Contact_Summary $self The form instance (unused).
+   *
+   * @return array Empty array (no errors).
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     return $errors;
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining contact and address tables, and conditionally
+   * joining email and phone tables when those fields are selected. Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
     $this->_from = "
         FROM civicrm_contact {$this->_aliases['civicrm_contact']} {$this->_aclFrom}
             LEFT JOIN civicrm_address {$this->_aliases['civicrm_address']} 
@@ -206,11 +276,22 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause grouping results by contact ID. Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = "GROUP BY {$this->_aliases['civicrm_contact']}.id";
   }
 
-  function postProcess() {
+  /**
+   * Builds the ACL clause, assembles and executes the query, formats and assigns
+   * the result rows to the template, then finalises the output.
+   *
+   * @return void
+   */
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -227,7 +308,15 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Post-processes result rows to linkify contact names to the contact detail report,
+   * and resolves country and state/province IDs to human-readable labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
@@ -236,9 +325,11 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_display_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contact/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contact/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_display_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_display_name_hover'] = ts("View Contact details for this contact.");
@@ -259,7 +350,6 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
         $entryFound = TRUE;
       }
 
-
       // skip looking further in rows, if first row itself doesn't
       // have the column we need
       if (!$entryFound) {
@@ -268,4 +358,3 @@ class CRM_Report_Form_Contact_Summary extends CRM_Report_Form {
     }
   }
 }
-

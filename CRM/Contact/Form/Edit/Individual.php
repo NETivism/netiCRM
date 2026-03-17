@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Auxilary class to provide support to the Contact Form class. Does this by implementing
@@ -46,9 +41,12 @@ class CRM_Contact_Form_Edit_Individual {
   /**
    * This function provides the HTML form elements that are specific to the Individual Contact Type
    *
-   * @access public
+   * @param object $form   (reference) form object
+   * @param int    $action action
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildQuickForm(&$form, $action = NULL) {
     $form->applyFilter('__ALL__', 'trim');
@@ -77,7 +75,10 @@ class CRM_Contact_Form_Edit_Individual {
     }
 
     // nick_name
-    $form->addElement('text', 'nick_name', ts('Nick Name'),
+    $form->addElement(
+      'text',
+      'nick_name',
+      ts('Nick Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'nick_name')
     );
 
@@ -97,13 +98,17 @@ class CRM_Contact_Form_Edit_Individual {
     $checkSimilar = defined('CIVICRM_CONTACT_AJAX_CHECK_SIMILAR') ? CIVICRM_CONTACT_AJAX_CHECK_SIMILAR : TRUE;
     $form->assign('checkSimilar', $checkSimilar);
 
-
     //External Identifier Element
-    $form->add('text', 'external_identifier', ts('External Id'),
-      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'), FALSE
+    $form->add(
+      'text',
+      'external_identifier',
+      ts('External Id'),
+      CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'),
+      FALSE
     );
 
-    $form->addRule('external_identifier',
+    $form->addRule(
+      'external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
       ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
@@ -115,15 +120,15 @@ class CRM_Contact_Form_Edit_Individual {
   /**
    * global form rule
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields    the input form values
+   * @param array $files     the uploaded files if any
+   * @param int   $contactID contact id
    *
-   * @return true if no errors, else array of errors
+   * @return array|boolean true if no errors, else array of errors
    * @access public
    * @static
    */
-  static function formRule($fields, $files, $contactID = NULL) {
+  public static function formRule($fields, $files, $contactID = NULL) {
     $errors = [];
     $primaryID = CRM_Contact_Form_Contact::formRule($fields, $errors, $contactID);
 
@@ -138,4 +143,3 @@ class CRM_Contact_Form_Edit_Individual {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

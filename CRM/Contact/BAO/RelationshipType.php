@@ -27,19 +27,16 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -53,11 +50,11 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contact_BAO_RelationshipType object
+   * @return CRM_Contact_BAO_RelationshipType|null CRM_Contact_BAO_RelationshipType object
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $relationshipType = new CRM_Contact_DAO_RelationshipType();
     $relationshipType->copyValues($params);
     if ($relationshipType->find(TRUE)) {
@@ -71,28 +68,28 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
   /**
    * update the is_active flag in the db
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * @param int     $id        id of the database record
+   * @param boolean $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean true on success, false otherwise
    * @static
+   * @access public
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_RelationshipType', $id, 'is_active', $is_active);
   }
 
   /**
    * Function to add the relationship type in the db
    *
-   * @param array $params (reference ) an assoc array of name/value pairs
-   * @param array $ids    the array that holds all the db ids
+   * @param array $params (reference) an assoc array of name/value pairs
+   * @param array $ids    (reference) the array that holds all the db ids
    *
-   * @return object CRM_Contact_DAO_RelationshipType
+   * @return CRM_Contact_DAO_RelationshipType relationship type object
    * @access public
    * @static
-   *
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     //to change name, CRM-3336
     if (!CRM_Utils_Array::value('label_a_b', $params) && CRM_Utils_Array::value('name_a_b', $params)) {
       $params['label_a_b'] = $params['name_a_b'];
@@ -104,19 +101,19 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
 
     // action is taken depending upon the mode
     $relationshipType = new CRM_Contact_DAO_RelationshipType();
-    if(CRM_Utils_Array::value('relationshipType', $ids)) {
+    if (CRM_Utils_Array::value('relationshipType', $ids)) {
       $relationshipType->id = CRM_Utils_Array::value('relationshipType', $ids);
-      $relationshipType->find(true);
+      $relationshipType->find(TRUE);
     }
 
     // set label to name if it's not set - but *only* for
     // ADD action. CRM-3336 as part from (CRM-3522)
-    // Modify by junsuwhy in NetiCRM, refs #15343 
+    // Modify by junsuwhy in NetiCRM, refs #15343
     if ($relationshipType->id && ($relationshipType->is_reserved || !preg_match('/[^A-Za-z0-9 ]/', $relationshipType->name_a_b))) {
       $params['name_a_b'] = $relationshipType->name_a_b;
       $params['name_b_a'] = $relationshipType->name_b_a;
     }
-    else{
+    else {
       if (!CRM_Utils_Array::value('name_a_b', $params) && CRM_Utils_Array::value('label_a_b', $params)) {
         $params['name_a_b'] = $params['label_a_b'];
       }
@@ -138,17 +135,17 @@ class CRM_Contact_BAO_RelationshipType extends CRM_Contact_DAO_RelationshipType 
   /**
    * Function to delete Relationship Types
    *
-   * @param int $relationshipTypeId
+   * @param int $relationshipTypeId relationship type id
+   *
+   * @return boolean true if deleted, false otherwise
    * @static
+   * @access public
    */
-
-  static function del($relationshipTypeId) {
+  public static function del($relationshipTypeId) {
     // make sure relationshipTypeId is an integer
     if (!CRM_Utils_Rule::positiveInteger($relationshipTypeId)) {
       return CRM_Core_Error::statusBounce(ts('Invalid relationship type'));
     }
-
-
 
     //check dependencies
 
@@ -180,4 +177,3 @@ UPDATE civicrm_membership_type
     return $relationshipType->delete();
   }
 }
-

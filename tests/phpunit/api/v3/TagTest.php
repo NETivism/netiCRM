@@ -31,12 +31,13 @@ require_once 'CiviTest/CiviUnitTestCase.php';
 class api_v3_TagTest extends CiviUnitTestCase {
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
-  function setUp() {
+  public function setUp() {
     $this->_apiversion = 3;
     parent::setUp();
   }
 
-  function tearDown() {}
+  public function tearDown() {
+  }
 
   ///////////////// civicrm_tag_get methods
 
@@ -116,7 +117,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_create with wrong params type.
    */
-  function testCreateWrongParamsType() {
+  public function testCreateWrongParamsType() {
     $params = 'a string';
     $result = civicrm_api('tag', 'create', $params);
     $this->assertEquals(1, $result['is_error'], "In line " . __LINE__);
@@ -126,7 +127,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_create with empty params.
    */
-  function testCreateEmptyParams() {
+  public function testCreateEmptyParams() {
     $params = ['version' => $this->_apiversion];
     $result = civicrm_api('tag', 'create', $params);
     $this->assertEquals(1, $result['is_error'], "In line " . __LINE__);
@@ -136,7 +137,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_create
    */
-  function testCreatePasstagInParams() {
+  public function testCreatePasstagInParams() {
     $params = [
       'tag' => 10,
       'name' => 'New Tag23',
@@ -150,7 +151,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_create - success expected.
    */
-  function testCreate() {
+  public function testCreate() {
     $params = [
       'name' => 'New Tag3',
       'description' => 'This is description for New Tag 02',
@@ -169,7 +170,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
    * Test civicrm_tag_create contribution tag- success expected. Test checks that used_for is set
    * and not over-written by default on update
    */
-  function testCreateContributionTag() {
+  public function testCreateContributionTag() {
     $params = [
       'name' => 'New Tag4',
       'description' => 'This is description for New Cont tag',
@@ -193,7 +194,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_delete with wrong parameters type.
    */
-  function testDeleteWrongParamsType() {
+  public function testDeleteWrongParamsType() {
     $tag = 'is string';
     $result = civicrm_api('tag', 'delete', $tag);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
@@ -203,7 +204,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_delete with empty parameters.
    */
-  function testDeleteEmptyParams() {
+  public function testDeleteEmptyParams() {
     $tag = ['version' => $this->_apiversion];
     $result = civicrm_api('tag', 'delete', $tag);
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
@@ -213,7 +214,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_delete without tag id.
    */
-  function testDeleteWithoutTagId() {
+  public function testDeleteWithoutTagId() {
     $tag = ['version' => 3];
 
     $result = civicrm_api('tag', 'delete', $tag);
@@ -224,7 +225,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_delete with wrong tag id type.
    */
-  function testDeleteWrongParams() {
+  public function testDeleteWrongParams() {
     $result = civicrm_api('tag', 'delete', 'tyttyd');
     $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
     $this->assertEquals('Input variable `params` is not an array', $result['error_message'], 'In line ' . __LINE__);
@@ -233,7 +234,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_delete .
    */
-  function testTagDeleteOldSyntax() {
+  public function testTagDeleteOldSyntax() {
     $tagID = $this->tagCreate(NULL);
     $params = [
       'tag_id' => $tagID['id'],
@@ -246,7 +247,7 @@ class api_v3_TagTest extends CiviUnitTestCase {
   /**
    * Test civicrm_tag_delete = $params['id'] is correct
    */
-  function testTagDeleteCorrectSyntax() {
+  public function testTagDeleteCorrectSyntax() {
     $tagID = $this->tagCreate(NULL);
     $params = [
       'id' => $tagID['id'],
@@ -257,11 +258,10 @@ class api_v3_TagTest extends CiviUnitTestCase {
     $this->assertEquals(0, $result['is_error'], 'In line ' . __LINE__);
   }
 
-  function testTaggetfields() {
+  public function testTaggetfields() {
     $description = "demonstrate use of getfields to interogate api";
     $params      = ['version' => 3, 'action' => 'create'];
     $result      = civicrm_api('tag', 'getfields', $params);
     $this->assertEquals('civicrm_contact', $result['values']['used_for']['api.default']);
   }
 }
-

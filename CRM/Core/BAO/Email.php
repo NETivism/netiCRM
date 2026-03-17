@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class contains functions for email handling
@@ -41,15 +37,15 @@
 class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
 
   /**
-   * low level logic of create email
+   * Low-level logic to add or update an email record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * Normalizes the email address to lowercase before saving.
    *
-   * @return object       CRM_Core_BAO_Email object on success, null otherwise
-   * @access public
-   * @static
+   * @param array &$params associative array of name/value pairs
+   *
+   * @return CRM_Core_DAO_Email the created/updated email object
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     $email = new CRM_Core_DAO_Email();
     $email->copyValues($params);
 
@@ -61,15 +57,16 @@ class CRM_Core_BAO_Email extends CRM_Core_DAO_Email {
   }
 
   /**
-   * Business logic of create email
+   * Business logic to create or update an email record.
    *
-   * @param array $params
-   * 
-   * @return object CRM_Core_BAO_Email object on success, null otherwise
-   * @access public
-   * @static
+   * Handles primary email logic, bulkmail uniqueness per contact,
+   * and triggers hooks.
+   *
+   * @param array $params associative array of email data
+   *
+   * @return CRM_Core_DAO_Email the created/updated email object
    */
-  static function create(&$params) {
+  public static function create(&$params) {
     CRM_Core_BAO_Block::handlePrimary($params, 'CRM_Core_BAO_Email');
 
     $hook = empty($params['id']) ? 'create' : 'edit';
@@ -101,29 +98,25 @@ contact_id = {$params['contact_id']}";
   }
 
   /**
-   * Given the list of params in the params array, fetch the object
-   * and store the values in the values array
+   * Fetch email values based on entity criteria.
    *
-   * @param array $entityBlock   input parameters to find object
+   * @param array $entityBlock associative array containing 'contact_id' or 'entity_table'/'entity_id'
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return array|null array of email data arrays
    */
-  static function &getValues($entityBlock) {
+  public static function &getValues($entityBlock) {
     return CRM_Core_BAO_Block::getValues('email', $entityBlock);
   }
 
   /**
-   * Get all the emails for a specified contact_id, with the primary email being first
+   * Get all emails for a specified contact, ordered by primary email first.
    *
-   * @param int $id the contact id
+   * @param int $id the contact ID
+   * @param bool $updateBlankLocInfo if TRUE, return indexed sequentially; otherwise by ID
    *
-   * @return array  the array of email id's
-   * @access public
-   * @static
+   * @return array array of email details
    */
-  static function allEmails($id, $updateBlankLocInfo = FALSE) {
+  public static function allEmails($id, $updateBlankLocInfo = FALSE) {
     if (!$id) {
       return NULL;
     }
@@ -164,23 +157,19 @@ ORDER BY
   }
 
   /**
-   * Get all the emails for a specified location_block id, with the primary email being first
+   * Get all emails for a specified entity via its location block.
    *
-   * @param array $entityElements the array containing entity_id and
-   * entity_table name
+   * @param array &$entityElements array containing 'entity_id' and 'entity_table'
    *
-   * @return array  the array of email id's
-   * @access public
-   * @static
+   * @return array|null array of email details
    */
-  static function allEntityEmails(&$entityElements) {
+  public static function allEntityEmails(&$entityElements) {
     if (empty($entityElements)) {
       return NULL;
     }
 
     $entityId = $entityElements['entity_id'];
     $entityTable = $entityElements['entity_table'];
-
 
     $sql = " SELECT email, ltype.name as locationType, e.is_primary as is_primary, e.on_hold as on_hold,e.id as email_id, e.location_type_id as locationTypeId 
 FROM civicrm_loc_block loc, civicrm_email e, civicrm_location_type ltype, {$entityTable} ev
@@ -208,14 +197,13 @@ ORDER BY e.is_primary DESC, email_id ASC ";
   }
 
   /**
-   * Function to set / reset hold status for an email
+   * Set or reset the 'on_hold' status for an email and record dates.
    *
-   * @param object $email  email object
+   * @param CRM_Core_DAO_Email &$email email object (passed by reference)
    *
    * @return void
-   * @static
    */
-  static function holdEmail(&$email) {
+  public static function holdEmail(&$email) {
     //check for update mode
     if ($email->id) {
       //get hold date
@@ -244,14 +232,15 @@ ORDER BY e.is_primary DESC, email_id ASC ";
   }
 
   /**
-   * Get current exists id from value(email)
+   * Check if an email value already exists for a contact and set the 'id' parameter.
    *
-   * Only effect when phone id not provided. Id will be added into params before add.
-   * 
-   * @param array $params referenced array to be add exists phone id
+   * Only performs lookup if 'id' is not provided and email/contact_id are present.
+   *
+   * @param array &$params associative array of email fields (passed by reference)
+   *
    * @return void
    */
-  static function valueExists(&$params) {
+  public static function valueExists(&$params) {
     if (empty($params['id']) && !empty($params['email']) && is_string($params['email']) && !empty($params['contact_id'])) {
       $check = preg_replace('/[^a-zA-Z0-9.@-]/', '', $params['email']);
       $params['id'] = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_email WHERE REGEXP_REPLACE(email, '[^a-zA-Z0-9.@-]', '') LIKE %1 AND contact_id = %2", [
@@ -261,4 +250,3 @@ ORDER BY e.is_primary DESC, email_id ASC ";
     }
   }
 }
-

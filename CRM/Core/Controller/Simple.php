@@ -31,29 +31,25 @@
  * class is used to optimize and make single form pages a relatively trivial
  * process
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Core_Controller_Simple extends CRM_Core_Controller {
 
   /**
-   * constructor
+   * Class constructor.
    *
-   * @param string  path        the class Path of the form being implemented
-   * @param string  title       the descriptive name for the page
-   * @param int     mode        the mode that the form will operate on
-   * @param boolean addSequence should we add a unique sequence number to the end of the key
-   * @param boolean ignoreKey    should we not set a qfKey for this controller (for standalone forms)
-   *
-   * @return object
-   * @access public
+   * @param string $path The class path of the form being implemented.
+   * @param string $title The descriptive name for the page.
+   * @param int|null $mode The mode that the form will operate on.
+   * @param bool $imageUpload Whether this form involves an image upload.
+   * @param bool $addSequence Whether to add a unique sequence number to the end of the key.
+   * @param bool $ignoreKey Whether to ignore the qfKey for this controller.
+   * @param bool $attachUpload Whether this form involves a file attachment.
    */
-  function __construct($path,
+  public function __construct(
+    $path,
     $title,
     $mode = NULL,
     $imageUpload = FALSE,
@@ -75,7 +71,6 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
       $mode = $savedAction;
     }
 
-
     $this->_stateMachine->addSequentialPages($params, $mode);
 
     $this->addPages($this->_stateMachine, $mode);
@@ -94,7 +89,8 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
       // always allow a single upload file with same name
       if ($attachUpload) {
 
-        $this->addActions($config->uploadDir,
+        $this->addActions(
+          $config->uploadDir,
           CRM_Core_BAO_File::uploadNames()
         );
       }
@@ -107,10 +103,20 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
     }
   }
 
+  /**
+   * Sets the parent object.
+   *
+   * @param object $parent The parent object.
+   */
   public function setParent($parent) {
     $this->_parent = $parent;
   }
 
+  /**
+   * Gets the template file name.
+   *
+   * @return string Template file name.
+   */
   public function getTemplateFileName() {
     // there is only one form here, so should be quite easy
     $actionName = $this->getActionName();
@@ -121,12 +127,13 @@ class CRM_Core_Controller_Simple extends CRM_Core_Controller {
 
   /**
    * A wrapper for getTemplateFileName that includes calling the hook to
-   * prevent us from having to copy & paste the logic of calling the hook
+   * prevent us from having to copy & paste the logic of calling the hook.
+   *
+   * @return string The hooked template file name.
    */
-  function getHookedTemplateFileName() {
+  public function getHookedTemplateFileName() {
     $pageTemplateFile = $this->getTemplateFileName();
     CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
     return $pageTemplateFile;
   }
 }
-

@@ -48,16 +48,19 @@ function civicrm_api3_option_value_create($params) {
     }
     if (!CRM_Utils_Array::value('value', $params) && CRM_Utils_Array::value('option_group_id', $params)) {
       // 'value' defaults to next weight in option_group
-      $params['value'] = (int) CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+      $params['value'] = (int) CRM_Utils_Weight::getDefaultWeight(
+        'CRM_Core_DAO_OptionValue',
         ['option_group_id' => $params['option_group_id']]
       );
     }
     if (!CRM_Utils_Array::value('weight', $params) && CRM_Utils_Array::value('value', $params)) {
       // 'weight' defaults to 'value'
       $params['weight'] = $params['value'];
-    } elseif (CRM_Utils_Array::value('weight', $params) && $params['weight'] == 'next' && CRM_Utils_Array::value('option_group_id', $params)) {
+    }
+    elseif (CRM_Utils_Array::value('weight', $params) && $params['weight'] == 'next' && CRM_Utils_Array::value('option_group_id', $params)) {
       // weight is numeric, so it's safe-ish to treat symbol 'next' as magical value
-      $params['weight'] = (int) CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+      $params['weight'] = (int) CRM_Utils_Weight::getDefaultWeight(
+        'CRM_Core_DAO_OptionValue',
         ['option_group_id' => $params['option_group_id']]
       );
     }
@@ -113,4 +116,3 @@ function _civicrm_api3_option_value_create_spec(&$params) {
 function civicrm_api3_option_value_delete($params) {
   return CRM_Core_BAO_OptionValue::del((int) $params['id']) ? civicrm_api3_create_success() : civicrm_api3_create_error('Could not delete OptionValue ' . $params['id']);
 }
-

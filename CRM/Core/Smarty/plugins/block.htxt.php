@@ -28,20 +28,17 @@
 /**
  * CiviCRM's Smarty gettext plugin
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  */
 
 /**
- * Smarty block function providing support for
- * CiviCRM's helptext mechanism
+ * Smarty block function providing support for CiviCRM's helptext mechanism.
  *
- * @param array $params   template call's parameters
- * @param string $text    {ts} block contents from the template
- * @param object $smarty  the Smarty object
+ * @param array $params template call's parameters
+ * @param string|null $text {ts} block contents from the template
+ * @param Smarty &$smarty the Smarty object
  *
- * @return string  the string, translated by gettext
+ * @return string|null helptext HTML if ID matches, else NULL
  */
 function smarty_block_htxt($params, $text, &$smarty) {
   $id = $params['id'];
@@ -52,4 +49,3 @@ function smarty_block_htxt($params, $text, &$smarty) {
     return NULL;
   }
 }
-

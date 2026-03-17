@@ -29,9 +29,7 @@
  * This is the base Action class for all actions which we redefine. This is
  * integrated with the StateMachine, Controller and State objects
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -44,24 +42,20 @@ class CRM_Core_QuickForm_Action extends HTML_QuickForm_Action {
   protected $_stateMachine;
 
   /**
-   * constructor
+   * Class constructor.
    *
-   * @param object    $stateMachine    reference to state machine object
-   *
-   * @return object
-   * @access public
+   * @param CRM_Core_StateMachine &$stateMachine reference to state machine object
    */
-  function __construct(&$stateMachine) {
+  public function __construct(&$stateMachine) {
     $this->_stateMachine = &$stateMachine;
   }
 
   /**
-   * returns the user to the top of the user context stack.
+   * Return the user to the top of the user context stack.
    *
    * @return void
-   * @access public
    */
-  function popUserContext() {
+  public function popUserContext() {
     $session = CRM_Core_Session::singleton();
     $config = CRM_Core_Config::singleton();
 
@@ -84,4 +78,3 @@ class CRM_Core_QuickForm_Action extends HTML_QuickForm_Action {
     }
   }
 }
-

@@ -88,4 +88,3 @@ function &civicrm_survey_respondant_count(&$params) {
   }
   return ($signaturesCount);
 }
-

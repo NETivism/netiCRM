@@ -26,10 +26,9 @@
 */
 
 /**
+ * Intrusion Detection System integration for monitoring and filtering malicious input
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 require_once 'IDS/autoload.php';
@@ -39,7 +38,7 @@ use IDS\Monitor;
 use IDS\Report;
 
 class CRM_Core_IDS {
-  CONST CONFIG_FILE = 'Config.IDS.ini';
+  public const CONFIG_FILE = 'Config.IDS.ini';
 
   /**
    * @var array
@@ -172,9 +171,9 @@ class CRM_Core_IDS {
    * This function includes the IDS vendor parts and runs the
    * detection routines on the request array.
    *
-   * @param object cake controller object
+   * @param array $args The request arguments.
    *
-   * @return boolean
+   * @return bool
    */
   public function check(&$args) {
     $path = CRM_Utils_Array::implode('/', $args);
@@ -182,7 +181,7 @@ class CRM_Core_IDS {
     // remove tracking parameters to prevent false positive
     $trackingG = ['fbclid', 'gclid', 'wbraid'];
     $trackingC = [ '__utma', '__utmb', '__utmc', '__utmv', '__utmz', '_gid', '_ga', '_gcl_au', '_fbp'];
-    foreach($trackingG as $g) {
+    foreach ($trackingG as $g) {
       if (isset($_GET[$g])) {
         unset($_GET[$g]);
       }
@@ -190,7 +189,7 @@ class CRM_Core_IDS {
         unset($_REQUEST[$g]);
       }
     }
-    foreach($trackingC as $c) {
+    foreach ($trackingC as $c) {
       if (isset($_COOKIE[$c])) {
         unset($_COOKIE[$c]);
       }
@@ -216,9 +215,9 @@ class CRM_Core_IDS {
 
     // dynamic definition of ids config
     // only apply exception when has certain permission
-    foreach(self::$definition as $perm => $permPath) {
+    foreach (self::$definition as $perm => $permPath) {
       if (CRM_Core_Permission::check($perm) || $perm === '*') {
-        foreach($permPath as $p => $epts) {
+        foreach ($permPath as $p => $epts) {
           if ($path == $p) {
             self::parseDefinitions($epts);
           }
@@ -237,7 +236,7 @@ class CRM_Core_IDS {
     }
 
     if (!empty(self::$exceptions)) {
-      foreach(self::$exceptions as $type => $epts) {
+      foreach (self::$exceptions as $type => $epts) {
         $epts = array_unique($epts);
         $init->config['General'][$type] = $epts;
       }
@@ -261,6 +260,12 @@ class CRM_Core_IDS {
     return TRUE;
   }
 
+  /**
+   * Initialize the IDS configuration.
+   *
+   * @param string|null $configFile The configuration file path.
+   * @param bool $forceCreate Whether to force creation of the config file.
+   */
   public static function initConfig($configFile = NULL, $forceCreate = FALSE) {
     global $tsLocale;
     $config = CRM_Core_Config::singleton();
@@ -271,7 +276,7 @@ class CRM_Core_IDS {
       if ($temp) {
         $dirs = glob($temp.DIRECTORY_SEPARATOR.'smarty*');
         if (!empty($dirs)) {
-          foreach($dirs as $dir) {
+          foreach ($dirs as $dir) {
             $hostname = CRM_Utils_Type::escape($_SERVER['HTTP_HOST'], 'DirectoryName', FALSE);
             $configFile = $dir . DIRECTORY_SEPARATOR . $hostname . DIRECTORY_SEPARATOR . $tsLocale . DIRECTORY_SEPARATOR . 'ConfigAndLog' . DIRECTORY_SEPARATOR . self::CONFIG_FILE;
             self::initConfig($configFile, $forceCreate);
@@ -314,16 +319,12 @@ class CRM_Core_IDS {
   }
 
   /**
-   * This function rects on the values in
-   * the incoming results array.
+   * This function reacts on the values in the incoming results array.
    *
-   * Depending on the impact value certain actions are
-   * performed.
+   * Depending on the impact value certain actions are performed.
    *
-   * @param Report $result
-   * @param int $impact
-   *
-   * @return boolean
+   * @param Report $result The IDS report object.
+   * @param int $impact The impact value.
    */
   private function react(Report $result, $impact) {
     if ($impact >= $this->_threshold['kick']) {
@@ -341,14 +342,21 @@ class CRM_Core_IDS {
   }
 
   /**
-   * These function
+   * Log the suspicious action.
+   *
+   * @return bool
    */
   private function log() {
     return TRUE;
   }
 
+  /**
+   * Warn the user about suspicious action.
+   *
+   * @return bool
+   */
   private function warn() {
-    if(CRM_Utils_System::isUserLoggedIn()) {
+    if (CRM_Utils_System::isUserLoggedIn()) {
       return TRUE;
     }
     else {
@@ -358,6 +366,9 @@ class CRM_Core_IDS {
     }
   }
 
+  /**
+   * Kick the user for suspicious action.
+   */
   private function kick() {
     $session = CRM_Core_Session::singleton();
     $session->reset(2);
@@ -366,12 +377,11 @@ class CRM_Core_IDS {
   }
 
   /**
-   * Record suspicious action to log
+   * Record suspicious action to log.
    *
-   * @param Report $result Object of \IDS\Report
-   * @param string $reaction action that civicrm take
-   * @param int $impact calculation from IDS
-   * @return void
+   * @param Report $result Object of \IDS\Report.
+   * @param string $reaction Action that CiviCRM took.
+   * @param int $impact Calculation from IDS.
    */
   private function record($result, $reaction, $impact) {
     $ip = CRM_Utils_System::ipAddress();
@@ -392,7 +402,7 @@ class CRM_Core_IDS {
     foreach ($result as $event) {
       $filters = $event->getFilters();
       $description = [];
-      foreach($filters as $filter) {
+      foreach ($filters as $filter) {
         $description[] = [
           'id' => $filter->getId(),
           'desc' => $filter->getDescription(),
@@ -416,9 +426,14 @@ class CRM_Core_IDS {
     }
   }
 
+  /**
+   * Parse exception definitions for IDS.
+   *
+   * @param array $definition The exception definition.
+   */
   public function parseDefinitions($definition) {
     if (is_array($definition)) {
-      foreach($definition as $def) {
+      foreach ($definition as $def) {
         list($field, $type, $condition) = explode(':', $def, 3);
         if (empty($type)) {
           $type = 'exceptions';
@@ -436,4 +451,3 @@ class CRM_Core_IDS {
     }
   }
 }
-

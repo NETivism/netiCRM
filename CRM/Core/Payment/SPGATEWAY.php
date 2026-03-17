@@ -1,27 +1,30 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 date_default_timezone_set('Asia/Taipei');
 
 class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
-  const EXPIRE_DAY = 7;
-  const MAX_EXPIRE_DAY = 180;
-  const RESPONSE_TYPE = 'JSON';
-  const MPG_VERSION = '2.3';
-  const AGREEMENT_VERSION = '1.5';
-  const RECUR_VERSION = '1.0';
-  const QUERY_VERSION = '1.1';
-  const REAL_DOMAIN = 'https://core.newebpay.com';
-  const TEST_DOMAIN = 'https://ccore.newebpay.com';
-  const URL_SITE = '/MPG/mpg_gateway';
-  const URL_QUERY = '/API/QueryTradeInfo';
-  const URL_RECUR = '/MPG/period';
-  const URL_CREDITBG = "/API/CreditCard";
-  const QUEUE_NAME = 'spgateway_batch_all_recur';
+  public const EXPIRE_DAY = 7;
+  public const MAX_EXPIRE_DAY = 180;
+  public const RESPONSE_TYPE = 'JSON';
+  public const MPG_VERSION = '2.3';
+  public const AGREEMENT_VERSION = '1.5';
+  public const RECUR_VERSION = '1.0';
+  public const QUERY_VERSION = '1.1';
+  public const REAL_DOMAIN = 'https://core.newebpay.com';
+  public const TEST_DOMAIN = 'https://ccore.newebpay.com';
+  public const URL_SITE = '/MPG/mpg_gateway';
+  public const URL_QUERY = '/API/QueryTradeInfo';
+  public const URL_RECUR = '/MPG/period';
+  public const URL_CREDITBG = "/API/CreditCard";
+  public const QUEUE_NAME = 'spgateway_batch_all_recur';
 
   /**
    * mode of operation: live or test
    *
    * @var object
-   * @static
    */
   protected static $_mode = NULL;
 
@@ -49,7 +52,6 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * pattern and cache the instance in this variable
    *
    * @var object
-   * @static
    */
   private static $_singleton = NULL;
 
@@ -60,10 +62,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * Constructor
    *
    * @param string $mode the mode of operation: live or test
-   *
-   * @return void
+   * @param array $paymentProcessor Payment processor data
    */
-  function __construct($mode, &$paymentProcessor) {
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
     $this->_processorName = ts('Spgateway');
@@ -71,7 +72,14 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $this->_config = $config;
   }
 
-  static function getAdminFields($ppDAO, $form){
+  /**
+   * Get admin fields for payment processor
+   *
+   * @param object $ppDAO Payment processor DAO
+   * @param object $form Payment processor form
+   * @return array<int, array<string, mixed>> Admin fields
+   */
+  public static function getAdminFields($ppDAO, $form) {
     $fields = [
       [
         'name' => 'user_name',
@@ -110,7 +118,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         2 => [0, 'Integer'],
       ];
       $paramsTest = [
-        1 => [$ppid+1, 'Positive'],
+        1 => [$ppid + 1, 'Positive'],
         2 => [1, 'Integer'],
       ];
       $sql = 'SELECT count(id) FROM civicrm_contribution WHERE payment_processor_id = %1 AND is_test = %2';
@@ -134,7 +142,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
       $processorOptionsTest = ['' => ts('-- Select --')];
       foreach ($paymentProcessorsTest as $id => $processor) {
-        if ($id != $ppid+1 && !empty($processor['user_name'])) {
+        if ($id != $ppid + 1 && !empty($processor['user_name'])) {
           $processorOptionsTest[$id] = $processor['user_name']." ({$processor['name']}, ID:{$processor['id']})";
         }
       }
@@ -143,7 +151,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
     // remove form rules
     $noRuleElement = ['url_recur', 'url_api', 'url_site', 'test_url_recur', 'test_url_api', 'test_url_site'];
-    foreach($noRuleElement as $ele) {
+    foreach ($noRuleElement as $ele) {
       foreach ($form->_rules[$ele] as $key => $rule) {
         if ($rule['type'] == 'url') {
           unset($form->_rules['url_recur'][$key]);
@@ -153,6 +161,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $fields;
   }
 
+  /**
+   * Get editable fields for contribution recur form
+   *
+   * @param array|null $paymentProcessor Payment processor data
+   * @param object|null $form Form object
+   * @return array Editable fields
+   */
   public static function getEditableFields($paymentProcessor = NULL, $form = NULL) {
     $form->assign('spgateway_agreement', FALSE);
     if (empty($paymentProcessor)) {
@@ -189,6 +204,12 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $returnArray;
   }
 
+  /**
+   * Post build form for contribution recur
+   *
+   * @param object $form Form object
+   * @return void
+   */
   public static function postBuildForm($form) {
     $form->addDate('cycle_day_date', FALSE, FALSE, ['formatType' => 'custom', 'format' => 'mm-dd']);
     $cycleDay = &$form->getElement('cycle_day');
@@ -203,6 +224,14 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Validate installments
+   *
+   * @param array $fields Form fields
+   * @param array $ignore Ignored fields
+   * @param object $form Form object
+   * @return array<string, mixed> Errors
+   */
   public static function validateInstallments($fields, $ignore, $form) {
     $errors = [];
     $pass = TRUE;
@@ -222,9 +251,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * singleton function used to manage this object
    *
    * @param string $mode the mode of operation: live or test
+   * @param array $paymentProcessor Payment processor data
+   * @param object|null $paymentForm Payment form object
    *
    * @return object
-   * @static
    *
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
@@ -238,10 +268,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   /**
    * This function checks to see if we have the right config values
    *
-   * @return string the error message if any
+   * @return string|null the error message if any, otherwise NULL
    * @public
    */
-  function checkConfig() {
+  public function checkConfig() {
     $config = CRM_Core_Config::singleton();
 
     $error = [];
@@ -262,19 +292,39 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
-  function setExpressCheckOut(&$params) {
+  /**
+   * Express Checkout
+   *
+   * @param array $params parameters
+   */
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  /**
+   * Get Express Checkout Details
+   *
+   * @param string $token token
+   */
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  /**
+   * Do Express Checkout
+   *
+   * @param array $params parameters
+   */
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  /**
+   * Do Direct Payment
+   *
+   * @param array $params parameters
+   */
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
@@ -282,18 +332,17 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    * Sets appropriate parameters for checking out to google
    *
    * @param array $params  name value pair of contribution datat
+   * @param string $component component name
    *
    * @return void
-   * @access public
    *
    */
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     $component = strtolower($component);
     if ($component != 'contribute' && $component != 'event') {
       CRM_Core_Error::fatal(ts('Component is invalid'));
     }
     $is_test = $this->_mode == 'test' ? 1 : 0;
-
 
     // special case for mobile payment, update payment_processor_id when needed
     if (!empty($params['contributionID']) && !empty($this->_paymentProcessor['id'])) {
@@ -358,16 +407,16 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
     }
 
-    if($instrumentCode == 'Credit' || $instrumentCode == 'WebATM'){
+    if ($instrumentCode == 'Credit' || $instrumentCode == 'WebATM') {
       $isPayLater = FALSE;
     }
-    else{
+    else {
       $isPayLater = TRUE;
 
       // Set participant status to 'Pending from pay later', Accupied the seat.
-      if($params['participantID']){
+      if ($params['participantID']) {
         $participantStatus = CRM_Event_PseudoConstant::participantStatus();
-        if($newStatus = array_search('Pending from pay later', $participantStatus)){
+        if ($newStatus = array_search('Pending from pay later', $participantStatus)) {
           CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $params['participantID'], 'status_id', $newStatus, 'id');
           $cancelledStatus = array_search('Cancelled', $participantStatus);
           $sql = 'SELECT id FROM civicrm_participant WHERE registered_by_id = %1 AND status_id != %2';
@@ -376,7 +425,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
             2 => [$cancelledStatus, 'Integer'],
           ];
           $dao = CRM_Core_DAO::executeQuery($sql, $paramsRegisteredBy);
-          while($dao->fetch()){
+          while ($dao->fetch()) {
             CRM_Core_DAO::setFieldValue('CRM_Event_DAO_Participant', $dao->id, 'status_id', $newStatus, 'id');
           }
         }
@@ -387,12 +436,12 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $contrib_params = [ 'id' => $params['contributionID'] ];
     $contrib_values = $contrib_ids = [];
     CRM_Contribute_BAO_Contribution::getValues($contrib_params, $contrib_values, $contrib_ids);
-    if($params['civicrm_instrument_id']){
+    if ($params['civicrm_instrument_id']) {
       $contrib_values['payment_instrument_id'] = $params['civicrm_instrument_id'];
     }
     $contrib_values['is_pay_later'] = $isPayLater;
     $contrib_values['trxn_id'] = self::generateTrxnId($is_test, $params['contributionID']);
-    $contribution =& CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
+    $contribution = &CRM_Contribute_BAO_Contribution::create($contrib_values, $contrib_ids);
 
     // Inject in quickform sessions
     // Special hacking for display trxn_id after thank you page.
@@ -401,7 +450,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $params['trxn_id'] = $contribution->trxn_id;
 
     $arguments = $this->prepareOrderParams($contribution, $params, $instrumentCode, $formKey);
-    if(!$contrib_values['is_recur']){
+    if (!$contrib_values['is_recur']) {
       CRM_Core_Payment_SPGATEWAYAPI::checkMacValue($arguments, $this->_paymentProcessor);
     }
     CRM_Core_Error::debug_var('spgateway_post_data_', $arguments);
@@ -423,31 +472,30 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    *
    * Prepare order form element
    *
-   * @param object $contribution
-   * @param array $vars
-   * @param object $paymentProcessor
-   * @param string $instrumentCode
-   * @param string $formKey
-   * @return void
+   * @param object $contribution Contribution object
+   * @param array $vars Form variables
+   * @param string $instrumentCode Payment instrument code
+   * @param string $formKey Form key
+   * @return array Order parameters
    */
-  function prepareOrderParams(&$contribution, &$vars, $instrumentCode, $formKey){
+  public function prepareOrderParams(&$contribution, &$vars, $instrumentCode, $formKey) {
     global $tsLocale;
 
     // url
     $ids = CRM_Contribute_BAO_Contribution::buildIds($contribution->id);
-    $notifyURL= CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, 'spgateway/ipn/'.$instrumentCode);
-    $baseURL= CRM_Utils_System::currentPath();
+    $notifyURL = CRM_Contribute_BAO_Contribution::makeNotifyUrl($ids, 'spgateway/ipn/'.$instrumentCode);
+    $baseURL = CRM_Utils_System::currentPath();
     $urlParams = [ "_qf_ThankYou_display" => "1" , "qfKey" => $vars['qfKey'], ];
     $thankyouURL = CRM_Utils_System::url($baseURL, http_build_query($urlParams), TRUE);
 
     $component = !empty($ids['eventID']) ? 'event' : 'contribution';
 
     // parameter
-    if($component == 'event' && !empty($_SESSION['CiviCRM'][$formKey])){
-      $values =& $_SESSION['CiviCRM'][$formKey]['values']['event'];
+    if ($component == 'event' && !empty($_SESSION['CiviCRM'][$formKey])) {
+      $values = &$_SESSION['CiviCRM'][$formKey]['values']['event'];
     }
-    else{
-      $values =& $_SESSION['CiviCRM'][$formKey]['values'];
+    else {
+      $values = &$_SESSION['CiviCRM'][$formKey]['values'];
     }
 
     // max 180 days of expire
@@ -461,22 +509,22 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     if ($hours < 24) {
       $values['expiration_day'] = 1;
     }
-    elseif ($hours > 24 * self::MAX_EXPIRE_DAY ) {
+    elseif ($hours > 24 * self::MAX_EXPIRE_DAY) {
       $values['expiration_day'] = self::MAX_EXPIRE_DAY;
     }
-    elseif(!empty($hours)){
-      $values['expiration_day'] = ceil($hours/24);
+    elseif (!empty($hours)) {
+      $values['expiration_day'] = ceil($hours / 24);
     }
 
     // building vars
-    $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'],'.')) : $vars['amount'];
+    $amount = $vars['currencyID'] == 'TWD' && strstr($vars['amount'], '.') ? substr($vars['amount'], 0, strpos($vars['amount'], '.')) : $vars['amount'];
 
     $itemDescription = $vars['description'];
-    $itemDescription .= ($vars['description'] == $vars['item_name'])?'':':'.$vars['item_name'];
+    $itemDescription .= ($vars['description'] == $vars['item_name']) ? '' : ':'.$vars['item_name'];
     $itemDescription .= ':'.floatval($vars['amount']);
     $itemDescription = preg_replace('/[^[:alnum:][:space:]]/u', ' ', $itemDescription);
 
-    if(!empty($this->_paymentProcessor['url_api']) && $this->_paymentProcessor['url_api'] > 0) {
+    if (!empty($this->_paymentProcessor['url_api']) && $this->_paymentProcessor['url_api'] > 0) {
       $tradeInfo = [
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'RespondType' => self::RESPONSE_TYPE,
@@ -526,7 +574,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $args['#url'] = self::REAL_DOMAIN.self::URL_SITE;
       }
     }
-    elseif(!$vars['is_recur']){
+    elseif (!$vars['is_recur']) {
       $tradeInfo = [
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'RespondType' => self::RESPONSE_TYPE,
@@ -540,24 +588,24 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         'MerchantOrderNo' => $vars['trxn_id'],
       ];
 
-      switch($instrumentCode){
+      switch ($instrumentCode) {
         case 'ATM':
           $tradeInfo['VACC'] = 1;
           $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
-          $tradeInfo['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          $tradeInfo['ExpireDate'] = date('Ymd', strtotime("+$day day"));
           $tradeInfo['CustomerURL'] = $thankyouURL;
           break;
         case 'BARCODE':
           $tradeInfo['BARCODE'] = 1;
           $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
-          $tradeInfo['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+          $tradeInfo['ExpireDate'] = date('Ymd', strtotime("+$day day"));
           $tradeInfo['CustomerURL'] = $thankyouURL;
           break;
         case 'CVS':
           $tradeInfo['CVS'] = 1;
-          if($instrumentCode == 'CVS' && !empty($values['expiration_day'])) {
+          if ($instrumentCode == 'CVS' && !empty($values['expiration_day'])) {
             $day = !empty($values['expiration_day']) ? $values['expiration_day'] : self::EXPIRE_DAY;
-            $tradeInfo['ExpireDate'] = date('Ymd',strtotime("+$day day"));
+            $tradeInfo['ExpireDate'] = date('Ymd', strtotime("+$day day"));
           }
           $tradeInfo['CustomerURL'] = $thankyouURL;
           break;
@@ -579,7 +627,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           break;
       }
 
-      if($tsLocale == CRM_Core_Config::SYSTEM_LANG){
+      if ($tsLocale == CRM_Core_Config::SYSTEM_LANG) {
         $tradeInfo['LangType'] = 'en';
       }
       // Use hook_civicrm_alterPaymentProcessorParams
@@ -607,7 +655,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $args['#url'] = self::REAL_DOMAIN.self::URL_SITE;
       }
     }
-    else{
+    else {
       $data = [
         'MerchantID' => $this->_paymentProcessor['user_name'],
         'RespondType' => self::RESPONSE_TYPE,
@@ -627,29 +675,30 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       ];
       $period = strtoupper($vars['frequency_unit'][0]);
 
-      if($vars['frequency_unit'] == 'month'){
+      if ($vars['frequency_unit'] == 'month') {
         $frequency_interval = $vars['frequency_interval'] > 12 ? 12 : $vars['frequency_interval'];
         $data['PeriodType'] = 'M';
         $data['PeriodPoint'] = date('d');
       }
-      elseif($vars['frequency_unit'] == 'week'){
+      elseif ($vars['frequency_unit'] == 'week') {
         $frequency_interval = (7 * $vars['frequency_interval']) > 365 ? 365 : ($vars['frequency_interval'] * 7);
         $data['PeriodType'] = 'W';
       }
-      elseif($vars['frequency_unit'] == 'year'){
+      elseif ($vars['frequency_unit'] == 'year') {
         $frequency_interval = 1;
         $data['PeriodType'] = 'Y';
         $data['PeriodPoint'] = date('md');
       }
-      if(empty($frequency_interval)){
+      if (empty($frequency_interval)) {
         $frequency_interval = 1;
       }
-      if($vars['frequency_unit'] == 'year'){
+      if ($vars['frequency_unit'] == 'year') {
         $data['PeriodTimes'] = empty($vars['installments']) ? 9 : $vars['installments'];
-      }else{
+      }
+      else {
         $data['PeriodTimes'] = empty($vars['installments']) ? 99 : $vars['installments']; // support endless
       }
-      if($tsLocale == CRM_Core_Config::SYSTEM_LANG){
+      if ($tsLocale == CRM_Core_Config::SYSTEM_LANG) {
         $data['LangType'] = 'en';
       }
       // Use hook_civicrm_alterPaymentProcessorParams
@@ -672,7 +721,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $args;
   }
 
-  private function redirectForm($vars){
+  /**
+   * Redirect to payment gateway
+   *
+   * @param array $vars Form variables
+   * @return string Redirect HTML
+   */
+  private function redirectForm($vars) {
     header('Pragma: no-cache');
     header('Cache-Control: no-store, no-cache, must-revalidate');
     header('Expires: 0');
@@ -681,8 +736,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
     $js = 'document.forms.redirect.submit();';
     $output .= '<form action="'.$vars['#url'].'" name="redirect" method="post" id="redirect-form">';
-    foreach($vars as $k=>$p){
-      if($k[0] != '#'){
+    foreach ($vars as $k => $p) {
+      if ($k[0] != '#') {
         $output .= '<input type="hidden" name="'.$k.'" value="'.$p.'" />';
       }
     }
@@ -704,14 +759,22 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     EOT;
   }
 
+  /**
+   * Mobile checkout
+   *
+   * @param string $type Payment type
+   * @param array $post POST data
+   * @param array $objects Related objects
+   * @return array Result
+   */
   public static function mobileCheckout($type, $post, $objects) {
     $contribution = $objects['contribution'];
     $merchantPaymentProcessor = $objects['payment_processor'];
 
-    if($type = 'applepay') {
+    if ($type = 'applepay') {
       $email = new CRM_Core_DAO_Email();
       $email->contact_id = $contribution->contact_id;
-      $email->is_primary = true;
+      $email->is_primary = TRUE;
       $email->find(TRUE);
 
       $token = urlencode(json_encode($post['token']));
@@ -739,9 +802,10 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         'PostData_' => $data,
         'Pos_' => self::RESPONSE_TYPE,
       ];
-      if($contribution->is_test){
+      if ($contribution->is_test) {
         $url = CRM_Core_Payment_SPGATEWAY::TEST_DOMAIN.CRM_Core_Payment_SPGATEWAY::URL_CREDITBG;
-      }else{
+      }
+      else {
         $url = CRM_Core_Payment_SPGATEWAY::REAL_DOMAIN.CRM_Core_Payment_SPGATEWAY::URL_CREDITBG;
       }
 
@@ -762,7 +826,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         $err = curl_error($ch);
         $curlError = [$errno => $err];
       }
-      else{
+      else {
         $curlError = [];
       }
       curl_close($ch);
@@ -771,15 +835,22 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $result = json_decode($result);
       CRM_Core_Payment_SPGATEWAYAPI::writeRecord($contribution->id, get_object_vars($result));
       $return = [];
-      if($result->Status == 'SUCCESS'){
-        $return['is_success'] = true;
+      if ($result->Status == 'SUCCESS') {
+        $return['is_success'] = TRUE;
       }
       $return['message'] = $result->Message;
     }
     return $return;
   }
 
-  function doUpdateRecur($params, $debug = FALSE) {
+  /**
+   * Update recurring contribution
+   *
+   * @param array $params Parameters
+   * @param bool $debug Debug mode
+   * @return array Result
+   */
+  public function doUpdateRecur($params, $debug = FALSE) {
     if ($debug) {
       CRM_Core_Error::debug('SPGATEWAY doUpdateRecur $params', $params);
     }
@@ -954,7 +1025,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $recurResult;
   }
 
-  function cancelRecuringMessage($recurID){
+  /**
+   * Cancel recurring message
+   *
+   * @param int $recurID Recurring ID
+   * @return string Message
+   */
+  public function cancelRecuringMessage($recurID) {
     $sql = "SELECT p.payment_processor_type, p.url_recur FROM civicrm_payment_processor p INNER JOIN civicrm_contribution_recur r ON p.id = r.processor_id WHERE r.id = %1";
     $params = [ 1 => [$recurID, 'Positive']];
     $dao = CRM_Core_DAO::executeQuery($sql, $params);
@@ -965,17 +1042,18 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
     }
     if (function_exists("_civicrm_spgateway_cancel_recuring_message")) {
-      return _civicrm_spgateway_cancel_recuring_message(); 
-    }else{
+      return _civicrm_spgateway_cancel_recuring_message();
+    }
+    else {
       CRM_Core_Error::fatal('Module civicrm_spgateway doesn\'t exists.');
     }
   }
 
   /**
    * Function called from contributionRecur page to show tappay detail information
-   * 
-   * @param int @contributionId the contribution id
-   * 
+   *
+   * @param int $contributionId the contribution id
+   *
    * @return array The label as the key to value.
    */
   public static function getRecordDetail($contributionId) {
@@ -1003,7 +1081,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
   /**
    * Behavior after pressed "Sync now" button.
-   * 
+   *
    * @param int $id The contribution recurring ID
    * @param string $idType Means the type of the ID, value as "Contribution" or "recur"
    * @param object $form The MakingTransaction form object
@@ -1068,6 +1146,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Sync single contribution record from Newebpay API
+   *
+   * @param int|null $contributionId Contribution ID
+   * @param object|null $order Order data
+   * @return void
+   */
   public static function doSingleQueryRecord($contributionId = NULL, $order = NULL) {
     $get = $_GET;
     unset($get['q']);
@@ -1159,7 +1244,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           $resultMessage .= "<li>{$value}</li>";
         }
       }
-      $resultMessage.="</ul>";
+      $resultMessage .= "</ul>";
     }
     if (!isset($order)) {
       CRM_Core_Session::setStatus($resultMessage);
@@ -1167,6 +1252,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
   }
 
+  /**
+   * Get sync data URL
+   *
+   * @param int $contributionId Contribution ID
+   * @param object|null $form Form object
+   * @return string Sync URL
+   */
   public static function getSyncDataUrl($contributionId, &$form = NULL) {
     $get = $_GET;
     unset($get['q']);
@@ -1217,7 +1309,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       if (is_array($arguments)) {
         $instrument = end($arguments);
       }
-      elseif (is_string($arguments)){
+      elseif (is_string($arguments)) {
         $instrument = $arguments;
       }
       else {
@@ -1227,19 +1319,19 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
 
     // detect variables
-    if(empty($post)){
+    if (empty($post)) {
       CRM_Core_Error::debug_log_message("Spgateway: Could not find POST data from payment server.");
       CRM_Utils_System::civiExit();
     }
-    else{
+    else {
       // validate some post
       if (!empty($post['TradeInfo']) || !empty($post['JSONData']) || !empty($post['Period']) || !empty($post['Result'])) {
         $ipn = new CRM_Core_Payment_SPGATEWAYIPN($post, $get);
         $result = $ipn->main($instrument);
-        if(is_string($result) && $print){
+        if (is_string($result) && $print) {
           echo $result;
         }
-        else{
+        else {
           return $result;
         }
       }
@@ -1254,33 +1346,33 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   /**
    * Migrate from _civicrm_spgateway_instrument
    *
-   * @param string $type
-   * @return void
+   * @param string $type Instrument type
+   * @return array List of instruments
    */
-  public static function instruments($type = 'normal'){
+  public static function instruments($type = 'normal') {
     $i = [
       'Credit Card' => ['label' => ts('Credit Card'), 'desc' => '', 'code' => 'Credit'],
       'ATM' => ['label' => ts('ATM Transfer'), 'desc' => '', 'code' => 'ATM'],
       'Web ATM' => ['label' => ts('Web ATM'), 'desc' => '', 'code' => 'WebATM'],
-      'Convenient Store' => ['label' => ts('Convenient Store Barcode'), 'desc'=>'', 'code' => 'BARCODE'],
-      'Convenient Store (Code)' => ['label'=> ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'],
-      'GooglePay' => ['label'=> ts('Google Pay'),'desc' => '', 'code' => 'GooglePay'],
-      'ApplePayFront' => ['label'=> ts('Apple Pay'),'desc' => '', 'code' => 'ApplePayFront'],
+      'Convenient Store' => ['label' => ts('Convenient Store Barcode'), 'desc' => '', 'code' => 'BARCODE'],
+      'Convenient Store (Code)' => ['label' => ts('Convenient Store (Code)'),'desc' => '', 'code' => 'CVS'],
+      'GooglePay' => ['label' => ts('Google Pay'),'desc' => '', 'code' => 'GooglePay'],
+      'ApplePayFront' => ['label' => ts('Apple Pay'),'desc' => '', 'code' => 'ApplePayFront'],
     ];
-    if($type == 'form_name'){
-      foreach($i as $name => $data){
+    if ($type == 'form_name') {
+      foreach ($i as $name => $data) {
         $form_name = preg_replace('/[^0-9a-z]+/i', '_', strtolower($name));
         $instrument[$form_name] = $data;
       }
       return $instrument;
     }
-    elseif($type == 'code'){
-      foreach($i as $name =>  $data){
+    elseif ($type == 'code') {
+      foreach ($i as $name =>  $data) {
         $instrument[$name] = $data['code'];
       }
       return $instrument;
     }
-    else{
+    else {
       return $i;
     }
   }
@@ -1288,15 +1380,15 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   /**
    * Migrate from _civicrm_spgateway_trxn_id
    *
-   * @param int $is_test
-   * @param int $id
-   * @return string
+   * @param int $is_test Whether in test mode
+   * @param int|string $id Base ID
+   * @return string Generated transaction ID
    */
-  public static function generateTrxnId($is_test, $id){
+  public static function generateTrxnId($is_test, $id) {
     if (empty($id)) {
-      $id = 'ag_' . substr(md5(uniqid(mt_rand(), true)), 0, 6).'_'.mt_rand(100, 999);
+      $id = 'ag_' . substr(md5(uniqid(mt_rand(), TRUE)), 0, 6).'_'.mt_rand(100, 999);
     }
-    if($is_test){
+    if ($is_test) {
       $trxnId = 'test' . substr(str_replace(['.','-'], '', $_SERVER['HTTP_HOST']), 0, 3) . $id. 'T'. mt_rand(100, 999);
       return $trxnId;
     }
@@ -1308,9 +1400,9 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
    *
    * Sync non-recurring transaction by specific trxn id
    *
-   * @param int $inputTrxnId
-   * @return bool|object
-   * @param string $order
+   * @param string $inputTrxnId Transaction ID
+   * @param object|array|null $order Pre-defined order response (optional)
+   * @return bool|object|string Result message or response object
    */
   public static function syncTransaction($inputTrxnId, $order = NULL) {
     $paymentProcessorId = 0;
@@ -1327,7 +1419,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     }
     // we can't support single contribution check because lake of payment processor id #TODO - logic to get payment processor id
     if (!empty($paymentProcessorId)) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test' : 'live');
 
       if (strstr($paymentProcessor['payment_processor_type'], 'SPGATEWAY') && !empty($paymentProcessor['user_name'])) {
         if ($order) {
@@ -1368,7 +1460,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           // prepare post, complex logic because recurring have different variable names
           $ipnResult = clone $result;
           if ($result->Result->TradeStatus != 1) {
-            $ipnResult->Status =$result->Result->RespondCode;
+            $ipnResult->Status = $result->Result->RespondCode;
           }
           $ipnResult->Message = $result->Result->RespondMsg;
           // Pass CheckCode.
@@ -1380,7 +1472,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
             unset($ipnResult->Result->Amt);
             $ipnResult->Result->OrderNo = $result->Result->MerchantOrderNo;
             list($first_id, $period_times) = explode('_', $result->Result->MerchantOrderNo);
-            if(!empty($period_times) && $period_times != 1){
+            if (!empty($period_times) && $period_times != 1) {
               $ipnResult->Result->AlreadyTimes = $period_times;
             }
             $ipnResult->Result->MerchantOrderNo = $first_id;
@@ -1414,21 +1506,18 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   }
 
   /**
-   * Always trying to fetch next trxn_id which not appear in CRM
-   */
-  /**
    * Migrate from civicrm_spgateway_recur_check
    *
    * Trying to get next transaction by given recurring id
    *
-   * @param int $recurId
+   * @param int $recurId Recurring ID
    * @return void
    */
   public static function recurSync($recurId) {
     $query = "SELECT trxn_id, CAST(REGEXP_REPLACE(trxn_id, '^[0-9_r]+_([0-9]+)$', '\\\\1') as UNSIGNED) as number FROM civicrm_contribution WHERE contribution_recur_id = %1 AND CAST(trxn_id as UNSIGNED) < 900000000 ORDER BY number DESC";
     $result = CRM_Core_DAO::executeQuery($query, [1 => [$recurId, 'Integer']]);
     $result->fetch();
-    if(!empty($result->N)){
+    if (!empty($result->N)) {
       // when recurring trxn_id have underline, eg oooo_1
       if (strstr($result->trxn_id, '_')) {
         list($parentTrxnId, $recurringInstallment, $oldRecurInstallment) = explode('_', $result->trxn_id);
@@ -1445,7 +1534,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       }
       // when first recurring trxn_id record without underline
       else {
-        $parentTrxnId= $result->trxn_id;
+        $parentTrxnId = $result->trxn_id;
         $installment = 2;
         self::recurSyncTransaction($parentTrxnId, TRUE);
       }
@@ -1455,13 +1544,13 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   /**
    * Migrate from civicrm_spgateway_single_check
    *
-   * Create recurring transacation by specific trxn id
+   * Create recurring transaction by specific trxn id
    * Base on spgateway / neweb response
    *
-   * @param string $trxnId
-   * @param bool $createContribution
-   * @param string $order
-   * @return object|bool
+   * @param string $trxnId Transaction ID
+   * @param bool $createContribution Whether to create contribution if not exists
+   * @param object|array|null $order Pre-defined order response (optional)
+   * @return object|bool Response object or FALSE on failure
    */
   public static function recurSyncTransaction($trxnId, $createContribution = FALSE, $order = NULL) {
     $parentTrxnId = 0;
@@ -1497,7 +1586,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
         }
       }
     }
-    elseif($createContribution) {
+    elseif ($createContribution) {
       // recurring contribution
       if ($parentTrxnId) {
         $contribution = new CRM_Contribute_DAO_Contribution();
@@ -1517,7 +1606,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
 
     // we can't support single contribution check because lake of payment processor id #TODO - logic to get payment processor id
     if (!empty($paymentProcessorId)) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($paymentProcessorId, $contribution->is_test ? 'test' : 'live');
 
       if (!empty($paymentProcessor['user_name'])) {
         if ($order) {
@@ -1552,7 +1641,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
             // prepare post, complex logic because recurring have different variable names
             $ipnResult = clone $result;
             if ($result->Result->TradeStatus != 1) {
-              $ipnResult->Status =$result->Result->RespondCode;
+              $ipnResult->Status = $result->Result->RespondCode;
             }
             $ipnResult->Message = $result->Result->RespondMsg;
 
@@ -1561,7 +1650,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
             unset($ipnResult->Result->CheckCode);
             $ipnResult->Result->OrderNo = $result->Result->MerchantOrderNo;
             list($first_id, $period_times) = explode('_', $result->Result->MerchantOrderNo);
-            if(!empty($period_times) && $period_times != 1){
+            if (!empty($period_times) && $period_times != 1) {
               $ipnResult->Result->AlreadyTimes = $period_times;
             }
             $ipnResult->Result->MerchantOrderNo = $first_id;
@@ -1600,8 +1689,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   /**
    * Using weblog post data to sync
    *
-   * @param string $processOnlyDate string that format YYYYmmddHH indicate only process date in that hour
-   * @param array $lines custom provided lines for test o process
+   * @param string $filterDatetime string that format YYYYmmddHH indicate only process date in that hour
+   * @param array|null $lines custom provided lines for test o process
    * @return void
    */
   public static function syncTransactionWebLog($filterDatetime = '', $lines = NULL) {
@@ -1649,7 +1738,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
           if (!empty($postString)) {
             if (strpos($postString, 'JSONData=') === 0) {
               $postString = substr($postString, 9);
-              $postParams = json_decode($postString, true);
+              $postParams = json_decode($postString, TRUE);
               if (!empty($postParams['Result'])) {
                 $ipnResult = json_decode($postParams['Result'], TRUE);
                 if (!empty($ipnResult['MerchantID'])) {
@@ -1667,7 +1756,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
                 }
               }
             }
-            elseif (strpos($postString, 'Content-Disposition: form-data') !== false) {
+            elseif (strpos($postString, 'Content-Disposition: form-data') !== FALSE) {
               $rawPostData = preg_replace('/\r\n--------------------------\w+--\r\n$/', '', $postString);
               $postParts = preg_split('/\r\n--------------------------\w+\r\n/', $rawPostData);
               $postParams = [];
@@ -1680,7 +1769,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
               }
               if (!empty($postParams['Period'])) {
                 // decode
-                if(is_numeric($getParams['cid'])) {
+                if (is_numeric($getParams['cid'])) {
                   $dao = CRM_Core_DAO::executeQuery("SELECT payment_processor_id, is_test FROM civicrm_contribution WHERE id = %1", [
                     1 => [$getParams['cid'], 'Integer'],
                   ]);
@@ -1737,8 +1826,8 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       // process complete, start to call sync when necessery
       // only trigger sync when contribution status is pending
       if (!empty($ordersByMerchant)) {
-        foreach($ordersByMerchant as $merchantId => $orders) {
-          foreach($orders as $idx => $order) {
+        foreach ($ordersByMerchant as $merchantId => $orders) {
+          foreach ($orders as $idx => $order) {
             if (!empty($order['trxn_id'])) {
               if ($order['first_recurring']) {
                 $current_status_id = CRM_Core_DAO::singleValueQuery("SELECT contribution_status_id FROM civicrm_contribution WHERE trxn_id IN (%1, %2)", [
@@ -1764,7 +1853,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
                     self::recurSyncTransaction($order['trxn_id'], TRUE);
                   }
                 }
-                elseif($current_status_id == 2) {
+                elseif ($current_status_id == 2) {
                   CRM_Core_Error::debug_log_message("spgateway: weblog sync recur status for trxn_id {$order['trxn_id']}");
                   if ($order['first_recurring']) {
                     $ids = explode('_', $order['trxn_id']);
@@ -1814,7 +1903,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $seq->name = self::QUEUE_NAME;
 
     if ($seq->find(TRUE)) {
-      if ( $seq->value && (CRM_REQUEST_TIME - $seq->timestamp) < 1800) {
+      if ($seq->value && (CRM_REQUEST_TIME - $seq->timestamp) < 1800) {
         // last process is executing.
         $error = "Last process is still executing. Interupt now.";
         CRM_Core_Error::debug_log_message($error, TRUE);
@@ -1843,7 +1932,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $cycleDayFilter = 'r.cycle_day = '.$today.' ';
     }
     else {
-      for($i = $today; $i <= 31 ; $i++) {
+      for ($i = $today; $i <= 31 ; $i++) {
         $days[] = $i;
       }
       $cycleDayFilter = 'r.cycle_day IN ('.CRM_Utils_Array::implode(',', $days).')';
@@ -1913,11 +2002,11 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   }
 
   /**
-   * doCheckRecur
+   * Check recurring contribution status
    *
-   * @param  int $recurId
-   * @param  int $time
-   * @return string
+   * @param int $recurId Recurring ID
+   * @param int|null $time Current timestamp
+   * @return string Result message
    */
   public static function doCheckRecur($recurId, $time = NULL) {
     if (!defined('CIVICRM_SPGATEWAY_ENABLE_AGREEMENT') || !CIVICRM_SPGATEWAY_ENABLE_AGREEMENT) {
@@ -2016,7 +2105,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $changeStatusId = 1;
     }
     elseif ($donePayment && $dao->frequency_unit == 'month' && !empty($new_expiry_date) && date('Ym', $time) == date('Ym', strtotime($new_expiry_date))) {
-      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", [1 => date('Y/m',strtotime($new_expiry_date))]);
+      $statusNote = ts("This is lastest contribution of this recurring (expiry date is %1).", [1 => date('Y/m', strtotime($new_expiry_date))]);
       $resultNote .= "\n" . $statusNote;
       $changeStatus = TRUE;
       $changeStatusId = 6;
@@ -2040,7 +2129,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $changeStatusId = 6;
     }
 
-    if ( $changeStatus ) {
+    if ($changeStatus) {
       $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus($changeStatusId)]);
       $statusNote .= ' '.ts("Auto renews status");
       $resultNote .= "\n".$statusNoteTitle;
@@ -2058,19 +2147,19 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
   }
 
   /**
-   * payByToken
+   * Pay by token for agreement payment
    *
-   * @param  int $recurringId
-   * @param  int $referContributionId
-   * @param  bool $sendMail
-   * @return array
+   * @param int|null $recurringId Recurring ID
+   * @param int|null $referContributionId Reference contribution ID (optional)
+   * @param bool $sendMail Whether to send receipt email
+   * @return array Result
    */
   public static function payByToken($recurringId = NULL, $referContributionId = NULL, $sendMail = TRUE) {
     if (!defined('CIVICRM_SPGATEWAY_ENABLE_AGREEMENT') || !CIVICRM_SPGATEWAY_ENABLE_AGREEMENT) {
       return;
     }
     $response = [];
-    if(empty($recurringId)){
+    if (empty($recurringId)) {
       $recurringId = CRM_Utils_Request::retrieve('crid', 'Positive', CRM_Core_DAO::$_nullObject, TRUE, $recurringId, 'REQUEST');
     }
     if (empty($recurringId)) {
@@ -2109,22 +2198,31 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     else {
       $order = 'ASC';
     }
-    $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date $order";
+    $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date $order LIMIT 1";
     $params = [1 => [$recurringId, 'Positive']];
     $findContributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
 
-    // Find FirstContribution
+    // Find CopyContribution
     $findContribution = new CRM_Contribute_DAO_Contribution();
     $findContribution->id = $findContributionId;
-    $findContribution->find(TRUE);
+    $found = $findContribution->find(TRUE);
 
-    $ppid = $findContribution->payment_processor_id;
+    $ppid = NULL;
+    // we got to get payment processor by first contribution anyway
+    if ($config->recurringCopySetting == 'latest') {
+      $firstContribution = CRM_Core_DAO::executeQuery("SELECT id, payment_processor_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date ASC LIMIT 1", [1 => [$recurringId, 'Positive']]);
+      $firstContribution->fetch();
+      if (!empty($firstContribution->id) && !empty($firstContribution->payment_processor_id)) {
+        $ppid = $firstContribution->payment_processor_id;
+      }
+    }
+    $ppid = $ppid ?? $findContribution->payment_processor_id;
     $mode = $findContribution->is_test ? 'test' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
     $response = ['status' => 0, 'msg' => 'Unknown error'];
 
-    if ($paymentProcessor && !empty($paymentProcessor['url_api'])) {
+    if (!empty($found) && $paymentProcessor && !empty($paymentProcessor['url_api'])) {
       $trxnId = self::generateTrxnId($findContribution->is_test, 0);
 
       if (empty($referContributionId)) {
@@ -2231,11 +2329,17 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     return $response;
   }
 
+  /**
+   * Check if recurring process should proceed
+   *
+   * @param int $recurId Recurring ID
+   * @return bool Whether to proceed
+   */
   public static function checkProceedRecur($recurId) {
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $recurId;
     if ($recur->find(TRUE) && !empty($recur->processor_id)) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $recur->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $recur->is_test ? 'test' : 'live');
       if (!empty($paymentProcessor['url_api'])) {
         return TRUE;
       }
@@ -2256,7 +2360,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     $recur = new CRM_Contribute_DAO_ContributionRecur();
     $recur->id = $recurId;
     if ($recur->find(TRUE) && !empty($recur->processor_id)) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $recur->is_test ? 'test': 'live');
+      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($recur->processor_id, $recur->is_test ? 'test' : 'live');
       if (!empty($paymentProcessor['url_api'])) {
         // Get current user
         $session = CRM_Core_Session::singleton();

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Form for displaying the summary of Taiwan ACH import results.
+ */
 class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
   public $_parseResult;
   public $_processResult;
@@ -8,7 +11,15 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
   protected $_contributionRecurId = NULL;
   protected $_action = NULL;
 
-  function preProcess() {
+  /**
+   * Set up variables before the form is built.
+   *
+   * Retrieves the final parse and process results from the session and
+   * assigns them to the template for display.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $this->_parseResult = $this->get('parseResult');
     $this->_processResult = $this->get('processResult');
     $this->assign('processResult', $this->_processResult);
@@ -16,8 +27,16 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
     $this->assign('importType', $this->_parseResult['import_type']);
   }
 
-  function buildQuickForm() {
-    $this->addButtons([
+  /**
+   * Actually build the form components.
+   *
+   * Adds a 'Done' button to complete the import workflow.
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
         ],
@@ -25,14 +44,21 @@ class CRM_Contribute_Form_TaiwanACH_Summary extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+  /**
+   * Process the form submission.
+   *
+   * This method is a placeholder as no additional logic is required after
+   * the summary display.
+   *
+   * @return void
+   */
+  public function postProcess() {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Summary');

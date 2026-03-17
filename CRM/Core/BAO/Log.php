@@ -27,21 +27,26 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * BAO object for crm_log table
  */
 class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
-  static $_processed = NULL;
+  public static $_processed = NULL;
 
-  static function lastModified($id, $table = 'civicrm_contact', $order = 'desc') {
+  /**
+   * Get the last modified log entry for a specific entity.
+   *
+   * @param int $id entity ID
+   * @param string $table name of the entity table (defaults to 'civicrm_contact')
+   * @param string $order sort order ('desc' or 'asc')
+   *
+   * @return array associative array of log details
+   */
+  public static function lastModified($id, $table = 'civicrm_contact', $order = 'desc') {
     $log = new CRM_Core_DAO_Log();
 
     $log->entity_table = $table;
@@ -66,14 +71,13 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
   }
 
   /**
-   * add log to civicrm_log table
+   * Add a log entry to the civicrm_log table.
    *
-   * @param array $params  array of name-value pairs of log table.
+   * @param array &$params associative array of log data
    *
-   * @static
+   * @return CRM_Core_BAO_Log the created log object
    */
-  static function add(&$params) {
-
+  public static function add(&$params) {
 
     $log = new CRM_Core_DAO_Log();
     $log->copyValues($params);
@@ -81,7 +85,18 @@ class CRM_Core_BAO_Log extends CRM_Core_DAO_Log {
     return $log;
   }
 
-  static function register($contactID, $tableName, $tableID, $userID = NULL, $data = NULL) {
+  /**
+   * Register a modification to an entity in the log.
+   *
+   * @param int $contactID contact ID being modified
+   * @param string $tableName name of the table being modified
+   * @param int $tableID ID of the record being modified
+   * @param int|null $userID optional ID of the user performing the modification
+   * @param string|null $data optional custom log data
+   *
+   * @return void
+   */
+  public static function register($contactID, $tableName, $tableID, $userID = NULL, $data = NULL) {
     if (!self::$_processed) {
       self::$_processed = [];
     }
@@ -134,15 +149,16 @@ UPDATE civicrm_log
   }
 
   /**
-   * Write audit log on specific entity
+   * Write an audit log for a specific entity.
    *
-   * @param int $entityId       entity id that associate the table
-   * @param string $auditType the given string will be auto prepend 'audit.' 
-   * @param string $data
+   * @param int $entityId ID of the entity
+   * @param string $auditType type of audit (auto-prepended with 'audit.')
+   * @param string $data audit log data
+   *
    * @return void
    */
-  static function audit($entityId, $auditType, $data) {
-    if (!$entityId || !$auditType|| empty($data)) {
+  public static function audit($entityId, $auditType, $data) {
+    if (!$entityId || !$auditType || empty($data)) {
       return;
     }
     $userID = CRM_Core_Session::singleton()->get('userID');
@@ -158,18 +174,15 @@ UPDATE civicrm_log
   }
 
   /**
-   * Function to get log record count for a Contact
+   * Get the count of log records for a specific contact.
    *
-   * @param int $contactId Contact ID
+   * @param int $contactID contact ID
    *
    * @return int count of log records
-   * @access public
-   * @static
    */
-  static function getContactLogCount($contactID) {
+  public static function getContactLogCount($contactID) {
     $query = "SELECT count(*) FROM civicrm_log 
                    WHERE civicrm_log.entity_table = 'civicrm_contact' AND civicrm_log.entity_id = {$contactID}";
     return CRM_Core_DAO::singleValueQuery($query);
   }
 }
-

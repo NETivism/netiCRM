@@ -27,25 +27,23 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Upgrade_TwoOne_Form_Step2 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '2']);
 
     return $this->checkVersion('2.01');
   }
 
-  function upgrade() {
+  public function upgrade() {
     $currentDir = dirname(__FILE__);
 
     // 1. remove domain_ids from the entire db
-    $sqlFile = CRM_Utils_Array::implode(DIRECTORY_SEPARATOR,
+    $sqlFile = CRM_Utils_Array::implode(
+      DIRECTORY_SEPARATOR,
       [$currentDir, '../sql', 'group_values.mysql']
     );
     $this->source($sqlFile);
@@ -103,7 +101,7 @@ AND    `label` IN ('html', 'htm')
     $this->setVersion('2.02');
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     // check if Option Group & Option Values tables exists
     if (!CRM_Core_DAO::checkTableExists('civicrm_option_group') ||
       !CRM_Core_DAO::checkTableExists('civicrm_option_value')
@@ -138,16 +136,15 @@ AND    `label` IN ('html', 'htm')
     return $this->checkVersion('2.02');
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('CiviCRM 2.1 Upgrade: Step Two (Option Group And Values)');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     return '<p>' . ts('Step Two will upgrade the Option Group And Values in your database.') . '</p>';
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Upgrade & Continue');
   }
 }
-

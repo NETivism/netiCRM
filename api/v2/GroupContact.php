@@ -1,7 +1,6 @@
 <?php
 // $Id: GroupContact.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -147,8 +146,12 @@ function civicrm_group_contact_common(&$params, $op = 'add') {
   if ($op == 'add' || $op == 'pending') {
     $values['total_count'] = $values['added'] = $values['not_added'] = 0;
     foreach ($groupIDs as $groupID) {
-      list($tc, $a, $na) = CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIDs, $groupID,
-        $method, $status, $tracking
+      list($tc, $a, $na) = CRM_Contact_BAO_GroupContact::addContactsToGroup(
+        $contactIDs,
+        $groupID,
+        $method,
+        $status,
+        $tracking
       );
       $values['total_count'] += $tc;
       $values['added'] += $a;
@@ -158,8 +161,12 @@ function civicrm_group_contact_common(&$params, $op = 'add') {
   else {
     $values['total_count'] = $values['removed'] = $values['not_removed'] = 0;
     foreach ($groupIDs as $groupID) {
-      list($tc, $r, $nr) = CRM_Contact_BAO_GroupContact::removeContactsFromGroup($contactIDs, $groupID,
-        $method, $status, $tracking
+      list($tc, $r, $nr) = CRM_Contact_BAO_GroupContact::removeContactsFromGroup(
+        $contactIDs,
+        $groupID,
+        $method,
+        $status,
+        $tracking
       );
       $values['total_count'] += $tc;
       $values['removed'] += $r;
@@ -196,4 +203,3 @@ function civicrm_group_contact_update_status(&$params) {
 
   return TRUE;
 }
-

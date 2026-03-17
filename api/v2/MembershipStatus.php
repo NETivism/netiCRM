@@ -1,7 +1,6 @@
 <?php
 // $Id: MembershipStatus.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -241,7 +240,8 @@ SELECT start_date, end_date, join_date
   if ($dao->fetch()) {
     require_once 'CRM/Member/BAO/MembershipStatus.php';
     // CRM-7248 added $excludeIsAdmin to this function, also 'today' param
-    $result = &CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($dao->start_date,
+    $result = &CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate(
+      $dao->start_date,
       $dao->end_date,
       $dao->join_date,
       'today',
@@ -259,4 +259,3 @@ SELECT start_date, end_date, join_date
   $dao->free();
   return $result;
 }
-

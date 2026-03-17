@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of Premiums
@@ -46,14 +42,14 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Contribute_BAO_Premium';
   }
 
@@ -62,7 +58,7 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       // helper variable for nicer formatting
       $deleteExtra = ts('Are you sure you want to remove this product form this page?');
@@ -100,20 +96,27 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
    * Finally it calls the parent's run method.
    *
    * @return void
-   * @access public
    *
    */
-  function run() {
+  public function run() {
     // get the requested action
-    $action = CRM_Utils_Request::retrieve('action', 'String',
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
       // default to 'browse'
-      $this, FALSE, 'browse'
+      $this,
+      FALSE,
+      'browse'
     );
 
     // assign vars to templates
     $this->assign('action', $action);
-    $id = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('id', $id);
 
@@ -129,17 +132,20 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
   }
 
   /**
+   * Browse premiums
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
     // get all custom groups sorted by weight
     $premiums = [];
 
-    $pageID = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $pageID = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     $dao = new CRM_Contribute_DAO_Premium();
     $dao->entity_table = 'civicrm_contribution_page';
@@ -150,7 +156,6 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
     if (!$premiumID) {
       return;
     }
-
 
     $dao = new CRM_Contribute_DAO_PremiumsProduct();
     $dao->premiums_id = $premiumID;
@@ -169,12 +174,13 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
 
         $action = array_sum(array_keys($this->links()));
 
-        $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(self::links(), $action,
+        $premiums[$dao->id]['action'] = CRM_Core_Action::formLink(
+          self::links(),
+          $action,
           ['id' => $pageID, 'pid' => $dao->id]
         );
       }
     }
-
 
     if (count(CRM_Contribute_PseudoConstant::products($pageID)) == 0) {
       $this->assign('products', FALSE);
@@ -187,8 +193,12 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
     $returnURL = CRM_Utils_System::url('civicrm/admin/contribute/premium', "reset=1&action=update&id={$pageID}");
     $filter = "premiums_id = {$premiumID}";
 
-    CRM_Utils_Weight::addOrder($premiums, 'CRM_Contribute_DAO_PremiumsProduct',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $premiums,
+      'CRM_Contribute_DAO_PremiumsProduct',
+      'id',
+      $returnURL,
+      $filter
     );
     $this->assign('rows', $premiums);
 
@@ -259,15 +269,21 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
 
       foreach ($combinations as $id => $combination) {
         $action = array_sum(array_keys($combinationLinks));
-        $combinations[$id]['action'] = CRM_Core_Action::formLink($combinationLinks, $action,
+        $combinations[$id]['action'] = CRM_Core_Action::formLink(
+          $combinationLinks,
+          $action,
           ['id' => $pageID, 'combination_id' => $id]
         );
       }
 
       $combinationReturnURL = CRM_Utils_System::url('civicrm/admin/contribute/premium', "reset=1&action=update&id={$pageID}");
       $combinationFilter = "premiums_id = {$premiumID}";
-      CRM_Utils_Weight::addOrder($combinations, 'CRM_Contribute_DAO_PremiumsCombination',
-        'id', $combinationReturnURL, $combinationFilter
+      CRM_Utils_Weight::addOrder(
+        $combinations,
+        'CRM_Contribute_DAO_PremiumsCombination',
+        'id',
+        $combinationReturnURL,
+        $combinationFilter
       );
     }
     $this->assign('combinations', $combinations);
@@ -278,7 +294,7 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Contribute_Form_ContributionPage_Premium';
   }
 
@@ -287,17 +303,18 @@ class CRM_Contribute_Page_Premium extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return 'Configure Premiums';
   }
 
   /**
    * Get user context.
    *
+   * @param string $mode the current mode
+   *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return CRM_Utils_System::currentPath();
   }
 }
-

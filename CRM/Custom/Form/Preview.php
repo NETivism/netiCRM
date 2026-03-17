@@ -27,17 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
 
 /**
  * This class generates form components for previewing custom data
@@ -66,9 +58,8 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
    * @param null
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // get the controller vars
     $this->_groupId = $this->get('groupId');
     $this->_fieldId = $this->get('fieldId');
@@ -80,10 +71,10 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_CustomField', $params, $defaults);
 
       if (CRM_Utils_Array::value('is_view', $defaults)) {
-         return CRM_Core_Error::statusBounce(ts('This field is view only so it will not display on edit form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is view only so it will not display on edit form.'));
       }
       elseif (CRM_Utils_Array::value('is_active', $defaults) == 0) {
-         return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not display on edit form.'));
+        return CRM_Core_Error::statusBounce(ts('This field is inactive so it will not display on edit form.'));
       }
 
       $groupTree = [];
@@ -103,14 +94,10 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
   /**
    * Set the default form values
    *
-   * @param null
-   *
-   * @return array   the default array reference
-   * @access protected
+   * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = [];
-
 
     CRM_Core_BAO_CustomGroup::setDefaults($this->_groupTree, $defaults, FALSE, FALSE);
 
@@ -123,18 +110,18 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
    * @param null
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if (is_array($this->_groupTree[$this->_groupId])) {
-      foreach ($this->_groupTree[$this->_groupId]['fields'] as & $field) {
+      foreach ($this->_groupTree[$this->_groupId]['fields'] as &$field) {
         //add the form elements
         CRM_Core_BAO_CustomField::addQuickFormElement($this, $field['element_name'], $field['id'], FALSE, $field['is_required']);
       }
 
       $this->assign('groupTree', $this->_groupTree);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
           'isDefault' => TRUE,
@@ -143,4 +130,3 @@ class CRM_Custom_Form_Preview extends CRM_Core_Form {
     );
   }
 }
-

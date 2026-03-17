@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
@@ -40,25 +37,19 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a tag record based on the provided parameters.
    *
-   * @param array $params      (reference ) an assoc array of name/value pairs
-   * @param array $defaults    (reference ) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object     CRM_Core_DAO_Tag object on success, otherwise null
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_Tag|null matching DAO object
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $tag = new CRM_Core_DAO_Tag();
     $tag->copyValues($params);
     if ($tag->find(TRUE)) {
@@ -68,14 +59,30 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     return NULL;
   }
 
-  function getTree($usedFor = NULL, $excludeHidden = FALSE) {
+  /**
+   * Get the tag tree structure.
+   *
+   * @param string|null $usedFor entity type (e.g., 'civicrm_contact')
+   * @param bool $excludeHidden whether to exclude tag sets
+   *
+   * @return array nested associative array of tags
+   */
+  public function getTree($usedFor = NULL, $excludeHidden = FALSE) {
     if (!isset($this->tree)) {
       $this->buildTree($usedFor, $excludeHidden);
     }
     return $this->tree;
   }
 
-  function buildTree($usedFor = NULL, $excludeHidden = FALSE) {
+  /**
+   * Build the tag tree structure.
+   *
+   * @param string|null $usedFor entity type
+   * @param bool $excludeHidden whether to exclude tag sets
+   *
+   * @return void
+   */
+  public function buildTree($usedFor = NULL, $excludeHidden = FALSE) {
     $sql = "SELECT civicrm_tag.id, civicrm_tag.parent_id,civicrm_tag.name FROM civicrm_tag ";
 
     $whereClause = [];
@@ -116,14 +123,14 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
         $parent['children'][$dao->id] = ['name' => $dao->name];
       }
     }
-    if (sizeof($orphan)) {
+    if (count($orphan)) {
       //hang the 3rd level lists at the right place
-      foreach ($this->tree as & $level1) {
+      foreach ($this->tree as &$level1) {
         if (!isset($level1['children'])) {
           continue;
         }
 
-        foreach ($level1['children'] as $key => & $level2) {
+        foreach ($level1['children'] as $key => &$level2) {
           if (CRM_Utils_Array::arrayKeyExists($key, $orphan)) {
             $level2['children'] = $orphan[$key]['children'];
           }
@@ -132,7 +139,18 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     }
   }
 
-  static function getTagsUsedFor($usedFor = ['civicrm_contact'],
+  /**
+   * Get tags used for specific entity types.
+   *
+   * @param array|string $usedFor entity table name(s)
+   * @param bool $buildSelect whether to return a simple (id => name) array
+   * @param bool $all whether to include tag sets
+   * @param int|null $parentId filter by parent tag ID
+   *
+   * @return array array of tag info
+   */
+  public static function getTagsUsedFor(
+    $usedFor = ['civicrm_contact'],
     $buildSelect = TRUE,
     $all = FALSE,
     $parentId = NULL
@@ -185,7 +203,19 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     return $tags;
   }
 
-  static function getTags($usedFor = 'civicrm_contact',
+  /**
+   * Get tags with hierarchical labels (using non-breaking spaces for indentation).
+   *
+   * @param string $usedFor entity table name
+   * @param array &$tags associative array to store the result
+   * @param int|null $parentId starting parent tag ID
+   * @param string $separator indentation string
+   * @param bool $flatlist whether to return a flat list
+   *
+   * @return array associative array of (id => formatted_label)
+   */
+  public static function getTags(
+    $usedFor = 'civicrm_contact',
     &$tags = [],
     $parentId = NULL,
     $separator = '&nbsp;&nbsp;',
@@ -246,7 +276,7 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
     // Prefix each name with the calcuated spacing to give the visual
     // appearance of ordering when transformed into HTML in the form layer.
-    foreach ($tags as & $tag) {
+    foreach ($tags as &$tag) {
       $tag = $tag[0] . $tag[1];
     }
 
@@ -254,16 +284,13 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
   }
 
   /**
-   * Function to delete the tag
+   * Delete a tag and all its entity associations.
    *
-   * @param int $id   tag id
+   * @param int $id tag ID
    *
-   * @return boolean
-   * @access public
-   * @static
-   *
+   * @return bool TRUE on success
    */
-  static function del($id) {
+  public static function del($id) {
     // delete all crm_entity_tag records with the selected tag id
 
     $entityTag = new CRM_Core_DAO_EntityTag();
@@ -278,7 +305,6 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     $tag = new CRM_Core_DAO_Tag();
     $tag->id = $id;
 
-
     CRM_Utils_Hook::pre('delete', 'Tag', $id, $tag);
 
     if ($tag->delete()) {
@@ -290,20 +316,14 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
   }
 
   /**
-   * takes an associative array and creates a contact object
+   * Add or update a tag record.
    *
-   * The function extract all the params it needs to initialize the create a
-   * contact object. the params array could contain additional unused name/value
-   * pairs
+   * @param array &$params associative array of tag data
+   * @param array &$ids associative array containing 'tag' ID if updating
    *
-   * @param array  $params         (reference) an assoc array of name/value pairs
-   * @param array  $ids            (reference) the array that holds all the db ids
-   *
-   * @return object    CRM_Core_DAO_Tag object on success, otherwise null
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_Tag|null created/updated tag object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     if (!self::dataExists($params)) {
       return NULL;
     }
@@ -318,7 +338,6 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
     $tag->copyValues($params);
     $tag->id = CRM_Utils_Array::value('tag', $ids);
-
 
     $edit = ($tag->id) ? TRUE : FALSE;
     if ($edit) {
@@ -339,7 +358,8 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
 
     // if we modify parent tag, then we need to update all children
     if ($tag->parent_id === 'null') {
-      CRM_Core_DAO::executeQuery("UPDATE civicrm_tag SET used_for=%1 WHERE parent_id = %2",
+      CRM_Core_DAO::executeQuery(
+        "UPDATE civicrm_tag SET used_for=%1 WHERE parent_id = %2",
         [1 => [$params['used_for'], 'String'],
           2 => [$tag->id, 'Integer'],
         ]
@@ -350,15 +370,13 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
   }
 
   /**
-   * Check if there is data to create the object
+   * Check if there is enough data to create a tag record.
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array &$params associative array of tag data
    *
-   * @return boolean
-   * @access public
-   * @static
+   * @return bool TRUE if name is present
    */
-  static function dataExists(&$params) {
+  public static function dataExists(&$params) {
     if (!empty($params['name'])) {
       return TRUE;
     }
@@ -367,15 +385,13 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
   }
 
   /**
-   * Function to get the tag sets for a entity object
+   * Get tag sets for a specific entity table.
    *
-   * @param string $entityTable entity_table
+   * @param string $entityTable entity table name
    *
-   * @return array $tagSets array of tag sets
-   * @access public
-   * @static
+   * @return string[] array of tag set names
    */
-  static function getTagSet($entityTable) {
+  public static function getTagSet($entityTable) {
     $tagSets = [];
     $query = "SELECT name FROM civicrm_tag WHERE is_tagset=1 AND parent_id IS NULL and used_for LIKE '%{$entityTable}%'";
     $dao = CRM_Core_DAO::executeQuery($query, CRM_Core_DAO::$_nullArray, TRUE, NULL, FALSE, FALSE);
@@ -386,13 +402,11 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
   }
 
   /**
-   * Function to get the tags that are not children of a tagset.
+   * Get tags that are not children of any tag set.
    *
-   * @return $tags associated array of tag name and id
-   * @access public
-   * @static
+   * @return array associative array of (id => name)
    */
-  static function getTagsNotInTagset() {
+  public static function getTagsNotInTagset() {
     $tags = $tagSets = [];
     // first get all the tag sets
     $query = "SELECT id FROM civicrm_tag WHERE is_tagset=1 AND parent_id IS NULL";
@@ -416,4 +430,3 @@ class CRM_Core_BAO_Tag extends CRM_Core_DAO_Tag {
     return $tags;
   }
 }
-

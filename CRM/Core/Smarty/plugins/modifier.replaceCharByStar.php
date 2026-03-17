@@ -27,16 +27,22 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
+/**
+ * Mask characters in a string with asterisks, preserving start and end.
+ *
+ * @param string $str the string to mask
+ *
+ * @return string masked string
+ */
 function smarty_modifier_replacecharbystar($str) {
-  if(strpos($str, '@') !== false){
+  if (strpos($str, '@') !== FALSE) {
     $glue = '@';
-  }else{
+  }
+  else {
     $glue = ' ';
   }
   $str_array = explode($glue, $str);
@@ -48,25 +54,32 @@ function smarty_modifier_replacecharbystar($str) {
   return $return;
 }
 
+/**
+ * Helper function to apply asterisks to a single segment of a string.
+ *
+ * @param string $str the segment to mask
+ *
+ * @return string masked segment
+ */
 function _doAddStar($str) {
-   if(mb_strlen($str) > 2){
-    $return = mb_substr($str,0,1);
-    for ($i=1; $i < mb_strlen($str)-1 ; $i++) {
-      $cha = mb_substr($str,$i,1);
-      if($cha == ' '){
+  if (mb_strlen($str) > 2) {
+    $return = mb_substr($str, 0, 1);
+    for ($i = 1; $i < mb_strlen($str) - 1 ; $i++) {
+      $cha = mb_substr($str, $i, 1);
+      if ($cha == ' ') {
         $return .= ' ';
-      }else if(ord($cha)> 0xa0){
+      }
+      elseif (ord($cha) > 0xa0) {
         $return .= '＊';
-      }else{
+      }
+      else {
         $return .= '*';
       }
     }
-    $return .= mb_substr($str,-1,1);
-  }else{
-   $return = preg_replace('/.$/u', '＊', $str);
+    $return .= mb_substr($str, -1, 1);
+  }
+  else {
+    $return = preg_replace('/.$/u', '＊', $str);
   }
   return $return;
 }
-
-
-

@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of Gender
@@ -45,45 +41,40 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
    */
   public $_id;
   /**
-   * The action links that we need to display for the browse screen
+   * Action links displayed on the browse screen.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
-   * The option group name
+   * The option group machine name (e.g. 'report_template').
    *
-   * @var array
-   * @static
+   * @var string|null
    */
-  static $_gName = NULL;
+  public static $_gName = NULL;
 
   /**
-   * The option group name in display format (capitalized, without underscores...etc)
+   * The option group display name (capitalized, spaces instead of underscores).
    *
-   * @var array
-   * @static
+   * @var string|null
    */
-  static $_GName = NULL;
+  public static $_GName = NULL;
 
   /**
-   * The option group id
+   * The option group database ID.
    *
-   * @var array
-   * @static
+   * @var int|null
    */
-  static $_gId = NULL;
+  public static $_gId = NULL;
 
   /**
-   * Obtains the group name from url and sets the title.
+   * Obtains the group name from the URL and sets the page title.
+   * Hardcodes the option group to 'report_template' and looks up its ID.
    *
    * @return void
-   * @access public
-   *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
     $this->_id = CRM_Utils_Request::retrieve('id', 'String', $this, FALSE);
 
@@ -99,7 +90,8 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
     self::$_GName = ucwords(str_replace('_', ' ', self::$_gName));
 
     $this->assign('GName', self::$_GName);
-    $newReportURL = CRM_Utils_System::url("civicrm/admin/report/register",
+    $newReportURL = CRM_Utils_System::url(
+      "civicrm/admin/report/register",
       'reset=1'
     );
     $this->assign('newReport', $newReportURL);
@@ -111,16 +103,17 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_OptionValue';
   }
 
   /**
-   * Get action Links
+   * Returns the action links for report template rows (edit, enable, disable, delete).
+   * Lazily builds and caches the links array in the static $_links property.
    *
-   * @return array (reference) of action links
+   * @return array Reference to the array of action link definitions.
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::UPDATE => [
@@ -158,25 +151,23 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $this->preProcess();
     parent::run();
   }
 
   /**
-   * Browse all options
-   *
+   * Renders the list of registered report templates with reorder controls.
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
 
     $groupParams = ['name' => self::$_gName];
     $optionValue = CRM_Core_OptionValue::getRows($groupParams, $this->links(), 'weight');
     $gName = self::$_gName;
-    $returnURL = CRM_Utils_System::url("civicrm/admin/report/options/$gName",
+    $returnURL = CRM_Utils_System::url(
+      "civicrm/admin/report/options/$gName",
       "reset=1"
     );
     $filter = "option_group_id = " . self::$_gId;
@@ -184,8 +175,12 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
     $session = new CRM_Core_Session();
     $session->replaceUserContext($returnURL);
 
-    CRM_Utils_Weight::addOrder($optionValue, 'CRM_Core_DAO_OptionValue',
-      'id', $returnURL, $filter
+    CRM_Utils_Weight::addOrder(
+      $optionValue,
+      'CRM_Core_DAO_OptionValue',
+      'id',
+      $returnURL,
+      $filter
     );
     $this->assign('rows', $optionValue);
   }
@@ -195,7 +190,7 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Report_Form_Register';
   }
 
@@ -204,7 +199,7 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return self::$_GName;
   }
 
@@ -213,20 +208,18 @@ class CRM_Report_Page_Options extends CRM_Core_Page_Basic {
    *
    * @return string user context.
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/report/options/' . self::$_gName;
   }
 
   /**
-   * function to get userContext params
+   * Returns the query string parameters for the user context (post-action redirect).
    *
-   * @param int $mode mode that we are in
+   * @param int|null $mode The action mode (unused).
    *
-   * @return string
-   * @access public
+   * @return string Query string 'reset=1&action=browse'.
    */
-  function userContextParams($mode = NULL) {
+  public function userContextParams($mode = NULL) {
     return 'reset=1&action=browse';
   }
 }
-

@@ -1,7 +1,6 @@
 <?php
 // $Id: Membership.php 41417 2012-07-06 14:53:10Z deepak $
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 4.2                                                |
@@ -126,4 +125,3 @@ function civicrm_membership_types_get(&$params) {
 function civicrm_membership_statuses_get(&$params) {
   return civicrm_membership_status_get($params);
 }
-

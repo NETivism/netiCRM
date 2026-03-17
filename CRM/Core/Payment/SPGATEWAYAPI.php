@@ -1,4 +1,10 @@
 <?php
+/**
+ * API client for communicating with the SPGATEWAY (Neweb Pay) payment gateway, supporting recurring status changes and data encryption.
+ *
+ * @package CiviCRM_PaymentProcessor
+ */
+
 class CRM_Core_Payment_SPGATEWAYAPI {
 
   public $_urlDomain;
@@ -34,16 +40,16 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    * Constructor
    *
    * @param array $apiParams
-   *   apiType
-   *   paymentProcessorId
-   *   paymentProcessor
-   *   isTest
+   *   - apiType: string
+   *   - paymentProcessorId: int (optional)
+   *   - paymentProcessor: array (optional)
+   *   - isTest: bool
    */
-  function __construct($apiParams) {
+  public function __construct($apiParams) {
     if (!empty($apiParams['paymentProcessor'])) {
       $this->_paymentProcessor = $apiParams['paymentProcessor'];
     }
-    else if (!empty($apiParams['paymentProcessorId'])) {
+    elseif (!empty($apiParams['paymentProcessorId'])) {
       $mode = $apiParams['isTest'] ? '' : 'test';
       $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($apiParams['paymentProcessorId'], $mode);
     }
@@ -64,8 +70,8 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Validate and send request to spgateway / neweb
    *
-   * @param array $params
-   * @return void
+   * @param array $params Request parameters
+   * @return array|bool Result of the request or FALSE on failure
    */
   public function request($params) {
     $allowedFields = self::getRequestFields($this->_apiType);
@@ -90,11 +96,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
     $requiredFields = self::getRequestFields($this->_apiType, TRUE);
     foreach ($requiredFields as $required) {
-      if(empty($post[$required])){
+      if (empty($post[$required])) {
         $missingRequired[] = $required;
       }
     }
-    if(!empty($missingRequired)) {
+    if (!empty($missingRequired)) {
       CRM_Core_Error::fatal('Required parameters missing: '.implode(',', $missingRequired));
     }
 
@@ -122,8 +128,8 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       if ($this->_response->Status == 'SUCCESS') {
         // Format Every thing.
         // Format of amount
-        $response =& $this->_response;
-        if(!empty($response->amount) && $response->currency != 'TWD') {
+        $response = &$this->_response;
+        if (!empty($response->amount) && $response->currency != 'TWD') {
           $response->amount = (float)$response->amount / 100;
         }
 
@@ -157,7 +163,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
         return $recurResult;
       }
-      else if ( in_array($this->_response->Status, ['PER10061', 'PER10063', 'PER10062', 'PER10064']) ) {
+      elseif (in_array($this->_response->Status, ['PER10061', 'PER10063', 'PER10062', 'PER10064'])) {
         // Refs #30842, Status is already changed in NewebPay.
         $recurResult['response_status'] = $this->_response->Status;
         $recurResult['msg'] = $recurResult['note_body'] = ts('NewebPay response:') . $this->_response->Message;
@@ -171,7 +177,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       }
 
     }
-    else if ($result['success'] == FALSE && $result['status'] == 0){
+    elseif ($result['success'] == FALSE && $result['status'] == 0) {
       // Curl Error
       $return = [
         'is_error' => 1,
@@ -179,7 +185,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       ];
       return $return;
     }
-    else if (empty($this->_response)) {
+    elseif (empty($this->_response)) {
       // No any response, need to ask Newebpay
       CRM_Core_Error::debug('NewebPay api request as empty response', $this);
       $return = [
@@ -194,6 +200,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     }
   }
 
+  /**
+   * Internal method to send curl request
+   *
+   * @return array Result containing success, status, and curlError
+   */
   private function _request() {
     $this->_success = FALSE;
     if (!empty(getenv('CIVICRM_TEST_DSN'))) {
@@ -207,7 +218,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     $opt = [];
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
     $opt[CURLOPT_SSL_VERIFYPEER] = FALSE;
-    if($this->_apiMethod == 'POST'){
+    if ($this->_apiMethod == 'POST') {
       $requestString = http_build_query($this->_request, '', '&');
       $postDataString = self::recurEncrypt($requestString, $this->_paymentProcessor);
       $postFields = [
@@ -224,9 +235,9 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $errno = curl_errno($ch);
     if (!empty($errno)) {
-        $errno = curl_errno($ch);
-        $err = curl_error($ch);
-        CRM_Core_Error::debug_log_message("CURL: $err :: $errno");
+      $errno = curl_errno($ch);
+      $err = curl_error($ch);
+      CRM_Core_Error::debug_log_message("CURL: $err :: $errno");
     }
 
     if ($result === FALSE) {
@@ -234,7 +245,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       $err = curl_error($ch);
       $curlError = [$errno => $err];
     }
-    else{
+    else {
       $curlError = [];
     }
     curl_close($ch);
@@ -254,21 +265,21 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     return $return;
   }
 
-
   /**
    * Migrate from civicrm_spgateway_record
    *
-   * @param int $cid
-   * @param array $data
+   * @param int $cid Contribution ID
+   * @param array|string|object $data Response data from spgateway
+   * @param int $recurringId Contribution recur ID (optional)
    * @return void
    */
-  public static function writeRecord($cid, $data = null, $recurringId = NULL){
-    if(is_numeric($cid)){
-      if(empty($data) && !empty($_POST)){
+  public static function writeRecord($cid, $data = NULL, $recurringId = NULL) {
+    if (is_numeric($cid)) {
+      if (empty($data) && !empty($_POST)) {
         $data = $_POST;
       }
 
-      if(!empty($data['JSONData'])){
+      if (!empty($data['JSONData'])) {
         $data = $data['JSONData'];
       }
       $exists = CRM_Core_DAO::singleValueQuery("SELECT cid FROM civicrm_contribution_spgateway WHERE cid = %1", [
@@ -331,16 +342,16 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
       // Set expire time
       $dataObj = self::dataDecode($data);
-      if(!empty($dataObj['ExpireDate'])){
+      if (!empty($dataObj['ExpireDate'])) {
         $expire_date = $dataObj['ExpireDate'];
-        if(!empty($dataObj['ExpireTime'])){
+        if (!empty($dataObj['ExpireTime'])) {
           $expire_date .= ' '.$dataObj['ExpireTime'];
         }
-        else{
+        else {
           $expire_date .= ' 23:59:59';
         }
       }
-      if(!empty($expire_date)){
+      if (!empty($expire_date)) {
         $sql = "UPDATE civicrm_contribution SET expire_date = %1 WHERE id = %2";
         $params = [
           1 => [ $expire_date, 'String'],
@@ -356,19 +367,19 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    *
    * Decode JSON data before save from Spgateway / neweb response
    *
-   * @param array|object $post
-   * @return void
+   * @param array|object|string $post Data to decode
+   * @return array Decoded data
    */
-  public static function dataDecode($post = null){
+  public static function dataDecode($post = NULL) {
     $data = empty($post) ? $_POST : $post;
     if (is_object($data)) {
       $data = (array) $data;
     }
-    if (is_array($data) && !empty($data['JSONData'])){
+    if (is_array($data) && !empty($data['JSONData'])) {
       // decode JSONData
       $data = $data['JSONData'];
     }
-    if (is_string($data) && json_decode($data)){
+    if (is_string($data) && json_decode($data)) {
       $data = json_decode($data, TRUE);
       if (is_string($data) && json_decode($data)) {
         // Sometimes, neweb will return 2 times encode json.
@@ -379,9 +390,9 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     $return = $data;
 
     // flatten the jsonData object to 1-dimension array.
-    if(isset($data['Result'])){
-      if(is_string($data['Result']) && json_decode($data['Result'], true)){
-        $return = $dataResult = json_decode($data['Result'], true);
+    if (isset($data['Result'])) {
+      if (is_string($data['Result']) && json_decode($data['Result'], TRUE)) {
+        $return = $dataResult = json_decode($data['Result'], TRUE);
       }
       else {
         $return = $dataResult = (array) $data['Result'];
@@ -407,13 +418,13 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Prepare available fields for spgateway
    *
-   * @param string $apiType
-   * @param bool $required
-   * @return array
+   * @param string $apiType The type of API
+   * @param bool $required Whether to return only required fields
+   * @return array List of fields
    */
   public static function getRequestFields($apiType, $required = FALSE) {
     $fields = [];
-    switch($apiType){
+    switch ($apiType) {
       case 'alter-status':
         $fields = explode(',', 'RespondType*,Version*,MerOrderNo*,PeriodNo*,AlterType*,TimeStamp*');
         break;
@@ -422,10 +433,10 @@ class CRM_Core_Payment_SPGATEWAYAPI {
         break;
     }
     foreach ($fields as $key => &$value) {
-      if(!strstr($value, '*') && $required) {
+      if (!strstr($value, '*') && $required) {
         unset($fields[$key]);
       }
-      else{
+      else {
         $value = str_replace('*', '', $value);
       }
     }
@@ -435,32 +446,32 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_postdata
    *
-   * @param string $url
-   * @param array $post_data
-   * @return object
+   * @param string $url Target URL
+   * @param array $post_data Data to post
+   * @return object|bool Decoded response object or FALSE on failure
    */
-  public static function sendRequest($url, $post_data){
+  public static function sendRequest($url, $post_data) {
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
     curl_setopt($ch, CURLOPT_HEADER, 0);  // DO NOT RETURN HTTP HEADERS
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);  // RETURN THE CONTENTS OF THE CALL
     $response = curl_exec($ch);
-    if(curl_errno($ch)){
+    if (curl_errno($ch)) {
       CRM_Core_Error::debug_log_message('civicrm_spgateway: Fetch recuring error: curl_errno: '.curl_errno($ch).' / '. curl_error($ch), 'error');
     }
-    else{
+    else {
       $field_string = http_build_query($post_data, '', '&');
       CRM_Core_Error::debug_log_message('civicrm_spgateway: Request:'.$url."?".$field_string);
       CRM_Core_Error::debug_log_message('civicrm_spgateway: Response:'.$response);
     }
     curl_close($ch);
-    if(!empty($response)){
+    if (!empty($response)) {
       return json_decode($response);
     }
-    else{
+    else {
       return FALSE;
     }
   }
@@ -470,32 +481,32 @@ class CRM_Core_Payment_SPGATEWAYAPI {
    *
    * Encode spgateway / neweb API delivery
    *
-   * @param array $args
-   * @param object $payment_processor
-   * @param array $checkArgs
-   * @return string
+   * @param array|string $args Arguments to encode
+   * @param array|object $payment_processor Payment processor data
+   * @param array $checkArgs Fields to use for encoding
+   * @return string Encoded check value
    */
-  public static function encode(&$args, $payment_processor, $checkArgs = []){
+  public static function encode(&$args, $payment_processor, $checkArgs = []) {
     // remove empty arg
-    if(is_array($args)){
-      foreach($args as $k => $v){
-        if($k == 'CheckValue'){
+    if (is_array($args)) {
+      foreach ($args as $k => $v) {
+        if ($k == 'CheckValue') {
           unset($args[$k]);
         }
       }
     }
-    elseif(is_string($args)){
+    elseif (is_string($args)) {
       $tmp = explode('&', $args);
       $args = [];
-      foreach($tmp as $v){
+      foreach ($tmp as $v) {
         list($key, $value) = explode('=', $v);
         $args[$key] = $value;
       }
     }
-    if(count($checkArgs) == 0){
+    if (count($checkArgs) == 0) {
       $checkArgs = ['HashKey','Amt','MerchantID','MerchantOrderNo','TimeStamp','Version','HashIV'];
     }
-    foreach($checkArgs as $k){
+    foreach ($checkArgs as $k) {
       switch ($k) {
         case 'HashIV':
         case 'IV':
@@ -522,9 +533,13 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
   /**
    * Migrate from _civicrm_spgateway_checkKeyIV
+   * 
+   * Check if Key and IV have value
+   * 
+   * @param string $v Value to check
    */
-  public static function checkKeyIV($v){
-    if(empty($v)){
+  public static function checkKeyIV($v) {
+    if (empty($v)) {
       CRM_Core_Error::fatal(ts('KEY and IV should have value.'));
     }
   }
@@ -532,11 +547,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_checkmacvalue
    *
-   * @param array $args
-   * @param object $payment_processor
-   * @return string
+   * @param array $args Arguments to check
+   * @param array|object $payment_processor Payment processor data
+   * @return string Encoded check value
    */
-  public static function checkMacValue(&$args, $payment_processor){
+  public static function checkMacValue(&$args, $payment_processor) {
     $used_args = ['HashKey','Amt','MerchantID','MerchantOrderNo','TimeStamp','Version','HashIV'];
     return self::encode($args, $payment_processor, $used_args);
   }
@@ -544,11 +559,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_checkcode
    *
-   * @param array $args
-   * @param object $payment_processor
-   * @return string
+   * @param array $args Arguments to check
+   * @param array|object $payment_processor Payment processor data
+   * @return string Encoded check value
    */
-  public static function checkCode(&$args, $payment_processor){
+  public static function checkCode(&$args, $payment_processor) {
     $used_args = ['HashIV','Amt','MerchantID','MerchantOrderNo','TradeNo','HashKey'];
     return self::encode($args, $payment_processor, $used_args);
   }
@@ -556,8 +571,9 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * tradeSha for agreement payment
    *
-   * @param string $aesString
-   * @param object $paymentProcessor
+   * @param string $aesString AES encrypted string
+   * @param array|object $paymentProcessor Payment processor data
+   * @return string SHA256 hash string
    */
   public static function tradeSha($aesString, $paymentProcessor) {
     $hashKey = $paymentProcessor['password'];
@@ -575,11 +591,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_recur_encrypt
    *
-   * @param string $str
-   * @param object $payment_processor
-   * @return string
+   * @param string $str String to encrypt
+   * @param array|object $payment_processor Payment processor data
+   * @return string Encrypted string
    */
-  public static function recurEncrypt($str, $payment_processor){
+  public static function recurEncrypt($str, $payment_processor) {
     $key = $payment_processor['password'];
     $iv = $payment_processor['signature'];
     self::checkKeyIV($key);
@@ -591,11 +607,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_recur_decrypt
    *
-   * @param string $str
-   * @param object $payment_processor
-   * @return string
+   * @param string $str String to decrypt
+   * @param array|object $payment_processor Payment processor data
+   * @return string Decrypted string
    */
-  public static function recurDecrypt($str, $payment_processor){
+  public static function recurDecrypt($str, $payment_processor) {
     $key = $payment_processor['password'];
     $iv = $payment_processor['signature'];
     self::checkKeyIV($key);
@@ -607,12 +623,11 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_encrypt
    *
-   * @param string $key
-   * @param string $iv
-   * @param string $str
-   * @param bool $force
-   *
-   * @return string
+   * @param string $key Encryption key
+   * @param string $iv Initialization vector
+   * @param string $str String to encrypt
+   * @param string|null $force Force use 'openssl' or 'mcrypt'
+   * @return string|bool Encrypted hex string or FALSE on failure
    */
   public static function encrypt($key, $iv, $str, $force = NULL) {
     $data = self::addPadding($str);
@@ -620,7 +635,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
       if ($force == 'openssl') {
         $openssl = TRUE;
       }
-      elseif($force == 'mcrypt') {
+      elseif ($force == 'mcrypt') {
         $mcrypt = TRUE;
       }
     }
@@ -634,7 +649,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
     if ($openssl) {
       $keyLen = strlen($key);
-      switch($keyLen) {
+      switch ($keyLen) {
         case 16:
           $encoding = 'AES-128-CBC';
           break;
@@ -660,18 +675,18 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_decrypt
    *
-   * @param string $key
-   * @param string $iv
-   * @param string $encrypted
-   * @param bool $force
-   * @return void
+   * @param string $key Encryption key
+   * @param string $iv Initialization vector
+   * @param string $encrypted Encrypted hex string
+   * @param string|null $force Force use 'openssl' or 'mcrypt'
+   * @return string|bool Decrypted string or FALSE on failure
    */
   public static function decrypt($key, $iv, $encrypted, $force = NULL) {
     if ($force) {
       if ($force == 'openssl') {
         $openssl = TRUE;
       }
-      elseif($force == 'mcrypt') {
+      elseif ($force == 'mcrypt') {
         $mcrypt = TRUE;
       }
     }
@@ -686,7 +701,7 @@ class CRM_Core_Payment_SPGATEWAYAPI {
     $data = hex2bin($encrypted);
     if ($openssl) {
       $keyLen = strlen($key);
-      switch($keyLen) {
+      switch ($keyLen) {
         case 16:
           $encoding = 'AES-128-CBC';
           break;
@@ -709,9 +724,9 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_addpadding
    *
-   * @param string $string
-   * @param int $blocksize
-   * @return string
+   * @param string $string String to pad
+   * @param int $blocksize Block size
+   * @return string Padded string
    */
   public static function addPadding($string, $blocksize = 32) {
     $len = strlen($string);
@@ -723,17 +738,18 @@ class CRM_Core_Payment_SPGATEWAYAPI {
   /**
    * Migrate from _civicrm_spgateway_strippadding
    *
-   * @param string $string
-   * @return bool|string
+   * @param string $string String to strip padding from
+   * @return string|bool Stripped string or FALSE on failure
    */
   public static function stripPadding($string) {
-      $slast = ord(substr($string, -1));
-      $slastc = chr($slast);
-      if (preg_match("/$slastc{" . $slast . "}/", $string)) {
-          $string = substr($string, 0, strlen($string) - $slast);
-          return $string;
-      } else {
-          return false;
-      }
+    $slast = ord(substr($string, -1));
+    $slastc = chr($slast);
+    if (preg_match("/$slastc{" . $slast . "}/", $string)) {
+      $string = substr($string, 0, strlen($string) - $slast);
+      return $string;
+    }
+    else {
+      return FALSE;
+    }
   }
 }

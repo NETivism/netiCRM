@@ -26,13 +26,11 @@
 */
 
 /**
+ * Custom search form for searching event participants by price set selections
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Custom_Base implements CRM_Contact_Form_Search_Interface {
 
@@ -44,10 +42,18 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
 
   public static $_primaryIDName = 'id';
 
-  protected $_pstatus = NULL; function __construct(&$formValues) {
+  protected $_pstatus = NULL;
+
+  /**
+   * Class constructor.
+   *
+   * @param array $formValues
+   */
+  public function __construct(&$formValues) {
     parent::__construct($formValues);
 
-    $this->_eventID = CRM_Utils_Array::value('event_id',
+    $this->_eventID = CRM_Utils_Array::value(
+      'event_id',
       $this->_formValues
     );
 
@@ -61,7 +67,10 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
     }
   }
 
-  function __destruct() {
+  /**
+   * Destructor.
+   */
+  public function __destruct() {
     /*
         if ( $this->_eventID ) {
             $sql = "DROP TEMPORARY TABLE {$this->_tableName}";
@@ -71,7 +80,10 @@ class CRM_Contact_Form_Search_Custom_PriceSet extends CRM_Contact_Form_Search_Cu
         */
   }
 
-  function buildTempTable() {
+  /**
+   * Build the temporary table for storing search results.
+   */
+  public function buildTempTable() {
     $randomNum = md5(uniqid());
     $this->_tableName = "civicrm_temp_custom_{$randomNum}";
     $sql = "
@@ -97,12 +109,16 @@ UNIQUE INDEX unique_participant_id ( participant_id )
 ) ENGINE=HEAP
 ";
 
-    CRM_Core_DAO::executeQuery($sql,
+    CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
   }
 
-  function fillTable() {
+  /**
+   * Populate the temporary table with participant and price set data.
+   */
+  public function fillTable() {
     $sql = "
 REPLACE INTO {$this->_tableName}
 ( contact_id, participant_id, status_id )
@@ -113,7 +129,8 @@ WHERE  p.contact_id = c.id
   AND  p.is_test    = 0
   AND  p.event_id = {$this->_eventID}
 ";
-    CRM_Core_DAO::executeQuery($sql,
+    CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -132,7 +149,8 @@ WHERE
 ORDER BY c.id, l.price_field_value_id;
 ";
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -158,13 +176,21 @@ UPDATE {$this->_tableName}
 SET $values
 WHERE participant_id = $participantID;
 ";
-      CRM_Core_DAO::executeQuery($sql,
+      CRM_Core_DAO::executeQuery(
+        $sql,
         CRM_Core_DAO::$_nullArray
       );
     }
   }
 
-  function priceSetDAO($eventID = NULL) {
+  /**
+   * Get the DAO for event price sets.
+   *
+   * @param int|null $eventID
+   *
+   * @return CRM_Core_DAO
+   */
+  public function priceSetDAO($eventID = NULL) {
 
     // get all the events that have a price set associated with it
     $sql = "
@@ -184,13 +210,19 @@ AND    p.entity_id    = e.id
       $sql .= " AND e.id = $eventID";
     }
 
-    $dao = CRM_Core_DAO::executeQuery($sql,
+    $dao = CRM_Core_DAO::executeQuery(
+      $sql,
       $params
     );
     return $dao;
   }
 
-  function buildForm(&$form) {
+  /**
+   * Build the form object.
+   *
+   * @param CRM_Core_Form $form
+   */
+  public function buildForm(&$form) {
     $dao = $this->priceSetDAO();
 
     $event = [];
@@ -203,7 +235,8 @@ AND    p.entity_id    = e.id
       return;
     }
 
-    $form->add('select',
+    $form->add(
+      'select',
       'event_id',
       ts('Event'),
       $event,
@@ -218,7 +251,10 @@ AND    p.entity_id    = e.id
     $form->setTitle(ts('Price Set Export') .' - '. ts('Event'));
   }
 
-  function setColumns() {
+  /**
+   * Set up the columns for the result display.
+   */
+  public function setColumns() {
     $this->_columns = [ts('Contact Id') => 'contact_id',
       ts('Participant Id') => 'participant_id',
       ts('Status') => 'status_id',
@@ -261,12 +297,22 @@ AND    p.entity_id    = e.id
     }
   }
 
-  function summary() {
+  /**
+   * Get summary data.
+   *
+   * @return null
+   */
+  public function summary() {
     return NULL;
   }
 
-  function count(){
-    if(!$this->_filled){
+  /**
+   * Get the count of participants found.
+   *
+   * @return int
+   */
+  public function count() {
+    if (!$this->_filled) {
       $this->fillTable();
       $this->_filled = TRUE;
     }
@@ -274,7 +320,20 @@ AND    p.entity_id    = e.id
     return $value;
   }
 
-  function all($offset = 0, $rowcount = 0, $sort = NULL,
+  /**
+   * Build the all query.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function all(
+    $offset = 0,
+    $rowcount = 0,
+    $sort = NULL,
     $includeContactIDs = FALSE
   ) {
     $selectClause = "
@@ -291,46 +350,83 @@ contact_a.display_name   as display_name";
       $selectClause .= ",\ntempTable.{$fieldName} as {$fieldName}";
     }
 
-    return $this->sql($selectClause,
-      $offset, $rowcount, $sort,
-      $includeContactIDs, NULL
+    return $this->sql(
+      $selectClause,
+      $offset,
+      $rowcount,
+      $sort,
+      $includeContactIDs,
+      NULL
     );
   }
 
-  function from() {
+  /**
+   * Build the FROM clause.
+   *
+   * @return string
+   */
+  public function from() {
     return "
 FROM       civicrm_contact contact_a
 INNER JOIN {$this->_tableName} tempTable ON ( tempTable.contact_id = contact_a.id )
 ";
   }
 
-  function where($includeContactIDs = FALSE) {
+  /**
+   * Build the WHERE clause.
+   *
+   * @param bool $includeContactIDs
+   *
+   * @return string
+   */
+  public function where($includeContactIDs = FALSE) {
     return ' ( 1 ) ';
   }
 
-  function templateFile() {
+  /**
+   * Get the path to the template file.
+   *
+   * @return string
+   */
+  public function templateFile() {
     return 'CRM/Contact/Form/Search/Custom.tpl';
   }
 
-  function setDefaultValues() {
+  /**
+   * Get the default values for the search form.
+   *
+   * @return array
+   */
+  public function setDefaultValues() {
     return [];
   }
 
-  function alterRow(&$row) {
+  /**
+   * Alter a single result row.
+   *
+   * @param array $row
+   */
+  public function alterRow(&$row) {
     $row['status_id'] = $this->_pstatus[$row['status_id']];
   }
 
-  
   /**
-   * This will call by search tasks
-   * Which not only provide contact id, but also provide additional id
-   * Mostly used by custom search support multiple record of one contact
+   * Get the SQL for retrieving contact IDs and additional IDs.
+   *
+   * This will be called by search tasks which not only need contact id,
+   * but also provide additional id. Mostly used by custom search
+   * supporting multiple records of one contact.
+   *
+   * @param int $offset
+   * @param int $rowcount
+   * @param null|string|object $sort
+   *
+   * @return string
    */
-  function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
+  public function contactAdditionalIDs($offset = 0, $rowcount = 0, $sort = NULL) {
     $fields = "contact_a.id AS contact_id, participant_id" ;
 
     return $this->sql($fields, $offset, $rowcount, $sort, FALSE);
   }
 
 }
-

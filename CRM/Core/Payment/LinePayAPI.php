@@ -1,10 +1,11 @@
 <?php
 /**
  * Standalone api without extends from class
+ * @package CiviCRM_PaymentProcessor
  */
 class CRM_Core_Payment_LinePayAPI {
-  CONST LINEPAY_TEST = 'https://sandbox-api-pay.line.me';
-  CONST LINEPAY_PROD = 'https://api-pay.line.me';
+  public const LINEPAY_TEST = 'https://sandbox-api-pay.line.me';
+  public const LINEPAY_PROD = 'https://api-pay.line.me';
 
   public static $_currencies = [
     'USD' => 'USD',
@@ -109,12 +110,17 @@ class CRM_Core_Payment_LinePayAPI {
   protected $_apiGetMethodTypes = ['query', 'authorization', 'recurring/check'];
   protected $_apiMethod;
 
-  function __construct($apiParams){
+  /**
+   * Class constructor.
+   *
+   * @param array $apiParams API configuration parameters (channelId, channelSecret, isTest, apiType)
+   */
+  public function __construct($apiParams) {
     extract($apiParams);
     if (empty($channelId) || empty($channelSecret) || is_null($isTest) || empty($apiType)) {
       CRM_Core_Error::fatal('Required parameters missing: channelId, channelSecret, isTest, apiType');
     }
-    foreach($apiParams as $name => $val) {
+    foreach ($apiParams as $name => $val) {
       $name = '_'.$name;
       $this->$name = $val;
     }
@@ -122,17 +128,24 @@ class CRM_Core_Payment_LinePayAPI {
       CRM_Core_Error::fatal('API type not supported currently or given wrong type');
     }
     else {
-      $this->_apiURL = $isTest ? self::LINEPAY_TEST : self::LINEPAY_PROD; 
+      $this->_apiURL = $isTest ? self::LINEPAY_TEST : self::LINEPAY_PROD;
       $this->_apiURL .= $this->_apiTypes[$this->_apiType];
-      if(in_array($this->_apiType, $this->_apiGetMethodTypes)){
+      if (in_array($this->_apiType, $this->_apiGetMethodTypes)) {
         $this->_apiMethod = 'GET';
       }
-      else{
+      else {
         $this->_apiMethod = 'POST';
       }
     }
   }
 
+  /**
+   * Send a request to the LinePay API.
+   *
+   * @param array $params request parameters
+   *
+   * @return object|bool API response object or FALSE on failure
+   */
   public function request($params) {
     $orderId = $transactionId = NULL;
     $allowedFields = self::fields($this->_apiType);
@@ -152,7 +165,7 @@ class CRM_Core_Payment_LinePayAPI {
       if (empty($post['langCd'])) {
         $post['langCd'] = !empty(self::$_lang[$tsLocale]) ? self::$_lang[$tsLocale] : 'en';
       }
-      elseif(!in_array($post['langCd'], self::$_lang)){ // if wrong lang
+      elseif (!in_array($post['langCd'], self::$_lang)) { // if wrong lang
         $post['langCd'] = !empty(self::$_lang[$tsLocale]) ? self::$_lang[$tsLocale] : 'en';
       }
 
@@ -206,7 +219,7 @@ class CRM_Core_Payment_LinePayAPI {
       }
       // api response multiple records
       elseif (!empty($this->_response->info) && is_array($this->_response->info)) {
-        foreach($this->_response->info as $idx => $info) {
+        foreach ($this->_response->info as $idx => $info) {
           $r = clone $this->_response;
           $r->info = $info;
           if (!empty($info->transactionId)) {
@@ -231,6 +244,15 @@ class CRM_Core_Payment_LinePayAPI {
     }
   }
 
+  /**
+   * Save API request/response data to the database.
+   *
+   * @param string|null $orderId contribution trxn_id
+   * @param string|null $transactionId LinePay transaction ID
+   * @param mixed $data data to be recorded
+   *
+   * @return CRM_Contribute_DAO_LinePay|bool DAO object or FALSE on failure
+   */
   public function writeRecord($orderId = NULL, $transactionId = NULL, $data = NULL) {
     if (empty($orderId) && empty($transactionId)) {
       return FALSE;
@@ -256,13 +278,18 @@ class CRM_Core_Payment_LinePayAPI {
     if (!empty($orderId)) {
       $record->trxn_id = $orderId;
     }
-    if (!empty($responseField) && !empty($data)){
-      $record->$responseField = $data; 
+    if (!empty($responseField) && !empty($data)) {
+      $record->$responseField = $data;
     }
     $record->save();
     return $record;
   }
 
+  /**
+   * Execute the API request using cURL.
+   *
+   * @return array<string, bool|int|string[]> [success => bool, status => int, curlError => array]
+   */
   private function _curl() {
     $this->_success = FALSE;
     $ch = curl_init($this->_apiURL);
@@ -278,7 +305,7 @@ class CRM_Core_Payment_LinePayAPI {
     $opt[CURLOPT_CONNECTTIMEOUT] = 10;
     $opt[CURLOPT_TIMEOUT] = 45;
 
-    if($this->_apiMethod == 'POST'){
+    if ($this->_apiMethod == 'POST') {
       $opt[CURLOPT_POST] = TRUE;
       $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     }
@@ -291,7 +318,7 @@ class CRM_Core_Payment_LinePayAPI {
       $err = curl_error($ch);
       $curlError = [$errno => $err];
     }
-    else{
+    else {
       $curlError = [];
     }
     curl_close($ch);
@@ -313,11 +340,16 @@ class CRM_Core_Payment_LinePayAPI {
   }
 
   /**
-   * API query fields
+   * Get the allowed or required fields for a given API type.
+   *
+   * @param string $apiType API type
+   * @param bool $isResponse whether to return response fields (unused)
+   *
+   * @return array allowed field names
    */
-  static public function fields($apiType, $isResponse = FALSE) {
+  public static function fields($apiType, $isResponse = FALSE) {
     $fields = [];
-    switch($apiType){
+    switch ($apiType) {
       case 'query':
         $fields = explode(',', 'transactionId,orderId');
         break;
@@ -331,7 +363,14 @@ class CRM_Core_Payment_LinePayAPI {
     return $fields;
   }
 
-  static public function errorMessage($code) {
+  /**
+   * Get the error message corresponding to a LinePay error code.
+   *
+   * @param string $code error code
+   *
+   * @return string|false translated error message or FALSE if not found
+   */
+  public static function errorMessage($code) {
     $code = (string) $code;
 
     if (!empty(self::$_errorMessage[$code])) {

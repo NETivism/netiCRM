@@ -26,10 +26,9 @@
 */
 
 /**
+ * Provides access control list (ACL) checking and permission filtering for contacts
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_ACL_API {
@@ -39,19 +38,17 @@ class CRM_ACL_API {
    *
    * @var int
    */
-  CONST EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6;
+  public const EDIT = 1, VIEW = 2, DELETE = 3, CREATE = 4, SEARCH = 5, ALL = 6;
 
   /**
    * given a permission string, check for access requirements
    *
-   * @param string $str       the permission to check
-   * @param int    $contactID the contactID for whom the check is made
+   * @param string $str the permission to check
+   * @param int $contactID the contactID for whom the check is made
    *
-   * @return boolean true if yes, else false
-   * @static
-   * @access public
+   * @return bool true if yes, else false
    */
-  static function check($str, $contactID = NULL) {
+  public static function check($str, $contactID = NULL) {
     if ($contactID == NULL) {
       $session = CRM_Core_Session::singleton();
       $contactID = $session->get('userID');
@@ -62,7 +59,6 @@ class CRM_ACL_API {
       $contactID = 0;
     }
 
-
     return CRM_ACL_BAO_ACL::check($str, $contactID);
   }
 
@@ -70,20 +66,20 @@ class CRM_ACL_API {
    * Get the permissioned where clause for the user
    *
    * @param int $type the type of permission needed
-   * @param  array $tables (reference ) add the tables that are needed for the select clause
-   * @param  array $whereTables (reference ) add the tables that are needed for the where clause
-   * @param int    $contactID the contactID for whom the check is made
-   * @param bool   $onlyDeleted  whether to include only deleted contacts
-   * @param bool   $skipDeleteClause don't add delete clause if this is true,
+   * @param array $tables (reference ) add the tables that are needed for the select clause
+   * @param array $whereTables (reference ) add the tables that are needed for the where clause
+   * @param int $contactID the contactID for whom the check is made
+   * @param bool $onlyDeleted whether to include only deleted contacts
+   * @param bool $skipDeleteClause don't add delete clause if this is true,
    *               this means it is handled by generating query
    *
    * @return string the group where clause for this user
-   * @access public
    */
   public static function whereClause($type, &$tables, &$whereTables, $contactID = NULL, $onlyDeleted = FALSE, $skipDeleteClause = FALSE) {
     // first see if the contact has edit / view all contacts
     if (CRM_Core_Permission::check('edit all contacts') ||
-      ($type == self::VIEW &&
+      (
+        $type == self::VIEW &&
         CRM_Core_Permission::check('view all contacts')
       )
     ) {
@@ -111,7 +107,6 @@ class CRM_ACL_API {
       $contactID = 0;
     }
 
-
     $whereACL = CRM_ACL_BAO_ACL::whereClause($type, $tables, $whereTables, $contactID);
     if (!$skipDeleteClause) {
       if (CRM_Core_Permission::check('access deleted contacts') and $onlyDeleted) {
@@ -130,12 +125,16 @@ class CRM_ACL_API {
    * get all the groups the user has access to for the given operation
    *
    * @param int $type the type of permission needed
-   * @param int    $contactID the contactID for whom the check is made
+   * @param int $contactID the contactID for whom the check is made
+   * @param string $tableName the table name
+   * @param array $allGroups the groups to check
+   * @param array $includedGroups the groups to include
    *
    * @return array the ids of the groups for which the user has permissions
-   * @access public
    */
-  public static function group($type, $contactID = NULL,
+  public static function group(
+    $type,
+    $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
     $includedGroups = NULL
@@ -162,12 +161,18 @@ class CRM_ACL_API {
    * check if the user has access to this group for operation $type
    *
    * @param int $type the type of permission needed
-   * @param int    $contactID the contactID for whom the check is made
+   * @param int $groupID the group ID
+   * @param int $contactID the contactID for whom the check is made
+   * @param string $tableName the table name
+   * @param array $allGroups the groups to check
+   * @param array $includedGroups the groups to include
    *
-   * @return array the ids of the groups for which the user has permissions
-   * @access public
+   * @return bool true if the user has permissions, else false
    */
-  public static function groupPermission($type, $groupID, $contactID = NULL,
+  public static function groupPermission(
+    $type,
+    $groupID,
+    $contactID = NULL,
     $tableName = 'civicrm_saved_search',
     $allGroups = NULL,
     $includedGroups = NULL
@@ -186,4 +191,3 @@ class CRM_ACL_API {
     return in_array($groupID, $groups) ? TRUE : FALSE;
   }
 }
-

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * Page for displaying Campaigns
@@ -54,7 +49,7 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
    * @return array $_actionLinks
    *
    */
-  function &actionLinks() {
+  public function &actionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_actionLinks)) {
       $deleteExtra = ts('Are you sure you want to delete this Campaign?');
@@ -88,8 +83,7 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
     return self::$_actionLinks;
   }
 
-  function browse() {
-
+  public function browse() {
 
     $campaigns = CRM_Campaign_BAO_Campaign::getCampaign(TRUE);
 
@@ -114,7 +108,9 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
         else {
           $action -= CRM_Core_Action::DISABLE;
         }
-        $campaigns[$cmpid]['action'] = CRM_Core_Action::formLink(self::actionLinks(), $action,
+        $campaigns[$cmpid]['action'] = CRM_Core_Action::formLink(
+          self::actionLinks(),
+          $action,
           ['id' => $campaign['id']]
         );
       }
@@ -124,13 +120,17 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
     $this->assign('addCampaignUrl', CRM_Utils_System::url('civicrm/campaign/add', 'reset=1&action=add'));
   }
 
-  function run() {
+  public function run() {
     if (!CRM_Core_Permission::check('administer CiviCampaign')) {
       CRM_Utils_System::permissionDenied();
     }
 
-    $action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 0
+    $action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      0
     );
     $this->assign('action', $action);
     $this->browse();
@@ -138,4 +138,3 @@ class CRM_Campaign_Page_Campaign extends CRM_Core_Page {
     parent::run();
   }
 }
-

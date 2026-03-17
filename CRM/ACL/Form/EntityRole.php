@@ -27,19 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
@@ -47,8 +41,7 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -59,14 +52,14 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
 
     $attributes = CRM_Core_DAO::getAttribute('CRM_ACL_DAO_EntityRole');
 
-
     $aclRoles = ['' => ts('- select -')] + CRM_Core_OptionGroup::values('acl_role');
-    $this->add('select', 'acl_role_id', ts('ACL Role'),
-      $aclRoles, TRUE
+    $this->add(
+      'select',
+      'acl_role_id',
+      ts('ACL Role'),
+      $aclRoles,
+      TRUE
     );
-
-
-
 
     $label = ts('Assigned To');
     $group = ['' => ts('- select group -')] + CRM_Core_PseudoConstant::staticGroup(FALSE, 'Access');
@@ -78,12 +71,10 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
-
 
     CRM_ACL_BAO_Cache::resetCache();
 
@@ -102,4 +93,3 @@ class CRM_ACL_Form_EntityRole extends CRM_Admin_Form {
     }
   }
 }
-

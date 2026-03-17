@@ -4,7 +4,7 @@
  *  File for the Utils class
  *
  *  (PHP 5)
- *  
+ *
  *   @author Walt Haas <walt@dharmatech.org> (801) 534-1262
  *   @copyright Copyright CiviCRM LLC (C) 2009
  *   @license   http://www.fsf.org/licensing/licenses/agpl-3.0.html
@@ -29,7 +29,6 @@
  *   <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  *  Utility functions
  *   @package   CiviCRM
@@ -45,11 +44,11 @@ class Utils {
   /**
    *  Construct an object for this database
    */
-  public function __construct( $host, $user, $pass ) {
+  public function __construct($host, $user, $pass) {
     try {
-      $this->pdo = new PDO("mysql:host={$host}", $user, $pass, [PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true ]);
+      $this->pdo = new PDO("mysql:host={$host}", $user, $pass, [PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE ]);
     }
-    catch ( Exception $e ) {
+    catch (Exception $e) {
       echo "Can't connect to MySQL server:" . PHP_EOL . $e->getMessage() . PHP_EOL;
       exit(1);
     }
@@ -63,25 +62,25 @@ class Utils {
    *  @return mixed   PDOStatement => Results of the query
    *          false    => Query failed
    */
-  function do_query( $query ) {
-    $string = preg_replace("/^#[^\n]*$/m", "\n", $query );
-    $string = preg_replace("/^(--[^-]).*/m", "\n", $string );
-    
+  public function do_query($query) {
+    $string = preg_replace("/^#[^\n]*$/m", "\n", $query);
+    $string = preg_replace("/^(--[^-]).*/m", "\n", $string);
+
     $queries  = preg_split('/;$/m', $string);
-    foreach ( $queries as $query ) {
-      $query = trim( $query );
-      if ( ! empty( $query ) ) {
-        $result = $this->pdo->query( $query );
-        if ( $this->pdo->errorCode() == 0 ) {
+    foreach ($queries as $query) {
+      $query = trim($query);
+      if (!empty($query)) {
+        $result = $this->pdo->query($query);
+        if ($this->pdo->errorCode() == 0) {
           continue;
-        } 
-        else { 
-          var_dump( $result );
-          var_dump( $this->pdo->errorInfo() );
+        }
+        else {
+          var_dump($result);
+          var_dump($this->pdo->errorInfo());
         }
       }
     }
-    return true;
+    return TRUE;
   }
 
 }

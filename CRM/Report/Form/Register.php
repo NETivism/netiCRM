@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 class CRM_Report_Form_Register extends CRM_Core_Form {
   /**
@@ -46,6 +41,12 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
   public $_id;
   protected $_values = NULL;
 
+  /**
+   * Retrieves the action mode and record ID from the URL, and looks up the
+   * report_template option group ID for use during form building.
+   *
+   * @return void
+   */
   public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE);
     $this->_id = CRM_Utils_Request::retrieve('id', 'String', $this, FALSE);
@@ -57,14 +58,24 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     }
 
     //   crm_core_error::debug("$this->_actions", $this->_action);
-    $this->_opID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-      'report_template', 'id', 'name'
+    $this->_opID = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
+      'report_template',
+      'id',
+      'name'
     );
 
     $instanceInfo = [];
   }
 
-  function setDefaultValues() {
+  /**
+   * Returns default values for the register form.
+   * For delete action, returns an empty array. For update, loads the existing option value.
+   * For create, calculates the default weight.
+   *
+   * @return array Default form values.
+   */
+  public function setDefaultValues() {
     $defaults = [];
     if ($this->_action & CRM_Core_Action::DELETE) {
       return $defaults;
@@ -75,16 +86,25 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
       CRM_Core_DAO::commonRetrieve('CRM_Core_DAO_OptionValue', $params, $defaults);
     }
     else {
-      $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight('CRM_Core_DAO_OptionValue',
+      $defaults['weight'] = CRM_Utils_Weight::getDefaultWeight(
+        'CRM_Core_DAO_OptionValue',
         ['option_group_id' => $this->_opID]
       );
     }
     return $defaults;
   }
 
+  /**
+   * Builds the report template registration form with fields for label, URL, class,
+   * weight, description, enabled status, and component. For delete action, shows only
+   * a confirmation button.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -118,7 +138,8 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
 
     $this->add('select', 'component_id', ts('Component'), ['' => ts('Contact')] + $components);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Save'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -132,7 +153,16 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     $this->addFormRule(['CRM_Report_Form_Register', 'formRule'], $this);
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validates that the report URL value and class name are unique in the database.
+   *
+   * @param array $fields Submitted form values (expects 'value' and 'name').
+   * @param array $files Uploaded files (unused).
+   * @param CRM_Report_Form_Register $self The form instance, used to check existing record ID.
+   *
+   * @return array<string, mixed> Associative array of field => error message; empty if valid.
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $dupeClass = FALSE;
     $reportUrl = new CRM_Core_DAO_OptionValue();
@@ -162,11 +192,11 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes form submission. For delete action, removes the option value record.
+   * For create/update, saves the submitted values as an option value in the
+   * 'report_template' option group and redirects to the template list.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
@@ -193,4 +223,3 @@ class CRM_Report_Form_Register extends CRM_Core_Form {
     }
   }
 }
-

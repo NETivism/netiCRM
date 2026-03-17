@@ -26,13 +26,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to save a search
@@ -44,9 +40,8 @@ class CRM_Activity_Form_Task_SearchTaskHookSample extends CRM_Activity_Form_Task
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $rows = [];
     // display name and activity details of all selected contacts
@@ -62,7 +57,8 @@ INNER JOIN civicrm_contact ct ON ( at.source_contact_id = ct.id )
  LEFT JOIN civicrm_option_value ov ON (at.activity_type_id = ov.value AND og.id = ov.option_group_id )   
      WHERE at.id IN ( $activityIDs )";
 
-    $dao = CRM_Core_DAO::executeQuery($query,
+    $dao = CRM_Core_DAO::executeQuery(
+      $query,
       CRM_Core_DAO::$_nullArray
     );
 
@@ -80,11 +76,11 @@ INNER JOIN civicrm_contact ct ON ( at.source_contact_id = ct.id )
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -93,4 +89,3 @@ INNER JOIN civicrm_contact ct ON ( at.source_contact_id = ct.id )
     );
   }
 }
-

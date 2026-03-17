@@ -1,29 +1,26 @@
 <?php
 class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
-  const SESSION_LIMIT = 1800; // second
-  const LAST_STATE = 4;
-  const FIRST_STATE = 1;
+  public const SESSION_LIMIT = 1800; // second
+  public const LAST_STATE = 4;
+  public const FIRST_STATE = 1;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
+   * Add or update a page visit track record.
    *
-   * The function extracts all the params it needs to create a
-   * track object. the params array contains additional unused name/value
-   * pairs
+   * Handles session-based visit logic and triggers pre/post hooks.
    *
-   * @param array  $params         (reference) an assoc array of name/value pairs
+   * @param array &$params associative array of track data
    *
-   * @return object    CRM_Core_DAO_Track object on success, otherwise null
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_Track|bool|null the track object, or FALSE on error
    */
-  static function add(&$params) {
+  public static function add(&$params) {
     if (empty($params['page_type']) || empty($params['page_id'])) {
       return FALSE;
     }
@@ -63,7 +60,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
         3 => [$params['page_type'], 'String'],
         4 => [$params['page_id'], 'Integer']
       ]);
-      
+
       if ($sameSession->fetch()) {
         CRM_Utils_Hook::pre('edit', 'Track', $sameSession->id, $params);
         $track->id = $sameSession->id;
@@ -92,9 +89,11 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
   }
 
   /**
-   * Function to receive json object
+   * Handle AJAX requests for page visit tracking.
+   *
+   * @return void
    */
-  static function ajax() {
+  public static function ajax() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
       CRM_Utils_System::notFound();
       CRM_Utils_System::civiExit();
@@ -115,7 +114,7 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $fields = $track->fields();
     $params = (array) $json;
     $params = array_filter($params);
-    foreach($params as $key => $value) {
+    foreach ($params as $key => $value) {
       if (isset($fields[$key])) {
         $field = $fields[$key];
         switch ($field['type']) {
@@ -148,15 +147,25 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     CRM_Utils_System::civiExit();
   }
 
+  /**
+   * Get track statistics grouped by referrer type for a specific page.
+   *
+   * @param string $pageType name of the page table
+   * @param int $pageId ID of the page record
+   * @param string|null $start optional start date filter
+   * @param string|null $end optional end date filter
+   *
+   * @return array associative array of statistics
+   */
   public static function referrerTypeByPage($pageType, $pageId, $start = NULL, $end = NULL) {
     $params = [
       'pageType' => $pageType,
       'pageId' => $pageId,
     ];
-    if($start){
+    if ($start) {
       $params['visitDateStart'] = $start;
     }
-    if($end){
+    if ($end) {
       $params['visitDateEnd'] = $end;
     }
     $selector = new CRM_Track_Selector_Track($params);
@@ -165,9 +174,9 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     $return = [];
     $total = 0;
     $start = $end = 0;
-    while($dao->fetch()){
+    while ($dao->fetch()) {
       $type = !empty($dao->referrer_type) ? $dao->referrer_type : 'unknown';
-      $total = $total+$dao->count;
+      $total = $total + $dao->count;
       if (!$start && !$end) {
         $start = strtotime($dao->start);
         $end = strtotime($dao->end);
@@ -185,15 +194,23 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
     }
     // sort by count
     uasort($return, [__CLASS__, 'cmp']);
-    foreach($return as $type => $data) {
-      $return[$type]['percent'] = number_format(($data['count'] / $total) * 100 );
-      $return[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100 );
+    foreach ($return as $type => $data) {
+      $return[$type]['percent'] = number_format(($data['count'] / $total) * 100);
+      $return[$type]['percent_goal'] = number_format(($data['count_goal'] / $total) * 100);
       $return[$type]['start'] = date('Y-m-d H:i:s', $start);
       $return[$type]['end'] = date('Y-m-d H:i:s', $end);
     }
     return $return;
   }
 
+  /**
+   * Get track data for a specific entity.
+   *
+   * @param string $entityTable name of the entity table
+   * @param int $entityId entity ID
+   *
+   * @return array|null associative array of track fields
+   */
   public static function getTrack($entityTable, $entityId) {
     if (!empty($entityTable) && is_numeric($entityId)) {
       $params = [
@@ -204,24 +221,32 @@ class CRM_Core_BAO_Track extends CRM_Core_DAO_Track {
       $dao = $selector->getQuery();
       $dao->fetch();
       if ($dao->N) {
-				$track = new CRM_Core_DAO_Track();
+        $track = new CRM_Core_DAO_Track();
         $fields = $track->fields();
         $values = [];
-				foreach ($fields as $name => $value) {
-					$dbName = $value['name'];
-					if (isset($dao->$dbName) && $dao->$dbName !== 'null') {
-						$values[$dbName] = $dao->$dbName;
-						if ($name != $dbName) {
-							$values[$name] = $dao->$dbName;
-						}
-					}
-				}
+        foreach ($fields as $name => $value) {
+          $dbName = $value['name'];
+          if (isset($dao->$dbName) && $dao->$dbName !== 'null') {
+            $values[$dbName] = $dao->$dbName;
+            if ($name != $dbName) {
+              $values[$name] = $dao->$dbName;
+            }
+          }
+        }
         return $values;
       }
       return [];
-    } 
+    }
   }
 
+  /**
+   * Comparison helper for sorting referrer statistics by count.
+   *
+   * @param array $a
+   * @param array $b
+   *
+   * @return int
+   */
   public static function cmp($a, $b) {
     if ($a['count'] == $b['count']) {
       return 0;

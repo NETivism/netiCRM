@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class gets the name of the file to upload
@@ -45,7 +40,6 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $session = CRM_Core_Session::singleton();
@@ -55,8 +49,7 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     //Setting Upload File Size
@@ -81,27 +74,41 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
     $this->addElement('checkbox', 'skipColumnHeader', ts('First row contains column headers'));
 
     $duplicateOptions = [];
-    $duplicateOptions[] = $this->createElement('radio',
-      NULL, NULL, ts('Skip'), CRM_Activity_Import_Parser::DUPLICATE_SKIP
+    $duplicateOptions[] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Skip'),
+      CRM_Activity_Import_Parser::DUPLICATE_SKIP
     );
-    $duplicateOptions[] = $this->createElement('radio',
-      NULL, NULL, ts('Update'), CRM_Activity_Import_Parser::DUPLICATE_UPDATE
+    $duplicateOptions[] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Update'),
+      CRM_Activity_Import_Parser::DUPLICATE_UPDATE
     );
-    $duplicateOptions[] = $this->createElement('radio',
-      NULL, NULL, ts('Fill'), CRM_Activity_Import_Parser::DUPLICATE_FILL
+    $duplicateOptions[] = $this->createElement(
+      'radio',
+      NULL,
+      NULL,
+      ts('Fill'),
+      CRM_Activity_Import_Parser::DUPLICATE_FILL
     );
 
-    $this->addGroup($duplicateOptions, 'onDuplicate',
+    $this->addGroup(
+      $duplicateOptions,
+      'onDuplicate',
       ts('On duplicate entries')
     );
 
     //get the saved mapping details
 
-
-    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue('mapping_type',
-        'Import Activity',
-        'name'
-      ));
+    $mappingArray = CRM_Core_BAO_Mapping::getMappings(CRM_Core_OptionGroup::getValue(
+      'mapping_type',
+      'Import Activity',
+      'name'
+    ));
     $this->assign('savedMapping', $mappingArray);
     $this->add('select', 'savedMapping', ts('Mapping Option'), ['' => ts('- select -')] + $mappingArray);
 
@@ -118,7 +125,8 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
 
     CRM_Core_Form_Date::buildAllowedDateFormats($this);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'upload',
           'name' => ts('Continue >>'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -135,14 +143,14 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
    * Process the uploaded file
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $this->controller->resetPage('MapField');
 
     $fileName = $this->controller->exportValue($this->_name, 'uploadFile');
     $skipColumnHeader = $this->controller->exportValue($this->_name, 'skipColumnHeader');
-    $onDuplicate = $this->controller->exportValue($this->_name,
+    $onDuplicate = $this->controller->exportValue(
+      $this->_name,
       'onDuplicate'
     );
     $dateFormats = $this->controller->exportValue($this->_name, 'dateFormats');
@@ -162,7 +170,9 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
 
     $parser = new CRM_Activity_Import_Parser_Activity($mapper);
     $parser->setMaxLinesToProcess(100);
-    $parser->run($fileName, $seperator,
+    $parser->run(
+      $fileName,
+      $seperator,
       $mapper,
       $skipColumnHeader,
       CRM_Activity_Import_Parser::MODE_MAPFIELD
@@ -176,10 +186,8 @@ class CRM_Activity_Import_Form_UploadFile extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Upload Data');
   }
 }
-

@@ -26,54 +26,64 @@
 */
 
 /**
+ * Google reCAPTCHA integration for CiviCRM forms.
  *
- * @package CRM
+ * Provides singleton-based reCAPTCHA v2 widget rendering and server-side
+ * response validation using the Google reCAPTCHA PHP library.
+ *
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
- *
  */
 class CRM_Utils_ReCAPTCHA {
 
+  /**
+   * @var mixed
+   */
   protected $_captcha = NULL;
 
+  /**
+   * @var string|null
+   */
   protected $_name = NULL;
 
+  /**
+   * @var string|null
+   */
   protected $_url = NULL;
 
+  /**
+   * @var string|null
+   */
   protected $_phrase = NULL;
 
   /**
-   * We only need one instance of this object. So we use the singleton
-   * pattern and cache the instance in this variable
+   * Singleton instance of this class.
    *
-   * @var object
-   * @static
+   * @var CRM_Utils_ReCAPTCHA|null
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
-   * singleton function used to manage this object
+   * Return the singleton instance of this class.
    *
-   * @param string the key to permit session scope's
-   *
-   * @return object
-   * @static
-   *
+   * @return CRM_Utils_ReCAPTCHA
    */
-  static function &singleton() {
+  public static function &singleton() {
     if (self::$_singleton === NULL) {
       self::$_singleton = new CRM_Utils_ReCAPTCHA();
     }
     return self::$_singleton;
   }
 
-  function __construct() {
+  /**
+   * Constructor. Loads the Google reCAPTCHA PHP library.
+   */
+  public function __construct() {
     $require_path = 'packages/recaptcha/src/ReCaptcha';
     $config = CRM_Core_Config::singleton();
-    if(CRM_Utils_System::moduleExists('recaptcha') && $config->userFramework == 'Drupal') {
+    if (CRM_Utils_System::moduleExists('recaptcha') && $config->userFramework == 'Drupal') {
       if ($config->userSystem->version < 8) {
         $possible_path = drupal_get_path('module', 'recaptcha').'/recaptcha-php/src/ReCaptcha';
-        if(is_file($possible_path.'/ReCaptcha.php')){
+        if (is_file($possible_path.'/ReCaptcha.php')) {
           $require_path = $possible_path;
         }
       }
@@ -87,10 +97,13 @@ class CRM_Utils_ReCAPTCHA {
   }
 
   /**
-   * Add element to form
+   * Add a reCAPTCHA widget and validation rule to a form.
    *
+   * @param CRM_Core_Form $form the form object to add the reCAPTCHA element to
+   *
+   * @return void
    */
-  function add(&$form) {
+  public function add(&$form) {
     $config = CRM_Core_Config::singleton();
     $html = self::getHTML($config->recaptchaPublicKey);
 
@@ -111,7 +124,18 @@ class CRM_Utils_ReCAPTCHA {
     );
   }
 
-  static function validate($value, $form) {
+  /**
+   * Validate the reCAPTCHA response from the user.
+   *
+   * Caches the result of a successful validation to avoid duplicate
+   * verification on repeated form submissions.
+   *
+   * @param string $value the reCAPTCHA response value from the form
+   * @param CRM_Core_Form $form the form object being validated
+   *
+   * @return bool TRUE if validation passes, FALSE otherwise
+   */
+  public static function validate($value, $form) {
     // refs #35022 when recaptcha has twice,recored the previous result.
     static $previousResult;
     $config = CRM_Core_Config::singleton();
@@ -126,7 +150,7 @@ class CRM_Utils_ReCAPTCHA {
       $previousResult = TRUE;
       return TRUE;
     }
-    elseif(empty($errors)){
+    elseif (empty($errors)) {
       $previousResult = TRUE;
       return TRUE;
     }
@@ -134,20 +158,40 @@ class CRM_Utils_ReCAPTCHA {
     return FALSE;
   }
 
-  static function getHTML($pubkey){
+  /**
+   * Generate the HTML markup for the reCAPTCHA widget.
+   *
+   * @param string $pubkey the reCAPTCHA site (public) key
+   *
+   * @return string HTML containing the reCAPTCHA div and script tag
+   */
+  public static function getHTML($pubkey) {
     $output = '<div class="g-recaptcha" data-sitekey="'.$pubkey.'"></div>';
     $output .= '<script src="//www.google.com/recaptcha/api.js"></script>';
     return $output;
   }
 
-  static function checkAnswer($key, $response, $ip){
+  /**
+   * Verify the reCAPTCHA response with Google's API.
+   *
+   * @param string $key the reCAPTCHA secret (private) key
+   * @param string $response the user's reCAPTCHA response token
+   * @param string $ip the client IP address
+   *
+   * @return \ReCaptcha\Response the verification response object
+   */
+  public static function checkAnswer($key, $response, $ip) {
     $recaptcha = new \ReCaptcha\ReCaptcha($key);
     $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $ip);
     return $resp;
   }
 
-  static function getIp(){
+  /**
+   * Get the client's IP address.
+   *
+   * @return string the client IP address
+   */
+  public static function getIp() {
     return CRM_Utils_System::ipAddress();
   }
 }
-

@@ -28,27 +28,27 @@
 /**
  * Address utilties
  *
- * @package CRM
  */
 class CRM_Utils_Address {
 
   /**
-   * format an address string from address fields and a format string
+   * Format an address string from address fields and an optional format template.
    *
-   * Format an address basing on the address fields provided.
-   * Use Preferences::address_format if there's no format specified.
+   * Uses the CiviCRM address_format preference when no $format is provided.
+   * Token placeholders in the format string (e.g. {street_address}) are replaced
+   * with the corresponding field values or dropped when the value is empty.
    *
-   * @param array   $fields            the address fields
-   * @param string  $format            the desired address format
-   * @param boolean $microformat       if true indicates, the address to be built in hcard-microformat standard.
-   * @param boolean $mailing           if true indicates, the call has been made from mailing label
-   * @param boolean $individualFormat  if true indicates, the call has been made for the contact of type 'individual'
+   * @param array       $fields           Associative array of address field values keyed by field name.
+   * @param string|null $format           Address format template string, or NULL to use the site preference.
+   * @param bool        $microformat      When TRUE, wraps the output in hCard microformat markup.
+   * @param bool        $mailing          When TRUE, uses the mailing_format preference instead of address_format.
+   * @param bool        $individualFormat When TRUE, uses the contact's display_name rather than addressee_display.
+   * @param array|null  $tokenFields      Additional token field names whose values should be substituted.
    *
-   * @return string  formatted address string
-   *
-   * @static
+   * @return string  The formatted address string.
    */
-  static function format($fields,
+  public static function format(
+    $fields,
     $format = NULL,
     $microformat = FALSE,
     $mailing = FALSE,
@@ -56,7 +56,6 @@ class CRM_Utils_Address {
     $tokenFields = NULL
   ) {
     static $config = NULL;
-
 
     if (!$format) {
       $format = CRM_Core_BAO_Preferences::value('address_format');
@@ -103,7 +102,7 @@ class CRM_Utils_Address {
     }
 
     if (!$microformat) {
-        // replacements in case of Individual Name Format
+      // replacements in case of Individual Name Format
       $replacements = [
         'display_name' => CRM_Utils_Array::value('display_name', $fields),
         'individual_prefix' => CRM_Utils_Array::value('individual_prefix', $fields),
@@ -264,4 +263,3 @@ class CRM_Utils_Address {
     return $finalFormatted;
   }
 }
-

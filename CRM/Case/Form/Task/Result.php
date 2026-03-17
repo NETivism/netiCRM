@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Used for displaying results
@@ -48,7 +44,8 @@ class CRM_Case_Form_Task_Result extends CRM_Case_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {}
+  public function preProcess() {
+  }
 
   /**
    * Function to actually build the form
@@ -57,7 +54,8 @@ class CRM_Case_Form_Task_Result extends CRM_Case_Form_Task {
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -66,4 +64,3 @@ class CRM_Case_Form_Task_Result extends CRM_Case_Form_Task {
     );
   }
 }
-

@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class provides the functionality to delete a group of
@@ -55,29 +50,26 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
    * build all the data structures needed to build the form
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
   }
 
   /**
    * Build the form
    *
-   * @access public
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Delete Activites'), 'done');
   }
 
   /**
    * process the form after the input has been submitted and validated
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $deletedActivities = 0;
@@ -96,4 +88,3 @@ class CRM_Activity_Form_Task_Delete extends CRM_Activity_Form_Task {
     CRM_Core_Session::setStatus($status);
   }
 }
-

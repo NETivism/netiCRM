@@ -26,10 +26,9 @@
 */
 
 /**
+ * Form handler for contact location (address, phone, email) editing
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Contact_Form_Location {
@@ -37,9 +36,13 @@ class CRM_Contact_Form_Location {
   /**
    * Function to set variables up before form is built
    *
+   * @param object $form (reference) form object
+   *
    * @return void
+   * @static
+   * @access public
    */
-  static function preProcess(&$form) {
+  public static function preProcess(&$form) {
     $form->_addBlockName = CRM_Utils_Request::retrieve('block', 'String', CRM_Core_DAO::$_nullObject);
     $additionalblockCount = CRM_Utils_Request::retrieve('count', 'Positive', CRM_Core_DAO::$_nullObject);
 
@@ -74,17 +77,20 @@ class CRM_Contact_Form_Location {
   /**
    * Function to build the form
    *
-   * @return None
+   * @param object $form (reference) form object
+   *
+   * @return void
    * @access public
+   * @static
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     // required for subsequent AJAX requests.
     $ajaxRequestBlocks = [];
     $generateAjaxRequest = 0;
 
     //build 1 instance of all blocks, without using ajax ...
     foreach ($form->_blocks as $blockName => $label) {
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $blockName) . ".php");
+      require_once(str_replace('_', DIRECTORY_SEPARATOR, "CRM_Contact_Form_Edit_" . $blockName) . ".php");
       $name = strtolower($blockName);
 
       $instances = [1];
@@ -108,7 +114,7 @@ class CRM_Contact_Form_Location {
 
         $form->set($blockName . "_Block_Count", $instance);
         $formName = 'CRM_Contact_Form_Edit_' . $blockName;
-        $formName::buildQuickForm( $form );
+        $formName::buildQuickForm($form);
       }
     }
 
@@ -117,4 +123,3 @@ class CRM_Contact_Form_Location {
     $form->assign('ajaxRequestBlocks', $ajaxRequestBlocks);
   }
 }
-

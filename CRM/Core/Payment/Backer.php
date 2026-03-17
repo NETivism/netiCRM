@@ -1,4 +1,8 @@
 <?php
+/**
+ * @package CiviCRM_PaymentProcessor
+ */
+
 
 class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
@@ -15,19 +19,25 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
    */
   private static $_singleton = NULL;
 
-  function __construct($mode, &$paymentProcessor) {
+  /**
+   * Class constructor.
+   *
+   * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   */
+  public function __construct($mode, &$paymentProcessor) {
     $this->_mode = $mode;
     $this->_paymentProcessor = $paymentProcessor;
   }
 
   /**
-   * singleton function used to manage this object
+   * Singleton function used to manage this object.
    *
    * @param string $mode the mode of operation: live or test
+   * @param array &$paymentProcessor payment processor parameters
+   * @param CRM_Core_Form|null &$paymentForm payment form object
    *
-   * @return object
-   * @static
-   *
+   * @return CRM_Core_Payment_Backer
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
     $processorName = $paymentProcessor['name'];
@@ -38,18 +48,16 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * This function checks to see if we have the right config values
+   * Check if the processor has the right configuration values.
    *
-   * @return string the error message if any
-   * @public
+   * @return string|null error message if any, else NULL
    */
-  function checkConfig() {
+  public function checkConfig() {
     $error = [];
 
     if (empty($this->_paymentProcessor['password'])) {
       $error[] = ts('Password is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
-
 
     if (!empty($error)) {
       return CRM_Utils_Array::implode('<br>', $error);
@@ -59,9 +67,17 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
-  static function getAdminFields($ppDAO, $form){
+  /**
+   * Get the administrative fields for this payment processor.
+   *
+   * @param object $ppDAO payment processor DAO
+   * @param CRM_Core_Form $form the settings form
+   *
+   * @return array array of administrative fields
+   */
+  public static function getAdminFields($ppDAO, $form) {
     $pages = CRM_Contribute_PseudoConstant::contributionPage();
-    foreach($pages as $id => $page) {
+    foreach ($pages as $id => $page) {
       $pages[$id] .= " ($id)";
     }
     return [
@@ -87,31 +103,39 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     ];
   }
 
-  function setExpressCheckOut(&$params) {
+  public function setExpressCheckOut(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function getExpressCheckoutDetails($token) {
+  public function getExpressCheckoutDetails($token) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doExpressCheckout(&$params) {
+  public function doExpressCheckout(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doDirectPayment(&$params) {
+  public function doDirectPayment(&$params) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function doTransferCheckout(&$params, $component) {
+  public function doTransferCheckout(&$params, $component) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function cancelRecuringMessage($recurID) {
+  public function cancelRecuringMessage($recurID) {
     CRM_Core_Error::fatal(ts('This function is not implemented'));
   }
 
-  function checkSignature($string, $signature = NULL) {
+  /**
+   * Check the signature of a request for security.
+   *
+   * @param string $string the payload to check
+   * @param string|null $signature the signature to verify against
+   *
+   * @return bool TRUE if signature is valid
+   */
+  public function checkSignature($string, $signature = NULL) {
     if (empty($signature)) {
       $headers = CRM_Utils_System::getAllHeaders();
       $signature = $_SERVER['HTTP_X_BACKME_SIGNATURE'];
@@ -134,7 +158,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return FALSE;
   }
 
-  function processContribution($jsonString, &$contributionResult) {
+  /**
+   * Process a contribution from a JSON payload.
+   *
+   * @param string $jsonString the JSON payload from Backer
+   * @param array &$contributionResult array to store processing results
+   *
+   * @return int|void|string contribution ID if successful, or error status
+   */
+  public function processContribution($jsonString, &$contributionResult) {
     $params = self::formatParams($jsonString);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
     $config = CRM_Core_Config::singleton();
@@ -244,8 +276,8 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     if (empty($contactId)) {
       // create contact
       $contact = $params['contact'];
-      $blocks = ['email', 'phone', 'address']; 
-      foreach($blocks as $blockName) {
+      $blocks = ['email', 'phone', 'address'];
+      foreach ($blocks as $blockName) {
         $contact[$blockName] = $params[$blockName];
       }
       $contact['log_data'] = ts('Updated contact').'-'.ts('Backer Auto Import');
@@ -257,8 +289,8 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       // add email, phone, address into contact
       $contact = $params['contact'];
       $contact['id'] = $contactId;
-      $blocks = ['email', 'phone', 'address']; 
-      foreach($blocks as $blockName) {
+      $blocks = ['email', 'phone', 'address'];
+      foreach ($blocks as $blockName) {
         if (isset($params[$blockName]) && is_array($params[$blockName])) {
           $blockValue = reset($params[$blockName]);
           $blockValue['contact_id'] = $contactId;
@@ -270,7 +302,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
               CRM_Core_BAO_Block::blockValueExists($blockName, $blockValue);
             }
             else {
-              foreach($params[$blockName] as $emailKey => $emailValue) {
+              foreach ($params[$blockName] as $emailKey => $emailValue) {
                 CRM_Core_BAO_Block::blockValueExists($blockName, $emailValue);
               }
             }
@@ -482,19 +514,27 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     }
   }
 
-  function processIPN($ids, $contrib) {
+  /**
+   * Process an IPN request for a contribution.
+   *
+   * @param array $ids extracted IDs
+   * @param array $contrib contribution data
+   *
+   * @return void
+   */
+  public function processIPN($ids, $contrib) {
     // ipn transact
     $ipn = new CRM_Core_Payment_BaseIPN();
     $input = $objects = [];
     $input['component'] = 'contribute';
     $validateResult = $ipn->validateData($input, $ids, $objects, FALSE);
-    if ($validateResult){
+    if ($validateResult) {
       $transaction = new CRM_Core_Transaction();
       $exists = $objects['contribution'];
       $input['amount'] = $contrib['total_amount'];
 
       // success: 2->1
-      if ($contrib['contribution_status_id'] == 1 && $exists->contribution_status_id == 2){
+      if ($contrib['contribution_status_id'] == 1 && $exists->contribution_status_id == 2) {
         $objects['contribution']->receive_date = $contrib['receive_date'];
         $ipn->completeTransaction($input, $ids, $objects, $transaction);
       }
@@ -521,10 +561,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Format params from backer
+   * Format parameters received from Backer.
    *
-   * @param string $string
-   * @return array
+   * @param string $string JSON string from Backer
+   *
+   * @return array formatted parameters
    */
   public static function formatParams($string) {
     $params = [];
@@ -548,6 +589,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     return $params;
   }
 
+  /**
+   * Format contact information from Backer JSON data.
+   *
+   * @param array $json the parsed JSON data
+   * @param array &$params array to store formatted contact data
+   *
+   * @return void
+   */
   public static function formatContact($json, &$params) {
     $name = self::explodeName($json['user']['name']);
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
@@ -570,11 +619,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       'is_primary' => 1,
       'append' => TRUE,
     ];
-     $params['email'][] = [
-      'email' => $json['receipt']['email'],
-      'location_type_id' => array_search('Billing', $locationType),
-      'is_primary' => 1,
-      'append' => TRUE,
+    $params['email'][] = [
+     'email' => $json['receipt']['email'],
+     'location_type_id' => array_search('Billing', $locationType),
+     'is_primary' => 1,
+     'append' => TRUE,
     ];
     $phone = self::validateMobilePhone($json['user']['cellphone']);
     $params['phone'][] = [
@@ -588,9 +637,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     // address
     // backer special abbr convert to CRM
     if ($json['recipient']['recipient_subdivision']) {
-      if ($json['recipient']['recipient_subdivision'] == 'KIN') $json['recipient']['recipient_subdivision'] = 'KMN';
-      elseif ($json['recipient']['recipient_subdivision'] == 'LIE') $json['recipient']['recipient_subdivision'] = 'LCI';
-      elseif ($json['recipient']['recipient_subdivision'] == 'NWT') $json['recipient']['recipient_subdivision'] = 'TPQ';
+      if ($json['recipient']['recipient_subdivision'] == 'KIN') {
+        $json['recipient']['recipient_subdivision'] = 'KMN';
+      }
+      elseif ($json['recipient']['recipient_subdivision'] == 'LIE') {
+        $json['recipient']['recipient_subdivision'] = 'LCI';
+      }
+      elseif ($json['recipient']['recipient_subdivision'] == 'NWT') {
+        $json['recipient']['recipient_subdivision'] = 'TPQ';
+      }
 
       $countryId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_country WHERE name = 'Taiwan'");
       $stateProvinceId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_state_province WHERE abbreviation = %1 AND country_id = %2", [
@@ -611,7 +666,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     ];
     $addName = self::explodeName(trim($json['recipient']['recipient_name']));
     if ($addName === FALSE) {
-      $addName= [
+      $addName = [
         '',    // sure name
         $json['recipient']['recipient_name'], // given name
       ];
@@ -646,6 +701,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $params['additional']['address'][0] = $address;
   }
 
+  /**
+   * Format recurring contribution information from Backer JSON data.
+   *
+   * @param array $json the parsed JSON data
+   * @param array &$params array to store formatted recurring data
+   *
+   * @return void
+   */
   public static function formatRecurring($json, &$params) {
     $statusMap = [
       // recurring contribution status
@@ -690,6 +753,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     $params['recurring'] = $recurring;
   }
 
+  /**
+   * Format contribution information from Backer JSON data.
+   *
+   * @param array $json the parsed JSON data
+   * @param array &$params array to store formatted contribution data
+   *
+   * @return void
+   */
   public static function formatContribution($json, &$params) {
     $config = CRM_Core_Config::singleton();
     $locationType = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
@@ -724,10 +795,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     if (!empty($json['transaction']['parent_trade_no'])) {
       // invoice id is uniq, will append additional info
       $params['contribution']['invoice_id'] = $json['transaction']['parent_trade_no'].'_'.substr(md5(uniqid((string)rand(), TRUE)), 0, 10);
-      $contributionRecurId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE trxn_id = %1" , [1 => [$json['transaction']['parent_trade_no'], 'String']]);
+      $contributionRecurId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_contribution_recur WHERE trxn_id = %1", [1 => [$json['transaction']['parent_trade_no'], 'String']]);
       if (!empty($contributionRecurId)) {
         $params['contribution']['contribution_recur_id'] = $contributionRecurId;
-      } else {
+      }
+      else {
         $contributionResult['status'] = "No recur id.";
       }
     }
@@ -735,7 +807,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
       $params['contribution']['invoice_id'] = md5(uniqid((string)rand(), TRUE));
     }
 
-    switch($statusMap[$json['transaction']['render_status']]) {
+    switch ($statusMap[$json['transaction']['render_status']]) {
       case 1: // success
         $params['contribution']['receive_date'] = date('YmdHis', strtotime($json['payment']['paid_at']));
         break;
@@ -773,14 +845,14 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
     // complex logic to values of custom
     if (!empty($json['transaction']['items']['custom_fields'])) {
       $items = $matches = [];
-      foreach($json['transaction']['items']['custom_fields'] as $key => $item) {
+      foreach ($json['transaction']['items']['custom_fields'] as $key => $item) {
         $items[$item['name']] = $item['value'];
       }
       CRM_Core_BAO_CustomGroup::matchFieldValues('Contribution', $items, $matches);
       if (!empty($matches[1])) {
         $params['contribution'] += $matches[1];
         $leftItems = array_diff_key($items, $matches[0]);
-        foreach($leftItems as $label => $value) {
+        foreach ($leftItems as $label => $value) {
           $amountLevel[] = $label.'→'.$value;
         }
       }
@@ -850,9 +922,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
         // billing address and email
         if ($json['receipt']['address']) {
-          if ($json['receipt']['subdivision'] == 'KIN') $json['receipt']['subdivision'] = 'KMN';
-          elseif ($json['receipt']['subdivision'] == 'LIE') $json['receipt']['subdivision'] = 'LCI';
-          elseif ($json['receipt']['subdivision'] == 'NWT') $json['receipt']['subdivision'] = 'TPQ';
+          if ($json['receipt']['subdivision'] == 'KIN') {
+            $json['receipt']['subdivision'] = 'KMN';
+          }
+          elseif ($json['receipt']['subdivision'] == 'LIE') {
+            $json['receipt']['subdivision'] = 'LCI';
+          }
+          elseif ($json['receipt']['subdivision'] == 'NWT') {
+            $json['receipt']['subdivision'] = 'TPQ';
+          }
 
           $countryId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_country WHERE name = 'Taiwan'");
           $stateProvinceId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_state_province WHERE abbreviation = %1 AND country_id = %2", [
@@ -871,7 +949,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         }
         if ($json['receipt']['email']) {
           if (!empty($params['email'])) {
-            foreach($params['email'] as &$mail) {
+            foreach ($params['email'] as &$mail) {
               if (isset($mail['is_primary'])) {
                 $mail['is_primary'] = 0;
               }
@@ -889,14 +967,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Explode name string to sure name - given name
+   * Explode a full name string into surname and given name.
    *
-   * @param string $str
-   * @return array|false
+   * @param string $str full name string
+   *
+   * @return array|false [surname, given_name] or FALSE on failure
    */
   public static function explodeName($str) {
     $str = trim($str);
-    $str = str_replace(["\r","\n"],'',$str);
+    $str = str_replace(["\r","\n"], '', $str);
     if (empty($str)) {
       return FALSE;
     }
@@ -919,7 +998,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           mb_substr($str, 1, 1, 'UTF-8'),
         ];
       }
-      else if ($len == 3 || $len == 4) {
+      elseif ($len == 3 || $len == 4) {
         $given_name = mb_substr($str, -2, 2, 'UTF-8');
         $sure_name = str_replace($given_name, '', $str);
         $name[] = $sure_name;
@@ -934,11 +1013,15 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Validating mobile number.
+   * Validate and format a mobile phone number for Taiwan.
+   *
+   * @param string $str phone number string
+   *
+   * @return string|false formatted phone number or FALSE if invalid
    */
   public static function validateMobilePhone($str) {
     $str = trim($str);
-    $str = str_replace(["\r","\n"],'',$str);
+    $str = str_replace(["\r","\n"], '', $str);
     if (empty($str)) {
       return FALSE;
     }
@@ -965,8 +1048,11 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
   }
 
   /**
-   * Attempts to backfill the missing contribution_recur_id on a contribution
-   * by matching the beginning of the invoice_id with the given trxn_id.
+   * Backfill missing contribution_recur_id on contributions based on trxn_id.
+   *
+   * @param string $trxn_id the transaction ID to match
+   *
+   * @return void
    */
   public static function updateContributionRecurId($trxn_id) {
     $sql = "

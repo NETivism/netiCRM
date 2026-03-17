@@ -27,22 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Given an ezComponents-parsed representation of
- * a text with alternatives return only the first one
+ * Return only the first alternative from an ezComponents-parsed representation.
  *
- * @param string $full  all alternatives as a long string (or some other text)
+ * @param string $full the string containing alternatives
  *
- * @return string       only the first alternative found (or the text without alternatives)
+ * @return string the first alternative or the original text
  */
 function smarty_modifier_crmStripAlternatives($full) {
 
   return CRM_Utils_String::stripAlternatives($full);
 }
-

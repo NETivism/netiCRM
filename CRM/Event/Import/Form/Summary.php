@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class summarizes the import results
@@ -44,7 +40,6 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // set the error message path to display
@@ -88,7 +83,9 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
 
       /* only subtract dupes from succesful import if we're skipping */
 
-      $this->set('validRowCount', $totalRowCount - $invalidRowCount -
+      $this->set(
+        'validRowCount',
+        $totalRowCount - $invalidRowCount -
         $conflictRowCount - $duplicateRowCount - $mismatchCount
       );
     }
@@ -103,11 +100,11 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -120,10 +117,8 @@ class CRM_Event_Import_Form_Summary extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Summary');
   }
 }
-

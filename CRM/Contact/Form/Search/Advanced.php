@@ -27,21 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  * Files required
  */
-
-
-
-
-
-
 
 /**
  * advanced search, extends basic search
@@ -57,7 +49,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->set('searchFormName', 'Advanced');
 
     parent::preProcess();
@@ -70,12 +62,10 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->set('context', 'advanced');
 
-
     $this->_searchPane = CRM_Utils_Array::value('searchPane', $_GET);
-
 
     $this->_searchOptions = CRM_Core_BAO_Preferences::valueOptions('advanced_search_options');
 
@@ -95,10 +85,13 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
 
     //check if there are any custom data searchable fields
     $groupDetails = [];
-    $extends = array_merge(['Contact', 'Individual', 'Household', 'Organization'],
+    $extends = array_merge(
+      ['Contact', 'Individual', 'Household', 'Organization'],
       CRM_Contact_BAO_ContactType::subTypes()
     );
-    $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(NULL, TRUE,
+    $groupDetails = CRM_Core_BAO_CustomGroup::getGroupDetail(
+      NULL,
+      TRUE,
       $extends
     );
     // if no searchable fields unset panel
@@ -111,7 +104,6 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
         unset($paneNames[$name]);
       }
     }
-
 
     $components = CRM_Core_Component::getEnabledComponents();
 
@@ -126,7 +118,6 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
     }
 
-
     usort($componentPanes, ['CRM_Utils_Sort', 'cmpFunc']);
 
     foreach ($componentPanes as $name => $pane) {
@@ -140,9 +131,10 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
         continue;
       }
 
-      $allPanes[$name] = ['url' => CRM_Utils_System::url('civicrm/contact/search/advanced',
-          "snippet=1&searchPane=$type&qfKey={$this->controller->_key}"
-        ),
+      $allPanes[$name] = ['url' => CRM_Utils_System::url(
+        'civicrm/contact/search/advanced',
+        "snippet=1&searchPane=$type&qfKey={$this->controller->_key}"
+      ),
         'open' => 'false',
         'id' => $type,
       ];
@@ -161,7 +153,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
           $this->_paneTemplatePath[$type] = $c->getAdvancedSearchPaneTemplatePath();
         }
         else {
-          CRM_Contact_Form_Search_Criteria::$type( $this );
+          CRM_Contact_Form_Search_Criteria::$type($this);
           $template = ucfirst($type);
           $this->_paneTemplatePath[$type] = "CRM/Contact/Form/Search/Criteria/{$template}.tpl";
         }
@@ -176,7 +168,13 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     }
   }
 
-  function getTemplateFileName() {
+  /**
+   * Get the template file name
+   *
+   * @return string
+   * @access public
+   */
+  public function getTemplateFileName() {
     if (!$this->_searchPane) {
       return parent::getTemplateFileName();
     }
@@ -198,7 +196,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    *
    * @return array the default array reference
    */
-  function &setDefaultValues() {
+  public function &setDefaultValues() {
     $defaults = $this->_formValues;
     $this->normalizeDefaultValues($defaults);
 
@@ -229,7 +227,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * @return void
    * @access public
    */
-  function postProcess() {
+  public function postProcess() {
     $this->set('isAdvanced', '1');
 
     // get user submitted values
@@ -275,7 +273,6 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       $this->_formValues['group'] = [$this->_groupID => 1];
     }
 
-
     //search for civicase
     if (is_array($this->_formValues)) {
       if (CRM_Utils_Array::arrayKeyExists('case_owner', $this->_formValues) &&
@@ -301,9 +298,7 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
       }
     }
 
-
     CRM_Core_BAO_CustomValue::fixFieldValueOfTypeMemo($this->_formValues);
-
 
     $this->_params = &CRM_Contact_BAO_Query::convertFormValues($this->_formValues);
     $this->_returnProperties = &$this->returnProperties();
@@ -316,9 +311,9 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
    * multiple purposes (queries, save/edit etc)
    *
    * @return void
-   * @access private
+   * @access public
    */
-  function normalizeFormValues() {
+  public function normalizeFormValues() {
     $contactType = CRM_Utils_Array::value('contact_type', $this->_formValues);
 
     if ($contactType && is_array($contactType)) {
@@ -369,10 +364,12 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
   /**
    * normalize default values for multiselect plugins
    *
-   * @return void
-   * @access private
+   * @param array $defaults
+   *
+   * @return array
+   * @access public
    */
-  function normalizeDefaultValues(&$defaults) {
+  public function normalizeDefaultValues(&$defaults) {
     if (!is_array($defaults)) {
       $defaults = [];
     }
@@ -397,4 +394,3 @@ class CRM_Contact_Form_Search_Advanced extends CRM_Contact_Form_Search {
     return $defaults;
   }
 }
-

@@ -26,17 +26,16 @@
 */
 
 /**
+ * Abstract base class for mail store implementations that retrieve and process inbound email
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
 class CRM_Mailing_MailStore {
   public $_transport;
   // flag to decide whether to print debug messages
-  var $_debug = FALSE;
+  public $_debug = FALSE;
 
   /**
    * Return the proper mail store implementation, based on config settings
@@ -46,12 +45,12 @@ class CRM_Mailing_MailStore {
    * @return object        mail store implementation for processing CiviMail-bound emails
    */
   public static function getStore($name = NULL) {
-    if($name) {
+    if ($name) {
       $params = [
         'name' => $name,
       ];
     }
-    else{
+    else {
       $params = [
         'is_default' => 1,
       ];
@@ -75,8 +74,8 @@ class CRM_Mailing_MailStore {
 
         return new CRM_Mailing_MailStore_Localdir($setting['source']);
 
-      // DO NOT USE the mbox transport for anything other than testing
-      // in particular, it does not clear the mbox afterwards
+        // DO NOT USE the mbox transport for anything other than testing
+        // in particular, it does not clear the mbox afterwards
 
       case 'mbox':
 
@@ -92,14 +91,15 @@ class CRM_Mailing_MailStore {
    *
    * @return array  array of ezcMail objects
    */
-  function allMails() {
+  public function allMails() {
     return $this->fetchNext(0);
   }
 
   /**
    * Expunge the messages marked for deletion; stub function to be redefined by IMAP store
    */
-  function expunge() {}
+  public function expunge() {
+  }
 
   /**
    * Return the next X messages from the mail store
@@ -108,7 +108,7 @@ class CRM_Mailing_MailStore {
    *
    * @return array      array of ezcMail objects
    */
-  function fetchNext($count = 1) {
+  public function fetchNext($count = 1) {
     if (isset($this->_transport->options->uidReferencing) and $this->_transport->options->uidReferencing) {
       $identifiers = $this->_transport->listUniqueIdentifiers();
       if (is_array($identifiers)) {
@@ -124,14 +124,14 @@ class CRM_Mailing_MailStore {
         print "fetching $count messages\n";
       }
     }
-    catch(ezcMailOffsetOutOfRangeException$e) {
+    catch (ezcMailOffsetOutOfRangeException$e) {
       if ($this->_debug) {
         print "got to the end of the mailbox\n";
       }
       return [];
     }
     $mails = [];
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     //set property text attachment as file CRM-5408
     $parser->options->parseTextAttachmentsAsFiles = TRUE;
 
@@ -152,7 +152,7 @@ class CRM_Mailing_MailStore {
    *
    * @return string       path to the Maildir's cur directory
    */
-  function maildir($name) {
+  public function maildir($name) {
     $config = CRM_Core_Config::singleton();
     $dir = $config->customFileUploadDir . DIRECTORY_SEPARATOR . $name;
     foreach ([
@@ -170,4 +170,3 @@ class CRM_Mailing_MailStore {
     return $dir . DIRECTORY_SEPARATOR . 'cur';
   }
 }
-

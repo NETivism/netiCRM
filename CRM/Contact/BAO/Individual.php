@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -42,19 +40,20 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
   /**
    * This is a contructor of the class.
    */
-  function __construct() {}
+  public function __construct() {
+  }
 
   /**
    * Function is used to format the individual contact values
    *
-   * @param array  $params (reference ) an assoc array of name/value pairs
-   * @param array  $contact  contact object
+   * @param array                   $params  (reference) an assoc array of name/value pairs
+   * @param CRM_Contact_BAO_Contact $contact (reference) contact object
    *
-   * @return object CRM_Contact_BAO_Contact object
+   * @return CRM_Contact_BAO_Contact CRM_Contact_BAO_Contact object
    * @access public
    * @static
    */
-  static function format(&$params, &$contact) {
+  public static function format(&$params, &$contact) {
     if (!self::dataExists($params)) {
       return;
     }
@@ -243,7 +242,7 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
           $displayName = $sortName;
         }
       }
-      else{
+      else {
         // use western style
         $default_format = "{first_name}{ }{last_name}";
         $sortName = CRM_Utils_Address::format($formatted, $default_format, FALSE, FALSE, TRUE, $tokenFields);
@@ -351,12 +350,14 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
   /**
    * regenerates display_name for contacts with given prefixes/suffixes
    *
-   * @param array $ids     the array with the prefix/suffix id governing which contacts to regenerate
-   * @param int   $action  the action describing whether prefix/suffix was UPDATED or DELETED
+   * @param array $ids    (reference) the array with the prefix/suffix id governing which contacts to regenerate
+   * @param int   $action the action describing whether prefix/suffix was UPDATED or DELETED
    *
    * @return void
+   * @static
+   * @access public
    */
-  static function updateDisplayNames(&$ids, $action) {
+  public static function updateDisplayNames(&$ids, $action) {
     // get the proper field name (prefix_id or suffix_id) and its value
     $fieldName = '';
     foreach ($ids as $key => $value) {
@@ -399,9 +400,10 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
   /**
    * creates display name
    *
-   * @return string  the constructed display name
+   * @return string the constructed display name
+   * @access public
    */
-  function displayName() {
+  public function displayName() {
     $prefix = &CRM_Core_PseudoConstant::individualPrefix();
     $suffix = &CRM_Core_PseudoConstant::individualSuffix();
     return str_replace('  ', ' ', trim($prefix[$this->prefix_id] . ' ' . $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name . ' ' . $suffix[$this->suffix_id]));
@@ -410,13 +412,13 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
   /**
    * Check if there is data to create the object
    *
-   * @param array  $params         (reference ) an assoc array of name/value pairs
+   * @param array $params (reference) an assoc array of name/value pairs
    *
    * @return boolean
    * @access public
    * @static
    */
-  static function dataExists(&$params) {
+  public static function dataExists(&$params) {
     if ($params['contact_type'] == 'Individual') {
       return TRUE;
     }
@@ -424,4 +426,3 @@ class CRM_Contact_BAO_Individual extends CRM_Contact_DAO_Contact {
     return FALSE;
   }
 }
-

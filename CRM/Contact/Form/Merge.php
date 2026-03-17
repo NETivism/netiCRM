@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -62,7 +60,13 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
   // to side-step this, we use the below UUID as a (re)placeholder
   public $_qfZeroBug = 'e8cddb72-a257-11dc-b9cc-0016d3330ee9';
 
-  function preProcess() {
+  /**
+   * Pre-process the form
+   *
+   * @return void
+   * @access public
+   */
+  public function preProcess() {
     $this->_hasError = FALSE;
     if (!CRM_Core_Permission::check('merge duplicate contacts')) {
       return CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
@@ -88,9 +92,10 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
 
     // Block access if user does not have EDIT permissions for both contacts.
-    if (!(CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::EDIT)
+    if (!(
+      CRM_Contact_BAO_Contact_Permission::allow($cid, CRM_Core_Permission::EDIT)
         && CRM_Contact_BAO_Contact_Permission::allow($oid, CRM_Core_Permission::EDIT)
-      )) {
+    )) {
       CRM_Utils_System::permissionDenied();
     }
 
@@ -111,7 +116,8 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $this->assign('mainUfId', $mainUfId);
     $this->assign('mainUfName', $mainUserName);
 
-    $flipUrl = CRM_Utils_system::url('civicrm/contact/merge',
+    $flipUrl = CRM_Utils_system::url(
+      'civicrm/contact/merge',
       "reset=1&action=update&cid={$oid}&oid={$cid}&rgid={$rgid}&gid={$gid}"
     );
     if (!$flip) {
@@ -150,7 +156,8 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     // ensure that oid is not the current user, if so refuse to do the merge
     if ($session->get('userID') == $oid) {
       $display_name = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $oid, 'display_name');
-      $message = ts('The contact record which is linked to the currently logged in user account - \'%1\' - cannot be deleted.',
+      $message = ts(
+        'The contact record which is linked to the currently logged in user account - \'%1\' - cannot be deleted.',
         [1 => $display_name]
       );
       return CRM_Core_Error::statusBounce($message);
@@ -174,12 +181,14 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     $subtypes = CRM_Contact_BAO_ContactType::subTypePairs(NULL, TRUE, '');
     $this->assign('contact_type', $main['contact_type']);
     if (isset($main['contact_sub_type'])) {
-      $this->assign('main_contact_subtype',
+      $this->assign(
+        'main_contact_subtype',
         CRM_Utils_Array::value('contact_sub_type', $subtypes[$main['contact_sub_type'][0]])
       );
     }
     if (isset($other['contact_sub_type'])) {
-      $this->assign('other_contact_subtype',
+      $this->assign(
+        'other_contact_subtype',
         CRM_Utils_Array::value('contact_sub_type', $subtypes[$other['contact_sub_type'][0]])
       );
     }
@@ -204,7 +213,8 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     // add elements
     foreach ($rowsElementsAndInfo['elements'] as $element) {
       // special case for communication method
-      $this->addElement($element[0],
+      $this->addElement(
+        $element[0],
         $element[1],
         CRM_Utils_Array::arrayKeyExists('2', $element) ? $element[2] : NULL,
         CRM_Utils_Array::arrayKeyExists('3', $element) ? $element[3] : NULL,
@@ -233,12 +243,31 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values for the form
+   *
+   * @return array defaults array
+   * @access public
+   */
+  public function setDefaultValues() {
     return ['deleteOther' => 1];
   }
 
-  function addRules() {}
+  /**
+   * Add rules for the form
+   *
+   * @return void
+   * @access public
+   */
+  public function addRules() {
+  }
 
+  /**
+   * Build the form
+   *
+   * @return void
+   * @access public
+   */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Merge Contacts'));
     if (!$this->_hasError) {
@@ -249,6 +278,12 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Post-process the form
+   *
+   * @return void
+   * @access public
+   */
   public function postProcess() {
     $formValues = $this->exportValues();
 
@@ -271,7 +306,16 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     CRM_Utils_System::redirect($url);
   }
 
-  function validateContacts($cid, $oid) {
+  /**
+   * Validate contacts for merge
+   *
+   * @param int $cid contact id 1
+   * @param int $oid contact id 2
+   *
+   * @return boolean true if valid, false otherwise
+   * @access public
+   */
+  public function validateContacts($cid, $oid) {
     if (!$cid || !$oid) {
       return;
     }
@@ -292,7 +336,16 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 
-  function checkContactIsAdmin($cid, $oid) {
+  /**
+   * Check if contact is admin
+   *
+   * @param int $cid contact id 1
+   * @param int $oid contact id 2
+   *
+   * @return boolean true if admin, false otherwise
+   * @access public
+   */
+  public function checkContactIsAdmin($cid, $oid) {
     // Check contact is admin or not
     $cidSql = "SELECT uf_id FROM `civicrm_uf_match` where contact_id = %1";
     $cidParams = [ 1 => [$cid, 'Integer']];
@@ -310,4 +363,3 @@ class CRM_Contact_Form_Merge extends CRM_Core_Form {
     }
   }
 }
-

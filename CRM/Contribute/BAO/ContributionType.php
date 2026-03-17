@@ -27,24 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_ContributionType {
 
   /**
    * static holder for the default LT
    */
-  static $_defaultContributionType = NULL;
+  public static $_defaultContributionType = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
@@ -58,11 +55,11 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @param array $params   (reference ) an assoc array of name/value pairs
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Contribute_BAO_ContributionType object
+   * @return CRM_Contribute_BAO_ContributionType|null CRM_Contribute_BAO_ContributionType object
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $contributionType = new CRM_Contribute_DAO_ContributionType();
     $contributionType->copyValues($params);
     if ($contributionType->find(TRUE)) {
@@ -78,10 +75,10 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @param int      $id        id of the database record
    * @param boolean  $is_active value we want to set the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @return boolean             TRUE on success, FALSE otherwise
    * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Contribute_DAO_ContributionType', $id, 'is_active', $is_active);
   }
 
@@ -94,9 +91,9 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * @access public
    * @static
    *
-   * @return object
+   * @return CRM_Contribute_BAO_ContributionType
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
 
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_deductible'] = CRM_Utils_Array::value('is_deductible', $params, FALSE);
@@ -105,7 +102,8 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
 
     // action is taken depending upon the mode
     $contributionType = new CRM_Contribute_DAO_ContributionType();
-    $contributionType->copyValues($params);;
+    $contributionType->copyValues($params);
+    ;
 
     $contributionType->id = CRM_Utils_Array::value('contributionType', $ids);
     $contributionType->save();
@@ -119,10 +117,11 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
    * Function to delete contribution Types
    *
    * @param int $contributionTypeId
+   *
+   * @return void|string
    * @static
    */
-
-  static function del($contributionTypeId) {
+  public static function del($contributionTypeId) {
     //checking if contribution type is present
     $check = FALSE;
 
@@ -144,8 +143,8 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
     if ($check) {
       $session = CRM_Core_Session::singleton();
       CRM_Core_Session::setStatus(ts(
-          'This contribution type cannot be deleted because it is being referenced by one or more of the following types of records: Contributions, Contribution Pages, or Membership Types. Consider disabling this type instead if you no longer want it used.'
-        ));
+        'This contribution type cannot be deleted because it is being referenced by one or more of the following types of records: Contributions, Contribution Pages, or Membership Types. Consider disabling this type instead if you no longer want it used.'
+      ));
       return CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/contribute/contributionType', "reset=1&action=browse"));
     }
 
@@ -159,14 +158,14 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
   }
 
   /**
-   * Function to see if contritbution type is deductible
+   * Function to see if contribution type is deductible
    *
    * @param int $contributionTypeId contribution type id to retrieve
-   * @param boolean $all default FALSE. TRUE will return type even type is not active. 
-   * 
-   * @return numeric when contribution type found. FALSE when not found.
+   * @param boolean $all default FALSE. TRUE will return type even type is not active.
+   *
+   * @return int|false when contribution type found. FALSE when not found.
    */
-  static function deductible($contributionTypeId, $all = FALSE) {
+  public static function deductible($contributionTypeId, $all = FALSE) {
     $types = [];
     CRM_Core_PseudoConstant::populate($types, 'CRM_Contribute_DAO_ContributionType', $all, 'is_deductible');
     if (isset($types[$contributionTypeId])) {
@@ -175,4 +174,3 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
     return FALSE;
   }
 }
-

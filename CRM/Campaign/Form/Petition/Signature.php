@@ -27,15 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
 
 /**
  * This class generates form components for processing a petition signature
@@ -50,7 +44,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    */
   public $_fields;
   public $thankyou;
-  CONST EMAIL_THANK = 1, EMAIL_CONFIRM = 2, MODE_CREATE = 4;
+  public const EMAIL_THANK = 1, EMAIL_CONFIRM = 2, MODE_CREATE = 4;
 
   protected $_mode;
 
@@ -150,7 +144,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
   protected $_image_URL;
 
-  protected $_defaults = NULL; function __construct() {
+  protected $_defaults = NULL;
+  public function __construct() {
     parent::__construct();
     // this property used by civicrm_fb module and if true, forces thank you email to be sent
     // for users signing in via Facebook connect; also sets Fb email to check against
@@ -193,8 +188,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
     // add the custom contact and activity profile fields to the signature form
 
-
-
     $ufJoinParams = ['entity_id' => $this->_surveyId,
       'entity_table' => 'civicrm_survey',
       'module' => 'CiviCampaign',
@@ -208,7 +201,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     if (!isset($this->_contactProfileFields['email-Primary'])) {
       CRM_Core_Error::fatal('The contact profile needs to contain the primary email address field');
     }
-
 
     $ufJoinParams['weight'] = 1;
     $this->_activityProfileId = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
@@ -228,7 +220,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
 
     $this->_defaults = [];
     if ($this->_contactId) {
@@ -240,13 +232,13 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
 
     //set custom field defaults
 
-
     foreach ($this->_contactProfileFields as $name => $field) {
       if ($customFieldID = CRM_Core_BAO_CustomField::getKeyID($name)) {
         $htmlType = $field['html_type'];
 
         if (!isset($this->_defaults[$name])) {
-          CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID,
+          CRM_Core_BAO_CustomField::setProfileDefaults(
+            $customFieldID,
             $name,
             $this->_defaults,
             $this->_contactId,
@@ -262,7 +254,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
           $htmlType = $field['html_type'];
 
           if (!isset($this->_defaults[$name])) {
-            CRM_Core_BAO_CustomField::setProfileDefaults($customFieldID,
+            CRM_Core_BAO_CustomField::setProfileDefaults(
+              $customFieldID,
               $name,
               $this->_defaults,
               $this->_contactId,
@@ -296,7 +289,8 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
       $this->buildCustom($this->_activityProfileId, 'petitionActivityProfile');
     }
     // add buttons
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Sign the Petition'),
           'isDefault' => TRUE,
@@ -314,7 +308,7 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    * @see valid_date
    */
 
-  static function formRule($fields, $files, $errors) {
+  public static function formRule($fields, $files, $errors) {
     $errors = [];
 
     return empty($errors) ? TRUE : $errors;
@@ -461,30 +455,41 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
         break;
     }
 
-
-
-
     $transaction = new CRM_Core_Transaction();
 
-    $this->_contactId = CRM_Contact_BAO_Contact::createProfileContact($params, $this->_contactProfileFields,
-      $this->_contactId, $this->_addToGroupID,
-      $this->_contactProfileId, $this->_ctype,
+    $this->_contactId = CRM_Contact_BAO_Contact::createProfileContact(
+      $params,
+      $this->_contactProfileFields,
+      $this->_contactId,
+      $this->_addToGroupID,
+      $this->_contactProfileId,
+      $this->_ctype,
       TRUE
     );
 
     // get additional custom activity profile field data
     // to save with new signature activity record
     $surveyInfo = $this->bao->getSurveyInfo($this->_surveyId);
-    $customActivityFields = CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
+    $customActivityFields = CRM_Core_BAO_CustomField::getFields(
+      'Activity',
+      FALSE,
+      FALSE,
       $surveyInfo['activity_type_id']
     );
-    $customActivityFields = CRM_Utils_Array::arrayMerge($customActivityFields,
-      CRM_Core_BAO_CustomField::getFields('Activity', FALSE, FALSE,
-        NULL, NULL, TRUE
+    $customActivityFields = CRM_Utils_Array::arrayMerge(
+      $customActivityFields,
+      CRM_Core_BAO_CustomField::getFields(
+        'Activity',
+        FALSE,
+        FALSE,
+        NULL,
+        NULL,
+        TRUE
       )
     );
 
-    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($params,
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customActivityFields,
       NULL,
       'Activity'
@@ -541,10 +546,9 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
    * @return None
    * @access public
    */
-  function buildCustom($id, $name, $viewOnly = FALSE) {
+  public function buildCustom($id, $name, $viewOnly = FALSE) {
 
     if ($id) {
-
 
       $session = CRM_Core_Session::singleton();
       $this->assign("petition", $this->petition);
@@ -573,7 +577,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
                 }
                 */
 
-
         $this->assign($name, $fields);
 
         $addCaptcha = FALSE;
@@ -585,7 +588,6 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
             // ignore file upload fields
             continue;
           }
-
 
           CRM_Core_BAO_UFGroup::buildProfile($this, $field, CRM_Profile_Form::MODE_CREATE, $contactID, TRUE);
           $this->_fields[$key] = $field;
@@ -606,16 +608,17 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     }
   }
 
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
     if ($this->thankyou) {
       return ('CRM/Campaign/Page/Petition/ThankYou.tpl');
     }
-    else {}
+    else {
+    }
     return parent::getTemplateFileName();
   }
 
   // check if user has already signed this petition
-  function redirectIfSigned($params) {
+  public function redirectIfSigned($params) {
     $signature = $this->bao->checkSignature($this->_surveyId, $this->_contactId);
     //TODO: error case when more than one signature found for this petition and this contact
     if (!empty($signature) && (count($signature) == 1)) {
@@ -635,6 +638,3 @@ class CRM_Campaign_Form_Petition_Signature extends CRM_Core_Form {
     }
   }
 }
-
-
-

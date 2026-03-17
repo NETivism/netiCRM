@@ -11,7 +11,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
 
@@ -92,6 +91,8 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
 
   /**
    * Browse all entities.
+   *
+   * @return void
    */
   public function browse() {
     $id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -164,7 +165,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
       }
       $contact = CRM_Contact_BAO_Contact::getDisplayAndImage($dao->created_id);
       $row['id'] = $dao->id;
-      $row['label'] = $dao->label; 
+      $row['label'] = $dao->label;
       if ($dao->description) {
         $row['description'] = $dao->description;
       }
@@ -186,10 +187,10 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
         $completedStatus = $batchStatus['Completed'];
         $canceledStatus = $batchStatus['Canceled'];
         $actions = [];
-        if (isset($meta['download']['file']) && file_exists($meta['download']['file']))  {
+        if (isset($meta['download']['file']) && file_exists($meta['download']['file'])) {
           $download = '<a href="'.CRM_Utils_System::url("civicrm/admin/batch", "reset=1&id={$dao->id}&action=export").'" class="download">'.ts("Download").'</a>';
           if ($dao->status_id == $completedStatus || $dao->status_id == $canceledStatus) {
-            $actions['expiredDate'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400*CRM_Batch_BAO_Batch::EXPIRE_DAY);
+            $actions['expiredDate'] = date('Y-m-d H:i:s', strtotime($dao->modified_date) + 86400 * CRM_Batch_BAO_Batch::EXPIRE_DAY);
             // reset action string when expired
             if (strtotime($actions['expiredDate']) < time()) {
               $actions['downloadExpired'] = ts('Download').' - '.ts("Expired");
@@ -219,8 +220,13 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     */
   }
 
+  /**
+   * Search batches.
+   *
+   * @return void
+   */
   public function search() {
-    if ($this->_action & (CRM_Core_Action::ADD | CRM_Core_Action::UPDATE | CRM_Core_Action::DELETE) ) {
+    if ($this->_action & (CRM_Core_Action::ADD | CRM_Core_Action::UPDATE | CRM_Core_Action::DELETE)) {
       return;
     }
 
@@ -231,6 +237,13 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
     $form->run();
   }
 
+  /**
+   * Process download of batch file.
+   *
+   * @param int $id
+   *
+   * @return void
+   */
   public function processDownload($id) {
     $params = [
       'id' => $id,
@@ -244,7 +257,7 @@ class CRM_Batch_Page_Batch extends CRM_Core_Page_Basic {
         if (isset($batch->data['download']['file']) && file_exists($batch->data['download']['file']) && $expireStamp > time()) {
           if (isset($batch->data['download']['header'])) {
             if (is_array($batch->data['download']['header'])) {
-              foreach($batch->data['download']['header'] as $header) {
+              foreach ($batch->data['download']['header'] as $header) {
                 header($header);
               }
             }

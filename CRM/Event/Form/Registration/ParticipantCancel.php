@@ -28,13 +28,9 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for processing Event
@@ -51,7 +47,6 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_participantId = CRM_Utils_Request::retrieve('participantId', 'Positive', $this);
@@ -64,7 +59,10 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     if ($this->_participantId) {
 
       $params = ['id' => $this->_participantId];
-      CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Participant', $params, $values,
+      CRM_Core_DAO::commonRetrieve(
+        'CRM_Event_DAO_Participant',
+        $params,
+        $values,
         ['contact_id', 'event_id', 'status_id']
       );
     }
@@ -92,27 +90,34 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
 
     if (!$this->_csContactID) {
       $config = CRM_Core_Config::singleton();
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this event registration. Contact the site administrator if you need assistance.'), $config->userFrameworkBaseURL);
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this event registration. Contact the site administrator if you need assistance.'), $config->userFrameworkBaseURL);
     }
   }
 
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-    if(CRM_Utils_Array::value('is_monetary', $values['event'])){
+    if (CRM_Utils_Array::value('is_monetary', $values['event'])) {
       $statusMessage = ts("Cancelling registration only available for free events. Contact your site administrator if you need assistance.");
-       return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
-          FALSE, NULL, FALSE, TRUE
-        ));
+      return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+        'civicrm/event/info',
+        "reset=1&id={$this->_eventId}&noFullMsg=1",
+        FALSE,
+        NULL,
+        FALSE,
+        TRUE
+      ));
       return ;
     }
     $params = ['id' => $this->_eventId];
     $values = [];
-    CRM_Core_DAO::commonRetrieve('CRM_Event_DAO_Event', $params, $values,
+    CRM_Core_DAO::commonRetrieve(
+      'CRM_Event_DAO_Event',
+      $params,
+      $values,
       ['title']
     );
 
@@ -121,9 +126,10 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
     $statusMsg = NULL;
 
     // status class other than Negative should be able to cancel registration.
-    if (CRM_Utils_Array::arrayKeyExists($this->_participantStatusId,
-        CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")
-      )) {
+    if (CRM_Utils_Array::arrayKeyExists(
+      $this->_participantStatusId,
+      CRM_Event_PseudoConstant::participantStatus(NULL, "class != 'Negative'")
+    )) {
       $cancelConfirm = ts('Are you sure you want to cancel your registration for this event?');
       $buttons = array_merge($buttons, [['type' => 'next',
             'name' => ts('Cancel Registration'),
@@ -131,12 +137,13 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
             'js' => ['onclick' => 'return confirm(\'' . $cancelConfirm . '\');'],
           ]]);
       if (!$statusMsg) {
-        $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",FALSE, NULL, FALSE, TRUE );
+        $url = CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1", FALSE, NULL, FALSE, TRUE);
         $statusMsg = ts('You can cancel your registration for %1 by clicking "Cancel Registration".', [1 => "<a href='$url' target='_blank'>".$values['title']."</a>"]);
       }
     }
     if (!$statusMsg) {
-      $statusMsg = ts("Oops, it looks like your registration for %1 has already been cancelled.",
+      $statusMsg = ts(
+        "Oops, it looks like your registration for %1 has already been cancelled.",
         [1 => $values['title']]
       );
     }
@@ -161,7 +168,7 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
       $this->assign('mapKey', $config->mapAPIKey);
       $sumLat = $sumLng = 0;
       $maxLat = $maxLng = -400;
-      $minLat = $minLng = + 400;
+      $minLat = $minLng = +400;
       foreach ($locations as $location) {
         $sumLat += $location['lat'];
         $sumLng += $location['lng'];
@@ -190,16 +197,22 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
       $this->assign_by_ref('center', $center);
       $this->assign_by_ref('span', $span);
       if ($action == CRM_Core_Action::PREVIEW) {
-        $mapURL = CRM_Utils_System::url('civicrm/contact/map/event',
+        $mapURL = CRM_Utils_System::url(
+          'civicrm/contact/map/event',
           "eid={$this->_eventId}&reset=1&action=preview",
-          TRUE, NULL, TRUE,
+          TRUE,
+          NULL,
+          TRUE,
           TRUE
         );
       }
       else {
-        $mapURL = CRM_Utils_System::url('civicrm/contact/map/event',
+        $mapURL = CRM_Utils_System::url(
+          'civicrm/contact/map/event',
           "eid={$this->_eventId}&reset=1",
-          TRUE, NULL, TRUE,
+          TRUE,
+          NULL,
+          TRUE,
           TRUE
         );
       }
@@ -216,9 +229,8 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the button.
@@ -228,7 +240,6 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
 
     if ($buttonName == '_qf_ParticipantCancel_next') {
       //need to registration status to 'cancelled'.
-
 
       $cancelledId = array_search('Cancelled', CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Negative'"));
       $additionalParticipantIds = CRM_Event_BAO_Participant::getAdditionalParticipantIds($participantId);
@@ -248,10 +259,14 @@ class CRM_Event_Form_Registration_ParticipantCancel extends CRM_Event_Form_Regis
         }
       }
 
-       return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url('civicrm/event/info', "reset=1&id={$this->_eventId}&noFullMsg=1",
-          FALSE, NULL, FALSE, TRUE
-        ));
+      return CRM_Core_Error::statusBounce($statusMessage, CRM_Utils_System::url(
+        'civicrm/event/info',
+        "reset=1&id={$this->_eventId}&noFullMsg=1",
+        FALSE,
+        NULL,
+        FALSE,
+        TRUE
+      ));
     }
   }
 }
-

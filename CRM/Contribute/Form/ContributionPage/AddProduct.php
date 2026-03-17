@@ -27,37 +27,37 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
-
 /**
- * form to process actions fo adding product to contribution page
+ * form to process actions for adding product to contribution page
  */
 class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_Form_ContributionPage {
 
-  static $_products;
+  public static $_products;
 
-  static $_pid;
+  public static $_pid;
 
   /**
-   * Function to pre  process the form
+   * Set up variables before the form is built.
    *
-   * @access public
+   * This method initializes the available products for the contribution page
+   * and retrieves the product ID (pid) if editing an existing entry.
    *
-   * @return None
+   * @return void
    */
   public function preProcess() {
     parent::preProcess();
 
     $this->_products = CRM_Contribute_PseudoConstant::products($this->_id);
-    $this->_pid = CRM_Utils_Request::retrieve('pid', 'Positive',
-      $this, FALSE, 0
+    $this->_pid = CRM_Utils_Request::retrieve(
+      'pid',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
 
     if ($this->_pid) {
@@ -72,14 +72,14 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   }
 
   /**
-   * This function sets the default values for the form. Note that in edit/view mode
-   * the default values are retrieved from the database
+   * Set default values for the form.
    *
-   * @access public
+   * Retrieves product ID and weight from the database if in edit mode.
+   * Otherwise, calculates the default weight for a new product.
    *
-   * @return void
+   * @return array<string, float|int> the array of default values for form elements
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_pid) {
@@ -90,8 +90,12 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $defaults['weight'] = $dao->weight;
     }
     if (!isset($defaults['weight']) || !($defaults['weight'])) {
-      $pageID = CRM_Utils_Request::retrieve('id', 'Positive',
-        $this, FALSE, 0
+      $pageID = CRM_Utils_Request::retrieve(
+        'id',
+        'Positive',
+        $this,
+        FALSE,
+        0
       );
 
       $dao = new CRM_Contribute_DAO_Premium();
@@ -106,14 +110,16 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $dao->fetch();
       $defaults['weight'] = $dao->max_weight + 1;
     }
-    RETURN $defaults;
+    return $defaults;
   }
 
   /**
-   * Function to actually build the form
+   * Actually build the form components.
+   *
+   * Handles product selection, weight input, and action-specific layouts
+   * like DELETE confirmation or PREVIEW.
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     $mngPremURL = CRM_Utils_System::url('civicrm/admin/contribute/managePremiums', 'reset=1');
@@ -123,9 +129,14 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $session = CRM_Core_Session::singleton();
       $url = CRM_Utils_System::url($urlParams, 'reset=1&action=update&id=' . $this->_id);
       $session->pushUserContext($url);
-      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean',
-          CRM_Core_DAO::$_nullObject, '', '', 'GET'
-        )) {
+      if (CRM_Utils_Request::retrieve(
+        'confirmed',
+        'Boolean',
+        CRM_Core_DAO::$_nullObject,
+        '',
+        '',
+        'GET'
+      )) {
 
         $dao = new CRM_Contribute_DAO_PremiumsProduct();
         $dao->id = $this->_pid;
@@ -134,8 +145,8 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
         CRM_Utils_System::redirect($url);
       }
 
-
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -152,7 +163,8 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     if ($this->_action & CRM_Core_Action::PREVIEW) {
 
       CRM_Contribute_BAO_Premium::buildPremiumPreviewBlock($this, NULL, $this->_pid);
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Done with Preview'),
             'isDefault' => TRUE,
@@ -176,7 +188,8 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
     $session->pushUserContext(CRM_Utils_System::url($urlParams, 'action=update&reset=1&id=' . $this->_id));
 
     if ($single) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Save'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -194,16 +207,21 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   }
 
   /**
-   * Process the form
+   * Process the form submission.
+   *
+   * Handles deletion, preview redirection, or saving the product-to-page association.
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // get the submitted form values.
     $params = $this->controller->exportValues($this->_name);
-    $pageID = CRM_Utils_Request::retrieve('id', 'Positive',
-      $this, FALSE, 0
+    $pageID = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
+      $this,
+      FALSE,
+      0
     );
     $urlParams = 'civicrm/admin/contribute/premium';
     if ($this->_action & CRM_Core_Action::PREVIEW) {
@@ -238,8 +256,6 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
       $premiumID = $dao->id;
       $params['premiums_id'] = $premiumID;
 
-
-
       $dao = new CRM_Contribute_DAO_PremiumsProduct();
       $dao->copyValues($params);
       $dao->save();
@@ -248,13 +264,11 @@ class CRM_Contribute_Form_ContributionPage_AddProduct extends CRM_Contribute_For
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Add Premium to Contribution Page');
   }
 }
-

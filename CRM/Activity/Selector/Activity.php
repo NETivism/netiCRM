@@ -27,18 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
-
 
 /**
  * This class is used to retrieve and display activities for a contact
@@ -50,23 +41,20 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * This defines two actions - Details and Delete.
    *
    * @var array
-   * @static
    */
-  static $_actionLinks;
+  public static $_actionLinks;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
    *
    * @var array
-   * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * contactId - contact id of contact whose activies are displayed
    *
    * @var int
-   * @access protected
    */
   protected $_contactId;
 
@@ -79,13 +67,12 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * Class constructor
    *
-   * @param int $contactId - contact whose activities we want to display
-   * @param int $permission - the permission we have for this contact
-   *
-   * @return CRM_Contact_Selector_Activity
-   * @access public
+   * @param int $contactId contact whose activities we want to display
+   * @param int $permission the permission we have for this contact
+   * @param bool $admin
+   * @param string $context
    */
-  function __construct($contactId, $permission, $admin = FALSE, $context = 'activity') {
+  public function __construct($contactId, $permission, $admin = FALSE, $context = 'activity') {
     $this->_contactId = $contactId;
     $this->_permission = $permission;
     $this->_admin = $admin;
@@ -102,13 +89,18 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    *
    * - View
    *
-   * @param string $activityType type of activity
+   * @param int $activityTypeId
+   * @param int $sourceRecordId
+   * @param bool $accessMailingReport
+   * @param int $activityId
+   * @param string $key
+   * @param string $compContext
    *
    * @return array
-   * @access public
    *
    */
-  function actionLinks($activityTypeId,
+  public function actionLinks(
+    $activityTypeId,
     $sourceRecordId = NULL,
     $accessMailingReport = FALSE,
     $activityId = NULL,
@@ -139,11 +131,13 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         $qsView = "action=view&reset=1&id={$sourceRecordId}&cid=%%cid%%&context=%%cxt%%{$extraParams}";
       }
     }
-    elseif (in_array($activityTypeId, [
+    elseif (in_array(
+      $activityTypeId,
+      [
       $activityTypeIds['Contribution'],
       $activityTypeIds['Email Receipt'],
       $activityTypeIds['Contribution Notification Email']]
-      )) {
+    )) {
       if ($sourceRecordId) {
         $url = 'civicrm/contact/view/contribution';
         $text = 'View Contribution';
@@ -253,7 +247,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       ];
     }
 
-
     if (CRM_Case_BAO_Case::checkPermission($activityId, 'File On Case', $activityTypeId)) {
       self::$_actionLinks = self::$_actionLinks + [CRM_Core_Action::ADD =>
         [
@@ -310,10 +303,13 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * getter for array of the parameters required for creating pager.
    *
-   * @param
-   * @access public
+   * @param int $action
+   * @param array $params
+   *
+   *
+   * @return void
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Activities %%StatusMessage%%');
     $params['csvString'] = NULL;
     $params['rowCount'] = CRM_Utils_Pager::ROWCOUNT;
@@ -326,13 +322,12 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    * returns the column headers as an array of tuples:
    * (name, sortName (key to the sort array))
    *
-   * @param string $action the action being performed
-   * @param enum   $output what should the result set include (web/email/csv)
+   * @param int $action the action being performed
+   * @param string $output what should the result set include (web/email/csv)
    *
    * @return array the column headers that need to be displayed
-   * @access public
    */
-  function &getColumnHeaders($action = NULL, $output = NULL) {
+  public function &getColumnHeaders($action = NULL, $output = NULL) {
     if ($output == CRM_Core_Selector_Controller::EXPORT || $output == CRM_Core_Selector_Controller::SCREEN) {
       $csvHeaders = [ts('Activity Type'), ts('Description'), ts('Activity Date')];
       foreach (self::_getColumnHeaders() as $column) {
@@ -350,12 +345,12 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * Returns total number of rows for the query.
    *
-   * @param string $action - action being performed
+   * @param int $action - action being performed
+   * @param int $case
    *
    * @return int Total number of rows
-   * @access public
    */
-  function getTotalCount($action, $case = NULL) {
+  public function getTotalCount($action, $case = NULL) {
 
     return CRM_Activity_BAO_Activity::getActivitiesCount($this->_contactId, $this->_admin, $case, $this->_context);
   }
@@ -363,15 +358,16 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
   /**
    * returns all the rows in the given offset and rowCount
    *
-   * @param enum   $action   the action being performed
-   * @param int    $offset   the row number to start from
-   * @param int    $rowCount the number of rows to return
-   * @param string $sort     the sql string that describes the sort order
-   * @param enum   $output   what should the result set include (web/email/csv)
+   * @param int $action the action being performed
+   * @param int $offset the row number to start from
+   * @param int $rowCount the number of rows to return
+   * @param string $sort the sql string that describes the sort order
+   * @param string $output what should the result set include (web/email/csv)
+   * @param int $case
    *
-   * @return int   the total number of rows for this action
+   * @return array the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL, $case = NULL) {
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL, $case = NULL) {
     $params['contact_id'] = $this->_contactId;
     $config = CRM_Core_Config::singleton();
     $rows = CRM_Activity_BAO_Activity::getActivities($params, $offset, $rowCount, $sort, $this->_admin, $case, $this->_context);
@@ -397,7 +393,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $row = &$rows[$k];
 
       if (in_array($row['activity_type_id'], $showDetails)) {
-        $row['details'] = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $row['activity_id'], 'details'); 
+        $row['details'] = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $row['activity_id'], 'details');
       }
 
       // add class to this row if overdue
@@ -434,7 +430,8 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
         }
       }
 
-      $actionLinks = $this->actionLinks(CRM_Utils_Array::value('activity_type_id', $row),
+      $actionLinks = $this->actionLinks(
+        CRM_Utils_Array::value('activity_type_id', $row),
         CRM_Utils_Array::value('source_record_id', $row),
         $accessMailingReport,
         CRM_Utils_Array::value('activity_id', $row),
@@ -444,7 +441,8 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
       $actionMask = array_sum(array_keys($actionLinks)) & $mask;
 
       if ($output != CRM_Core_Selector_Controller::EXPORT && $output != CRM_Core_Selector_Controller::SCREEN) {
-        $row['action'] = CRM_Core_Action::formLink($actionLinks,
+        $row['action'] = CRM_Core_Action::formLink(
+          $actionLinks,
           $actionMask,
           ['id' => $row['activity_id'],
             'cid' => $this->_contactId,
@@ -467,7 +465,7 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('CiviCRM Activity');
   }
 
@@ -476,7 +474,6 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
    *
    *
    * @return array $_columnHeaders
-   * @access private
    */
   private static function &_getColumnHeaders() {
     if (!isset(self::$_columnHeaders)) {
@@ -520,4 +517,3 @@ class CRM_Activity_Selector_Activity extends CRM_Core_Selector_Base implements C
     return self::$_columnHeaders;
   }
 }
-

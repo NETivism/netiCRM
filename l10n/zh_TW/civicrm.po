@@ -1,6 +1,6 @@
 # 
 # Translators:
-# CC Chu <poliphilonet@gmail.com>, 2020-2025
+# CC Chu <poliphilonet@gmail.com>, 2020-2026
 # Chang Shu-huai <junsuwhy@gmail.com>, 2016-2024
 # Charles Chuang, 2022-2024
 # CHUNLIAN WU <susanna@netivism.com.tw>, 2017
@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: netiCRM\n"
 "PO-Revision-Date: 2013-07-25 09:19+0000\n"
-"Last-Translator: 馮 佳今, 2022-2026\n"
+"Last-Translator: CC Chu <poliphilonet@gmail.com>, 2020-2026\n"
 "Language-Team: Chinese (Taiwan) (http://app.transifex.com/netivism-tw/neticrm/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51510,3 +51510,218 @@ msgstr "返回管理感謝禮"
 #: templates/CRM/Contribute/Form/ContributionView.tpl
 msgid "Source IP"
 msgstr "來源 IP 位址"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Site Name and Welcome"
+msgstr "網站名稱與歡迎訊息"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Logo and Background"
+msgstr "Logo 與背景"
+
+#: neticrmp/themes/neticrmp_next
+msgid "User Accounts"
+msgstr "網站使用者帳號"
+
+#: neticrmp/themes/neticrmp_next
+msgid "User Permissions"
+msgstr "網站使用者權限"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Login IP Restriction"
+msgstr "登入IP限制"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Toggle Sidebar Toolbar"
+msgstr "開闔側欄工具列"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Back to Admin Home"
+msgstr "回管理介面首頁"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Quick Search"
+msgstr "快速搜尋"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Start Using netiCRM"
+msgstr "開始使用netiCRM"
+
+#: neticrmp/themes/neticrmp_next
+msgid "Web Administrator Settings"
+msgstr "網站管理員設定"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Latest Contributions"
+msgstr "最新捐款"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "New Event Registrants"
+msgstr "新進報名者"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Recurring Contributions Expiring Soon"
+msgstr "定期定額即將到期"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Memberships Expiring Soon"
+msgstr "會籍即將到期"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "CRM Basics: Forms and Fields"
+msgstr "CRM基礎：表單與欄位"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Start Fundraising"
+msgstr "開始募款"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Invite Supporters to Events"
+msgstr "邀請支持者參加活動"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Recruit Members"
+msgstr "招募會員"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Send Newsletter to Communicate with Supporters"
+msgstr "寄送電子報向支持者傳達理念"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Manage Contact Groups"
+msgstr "設定聯絡人群組"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Form"
+msgstr "建立表單"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid ""
+"Copywriting Assistant: A smart writing tool and your personal editor. Set up"
+" Organization Profile and Role Style to auto-generate effective content for "
+"any scenario."
+msgstr "文案小幫手：是智慧型寫作工具，更是您的個人編輯！設定好「組織簡介」和「角色風格」，就能自動生成各種情境下的高效文案。"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "More Info"
+msgstr "更多介紹"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Fields: The foundation for CRM to record contact data"
+msgstr "欄位：CRM記錄聯絡人資料的基礎"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Forms: Use online forms to collect data directly into CRM"
+msgstr "表單：利用線上表單蒐集資料，直接進到CRM系統"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "There are two types of fields: Default fields,"
+msgstr "欄位有兩種：預設欄位、"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Set Up Contribution Types"
+msgstr "設定組織募款類型"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Manually Add a Contribution"
+msgstr "手動新增一筆捐款"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Set Up Contribution Thank-you Gifts"
+msgstr "設定捐款感謝禮"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Online Contribution Page"
+msgstr "建立線上募款頁"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View All Contribution Pages"
+msgstr "查看所有募款頁"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "More Features"
+msgstr "更多功能"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Add/Manage Event Types"
+msgstr "新增/管理活動類型"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Online Registration Page"
+msgstr "建立線上報名頁"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View Created Event Registration Pages"
+msgstr "查看已建立的活動報名頁"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View Event Registration Status"
+msgstr "查看各活動報名狀況"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Basic Settings"
+msgstr "基本設定"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Membership Fee Settings/Membership Status Change"
+msgstr "會費設定/會員資格變更"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Add/Edit Membership Types"
+msgstr "新增/編輯會員類型"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Invite to Join"
+msgstr "邀請加入"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Membership Signup Page"
+msgstr "建立會員入會頁面"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Add Member"
+msgstr "新增會員"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Introduction to the Newsletter System"
+msgstr "認識電子報系統"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Header/Footer/Auto-Reply Messages"
+msgstr "建立頁首/頁尾/自動回覆訊息"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Newsletter Template"
+msgstr "建立電子報範本"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Offer Subscription"
+msgstr "提供訂閱"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Newsletter Group"
+msgstr "建立電子報群組"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Create Online Subscription Page"
+msgstr "建立線上訂閱頁面"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Edit/Send Newsletter"
+msgstr "編輯/發送電子報"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "Go Now"
+msgstr "立即前往"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.pages.inc
+msgid "View Online Manual"
+msgstr "參閱線上手冊"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.module
+msgid "netiCRM is a free software licensed under %1"
+msgstr "netiCRM 是一套採用 %1 授權的自由軟體"
+
+#: neticrmp/modules/neticrm_preset/neticrm_preset.module
+msgid "%1 is a CRM service for nonprofits provided by NETivism"
+msgstr "%1 是由網絡行動科技提供的非營利組織CRM服務"

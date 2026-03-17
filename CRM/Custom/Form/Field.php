@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * form to process actions on the field aspect of Custom
@@ -44,13 +39,12 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * Constants for number of options for data types of multiple option.
    */
-  CONST NUM_OPTION = 11;
+  public const NUM_OPTION = 11;
 
   /**
    * the custom group id saved to the session for an update
    *
    * @var int
-   * @access protected
    */
   protected $_gid;
 
@@ -58,7 +52,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * The field id, used when editing the field
    *
    * @var int
-   * @access protected
    */
   protected $_id;
 
@@ -66,7 +59,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * The default custom data/input types, when editing the field
    *
    * @var array
-   * @access protected
    */
   protected $_defaultDataType;
 
@@ -79,7 +71,6 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * Array for valid combinations of data_type & html_type
    *
    * @var array
-   * @static
    */
   private static $_dataTypeValues = NULL;
   private static $_dataTypeKeys = NULL;
@@ -109,13 +100,9 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * Function to set variables up before form is built
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function preProcess() {
-
     if (!(self::$_dataTypeKeys)) {
       self::$_dataTypeKeys = array_keys(CRM_Core_BAO_CustomField::dataType());
       self::$_dataTypeValues = array_values(CRM_Core_BAO_CustomField::dataType());
@@ -125,7 +112,8 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $this->_gid = CRM_Utils_Request::retrieve('gid', 'Positive', $this);
 
     if ($this->_gid) {
-      $url = CRM_Utils_System::url('civicrm/admin/custom/group/field',
+      $url = CRM_Utils_System::url(
+        'civicrm/admin/custom/group/field',
         "reset=1&action=browse&gid={$this->_gid}"
       );
 
@@ -175,12 +163,9 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
    * This function sets the default values for the form. Note that in edit/view mode
    * the default values are retrieved from the database
    *
-   * @param null
-   *
-   * @return array    array of default values
-   * @access public
+   * @return array array of default values
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = $this->_values;
 
     if ($this->_id) {
@@ -200,10 +185,12 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
       }
 
       if (CRM_Utils_Array::value('data_type', $defaults)) {
-        $defaultDataType = array_search($defaults['data_type'],
+        $defaultDataType = array_search(
+          $defaults['data_type'],
           self::$_dataTypeKeys
         );
-        $defaultHTMLType = array_search($defaults['html_type'],
+        $defaultHTMLType = array_search(
+          $defaults['html_type'],
           self::$_dataToHTML[$defaultDataType]
         );
         $defaults['data_type'] = ['0' => $defaultDataType,
@@ -246,7 +233,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     }
 
     $config = CRM_Core_Config::singleton();
-    if(!empty($config->externalMembershipIdFieldId) && $config->externalMembershipIdFieldId == $this->_id){
+    if (!empty($config->externalMembershipIdFieldId) && $config->externalMembershipIdFieldId == $this->_id) {
       $defaults['is_external_membership_id'] = 1;
     }
 
@@ -259,10 +246,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
     if ($this->_gid) {
@@ -276,7 +260,8 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $attributes = &CRM_Core_DAO::getAttribute('CRM_Core_DAO_CustomField');
 
     // label
-    $this->add('text',
+    $this->add(
+      'text',
       'label',
       ts('Field Label'),
       $attributes['label'],
@@ -288,7 +273,8 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     foreach ($dt as $key => $value) {
       $it[$key] = self::$_dataToLabels[$key];
     }
-    $sel = &$this->addElement('hierselect',
+    $sel = &$this->addElement(
+      'hierselect',
       'data_type',
       ts('Data and Input Field Type'),
       'onclick="clearSearchBoxes();custom_option_html_type(this.form)"; onBlur="custom_option_html_type(this.form)";',
@@ -305,7 +291,7 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
         $customGroup = [];
         CRM_Core_BAO_CustomGroup::retrieve($params, $customGroup);
         $customFields = CRM_Core_BAO_CustomField::getFields($customGroup['extends']);
-        foreach($customFields as $fieldId => $field) {
+        foreach ($customFields as $fieldId => $field) {
           if ($field['html_type'] == 'Select' && $fieldId != $this->_values['id']) {
             $parentOptions[$fieldId] = $field['label'];
           }
@@ -328,17 +314,20 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
         '2' => ts('Reuse an existing set'),
       ];
 
-      $this->add('select',
+      $this->add(
+        'select',
         'option_group_id',
         ts('Multiple Choice Option Sets'),
         ['' => ts('- select -')] + $optionGroups
       );
     }
 
-    $element = &$this->addRadio('option_type',
+    $element = &$this->addRadio(
+      'option_type',
       ts('Option Type'),
       $optionTypes,
-      ['onclick' => "showOptionSelect();"], '<br/>'
+      ['onclick' => "showOptionSelect();"],
+      '<br/>'
     );
 
     //if empty option group freeze the option type.
@@ -365,17 +354,26 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
 
       $optionAttributes = &CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue');
       // label
-      $this->add('text', 'option_label[' . $i . ']', ts('Label'),
+      $this->add(
+        'text',
+        'option_label[' . $i . ']',
+        ts('Label'),
         $optionAttributes['label']
       );
 
       // value
-      $this->add('text', 'option_value[' . $i . ']', ts('Value'),
+      $this->add(
+        'text',
+        'option_value[' . $i . ']',
+        ts('Value'),
         $optionAttributes['value']
       );
 
       // weight
-      $this->add('text', "option_weight[$i]", ts('Order'),
+      $this->add(
+        'text',
+        "option_weight[$i]",
+        ts('Order'),
         $optionAttributes['weight']
       );
 
@@ -394,7 +392,8 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $_showHide->addToTemplate();
 
     // text length for alpha numeric data types
-    $ele = $this->add('text',
+    $ele = $this->add(
+      'text',
       'text_length',
       ts('Database field length'),
       $attributes['text_length'],
@@ -403,13 +402,15 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $ele->freeze();
     $this->addRule('text_length', ts('Value should be a positive number'), 'integer');
 
-    $this->add('text',
+    $this->add(
+      'text',
       'start_date_years',
       ts('Dates may be up to'),
       $attributes['start_date_years'],
       FALSE
     );
-    $this->add('text',
+    $this->add(
+      'text',
       'end_date_years',
       ts('Dates may be up to'),
       $attributes['end_date_years'],
@@ -419,22 +420,30 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $this->addRule('start_date_years', ts('Value should be a positive number'), 'integer');
     $this->addRule('end_date_years', ts('Value should be a positive number'), 'integer');
 
-    $this->add('select', 'date_format', ts('Date Format'),
+    $this->add(
+      'select',
+      'date_format',
+      ts('Date Format'),
       ['' => ts('- select -')] + CRM_Core_SelectValues::getDatePluginInputFormats()
     );
 
-    $this->add('select', 'time_format', ts('Time'),
+    $this->add(
+      'select',
+      'time_format',
+      ts('Time'),
       ['' => ts('- none -')] + CRM_Core_SelectValues::getTimeFormats()
     );
 
     // for Note field
-    $this->add('text',
+    $this->add(
+      'text',
       'note_columns',
       ts('Width (columns)') . ' ',
       $attributes['note_columns'],
       FALSE
     );
-    $this->add('text',
+    $this->add(
+      'text',
       'note_rows',
       ts('Height (rows)') . ' ',
       $attributes['note_rows'],
@@ -445,7 +454,10 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $this->addRule('note_rows', ts('Value should be a positive number'), 'positiveInteger');
 
     // weight
-    $this->add('text', 'weight', ts('Order'),
+    $this->add(
+      'text',
+      'weight',
+      ts('Order'),
       $attributes['weight'],
       TRUE
     );
@@ -459,16 +471,28 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $this->addRule('options_per_line', ts('must be a numeric value'), 'numeric');
 
     // default value, help pre, help post, mask, attributes, javascript ?
-    $this->add('text', 'default_value', ts('Default Value'),
+    $this->add(
+      'text',
+      'default_value',
+      ts('Default Value'),
       $attributes['default_value']
     );
-    $this->add('textarea', 'help_pre', ts('Field Pre Help'),
+    $this->add(
+      'textarea',
+      'help_pre',
+      ts('Field Pre Help'),
       $attributes['help_pre']
     );
-    $this->add('textarea', 'help_post', ts('Field Post Help'),
+    $this->add(
+      'textarea',
+      'help_post',
+      ts('Field Post Help'),
       $attributes['help_post']
     );
-    $this->add('text', 'mask', ts('Mask'),
+    $this->add(
+      'text',
+      'mask',
+      ts('Mask'),
       $attributes['mask']
     );
 
@@ -479,10 +503,12 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     $this->add('checkbox', 'is_view', ts('View Only?'));
 
     // is searchable ?
-    $this->addElement('checkbox',
+    $this->addElement(
+      'checkbox',
       'is_searchable',
       ts('Is this Field Searchable?'),
-      NULL, ['onclick' => "showSearchRange(this)"]
+      NULL,
+      ['onclick' => "showSearchRange(this)"]
     );
 
     // is searchable by range?
@@ -494,7 +520,8 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
 
     // add buttons
     $js = ['data' => 'click-once'];
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -518,7 +545,8 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::VIEW) {
       $this->freeze();
       $url = CRM_Utils_System::url('civicrm/admin/custom/group/field', 'reset=1&action=browse&gid=' . $this->_gid);
-      $this->addElement('button',
+      $this->addElement(
+        'button',
         'done',
         ts('Done'),
         ['onclick' => "location.href='$url'"]
@@ -526,21 +554,22 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
     }
 
     $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
-    if($type == 'Membership'){
+    if ($type == 'Membership') {
       $config = CRM_Core_Config::singleton();
       $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
-      if(!empty($current_external_membership_id_field_id) && $current_external_membership_id_field_id != $this->_id){
+      if (!empty($current_external_membership_id_field_id) && $current_external_membership_id_field_id != $this->_id) {
         $sql = "SELECT f.label AS field_label, g.title AS group_title, f.custom_group_id FROM civicrm_custom_field f INNER JOIN civicrm_custom_group g ON f.custom_group_id = g.id WHERE f.id = %1";
         $param = [1 => [$current_external_membership_id_field_id, 'Integer']];
         $dao = CRM_Core_DAO::executeQuery($sql, $param);
-        if($dao->fetch()){
+        if ($dao->fetch()) {
           $this->assign('current_external_membership_id_field_title', $dao->field_label);
           $this->assign('current_external_membership_id_group_title', $dao->group_title);
           $this->assign('current_external_membership_id_group_id', $dao->custom_group_id);
         }
       }
 
-      $this->addElement('checkbox',
+      $this->addElement(
+        'checkbox',
         'is_external_membership_id',
         ts('External Membership ID Field')
       );
@@ -550,14 +579,14 @@ class CRM_Custom_Form_Field extends CRM_Core_Form {
   /**
    * global validation rules for the form
    *
-   * @param array  $fields   (referance) posted values of the form
+   * @param array $fields (referance) posted values of the form
+   * @param array $files
+   * @param CRM_Custom_Form_Field $self
    *
-   * @return array    if errors then list of errors to be posted back to the form,
+   * @return array|bool if errors then list of errors to be posted back to the form,
    *                  true otherwise
-   * @static
-   * @access public
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $default = CRM_Utils_Array::value('default_value', $fields);
 
     $errors = [];
@@ -814,7 +843,6 @@ AND    option_group_id = %2";
       }
     }
 
-
     $assignError = new CRM_Core_Page();
     if ($_rowError) {
       $_showHide->addToTemplate();
@@ -863,7 +891,6 @@ AND    option_group_id = %2";
       $errors['is_view'] = ts('Can not set this field Required and View Only at the same time.');
     }
 
-
     if (CRM_Utils_Array::value('is_searchable', $fields)) {
       $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $self->_gid, 'table_name');
       $existsIndexCount = CRM_Core_BAO_SchemaHandler::checkIndexCountByTable($tableName);
@@ -878,10 +905,7 @@ AND    option_group_id = %2";
   /**
    * Process the form
    *
-   * @param null
-   *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // store the submitted values in an array
@@ -899,22 +923,22 @@ AND    option_group_id = %2";
 
     $type = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $this->_gid, 'extends');
 
-    if($type == 'Membership'){
+    if ($type == 'Membership') {
       $config = CRM_Core_Config::singleton();
       $current_external_membership_id_field_id = $config->externalMembershipIdFieldId;
 
-      if(empty($this->_id)){
+      if (empty($this->_id)) {
         $this_field_id = CRM_Core_DAO::singleValueQuery("SELECT `AUTO_INCREMENT` FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'civicrm_custom_field'");
       }
-      else{
+      else {
         $this_field_id = $this->_id;
       }
 
-      if($current_external_membership_id_field_id != $this_field_id ){
+      if ($current_external_membership_id_field_id != $this_field_id) {
         $add['externalMembershipIdFieldId'] = $this_field_id;
       }
-      else{
-        if(!$this->controller->exportValues('is_external_membership_id')){
+      else {
+        if (!$this->controller->exportValues('is_external_membership_id')) {
           $add['externalMembershipIdFieldId'] = FALSE;
         }
       }
@@ -976,7 +1000,6 @@ SELECT id
       }
     }
 
-
     // need the FKEY - custom group id
     $params['custom_group_id'] = $this->_gid;
 
@@ -1001,23 +1024,25 @@ SELECT id
     $cache = &CRM_Utils_Cache::singleton();
     $cache->delete('*CRM_Core_DAO_CustomGroup*');
 
-    CRM_Core_Session::setStatus(ts('Your custom field \'%1\' has been saved.',
-        [1 => $customField->label]
-      ));
+    CRM_Core_Session::setStatus(ts(
+      'Your custom field \'%1\' has been saved.',
+      [1 => $customField->label]
+    ));
 
     $buttonName = $this->controller->getButtonName();
     $session = CRM_Core_Session::singleton();
     if ($buttonName == $this->getButtonName('next', 'new')) {
       CRM_Core_Session::setStatus(ts(' You can add another custom field.'));
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field/add',
-          'reset=1&action=add&gid=' . $this->_gid
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/admin/custom/group/field/add',
+        'reset=1&action=add&gid=' . $this->_gid
+      ));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/admin/custom/group/field',
-          'reset=1&action=browse&gid=' . $this->_gid
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/admin/custom/group/field',
+        'reset=1&action=browse&gid=' . $this->_gid
+      ));
     }
   }
 }
-

@@ -26,10 +26,9 @@
 */
 
 /**
+ * Mail store implementation for reading messages from a POP3 server
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
@@ -48,10 +47,8 @@ class CRM_Mailing_MailStore_Pop3 extends CRM_Mailing_MailStore {
    * @param string $username  authentication username
    * @param string $password  authentication password
    * @param bool   $ssl       whether to use POP3 or POP3S
-   *
-   * @return void
    */
-  function __construct($host, $username, $password, $ssl = TRUE) {
+  public function __construct($host, $username, $password, $ssl = TRUE) {
     if ($this->_debug) {
       print "connecting to $host and authenticating as $username\n";
     }
@@ -71,12 +68,12 @@ class CRM_Mailing_MailStore_Pop3 extends CRM_Mailing_MailStore {
    *
    * @return void
    */
-  function markIgnored($nr) {
+  public function markIgnored($nr) {
     if ($this->_debug) {
       print "fetching message $nr and putting it in the ignored mailbox\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_ignored);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_transport->delete($nr);
   }
@@ -88,14 +85,13 @@ class CRM_Mailing_MailStore_Pop3 extends CRM_Mailing_MailStore {
    *
    * @return void
    */
-  function markProcessed($nr) {
+  public function markProcessed($nr) {
     if ($this->_debug) {
       print "fetching message $nr and putting it in the processed mailbox\n";
     }
     $set = new ezcMailStorageSet($this->_transport->fetchByMessageNr($nr), $this->_processed);
-    $parser = new ezcMailParser;
+    $parser = new ezcMailParser();
     $parser->parseMail($set);
     $this->_transport->delete($nr);
   }
 }
-

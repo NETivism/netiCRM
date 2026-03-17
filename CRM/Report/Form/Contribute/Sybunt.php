@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
 
@@ -48,7 +44,11 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     'barChart' => 'Bar Chart',
     'pieChart' => 'Pie Chart',
   ];
-  protected $_add2groupSupported = FALSE; function __construct() {
+  protected $_add2groupSupported = FALSE;
+  /**
+   * Class constructor.
+   */
+  public function __construct() {
     $yearsInPast = 8;
     $yearsInFuture = 2;
     $date = CRM_Core_SelectValues::date('custom', NULL, $yearsInPast, $yearsInFuture);
@@ -154,11 +154,21 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     $current_year = $this->_params['yid_value'];
@@ -190,7 +200,8 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
               $this->_columnHeaders["{$previous_year}"]['title'] = $previous_year;
 
               $this->_columnHeaders["civicrm_life_time_total"]['type'] = $field['type'];
-              $this->_columnHeaders["civicrm_life_time_total"]['title'] = 'LifeTime';;
+              $this->_columnHeaders["civicrm_life_time_total"]['title'] = 'LifeTime';
+              ;
             }
             elseif ($fieldName == 'receive_date') {
               $select[] = "Year({$field['dbAlias']} ) as {$tableName}_{$fieldName}";
@@ -211,7 +222,12 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
+  public function from() {
 
     $this->_from = " 
         FROM  civicrm_contribution  {$this->_aliases['civicrm_contribution']}
@@ -226,7 +242,12 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
                             {$this->_aliases['civicrm_phone']}.is_primary = 1 ";
   }
 
-  function where() {
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
+  public function where() {
     $this->_where = "";
     $this->_statusClause = "";
     foreach ($this->_columns as $tableName => $table) {
@@ -248,7 +269,8 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
             }
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -267,7 +289,6 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
       }
     }
 
-
     if (empty($clauses)) {
       $this->_where = "WHERE {$this->_aliases['civicrm_contribution']}.is_test = 0 ";
     }
@@ -279,12 +300,24 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Set group by clause.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->assign('chartSupported', TRUE);
     $this->_groupBy = "Group BY {$this->_aliases['civicrm_contribution']}.contact_id, Year({$this->_aliases['civicrm_contribution']}.receive_date) WITH ROLLUP ";
   }
 
-  function statistics(&$rows) {
+  /**
+   * Calculate statistics.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
 
     if (!empty($rows)) {
@@ -304,7 +337,12 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     return $statistics;
   }
 
-  function postProcess() {
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
+  public function postProcess() {
     // get ready with post process params
     $this->beginPostProcess();
 
@@ -382,7 +420,14 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     $this->endPostProcess($rows);
   }
 
-  function buildChart(&$rows) {
+  /**
+   * Build chart.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function buildChart(&$rows) {
     $graphRows = [];
     $count = 0;
     $current_year = $this->_params['yid_value'];
@@ -415,16 +460,25 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     }
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
 
     foreach ($rows as $rowNum => $row) {
       //Convert Display name into link
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_sort_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('civicrm_contribution_contact_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['civicrm_contribution_contact_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['civicrm_contact_sort_name_link'] = $url;
         $rows[$rowNum]['civicrm_contact_sort_name_hover'] = ts("View Contribution Details for this Contact.");
@@ -432,4 +486,3 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
     }
   }
 }
-

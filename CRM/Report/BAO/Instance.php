@@ -27,29 +27,34 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
 
   /**
-   * Delete the instance of the Report
+   * Delete a report instance by ID.
    *
-   * @return $results no of deleted Instance  on success, false otherwise
-   * @access public
+   * @param int|null $id The ID of the report instance to delete.
    *
+   * @return bool TRUE on success, FALSE otherwise.
    */
-  static function deleteInstance($id = NULL) {
+  public static function deleteInstance($id = NULL) {
     $dao = new CRM_Report_DAO_Instance();
     $dao->id = $id;
     return $dao->delete();
   }
 
-  static function retrieve($params, &$defaults) {
+  /**
+   * Retrieve a report instance and populate defaults array.
+   *
+   * @param array $params Key-value pairs used to find the instance (e.g. ['id' => 1]).
+   * @param array &$defaults Output array populated with the instance field values.
+   *
+   * @return CRM_Report_DAO_Instance|null The DAO object if found, NULL otherwise.
+   */
+  public static function retrieve($params, &$defaults) {
     $instance = new CRM_Report_DAO_Instance();
     $instance->copyValues($params);
 
@@ -61,4 +66,3 @@ class CRM_Report_BAO_Instance extends CRM_Report_DAO_Instance {
     return NULL;
   }
 }
-

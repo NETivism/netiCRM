@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class acts like a psuedo-BAO for transient import job tables
@@ -42,9 +38,9 @@ class CRM_Import_ImportJob {
   /**
    * default segementation of import job
    */
-  CONST BATCH_THRESHOLD = 2000, BATCH_LIMIT = 2000;
+  public const BATCH_THRESHOLD = 2000, BATCH_LIMIT = 2000;
 
-  CONST TABLE_PREFIX = 'civicrm_import_job';
+  public const TABLE_PREFIX = 'civicrm_import_job';
 
   protected $_tableName;
   protected $_primaryKeyName;
@@ -65,6 +61,13 @@ class CRM_Import_ImportJob {
 
   protected $_parser;
 
+  /**
+   * Class constructor.
+   *
+   * @param string $tableName
+   * @param string $createSql
+   * @param bool $createTable
+   */
   public function __construct($tableName = NULL, $createSql = NULL, $createTable = FALSE) {
     $dao = new CRM_Core_DAO();
     $db = $dao->getDatabaseConnection();
@@ -90,10 +93,22 @@ class CRM_Import_ImportJob {
     $this->_tableName = $tableName;
   }
 
+  /**
+   * Get table name.
+   *
+   * @return string
+   */
   public function getTableName() {
     return $this->_tableName;
   }
 
+  /**
+   * Check if import is complete.
+   *
+   * @param bool $dropIfComplete
+   *
+   * @return bool
+   */
   public function isComplete($dropIfComplete = FALSE) {
     if (!$this->_statusFieldName) {
       CRM_Core_Error::fatal("Could not get name of the import status field");
@@ -112,6 +127,13 @@ class CRM_Import_ImportJob {
     return TRUE;
   }
 
+  /**
+   * Set job parameters.
+   *
+   * @param array $params
+   *
+   * @return void
+   */
   public function setJobParams(&$params) {
     foreach ($params as $param => $value) {
       $index = "_".$param;
@@ -119,10 +141,22 @@ class CRM_Import_ImportJob {
     }
   }
 
+  /**
+   * Set form variables.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public function setFormVariables($form) {
     $this->_parser->set($form, CRM_Import_Parser::MODE_IMPORT);
   }
 
+  /**
+   * Get incomplete import tables.
+   *
+   * @return array{}
+   */
   public static function getIncompleteImportTables() {
     $dao = new CRM_Core_DAO();
     $database = $dao->database();

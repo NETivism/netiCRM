@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Synchronizing CMS Users
@@ -44,12 +40,12 @@ class CRM_Admin_Form_CMSUser extends CRM_Core_Form {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('OK'),
           'isDefault' => TRUE,
@@ -64,13 +60,11 @@ class CRM_Admin_Form_CMSUser extends CRM_Core_Form {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 
     CRM_Core_BAO_CMSUser::synchronize();
   }
 }
-

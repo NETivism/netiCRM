@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,21 +39,21 @@ class CRM_Contact_Form_Edit_OpenID {
   /**
    * build the form elements for an open id object
    *
-   * @param CRM_Core_Form $form       reference to the form object
-   * @param array         $location   the location object to store all the form elements in
-   * @param int           $locationId the locationId we are dealing with
-   * @param int           $count      the number of blocks to create
+   * @param object $form (reference) reference to the form object
    *
    * @return void
    * @access public
    * @static
    */
-  static function buildQuickForm(&$form) {
+  public static function buildQuickForm(&$form) {
     $blockId = ($form->get('OpenID_Block_Count')) ? $form->get('OpenID_Block_Count') : 1;
 
     $form->applyFilter('__ALL__', 'trim');
 
-    $form->addElement('text', "openid[$blockId][openid]", ts('OpenID'),
+    $form->addElement(
+      'text',
+      "openid[$blockId][openid]",
+      ts('OpenID'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OpenID', 'openid')
     );
     $form->addRule("openid[$blockId][openid]", ts('OpenID is not a valid URL.'), 'url');
@@ -74,4 +72,3 @@ class CRM_Contact_Form_Edit_OpenID {
     $form->addElement('radio', "openid[$blockId][is_primary]", '', '', '1', $js);
   }
 }
-

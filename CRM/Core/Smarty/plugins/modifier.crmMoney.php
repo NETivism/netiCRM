@@ -27,24 +27,20 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 /**
- * Format the given monetary amount (and currency) for display
+ * Format a monetary amount for display.
  *
- * @param float $amount     the monetary amount up for display
- * @param string $currency  the (optional) currency
+ * @param float $amount the monetary amount to format
+ * @param string|null $currency the currency code (optional)
+ * @param string|null $format format string
+ * @param bool $onlyNumber whether to return only the number part
  *
- * @return string  formatted monetary amount
- * @access public
+ * @return string formatted monetary amount
  */
 function smarty_modifier_crmMoney($amount, $currency = NULL, $format = NULL, $onlyNumber = FALSE) {
   return CRM_Utils_Money::format($amount, $currency, $format, $onlyNumber);
 }
-

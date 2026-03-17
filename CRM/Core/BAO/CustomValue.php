@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Business objects for managing custom data values.
@@ -42,14 +38,12 @@
 class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
 
   /**
-   * Validate a value against a CustomField type
+   * Validate a value against a CustomField type.
    *
-   * @param string $type  The type of the data
-   * @param string $value The data to be validated
+   * @param string $type The type of the data (e.g., 'Memo', 'String', 'Int')
+   * @param mixed $value The data to be validated
    *
-   * @return boolean True if the value is of the specified type
-   * @access public
-   * @static
+   * @return bool True if the value is of the specified type
    */
   public static function typecheck($type, $value) {
 
@@ -82,9 +76,11 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
         $valid = FALSE;
         $mulValues = explode(',', $value);
         foreach ($mulValues as $key => $state) {
-          $valid = CRM_Utils_Array::arrayKeyExists(strtolower(trim($state)),
+          $valid = CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($state)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::stateProvinceAbbreviation()), CASE_LOWER)
-          ) || CRM_Utils_Array::arrayKeyExists(strtolower(trim($state)),
+          ) || CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($state)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::stateProvince()), CASE_LOWER)
           );
           if (!$valid) {
@@ -99,9 +95,11 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
         $valid = FALSE;
         $mulValues = explode(',', $value);
         foreach ($mulValues as $key => $country) {
-          $valid = CRM_Utils_Array::arrayKeyExists(strtolower(trim($country)),
+          $valid = CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($country)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::countryIsoCode()), CASE_LOWER)
-          ) || CRM_Utils_Array::arrayKeyExists(strtolower(trim($country)),
+          ) || CRM_Utils_Array::arrayKeyExists(
+            strtolower(trim($country)),
             array_change_key_case(array_flip(CRM_Core_PseudoConstant::country()), CASE_LOWER)
           );
           if (!$valid) {
@@ -118,24 +116,22 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
           if ($value[0] != '/') {
             $file_path = CRM_Utils_File::baseFilePath().$value;
           }
-          else{
+          else {
             $file_path = $value;
           }
           return file_exists($file_path);
         }
-        return;
+        return FALSE;
     }
     return FALSE;
   }
 
   /**
-   * given a 'civicrm' type string, return the mysql data store area
+   * Given a 'civicrm' type string, return the MySQL data store column prefix.
    *
-   * @param string $type the civicrm type string
+   * @param string $type the CiviCRM type string
    *
-   * @return the mysql data store placeholder
-   * @access public
-   * @static
+   * @return string|null the MySQL data store placeholder
    */
   public static function typeToField($type) {
     switch ($type) {
@@ -170,7 +166,15 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
     }
   }
 
-
+  /**
+   * Fix memo type fields by adding wildcards if they are missing.
+   *
+   * Also handles ID mapping for ContactReference fields.
+   *
+   * @param array &$formValues associative array of form values
+   *
+   * @return void
+   */
   public static function fixFieldValueOfTypeMemo(&$formValues) {
     if (empty($formValues)) {
       return NULL;
@@ -183,19 +187,24 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
         continue;
       }
 
-      $htmlType = CRM_Core_DAO::getFieldValue('CRM_Core_BAO_CustomField',
-        substr($key, 7), 'html_type'
+      $htmlType = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_BAO_CustomField',
+        substr($key, 7),
+        'html_type'
       );
       if (($htmlType == 'TextArea') &&
-        !((substr($formValues[$key], 0, 1) == '%') ||
+        !(
+          (substr($formValues[$key], 0, 1) == '%') ||
           (substr($formValues[$key], -1, 1) == '%')
         )
       ) {
         $formValues[$key] = '%' . $formValues[$key] . '%';
       }
 
-      $dataType = CRM_Core_DAO::getFieldValue('CRM_Core_BAO_CustomField',
-        substr($key, 7), 'data_type'
+      $dataType = CRM_Core_DAO::getFieldValue(
+        'CRM_Core_BAO_CustomField',
+        substr($key, 7),
+        'data_type'
       );
       if (($dataType == 'ContactReference') && ($htmlType == 'Autocomplete-Select')) {
         $formValues[$key] = $formValues[$key . '_id'];
@@ -204,15 +213,14 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
   }
 
   /**
-   * Function to delet option value give an option value and custom group id
+   * Delete a custom value record from the corresponding custom value table.
    *
    * @param int $customValueID custom value ID
    * @param int $customGroupID custom group ID
    *
    * @return void
-   * @static
    */
-  static function deleteCustomValue($customValueID, $customGroupID) {
+  public static function deleteCustomValue($customValueID, $customGroupID) {
     // first we need to find custom value table, from custom group ID
     $tableName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_CustomGroup', $customGroupID, 'table_name');
 
@@ -221,4 +229,3 @@ class CRM_Core_BAO_CustomValue extends CRM_Core_DAO {
     CRM_Core_DAO::executeQuery($sql);
   }
 }
-

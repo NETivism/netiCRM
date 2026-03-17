@@ -27,30 +27,44 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Group_Form_Search extends CRM_Core_Form {
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     parent::preProcess();
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values.
+   *
+   * @return array<string, int>
+   */
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['active_status'] = 1;
     return $defaults;
   }
 
+  /**
+   * Build the form.
+   *
+   * @return void
+   */
   public function buildQuickForm() {
-    $this->add('text', 'title', ts('Find'),
+    $this->add(
+      'text',
+      'title',
+      ts('Find'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Group', 'title')
     );
-
 
     $groupTypes = CRM_Core_OptionGroup::values('group_type', TRUE);
     foreach ($groupTypes as $g => $v) {
@@ -62,21 +76,36 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
       unset($groupTypes['Access Control']);
     }
 
-    $this->addCheckBox('group_type',
+    $this->addCheckBox(
+      'group_type',
       ts('Type'),
       $tsGroupTypes,
-      NULL, NULL, NULL, NULL, '<br>'
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      '<br>'
     );
 
-    $this->addCheckBox('group_mode',
+    $this->addCheckBox(
+      'group_mode',
       ts('Mode'),
       [
         '0' => ts('Normal'),
         '1' => ts('Smart'),
-      ], NULL, NULL, NULL, NULL, '<br>', TRUE
+      ],
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      '<br>',
+      TRUE
     );
 
-    $this->add('select', 'visibility', ts('Visibility'),
+    $this->add(
+      'select',
+      'visibility',
+      ts('Visibility'),
       ['' => ts('- any visibility -')] + CRM_Core_SelectValues::ufVisibility(TRUE)
     );
     $this->addElement('checkbox', 'active_status', ts('Enabled'));
@@ -91,7 +120,12 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
     parent::buildQuickForm();
   }
 
-  function postProcess() {
+  /**
+   * Process the form.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();
     if (!empty($params)) {
@@ -109,4 +143,3 @@ class CRM_Group_Form_Search extends CRM_Core_Form {
     }
   }
 }
-

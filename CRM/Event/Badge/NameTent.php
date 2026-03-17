@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
 * Copyright (C) 2010 Tech To The People
 * Licensed to CiviCRM under the Academic Free License version 3.0.
@@ -34,10 +33,8 @@
 
 /**
  *
- * @package CRM
  *
  */
-
 
 class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
   /**
@@ -51,7 +48,10 @@ class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
    */
   public $format;
   public $pdf;
-  function __construct() {
+  /**
+   * class constructor
+   */
+  public function __construct() {
     parent::__construct();
     // A4
     $pw = 297;
@@ -67,6 +67,13 @@ class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
     //      $this->setDebug ();
   }
 
+  /**
+   * Write one side
+   *
+   * @param array $participant
+   *
+   * @return void
+   */
   protected function writeOneSide(&$participant) {
     $this->pdf->SetXY(0, $this->pdf->height / 2);
     $this->printBackground(TRUE);
@@ -79,6 +86,13 @@ class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
     $this->pdf->Write(0, $participant['current_employer'], NULL, NULL, 'C');
   }
 
+  /**
+   * Generate label
+   *
+   * @param array $participant
+   *
+   * @return void
+   */
   public function generateLabel($participant) {
     $this->writeOneSide($participant);
     $this->pdf->StartTransform();
@@ -87,4 +101,3 @@ class CRM_Event_Badge_NameTent extends CRM_Event_Badge {
     $this->pdf->StopTransform();
   }
 }
-

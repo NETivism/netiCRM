@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Error Handling and Debugging
@@ -45,10 +41,9 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
   protected $_oldSiteName;
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Update Directory Path and URL'));
@@ -69,7 +64,12 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     parent::buildQuickForm();
   }
 
-  function setDefaultValues() {
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array
+   */
+  public function setDefaultValues() {
     if (!$this->_defaults) {
       parent::setDefaultValues();
 
@@ -83,19 +83,32 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     return $this->_defaults;
   }
 
-  static function formRule($fields) {
+  /**
+   * Global form rule.
+   *
+   * @param array $fields
+   *
+   * @return bool|array
+   */
+  public static function formRule($fields) {
     $tmpDir = trim($fields['newBaseDir']);
 
     $errors = [];
-    if (!is_writeable($tmpDir)) {
-      $errors['newBaseDir'] = ts('%1 directory does not exist or cannot be written by webserver',
+    if (!is_writable($tmpDir)) {
+      $errors['newBaseDir'] = ts(
+        '%1 directory does not exist or cannot be written by webserver',
         [1 => $tmpDir]
       );
     }
     return $errors;
   }
 
-  function postProcess() {
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void
+   */
+  public function postProcess() {
     // redirect to admin page after saving
     $session = CRM_Core_Session::singleton();
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin'));
@@ -103,7 +116,7 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     $params = $this->controller->exportValues($this->_name);
 
     //CRM-5679
-    foreach ($params as $name => & $val) {
+    foreach ($params as $name => &$val) {
       if ($val && in_array($name, ['newBaseURL', 'newBaseDir', 'newSiteName'])) {
         $val = CRM_Utils_File::addTrailingSlash($val);
       }
@@ -120,7 +133,8 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
       $to[] = $params['newSiteName'];
     }
 
-    $newValues = str_replace($from,
+    $newValues = str_replace(
+      $from,
       $to,
       $this->_defaults
     );
@@ -130,4 +144,3 @@ class CRM_Admin_Form_Setting_UpdateConfigBackend extends CRM_Admin_Form_Setting 
     parent::rebuildMenu();
   }
 }
-

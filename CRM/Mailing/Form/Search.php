@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
 
 class CRM_Mailing_Form_Search extends CRM_Core_Form {
 
@@ -41,7 +38,10 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
   }
 
   public function buildQuickForm() {
-    $this->add('text', 'mailing_name', ts('Mailing Name'),
+    $this->add(
+      'text',
+      'mailing_name',
+      ts('Mailing Name'),
       CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'title')
     );
     $this->add('text', 'mailing_subject', ts('Mailing Subject'), CRM_Core_DAO::getAttribute('CRM_Mailing_DAO_Mailing', 'subject'));
@@ -55,7 +55,6 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
 
     CRM_Campaign_BAO_Campaign::addCampaignInComponentSearch($this);
 */
-
 
     $status = [
       '' => ts('- none -'),
@@ -74,7 +73,10 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
       ]);
   }
 
-  function setDefaultValues() {
+  /**
+   * @return array<string, non-empty-array<string, int>>
+   */
+  public function setDefaultValues() {
     $defaults = [];
     foreach ([
         'Scheduled', 'Complete', 'Running',
@@ -84,7 +86,7 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
     return $defaults;
   }
 
-  function postProcess() {
+  public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
 
     $parent = $this->controller->getParent();
@@ -111,4 +113,3 @@ class CRM_Mailing_Form_Search extends CRM_Core_Form {
     }
   }
 }
-

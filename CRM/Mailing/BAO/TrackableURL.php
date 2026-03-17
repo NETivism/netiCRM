@@ -27,33 +27,28 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
 
 class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
 
   public $N;
   /**
-   * class constructor
+   * Class constructor.
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Given a url, mailing id and queue event id, find or construct a
-   * trackable url and redirect url.
+   * Given a url, mailing id and queue event id, find or construct a trackable url and redirect url.
    *
-   * @param string $url       The target url to track
-   * @param int $mailing_id   The id of the mailing
-   * @param int $queue_id     The queue event id (contact clicking through)
+   * @param string $url The target url to track.
+   * @param int $mailing_id The id of the mailing.
+   * @param int $queue_id The queue event id (contact clicking through).
    *
-   * @return string $redirect The redirect/tracking url
-   * @static
+   * @return string The redirect/tracking url.
    */
   public static function getTrackerURL($url, $mailing_id, $queue_id) {
 
@@ -106,6 +101,16 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
     return $returnUrl;
   }
 
+  /**
+   * Scan a message for URLs and replace them with trackable URLs.
+   *
+   * @param string $msg (reference) The message content to scan.
+   * @param int $mailing_id The mailing ID.
+   * @param int $queue_id The queue event ID.
+   * @param bool $onlyHrefs Whether to scan only href attributes.
+   *
+   * @return void
+   */
   public static function scan_and_replace(&$msg, $mailing_id, $queue_id, $onlyHrefs = FALSE) {
     if (!$mailing_id) {
       return;
@@ -129,6 +134,13 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
     $msg = preg_replace($pattern, $replacement, $msg);
   }
 
+  /**
+   * Get the count of trackable URLs for a mailing.
+   *
+   * @param int $mailing_id The mailing ID.
+   *
+   * @return int The count of trackable URLs.
+   */
   public static function getTrackerURLCount($mailing_id) {
     $tracker = new CRM_Mailing_BAO_TrackableURL();
     $tracker->mailing_id = $mailing_id;
@@ -138,4 +150,3 @@ class CRM_Mailing_BAO_TrackableURL extends CRM_Mailing_DAO_TrackableURL {
     return 0;
   }
 }
-

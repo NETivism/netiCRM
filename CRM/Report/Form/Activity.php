@@ -27,29 +27,64 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Report_Form_Activity extends CRM_Report_Form {
 
   /**
-   * @var never[]
+   * Column headers for the report output.
+   *
+   * @var array
    */
   public $_columnHeaders;
-  public $_from;
-  public $_aliases;
-  public $_where;
+
   /**
-   * @var never[]|mixed[]|string[]|string
+   * The FROM clause of the report query.
+   *
+   * @var string
+   */
+  public $_from;
+
+  /**
+   * Table alias mappings.
+   *
+   * @var array
+   */
+  public $_aliases;
+
+  /**
+   * The WHERE clause of the report query.
+   *
+   * @var string
+   */
+  public $_where;
+
+  /**
+   * The GROUP BY clause of the report query.
+   *
+   * @var array|string
    */
   public $_groupBy;
+
+  /**
+   * Whether to generate absolute URLs in report output.
+   *
+   * @var bool
+   */
   public $_absoluteUrl;
+
   protected $_emailField = FALSE;
-  protected $_customGroupExtends = ['Activity']; function __construct() {
+  protected $_customGroupExtends = ['Activity'];
+
+  /**
+   * Class constructor.
+   *
+   * Initializes column definitions, filters, and group-by options
+   * for the Activity Detail report.
+   */
+  public function __construct() {
     $config = CRM_Core_Config::singleton();
     $campaignEnabled = in_array("CiviCampaign", $config->enableComponents);
     $this->_columns = [
@@ -242,7 +277,12 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function select() {
+  /**
+   * Build the SELECT clause for the report query.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -267,7 +307,12 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function from() {
+  /**
+   * Build the FROM clause for the report query.
+   *
+   * @return void
+   */
+  public function from() {
 
     $this->_from = "
         FROM civicrm_activity {$this->_aliases['civicrm_activity']}
@@ -311,7 +356,12 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
   }
 
-  function where() {
+  /**
+   * Build the WHERE clause for the report query.
+   *
+   * @return void
+   */
+  public function where() {
     $this->_where = " WHERE civicrm_option_group.name = 'activity_type' AND 
                                 {$this->_aliases['civicrm_activity']}.is_test = 0 AND
                                 {$this->_aliases['civicrm_activity']}.is_deleted = 0 AND
@@ -333,7 +383,8 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
           else {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -361,7 +412,12 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
   }
 
-  function groupBy() {
+  /**
+   * Build the GROUP BY clause for the report query.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = [];
     if (!empty($this->_params['group_bys'])) {
       foreach ($this->_columns as $tableName => $table) {
@@ -378,7 +434,18 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     $this->_groupBy = "GROUP BY " . CRM_Utils_Array::implode(', ', $this->_groupBy) . " ";
   }
 
-  function buildACLClause($tableAlias = 'contact_a') {
+  /**
+   * Build the ACL clause for contact access control.
+   *
+   * Overrides the parent to handle multiple contact roles
+   * (source, assignee, target) in activity reports.
+   *
+   * @param string|array $tableAlias
+   *   The table alias(es) to use for ACL filtering.
+   *
+   * @return void
+   */
+  public function buildACLClause($tableAlias = 'contact_a') {
     //override for ACL( Since Cotact may be source
     //contact/assignee or target also it may be null )
 
@@ -400,7 +467,7 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         CRM_Contact_BAO_Contact_Permission::cache( $contactID );
         $clauses = array();
         foreach( $tableAlias as $k => $alias ) {
-            $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON ( {$alias}.id = aclContactCache_{$k}.contact_id OR {$alias}.id IS NULL ) AND aclContactCache_{$k}.user_id = $contactID ";  
+            $clauses[] = " INNER JOIN civicrm_acl_contact_cache aclContactCache_{$k} ON ( {$alias}.id = aclContactCache_{$k}.contact_id OR {$alias}.id IS NULL ) AND aclContactCache_{$k}.user_id = $contactID ";
         }
 
         $this->_aclFrom  = CRM_Utils_Array::implode(" ", $clauses );
@@ -408,20 +475,37 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
         */
   }
 
-  function postProcess() {
+  /**
+   * Process the report after form submission.
+   *
+   * Builds ACL clauses and delegates to the parent postProcess.
+   *
+   * @return void
+   */
+  public function postProcess() {
 
     $this->buildACLClause(['contact_civireport', 'civicrm_contact_target', 'civicrm_contact_assignee']);
     parent::postProcess();
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Alter the display of report rows.
+   *
+   * Converts IDs to labels for activity types and statuses,
+   * and adds links to contact and activity detail views.
+   *
+   * @param array $rows
+   *   The report result rows, passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
 
     $entryFound = FALSE;
     $activityType = CRM_Core_PseudoConstant::activityType(TRUE, TRUE, FALSE, 'label', TRUE);
     $activityStatus = CRM_Core_PseudoConstant::activityStatus();
     $viewLinks = FALSE;
-
 
     if (CRM_Core_Permission::check('access CiviCRM')) {
       $viewLinks = TRUE;
@@ -433,7 +517,8 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_contact_contact_source', $row)) {
         if ($value = $row['civicrm_contact_source_contact_id']) {
           if ($viewLinks) {
-            $url = CRM_Utils_System::url("civicrm/contact/view",
+            $url = CRM_Utils_System::url(
+              "civicrm/contact/view",
               'reset=1&cid=' . $value,
               $this->_absoluteUrl
             );
@@ -488,14 +573,16 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
           if ($viewLinks) {
             // case activities get a special view link
             if ($rows[$rowNum]['civicrm_case_activity_case_id']) {
-              $url = CRM_Utils_System::url("civicrm/case/activity/view",
+              $url = CRM_Utils_System::url(
+                "civicrm/case/activity/view",
                 'reset=1&cid=' . $rows[$rowNum]['civicrm_contact_source_contact_id'] .
                 '&aid=' . $rows[$rowNum]['civicrm_activity_id'] . '&caseID=' . $rows[$rowNum]['civicrm_case_activity_case_id'],
                 $this->_absoluteUrl
               );
             }
             else {
-              $url = CRM_Utils_System::url("civicrm/contact/view/activity",
+              $url = CRM_Utils_System::url(
+                "civicrm/contact/view/activity",
                 'action=view&reset=1&cid=' . $rows[$rowNum]['civicrm_contact_source_contact_id'] .
                 '&id=' . $rows[$rowNum]['civicrm_activity_id'] . '&atype=' . $value,
                 $this->_absoluteUrl
@@ -521,4 +608,3 @@ class CRM_Report_Form_Activity extends CRM_Report_Form {
     }
   }
 }
-

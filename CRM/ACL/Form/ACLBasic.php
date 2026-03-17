@@ -27,19 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_ACL_Form_ACLBasic extends CRM_Admin_Form {
@@ -47,11 +41,10 @@ class CRM_ACL_Form_ACLBasic extends CRM_Admin_Form {
   /**
    * This function sets the default values for the form.
    *
-   * @access public
    *
-   * @return None
+   * @return array<string, int|int[]>
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
 
     if ($this->_id ||
@@ -79,8 +72,7 @@ SELECT object_table
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -89,16 +81,17 @@ SELECT object_table
       return;
     }
 
-
     $permissions = array_flip(CRM_Core_Permission::basicPermissions());
-    $this->addCheckBox('object_table',
+    $this->addCheckBox(
+      'object_table',
       ts('ACL Type'),
       $permissions,
-      NULL, NULL, TRUE, NULL,
+      NULL,
+      NULL,
+      TRUE,
+      NULL,
       ['</td><td>', '</td></tr><tr><td>']
     );
-
-
 
     $label = ts('Role');
     $role = ['-1' => ts('- select role -'),
@@ -114,8 +107,14 @@ SELECT object_table
     $this->addFormRule(['CRM_ACL_Form_ACLBasic', 'formRule']);
   }
 
-
-  static function formRule($params) {
+  /**
+   * Form rule for ACLBasic
+   *
+   * @param array $params
+   *
+   * @return array|bool
+   */
+  public static function formRule($params) {
     if ($params['entity_id'] == -1) {
       $errors = ['entity_id' => ts('Role is a required field')];
       return $errors;
@@ -127,14 +126,12 @@ SELECT object_table
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
 
     CRM_ACL_BAO_Cache::resetCache();
-
 
     $params = $this->controller->exportValues($this->_name);
     if ($this->_id ||
@@ -171,4 +168,3 @@ DELETE
     }
   }
 }
-

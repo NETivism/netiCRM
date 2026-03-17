@@ -28,13 +28,9 @@
 /**
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for processing Event
@@ -58,9 +54,8 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $this->_params = $this->get('params');
     $this->_lineItem = $this->get('lineItem');
@@ -145,7 +140,7 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
           'markup' => $dataLayer."\n",
         ];
         CRM_Utils_System::addHTMLHead($obj);
-        $this->set('dataLayerAdded', true);
+        $this->set('dataLayerAdded', TRUE);
       }
     }
   }
@@ -155,9 +150,8 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
    * no help display needed
    *
    * @return int
-   * @access public
    */
-  function getAction() {
+  public function getAction() {
     if ($this->_action & CRM_Core_Action::PREVIEW) {
       return CRM_Core_Action::VIEW | CRM_Core_Action::PREVIEW;
     }
@@ -169,13 +163,12 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $this->assignToTemplate();
     // change pay later option if needed
-    if(isset($this->_params['is_pay_later'])){
+    if (isset($this->_params['is_pay_later'])) {
       $this->assign('is_pay_later', $this->_params['is_pay_later']);
     }
 
@@ -243,8 +236,6 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
 
     $this->setDefaults($defaults);
 
-
-
     $params['entity_id'] = $this->_eventId;
     $params['entity_table'] = 'civicrm_event';
 
@@ -253,12 +244,14 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
       $friendText = $data['title'];
       $this->assign('friendText', $friendText);
       if ($this->_action & CRM_Core_Action::PREVIEW) {
-        $url = CRM_Utils_System::url("civicrm/friend",
+        $url = CRM_Utils_System::url(
+          "civicrm/friend",
           "eid={$this->_eventId}&reset=1&action=preview&page=event"
         );
       }
       else {
-        $url = CRM_Utils_System::url("civicrm/friend",
+        $url = CRM_Utils_System::url(
+          "civicrm/friend",
           "eid={$this->_eventId}&reset=1&page=event"
         );
       }
@@ -294,21 +287,19 @@ class CRM_Event_Form_Registration_ThankYou extends CRM_Event_Form_Registration {
   /**
    * Function to process the form
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
-  public function postProcess() {}
+  public function postProcess() {
+  }
   //end of function
 
   /**
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Complete');
   }
 }
-

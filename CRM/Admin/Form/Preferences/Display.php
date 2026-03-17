@@ -27,20 +27,22 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: Display.php 30467 2010-11-02 07:43:49Z sushant $
  *
  */
-
-
 
 /**
  * This class generates form components for the display preferences
  *
  */
 class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
-  function preProcess() {
+  /**
+   * Pre-processes the form.
+   *
+   * @return void Pre-processes the form.
+   */
+  public function preProcess() {
     parent::preProcess();
     CRM_Utils_System::setTitle(ts('Settings - Site Preferences'));
     // add all the checkboxes
@@ -52,7 +54,12 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     ];
   }
 
-  function setDefaultValues() {
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
+  public function setDefaultValues() {
     $defaults = [];
 
     parent::cbsDefaultValues($defaults);
@@ -76,10 +83,9 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     $wysiwyg_options = ['' => ts('Textarea')] + CRM_Core_PseudoConstant::wysiwygEditor();
@@ -95,7 +101,6 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     $this->addElement('textarea', 'display_name_format', ts('Individual Display Name Format'));
     $this->addElement('textarea', 'sort_name_format', ts('Individual Sort Name Format'));
 
-
     $editOptions = CRM_Core_OptionGroup::values('contact_edit_options', FALSE, FALSE, FALSE, 'AND v.filter = 0');
     $this->assign('editOptions', $editOptions);
 
@@ -108,11 +113,9 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     if ($this->_action == CRM_Core_Action::VIEW) {
@@ -145,4 +148,3 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
   }
   //end of function
 }
-

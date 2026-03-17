@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * defines a simple implemenation of a drupal block.
@@ -48,25 +43,23 @@ class CRM_Core_Block {
    *
    * @var int
    */
-  CONST CREATE_NEW = 1, RECENTLY_VIEWED = 2, DASHBOARD = 3, ADD = 4, LANGSWITCH = 5, EVENT = 6, FULLTEXT_SEARCH = 7, AUTOCOMPLETE_SEARCH = 8;
+  public const CREATE_NEW = 1, RECENTLY_VIEWED = 2, DASHBOARD = 3, ADD = 4, LANGSWITCH = 5, EVENT = 6, FULLTEXT_SEARCH = 7, AUTOCOMPLETE_SEARCH = 8;
 
   /**
    * template file names for the above blocks
    */
-  static $_properties = NULL;
+  public static $_properties = NULL;
 
   /**
-   * class constructor
-   *
+   * Class constructor.
    */
-  function __construct() {}
+  public function __construct() {
+  }
 
   /**
-   * initialises the $_properties array
-   *
-   * @return void
+   * Initializes the $_properties array.
    */
-  static function initProperties() {
+  public static function initProperties() {
     if (!defined('BLOCK_CACHE_GLOBAL')) {
       define('BLOCK_CACHE_GLOBAL', 0x0008);
     }
@@ -172,14 +165,14 @@ class CRM_Core_Block {
   }
 
   /**
-   * returns the desired property from the $_properties array
+   * Returns the desired property from the $_properties array.
    *
-   * @params int    $id        one of the class constants (ADD, SEARCH, etc.)
-   * @params string $property  the desired property
+   * @param int $id One of the class constants (ADD, SEARCH, etc.).
+   * @param string $property The desired property name.
    *
-   * @return string  the value of the desired property
+   * @return mixed The value of the desired property.
    */
-  static function getProperty($id, $property) {
+  public static function getProperty($id, $property) {
     if (!(self::$_properties)) {
       self::initProperties();
     }
@@ -187,15 +180,13 @@ class CRM_Core_Block {
   }
 
   /**
-   * sets the desired property in the $_properties array
+   * Sets the desired property in the $_properties array.
    *
-   * @params int    $id        one of the class constants (ADD, SEARCH, etc.)
-   * @params string $property  the desired property
-   * @params string $value     the value of the desired property
-   *
-   * @return void
+   * @param int $id One of the class constants (ADD, SEARCH, etc.).
+   * @param string $property The desired property name.
+   * @param mixed $value The value of the desired property.
    */
-  static function setProperty($id, $property, $value) {
+  public static function setProperty($id, $property, $value) {
     if (!(self::$_properties)) {
       self::initProperties();
     }
@@ -203,11 +194,11 @@ class CRM_Core_Block {
   }
 
   /**
-   * returns the whole $_properties array
+   * Returns the whole $_properties array.
    *
-   * @return array  the $_properties array
+   * @return array The $_properties array.
    */
-  static function properties() {
+  public static function properties() {
     if (!(self::$_properties)) {
       self::initProperties();
     }
@@ -215,12 +206,11 @@ class CRM_Core_Block {
   }
 
   /**
-   * Creates the info block for drupal
+   * Creates the info block for Drupal.
    *
-   * @return array
-   * @access public
+   * @return array The info block array.
    */
-  static function getInfo() {
+  public static function getInfo() {
 
     $block = [];
     foreach (self::properties() as $id => $value) {
@@ -242,7 +232,8 @@ class CRM_Core_Block {
         }
 
         if ($id == self::EVENT &&
-          (!CRM_Core_Permission::access('CiviEvent', FALSE) ||
+          (
+            !CRM_Core_Permission::access('CiviEvent', FALSE) ||
             !CRM_Core_Permission::check('view event info')
           )
         ) {
@@ -265,13 +256,9 @@ class CRM_Core_Block {
   }
 
   /**
-   * set the post action values for the block.
+   * Set the post action values for the block.
    *
-   * php is lame and u cannot call functions from static initializers
-   * hence this hack
-   *
-   * @return void
-   * @access private
+   * @param int $id The block ID.
    */
   private static function setTemplateValues($id) {
     switch ($id) {
@@ -291,16 +278,20 @@ class CRM_Core_Block {
         $values = ['postURL' => CRM_Utils_System::url('civicrm/contact/add', 'reset=1&ct=Individual'),
           'primaryLocationType' => $defaultPrimaryLocationId,
         ];
-        self::setProperty(self::ADD,
+        self::setProperty(
+          self::ADD,
           'templateValues',
           $values
         );
         break;
 
       case self::FULLTEXT_SEARCH:
-        $urlArray = ['fullTextSearchID' => CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue',
-            'CRM_Contact_Form_Search_Custom_FullText', 'value', 'name'
-          )];
+        $urlArray = ['fullTextSearchID' => CRM_Core_DAO::getFieldValue(
+          'CRM_Core_DAO_OptionValue',
+          'CRM_Contact_Form_Search_Custom_FullText',
+          'value',
+          'name'
+        )];
         self::setProperty(self::FULLTEXT_SEARCH, 'templateValues', $urlArray);
         break;
 
@@ -317,10 +308,7 @@ class CRM_Core_Block {
   }
 
   /**
-   * create the list of options to create New objects for the application and format is as a block
-   *
-   * @return void
-   * @access private
+   * Create the list of options to create New objects for the application and format it as a block.
    */
   private static function setTemplateShortcutValues() {
     $config = CRM_Core_Config::singleton();
@@ -349,13 +337,12 @@ class CRM_Core_Block {
             'title' => ts('Activity'),
           ]]);
 
-
       $components = CRM_Core_Component::getEnabledComponents();
 
       if (!empty($config->enableComponents)) {
         foreach ($components as $componentName => $obj) {
           if (in_array($componentName, $config->enableComponents)) {
-            $obj->creatNewShortcut( $shortCuts );
+            $obj->creatNewShortcut($shortCuts);
           }
         }
       }
@@ -410,10 +397,7 @@ class CRM_Core_Block {
   }
 
   /**
-   * create the list of dashboard links
-   *
-   * @return void
-   * @access private
+   * Create the list of dashboard links.
    */
   private static function setTemplateDashboardValues() {
     static $dashboardLinks = [];
@@ -445,10 +429,7 @@ class CRM_Core_Block {
   }
 
   /**
-   * create the list of mail urls for the application and format is as a block
-   *
-   * @return void
-   * @access private
+   * Create the list of mail URLs for the application and format it as a block.
    */
   private function setTemplateMailValues() {
     static $shortCuts = NULL;
@@ -476,10 +457,7 @@ class CRM_Core_Block {
   }
 
   /**
-   * create the list of shortcuts for the application and format is as a block
-   *
-   * @return void
-   * @access private
+   * Create the list of shortcuts for the application and format it as a block.
    */
   private function setTemplateMenuValues() {
     $config = CRM_Core_Config::singleton();
@@ -492,14 +470,10 @@ class CRM_Core_Block {
   }
 
   /**
-   * create the event blocks for upcoming events
-   *
-   * @return void
-   * @access private
+   * Create the event blocks for upcoming events.
    */
   private static function setTemplateEventValues() {
     $config = CRM_Core_Config::singleton();
-
 
     $info = CRM_Event_BAO_Event::getCompleteInfo();
 
@@ -507,7 +481,8 @@ class CRM_Core_Block {
       $session = CRM_Core_Session::singleton();
       // check if registration link should be displayed
       foreach ($info as $id => $event) {
-        $info[$id]['onlineRegistration'] = CRM_Event_BAO_Event::validRegistrationDate($event,
+        $info[$id]['onlineRegistration'] = CRM_Event_BAO_Event::validRegistrationDate(
+          $event,
           $session->get('userID')
         );
       }
@@ -517,14 +492,13 @@ class CRM_Core_Block {
   }
 
   /**
-   * Given an id creates a subject/content array
+   * Given an ID creates a subject/content array.
    *
-   * @param int $id id of the block
+   * @param int $id ID of the block.
    *
-   * @return array
-   * @access public
+   * @return array|null The block content array or null if not found or no access.
    */
-  static function getContent($id) {
+  public static function getContent($id) {
     // return if upgrade mode
     $config = CRM_Core_Config::singleton();
     if (CRM_Utils_Array::value($config->userFrameworkURLVar, $_GET) == 'civicrm/upgrade') {
@@ -576,28 +550,30 @@ class CRM_Core_Block {
     $block = [];
     $block['name'] = 'block-civicrm';
     $block['id'] = $block['name'] . '_' . $id;
-    $block['subject'] = self::fetch($id, 'Subject.tpl',
+    $block['subject'] = self::fetch(
+      $id,
+      'Subject.tpl',
       ['subject' => self::getProperty($id, 'subject')]
     );
-    $block['content'] = self::fetch($id, self::getProperty($id, 'template'),
+    $block['content'] = self::fetch(
+      $id,
+      self::getProperty($id, 'template'),
       self::getProperty($id, 'templateValues')
     );
-
 
     return $block;
   }
 
   /**
-   * Given an id and a template, fetch the contents
+   * Given an ID and a template, fetch the contents.
    *
-   * @param int    $id         id of the block
-   * @param string $fileName   name of the template file
-   * @param array  $properties template variables
+   * @param int $id ID of the block.
+   * @param string $fileName Name of the template file.
+   * @param array|null $properties Template variables.
    *
-   * @return array
-   * @access public
+   * @return string The fetched template content.
    */
-  static function fetch($id, $fileName, $properties) {
+  public static function fetch($id, $fileName, $properties) {
     $template = CRM_Core_Smarty::singleton();
 
     if ($properties) {
@@ -607,4 +583,3 @@ class CRM_Core_Block {
     return $template->fetch('CRM/Block/' . $fileName);
   }
 }
-

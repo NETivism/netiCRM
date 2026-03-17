@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Site Url
@@ -42,10 +38,9 @@
 class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Resource URLs'));
@@ -56,7 +51,7 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
       $this->addYesNo('enableSSL', ts('Force Secure URLs (SSL)'));
       $this->assign('admin', TRUE);
     }
-    else{
+    else {
       $this->assign('admin', FALSE);
     }
     $this->addElement('text', 'customCSSURL', ts('Custom CiviCRM CSS URL'));
@@ -66,14 +61,28 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     parent::buildQuickForm();
   }
 
-  static function formRule($fields) {
+  /**
+   * Global form rule.
+   *
+   * @param array $fields
+   *
+   * @return bool|array
+   */
+  public static function formRule($fields) {
     if (isset($fields['enableSSL']) &&
       $fields['enableSSL']
     ) {
       $config = CRM_Core_Config::singleton();
-      $url = str_replace('http://', 'https://',
-        CRM_Utils_System::url('civicrm/dashboard', 'reset=1', TRUE,
-          NULL, FALSE, FALSE
+      $url = str_replace(
+        'http://',
+        'https://',
+        CRM_Utils_System::url(
+          'civicrm/dashboard',
+          'reset=1',
+          TRUE,
+          NULL,
+          FALSE,
+          FALSE
         )
       );
       if (!CRM_Utils_System::checkURL($url, TRUE)) {
@@ -86,10 +95,14 @@ class CRM_Admin_Form_Setting_Url extends CRM_Admin_Form_Setting {
     return TRUE;
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void
+   */
   public function postProcess() {
     parent::postProcess();
 
     parent::rebuildMenu();
   }
 }
-

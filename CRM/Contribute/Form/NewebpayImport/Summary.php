@@ -1,10 +1,22 @@
 <?php
 
+/**
+ * Form for displaying the summary of Newebpay contribution imports.
+ */
 class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
 
   protected $_successedContribution;
 
-  function preProcess() {
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method retrieves the results of the import process (successes,
+   * status modifications, and errors) from the session and assigns them
+   * to the template for display. It also sets up download links for erroneous data.
+   *
+   * @return void
+   */
+  public function preProcess() {
     $successedTableHeader = $this->get('successedTableHeader');
     $this->_successedContribution = $this->get('successedContribution');
     $this->assign('successedTableHeader', $successedTableHeader);
@@ -40,8 +52,16 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
     $this->assign('downloadStatusUrl', $downloadStatusUrl);
   }
 
-  function buildQuickForm() {
-    $this->addButtons([
+  /**
+   * Actually build the form components.
+   *
+   * Adds a 'Done' button to finish the import wizard.
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
+    $this->addButtons(
+      [
         ['type' => 'cancel',
           'name' => ts('Done'),
         ],
@@ -49,14 +69,21 @@ class CRM_Contribute_Form_NewebpayImport_Summary extends CRM_Core_Form {
     );
   }
 
-  function postProcess() {
+  /**
+   * Process the form submission.
+   *
+   * This method is a placeholder as no specific logic is needed after
+   * displaying the summary.
+   *
+   * @return void
+   */
+  public function postProcess() {
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Summary');

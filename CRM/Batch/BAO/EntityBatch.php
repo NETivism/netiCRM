@@ -11,7 +11,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC https://civicrm.org/licensing
  */
 class CRM_Batch_BAO_EntityBatch extends CRM_Batch_DAO_EntityBatch {
@@ -20,7 +19,7 @@ class CRM_Batch_BAO_EntityBatch extends CRM_Batch_DAO_EntityBatch {
    * Create entity batch entry.
    *
    * @param array $params
-   * @return array
+   * @return CRM_Batch_DAO_EntityBatch
    */
   public static function create(&$params) {
     $op = 'edit';

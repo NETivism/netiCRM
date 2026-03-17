@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 /*
 * Copyright (C) 2010 Tech To The People
 * Licensed to CiviCRM under the Academic Free License version 3.0.
@@ -34,18 +33,18 @@
 
 /**
  *
- * @package CRM
  *
  */
-
-
 
 class CRM_Event_Badge_Simple extends CRM_Event_Badge {
   public $format;
   public $tMarginName;
   public $pdf;
   public $border;
-  function __construct() {
+  /**
+   * class constructor
+   */
+  public function __construct() {
     parent::__construct();
     $config = CRM_Core_Config::singleton();
     // A4
@@ -60,6 +59,13 @@ class CRM_Event_Badge_Simple extends CRM_Event_Badge {
     $this->tMarginName = 20;
   }
 
+  /**
+   * Generate label
+   *
+   * @param array $participant
+   *
+   * @return void
+   */
   public function generateLabel($participant) {
     $x = $this->pdf->GetAbsX();
     $y = $this->pdf->GetY();
@@ -77,4 +83,3 @@ class CRM_Event_Badge_Simple extends CRM_Event_Badge {
     $this->pdf->MultiCell($this->pdf->width, 0, $participant['current_employer'], $this->border, "C", 0, 1, $x, $this->pdf->getY());
   }
 }
-

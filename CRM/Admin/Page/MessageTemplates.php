@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying list of message templates
@@ -46,14 +42,20 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   // ids of templates which diverted from the default ones and can be reverted
   protected $_revertible = [];
 
   // set to the id that we’re reverting at the given moment (if we are)
   protected $_revertedId;
-  function __construct($title = NULL, $mode = NULL) {
+  /**
+   * Class constructor.
+   *
+   * @param string|null $title
+   * @param int|null $mode
+   */
+  public function __construct($title = NULL, $mode = NULL) {
     parent::__construct($title, $mode);
 
     // fetch the ids of templates which diverted from defaults and can be reverted –
@@ -77,20 +79,20 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get BAO Name
+   * Gets the BAO name.
    *
    * @return string Classname of BAO.
    */
-  function getBAOName() {
+  public function getBAOName() {
     return 'CRM_Core_BAO_MessageTemplates';
   }
 
   /**
-   * Get action Links
+   * Gets the action links.
    *
    * @return array (reference) of action links
    */
-  function &links() {
+  public function &links() {
     if (!(self::$_links)) {
       $confirm = ts('Are you sure you want to revert this template to the default for this workflow? You will lose any customizations you have made.', ['escape' => 'js']) . '\n\n' . ts('We recommend that you save a copy of the your customized Text and HTML message content to a text file before reverting so you can combine your changes with the system default messages as needed.', ['escape' => 'js']);
       self::$_links = [
@@ -136,7 +138,19 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
     return self::$_links;
   }
 
-  function action(&$object, $action, &$values, &$links, $permission, $forceAction = null){
+  /**
+   * Process action links.
+   *
+   * @param CRM_Core_DAO $object
+   * @param int $action
+   * @param array $values
+   * @param array $links
+   * @param int $permission
+   * @param bool|null $forceAction
+   *
+   * @return void
+   */
+  public function action(&$object, $action, &$values, &$links, $permission, $forceAction = NULL) {
     if ($object->workflow_id) {
       // do not expose action link for reverting to default if the template did not diverge or we just reverted it now
       if (!in_array($object->id, array_keys($this->_revertible)) or
@@ -165,7 +179,16 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
     }
   }
 
-  function run($args = NULL, $pageArgs = NULL, $sort = NULL) {
+  /**
+   * Run the page.
+   *
+   * @param array|null $args
+   * @param array|null $pageArgs
+   * @param string|null $sort
+   *
+   * @return void
+   */
+  public function run($args = NULL, $pageArgs = NULL, $sort = NULL) {
     // handle the revert action and offload the rest to parent
     if (CRM_Utils_Request::retrieve('action', 'String', $this) & CRM_Core_Action::REVERT) {
 
@@ -176,7 +199,6 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
 
       $this->_revertedId = $id;
 
-
       CRM_Core_BAO_MessageTemplates::revert($id);
     }
 
@@ -186,41 +208,43 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
   }
 
   /**
-   * Get name of edit form
+   * Gets the name of the edit form.
    *
    * @return string Classname of edit form.
    */
-  function editForm() {
+  public function editForm() {
     return 'CRM_Admin_Form_MessageTemplates';
   }
 
   /**
-   * Get edit form name
+   * Gets the edit form name.
    *
    * @return string name of this page.
    */
-  function editName() {
+  public function editName() {
     return ts('Message Template');
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/admin/messageTemplates';
   }
 
   /**
-   * browse all entities.
+   * Browses all entities.
    *
-   * @param int $action
+   * @param int|null $action
+   * @param string|null $sort
    *
    * @return void
-   * @access public
    */
-  function browse($action = NULL, $sort = NULL) {
+  public function browse($action = NULL, $sort = NULL) {
     $config = CRM_Core_Config::singleton();
     if ($this->_action & CRM_Core_Action::ADD) {
       return;
@@ -275,4 +299,3 @@ class CRM_Admin_Page_MessageTemplates extends CRM_Core_Page_Basic {
     $this->assign('rows', $rows);
   }
 }
-

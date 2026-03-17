@@ -27,40 +27,40 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
+ * Manages a session-stored list of recently viewed CiviCRM items.
  *
+ * Provides methods to add, retrieve, and delete items from the
+ * recently viewed queue, stored in the user's session.
  */
 class CRM_Utils_Recent {
 
   /**
-   * max number of items in queue
+   * Maximum number of items in the recently viewed queue.
    *
-   * @int
+   * @var int
    */
-  CONST MAX_ITEMS = 10, STORE_NAME = 'CRM_Utils_Recent';
+  public const MAX_ITEMS = 10, STORE_NAME = 'CRM_Utils_Recent';
 
   /**
-   * The list of recently viewed items
+   * The list of recently viewed items.
    *
-   * @var array
-   * @static
+   * @var array|null
    */
-  static private $_recent = NULL;
+  private static $_recent = NULL;
 
   /**
-   * initialize this class and set the static variables
+   * Initialize the recently viewed list from the session.
+   *
+   * Loads the stored recent items from the session if not already loaded.
    *
    * @return void
-   * @access public
-   * @static
    */
-  static function initialize() {
+  public static function initialize() {
     if (!self::$_recent) {
       $session = CRM_Core_Session::singleton();
       self::$_recent = $session->get(self::STORE_NAME);
@@ -71,30 +71,33 @@ class CRM_Utils_Recent {
   }
 
   /**
-   * return the recently viewed array
+   * Return the recently viewed items array.
    *
-   * @return array the recently viewed array
-   * @access public
-   * @static
+   * @return array the recently viewed items
    */
-  static function &get() {
+  public static function &get() {
     self::initialize();
     return self::$_recent;
   }
 
   /**
-   * add an item to the recent stack
+   * Add an item to the recently viewed stack.
    *
-   * @param string $title  the title to display
-   * @param string $url    the link for the above title
-   * @param string $icon   a link to a graphical image
-   * @param string $id     object id
+   * If an item with the same URL already exists, it is removed before
+   * adding the new entry to the top. The list is capped at MAX_ITEMS.
+   *
+   * @param string $title the display title
+   * @param string $url the URL link for the item
+   * @param int $id the entity ID
+   * @param string $type the entity type (e.g. 'Contact', 'Activity')
+   * @param int $contactId the related contact ID
+   * @param string $contactName the related contact display name
+   * @param array $others optional additional data (keys: subtype, isDeleted, imageUrl, editUrl, deleteUrl)
    *
    * @return void
-   * @access public
-   * @static
    */
-  static function add($title,
+  public static function add(
+    $title,
     $url,
     $id,
     $type,
@@ -118,7 +121,8 @@ class CRM_Utils_Recent {
       $others = [];
     }
 
-    array_unshift(self::$_recent,
+    array_unshift(
+      self::$_recent,
       ['title' => $title,
         'url' => $url,
         'id' => $id,
@@ -136,22 +140,19 @@ class CRM_Utils_Recent {
       array_pop(self::$_recent);
     }
 
-
     CRM_Utils_Hook::recent(self::$_recent);
 
     $session->set(self::STORE_NAME, self::$_recent);
   }
 
   /**
-   * delete an item from the recent stack
+   * Delete an item from the recently viewed stack by matching its ID and type.
    *
-   * @param array $recentItem array of the recent Item to be removed
+   * @param array $recentItem associative array with 'id' and 'type' keys identifying the item to remove
    *
    * @return void
-   * @access public
-   * @static
    */
-  static function del($recentItem) {
+  public static function del($recentItem) {
     self::initialize();
     $tempRecent = self::$_recent;
 
@@ -159,9 +160,10 @@ class CRM_Utils_Recent {
 
     // rebuild recent array excluding the matching item
     for ($i = 0; $i < count($tempRecent); $i++) {
-      if (!($tempRecent[$i]['id'] == $recentItem['id'] &&
+      if (!(
+        $tempRecent[$i]['id'] == $recentItem['id'] &&
           $tempRecent[$i]['type'] == $recentItem['type']
-        )) {
+      )) {
         self::$_recent[] = $tempRecent[$i];
       }
     }
@@ -171,15 +173,13 @@ class CRM_Utils_Recent {
   }
 
   /**
-   * delete an item from the recent stack
+   * Remove all recently viewed items associated with a given contact ID.
    *
-   * @param string $id  contact id that had to be removed
+   * @param int $id the contact ID whose recent items should be removed
    *
    * @return void
-   * @access public
-   * @static
    */
-  static function delContact($id) {
+  public static function delContact($id) {
     self::initialize();
 
     $tempRecent = self::$_recent;
@@ -199,4 +199,3 @@ class CRM_Utils_Recent {
     $session->set(self::STORE_NAME, self::$_recent);
   }
 }
-

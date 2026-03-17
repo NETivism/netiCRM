@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * The CiviCRM duplicate discovery engine is based on an
@@ -44,12 +40,12 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
   /**
    * ids of the contacts to limit the SQL queries (whole-database queries otherwise)
    */
-  var $contactIds = [];
+  public $contactIds = [];
 
   /**
    * params to dedupe against (queries against the whole contact set otherwise)
    */
-  var $params = [];
+  public $params = [];
 
   /**
    * Return the SQL query for the given rule - either for finding matching
@@ -57,9 +53,10 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
    *
    * @return string  SQL query performing the search
    */
-  function sql() {
+  public function sql() {
     if ($this->params &&
-      (!CRM_Utils_Array::arrayKeyExists($this->rule_table, $this->params) ||
+      (
+        !CRM_Utils_Array::arrayKeyExists($this->rule_table, $this->params) ||
         !CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])
       )
     ) {
@@ -129,7 +126,7 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
       $str = 'NULL';
       if (CRM_Utils_Array::arrayKeyExists($this->rule_field, $this->params[$this->rule_table])) {
         if (is_array($this->params[$this->rule_table][$this->rule_field])) {
-          foreach($this->params[$this->rule_table][$this->rule_field] as $str) {
+          foreach ($this->params[$this->rule_table][$this->rule_field] as $str) {
             $str = CRM_Utils_Type::escape($str, 'String');
             if ($this->rule_length) {
               $where[] = "SUBSTR(t1.{$this->rule_field}, 1, {$this->rule_length}) = SUBSTR('$str', 1, {$this->rule_length})";
@@ -197,17 +194,16 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
   /**
    * To find fields related to a rule group.
    *
-   * @param array contains the rule group property to identify rule group
+   * @param array $params contains the rule group property to identify rule group
    *
-   * @return rule fields array associated to rule group
-   * @access public
+   * @return array rule fields array associated to rule group
    */
-  static function dedupeRuleFields($params) {
+  public static function dedupeRuleFields($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];
     }
-    else{
+    else {
       // find default
       $rgBao->level = $params['level'];
       $rgBao->contact_type = $params['contact_type'];
@@ -228,17 +224,16 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
   /**
    * To find fields related to a rule group.
    *
-   * @param array contains the rule group property to identify rule group
+   * @param array $params contains the rule group property to identify rule group
    *
-   * @return rule fields array associated to rule group
-   * @access public
+   * @return array rule fields array associated to rule group
    */
-  static function dedupeRuleFieldsMapping($params) {
+  public static function dedupeRuleFieldsMapping($params) {
     $rgBao = new CRM_Dedupe_BAO_RuleGroup();
     if (!empty($params['id'])) {
       $rgBao->id = $params['id'];
     }
-    else{
+    else {
       // find default
       $rgBao->level = $params['level'];
       $rgBao->contact_type = $params['contact_type'];
@@ -264,4 +259,3 @@ class CRM_Dedupe_BAO_Rule extends CRM_Dedupe_DAO_Rule {
     return $ruleFields;
   }
 }
-

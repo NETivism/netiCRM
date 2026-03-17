@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class is to build the form for Deleting Group
@@ -59,16 +54,14 @@ class CRM_Custom_Form_DeleteGroup extends CRM_Core_Form {
    * set up variables to build the form
    *
    * @return void
-   * @acess protected
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_id = $this->get('id');
 
     $defaults = [];
     $params = ['id' => $this->_id];
     CRM_Core_BAO_CustomGroup::retrieve($params, $defaults);
     $this->_title = $defaults['title'];
-
 
     //check wheter this contain any custom fields
     $customField = new CRM_Core_DAO_CustomField();
@@ -88,12 +81,12 @@ class CRM_Custom_Form_DeleteGroup extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Delete Custom Group'),
           'isDefault' => TRUE,
@@ -109,7 +102,6 @@ class CRM_Custom_Form_DeleteGroup extends CRM_Core_Form {
    * Process the form when submitted
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $group = new CRM_Core_DAO_CustomGroup();
@@ -121,4 +113,3 @@ class CRM_Custom_Form_DeleteGroup extends CRM_Core_Form {
     CRM_Core_Session::setStatus(ts("The Group '%1' has been deleted.", [1 => $group->title]));
   }
 }
-

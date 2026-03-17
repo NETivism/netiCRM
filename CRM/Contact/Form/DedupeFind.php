@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for DedupeRules
@@ -52,10 +48,10 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
   /**
    * Function to pre processing
    *
-   * @return None
+   * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     $this->rgid = CRM_Utils_Request::retrieve('rgid', 'Positive', $this, FALSE, 0);
     if (CRM_Contact_Page_DedupeFind::dedupeRunning()) {
       $this->assign('is_running_process', TRUE);
@@ -65,7 +61,7 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
   /**
    * Function to build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
@@ -75,7 +71,8 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     asort($groupList);
 
     $this->add('select', 'group_id', ts('Select Group'), $groupList);
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Continue'),
           'isDefault' => TRUE,
@@ -93,7 +90,18 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     $this->addFormRule(['CRM_Contact_Form_DedupeFind', 'formRule'], $this);
   }
 
-  static function formRule($fields, $files, $form) {
+  /**
+   * global validation rules for the form
+   *
+   * @param array  $fields posted values of the form
+   * @param array  $files  uploaded files
+   * @param object $form   (reference) form object
+   *
+   * @return array<string, string> list of errors to be posted back to the form
+   * @static
+   * @access public
+   */
+  public static function formRule($fields, $files, $form) {
     $errors = [];
     if ($form->rgid) {
       $dedupeGroupParams = ['id' => $form->rgid];
@@ -109,16 +117,21 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     return $errors;
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values
+   *
+   * @return array default values
+   * @access public
+   */
+  public function setDefaultValues() {
     return $this->_defaults;
   }
 
   /**
    * Function to process the form
    *
+   * @return void
    * @access public
-   *
-   * @return None
    */
   public function postProcess() {
     $values = $this->exportValues();
@@ -137,4 +150,3 @@ class CRM_Contact_Form_DedupeFind extends CRM_Admin_Form {
     CRM_Utils_System::redirect($url);
   }
 }
-

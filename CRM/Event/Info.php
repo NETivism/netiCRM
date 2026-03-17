@@ -25,17 +25,12 @@
  +--------------------------------------------------------------------+
 */
 
-
-
-
 /**
  * This class introduces component to the system and provides all the
  * information about it. It needs to extend CRM_Core_Component_Info
  * abstract class.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Event_Info extends CRM_Core_Component_Info {
@@ -43,7 +38,11 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
   // docs inherited from interface
   protected $keyword = 'event';
 
-  // docs inherited from interface
+  /**
+   * Get info
+   *
+   * @return array
+   */
   public function getInfo() {
     return ['name' => 'CiviEvent',
       'translatedName' => ts('CiviEvent'),
@@ -53,8 +52,11 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     ];
   }
 
-
-  // docs inherited from interface
+  /**
+   * Get permissions
+   *
+   * @return array
+   */
   public function getPermissions() {
     return ['access CiviEvent',
       'edit event participants',
@@ -66,7 +68,11 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Get user dashboard element
+   *
+   * @return array
+   */
   public function getUserDashboardElement() {
     return ['name' => ts('Events'),
       'title' => ts('Your Event(s)'),
@@ -75,7 +81,11 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Register tab
+   *
+   * @return array
+   */
   public function registerTab() {
     return ['title' => ts('Events'),
       'id' => 'participant',
@@ -84,14 +94,22 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Register advanced search pane
+   *
+   * @return array
+   */
   public function registerAdvancedSearchPane() {
     return ['title' => ts('Events'),
       'weight' => 40,
     ];
   }
 
-  // docs inherited from interface
+  /**
+   * Get activity types
+   *
+   * @return array<string, array<string, mixed>>
+   */
   public function getActivityTypes() {
     $types = [];
     $types['Event'] = ['title' => ts('Event'),
@@ -100,7 +118,13 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     return $types;
   }
 
-  // add shortcut to Create New
+  /**
+   * Create new shortcut
+   *
+   * @param array $shortCuts
+   *
+   * @return void
+   */
   public function creatNewShortcut(&$shortCuts) {
     if (CRM_Core_Permission::check('access CiviEvent') &&
       CRM_Core_Permission::check('edit event participants')
@@ -113,4 +137,3 @@ class CRM_Event_Info extends CRM_Core_Component_Info {
     }
   }
 }
-

@@ -27,38 +27,28 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * Retrieve an option value record based on the provided parameters.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
-   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object CRM_Core_BAO_OptionValue object
-   * @access public
-   * @static
+   * @return CRM_Core_BAO_OptionValue|null matching DAO object
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $optionValue = new CRM_Core_DAO_OptionValue();
     $optionValue->copyValues($params);
     if ($optionValue->find(TRUE)) {
@@ -69,30 +59,26 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag for an option value in the database.
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * @param int $id ID of the database record
+   * @param bool $is_active value to set for the is_active field
    *
-   * @return Object             DAO object on sucess, null otherwise
-   * @static
+   * @return CRM_Core_DAO_OptionValue|null updated DAO object
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Core_DAO_OptionValue', $id, 'is_active', $is_active);
   }
 
   /**
-   * Function to add an Option Value
+   * Add or update an option value record.
    *
-   * @param array $params reference array contains the values submitted by the form
-   * @param array $ids    reference array contains the id
+   * @param array $params associative array of option value data
+   * @param array $ids associative array containing 'optionValue' ID if updating
    *
-   * @access public
-   * @static
-   *
-   * @return object
+   * @return CRM_Core_DAO_OptionValue the created/updated option value object
    */
-  static function add(&$params, &$ids) {
+  public static function add(&$params, &$ids) {
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['is_default'] = CRM_Utils_Array::value('is_default', $params, FALSE);
     $params['is_optgroup'] = CRM_Utils_Array::value('is_optgroup', $params, FALSE);
@@ -100,7 +86,8 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
 
     // action is taken depending upon the mode
     $optionValue = new CRM_Core_DAO_OptionValue();
-    $optionValue->copyValues($params);;
+    $optionValue->copyValues($params);
+    ;
 
     if (CRM_Utils_Array::value('is_default', $params)) {
       $query = 'UPDATE civicrm_option_value SET is_default = 0 WHERE  option_group_id = %1';
@@ -118,8 +105,11 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
       CRM_Core_DAO::executeQuery($query, $p);
     }
 
-    $groupName = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionGroup',
-      $params['option_group_id'], 'name', 'id'
+    $groupName = CRM_Core_DAO::getFieldValue(
+      'CRM_Core_DAO_OptionGroup',
+      $params['option_group_id'],
+      'name',
+      'id'
     );
 
     if (in_array($groupName, CRM_Core_OptionGroup::$_domainIDGroups)) {
@@ -133,16 +123,13 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * Function to delete Option Value
+   * Delete an option value and update any affected entity records.
    *
-   * @param  int  $optionGroupId     Id of the Option Group to be deleted.
+   * @param int $optionValueId ID of the option value to delete
    *
-   * @return void
-   *
-   * @access public
-   * @static
+   * @return bool TRUE on success, FALSE otherwise
    */
-  static function del($optionValueId) {
+  public static function del($optionValueId) {
     $optionValue = new CRM_Core_DAO_OptionValue();
     $optionValue->id = $optionValueId;
 
@@ -154,15 +141,13 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * Function to retrieve activity type label and decription
+   * Retrieve the label and description for a specific activity type.
    *
-   * @param int     $activityTypeId  activity type id
+   * @param int $activityTypeId activity type ID
    *
-   * @return array     lable and decription
-   * @static
-   * @access public
+   * @return array [label, description, name]
    */
-  static function getActivityTypeDetails($activityTypeId) {
+  public static function getActivityTypeDetails($activityTypeId) {
     $query = "SELECT civicrm_option_value.label, civicrm_option_value.description, civicrm_option_value.name
    FROM civicrm_option_value
         LEFT JOIN civicrm_option_group ON ( civicrm_option_value.option_group_id = civicrm_option_group.id )
@@ -177,30 +162,27 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * Get the Option Value title.
+   * Get the label/title of an option value.
    *
-   * @param int $id id of Option Value
+   * @param int $id ID of the option value
    *
-   * @return string title
-   *
-   * @access public
-   * @static
-   *
+   * @return string|null option value label
    */
-
   public static function getTitle($id) {
     return CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $id, 'label');
   }
 
   /**
-   * updates contacts affected by the option value passed.
+   * Update records in related tables when an option value is changed or deleted.
    *
-   * @param Integer $optionValueId     the option value id.
-   * @param int     $action            the action describing whether prefix/suffix was UPDATED or DELETED
+   * For example, updates contact records if a gender option is modified.
    *
-   * @return void
+   * @param int &$optionValueId ID of the option value (passed by reference)
+   * @param int $action the action being performed (e.g., CRM_Core_Action::DELETE)
+   *
+   * @return bool TRUE if records were updated successfully, FALSE otherwise
    */
-  static function updateRecords(&$optionValueId, $action) {
+  public static function updateRecords(&$optionValueId, $action) {
     //finding group name
     $optionValue = new CRM_Core_DAO_OptionValue();
     $optionValue->id = $optionValueId;
@@ -312,7 +294,6 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
     //delete acl_role option value
     if (CRM_Utils_Array::arrayKeyExists($gName, $aclRole)) {
 
-
       $entityRole = new CRM_ACL_DAO_EntityRole();
       $entityRole->$fieldName = $value;
 
@@ -326,16 +307,14 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * updates options values weights.
+   * Update the weights of multiple option values within a group.
    *
-   * @param int   $opGroupIde option group id.
-   * @param array $opWeights  options value , weight pair
+   * @param int $opGroupId option group ID
+   * @param array $opWeights associative array of (option_value => weight)
    *
    * @return void
-   * @access public
-   * @static
    */
-  static function updateOptionWeights($opGroupId, $opWeights) {
+  public static function updateOptionWeights($opGroupId, $opWeights) {
     if (!is_array($opWeights) || empty($opWeights)) {
       return;
     }
@@ -353,17 +332,13 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * Get the values of all option values given an option group ID. Store in system cache
-   * Does not take any filtering arguments. The object is to avoid hitting the DB and retrieve
-   * from memory
+   * Get all option values for a group ID, using the system cache for performance.
    *
-   * @param int $optionGroupID the option group for which we want the values from
+   * @param int $optionGroupID option group ID
    *
-   * @return array an array of array of values for this option group
-   * @static
-   * @public
+   * @return array array of option value arrays
    */
-  static function getOptionValuesArray($optionGroupID) {
+  public static function getOptionValuesArray($optionGroupID) {
     // check if we can get the field values from the system cache
     $cacheKey = __CLASS__ . '::' . __FUNCTION__ . '--' . $optionGroupID;
     $cache = CRM_Utils_Cache::singleton();
@@ -387,16 +362,13 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * Get the values of all option values given an option group ID as a key => value pair
-   * Use above cached function to make it super efficient
+   * Get label/value pairs for an option group ID, using the system cache.
    *
-   * @param int $optionGroupID the option group for which we want the values from
+   * @param int $optionGroupID option group ID
    *
-   * @return array an associative array of label, value pairs
-   * @static
-   * @public
+   * @return array associative array of (value => label)
    */
-  static function getOptionValuesAssocArray($optionGroupID) {
+  public static function getOptionValuesAssocArray($optionGroupID) {
     $optionValues = self::getOptionValuesArray($optionGroupID);
 
     $options = [];
@@ -407,16 +379,13 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
   }
 
   /**
-   * Get the values of all option values given an option group Name as a key => value pair
-   * Use above cached function to make it super efficient
+   * Get label/value pairs for an option group name, using the system cache.
    *
-   * @param string $optionGroupName the option group name for which we want the values from
+   * @param string $optionGroupName option group name
    *
-   * @return array an associative array of label, value pairs
-   * @static
-   * @public
+   * @return array associative array of (value => label)
    */
-  static function getOptionValuesAssocArrayFromName($optionGroupName) {
+  public static function getOptionValuesAssocArrayFromName($optionGroupName) {
     $dao = new CRM_Core_DAO_OptionGroup();
     $dao->name = $optionGroupName;
     $dao->selectAdd();
@@ -431,4 +400,3 @@ class CRM_Core_BAO_OptionValue extends CRM_Core_DAO_OptionValue {
     return $options;
   }
 }
-

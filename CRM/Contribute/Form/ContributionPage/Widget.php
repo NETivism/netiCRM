@@ -27,13 +27,13 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
+/**
+ * form to process actions on the widget section of Contribution Page
+ */
 class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_ContributionPage {
   public $_fields;
   public $_colorFields;
@@ -41,10 +41,18 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   protected $_colors;
 
   protected $_widget;
-  
-  function preProcess() {
-    parent::preProcess();
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes the widget data from the database, sets up iframe
+   * code for previewing the widget, and defines the available fields and color
+   * settings for the widget.
+   *
+   * @return void
+   */
+  public function preProcess() {
+    parent::preProcess();
 
     $this->_widget = new CRM_Contribute_DAO_Widget();
     $this->_widget->contribution_page_id = $this->_id;
@@ -71,7 +79,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->assign('cpageId', $this->_id);
 
     $config = CRM_Core_Config::singleton();
-    $title = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+    $title = CRM_Core_DAO::getFieldValue(
+      'CRM_Contribute_DAO_ContributionPage',
       $this->_id,
       'title'
     );
@@ -141,7 +150,15 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     ];
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves existing widget settings from the database or initializes them with
+   * defaults defined in `preProcess`.
+   *
+   * @return array the array of default values for form elements
+   */
+  public function setDefaultValues() {
     $defaults = [];
     // check if there is a widget already created
     if ($this->_widget) {
@@ -154,12 +171,12 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       foreach ($this->_colorFields as $name => $val) {
         $defaults[$name] = $val[3];
       }
-      $defaults['about'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage',
+      $defaults['about'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_ContributionPage',
         $this->_id,
         'intro_text'
       );
     }
-
 
     $showHide = new CRM_Core_ShowHideBlocks();
     $showHide->addHide("id-colors");
@@ -167,10 +184,19 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return $defaults;
   }
 
-  function buildQuickForm() {
+  /**
+   * Actually build the form components.
+   *
+   * Adds fields for enabling the widget, introductory text (WYSIWYG), title,
+   * logo URL, button title, and various color pickers.
+   *
+   * @return void
+   */
+  public function buildQuickForm() {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Widget');
 
-    $this->addElement('checkbox',
+    $this->addElement(
+      'checkbox',
       'is_active',
       ts('Enable Widget?'),
       NULL,
@@ -180,7 +206,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->addWysiwyg('about', ts('About'), $attributes['about']);
 
     foreach ($this->_fields as $name => $val) {
-      $this->add($val[1],
+      $this->add(
+        $val[1],
         $name,
         $val[0],
         $attributes[$name],
@@ -188,7 +215,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
       );
     }
     foreach ($this->_colorFields as $name => $val) {
-      $this->add($val[1],
+      $this->add(
+        $val[1],
         $name,
         $val[0],
         $attributes[$name],
@@ -200,7 +228,8 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $this->assign_by_ref('colorFields', $this->_colorFields);
 
     $this->_refreshButtonName = $this->getButtonName('refresh');
-    $this->addElement('submit',
+    $this->addElement(
+      'submit',
       $this->_refreshButtonName,
       ts('Save and Preview')
     );
@@ -209,13 +238,16 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Function for validation
+   * Global form rule for validation.
    *
-   * @param array $params (ref.) an assoc array of name/value pairs
+   * Ensures that title, about text, and all color fields are provided if
+   * the widget is enabled.
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @param array $params an assoc array of name/value pairs submitted by the form
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return mixed true if no errors, or an array of error messages
    */
   public static function formRule($params, $files, $self) {
     $errors = [];
@@ -236,7 +268,15 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     return empty($errors) ? TRUE : $errors;
   }
 
-  function postProcess() {
+  /**
+   * Process the form submission.
+   *
+   * Saves or updates the `civicrm_widget` record associated with the current
+   * contribution page.
+   *
+   * @return void
+   */
+  public function postProcess() {
     //to reset quickform elements of next (pcp) page.
     if ($this->controller->getNextName('Widget') == 'PCP') {
       $this->controller->resetPage('PCP');
@@ -252,7 +292,6 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
     $params['url_homepage'] = 'null';
 
-
     $widget = new CRM_Contribute_DAO_Widget();
     $widget->copyValues($params);
     $widget->save();
@@ -264,13 +303,11 @@ class CRM_Contribute_Form_ContributionPage_Widget extends CRM_Contribute_Form_Co
   }
 
   /**
-   * Return a descriptive name for the page, used in wizard header
+   * Return a descriptive name for the page, used in wizard header.
    *
-   * @return string
-   * @access public
+   * @return string the descriptive page title
    */
   public function getTitle() {
     return ts('Widget Settings');
   }
 }
-

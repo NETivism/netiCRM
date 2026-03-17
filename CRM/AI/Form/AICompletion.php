@@ -15,7 +15,13 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
    */
   protected $_itemValues = [];
 
-  function preProcess() {
+  /**
+   * Pre-process the form.
+   *
+   * @return void
+   * @throws CRM_Core_Exception
+   */
+  public function preProcess() {
     $this->_id = $this->get('id');
     if (empty($this->_id)) {
       CRM_Core_Error::statusBounce(ts('You do not have permission to access this page.'));
@@ -34,6 +40,15 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
     $this->addFormRule(['CRM_AI_Form_AICompletion', 'formRule'], $this);
   }
 
+  /**
+   * Global form rule.
+   *
+   * @param array $fields The input form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The current form object.
+   *
+   * @return bool|array True if no errors, else an array of errors.
+   */
   public static function formRule($fields, $files, $self) {
     $errors = [];
     if (!empty($fields['is_template']) && empty($fields['template_title'])) {
@@ -48,9 +63,9 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
    *
    * @access public
    *
-   * @return None
+   * @return array<string, mixed> The default values.
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults['template_title'] = $this->_itemValues['template_title'];
     $defaults['is_template'] = $this->_itemValues['is_template'];
@@ -61,14 +76,15 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
+   * @return void
    * @access public
    */
   public function buildQuickForm() {
     $this->addCbx('is_template', ts('Enable this message template'));
     $this->addTextfield('template_title', ts('Template Title'), ['size' => 100]);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Save'),
           'isDefault' => TRUE,
@@ -81,10 +97,11 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
   }
 
   /**
+   * Process the form submission.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     // store the submitted values in an array
@@ -106,4 +123,3 @@ class CRM_AI_Form_AICompletion extends CRM_Core_Form {
 
   }
 }
-

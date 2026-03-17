@@ -30,19 +30,17 @@
  * some of the below elements will be dynamic, so we'll probably have a
  * smart caching scheme on a per domain basis
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_SelectValues {
 
   /**
-   * CRM/Core/SelectValues.php
-   * different types of phones
-   * @static
+   * Different types of phones.
+   *
+   * @return array
    */
-  static function &phoneType() {
+  public static function &phoneType() {
     static $phoneType = NULL;
     if (!$phoneType) {
       $phoneType = [
@@ -57,10 +55,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * preferred mail format
-   * @static
+   * Preferred mail format.
+   *
+   * @return array
    */
-  static function &pmf() {
+  public static function &pmf() {
     static $pmf = NULL;
     if (!$pmf) {
       $pmf = [
@@ -73,10 +72,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * privacy options
-   * @static
+   * Privacy options.
+   *
+   * @return array
    */
-  static function &privacy() {
+  public static function &privacy() {
     static $privacy = NULL;
     if (!$privacy) {
       $privacy = [
@@ -93,10 +93,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * various pre defined contact super types
-   * @static
+   * Various predefined contact super types.
+   *
+   * @return array
    */
-  static function &contactType() {
+  public static function &contactType() {
     static $contactType = NULL;
     if (!$contactType) {
 
@@ -107,10 +108,13 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * various pre defined unit list
-   * @static
+   * Various predefined unit list.
+   *
+   * @param string|null $unitType The type of unit (e.g., 'duration').
+   *
+   * @return array
    */
-  static function &unitList($unitType = NULL) {
+  public static function &unitList($unitType = NULL) {
     static $unitList = NULL;
     if (!$unitList) {
       $unitList = [
@@ -130,10 +134,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * various pre defined period types
-   * @static
+   * Various predefined period types.
+   *
+   * @return array
    */
-  static function &periodType() {
+  public static function &periodType() {
     static $periodType = NULL;
     if (!$periodType) {
       $periodType = [
@@ -146,10 +151,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * various pre defined member visibility options
-   * @static
+   * Various predefined member visibility options.
+   *
+   * @return array
    */
-  static function &memberVisibility() {
+  public static function &memberVisibility() {
     static $visible = NULL;
     if (!$visible) {
       $visible = [
@@ -161,10 +167,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * various pre defined event dates
-   * @static
+   * Various predefined event dates.
+   *
+   * @return array
    */
-  static function &eventDate() {
+  public static function &eventDate() {
     static $eventDate = NULL;
     if (!$eventDate) {
       $eventDate = [
@@ -178,10 +185,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * Extended property (custom field) data types
-   * @static
+   * Extended property (custom field) data types.
+   *
+   * @return array
    */
-  static function &customDataType() {
+  public static function &customDataType() {
     static $customDataType = NULL;
     if (!$customDataType) {
       $customDataType = [
@@ -202,10 +210,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * Custom form field types
-   * @static
+   * Custom form field types.
+   *
+   * @return array
    */
-  static function &customHtmlType() {
+  public static function &customHtmlType() {
     static $customHtmlType = NULL;
     if (!$customHtmlType) {
       $customHtmlType = [
@@ -227,11 +236,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * various pre defined extensions for dynamic properties and groups
+   * Various predefined extensions for dynamic properties and groups.
    *
-   * @static
+   * @return array
    */
-  static function &customGroupExtends() {
+  public static function &customGroupExtends() {
     static $customGroupExtends = NULL;
     if (!$customGroupExtends) {
       $customGroupExtends = [
@@ -261,11 +270,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * styles for displaying the custom data group
+   * Styles for displaying the custom data group.
    *
-   * @static
+   * @return array
    */
-  static function &customGroupStyle() {
+  public static function &customGroupStyle() {
     static $customGroupStyle = NULL;
     if (!$customGroupStyle) {
       $customGroupStyle = [
@@ -277,11 +286,13 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * for displaying the uf group types
+   * For displaying the UF group types.
    *
-   * @static
+   * @param string $type The type of group (e.g., 'all', 'register').
+   *
+   * @return array<string, mixed>
    */
-  static function &ufGroupTypes($type = '') {
+  public static function &ufGroupTypes($type = '') {
     $ufGroupType = [];
     if ($type == 'all' || empty($type)) {
       $ufGroupType += [
@@ -301,11 +312,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * the status of a contact within a group
+   * The status of a contact within a group.
    *
-   * @static
+   * @return array
    */
-  static function &groupContactStatus() {
+  public static function &groupContactStatus() {
     static $groupContactStatus = NULL;
     if (!$groupContactStatus) {
       $groupContactStatus = [
@@ -318,10 +329,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * list of Group Types
-   * @static
+   * List of Group Types.
+   *
+   * @return array
    */
-  static function &groupType() {
+  public static function &groupType() {
     static $groupType = NULL;
     if (!$groupType) {
       $groupType = [
@@ -333,15 +345,16 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * compose the parameters for a date select object
+   * Compose the parameters for a date select object.
    *
-   * @param  $type    the type of date
-   * @param  $format  date format ( QF format)
+   * @param string|null $type The type of date.
+   * @param string|null $format Date format (QF format).
+   * @param int|null $minOffset Minimum year offset.
+   * @param int|null $maxOffset Maximum year offset.
    *
-   * @return array         the date array
-   * @static
+   * @return array<string, mixed> The date array.
    */
-  static function &date($type = NULL, $format = NULL, $minOffset = NULL, $maxOffset = NULL) {
+  public static function &date($type = NULL, $format = NULL, $minOffset = NULL, $maxOffset = NULL) {
 
     $date = [
       'addEmptyOption' => TRUE,
@@ -383,11 +396,13 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * values for UF form visibility options
+   * Values for UF form visibility options.
    *
-   * @static
+   * @param bool $isGroup Whether it is for a group.
+   *
+   * @return array
    */
-  static function ufVisibility($isGroup = FALSE) {
+  public static function ufVisibility($isGroup = FALSE) {
     static $_visibility = NULL;
     if (!$_visibility) {
       $_visibility = [
@@ -403,12 +418,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * different type of Mailing Components
+   * Different types of Mailing Components.
    *
-   * @static
-   * return array
+   * @return array
    */
-  static function &mailingComponents() {
+  public static function &mailingComponents() {
     static $components = NULL;
 
     if (!$components) {
@@ -426,12 +440,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * Function to get hours
+   * Function to get hours.
    *
-   *
-   * @static
+   * @return array
    */
-  function getHours() {
+  public function getHours() {
     for ($i = 0; $i <= 6; $i++) {
       $hours[$i] = $i;
     }
@@ -439,12 +452,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * Function to get minutes
+   * Function to get minutes.
    *
-   *
-   * @static
+   * @return array
    */
-  function getMinutes() {
+  public function getMinutes() {
     for ($i = 0; $i < 60; $i = $i + 15) {
       $minutes[$i] = $i;
     }
@@ -452,12 +464,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * Function to get the Map Provider
+   * Function to get the Map Provider.
    *
-   * @return array $map array of map providers
-   * @static
+   * @return array Array of map providers.
    */
-  static function &mapProvider() {
+  public static function &mapProvider() {
     static $map = NULL;
     if (!$map) {
       $map = [
@@ -469,12 +480,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * different type of Mailing Tokens
+   * Different types of Mailing Tokens.
    *
-   * @static
-   * return array
+   * @return array
    */
-  static function &mailingTokens() {
+  public static function &mailingTokens() {
     static $tokens = NULL;
 
     if (!$tokens) {
@@ -498,15 +508,13 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * different type of Contact Tokens
+   * Different types of Contact Tokens.
    *
-   * @static
-   * return array
+   * @return array
    */
-  static function &contactTokens() {
+  public static function &contactTokens() {
     static $tokens = NULL;
     if (!$tokens) {
-
 
       $additionalFields = [
         'checksum' => ['title' => ts('Checksum')],
@@ -529,13 +537,13 @@ class CRM_Core_SelectValues {
       $customFields = [];
       $customFields = CRM_Core_BAO_CustomField::getFields('Individual');
       $structure = CRM_Core_FieldHierarchy::$hierarchy;
-      foreach($structure as $component => $fields) {
-        foreach($fields as $fieldName => $dontcare) {
+      foreach ($structure as $component => $fields) {
+        foreach ($fields as $fieldName => $dontcare) {
           if (in_array($fieldName, $skipTokens)) {
             continue;
           }
           $tokenField = array_search($fieldName, $values);
-          if (!$tokenField){
+          if (!$tokenField) {
             continue;
           }
           $tokens["{contact.$fieldName}"] = $exportFields[$fieldName]['title'];
@@ -583,12 +591,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * different type of Participant Tokens
+   * Different types of Participant Tokens.
    *
-   * @static
-   * return array
+   * @return array
    */
-  static function &participantTokens() {
+  public static function &participantTokens() {
     static $tokens = NULL;
     $participant = new CRM_Event_DAO_Participant();
     $fields = $participant->fields();
@@ -627,12 +634,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * different type of Contribution Tokens
+   * Different types of Contribution Tokens.
    *
-   * @static
-   * return array
+   * @return array
    */
-  static function &contributionTokens() {
+  public static function &contributionTokens() {
     static $tokens = NULL;
     $contribution = new CRM_Contribute_DAO_Contribution();
     $fields = $contribution->fields();
@@ -673,10 +679,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * get qf mappig for all date parts.
+   * Get QF mapping for all date parts.
    *
+   * @return array
    */
-  static function &qfDatePartsMapping() {
+  public static function &qfDatePartsMapping() {
     static $qfDatePartsMapping = NULL;
     if (!$qfDatePartsMapping) {
       $qfDatePartsMapping = [
@@ -702,9 +709,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   *  CiviCRM supported date input formats
+   * CiviCRM supported date input formats.
+   *
+   * @return array<string, mixed>
    */
-  static function getDatePluginInputFormats() {
+  public static function getDatePluginInputFormats() {
     $dateInputFormats = [
       "mm/dd/yy" => ts('mm/dd/yyyy (12/31/2009)'),
       "dd/mm/yy" => ts('dd/mm/yyyy (31/12/2009)'),
@@ -736,14 +745,15 @@ class CRM_Core_SelectValues {
          gives proper result
         */
 
-
     return $dateInputFormats;
   }
 
   /**
-   * Map date plugin and actual format that is used by PHP
+   * Map date plugin and actual format that is used by PHP.
+   *
+   * @return array<string, string>
    */
-  static function datePluginToPHPFormats() {
+  public static function datePluginToPHPFormats() {
     $dateInputFormats = [
       "mm/dd/yy" => 'm/d/Y',
       "dd/mm/yy" => 'd/m/Y',
@@ -765,9 +775,11 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * Map date plugin and actual format that is used by PHP
+   * Map date plugin and actual format that is used by POSIX.
+   *
+   * @return array<string, string>
    */
-  static function datePluginToPOSIXFormats() {
+  public static function datePluginToPOSIXFormats() {
     $dateInputFormats = [
       "mm/dd/yy" => '%m/%d/%Y',
       "dd/mm/yy" => '%d/%m/%Y',
@@ -789,13 +801,14 @@ class CRM_Core_SelectValues {
   }
 
   /**
-   * Time formats
+   * Time formats.
+   *
+   * @return array<int, mixed>
    */
-  static function getTimeFormats() {
+  public static function getTimeFormats() {
     $timeFormats = ['1' => ts('12 Hours'),
       '2' => ts('24 Hours'),
     ];
     return $timeFormats;
   }
 }
-

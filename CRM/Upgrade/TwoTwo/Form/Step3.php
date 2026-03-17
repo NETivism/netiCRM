@@ -27,20 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Upgrade_TwoTwo_Form_Step3 extends CRM_Upgrade_Form {
-  function verifyPreDBState(&$errorMessage) {
+  public function verifyPreDBState(&$errorMessage) {
     $errorMessage = ts('Pre-condition failed for upgrade step %1.', [1 => '3']);
     return $this->checkVersion('2.1.102');
   }
 
-  function upgrade() {
+  public function upgrade() {
     //1.upgared the domain from email address.
     self::upgradeDomainFromEmail();
 
@@ -50,7 +47,7 @@ class CRM_Upgrade_TwoTwo_Form_Step3 extends CRM_Upgrade_Form {
     $this->setVersion('2.1.103');
   }
 
-  function verifyPostDBState(&$errorMessage) {
+  public function verifyPostDBState(&$errorMessage) {
     // check if Option Group & Option Values tables exists
     if (!CRM_Core_DAO::checkTableExists('civicrm_option_group') ||
       !CRM_Core_DAO::checkTableExists('civicrm_option_value')
@@ -85,15 +82,15 @@ class CRM_Upgrade_TwoTwo_Form_Step3 extends CRM_Upgrade_Form {
     return $this->checkVersion('2.1.103');
   }
 
-  function getTitle() {
+  public function getTitle() {
     return ts('CiviCRM 2.2 Upgrade: Step Three (Option Group And Values)');
   }
 
-  function getTemplateMessage() {
+  public function getTemplateMessage() {
     return '<p>' . ts('Step Three will upgrade the Option Group And Values in your database.') . '</p>';
   }
 
-  function getButtonTitle() {
+  public function getButtonTitle() {
     return ts('Upgrade & Continue');
   }
 
@@ -105,7 +102,7 @@ class CRM_Upgrade_TwoTwo_Form_Step3 extends CRM_Upgrade_Form {
    *
    * @return None
    */
-  function upgradeDomainFromEmail() {
+  public function upgradeDomainFromEmail() {
     $query = "
 SELECT id 
   FROM civicrm_option_group 
@@ -150,7 +147,6 @@ SELECT id
       //it as default from email address..
 
       //get the existing from email address.
-
 
       $optionValues = [];
       $grpParams['name'] = 'from_email_address';
@@ -267,11 +263,9 @@ ALTER TABLE `civicrm_domain`
   }
 
   /* preserve the mailer preferences from config backend to
-     * civicrm_preferences and unset these from config backend. 
+     * civicrm_preferences and unset these from config backend.
      */
-  function mailerPreferences() {
-
-
+  public function mailerPreferences() {
 
     $mailerValues = [];
     $mailerFields = ['outBound_option', 'smtpServer', 'smtpPort', 'smtpAuth',
@@ -301,4 +295,3 @@ ALTER TABLE `civicrm_domain`
     }
   }
 }
-

@@ -8,7 +8,7 @@
  */
 class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
 
-  const DEFAULT_TIMEOUT = 90;
+  public const DEFAULT_TIMEOUT = 90;
 
   private $apiKey;
   private $endpoint;
@@ -18,6 +18,8 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * Constructor
    *
    * Initialize service with configuration from CiviCRM settings
+   *
+   * @throws Exception
    */
   public function __construct() {
     parent::__construct();
@@ -93,7 +95,8 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
       // Step 5: Format response with advanced parameters
       return $this->formatResponse($response, $params);
 
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       return $this->createErrorResponse('api_error', $e->getMessage());
     }
   }
@@ -103,7 +106,7 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * Convert standardized parameters to service-specific format
    *
    * @param array $params Input parameters (by reference)
-   * @return void
+   * @return void None.
    */
   protected function formatParams(&$params) {
     // Set basic default parameters for ITRI ICL
@@ -161,7 +164,7 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * @return bool True if response indicates error
    */
   public function isError($response) {
-    return !is_array($response) || !isset($response['success']) || $response['success'] !== true;
+    return !is_array($response) || !isset($response['success']) || $response['success'] !== TRUE;
   }
 
   /**
@@ -206,9 +209,9 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
     $ch = curl_init($requestData['url']);
 
     curl_setopt_array($ch, [
-      CURLOPT_POST => true,
+      CURLOPT_POST => TRUE,
       CURLOPT_POSTFIELDS => $requestData['payload'],
-      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_RETURNTRANSFER => TRUE,
       CURLOPT_HTTPHEADER => $requestData['headers'],
       CURLOPT_TIMEOUT => $this->timeout,
       CURLOPT_CONNECTTIMEOUT => 10
@@ -246,7 +249,7 @@ class CRM_AI_GenImageService_ITRIICL extends CRM_AI_GenImageService {
    * Convert ratio strings to width/height values
    *
    * @param string $ratio Ratio string (e.g., "1:1", "4:3", "16:9")
-   * @return void
+   * @return void None.
    */
   private function processRatio($ratio) {
     $ratioMap = [

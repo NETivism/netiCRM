@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Business objects for managing price fields values.
@@ -42,15 +38,14 @@
 class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
 
   /**
-   * insert/update a new entry in the database.
+   * Insert/update a new entry in the database.
    *
-   * @param array $params (reference), array $ids
+   * @param array $params (reference)
+   * @param array $ids the array that holds all the db ids
    *
-   * @return object CRM_Price_DAO_FieldValue object
-   * @access public
-   * @static
+   * @return CRM_Price_BAO_FieldValue
    */
-  static function &add(&$params, $ids) {
+  public static function &add(&$params, $ids) {
 
     $fieldValueBAO = new CRM_Price_BAO_FieldValue();
     $fieldValueBAO->copyValues($params);
@@ -66,20 +61,21 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
   /**
    * Creates a new entry in the database.
    *
-   * @param array $params (reference), array $ids
+   * @param array $params (reference)
+   * @param array $ids the array that holds all the db ids
    *
-   * @return object CRM_Price_DAO_FieldValue object
-   * @access public
-   * @static
+   * @return CRM_Price_BAO_FieldValue|void
    */
-  static function create(&$params, $ids) {
+  public static function create(&$params, $ids) {
 
     if (!is_array($params) || empty($params)) {
       return;
     }
 
     if ($id = CRM_Utils_Array::value('id', $ids)) {
-      if (isset($params['name']))unset($params['name']);
+      if (isset($params['name'])) {
+        unset($params['name']);
+      }
 
       $oldWeight = NULL;
       if ($id) {
@@ -105,31 +101,28 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
    * Takes a bunch of params that are needed to match certain criteria and
    * retrieves the relevant objects.
    *
-   * @param array $params   (reference ) an assoc array
+   * @param array $params (reference ) an assoc array
    * @param array $defaults (reference ) an assoc array to hold the flattened values
    *
-   * @return object CRM_Price_DAO_FieldValue object
-   * @access public
-   * @static
+   * @return CRM_Price_DAO_FieldValue
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_Price_DAO_FieldValue', $params, $defaults);
   }
 
   /**
-   * Retrive the all values for given field id
+   * Retrieve the all values for given field id.
    *
    * @param int $fieldId price_field_id
    * @param array $values (reference ) to hold the values
    * @param string $orderBy for order by, default weight
-   * @param int $isActive is_active, default false
+   * @param bool $isActive is_active, default false
    *
    * @return array $values
    *
-   * @access public
-   * @static
    */
-  static function getValues($fieldId, &$values, $orderBy = 'weight', $isActive = FALSE) {
+  public static function getValues($fieldId, &$values, $orderBy = 'weight', $isActive = FALSE) {
+
     $fieldValueDAO = new CRM_Price_DAO_FieldValue();
     $fieldValueDAO->price_field_id = $fieldId;
     $fieldValueDAO->orderBy($orderBy, 'label');
@@ -146,31 +139,27 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag in the db.
    *
-   * @param int      $id         Id of the database record
-   * @param boolean  $is_active  Value we want to set the is_active field
+   * @param int $id Id of the database record
+   * @param bool $is_active Value we want to set the is_active field
    *
-   * @return   Object            DAO object on sucess, null otherwise
+   * @return bool|null DAO object on success, null otherwise
    *
-   * @access public
-   * @static
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     return CRM_Core_DAO::setFieldValue('CRM_Price_DAO_FieldValue', $id, 'is_active', $is_active);
   }
 
   /**
-   * delete all values of the given field id
+   * Delete all values of the given field id.
    *
-   * @param  int    $fieldId    Price field id
+   * @param int $fieldId Price field id
    *
-   * @return boolean
+   * @return bool|void
    *
-   * @access public
-   * @static
    */
-  static function deleteValues($fieldId) {
+  public static function deleteValues($fieldId) {
     if (!$fieldId) {
       return FALSE;
     }
@@ -183,14 +172,12 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
   /**
    * Delete the value.
    *
-   * @param   int   $id  Id
+   * @param int $id Id
    *
-   * @return  boolean
+   * @return bool
    *
-   * @access public
-   * @static
    */
-  static function del($id) {
+  public static function del($id) {
     if (!$id) {
       return FALSE;
     }
@@ -200,4 +187,3 @@ class CRM_Price_BAO_FieldValue extends CRM_Price_DAO_FieldValue {
     return $fieldValueDAO->delete();
   }
 }
-

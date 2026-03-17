@@ -34,147 +34,143 @@
  *
  */
 
-class CiviTestCase extends PHPUnit_Framework_Testcase
-{
+class CiviTestCase extends PHPUnit_Framework_Testcase {
 
-    function __construct( ) 
-    {
-        parent::__construct( );
+  public function __construct() {
+    parent::__construct();
 
-        require_once 'CRM/Core/Config.php';
-        $config =& CRM_Core_Config::singleton( );
+    require_once 'CRM/Core/Config.php';
+    $config = &CRM_Core_Config::singleton();
+  }
+
+  public function civiGet($path, $params, $abort = FALSE) {
+    $url = CRM_Utils_System::url($path, $params, TRUE, NULL, FALSE);
+
+    return $this->civiGetURL($url, $abort);
+  }
+
+  public function civiGetURL($url, $abort = FALSE) {
+    $html = $this->_browser->get($url);
+
+    if ($this->drupalCheckAuth(TRUE)) {
+      $html .= $this->drupalCheckAuth();
     }
 
-    function civiGet( $path, $params, $abort = false ) {
-        $url = CRM_Utils_System::url( $path, $params, true, null, false );
+    $this->_content = $this->_browser->getContent();
 
-        return $this->civiGetURL( $url, $abort );
+    if ($abort) {
+      echo $html;
+      exit();
     }
 
-    function civiGetURL( $url, $abort = false ) {
-        $html = $this->_browser->get($url);
-        
-        if ($this->drupalCheckAuth(true)) {
-            $html .= $this->drupalCheckAuth();
-        }
+    return $html;
+  }
 
-        $this->_content = $this->_browser->getContent();
-
-        if ( $abort ) {
-            echo $html;
-            exit( );
-        }
-
-        return $html;
+  public function getUrlsByLabel($label, $fuzzy = FALSE) {
+    if (!$fuzzy) {
+      return $this->_browser->_page->getUrlsByLabel($label);
     }
 
+    $matches = [];
+    foreach ($this->_browser->_page->_links as $link) {
+      $text = $link->getText();
+      if ($text == $label ||
+           strpos($text, $label) !== FALSE) {
+        $matches[] = $this->_browser->_page->_getUrlFromLink($link);
+      }
+    }
+    return $matches;
+  }
 
-    
-
-
-    function getUrlsByLabel($label, $fuzzy = false) {
-        if ( ! $fuzzy ) {
-            return $this->_browser->_page->getUrlsByLabel( $label );
-        }
-
-        $matches = [];
-        foreach ($this->_browser->_page->_links as $link) {
-            $text = $link->getText();
-            if ( $text == $label ||
-                 strpos( $text, $label ) !== false ) {
-                $matches[] = $this->_browser->_page->_getUrlFromLink($link);
-            }
-        }
-        return $matches;
+  public function isCiviURL($url, $ignoreVariations = TRUE) {
+    static $config = NULL;
+    if (!$config) {
+      $config = &CRM_Core_Config::singleton();
     }
 
-    function isCiviURL( $url, $ignoreVariations = true ) {
-        static $config = null;
-        if ( ! $config ) {
-            $config =& CRM_Core_Config::singleton( );
-        }
-        
-        if ( strpos( $url,
-                     $config->userFrameworkBaseURL . 'civicrm/' ) === false ) {
-            return false;
-        }
-        
-        // ignore all urls with snippet, force, crmSID
-        if ( $ignoreVariations &&
-             ( strpos( $url, 'snippet=' ) ||
-               strpos( $url, 'force='   ) ||
-               strpos( $url, 'crmSID='  ) ) ) {
-            return false;
-        }
-        
-        return true;
+    if (strpos(
+      $url,
+      $config->userFrameworkBaseURL . 'civicrm/'
+    ) === FALSE) {
+      return FALSE;
     }
 
-    function getUrlsByToken( $token, $path = null ) {
-        $matches = [];
-        foreach ($this->_browser->_page->_links as $link) {
-            $text = $link->getText();
-            $url  = $this->_browser->_page->_getUrlFromLink($link)->asString( );
-            if ( $this->isCiviURL( $url ) &&
-                 ( strpos( $url, $token ) !== false ) ) {
-                if ( ! $path ||
-                     strpos( $url, $path ) !== false ) {
-                    $matches[$text] = $url;
-                }
-            }
+    // ignore all urls with snippet, force, crmSID
+    if ($ignoreVariations &&
+         (strpos($url, 'snippet=') ||
+           strpos($url, 'force=') ||
+           strpos($url, 'crmSID='))) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  public function getUrlsByToken($token, $path = NULL) {
+    $matches = [];
+    foreach ($this->_browser->_page->_links as $link) {
+      $text = $link->getText();
+      $url  = $this->_browser->_page->_getUrlFromLink($link)->asString();
+      if ($this->isCiviURL($url) &&
+           (strpos($url, $token) !== FALSE)) {
+        if (!$path ||
+             strpos($url, $path) !== FALSE) {
+          $matches[$text] = $url;
         }
-        return $matches;
+      }
+    }
+    return $matches;
+  }
+
+  public function clickLink($label, $index = 0, $fuzzy = FALSE) {
+    if (!$fuzzy) {
+      return parent::clickLink($label, $index);
     }
 
-    function clickLink($label, $index = 0, $fuzzy = false) {
-        if ( ! $fuzzy ) {
-            return parent::clickLink( $label, $index );
-        } 
-
-        $url_before = str_replace('%', '%%', $this->getUrl());
-        $urls = $this->getUrlsByLabel($label, true);
-        if (count($urls) < $index + 1) {
-            $url_target = 'URL NOT FOUND!';
-        } else {
-            $url_target = str_replace('%', '%%', $urls[$index]->asString());
-        }
-
-        $this->_browser->_load( $urls[$index], new SimpleGetEncoding( ) );
-        $ret = $this->_failOnError( $this->_browser->getContent( ) );
-        
-        $this->assertTrue($ret, ' [browser] clicked link '. t($label) . " ($url_target) from $url_before");
-        
-        return $ret;
+    $url_before = str_replace('%', '%%', $this->getUrl());
+    $urls = $this->getUrlsByLabel($label, TRUE);
+    if (count($urls) < $index + 1) {
+      $url_target = 'URL NOT FOUND!';
+    }
+    else {
+      $url_target = str_replace('%', '%%', $urls[$index]->asString());
     }
 
-    function allPermissions( ) 
-    {
-        return [
-                     1 => 'add contacts'               ,
-                     2 => 'view all contacts'          ,
-                     3 => 'edit all contacts'          ,
-                     4 => 'import contacts'            ,
-                     5 => 'edit groups'                ,
-                     6 => 'administer CiviCRM'         ,
-                     7 => 'access uploaded files'      ,
-                     8 => 'profile listings and forms' ,
-                     9 => 'access all custom data'     ,
-                     10 => 'view all activities'        ,
-                     11 => 'access CiviCRM'             ,
-                     12 => 'access Contact Dashboard'   ,
-                     ];
-    }
+    $this->_browser->_load($urls[$index], new SimpleGetEncoding());
+    $ret = $this->_failOnError($this->_browser->getContent());
 
-    function errorPage( &$ret, &$url ) {
-        // check if there is a civicrm error or warning message on the page
-        // at a later stage, we should also check for CMS based errors
-        $this->assertTrue($ret, ts(' [browser] GET %1"', ['%1' => $url]));
+    $this->assertTrue($ret, ' [browser] clicked link '. t($label) . " ($url_target) from $url_before");
 
-        $this->assertNoText( 'Sorry. A non-recoverable error has occurred', '[browser] fatal error page?' );
-        $this->assertNoText( 'The requested page could not be found', '[browser] page not found?' );
-        $this->assertNoText( 'You are not authorized to access this page', '[browser] permission denied?' );
-        
-        return;
-    }
+    return $ret;
+  }
+
+  public function allPermissions() {
+    return [
+                 1 => 'add contacts'               ,
+                 2 => 'view all contacts'          ,
+                 3 => 'edit all contacts'          ,
+                 4 => 'import contacts'            ,
+                 5 => 'edit groups'                ,
+                 6 => 'administer CiviCRM'         ,
+                 7 => 'access uploaded files'      ,
+                 8 => 'profile listings and forms' ,
+                 9 => 'access all custom data'     ,
+                 10 => 'view all activities'        ,
+                 11 => 'access CiviCRM'             ,
+                 12 => 'access Contact Dashboard'   ,
+                 ];
+  }
+
+  public function errorPage(&$ret, &$url) {
+    // check if there is a civicrm error or warning message on the page
+    // at a later stage, we should also check for CMS based errors
+    $this->assertTrue($ret, ts(' [browser] GET %1"', ['%1' => $url]));
+
+    $this->assertNoText('Sorry. A non-recoverable error has occurred', '[browser] fatal error page?');
+    $this->assertNoText('The requested page could not be found', '[browser] page not found?');
+    $this->assertNoText('You are not authorized to access this page', '[browser] permission denied?');
+
+    return;
+  }
 
 }

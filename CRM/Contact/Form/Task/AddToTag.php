@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class provides the functionality to delete a group of
@@ -65,7 +60,7 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     // add select for tag
     $this->_tags = CRM_Core_BAO_Tag::getTags();
 
@@ -73,19 +68,28 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
       $this->_tagElement = &$this->addElement('checkbox', "tag[$tagID]", NULL, $tagName);
     }
 
-
-
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, 'civicrm_contact');
 
     $this->addDefaultButtons(ts('Tag Contacts'));
   }
 
-  function addRules() {
+  /**
+   * Add the form rules.
+   */
+  public function addRules() {
     $this->addFormRule(['CRM_Contact_Form_Task_AddToTag', 'formRule']);
   }
 
-  static function formRule($form, $rule) {
+  /**
+   * Form rule.
+   *
+   * @param array $form
+   * @param array $rule
+   *
+   * @return array<string, string>
+   */
+  public static function formRule($form, $rule) {
     $errors = [];
     if (empty($form['tag']) && empty($form['taglist'])) {
       $errors['_qf_default'] = "Please select atleast one tag.";
@@ -94,11 +98,11 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     //get the submitted values in an array
@@ -156,4 +160,3 @@ class CRM_Contact_Form_Task_AddToTag extends CRM_Contact_Form_Task {
   }
   //end of function
 }
-

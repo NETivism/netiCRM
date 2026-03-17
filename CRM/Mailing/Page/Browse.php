@@ -27,15 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
-
-
-
 
 /**
  * This implements the profile page for all contacts. It uses a selector
@@ -90,7 +84,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
    * @access public
    *
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_unscheduled = $this->_archived = $archiveLinks = FALSE;
     $this->_mailingId = CRM_Utils_Request::retrieve('mid', 'Positive', $this);
 
@@ -127,14 +121,14 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
    *
    * @return void
    */
-  function run($newArgs = NULL) {
+  public function run($newArgs = NULL) {
     $this->preProcess();
 
-    $this->_sortByCharacter = CRM_Utils_Request::retrieve('sortByCharacter',
+    $this->_sortByCharacter = CRM_Utils_Request::retrieve(
+      'sortByCharacter',
       'String',
       $this
     );
-
 
     if (strtolower($this->_sortByCharacter) == 'all' ||
       !empty($_POST)
@@ -173,7 +167,8 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
         CRM_Utils_System::redirect($context);
       }
       else {
-        $controller = new CRM_Core_Controller_Simple('CRM_Mailing_Form_Browse',
+        $controller = new CRM_Core_Controller_Simple(
+          'CRM_Mailing_Form_Browse',
           ts('Cancel Mailing'),
           $this->_action
         );
@@ -186,15 +181,15 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
 
         // check for action permissions.
         if (!CRM_Core_Permission::checkActionPermission('CiviMail', $this->_action)) {
-           return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+          return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
         }
-
 
         CRM_Mailing_BAO_Mailing::del($this->_mailingId);
         CRM_Utils_System::redirect($context);
       }
       else {
-        $controller = new CRM_Core_Controller_Simple('CRM_Mailing_Form_Browse',
+        $controller = new CRM_Core_Controller_Simple(
+          'CRM_Mailing_Form_Browse',
           ts('Delete Mailing'),
           $this->_action
         );
@@ -210,7 +205,8 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
         CRM_Utils_System::redirect($context);
       }
       else {
-        $controller = new CRM_Core_Controller_Simple('CRM_Mailing_Form_Browse',
+        $controller = new CRM_Core_Controller_Simple(
+          'CRM_Mailing_Form_Browse',
           ts('Archive Mailing'),
           $this->_action
         );
@@ -296,16 +292,18 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
     return parent::run();
   }
 
-  function search() {
+  public function search() {
     if ($this->_action &
-      (CRM_Core_Action::ADD |
+      (
+        CRM_Core_Action::ADD |
         CRM_Core_Action::UPDATE
       )
     ) {
       return;
     }
 
-    $form = new CRM_Core_Controller_Simple('CRM_Mailing_Form_Search',
+    $form = new CRM_Core_Controller_Simple(
+      'CRM_Mailing_Form_Search',
       ts('Search Mailings'),
       CRM_Core_Action::ADD
     );
@@ -315,7 +313,7 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
     $form->run();
   }
 
-  function whereClause(&$params, $sortBy = TRUE) {
+  public function whereClause(&$params, $sortBy = TRUE) {
     $values = [];
 
     $clauses = [];
@@ -340,4 +338,3 @@ class CRM_Mailing_Page_Browse extends CRM_Core_Page {
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
 }
-

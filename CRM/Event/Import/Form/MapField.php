@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class gets the name of the file to upload
@@ -46,7 +42,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * cache of preview data values
    *
    * @var array
-   * @access protected
    */
   protected $_dataValues;
 
@@ -54,7 +49,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * mapper fields
    *
    * @var array
-   * @access protected
    */
   protected $_mapperFields;
 
@@ -62,7 +56,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * loaded mapping ID
    *
    * @var int
-   * @access protected
    */
   protected $_loadedMappingId;
 
@@ -70,7 +63,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * number of columns in import file
    *
    * @var int
-   * @access protected
    */
   protected $_columnCount;
 
@@ -78,7 +70,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * column headers, if we have them
    *
    * @var array
-   * @access protected
    */
   protected $_columnHeaders;
 
@@ -87,18 +78,16 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * form building already.
    *
    * @var array
-   * @access protected
    */
   protected $_fieldUsed;
 
   /**
    * Attempt to resolve the header with our mapper fields
    *
-   * @param header
-   * @param mapperFields
+   * @param string $columnName
+   * @param array $patterns
    *
    * @return string
-   * @access public
    */
   public function defaultFromHeader($columnName, &$patterns) {
     if (!preg_match('/^[0-9a-z]$/i', $columnName)) {
@@ -116,11 +105,10 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
   /**
    * Guess at the field names given the data and patterns from the schema
    *
-   * @param patterns
-   * @param index
+   * @param array $patterns
+   * @param int $index
    *
    * @return string
-   * @access public
    */
   public function defaultFromData(&$patterns, $index) {
     $best = '';
@@ -161,7 +149,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $this->_mapperFields = $this->get('fields');
@@ -211,11 +198,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * Function to actually build the form
    *
    * @return void
-   * @access public
    */
   public function buildQuickForm() {
-
-
 
     //to save the current mappings
     if (!$this->get('savedMapping')) {
@@ -272,7 +256,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     $headerPatterns = $this->get('headerPatterns');
     $dataPatterns = $this->get('dataPatterns');
     $hasLocationTypes = $this->get('fieldTypes');
-
 
     /* Initialize all field usages to false */
 
@@ -341,7 +324,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
         if ($hasHeaders) {
           // Infer the default from the skipped headers if we have them
           $defaults["mapper[$i]"] = [
-            $this->defaultFromHeader($this->_columnHeaders[$i],
+            $this->defaultFromHeader(
+              $this->_columnHeaders[$i],
               $headerPatterns
             ),
             //                     $defaultLocationType->id
@@ -375,7 +359,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
 
     $this->setDefaults($defaults);
 
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -395,12 +380,12 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * global validation rules for the form
    *
    * @param array $fields posted values of the form
+   * @param array $files
+   * @param CRM_Event_Import_Form_MapField $self
    *
-   * @return array list of errors to be posted back to the form
-   * @static
-   * @access public
+   * @return array|bool list of errors to be posted back to the form
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     $fieldMessage = NULL;
     if (!CRM_Utils_Array::arrayKeyExists('savedMapping', $fields)) {
@@ -462,7 +447,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
             }
           }
           elseif (!in_array('event_title', $importKeys)) {
-            $errors['_qf_default'] .= ts('Missing required field: Provide %1 or %2',
+            $errors['_qf_default'] .= ts(
+              'Missing required field: Provide %1 or %2',
               [1 => $title, 2 => 'Event Title']
             ) . '<br />';
           }
@@ -509,7 +495,6 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * preview the file and extract some summary statistics
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     $params = $this->controller->exportValues('MapField');
@@ -532,7 +517,7 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     $mapperKeysMain = [];
 
     $mapperWeight = $params['weight'];
-    for ($i=0; $i < count($mapperWeight); $i++) {
+    for ($i = 0; $i < count($mapperWeight); $i++) {
       $mapperKeys[] = $mapperKeysOrigin[array_search($i, $mapperWeight)];
     }
     $this->set('mapperKeys', $mapperKeys);
@@ -577,13 +562,13 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
     if (CRM_Utils_Array::value('saveMapping', $params)) {
       $mappingParams = ['name' => $params['saveMappingName'],
         'description' => $params['saveMappingDesc'],
-        'mapping_type_id' => CRM_Core_OptionGroup::getValue('mapping_type',
+        'mapping_type_id' => CRM_Core_OptionGroup::getValue(
+          'mapping_type',
           'Import Participant',
           'name'
         ),
       ];
       $saveMapping = CRM_Core_BAO_Mapping::add($mappingParams);
-
 
       for ($i = 0; $i < $this->_columnCount; $i++) {
         $saveMappingFields = new CRM_Core_DAO_MappingField();
@@ -620,10 +605,8 @@ class CRM_Event_Import_Form_MapField extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Match Fields');
   }
 }
-

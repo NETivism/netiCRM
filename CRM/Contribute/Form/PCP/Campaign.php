@@ -27,15 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * This class generates form components for processing a ontribution
- *
+ * Form for setting up or editing a Personal Campaign Page (PCP).
  */
 class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   public $_elementIndex;
@@ -46,6 +43,14 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   private $_contactID;
   private $_contriPageId;
 
+  /**
+   * Set up variables before the form is built.
+   *
+   * This method initializes the context, PCP page ID, contact ID, and sets the
+   * page title. It also prepares preview URLs if the PCP already exists.
+   *
+   * @return void
+   */
   public function preProcess() {
     // we do not want to display recently viewed items, so turn off
     $this->assign('displayRecent', FALSE);
@@ -80,8 +85,12 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       if ($this->_key) {
         $queryParams['key'] = $this->_key;
       }
-      $pcpPagePreviewUrl = CRM_Utils_System::url("civicrm/contribute/pcp/info", http_build_query($queryParams, '', '&'),
-        TRUE, NULL, FALSE,
+      $pcpPagePreviewUrl = CRM_Utils_System::url(
+        "civicrm/contribute/pcp/info",
+        http_build_query($queryParams, '', '&'),
+        TRUE,
+        NULL,
+        FALSE,
         TRUE
       );
       $this->assign('pcp_page_preview_url', $pcpPagePreviewUrl);
@@ -92,7 +101,15 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     parent::preProcess();
   }
 
-  function setDefaultValues() {
+  /**
+   * Set default values for the form.
+   *
+   * Retrieves existing PCP details (title, goal amount, active status, etc.)
+   * from the database if in edit mode.
+   *
+   * @return array the array of default values for form elements
+   */
+  public function setDefaultValues() {
     $dafaults = [];
     $dao = new CRM_Contribute_DAO_PCP();
 
@@ -124,10 +141,13 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Actually build the form components.
    *
-   * @return None
-   * @access public
+   * Adds fields for title, summary, goal amount, button text, message (WYSIWYG),
+   * image attachments, and display options (thermometer, honor roll).
+   * It also handles field freezing based on PCP status and user permissions.
+   *
+   * @return void
    */
   public function buildQuickForm() {
     $isManager = CRM_Core_Permission::check('administer CiviCRM');
@@ -194,7 +214,7 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
       $isActive->freeze();
     }
     if (!in_array($statusId, [$statusDraftId]) && !$isManager) {
-      foreach($readOnly as &$element) {
+      foreach ($readOnly as &$element) {
         $element->freeze();
       }
     }
@@ -223,17 +243,17 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule for validation.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * Ensures goal amount is positive and button text length is within limits.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @param array $fields the input form values
+   * @param array $files the uploaded files array
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array<string, mixed> true if no errors, or an array of error messages
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
     if ($fields['goal_amount'] <= 0) {
       $errors['goal_amount'] = ts('Goal Amount should be a numeric value greater than zero.');
@@ -246,11 +266,13 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form submission.
    *
-   * @access public
+   * Saves or updates the PCP record, handles file attachments, sends
+   * notifications to administrators and users, and manages redirections based
+   * on the submission context.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $params = $this->controller->exportValues();
@@ -275,8 +297,11 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
     $params['goal_amount'] = CRM_Utils_Rule::cleanMoney($params['goal_amount']);
 
-    $approval_needed = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_PCPBlock',
-      $params['contribution_page_id'], 'is_approval_needed', 'entity_id'
+    $approval_needed = CRM_Core_DAO::getFieldValue(
+      'CRM_Contribute_DAO_PCPBlock',
+      $params['contribution_page_id'],
+      'is_approval_needed',
+      'entity_id'
     );
     $approvalMessage = NULL;
     $statusDraftId = CRM_Core_OptionGroup::getValue('pcp_status', 'Draft', 'name');
@@ -355,27 +380,36 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
 
       $this->assign('pcpId', $pcp->id);
 
-      $supporterUrl = CRM_Utils_System::url("civicrm/contact/view",
+      $supporterUrl = CRM_Utils_System::url(
+        "civicrm/contact/view",
         "reset=1&cid={$pcp->contact_id}",
-        TRUE, NULL, FALSE,
+        TRUE,
+        NULL,
+        FALSE,
         FALSE
       );
       $this->assign('supporterUrl', $supporterUrl);
       $supporterName = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $pcp->contact_id, 'display_name');
       $this->assign('supporterName', $supporterName);
 
-      $contribPageUrl = CRM_Utils_System::url("civicrm/contribute/transact",
+      $contribPageUrl = CRM_Utils_System::url(
+        "civicrm/contribute/transact",
         "reset=1&id={$pcp->contribution_page_id}",
-        TRUE, NULL, FALSE,
+        TRUE,
+        NULL,
+        FALSE,
         TRUE
       );
       $this->assign('contribPageUrl', $contribPageUrl);
       $contribPageTitle = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $pcp->contribution_page_id, 'title');
       $this->assign('contribPageTitle', $contribPageTitle);
 
-      $managePCPUrl = CRM_Utils_System::url("civicrm/admin/pcp",
+      $managePCPUrl = CRM_Utils_System::url(
+        "civicrm/admin/pcp",
         "reset=1&contribution_page_id={$pcp->contribution_page_id}",
-        TRUE, NULL, FALSE,
+        TRUE,
+        NULL,
+        FALSE,
         FALSE
       );
       $this->assign('managePCPUrl', $managePCPUrl);
@@ -409,7 +443,6 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
         }
       }
     }
-
 
     // send welcome mail to Draft user or Waiting for review user
     if (!$this->_pageId) {
@@ -474,4 +507,3 @@ class CRM_Contribute_Form_PCP_Campaign extends CRM_Core_Form {
     }
   }
 }
-

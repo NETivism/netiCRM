@@ -11,7 +11,6 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     // required parameter from url
@@ -27,7 +26,7 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
     $this->_contactId = $values['contact_id'];
     $this->_statusId = $values['status_id'];
     if (empty($this->_eventId) || empty($this->_contactId)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have access to this page'));
       return;
     }
     $params = ['id' => $this->_eventId];
@@ -39,13 +38,13 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
     // check permissions
     $eventInfoUrl = CRM_Utils_System::url('civicrm/event/info', "reset=1&id=".$this->_eventId);
     if (!CRM_Contact_BAO_Contact_Permission::validateChecksumContact($this->_contactId, $this)) {
-       return CRM_Core_Error::statusBounce(ts("Something wrong with your check-in url. Contact event manager for further assistant."), $eventInfoUrl);
+      return CRM_Core_Error::statusBounce(ts("Something wrong with your check-in url. Contact event manager for further assistant."), $eventInfoUrl);
       return;
     }
 
     $this->_perm = CRM_Core_Permission::check("edit event participants");
     if (!$this->_perm) {
-       return CRM_Core_Error::statusBounce(ts("You can only check in event with event manager."), $eventInfoUrl);
+      return CRM_Core_Error::statusBounce(ts("You can only check in event with event manager."), $eventInfoUrl);
       return;
     }
   }
@@ -53,20 +52,19 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
   /**
    * Function to build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     if (CRM_Core_Permission::check("edit event participants")) {
       $displayName = CRM_Core_DAO::getFieldValue("CRM_Contact_DAO_Contact", $this->_contactId, 'display_name');
-      $this->assign("display_name", $displayName); 
+      $this->assign("display_name", $displayName);
       $this->assign("event", $this->_event);
       $participantStatus = CRM_Event_PseudoConstant::participantstatus();
-      $participantStatusPositive = CRM_Event_PseudoConstant::participantStatus( null, "class = 'Positive'" );
+      $participantStatusPositive = CRM_Event_PseudoConstant::participantStatus(NULL, "class = 'Positive'");
       $attendedStatusId = array_search('Attended', $participantStatus);
       $this->assign('participant_id', $this->_participantId);
       $this->assign('contact_id', $this->_contactId);
-      if (empty($participantStatusPositive[$this->_statusId])){
+      if (empty($participantStatusPositive[$this->_statusId])) {
         $this->assign('status', ts($participantStatus[$this->_statusId]));
         $this->assign("status_message", ts("This participant is not registered."));
         $this->addRule("qfKey", ts('This participant is not registered.'), 'integer');
@@ -97,13 +95,19 @@ class CRM_Event_Form_Registration_ParticipantCheckin extends CRM_Event_Form_Regi
         $this->assign("status_message", ts("Press confirm to process check-in for this participant."));
         $this->assign("current_date", date('Y-m-d H:i:s'));
         $session = CRM_Core_Session::singleton();
-        $session->pushUserContext(CRM_Utils_System::url(CRM_Utils_System::currentPath(),
+        $session->pushUserContext(CRM_Utils_System::url(
+          CRM_Utils_System::currentPath(),
           "reset=1&participantId={$this->_participantId}&cs={$this->_csString}"
         ));
       }
     }
   }
 
+  /**
+   * Function to process the form
+   *
+   * @return void
+   */
   public function postProcess() {
     $participantStatus = CRM_Event_PseudoConstant::participantstatus();
     $attendedStatusId = array_search('Attended', $participantStatus);

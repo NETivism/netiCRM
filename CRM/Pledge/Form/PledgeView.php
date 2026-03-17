@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class generates form components for Pledge
@@ -43,17 +38,16 @@
 class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
 
   /**
-   * Function to set variables up before form is built
+   * Pre-process form.
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
 
-
     $values = $ids = [];
     $params = ['id' => $this->get('id')];
-    CRM_Pledge_BAO_Pledge::getValues($params,
+    CRM_Pledge_BAO_Pledge::getValues(
+      $params,
       $values,
       $ids
     );
@@ -86,24 +80,24 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
       $values['pledge_status'] = CRM_Utils_Array::value($values['status_id'], CRM_Contribute_PseudoConstant::contributionStatus());
     }
 
-
-
-    $url = CRM_Utils_System::url('civicrm/contact/view/pledge',
+    $url = CRM_Utils_System::url(
+      'civicrm/contact/view/pledge',
       "action=view&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
     );
 
     $recentOther = [];
     if (CRM_Core_Permission::checkActionPermission('CiviPledge', CRM_Core_Action::UPDATE)) {
-      $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/contact/view/pledge',
+      $recentOther['editUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/pledge',
         "action=update&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
     if (CRM_Core_Permission::checkActionPermission('CiviPledge', CRM_Core_Action::DELETE)) {
-      $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/contact/view/pledge',
+      $recentOther['deleteUrl'] = CRM_Utils_System::url(
+        'civicrm/contact/view/pledge',
         "action=delete&reset=1&id={$values['id']}&cid={$values['contact_id']}&context=home"
       );
     }
-
 
     $displayName = CRM_Contact_BAO_Contact::displayName($values['contact_id']);
     $this->assign('displayName', $displayName);
@@ -111,7 +105,8 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
     $title = $displayName . ' - (' . ts('Pledged') . ' ' . CRM_Utils_Money::format($values['pledge_amount']) . ' - ' . $values['contribution_type'] . ')';
 
     // add Pledge to Recent Items
-    CRM_Utils_Recent::add($title,
+    CRM_Utils_Recent::add(
+      $title,
       $url,
       $values['id'],
       'Pledge',
@@ -124,13 +119,13 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Done'),
           'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -140,4 +135,3 @@ class CRM_Pledge_Form_PledgeView extends CRM_Core_Form {
     );
   }
 }
-

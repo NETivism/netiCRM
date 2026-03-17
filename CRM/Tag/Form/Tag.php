@@ -26,31 +26,30 @@
 */
 
 /**
+ * Form for creating and editing tags.
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
- *
- */
-
-
-
-
-
-
-/**
- * This class generates form components for tags
- *
  */
 class CRM_Tag_Form_Tag extends CRM_Core_Form {
 
   /**
-   * The contact id, used when add/edit tag
+   * The contact id, used when add/edit tag.
    *
    * @var int
    */
   protected $_entityID;
-  protected $_entityTable; function preProcess() {
+
+  /**
+   * The entity table.
+   *
+   * @var string
+   */
+  protected $_entityTable;
+
+  /**
+   * Pre-process the form.
+   */
+  public function preProcess() {
     if ($this->get('entityID')) {
       $this->_entityID = $this->get('entityID');
     }
@@ -69,10 +68,9 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
   }
 
   /**
-   * Function to build the form
+   * Build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     // get categories for the contact id
@@ -109,7 +107,6 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
 
     //build tag widget
 
-
     $parentNames = CRM_Core_BAO_Tag::getTagSet('civicrm_contact');
     CRM_Core_Form_Tag::buildQuickForm($this, $parentNames, $this->_entityTable, $this->_entityID);
 
@@ -117,7 +114,8 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
       $this->freeze();
     }
     else {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Update Tags'),
             'isDefault' => TRUE,
@@ -131,10 +129,10 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
   }
 
   /**
+   * Process the form submission.
    *
-   * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     CRM_Utils_System::flushCache('CRM_Core_DAO_Tag');
@@ -148,6 +146,5 @@ class CRM_Tag_Form_Tag extends CRM_Core_Form {
 
     CRM_Core_Session::setStatus(ts('Your update(s) have been saved.'));
   }
-  //end of function
-}
 
+}

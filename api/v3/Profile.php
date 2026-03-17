@@ -72,7 +72,8 @@ function civicrm_api3_profile_get($params) {
     return civicrm_api3_create_error('Can not retrieve values for profiles include fields for more than one record type.');
   }
 
-  $profileFields = CRM_Core_BAO_UFGroup::getFields($params['profile_id'],
+  $profileFields = CRM_Core_BAO_UFGroup::getFields(
+    $params['profile_id'],
     FALSE,
     NULL,
     NULL,
@@ -89,7 +90,8 @@ function civicrm_api3_profile_get($params) {
     civicrm_api3_verify_mandatory($params, NULL, ['activity_id']);
 
     require_once 'CRM/Profile/Form.php';
-    $errors = CRM_Profile_Form::validateContactActivityProfile($params['activity_id'],
+    $errors = CRM_Profile_Form::validateContactActivityProfile(
+      $params['activity_id'],
       $params['contact_id'],
       $params['profile_id']
     );
@@ -151,7 +153,8 @@ function civicrm_api3_profile_set($params) {
 
   $contactParams = $activityParams = $missingParams = [];
 
-  $profileFields = CRM_Core_BAO_UFGroup::getFields($params['profile_id'],
+  $profileFields = CRM_Core_BAO_UFGroup::getFields(
+    $params['profile_id'],
     FALSE,
     NULL,
     NULL,
@@ -167,7 +170,8 @@ function civicrm_api3_profile_set($params) {
     civicrm_api3_verify_mandatory($params, NULL, ['activity_id']);
 
     require_once 'CRM/Profile/Form.php';
-    $errors = CRM_Profile_Form::validateContactActivityProfile($params['activity_id'],
+    $errors = CRM_Profile_Form::validateContactActivityProfile(
+      $params['activity_id'],
       $params['contact_id'],
       $params['profile_id']
     );
@@ -244,7 +248,8 @@ function civicrm_api3_profile_set($params) {
   CRM_Core_BAO_UFGroup::retrieve($ufGroupParams, $ufGroupDetails);
 
   if (isset($profileFields['group'])) {
-    CRM_Contact_BAO_GroupContact::create($groups,
+    CRM_Contact_BAO_GroupContact::create(
+      $groups,
       $params['contact_id'],
       FALSE,
       'Admin'
@@ -253,7 +258,8 @@ function civicrm_api3_profile_set($params) {
 
   if (isset($profileFields['tag'])) {
     require_once 'CRM/Core/BAO/EntityTag.php';
-    CRM_Core_BAO_EntityTag::create($tags,
+    CRM_Core_BAO_EntityTag::create(
+      $tags,
       'civicrm_contact',
       $params['contact_id']
     );
@@ -261,7 +267,8 @@ function civicrm_api3_profile_set($params) {
 
   if (CRM_Utils_Array::value('add_to_group_id', $ufGroupDetails)) {
     $contactIds = [$params['contact_id']];
-    CRM_Contact_BAO_GroupContact::addContactsToGroup($contactIds,
+    CRM_Contact_BAO_GroupContact::addContactsToGroup(
+      $contactIds,
       $ufGroupDetails['add_to_group_id']
     );
   }
@@ -290,7 +297,8 @@ function civicrm_api3_profile_apply($params) {
     return civicrm_api3_create_error('Invalid value for profile_id');
   }
 
-  $profileFields = CRM_Core_BAO_UFGroup::getFields($params['profile_id'],
+  $profileFields = CRM_Core_BAO_UFGroup::getFields(
+    $params['profile_id'],
     FALSE,
     NULL,
     NULL,
@@ -302,7 +310,8 @@ function civicrm_api3_profile_apply($params) {
     CRM_Core_Permission::EDIT
   );
 
-  list($data, $contactDetails) = CRM_Contact_BAO_Contact::formatProfileContactParams($params,
+  list($data, $contactDetails) = CRM_Contact_BAO_Contact::formatProfileContactParams(
+    $params,
     $profileFields,
     CRM_Utils_Array::value('contact_id', $params),
     $params['profile_id'],
@@ -323,9 +332,8 @@ function civicrm_api3_profile_apply($params) {
 function civicrm_api3_profile_getfields($params) {
   $dao = _civicrm_api3_get_DAO('UFGroup');
   $file = str_replace('_', '/', $dao) . ".php";
-  require_once ($file);
+  require_once($file);
   $d = new $dao();
   $fields = $d->fields();
   return civicrm_api3_create_success($fields);
 }
-

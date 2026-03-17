@@ -8,7 +8,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    * @var const
    * @access public
    */
-  const
+  public const
     VALID_EMAIL = 1,
     VALID_SPF = 2,
     VALID_DKIM = 4;
@@ -37,9 +37,9 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   /**
    * Preprocess Form
    *
-   * @return void
+   * @return void None.
    */
-  function preProcess() {
+  public function preProcess() {
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, TRUE);
     if ($this->_action & CRM_Core_Action::DELETE || $this->_action & CRM_Core_Action::UPDATE || $this->get('id')) {
       $this->_id = CRM_Utils_Request::retrieve('id', 'Integer', $this, TRUE);
@@ -55,13 +55,19 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     if ($this->_action & CRM_Core_Action::DELETE) {
       return;
     }
-		$this->_defaultFrom = trim(CRM_Mailing_BAO_Mailing::defaultFromMail());
+    $this->_defaultFrom = trim(CRM_Mailing_BAO_Mailing::defaultFromMail());
   }
 
-  function buildQuickForm() {
+  /**
+   * Builds the form.
+   *
+   * @return void None.
+   */
+  public function buildQuickForm() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       $this->assign('email', $this->_values['email']);
-      $this->addButtons([
+      $this->addButtons(
+        [
           [
             'type' => 'next',
             'name' => ts('Delete Mail Settings'),
@@ -76,13 +82,23 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     }
   }
 
-  function postProcess() {
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void None.
+   */
+  public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Core_BAO_OptionValue::del($this->_id);
       CRM_Core_Session::setStatus(ts('Selected option value has been deleted.'));
     }
   }
 
+  /**
+   * Saves values.
+   *
+   * @return void None.
+   */
   public function saveValues() {
     $saved = self::saveEmailAddress($this->_action, $this->_id, $this->_values);
     if ($this->_action & CRM_Core_Action::ADD && !empty($saved->id)) {
@@ -94,8 +110,8 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   /**
    * Load email address from option
    *
-   * @param int $id
-   * @return void
+   * @param int $id The option value ID.
+   * @return array The email address values.
    */
   public static function loadEmailAddress($id) {
     $values = [];
@@ -121,7 +137,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    *   'is_active' => 1,
    *   'filter' => logic combination of self::VALID_EMAIL / self::VALID_SPF / self::VALID_DKIM
    *   'description' => 'description of this email'
-   * @return object
+   * @return object The saved option value object.
    */
   public static function saveEmailAddress($action, $id, $params) {
     $groupParams = ['name' => ('from_email_address')];
@@ -137,7 +153,10 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
    *
    * Include one-time validation link to verify owner of email address.
    *
-   * @return void
+   * @param string $email The email address to validate.
+   * @param int $id The option value ID.
+   *
+   * @return void None.
    * @static
    */
   public static function sendValidationEmail($email, $id) {
@@ -166,12 +185,12 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $hash->name = __FUNCTION__.':'.$id;
     if ($hash->find(TRUE)) {
       $hash->value = $email;
-      $hash->timestamp = microtime(true);
+      $hash->timestamp = microtime(TRUE);
       $hash->update();
     }
     else {
       $hash->value = $email;
-      $hash->timestamp = microtime(true);
+      $hash->timestamp = microtime(TRUE);
       $hash->insert();
     }
 
@@ -198,6 +217,13 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     }
   }
 
+  /**
+   * Verifies email address.
+   *
+   * @param int $id The option value ID.
+   *
+   * @return void None.
+   */
   public static function verifyEmail($id) {
     $key = CRM_Utils_Request::retrieve('k', 'String', CRM_Core_DAO::$_nullObject, TRUE);
     $id = CRM_Utils_Request::retrieve('id', 'Integer', CRM_Core_DAO::$_nullObject, TRUE);
@@ -226,7 +252,6 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     CRM_Core_Error::statusBounce(ts('Invalid URL'));
   }
 
-
   /**
    * Return verified email array
    *
@@ -238,7 +263,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $all = [];
     CRM_Core_OptionGroup::getAssoc('from_email_address', $all);
     $verified = [];
-    foreach($all['filter'] as $idx => $filter) {
+    foreach ($all['filter'] as $idx => $filter) {
       if ($filter == $verifiedType) {
         $verified[$all['value'][$idx]] = CRM_Utils_Mail::pluckEmailFromHeader($all['label'][$idx]);
       }
@@ -246,7 +271,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $defaultFrom = CRM_Mailing_BAO_Mailing::defaultFromMail();
     $verified['default'] = $defaultFrom;
     if ($returnType === 'domain') {
-      foreach($verified as $idx => $email) {
+      foreach ($verified as $idx => $email) {
         $domain = preg_replace('/^[^@]+@/', '', $email);
         $verified[$idx] = $domain;
       }
@@ -272,7 +297,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
     $results = [];
 
     $enableDMARC = FALSE;
-    foreach($emails as $val => $email) {
+    foreach ($emails as $val => $email) {
       if (!CRM_Utils_Array::arrayKeyExists($val, $fromEmailIds)) {
         continue;
       }
@@ -330,9 +355,9 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
 
     // try to enable DMARC when verify passed (sender = from addr)
     if ($enableDMARC) {
-      $params = array(
+      $params = [
         'enableDMARC' => 1,
-      );
+      ];
       CRM_Core_BAO_ConfigSetting::add($params);
     }
 
@@ -350,7 +375,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
   public static function migrateEmailFromPages($fromName, $fromEmail) {
     $availableEmails = CRM_Core_PseudoConstant::fromEmailAddress(TRUE, TRUE);
     $migrateEmail = TRUE;
-    foreach($availableEmails as $info) {
+    foreach ($availableEmails as $info) {
       if ($info['email'] === $fromEmail) {
         $migrateEmail = FALSE;
         return TRUE;
@@ -363,7 +388,7 @@ class CRM_Admin_Form_FromEmailAddress extends CRM_Core_Form {
       $existsFrom = [];
       list($dontcare, $domain) = explode('@', $fromEmail);
       CRM_Core_OptionGroup::getAssoc('from_email_address', $existsFrom);
-      foreach($existsFrom['filter'] as $idx => $filter) {
+      foreach ($existsFrom['filter'] as $idx => $filter) {
         $filterPassed = (self::VALID_EMAIL | self::VALID_SPF | self::VALID_DKIM);
         if ($filter == $filterPassed) {
           $validAddr = $existsFrom['label'][$idx];

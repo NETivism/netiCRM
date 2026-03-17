@@ -27,16 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
 
 /**
  * This class generates form components for Membership Type
@@ -67,6 +60,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
   public $_membershipID;
 
+  /**
+   * Pre-process form.
+   *
+   * @return void
+   */
   public function preProcess() {
     //custom data related code
     $this->_cdType = CRM_Utils_Array::value('type', $_GET);
@@ -77,27 +75,36 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
 
     // action
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 'add'
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      'add'
     );
-    $this->_id = CRM_Utils_Request::retrieve('id', 'Positive',
+    $this->_id = CRM_Utils_Request::retrieve(
+      'id',
+      'Positive',
       $this
     );
-    $this->_contactID = CRM_Utils_Request::retrieve('cid', 'Positive',
+    $this->_contactID = CRM_Utils_Request::retrieve(
+      'cid',
+      'Positive',
       $this
     );
-
 
     // check for edit permission
     if (!CRM_Core_Permission::checkActionPermission('CiviMember', $this->_action)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
 
     $this->_context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->assign('context', $this->_context);
 
     if ($this->_id) {
-      $this->_memType = CRM_Core_DAO::getFieldValue("CRM_Member_DAO_Membership", $this->_id,
+      $this->_memType = CRM_Core_DAO::getFieldValue(
+        "CRM_Member_DAO_Membership",
+        $this->_id,
         "membership_type_id"
       );
     }
@@ -111,7 +118,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $processors = CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "billing_mode IN ( 1, 3 ) AND payment_processor_type != 'TaiwanACH'");
 
       foreach ($processors as $ppID => $label) {
-
 
         $paymentProcessor = &CRM_Core_BAO_PaymentProcessor::getPayment($ppID, $this->_mode);
         if ($paymentProcessor['payment_processor_type'] == 'PayPal' && !$paymentProcessor['user_name']) {
@@ -130,7 +136,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         }
       }
       if (empty($validProcessors)) {
-         return CRM_Core_Error::statusBounce(ts('Could not find valid payment processor for this page'));
+        return CRM_Core_Error::statusBounce(ts('Could not find valid payment processor for this page'));
       }
       else {
         $this->_processors = $validProcessors;
@@ -140,13 +146,12 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $locationTypes = CRM_Core_PseudoConstant::locationType(FALSE, 'name');
       $this->_bltID = array_search('Billing', $locationTypes);
       if (!$this->_bltID) {
-         return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', [1 => 'Billing']));
+        return CRM_Core_Error::statusBounce(ts('Please set a location type of %1', [1 => 'Billing']));
       }
       $this->set('bltID', $this->_bltID);
       $this->assign('bltID', $this->_bltID);
 
       $this->_fields = [];
-
 
       CRM_Core_Payment_Form::setCreditCardFields($this);
 
@@ -179,12 +184,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
   }
 
   /**
-   * This function sets the default values for the form. MobileProvider that in edit/view mode
-   * the default values are retrieved from the database
+   * Set the default values for the form.
    *
-   * @access public
+   * Note that in edit/view mode the default values are retrieved from the database.
    *
-   * @return None
+   * @return array
    */
   public function setDefaultValues() {
     if ($this->_cdType) {
@@ -202,7 +206,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
     if (is_numeric($this->_memType)) {
       $defaults["membership_type_id"] = [];
-      $defaults["membership_type_id"][0] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+      $defaults["membership_type_id"][0] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
         $this->_memType,
         'member_of_contact_id',
         'id'
@@ -234,7 +239,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     if (CRM_Utils_Array::value('record_contribution', $defaults) && !$this->_mode) {
       $contributionParams = ['id' => $defaults['record_contribution']];
       $contributionIds = [];
-
 
       CRM_Contribute_BAO_Contribution::getValues($contributionParams, $defaults, $contributionIds);
 
@@ -314,10 +318,9 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
   }
 
   /**
-   * Function to build the form
+   * Function to actually build the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     if ($this->_cdType) {
@@ -330,7 +333,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $this->assign('entityID', $this->_id);
 
     if ($this->_action & CRM_Core_Action::DELETE) {
-      $this->addButtons([
+      $this->addButtons(
+        [
           ['type' => 'next',
             'name' => ts('Delete'),
             'spacing' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
@@ -361,7 +365,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         }
         else {
           if (!CRM_Utils_Array::value($dao->member_of_contact_id, $selMemTypeOrg)) {
-            $selMemTypeOrg[$dao->member_of_contact_id] = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact',
+            $selMemTypeOrg[$dao->member_of_contact_id] = CRM_Core_DAO::getFieldValue(
+              'CRM_Contact_DAO_Contact',
               $dao->member_of_contact_id,
               'display_name',
               'id'
@@ -387,7 +392,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       natcasesort($orgMembershipType);
       $selOrgMemType[$index] = $orgMembershipType;
     }
-    $sel = &$this->addElement('hierselect',
+    $sel = &$this->addElement(
+      'hierselect',
       'membership_type_id',
       ts('Membership Organization and Type'),
       ['onChange' => "buildCustomData( 'Membership', this.value );"]
@@ -401,16 +407,25 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $this->addDate('start_date', ts('Start Date'), FALSE, ['formatType' => 'activityDate']);
     $this->addDate('end_date', ts('End Date'), FALSE, ['formatType' => 'activityDate']);
 
-    $this->add('text', 'source', ts('Source'),
+    $this->add(
+      'text',
+      'source',
+      ts('Source'),
       CRM_Core_DAO::getAttribute('CRM_Member_DAO_Membership', 'source')
     );
 
     if (!$this->_mode) {
-      $this->add('select', 'status_id', ts('Membership Status'),
+      $this->add(
+        'select',
+        'status_id',
+        ts('Membership Status'),
         ['' => ts('- select -')] + CRM_Member_PseudoConstant::membershipStatus(NULL, NULL, 'label')
       );
-      $this->addElement('checkbox', 'is_override',
-        ts('Status Override?'), NULL,
+      $this->addElement(
+        'checkbox',
+        'is_override',
+        ts('Status Override?'),
+        NULL,
         ['onClick' => 'showHideMemberStatus()']
       );
 
@@ -424,8 +439,9 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->addElement('checkbox', 'record_contribution', ts('Record Membership Payment?'));
 
-
-      $this->add('select', 'contribution_type_id',
+      $this->add(
+        'select',
+        'contribution_type_id',
         ts('Contribution Type'),
         ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::contributionType()
       );
@@ -435,14 +451,20 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->addDateTime('receive_date', ts('Receive Date'), FALSE, ['formatType' => 'activityDateTime']);
 
-      $this->add('select', 'payment_instrument_id',
+      $this->add(
+        'select',
+        'payment_instrument_id',
         ts('Paid By'),
         ['' => ts('- select -')] + CRM_Contribute_PseudoConstant::paymentInstrument(),
-        FALSE, ['onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);"]
+        FALSE,
+        ['onChange' => "return showHideByValue('payment_instrument_id','4','checkNumber','table-row','select',false);"]
       );
       $this->add('text', 'trxn_id', ts('Transaction ID'));
-      $this->addRule('trxn_id', ts('Transaction ID already exists in Database.'),
-        'objectExists', ['CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id']
+      $this->addRule(
+        'trxn_id',
+        ts('Transaction ID already exists in Database.'),
+        'objectExists',
+        ['CRM_Contribute_DAO_Contribution', $this->_id, 'trxn_id']
       );
 
       $allowStatuses = [];
@@ -459,10 +481,16 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       else {
         $allowStatuses = $statuses;
       }
-      $this->add('select', 'contribution_status_id',
-        ts('Payment Status'), $allowStatuses
+      $this->add(
+        'select',
+        'contribution_status_id',
+        ts('Payment Status'),
+        $allowStatuses
       );
-      $this->add('text', 'check_number', ts('Check Number'),
+      $this->add(
+        'text',
+        'check_number',
+        ts('Check Number'),
         CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_Contribution', 'check_number')
       );
     }
@@ -509,7 +537,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
     $this->addFormRule(['CRM_Member_Form_Membership', 'formRule'], $this);
 
-
     $mailingInfo = &CRM_Core_BAO_Preferences::mailingPreferences();
     $this->assign('outBound_option', $mailingInfo['outBound_option']);
 
@@ -517,13 +544,13 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
   }
 
   /**
-   * Function for validation
+   * Function for validation.
    *
    * @param array $params (ref.) an assoc array of name/value pairs
+   * @param array $files
+   * @param CRM_Core_Form $self
    *
-   * @return mixed true or array of errors
-   * @access public
-   * @static
+   * @return array|bool true or array of errors
    */
   public static function formRule($params, $files, $self) {
     $errors = [];
@@ -601,16 +628,20 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       //  Default values for start and end dates if not supplied
       //  on the form
       $defaultDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType(
-        $params['membership_type_id'][1], $joinDate,
-        $startDate, $endDate
+        $params['membership_type_id'][1],
+        $joinDate,
+        $startDate,
+        $endDate
       );
       if (!$startDate) {
-        $startDate = CRM_Utils_Array::value('start_date',
+        $startDate = CRM_Utils_Array::value(
+          'start_date',
           $defaultDates
         );
       }
       if (!$endDate) {
-        $endDate = CRM_Utils_Array::value('end_date',
+        $endDate = CRM_Utils_Array::value(
+          'end_date',
           $defaultDates
         );
       }
@@ -618,7 +649,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       //CRM-3724, check for availability of valid membership status.
       if (!CRM_Utils_Array::value('is_override', $params)) {
 
-        $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate($startDate,
+        $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate(
+          $startDate,
           $endDate,
           $joinDate,
           'today',
@@ -660,7 +692,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     // validate contribution status for 'Failed'.
     if ($self->_onlinePendingContributionId &&
       CRM_Utils_Array::value('record_contribution', $params) &&
-      (CRM_Utils_Array::value('contribution_status_id', $params) ==
+      (
+        CRM_Utils_Array::value('contribution_status_id', $params) ==
         array_search('Failed', CRM_Contribute_PseudoConstant::contributionStatus(NULL, 'name'))
       )
     ) {
@@ -671,16 +704,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
   }
 
   /**
-   * Function to process the form
+   * Process the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return void
    */
   public function postProcess() {
-
-
-
 
     if ($this->_action & CRM_Core_Action::DELETE) {
       CRM_Member_BAO_Membership::deleteRelatedMemberships($this->_id);
@@ -729,8 +757,11 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     foreach ($dateTypes as $dateField => $dateVariable) {
       $$dateVariable = CRM_Utils_Date::processDate($formValues[$dateField]);
     }
-    $calcDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($params['membership_type_id'],
-      $joinDate, $startDate, $endDate
+    $calcDates = CRM_Member_BAO_MembershipType::getDatesForMembershipType(
+      $params['membership_type_id'],
+      $joinDate,
+      $startDate,
+      $endDate
     );
     $excludeIsAdmin = CRM_Utils_Array::value('exclude_is_admin', $params, FALSE);
     if (!$excludeIsAdmin && !CRM_Utils_Array::value('is_override', $params)) {
@@ -752,7 +783,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         if ($formValues['status_id'] == $pendingId && !$formValues['skip_status_cal'] && $calcStatus['id'] != $pendingId) {
           $date = CRM_Utils_Array::value($d, $calcDates);
         }
-        elseif($formValues['status_id'] != $pendingId) {
+        elseif ($formValues['status_id'] != $pendingId) {
           $date = CRM_Utils_Array::value($d, $calcDates);
         }
       }
@@ -780,15 +811,20 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $ids['userId'] = $session->get('userID');
 
     // membership type custom data
-    $customFields = CRM_Core_BAO_CustomField::getFields('Membership', FALSE, FALSE,
+    $customFields = CRM_Core_BAO_CustomField::getFields(
+      'Membership',
+      FALSE,
+      FALSE,
       CRM_Utils_Array::value('membership_type_id', $params)
     );
 
-    $customFields = CRM_Utils_Array::arrayMerge($customFields,
+    $customFields = CRM_Utils_Array::arrayMerge(
+      $customFields,
       CRM_Core_BAO_CustomField::getFields('Membership', FALSE, FALSE, NULL, NULL, TRUE)
     );
 
-    $params['custom'] = CRM_Core_BAO_CustomField::postProcess($formValues,
+    $params['custom'] = CRM_Core_BAO_CustomField::postProcess(
+      $formValues,
       $customFields,
       $this->_id,
       'Membership'
@@ -807,7 +843,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $params[$f] = CRM_Utils_Array::value($f, $formValues);
       }
 
-      $membershipType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+      $membershipType = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
         $formValues['membership_type_id'][1]
       );
       if (!$this->_onlinePendingContributionId) {
@@ -819,24 +856,28 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       }
 
       //insert contribution type name in receipt.
-      $formValues['contributionType_name'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType',
+      $formValues['contributionType_name'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Contribute_DAO_ContributionType',
         $formValues['contribution_type_id']
       );
     }
 
     if ($this->_mode) {
-      $params['total_amount'] = $formValues['total_amount'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-        $params['membership_type_id'], 'minimum_fee'
+      $params['total_amount'] = $formValues['total_amount'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
+        $params['membership_type_id'],
+        'minimum_fee'
       );
-      $params['contribution_type_id'] = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-        $params['membership_type_id'], 'contribution_type_id'
+      $params['contribution_type_id'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
+        $params['membership_type_id'],
+        'contribution_type_id'
       );
 
-      $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($formValues['payment_processor_id'],
+      $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment(
+        $formValues['payment_processor_id'],
         $this->_mode
       );
-
-
 
       $now = date('YmdHis');
       $fields = [];
@@ -894,7 +935,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $paymentParams['email'] = $this->_memberEmail;
       }
 
-
       CRM_Core_Payment_Form::mapParams($this->_bltID, $this->_params, $paymentParams, TRUE);
 
       $payment = &CRM_Core_Payment::singleton($this->_mode, $this->_paymentProcessor, $this);
@@ -903,9 +943,10 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       if (is_a($result, 'CRM_Core_Error')) {
         CRM_Core_Error::displaySessionError($result);
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contact/view/membership',
-            "reset=1&action=add&cid={$this->_contactID}&context=&mode={$this->_mode}"
-          ));
+        CRM_Utils_System::redirect(CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
+          "reset=1&action=add&cid={$this->_contactID}&context=&mode={$this->_mode}"
+        ));
       }
 
       if ($result) {
@@ -925,7 +966,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
 
       $this->set('params', $this->_params);
       $this->assign('trxn_id', $result['trxn_id']);
-      $this->assign('receive_date',
+      $this->assign(
+        'receive_date',
         CRM_Utils_Date::mysqlToIso($params['receive_date'])
       );
 
@@ -973,7 +1015,6 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
           //display end date w/ status message.
           $endDate = $membership->end_date;
 
-
           if (!in_array($membership->status_id, [array_search('Cancelled', $membershipStatuses),
                 array_search('Expired', $membershipStatuses),
               ])) {
@@ -984,7 +1025,7 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $this->assign('cancelled', $cancelled);
 
         // here we might updated dates, so get from object.
-        foreach ($calcDates as $date => & $val) {
+        foreach ($calcDates as $date => &$val) {
           if ($membership->$date) {
             $val = $membership->$date;
           }
@@ -1000,10 +1041,10 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     if (CRM_Utils_Array::value('send_receipt', $formValues)) {
       $receiptSend = TRUE;
       $fromEmail = CRM_Core_PseudoConstant::fromEmailAddress();
-      if(!empty($fromEmail['default'])){
+      if (!empty($fromEmail['default'])) {
         $receiptFrom = reset($fromEmail);
       }
-      else{
+      else {
         $receiptFrom = '"' . $userName . '" <' . $userEmail . '>';
       }
 
@@ -1064,7 +1105,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
         $date = CRM_Utils_Date::format($this->_params['credit_card_exp_date']);
         $date = CRM_Utils_Date::mysqlToIso($date);
         $this->assign('credit_card_exp_date', $date);
-        $this->assign('credit_card_number',
+        $this->assign(
+          'credit_card_number',
           CRM_Utils_System::mungeCreditCard($this->_params['credit_card_number'])
         );
         $this->assign('credit_card_type', $this->_params['credit_card_type']);
@@ -1081,9 +1123,10 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
       $this->assign('formValues', $formValues);
       $this->assign('mem_start_date', CRM_Utils_Date::customFormat($calcDates['start_date']));
       $this->assign('mem_end_date', CRM_Utils_Date::customFormat($calcDates['end_date']));
-      $this->assign('membership_name', CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
-          $formValues['membership_type_id'][1]
-        ));
+      $this->assign('membership_name', CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
+        $formValues['membership_type_id'][1]
+      ));
       $this->assign('customValues', $customValues);
 
       $workflow = CRM_Core_BAO_MessageTemplates::getMessageTemplateByWorkflow('msg_tpl_workflow_membership', 'membership_offline_receipt');
@@ -1121,7 +1164,8 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     }
     elseif (($this->_action & CRM_Core_Action::ADD)) {
 
-      $memType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+      $memType = CRM_Core_DAO::getFieldValue(
+        'CRM_Member_DAO_MembershipType',
         $params['membership_type_id']
       );
       $statusMsg = ts('%1 membership for %2 has been added.', [1 => $memType, 2 => $this->_memberDisplayName]);
@@ -1142,21 +1186,23 @@ class CRM_Member_Form_Membership extends CRM_Member_Form {
     $buttonName = $this->controller->getButtonName();
     if ($this->_context == 'standalone') {
       if ($buttonName == $this->getButtonName('upload', 'new')) {
-        $session->replaceUserContext(CRM_Utils_System::url('civicrm/member/add',
-            'reset=1&action=add&context=standalone'
-          ));
+        $session->replaceUserContext(CRM_Utils_System::url(
+          'civicrm/member/add',
+          'reset=1&action=add&context=standalone'
+        ));
       }
       else {
-        $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view',
-            "reset=1&cid={$this->_contactID}&selectedChild=member"
-          ));
+        $session->replaceUserContext(CRM_Utils_System::url(
+          'civicrm/contact/view',
+          "reset=1&cid={$this->_contactID}&selectedChild=member"
+        ));
       }
     }
     elseif ($buttonName == $this->getButtonName('upload', 'new')) {
-      $session->replaceUserContext(CRM_Utils_System::url('civicrm/contact/view/membership',
-          "reset=1&action=add&context=membership&cid={$this->_contactID}"
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        'civicrm/contact/view/membership',
+        "reset=1&action=add&context=membership&cid={$this->_contactID}"
+      ));
     }
   }
 }
-

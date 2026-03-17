@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Page for displaying Parent Information Section tabs
@@ -50,11 +46,11 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
   private static $_customizeActionLinks;
 
   /**
-   * Get action Links
+   * Gets the string action links.
    *
    * @return array (reference) of action links
    */
-  function &stringActionLinks() {
+  public function &stringActionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_stringActionLinks)) {
 
@@ -70,7 +66,12 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
     return self::$_stringActionLinks;
   }
 
-  function &customizeActionLinks() {
+  /**
+   * Gets the customize action links.
+   *
+   * @return array (reference) of action links
+   */
+  public function &customizeActionLinks() {
     // check if variable _actionsLinks is populated
     if (!isset(self::$_customizeActionLinks)) {
 
@@ -87,32 +88,28 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
   }
 
   /**
-   * Run the basic page (run essentially starts execution for that page).
+   * Runs the basic page.
    *
    * @return void
    */
-  function run() {
+  public function run() {
     CRM_Utils_System::setTitle(ts('DB Template Strings'));
     $this->browse();
     parent::run();
   }
 
   /**
-   * Browse all options
-   *
+   * Browses all templates.
    *
    * @return void
-   * @access public
-   * @static
    */
-  function browse() {
+  public function browse() {
     $permission = FALSE;
     $this->assign('editClass', FALSE);
     if (CRM_Core_Permission::check('access CiviCRM')) {
       $this->assign('editClass', TRUE);
       $permission = TRUE;
     }
-
 
     $daoResult = new CRM_Core_DAO_Persistent();
     $daoResult->find();
@@ -121,7 +118,8 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
       $values[$daoResult->id] = [];
       CRM_Core_DAO::storeValues($daoResult, $values[$daoResult->id]);
       if ($daoResult->is_config == 1) {
-        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(self::customizeActionLinks(),
+        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(
+          self::customizeActionLinks(),
           NULL,
           ['id' => $daoResult->id]
         );
@@ -129,7 +127,8 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
         $configCustomization[$daoResult->id] = $values[$daoResult->id];
       }
       if ($daoResult->is_config == 0) {
-        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(self::stringActionLinks(),
+        $values[$daoResult->id]['action'] = CRM_Core_Action::formLink(
+          self::stringActionLinks(),
           NULL,
           ['id' => $daoResult->id]
         );
@@ -142,4 +141,3 @@ class CRM_Admin_Page_Persistent extends CRM_Core_Page {
     $this->assign('rows', $rows);
   }
 }
-

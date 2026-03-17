@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
- * $Id$
  *
  */
 
@@ -40,33 +38,31 @@
 class CRM_Utils_Cache {
 
   /**
-   * We only need one instance of this object. So we use the singleton
-   * pattern and cache the instance in this variable
+   * Singleton instance of the active cache implementation.
    *
    * @var object
-   * @static
    */
-  static private $_singleton = NULL;
+  private static $_singleton = NULL;
 
   /**
-   * Constructor
+   * Constructor. Not to be called directly — use singleton().
    *
-   * @param array   $config  an array of configuration params
-   *
-   * @return void
+   * @param array $config  Configuration parameters for the cache backend (passed by reference).
    */
-  function __construct(&$config) {
+  public function __construct(&$config) {
     CRM_Core_Error::fatal(ts('this is just an interface and should not be called directly'));
   }
 
   /**
-   * singleton function used to manage this object
+   * Return the singleton cache instance, creating it on first call.
    *
-   * @return object
-   * @static
+   * The cache backend is determined by the CIVICRM_DB_CACHE_CLASS constant
+   * (defaulting to ArrayCache). Legacy constants CIVICRM_USE_MEMCACHE and
+   * CIVICRM_USE_ARRAYCACHE are also honoured for backwards compatibility.
    *
+   * @return object  A reference to the active cache implementation instance.
    */
-  static function &singleton() {
+  public static function &singleton() {
     if (self::$_singleton === NULL) {
       // default to ArrayCache for now
       $className = 'ArrayCache';
@@ -87,7 +83,7 @@ class CRM_Utils_Cache {
 
       // a generic method for utilizing any of the available db caches.
       $dbCacheClass = 'CRM_Utils_Cache_' . $className;
-      require_once (str_replace('_', DIRECTORY_SEPARATOR, $dbCacheClass) . '.php');
+      require_once(str_replace('_', DIRECTORY_SEPARATOR, $dbCacheClass) . '.php');
       $settings = self::getCacheSettings($className);
       self::$_singleton = new $dbCacheClass($settings);
     }
@@ -95,13 +91,15 @@ class CRM_Utils_Cache {
   }
 
   /**
-   * Get cache relevant settings
+   * Return the configuration settings array for the given cache plugin.
    *
-   * @return array
-   *   associative array of settings for the cache
-   * @static
+   * Reads relevant CIVICRM_* constants to build the settings array.
+   *
+   * @param string $cachePlugin  The cache class name suffix (e.g. 'ArrayCache', 'Memcache', 'Memcached', 'APCcache').
+   *
+   * @return array  Associative array of settings for the specified cache plugin.
    */
-  static function getCacheSettings($cachePlugin) {
+  public static function getCacheSettings($cachePlugin) {
     switch ($cachePlugin) {
       case 'ArrayCache':
       case 'NoCache':
@@ -165,4 +163,3 @@ class CRM_Utils_Cache {
     return $defaults;
   }
 }
-

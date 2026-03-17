@@ -6,10 +6,9 @@
 class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings') . ' - '. ts('Recurring Contribution'));
@@ -20,7 +19,6 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
     }
     $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'recurringSyncExclude', ts('Exclude to sync'), $option, $attrs);
-
 
     $option = [
       'earliest' => ts('Earliest').' ('.ts('Default').')',
@@ -40,8 +38,8 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
     $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
 
     $pages = [];
-    CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active','is_internal is NULL');
-    foreach($pages as $id => &$page) {
+    CRM_Core_PseudoConstant::populate($pages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active', 'is_internal is NULL');
+    foreach ($pages as $id => &$page) {
       $page .= " ($id)";
     }
     $this->addSelect('defaultRenewalPageId', ts('Default contribution page for one-time renewal link'), ['' => ts('-- Select --')] + $pages);
@@ -49,4 +47,3 @@ class CRM_Admin_Form_Setting_Recurring extends CRM_Admin_Form_Setting {
     parent::buildQuickForm($check);
   }
 }
-

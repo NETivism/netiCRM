@@ -34,7 +34,6 @@
  * @package CiviCRM_APIv3
  * @subpackage API_Mailing
  * @copyright CiviCRM LLC (c) 2004-2012
- * $Id$
  *
  */
 
@@ -95,7 +94,7 @@ function civicrm_api3_mailing_event_bounce($params) {
     return civicrm_api3_create_success($params);
   }
   else {
-    throw new API_Exception(ts('Queue event could not be found'),'no_queue_event
+    throw new API_Exception(ts('Queue event could not be found'), 'no_queue_event
       ');
   }
 }
@@ -211,7 +210,8 @@ function _civicrm_api3_mailing_event_forward_spec(&$params) {
  */
 function civicrm_api3_mailing_event_click($params) {
 
-  civicrm_api3_verify_mandatory($params,
+  civicrm_api3_verify_mandatory(
+    $params,
     'CRM_Mailing_Event_DAO_TrackableURLOpen',
     ['event_queue_id', 'url_id'],
     FALSE
@@ -238,7 +238,8 @@ function civicrm_api3_mailing_event_click($params) {
  */
 function civicrm_api3_mailing_event_open($params) {
 
-  civicrm_api3_verify_mandatory($params,
+  civicrm_api3_verify_mandatory(
+    $params,
     'CRM_Mailing_Event_DAO_Opened',
     ['event_queue_id'],
     FALSE
@@ -266,5 +267,3 @@ function civicrm_api3_mailing_update_email_resetdate($params) {
   );
   return civicrm_api3_create_success();
 }
-
-

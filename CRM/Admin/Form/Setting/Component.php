@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Component
@@ -42,17 +38,19 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
   protected $_components;
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     CRM_Utils_System::setTitle(ts('Settings - Enable Components'));
 
     $components = $this->_getComponentSelectValues();
-    $include = &$this->addElement('advmultiselect', 'enableComponents',
-      ts('Components') . ' ', $components,
+    $include = &$this->addElement(
+      'advmultiselect',
+      'enableComponents',
+      ts('Components') . ' ',
+      $components,
       ['size' => 5,
         'style' => 'width:150px',
         'class' => 'advmultiselect',
@@ -68,17 +66,13 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $options additional user data
+   * @param array $fields The input form values.
    *
-   * @return true if no errors, else array of errors
-   * @access public
-   * @static
+   * @return bool|array True if no errors, else array of errors.
    */
-  static function formRule($fields) {
+  public static function formRule($fields) {
     $errors = [];
 
     if (is_array($fields['enableComponents'])) {
@@ -90,7 +84,11 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     return $errors;
   }
 
-
+  /**
+   * Gets the component select values.
+   *
+   * @return array The component select values.
+   */
   private function _getComponentSelectValues() {
     $ret = [];
 
@@ -102,9 +100,13 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     return $ret;
   }
 
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void Processes the submitted form values.
+   */
   public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
-
 
     $params['enableComponentIDs'] = [];
     foreach ($params['enableComponents'] as $name) {
@@ -118,4 +120,3 @@ class CRM_Admin_Form_Setting_Component extends CRM_Admin_Form_Setting {
     CRM_Core_BAO_Navigation::resetNavigation();
   }
 }
-

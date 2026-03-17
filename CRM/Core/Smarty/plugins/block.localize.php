@@ -27,22 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
  * Smarty block function for multilingualizing upgrade SQL queries.
+ *
  * The string passed in $text is repeated locale-number times, with the
  * param field (if provided) appended with a different locale every time.
  *
- * @param array  $params   template call's parameters
- * @param string $text     {ts} block contents from the template
- * @param object $smarty   the Smarty object
+ * @param array $params template call's parameters
+ * @param string|null $text {ts} block contents from the template
+ * @param Smarty &$smarty the Smarty object
  *
- * @return string  multilingualized query
+ * @return string multilingualized query
  */
 function smarty_block_localize($params, $text, &$smarty) {
   if (!$smarty->_tpl_vars['multilingual']) {
@@ -64,4 +63,3 @@ function smarty_block_localize($params, $text, &$smarty) {
 
   return CRM_Utils_Array::implode(', ', $lines);
 }
-

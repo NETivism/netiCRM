@@ -4,27 +4,26 @@ namespace Civi\Install;
 
 /**
  * Class Requirements
- * @package Civi\Install
  */
 class Requirements {
 
-  const MIN_MYSQL_VER = '10.3.0';
-  const MIN_MYSQL_THREAD_STACK = 128;
+  public const MIN_MYSQL_VER = '10.3.0';
+  public const MIN_MYSQL_THREAD_STACK = 128;
 
   /**
    * Requirement severity -- Requirement successfully met.
    */
-  const REQUIREMENT_OK = 0;
+  public const REQUIREMENT_OK = 0;
 
   /**
    * Requirement severity -- Warning condition; proceed but flag warning.
    */
-  const REQUIREMENT_WARNING = 1;
+  public const REQUIREMENT_WARNING = 1;
 
   /**
    * Requirement severity -- Error condition; abort installation.
    */
-  const REQUIREMENT_ERROR = 2;
+  public const REQUIREMENT_ERROR = 2;
 
   /**
    * @var array

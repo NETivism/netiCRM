@@ -30,21 +30,9 @@
  * trifecta. Each form is associated with a specific state in the state
  * machine. Each form can also operate in various modes
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
-
-
-
-
 
 class CRM_Core_Form extends HTML_QuickForm_Page {
 
@@ -54,7 +42,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * @var      CRM_Core_Controller
    * @access   public
    */
-  public $controller = null;
+  public $controller = NULL;
 
   /**
    * The state object that this form belongs to
@@ -98,7 +86,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    * @var CRM_Core_Smarty
    */
-  static protected $_template;
+  protected static $_template;
 
   /**
    * The count of submissions in the same form
@@ -113,7 +101,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    * @var const string
    */
-  CONST ATTR_SPACING = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+  public const ATTR_SPACING = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
   /**
    * All checkboxes are defined with a common prefix. This allows us to
@@ -123,23 +111,21 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    *
    * @var const string / int
    */
-  CONST CB_PREFIX = 'mark_x_', CB_PREFIY = 'mark_y_', CB_PREFIZ = 'mark_z_', CB_PREFIX_LEN = 7;
+  public const CB_PREFIX = 'mark_x_', CB_PREFIY = 'mark_y_', CB_PREFIZ = 'mark_z_', CB_PREFIX_LEN = 7;
 
   /**
-   * Constructor for the basic form page
+   * Constructor for the basic form page.
    *
    * We should not use QuickForm directly. This class provides a lot
-   * of default convenient functions, rules and buttons
+   * of default convenient functions, rules and buttons.
    *
-   * @param object    $state     State associated with this form
-   * @param enum      $action    The mode the form is operating in (None/Create/View/Update/Delete)
-   * @param string    $method    The type of http method used (GET/POST)
-   * @param string    $name      The name of the form if different from class name
-   *
-   * @return object
-   * @access public
+   * @param CRM_Core_State|null $state State associated with this form.
+   * @param int $action The mode the form is operating in (e.g., CRM_Core_Action::NONE).
+   * @param string $method The type of http method used (GET/POST).
+   * @param string|null $name The name of the form if different from class name.
    */
-  function __construct($state = NULL,
+  public function __construct(
+    $state = NULL,
     $action = CRM_Core_Action::NONE,
     $method = 'post',
     $name = NULL
@@ -165,16 +151,13 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  static function generateID() {}
+  public static function generateID() {
+  }
 
   /**
-   * register all the standard rules that most forms potentially use
-   *
-   * @return void
-   * @access private
-   *
+   * Register all the standard rules that most forms potentially use.
    */
-  function registerRules() {
+  public function registerRules() {
     static $rules = ['title', 'longTitle', 'variable', 'qfVariable',
       'phone', 'integer', 'query',
       'url', 'wikiURL',
@@ -192,21 +175,24 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
    * Simple easy to use wrapper around addElement. Deal with
-   * simple validation rules
+   * simple validation rules.
    *
-   * @param string type of html element to be added
-   * @param string name of the html element
-   * @param string display label for the html element
-   * @param string attributes used for this element.
-   *               These are not default values
-   * @param bool   is this a required field
+   * @param string $type The type of html element to be added.
+   * @param string $name The name of the html element.
+   * @param string $label The display label for the html element.
+   * @param mixed $attributes Attributes used for this element.
+   * @param bool $required Whether this is a required field.
+   * @param mixed $javascript JavaScript associated with the element.
    *
-   * @return object    html element, could be an error object
-   * @access public
-   *
+   * @return \HTML_QuickForm_element The created html element.
    */
-  function &add($type, $name, $label = '',
-    $attributes = '', $required = FALSE, $javascript = NULL
+  public function &add(
+    $type,
+    $name,
+    $label = '',
+    $attributes = '',
+    $required = FALSE,
+    $javascript = NULL
   ) {
     $element = $this->addElement($type, $name, $label, $attributes, $javascript);
     if (HTML_QuickForm::isError($element)) {
@@ -225,36 +211,28 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
    * This function is called before buildForm. Any pre-processing that
-   * needs to be done for buildForm should be done here
+   * needs to be done for buildForm should be done here.
    *
-   * This is a virtual function and should be redefined if needed
-   *
-   * @access public
-   *
-   * @return void
-   *
+   * This is a virtual function and should be redefined if needed.
    */
-  function preProcess() {}
+  public function preProcess() {
+  }
 
   /**
    * This function is called after the form is validated. Any
    * processing of form state etc should be done in this function.
    * Typically all processing associated with a form should be done
-   * here and relevant state should be stored in the session
+   * here and relevant state should be stored in the session.
    *
-   * This is a virtual function and should be redefined if needed
-   *
-   * @access public
-   *
-   * @return void
-   *
+   * This is a virtual function and should be redefined if needed.
    */
-  function postProcess() {}
+  public function postProcess() {
+  }
 
   /**
-   * This function is just a wrapper, so that we can call all the hook functions
+   * This function is just a wrapper, so that we can call all the hook functions.
    */
-  function mainProcess() {
+  public function mainProcess() {
     // Process blob images from CKeditor fields before data persistence
     // Convert temporary blob URLs to permanent file storage
     $blobImagesProcessResult = $this->processBlobImages();
@@ -279,44 +257,36 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   /**
    * This virtual function is used to build the form. It replaces the
    * buildForm associated with QuickForm_Page. This allows us to put
-   * preProcess in front of the actual form building routine
-   *
-   * @access public
-   *
-   * @return void
-   *
+   * preProcess in front of the actual form building routine.
    */
-  function buildQuickForm() {}
+  public function buildQuickForm() {
+  }
 
   /**
    * This virtual function is used to set the default values of
-   * various form elements
-   *
-   * access        public
+   * various form elements.
    *
    * @return array reference to the array of default values
-   *
    */
-  function setDefaultValues() {}
+  public function setDefaultValues() {
+  }
 
   /**
    * This is a virtual function that adds group and global rules to
    * the form. Keeping it distinct from the form to keep code small
-   * and localized in the form building code
-   *
-   * @access public
-   *
-   * @return void
-   *
+   * and localized in the form building code.
    */
-  function addRules() {}
+  public function addRules() {
+  }
 
-  function validate() {
+  public function validate() {
     $error = parent::validate();
 
-
-    $hookErrors = CRM_Utils_Hook::validate(get_class($this),
-      $this->_submitValues, $this->_submitFiles, $this
+    $hookErrors = CRM_Utils_Hook::validate(
+      get_class($this),
+      $this->_submitValues,
+      $this->_submitFiles,
+      $this
     );
     if ($hookErrors !== TRUE && is_array($hookErrors) && !empty($hookErrors)) {
       $this->_errors += $hookErrors;
@@ -331,7 +301,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * buildQuickForm.
    *
    */
-  function buildForm() {
+  public function buildForm() {
     $this->_formBuilt = TRUE;
 
     $initPage = $this->get('initPage');
@@ -375,14 +345,15 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     // call the form hook
     // also call the hook function so any modules can set thier own custom defaults
     // the user can do both the form and set default values with this hook
-    CRM_Utils_Hook::buildForm(get_class($this),
+    CRM_Utils_Hook::buildForm(
+      get_class($this),
       $this
     );
 
     $this->addRules();
   }
 
-  function addButton($buttonType, $label, $attributes = NULL) {
+  public function addButton($buttonType, $label, $attributes = NULL) {
     $attributes = !empty($attributes) ? $attributes : [];
     if (!empty($attributes['class'])) {
       $attributes['class'] .= ' form-submit';
@@ -407,7 +378,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * @access public
    *
    */
-  function addButtons($params) {
+  public function addButtons($params) {
     $prevnext = [];
     $spacing = [];
     foreach ($params as $button) {
@@ -459,119 +430,103 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   /**
    * getter function for Name
    *
-   * @return string
-   * @access public
+   * @return string The form name.
    */
-  function getName() {
+  public function getName() {
     return $this->_name;
   }
 
   /**
    * getter function for State
    *
-   * @return object
-   * @access public
+   * @return \CRM_Core_State The state object.
    */
-  function &getState() {
+  public function &getState() {
     return $this->_state;
   }
 
   /**
    * getter function for StateType
    *
-   * @return int
-   * @access public
+   * @return int The state type.
    */
-  function getStateType() {
+  public function getStateType() {
     return $this->_state->getType();
   }
 
   /**
-   * getter function for title. Should be over-ridden by derived class
+   * getter function for title. Should be over-ridden by derived class.
    *
-   * @return string
-   * @access public
+   * @return string The form title.
    */
-  function getTitle() {
+  public function getTitle() {
     return $this->_title ? $this->_title : ts('ERROR: Title is not Set');
   }
 
   /**
    * setter function for title.
    *
-   * @param string $title the title of the form
-   *
-   * @return void
-   * @access public
+   * @param string $title The title of the form.
    */
-  function setTitle($title) {
+  public function setTitle($title) {
     $this->_title = $title;
   }
 
   /**
-   * Setter function for options
+   * Setter function for options.
    *
-   * @param mixed
-   *
-   * @return void
-   * @access public
+   * @param mixed $options The options for the form.
    */
-  function setOptions($options) {
+  public function setOptions($options) {
     $this->_options = $options;
   }
 
   /**
    * getter function for link.
    *
-   * @return string
-   * @access public
+   * @return string The link URL.
    */
-  function getLink() {
+  public function getLink() {
     $config = CRM_Core_Config::singleton();
-    return CRM_Utils_System::url($_GET[$config->userFrameworkURLVar],
+    return CRM_Utils_System::url(
+      $_GET[$config->userFrameworkURLVar],
       '_qf_' . $this->_name . '_display=true'
     );
   }
 
   /**
-   * boolean function to determine if this is a one form page
+   * boolean function to determine if this is a one form page.
    *
-   * @return boolean
-   * @access public
+   * @return bool True if simple form.
    */
-  function isSimpleForm() {
+  public function isSimpleForm() {
     return $this->_state->getType() & (CRM_Core_State::START | CRM_Core_State::FINISH);
   }
 
   /**
-   * getter function for Form Action
+   * getter function for Form Action.
    *
-   * @return string
-   * @access public
+   * @return string The form action URL.
    */
-  function getFormAction() {
+  public function getFormAction() {
     return $this->_attributes['action'];
   }
 
   /**
-   * setter function for Form Action
+   * setter function for Form Action.
    *
-   * @param string
-   *
-   * @return void
-   * @access public
+   * @param string $action The form action URL.
    */
-  function setFormAction($action) {
+  public function setFormAction($action) {
     $this->_attributes['action'] = $action;
   }
 
   /**
-   * render form and return contents
+   * render form and return contents.
    *
-   * @return string
-   * @access public
+   * @return array The form contents as an associative array.
    */
-  function toSmarty() {
+  public function toSmarty() {
     $renderer = &$this->getRenderer();
     $this->accept($renderer);
     $content = $renderer->toArray();
@@ -581,12 +536,11 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
   /**
    * getter function for renderer. If renderer is not set
-   * create one and initialize it
+   * create one and initialize it.
    *
-   * @return object
-   * @access public
+   * @return \CRM_Core_Form_Renderer The renderer object.
    */
-  function &getRenderer() {
+  public function &getRenderer() {
     if (!isset($this->_renderer)) {
       $this->_renderer = &CRM_Core_Form_Renderer::singleton();
     }
@@ -594,12 +548,11 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   /**
-   * Use the form name to create the tpl file name
+   * Use the form name to create the tpl file name.
    *
-   * @return string
-   * @access public
+   * @return string The template file name.
    */
-  function getTemplateFileName() {
+  public function getTemplateFileName() {
 
     $ext = new CRM_Core_Extensions();
     if ($ext->isExtensionClass(CRM_Utils_System::getClassName($this))) {
@@ -607,7 +560,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       $tplname = $ext->getTemplatePath(CRM_Utils_System::getClassName($this)) . DIRECTORY_SEPARATOR . $filename;
     }
     else {
-      $tplname = str_replace('_',
+      $tplname = str_replace(
+        '_',
         DIRECTORY_SEPARATOR,
         CRM_Utils_System::getClassName($this)
       ) . '.tpl';
@@ -619,23 +573,20 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
    * A wrapper for getTemplateFileName that includes calling the hook to
    * prevent us from having to copy & paste the logic of calling the hook
    */
-  function getHookedTemplateFileName() {
+  public function getHookedTemplateFileName() {
     $pageTemplateFile = $this->getTemplateFileName();
-    CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'page', $pageTemplateFile);
+    CRM_Utils_Hook::alterTemplateFile(get_class($this), $this, 'form', $pageTemplateFile);
     return $pageTemplateFile;
   }
 
   /**
-   * Error reporting mechanism
+   * Error reporting mechanism.
    *
-   * @param string  $message Error Message
-   * @param int     $code    Error Code
-   * @param CRM_Core_DAO $dao     A data access object on which we perform a rollback if non - empty
-   *
-   * @return void
-   * @access public
+   * @param string $message Error Message.
+   * @param int|null $code Error Code.
+   * @param \CRM_Core_DAO|null $dao A data access object on which we perform a rollback if non-empty.
    */
-  function error($message, $code = NULL, $dao = NULL) {
+  public function error($message, $code = NULL, $dao = NULL) {
     if ($dao) {
       $dao->query('ROLLBACK');
     }
@@ -646,105 +597,115 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   /**
-   * Store the variable with the value in the form scope
+   * Store the variable with the value in the form scope.
    *
-   * @param  string name  : name  of the variable
-   * @param  mixed  value : value of the variable
-   *
-   * @access public
-   *
-   * @return void
-   *
+   * @param string $name Name of the variable.
+   * @param mixed $value Value of the variable.
    */
-  function set($name, $value) {
+  public function set($name, $value) {
     $this->controller->set($name, $value);
   }
 
   /**
-   * Get the variable from the form scope
+   * Get the variable from the form scope.
    *
-   * @param  string name  : name  of the variable
+   * @param string $name Name of the variable.
    *
-   * @access public
-   *
-   * @return mixed
-   *
+   * @return mixed The value of the variable.
    */
-  function get($name) {
+  public function get($name) {
     return $this->controller->get($name);
   }
 
   /**
-   * getter for action
+   * getter for action.
    *
-   * @return int
-   * @access public
+   * @return int The form action mode.
    */
-  function getAction() {
+  public function getAction() {
     return $this->_action;
   }
 
   /**
-   * setter for action
+   * setter for action.
    *
-   * @param  int  $action the mode we want to set the form
-   *
-   * @return void
-   * @access public
+   * @param int $action The mode we want to set the form.
    */
-  function setAction($action) {
+  public function setAction($action) {
     $this->_action = $action;
   }
 
   /**
-   * assign value to name in template
+   * assign value to name in template.
    *
-   * @param array|string $name  name  of variable
-   * @param mixed $value value of varaible
-   *
-   * @return void
-   * @access public
+   * @param array|string $var Name of variable or associative array of variables.
+   * @param mixed $value Value of variable.
    */
-  function assign($var, $value = NULL) {
+  public function assign($var, $value = NULL) {
     self::$_template->assign($var, $value);
   }
 
   /**
-   * assign value to name in template by reference
+   * assign value to name in template by reference.
    *
-   * @param array|string $name  name  of variable
-   * @param mixed $value value of varaible
-   *
-   * @return void
-   * @access public
+   * @param string $var Name of variable.
+   * @param mixed $value Value of variable.
    */
-  function assign_by_ref($var, &$value) {
+  public function assign_by_ref($var, &$value) {
     self::$_template->assign_by_ref($var, $value);
   }
 
   /**
-   * check if variables assigned
+   * check if variables assigned.
    *
-   * @param string $name  name  of variable
-   * @param mixed $value value of varaible, if value will check equality
-   *        default only check isset
-   *
-   * @return void
-   * @access public
+   * @param string $var Name of variable.
+   * @param mixed $value Value of variable, if value will check equality.
    */
-  function isAssigned($var, $value = NULL) {
+  public function isAssigned($var, $value = NULL) {
     self::$_template->isAssigned($var, $value);
   }
 
-  function addTextfield($name, $label, $attributes = NULL, $required = FALSE) {
+  /**
+   * Add a text field to the form.
+   *
+   * @param string $name The name of the field.
+   * @param string $label The label for the field.
+   * @param mixed $attributes Attributes for the field.
+   * @param bool $required Whether the field is required.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addTextfield($name, $label, $attributes = NULL, $required = FALSE) {
     return $this->add('text', $name, $label, $attributes, $required);
   }
 
-  function addCbx($name, $label, $attributes = NULL, $required = FALSE) {
+  /**
+   * Add a checkbox to the form.
+   *
+   * @param string $name The name of the checkbox.
+   * @param string $label The label for the checkbox.
+   * @param mixed $attributes Attributes for the checkbox.
+   * @param bool $required Whether the checkbox is required.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addCbx($name, $label, $attributes = NULL, $required = FALSE) {
     return $this->add('checkbox', $name, $label, $attributes, $required);
   }
 
-  function addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
+  /**
+   * Add a radio button group to the form.
+   *
+   * @param string $name The name of the radio group.
+   * @param string $title The title for the radio group.
+   * @param array $values The values for the radio buttons.
+   * @param mixed $attributes Attributes for the radio buttons.
+   * @param string|null $separator Separator between radio buttons.
+   * @param bool $required Whether the group is required.
+   *
+   * @return \HTML_QuickForm_group The created element group.
+   */
+  public function addRadio($name, $title, &$values, $attributes = NULL, $separator = NULL, $required = FALSE) {
     $options = [];
     $attributes = $attributes ? $attributes : [];
     $allowClear = !empty($attributes['allowClear']) ? TRUE : FALSE;
@@ -763,7 +724,18 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $group;
   }
 
-  function addYesNo($id, $title, $dontKnow = NULL, $required = NULL, $attribute = NULL) {
+  /**
+   * Add a Yes/No radio group to the form.
+   *
+   * @param string $id The name of the group.
+   * @param string $title The title for the group.
+   * @param bool|null $dontKnow Whether to include a "Don't Know" option.
+   * @param bool|null $required Whether the group is required.
+   * @param mixed $attribute Attributes for the radio buttons.
+   *
+   * @return \HTML_QuickForm_group The created element group.
+   */
+  public function addYesNo($id, $title, $dontKnow = NULL, $required = NULL, $attribute = NULL) {
     $choice = [];
     $choice[] = &$this->createElement('radio', NULL, '11', ts('Yes'), '1', $attribute);
     $choice[] = &$this->createElement('radio', NULL, '11', ts('No'), '0', $attribute);
@@ -778,10 +750,31 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $group;
   }
 
-  function addCheckBox($id, $title, $values, $other = NULL,
-    $attributes = NULL, $required = NULL,
+  /**
+   * Add a checkbox group to the form.
+   *
+   * @param string $id The name of the group.
+   * @param string $title The title for the group.
+   * @param array $values The values for the checkboxes.
+   * @param bool|null $other Whether to include an "Other" text field.
+   * @param mixed $attributes Attributes for the checkboxes.
+   * @param bool|null $required Whether the group is required.
+   * @param string|null $javascriptMethod JavaScript method for the checkboxes.
+   * @param string $separator Separator between checkboxes.
+   * @param bool $flipValues Whether to flip keys and values.
+   *
+   * @return \HTML_QuickForm_group The created element group.
+   */
+  public function addCheckBox(
+    $id,
+    $title,
+    $values,
+    $other = NULL,
+    $attributes = NULL,
+    $required = NULL,
     $javascriptMethod = NULL,
-    $separator = '<br />', $flipValues = FALSE
+    $separator = '<br />',
+    $flipValues = FALSE
   ) {
     $options = [];
 
@@ -813,7 +806,8 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
 
     if ($required) {
-      $this->addRule($id,
+      $this->addRule(
+        $id,
         ts('%1 is a required field.', [1 => $title]),
         'required'
       );
@@ -821,23 +815,26 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $ele;
   }
 
-  function resetValues() {
+  /**
+   * Reset the values of the form in the controller container.
+   */
+  public function resetValues() {
     $data = &$this->controller->container();
     $data['values'][$this->_name] = [];
   }
 
   /**
    * simple shell that derived classes can call to add buttons to
-   * the form with a customized title for the main Submit
+   * the form with a customized title for the main Submit.
    *
-   * @param string $title title of the main button
-   * @param string $type  button type for the form after processing
-   * @param string $submitOnce If true, add javascript to next button submit which prevents it from being clicked more than once
+   * @param string $title Title of the main button.
+   * @param string $nextType Button type for the next button.
+   * @param string $backType Button type for the back button.
+   * @param bool $submitOnce If true, add javascript to next button submit which prevents it from being clicked more than once.
    *
-   * @return void
-   * @access public
+   * @return \HTML_QuickForm_group The created button group.
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = FALSE) {
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = FALSE) {
     $buttons = [];
     if ($backType != NULL) {
       $buttons[] = ['type' => $backType,
@@ -857,15 +854,39 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $this->addButtons($buttons);
   }
 
-  function addDateRange($name, $label = 'From', $dateFormat = 'searchDate', $required = FALSE) {
+  /**
+   * Add a date range field to the form.
+   *
+   * @param string $name The name of the field.
+   * @param string $label The label for the field.
+   * @param string $dateFormat The date format type.
+   * @param bool $required Whether the field is required.
+   */
+  public function addDateRange($name, $label = 'From', $dateFormat = 'searchDate', $required = FALSE) {
     $this->addDate($name . '_from', ts($label), $required, ['formatType' => $dateFormat]);
     $this->addDate($name . '_to', ts('To'), $required, ['formatType' => $dateFormat]);
   }
 
-  function addSelectByOption($name, $label, $prefix = NULL, $required = NULL, $extra = NULL, $select = '- select -') {
+  /**
+   * Add a select field with values from an option group.
+   *
+   * @param string $name The name of the field.
+   * @param string $label The label for the field.
+   * @param string|null $prefix Prefix for the field name.
+   * @param bool|null $required Whether the field is required.
+   * @param mixed $extra Extra attributes for the field.
+   * @param string $select The default select label.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addSelectByOption($name, $label, $prefix = NULL, $required = NULL, $extra = NULL, $select = '- select -') {
     if ($prefix) {
-      $ele = $this->addElement('select', $name . '_id' . $prefix, $label,
-        ['' => $select] + CRM_Core_OptionGroup::values($name), $extra
+      $ele = $this->addElement(
+        'select',
+        $name . '_id' . $prefix,
+        $label,
+        ['' => $select] + CRM_Core_OptionGroup::values($name),
+        $extra
       );
       if ($required) {
         $this->addRule($name . '_id' . $prefix, ts('Please select %1', [1 => $label]), 'required');
@@ -873,8 +894,12 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
       return $ele;
     }
     else {
-      $ele = $this->addElement('select', $name . '_id', $label,
-        ['' => $select] + CRM_Core_OptionGroup::values($name), $extra
+      $ele = $this->addElement(
+        'select',
+        $name . '_id',
+        $label,
+        ['' => $select] + CRM_Core_OptionGroup::values($name),
+        $extra
       );
       if ($required) {
         $this->addRule($name . '_id', ts('Please select %1', [1 => $label]), 'required');
@@ -883,17 +908,38 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  function addTextarea($name, $label, $attributes = NULL, $required = NULL) {
+  /**
+   * Add a textarea to the form.
+   *
+   * @param string $name The name of the textarea.
+   * @param string $label The label for the textarea.
+   * @param mixed $attributes Attributes for the textarea.
+   * @param bool|null $required Whether the textarea is required.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addTextarea($name, $label, $attributes = NULL, $required = NULL) {
     return $this->add('textarea', $name, $label, $attributes, $required);
   }
 
-  function addWysiwyg($name, $label, $attributes, $forceTextarea = FALSE) {
+  /**
+   * Add a WYSIWYG editor to the form.
+   *
+   * @param string $name The name of the field.
+   * @param string $label The label for the field.
+   * @param mixed $attributes Attributes for the field.
+   * @param bool $forceTextarea Whether to force a plain textarea.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addWysiwyg($name, $label, $attributes, $forceTextarea = FALSE) {
     // 1. Get configuration option for editor (tinymce, ckeditor, pure textarea)
     // 2. Based on the option, initialise proper editor
 
-    $editor = strtolower(CRM_Utils_Array::value(CRM_Core_BAO_Preferences::value('editor_id'),
-        CRM_Core_PseudoConstant::wysiwygEditor()
-      ));
+    $editor = strtolower(CRM_Utils_Array::value(
+      CRM_Core_BAO_Preferences::value('editor_id'),
+      CRM_Core_PseudoConstant::wysiwygEditor()
+    ));
     if (!$editor || $forceTextarea) {
       $editor = 'textarea';
     }
@@ -906,9 +952,23 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $ele;
   }
 
-  function addCountry($id, $title, $required = NULL, $extra = NULL) {
-    $ele = $this->addElement('select', $id, $title,
-      ['' => ts('- select -')] + CRM_Core_PseudoConstant::country(), $extra
+  /**
+   * Add a country select field to the form.
+   *
+   * @param string $id The name of the field.
+   * @param string $title The title for the field.
+   * @param bool|null $required Whether the field is required.
+   * @param mixed $extra Extra attributes for the field.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addCountry($id, $title, $required = NULL, $extra = NULL) {
+    $ele = $this->addElement(
+      'select',
+      $id,
+      $title,
+      ['' => ts('- select -')] + CRM_Core_PseudoConstant::country(),
+      $extra
     );
     if ($required) {
       $this->addRule($id, ts('Please select %1', [1 => $title]), 'required');
@@ -916,7 +976,19 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $ele;
   }
 
-  function addSelect($name, $label, $options, $attributes = NULL, $required = NULL, $others = NULL) {
+  /**
+   * Add a select field to the form.
+   *
+   * @param string $name The name of the field.
+   * @param string $label The label for the field.
+   * @param array $options The options for the select field.
+   * @param mixed $attributes Attributes for the field.
+   * @param bool|null $required Whether the field is required.
+   * @param mixed $others Other parameters.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addSelect($name, $label, $options, $attributes = NULL, $required = NULL, $others = NULL) {
     $ele = $this->addElement('select', $name, $label, $options, $attributes);
 
     if ($required) {
@@ -925,13 +997,40 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $ele;
   }
 
-  function addNumber($name, $label, $attributes = NULL, $required = NULL) {
+  /**
+   * Add a number field to the form.
+   *
+   * @param string $name The name of the field.
+   * @param string $label The label for the field.
+   * @param mixed $attributes Attributes for the field.
+   * @param bool|null $required Whether the field is required.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addNumber($name, $label, $attributes = NULL, $required = NULL) {
     return $this->add('number', $name, $label, $attributes, $required);
   }
 
-  function buildAddressBlock($locationId, $title, $phone,
-    $alternatePhone = NULL, $addressRequired = NULL,
-    $phoneRequired = NULL, $altPhoneRequired = NULL,
+  /**
+   * Build an address block.
+   *
+   * @param int $locationId The location ID.
+   * @param string $title The title for the address block.
+   * @param string $phone The phone number.
+   * @param string|null $alternatePhone The alternate phone number.
+   * @param bool|null $addressRequired Whether address is required.
+   * @param bool|null $phoneRequired Whether phone is required.
+   * @param bool|null $altPhoneRequired Whether alternate phone is required.
+   * @param string|null $locationName The name of the location field.
+   */
+  public function buildAddressBlock(
+    $locationId,
+    $title,
+    $phone,
+    $alternatePhone = NULL,
+    $addressRequired = NULL,
+    $phoneRequired = NULL,
+    $altPhoneRequired = NULL,
     $locationName = NULL
   ) {
     if (!$locationName) {
@@ -941,62 +1040,90 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     $config = CRM_Core_Config::singleton();
     $attributes = CRM_Core_DAO::getAttribute('CRM_Core_DAO_Address');
 
-    $location[$locationId]['address']['street_address'] = $this->addElement('text', "{$locationName}[$locationId][address][street_address]", $title,
+    $location[$locationId]['address']['street_address'] = $this->addElement(
+      'text',
+      "{$locationName}[$locationId][address][street_address]",
+      $title,
       $attributes['street_address']
     );
     if ($addressRequired) {
       $this->addRule("{$locationName}[$locationId][address][street_address]", ts("Please enter the Street Address for %1.", [1 => $title]), 'required');
     }
 
-    $location[$locationId]['address']['supplemental_address_1'] = $this->addElement('text', "{$locationName}[$locationId][address][supplemental_address_1]", ts('Additional Address 1'),
+    $location[$locationId]['address']['supplemental_address_1'] = $this->addElement(
+      'text',
+      "{$locationName}[$locationId][address][supplemental_address_1]",
+      ts('Additional Address 1'),
       $attributes['supplemental_address_1']
     );
-    $location[$locationId]['address']['supplemental_address_2'] = $this->addElement('text', "{$locationName}[$locationId][address][supplemental_address_2]", ts('Additional Address 2'),
+    $location[$locationId]['address']['supplemental_address_2'] = $this->addElement(
+      'text',
+      "{$locationName}[$locationId][address][supplemental_address_2]",
+      ts('Additional Address 2'),
       $attributes['supplemental_address_2']
     );
 
-    $location[$locationId]['address']['city'] = $this->addElement('text', "{$locationName}[$locationId][address][city]", ts('City'),
+    $location[$locationId]['address']['city'] = $this->addElement(
+      'text',
+      "{$locationName}[$locationId][address][city]",
+      ts('City'),
       $attributes['city']
     );
     if ($addressRequired) {
       $this->addRule("{$locationName}[$locationId][address][city]", ts("Please enter the City for %1.", [1 => $title]), 'required');
     }
 
-    $location[$locationId]['address']['postal_code'] = $this->addElement('text', "{$locationName}[$locationId][address][postal_code]", ts('Zip / Postal Code'),
+    $location[$locationId]['address']['postal_code'] = $this->addElement(
+      'text',
+      "{$locationName}[$locationId][address][postal_code]",
+      ts('Zip / Postal Code'),
       $attributes['postal_code']
     );
     if ($addressRequired) {
       $this->addRule("{$locationName}[$locationId][address][postal_code]", ts("Please enter the Zip/Postal Code for %1.", [1 => $title]), 'required');
     }
 
-    $location[$locationId]['address']['postal_code_suffix'] = $this->addElement('text', "{$locationName}[$locationId][address][postal_code_suffix]", ts('Add-on Code'),
+    $location[$locationId]['address']['postal_code_suffix'] = $this->addElement(
+      'text',
+      "{$locationName}[$locationId][address][postal_code_suffix]",
+      ts('Add-on Code'),
       ['size' => 4, 'maxlength' => 12]
     );
     $this->addRule("{$locationName}[$locationId][address][postal_code_suffix]", ts('Zip-Plus not valid.'), 'positiveInteger');
 
     if ($config->includeCounty) {
-      $location[$locationId]['address']['county_id'] = $this->addElement('select', "{$locationName}[$locationId][address][county_id]", ts('County'),
+      $location[$locationId]['address']['county_id'] = $this->addElement(
+        'select',
+        "{$locationName}[$locationId][address][county_id]",
+        ts('County'),
         ['' => ts('- select -')] + CRM_Core_PseudoConstant::county()
       );
     }
 
-    $location[$locationId]['address']['state_province_id'] = $this->addElement('select', "{$locationName}[$locationId][address][state_province_id]", ts('State / Province'),
+    $location[$locationId]['address']['state_province_id'] = $this->addElement(
+      'select',
+      "{$locationName}[$locationId][address][state_province_id]",
+      ts('State / Province'),
       ['' => ts('- select -')] + CRM_Core_PseudoConstant::stateProvince()
     );
 
-    $location[$locationId]['address']['country_id'] = $this->addElement('select', "{$locationName}[$locationId][address][country_id]", ts('Country'),
+    $location[$locationId]['address']['country_id'] = $this->addElement(
+      'select',
+      "{$locationName}[$locationId][address][country_id]",
+      ts('Country'),
       ['' => ts('- select -')] + CRM_Core_PseudoConstant::country()
     );
     if ($addressRequired) {
       $this->addRule("{$locationName}[$locationId][address][country_id]", ts("Please select the Country for %1.", [1 => $title]), 'required');
     }
 
-
     if ($phone) {
-      $location[$locationId]['phone'][1]['phone'] = $this->addElement('text',
+      $location[$locationId]['phone'][1]['phone'] = $this->addElement(
+        'text',
         "{$locationName}[$locationId][phone][1][phone]",
         $phone,
-        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Phone',
+        CRM_Core_DAO::getAttribute(
+          'CRM_Core_DAO_Phone',
           'phone'
         )
       );
@@ -1007,10 +1134,12 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
 
     if ($alternatePhone) {
-      $location[$locationId]['phone'][2]['phone'] = $this->addElement('text',
+      $location[$locationId]['phone'][2]['phone'] = $this->addElement(
+        'text',
         "{$locationName}[$locationId][phone][2][phone]",
         $alternatePhone,
-        CRM_Core_DAO::getAttribute('CRM_Core_DAO_Phone',
+        CRM_Core_DAO::getAttribute(
+          'CRM_Core_DAO_Phone',
           'phone'
         )
       );
@@ -1021,19 +1150,39 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
+  /**
+   * Get the root title of the form.
+   *
+   * @return string|null The root title.
+   */
   public function getRootTitle() {
     return NULL;
   }
 
+  /**
+   * Get the complete title of the form.
+   *
+   * @return string The complete title.
+   */
   public function getCompleteTitle() {
     return $this->getRootTitle() . $this->getTitle();
   }
 
-  static function &getTemplate() {
+  /**
+   * Get the template object.
+   *
+   * @return \CRM_Core_Smarty The template object.
+   */
+  public static function &getTemplate() {
     return self::$_template;
   }
 
-  function addUploadElement($elementName) {
+  /**
+   * Add an upload element to the form.
+   *
+   * @param string|array $elementName The name of the upload element.
+   */
+  public function addUploadElement($elementName) {
     $uploadNames = $this->get('uploadNames');
     if (!$uploadNames) {
       $uploadNames = [];
@@ -1058,35 +1207,48 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  function buttonType() {
+  /**
+   * Get the button type (next or upload).
+   *
+   * @return string The button type.
+   */
+  public function buttonType() {
     $uploadNames = $this->get('uploadNames');
     $buttonType = (is_array($uploadNames) && !empty($uploadNames)) ? 'upload' : 'next';
     $this->assign('buttonType', $buttonType);
     return $buttonType;
   }
 
-  function getVar($name) {
+  /**
+   * Get a variable from the form.
+   *
+   * @param string $name The name of the variable.
+   *
+   * @return mixed The value of the variable.
+   */
+  public function getVar($name) {
     return $this->$name ?? NULL;
   }
 
-  function setVar($name, $value) {
+  /**
+   * Set a variable on the form.
+   *
+   * @param string $name The name of the variable.
+   * @param mixed $value The value of the variable.
+   */
+  public function setVar($name, $value) {
     $this->$name = $value;
   }
 
   /**
-   *  Function to add date
-   *  @param string $name   name of the element
-   *  @param string $label  label of the element
-   *  @param array  $attributes key / value pair
+   * Function to add a date element.
    *
-   // if you need time
-   *  $arrtibutes = array ( 'addTime' => true,
-   *                        'formatType' => 'relative' or 'birth' etc check advanced date settings
-   *                      );
-   *  @param boolean $required  true if required
-   *
+   * @param string $name Name of the element.
+   * @param string $label Label of the element.
+   * @param bool $required True if required.
+   * @param array|null $attributes Key/value pair of attributes.
    */
-  function addDate($name, $label, $required = FALSE, $attributes = NULL) {
+  public function addDate($name, $label, $required = FALSE, $attributes = NULL) {
     if (CRM_Utils_Array::value('formatType', $attributes)) {
       // get actual format
       $params = ['name' => $attributes['formatType']];
@@ -1159,9 +1321,14 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   /**
-   *  Function that will add date and time
+   * Function that will add date and time.
+   *
+   * @param string $name Name of the element.
+   * @param string $label Label of the element.
+   * @param bool $required True if required.
+   * @param array|null $attributes Key/value pair of attributes.
    */
-  function addDateTime($name, $label, $required = FALSE, $attributes = NULL) {
+  public function addDateTime($name, $label, $required = FALSE, $attributes = NULL) {
     $addTime = ['addTime' => TRUE];
     if (is_array($attributes)) {
       $attributes = array_merge($attributes, $addTime);
@@ -1174,9 +1341,20 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   /**
-   * add a currency and money element to the form
+   * add a currency and money element to the form.
+   *
+   * @param string $name Name of the field.
+   * @param string $label Label for the field.
+   * @param bool $required Whether the field is required.
+   * @param mixed $attributes Attributes for the field.
+   * @param bool $addCurrency Whether to add a currency selector.
+   * @param string $currencyName Name for the currency selector.
+   * @param string|null $defaultCurrency Default currency code.
+   *
+   * @return \HTML_QuickForm_element The created element.
    */
-  function addMoney($name,
+  public function addMoney(
+    $name,
     $label,
     $required = FALSE,
     $attributes = NULL,
@@ -1195,9 +1373,17 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   }
 
   /**
-   * add currency element to the form
+   * add currency element to the form.
+   *
+   * @param string $name Name of the selector.
+   * @param string|null $label Label for the selector.
+   * @param bool $required Whether the selector is required.
+   * @param string|null $defaultCurrency Default currency code.
+   *
+   * @return \HTML_QuickForm_element The created element.
    */
-  function addCurrency($name = 'currency',
+  public function addCurrency(
+    $name = 'currency',
     $label = NULL,
     $required = TRUE,
     $defaultCurrency = NULL
@@ -1205,7 +1391,7 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     $currencies = CRM_Core_OptionGroup::values('currencies_enabled');
     if (!$required) {
-      $currencies = [ ''=> ts( '- select -' ) ] + $currencies;
+      $currencies = [ '' => ts('- select -') ] + $currencies;
     }
     $ele = $this->add('select', $name, $label, $currencies, $required);
     if (!$defaultCurrency) {
@@ -1216,31 +1402,39 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $ele;
   }
 
-  function addFieldRequiredRule(&$errors,$fields,$files){
+  /**
+   * Add a rule to check for required fields.
+   *
+   * @param array $errors The errors array.
+   * @param array $fields The fields array.
+   * @param array $files The files array.
+   */
+  public function addFieldRequiredRule(&$errors, $fields, $files) {
     // Files : Write in $this->_submitFiles['custom_4']['name']
     // if is no Files : $this->_submitFiles['custom_4']['error'] == 4
     // or $this->_submitFiles['custom_4']['name'] is null.
     foreach ($this->_fields as $name => $fld) {
-      if($fld['is_required']){
+      if ($fld['is_required']) {
         $data_type = $fld['data_type'] ?? '';
         if (CRM_Utils_System::isNull(CRM_Utils_Array::value($name, $fields) && $data_type != 'File')) {
           $errors[$name] = ts('%1 is a required field.', [1 => $fld['title']]);
         }
 
-        if(empty($files[$name]['name']) && ($data_type == 'File' || $name == 'image_URL')){
-          if($this->_action == 1){
+        if (empty($files[$name]['name']) && ($data_type == 'File' || $name == 'image_URL')) {
+          if ($this->_action == 1) {
             // profile : create
             $errors[$name] = ts('%1 is a required field.', [1 => $fld['title']]);
-          }else{
-            if($data_type == 'File'){
+          }
+          else {
+            if ($data_type == 'File') {
               $customFieldID = CRM_Core_BAO_CustomField::getKeyID($name);
               $file = CRM_Core_BAO_CustomField::getFileURL($this->_id, $customFieldID);
-              $file = $file['file_id']??FALSE;
+              $file = $file['file_id'] ?? FALSE;
             }
-            if($name == 'image_URL'){
-              $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id , 'image_URL');
+            if ($name == 'image_URL') {
+              $file  = CRM_Core_DAO::getFieldValue('CRM_Contact_DAO_Contact', $this->_id, 'image_URL');
             }
-            if(empty($file)){
+            if (empty($file)) {
               $errors[$name] = ts('%1 is a required field.', [1 => $fld['title']]);
             }
           }
@@ -1249,7 +1443,10 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  function preventMultipleSubmission() {
+  /**
+   * Prevent multiple submissions of the same form.
+   */
+  public function preventMultipleSubmission() {
     if ($this->_submissionCount > 1) {
       $message = ts('This message indicate that your have submitted this form before. You stop here because we need to prevent your double submissions.');
       $initPage = $this->get('initPage');
@@ -1260,7 +1457,18 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     }
   }
 
-  function addFile($name, $label = '', $attributes = '', $required = FALSE, $javascript = NULL) {
+  /**
+   * Add a file upload element to the form.
+   *
+   * @param string $name The name of the field.
+   * @param string $label The label for the field.
+   * @param mixed $attributes Attributes for the field.
+   * @param bool $required Whether the field is required.
+   * @param mixed $javascript JavaScript for the field.
+   *
+   * @return \HTML_QuickForm_element The created element.
+   */
+  public function addFile($name, $label = '', $attributes = '', $required = FALSE, $javascript = NULL) {
     $element = &$this->addElement('file', $name, $label, $attributes, $javascript);
     if (HTML_QuickForm::isError($element)) {
       CRM_Core_Error::fatal(HTML_QuickForm::errorMessage($element));
@@ -1276,6 +1484,13 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $element;
   }
 
+  /**
+   * Extract ID and additional ID from a checkbox prefix.
+   *
+   * @param string $value The checkbox value string.
+   *
+   * @return array Array of [id, additionalID].
+   */
   public static function cbExtract($value) {
     $id = $additionalID = NULL;
     if (substr($value, 0, CRM_Core_Form::CB_PREFIX_LEN) == CRM_Core_Form::CB_PREFIX) {
@@ -1331,4 +1546,3 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     return $result;
   }
 }
-

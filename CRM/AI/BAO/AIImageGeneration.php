@@ -3,16 +3,16 @@
 class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
 
   // Status constants based on planning document
-  const STATUS_SUCCESS = 1;      // Success: Image generated and saved successfully
-  const STATUS_PENDING = 2;      // Pending: Request created, waiting to start processing
-  const STATUS_FAILED = 4;       // Failed: Error occurred during translation or image generation
-  const STATUS_PROCESSING = 5;   // Processing: Currently translating prompt or generating image
+  public const STATUS_SUCCESS = 1;      // Success: Image generated and saved successfully
+  public const STATUS_PENDING = 2;      // Pending: Request created, waiting to start processing
+  public const STATUS_FAILED = 4;       // Failed: Error occurred during translation or image generation
+  public const STATUS_PROCESSING = 5;   // Processing: Currently translating prompt or generating image
 
   /**
    * Create image generation record
    *
    * @param array $data Record data
-   * @return CRM_AI_BAO_AIImageGeneration
+   * @return CRM_AI_DAO_AIImageGeneration The created record object.
    * @throws CRM_Core_Exception
    */
   public static function create(&$data) {
@@ -67,11 +67,11 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
    * @param array $params      (reference) an assoc array of name/value pairs
    * @param array $defaults    (reference) an assoc array to hold the flattened values
    *
-   * @return object   CRM_AI_BAO_AIImageGeneration object
+   * @return CRM_AI_DAO_AIImageGeneration|null CRM_AI_DAO_AIImageGeneration object
    * @access public
    * @static
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     return CRM_Core_DAO::commonRetrieve('CRM_AI_DAO_AIImageGeneration', $params, $defaults);
   }
 
@@ -92,7 +92,8 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
     try {
       self::create($data);
       return TRUE;
-    } catch (Exception $e) {
+    }
+    catch (Exception $e) {
       CRM_Core_Error::debug_log_message("Failed to update image generation status: " . $e->getMessage());
       return FALSE;
     }
@@ -102,7 +103,8 @@ class CRM_AI_BAO_AIImageGeneration extends CRM_AI_DAO_AIImageGeneration {
    * Save generation record with full workflow
    *
    * @param array $data Complete generation data
-   * @return CRM_AI_BAO_AIImageGeneration
+   * @return CRM_AI_DAO_AIImageGeneration The saved record object.
+   * @throws CRM_Core_Exception
    */
   public function saveGenerationRecord($data) {
     return self::create($data);

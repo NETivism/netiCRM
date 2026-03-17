@@ -26,13 +26,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to save a search
@@ -46,7 +42,7 @@ class CRM_Grant_Form_Task_SearchTaskHookSample extends CRM_Grant_Form_Task {
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     parent::preProcess();
     $rows = [];
     // display name and grant details of all selectced contacts
@@ -81,7 +77,8 @@ INNER JOIN civicrm_contact ct ON ( grt.contact_id = ct.id )
    * @access public
    */
   public function buildQuickForm() {
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'done',
           'name' => ts('Done'),
           'isDefault' => TRUE,
@@ -90,4 +87,3 @@ INNER JOIN civicrm_contact ct ON ( grt.contact_id = ct.id )
     );
   }
 }
-

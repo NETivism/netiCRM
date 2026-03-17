@@ -27,12 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Contribute_Page_Tab extends CRM_Core_Page {
 
@@ -44,7 +41,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
   public $_permission = NULL;
   public $_contactId = NULL;
 
@@ -57,9 +54,9 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    *
    * @return array
    * @access public
-   *
+   * @static
    */
-  static function &honorLinks() {
+  public static function &honorLinks() {
     if (!(self::$_links)) {
       self::$_links = [
         CRM_Core_Action::VIEW => [
@@ -96,9 +93,9 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    *
    * @return array
    * @access public
-   *
+   * @static
    */
-  static function &recurLinks() {
+  public static function &recurLinks() {
     if (!(self::$_links) && CRM_Core_Permission::check('access CiviContribute')) {
       self::$_links = [
         CRM_Core_Action::VIEW => [
@@ -130,13 +127,10 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is browse
    *
-   * return null
+   * @return void
    * @access public
    */
-  function browse() {
-
-
-
+  public function browse() {
 
     // Check permission have "edit contributions"
     $this->assign('editContributionPermission', CRM_Core_Permission::check('edit contributions'));
@@ -168,17 +162,21 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         $params[$ids]['is_active'] = ($recur['contribution_status_id'] != 3);
         $links = self::recurLinks();
         if ($params[$ids]['is_active']) {
-          $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
+          $params[$ids]['action'] = CRM_Core_Action::formLink(
+            $links,
+            $action,
             ['cid' => $this->_contactId,
               'id' => $ids,
               'cxt' => 'contribution',
             ]
           );
         }
-        else{
+        else {
           unset($links[CRM_Core_Action::DISABLE]);
           unset($links[CRM_Core_Action::UPDATE]);
-          $params[$ids]['action'] = CRM_Core_Action::formLink($links, $action,
+          $params[$ids]['action'] = CRM_Core_Action::formLink(
+            $links,
+            $action,
             ['cid' => $this->_contactId,
               'id' => $ids,
               'cxt' => 'contribution',
@@ -200,7 +198,9 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $params = CRM_Contribute_BAO_Contribution::getHonorContacts($this->_contactId);
     if (!empty($params)) {
       foreach ($params as $ids => $honorId) {
-        $params[$ids]['action'] = CRM_Core_Action::formLink(self::honorLinks(), $action,
+        $params[$ids]['action'] = CRM_Core_Action::formLink(
+          self::honorLinks(),
+          $action,
           ['cid' => $honorId['honorId'],
             'id' => $ids,
             'cxt' => 'contribution',
@@ -247,10 +247,10 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is view
    *
-   * return null
+   * @return void
    * @access public
    */
-  function view() {
+  public function view() {
     $controller = new CRM_Core_Controller_Simple('CRM_Contribute_Form_ContributionView', 'View Contribution', $this->_action);
     $controller->setEmbedded(TRUE);
     $controller->set('id', $this->_id);
@@ -261,10 +261,10 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
   /**
    * This function is called when action is update or new
    *
-   * return null
+   * @return void
    * @access public
    */
-  function edit() {
+  public function edit() {
     // set https for offline cc transaction
     $mode = CRM_Utils_Request::retrieve('mode', 'String', $this);
     if ($mode == 'test' || $mode == 'live') {
@@ -283,7 +283,13 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     return $controller->run();
   }
 
-  function preProcess() {
+  /**
+   * Pre-process the page
+   *
+   * @return void
+   * @access public
+   */
+  public function preProcess() {
     $context = CRM_Utils_Request::retrieve('context', 'String', $this);
     $this->_action = CRM_Utils_Request::retrieve('action', 'String', $this, FALSE, 'browse');
     $this->_id = CRM_Utils_Request::retrieve('id', 'Positive', $this);
@@ -318,7 +324,7 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
    * return null
    * @access public
    */
-  function run() {
+  public function run() {
     $this->preProcess();
 
     // check if we can process credit card contribs
@@ -349,10 +355,20 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     return parent::run();
   }
 
-  function setContext() {
+  /**
+   * Set context for redirection
+   *
+   * @return void
+   * @access public
+   */
+  public function setContext() {
     $qfKey = CRM_Utils_Request::retrieve('key', 'String', $this);
-    $context = CRM_Utils_Request::retrieve('context', 'String',
-      $this, FALSE, 'search'
+    $context = CRM_Utils_Request::retrieve(
+      'context',
+      'String',
+      $this,
+      FALSE,
+      'search'
     );
     $compContext = CRM_Utils_Request::retrieve('compContext', 'String', $this);
 
@@ -379,13 +395,15 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'dashboard':
-        $url = CRM_Utils_System::url('civicrm/contribute',
+        $url = CRM_Utils_System::url(
+          'civicrm/contribute',
           'reset=1'
         );
         break;
 
       case 'pledgeDashboard':
-        $url = CRM_Utils_System::url('civicrm/pledge',
+        $url = CRM_Utils_System::url(
+          'civicrm/pledge',
           'reset=1'
         );
         break;
@@ -400,7 +418,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
           $cid = $this->_contactId;
         }
 
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$cid}&selectedChild=contribute"
         );
         break;
@@ -426,7 +445,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         break;
 
       case 'activity':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=activity"
         );
         break;
@@ -451,7 +471,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         else {
           $action = 'update';
         }
-        $url = CRM_Utils_System::url('civicrm/contact/view/membership',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/membership',
           "reset=1&action={$action}&id={$componentId}&cid={$this->_contactId}&context={$context}&selectedChild=member{$searchKey}{$compContext}"
         );
         break;
@@ -475,13 +496,15 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         else {
           $action = 'update';
         }
-        $url = CRM_Utils_System::url('civicrm/contact/view/participant',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view/participant',
           "reset=1&action={$action}&id={$componentId}&cid={$this->_contactId}&context={$context}&selectedChild=event{$searchKey}{$compContext}"
         );
         break;
 
       case 'pledge':
-        $url = CRM_Utils_System::url('civicrm/contact/view',
+        $url = CRM_Utils_System::url(
+          'civicrm/contact/view',
           "reset=1&force=1&cid={$this->_contactId}&selectedChild=pledge"
         );
         break;
@@ -518,7 +541,8 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
         if ($this->_contactId) {
           $cid = '&cid=' . $this->_contactId;
         }
-        $url = CRM_Utils_System::url('civicrm/contribute/search',
+        $url = CRM_Utils_System::url(
+          'civicrm/contribute/search',
           'reset=1&force=1' . $cid
         );
         break;
@@ -528,4 +552,3 @@ class CRM_Contribute_Page_Tab extends CRM_Core_Page {
     $session->pushUserContext($url);
   }
 }
-

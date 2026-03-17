@@ -39,7 +39,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   protected $_relTypeID;
   protected $_apiversion;
   public $_eNoticeCompliant = TRUE;
-  function get_info() {
+  public function get_info() {
     return [
       'name' => 'RelationshipType Create',
       'description' => 'Test all RelationshipType Create API methods.',
@@ -47,7 +47,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     ];
   }
 
-  function setUp() {
+  public function setUp() {
 
     parent::setUp();
     $this->_apiversion = 3;
@@ -55,7 +55,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     $this->_cId_b      = $this->organizationCreate(NULL);
   }
 
-  function tearDown() {
+  public function tearDown() {
 
     $tablesToTruncate = [
       'civicrm_contact',
@@ -69,7 +69,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with no name
    */
-  function testRelationshipTypeCreateWithoutName() {
+  public function testRelationshipTypeCreateWithoutName() {
     $relTypeParams = [
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
@@ -78,7 +78,8 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     $result = civicrm_api('relationship_type', 'create', $relTypeParams);
 
     $this->assertEquals($result['is_error'], 1);
-    $this->assertEquals($result['error_message'],
+    $this->assertEquals(
+      $result['error_message'],
       'Mandatory key(s) missing from params array: name_a_b, name_b_a'
     );
   }
@@ -86,7 +87,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with no contact type
    */
-  function testRelationshipTypeCreateWithoutContactType() {
+  public function testRelationshipTypeCreateWithoutContactType() {
     $relTypeParams = [
       'name_a_b' => 'Relation 1 without contact type',
       'name_b_a' => 'Relation 2 without contact type',
@@ -95,7 +96,8 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     $result = civicrm_api('relationship_type', 'create', $relTypeParams);
 
     $this->assertEquals($result['is_error'], 1);
-    $this->assertEquals($result['error_message'],
+    $this->assertEquals(
+      $result['error_message'],
       'Mandatory key(s) missing from params array: contact_type_a, contact_type_b'
     );
   }
@@ -103,7 +105,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * create relationship type
    */
-  function testRelationshipTypeCreate() {
+  public function testRelationshipTypeCreate() {
     $params = [
       'name_a_b' => 'Relation 1 for relationship type create',
       'name_b_a' => 'Relation 2 for relationship type create',
@@ -140,7 +142,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testRelationshipTypeDeleteEmpty() {
+  public function testRelationshipTypeDeleteEmpty() {
     $params = [];
     $result = civicrm_api('relationship_type', 'delete', $params);
 
@@ -150,7 +152,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with No array
    */
-  function testRelationshipTypeDeleteParamsNotArray() {
+  public function testRelationshipTypeDeleteParamsNotArray() {
     $params = 'name_a_b = Test1';
     $result = civicrm_api('relationship_type', 'delete', $params);
 
@@ -160,7 +162,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check if required fields are not passed
    */
-  function testRelationshipTypeDeleteWithoutRequired() {
+  public function testRelationshipTypeDeleteWithoutRequired() {
     $params = [
       'name_b_a' => 'Relation 2 delete without required',
       'contact_type_b' => 'Individual',
@@ -177,7 +179,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with incorrect required fields
    */
-  function testRelationshipTypeDeleteWithIncorrectData() {
+  public function testRelationshipTypeDeleteWithIncorrectData() {
     $params = [
       'id' => 'abcd',
       'name_b_a' => 'Relation 2 delete with incorrect',
@@ -198,7 +200,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check relationship type delete
    */
-  function testRelationshipTypeDelete() {
+  public function testRelationshipTypeDelete() {
     $rel = $this->_relationshipTypeCreate();
     // create sample relationship type.
     $params = [
@@ -215,7 +217,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testRelationshipTypeUpdateEmpty() {
+  public function testRelationshipTypeUpdateEmpty() {
     $params = [];
     $result = civicrm_api('relationship_type', 'create', $params);
 
@@ -226,7 +228,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with No array
    */
-  function testRelationshipTypeUpdateParamsNotArray() {
+  public function testRelationshipTypeUpdateParamsNotArray() {
     $params = 'name_a_b = Relation 1';
     $result = civicrm_api('relationship_type', 'create', $params);
 
@@ -237,7 +239,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with no contact type
    */
-  function testRelationshipTypeUpdateWithoutContactType() {
+  public function testRelationshipTypeUpdateWithoutContactType() {
     // create sample relationship type.
     $this->_relTypeID = $this->_relationshipTypeCreate(NULL);
 
@@ -261,7 +263,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with all parameters
    */
-  function testRelationshipTypeUpdate() {
+  public function testRelationshipTypeUpdate() {
     // create sample relationship type.
     $this->_relTypeID = $this->_relationshipTypeCreate(NULL);
 
@@ -289,7 +291,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with empty array
    */
-  function testRelationshipTypesGetEmptyParams() {
+  public function testRelationshipTypesGetEmptyParams() {
     $firstRelTypeParams = [
       'name_a_b' => 'Relation 27 for create',
       'name_b_a' => 'Relation 28 for create',
@@ -325,7 +327,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with params Not Array.
    */
-  function testRelationshipTypesGetParamsNotArray() {
+  public function testRelationshipTypesGetParamsNotArray() {
 
     $results = civicrm_api('relationship_type', 'get', 'string');
     $this->assertEquals(1, $results['is_error']);
@@ -334,7 +336,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * check with valid params array.
    */
-  function testRelationshipTypesGet() {
+  public function testRelationshipTypesGet() {
     $firstRelTypeParams = [
       'name_a_b' => 'Relation 30 for create',
       'name_b_a' => 'Relation 31 for create',
@@ -376,7 +378,7 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
   /**
    * create relationship type.
    */
-  function _relationshipTypeCreate($params = NULL) {
+  public function _relationshipTypeCreate($params = NULL) {
     if (!is_array($params) || empty($params)) {
       $params = [
         'name_a_b' => 'Relation 1 for create',
@@ -393,4 +395,3 @@ class api_v3_RelationshipTypeTest extends CiviUnitTestCase {
     return $this->relationshipTypeCreate($params);
   }
 }
-

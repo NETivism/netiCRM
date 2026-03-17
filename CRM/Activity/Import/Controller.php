@@ -27,21 +27,21 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Activity_Import_Controller extends CRM_Core_Controller {
 
   /**
    * class constructor
+   *
+   * @param string $title
+   * @param int $action
+   * @param bool $modal
    */
-  function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
+  public function __construct($title = NULL, $action = CRM_Core_Action::NONE, $modal = TRUE) {
     parent::__construct($title, $modal);
-
 
     $this->_stateMachine = new CRM_Activity_Import_StateMachine($this, $action);
 
@@ -53,4 +53,3 @@ class CRM_Activity_Import_Controller extends CRM_Core_Controller {
     $this->addActions($config->uploadDir, ['uploadFile']);
   }
 }
-

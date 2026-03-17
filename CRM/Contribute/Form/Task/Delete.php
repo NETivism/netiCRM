@@ -27,19 +27,12 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
-
 /**
- * This class provides the functionality to delete a group of
- * contributions. This class provides functionality for the actual
- * deletion.
+ * This class provides the functionality to delete a group of contributions.
  */
 class CRM_Contribute_Form_Task_Delete extends CRM_Contribute_Form_Task {
 
@@ -52,36 +45,39 @@ class CRM_Contribute_Form_Task_Delete extends CRM_Contribute_Form_Task {
   protected $_single = FALSE;
 
   /**
-   * build all the data structures needed to build the form
+   * Set up variables before the form is built.
    *
-   * @return void
-   * @access public
+   * Verifies delete permissions and calls the parent preProcess method to
+   * initialize selected contribution IDs.
+   *
+   * @return mixed false if access is denied, or continues processing
    */
-  function preProcess() {
+  public function preProcess() {
     //check for delete
     if (!CRM_Core_Permission::checkActionPermission('CiviContribute', CRM_Core_Action::DELETE)) {
-       return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+      return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
     }
     parent::preProcess();
   }
 
   /**
-   * Build the form
+   * Actually build the form components.
    *
-   * @access public
+   * Adds the 'Delete Contributions' and 'Cancel' buttons.
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     $this->addDefaultButtons(ts('Delete Contributions'), 'done');
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form submission.
    *
-   * @access public
+   * Deletes all selected contributions and displays a status message with
+   * the total number of deleted records.
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $deletedContributions = 0;
@@ -98,4 +94,3 @@ class CRM_Contribute_Form_Task_Delete extends CRM_Contribute_Form_Task {
     CRM_Core_Session::setStatus($status);
   }
 }
-

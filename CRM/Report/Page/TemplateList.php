@@ -27,22 +27,31 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 /**
- * Page for displaying list of Reprot templates available
+ * Page for displaying the list of registered report templates.
  */
 class CRM_Report_Page_TemplateList extends CRM_Core_Page {
 
+  /**
+   * Retrieves report template entries from the 'report_template' option group,
+   * grouped by component name. Skips templates for disabled components.
+   * Translates simple ASCII labels and descriptions via ts().
+   * When the 'all' GET parameter is set, includes inactive templates as well.
+   *
+   * @return array Nested array: componentName => [ optionValue => [ title, description, url, instanceUrl? ] ].
+   */
   public static function &info() {
-    $all = CRM_Utils_Request::retrieve('all', 'Boolean', CRM_Core_DAO::$_nullObject,
-      FALSE, NULL, 'GET'
+    $all = CRM_Utils_Request::retrieve(
+      'all',
+      'Boolean',
+      CRM_Core_DAO::$_nullObject,
+      FALSE,
+      NULL,
+      'GET'
     );
     $sql = "
 SELECT  v.id, v.value, v.label, v.description, v.component_id, 
@@ -80,7 +89,8 @@ LEFT  JOIN civicrm_component comp
       $rows[$dao->component_name][$dao->value]['description'] = ts($dao->description);
       $rows[$dao->component_name][$dao->value]['url'] = CRM_Utils_System::url('civicrm/report/' . trim($dao->value, '/'), 'reset=1');
       if ($dao->instance_id) {
-        $rows[$dao->component_name][$dao->value]['instanceUrl'] = CRM_Utils_System::url('civicrm/report/list',
+        $rows[$dao->component_name][$dao->value]['instanceUrl'] = CRM_Utils_System::url(
+          'civicrm/report/list',
           "reset=1&ovid={$dao->id}"
         );
       }
@@ -94,11 +104,10 @@ LEFT  JOIN civicrm_component comp
    *
    * @return void
    */
-  function run() {
+  public function run() {
     $rows = &self::info();
     $this->assign('list', $rows);
 
     return parent::run();
   }
 }
-

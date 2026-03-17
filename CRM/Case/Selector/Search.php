@@ -27,17 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
-
-
-
 
 /**
  * This class is used to retrieve and display a range of
@@ -53,7 +45,7 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    * @var array
    * @static
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * we use desc to remind us what that column is, name is used in the tpl
@@ -61,14 +53,14 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    * @var array
    * @static
    */
-  static $_columnHeaders;
+  public static $_columnHeaders;
 
   /**
    * Properties of contact we're interested in displaying
    * @var array
    * @static
    */
-  static $_properties = [
+  public static $_properties = [
     'contact_id',
     'contact_type',
     'sort_name',
@@ -149,7 +141,8 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    * @return CRM_Contact_Selector
    * @access public
    */
-  function __construct(&$queryParams,
+  public function __construct(
+    &$queryParams,
     $action = CRM_Core_Action::NONE,
     $additionalClause = NULL,
     $single = FALSE,
@@ -168,7 +161,12 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
     // type of selector
     $this->_action = $action;
 
-    $this->_query = new CRM_Contact_BAO_Query($this->_queryParams, NULL, NULL, FALSE, FALSE,
+    $this->_query = new CRM_Contact_BAO_Query(
+      $this->_queryParams,
+      NULL,
+      NULL,
+      FALSE,
+      FALSE,
       CRM_Contact_BAO_Query::MODE_CASE
     );
 
@@ -188,7 +186,7 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    * @access public
    *
    */
-  static function &links($isDeleted = FALSE, $key = NULL) {
+  public static function &links($isDeleted = FALSE, $key = NULL) {
     $extraParams = ($key) ? "&key={$key}" : NULL;
 
     if ($isDeleted) {
@@ -233,7 +231,7 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    * @param
    * @access public
    */
-  function getPagerParams($action, &$params) {
+  public function getPagerParams($action, &$params) {
     $params['status'] = ts('Case') . ' %%StatusMessage%%';
     $params['csvString'] = NULL;
     if ($this->_limit) {
@@ -256,10 +254,15 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    * @return int Total number of rows
    * @access public
    */
-  function getTotalCount($action) {
-    return $this->_query->searchQuery(0, 0, NULL,
-      TRUE, FALSE,
-      FALSE, FALSE,
+  public function getTotalCount($action) {
+    return $this->_query->searchQuery(
+      0,
+      0,
+      NULL,
+      TRUE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_additionalClause
     );
@@ -276,10 +279,15 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    *
    * @return int   the total number of rows for this action
    */
-  function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    $result = $this->_query->searchQuery($offset, $rowCount, $sort,
-      FALSE, FALSE,
-      FALSE, FALSE,
+  public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
+    $result = $this->_query->searchQuery(
+      $offset,
+      $rowCount,
+      $sort,
+      FALSE,
+      FALSE,
+      FALSE,
+      FALSE,
       FALSE,
       $this->_additionalClause
     );
@@ -296,9 +304,7 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
     }
     $mask = CRM_Core_Action::mask($permissions);
 
-
     $caseStatus = CRM_Core_OptionGroup::values('case_status', FALSE, FALSE, FALSE, " AND v.name = 'Urgent' ");
-
 
     $scheduledInfo = [];
 
@@ -322,7 +328,8 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
       $scheduledInfo['case_deleted'] = $result->case_deleted;
       $row['checkbox'] = CRM_Core_Form::CB_PREFIX . $result->case_id;
 
-      $row['action'] = CRM_Core_Action::formLink(self::links($isDeleted, $this->_key),
+      $row['action'] = CRM_Core_Action::formLink(
+        self::links($isDeleted, $this->_key),
         $mask,
         ['id' => $result->case_id,
           'cid' => $result->contact_id,
@@ -330,8 +337,8 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
         ]
       );
 
-
-      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage($result->contact_sub_type ?
+      $row['contact_type'] = CRM_Contact_BAO_Contact_Utils::getImage(
+        $result->contact_sub_type ?
         $result->contact_sub_type : $result->contact_type
       );
 
@@ -444,7 +451,7 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
     return self::$_columnHeaders;
   }
 
-  function &getQuery() {
+  public function &getQuery() {
     return $this->_query;
   }
 
@@ -455,9 +462,8 @@ class CRM_Case_Selector_Search extends CRM_Core_Selector_Base {
    *
    * @return string name of the file
    */
-  function getExportFileName($output = 'csv') {
+  public function getExportFileName($output = 'csv') {
     return ts('Case Search');
   }
 }
 //end of class
-

@@ -143,4 +143,3 @@ function civicrm_participant_payment_delete(&$params) {
 
   return $participant->deleteParticipantPayment($params) ? civicrm_create_success() : civicrm_create_error('Error while deleting participantPayment');
 }
-

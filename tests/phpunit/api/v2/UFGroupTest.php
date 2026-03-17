@@ -25,7 +25,6 @@
  +--------------------------------------------------------------------+
 */
 
-
 require_once 'CiviTest/CiviUnitTestCase.php';
 require_once 'api/v2/UFGroup.php';
 require_once 'api/v2/UFJoin.php';
@@ -40,11 +39,13 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   // ids from the uf_group_test.xml fixture
   protected $_ufGroupId = 11;
   protected $_ufFieldId;
-  protected $_contactId = 69; function tearDown() {
+  protected $_contactId = 69;
+  public function tearDown() {
 
     //  Truncate the tables
     $op = new PHPUnit_Extensions_Database_Operation_Truncate();
-    $op->execute($this->_dbconn,
+    $op->execute(
+      $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(
         dirname(__FILE__) . '/../../CiviTest/truncate-ufgroup.xml'
       )
@@ -54,8 +55,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-
-    $op = new PHPUnit_Extensions_Database_Operation_Insert;
+    $op = new PHPUnit_Extensions_Database_Operation_Insert();
     $op->execute(
       $this->_dbconn,
       new PHPUnit_Extensions_Database_DataSet_FlatXMLDataSet(dirname(__FILE__) . '/dataset/uf_group_test.xml')
@@ -111,17 +111,17 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   /**
    * fetch profile title by its id
    */
-  function testGetUFProfileTitle() {
+  public function testGetUFProfileTitle() {
     $ufProfile = civicrm_uf_profile_title_get($this->_ufGroupId);
     $this->assertEquals($ufProfile, 'Test Profile', 'In line ' . __LINE__);
   }
 
-  function testGetUFProfileTitleWithEmptyParam() {
+  public function testGetUFProfileTitleWithEmptyParam() {
     $result = civicrm_uf_profile_title_get([]);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
-  function testGetUFProfileTitleWithWrongParam() {
+  public function testGetUFProfileTitleWithWrongParam() {
     $result = civicrm_uf_profile_title_get('a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
@@ -129,13 +129,13 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   /**
    * fetch profile HTML by contact id and profile title
    */
-  function testGetUFProfileHTML() {
+  public function testGetUFProfileHTML() {
     $profileHTML = civicrm_uf_profile_html_get($this->_contactId, 'Test Profile');
     // check if html / content is returned
     $this->assertNotNull($profileHTML, 'In line ' . __LINE__);
   }
 
-  function testGetUFProfileHTMLWithWrongParams() {
+  public function testGetUFProfileHTMLWithWrongParams() {
     $result = civicrm_uf_profile_html_get($this->_contactId, 42);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $result = civicrm_uf_profile_html_get('a string', 'Test Profile');
@@ -145,20 +145,18 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
   /**
    * fetch profile HTML by contact id and profile id
    */
-  function testGetUFProfileHTMLById() {
+  public function testGetUFProfileHTMLById() {
     $profileHTML = civicrm_uf_profile_html_by_id_get($this->_contactId, $this->_ufGroupId);
     // check if html / content is returned
     $this->assertNotNull($profileHTML, 'In line ' . __LINE__);
   }
 
-  function testGetUFProfileHTMLByIdWithWrongParams() {
+  public function testGetUFProfileHTMLByIdWithWrongParams() {
     $result = civicrm_uf_profile_html_by_id_get('a string', $this->_ufGroupId);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $result = civicrm_uf_profile_html_by_id_get($this->_contactId, 'a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
-
-
 
   public function testUFJoinEditWrongParamsType() {
     $params = 'a string';
@@ -217,7 +215,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertNotNull($profileHTML, 'In line ' . __LINE__);
   }
 
-  function testGetUFProfileCreateHTMLWithWrongParam() {
+  public function testGetUFProfileCreateHTMLWithWrongParam() {
     $result = civicrm_uf_create_html_get('a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
@@ -252,12 +250,12 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals($ufProfile['country-Primary']['groupHelpPre'], 'Profile to Test API', 'In line ' . __LINE__);
   }
 
-  function testGetUFProfileFieldsWithEmptyParam() {
+  public function testGetUFProfileFieldsWithEmptyParam() {
     $result = civicrm_uf_profile_fields_get([]);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
-  function testGetUFProfileFieldsWithWrongParam() {
+  public function testGetUFProfileFieldsWithWrongParam() {
     $result = civicrm_uf_profile_fields_get('a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
@@ -270,7 +268,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals($ufMatchId, 69, 'In line ' . __LINE__);
   }
 
-  function testGetUFMatchIDWrongParam() {
+  public function testGetUFMatchIDWrongParam() {
     $result = civicrm_uf_match_id_get('a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
@@ -283,7 +281,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals($ufIdFetced, 42, 'In line ' . __LINE__);
   }
 
-  function testGetUFIDWrongParam() {
+  public function testGetUFIDWrongParam() {
     $result = civicrm_uf_id_get('a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
@@ -336,12 +334,12 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     }
   }
 
-  function testCreateUFFieldWithEmptyParams() {
+  public function testCreateUFFieldWithEmptyParams() {
     $result = civicrm_uf_field_create($this->_ufGroupId, []);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
-  function testCreateUFFieldWithWrongParams() {
+  public function testCreateUFFieldWithWrongParams() {
     $result = civicrm_uf_field_create('a string', ['field_name' => 'test field']);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $result = civicrm_uf_field_create($this->_ufGroupId, 'a string');
@@ -411,7 +409,6 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
       $this->assertEquals($ufJoinUpdated[$key], $params[$key], 'In line ' . __LINE__);
     }
   }
-
 
   public function testFindUFJoinWrongParamsType() {
     $params = 'a string';
@@ -493,7 +490,7 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals(1, count($ufProfileGroup), 'In line ' . __LINE__);
   }
 
-  function testGroupCreate() {
+  public function testGroupCreate() {
     $params = [
       'add_captcha' => 1,
       'add_contact_to_group' => 2,
@@ -527,19 +524,19 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals($group['limit_listings_group_id'], $params['group'], 'In line ' . __LINE__);
   }
 
-  function testGroupCreateWithEmptyParams() {
+  public function testGroupCreateWithEmptyParams() {
     $result = civicrm_uf_group_create([]);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
-  function testGroupCreateWithWrongParams() {
+  public function testGroupCreateWithWrongParams() {
     $result = civicrm_uf_group_create('a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $result = civicrm_uf_group_create(['name' => 'A title-less group']);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
-  function testGroupUpdate() {
+  public function testGroupUpdate() {
     $params = [
       'add_captcha' => 1,
       'add_contact_to_group' => 2,
@@ -573,16 +570,15 @@ class api_v2_UFGroupTest extends CiviUnitTestCase {
     $this->assertEquals($group['limit_listings_group_id'], $params['group'], 'In line ' . __LINE__);
   }
 
-  function testGroupUpdateWithEmptyParams() {
+  public function testGroupUpdateWithEmptyParams() {
     $result = civicrm_uf_group_update([], $this->_ufGroupId);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 
-  function testGroupUpdateWithWrongParams() {
+  public function testGroupUpdateWithWrongParams() {
     $result = civicrm_uf_group_update('a string', $this->_ufGroupId);
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
     $result = civicrm_uf_group_update(['title' => 'Title'], 'a string');
     $this->assertEquals($result['is_error'], 1, 'In line ' . __LINE__);
   }
 }
-

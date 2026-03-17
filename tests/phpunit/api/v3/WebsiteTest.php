@@ -9,7 +9,7 @@ class api_v3_WebsiteTest extends CiviUnitTestCase {
   protected $_entity;
   public $_eNoticeCompliant = TRUE;
   public $DBResetRequired = FALSE;
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->_entity     = 'website';
@@ -23,7 +23,7 @@ class api_v3_WebsiteTest extends CiviUnitTestCase {
     ];
   }
 
-  function tearDown() {
+  public function tearDown() {
     $this->quickCleanup([
       'civicrm_website',
       'civicrm_contact'
@@ -66,11 +66,10 @@ class api_v3_WebsiteTest extends CiviUnitTestCase {
     $this->assertAPISuccess($result, 'in line ' . __LINE__);
     $deleteParams = ['version' => 3, 'id' => 600];
     $result = civicrm_api($this->_entity, 'delete', $deleteParams);
-    $this->assertEquals(1,$result['is_error'], 'In line ' . __LINE__);
+    $this->assertEquals(1, $result['is_error'], 'In line ' . __LINE__);
     $checkDeleted = civicrm_api($this->_entity, 'get', [
         'version' => 3,
     ]);
     $this->assertEquals(1, $checkDeleted['count'], 'In line ' . __LINE__);
   }
 }
-

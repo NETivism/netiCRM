@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -47,7 +45,7 @@ class CRM_Utils_System_Joomla {
    * @return void
    * @access public
    */
-  function setTitle($title, $pageTitle = NULL) {
+  public function setTitle($title, $pageTitle = NULL) {
     if (!$pageTitle) {
       $pageTitle = $title;
     }
@@ -71,7 +69,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static function appendBreadCrumb($breadCrumbs) {
+  public static function appendBreadCrumb($breadCrumbs) {
     $template = CRM_Core_Smarty::singleton();
     $bc = $template->get_template_vars('breadcrumb');
 
@@ -80,8 +78,13 @@ class CRM_Utils_System_Joomla {
         if (stripos($crumbs['url'], 'id%%')) {
           $args = ['cid', 'mid'];
           foreach ($args as $a) {
-            $val = CRM_Utils_Request::retrieve($a, 'Positive', CRM_Core_DAO::$_nullObject,
-              FALSE, NULL, $_GET
+            $val = CRM_Utils_Request::retrieve(
+              $a,
+              'Positive',
+              CRM_Core_DAO::$_nullObject,
+              FALSE,
+              NULL,
+              $_GET
             );
             if ($val) {
               $crumbs['url'] = str_ireplace("%%{$a}%%", $val, $crumbs['url']);
@@ -104,7 +107,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static function resetBreadCrumb() {
+  public static function resetBreadCrumb() {
     return;
   }
 
@@ -117,7 +120,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static function addHTMLHead($string = NULL, $includeAll = FALSE) {
+  public static function addHTMLHead($string = NULL, $includeAll = FALSE) {
     $document = &JFactory::getDocument();
 
     if ($string) {
@@ -175,8 +178,12 @@ class CRM_Utils_System_Joomla {
    * @access public
    *
    */
-  function url($path = NULL, $query = NULL, $absolute = TRUE,
-    $fragment = NULL, $htmlize = TRUE,
+  public function url(
+    $path = NULL,
+    $query = NULL,
+    $absolute = TRUE,
+    $fragment = NULL,
+    $htmlize = TRUE,
     $frontend = FALSE
   ) {
     $config = CRM_Core_Config::singleton();
@@ -222,7 +229,7 @@ class CRM_Utils_System_Joomla {
    * access public
    * @static
    */
-  static function mapConfigToSSL() {
+  public static function mapConfigToSSL() {
     // dont need to do anything, let CMS handle their own switch to SSL
     return;
   }
@@ -236,13 +243,17 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  function postURL($action) {
+  public function postURL($action) {
     if (!empty($action)) {
       return $action;
     }
 
-    return self::url(CRM_Utils_Array::value('task', $_GET),
-      NULL, TRUE, NULL, FALSE
+    return self::url(
+      CRM_Utils_Array::value('task', $_GET),
+      NULL,
+      TRUE,
+      NULL,
+      FALSE
     );
   }
 
@@ -254,7 +265,7 @@ class CRM_Utils_System_Joomla {
    * @return void
    * @access public
    */
-  function setEmail(&$user) {
+  public function setEmail(&$user) {
     global $database;
     $query = "SELECT email FROM #__users WHERE id='$user->id'";
     $database->setQuery($query);
@@ -272,8 +283,7 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static function authenticate($name, $password) {
-
+  public static function authenticate($name, $password) {
 
     $config = CRM_Core_Config::singleton();
 
@@ -316,15 +326,15 @@ class CRM_Utils_System_Joomla {
    * @access public
    * @static
    */
-  static function setMessage($message) {
+  public static function setMessage($message) {
     return;
   }
 
-  static function permissionDenied() {
-     return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
+  public static function permissionDenied() {
+    return CRM_Core_Error::statusBounce(ts('You do not have permission to access this page'));
   }
 
-  static function logout() {
+  public static function logout() {
     session_destroy();
     header("Location:index.php");
   }
@@ -334,7 +344,7 @@ class CRM_Utils_System_Joomla {
    *
    * @return string  the used locale or null for none
    */
-  static function getUFLocale() {
+  public static function getUFLocale() {
     if (defined('_JEXEC')) {
       $conf = &JFactory::getConfig();
       $locale = $conf->getValue('config.language');
@@ -343,14 +353,14 @@ class CRM_Utils_System_Joomla {
     return NULL;
   }
 
-  /* 
+  /*
      * load joomla bootstrap
      *
      * @param $name string  optional username for login
      * @param $pass string  optional password for login
      */
 
-  static function loadBootStrap($user = NULL, $pass = NULL) {
+  public static function loadBootStrap($user = NULL, $pass = NULL) {
     return TRUE;
   }
 
@@ -374,4 +384,3 @@ class CRM_Utils_System_Joomla {
     return ($user->guest) ? NULL : $user->id;
   }
 }
-

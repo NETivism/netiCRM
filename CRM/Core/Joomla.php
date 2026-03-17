@@ -26,10 +26,9 @@
 */
 
 /**
+ * Joomla CMS integration utilities for CiviCRM
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,20 +38,16 @@
 class CRM_Core_Joomla {
 
   /**
-   * Reuse drupal blocks into a left sidebar. Assign the generated template
-   * to the smarty instance
+   * Reuse Drupal blocks into a left sidebar.
    *
-   * @return void
-   * @access public
-   * @static
+   * Assign the generated template to the Smarty instance.
    */
-  static function sidebarLeft() {
+  public static function sidebarLeft() {
     $config = CRM_Core_Config::singleton();
 
     if ($config->userFrameworkFrontend) {
       return;
     }
-
 
     $blockIds = [
       CRM_Core_Block::CREATE_NEW,
@@ -69,11 +64,9 @@ class CRM_Core_Joomla {
       $blocks[] = CRM_Core_Block::getContent($id);
     }
 
-
     $template = CRM_Core_Smarty::singleton();
     $template->assign_by_ref('blocks', $blocks);
     $sidebarLeft = $template->fetch('CRM/Block/blocks.tpl');
     $template->assign_by_ref('sidebarLeft', $sidebarLeft);
   }
 }
-

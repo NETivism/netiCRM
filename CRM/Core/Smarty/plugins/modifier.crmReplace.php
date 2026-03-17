@@ -27,24 +27,18 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
 /**
- * Replace the value of an attribute in the input string. Assume
- * the the attribute is well formed, of the type name="value". If
- * no replacement is mentioned the value is inserted at the end of
- * the form element
+ * Replace the value of an attribute in an HTML input string.
  *
- * @param string $string    the html to be tweaked with
- * @param string $attribute the attribute to modify
- * @param string $value     the new attribute value
+ * @param string $string the HTML string to modify
+ * @param string $attribute the attribute name to modify
+ * @param string $value the new attribute value
  *
- * @return string        the new modified html string
- * @access public
+ * @return string the modified HTML string
  */
 function smarty_modifier_crmReplace($string, $attribute, $value) {
   static $endOfElement = '/>';
@@ -53,11 +47,10 @@ function smarty_modifier_crmReplace($string, $attribute, $value) {
   // we need to search and replace the string: $attribute=XXX or $attribute="XXX"
   // with $attribute=\"$value\"
   $pattern = '/' . $attribute . '="([^"]+?)"/';
-  if(strstr($attribute, 'class')){
+  if (strstr($attribute, 'class')) {
     return preg_replace($pattern, $attribute . '="$1 ' . $value . '"', $string);
   }
-  else{
+  else {
     return preg_replace($pattern, $attribute . '="' . $value . '"', $string);
   }
 }
-

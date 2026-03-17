@@ -4,8 +4,7 @@
  * This
  * contacts.
  */
-class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact_Form_Task
-{
+class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact_Form_Task {
 
   /**
    * Are we operating in "single mode", i.e. updating the task of only
@@ -14,11 +13,11 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
    * @var boolean
    */
 
-  const BATCH_LIMIT = 100;
-  const BATCH_THRESHOLD = 1;
+  public const BATCH_LIMIT = 100;
+  public const BATCH_THRESHOLD = 1;
 
-  static protected $_tmpreceipt = NULL;
-  static protected $_exportFileName = NULL;
+  protected static $_tmpreceipt = NULL;
+  protected static $_exportFileName = NULL;
 
   /**
    * Display Name of the form
@@ -32,12 +31,15 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
   }
 
   /**
-   * build all the data structures needed to build the form
+   * Pre-process the form.
+   *
+   * Filter the contact list to get the final set of recipients
+   * and assign summary data to the template.
    *
    * @return void
    * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     CRM_Utils_System::setTitle(ts('Send Annual Receipt Email'));
     parent::preProcess();
 
@@ -83,7 +85,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
       $contributionTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible', TRUE);
       $deductible = [ 0 => '"'.ts('All').' '.ts('Deductible').'"'];
       $contributionTypes = $deductible + $contributionTypes;
-      foreach($searchOption['contribution_type_id'] as $typeId) {
+      foreach ($searchOption['contribution_type_id'] as $typeId) {
         $searchOptionDisplay['contribution_types'][$typeId] = $contributionTypes[$typeId];
       }
     }
@@ -107,8 +109,7 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
    *
    * @return void
    */
-  public function buildQuickForm()
-  {
+  public function buildQuickForm() {
     $fromEmails = CRM_Contact_BAO_Contact_Utils::fromEmailAddress();
     $emails = [
       ts('Default') => $fromEmails['default'],
@@ -128,7 +129,6 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     );
     $this->addTextfield('bcc', ts('BCC'));
 
-
     $buttons = [
       [
         'type' => 'back',
@@ -146,18 +146,24 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     $this->addButtons($buttons);
   }
 
-  function setDefaultValues()
-  {
+  /**
+   * Set the default values for the form.
+   *
+   * @return array{}
+   */
+  public function setDefaultValues() {
     $defaults = [];
     return $defaults;
   }
 
   /**
-   * process the form after the input has been submitted and validated
+   * Process the form after the input has been submitted and validated.
+   *
+   * This will either send the emails directly or create a batch job.
    *
    * @access public
    *
-   * @return None
+   * @return void
    */
   public function postProcess() {
     $mailingOption = $this->controller->exportValues($this->_name);
@@ -234,6 +240,15 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
     return $pdfFilename;
   }
 
+  /**
+   * Send a single annual receipt email.
+   *
+   * @param int $contactId
+   * @param array $searchOption
+   * @param array $mailingOption
+   *
+   * @return bool
+   */
   public static function sendAnnualReceiptEmail($contactId, $searchOption, $mailingOption) {
     // get primary location email if no email exist( for billing location).
     $locationTypes = &CRM_Core_PseudoConstant::locationType();
@@ -318,12 +333,15 @@ class CRM_Contact_Form_Task_AnnualReceiptEmail_MailingOption extends CRM_Contact
   }
 
   /**
-   * Send pdf receipt mail to each contact id
+   * Send pdf receipt mail to each contact id.
+   *
+   * This function serves as the callback for the batch processor.
    *
    * @param array $contactIds
    * @param array $searchOption
    * @param array $mailingOption
-   * @return void
+   *
+   * @return bool|void
    */
   public static function sendAnnualReceiptEmails($contactIds, $searchOption, $mailingOption) {
     global $civicrm_batch;

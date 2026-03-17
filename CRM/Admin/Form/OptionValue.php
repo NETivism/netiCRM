@@ -27,20 +27,16 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Option Value
  *
  */
 class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
-  static $_gid = NULL;
+  public static $_gid = NULL;
 
   /**
    * The option group name
@@ -48,13 +44,12 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
    * @var string
    * @static
    */
-  static $_gName = NULL;
+  public static $_gName = NULL;
 
   /**
-   * Function to for pre-processing
+   * Pre-processes the form.
    *
-   * @return None
-   * @access public
+   * @return void Pre-processes the form.
    */
   public function preProcess() {
     parent::preProcess();
@@ -73,8 +68,8 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
       CRM_Core_Error::fatal(ts('Missing required fields').': '.ts('Option Group Name'));
     }
     // get id from value
-    if ($this->_action & CRM_Core_Action::UPDATE){
-      if(empty($this->_id) || !is_numeric($this->_id)) {
+    if ($this->_action & CRM_Core_Action::UPDATE) {
+      if (empty($this->_id) || !is_numeric($this->_id)) {
         $value = CRM_Utils_Request::retrieve('value', 'String', $this, TRUE);
         $optionId = CRM_Core_DAO::singleValueQuery("SELECT id FROM civicrm_option_value WHERE option_group_id = %1 AND value = %2", [
           1 => [$this->_gid, 'Integer'],
@@ -99,7 +94,6 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     $this->assign('id', $this->_id);
     $this->assign('gid', $this->_gid);
 
-
     if ($this->_id && in_array($this->_gName, CRM_Core_OptionGroup::$_domainIDGroups)) {
       $domainID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $this->_id, 'domain_id', 'id');
       if (CRM_Core_Config::domainID() != $domainID) {
@@ -109,14 +103,11 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
   }
 
   /**
-   * This function sets the default values for the form.
-   * the default values are retrieved from the database
+   * Sets the default values for the form.
    *
-   * @access public
-   *
-   * @return None
+   * @return array The default values.
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $defaults = parent::setDefaultValues();
     if (!CRM_Utils_Array::value('weight', $defaults)) {
@@ -134,10 +125,9 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
   }
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     //CRM-4575
@@ -155,14 +145,16 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     $this->add('text', 'value', ts('Value'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'value'), TRUE);
     $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'name'));
     if ($this->_gName == 'custom_search') {
-      $this->add('text',
+      $this->add(
+        'text',
         'description',
         ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
       );
     }
     else {
-      $this->addWysiwyg('description',
+      $this->addWysiwyg(
+        'description',
         ts('Description'),
         CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionValue', 'description')
       );
@@ -220,17 +212,15 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
   }
 
   /**
-   * global form rule
+   * Global form rule.
    *
-   * @param array $fields  the input form values
-   * @param array $files   the uploaded files if any
-   * @param array $self    this object.
+   * @param array $fields The input form values.
+   * @param array $files The uploaded files.
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return true if no errors, else an array of errors
-   * @access public
-   * @static
+   * @return bool|array True if no errors, else array of errors.
    */
-  static function formRule($fields, $files, $self) {
+  public static function formRule($fields, $files, $self) {
     $errors = [];
 
     //don't allow duplicate value within group.
@@ -250,11 +240,9 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -285,4 +273,3 @@ class CRM_Admin_Form_OptionValue extends CRM_Admin_Form {
     }
   }
 }
-

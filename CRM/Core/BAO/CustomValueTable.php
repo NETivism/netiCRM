@@ -26,14 +26,21 @@
 */
 
 /**
+ * Provides direct access to custom field value storage tables for CRUD operations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_BAO_CustomValueTable {
-  static function create(&$customParams) {
+  /**
+   * Insert or update custom data in the appropriate custom value tables.
+   *
+   * @param array &$customParams associative array of custom field data,
+   *                             keyed by table name and then by index.
+   *
+   * @return void
+   */
+  public static function create(&$customParams) {
     if (empty($customParams) ||
       !is_array($customParams)
     ) {
@@ -87,12 +94,18 @@ class CRM_Core_BAO_CustomValueTable {
                   $states = [];
                   $states['state_province'] = trim($stateVal);
 
-                  CRM_Utils_Array::lookupValue($states, 'state_province',
-                    CRM_Core_PseudoConstant::stateProvince(), TRUE
+                  CRM_Utils_Array::lookupValue(
+                    $states,
+                    'state_province',
+                    CRM_Core_PseudoConstant::stateProvince(),
+                    TRUE
                   );
                   if (!$states['state_province_id']) {
-                    CRM_Utils_Array::lookupValue($states, 'state_province',
-                      CRM_Core_PseudoConstant::stateProvinceAbbreviation(), TRUE
+                    CRM_Utils_Array::lookupValue(
+                      $states,
+                      'state_province',
+                      CRM_Core_PseudoConstant::stateProvinceAbbreviation(),
+                      TRUE
                     );
                   }
                   $validStates[] = $states['state_province_id'];
@@ -122,12 +135,18 @@ class CRM_Core_BAO_CustomValueTable {
                 foreach ($mulValues as $key => $countryVal) {
                   $countries = [];
                   $countries['country'] = trim($countryVal);
-                  CRM_Utils_Array::lookupValue($countries, 'country',
-                    CRM_Core_PseudoConstant::country(), TRUE
+                  CRM_Utils_Array::lookupValue(
+                    $countries,
+                    'country',
+                    CRM_Core_PseudoConstant::country(),
+                    TRUE
                   );
                   if (!$countries['country_id']) {
-                    CRM_Utils_Array::lookupValue($countries, 'country',
-                      CRM_Core_PseudoConstant::countryIsoCode(), TRUE
+                    CRM_Utils_Array::lookupValue(
+                      $countries,
+                      'country',
+                      CRM_Core_PseudoConstant::countryIsoCode(),
+                      TRUE
                     );
                   }
                   $validCountries[] = $countries['country_id'];
@@ -233,7 +252,8 @@ class CRM_Core_BAO_CustomValueTable {
 
           $dao->free();
 
-          CRM_Utils_Hook::custom($hookOP,
+          CRM_Utils_Hook::custom(
+            $hookOP,
             $hookID,
             $entityID,
             $fields
@@ -244,15 +264,15 @@ class CRM_Core_BAO_CustomValueTable {
   }
 
   /**
-   * given a field return the mysql data type associated with it
+   * Given a field type, return the MySQL data type associated with it.
    *
-   * @param string $type the civicrm type string
+   * @param string $type CiviCRM type string
+   * @param int $maxLength maximum length for string types
    *
-   * @return the mysql data store placeholder
-   * @access public
-   * @static
+   * @return string the MySQL data type
    */
-  public static function fieldToSQLType($type,
+  public static function fieldToSQLType(
+    $type,
     $maxLength = 255
   ) {
     if (!isset($maxLength) ||
@@ -272,7 +292,7 @@ class CRM_Core_BAO_CustomValueTable {
 
       case 'Int':
         return 'int';
-      // the below three are FK's, and have constraints added to them
+        // the below three are FK's, and have constraints added to them
 
       case 'ContactReference':
       case 'StateProvince':
@@ -298,7 +318,16 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  static function store(&$params, $entityTable, $entityID) {
+  /**
+   * Higher level wrapper for creating custom data.
+   *
+   * @param array &$params associative array of custom field data
+   * @param string $entityTable name of the entity table (e.g., 'civicrm_contact')
+   * @param int $entityID ID of the entity
+   *
+   * @return void
+   */
+  public static function store(&$params, $entityTable, $entityID) {
     $cvParams = [];
     foreach ($params as $fieldID => $param) {
       if (is_array($param)) {
@@ -342,9 +371,21 @@ class CRM_Core_BAO_CustomValueTable {
     }
   }
 
-  static function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
+  /**
+   * Process and store custom data after form submission.
+   *
+   * @param array &$params associative array of form field values
+   * @param array &$customFields associative array of custom field metadata
+   * @param string $entityTable name of the entity table
+   * @param int $entityID ID of the entity
+   * @param string|array $customFieldExtends what the custom field extends
+   *
+   * @return void
+   */
+  public static function postProcess(&$params, &$customFields, $entityTable, $entityID, $customFieldExtends) {
 
-    $customData = CRM_Core_BAO_CustomField::postProcess($params,
+    $customData = CRM_Core_BAO_CustomField::postProcess(
+      $params,
       $customFields,
       $entityID,
       $customFieldExtends
@@ -358,21 +399,16 @@ class CRM_Core_BAO_CustomValueTable {
   /**
    * Return an array of all custom values associated with an entity.
    *
-   * @param int         $entityID      Identification number of the entity
-   * @param string      $entityType    Type of entity that the entityID corresponds to, specified
-   *                                   as a string with format "'<EntityName>'". Comma separated
-   *                                   list may be used to specify OR matches. Allowable values
-   *                                   are enumerated types in civicrm_custom_group.extends field.
-   *                                   Optional. Default value assumes entityID references a
-   *                                   contact entity.
-   * @param array       $fieldIDs      optional list of fieldIDs that we want to retrieve. If this
-   *                                   is set the entityType is ignored
+   * @param int $entityID Identification number of the entity
+   * @param string|null $entityType Type of entity that the entityID corresponds to.
+   *                                Allowable values are enumerated types in
+   *                                civicrm_custom_group.extends field.
+   * @param array|null $fieldIDs optional list of fieldIDs that we want to retrieve.
+   *                             If this is set the entityType is ignored.
    *
-   * @return array      $fields        Array of custom values for the entity with key=>value
-   *                                   pairs specified as civicrm_custom_field.id => custom value.
-   *                                   Empty array if no custom values found.
-   * @access public
-   * @static
+   * @return array Array of custom values for the entity with key=>value
+   *               pairs specified as civicrm_custom_field.id => custom value.
+   *               Empty array if no custom values found.
    */
   public static function &getEntityValues($entityID, $entityType = NULL, $fieldIDs = NULL) {
     if (!$entityID) {
@@ -445,21 +481,21 @@ AND    $cond
   }
 
   /**
-   * Function to take in an array of entityID, custom_XXX => value
-   * and set the value in the appropriate table. Should also be able
-   * to set the value to null. Follows api parameter/return conventions
+   * Set custom values for an entity based on an array of parameters.
    *
-   * @array $params
+   * Follows API parameter/return conventions.
    *
-   * @return array
-   * @static
+   * @param array &$params associative array containing 'entityID' and 'custom_XXX' fields
+   *
+   * @return array API error or success array
    */
-  static function setValues(&$params) {
-
+  public static function setValues(&$params) {
 
     if (!isset($params['entityID']) ||
-      CRM_Utils_Type::escape($params['entityID'],
-        'Integer', FALSE
+      CRM_Utils_Type::escape(
+        $params['entityID'],
+        'Integer',
+        FALSE
       ) === NULL
     ) {
       return CRM_Core_Error::createAPIError(ts('entityID needs to be set and of type Integer'));
@@ -473,12 +509,15 @@ AND    $cond
     foreach ($params as $n => $v) {
       if ($customFieldInfo = CRM_Core_BAO_CustomField::getKeyID($n, TRUE)) {
         $fieldID = (int) $customFieldInfo[0];
-        if (CRM_Utils_Type::escape($fieldID,
-            'Integer', FALSE
-          ) === NULL) {
-          return CRM_Core_Error::createAPIError(ts('field ID needs to be of type Integer for index %1',
-              [1 => $fieldID]
-            ));
+        if (CRM_Utils_Type::escape(
+          $fieldID,
+          'Integer',
+          FALSE
+        ) === NULL) {
+          return CRM_Core_Error::createAPIError(ts(
+            'field ID needs to be of type Integer for index %1',
+            [1 => $fieldID]
+          ));
         }
         if (!CRM_Utils_Array::arrayKeyExists($fieldID, $fieldValues)) {
           $fieldValues[$fieldID] = [];
@@ -494,7 +533,7 @@ AND    $cond
     }
 
     $keys = array_keys($fieldValues);
-    if(empty($keys)) {
+    if (empty($keys)) {
       return CRM_Core_Error::createAPIError(ts('Set custom value without necessery keys'));
     }
     $fieldIDList = CRM_Utils_Array::implode(',', $keys);
@@ -554,24 +593,24 @@ AND    cf.id IN ( $fieldIDList )
   }
 
   /**
-   * Function to take in an array of entityID, custom_ID
-   * and gets the value from the appropriate table.
+   * Retrieve custom field values for a specific entity based on requested field IDs.
    *
    * To get the values of custom fields with IDs 13 and 43 for contact ID 1327, use:
    * $params = array( 'entityID' => 1327, 'custom_13' => 1, 'custom_43' => 1 );
    *
-   * @array $params
+   * @param array &$params associative array containing 'entityID' and 'custom_ID' keys
    *
-   * @return array
-   * @static
+   * @return array|null result array containing values or error info
    */
-  static function &getValues(&$params) {
+  public static function &getValues(&$params) {
     if (empty($params)) {
       return NULL;
     }
     if (!isset($params['entityID']) ||
-      CRM_Utils_Type::escape($params['entityID'],
-        'Integer', FALSE
+      CRM_Utils_Type::escape(
+        $params['entityID'],
+        'Integer',
+        FALSE
       ) === NULL
     ) {
       return CRM_Core_Error::createAPIError(ts('entityID needs to be set and of type Integer'));
@@ -584,12 +623,15 @@ AND    cf.id IN ( $fieldIDList )
       $key = $idx = NULL;
       if (substr($n, 0, 7) == 'custom_') {
         $idx = substr($n, 7);
-        if (CRM_Utils_Type::escape($idx,
-            'Integer', FALSE
-          ) === NULL) {
-          return CRM_Core_Error::createAPIError(ts('field ID needs to be of type Integer for index %1',
-              [1 => $idx]
-            ));
+        if (CRM_Utils_Type::escape(
+          $idx,
+          'Integer',
+          FALSE
+        ) === NULL) {
+          return CRM_Core_Error::createAPIError(ts(
+            'field ID needs to be of type Integer for index %1',
+            [1 => $idx]
+          ));
         }
         $fieldIDs[] = (int ) $idx;
       }
@@ -616,7 +658,8 @@ AND    cf.id IN ( $fieldIDList )
       }
     }
 
-    $values = self::getEntityValues($params['entityID'],
+    $values = self::getEntityValues(
+      $params['entityID'],
       $type,
       $fieldIDs
     );
@@ -643,20 +686,13 @@ AND    cf.id IN ( $fieldIDList )
   }
 
   /**
-   * Return an array of specify custom field values associated with multiple entities.
+   * Return an array of specific custom field values associated with multiple entities.
    *
-   * @param array       $entityIDs     Identification number of the entity
-   * @param string      $entityType    Type of entity that the entityID corresponds to, specified
-   *                                   as a string with format "'<EntityName>'". Comma separated
-   *                                   list may be used to specify OR matches. Allowable values
-   *                                   are enumerated types in civicrm_custom_group.extends field.
-   *                                   Optional. Default value assumes entityID references a
-   *                                   contact entity.
-   * @param array       $fieldIDs      optional list of fieldIDs that we want to retrieve. If this
-   *                                   is set the entityType is ignored
+   * @param array $entityIDs array of entity identification numbers
+   * @param string|null $entityType type of entity
+   * @param array|null $fieldIDs optional list of fieldIDs to retrieve
    *
-   * @access public
-   * @static
+   * @return array|null associative array of entity values
    */
   public static function getEntitiesValues($entityIDs, $entityType = NULL, $fieldIDs = NULL) {
     if (empty($entityIDs)) {
@@ -724,4 +760,3 @@ AND    $cond
     return $result;
   }
 }
-

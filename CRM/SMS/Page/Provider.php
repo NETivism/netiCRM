@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2017
  */
 
@@ -47,13 +46,12 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
    *
    * @var array
    */
-  static $_links = NULL;
+  public static $_links = NULL;
 
   /**
    * Get BAO Name.
    *
-   * @return string
-   *   Classname of BAO.
+   * @return string Classname of BAO.
    */
   public function getBAOName() {
     return 'CRM_SMS_BAO_Provider';
@@ -62,8 +60,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get action Links.
    *
-   * @return array
-   *   (reference) of action links
+   * @return array (reference) of action links
    */
   public function &links() {
     if (!(self::$_links)) {
@@ -103,6 +100,8 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
    * This method is called after the page is created. It checks for the
    * type of action and executes that action.
    * Finally it calls the parent's run method.
+   *
+   * @return void
    */
   public function run() {
     // set title and breadcrumb
@@ -110,18 +109,27 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
     $breadCrumb = [
       [
         'title' => ts('SMS Provider'),
-        'url' => CRM_Utils_System::url('civicrm/admin/sms/provider',
+        'url' => CRM_Utils_System::url(
+          'civicrm/admin/sms/provider',
           'reset=1'
         ),
       ],
     ];
     CRM_Utils_System::appendBreadCrumb($breadCrumb);
 
-    $this->_id = CRM_Utils_Request::retrieve('id', 'String',
-      $this, FALSE, 0
+    $this->_id = CRM_Utils_Request::retrieve(
+      'id',
+      'String',
+      $this,
+      FALSE,
+      0
     );
-    $this->_action = CRM_Utils_Request::retrieve('action', 'String',
-      $this, FALSE, 0
+    $this->_action = CRM_Utils_Request::retrieve(
+      'action',
+      'String',
+      $this,
+      FALSE,
+      0
     );
 
     return parent::run();
@@ -130,7 +138,9 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Browse all Providers.
    *
-   * @param array $action
+   * @param int|null $action
+   *
+   * @return void
    */
   public function browse($action = NULL) {
     $providers = CRM_SMS_BAO_Provider::getProviders();
@@ -151,10 +161,10 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
         $apiParams = json_decode($provider['api_params'], TRUE);
         if (is_array($apiParams)) {
           $provider['api_params'] = [];
-          foreach($apiParams as $key => $val) {
+          foreach ($apiParams as $key => $val) {
             if (is_array($val)) {
               $provider['api_params'][] = '<strong>'.$key.'</strong>';
-              foreach($val as $k => $v) {
+              foreach ($val as $k => $v) {
                 $provider['api_params'][] = $k.":" . CRM_Utils_String::mask($v);
               }
             }
@@ -166,7 +176,9 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
         }
       }
 
-      $provider['action'] = CRM_Core_Action::formLink(self::links(), $action,
+      $provider['action'] = CRM_Core_Action::formLink(
+        self::links(),
+        $action,
         ['id' => $provider['id']],
         ts('more'),
         FALSE,
@@ -182,8 +194,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get name of edit form.
    *
-   * @return string
-   *   Classname of edit form.
+   * @return string Classname of edit form.
    */
   public function editForm() {
     return 'CRM_SMS_Form_Provider';
@@ -192,8 +203,7 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get edit form name.
    *
-   * @return string
-   *   name of this page.
+   * @return string name of this page.
    */
   public function editName() {
     return 'SMS Provider';
@@ -202,10 +212,9 @@ class CRM_SMS_Page_Provider extends CRM_Core_Page_Basic {
   /**
    * Get user context.
    *
-   * @param null $mode
+   * @param int|null $mode
    *
-   * @return string
-   *   user context.
+   * @return string user context.
    */
   public function userContext($mode = NULL) {
     return 'civicrm/admin/sms/provider';

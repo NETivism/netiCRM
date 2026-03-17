@@ -26,9 +26,7 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2013
- * $Id$
  *
  */
 
@@ -37,16 +35,23 @@
  */
 class CRM_Admin_Page_ChartSample extends CRM_Core_Page {
 
-  function run() {
+  /**
+   * Runs the page.
+   *
+   * @return void
+   */
+  public function run() {
     return parent::run();
   }
 
   /**
-   * Get user context.
+   * Gets user context.
    *
-   * @return string user context.
+   * @param string|null $mode
+   *
+   * @return string
    */
-  function userContext($mode = NULL) {
+  public function userContext($mode = NULL) {
     return 'civicrm/chartsample';
   }
 }

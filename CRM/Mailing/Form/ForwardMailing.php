@@ -27,26 +27,31 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
 
-
 class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
   public $_fromEmail;
-  function preProcess() {
-    $job_id = CRM_Utils_Request::retrieve('jid', 'Positive',
-      $this, NULL
+  public function preProcess() {
+    $job_id = CRM_Utils_Request::retrieve(
+      'jid',
+      'Positive',
+      $this,
+      NULL
     );
-    $queue_id = CRM_Utils_Request::retrieve('qid', 'Positive',
-      $this, NULL
+    $queue_id = CRM_Utils_Request::retrieve(
+      'qid',
+      'Positive',
+      $this,
+      NULL
     );
-    $hash = CRM_Utils_Request::retrieve('h', 'String',
-      $this, NULL
+    $hash = CRM_Utils_Request::retrieve(
+      'h',
+      'String',
+      $this,
+      NULL
     );
-
 
     $q = CRM_Mailing_Event_BAO_Queue::verify($job_id, $queue_id, $hash);
 
@@ -54,7 +59,7 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
 
       /** ERROR **/
       CRM_Core_Error::fatal(ts('Invalid form parameters.'));
-       return CRM_Core_Error::statusBounce(ts('Invalid form parameters.'));
+      return CRM_Core_Error::statusBounce(ts('Invalid form parameters.'));
     }
 
     CRM_Contact_BAO_Contact::redirectPreferredLanguage($q->contact_id);
@@ -68,7 +73,6 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
 
     /* Show the subject instead of the name here, since it's being
          * displayed to external contacts/users */
-
 
     CRM_Utils_System::setTitle(ts('Forward Mailing: %1', [1 => $mailing->subject]));
 
@@ -96,7 +100,8 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
 
     //insert message Text by selecting "Select Template option"
     $this->add('textarea', 'forward_comment', ts('Comment'), ['cols' => '80', 'rows' => '8', 'style' => 'display:none']);
-    $this->addWysiwyg('html_comment',
+    $this->addWysiwyg(
+      'html_comment',
       ts('HTML Message'),
       ['cols' => '80', 'rows' => '8']
     );
@@ -166,7 +171,6 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
       $status = ts('Mailing is forwarded successfully to %count email address.', ['count' => $forwarded, 'plural' => 'Mailing is forwarded successfully to %count email addresses.']);
     }
 
-
     CRM_Utils_System::setUFMessage($status);
 
     // always redirect to front page of url
@@ -175,4 +179,3 @@ class CRM_Mailing_Form_ForwardMailing extends CRM_Core_Form {
     $session->pushUserContext($config->userFrameworkBaseURL);
   }
 }
-

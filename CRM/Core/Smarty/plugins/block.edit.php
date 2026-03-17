@@ -31,24 +31,21 @@
  * Template elements tagged {edit}...{/edit} are hidden unless action is create
  * or update (this facilitates using form templates for read-only display).
  *
- * @package CRM
  * @author Piotr Szotkowski <shot@caltha.pl>
  * @author Michal Mach <mover@artnet.org>
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  */
 
 /**
- * Smarty block function providing edit-only display support
+ * Smarty block function providing edit-only display support.
  *
- * @param array $params   template call's parameters
- * @param string $text    {edit} block contents from the template
- * @param object $smarty  the Smarty object
+ * @param array $params template call's parameters
+ * @param string|null $text {edit} block contents from the template
+ * @param Smarty &$smarty the Smarty object
  *
- * @return string  the string, translated by gettext
+ * @return string|null the string if in edit mode, else NULL
  */
 function smarty_block_edit($params, $text, &$smarty) {
   $action = $smarty->_tpl_vars['action'];
   return ($action & 3) ? $text : NULL;
 }
-

@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -41,21 +39,21 @@ class CRM_Core_Form_Tag {
   public $_entityTagValues;
 
   /**
-   * Function to build tag widget if correct parent is passed
+   * Build the tag widget on a form for specific parent tags.
    *
-   * @param object  $form form object
-   * @param string  $parentName parent name ( tag name)
-   * @param string  $entityTable entitytable 'eg: civicrm_contact'
-   * @param int     $entityId    entityid  'eg: contact id'
+   * @param CRM_Core_Form &$form the form object
+   * @param string[] $parentNames array of parent tag names
+   * @param string $entityTable entity table name (e.g., 'civicrm_contact')
+   * @param int|null $entityId optional entity ID
+   * @param bool $skipTagCreate whether to skip automatic tag creation
+   * @param bool $skipEntityAction whether to skip adding/removing entity tags
    *
    * @return void
-   * @access public
-   * @static
    */
-  static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
+  public static function buildQuickForm(&$form, $parentNames, $entityTable, $entityId = NULL, $skipTagCreate = FALSE, $skipEntityAction = FALSE) {
     $tagset = $form->_entityTagValues = [];
 
-    foreach ($parentNames as & $parentNameItem) {
+    foreach ($parentNames as &$parentNameItem) {
       // get the parent id for tag list input for keyword
       $parentId = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Tag', $parentNameItem, 'id', 'name');
 
@@ -67,9 +65,12 @@ class CRM_Core_Form_Tag {
         $tagset[$tagsetItem]['parentID'] = $parentId;
 
         //tokeninput url
-        $tagUrl = CRM_Utils_System::url('civicrm/ajax/taglist',
+        $tagUrl = CRM_Utils_System::url(
+          'civicrm/ajax/taglist',
           "parentId={$parentId}",
-          FALSE, NULL, FALSE
+          FALSE,
+          NULL,
+          FALSE
         );
 
         $tagset[$tagsetItem]['tagUrl'] = $tagUrl;
@@ -142,10 +143,16 @@ class CRM_Core_Form_Tag {
   }
 
   /**
-   * Function to save entity tags when it is not save used AJAX
+   * Save entity tags when AJAX was not used.
    *
+   * @param array &$params associative array of submitted tag list values
+   * @param int $entityId entity ID
+   * @param string $entityTable entity table name (defaults to 'civicrm_contact')
+   * @param CRM_Core_Form|null &$form optional form object containing current tag values
+   *
+   * @return void
    */
-  static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
+  public static function postProcess(&$params, $entityId, $entityTable = 'civicrm_contact', &$form = NULL) {
     foreach ($params as $value) {
       if (!$value) {
         continue;
@@ -168,4 +175,3 @@ class CRM_Core_Form_Tag {
     }
   }
 }
-

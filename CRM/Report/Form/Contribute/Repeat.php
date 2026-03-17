@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Report_Form_Contribute_Repeat extends CRM_Report_Form {
   public $_columnHeaders;
@@ -42,7 +38,10 @@ class CRM_Report_Form_Contribute_Repeat extends CRM_Report_Form {
   public $_from;
   public $_where;
   public $_absoluteUrl;
-  function __construct() {
+  /**
+   * Class constructor.
+   */
+  public function __construct() {
     $this->_columns = ['civicrm_contact' =>
       ['dao' => 'CRM_Contact_DAO_Contact',
         'grouping' => 'contact-fields',
@@ -208,15 +207,32 @@ contribution2_total_amount_count, contribution2_total_amount_sum',
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Pre-process form values.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function setDefaultValues($freeze = TRUE) {
+  /**
+   * Set default values.
+   *
+   * @param bool $freeze
+   *
+   * @return array
+   */
+  public function setDefaultValues($freeze = TRUE) {
     return parent::setDefaultValues($freeze);
   }
 
-  function select() {
+  /**
+   * Select columns.
+   *
+   * @return void
+   */
+  public function select() {
     $select = $uni = [];
     $append = NULL;
 
@@ -281,7 +297,14 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  function groupBy($tableCol = FALSE) {
+  /**
+   * Set group by clause.
+   *
+   * @param bool $tableCol
+   *
+   * @return void|array
+   */
+  public function groupBy($tableCol = FALSE) {
     $this->_groupBy = [];
     if (is_array($this->_params['group_bys']) &&
       !empty($this->_params['group_bys'])
@@ -305,14 +328,22 @@ SUM(contribution2_total_amount_sum)   as contribution2_total_amount_sum';
     }
   }
 
-  function from() {
+  /**
+   * Set from clause.
+   *
+   * @return void
+   */
+  public function from() {
     foreach (['receive_date1', 'receive_date2'] as $fieldName) {
       $relative = CRM_Utils_Array::value("{$fieldName}_relative", $this->_params);
       $from = CRM_Utils_Array::value("{$fieldName}_from", $this->_params);
       $to = CRM_Utils_Array::value("{$fieldName}_to", $this->_params);
 
-      $$fieldName = $this->dateClause($this->_columns['civicrm_contribution']['filters'][$fieldName]['dbAlias'],
-        $relative, $from, $to
+      $$fieldName = $this->dateClause(
+        $this->_columns['civicrm_contribution']['filters'][$fieldName]['dbAlias'],
+        $relative,
+        $from,
+        $to
       );
     }
 
@@ -369,7 +400,12 @@ LEFT  JOIN (
 ";
   }
 
-  function where() {
+  /**
+   * Set where clause.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses[] = "!(contribution1_total_amount_count IS NULL AND contribution2_total_amount_count IS NULL)";
 
     foreach ($this->_columns as $tableName => $table) {
@@ -379,7 +415,8 @@ LEFT  JOIN (
           if (!(CRM_Utils_Array::value('type', $field) & CRM_Utils_Type::T_DATE)) {
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -404,7 +441,16 @@ LEFT  JOIN (
     }
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validation rules for the form.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $self
+   *
+   * @return array|bool
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = $checkDate = $errorCount = [];
 
     $rules = ['id' => ['sort_name', 'email', 'phone',
@@ -428,9 +474,10 @@ LEFT  JOIN (
     if (empty($fields['group_bys'])) {
       $errors['fields'] = ts('Please select at least one Group by field.');
     }
-    elseif ((CRM_Utils_Array::arrayKeyExists('contribution_source', $fields['group_bys']) ||
+    elseif ((
+      CRM_Utils_Array::arrayKeyExists('contribution_source', $fields['group_bys']) ||
         CRM_Utils_Array::arrayKeyExists('contribution_type', $fields['group_bys'])
-      ) &&
+    ) &&
       (count($fields['group_bys']) > 1)
     ) {
 
@@ -536,12 +583,24 @@ LEFT  JOIN (
     return $errors;
   }
 
-  function statistics(&$rows) {
+  /**
+   * Calculate statistics.
+   *
+   * @param array $rows
+   *
+   * @return array
+   */
+  public function statistics(&$rows) {
     $statistics = parent::statistics($rows);
     return $statistics;
   }
 
-  function postProcess() {
+  /**
+   * Post-process form.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $this->beginPostProcess();
 
     $this->select();
@@ -563,10 +622,13 @@ LEFT  JOIN (
     // FIXME: calculate % using query
     foreach ($rows as $uid => $row) {
       if ($row['contribution1_total_amount_sum'] && $row['contribution2_total_amount_sum']) {
-        $rows[$uid]['change'] = number_format((($row['contribution2_total_amount_sum'] -
+        $rows[$uid]['change'] = number_format(
+          ((
+            $row['contribution2_total_amount_sum'] -
               $row['contribution1_total_amount_sum']
-            ) * 100) /
-          ($row['contribution1_total_amount_sum']), 2
+          ) * 100) /
+          ($row['contribution1_total_amount_sum']),
+          2
         );
       }
       elseif ($row['contribution1_total_amount_sum']) {
@@ -587,14 +649,16 @@ LEFT  JOIN (
     ];
 
     // hack to fix title
-    list($from1, $to1) = $this->getFromTo(CRM_Utils_Array::value("receive_date1_relative", $this->_params),
+    list($from1, $to1) = $this->getFromTo(
+      CRM_Utils_Array::value("receive_date1_relative", $this->_params),
       CRM_Utils_Array::value("receive_date1_from", $this->_params),
       CRM_Utils_Array::value("receive_date1_to", $this->_params)
     );
     $from1 = CRM_Utils_Date::customFormat($from1, NULL, ['d']);
     $to1 = CRM_Utils_Date::customFormat($to1, NULL, ['d']);
 
-    list($from2, $to2) = $this->getFromTo(CRM_Utils_Array::value("receive_date2_relative", $this->_params),
+    list($from2, $to2) = $this->getFromTo(
+      CRM_Utils_Array::value("receive_date2_relative", $this->_params),
       CRM_Utils_Array::value("receive_date2_from", $this->_params),
       CRM_Utils_Array::value("receive_date2_to", $this->_params)
     );
@@ -615,13 +679,22 @@ LEFT  JOIN (
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Alter display of rows.
+   *
+   * @param array $rows
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     // custom code to alter rows
-    list($from1, $to1) = $this->getFromTo(CRM_Utils_Array::value("receive_date1_relative", $this->_params),
+    list($from1, $to1) = $this->getFromTo(
+      CRM_Utils_Array::value("receive_date1_relative", $this->_params),
       CRM_Utils_Array::value("receive_date1_from", $this->_params),
       CRM_Utils_Array::value("receive_date1_to", $this->_params)
     );
-    list($from2, $to2) = $this->getFromTo(CRM_Utils_Array::value("receive_date2_relative", $this->_params),
+    list($from2, $to2) = $this->getFromTo(
+      CRM_Utils_Array::value("receive_date2_relative", $this->_params),
       CRM_Utils_Array::value("receive_date2_from", $this->_params),
       CRM_Utils_Array::value("receive_date2_to", $this->_params)
     );
@@ -646,13 +719,14 @@ LEFT  JOIN (
         if ($value = $row['address_civireport_country_id']) {
           $rows[$rowNum]['address_civireport_country_id'] = CRM_Core_PseudoConstant::country($value, FALSE);
 
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&" .
             "country_id_op=in&country_id_value={$value}&" .
             "$dateUrl",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
-
 
           $rows[$rowNum]['address_civireport_country_id_link'] = $url;
           $rows[$rowNum]['address_civireport_country_id_hover'] = ts("View contributions for this Country.");
@@ -665,11 +739,13 @@ LEFT  JOIN (
         if ($value = $row['address_civireport_state_province_id']) {
           $rows[$rowNum]['address_civireport_state_province_id'] = CRM_Core_PseudoConstant::stateProvince($value, FALSE);
 
-          $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+          $url = CRM_Report_Utils_Report::getNextUrl(
+            'contribute/detail',
             "reset=1&force=1&" .
             "state_province_id_op=in&state_province_id_value={$value}&" .
             "$dateUrl",
-            $this->_absoluteUrl, $this->_id
+            $this->_absoluteUrl,
+            $this->_id
           );
           $rows[$rowNum]['address_civireport_state_province_id_link'] = $url;
           $rows[$rowNum]['address_civireport_state_province_id_hover'] = ts("View repeatDetails for this state.");
@@ -681,9 +757,11 @@ LEFT  JOIN (
       if (CRM_Utils_Array::arrayKeyExists('contact_civireport_sort_name', $row) &&
         CRM_Utils_Array::arrayKeyExists('contact_civireport_id', $row)
       ) {
-        $url = CRM_Report_Utils_Report::getNextUrl('contribute/detail',
+        $url = CRM_Report_Utils_Report::getNextUrl(
+          'contribute/detail',
           'reset=1&force=1&id_op=eq&id_value=' . $row['contact_civireport_id'],
-          $this->_absoluteUrl, $this->_id
+          $this->_absoluteUrl,
+          $this->_id
         );
         $rows[$rowNum]['contact_civireport_sort_name_link'] = $url;
         $rows[$rowNum]['contact_civireport_sort_name_hover'] = ts("View Contribution details for this contact");
@@ -693,4 +771,3 @@ LEFT  JOIN (
     // foreach ends
   }
 }
-

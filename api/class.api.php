@@ -61,7 +61,7 @@
 
  */
 class civicrm_api3 {
-  function __construct($config = NULL) {
+  public function __construct($config = NULL) {
     $this->local      = TRUE;
     $this->input      = [];
     $this->lastResult = [];
@@ -72,7 +72,9 @@ class civicrm_api3 {
       if (isset($config['path'])) {
         $this->uri .= "/" . $config['path'];
       }
-      else $this->uri .= '/sites/all/modules/civicrm/extern/rest.php';
+      else {
+        $this->uri .= '/sites/all/modules/civicrm/extern/rest.php';
+      }
       $this->uri .= '?json=1';
       if (isset($config['key'])) {
         $this->key = $config['key'];
@@ -123,7 +125,7 @@ class civicrm_api3 {
     echo "Calling static method '$name' " . CRM_Utils_Array::implode(', ', $arguments) . "\n";
   }
 
-  function remoteCall($entity, $action, $params = [
+  public function remoteCall($entity, $action, $params = [
     ]) {
     $fields = "key={$this->key}&api_key={$this->api_key}";
     $query = $this->uri . "&entity=$entity&action=$action";
@@ -141,7 +143,7 @@ class civicrm_api3 {
       //execute post
       $result = curl_exec($ch);
       curl_close($ch);
-      return json_decode($result, true);
+      return json_decode($result, TRUE);
       // not good, all in get when should be in post.
     }
     else {
@@ -150,7 +152,7 @@ class civicrm_api3 {
     }
   }
 
-  function call($entity, $action = 'Get', $params = [
+  public function call($entity, $action = 'Get', $params = [
     ]) {
     if (is_int($params)) {
       $params = ['id' => $params];
@@ -184,9 +186,9 @@ class civicrm_api3 {
   }
 
   //* helper method for long running programs (eg bots)
-  function ping() {
+  public function ping() {
     global $_DB_DATAOBJECT;
-    foreach ($_DB_DATAOBJECT['CONNECTIONS'] as & $c) {
+    foreach ($_DB_DATAOBJECT['CONNECTIONS'] as &$c) {
       if (!$c->connection->ping()) {
         $c->connect($this->cfg->dsn);
         if (!$c->connection->ping()) {
@@ -196,11 +198,11 @@ class civicrm_api3 {
     }
   }
 
-  function errorMsg() {
+  public function errorMsg() {
     return $this->lastResult->error_message;
   }
 
-  function init() {
+  public function init() {
     CRM_Core_DAO::init($this->cfg->dsn);
   }
 
@@ -210,8 +212,6 @@ class civicrm_api3 {
    * or
    * $api->attr ('id',42) //set the id
    */
-
-
 
   public function attr($name, $value = NULL) {
     if ($value === NULL) {
@@ -238,8 +238,6 @@ class civicrm_api3 {
   }
  */
 
-
-
   public function __get($name) {
     //TODO, test if valid entity
     if (strtolower($name) !== $name) {
@@ -265,13 +263,14 @@ class civicrm_api3 {
     return $this;
   }
 
-
   // or use $api->value
   public function values() {
     if (is_array($this->lastResult)) {
       return $this->lastResult['values'];
     }
-    else return $this->lastResult->values;
+    else {
+      return $this->lastResult->values;
+    }
   }
 
   // or use $api->result
@@ -279,4 +278,3 @@ class civicrm_api3 {
     return $this->lastResult;
   }
 }
-

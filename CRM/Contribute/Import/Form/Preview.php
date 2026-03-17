@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
-
 
 /**
  * This class previews the uploaded file and returns summary
@@ -44,11 +39,11 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
 
   public $_dataValues;
   public $_columnHeaders;
+
   /**
    * Function to set variables up before form is built
    *
    * @return void
-   * @access public
    */
   public function preProcess() {
     $skipColumnHeader = $this->controller->exportValue('UploadFile', 'skipColumnHeader');
@@ -71,7 +66,6 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       $this->assign('loadedMapping', $mappingId);
       $this->assign('savedName', $mapDAO->name);
     }
-
 
     if ($skipColumnHeader) {
       $this->assign('skipColumnHeader', $skipColumnHeader);
@@ -117,8 +111,7 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
   /**
    * Function to actually build the form
    *
-   * @return None
-   * @access public
+   * @return void
    */
   public function buildQuickForm() {
     $attr = ['onclick' => "return verify();"];
@@ -127,7 +120,8 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
       $attr['disabled'] = 'disabled';
       $this->assign('locked_import', TRUE);
     }
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'back',
           'name' => ts('<< Previous'),
         ],
@@ -147,7 +141,6 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
    * Return a descriptive name for the page, used in wizard header
    *
    * @return string
-   * @access public
    */
   public function getTitle() {
     return ts('Preview');
@@ -158,7 +151,6 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
    * preview the file and extract some summary statistics
    *
    * @return void
-   * @access public
    */
   public function postProcess() {
     // prevent table error and duplicated import
@@ -241,4 +233,3 @@ class CRM_Contribute_Import_Form_Preview extends CRM_Core_Form {
     $importJob->isComplete();
   }
 }
-

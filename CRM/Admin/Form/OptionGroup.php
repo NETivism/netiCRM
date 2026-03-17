@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class generates form components for Option Group
@@ -42,10 +38,9 @@
 class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
 
   /**
-   * Function to build the form
+   * Builds the form.
    *
-   * @return None
-   * @access public
+   * @return void Builds the form.
    */
   public function buildQuickForm() {
     parent::buildQuickForm();
@@ -54,19 +49,22 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
     }
 
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text',
+    $this->add(
+      'text',
       'name',
       ts('Name'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionGroup', 'name'),
       TRUE
     );
-    $this->addRule('name',
+    $this->addRule(
+      'name',
       ts('Name already exists in Database.'),
       'objectExists',
       ['CRM_Core_DAO_OptionGroup', $this->_id]
     );
 
-    $this->add('text',
+    $this->add(
+      'text',
       'description',
       ts('Description'),
       CRM_Core_DAO::getAttribute('CRM_Core_DAO_OptionGroup', 'description')
@@ -94,11 +92,9 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
   }
 
   /**
-   * Function to process the form
+   * Processes the submitted form values.
    *
-   * @access public
-   *
-   * @return None
+   * @return void Processes the submitted form values.
    */
   public function postProcess() {
     $params = $this->exportValues();
@@ -122,4 +118,3 @@ class CRM_Admin_Form_OptionGroup extends CRM_Admin_Form {
     }
   }
 }
-

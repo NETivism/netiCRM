@@ -27,16 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
 class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
   public $_isReserved;
+  /**
+   * Builds the form.
+   *
+   * @return void Builds the form.
+   */
   public function buildQuickForm() {
     parent::buildQuickForm();
 
@@ -65,11 +66,15 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
 
     $this->add('text', 'weight', ts('Weight'), $attributes['weight'], TRUE);
 
-
     $this->add('select', 'visibility_id', ts('Visibility'), CRM_Core_PseudoConstant::visibility(), TRUE);
   }
 
-  function setDefaultValues() {
+  /**
+   * Sets the default values for the form.
+   *
+   * @return array The default values.
+   */
+  public function setDefaultValues() {
     $defaults = parent::setDefaultValues();
     if (!CRM_Utils_Array::value('weight', $defaults)) {
 
@@ -82,7 +87,12 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
     return $defaults;
   }
 
-  function postProcess() {
+  /**
+   * Processes the submitted form values.
+   *
+   * @return void Processes the submitted form values.
+   */
+  public function postProcess() {
     if ($this->_action & CRM_Core_Action::DELETE) {
       if (CRM_Event_BAO_ParticipantStatusType::deleteParticipantStatusType($this->_id)) {
         CRM_Core_Session::setStatus(ts('Selected participant status has been deleted.'));
@@ -106,14 +116,15 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
     ];
 
     // make sure a malicious POST does not change these on reserved statuses
-    if ($this->_isReserved)unset($params['name'], $params['class'], $params['is_active']);
+    if ($this->_isReserved) {
+      unset($params['name'], $params['class'], $params['is_active']);
+    }
 
     if ($this->_action & CRM_Core_Action::UPDATE) {
 
       $params['id'] = $this->_id;
 
     }
-
 
     if ($this->_id) {
       $oldWeight = CRM_Core_DAO::getFieldValue('CRM_Event_DAO_ParticipantStatusType', $this->_id, 'weight', 'id');
@@ -138,4 +149,3 @@ class CRM_Admin_Form_ParticipantStatus extends CRM_Admin_Form {
     }
   }
 }
-

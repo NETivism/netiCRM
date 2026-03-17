@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -39,18 +37,24 @@
 class CRM_Member_Page_AJAX {
 
   /**
-   * Function to setDefaults according to membership type
+   * Function to setDefaults according to membership type.
+   *
+   * @param object $config
+   *
+   * @return void
    */
-  static function getMemberTypeDefaults($config) {
+  public static function getMemberTypeDefaults($config) {
 
     $memType = CRM_Utils_Type::escape($_POST['mtype'], 'Integer');
 
-    $contributionType = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+    $contributionType = CRM_Core_DAO::getFieldValue(
+      'CRM_Member_DAO_MembershipType',
       $memType,
       'contribution_type_id'
     );
 
-    $totalAmount = CRM_Core_DAO::getFieldValue('CRM_Member_DAO_MembershipType',
+    $totalAmount = CRM_Core_DAO::getFieldValue(
+      'CRM_Member_DAO_MembershipType',
       $memType,
       'minimum_fee'
     );
@@ -67,4 +71,3 @@ class CRM_Member_Page_AJAX {
     CRM_Utils_System::civiExit();
   }
 }
-

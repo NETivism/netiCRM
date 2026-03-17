@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * This class provides the functionality to save a search
@@ -42,12 +38,11 @@
 class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
 
   /**
-   * build all the data structures needed to build the form
+   * Build all the data structures needed to build the form.
    *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     // set print view, so that print templates are called
     $this->controller->setPrint(1);
     $this->assign('id', $this->get('id'));
@@ -61,7 +56,8 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
 
     $sortID = NULL;
     if ($this->get(CRM_Utils_Sort::SORT_ID)) {
-      $sortID = CRM_Utils_Sort::sortIDValue($this->get(CRM_Utils_Sort::SORT_ID),
+      $sortID = CRM_Utils_Sort::sortIDValue(
+        $this->get(CRM_Utils_Sort::SORT_ID),
         $this->get(CRM_Utils_Sort::SORT_DIRECTION)
       );
     }
@@ -72,18 +68,20 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
     }
 
     $selectorName = $this->controller->selectorName();
-    require_once (str_replace('_', DIRECTORY_SEPARATOR, $selectorName) . '.php');
+    require_once(str_replace('_', DIRECTORY_SEPARATOR, $selectorName) . '.php');
 
     $returnP = $returnPropeties ?? "";
     $customSearchClass = $this->get('customSearchClass');
-        $selector   = new $selectorName( $customSearchClass,
-                 $fv,
-                 $params,
-                 $returnP,
-                 $this->_action,
-                 $includeContactIds
-      );
-    $controller = new CRM_Core_Selector_Controller($selector,
+    $selector   = new $selectorName(
+      $customSearchClass,
+      $fv,
+      $params,
+      $returnP,
+      $this->_action,
+      $includeContactIds
+    );
+    $controller = new CRM_Core_Selector_Controller(
+      $selector,
       NULL,
       $sortID,
       CRM_Core_Action::VIEW,
@@ -95,19 +93,18 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
   }
 
   /**
-   * Build the form - it consists of
-   *    - displaying the QILL (query in local language)
-   *    - displaying elements for saving the search
-   *
-   * @access public
+   * Build the form - it consists of.
+   * - displaying the QILL (query in local language)
+   * - displaying elements for saving the search
    *
    * @return void
    */
-  function buildQuickForm() {
+  public function buildQuickForm() {
     //
     // just need to add a javacript to popup the window for printing
     //
-    $this->addButtons([
+    $this->addButtons(
+      [
         ['type' => 'next',
           'name' => ts('Print Contact List'),
           'js' => ['onclick' => 'window.print()'],
@@ -121,9 +118,7 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
   }
 
   /**
-   * process the form after the input has been submitted and validated
-   *
-   * @access public
+   * Process the form after the input has been submitted and validated.
    *
    * @return void
    */
@@ -131,4 +126,3 @@ class CRM_Contact_Form_Task_Print extends CRM_Contact_Form_Task {
     // redirect to the main search page after printing is over
   }
 }
-

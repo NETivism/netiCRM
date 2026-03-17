@@ -38,4 +38,3 @@
  * $Id: Contact.php 30415 2010-10-29 12:02:47Z shot $
  */
 require_once 'api/v2/Contribution.php';
-

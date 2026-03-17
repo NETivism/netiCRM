@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * State machine for managing different states of the Import process.
@@ -44,12 +40,12 @@ class CRM_Contribute_StateMachine_ContributionPage extends CRM_Core_StateMachine
   /**
    * class constructor
    *
-   * @param object  CRM_Contribute_Controller_ContributionPage
-   * @param int     $action
+   * @param CRM_Core_Controller $controller
+   * @param int $action
    *
-   * @return object CRM_Contribute_StateMachine_ContributionPage
+   * @return CRM_Contribute_StateMachine_ContributionPage
    */
-  function __construct($controller, $action = CRM_Core_Action::NONE) {
+  public function __construct($controller, $action = CRM_Core_Action::NONE) {
     parent::__construct($controller, $action);
 
     $session = CRM_Core_Session::singleton();
@@ -76,4 +72,3 @@ class CRM_Contribute_StateMachine_ContributionPage extends CRM_Core_StateMachine
     $this->addSequentialPages($this->_pages);
   }
 }
-

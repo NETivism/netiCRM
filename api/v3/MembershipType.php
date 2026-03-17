@@ -70,7 +70,7 @@ function civicrm_api3_membership_type_create($params) {
 }
 /*
  * Adjust Metadata for Create action
- * 
+ *
  * The metadata is used for setting defaults, documentation & validation
  * @param array $params array or parameters determined by getfields
  */
@@ -78,7 +78,7 @@ function _civicrm_api3_membership_type_create_spec(&$params) {
   // todo could set default here probably
   $params['domain_id']['api.required'] = 1;
   $params['member_of_contact_id']['api.required'] = 1;
-  $params['financial_type_id']['api.required'] =1;
+  $params['financial_type_id']['api.required'] = 1;
   $params['name']['api.required'] = 1;
   $params['duration_unit']['api.required'] = 1;
   $params['duration_interval']['api.required'] = 1;
@@ -114,8 +114,6 @@ function civicrm_api3_membership_type_get($params) {
  */
 function civicrm_api3_membership_type_delete($params) {
 
-
   $memberDelete = CRM_Member_BAO_MembershipType::del($params['id']);
   return $memberDelete ? civicrm_api3_create_success($memberDelete) : civicrm_api3_create_error('Error while deleting membership type. id : ' . $params['id']);
 }
-

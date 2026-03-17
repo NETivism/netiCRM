@@ -26,34 +26,32 @@
 */
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
-{
+
+class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO {
   /**
    * static instance to hold the table name
    *
    * @var string
    * @static
    */
-  static $_tableName = 'civicrm_membership_status';
+  public static $_tableName = 'civicrm_membership_status';
   /**
    * static instance to hold the field values
    *
    * @var array
    * @static
    */
-  static $_fields = null;
+  public static $_fields = NULL;
   /**
    * static instance to hold the FK relationships
    *
    * @var string
    * @static
    */
-  static $_links = null;
+  public static $_links = NULL;
   /**
    * static instance to hold the values that can
    * be imported / apu
@@ -61,7 +59,7 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_import = null;
+  public static $_import = NULL;
   /**
    * static instance to hold the values that can
    * be exported / apu
@@ -69,7 +67,7 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    * @var array
    * @static
    */
-  static $_export = null;
+  public static $_export = NULL;
   /**
    * static value to see if we should log any modifications to
    * this table in the civicrm_log table
@@ -77,8 +75,8 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    * @var boolean
    * @static
    */
-  static $_log = true;
-    /**
+  public static $_log = TRUE;
+  /**
    * Membership Id
    *
    * @var int unsigned
@@ -167,116 +165,112 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    * @var boolean
    */
   public $is_reserved;
-   /**
+  /**
    * class constructor
    *
-   * @access public
    * @return civicrm_membership_status
    */
-  function __construct()
-  {
+  public function __construct() {
     parent::__construct();
   }
-    /**
+   /**
    * returns all the column names of this table
    *
-   * @access public
    * @return array
    */
-  static function &fields()
-  {
+  public static function &fields() {
     if (!(self::$_fields)) {
       self::$_fields = [
         'id' => [
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
-          'required' => true,
-                  ] ,
+          'required' => TRUE,
+        ],
         'membership_status' => [
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Membership Status') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-             'import' => true,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+          'import' => TRUE,
           'where' => 'civicrm_membership_status.name',
           'headerPattern' => '',
           'dataPattern' => '',
-           'export' => true,
-               'usage' => 'System',
-       ] ,
+          'export' => TRUE,
+          'usage' => 'System',
+        ],
         'label' => [
           'name' => 'label',
           'type' => CRM_Utils_Type::T_STRING,
           'title' => ts('Label') ,
-           'maxlength' => 128,
-           'size' => CRM_Utils_Type::HUGE,
-                ] ,
+          'maxlength' => 128,
+          'size' => CRM_Utils_Type::HUGE,
+        ],
         'start_event' => [
           'name' => 'start_event',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Start Event') ,
-                   'enumValues' => 'start_date, end_date, join_date',
-         ] ,
+          'enumValues' => 'start_date, end_date, join_date',
+        ],
         'start_event_adjust_unit' => [
           'name' => 'start_event_adjust_unit',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('Start Event Adjust Unit') ,
-                   'enumValues' => 'day, month, year',
-         ] ,
+          'enumValues' => 'day, month, year',
+        ],
         'start_event_adjust_interval' => [
           'name' => 'start_event_adjust_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Start Event Adjust Interval') ,
-                  ] ,
+        ],
         'end_event' => [
           'name' => 'end_event',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('End Event') ,
-                   'enumValues' => 'start_date, end_date, join_date',
-         ] ,
+          'enumValues' => 'start_date, end_date, join_date',
+        ],
         'end_event_adjust_unit' => [
           'name' => 'end_event_adjust_unit',
           'type' => CRM_Utils_Type::T_ENUM,
           'title' => ts('End Event Adjust Unit') ,
-                   'enumValues' => 'day, month, year',
-         ] ,
+          'enumValues' => 'day, month, year',
+        ],
         'end_event_adjust_interval' => [
           'name' => 'end_event_adjust_interval',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('End Event Adjust Interval') ,
-                  ] ,
+        ],
         'is_current_member' => [
           'name' => 'is_current_member',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Current Membership?') ,
-                  ] ,
+        ],
         'is_admin' => [
           'name' => 'is_admin',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Admin Assigned Only?') ,
-                  ] ,
+        ],
         'weight' => [
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('Weight') ,
-                  ] ,
+        ],
         'is_default' => [
           'name' => 'is_default',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Default Status?') ,
-                  ] ,
+        ],
         'is_active' => [
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Active') ,
-                  'default' => '',
-          ] ,
+          'default' => '',
+        ],
         'is_reserved' => [
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'title' => ts('Is Reserved') ,
-                  ] ,
+        ],
       ];
     }
     return self::$_fields;
@@ -284,32 +278,26 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
   /**
    * returns the names of this table
    *
-   * @access public
    * @return string
    */
-  static function getTableName()
-  {
-        global $dbLocale;
+  public static function getTableName() {
+    global $dbLocale;
     return self::$_tableName . $dbLocale;
-      }
+  }
   /**
    * returns if this table needs to be logged
    *
-   * @access public
    * @return boolean
    */
-  function getLog()
-  {
+  public function getLog() {
     return self::$_log;
   }
   /**
    * returns the list of fields that can be imported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &import($prefix = false)
-  {
+  public static function &import($prefix = FALSE) {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
@@ -317,22 +305,21 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['membership_status'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_import[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_import;
   }
   /**
    * returns the list of fields that can be exported
    *
-   * @access public
-   * return array
+   * @return array
    */
-  static function &export($prefix = false)
-  {
+  public static function &export($prefix = FALSE) {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
@@ -340,12 +327,13 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['membership_status'] = &$fields[$name];
-          } else {
+          }
+          else {
             self::$_export[$name] = &$fields[$name];
           }
         }
       }
-          }
+    }
     return self::$_export;
   }
   /**
@@ -353,14 +341,14 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    *
    * @return array (reference)  the array of enum fields
    */
-  static function &getEnums()
+  public static function &getEnums()
   {
     static $enums = [
-                                                        'start_event',
-                          'start_event_adjust_unit',
-                                      'end_event',
-                          'end_event_adjust_unit',
-                                                                                                    ];
+        'start_event',
+        'start_event_adjust_unit',
+        'end_event',
+        'end_event_adjust_unit',
+    ];
     return $enums;
   }
   /**
@@ -371,32 +359,31 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    *
    * @return string  the display value of the enum
    */
-  static function tsEnum($field, $value)
-  {
-    static $translations = null;
+  public static function tsEnum($field, $value) {
+    static $translations = NULL;
     if (!$translations) {
       $translations = [
-                                                        'start_event' => [
-                  'start_date' => ts('start_date'),
-                  'end_date' => ts('end_date'),
-                  'join_date' => ts('join_date'),
-                ],
-                          'start_event_adjust_unit' => [
-                  'day' => ts('day'),
-                  'month' => ts('month'),
-                  'year' => ts('year'),
-                ],
-                                      'end_event' => [
-                  'start_date' => ts('start_date'),
-                  'end_date' => ts('end_date'),
-                  'join_date' => ts('join_date'),
-                ],
-                          'end_event_adjust_unit' => [
-                  'day' => ts('day'),
-                  'month' => ts('month'),
-                  'year' => ts('year'),
-                ],
-                                                                                                      ];
+        'start_event' => [
+          'start_date' => ts('start_date'),
+          'end_date' => ts('end_date'),
+          'join_date' => ts('join_date'),
+        ],
+        'start_event_adjust_unit' => [
+          'day' => ts('day'),
+          'month' => ts('month'),
+          'year' => ts('year'),
+        ],
+        'end_event' => [
+          'start_date' => ts('start_date'),
+          'end_date' => ts('end_date'),
+          'join_date' => ts('join_date'),
+        ],
+        'end_event_adjust_unit' => [
+          'day' => ts('day'),
+          'month' => ts('month'),
+          'year' => ts('year'),
+        ],
+      ];
     }
     return $translations[$field][$value];
   }
@@ -406,10 +393,9 @@ class CRM_Member_DAO_MembershipStatus extends CRM_Core_DAO
    * @param array $values (reference)  the array up for enhancing
    * @return void
    */
-  static function addDisplayEnums(&$values)
-  {
+  public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Member_DAO_MembershipStatus::getEnums();
-    foreach ($enumFields as $enum) {
+    foreach($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Member_DAO_MembershipStatus::tsEnum($enum, $values[$enum]);
       }

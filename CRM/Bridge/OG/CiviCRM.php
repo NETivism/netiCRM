@@ -26,15 +26,23 @@
 */
 
 /**
+ * Bridges Drupal Organic Groups with CiviCRM group and membership operations
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Bridge_OG_CiviCRM {
 
-  static function group($groupID, $group, $op) {
+  /**
+   * OG group sync
+   *
+   * @param int $groupID
+   * @param object $group
+   * @param string $op
+   *
+   * @return void
+   */
+  public static function group($groupID, $group, $op) {
     if ($op == 'add') {
       self::groupAdd($groupID, $group);
     }
@@ -43,7 +51,15 @@ class CRM_Bridge_OG_CiviCRM {
     }
   }
 
-  static function groupAdd($groupID, $group) {
+  /**
+   * OG group add sync
+   *
+   * @param int $groupID
+   * @param object $group
+   *
+   * @return void
+   */
+  public static function groupAdd($groupID, $group) {
 
     $ogID = CRM_Bridge_OG_Utils::ogID($groupID, FALSE);
 
@@ -67,14 +83,23 @@ class CRM_Bridge_OG_CiviCRM {
     node_save($node);
 
     // also change the source field of the group
-    CRM_Core_DAO::setFieldValue('CRM_Contact_DAO_Group',
+    CRM_Core_DAO::setFieldValue(
+      'CRM_Contact_DAO_Group',
       $groupID,
       'source',
       CRM_Bridge_OG_Utils::ogSyncName($node->nid)
     );
   }
 
-  static function groupDelete($groupID, $group) {
+  /**
+   * OG group delete sync
+   *
+   * @param int $groupID
+   * @param object $group
+   *
+   * @return void
+   */
+  public static function groupDelete($groupID, $group) {
 
     $ogID = CRM_Bridge_OG_Utils::ogID($groupID, FALSE);
     if (!$ogID) {
@@ -84,13 +109,21 @@ class CRM_Bridge_OG_CiviCRM {
     node_delete($ogID);
   }
 
-  static function groupContact($groupID, $contactIDs, $op) {
+  /**
+   * OG group contact sync
+   *
+   * @param int $groupID
+   * @param array $contactIDs
+   * @param string $op
+   *
+   * @return void
+   */
+  public static function groupContact($groupID, $contactIDs, $op) {
 
     $ogID = CRM_Bridge_OG_Utils::ogID($groupID, FALSE);
     if (!$ogID) {
       return;
     }
-
 
     foreach ($contactIDs as $contactID) {
       $drupalID = civicrm_uf_id_get($contactID);
@@ -105,4 +138,3 @@ class CRM_Bridge_OG_CiviCRM {
     }
   }
 }
-

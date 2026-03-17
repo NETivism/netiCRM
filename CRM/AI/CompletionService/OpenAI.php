@@ -2,18 +2,18 @@
 
 class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
-  CONST END_POINT_LIST = [
+  public const END_POINT_LIST = [
     CRM_AI_BAO_AICompletion::CHAT_COMPLETION => 'https://api.openai.com/v1/chat/completions',
   ];
 
-  CONST MODEL_LIST = [
+  public const MODEL_LIST = [
     'gpt-3.5-turbo',
     'gpt-4o',
   ];
 
   /**
    * OpenAI API Key
-   * 
+   *
    * @var string
    */
   private $_apiKey = NULL;
@@ -41,33 +41,32 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
   /**
    * AICompletion ID
-   * 
+   *
    * @var int
    */
   private $_id = NULL;
 
   /**
    * Post data , json format.
-   * 
+   *
    * @var string
    */
   private $_postData = '';
 
   /**
    * Response data
-   * 
+   *
    * @var string
    */
   private $_responseData = '';
-
 
   /**
    * Abstract function for setting the model name
    *
    * Should set to default model when provide model name not available
    *
-   * @param string $model
-   * @return string the real model name set on this function
+   * @param string $model The model name.
+   * @return void
    */
   public function setModel($model) {
     // TODO: check if model name is in available list
@@ -79,8 +78,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    *
    * Should set to max tokens when value not provided
    *
-   * @param int $maxTokens
-   * @return int the real tokens set on this function
+   * @param int $maxTokens The maximum number of tokens.
+   * @return void
    */
   public function setMaxTokens($maxTokens) {
     if ($maxTokens >= CRM_AI_BAO_AICompletion::COMPLETION_MAX_TOKENS) {
@@ -97,7 +96,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Get current model name
    *
-   * @return string
+   * @return string The model name.
    */
   public function getModel() {
     return $this->_model;
@@ -106,7 +105,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Get current max tokens
    *
-   * @return int|null
+   * @return int|null The maximum number of tokens.
    */
   public function getMaxTokens() {
     return $this->_maxTokens;
@@ -117,8 +116,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
    *
    * Error handling should using try - catch when doing request
    *
-   * @param array $params
-   * @return string
+   * @param array $params The request parameters.
+   * @return array|void The response data.
    */
   public function request($params) {
     $config = CRM_Core_Config::singleton();
@@ -138,9 +137,9 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
     // Send the request to OpenAI
     $ch = curl_init($api_endpoint);
-    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $this->_postData);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
       'Content-Type: application/json',
       'Authorization: Bearer ' . $this->_apiKey,
@@ -153,15 +152,15 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       }
       $responseData = &$this->_responseData;
       $responseData = [
-        'status_id' => 2, // 2: pending, 5: processing, 1: finished, 
+        'status_id' => 2, // 2: pending, 5: processing, 1: finished,
         'id' => $this->_id,
       ];
-      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData){
+      curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $data) use (&$responseData) {
         $chunks = explode("\n", $data);
         if (is_array($chunks)) {
           $chunks = array_filter($chunks);
         }
-        foreach($chunks as $resp) {
+        foreach ($chunks as $resp) {
           $json = preg_replace('/^data:\s/', '', $resp);
           $decoded = json_decode($json, TRUE);
           if ($decoded === FALSE) {
@@ -233,12 +232,12 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       // the common connection timeout
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-      curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+      curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
 
       curl_exec($ch);
       $curl_errno = curl_errno($ch);
-      $curl_error = curl_error($ch);  
+      $curl_error = curl_error($ch);
       if ($curl_errno > 0) {
         throw new CRM_Core_Exception("Curl Error. Error Number: {$curl_errno}. Error message: {$curl_error}");
       }
@@ -251,7 +250,7 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
       // this will limit common connection timeout
       curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
       $this->_responseData = curl_exec($ch);
-      if(curl_errno($ch)){
+      if (curl_errno($ch)) {
         throw new CRM_Core_Exception(curl_error($ch));
       }
       curl_close($ch);
@@ -262,24 +261,24 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
 
   /**
    * Return the fields array that API used.
-   * 
+   *
    * @param string $apiType field name
-   * @param boolean $is_required only return required fields or not  
+   * @param boolean $is_required only return required fields or not
    * @return array $fields An array contain needed fields.
    */
-  static private function fields($apiType, $is_required = FALSE) {
+  private static function fields($apiType, $is_required = FALSE) {
     $fields = [];
-    switch($apiType){
+    switch ($apiType) {
       case 'CHAT_COMPLETION':
         // Refs: https://platform.openai.com/docs/api-reference/chat/create
         $fields = explode(',', 'model*,messages*,temperature,top_p,n,stream,stop,max_tokens,presence_penalty,frequency_penalty,logit_bias,user');
         break;
     }
     foreach ($fields as $key => &$value) {
-      if(!strstr($value, '*') && $is_required) {
+      if (!strstr($value, '*') && $is_required) {
         unset($fields[$key]);
       }
-      else{
+      else {
         $value = str_replace('*', '', $value);
       }
     }
@@ -289,8 +288,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Format parameters before sending via request
    *
-   * @param array $params(reference)
-   * @return string json encoded string.
+   * @param array $params The request parameters (reference).
+   * @return string The JSON encoded request data.
    */
   protected function formatParams(&$params) {
     if ($params['id']) {
@@ -330,8 +329,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Format response before saving to CRM_AI_DAO_AICompletion
    *
-   * @param string $responseString
-   * @return array
+   * @param string $responseString The raw response string.
+   * @return array<string, mixed> The formatted response data.
    */
   protected function formatResponse($responseString) {
     $response = json_decode($responseString, TRUE);
@@ -361,8 +360,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Low level function to determine if result in response is an error.
    *
-   * @param array $response
-   * @return boolean
+   * @param array $response The response data.
+   * @return boolean True if the response contains an error.
    */
   protected function isError($response) {
 
@@ -371,8 +370,8 @@ class CRM_AI_CompletionService_OpenAI extends CRM_AI_CompletionService {
   /**
    * Calculate token numbers
    *
-   * @param string $string
-   * @return int
+   * @param string $input The input string.
+   * @return int The number of tokens.
    */
   public static function calculateTokenNumbers($input) {
 

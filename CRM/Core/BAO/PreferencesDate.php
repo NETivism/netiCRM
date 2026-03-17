@@ -27,42 +27,33 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
 
 class CRM_Core_BAO_PreferencesDate extends CRM_Core_DAO_PreferencesDate {
 
   /**
    * static holder for the default LT
    */
-  static $_defaultPreferencesDate = NULL;
+  public static $_defaultPreferencesDate = NULL;
 
   /**
    * class constructor
    */
-  function __construct() {
+  public function __construct() {
     parent::__construct();
   }
 
   /**
-   * Takes a bunch of params that are needed to match certain criteria and
-   * retrieves the relevant objects. Typically the valid params are only
-   * contact_id. We'll tweak this function to be more full featured over a period
-   * of time. This is the inverse function of create. It also stores all the retrieved
-   * values in the default array
+   * Retrieve a date preference record based on the provided parameters.
    *
-   * @param array $params   (reference ) an assoc array of name/value pairs
-   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   * @param array $params associative array of identifying fields
+   * @param array $defaults associative array to hold retrieved values
    *
-   * @return object CRM_Core_BAO_PreferencesDate object on success, null otherwise
-   * @access public
-   * @static
+   * @return CRM_Core_DAO_PreferencesDate|null matching DAO object
    */
-  static function retrieve(&$params, &$defaults) {
+  public static function retrieve(&$params, &$defaults) {
     $dao = new CRM_Core_DAO_PreferencesDate();
     $dao->copyValues($params);
     if ($dao->find(TRUE)) {
@@ -73,30 +64,29 @@ class CRM_Core_BAO_PreferencesDate extends CRM_Core_DAO_PreferencesDate {
   }
 
   /**
-   * update the is_active flag in the db
+   * Update the is_active flag for a date preference record.
    *
-   * @param int      $id        id of the database record
-   * @param boolean  $is_active value we want to set the is_active field
+   * Note: This method currently calls fatal() and is not implemented.
    *
-   * @return Object             DAO object on sucess, null otherwise
+   * @param int $id database record ID
+   * @param bool $is_active value to set for the is_active field
    *
-   * @access public
-   * @static
+   * @return void
    */
-  static function setIsActive($id, $is_active) {
+  public static function setIsActive($id, $is_active) {
     CRM_Core_Error::fatal();
   }
 
   /**
-   * Function to delete preference dates
+   * Delete a date preference record.
    *
-   * @param  int  $id
+   * Note: This method currently calls fatal() and is not implemented.
    *
-   * @access public
-   * @static
+   * @param int $id record ID
+   *
+   * @return void
    */
-  static function del($id) {
+  public static function del($id) {
     CRM_Core_Error::fatal();
   }
 }
-

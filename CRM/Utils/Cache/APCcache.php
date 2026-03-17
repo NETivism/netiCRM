@@ -26,15 +26,14 @@
 */
 
 /**
+ * Cache backend implementation using APC (Alternative PHP Cache)
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2014
- * $Id$
  *
  */
 class CRM_Utils_Cache_APCcache {
-  CONST DEFAULT_TIMEOUT = 3600;
-  CONST DEFAULT_PREFIX = '';
+  public const DEFAULT_TIMEOUT = 3600;
+  public const DEFAULT_PREFIX = '';
 
   /**
    * The default timeout to use
@@ -58,10 +57,8 @@ class CRM_Utils_Cache_APCcache {
    * Constructor
    *
    * @param array   $config  an array of configuration params
-   *
-   * @return void
    */
-  function __construct(&$config) {
+  public function __construct(&$config) {
     if (isset($config['timeout'])) {
       $this->_timeout = intval($config['timeout']);
     }
@@ -70,22 +67,22 @@ class CRM_Utils_Cache_APCcache {
     }
   }
 
-  function set($key, &$value) {
+  public function set($key, &$value) {
     if (!apc_store($this->_prefix . $key, $value, $this->_timeout)) {
       return FALSE;
     }
     return TRUE;
   }
 
-  function &get($key) {
+  public function &get($key) {
     return apc_fetch($this->_prefix . $key);
   }
 
-  function delete($key) {
+  public function delete($key) {
     return apc_delete($this->_prefix . $key);
   }
 
-  function flush() {
+  public function flush() {
     $allinfo = apc_cache_info('user');
     $keys = $allinfo['cache_list'];
     // Our keys follows this pattern: ([A-Za-z0-9_]+)?CRM_[A-Za-z0-9_]+
@@ -102,4 +99,3 @@ class CRM_Utils_Cache_APCcache {
     }
   }
 }
-

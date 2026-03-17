@@ -27,47 +27,68 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
 
   /**
-   * @var mixed[]
+   * @var array Case status options keyed by status ID.
    */
   public $case_statuses;
+
   /**
-   * @var mixed[]
+   * @var array Relationship type labels keyed by relationship type ID.
    */
   public $rel_types;
+
   /**
-   * @var mixed[]
+   * @var array Deleted status labels for select options.
    */
   public $deleted_labels;
+
   /**
-   * @var never[]
+   * @var array Report column headers keyed by column alias.
    */
   public $_columnHeaders;
-  public $_aliases;
+
   /**
-   * @var string
+   * @var array Table alias mapping keyed by table name.
+   */
+  public $_aliases;
+
+  /**
+   * @var string SQL FROM clause.
    */
   public $_from;
+
   /**
-   * @var string
+   * @var string SQL WHERE clause.
    */
   public $_where;
+
   /**
-   * @var string
+   * @var string SQL GROUP BY clause.
    */
   public $_groupBy;
+
+  /**
+   * @var array|null Summary statistics data.
+   */
   protected $_summary = NULL;
-  protected $_relField = FALSE; function __construct() {
+
+  /**
+   * @var bool Whether relationship fields are selected.
+   */
+  protected $_relField = FALSE;
+  /**
+   * Class constructor.
+   *
+   * Initializes case status, relationship type, and deleted label options.
+   * Defines column definitions for case, contact, relationship, and case contact tables.
+   */
+  public function __construct() {
     $this->case_statuses = CRM_Case_PseudoConstant::caseStatus();
     $rels = CRM_Core_PseudoConstant::relationshipType();
     foreach ($rels as $relid => $v) {
@@ -162,11 +183,21 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     parent::__construct();
   }
 
-  function preProcess() {
+  /**
+   * Pre-processes the report form.
+   *
+   * @return void
+   */
+  public function preProcess() {
     parent::preProcess();
   }
 
-  function select() {
+  /**
+   * Builds the SELECT clause from selected and required fields. Populates $_select and $_columnHeaders.
+   *
+   * @return void
+   */
+  public function select() {
     $select = [];
     $this->_columnHeaders = [];
     foreach ($this->_columns as $tableName => $table) {
@@ -196,7 +227,16 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     $this->_select = "SELECT " . CRM_Utils_Array::implode(', ', $select) . " ";
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validates that staff member and relationship fields are consistent with filters.
+   *
+   * @param array $fields Submitted form field values.
+   * @param array $files Uploaded files.
+   * @param CRM_Report_Form_Case_Summary $self The report form instance.
+   *
+   * @return array Validation errors keyed by field name.
+   */
+  public static function formRule($fields, $files, $self) {
     $errors = $grouping = [];
     if (empty($fields['relationship_type_id_value']) && (CRM_Utils_Array::arrayKeyExists('sort_name', $fields['fields']) || CRM_Utils_Array::arrayKeyExists('label_b_a', $fields['fields']))) {
       $errors['fields'] = ts('Either filter on at least one relationship type, or de-select Staff Member and Relationship from the list of fields.');
@@ -207,7 +247,12 @@ class CRM_Report_Form_Case_Summary extends CRM_Report_Form {
     return $errors;
   }
 
-  function from() {
+  /**
+   * Builds the FROM clause joining case, contact, relationship, and case contact tables. Populates $_from.
+   *
+   * @return void
+   */
+  public function from() {
 
     $cc = $this->_aliases['civicrm_case'];
     $c = $this->_aliases['civicrm_contact'];
@@ -235,7 +280,12 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     }
   }
 
-  function where() {
+  /**
+   * Builds the WHERE clause from submitted filter values. Populates $_where.
+   *
+   * @return void
+   */
+  public function where() {
     $clauses = [];
     $this->_having = '';
     foreach ($this->_columns as $tableName => $table) {
@@ -247,7 +297,11 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
             $from = CRM_Utils_Array::value("{$fieldName}_from", $this->_params);
             $to = CRM_Utils_Array::value("{$fieldName}_to", $this->_params);
 
-            $clause = $this->dateClause($field['dbAlias'], $relative, $from, $to,
+            $clause = $this->dateClause(
+              $field['dbAlias'],
+              $relative,
+              $from,
+              $to,
               CRM_Utils_Array::value('type', $field)
             );
           }
@@ -255,7 +309,8 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
 
             $op = CRM_Utils_Array::value("{$fieldName}_op", $this->_params);
             if ($op) {
-              $clause = $this->whereClause($field,
+              $clause = $this->whereClause(
+                $field,
                 $op,
                 CRM_Utils_Array::value("{$fieldName}_value", $this->_params),
                 CRM_Utils_Array::value("{$fieldName}_min", $this->_params),
@@ -279,11 +334,21 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     }
   }
 
-  function groupBy() {
+  /**
+   * Builds the GROUP BY clause. Populates $_groupBy.
+   *
+   * @return void
+   */
+  public function groupBy() {
     $this->_groupBy = "";
   }
 
-  function postProcess() {
+  /**
+   * Executes the report query, builds rows, formats display, and assigns output to the template.
+   *
+   * @return void
+   */
+  public function postProcess() {
 
     $this->beginPostProcess();
 
@@ -297,7 +362,14 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     $this->endPostProcess($rows);
   }
 
-  function alterDisplay(&$rows) {
+  /**
+   * Modifies report output rows for display. Converts case status IDs and deleted flags to labels.
+   *
+   * @param array &$rows Report result rows passed by reference.
+   *
+   * @return void
+   */
+  public function alterDisplay(&$rows) {
     $entryFound = FALSE;
     foreach ($rows as $rowNum => $row) {
       if (CRM_Utils_Array::arrayKeyExists('civicrm_case_status_id', $row)) {
@@ -321,4 +393,3 @@ inner join civicrm_contact $c2 on {$c2}.id={$ccc}.contact_id
     }
   }
 }
-

@@ -27,20 +27,19 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
-
+/**
+ * Form for searching contribution pages.
+ */
 class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
 
   /**
-   * Build the form
+   * Actually build the form components.
    *
-   * @access public
+   * Adds fields for filtering contribution pages by title and contribution type.
    *
    * @return void
    */
@@ -49,7 +48,7 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
 
     $this->add('text', 'title', ts('Find'), $attributes);
 
-    $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULl, NULL, TRUE);
+    $contribution_type = CRM_Contribute_PseudoConstant::contributionType(NULL, NULL, TRUE);
     $attrs = ['multiple' => 'multiple'];
     $this->addElement('select', 'contribution_type_id', 'Contribution Type', $contribution_type, $attrs);
 
@@ -61,7 +60,15 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
       ]);
   }
 
-  function postProcess() {
+  /**
+   * Process the form submission.
+   *
+   * Updates search parameters in the parent controller to filter the displayed
+   * contribution pages.
+   *
+   * @return void
+   */
+  public function postProcess() {
     $params = $this->controller->exportValues($this->_name);
     $parent = $this->controller->getParent();
     $parent->set('searchResult', 1);
@@ -80,4 +87,3 @@ class CRM_Contribute_Form_SearchContribution extends CRM_Core_Form {
     }
   }
 }
-

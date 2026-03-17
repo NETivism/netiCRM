@@ -27,14 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2011
- * $Id$
  *
  */
-
-
-
 
 /**
  *
@@ -91,7 +86,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
    *
    * @return None
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $defaults = [];
     $this->assign('count', $this->_recipientsCount);
     $defaults['now'] = 1;
@@ -117,13 +112,14 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     if ($this->_recipientsCount <= 0) {
       $disabled = ['disabled' => 'disabled'];
       $qfKey = CRM_Utils_Request::retrieve('qfKey', 'String', $this);
-      if (CRM_Utils_Rule::qfKey($qfKey)){
+      if (CRM_Utils_Rule::qfKey($qfKey)) {
         $this->assign('backURL', CRM_Utils_System::url("civicrm/mailing/send", "_qf_Group_display=true&qfKey=".$qfKey));
       }
     }
 
     if ($this->_scheduleFormOnly) {
-      $title = ts('Schedule Mailing') . ' - ' . CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
+      $title = ts('Schedule Mailing') . ' - ' . CRM_Core_DAO::getFieldValue(
+        'CRM_Mailing_DAO_Mailing',
         $this->_mailingID,
         'name'
       );
@@ -185,14 +181,15 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       // add the preview elements
       $preview = [];
       $preview['type'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing', $this->_mailingID, 'body_html') ? 'html' : 'text';
-      $preview['subject'] = CRM_Core_DAO::getFieldValue('CRM_Mailing_DAO_Mailing',
+      $preview['subject'] = CRM_Core_DAO::getFieldValue(
+        'CRM_Mailing_DAO_Mailing',
         $this->_mailingID,
         'subject'
       );
       $preview['viewURL'] = CRM_Utils_System::url('civicrm/mailing/view', "reset=1&id={$this->_mailingID}");
 
-
-      $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo('civicrm_mailing',
+      $preview['attachment'] = CRM_Core_BAO_File::attachmentInfo(
+        'civicrm_mailing',
         $this->_mailingID
       );
 
@@ -260,9 +257,10 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
       return TRUE;
     }
 
-    if (CRM_Utils_Date::format(CRM_Utils_Date::processDate($params['start_date'],
-          $params['start_date_time']
-        )) < CRM_Utils_Date::format(date('YmdHi00'))) {
+    if (CRM_Utils_Date::format(CRM_Utils_Date::processDate(
+      $params['start_date'],
+      $params['start_date_time']
+    )) < CRM_Utils_Date::format(date('YmdHi00'))) {
       return [
         'start_date' =>
         ts('Start date cannot be earlier than the current time.'),
@@ -291,7 +289,8 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     foreach ([
         'now', 'start_date', 'start_date_time',
       ] as $parameter) {
-      $params[$parameter] = $this->controller->exportValue($this->_name,
+      $params[$parameter] = $this->controller->exportValue(
+        $this->_name,
         $parameter
       );
     }
@@ -314,7 +313,7 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
         else {
           $job->scheduled_date = CRM_Utils_Date::processDate($params['start_date'] . ' ' . $params['start_date_time']);
         }
-        $job->end_date = null;
+        $job->end_date = NULL;
         $job->save();
       }
 
@@ -337,7 +336,6 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
         $mailing->approval_date = CRM_Utils_Date::isoToMysql($mailing->approval_date);
       }
       */
-
 
       // also set the scheduled_id
       $session = CRM_Core_Session::singleton();
@@ -385,9 +383,10 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     }
 
     $session = CRM_Core_Session::singleton();
-    $session->pushUserContext(CRM_Utils_System::url('civicrm/mailing/browse/scheduled',
-        'reset=1&scheduled=true'
-      ));
+    $session->pushUserContext(CRM_Utils_System::url(
+      'civicrm/mailing/browse/scheduled',
+      'reset=1&scheduled=true'
+    ));
   }
 
   /**
@@ -401,4 +400,3 @@ class CRM_Mailing_Form_Schedule extends CRM_Core_Form {
     return ts('Schedule or Send');
   }
 }
-

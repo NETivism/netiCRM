@@ -1,41 +1,39 @@
 <?php
 
-/* 
- +--------------------------------------------------------------------+ 
- | CiviCRM version 3.3                                                | 
- +--------------------------------------------------------------------+ 
- | Copyright CiviCRM LLC (c) 2004-2010                                | 
- +--------------------------------------------------------------------+ 
- | This file is a part of CiviCRM.                                    | 
- |                                                                    | 
- | CiviCRM is free software; you can copy, modify, and distribute it  | 
- | under the terms of the GNU Affero General Public License           | 
- | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   | 
- |                                                                    | 
- | CiviCRM is distributed in the hope that it will be useful, but     | 
- | WITHOUT ANY WARRANTY; without even the implied warranty of         | 
- | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               | 
- | See the GNU Affero General Public License for more details.        | 
- |                                                                    | 
+/*
+ +--------------------------------------------------------------------+
+ | CiviCRM version 3.3                                                |
+ +--------------------------------------------------------------------+
+ | Copyright CiviCRM LLC (c) 2004-2010                                |
+ +--------------------------------------------------------------------+
+ | This file is a part of CiviCRM.                                    |
+ |                                                                    |
+ | CiviCRM is free software; you can copy, modify, and distribute it  |
+ | under the terms of the GNU Affero General Public License           |
+ | Version 3, 19 November 2007 and the CiviCRM Licensing Exception.   |
+ |                                                                    |
+ | CiviCRM is distributed in the hope that it will be useful, but     |
+ | WITHOUT ANY WARRANTY; without even the implied warranty of         |
+ | MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.               |
+ | See the GNU Affero General Public License for more details.        |
+ |                                                                    |
  | You should have received a copy of the GNU Affero General Public   |
  | License and the CiviCRM Licensing Exception along                  |
  | with this program; if not, contact CiviCRM LLC                     |
  | at info[AT]civicrm[DOT]org. If you have questions about the        |
  | GNU Affero General Public License or the licensing of CiviCRM,     |
  | see the CiviCRM license FAQ at http://civicrm.org/licensing        |
- +--------------------------------------------------------------------+ 
+ +--------------------------------------------------------------------+
 */
 
 /**
+ * Builds SQL queries for custom field data with support for various field types and operators
  *
- *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 class CRM_Core_BAO_CustomQuery {
-  CONST PREFIX = 'custom_value_';
+  public const PREFIX = 'custom_value_';
 
   /**
    * the set of custom field ids
@@ -101,7 +99,7 @@ class CRM_Core_BAO_CustomQuery {
    * @var array
    * @static
    */
-  static $extendsMap = [
+  public static $extendsMap = [
     'Contact' => 'civicrm_contact',
     'Individual' => 'civicrm_contact',
     'Household' => 'civicrm_contact',
@@ -119,16 +117,14 @@ class CRM_Core_BAO_CustomQuery {
   ];
 
   /**
-   * class constructor
+   * Class constructor.
    *
-   * Takes in a set of custom field ids andsets up the data structures to
-   * generate a query
+   * Takes in a set of custom field IDs and sets up the data structures to
+   * generate a query.
    *
-   * @param  array  $ids     the set of custom field ids
-   *
-   * @access public
+   * @param array $ids the set of custom field IDs
    */
-  function __construct($ids) {
+  public function __construct($ids) {
     $this->_ids = &$ids;
 
     $this->_select = [];
@@ -198,7 +194,8 @@ SELECT f.id, f.label, f.data_type,
           $optionGroupID = $dao->option_group_id;
         }
         elseif ($dao->data_type != 'Boolean') {
-          $errorMessage = ts("The custom field %1 is corrupt. Please delete and re-build the field",
+          $errorMessage = ts(
+            "The custom field %1 is corrupt. Please delete and re-build the field",
             [1 => $dao->label]
           );
           CRM_Core_Error::fatal($errorMessage);
@@ -238,15 +235,11 @@ SELECT label, value
   }
 
   /**
-   * generate the select clause and the associated tables
-   * for the from clause
-   *
-   * @param  NULL
+   * Generate the SELECT clause and the associated tables for the FROM clause.
    *
    * @return void
-   * @access public
    */
-  function select() {
+  public function select() {
     if (empty($this->_fields)) {
       return;
     }
@@ -300,16 +293,11 @@ SELECT label, value
   }
 
   /**
-   * generate the where clause and also the english language
-   * equivalent
-   *
-   * @param NULL
+   * Generate the WHERE clause and also the English language equivalent (QILL).
    *
    * @return void
-   *
-   * @access public
    */
-  function where() {
+  public function where() {
     //CRM_Core_Error::debug( 'fld', $this->_fields );
     //CRM_Core_Error::debug( 'ids', $this->_ids );
 
@@ -349,7 +337,6 @@ SELECT label, value
             // if we are coming in from listings,
             // for checkboxes the value is already in the right format and is NOT an array
             if (empty($field['is_search_range']) && is_array($value)) {
-
 
               //ignoring $op value for checkbox and multi select
               $sqlValue = [];
@@ -423,7 +410,8 @@ SELECT label, value
             }
             else {
               if ($field['is_search_range'] && is_array($value)) {
-                $this->searchRange($field['id'],
+                $this->searchRange(
+                  $field['id'],
                   $field['label'],
                   $field['data_type'],
                   $fieldName,
@@ -595,15 +583,13 @@ SELECT label, value
   }
 
   /**
-   * function that does the actual query generation
-   * basically ties all the above functions together
+   * Finalize the query and return the components of the SQL statement.
    *
-   * @param NULL
+   * Tries all the functions together to generate the SELECT, FROM, and WHERE clauses.
    *
-   * @return  array   array of strings
-   * @access public
+   * @return array [select_clause, from_clause, where_clause]
    */
-  function query() {
+  public function query() {
     $this->select();
 
     $this->where();
@@ -627,7 +613,19 @@ SELECT label, value
     ];
   }
 
-  function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
+  /**
+   * Generate WHERE and QILL clauses for a range search on a custom field.
+   *
+   * @param int $id custom field ID
+   * @param string $label custom field label
+   * @param string $type data type of the field
+   * @param string $fieldName SQL column name
+   * @param array $value associative array containing 'from' and/or 'to' values
+   * @param int $grouping grouping index for the WHERE clause
+   *
+   * @return void
+   */
+  public function searchRange(&$id, &$label, $type, $fieldName, &$value, &$grouping) {
     $qill = [];
 
     if (isset($value['from'])) {
@@ -658,4 +656,3 @@ SELECT label, value
     }
   }
 }
-

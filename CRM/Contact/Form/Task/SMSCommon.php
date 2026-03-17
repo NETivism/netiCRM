@@ -27,7 +27,6 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2016
  */
 
@@ -35,7 +34,7 @@
  * This class provides the common functionality for sending sms to one or a group of contact ids.
  */
 class CRM_Contact_Form_Task_SMSCommon {
-  const RECIEVED_SMS_ACTIVITY_SUBJECT = "SMS Received";
+  public const RECIEVED_SMS_ACTIVITY_SUBJECT = "SMS Received";
 
   public $_contactDetails = [];
 
@@ -43,6 +42,8 @@ class CRM_Contact_Form_Task_SMSCommon {
    * Pre process the provider.
    *
    * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function preProcessProvider(&$form) {
     $form->_single = FALSE;
@@ -66,6 +67,8 @@ class CRM_Contact_Form_Task_SMSCommon {
    * Build the form object.
    *
    * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function buildQuickForm(&$form) {
     $form->assign('SMSTask', TRUE);
@@ -75,7 +78,6 @@ class CRM_Contact_Form_Task_SMSCommon {
       $cid = CRM_Utils_Request::retrieve('cid', 'Positive', $form, TRUE);
       $form->_contactIds = [$cid];
     }
-
 
     if (!empty($form->_contactIds)) {
       $queryParams = [];
@@ -211,14 +213,11 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
   /**
    * Form rule.
    *
-   * @param array $fields
-   *   The input form values.
-   * @param array $dontCare
-   * @param object $self
-   *   Additional values form 'this'.
+   * @param array $fields The input form values.
+   * @param array $dontCare The files array (unused).
+   * @param CRM_Core_Form $self The form object.
    *
-   * @return bool|array
-   *   true if no errors, else array of errors
+   * @return bool|array true if no errors, else array of errors
    */
   public static function formRule($fields, $dontCare, $self) {
     $errors = [];
@@ -239,7 +238,7 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
             $self->set('force_send', TRUE);
             $self->set('has_token', TRUE);
           }
-          if(preg_match ("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)){
+          if (preg_match("/[\x{4e00}-\x{9fa5}]/u", $messageCheck)) {
             if ($messageCheck && (mb_strlen($messageCheck) > CRM_SMS_Provider::MAX_ZH_SMS_CHAR)) {
               $errors['sms_text_message'] .= ts("You can configure the SMS message body up to %1 characters", [1 => CRM_SMS_Provider::MAX_ZH_SMS_CHAR]);
               $self->set('force_send', TRUE);
@@ -267,6 +266,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
    * Process the form after the input has been submitted and validated.
    *
    * @param CRM_Core_Form $form
+   *
+   * @return void
    */
   public static function postProcess(&$form) {
 
@@ -349,7 +350,8 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
     }
     else {
-      $sendResult = CRM_Activity_BAO_Activity::sendSMS($formattedContactDetails,
+      $sendResult = CRM_Activity_BAO_Activity::sendSMS(
+        $formattedContactDetails,
         $thisValues,
         $smsParams,
         $contactIds
@@ -367,6 +369,16 @@ ORDER BY civicrm_phone.is_primary DESC, phone_id ASC";
     }
   }
 
+  /**
+   * Batch send SMS.
+   *
+   * @param array $contactDetails
+   * @param array $activityParams
+   * @param array $smsParams
+   * @param array $contactIds
+   *
+   * @return void
+   */
   public static function batchSend($contactDetails, $activityParams, $smsParams, $contactIds) {
     global $civicrm_batch;
 

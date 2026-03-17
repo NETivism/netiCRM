@@ -6,28 +6,33 @@
 class CRM_AI_Page_AJAX {
 
   // HTTP status code constants
-  const HTTP_BAD_REQUEST = 400;
-  const HTTP_UNAUTHORIZED = 401;
-  const HTTP_FORBIDDEN = 403;
-  const HTTP_NOT_FOUND = 404;
-  const HTTP_METHOD_NOT_ALLOWED = 405;
-  const HTTP_PAYLOAD_TOO_LARGE = 413;
-  const HTTP_UNSUPPORTED_MEDIA_TYPE = 415;
-  const HTTP_UNPROCESSABLE_ENTITY = 422;
-  const HTTP_TOO_MANY_REQUESTS = 429;
-  const HTTP_INTERNAL_SERVER_ERROR = 500;
-  const HTTP_BAD_GATEWAY = 502;
-  const HTTP_SERVICE_UNAVAILABLE = 503;
-  const HTTP_GATEWAY_TIMEOUT = 504;
+  public const HTTP_BAD_REQUEST = 400;
+  public const HTTP_UNAUTHORIZED = 401;
+  public const HTTP_FORBIDDEN = 403;
+  public const HTTP_NOT_FOUND = 404;
+  public const HTTP_METHOD_NOT_ALLOWED = 405;
+  public const HTTP_PAYLOAD_TOO_LARGE = 413;
+  public const HTTP_UNSUPPORTED_MEDIA_TYPE = 415;
+  public const HTTP_UNPROCESSABLE_ENTITY = 422;
+  public const HTTP_TOO_MANY_REQUESTS = 429;
+  public const HTTP_INTERNAL_SERVER_ERROR = 500;
+  public const HTTP_BAD_GATEWAY = 502;
+  public const HTTP_SERVICE_UNAVAILABLE = 503;
+  public const HTTP_GATEWAY_TIMEOUT = 504;
 
+  /**
+   * Handle chat request.
+   *
+   * @return void
+   */
   public static function chat() {
     $maxlength = 2000;
-    $toneStyle = $aiRole = $context = null;
+    $toneStyle = $aiRole = $context = NULL;
     $data = [];
     $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
       if ($jsondata === NULL) {
         self::responseError([
           'status' => 0,
@@ -85,7 +90,8 @@ class CRM_AI_Page_AJAX {
             if ($component === "Activity" && (strstr($jsondata['sourceUrl'], "atype=$mailTypeId") || strstr($jsondata['sourceUrl'], "_qf_Email_display"))) {
               $data['component'] = $component;
               break 2;
-            } elseif ($component !== "Activity") {
+            }
+            elseif ($component !== "Activity") {
               $data['component'] = $component;
               break 2;
             }
@@ -107,7 +113,8 @@ class CRM_AI_Page_AJAX {
         $country = $countries[$countryId];
         $language = $languages[$tsLocale];
         if ($toneStyle && $aiRole) {
-          $system_prompt = ts("Please use %4 language of %3 to play the role of %1 and help generate a %2.",
+          $system_prompt = ts(
+            "Please use %4 language of %3 to play the role of %1 and help generate a %2.",
             [1 => $aiRole, 2 => $toneStyle, 3 => $country, 4 => ts($language)]
           );
           $data['prompt'] = [
@@ -128,7 +135,7 @@ class CRM_AI_Page_AJAX {
         try {
           $token = CRM_AI_BAO_AICompletion::prepareChat($data);
         }
-        catch(CRM_Core_Exception $e) {
+        catch (CRM_Core_Exception $e) {
           $message = $e->getMessage();
           self::responseError([
             'status' => 0,
@@ -160,19 +167,20 @@ class CRM_AI_Page_AJAX {
           'stream' => TRUE,
           'temperature' => CRM_AI_BAO_AICompletion::TEMPERATURE_DEFAULT,
         ];
-        try{
+        try {
           $result = CRM_AI_BAO_AICompletion::chat($params);
         }
-        catch(CRM_Core_Exception $e) {
+        catch (CRM_Core_Exception $e) {
           $message = $e->getMessage();
 
           // Check if the exception message is related to cURL timeout or any cURL errors
-          if(strpos($message, "Curl Error") !== false) {
+          if (strpos($message, "Curl Error") !== FALSE) {
             self::responseSseError([
               'is_error' => 1,
               'message' => 'OpenAI Connect Error'
             ]);
-          } else {
+          }
+          else {
             self::responseError([
               'status' => 0,
               'message' => $message,
@@ -194,11 +202,17 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Get template list.
+   *
+   * @return void
+   * @throws CRM_Core_Exception
+   */
   public static function getTemplateList() {
     $data = [];
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
       if ($jsondata === NULL) {
         self::responseError([
           'status' => 0,
@@ -269,10 +283,16 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Get template by ID.
+   *
+   * @return void
+   * @throws CRM_Core_Exception
+   */
   public static function getTemplate() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
       if ($jsondata === NULL) {
         self::responseError([
           'status' => 0,
@@ -301,11 +321,16 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Set template status and title.
+   *
+   * @return void
+   */
   public static function setTemplate() {
     $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
       if ($jsondata === NULL) {
         self::responseError([
           'status' => 0,
@@ -375,11 +400,16 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Set share status.
+   *
+   * @return void
+   */
   public static function setShare() {
     $result = FALSE;
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
       if ($jsondata === NULL) {
         self::responseError([
           'status' => 0,
@@ -422,13 +452,18 @@ class CRM_AI_Page_AJAX {
     }
   }
 
+  /**
+   * Generate image by text prompt.
+   *
+   * @return void
+   */
   public static function generateImage() {
     $maxlength = 1000;
 
     // Only handle POST requests for direct image generation
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
 
       if ($jsondata === NULL) {
         self::responseError([
@@ -490,7 +525,7 @@ class CRM_AI_Page_AJAX {
       // Use complete AIGenImage workflow with database integration
       // Wrap only the image generation logic, not the response output
       $imageGenerator = new CRM_AI_BAO_AIGenImage();
-      $generateResult = null;
+      $generateResult = NULL;
 
       try {
         $generateResult = $imageGenerator->generate([
@@ -498,7 +533,8 @@ class CRM_AI_Page_AJAX {
           'style' => $jsondata['style'] ?? '',
           'ratio' => $jsondata['ratio'] ?? '1:1'
         ]);
-      } catch (Exception $e) {
+      }
+      catch (Exception $e) {
         // Handle image generation errors only
         // Parse error code and preserve original technical message
         $errorMessage = $e->getMessage();
@@ -507,9 +543,11 @@ class CRM_AI_Page_AJAX {
 
         if ($errorCode === 'GATEWAY_TIMEOUT') {
           $statusCode = self::HTTP_GATEWAY_TIMEOUT;
-        } elseif ($errorCode === 'BAD_GATEWAY' || $errorCode === 'API_ERROR') {
+        }
+        elseif ($errorCode === 'BAD_GATEWAY' || $errorCode === 'API_ERROR') {
           $statusCode = self::HTTP_BAD_GATEWAY;
-        } elseif ($errorCode === 'VALIDATION_ERROR') {
+        }
+        elseif ($errorCode === 'VALIDATION_ERROR') {
           $statusCode = self::HTTP_UNPROCESSABLE_ENTITY;
         }
 
@@ -541,7 +579,8 @@ class CRM_AI_Page_AJAX {
             'advanced' => $generateResult['advanced'] ?? []
           ],
         ]);
-      } else {
+      }
+      else {
         // Handle generation failure
         // Parse error code and preserve original technical message
         $errorMessage = $generateResult['error'] ?? 'Unknown error occurred during image generation';
@@ -550,9 +589,11 @@ class CRM_AI_Page_AJAX {
         $statusCode = self::HTTP_BAD_GATEWAY;
         if ($errorCode === 'CONTENT_VIOLATION') {
           $statusCode = self::HTTP_UNPROCESSABLE_ENTITY;
-        } elseif ($errorCode === 'PROMPT_INJECTION') {
+        }
+        elseif ($errorCode === 'PROMPT_INJECTION') {
           $statusCode = self::HTTP_BAD_REQUEST;
-        } elseif ($errorCode === 'PROCESSING_ERROR') {
+        }
+        elseif ($errorCode === 'PROCESSING_ERROR') {
           $statusCode = self::HTTP_INTERNAL_SERVER_ERROR;
         }
 
@@ -571,10 +612,15 @@ class CRM_AI_Page_AJAX {
     ], self::HTTP_BAD_REQUEST);
   }
 
+  /**
+   * Get sample image by locale and style/ratio.
+   *
+   * @return void
+   */
   public static function getSampleImage() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
 
       if ($jsondata === NULL) {
         self::responseError([
@@ -621,7 +667,7 @@ class CRM_AI_Page_AJAX {
       }
 
       $jsonContent = file_get_contents($dataPath);
-      $promptsData = json_decode($jsonContent, true);
+      $promptsData = json_decode($jsonContent, TRUE);
 
       if ($promptsData === NULL || !isset($promptsData['prompts']) || empty($promptsData['prompts'])) {
         self::responseError([
@@ -675,10 +721,15 @@ class CRM_AI_Page_AJAX {
     ]);
   }
 
+  /**
+   * Get image generation history for current user.
+   *
+   * @return void
+   */
   public static function getImageHistory() {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_SERVER['CONTENT_TYPE'] == 'application/json') {
       $jsonString = file_get_contents('php://input');
-      $jsondata = json_decode($jsonString, true);
+      $jsondata = json_decode($jsonString, TRUE);
 
       if ($jsondata === NULL) {
         self::responseError([
@@ -785,7 +836,8 @@ class CRM_AI_Page_AJAX {
             'status_id' => (int)$dao->status_id,
           ];
         }
-      } catch (Exception $e) {
+      }
+      catch (Exception $e) {
         self::responseError([
           'status' => 0,
           'message' => 'Database error occurred while retrieving image history.',
@@ -811,7 +863,8 @@ class CRM_AI_Page_AJAX {
             ],
           ],
         ]);
-      } else {
+      }
+      else {
         self::responseSucess([
           'status' => 1,
           'message' => 'Image history retrieved successfully.',
@@ -848,7 +901,7 @@ class CRM_AI_Page_AJAX {
     // Filter by style if provided
     if (isset($filters['style']) && !empty($filters['style'])) {
       $style = $filters['style'];
-      $filteredPrompts = array_filter($filteredPrompts, function($prompt) use ($style) {
+      $filteredPrompts = array_filter($filteredPrompts, function ($prompt) use ($style) {
         return isset($prompt['style']) && $prompt['style'] === $style;
       });
     }
@@ -856,7 +909,7 @@ class CRM_AI_Page_AJAX {
     // Filter by ratio if provided
     if (isset($filters['ratio']) && !empty($filters['ratio'])) {
       $ratio = $filters['ratio'];
-      $filteredPrompts = array_filter($filteredPrompts, function($prompt) use ($ratio) {
+      $filteredPrompts = array_filter($filteredPrompts, function ($prompt) use ($ratio) {
         return isset($prompt['ratio']) && $prompt['ratio'] === $ratio;
       });
     }
@@ -869,13 +922,14 @@ class CRM_AI_Page_AJAX {
    * This function handles the response in case of an error.
    *
    * @param mixed $error The error message or object that needs to be sent as a response.
+   * @param int $statusCode The HTTP status code.
    */
   public static function responseError($error, $statusCode = 400) {
     // 405 status code needs special handling for Allow header
     if ($statusCode === self::HTTP_METHOD_NOT_ALLOWED) {
       header('Allow: POST');
     }
-    
+
     http_response_code($statusCode);
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode($error);
@@ -918,6 +972,7 @@ class CRM_AI_Page_AJAX {
    * @param array $jsondata The JSON data to be validated.
    * @param array $allowedInput An associative array where the keys are what we expect to find in the JSON data,
    *                            and the values are the types that these inputs should have.
+   * @param array $requiredFields The required fields.
    * @return bool Returns true if all inputs exist and are of the correct type; otherwise returns false.
    */
   public static function validateJsonData($jsondata, $allowedInput, $requiredFields = []) {
@@ -929,34 +984,35 @@ class CRM_AI_Page_AJAX {
     // Check required fields exist
     foreach ($requiredFields as $field) {
       if (!isset($jsondata[$field])) {
-        return false;
+        return FALSE;
       }
     }
 
     // Check type validation for all provided fields
     foreach ($jsondata as $key => $value) {
       if (!isset($allowedInput[$key])) {
-        return false; // Unknown field
+        return FALSE; // Unknown field
       }
 
       $expectedType = $allowedInput[$key];
       if ($expectedType === 'integer' || $expectedType === 'double') {
         if (!is_numeric($value)) {
-          return false;
+          return FALSE;
         }
-      } else if (gettype($value) != $expectedType) {
-        return false;
+      }
+      elseif (gettype($value) != $expectedType) {
+        return FALSE;
       }
     }
 
-    return true;
+    return TRUE;
   }
 
   /**
    * Extract error code from exception message
    *
    * @param string $errorMessage Original error message
-   * @return string Error code
+   * @return string The error code.
    */
   private static function parseErrorCode($errorMessage) {
     // Pattern to extract error codes from AITransPrompt exceptions
@@ -967,16 +1023,16 @@ class CRM_AI_Page_AJAX {
     }
 
     // Check for timeout errors
-    if (strpos($errorMessage, 'timed out') !== false || strpos($errorMessage, 'timeout') !== false) {
+    if (strpos($errorMessage, 'timed out') !== FALSE || strpos($errorMessage, 'timeout') !== FALSE) {
       return 'GATEWAY_TIMEOUT';
     }
 
     // Check for other common error patterns related to API issues
-    if (strpos($errorMessage, 'Image generation failed') !== false || strpos($errorMessage, 'API error') !== false) {
+    if (strpos($errorMessage, 'Image generation failed') !== FALSE || strpos($errorMessage, 'API error') !== FALSE) {
       return 'BAD_GATEWAY';
     }
 
-    if (strpos($errorMessage, 'validation') !== false || strpos($errorMessage, 'invalid') !== false) {
+    if (strpos($errorMessage, 'validation') !== FALSE || strpos($errorMessage, 'invalid') !== FALSE) {
       return 'VALIDATION_ERROR';
     }
 

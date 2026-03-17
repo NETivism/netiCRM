@@ -27,13 +27,9 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
-
-
 
 /**
  * Class for activity task actions
@@ -79,16 +75,21 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
   /**
    * build all the data structures needed to build the form
    *
-   * @param
-   *
    * @return void
-   * @access public
    */
-  function preProcess() {
+  public function preProcess() {
     self::preProcessCommon($this);
   }
 
-  static function preProcessCommon(&$form, $useTable = FALSE) {
+  /**
+   * Common pre process
+   *
+   * @param CRM_Core_Form $form
+   * @param bool $useTable
+   *
+   * @return void
+   */
+  public static function preProcessCommon(&$form, $useTable = FALSE) {
     $form->_activityHolderIds = [];
 
     $values = $form->controller->exportValues($form->get('searchFormName'));
@@ -108,7 +109,12 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
     }
     else {
       $queryParams = $form->get('queryParams');
-      $query = new CRM_Contact_BAO_Query($queryParams, NULL, NULL, FALSE, FALSE,
+      $query = new CRM_Contact_BAO_Query(
+        $queryParams,
+        NULL,
+        NULL,
+        FALSE,
+        FALSE,
         CRM_Contact_BAO_Query::MODE_ACTIVITY
       );
       $result = $query->searchQuery(0, 0, NULL);
@@ -139,15 +145,18 @@ class CRM_Activity_Form_Task extends CRM_Core_Form {
       $session->replaceUserContext(CRM_Utils_System::url('civicrm/activity/search', $urlParams));
     }
     else {
-      $session->replaceUserContext(CRM_Utils_System::url("civicrm/contact/search/$searchFormName",
-          $urlParams
-        ));
+      $session->replaceUserContext(CRM_Utils_System::url(
+        "civicrm/contact/search/$searchFormName",
+        $urlParams
+      ));
     }
   }
 
   /**
    * Given the membership id, compute the contact id
    * since its used for things like send email
+   *
+   * @return void
    */
   public function setContactIDs() {
     $IDs = CRM_Utils_Array::implode(',', $this->_activityHolderIds);
@@ -168,13 +177,15 @@ SELECT source_contact_id
    * the form with a customized title for the main Submit
    *
    * @param string $title title of the main button
-   * @param string $type  button type for the form after processing
+   * @param string $nextType button type for the form after processing
+   * @param string $backType button type for the form before processing
+   * @param bool $submitOnce
    *
    * @return void
-   * @access public
    */
-  function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = null) {
-    $this->addButtons([
+  public function addDefaultButtons($title, $nextType = 'next', $backType = 'back', $submitOnce = NULL) {
+    $this->addButtons(
+      [
         ['type' => $nextType,
           'name' => $title,
           'isDefault' => TRUE,
@@ -186,4 +197,3 @@ SELECT source_contact_id
     );
   }
 }
-

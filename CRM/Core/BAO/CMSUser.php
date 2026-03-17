@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -37,20 +35,14 @@
  *  this file contains functions for synchronizing cms users with CiviCRM contacts
  */
 
-
 class CRM_Core_BAO_CMSUser {
 
   /**
-   * Function for synchronizing cms users with CiviCRM contacts
-   *
-   * @param NULL
+   * Synchronize all users from the CMS user table to CiviCRM contacts.
    *
    * @return void
-   *
-   * @static
-   * @access public
    */
-  static function synchronize() {
+  public static function synchronize() {
     //start of schronization code
     $config = CRM_Core_Config::singleton();
 
@@ -111,16 +103,14 @@ class CRM_Core_BAO_CMSUser {
   }
 
   /**
-   * Function to create CMS user using Profile
+   * Create a CMS user and associate it with a CiviCRM contact.
    *
-   * @param array  $params associated array
-   * @param string $mail email id for cms user
+   * @param array &$params associative array of user details
+   * @param string $mail email address for the CMS user
    *
-   * @return int contact id that has been created
-   * @access public
-   * @static
+   * @return int|bool the CMS user ID on success, or FALSE on failure
    */
-  static function create(&$params, $mail) {
+  public static function create(&$params, $mail) {
     $config = CRM_Core_Config::singleton();
 
     $ufID = $config->userSystem->createUser($params, $mail);
@@ -143,16 +133,16 @@ class CRM_Core_BAO_CMSUser {
   }
 
   /**
-   * Function to create Form for CMS user using Profile
+   * Add CMS user account creation fields to a CiviCRM form.
    *
-   * @param object  $form
-   * @param integer $gid id of group of profile
-   * @param string $emailPresent true, if the profile field has email(primary)
+   * @param CRM_Core_Form &$form the form object
+   * @param int $gid ID of the profile group
+   * @param bool $emailPresent TRUE if an email field is present in the profile
+   * @param int $action the form action (e.g., CRM_Core_Action::ADD)
    *
-   * @access public
-   * @static
+   * @return bool|void FALSE if registration is disabled, otherwise adds elements to the form
    */
-  static function buildForm(&$form, $gid, $emailPresent, $action = CRM_Core_Action::NONE) {
+  public static function buildForm(&$form, $gid, $emailPresent, $action = CRM_Core_Action::NONE) {
     $config = CRM_Core_Config::singleton();
     $showCMS = FALSE;
 
@@ -172,7 +162,7 @@ class CRM_Core_BAO_CMSUser {
     // if cms is drupal having version greater than equal to 5.1
     // we also need email verification enabled, else we dont do it
     // then showCMS will true
-    if ($isDrupal OR $isJoomla) {
+    if ($isDrupal or $isJoomla) {
       if ($gid) {
         $isCMSUser = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'is_cms_user');
       }
@@ -215,7 +205,7 @@ class CRM_Core_BAO_CMSUser {
             $form->assign('cmsQfKey', $qfKey);
             $form->assign('cmsCtrName', $controllerName);
             $form->add('text', 'cms_name', ts('Username'), NULL, $required);
-            if (($isDrupal && !CRM_Utils_System::userEmailVerification()) OR ($isJoomla)) {
+            if (($isDrupal && !CRM_Utils_System::userEmailVerification()) or ($isJoomla)) {
               $form->add('password', 'cms_pass', ts('Password'));
               $form->add('password', 'cms_confirm_pass', ts('Confirm Password'));
             }
@@ -264,7 +254,8 @@ class CRM_Core_BAO_CMSUser {
 
       if (!empty($args)) {
         // append destination so user is returned to form they came from after login
-        $destination = CRM_Utils_System::currentPath() . "?" . http_build_query($args, '', '&');;
+        $destination = CRM_Utils_System::currentPath() . "?" . http_build_query($args, '', '&');
+        ;
         $loginUrl .= '?destination=' . urlencode($destination);
       }
     }
@@ -272,7 +263,16 @@ class CRM_Core_BAO_CMSUser {
     $form->assign('showCMS', $showCMS);
   }
 
-  static function formRule($fields, $files, $self) {
+  /**
+   * Validation rule for CMS user account creation.
+   *
+   * @param array $fields associative array of form field values
+   * @param array $files associative array of uploaded files
+   * @param CRM_Core_Form $self the form object
+   *
+   * @return array|bool error array if validation fails, otherwise TRUE
+   */
+  public static function formRule($fields, $files, $self) {
     if (!CRM_Utils_Array::value('cms_create_account', $fields)) {
       return TRUE;
     }
@@ -300,7 +300,7 @@ class CRM_Core_BAO_CMSUser {
       }
 
       if ($emailName == NULL) {
-        $errors['_qf_default'] == ts('Could not find an email address.');
+        $errors['_qf_default'] = ts('Could not find an email address.');
         return $errors;
       }
 
@@ -312,7 +312,7 @@ class CRM_Core_BAO_CMSUser {
         $errors[$emailName] = ts('Please specify a valid email address.');
       }
 
-      if (($isDrupal && !CRM_Utils_System::userEmailVerification()) OR ($isJoomla)) {
+      if (($isDrupal && !CRM_Utils_System::userEmailVerification()) or ($isJoomla)) {
         if (empty($fields['cms_pass']) ||
           empty($fields['cms_confirm_pass'])
         ) {
@@ -328,7 +328,7 @@ class CRM_Core_BAO_CMSUser {
       }
 
       // now check that the cms db does not have the user name and/or email
-      if ($isDrupal OR $isJoomla) {
+      if ($isDrupal or $isJoomla) {
         $params = ['name' => $fields['cms_name'],
           'mail' => $fields[$emailName],
         ];
@@ -340,16 +340,13 @@ class CRM_Core_BAO_CMSUser {
   }
 
   /**
-   * Function to check if a cms user already exists.
+   * Check if a CMS user exists based on contact details (primarily email).
    *
-   * @param  Array $contact array of contact-details
+   * @param array &$contact associative array of contact details
    *
-   * @return uid if user exists, false otherwise
-   *
-   * @access public
-   * @static
+   * @return int|bool the CMS user ID if found, otherwise FALSE
    */
-  static function userExists(&$contact) {
+  public static function userExists(&$contact) {
     $config = CRM_Core_Config::singleton();
 
     $isDrupal = ucfirst($config->userFramework) == 'Drupal' ? TRUE : FALSE;
@@ -395,7 +392,14 @@ class CRM_Core_BAO_CMSUser {
     return $result;
   }
 
-  static function &dbHandle(&$config) {
+  /**
+   * Get a database handle for the CMS database.
+   *
+   * @param CRM_Core_Config &$config the config singleton
+   *
+   * @return object|CRM_Core_Error the database handle object
+   */
+  public static function &dbHandle(&$config) {
     CRM_Core_Error::ignoreException();
     $db_uf = DB::connect($config->userFrameworkDSN);
     CRM_Core_Error::setCallback();
@@ -404,12 +408,12 @@ class CRM_Core_BAO_CMSUser {
     ) {
       $session = CRM_Core_Session::singleton();
       $session->pushUserContext(CRM_Utils_System::url('civicrm/admin', 'reset=1'));
-       return CRM_Core_Error::statusBounce(ts("Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
-          [1 => $db_uf->getMessage()]
-        ));
+      return CRM_Core_Error::statusBounce(ts(
+        "Cannot connect to UF db via %1. Please check the CIVICRM_UF_DSN value in your civicrm.settings.php file",
+        [1 => $db_uf->getMessage()]
+      ));
     }
     $db_uf->query('/*!40101 SET NAMES utf8mb4 */');
     return $db_uf;
   }
 }
-

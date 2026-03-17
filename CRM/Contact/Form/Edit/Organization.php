@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -43,9 +41,11 @@ class CRM_Contact_Form_Edit_Organization {
   /**
    * This function provides the HTML form elements that are specific to this Contact Type
    *
-   * @access public
+   * @param object $form (reference) form object
    *
-   * @return None
+   * @return void
+   * @access public
+   * @static
    */
   public static function buildQuickForm(&$form) {
     $attributes = CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact');
@@ -59,7 +59,10 @@ class CRM_Contact_Form_Edit_Organization {
     $form->addElement('text', 'legal_name', ts('Legal Name'), $attributes['legal_name']);
 
     // nick_name
-    $form->addElement('text', 'nick_name', ts('Nick Name'),
+    $form->addElement(
+      'text',
+      'nick_name',
+      ts('Nick Name'),
       CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'nick_name')
     );
 
@@ -68,14 +71,26 @@ class CRM_Contact_Form_Edit_Organization {
 
     $form->addElement('text', 'contact_source', ts('Source'));
     $form->add('text', 'external_identifier', ts('External Id'), CRM_Core_DAO::getAttribute('CRM_Contact_DAO_Contact', 'external_identifier'), FALSE);
-    $form->addRule('external_identifier',
+    $form->addRule(
+      'external_identifier',
       ts('External ID already exists in Database.'),
       'objectExists',
       ['CRM_Contact_DAO_Contact', $form->_contactId, 'external_identifier']
     );
   }
 
-  static function formRule($fields, $files, $contactID = NULL) {
+  /**
+   * global form rule
+   *
+   * @param array $fields    the input form values
+   * @param array $files     the uploaded files if any
+   * @param int   $contactID contact id
+   *
+   * @return array|boolean true if no errors, else array of errors
+   * @access public
+   * @static
+   */
+  public static function formRule($fields, $files, $contactID = NULL) {
 
     $errors = [];
 
@@ -93,4 +108,3 @@ class CRM_Contact_Form_Edit_Organization {
     return empty($errors) ? TRUE : $errors;
   }
 }
-

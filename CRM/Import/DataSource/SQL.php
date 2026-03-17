@@ -27,15 +27,17 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
-
 class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
 
+  /**
+   * Get info about this data source.
+   *
+   * @return array
+   */
   public function getInfo() {
     return [
       'title' => ts('SQL Query'),
@@ -43,15 +45,39 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     ];
   }
 
-  public static function preProcess(&$form) {}
+  /**
+   * Pre-process form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
+  public static function preProcess(&$form) {
+  }
 
+  /**
+   * Build the form.
+   *
+   * @param CRM_Core_Form $form
+   *
+   * @return void
+   */
   public static function buildQuickForm(&$form) {
     $form->add('hidden', 'hidden_dataSource', 'CRM_Import_DataSource_SQL');
     $form->add('textarea', 'sqlQuery', ts('Specify SQL Query'), 'rows=10 cols=45', TRUE);
     $form->addFormRule(['CRM_Import_DataSource_SQL', 'formRule'], $form);
   }
 
-  static function formRule($fields, $files, $form) {
+  /**
+   * Form rule for validation.
+   *
+   * @param array $fields
+   * @param array $files
+   * @param CRM_Core_Form $form
+   *
+   * @return mixed
+   */
+  public static function formRule($fields, $files, $form) {
     $errors = [];
 
     // poor man's query validation (case-insensitive regex matching on word boundaries)
@@ -65,10 +91,20 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     return $errors ? $errors : TRUE;
   }
 
-
+  /**
+   * Process the form.
+   *
+   * @param CRM_Core_Form $form
+   * @param array $params
+   * @param object $db
+   *
+   * @return void
+   */
   public static function postProcess(&$form, &$params, &$db) {
-    $importJob = new CRM_Import_ImportJob(CRM_Utils_Array::value('import_table_name', $params),
-      $params['sqlQuery'], TRUE
+    $importJob = new CRM_Import_ImportJob(
+      CRM_Utils_Array::value('import_table_name', $params),
+      $params['sqlQuery'],
+      TRUE
     );
     $tableName = $importJob->getTableName();
     $form->set('importTableName', $tableName);
@@ -78,4 +114,3 @@ class CRM_Import_DataSource_SQL extends CRM_Import_DataSource {
     $form->set('statusFieldName', $fields['statusFieldName']);
   }
 }
-

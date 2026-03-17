@@ -27,9 +27,7 @@
 
 /**
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
- * $Id$
  *
  */
 
@@ -72,7 +70,6 @@
  *      'data' - array
  *
  *
- * @package CRM
  * @copyright CiviCRM LLC (c) 2004-2010
  * $Id: $
  *
@@ -86,14 +83,9 @@ class CRM_Utils_Tree {
   private $tree;
 
   /**
-   * Constructor for the tree.
+   * Constructor. Creates the tree with a single root node.
    *
-   * @param string $root
-   *
-   * @return CRM_Utils_Tree
-
-   * @access public
-   *
+   * @param string $nodeName  The name for the root node.
    */
   public function __construct($nodeName) {
     // create the root node
@@ -104,14 +96,13 @@ class CRM_Utils_Tree {
   }
 
   /**
-   * Find a node that matches the given string
+   * Recursively search for a node by name within a subtree.
    *
-   * @param string      $name       name of the node we are searching for.
-   * @param array (ref) $parentNode which parent node should we search in ?
+   * @param string $name        The node name to search for.
+   * @param array  $parentNode  The subtree root to search within (passed by reference).
+   *                            If empty/falsy, the search starts from the tree root.
    *
-   * @return array(ref) | false node if found else false
-   *
-   * @access public
+   * @return array|false  A reference to the matching node array, or FALSE if not found.
    */
   //public function &findNode(&$parentNode, $name)
   public function &findNode($name, &$parentNode) {
@@ -144,27 +135,22 @@ class CRM_Utils_Tree {
   }
 
   /**
-   * Function to check if node is a leaf node.
-   * Currently leaf nodes are strings and non-leaf nodes are arrays
+   * Determine whether a node has no children (is a leaf node).
    *
-   * @param array(ref) $node node which needs to checked
+   * @param array $node  The node to check (passed by reference).
    *
-   * @return boolean
-   *
-   * @access public
+   * @return bool  TRUE if the node has children, FALSE if it is a leaf.
    */
   public function isLeafNode(&$node) {
     return (count($node['children']) ? TRUE : FALSE);
   }
 
   /**
-   * Create a node
+   * Create and return a new node array with the given name.
    *
-   * @param string $name
+   * @param string $name  The name for the new node.
    *
-   * @return array (ref)
-   *
-   * @access public
+   * @return array  A reference to the newly created node array with keys 'name', 'children', and 'data'.
    */
   public function &createNode($name) {
     $node['name'] = $name;
@@ -175,14 +161,12 @@ class CRM_Utils_Tree {
   }
 
   /**
-   * Add node
+   * Add a node as a child of the named parent node.
    *
-   * @param string $parentName - name of the parent ?
-   * @param array  (ref)       - node to be added
+   * @param string $parentName  The name of the parent node to attach the child to.
+   * @param array  $node        The node to add (passed by reference).
    *
-   * @return none
-   *
-   * @access public
+   * @return void
    */
   public function addNode($parentName, &$node) {
     $temp = '';
@@ -192,15 +176,13 @@ class CRM_Utils_Tree {
   }
 
   /**
-   * Add Data
+   * Attach arbitrary data to a named child node within a parent node.
    *
-   * @param string $parentName - name of the parent ?
-   * @param mixed              - data to be added
-   * @param string             - key to be used (optional)
+   * @param string $parentName  The name of the parent node to search within.
+   * @param string $childName   The name of the child node to attach data to.
+   * @param mixed  $data        The data to store in the child node's 'data' array.
    *
-   * @return none
-   *
-   * @access public
+   * @return void
    */
   public function addData($parentName, $childName, $data) {
     $temp = '';
@@ -215,29 +197,20 @@ class CRM_Utils_Tree {
   }
 
   /**
-   * Get Tree
+   * Return the entire tree structure.
    *
-   * @param none
-   *
-   * @return tree
-   *
-   * @access public
+   * @return array  The internal tree array with a 'rootNode' key.
    */
   public function getTree() {
     return $this->tree;
   }
 
   /**
-   * print the tree
+   * Print the entire tree structure for debugging.
    *
-   * @param none
-   *
-   * @return none
-   *
-   * @access public
+   * @return void
    */
   public function display() {
     print_r($this->tree);
   }
 }
-
