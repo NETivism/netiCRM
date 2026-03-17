@@ -177,6 +177,13 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
     $config = CRM_Core_Config::singleton();
     $cke4Path = $config->resourceBase . 'packages/ckeditor/ckeditor.js?' . $config->ver;
 
+    // Detect which editor the system actually loaded via addWysiwyg
+    $systemEditor = strtolower(CRM_Utils_Array::value(
+      CRM_Core_BAO_Preferences::value('editor_id'),
+      CRM_Core_PseudoConstant::wysiwygEditor()
+    ));
+    $defaultEditorType = ($systemEditor === 'ckeditor5') ? 'cke5' : 'cke4';
+
     // Prepare CKE4 configuration (matching ckeditor.php logic)
     $plugins = array('widget', 'lineutils', 'mediaembed', 'tableresize', 'image2');
 
@@ -236,8 +243,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       <div class="content">
         <select id="editor-format-switcher" onchange="switchEditorFormat(this.value)" style="padding: 4px 8px;">
           <option value="">請選擇編輯器...</option>
-          <option value="cke4">CKEditor 4 (傳統版)</option>
-          <option value="cke5" selected>CKEditor 5 (新版)</option>
+          <option value="cke4"' . ($defaultEditorType === 'cke4' ? ' selected' : '') . '>CKEditor 4 (傳統版)</option>
+          <option value="cke5"' . ($defaultEditorType === 'cke5' ? ' selected' : '') . '>CKEditor 5 (新版)</option>
         </select>
         <span id="editor-switch-status" style="margin-left: 10px; color: #666;"></span>
       </div>
@@ -267,18 +274,19 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
       }
 
       let currentEditor = null;
-      let currentEditorType = "cke5"; // Default to CKE5
+      let currentEditorType = "' . $defaultEditorType . '";
       const editorElement = document.querySelector("[name=description]");
       const statusSpan = document.getElementById("editor-switch-status");
 
-      // Wait for page to load before initializing default editor
+      // Wait for page to load before detecting initial editor status
       cj(document).ready(function() {
-        // CKE5 should already be initialized by ckeditor5.php
-        // Just store the reference
         setTimeout(function() {
-          if (window.CKEDITOR_5 && window.CKEDITOR_5.ClassicEditor) {
-            // Find the CKE5 instance
+          if (currentEditorType === "cke5" && window.CKEDITOR_5 && window.CKEDITOR_5.ClassicEditor) {
             statusSpan.textContent = "✓ CKEditor 5 已載入";
+            statusSpan.style.color = "green";
+          }
+          else if (currentEditorType === "cke4" && window.CKEDITOR && window.CKEDITOR.instances && window.CKEDITOR.instances[editorElement.name]) {
+            statusSpan.textContent = "✓ CKEditor 4 已載入";
             statusSpan.style.color = "green";
           }
         }, 1000);
@@ -412,9 +420,16 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
           cj(editorElement).addClass("ckeditor-processed");
         }
 
+        // Destroy any existing CKE4 instance to prevent editor-element-conflict
+        if (window.CKEDITOR.instances && window.CKEDITOR.instances[editorElement.name]) {
+          window.CKEDITOR.instances[editorElement.name].destroy();
+        }
+
         // Initialize CKE4 (matching ckeditor.php:109)
-        // Note: Do NOT pass config here, set it after replace (as ckeditor.php does)
         const editor = window.CKEDITOR.replace(editorElement.name);
+        if (!editor) {
+          throw new Error("CKEDITOR.replace returned null for " + editorElement.name);
+        }
 
         // Get the editor instance
         const instance = window.CKEDITOR.instances[editorElement.name];

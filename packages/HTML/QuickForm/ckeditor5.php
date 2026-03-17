@@ -180,6 +180,14 @@ cj(function() {
     })
     .then(editor => {
       console.log('CKEditor 5 initialized successfully for element:', element.id || element.name);
+      // Store instance reference for external access (e.g. editor switcher)
+      var ckDiv = element.nextElementSibling;
+      if (ckDiv && ckDiv.classList.contains('ck-editor')) {
+        var editableDiv = ckDiv.querySelector('.ck-editor__editable');
+        if (editableDiv) {
+          editableDiv.ckeditorInstance = editor;
+        }
+      }
       // Prevent form navigation on key press
       editor.model.document.on('change:data', () => {
         global_formNavigate = false;
