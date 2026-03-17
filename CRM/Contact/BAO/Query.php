@@ -1173,7 +1173,7 @@ class CRM_Contact_BAO_Query {
             $this->_element['group_contact_id'] = 1;
             $this->_select['status'] = "$tbName.status as status";
             $this->_element['status'] = 1;
-            $this->_tables[$tbName] = 1;
+            $this->_fromClause .= " LEFT JOIN civicrm_group_contact {$tbName} ON {$tbName}.contact_id = contact_a.id AND {$tbName}.group_id = {$groupId} ";
           }
         }
         $this->_useGroupBy = TRUE;
@@ -2690,10 +2690,6 @@ class CRM_Contact_BAO_Query {
   public function group(&$values) {
     list($name, $op, $value, $grouping, $wildcard) = $values;
 
-    if (count($value) > 1) {
-      $this->_useDistinct = TRUE;
-    }
-
     $groupNames = CRM_Core_PseudoConstant::group();
     $groupIds = CRM_Utils_Array::implode(',', array_keys($value, 1));
 
@@ -2707,9 +2703,7 @@ class CRM_Contact_BAO_Query {
     $statii = [];
     $in = FALSE;
     $gcsValues = &$this->getWhereValues('group_contact_status', $grouping);
-    if ($gcsValues &&
-      is_array($gcsValues[2])
-    ) {
+    if ($gcsValues && is_array($gcsValues[2])) {
       foreach ($gcsValues[2] as $k => $v) {
         if ($v) {
           if ($k == 'Added') {
@@ -2724,53 +2718,48 @@ class CRM_Contact_BAO_Query {
       $in = TRUE;
     }
 
-    $skipGroup = FALSE;
-    if (count($value) == 1 &&
-      count($statii) == 1 &&
-      $statii[0] == "'Added'"
-    ) {
-      // check if smart group, if so we can get rid of that one additional
-      // left join
-      $groupIDs = array_keys($value);
-
-      if (CRM_Utils_Array::value(0, $groupIDs) &&
-        CRM_Core_DAO::getFieldValue(
-          'CRM_Contact_DAO_Group',
-          $groupIDs[0],
-          'saved_search_id'
-        )
-      ) {
-        $skipGroup = TRUE;
-      }
-    }
-
-    if (!$skipGroup) {
-      $gcTable = "`civicrm_group_contact-{$groupIds}`";
-      $this->_tables[$gcTable] = $this->_whereTables[$gcTable] = " LEFT JOIN civicrm_group_contact {$gcTable} ON contact_a.id = {$gcTable}.contact_id ";
-    }
-
+    // Build WHERE clause using EXISTS subquery instead of LEFT JOIN, to reduce
+    // database load and avoid duplicate rows.
     $groupClause = NULL;
+    $statii_qill = [];
 
-    if (!$skipGroup) {
-      if (strstr($op, 'NULL')) {
-        $groupClause = "{$gcTable}.group_id $op";
-        $qill = ts('Group').ts($op);
+    if (strstr($op, 'NULL')) {
+      // IS NULL  → contact has no group membership at all
+      // IS NOT NULL → contact has at least one group membership
+      if ($op === 'IS NULL') {
+        $groupClause = "NOT EXISTS (SELECT 1 FROM civicrm_group_contact cgc WHERE cgc.contact_id = contact_a.id)";
       }
       else {
-        $groupClause = "{$gcTable}.group_id $op ( $groupIds )";
-        $qill = ts('Contacts %1', [1 => $op]);
-        $qill .= ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
+        $groupClause = "EXISTS (SELECT 1 FROM civicrm_group_contact cgc WHERE cgc.contact_id = contact_a.id)";
       }
-      if (!empty($statii) && $op != 'IS NULL') {
-        $groupClause .= " AND {$gcTable}.status IN (" . CRM_Utils_Array::implode(', ', $statii) . ")";
+      $qill = ts('Group') . ' ' . ts($op);
+    }
+    else {
+      $statusSql = '';
+      if (!empty($statii)) {
+        $statusSql = " AND cgc.status IN (" . CRM_Utils_Array::implode(', ', $statii) . ")";
         foreach ($statii as $v) {
-          $v = trim($v, "'");
-          $statii_qill[] = ts($v);
+          $statii_qill[] = ts(trim($v, "'"));
         }
-        $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $statii_qill);
+      }
+
+      if ($op === 'IN') {
+        $groupClause = "EXISTS (SELECT 1 FROM civicrm_group_contact cgc WHERE cgc.contact_id = contact_a.id AND cgc.group_id IN ($groupIds){$statusSql})";
+      }
+      else {
+        // NOT IN: use NOT EXISTS so contacts with no group membership are also matched
+        $groupClause = "NOT EXISTS (SELECT 1 FROM civicrm_group_contact cgc WHERE cgc.contact_id = contact_a.id AND cgc.group_id IN ($groupIds){$statusSql})";
+      }
+
+      $qill = ts('Contacts %1', [1 => $op]);
+      $qill .= ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
+      if (!empty($statii_qill)) {
+        $qill .= ' ' . ts('AND') . ' ' . ts('Group Status') . ' - ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $statii_qill);
       }
     }
 
+    // Merge with smart group (savedSearch) cache clause when 'Added' status is selected.
+    // Smart group members live in civicrm_group_contact_cache, not civicrm_group_contact.
     if ($in) {
       $ssClause = $this->savedSearch($values);
       if ($ssClause) {
@@ -2780,21 +2769,6 @@ class CRM_Contact_BAO_Query {
         else {
           $groupClause = $ssClause;
         }
-      }
-
-      if (strstr($op, 'NULL')) {
-        $qill = ts('Group').ts($op);
-      }
-      else {
-        $qill = ts('Contacts %1', [1 => $op]);
-        $qill .= ' ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $names);
-      }
-      if (!empty($statii) && $op != 'IS NULL') {
-        foreach ($statii as $k => $v) {
-          $v = trim($v, "'");
-          $statii_qill[$k] = ts($v);
-        }
-        $qill .= " " . ts('AND') . " " . ts('Group Status') . ' - ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $statii_qill);
       }
     }
 
