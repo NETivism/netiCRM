@@ -2111,22 +2111,31 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
     else {
       $order = 'ASC';
     }
-    $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date $order";
+    $sql = "SELECT id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date $order LIMIT 1";
     $params = [1 => [$recurringId, 'Positive']];
     $findContributionId = CRM_Core_DAO::singleValueQuery($sql, $params);
 
-    // Find FirstContribution
+    // Find CopyContribution
     $findContribution = new CRM_Contribute_DAO_Contribution();
     $findContribution->id = $findContributionId;
-    $findContribution->find(TRUE);
+    $found = $findContribution->find(TRUE);
 
-    $ppid = $findContribution->payment_processor_id;
+    $ppid = NULL;
+    // we got to get payment processor by first contribution anyway
+    if ($config->recurringCopySetting == 'latest') {
+      $firstContribution = CRM_Core_DAO::executeQuery("SELECT id, payment_processor_id FROM civicrm_contribution WHERE contribution_recur_id = %1 ORDER BY created_date ASC LIMIT 1", [1 => [$recurringId, 'Positive']]);
+      $firstContribution->fetch();
+      if (!empty($firstContribution->id) && !empty($firstContribution->payment_processor_id)) {
+        $ppid = $firstContribution->payment_processor_id;
+      }
+    }
+    $ppid = $ppid ?? $findContribution->payment_processor_id;
     $mode = $findContribution->is_test ? 'test' : 'live';
     $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($ppid, $mode);
 
     $response = ['status' => 0, 'msg' => 'Unknown error'];
 
-    if ($paymentProcessor && !empty($paymentProcessor['url_api'])) {
+    if (!empty($found) && $paymentProcessor && !empty($paymentProcessor['url_api'])) {
       $trxnId = self::generateTrxnId($findContribution->is_test, 0);
 
       if (empty($referContributionId)) {
