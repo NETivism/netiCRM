@@ -56,10 +56,160 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
   }
 
   /**
+   * Build htmlSupport config for Full Editor (CiviCRM preset).
+   *
+   * Allows most HTML elements but blocks XSS event handlers.
+   * Source: ckeditor5-config.js FULL_HTML_SUPPORT
+   *
+   * @param bool $fullPage Whether to include fullpage elements
+   * @return string JavaScript object literal for htmlSupport config
+   */
+  function getFullHtmlSupport($fullPage = FALSE) {
+    $allowRules = "
+        {
+          // Block elements
+          name: /^(div|section|article|header|footer|nav|aside|main|figure|figcaption|blockquote)$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Inline elements
+          name: /^(span|a|strong|em|i|b|code|pre|cite|small|mark|del|ins|sub|sup|button)$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Headings
+          name: /^h[1-6]$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Lists
+          name: /^(ul|ol|li)$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Tables
+          name: /^(table|thead|tbody|tfoot|tr|th|td|caption|colgroup|col)$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Paragraphs
+          name: 'p',
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Video and audio
+          name: /^(video|audio|source|track)$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Object and embed
+          name: /^(object|embed|param)$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        },
+        {
+          // Style tags
+          name: 'style',
+          attributes: true
+        }";
+
+    // FullPage mode: allow html/head/body/title/meta/link
+    if ($fullPage) {
+      $allowRules .= ",
+        {
+          name: /^(html|head|body|title|meta|link)$/,
+          attributes: true,
+          classes: true,
+          styles: true
+        }";
+    }
+
+    return "{
+      allow: [" . $allowRules . "
+      ],
+      disallow: [
+        {
+          // XSS event handlers
+          attributes: {
+            onclick: /.*/,
+            onload: /.*/,
+            onerror: /.*/,
+            onmouseover: /.*/,
+            onfocus: /.*/,
+            onblur: /.*/,
+            onsubmit: /.*/,
+            onkeydown: /.*/,
+            onkeyup: /.*/,
+            onkeypress: /.*/,
+            onmousedown: /.*/,
+            onmouseup: /.*/,
+            onmouseout: /.*/,
+            onchange: /.*/,
+            oninput: /.*/,
+            oncontextmenu: /.*/
+          }
+        }
+      ]
+    }";
+  }
+
+  /**
+   * Build htmlSupport config for Basic Editor (CiviCRMBasic preset).
+   *
+   * Only allows limited HTML elements.
+   * Source: ckeditor5-config.js BASIC_HTML_SUPPORT
+   *
+   * @return string JavaScript object literal for htmlSupport config
+   */
+  function getBasicHtmlSupport() {
+    return "{
+      allow: [
+        {
+          name: /^(h[1-3]|p|blockquote)$/,
+          styles: true,
+          classes: true
+        },
+        {
+          name: /^(strong|em)$/
+        },
+        {
+          name: 'a',
+          attributes: ['href', 'target', 'rel']
+        },
+        {
+          name: 'img',
+          attributes: ['src', 'alt', 'width', 'height', 'title'],
+          classes: ['left', 'right']
+        },
+        {
+          name: 'span',
+          styles: ['font-size', 'color', 'background-color']
+        }
+      ]
+    }";
+  }
+
+  /**
    * Initialize CKEditor 5 on the textarea element
    *
    * Loads CKEditor 5 from local files (packages/ckeditor5/) and initializes
    * ClassicEditor with configured plugins and toolbar.
+   * Uses permission-based preset system matching CKEditor 4 behavior.
    *
    * @access public
    * @return string HTML output
@@ -73,6 +223,61 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     $config = CRM_Core_Config::singleton();
     $name = $this->getAttribute('name');
     $elementId = $this->getAttribute('id');
+    $fullPage = $this->getAttribute('fullpage');
+
+    // Determine preset based on permission (same logic as CKEditor 4)
+    $isFullEditor = CRM_Core_Permission::check('access CiviCRM');
+    $htmlSupportConfig = $isFullEditor
+      ? $this->getFullHtmlSupport($fullPage)
+      : $this->getBasicHtmlSupport();
+
+    // Build plugins list
+    $plugins = "
+        Essentials,
+        Bold,
+        Italic,
+        Underline,
+        Strikethrough,
+        Paragraph,
+        Heading,
+        Link,
+        List,
+        Alignment,
+        Font,
+        RemoveFormat,
+        SourceEditing,
+        GeneralHtmlSupport,
+        Undo";
+
+    // FullPage plugin only for full editor with fullpage attribute
+    if ($isFullEditor && $fullPage) {
+      $plugins .= ",
+        FullPage";
+    }
+
+    // Build toolbar based on preset
+    if ($isFullEditor) {
+      $toolbar = "
+        'undo', 'redo', '|',
+        'heading', '|',
+        'bold', 'italic', 'underline', 'strikethrough', '|',
+        'link', '|',
+        'bulletedList', 'numberedList', '|',
+        'alignment', '|',
+        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+        'removeFormat', '|',
+        'sourceEditing'";
+    }
+    else {
+      $toolbar = "
+        'heading', '|',
+        'removeFormat', '|',
+        'bold', 'italic', 'underline', 'strikethrough', '|',
+        'fontSize', 'fontColor', 'fontBackgroundColor', '|',
+        'numberedList', 'bulletedList', '|',
+        'link', 'unlink', '|',
+        'undo', 'redo'";
+    }
 
     // Render textarea element
     $html = parent::toHtml();
@@ -88,7 +293,7 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
 if (window.CKEDITOR && !window.CKEDITOR_5) {
   window.CKEDITOR_5 = window.CKEDITOR;
   window.CKEDITOR = undefined;
-  console.log("✅ Namespace swapping complete: CKE5 → window.CKEDITOR_5");
+  console.log("CKE5 namespace swap complete: window.CKEDITOR_5");
 }
 </script>' . "\n";
 
@@ -136,50 +341,15 @@ cj(function() {
   // Initialize CKEditor 5
   ClassicEditor
     .create(element, {
-      licenseKey: 'GPL',  // Use GPL license for open source projects
-      plugins: [
-        Essentials,
-        Bold,
-        Italic,
-        Underline,
-        Strikethrough,
-        Paragraph,
-        Heading,
-        Link,
-        List,
-        Alignment,
-        Font,
-        RemoveFormat,
-        SourceEditing,
-        FullPage,
-        GeneralHtmlSupport,
-        Undo
+      licenseKey: 'GPL',
+      plugins: [{$plugins}
       ],
-      toolbar: [
-        'undo', 'redo', '|',
-        'heading', '|',
-        'bold', 'italic', 'underline', 'strikethrough', '|',
-        'link', '|',
-        'bulletedList', 'numberedList', '|',
-        'alignment', '|',
-        'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
-        'removeFormat', '|',
-        'sourceEditing'
+      toolbar: [{$toolbar}
       ],
-      htmlSupport: {
-        allow: [
-          {
-            name: /^(html|head|body|title|meta|style|script|div|span|p|h[1-6]|table|thead|tbody|tr|td|th|ul|ol|li|a|img|br|hr)$/,
-            attributes: true,
-            classes: true,
-            styles: true
-          }
-        ]
-      },
+      htmlSupport: {$htmlSupportConfig},
       height: '{$this->height}px'
     })
     .then(editor => {
-      console.log('CKEditor 5 initialized successfully for element:', element.id || element.name);
       // Store instance reference for external access (e.g. editor switcher)
       var ckDiv = element.nextElementSibling;
       if (ckDiv && ckDiv.classList.contains('ck-editor')) {
