@@ -107,7 +107,8 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
   public function __construct() {
     parent::__construct();
   }
-   /**
+
+  /**
    * returns all the column names of this table
    *
    * @return array
@@ -169,7 +170,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['mailing_bounce_type'] = &$fields[$name];
@@ -191,7 +192,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['mailing_bounce_type'] = &$fields[$name];
@@ -209,8 +210,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {
+  public static function &getEnums() {
     static $enums = [
         'name',
     ];
@@ -254,7 +254,7 @@ class CRM_Mailing_DAO_BounceType extends CRM_Core_DAO {
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Mailing_DAO_BounceType::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Mailing_DAO_BounceType::tsEnum($enum, $values[$enum]);
       }

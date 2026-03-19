@@ -131,6 +131,7 @@ class CRM_Member_DAO_MembershipLog extends CRM_Core_DAO {
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
@@ -241,7 +242,7 @@ class CRM_Member_DAO_MembershipLog extends CRM_Core_DAO {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['membership_log'] = &$fields[$name];
@@ -263,7 +264,7 @@ class CRM_Member_DAO_MembershipLog extends CRM_Core_DAO {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['membership_log'] = &$fields[$name];
