@@ -657,4 +657,3 @@ class CRM_Coupon_BAO_Coupon extends CRM_Coupon_DAO_Coupon {
     return $couponTrack;
   }
 }
-

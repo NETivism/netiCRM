@@ -2,4 +2,3 @@
 /**
  * @package CiviCRM_PaymentProcessor
  */
-

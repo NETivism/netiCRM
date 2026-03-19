@@ -5,7 +5,6 @@
  * @package CiviCRM_PaymentProcessor
  */
 
-
 class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
 
   private $_post;

@@ -3,7 +3,6 @@
  * @package CiviCRM_PaymentProcessor
  */
 
-
 class CRM_Core_Payment_Backer extends CRM_Core_Payment {
 
   protected $_mode = NULL;

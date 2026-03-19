@@ -5,7 +5,6 @@
  * @package CiviCRM_PaymentProcessor
  */
 
-
 class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
   public static $_payment_processor = NULL;
   public static $_input = NULL;

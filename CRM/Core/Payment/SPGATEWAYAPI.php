@@ -533,9 +533,9 @@ class CRM_Core_Payment_SPGATEWAYAPI {
 
   /**
    * Migrate from _civicrm_spgateway_checkKeyIV
-   * 
+   *
    * Check if Key and IV have value
-   * 
+   *
    * @param string $v Value to check
    */
   public static function checkKeyIV($v) {
