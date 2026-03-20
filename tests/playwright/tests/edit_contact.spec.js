@@ -1,3 +1,4 @@
+// Test searching and editing a contact's basic info (name, phone, email) in the backend
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

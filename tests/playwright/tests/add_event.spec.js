@@ -1,3 +1,4 @@
+// Test creating a new event in the backend including info, fees, and online registration settings
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 
@@ -10,7 +11,7 @@ test.beforeAll(async () => {
     const browser = await chromium.launch();
     page = await browser.newPage();
 });
-  
+
 test.afterAll(async () => {
     await page.close();
 });

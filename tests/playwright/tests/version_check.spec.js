@@ -1,3 +1,4 @@
+// Batch-check a list of sites to verify pages are reachable and responding correctly
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 const fs = require('fs').promises;

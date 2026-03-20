@@ -1,3 +1,4 @@
+// Test batch CSV import for contacts and contributions
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

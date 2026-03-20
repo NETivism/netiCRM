@@ -1,3 +1,4 @@
+// Test donation payment flow via ECPay (AllPay) convenience store barcode method
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 
