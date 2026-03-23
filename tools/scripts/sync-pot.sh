@@ -74,9 +74,9 @@ printf "Add these %s entry/entries to civicrm.pot? [y/N] " "$ORPHANED_REAL"
 read -r CONFIRM
 
 if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
-  echo "Aborted."
+  echo "Aborted. Please reconcile civicrm.pot manually before pushing."
   rm -f "$TEMP_EXTRACTED"
-  exit 0
+  exit 1
 fi
 
 # Step 5: Append to POT.
