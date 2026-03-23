@@ -51038,3 +51038,11 @@ msgstr ""
 #: neticrmp/modules/neticrm_preset/neticrm_preset.module
 msgid "%1 is a CRM service for nonprofits provided by NETivism"
 msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.php
+msgid "Failed Donation Date (From)"
+msgstr ""
+
+#: CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.php
+msgid "Failed Donation Date (To)"
+msgstr ""
