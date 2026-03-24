@@ -307,13 +307,30 @@ class CRM_Core_BAO_Mapping extends CRM_Core_DAO_Mapping {
       if ($mappingType == 'Export') {
         $relationships = [];
         $relationshipTypes = CRM_Contact_BAO_Relationship::getContactRelationshipType(NULL, NULL, NULL, $value);
+        // Fetch all relationship types (both directions, all contact types) for opposite-label lookup
+        $allRelationshipTypes = CRM_Core_PseudoConstant::relationshipType('label');
         asort($relationshipTypes);
 
         foreach ($relationshipTypes as $key => $var) {
           list($type) = explode('_', $key);
 
-          $relationships[$key]['title'] = $var;
-          $relationships[$key]['headerPattern'] = '/' . preg_quote($var, '/') . '/';
+          $title = $var;
+          // For Chinese labels: swap with opposite direction's label, prefix with "的 "
+          if (preg_match('/[^\x00-\x7F]/', $var)) {
+            $keyParts = explode('_', $key);
+            if (count($keyParts) === 3) {
+              $dir = $keyParts[1] . '_' . $keyParts[2];
+              $oppositeDir = ($dir === 'a_b') ? 'b_a' : 'a_b';
+              $typeData = CRM_Utils_Array::value($type, $allRelationshipTypes, []);
+              $oppositeLabel = CRM_Utils_Array::value('label_' . $oppositeDir, $typeData);
+              if ($oppositeLabel) {
+                $title = ts("'s") . ' ' . $oppositeLabel;
+              }
+            }
+          }
+
+          $relationships[$key]['title'] = $title;
+          $relationships[$key]['headerPattern'] = '/' . preg_quote($title, '/') . '/';
           $relationships[$key]['export'] = TRUE;
           $relationships[$key]['relationship_type_id'] = $type;
           $relationships[$key]['related'] = TRUE;
