@@ -219,7 +219,7 @@ class CRM_Utils_MCP {
 
     $jsonResponse = json_encode($result, $options);
     if (CRM_Core_Config::singleton()->debug) {
-      CRM_Core_Error::debug_var('mcp_result', $result);
+      CRM_Core_Error::debug_var("mcp_result_contact_{$this->_contactId}", $result);
     }
 
     if ($this->_isStreamable) {
@@ -340,7 +340,7 @@ class CRM_Utils_MCP {
     $clientInfo = $params['clientInfo'] ?? [];
     if (!empty($clientInfo)) {
       CRM_Core_Error::debug_log_message(
-        'MCP client connected: ' . ($clientInfo['name'] ?? 'unknown') .
+        "[contact:{$this->_contactId}] MCP client connected: " . ($clientInfo['name'] ?? 'unknown') .
         ' v' . ($clientInfo['version'] ?? 'unknown')
       );
     }
@@ -674,6 +674,7 @@ class CRM_Utils_MCP {
         'inputSchema' => [
           'type' => 'object',
           'properties' => [
+            'prompt' => ['type' => 'string', 'description' => 'The original natural language prompt or question from the user that led to generating this SQL query. Plain text only, HTML will be stripped.'],
             'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id,contribution_recur_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
           ],
         ],
@@ -720,6 +721,13 @@ class CRM_Utils_MCP {
   }
 
   private function handleMCPQuery($arguments, $id) {
+    // Log prompt and query for auditing
+    $prompt = isset($arguments['prompt']) ? $this->sanitizePrompt($arguments['prompt']) : '';
+    if (!empty($prompt)) {
+      CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP query prompt: " . $prompt);
+    }
+    CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP query sql: " . ($arguments['query'] ?? ''));
+
     $allowlist = [
       'statement' => 'SELECT',
       'table' => ['civicrm_contribution', 'civicrm_contact', 'civicrm_participant_payment', 'civicrm_membership_payment', 'civicrm_contribution_recur', 'civicrm_contribution_page'],
@@ -738,7 +746,7 @@ class CRM_Utils_MCP {
         $results = $sth->fetchAll();
       }
       catch (\Exception $e) {
-        CRM_Core_Error::debug_log_message('MCP query error: ' . $e->getMessage());
+        CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP query error: " . $e->getMessage());
         $results = ['Query execution failed.'];
         $isError = TRUE;
       }
@@ -816,6 +824,29 @@ class CRM_Utils_MCP {
   }
 
   /**
+   * Sanitize a prompt string to plain text with UTF-8 encoding and max 512 chars
+   * @param string $prompt Raw prompt text (may contain HTML)
+   * @return string Sanitized plain text
+   */
+  private function sanitizePrompt($prompt) {
+    // Strip HTML tags to get plain text
+    $prompt = strip_tags($prompt);
+    // Decode HTML entities (e.g. &amp; &lt;)
+    $prompt = html_entity_decode($prompt, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    // Strip any tags that may have appeared after entity decoding
+    $prompt = strip_tags($prompt);
+    // Ensure valid UTF-8 by re-encoding and dropping invalid byte sequences
+    $prompt = mb_convert_encoding($prompt, 'UTF-8', 'UTF-8');
+    // Collapse whitespace to single spaces
+    $prompt = preg_replace('/\s+/', ' ', trim($prompt));
+    // Truncate to max 512 characters (UTF-8 char-aware)
+    if (mb_strlen($prompt, 'UTF-8') > 500) {
+      $prompt = mb_substr($prompt, 0, 500, 'UTF-8');
+    }
+    return $prompt;
+  }
+
+  /**
    * Create MCP JSON-RPC 2.0 error response
    * @param int $code Error code
    * @param string $message Error message
@@ -823,7 +854,8 @@ class CRM_Utils_MCP {
    * @return array Error response
    */
   private function error($code, $message, $id) {
-    CRM_Core_Error::debug_log_message("MCP error response: code:$code $message $id");
+    $contactStr = $this->_contactId ? "[contact:{$this->_contactId}] " : '';
+    CRM_Core_Error::debug_log_message("{$contactStr}MCP error response: code:$code $message $id");
     return [
       'jsonrpc' => '2.0',
       'error' => [
