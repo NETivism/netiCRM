@@ -392,37 +392,21 @@ class CRM_Utils_MCP {
    * @return bool True if user has permission, false otherwise
    */
   private function hasToolPermission($toolName) {
-    // Parse tool name to extract entity and action
-    $parts = explode('_', $toolName);
-    if (count($parts) < 2) {
+    // MCP query permission is always required
+    if (!CRM_Core_Permission::check('MCP query')) {
       return FALSE;
     }
 
-    $entity = $parts[0];
-    $action = $parts[1];
+    // Additional per-tool permissions
+    $toolPermissions = [
+      'contribution_query' => 'access CiviContribute',
+    ];
 
-    // Map tool action to API action
-    $apiAction = '';
-    switch ($action) {
-      case 'query':
-        $apiAction = 'query';
-        break;
-      default:
-        return FALSE;
+    if (isset($toolPermissions[$toolName])) {
+      return CRM_Core_Permission::check($toolPermissions[$toolName]);
     }
 
-    // Check REST API permissions based on action
-    $permissionRequired = '';
-    if (in_array($apiAction, ['query'])) {
-      $permissionRequired = 'MCP query';
-    }
-
-    // Check REST API permission if required
-    if (!empty($permissionRequired) && CRM_Core_Permission::check($permissionRequired)) {
-      return TRUE;
-    }
-
-    return FALSE;
+    return TRUE;
   }
 
   /**
@@ -684,16 +668,6 @@ class CRM_Utils_MCP {
     $contributionSearchableFields = $this->getSearchableFormFields('contribution');
 
     $tools = [
-      [
-        'name' => 'contact_query',
-        'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
-        'inputSchema' => [
-          'type' => 'object',
-          'properties' => [
-            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id,contribution_recur_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
-          ],
-        ],
-      ],
       [
         'name' => 'contribution_query',
         'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
