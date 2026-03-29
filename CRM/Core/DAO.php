@@ -126,7 +126,7 @@ class CRM_Core_DAO extends DB_DataObject {
         PDO::ATTR_PERSISTENT => FALSE,
       ];
       $pdo = new PDO($pdoDsn, $username, $password, $options);
-      //$pdo->exec("SET SESSION read_only = 1");
+      $pdo->exec("SET SESSION TRANSACTION READ ONLY");
       return $pdo;
     }
     catch (Exception $e) {
