@@ -40,6 +40,7 @@ use Drupal\Core\DrupalKernel;
  */
 class CRM_Utils_System_Drupal {
   public $is_drupal;
+  public $admin_permissions = 'administer permissions';
   public $version;
   public $versionalClass;
   private static $_version;
@@ -987,6 +988,21 @@ class CRM_Utils_System_Drupal {
    * @param array $params
    * @return void
    */
+  /**
+   * Get the last login timestamp for a CMS user by Drupal UID.
+   *
+   * Dispatches to the versional implementation (Drupal7 or Drupal8/10).
+   *
+   * @param int $ufId Drupal user ID
+   * @return int|null Unix timestamp of last login, or NULL if unavailable
+   */
+  public static function getLastLoginTime($ufId) {
+    if (empty($ufId)) {
+      return NULL;
+    }
+    return CRM_Core_Config::$_userSystem->versionalClass->getLastLoginTime($ufId);
+  }
+
   public static function loadUser($params = []) {
     if (empty($params)) {
       return FALSE;
