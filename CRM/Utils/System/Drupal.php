@@ -293,6 +293,29 @@ class CRM_Utils_System_Drupal {
   }
 
   /**
+   * Return the URL for a Drupal user profile page, respecting path aliases.
+   *
+   * @param int $ufId  Drupal user ID.
+   * @return string|null  Absolute URL, or NULL when $ufId is invalid.
+   */
+  public static function getUFProfileLink($ufId) {
+    if (!is_numeric($ufId)) {
+      return NULL;
+    }
+    $version = self::$_version;
+    if ($version < 8) {
+      // url() in Drupal 7 resolves path aliases automatically.
+      return url('user/' . $ufId, ['absolute' => TRUE]);
+    }
+    else {
+      // Url::fromRoute() in Drupal 8/10 resolves path aliases automatically.
+      return \Drupal\Core\Url::fromRoute('entity.user.canonical', ['user' => $ufId])
+        ->setAbsolute()
+        ->toString();
+    }
+  }
+
+  /**
    * sets the title of the page
    *
    * @param string $title

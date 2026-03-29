@@ -42,6 +42,13 @@ class CRM_Connector_Page_Connector extends CRM_Core_Page {
 
     CRM_Utils_System::setTitle(ts('netiCRM Connector'));
 
+    $ufId = CRM_Core_BAO_UFMatch::getUFId($cid);
+    $ufName = CRM_Core_Config::$_userSystem->getBestUFName($ufId);
+    if (!empty($ufName)) {
+      $breadCrumb = [['title' => $ufName, 'url' => CRM_Core_Config::$_userSystem->getUFProfileLink($ufId)]];
+      CRM_Utils_System::appendBreadCrumb($breadCrumb);
+    }
+
     $this->assign('cid', $cid);
     $this->assign('mcpEnabled', $mcpEnabled);
     $this->assign('apiExplorerEnabled', $apiExplorerEnabled);
