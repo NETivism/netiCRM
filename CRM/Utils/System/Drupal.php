@@ -305,13 +305,11 @@ class CRM_Utils_System_Drupal {
     $version = self::$_version;
     if ($version < 8) {
       // url() in Drupal 7 resolves path aliases automatically.
-      return url('user/' . $ufId, ['absolute' => TRUE]);
+      return url('user/' . $ufId);
     }
     else {
       // Url::fromRoute() in Drupal 8/10 resolves path aliases automatically.
-      return \Drupal\Core\Url::fromRoute('entity.user.canonical', ['user' => $ufId])
-        ->setAbsolute()
-        ->toString();
+      return \Drupal\Core\Url::fromRoute('entity.user.canonical', ['user' => $ufId])->toString();
     }
   }
 
