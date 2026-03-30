@@ -90,9 +90,9 @@ define( 'CIVICRM_DSN'          , 'mysqli://%%dbUser%%:%%dbPass%%@%%dbHost%%/%%db
  * views. The user is NOT created automatically; a DBA must provision it manually.
  *
  * EXAMPLE:
- *      define( 'CIVICRM_DSN_READONLY', 'mysql://crm_readonly:YOUR_PASSWORD@localhost/%%dbName%%' );
+ *      define( 'CIVICRM_DSN_READONLY', 'mysqli://%%dbUser%%_readonly:YOUR_PASSWORD@localhost/%%dbName%%' );
  */
-// define( 'CIVICRM_DSN_READONLY', 'mysql://crm_readonly:%%dbPass%%@%%dbHost%%/%%dbName%%' );
+// define( 'CIVICRM_DSN_READONLY', 'mysqli://%%dbUser%%_readonly:%%dbPass%%@%%dbHost%%/%%dbName%%' );
 
 /**
  * CiviCRM Logging Database
