@@ -1,6 +1,9 @@
 #! /bin/bash
 # Append a translation to civicrm.po and push to Transifex, then regenerate .mo.
-# Usage: add-translation.sh <source_string> <translated_string> [language]
+# Usage: add-translation.sh [--push] <source_string> <translated_string> [language]
+#
+# Options:
+#   --push    Push translation to Transifex after appending
 #
 # Arguments:
 #   source_string     - The English source string (msgid)
@@ -9,20 +12,30 @@
 #
 # Examples:
 #   add-translation.sh "Failed Donation Date (From)" "捐款失敗日期（起）"
-#   add-translation.sh "Hello %1" "你好 %1" zh_TW
+#   add-translation.sh --push "Hello %1" "你好 %1" zh_TW
 
 CALLEDPATH=$(dirname "$0")
 CIVICRMPATH=$(cd "$CALLEDPATH/../../" && pwd)
 
-STRING="$1"
-TRANSLATION="$2"
-LANGUAGE="${3:-zh_TW}"
+PUSH=0
+ARGS=()
+
+for arg in "$@"; do
+  case "$arg" in
+    --push) PUSH=1 ;;
+    *)      ARGS+=("$arg") ;;
+  esac
+done
+
+STRING="${ARGS[0]}"
+TRANSLATION="${ARGS[1]}"
+LANGUAGE="${ARGS[2]:-zh_TW}"
 
 PO_FILE="$CIVICRMPATH/l10n/$LANGUAGE/civicrm.po"
 MO_FILE="$CIVICRMPATH/l10n/$LANGUAGE/LC_MESSAGES/civicrm.mo"
 
 if [ -z "$STRING" ] || [ -z "$TRANSLATION" ]; then
-  echo "Usage: $0 <source_string> <translated_string> [language]"
+  echo "Usage: $0 [--push] <source_string> <translated_string> [language]"
   echo "Example: $0 'Failed Donation Date (From)' '捐款失敗日期（起）'"
   exit 1
 fi
@@ -58,9 +71,11 @@ else
   [ -n "$SOURCES" ] && echo "  Sources: ${SOURCES}"
 fi
 
-echo "Pushing translation (${LANGUAGE}) to Transifex ..."
-cd "$CIVICRMPATH"
-tx push -t -l "$LANGUAGE"
+if [ "$PUSH" -eq 1 ]; then
+  echo "Pushing translation (${LANGUAGE}) to Transifex ..."
+  cd "$CIVICRMPATH"
+  tx push -t -l "$LANGUAGE"
+fi
 
 echo "Generating MO file ..."
 if [ ! -d "$CIVICRMPATH/l10n/$LANGUAGE/LC_MESSAGES" ]; then

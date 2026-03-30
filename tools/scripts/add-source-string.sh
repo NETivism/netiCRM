@@ -1,20 +1,41 @@
 #! /bin/bash
 # Append a single source string to civicrm.pot and push to Transifex.
-# Usage: add-source-string.sh <source_string>
+# Usage: add-source-string.sh [--push] [--pull-translation] <source_string>
 #
-# Example:
+# Options:
+#   --push              Push source to Transifex after appending
+#   --pull-translation  Force pull latest translations (ignores 5-minute cache)
+#
+# Examples:
 #   add-source-string.sh "Failed Donation Date (From)"
-#   add-source-string.sh "Hello %1"
+#   add-source-string.sh --push "Hello %1"
+#   add-source-string.sh --push --pull-translation "Hello %1"
 
 CALLEDPATH=$(dirname "$0")
 CIVICRMPATH=$(cd "$CALLEDPATH/../../" && pwd)
 POT_FILE="$CIVICRMPATH/l10n/pot/civicrm.pot"
 PO_FILE="$CIVICRMPATH/l10n/zh_TW/civicrm.po"
+PULL_TIMESTAMP_FILE="/tmp/civicrm-pull-translation-$(id -u).last"
+PULL_CACHE_SECONDS=300  # 5 minutes
 
-STRING="$1"
+PUSH=0
+FORCE_PULL=0
+STRING=""
+
+for arg in "$@"; do
+  case "$arg" in
+    --push)             PUSH=1 ;;
+    --pull-translation) FORCE_PULL=1 ;;
+    *)
+      if [ -z "$STRING" ]; then
+        STRING="$arg"
+      fi
+      ;;
+  esac
+done
 
 if [ -z "$STRING" ]; then
-  echo "Usage: $0 <source_string>"
+  echo "Usage: $0 [--push] [--pull-translation] <source_string>"
   echo "Example: $0 'Failed Donation Date (From)'"
   exit 1
 fi
@@ -24,10 +45,26 @@ if [ ! -f "$POT_FILE" ]; then
   exit 1
 fi
 
-# Step 1: Pull latest translations so local PO reflects remote Transifex source
-echo "Pulling latest translations from Transifex ..."
-"$CALLEDPATH/pull-translation.sh"
-echo ""
+# Step 1: Pull latest translations so local PO reflects remote Transifex source.
+# Skip if pull-translation.sh was run within 5 minutes, unless --pull-translation is set.
+SHOULD_PULL=1
+if [ "$FORCE_PULL" -eq 0 ] && [ -f "$PULL_TIMESTAMP_FILE" ]; then
+  LAST_PULL=$(cat "$PULL_TIMESTAMP_FILE" 2>/dev/null)
+  NOW=$(date +%s)
+  if [ -n "$LAST_PULL" ] && [ $((NOW - LAST_PULL)) -lt $PULL_CACHE_SECONDS ]; then
+    SHOULD_PULL=0
+    echo "Skipping pull-translation.sh (last run was $((NOW - LAST_PULL))s ago, within ${PULL_CACHE_SECONDS}s cache)."
+    echo "  Use --pull-translation to force."
+    echo ""
+  fi
+fi
+
+if [ "$SHOULD_PULL" -eq 1 ]; then
+  echo "Pulling latest translations from Transifex ..."
+  "$CALLEDPATH/pull-translation.sh"
+  date +%s > "$PULL_TIMESTAMP_FILE"
+  echo ""
+fi
 
 # Step 2: Check for orphaned msgids — in PO but not in local POT.
 # msgmerge merges PO against POT and marks entries missing from POT as obsolete (#~).
@@ -74,8 +111,10 @@ else
   [ -n "$SOURCES" ] && echo "  Sources: ${SOURCES}"
 fi
 
-echo ""
-echo "Pushing source to Transifex ..."
-cd "$CIVICRMPATH"
-tx push -s
-echo "Done."
+if [ "$PUSH" -eq 1 ]; then
+  echo ""
+  echo "Pushing source to Transifex ..."
+  cd "$CIVICRMPATH"
+  tx push -s
+  echo "Done."
+fi
