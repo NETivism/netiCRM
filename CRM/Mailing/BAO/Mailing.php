@@ -2320,7 +2320,14 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
                         $mailing.scheduled_id as scheduled_id,
                         $mailing.is_archived as archived,
                         $mailing.visibility as visibility,
-                        $mailing.created_date as created_date
+                        $mailing.created_date as created_date,
+                        CASE WHEN (
+                            $mailing.subject IS NOT NULL AND $mailing.subject != ''
+                            AND (
+                                ($mailing.body_html IS NOT NULL AND $mailing.body_html != '')
+                                OR ($mailing.body_text IS NOT NULL AND $mailing.body_text != '')
+                            )
+                        ) THEN 1 ELSE 0 END as is_complete
             FROM        $mailing
             LEFT JOIN   $job ON ( $job.mailing_id = $mailing.id AND $job.is_test = 0 AND $job.parent_id IS NULL )
             LEFT JOIN   civicrm_contact createdContact ON ( civicrm_mailing.created_id = createdContact.id )
@@ -2363,6 +2370,7 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
         'scheduled_id' => $dao->scheduled_id,
         'archived' => $dao->archived,
         'visibility' => $dao->visibility,
+        'is_complete' => (bool) $dao->is_complete,
         /*
         'approval_status_id' => $dao->approval_status_id,
         'campaign_id' => $dao->campaign_id,
