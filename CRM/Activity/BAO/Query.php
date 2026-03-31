@@ -251,13 +251,26 @@ class CRM_Activity_BAO_Query {
         $clause = [];
         if (is_array($value)) {
           foreach ($value as $v) {
-            $clause[] = "'" . CRM_Utils_Type::escape($status[$v], 'String') . "'";
+            if (CRM_Utils_Array::arrayKeyExists($v, $status)) {
+              $clause[] = "'" . CRM_Utils_Type::escape($status[$v], 'String') . "'";
+            }
           }
+          $activityStatus = CRM_Utils_Array::implode(',', $value);
         }
         else {
-          $clause[] = "'" . CRM_Utils_Type::escape($value, 'String') . "'";
+          $statusId = array_search($value, $status);
+          if ($statusId !== FALSE) {
+            // use the numeric ID for WHERE clause
+            $activityStatus = CRM_Utils_Type::escape($statusId, 'Integer');
+            $clause[] = "'" . CRM_Utils_Type::escape($value, 'String') . "'";
+          }
+          else {
+            // assume numeric ID
+            $activityStatus = CRM_Utils_Type::escape($value, 'Integer');
+            $clause[] = "'" . CRM_Utils_Type::escape($value, 'String') . "'";
+          }
         }
-        $query->_where[$grouping][] = ' civicrm_activity.status_id IN (' . CRM_Utils_Array::implode(',', $value) . ')';
+        $query->_where[$grouping][] = ' civicrm_activity.status_id IN (' . $activityStatus . ')';
         $query->_qill[$grouping][] = ts('Activity Status') . ' - ' . CRM_Utils_Array::implode(' ' . ts('or') . ' ', $clause);
         break;
 
