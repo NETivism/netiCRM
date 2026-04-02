@@ -636,7 +636,6 @@ SELECT $acl.*
     return $result;
   }
 
-
   /**
    * Create an ACL record
    *

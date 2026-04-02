@@ -2160,6 +2160,20 @@ GROUP BY civicrm_primary_id ";
     foreach ($headerRows as &$header) {
       $split = explode('-', $header);
       if ($relationTypeName = CRM_Utils_Array::value($split[0], $contactRelationshipTypes)) {
+        // For Chinese labels: swap with opposite direction's label, prefix with "的 "
+        if (preg_match('/[^\x00-\x7F]/', $relationTypeName)) {
+          $keyParts = explode('_', $split[0]);
+          if (count($keyParts) === 3) {
+            $typeId = $keyParts[0];
+            $dir = $keyParts[1] . '_' . $keyParts[2];
+            $oppositeDir = ($dir === 'a_b') ? 'b_a' : 'a_b';
+            $oppositeKey = $typeId . '_' . $oppositeDir;
+            $oppositeLabel = CRM_Utils_Array::value($oppositeKey, $contactRelationshipTypes);
+            if ($oppositeLabel) {
+              $relationTypeName = ts("'s") . ' ' . $oppositeLabel;
+            }
+          }
+        }
         $split[0] = $relationTypeName;
         $header = CRM_Utils_Array::implode('-', $split);
       }

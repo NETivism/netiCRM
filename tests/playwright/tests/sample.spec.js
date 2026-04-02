@@ -1,3 +1,4 @@
+// Sample test: verify the site front page loads with the correct title
 const { test, expect, chromium } = require('@playwright/test');
 
 /** @type {import('@playwright/test').Page} */

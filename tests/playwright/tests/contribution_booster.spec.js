@@ -1,3 +1,4 @@
+// Test Contribution Booster dashboard links and search filter functionality
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

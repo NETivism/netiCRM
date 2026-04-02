@@ -1,3 +1,4 @@
+// Test advanced search by contact, contribution, and membership criteria and verify results
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

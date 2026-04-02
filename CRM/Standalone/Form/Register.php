@@ -63,7 +63,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
     $this->_openID = $session->get('openid');
   }
 
-
   /**
    * Set the default values for the form.
    *
@@ -77,7 +76,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
 
     return $defaults;
   }
-
 
   /**
    * Build the form.
@@ -132,7 +130,6 @@ class CRM_Standalone_Form_Register extends CRM_Core_Form {
       ]
     );
   }
-
 
   /**
    * Process the form submission.

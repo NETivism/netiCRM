@@ -5,7 +5,6 @@
  * @package CiviCRM_PaymentProcessor
  */
 
-
 class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
 
   public const QUEUE_NAME = 'tappay_batch_all_recur';

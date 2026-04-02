@@ -167,7 +167,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO {
   public $is_active;
   /**
    * Rolling means we set start/end based on current day, fixed means we set start/end for current year or month
-(e.g. 1 year + fixed -> we would set start/end for 1/1/06 thru 12/31/06 for any premium chosen in 2006) 
+(e.g. 1 year + fixed -> we would set start/end for 1/1/06 thru 12/31/06 for any premium chosen in 2006)
    *
    * @var enum('rolling', 'fixed')
    */
@@ -239,7 +239,8 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO {
   public function __construct() {
     parent::__construct();
   }
-   /**
+
+  /**
    * returns all the column names of this table
    *
    * @return array
@@ -442,7 +443,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['product'] = &$fields[$name];
@@ -464,7 +465,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['product'] = &$fields[$name];
@@ -482,8 +483,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO {
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {
+  public static function &getEnums() {
     static $enums = [
         'period_type',
         'duration_unit',
@@ -531,7 +531,7 @@ class CRM_Contribute_DAO_Product extends CRM_Core_DAO {
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Contribute_DAO_Product::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Contribute_DAO_Product::tsEnum($enum, $values[$enum]);
       }

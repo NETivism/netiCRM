@@ -3,7 +3,6 @@
  * @package CiviCRM_PaymentProcessor
  */
 
-
 /*
  +--------------------------------------------------------------------+
  | CiviCRM version 3.3                                                |

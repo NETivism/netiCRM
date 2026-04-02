@@ -8,6 +8,8 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
   protected $_config;
   protected $_tableName = NULL;
   protected $_filled = NULL;
+  protected $_failedDateFrom = NULL;
+  protected $_failedDateTo = NULL;
 
   /**
    * The constructor gets the submitted form values
@@ -25,6 +27,12 @@ class CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate extends CRM_Contact_F
       $this->_cstatus = CRM_Contribute_PseudoConstant::contributionStatus();
       $this->_config = CRM_Core_Config::singleton();
       $this->buildColumn();
+      if (!empty($this->_formValues['failed_date_from'])) {
+        $this->_failedDateFrom = CRM_Utils_Date::processDate($this->_formValues['failed_date_from']);
+      }
+      if (!empty($this->_formValues['failed_date_to'])) {
+        $this->_failedDateTo = CRM_Utils_Date::processDate($this->_formValues['failed_date_to'], '23:59:59');
+      }
     }
   }
 
@@ -152,9 +160,9 @@ $having
    * @access public
    */
   public function tempFrom() {
-    return "civicrm_contact AS contact INNER JOIN 
+    return "civicrm_contact AS contact INNER JOIN
  (SELECT ca.* FROM civicrm_contribution ca LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = ca.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = ca.id WHERE ca.is_test = 0 AND ca.contribution_status_id = 4 AND pp.id IS NULL AND mp.id IS NULL ORDER BY ca.created_date DESC) failed ON failed.contact_id = contact.id
-   LEFT JOIN 
+   LEFT JOIN
 (SELECT MIN(cb.created_date) created_date, cb.total_amount, cb.contact_id, cc.id FROM civicrm_contribution cb LEFT JOIN civicrm_membership_payment mp ON mp.contribution_id = cb.id LEFT JOIN civicrm_participant_payment pp ON pp.contribution_id = cb.id LEFT JOIN civicrm_contribution cc ON cb.contact_id = cc.contact_id WHERE cb.is_test = 0 AND cb.contribution_status_id = 1 AND pp.id IS NULL AND mp.id IS NULL AND cc.is_test = 0 AND cc.contribution_status_id = 4 AND cc.created_date < cb.created_date GROUP BY cc.id ORDER BY cb.created_date DESC) success ON success.id = failed.id
 ";
   }
@@ -170,6 +178,13 @@ $having
     $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "(success.created_date IS NULL OR success.created_date > date_add(failed.created_date, INTERVAL $days DAY) OR success.created_date <= failed.created_date)";
+
+    if (!empty($this->_failedDateFrom)) {
+      $clauses[] = "failed.created_date >= {$this->_failedDateFrom}";
+    }
+    if (!empty($this->_failedDateTo)) {
+      $clauses[] = "failed.created_date <= {$this->_failedDateTo}";
+    }
 
     return CRM_Utils_Array::implode(' AND ', $clauses);
   }
@@ -197,6 +212,47 @@ $having
       $option[$i] = $i;
     }
     $form->addSelect('days', ts('days'), $option);
+    $form->addDate('failed_date_from', ts('Failed Donation Date (From)'), FALSE);
+    $form->addDate('failed_date_to', ts('Failed Donation Date (To)'), FALSE);
+    $form->addFormRule(['CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', 'formRule']);
+  }
+
+  /**
+   * Validate form values
+   *
+   * @param array $fields
+   *
+   * @return bool|array TRUE or array of errors
+   * @access public
+   */
+  public static function formRule($fields) {
+    $errors = [];
+    $from = CRM_Utils_Array::value('failed_date_from', $fields);
+    $to = CRM_Utils_Array::value('failed_date_to', $fields);
+
+    $tsFrom = NULL;
+    $tsTo = NULL;
+
+    if ($from) {
+      $tsFrom = strtotime($from);
+      if ($tsFrom === FALSE) {
+        $errors['failed_date_from'] = ts('Please enter a valid date for Failed Donation Date (From).');
+      }
+    }
+    if ($to) {
+      $tsTo = strtotime($to);
+      if ($tsTo === FALSE) {
+        $errors['failed_date_to'] = ts('Please enter a valid date for Failed Donation Date (To).');
+      }
+    }
+
+    if (empty($errors) && $tsFrom && $tsTo) {
+      if ($tsFrom > $tsTo) {
+        $errors['failed_date_from'] = ts('Failed Donation Date (From) must be earlier than or equal to Failed Donation Date (To).');
+      }
+    }
+
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**

@@ -10,7 +10,21 @@
       {ts}Edit Search Criteria{/ts}
     </div><!-- /.crm-accordion-header -->
     <div class="crm-accordion-body">
-      {ts 1=$form.days.html}After payment failed but not retry in %1 days{/ts} <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</span>
+      {ts 1=$form.days.html}After payment failed but not retry in %1 days{/ts}
+      <br/>
+      <table class="form-layout-compressed">
+        <tr class="crm-contact-custom-search-form-row-failed_date">
+          <td class="label">{$form.failed_date_from.label}</td>
+          <td>
+            {include file="CRM/common/jcalendar.tpl" elementName=failed_date_from}
+            &nbsp;
+            <span>{$form.failed_date_to.label}</span>
+            {include file="CRM/common/jcalendar.tpl" elementName=failed_date_to}
+          </td>
+        </tr>
+      </table>
+      <p class="description">{ts}You can specify a failed donation date range to limit the search to a specific period.{/ts}</p>
+      <span class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="top"}</span>
     </div><!-- /.crm-accordion-body -->
 </div><!-- /.crm-accordion-wrapper -->
 </div><!-- /.crm-form-block -->

@@ -108,6 +108,7 @@ class CRM_Core_DAO_EntityFile extends CRM_Core_DAO {
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
@@ -195,7 +196,7 @@ class CRM_Core_DAO_EntityFile extends CRM_Core_DAO {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['entity_file'] = &$fields[$name];
@@ -217,7 +218,7 @@ class CRM_Core_DAO_EntityFile extends CRM_Core_DAO {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['entity_file'] = &$fields[$name];

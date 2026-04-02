@@ -1,3 +1,4 @@
+// Test creating a group and setting up a mailing for that group
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

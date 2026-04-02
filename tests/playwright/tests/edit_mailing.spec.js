@@ -1,3 +1,4 @@
+// Test creating a mailing and editing its content blocks (title, paragraph, image, button)
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

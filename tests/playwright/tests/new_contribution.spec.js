@@ -1,3 +1,4 @@
+// Test manually adding a contribution record in the backend and verifying saved field values
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 
@@ -14,7 +15,7 @@ test.beforeAll(async () => {
 test.afterAll(async () => {
     await page.close();
 });
-  
+
 
 test.describe.serial('Add Contribution', () => {
 

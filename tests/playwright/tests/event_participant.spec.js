@@ -1,3 +1,4 @@
+// Test creating a contact and editing their event participant record in the backend
 const { test, expect, chromium } = require('@playwright/test');
 const utils = require('./utils.js');
 

@@ -94,7 +94,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
 {foreach from=$table.fields item=field}
   /**
 {if $field.comment}
-   * {$field.comment}
+   * {$field.comment|trim}
 {/if}
    *
    * @var {$field.phpType}
@@ -109,6 +109,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
   public function __construct() {ldelim}
     parent::__construct();
   {rdelim}
+
 {if $table.foreignKey}
   /**
    * return foreign links
@@ -125,9 +126,9 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
     {rdelim}
     return self::$_links;
   {rdelim}
-{/if} {* table.foreignKey *}
+{/if}{* table.foreignKey *}
 {if $table.foreignKey || $table.dynamicForeignKey}
- /**
+  /**
    * Returns foreign keys and entity references.
    *
    * @return array
@@ -146,6 +147,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
     return Civi::$statics[__CLASS__]['links'];
   {rdelim}
 {/if}{* table.foreignKey *}
+
   /**
    * returns all the column names of this table
    *
@@ -241,7 +243,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
     if (!(self::$_import)) {ldelim}
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {ldelim}
+      foreach ($fields as $name => $field) {ldelim}
         if (CRM_Utils_Array::value('import', $field)) {ldelim}
           if ($prefix) {ldelim}
             self::$_import['{$table.labelName}'] = &$fields[$name];
@@ -254,8 +256,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
 {if $table.foreignKey}
 {foreach from=$table.foreignKey item=foreign}
 {if $foreign.import}
-      self::$_import = array_merge( self::$_import,
-      {$foreign.className}::import(TRUE) );
+      self::$_import = array_merge(self::$_import, {$foreign.className}::import(TRUE));
 {/if}
 {/foreach}
 {/if}
@@ -271,7 +272,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
     if (!(self::$_export)) {ldelim}
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {ldelim}
+      foreach ($fields as $name => $field) {ldelim}
         if (CRM_Utils_Array::value('export', $field)) {ldelim}
           if ($prefix) {ldelim}
             self::$_export['{$table.labelName}'] = &$fields[$name];
@@ -284,8 +285,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
 {if $table.foreignKey}
 {foreach from=$table.foreignKey item=foreign}
 {if $foreign.export}
-      self::$_export = array_merge( self::$_export,
-      {$foreign.className}::export(TRUE) );
+      self::$_export = array_merge(self::$_export, {$foreign.className}::export(TRUE));
 {/if}
 {/foreach}
 {/if}
@@ -298,8 +298,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {ldelim}
+  public static function &getEnums() {ldelim}
     static $enums = [
 {foreach from=$table.fields item=field}
 {if $field.crmType == 'CRM_Utils_Type::T_ENUM'}
@@ -342,7 +341,7 @@ class {$table.className} extends CRM_Core_DAO {ldelim}
    */
   public static function addDisplayEnums(&$values) {ldelim}
     $enumFields = &{$table.className}::getEnums();
-    foreach($enumFields as $enum) {ldelim}
+    foreach ($enumFields as $enum) {ldelim}
       if (isset($values[$enum])) {ldelim}
         $values[$enum . '_display'] = {$table.className}::tsEnum($enum, $values[$enum]);
       {rdelim}

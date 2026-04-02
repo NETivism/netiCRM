@@ -197,13 +197,13 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
    */
   public $text_length;
   /**
-   * Date may be up to start_date_years years prior to tcurrent date  
+   * Date may be up to start_date_years years prior to tcurrent date
    *
    * @var int unsigned
    */
   public $start_date_years;
   /**
-   * Date may be up to end_date_years years after to tcurrent date 
+   * Date may be up to end_date_years years after to tcurrent date
    *
    * @var int unsigned
    */
@@ -221,13 +221,13 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
    */
   public $time_format;
   /**
-   *  Number of columns in Note Field 
+   * Number of columns in Note Field
    *
    * @var int unsigned
    */
   public $note_columns;
   /**
-   *  Number of rows in Note Field 
+   * Number of rows in Note Field
    *
    * @var int unsigned
    */
@@ -252,6 +252,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
   public function __construct() {
     parent::__construct();
   }
+
   /**
    * return foreign links
    *
@@ -473,7 +474,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
     if (!(self::$_import)) {
       self::$_import = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('import', $field)) {
           if ($prefix) {
             self::$_import['custom_field'] = &$fields[$name];
@@ -495,7 +496,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
     if (!(self::$_export)) {
       self::$_export = [];
       $fields = &self::fields();
-      foreach($fields as $name => $field) {
+      foreach ($fields as $name => $field) {
         if (CRM_Utils_Array::value('export', $field)) {
           if ($prefix) {
             self::$_export['custom_field'] = &$fields[$name];
@@ -513,8 +514,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
    *
    * @return array (reference)  the array of enum fields
    */
-  public static function &getEnums()
-  {
+  public static function &getEnums() {
     static $enums = [
         'data_type',
         'html_type',
@@ -577,7 +577,7 @@ class CRM_Core_DAO_CustomField extends CRM_Core_DAO {
    */
   public static function addDisplayEnums(&$values) {
     $enumFields = &CRM_Core_DAO_CustomField::getEnums();
-    foreach($enumFields as $enum) {
+    foreach ($enumFields as $enum) {
       if (isset($values[$enum])) {
         $values[$enum . '_display'] = CRM_Core_DAO_CustomField::tsEnum($enum, $values[$enum]);
       }
