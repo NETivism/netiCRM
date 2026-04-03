@@ -8,7 +8,7 @@ class CRM_Utils_ShortenURLProvider_NetiCC extends CRM_Utils_ShortenURLProvider {
   /**
    * @var string
    */
-  private $baseUrl = 'https://neti.cc';
+  private $baseUrl = 'https://d.neti.cc';
 
   /**
    * @var string
