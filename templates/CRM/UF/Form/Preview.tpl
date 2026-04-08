@@ -26,9 +26,47 @@
 {if $previewField }
 {capture assign=infoMessage}<strong>{ts}Profile Field Preview{/ts}</strong>{/capture}
 {else}
-{capture assign=infoMessage}<strong>{ts}Profile Preview{/ts}</strong>{/capture}
+{capture assign=infoMessage}<strong>{ts}Profile Preview{/ts}</strong>
+{if $usageSubtitle}<br/><span class="font-size11pt">{$usageSubtitle}</span>{/if}
+{/capture}
 {/if}
 {include file="CRM/common/info.tpl"}
+
+{if $hasUsagePages}
+<div class="crm-block crm-uf-usagepages-block">
+  <p><strong>{ts}This profile is embedded in the following pages. Click the title to preview the form on the frontend.{/ts}</strong></p>
+
+  {include file="CRM/common/pager.tpl" location="top" pager=$usagePager noForm=true}
+
+  <table class="selector">
+    <thead>
+      <tr>
+        <th>{ts}Page Title{/ts}</th>
+        <th>{ts}Page Settings{/ts}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {foreach from=$usagePages item=page}
+      <tr class="{cycle values='odd-row,even-row'}">
+        <td>
+          {if $page.isActive}
+            <a href="{$page.frontUrl}" target="_blank">{$page.pageTitle}</a>
+          {else}
+            <span class="disabled" style="color: red;">{$page.pageTitle}</span>
+          {/if}
+        </td>
+        <td>
+          <a href="{$page.configUrl}">{ts}Configure this page's form{/ts}</a>
+        </td>
+      </tr>
+      {/foreach}
+    </tbody>
+  </table>
+
+  {include file="CRM/common/pager.tpl" location="bottom" pager=$usagePager noForm=true}
+</div>
+{/if}
+
 <div class="crm-form-block">
 
 {if ! empty( $fields )}
