@@ -182,45 +182,39 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
    * Build usage pages section showing which pages use this profile.
    */
   protected function buildUsagePages() {
-    $groupType = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $this->_gid, 'group_type');
-    if (empty($groupType)) {
-      return;
-    }
+    // Check if this profile is configured for contribution or event pages via uf_join
+    $moduleCheckSql = "
+      SELECT COUNT(*) FROM civicrm_uf_join
+      WHERE uf_group_id = %1
+      AND module IN ('CiviContribute', 'CiviEvent', 'CiviEvent_Additional')
+    ";
+    $isUsedForPages = CRM_Core_DAO::singleValueQuery($moduleCheckSql, [1 => [$this->_gid, 'Integer']]);
 
-    // parse group_type, strip subtypes after VALUE_SEPARATOR
-    $mainPart = explode(CRM_Core_DAO::VALUE_SEPARATOR, $groupType)[0];
-    $types = explode(',', $mainPart);
-
-    $hasContribute = in_array('Contribute', $types);
-    $hasParticipant = in_array('Participant', $types);
-
-    if (!$hasContribute && !$hasParticipant) {
+    if (!$isUsedForPages) {
       return;
     }
 
     // AC-1: assign subtitle for the blue banner
     $this->assign('usageSubtitle', ts('The actual style and layout should be viewed on the page where this profile is embedded.'));
 
-    // build WHERE conditions based on group_type
-    $whereClauses = [];
-    if ($hasContribute) {
-      $whereClauses[] = "(uj.module = 'CiviContribute' AND uj.entity_table = 'civicrm_contribution_page')";
-    }
-    if ($hasParticipant) {
-      $whereClauses[] = "(uj.module IN ('CiviEvent', 'CiviEvent_Additional') AND uj.entity_table = 'civicrm_event')";
-    }
-    $whereModule = '(' . implode(' OR ', $whereClauses) . ')';
+    // WHERE conditions covering both contribution pages and event pages
+    $whereModule = "(
+      (uj.module = 'CiviContribute' AND uj.entity_table = 'civicrm_contribution_page') OR
+      (uj.module IN ('CiviEvent', 'CiviEvent_Additional') AND uj.entity_table = 'civicrm_event')
+    )";
 
-    // count distinct usage pages
+    // count distinct usage pages (excluding deleted pages via HAVING page_title IS NOT NULL)
     $countSql = "
       SELECT COUNT(*) FROM (
-        SELECT DISTINCT uj.entity_table, uj.entity_id
+        SELECT uj.entity_table, uj.entity_id,
+          CASE WHEN uj.entity_table = 'civicrm_contribution_page' THEN cp.title
+               WHEN uj.entity_table = 'civicrm_event' THEN ev.title END AS page_title
         FROM civicrm_uf_join uj
         LEFT JOIN civicrm_contribution_page cp ON uj.entity_table = 'civicrm_contribution_page' AND uj.entity_id = cp.id
         LEFT JOIN civicrm_event ev ON uj.entity_table = 'civicrm_event' AND uj.entity_id = ev.id
         WHERE uj.uf_group_id = %1 AND {$whereModule}
-        HAVING CASE WHEN uj.entity_table = 'civicrm_contribution_page' THEN cp.title
-                    WHEN uj.entity_table = 'civicrm_event' THEN ev.title END IS NOT NULL
+        GROUP BY uj.entity_table, uj.entity_id
+        HAVING page_title IS NOT NULL
       ) AS usage_count
     ";
     $totalCount = CRM_Core_DAO::singleValueQuery($countSql, [1 => [$this->_gid, 'Integer']]);
