@@ -160,21 +160,21 @@ WHERE  id IN ( $idString )
   /**
    * Generate API Key for a contact
    *
-   * Checks if the contact already has an API key. If not, generates a new 32-character
-   * API key using bin2hex(random_bytes(16)) and updates the contact record.
+   * Returns the existing key unless $reset is TRUE, in which case the current
+   * key is cleared first and a fresh 32-character key is generated.
    *
-   * @param int $contactId The contact ID
+   * @param int  $contactId The contact ID
+   * @param bool $reset     When TRUE, clears any existing key before generating
    *
-   * @return string|null The API key (existing or newly generated), or NULL if contact not found
+   * @return string|null The API key, or NULL if contact not found
    * @access public
    * @static
    */
-  public static function generateAPIKey($contactId) {
+  public static function generateAPIKey($contactId, $reset = FALSE) {
     if (!$contactId) {
       return NULL;
     }
 
-    // Retrieve the contact to check if api_key already exists
     $contact = new CRM_Contact_DAO_Contact();
     $contact->id = $contactId;
     $contact->selectAdd();
@@ -184,19 +184,50 @@ WHERE  id IN ( $idString )
       return NULL;
     }
 
-    // Check if api_key already has a value
-    if (!empty($contact->api_key)) {
+    // Return existing key when not resetting
+    if (!$reset && !empty($contact->api_key)) {
       return $contact->api_key;
     }
 
-    // Generate new 32-character API key
+    // Generate a new api_key (replaces existing on reset, creates on first call)
     $apiKey = bin2hex(random_bytes(16));
-
-    // Update the contact with the new API key
     $contact->api_key = $apiKey;
     $contact->save();
 
     return $apiKey;
+  }
+
+  /**
+   * Reset the contact hash, invalidating any previously issued MCP checksums.
+   *
+   * The MCP checksum is derived from site_key + hash + api_key. Regenerating
+   * the hash alone is sufficient to invalidate all outstanding checksums without
+   * touching the api_key.
+   *
+   * @param int $contactId The contact ID
+   *
+   * @return bool TRUE on success, FALSE if contact not found
+   * @access public
+   * @static
+   */
+  public static function resetContactHash($contactId) {
+    if (!$contactId) {
+      return FALSE;
+    }
+
+    $contact = new CRM_Contact_DAO_Contact();
+    $contact->id = $contactId;
+    $contact->selectAdd();
+    $contact->selectAdd('hash');
+
+    if (!$contact->find(TRUE)) {
+      return FALSE;
+    }
+
+    $contact->hash = md5(uniqid((string)rand(), TRUE));
+    $contact->save();
+
+    return TRUE;
   }
 
   /**

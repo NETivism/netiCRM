@@ -314,6 +314,15 @@ class CRM_Utils_SqlParser {
         $this->validateCondition($condition);
       }
     }
+
+    if (!empty($statement->union)) {
+      // Each union element is a tuple: [string $type, SelectStatement $stmt]
+      foreach ($statement->union as $unionTuple) {
+        if (is_array($unionTuple) && isset($unionTuple[1]) && $unionTuple[1] instanceof SelectStatement) {
+          $this->validateSelectStatement($unionTuple[1]);
+        }
+      }
+    }
   }
 
   /**
@@ -375,13 +384,24 @@ class CRM_Utils_SqlParser {
       return;
     }
 
-    if (!empty($expression->column) && $context === 'select') {
-      // If it's a SQL function, validate the function; otherwise validate as field
-      if ($this->isSqlFunction($expression->column)) {
-        $this->validateSqlFunction($expression->column);
+    if ($context === 'select') {
+      if (!empty($expression->column)) {
+        // If it's a SQL function, validate the function; otherwise validate as field
+        if ($this->isSqlFunction($expression->column)) {
+          $this->validateSqlFunction($expression->column);
+        }
+        else {
+          $this->validateField($expression->column);
+        }
       }
-      else {
-        $this->validateField($expression->column);
+      elseif (!empty($expression->function) && !$expression->subquery) {
+        // Bare function call: SLEEP(5), USER(), VERSION(), etc.
+        // Use expr (e.g. "SLEEP(5)") because validateSqlFunction requires the "(" to extract the name.
+        $this->validateSqlFunction($expression->expr);
+      }
+      elseif (!$expression->subquery && !empty($expression->expr) && trim($expression->expr) === '*') {
+        // Wildcard SELECT * — always reject
+        $this->validateField('*');
       }
     }
 
@@ -456,6 +476,7 @@ class CRM_Utils_SqlParser {
     // If it's a SQL function, validate the function and skip field validation
     if ($this->isSqlFunction($operand)) {
       $this->validateSqlFunction($operand);
+      $this->validateFunctionArgFields($operand);
       return;
     }
 
@@ -733,6 +754,107 @@ class CRM_Utils_SqlParser {
         $this->addError("Statement type '{$statementType}' is not in the allowlist");
       }
     }
+  }
+
+  /**
+   * Validate fields referenced inside a SQL function's arguments.
+   *
+   * Recursively handles nested function calls (e.g. ROUND(COUNT(x), 1)).
+   *
+   * @param string $funcExpr Full function expression, e.g. "SUM(cc.total_amount)"
+   */
+  private function validateFunctionArgFields(string $funcExpr): void {
+    $inner = $this->extractFunctionInner($funcExpr);
+    if ($inner === NULL) {
+      return;
+    }
+
+    // Strip leading DISTINCT keyword
+    $inner = preg_replace('/^\s*DISTINCT\s+/i', '', $inner);
+
+    foreach ($this->splitByComma($inner) as $arg) {
+      $arg = trim($arg);
+      if ($arg === '' || $this->isLiteral($arg)) {
+        continue;
+      }
+      if ($this->isSqlFunction($arg)) {
+        $this->validateSqlFunction($arg);
+        $this->validateFunctionArgFields($arg);
+        continue;
+      }
+      // Skip pure numeric/operator tokens (e.g. "100.0", "* 100.0 /")
+      if (preg_match('/^[\d\s\+\-\*\/\%\.]+$/', $arg)) {
+        continue;
+      }
+      $parsed = $this->parseIdentifier($arg);
+      if (!empty($parsed['table'])) {
+        $this->validateTable($parsed['table']);
+      }
+      if (!empty($parsed['field']) && $parsed['field'] !== '*') {
+        $this->validateField($parsed['field']);
+      }
+    }
+  }
+
+  /**
+   * Extract the content between the first opening parenthesis and its
+   * matching closing parenthesis in a function expression.
+   *
+   * @param string $funcExpr
+   * @return string|null Inner content, or NULL if no balanced parens found.
+   */
+  private function extractFunctionInner(string $funcExpr): ?string {
+    $open = strpos($funcExpr, '(');
+    if ($open === FALSE) {
+      return NULL;
+    }
+    $depth = 0;
+    $len = strlen($funcExpr);
+    for ($i = $open; $i < $len; $i++) {
+      if ($funcExpr[$i] === '(') {
+        $depth++;
+      }
+      elseif ($funcExpr[$i] === ')') {
+        $depth--;
+        if ($depth === 0) {
+          return substr($funcExpr, $open + 1, $i - $open - 1);
+        }
+      }
+    }
+    return NULL;
+  }
+
+  /**
+   * Split an expression string by top-level commas (ignoring commas inside
+   * nested parentheses).
+   *
+   * @param string $expr
+   * @return string[]
+   */
+  private function splitByComma(string $expr): array {
+    $result = [];
+    $depth = 0;
+    $current = '';
+    $len = strlen($expr);
+    for ($i = 0; $i < $len; $i++) {
+      $c = $expr[$i];
+      if ($c === '(') {
+        $depth++;
+      }
+      elseif ($c === ')') {
+        $depth--;
+      }
+      elseif ($c === ',' && $depth === 0) {
+        $result[] = $current;
+        $current = '';
+        continue;
+      }
+      $current .= $c;
+    }
+    if ($current !== '') {
+      $result[] = $current;
+    }
+    return $result;
   }
 
   /**
