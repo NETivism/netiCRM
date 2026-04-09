@@ -30,13 +30,13 @@ class CRM_Connector_Page_Connector extends CRM_Core_Page {
     $isAdmin = CRM_Core_Permission::check($adminPerm);
     $isOwnPage = ($loggedInCid && $loggedInCid === $cid);
     $hasMCPPerm = CRM_Core_Permission::check('MCP query');
-    $mcpEnabled         = defined('CIVICRM_MCP_ENABLED') && CIVICRM_MCP_ENABLED && $hasMCPPerm;
+    $mcpEnabled         = defined('CIVICRM_MCP_ENABLED') && CIVICRM_MCP_ENABLED;
     $apiExplorerEnabled = defined('CIVICRM_APIEXPLORER_ENABLED') && CIVICRM_APIEXPLORER_ENABLED;
     if (!$mcpEnabled && !$apiExplorerEnabled) {
       CRM_Utils_System::permissionDenied();
       return;
     }
-    if (!$isAdmin && !$isOwnPage) {
+    if (!$isAdmin && (!$isOwnPage || !$hasMCPPerm)) {
       CRM_Utils_System::permissionDenied();
     }
 
