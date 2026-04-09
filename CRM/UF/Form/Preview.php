@@ -182,21 +182,6 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
    * Build usage pages section showing which pages use this profile.
    */
   protected function buildUsagePages() {
-    // Check if this profile is configured for contribution or event pages via uf_join
-    $moduleCheckSql = "
-      SELECT COUNT(*) FROM civicrm_uf_join
-      WHERE uf_group_id = %1
-      AND module IN ('CiviContribute', 'CiviEvent', 'CiviEvent_Additional')
-    ";
-    $isUsedForPages = CRM_Core_DAO::singleValueQuery($moduleCheckSql, [1 => [$this->_gid, 'Integer']]);
-
-    if (!$isUsedForPages) {
-      return;
-    }
-
-    // AC-1: assign subtitle for the blue banner
-    $this->assign('usageSubtitle', ts('The actual style and layout should be viewed on the page where this profile is embedded.'));
-
     // WHERE conditions covering both contribution pages and event pages
     $whereModule = "(
       (uj.module = 'CiviContribute' AND uj.entity_table = 'civicrm_contribution_page') OR
@@ -222,6 +207,9 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
     if (empty($totalCount)) {
       return;
     }
+
+    // AC-1: assign subtitle for the blue banner (only when actual pages exist)
+    $this->assign('usageSubtitle', ts('The actual style and layout should be viewed on the page where this profile is embedded.'));
 
     // AC-6: set up pager
     $pager = new CRM_Utils_Pager([
