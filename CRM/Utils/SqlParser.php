@@ -574,6 +574,10 @@ class CRM_Utils_SqlParser {
   private function parseIdentifier(string $identifier): array {
     $identifier = $this->normalizeIdentifier($identifier);
 
+    // Strip leading parentheses (can appear when grouped WHERE conditions like
+    // "(table.field = val OR ...)" are parsed and the paren ends up in the operand)
+    $identifier = ltrim($identifier, '(');
+
     // Remove operators by cutting at first space
     if (strpos($identifier, ' ') !== FALSE) {
       $identifier = trim(substr($identifier, 0, strpos($identifier, ' ')));
@@ -775,6 +779,10 @@ class CRM_Utils_SqlParser {
     foreach ($this->splitByComma($inner) as $arg) {
       $arg = trim($arg);
       if ($arg === '' || $this->isLiteral($arg)) {
+        continue;
+      }
+      // Skip MySQL INTERVAL expressions (e.g. "INTERVAL 6 MONTH", "INTERVAL 1 DAY")
+      if (preg_match('/^INTERVAL\s+/i', $arg)) {
         continue;
       }
       if ($this->isSqlFunction($arg)) {
