@@ -450,6 +450,11 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   public $aiOrganizationIntro = '';
 
   /**
+   * neti.cc API key for URL shortener
+   */
+  public $netiCCAPIKey = '';
+
+  /**
    * Webserver Log Dir
    *
    * It should only use for web server log processing cron jobs

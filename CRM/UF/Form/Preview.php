@@ -111,6 +111,11 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
 
     $this->set('fieldId', NULL);
     $this->assign("fields", $this->_fields);
+
+    // build usage pages section for full profile preview
+    if (!$field) {
+      $this->buildUsagePages();
+    }
   }
 
   /**
@@ -171,5 +176,105 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
         ],
       ]
     );
+  }
+
+  /**
+   * Build usage pages section showing which pages use this profile.
+   */
+  protected function buildUsagePages() {
+    // WHERE conditions covering both contribution pages and event pages
+    $whereModule = "(
+      (uj.module = 'CiviContribute' AND uj.entity_table = 'civicrm_contribution_page') OR
+      (uj.module IN ('CiviEvent', 'CiviEvent_Additional') AND uj.entity_table = 'civicrm_event')
+    )";
+
+    // count distinct usage pages (excluding deleted pages via HAVING page_title IS NOT NULL)
+    $countSql = "
+      SELECT COUNT(*) FROM (
+        SELECT uj.entity_table, uj.entity_id,
+          CASE WHEN uj.entity_table = 'civicrm_contribution_page' THEN cp.title
+               WHEN uj.entity_table = 'civicrm_event' THEN ev.title END AS page_title
+        FROM civicrm_uf_join uj
+        LEFT JOIN civicrm_contribution_page cp ON uj.entity_table = 'civicrm_contribution_page' AND uj.entity_id = cp.id
+        LEFT JOIN civicrm_event ev ON uj.entity_table = 'civicrm_event' AND uj.entity_id = ev.id
+        WHERE uj.uf_group_id = %1 AND {$whereModule}
+        GROUP BY uj.entity_table, uj.entity_id
+        HAVING page_title IS NOT NULL
+      ) AS usage_count
+    ";
+    $totalCount = CRM_Core_DAO::singleValueQuery($countSql, [1 => [$this->_gid, 'Integer']]);
+
+    if (empty($totalCount)) {
+      return;
+    }
+
+    // AC-1: assign subtitle for the blue banner (only when actual pages exist)
+    $this->assign('usageSubtitle', ts('The actual style and layout should be viewed on the page where this profile is embedded.'));
+
+    // AC-6: set up pager
+    $pager = new CRM_Utils_Pager([
+      'total' => $totalCount,
+      'rowCount' => 25,
+      'status' => ts('Pages %%StatusMessage%%'),
+      'buttonBottom' => 'PagerBottomButton',
+      'buttonTop' => 'PagerTopButton',
+      'pageID' => $this->get(CRM_Utils_Pager::PAGE_ID),
+    ]);
+    $this->assign_by_ref('usagePager', $pager);
+
+    list($offset, $limit) = $pager->getOffsetAndRowCount();
+
+    // query usage pages with pagination
+    $sql = "
+      SELECT uj.entity_table, uj.entity_id,
+        CASE WHEN uj.entity_table = 'civicrm_contribution_page' THEN cp.title
+             WHEN uj.entity_table = 'civicrm_event' THEN ev.title END AS page_title,
+        CASE WHEN uj.entity_table = 'civicrm_contribution_page' THEN cp.is_active
+             WHEN uj.entity_table = 'civicrm_event' THEN ev.is_active END AS page_is_active
+      FROM civicrm_uf_join uj
+      LEFT JOIN civicrm_contribution_page cp ON uj.entity_table = 'civicrm_contribution_page' AND uj.entity_id = cp.id
+      LEFT JOIN civicrm_event ev ON uj.entity_table = 'civicrm_event' AND uj.entity_id = ev.id
+      WHERE uj.uf_group_id = %1 AND {$whereModule}
+      GROUP BY uj.entity_table, uj.entity_id
+      HAVING page_title IS NOT NULL
+      ORDER BY uj.entity_table, uj.entity_id
+      LIMIT %2 OFFSET %3
+    ";
+    $params = [
+      1 => [$this->_gid, 'Integer'],
+      2 => [$limit, 'Integer'],
+      3 => [$offset, 'Integer'],
+    ];
+    $dao = CRM_Core_DAO::executeQuery($sql, $params);
+
+    $rows = [];
+    while ($dao->fetch()) {
+      $entityId = $dao->entity_id;
+      $isContribution = ($dao->entity_table === 'civicrm_contribution_page');
+
+      // build page title with ID format
+      $pageTitle = $dao->page_title . ts('(ID: %1)', [1 => $entityId]);
+
+      // build frontend URL
+      if ($isContribution) {
+        $frontUrl = CRM_Utils_System::url('civicrm/contribute/transact', 'reset=1&id=' . $entityId);
+        $configUrl = CRM_Utils_System::url('civicrm/admin/contribute/custom', 'reset=1&action=update&id=' . $entityId);
+      }
+      else {
+        $frontUrl = CRM_Utils_System::url('civicrm/event/register', 'reset=1&id=' . $entityId);
+        $configUrl = CRM_Utils_System::url('civicrm/event/manage/registration', 'reset=1&action=update&id=' . $entityId);
+      }
+
+      $rows[] = [
+        'pageTitle' => $pageTitle,
+        'entityId' => $entityId,
+        'isActive' => (int) $dao->page_is_active === 1,
+        'frontUrl' => $frontUrl,
+        'configUrl' => $configUrl,
+      ];
+    }
+
+    $this->assign('usagePages', $rows);
+    $this->assign('hasUsagePages', TRUE);
   }
 }

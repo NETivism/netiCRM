@@ -167,36 +167,34 @@
       //Shorten URL
       $('.shorten-url-copy').click(function(){
         var sendUrl = $('#result_url').val();
-        console.log(JSON.stringify({"redirect": sendUrl}));
         $(".shorten-url-copy").css({"pointer-events":"none","background": "#808080"});
         $.ajax({
-            url: 'https://neti.cc/handle/create-entry',
-            type: 'PUT',
-            contentType: 'application/json',
-            dataType: 'json',
-            data: JSON.stringify({"redirect": sendUrl}),
-            success: function (data) {
-              var shortUrl = 'https://neti.cc/' + data.short;
-              $('#shorten_url').val(shortUrl);
-              $("#shorten_url").select();
-              document.execCommand("copy");
-              $("#shorten_url").after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
-              $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
-              $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
-
-              // save to database
-              if (pageId && pageType) {
-                $.ajax({
-                  url: '/civicrm/ajax/saveshortenurl',
-                  type: 'POST',
-                  data: {
-                    'page_id': pageId,
-                    'page_type': pageType,
-                    'shorten': shortUrl,
-                  }
-                });
-              }
+          url: '/civicrm/ajax/saveshortenurl',
+          type: 'POST',
+          dataType: 'json',
+          data: {
+            'url': sendUrl,
+            'page_id': pageId,
+            'page_type': pageType,
+          },
+          success: function(data) {
+            if (data.is_error) {
+              $(".shorten-url-copy").css({"pointer-events":"initial","background": "#333030"});
+              $('#shorten_url').after(" <div class='font-red'>{/literal}{ts}Failed to shorten URL, please try again.{/ts}{literal}</div>");
+              return;
             }
+            var shortUrl = data.shorten;
+            $('#shorten_url').val(shortUrl);
+            $('#shorten_url').select();
+            document.execCommand('copy');
+            $('#shorten_url').after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
+            $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
+            $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
+          },
+          error: function() {
+            $(".shorten-url-copy").css({"pointer-events":"initial","background": "#333030"});
+            $('#shorten_url').after(" <div class='font-red'>{/literal}{ts}Failed to shorten URL, please try again.{/ts}{literal}</div>");
+          }
         });
       });
 
