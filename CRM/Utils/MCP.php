@@ -929,6 +929,7 @@ class CRM_Utils_MCP {
     }
     else {
       $results = $parser->getErrors();
+      CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP parser error: " . json_encode($results, JSON_UNESCAPED_UNICODE));
       $isError = TRUE;
     }
     return [
