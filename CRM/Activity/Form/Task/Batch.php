@@ -33,6 +33,8 @@
  *
  */
 
+require_once 'api/v2/Activity.php';
+
 /**
  * This class provides the functionality for batch profile update for Activities
  */
@@ -238,8 +240,15 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
           $value['activity_date_time'] = CRM_Utils_Date::processDate($value['activity_date_time'], $value['activity_date_time_time']);
         }
 
-        if ($value['activity_status_id']) {
+        if (!empty($value['activity_status_id'])) {
           $value['status_id'] = $value['activity_status_id'];
+        }
+        elseif (!empty($value['activity_status'])) {
+          $activityStatuses = CRM_Core_PseudoConstant::activityStatus();
+          $statusId = array_search($value['activity_status'], $activityStatuses);
+          if ($statusId !== FALSE) {
+            $value['status_id'] = $statusId;
+          }
         }
 
         if ($value['activity_details']) {
@@ -262,8 +271,8 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
 SELECT activity_type_id , source_contact_id 
 FROM   civicrm_activity 
 WHERE  id = %1";
-        $params = [1 => [$key, 'Integer']];
-        $dao = CRM_Core_DAO::executeQuery($query, $params);
+        $queryParams = [1 => [$key, 'Integer']];
+        $dao = CRM_Core_DAO::executeQuery($query, $queryParams);
         $dao->fetch();
 
         // Get Activity Type ID
@@ -272,14 +281,19 @@ WHERE  id = %1";
         // Get Conatct ID
         $value['source_contact_id'] = $dao->source_contact_id;
 
+        // If target contact or assign contact is empty should not update
+        if ((empty($value['target_contact_id']) && empty($value['target_contact_name'])) || (empty($value['assign_contact_id']) && empty($value['assign_contact_name']))) {
+          $value['deleteActivityTarget'] = FALSE;
+          $value['deleteActivityAssignment'] = FALSE;
+        }
+
         $activityId = civicrm_activity_update($value);
 
         // add custom field values
         if (CRM_Utils_Array::value('custom', $value) &&
           is_array($value['custom'])
         ) {
-
-          CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_activity', $activityId->id);
+          CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_activity', $activityId['id']);
         }
       }
       CRM_Core_Session::setStatus(ts("Your updates have been saved."));
