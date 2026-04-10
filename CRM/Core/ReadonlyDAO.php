@@ -102,7 +102,6 @@ class CRM_Core_ReadonlyDAO {
     foreach (array_keys($this->viewDefinitions) as $viewName) {
       try {
         $msg = $this->grantSelectOnView($viewName);
-        //CRM_Core_Error::debug_log_message("[{$prefix}] {$msg}");
       }
       catch (Exception $e) {
         CRM_Core_Error::debug_log_message("[{$prefix}][ERROR] Failed to grant SELECT on `{$viewName}`: " . $e->getMessage());
@@ -126,7 +125,7 @@ class CRM_Core_ReadonlyDAO {
   public function connectReadonly() {
     try {
       $r = $this->readonlyDsn;
-      $pdoDsn = "mysql:host={$r['host']};port={$r['port']};dbname={$r['dbname']}";
+      $pdoDsn = "mysql:host={$r['host']};port={$r['port']};dbname={$r['dbname']};charset=utf8mb4";
       $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -186,7 +185,7 @@ class CRM_Core_ReadonlyDAO {
       return "";
     }
 
-    $fields = implode(', ', array_map(function($f) { return "`{$f}`"; }, $def['fields']));
+    $fields = implode(', ', array_map(function ($f) { return "`{$f}`"; }, $def['fields']));
     $source = $def['source'];
 
     // ALGORITHM=MERGE: MariaDB/MySQL will inline the view into the outer query,
@@ -247,7 +246,7 @@ class CRM_Core_ReadonlyDAO {
       throw new RuntimeException('CRM_Core_ReadonlyDAO: CIVICRM_DSN is unsupported or malformed.');
     }
 
-    $pdoDsn = "mysql:host={$parsed['host']};port={$parsed['port']};dbname={$parsed['dbname']}";
+    $pdoDsn = "mysql:host={$parsed['host']};port={$parsed['port']};dbname={$parsed['dbname']};charset=utf8mb4";
     return new PDO($pdoDsn, $parsed['username'], $parsed['password'], [
       PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
       PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -300,11 +299,11 @@ class CRM_Core_ReadonlyDAO {
     }
 
     return [
-      'host'     => isset($parsed['host']) ? $parsed['host'] : 'localhost',
-      'port'     => isset($parsed['port']) ? $parsed['port'] : 3306,
+      'host'     => $parsed['host'] ?? 'localhost',
+      'port'     => $parsed['port'] ?? 3306,
       'dbname'   => isset($parsed['path']) ? ltrim($parsed['path'], '/') : '',
-      'username' => isset($parsed['user']) ? $parsed['user'] : '',
-      'password' => isset($parsed['pass']) ? $parsed['pass'] : '',
+      'username' => $parsed['user'] ?? '',
+      'password' => $parsed['pass'] ?? '',
     ];
   }
 
