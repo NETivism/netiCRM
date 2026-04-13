@@ -38,6 +38,7 @@ use Drupal\Core\DrupalKernel;
  */
 class CRM_Utils_System_Drupal {
   public $is_drupal;
+  public $admin_permissions = 'administer permissions';
   public $version;
   public $versionalClass;
   private static $_version;
@@ -286,6 +287,27 @@ class CRM_Utils_System_Drupal {
       if ($user) {
         return $user->get('name')->value;
       }
+    }
+  }
+
+  /**
+   * Return the URL for a Drupal user profile page, respecting path aliases.
+   *
+   * @param int $ufId  Drupal user ID.
+   * @return string|null  Absolute URL, or NULL when $ufId is invalid.
+   */
+  public static function getUFProfileLink($ufId) {
+    if (!is_numeric($ufId)) {
+      return NULL;
+    }
+    $version = self::$_version;
+    if ($version < 8) {
+      // url() in Drupal 7 resolves path aliases automatically.
+      return url('user/' . $ufId);
+    }
+    else {
+      // Url::fromRoute() in Drupal 8/10 resolves path aliases automatically.
+      return \Drupal\Core\Url::fromRoute('entity.user.canonical', ['user' => $ufId])->toString();
     }
   }
 
@@ -985,6 +1007,21 @@ class CRM_Utils_System_Drupal {
    * @param array $params
    * @return void
    */
+  /**
+   * Get the last login timestamp for a CMS user by Drupal UID.
+   *
+   * Dispatches to the versional implementation (Drupal7 or Drupal8/10).
+   *
+   * @param int $ufId Drupal user ID
+   * @return int|null Unix timestamp of last login, or NULL if unavailable
+   */
+  public static function getLastLoginTime($ufId) {
+    if (empty($ufId)) {
+      return NULL;
+    }
+    return CRM_Core_Config::$_userSystem->versionalClass->getLastLoginTime($ufId);
+  }
+
   public static function loadUser($params = []) {
     if (empty($params)) {
       return FALSE;

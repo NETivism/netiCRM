@@ -9,6 +9,7 @@ use PhpMyAdmin\SqlParser\Statements\SelectStatement;
 use PhpMyAdmin\SqlParser\Statements\InsertStatement;
 use PhpMyAdmin\SqlParser\Statements\UpdateStatement;
 use PhpMyAdmin\SqlParser\Statements\DeleteStatement;
+use PhpMyAdmin\SqlParser\Statements\WithStatement;
 use PhpMyAdmin\SqlParser\Utils\Formatter;
 
 /**
@@ -139,6 +140,9 @@ class CRM_Utils_SqlParser {
         $this->collectSelectAliases($statement);
         $this->collectAllSubqueryAliases($statement);
       }
+      elseif ($statement instanceof WithStatement) {
+        $this->collectWithAliases($statement);
+      }
     }
   }
 
@@ -168,6 +172,17 @@ class CRM_Utils_SqlParser {
 
     $this->collectConditionSubqueryAliases($statement->where);
     $this->collectConditionSubqueryAliases($statement->having);
+
+    // Also collect aliases from UNION statements
+    if (!empty($statement->union)) {
+      foreach ($statement->union as $unionTuple) {
+        if (is_array($unionTuple) && isset($unionTuple[1]) && $unionTuple[1] instanceof SelectStatement) {
+          $this->collectSelectAliases($unionTuple[1]);
+          $this->collectConditionSubqueryAliases($unionTuple[1]->where);
+          $this->collectConditionSubqueryAliases($unionTuple[1]->having);
+        }
+      }
+    }
   }
 
   /**
@@ -187,6 +202,75 @@ class CRM_Utils_SqlParser {
           if ($subquery !== NULL) {
             $this->collectSubqueryAliases($subquery);
           }
+        }
+      }
+    }
+  }
+
+  /**
+   * Collect table names and field aliases from a WITH (CTE) statement.
+   *
+   * Each CTE name is added to the table allowlist so the final SELECT and
+   * other CTEs can reference it.  Field aliases produced inside each CTE
+   * body are also collected so they can appear in the outer SELECT.
+   *
+   * @param WithStatement $statement
+   */
+  private function collectWithAliases(WithStatement $statement): void {
+    // Add every CTE name to the table allowlist
+    foreach ($statement->withers as $name => $wither) {
+      $this->addToAllowlist('table', $name);
+      // Collect field aliases produced by each CTE body
+      if (!empty($wither->statement->statements)) {
+        foreach ($wither->statement->statements as $cteStmt) {
+          if ($cteStmt instanceof SelectStatement) {
+            $this->collectSelectAliases($cteStmt);
+            $this->collectAllSubqueryAliases($cteStmt);
+          }
+        }
+      }
+    }
+    // Collect aliases from the main query that follows the CTEs
+    if (!empty($statement->cteStatementParser->statements)) {
+      foreach ($statement->cteStatementParser->statements as $mainStmt) {
+        if ($mainStmt instanceof SelectStatement) {
+          $this->collectSelectAliases($mainStmt);
+          $this->collectAllSubqueryAliases($mainStmt);
+        }
+      }
+    }
+  }
+
+  /**
+   * Validate a WITH (CTE) statement.
+   *
+   * Validates each CTE body as an independent SELECT, then validates the
+   * final SELECT that consumes the CTEs.  CTE names are pre-added to the
+   * table allowlist so cross-references between CTEs and the main query
+   * are accepted.
+   *
+   * @param WithStatement $statement
+   */
+  private function validateWithStatement(WithStatement $statement): void {
+    // Validate each CTE body
+    foreach ($statement->withers as $name => $wither) {
+      if (!empty($wither->statement->statements)) {
+        foreach ($wither->statement->statements as $cteStmt) {
+          if ($cteStmt instanceof SelectStatement) {
+            $this->validateSelectStatement($cteStmt);
+          }
+        }
+      }
+    }
+    // Validate the final SELECT / statement
+    if (!empty($statement->cteStatementParser->statements)) {
+      foreach ($statement->cteStatementParser->statements as $mainStmt) {
+        if ($mainStmt instanceof SelectStatement) {
+          $this->validateSelectStatement($mainStmt);
+        }
+        else {
+          $type = $this->getStatementType($mainStmt);
+          $this->addError("CTE final statement type '{$type}' is not in the allowlist");
         }
       }
     }
@@ -303,6 +387,15 @@ class CRM_Utils_SqlParser {
    */
   private function validateStatement($statement): void {
     $statementType = $this->getStatementType($statement);
+
+    if ($statement instanceof WithStatement) {
+      // WITH (CTE) is permitted when SELECT is in the statement allowlist,
+      // since the final query is always a SELECT.
+      $this->validateStatementType('SELECT');
+      $this->validateWithStatement($statement);
+      return;
+    }
+
     $this->validateStatementType($statementType);
 
     if ($statement instanceof SelectStatement) {
@@ -358,6 +451,15 @@ class CRM_Utils_SqlParser {
     if ($statement->having) {
       foreach ($statement->having as $condition) {
         $this->validateCondition($condition);
+      }
+    }
+
+    if (!empty($statement->union)) {
+      // Each union element is a tuple: [string $type, SelectStatement $stmt]
+      foreach ($statement->union as $unionTuple) {
+        if (is_array($unionTuple) && isset($unionTuple[1]) && $unionTuple[1] instanceof SelectStatement) {
+          $this->validateSelectStatement($unionTuple[1]);
+        }
       }
     }
   }
@@ -421,13 +523,43 @@ class CRM_Utils_SqlParser {
       return;
     }
 
-    if (!empty($expression->column) && $context === 'select') {
-      // If it's a SQL function, validate the function; otherwise validate as field
-      if ($this->isSqlFunction($expression->column)) {
-        $this->validateSqlFunction($expression->column);
+    if ($context === 'select') {
+      if (!empty($expression->function) &&
+          (!$expression->subquery || $this->isSqlFunction($expression->expr))) {
+        // Function call (bare or window). Check function first because in lower MySQL
+        // contexts (< 8.0) window function names (NTILE, ROW_NUMBER, …) are not
+        // recognised as function keywords, so the parser also sets expression->column
+        // to the function name — we must not treat that as a field reference.
+        // Use expr (e.g. "NTILE(4) OVER (...)") so validateSqlFunction can extract
+        // the function name via the "(" character.
+        //
+        // Note: when OVER (PARTITION BY ...) is present, PhpMyAdmin sets
+        // expression->subquery = 'PARTITION' (because PARTITION is in its statement
+        // parser map). We detect real subqueries by checking that expr does NOT start
+        // with a function call pattern.
+        $this->validateSqlFunction($expression->expr);
+        // Validate fields referenced inside OVER (...) for window functions
+        if (preg_match('/\bOVER\s*\(/i', $expression->expr)) {
+          $this->validateWindowOverClause($expression->expr);
+        }
       }
-      else {
-        $this->validateField($expression->column);
+      elseif (!empty($expression->column)) {
+        // Skip string / numeric literals used as SELECT values (e.g. 'label' AS alias).
+        // The raw token (including quotes) is stored in expression->expr.
+        if (!empty($expression->expr) && $this->isLiteral($expression->expr)) {
+          // Literal value — not a field reference, no validation needed
+        }
+        elseif ($this->isSqlFunction($expression->column)) {
+          // Column holds a function name without parentheses (edge case)
+          $this->validateSqlFunction($expression->column);
+        }
+        else {
+          $this->validateField($expression->column);
+        }
+      }
+      elseif (!$expression->subquery && !empty($expression->expr) && trim($expression->expr) === '*') {
+        // Wildcard SELECT * — always reject
+        $this->validateField('*');
       }
     }
 
@@ -459,8 +591,10 @@ class CRM_Utils_SqlParser {
       if (is_string($condition->expr)) {
         $subquery = $this->extractSubquery($condition->expr);
         if ($subquery !== NULL) {
-          // Validate left operand against outer query allowlist
-          if (!empty($condition->leftOperand)) {
+          // Validate left operand against outer query allowlist.
+          // Skip when the entire leftOperand IS the EXISTS/NOT EXISTS expression
+          // (i.e. there is no real left-hand column — EXISTS is the whole condition).
+          if (!empty($condition->leftOperand) && !preg_match('/^(NOT\s+)?EXISTS\s*\(/i', trim($condition->leftOperand))) {
             $this->validateOperand($condition->leftOperand);
           }
           // Validate subquery independently
@@ -502,6 +636,7 @@ class CRM_Utils_SqlParser {
     // If it's a SQL function, validate the function and skip field validation
     if ($this->isSqlFunction($operand)) {
       $this->validateSqlFunction($operand);
+      $this->validateFunctionArgFields($operand);
       return;
     }
 
@@ -599,6 +734,10 @@ class CRM_Utils_SqlParser {
   private function parseIdentifier(string $identifier): array {
     $identifier = $this->normalizeIdentifier($identifier);
 
+    // Strip leading parentheses (can appear when grouped WHERE conditions like
+    // "(table.field = val OR ...)" are parsed and the paren ends up in the operand)
+    $identifier = ltrim($identifier, '(');
+
     // Remove operators by cutting at first space
     if (strpos($identifier, ' ') !== FALSE) {
       $identifier = trim(substr($identifier, 0, strpos($identifier, ' ')));
@@ -677,6 +816,10 @@ class CRM_Utils_SqlParser {
 
       // Other safe functions
       'ISNULL', 'GREATEST', 'LEAST',
+
+      // Window functions (used with OVER clause)
+      'ROW_NUMBER', 'RANK', 'DENSE_RANK', 'PERCENT_RANK', 'CUME_DIST',
+      'NTILE', 'LAG', 'LEAD', 'FIRST_VALUE', 'LAST_VALUE', 'NTH_VALUE',
     ];
 
     // Blocked dangerous functions (explicitly blocked, even if somehow added to allowlist)
@@ -754,6 +897,9 @@ class CRM_Utils_SqlParser {
     elseif ($statement instanceof DeleteStatement) {
       return 'DELETE';
     }
+    elseif ($statement instanceof WithStatement) {
+      return 'WITH';
+    }
     else {
       $className = get_class($statement);
       $parts = explode('\\', $className);
@@ -779,6 +925,172 @@ class CRM_Utils_SqlParser {
         $this->addError("Statement type '{$statementType}' is not in the allowlist");
       }
     }
+  }
+
+  /**
+   * Validate fields referenced inside a SQL function's arguments.
+   *
+   * Recursively handles nested function calls (e.g. ROUND(COUNT(x), 1)).
+   *
+   * @param string $funcExpr Full function expression, e.g. "SUM(cc.total_amount)"
+   */
+  private function validateFunctionArgFields(string $funcExpr): void {
+    $inner = $this->extractFunctionInner($funcExpr);
+    if ($inner === NULL) {
+      return;
+    }
+
+    // Strip leading DISTINCT keyword
+    $inner = preg_replace('/^\s*DISTINCT\s+/i', '', $inner);
+
+    foreach ($this->splitByComma($inner) as $arg) {
+      $arg = trim($arg);
+      if ($arg === '' || $this->isLiteral($arg)) {
+        continue;
+      }
+      // Skip MySQL INTERVAL expressions (e.g. "INTERVAL 6 MONTH", "INTERVAL 1 DAY")
+      if (preg_match('/^INTERVAL\s+/i', $arg)) {
+        continue;
+      }
+      if ($this->isSqlFunction($arg)) {
+        $this->validateSqlFunction($arg);
+        $this->validateFunctionArgFields($arg);
+        continue;
+      }
+      // Skip pure numeric/operator tokens (e.g. "100.0", "* 100.0 /")
+      if (preg_match('/^[\d\s\+\-\*\/\%\.]+$/', $arg)) {
+        continue;
+      }
+      $parsed = $this->parseIdentifier($arg);
+      if (!empty($parsed['table'])) {
+        $this->validateTable($parsed['table']);
+      }
+      if (!empty($parsed['field']) && $parsed['field'] !== '*') {
+        $this->validateField($parsed['field']);
+      }
+    }
+  }
+
+  /**
+   * Extract the content between the first opening parenthesis and its
+   * matching closing parenthesis in a function expression.
+   *
+   * @param string $funcExpr
+   * @return string|null Inner content, or NULL if no balanced parens found.
+   */
+  private function extractFunctionInner(string $funcExpr): ?string {
+    $open = strpos($funcExpr, '(');
+    if ($open === FALSE) {
+      return NULL;
+    }
+    $depth = 0;
+    $len = strlen($funcExpr);
+    for ($i = $open; $i < $len; $i++) {
+      if ($funcExpr[$i] === '(') {
+        $depth++;
+      }
+      elseif ($funcExpr[$i] === ')') {
+        $depth--;
+        if ($depth === 0) {
+          return substr($funcExpr, $open + 1, $i - $open - 1);
+        }
+      }
+    }
+    return NULL;
+  }
+
+  /**
+   * Validate field references inside an OVER (...) window clause.
+   *
+   * Handles PARTITION BY and ORDER BY fields, e.g.:
+   *   NTILE(4) OVER (PARTITION BY region ORDER BY total_donated ASC)
+   *
+   * @param string $funcExpr Full window function expression
+   */
+  private function validateWindowOverClause(string $funcExpr): void {
+    // Locate "OVER (" in the expression
+    if (!preg_match('/\bOVER\s*\(/i', $funcExpr, $match, PREG_OFFSET_CAPTURE)) {
+      return;
+    }
+
+    // Find the opening paren of the OVER clause
+    $overStart = $match[0][1] + strlen($match[0][0]) - 1;
+    $depth = 0;
+    $len = strlen($funcExpr);
+    $inner = '';
+
+    for ($i = $overStart; $i < $len; $i++) {
+      if ($funcExpr[$i] === '(') {
+        $depth++;
+        if ($depth === 1) {
+          continue; // skip the opening paren itself
+        }
+      }
+      elseif ($funcExpr[$i] === ')') {
+        $depth--;
+        if ($depth === 0) {
+          break;
+        }
+      }
+      if ($depth > 0) {
+        $inner .= $funcExpr[$i];
+      }
+    }
+
+    if (empty($inner)) {
+      return;
+    }
+
+    // Strip clause keywords to leave only field tokens
+    $inner = preg_replace('/\b(PARTITION\s+BY|ORDER\s+BY|ROWS\s+BETWEEN|RANGE\s+BETWEEN|UNBOUNDED\s+PRECEDING|UNBOUNDED\s+FOLLOWING|CURRENT\s+ROW|AND)\b/i', ',', $inner);
+    $inner = preg_replace('/\b(ASC|DESC|NULLS\s+FIRST|NULLS\s+LAST)\b/i', '', $inner);
+
+    foreach ($this->splitByComma($inner) as $field) {
+      $field = trim($field);
+      if ($field === '' || $this->isLiteral($field)) {
+        continue;
+      }
+      $parsed = $this->parseIdentifier($field);
+      if (!empty($parsed['table'])) {
+        $this->validateTable($parsed['table']);
+      }
+      if (!empty($parsed['field']) && $parsed['field'] !== '*') {
+        $this->validateField($parsed['field']);
+      }
+    }
+  }
+
+  /**
+   * Split an expression string by top-level commas (ignoring commas inside
+   * nested parentheses).
+   *
+   * @param string $expr
+   * @return string[]
+   */
+  private function splitByComma(string $expr): array {
+    $result = [];
+    $depth = 0;
+    $current = '';
+    $len = strlen($expr);
+    for ($i = 0; $i < $len; $i++) {
+      $c = $expr[$i];
+      if ($c === '(') {
+        $depth++;
+      }
+      elseif ($c === ')') {
+        $depth--;
+      }
+      elseif ($c === ',' && $depth === 0) {
+        $result[] = $current;
+        $current = '';
+        continue;
+      }
+      $current .= $c;
+    }
+    if ($current !== '') {
+      $result[] = $current;
+    }
+    return $result;
   }
 
   /**

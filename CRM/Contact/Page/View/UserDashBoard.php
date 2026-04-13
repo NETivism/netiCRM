@@ -200,6 +200,13 @@ class CRM_Contact_Page_View_UserDashBoard extends CRM_Core_Page {
   public function run() {
     $this->preProcess();
     $this->buildUserDashBoard();
+
+    $ufId = CRM_Core_BAO_UFMatch::getUFId($this->_contactId);
+    $ufName = CRM_Core_Config::$_userSystem->getBestUFName($ufId);
+    if (!empty($ufName)) {
+      $breadCrumb = [['title' => $ufName, 'url' => CRM_Core_Config::$_userSystem->getUFProfileLink($ufId)]];
+      CRM_Utils_System::appendBreadCrumb($breadCrumb);
+    }
     return parent::run();
   }
 

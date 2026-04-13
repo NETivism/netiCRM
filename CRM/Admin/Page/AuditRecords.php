@@ -41,7 +41,7 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
    * @return void
    */
   public function run() {
-    $date = date('Ymd000000', strtotime('-30Day'));
+    $date = date('Ymd000000', strtotime('-180Day'));
     $sql = "SELECT l.*, c.sort_name AS user_contact_name, c_modify.sort_name AS modified_name FROM civicrm_log l LEFT JOIN civicrm_uf_match um ON l.entity_id = um.uf_id LEFT JOIN civicrm_contact c ON um.contact_id = c.id LEFT JOIN civicrm_contact c_modify ON l.modified_id = c_modify.id WHERE entity_table LIKE 'audit.%' AND l.modified_date > %1 ORDER BY l.modified_date DESC";
     $dao = CRM_Core_DAO::executeQuery($sql, [1 => [$date, 'String']]);
     while ($dao->fetch()) {
@@ -78,6 +78,16 @@ class CRM_Admin_Page_AuditRecords extends CRM_Core_Page {
           break;
         case 'audit.civicrm.security.pwd':
           $auditStatusName = ts('Export excel file encryption settings password Changed');
+          break;
+        case 'audit.connector.mcp':
+          $data = json_decode($dao->data, TRUE);
+          $userId = $dao->entity_id;
+          $auditStatusName = ts('netiCRM Connector');
+          break;
+        case 'audit.connector.apikey':
+          $data = json_decode($dao->data, TRUE);
+          $userId = $dao->entity_id;
+          $auditStatusName = ts('API Key');
           break;
         default:
           $auditStatusName = ts('Other');
