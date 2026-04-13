@@ -89,6 +89,12 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
   protected static $_template;
 
   /**
+   * Static variable to track if editor switcher has been added.
+   * @var bool
+   */
+  protected static $_editorSwitcherAdded = FALSE;
+
+  /**
    * The count of submissions in the same form
    * @var int
    */
@@ -949,7 +955,293 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
 
     $ele = $this->addElement($editor, $name, $label, $attributes);
     $this->assign('editor', $editor);
+
+    if (in_array($editor, ['ckeditor', 'ckeditor5'])) {
+      $this->addEditorSwitcher();
+    }
     return $ele;
+  }
+
+  /**
+   * Add editor switcher UI and JavaScript for dynamic switching
+   *
+   * @return void
+   */
+  public function addEditorSwitcher() {
+    if (self::$_editorSwitcherAdded) {
+      return;
+    }
+    self::$_editorSwitcherAdded = TRUE;
+
+    $config = CRM_Core_Config::singleton();
+    $cke4Path = $config->resourceBase . 'packages/ckeditor/ckeditor.js?' . $config->ver;
+
+    // Detect system default editor
+    $systemEditor = strtolower(CRM_Utils_Array::value(
+      CRM_Core_BAO_Preferences::value('editor_id'),
+      CRM_Core_PseudoConstant::wysiwygEditor()
+    ));
+    $defaultEditorType = ($systemEditor === 'ckeditor5') ? 'cke5' : 'cke4';
+
+    // Prepare CKE4 configuration (matching ckeditor.php logic)
+    $plugins = array('widget', 'lineutils', 'mediaembed', 'tableresize', 'image2');
+    if (CRM_Core_Permission::check('access CiviCRM') ||
+      CRM_Core_Permission::check('paste and upload images')
+    ) {
+      $plugins[] = 'clipboard_image';
+    }
+
+    if (CRM_Core_Permission::check('access CiviCRM')) {
+      $toolbar = 'CiviCRM';
+      $allowedContent = 'true';
+    }
+    else {
+      $toolbar = 'CiviCRMBasic';
+      $allowedContent = "'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}'";
+    }
+
+    $extraPluginsCode = array();
+    foreach ($plugins as $name) {
+      $extraPluginsCode[] = "CKEDITOR.plugins.addExternal('{$name}', '{$config->resourceBase}packages/ckeditor/extraplugins/{$name}/', 'plugin.js');";
+    }
+
+    $imceEnabled = FALSE;
+    $imceUrl = '';
+    if (CRM_Utils_System::moduleExists('imce')) {
+      $imceEnabled = TRUE;
+      $imceUrl = CRM_Utils_System::url('imce');
+    }
+
+    $cke4Config = array(
+      'resourceBase' => $config->resourceBase,
+      'ver' => $config->ver,
+      'plugins' => $plugins,
+      'extraPluginsCode' => implode("\n      ", $extraPluginsCode),
+      'extraPluginsList' => implode(',', $plugins),
+      'toolbar' => $toolbar,
+      'allowedContent' => $allowedContent,
+      'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
+      'imceEnabled' => $imceEnabled,
+      'imceUrl' => $imceUrl,
+    );
+
+    $html = '
+    (function() {
+      const cke4Config = ' . json_encode($cke4Config) . ';
+      const defaultEditorType = "' . $defaultEditorType . '";
+
+      // IMCE integration
+      if (cke4Config.imceEnabled && !window.civicrmImceCkeditSendTo) {
+        window.civicrmImceCkeditSendTo = function (file, win) {
+          var parts = /\?(?:.*&)?CKEditorFuncNum=(\d+)(?:&|$)/.exec(win.location.href);
+          if (parts && parts.length > 1) {
+            var url = file.getUrl();
+            win.opener.CKEDITOR.tools.callFunction(parts[1], url);
+            win.close();
+          }
+        };
+      }
+
+      cj(document).ready(function() {
+        // Initial scan for editors on the page
+        setTimeout(scanAndInjectSwitchers, 1000);
+      });
+
+      function scanAndInjectSwitchers() {
+        let editors = [];
+        
+        // Find CKE4 editors
+        if (window.CKEDITOR && window.CKEDITOR.instances) {
+          for (let name in window.CKEDITOR.instances) {
+            const el = document.querySelector(\'textarea[name="\' + name + \'"]\');
+            if (el) editors.push({ name, element: el, type: "cke4" });
+          }
+        }
+        
+        // Find CKE5 editors
+        const cke5Containers = document.querySelectorAll(".ck-editor");
+        for (let container of cke5Containers) {
+          const textarea = container.previousElementSibling;
+          if (textarea && textarea.tagName.toLowerCase() === "textarea") {
+            // Avoid duplicates if already found via CKE4 (unlikely but safe)
+            if (!editors.find(e => e.element === textarea)) {
+              editors.push({ name: textarea.name, element: textarea, type: "cke5" });
+            }
+          }
+        }
+
+        editors.forEach(injectSwitcher);
+      }
+
+      function injectSwitcher(editorInfo) {
+        const { name, element, type } = editorInfo;
+        if (cj(element).data("switcher-initialized")) return;
+        
+        const switcherHtml = `
+          <div class="crm-section editor-switcher-container" style="margin-bottom: 5px; padding: 5px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 11px; font-weight: bold; color: #444;">測試模式:</span>
+            <select class="editor-format-switcher" onchange="switchEditorFormat(this.value, \'${name}\')" style="padding: 2px 4px; font-size: 11px; height: 24px; min-width: 140px;">
+              <option value="cke4" ${type === "cke4" ? "selected" : ""}>CKEditor 4 (傳統)</option>
+              <option value="cke5" ${type === "cke5" ? "selected" : ""}>CKEditor 5 (新版)</option>
+            </select>
+            <span class="editor-switch-status" style="font-size: 11px; color: #666;"></span>
+          </div>
+        `;
+        
+        const $element = cj(element);
+        $element.data("current-editor-type", type);
+        $element.data("switcher-initialized", true);
+
+        // Inject above the editor UI
+        if (type === "cke5") {
+          $element.next(".ck-editor").before(switcherHtml);
+        } else {
+          // Find CKE4 container if it exists
+          const cke4Id = "cke_" + name;
+          const cke4Container = document.getElementById(cke4Id);
+          if (cke4Container) {
+            cj(cke4Container).before(switcherHtml);
+          } else {
+            $element.before(switcherHtml);
+          }
+        }
+      }
+
+      window.switchEditorFormat = async function(format, editorName) {
+        const editorElement = document.querySelector(\'textarea[name="\' + editorName + \'"]\');
+        if (!editorElement) return;
+
+        const $element = cj(editorElement);
+        const currentType = $element.data("current-editor-type");
+        if (format === currentType) return;
+
+        const $status = $element.prev(".editor-switcher-container").find(".editor-switch-status");
+        $status.text("切換中...").css("color", "#666");
+
+        try {
+          const content = await getCurrentContent(editorElement, currentType);
+          await destroyEditor(editorElement, currentType);
+          
+          await new Promise(resolve => setTimeout(resolve, 200));
+
+          if (format === "cke4") {
+            await initializeCKE4(editorElement, content);
+          } else {
+            await initializeCKE5(editorElement, content);
+          }
+
+          $element.data("current-editor-type", format);
+          $status.text("✓ 已切換").css("color", "green");
+
+          // Reposition switcher if necessary
+          const $switcher = $element.prev(".editor-switcher-container");
+          if (format === "cke5") {
+             $element.next(".ck-editor").before($switcher);
+          } else {
+             cj("#cke_" + editorName).before($switcher);
+          }
+
+        } catch (error) {
+          console.error("Switch error:", error);
+          $status.text("✗ 失敗: " + error.message).css("color", "red");
+        }
+      };
+
+      async function getCurrentContent(el, type) {
+        if (type === "cke4" && window.CKEDITOR.instances[el.name]) {
+          return window.CKEDITOR.instances[el.name].getData();
+        } else if (type === "cke5") {
+          const container = el.nextElementSibling;
+          if (container && container.classList.contains("ck-editor")) {
+            const editable = container.querySelector(".ck-editor__editable");
+            if (editable && editable.ckeditorInstance) {
+              return editable.ckeditorInstance.getData();
+            }
+          }
+        }
+        return el.value;
+      }
+
+      async function destroyEditor(el, type) {
+        if (type === "cke4" && window.CKEDITOR.instances[el.name]) {
+          window.CKEDITOR.instances[el.name].destroy();
+          cj(el).removeClass("ckeditor-processed");
+        } else if (type === "cke5") {
+          const container = el.nextElementSibling;
+          if (container && container.classList.contains("ck-editor")) {
+            const editable = container.querySelector(".ck-editor__editable");
+            if (editable && editable.ckeditorInstance) {
+              await editable.ckeditorInstance.destroy();
+            }
+            container.remove();
+          }
+          cj(el).removeClass("ckeditor5-processed");
+        }
+        el.style.display = "block";
+      }
+
+      async function initializeCKE4(el, content) {
+        if (!window.CKEDITOR || !window.CKEDITOR.replace) {
+          await loadScript(cke4Config.resourceBase + "packages/ckeditor/ckeditor.js?" + cke4Config.ver);
+        }
+        
+        if (!window.cke4PluginsRegistered) {
+          ' . implode("\n          ", $extraPluginsCode) . '
+          window.cke4PluginsRegistered = true;
+        }
+
+        el.value = content;
+        cj(el).addClass("ckeditor-processed");
+
+        return new Promise((resolve) => {
+          const instance = window.CKEDITOR.replace(el.name, {
+            customConfig: cke4Config.customConfigPath,
+            extraPlugins: cke4Config.extraPluginsList,
+            toolbar: cke4Config.toolbar,
+            allowedContent: cke4Config.allowedContent,
+            width: "100%",
+            height: "400",
+            filebrowserBrowseUrl: cke4Config.imceUrl,
+            filebrowserImageBrowseUrl: cke4Config.imceUrl + "&type=Images"
+          });
+          instance.on("instanceReady", () => resolve(instance));
+        });
+      }
+
+      async function initializeCKE5(el, content) {
+        if (!window.CKEDITOR_5) throw new Error("CKE5 not loaded");
+        
+        el.value = content;
+        const { ClassicEditor, Essentials, Bold, Italic, Underline, Strikethrough, Paragraph, Heading, Link, List, Alignment, Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, ImageUpload, Base64UploadAdapter, Table, TableToolbar, TableProperties, TableCellProperties, SourceEditing, MediaEmbed, CodeBlock, GeneralHtmlSupport, Style, FullPage, HtmlEmbed, Font, ExtendSchema, CiviCKEditor5 } = window.CKEDITOR_5;
+
+        const editor = await ClassicEditor.create(el, {
+          plugins: [ Essentials, Bold, Italic, Underline, Strikethrough, Paragraph, Heading, Link, List, Alignment, Image, ImageToolbar, ImageCaption, ImageStyle, ImageResize, ImageUpload, Base64UploadAdapter, Table, TableToolbar, TableProperties, TableCellProperties, SourceEditing, MediaEmbed, CodeBlock, GeneralHtmlSupport, Style, FullPage, HtmlEmbed, Font, ExtendSchema ],
+          toolbar: (cke4Config.toolbar === "CiviCRM" ? CiviCKEditor5.getFullEditorConfig() : CiviCKEditor5.getBasicEditorConfig()).toolbar,
+          htmlSupport: {
+            allow: [{ name: /^(html|head|body|title|meta|style|script|div|span|p|h[1-6]|table|thead|tbody|tr|td|th|ul|ol|li|a|img|br|hr)$/, attributes: true, classes: true, styles: true }]
+          },
+          height: "400px"
+        });
+
+        const container = el.nextElementSibling;
+        if (container && container.classList.contains("ck-editor")) {
+          const editable = container.querySelector(".ck-editor__editable");
+          if (editable) editable.ckeditorInstance = editor;
+        }
+      }
+
+      function loadScript(src) {
+        return new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = src; s.onload = resolve; s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+    })();';
+
+    $template = CRM_Core_Smarty::singleton();
+    $additional_js = $template->get_template_vars('additional_js');
+    $template->assign('additional_js', $additional_js . "\n" . $html);
   }
 
   /**
