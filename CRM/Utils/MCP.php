@@ -909,11 +909,18 @@ class CRM_Utils_MCP {
       'table'     => array_keys($viewDefs),
       'field'     => array_keys($allFields),
     ];
-    $parser = new CRM_Utils_SqlParser($arguments['query'], $allowlist);
     $isError = FALSE;
-    if ($parser->isValid()) {
+    if (PHP_VERSION_ID >= 80100) {
+      $parser = new CRM_Utils_SqlParser($arguments['query'], $allowlist);
+      if (!$parser->isValid()) {
+        $results = $parser->getErrors();
+        CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP parser error: " . json_encode($results, JSON_UNESCAPED_UNICODE));
+        $isError = TRUE;
+      }
+    }
+    if (!$isError) {
       try {
-        $sql = $parser->getQuery(TRUE);
+        $sql = PHP_VERSION_ID >= 80100 ? $parser->getQuery(TRUE) : $arguments['query'];
         $dao = new CRM_Core_ReadonlyDAO(self::READONLY_QUERY_DEFINITIONS);
         $dao->setup();
         $pdo = $dao->connectReadonly();
@@ -926,11 +933,6 @@ class CRM_Utils_MCP {
         $results = ['Query execution failed.'];
         $isError = TRUE;
       }
-    }
-    else {
-      $results = $parser->getErrors();
-      CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP parser error: " . json_encode($results, JSON_UNESCAPED_UNICODE));
-      $isError = TRUE;
     }
     return [
       'jsonrpc' => '2.0',
