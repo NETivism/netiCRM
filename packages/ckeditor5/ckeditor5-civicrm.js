@@ -224,14 +224,9 @@
     _setupScriptWhitelist(trustedDomains) {
       var editor = this.editor;
       var dataFilter = editor.plugins.get(DataFilter);
-      var dataSchema = editor.plugins.get(DataSchema);
 
-      dataSchema.registerBlockElement({
-        model: 'htmlScript',
-        view: 'script',
-        isObject: true,
-        modelSchema: { inheritAllFrom: '$blockObject' },
-      });
+      // htmlScript is already registered by CKEditor 5's built-in DataSchema.
+      // Only allow script elements through the data filter.
       dataFilter.allowElement('script');
       dataFilter.allowAttributes({
         name: 'script',
