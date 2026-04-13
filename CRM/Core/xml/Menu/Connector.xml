@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<menu>
+  <item>
+    <path>civicrm/connector</path>
+    <title>netiCRM Connector</title>
+    <page_callback>CRM_Connector_Page_Connector</page_callback>
+    <access_arguments>access CiviCRM;MCP query</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/ajax/connector/generate-mcp</path>
+    <page_callback>CRM_Connector_Page_AJAX::generateMCP</page_callback>
+    <access_arguments>access CiviCRM;MCP query</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/ajax/connector/reset-mcp</path>
+    <page_callback>CRM_Connector_Page_AJAX::resetMCP</page_callback>
+    <access_arguments>access CiviCRM;MCP query</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/ajax/connector/generate-apikey</path>
+    <page_callback>CRM_Connector_Page_AJAX::generateAPIKey</page_callback>
+    <access_arguments>access CiviCRM;MCP query</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/ajax/connector/reset-apikey</path>
+    <page_callback>CRM_Connector_Page_AJAX::resetAPIKey</page_callback>
+    <access_arguments>access CiviCRM;MCP query</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/ajax/connector/revoke-key</path>
+    <page_callback>CRM_Connector_Page_AJAX::revokeKey</page_callback>
+    <access_arguments>access CiviCRM;MCP query</access_arguments>
+  </item>
+</menu>

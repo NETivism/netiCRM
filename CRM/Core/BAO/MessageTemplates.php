@@ -130,6 +130,7 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
     }
     else {
       unset($messageTemplates->is_sms);
+      $messageTemplates->is_sms = 0;
     }
 
     if (!$all) {

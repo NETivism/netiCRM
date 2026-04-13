@@ -13,6 +13,77 @@ class CRM_Utils_MCP {
   public const RATE_LIMIT_MAX_REQUESTS = 300;  // Maximum 300 requests per window
 
   /**
+   * Defines the read-only views exposed to MCP queries.
+   *
+   * Each key is the view name (as seen by SQL queries).
+   * 'source' is the underlying base table.
+   * 'fields' lists every column the view exposes (and that the parser will allow).
+   *
+   * This single definition is the source-of-truth for:
+   *   - CRM_Core_ReadonlyDAO (view + user provisioning)
+   *   - handleMCPQuery allowlist
+   *   - listTools query description
+   */
+  public const READONLY_QUERY_DEFINITIONS = [
+    'v_civicrm_contact' => [
+      'source' => 'civicrm_contact',
+      'alias' => 'contact',
+      'fields' => [
+        'id', 'contact_type', 'employer_id', 'birth_date',
+        'prefix_id', 'suffix_id', 'gender_id', 'job_title',
+        'created_date', 'modified_date',
+      ],
+    ],
+    'v_civicrm_contribution' => [
+      'source' => 'civicrm_contribution',
+      'alias' => 'c',
+      'fields' => [
+        'id', 'contact_id', 'total_amount', 'amount_level', 'receive_date',
+        'is_test', 'contribution_recur_id', 'contribution_status_id',
+        'contribution_page_id', 'contribution_type_id', 'cancel_date', 'receipt_date',
+      ],
+    ],
+    'v_civicrm_participant_payment' => [
+      'alias' => 'pp',
+      'source' => 'civicrm_participant_payment',
+      'fields' => ['id', 'contribution_id', 'participant_id'],
+    ],
+    'v_civicrm_membership_payment' => [
+      'source' => 'civicrm_membership_payment',
+      'alias' => 'mp',
+      'fields' => ['id', 'contribution_id', 'membership_id'],
+    ],
+    'v_civicrm_contribution_recur' => [
+      'source' => 'civicrm_contribution_recur',
+      'alias' => 'cr',
+      'fields' => [
+        'id', 'contact_id', 'amount', 'contribution_status_id',
+        'create_date', 'start_date', 'end_date', 'installments',
+      ],
+    ],
+    'v_civicrm_contribution_page' => [
+      'alias' => 'cp',
+      'source' => 'civicrm_contribution_page',
+      'fields' => ['id', 'created_date', 'title'],
+    ],
+    'v_civicrm_participant' => [
+      'source' => 'civicrm_participant',
+      'alias' => 'p',
+      'fields' => ['id', 'contact_id', 'event_id', 'status_id', 'register_date', 'fee_level', 'is_test', 'fee_amount'],
+    ],
+    'v_civicrm_event' => [
+      'source' => 'civicrm_event',
+      'alias' => 'e',
+      'fields' => ['id', 'title', 'event_type_id', 'start_date', 'end_date', 'is_active', 'is_template'],
+    ],
+    'v_civicrm_membership' => [
+      'source' => 'civicrm_membership',
+      'alias' => 'm',
+      'fields' => ['id', 'contact_id', 'membership_type_id', 'join_date', 'start_date', 'end_date', 'status_id', 'is_test'],
+    ],
+  ];
+
+  /**
    * @var bool Whether to output streaming responses
    */
   private $_isStreamable = FALSE;
@@ -218,7 +289,7 @@ class CRM_Utils_MCP {
 
     $jsonResponse = json_encode($result, $options);
     if (CRM_Core_Config::singleton()->debug) {
-      CRM_Core_Error::debug_var('mcp_result', $result);
+      CRM_Core_Error::debug_var("mcp_result_contact_{$this->_contactId}", $result);
     }
 
     if ($this->_isStreamable) {
@@ -339,7 +410,7 @@ class CRM_Utils_MCP {
     $clientInfo = $params['clientInfo'] ?? [];
     if (!empty($clientInfo)) {
       CRM_Core_Error::debug_log_message(
-        'MCP client connected: ' . ($clientInfo['name'] ?? 'unknown') .
+        "[contact:{$this->_contactId}] MCP client connected: " . ($clientInfo['name'] ?? 'unknown') .
         ' v' . ($clientInfo['version'] ?? 'unknown')
       );
     }
@@ -391,37 +462,92 @@ class CRM_Utils_MCP {
    * @return bool True if user has permission, false otherwise
    */
   private function hasToolPermission($toolName) {
-    // Parse tool name to extract entity and action
-    $parts = explode('_', $toolName);
-    if (count($parts) < 2) {
+    // MCP query permission is always required
+    if (!CRM_Core_Permission::check('MCP query')) {
       return FALSE;
     }
 
-    $entity = $parts[0];
-    $action = $parts[1];
+    // Each tool requires its own component permission
+    $toolPermissions = [
+      'contribution_query' => 'access CiviContribute',
+      'participant_query'  => 'access CiviEvent',
+      'membership_query'   => 'access CiviMember',
+    ];
 
-    // Map tool action to API action
-    $apiAction = '';
-    switch ($action) {
-      case 'query':
-        $apiAction = 'query';
+    if (isset($toolPermissions[$toolName])) {
+      return CRM_Core_Permission::check($toolPermissions[$toolName]);
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * Return the subset of READONLY_QUERY_DEFINITIONS relevant to a given tool,
+   * extended with views from other components when the user holds those permissions.
+   *
+   * @param string $toolName
+   * @return array  Keyed by view name, same structure as READONLY_QUERY_DEFINITIONS.
+   */
+  private function getToolViewDefs($toolName) {
+    $all = self::READONLY_QUERY_DEFINITIONS;
+    $hasCiviContribute = CRM_Core_Permission::check('access CiviContribute');
+    $hasCiviEvent      = CRM_Core_Permission::check('access CiviEvent');
+    $hasCiviMember     = CRM_Core_Permission::check('access CiviMember');
+
+    switch ($toolName) {
+      case 'contribution_query':
+        // Base: contact + all contribution-related views (incl. payment bridge tables)
+        $views = [
+          'v_civicrm_contact',
+          'v_civicrm_contribution',
+          'v_civicrm_contribution_recur',
+          'v_civicrm_contribution_page',
+          'v_civicrm_participant_payment',
+          'v_civicrm_membership_payment',
+        ];
+        if ($hasCiviEvent) {
+          $views[] = 'v_civicrm_participant';
+          $views[] = 'v_civicrm_event';
+        }
+        if ($hasCiviMember) {
+          $views[] = 'v_civicrm_membership';
+        }
         break;
+
+      case 'participant_query':
+        // Base: contact + participant + event + bridge table
+        $views = [
+          'v_civicrm_contact',
+          'v_civicrm_participant',
+          'v_civicrm_event',
+          'v_civicrm_participant_payment',
+        ];
+        if ($hasCiviContribute) {
+          $views[] = 'v_civicrm_contribution';
+          $views[] = 'v_civicrm_contribution_recur';
+          $views[] = 'v_civicrm_contribution_page';
+        }
+        break;
+
+      case 'membership_query':
+        // Base: contact + membership + bridge table
+        $views = [
+          'v_civicrm_contact',
+          'v_civicrm_membership',
+          'v_civicrm_membership_payment',
+        ];
+        if ($hasCiviContribute) {
+          $views[] = 'v_civicrm_contribution';
+          $views[] = 'v_civicrm_contribution_recur';
+          $views[] = 'v_civicrm_contribution_page';
+        }
+        break;
+
       default:
-        return FALSE;
+        return [];
     }
 
-    // Check REST API permissions based on action
-    $permissionRequired = '';
-    if (in_array($apiAction, ['query'])) {
-      $permissionRequired = 'MCP query';
-    }
-
-    // Check REST API permission if required
-    if (!empty($permissionRequired) && CRM_Core_Permission::check($permissionRequired)) {
-      return TRUE;
-    }
-
-    return FALSE;
+    return array_intersect_key($all, array_flip($views));
   }
 
   /**
@@ -678,45 +804,61 @@ class CRM_Utils_MCP {
    * @return array Response
    */
   private function listTools($params, $id) {
-    // Get available searchable fields for contact and contribution
-    $contactSearchableFields = $this->getSearchableFormFields('contact');
-    $contributionSearchableFields = $this->getSearchableFormFields('contribution');
-
-    $tools = [
-      [
-        'name' => 'contact_query',
-        'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
-        'inputSchema' => [
-          'type' => 'object',
-          'properties' => [
-            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id,contribution_recur_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
-          ],
-        ],
+    // Static metadata per tool: description and JOIN guidance for the AI.
+    $toolMeta = [
+      'contribution_query' => [
+        'description' => 'Generate a MariaDB SELECT query against read-only views for contribution-based analysis.',
+        'joinHint'    => 'To isolate direct (non-event, non-membership) contributions use: '
+          . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.contribution_id = c.id '
+          . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.contribution_id = c.id '
+          . 'WHERE pp.id IS NULL AND mp.id IS NULL.',
       ],
-      [
-        'name' => 'contribution_query',
-        'description' => 'Generate MariaDB related SQL Query on table "civicrm_contact" based and other related tables to doing contact based analysis.',
-        'inputSchema' => [
-          'type' => 'object',
-          'properties' => [
-            'query' => ['type' => 'string', 'description' => 'AI generated query that match MariaDB / MySQL Syntax and follow the rules: Allowed tables: [civicrm_contribution, civicrm_contact, civicrm_contribution_recur, civicrm_contribution_page, civicrm_membership_payment, civicrm_participant_payment]. Allowed selectable fields [id,contact_type,employer_id,birth_date,prefix_id,suffix_id,gender_id,job_title,created_date,modified_date,contact_id,total_amount,receive_date,is_test,contribution_status_id,contribution_page_id,contribution_type_id,contribution_recur_id] .Always join tables "LEFT JOIN civicrm_participant_payment p ON p.contribution_id = cc.id LEFT JOIN civicrm_membership_payment m ON m.contribution_id = cc.id" and add WHERE to check civicrm_participant_payment.id IS NULL AND civicrm_membership_payment.id IS NULL'],
-          ],
-        ],
+      'participant_query' => [
+        'description' => 'Generate a MariaDB SELECT query against read-only views for event participant analysis.',
+        'joinHint'    => 'Link participants to contributions via: '
+          . 'LEFT JOIN v_civicrm_participant_payment pp ON pp.participant_id = p.id.',
+      ],
+      'membership_query' => [
+        'description' => 'Generate a MariaDB SELECT query against read-only views for membership analysis.',
+        'joinHint'    => 'Link memberships to contributions via: '
+          . 'LEFT JOIN v_civicrm_membership_payment mp ON mp.membership_id = m.id.',
       ],
     ];
 
-    // Filter tools based on user permissions
-    $allowedTools = [];
-    foreach ($tools as $tool) {
-      if ($this->hasToolPermission($tool['name'])) {
-        $allowedTools[] = $tool;
+    $tools = [];
+    foreach ($toolMeta as $toolName => $meta) {
+      if (!$this->hasToolPermission($toolName)) {
+        continue;
       }
+
+      $viewDefs = $this->getToolViewDefs($toolName);
+      $viewDetails = [];
+      foreach ($viewDefs as $viewName => $def) {
+        $viewDetails[] = $viewName . ' ' . $def['alias'] . ' (fields: ' . implode(', ', $def['fields']) . ')';
+      }
+
+      $queryDescription = 'AI generated query that matches MariaDB / MySQL syntax. '
+        . 'Allowed views: [' . implode(', ', array_keys($viewDefs)) . ']. '
+        . 'View details — ' . implode('; ', $viewDetails) . '. '
+        . $meta['joinHint'];
+
+      $tools[] = [
+        'name' => $toolName,
+        'description' => $meta['description'],
+        'inputSchema' => [
+          'type' => 'object',
+          'properties' => [
+            'prompt' => ['type' => 'string', 'description' => 'The original natural language prompt or question from the user that led to generating this SQL query. Plain text only, HTML will be stripped.'],
+            'query'  => ['type' => 'string', 'description' => $queryDescription],
+          ],
+        ],
+      ];
     }
 
     return [
       'jsonrpc' => '2.0',
-      'result' => ['tools' => $allowedTools],
-      'id' => $id
+      'result'  => ['tools' => $tools],
+      'id'      => $id,
     ];
   }
 
@@ -736,40 +878,57 @@ class CRM_Utils_MCP {
     }
 
     switch ($toolName) {
-      case 'contact_query':
       case 'contribution_query':
-        return $this->handleMCPQuery($arguments, $id);
+      case 'participant_query':
+      case 'membership_query':
+        return $this->handleMCPQuery($toolName, $arguments, $id);
       default:
         return $this->error(-32601, 'Unknown tool: ' . $toolName, $id);
     }
   }
 
-  private function handleMCPQuery($arguments, $id) {
+  private function handleMCPQuery($toolName, $arguments, $id) {
+    // Log prompt and query for auditing
+    $prompt = isset($arguments['prompt']) ? $this->sanitizePrompt($arguments['prompt']) : '';
+    if (!empty($prompt)) {
+      CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP {$toolName} prompt: " . $prompt);
+    }
+    CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP {$toolName} sql: " . ($arguments['query'] ?? ''));
+
+    // Build allowlist from only the views this tool is permitted to access.
+    $viewDefs = $this->getToolViewDefs($toolName);
+    $allFields = [];
+    foreach ($viewDefs as $def) {
+      foreach ($def['fields'] as $field) {
+        $allFields[$field] = TRUE;
+      }
+    }
     $allowlist = [
       'statement' => 'SELECT',
-      'table' => ['civicrm_contribution', 'civicrm_contact', 'civicrm_participant_payment', 'civicrm_membership_payment', 'civicrm_contribution_recur', 'civicrm_contribution_page'],
-      'field' => [
-        'id','contact_type','employer_id','birth_date','prefix_id','suffix_id','gender_id','job_title','created_date','modified_date','contact_id','total_amount','receive_date','is_test','contribution_recur_id','contribution_status_id','contribution_page_id','contribution_type_id','contribution_id','participant_id','membership_id'
-      ],
+      'table'     => array_keys($viewDefs),
+      'field'     => array_keys($allFields),
     ];
     $parser = new CRM_Utils_SqlParser($arguments['query'], $allowlist);
     $isError = FALSE;
     if ($parser->isValid()) {
       try {
         $sql = $parser->getQuery(TRUE);
-        $dbo = CRM_Core_DAO::initReadonly();
-        $sth = $dbo->prepare($sql);
+        $dao = new CRM_Core_ReadonlyDAO(self::READONLY_QUERY_DEFINITIONS);
+        $dao->setup();
+        $pdo = $dao->connectReadonly();
+        $sth = $pdo->prepare($sql);
         $sth->execute();
         $results = $sth->fetchAll();
       }
       catch (\Exception $e) {
-        CRM_Core_Error::debug_log_message('MCP query error: ' . $e->getMessage());
+        CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP query error: " . $e->getMessage());
         $results = ['Query execution failed.'];
         $isError = TRUE;
       }
     }
     else {
       $results = $parser->getErrors();
+      CRM_Core_Error::debug_log_message("[contact:{$this->_contactId}] MCP parser error: " . json_encode($results, JSON_UNESCAPED_UNICODE));
       $isError = TRUE;
     }
     return [
@@ -841,6 +1000,29 @@ class CRM_Utils_MCP {
   }
 
   /**
+   * Sanitize a prompt string to plain text with UTF-8 encoding and max 512 chars
+   * @param string $prompt Raw prompt text (may contain HTML)
+   * @return string Sanitized plain text
+   */
+  private function sanitizePrompt($prompt) {
+    // Strip HTML tags to get plain text
+    $prompt = strip_tags($prompt);
+    // Decode HTML entities (e.g. &amp; &lt;)
+    $prompt = html_entity_decode($prompt, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    // Strip any tags that may have appeared after entity decoding
+    $prompt = strip_tags($prompt);
+    // Ensure valid UTF-8 by re-encoding and dropping invalid byte sequences
+    $prompt = mb_convert_encoding($prompt, 'UTF-8', 'UTF-8');
+    // Collapse whitespace to single spaces
+    $prompt = preg_replace('/\s+/', ' ', trim($prompt));
+    // Truncate to max 512 characters (UTF-8 char-aware)
+    if (mb_strlen($prompt, 'UTF-8') > 500) {
+      $prompt = mb_substr($prompt, 0, 500, 'UTF-8');
+    }
+    return $prompt;
+  }
+
+  /**
    * Create MCP JSON-RPC 2.0 error response
    * @param int $code Error code
    * @param string $message Error message
@@ -848,7 +1030,8 @@ class CRM_Utils_MCP {
    * @return array Error response
    */
   private function error($code, $message, $id) {
-    CRM_Core_Error::debug_log_message("MCP error response: code:$code $message $id");
+    $contactStr = $this->_contactId ? "[contact:{$this->_contactId}] " : '';
+    CRM_Core_Error::debug_log_message("{$contactStr}MCP error response: code:$code $message $id");
     return [
       'jsonrpc' => '2.0',
       'error' => [
