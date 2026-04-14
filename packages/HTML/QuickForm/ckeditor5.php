@@ -147,7 +147,46 @@ cj(function() {
 });
 </script>";
 
-    return $html;
+    // Add Switcher UI
+    $systemEditorId = CRM_Core_BAO_Preferences::value('editor_id');
+    $isCke5Default = ($systemEditorId == 4 || (is_array($systemEditorId) && in_array(4, $systemEditorId)));
+    
+    // CKE4 config needs some logic to match ckeditor.php
+    $plugins = array('widget', 'lineutils', 'mediaembed', 'tableresize', 'image2');
+    if (CRM_Core_Permission::check('access CiviCRM') || CRM_Core_Permission::check('paste and upload images')) {
+      $plugins[] = 'clipboard_image';
+    }
+    $extraPluginsCode = [];
+    foreach($plugins as $pname){
+      $extraPluginsCode[] = "CKEDITOR.plugins.addExternal('{$pname}', '{$config->resourceBase}packages/ckeditor/extraplugins/{$pname}/', 'plugin.js');";
+    }
+    $toolbar = CRM_Core_Permission::check('access CiviCRM') ? 'CiviCRM' : 'CiviCRMBasic';
+    $allowedContent = CRM_Core_Permission::check('access CiviCRM') ? 'true' : "'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}'";
+
+    $cke4Config = array(
+      'resourceBase' => $config->resourceBase,
+      'ver' => $config->ver,
+      'plugins' => $plugins,
+      'extraPluginsCode' => implode("\n", $extraPluginsCode),
+      'extraPluginsList' => implode(',', $plugins),
+      'toolbar' => $toolbar,
+      'allowedContent' => $allowedContent,
+      'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
+      'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
+      'imceUrl' => CRM_Utils_System::moduleExists('imce') ? CRM_Utils_System::url('imce') : ''
+    );
+
+    $switcherHtml = '
+    <div class="crm-section editor-switcher-container" style="margin-top: 5px; margin-bottom: 5px; padding: 5px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
+      <span style="font-size: 11px; font-weight: bold; color: #444;">' . ($isCke5Default ? '退回模式' : '試用模式') . ':</span>
+      <select class="editor-format-switcher" onchange="CiviEditorSwitcher.switch(this.value, \'' . $name . '\', ' . htmlspecialchars(json_encode($cke4Config)) . ')" style="padding: 2px 4px; font-size: 11px; height: 24px; min-width: 140px;">
+        <option value="cke4">CKEditor 4 (傳統)</option>
+        <option value="cke5" selected>CKEditor 5 (新版)</option>
+      </select>
+      <span class="editor-switch-status" style="font-size: 11px; color: #666;"></span>
+    </div>';
+
+    return $switcherHtml . $html;
   }
 
   /**
