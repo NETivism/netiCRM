@@ -506,6 +506,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$creditCardIds})
+          AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
             (c.expire_date IS NOT NULL AND c.expire_date < NOW())
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
@@ -513,7 +514,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer'], 2 => [$creditCardDays + 3, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
@@ -538,6 +539,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$nonCreditCardIds})
+          AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
             (c.expire_date IS NOT NULL AND c.expire_date < NOW())
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
@@ -545,7 +547,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer'], 2 => [$nonCreditCardDays + 3, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
@@ -570,6 +572,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
         WHERE c.contribution_status_id IN ({$statusList})
           AND c.payment_processor_id IS NOT NULL
           AND c.payment_instrument_id IN ({$barcodeIds})
+          AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
             (c.expire_date IS NOT NULL AND c.expire_date < NOW())
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
@@ -577,7 +580,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer'], 2 => [$convenienceStoreDays + 3, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
