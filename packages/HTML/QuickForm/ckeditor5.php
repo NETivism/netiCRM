@@ -167,7 +167,7 @@ cj(function() {
       $extraPluginsCode[] = "CKEDITOR.plugins.addExternal('{$pname}', '{$config->resourceBase}packages/ckeditor/extraplugins/{$pname}/', 'plugin.js');";
     }
     $toolbar = CRM_Core_Permission::check('access CiviCRM') ? 'CiviCRM' : 'CiviCRMBasic';
-    $allowedContent = CRM_Core_Permission::check('access CiviCRM') ? 'true' : "'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}'";
+    $allowedContent = CRM_Core_Permission::check('access CiviCRM') ? true : 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}';
 
     $cke4Config = array(
       'resourceBase' => $config->resourceBase,

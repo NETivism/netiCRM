@@ -85,7 +85,6 @@
       }
       
       if (!window.cke4PluginsRegistered && config.extraPluginsCode) {
-        // Evaluate extra plugins code from PHP
         const script = document.createElement('script');
         script.text = config.extraPluginsCode;
         document.head.appendChild(script);
@@ -96,34 +95,28 @@
       cj(el).addClass('ckeditor-processed');
 
       return new Promise((resolve) => {
-        const instance = window.CKEDITOR.replace(el.name);
+        // Build configuration object for replace()
+        const cke4Config = {
+          extraPlugins: config.extraPluginsList,
+          customConfig: config.customConfigPath,
+          width: '100%',
+          height: '400',
+          allowedContent: config.allowedContent,
+          fullPage: false,
+          toolbar: config.toolbar
+        };
+
+        if (config.imceEnabled) {
+          cke4Config.filebrowserBrowseUrl = config.imceUrl;
+          cke4Config.filebrowserImageBrowseUrl = config.imceUrl + '&type=Images';
+        }
+
+        // Pass configuration object directly to replace()
+        const instance = window.CKEDITOR.replace(el.name, cke4Config);
         
         instance.on('key', function(evt) {
           window.global_formNavigate = false;
         });
-
-        instance.config.extraPlugins = config.extraPluginsList;
-        instance.config.customConfig = config.customConfigPath;
-        instance.config.width = '100%';
-        instance.config.height = '400';
-        
-        if (config.allowedContent === 'true') {
-          instance.config.allowedContent = true;
-        } else {
-          let ac = config.allowedContent;
-          if (typeof ac === 'string' && ac.startsWith("'") && ac.endsWith("'")) {
-            ac = ac.slice(1, -1);
-          }
-          instance.config.allowedContent = ac;
-        }
-        
-        instance.config.fullPage = false;
-        instance.config.toolbar = config.toolbar;
-        
-        if (config.imceEnabled) {
-          instance.config.filebrowserBrowseUrl = config.imceUrl;
-          instance.config.filebrowserImageBrowseUrl = config.imceUrl + '&type=Images';
-        }
 
         instance.on('instanceReady', () => resolve(instance));
       });
@@ -132,8 +125,6 @@
     initializeCKE5: async function(el, content, config) {
       // Dynamic load CKE5 core files if missing
       if (!window.CKEDITOR_5) {
-        console.log('CiviEditorSwitcher: Loading CKE5 resources on-demand...');
-        
         // Load CSS
         const link = document.createElement('link');
         link.rel = 'stylesheet';

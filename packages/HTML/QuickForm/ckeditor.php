@@ -78,9 +78,11 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
             if (CRM_Core_Permission::check('access CiviCRM')) {
               $toolbar = 'CiviCRM';
               $allowedContent = 'editor.config.allowedContent = true;';
+              $allowedContentConfig = true;
             }
             else {
               $allowedContent = "editor.config.allowedContent = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}';";
+              $allowedContentConfig = 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}';
               $toolbar =  'CiviCRMBasic';
             }
             $fullPage = $this->getAttribute('fullpage');
@@ -141,7 +143,7 @@ cj( function( ) {
               'extraPluginsCode' => implode("\n", $extraPlugins),
               'extraPluginsList' => implode(',', $plugins),
               'toolbar' => $toolbar,
-              'allowedContent' => $allowedContent,
+              'allowedContent' => $allowedContentConfig,
               'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
               'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
               'imceUrl' => CRM_Utils_System::moduleExists('imce') ? CRM_Utils_System::url('imce') : ''
