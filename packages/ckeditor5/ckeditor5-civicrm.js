@@ -1048,16 +1048,39 @@
       cj(el).addClass('ckeditor-processed');
 
       return new Promise((resolve) => {
-        const instance = window.CKEDITOR.replace(el.name, {
-          customConfig: config.customConfigPath,
-          extraPlugins: config.extraPluginsList,
-          toolbar: config.toolbar,
-          allowedContent: config.allowedContent,
-          width: '100%',
-          height: '400',
-          filebrowserBrowseUrl: config.imceUrl,
-          filebrowserImageBrowseUrl: config.imceUrl + '&type=Images'
+        // Must call replace() without config to match ckeditor.php behavior,
+        // then assign config properties to instance.config so they are evaluated
+        // AFTER the customConfig is loaded asynchronously.
+        const instance = window.CKEDITOR.replace(el.name);
+        
+        instance.on('key', function(evt) {
+          window.global_formNavigate = false;
         });
+
+        instance.config.extraPlugins = config.extraPluginsList;
+        instance.config.customConfig = config.customConfigPath;
+        instance.config.width = '100%';
+        instance.config.height = '400';
+        
+        // Handle allowedContent string from PHP
+        if (config.allowedContent === 'true') {
+          instance.config.allowedContent = true;
+        } else {
+          let ac = config.allowedContent;
+          if (typeof ac === 'string' && ac.startsWith("'") && ac.endsWith("'")) {
+            ac = ac.slice(1, -1);
+          }
+          instance.config.allowedContent = ac;
+        }
+        
+        instance.config.fullPage = false;
+        instance.config.toolbar = config.toolbar;
+        
+        if (config.imceEnabled) {
+          instance.config.filebrowserBrowseUrl = config.imceUrl;
+          instance.config.filebrowserImageBrowseUrl = config.imceUrl + '&type=Images';
+        }
+
         instance.on('instanceReady', () => resolve(instance));
       });
     },
