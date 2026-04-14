@@ -97,6 +97,13 @@ class HTML_QuickForm_CKeditor extends HTML_QuickForm_textarea
               $html .= "\n".'<script type="text/javascript" src="'.$config->resourceBase.'packages/ckeditor/ckeditor.js?'.$config->ver.'"></script>'."\n";
               $GLOBALS['civicrm_ckeditor_script'] = TRUE;
             }
+
+            // Load switcher logic
+            if (empty($GLOBALS['editor_switcher_loaded'])) {
+              $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/editor-switcher.js?' . $config->ver . '"></script>' . "\n";
+              $GLOBALS['editor_switcher_loaded'] = TRUE;
+            }
+
             $html .= "<script type='text/javascript'>
 ".implode("\n", $extraPlugins)."
 cj( function( ) {

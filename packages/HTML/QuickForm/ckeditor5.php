@@ -103,6 +103,12 @@ if (window.CKEDITOR && !window.CKEDITOR_5) {
       $GLOBALS['ckeditor5_script_loaded'] = TRUE;
     }
 
+    // Load switcher logic
+    if (empty($GLOBALS['editor_switcher_loaded'])) {
+      $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/editor-switcher.js?' . $config->ver . '"></script>' . "\n";
+      $GLOBALS['editor_switcher_loaded'] = TRUE;
+    }
+
     // Initialize CKEditor 5 using config from ckeditor5-civicrm.js
     $elementSelector = $elementId
       ? "document.getElementById('{$elementId}')"
