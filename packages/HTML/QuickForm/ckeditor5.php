@@ -182,17 +182,29 @@ cj(function() {
       'imceUrl' => CRM_Utils_System::moduleExists('imce') ? CRM_Utils_System::url('imce') : ''
     );
 
-    $switcherHtml = '
-    <div class="crm-section editor-switcher-container" style="margin-top: 5px; margin-bottom: 5px; padding: 5px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
-      <span style="font-size: 11px; font-weight: bold; color: #444;">' . ($isCke5Default ? '退回模式' : '試用模式') . ':</span>
-      <select class="editor-format-switcher" onchange="CiviEditorSwitcher.switch(this.value, \'' . $name . '\', ' . htmlspecialchars(json_encode($cke4Config)) . ')" style="padding: 2px 4px; font-size: 11px; height: 24px; min-width: 140px;">
-        <option value="cke4">CKEditor 4 (傳統)</option>
-        <option value="cke5" selected>CKEditor 5 (新版)</option>
-      </select>
-      <span class="editor-switch-status" style="font-size: 11px; color: #666;"></span>
-    </div>';
+    if (!$isCke5Default) {
+      $hintMessage = '';
+      if ($systemEditorId == 2 || (is_array($systemEditorId) && in_array(2, $systemEditorId))) {
+        $hintMessage = '<span style="font-size: 11px; color: #8a6d3b; background-color: #fcf8e3; padding: 4px 8px; border-radius: 4px; border: 1px solid #faebcc; margin-right: 5px;">' . ts('CKEditor 5 目前處於測試階段，您可以切換至新版進行試用，若有問題歡迎回報。') . '</span>';
+      }
 
-    return $switcherHtml . $html;
+      $switcherHtml = '
+      <div class="crm-section editor-switcher-container" style="margin-top: 5px; margin-bottom: 5px; padding: 5px; background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+        ' . $hintMessage . '
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 11px; font-weight: bold; color: #444;">切換模式:</span>
+          <select class="editor-format-switcher" onchange="CiviEditorSwitcher.switch(this.value, \'' . $name . '\', ' . htmlspecialchars(json_encode($cke4Config)) . ')" style="padding: 2px 4px; font-size: 11px; height: 24px; min-width: 140px;">
+            <option value="cke4">CKEditor 4 (傳統)</option>
+            <option value="cke5" selected>CKEditor 5 (新版)</option>
+          </select>
+          <span class="editor-switch-status" style="font-size: 11px; color: #666;"></span>
+        </div>
+      </div>';
+
+      return $switcherHtml . $html;
+    }
+
+    return $html;
   }
 
   /**
