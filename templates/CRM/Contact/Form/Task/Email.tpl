@@ -115,8 +115,8 @@
   margin: 0 !important;
 }
 </style>
-<div id="dialog-confirm-email" title="{ts}你確定要寄送電子郵件?{/ts}" style="display:none;">
-  <p>{ts}發送此電子郵件後將無法復原。您確定要繼續嗎？{/ts}</p>
+<div id="dialog-confirm-email" title="{ts}Confirm Send Email?{/ts}" style="display:none;">
+  <p>{ts}Are you sure you want to continue?{/ts}</p>
 </div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
@@ -171,7 +171,7 @@ cj(document).ready(function() {
     modal: true,
     dialogClass: 'email-confirm-dialog',
     buttons: {
-      '{/literal}{ts}確定{/ts}{literal}': function() {
+      '{/literal}{ts}Confirm{/ts}{literal}': function() {
         cj(this).dialog('close');
         if (clickedBtn) {
           // Remove our handler then use native DOM click to submit with button value in POST
