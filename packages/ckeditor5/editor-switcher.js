@@ -24,7 +24,7 @@
       if (format === currentType) return;
 
       const $container = $el.closest('.crm-section').find('.editor-switch-status');
-      $container.text('切換中...').css('color', '#666');
+      $container.text('Switching...').css('color', '#666');
 
       try {
         const content = await this.getCurrentContent(el, currentType);
@@ -39,10 +39,10 @@
         }
 
         $el.data('current-editor-type', format);
-        $container.text('✓ 已切換').css('color', 'green');
+        $container.text('✓ Switched').css('color', 'green');
       } catch (error) {
         console.error('Switch error:', error);
-        $container.text('✗ 失敗: ' + error.message).css('color', 'red');
+        $container.text('✗ Failed: ' + error.message).css('color', 'red');
       }
     },
 
