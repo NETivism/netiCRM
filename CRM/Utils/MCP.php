@@ -135,8 +135,8 @@ class CRM_Utils_MCP {
     $id = $request['id'] ?? NULL;
 
     // Check from IP address when allowed list defined
-    if (defined('CIVICRM_API_ALLOWED_IP')) {
-      $allowedIPs = explode(',', CIVICRM_API_ALLOWED_IP);
+    if (defined('CIVICRM_MCP_ALLOWED_IP')) {
+      $allowedIPs = explode(',', CIVICRM_MCP_ALLOWED_IP);
       if (!empty($allowedIPs)) {
         $match = FALSE;
         $remoteIP = CRM_Utils_System::ipAddress();
