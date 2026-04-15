@@ -105,6 +105,19 @@
 {if $suppressedEmails > 0}
    {ts count=$suppressedEmails plural='Email will NOT be sent to %count contacts.'}Email will NOT be sent to %count contact.{/ts}
 {/if}
+{* Confirmation dialog - prevent accidental email send *}
+<style>
+.email-confirm-dialog {
+  position: fixed !important;
+  top: 210px ;
+  left: 50% ;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+}
+</style>
+<div id="dialog-confirm-email" title="{ts}你確定要寄送電子郵件?{/ts}" style="display:none;">
+  <p>{ts}發送此電子郵件後將無法復原。您確定要繼續嗎？{/ts}</p>
+</div>
 <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
 <script type="text/javascript">
@@ -144,6 +157,41 @@ cj( "#to"     ).tokenInput( toDataUrl, { prePopulate: toContact, classes: tokenC
 cj( "#cc_id"  ).tokenInput( sourceDataUrl, { prePopulate: ccContact, classes: tokenClass, hintText: hintText });
 cj( "#bcc_id" ).tokenInput( sourceDataUrl, { prePopulate: bccContact, classes: tokenClass, hintText: hintText });
 cj( 'ul.token-input-list-facebook, div.token-input-dropdown-facebook' ).css( 'width', '450px' );
+</script>
+{/literal}
+{literal}
+<script type="text/javascript">
+cj(document).ready(function() {
+  var clickedBtn = null;
+
+  cj('#dialog-confirm-email').dialog({
+    autoOpen: false,
+    resizable: false,
+    width: 450,
+    modal: true,
+    dialogClass: 'email-confirm-dialog',
+    buttons: {
+      '{/literal}{ts}確定{/ts}{literal}': function() {
+        cj(this).dialog('close');
+        if (clickedBtn) {
+          // Remove our handler then use native DOM click to submit with button value in POST
+          cj(clickedBtn).off('click.emailConfirm');
+          clickedBtn.click();
+        }
+      },
+      '{/literal}{ts}Cancel{/ts}{literal}': function() {
+        cj(this).dialog('close');
+      }
+    }
+  });
+
+  cj('#_qf_Email_upload-top, #_qf_Email_upload-bottom').on('click.emailConfirm', function(e) {
+    e.preventDefault();
+    clickedBtn = this;
+    cj('#dialog-confirm-email').dialog('open');
+    return false;
+  });
+});
 </script>
 {/literal}
 {include file="CRM/common/formNavigate.tpl"}
