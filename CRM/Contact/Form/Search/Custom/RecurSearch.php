@@ -127,7 +127,7 @@ class CRM_Contact_Form_Search_Custom_RecurSearch extends CRM_Contact_Form_Search
       ts('Last Receive Date') => 'last_receive_date',
       ts('Last Failed Date') => 'last_failed_date',
       ts('Contribution Page ID') => 'contribution_page_id',
-      0 => 'total_count',
+      1 => 'total_count',
     ];
   }
 
