@@ -1411,9 +1411,7 @@ class CRM_Export_BAO_Export {
 
     if (!empty($primaryIDName)) {
       $keyContactIDName = array_search('contact_id', $columns);
-      if ($keyContactIDName !== FALSE) {
-        unset($columns[$keyContactIDName]);
-      }
+      unset($columns[$keyContactIDName]);
       $header = array_keys($columns);
       $header[] = ts('CiviCRM Contact ID');
       $fields = array_values($columns);
