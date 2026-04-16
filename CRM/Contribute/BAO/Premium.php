@@ -514,7 +514,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer'], 2 => [$creditCardDays + 3, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($creditCardSql, [1 => [$creditCardDays, 'Integer'], 2 => [$creditCardDays + 30, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
@@ -547,7 +547,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer'], 2 => [$nonCreditCardDays + 3, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($nonCreditCardSql, [1 => [$nonCreditCardDays, 'Integer'], 2 => [$nonCreditCardDays + 30, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
@@ -580,7 +580,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND cp.restock <= 0
       ";
 
-      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer'], 2 => [$convenienceStoreDays + 3, 'Integer']]);
+      $dao = CRM_Core_DAO::executeQuery($barcodeSpecialSql, [1 => [$convenienceStoreDays, 'Integer'], 2 => [$convenienceStoreDays + 30, 'Integer']]);
       while ($dao->fetch()) {
         if (!isset($results[$dao->id])) {
           $results[$dao->id] = [
