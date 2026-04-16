@@ -175,7 +175,20 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
         }
         else {
           // handle non custom fields
-          CRM_Core_BAO_UFGroup::buildProfile($this, $field, NULL, $activityId);
+          if ($field['name'] === 'activity_status') {
+            $elementName = "field[{$activityId}][activity_status]";
+            if (!$this->elementExists($elementName)) {
+              $this->add(
+                'select',
+                $elementName,
+                $field['title'],
+                ['' => ts('- select -')] + CRM_Core_PseudoConstant::activityStatus()
+              );
+            }
+          }
+          else {
+            CRM_Core_BAO_UFGroup::buildProfile($this, $field, NULL, $activityId);
+          }
         }
       }
     }
@@ -208,6 +221,14 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     foreach ($this->_activityHolderIds as $activityId) {
       $details[$activityId] = [];
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $activityId, 'Activity');
+
+      // The database field name for activity_status is status_id. Since setComponentDefaults cannot map it automatically, the default value needs to be set manually.
+      foreach ($this->_fields as $name => $field) {
+        if ($field['name'] === 'activity_status') {
+          $statusId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityId, 'status_id');
+          $defaults["field[{$activityId}][activity_status]"] = $statusId;
+        }
+      }
     }
 
     return $defaults;
@@ -241,6 +262,9 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
         if ($value['activity_status_id']) {
           $value['status_id'] = $value['activity_status_id'];
         }
+        elseif (!empty($value['activity_status'])) {
+          $value['status_id'] = $value['activity_status'];
+        }
 
         if ($value['activity_details']) {
           $value['details'] = $value['activity_details'];
@@ -272,14 +296,14 @@ WHERE  id = %1";
         // Get Conatct ID
         $value['source_contact_id'] = $dao->source_contact_id;
 
-        $activityId = civicrm_activity_update($value);
+        $activity = CRM_Activity_BAO_Activity::create($value);
 
         // add custom field values
         if (CRM_Utils_Array::value('custom', $value) &&
           is_array($value['custom'])
         ) {
 
-          CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_activity', $activityId->id);
+          CRM_Core_BAO_CustomValueTable::store($value['custom'], 'civicrm_activity', $activity->id);
         }
       }
       CRM_Core_Session::setStatus(ts("Your updates have been saved."));
