@@ -508,7 +508,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND c.payment_instrument_id IN ({$creditCardIds})
           AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
-            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            (c.expire_date IS NOT NULL AND c.expire_date < DATE_SUB(NOW(), INTERVAL %1 DAY))
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
           )
           AND cp.restock <= 0
@@ -541,7 +541,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND c.payment_instrument_id IN ({$nonCreditCardIds})
           AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
-            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            (c.expire_date IS NOT NULL AND c.expire_date < DATE_SUB(NOW(), INTERVAL %1 DAY))
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
           )
           AND cp.restock <= 0
@@ -574,7 +574,7 @@ class CRM_Contribute_BAO_Premium extends CRM_Contribute_DAO_Premium {
           AND c.payment_instrument_id IN ({$barcodeIds})
           AND c.created_date > DATE_SUB(NOW(), INTERVAL %2 DAY)
           AND (
-            (c.expire_date IS NOT NULL AND c.expire_date < NOW())
+            (c.expire_date IS NOT NULL AND c.expire_date < DATE_SUB(NOW(), INTERVAL %1 DAY))
             OR (c.expire_date IS NULL AND DATEDIFF(NOW(), c.created_date) > %1)
           )
           AND cp.restock <= 0
