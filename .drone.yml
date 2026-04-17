@@ -26,12 +26,13 @@ steps:
     - /init.sh
     - cd $DRUPAL_ROOT && drush status | grep version
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Utils/TypeTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
+    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BaseIPNTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/ALLPAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/SPGATEWAYTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/LinePayTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/TapPayTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit CRM/Core/Payment/BackerTest.php
-    - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --filter testLastReceiptId CRM/Contribute/BAO/ContributionTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/ContributionRecurTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit api/v3/GetOptionsTest.php
     - cd $DRUPAL_ROOT/sites/all/modules/civicrm/tests/phpunit && phpunit --group CItesting api/v3/PhoneTest.php

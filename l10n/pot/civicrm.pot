@@ -51110,3 +51110,7 @@ msgstr ""
 #: templates/CRM/Connector/Page/Connector.tpl templates/CRM/Connector/Page/Connector.tpl
 msgid "Security notice: This API key is sensitive credentials. Do not share it publicly. Store it only in a trusted backend service or server, and keep it confidential."
 msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Prefix of Receipt ID cannot contain hyphen (-)."
+msgstr ""

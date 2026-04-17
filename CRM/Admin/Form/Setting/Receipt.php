@@ -233,6 +233,9 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
+    if (!empty($fields['receiptPrefix']) && strpos($fields['receiptPrefix'], '-') !== FALSE) {
+      $errors['receiptPrefix'] = ts('Prefix of Receipt ID cannot contain hyphen (-).');
+    }
     if ((!empty($fields['receiptDisplayLegalID']) && $fields['receiptDisplayLegalID'] !== 'complete') && (!empty($fields['receiptEmailEncryption']) && $fields['receiptEmailEncryption'] === '1')) {
       $errors['receiptEmailEncryption'] = ts('When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled.');
     }
