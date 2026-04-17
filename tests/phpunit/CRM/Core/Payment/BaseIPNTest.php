@@ -34,7 +34,7 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
 
   // Receipt-id prefix used by the tests.  Chosen to be recognisable and
   // unlikely to collide with real data in a development database.
-  const RECEIPT_PREFIX = 'BIPNTEST';
+  public const RECEIPT_PREFIX = 'BIPNTEST';
 
   public function get_info() {
     return [
@@ -270,7 +270,8 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
     $lock->release();
 
     $this->assertEquals(
-      0, $returnCode,
+      0,
+      $returnCode,
       "Worker subprocess should exit 0 (its assertion passed — lock timed out):\n" . implode("\n", $output)
     );
   }
@@ -301,8 +302,11 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
       $receiptId = CRM_Contribute_BAO_Contribution::genReceiptID($contrib->id, TRUE, FALSE);
 
       $this->assertNotEmpty($receiptId, 'genReceiptID must return a non-empty receipt_id');
-      $this->assertStringContainsString(self::RECEIPT_PREFIX, $receiptId,
-        'receipt_id must include the test prefix (' . self::RECEIPT_PREFIX . ')');
+      $this->assertStringContainsString(
+        self::RECEIPT_PREFIX,
+        $receiptId,
+        'receipt_id must include the test prefix (' . self::RECEIPT_PREFIX . ')'
+      );
 
       $dbReceiptId = CRM_Core_DAO::singleValueQuery(
         "SELECT receipt_id FROM civicrm_contribution WHERE id = %1",
@@ -358,8 +362,10 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
     }
 
     // Diagnostic: CIVICRM_TEST_DSN must be set so the sleep hook activates
-    $this->assertNotEmpty(getenv('CIVICRM_TEST_DSN'),
-      'Worker: CIVICRM_TEST_DSN must be inherited by the subprocess');
+    $this->assertNotEmpty(
+      getenv('CIVICRM_TEST_DSN'),
+      'Worker: CIVICRM_TEST_DSN must be inherited by the subprocess'
+    );
 
     $receiptPrefix = getenv('BASEIPN_RECEIPT_PREFIX');
     if (!empty($receiptPrefix)) {
@@ -372,16 +378,21 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
       "SELECT contribution_status_id FROM civicrm_contribution WHERE id = %1",
       [1 => [$contribId, 'Integer']]
     );
-    $this->assertEquals(1, $status,
-      "Worker: contribution {$contribId} must be Completed before genReceiptID");
+    $this->assertEquals(
+      1,
+      $status,
+      "Worker: contribution {$contribId} must be Completed before genReceiptID"
+    );
 
     // Sleep inside lastReceiptID to hold the FOR UPDATE lock long enough for
     // the main process to start its own genReceiptID call and block.
     $GLOBALS['CiviTest_ContributionTest_sleep'] = 4;
     $result = CRM_Contribute_BAO_Contribution::genReceiptID($contribId, TRUE, FALSE);
 
-    $this->assertNotEmpty($result,
-      "Worker: genReceiptID must return a receipt_id (returned: " . var_export($result, TRUE) . ")");
+    $this->assertNotEmpty(
+      $result,
+      "Worker: genReceiptID must return a receipt_id (returned: " . var_export($result, TRUE) . ")"
+    );
   }
 
   /**
@@ -448,8 +459,10 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
       }
       @unlink($flagFile);
       $workerLog = file_exists($logFile) ? file_get_contents($logFile) : '(log file missing)';
-      $this->assertTrue(time() < $deadline,
-        "Timed out (15 s) waiting for worker to acquire FOR UPDATE lock.\nWorker log:\n{$workerLog}");
+      $this->assertTrue(
+        time() < $deadline,
+        "Timed out (15 s) waiting for worker to acquire FOR UPDATE lock.\nWorker log:\n{$workerLog}"
+      );
 
       // ---- Process B (this process, no sleep) ----
       // B opens its transaction and issues SELECT … FOR UPDATE.  A holds the
@@ -470,12 +483,17 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
       );
 
       $workerLog = file_exists($logFile) ? file_get_contents($logFile) : '(log file missing)';
-      $this->assertNotEmpty($finalReceiptId,
-        "Contribution must have a receipt_id after concurrent genReceiptID calls.\nWorker log:\n{$workerLog}");
+      $this->assertNotEmpty(
+        $finalReceiptId,
+        "Contribution must have a receipt_id after concurrent genReceiptID calls.\nWorker log:\n{$workerLog}"
+      );
 
       // B must have returned the receipt_id that A saved — not allocated a new one
-      $this->assertEquals($finalReceiptId, $receiptIdFromB,
-        'Process B should return the receipt_id already saved by process A (SELECT FOR UPDATE early-return), not overwrite it');
+      $this->assertEquals(
+        $finalReceiptId,
+        $receiptIdFromB,
+        'Process B should return the receipt_id already saved by process A (SELECT FOR UPDATE early-return), not overwrite it'
+      );
 
       // Extract the numeric suffix from the receipt_id
       // e.g. "MBIPNTEST-000001" → suffix = "000001" (= 1)
@@ -489,7 +507,9 @@ class CRM_Core_Payment_BaseIPNTest extends CiviUnitTestCase {
         [1 => [$seqKey, 'String']]
       );
 
-      $this->assertEquals($seqNum, $seqValue,
+      $this->assertEquals(
+        $seqNum,
+        $seqValue,
         "civicrm_sequence.value ({$seqValue}) must equal the receipt_id numeric suffix ({$seqNum}). " .
         "A mismatch means a sequence number was consumed but never stored — a gap."
       );

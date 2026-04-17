@@ -318,6 +318,7 @@ AND    co.id IN ( $contribIDs )";
 
       // reset template values before processing next transactions
       $template->clearTemplateVars();
+      $transaction->commit();
     }
 
     CRM_Core_Session::setStatus(ts('Contribution status has been updated for selected record(s).'));
