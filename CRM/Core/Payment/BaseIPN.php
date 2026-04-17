@@ -492,12 +492,42 @@ class CRM_Core_Payment_BaseIPN {
    * @return void
    */
   public function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE, $sendMail = TRUE) {
-    $values = [];
-    CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
     $event = &$objects['event'];
+
+    // ref #46007, prevent overwrite receipt id by acquire lock on each IPN
+    // Serialize concurrent IPNs that target the same contribution. Without
+    // this lock, two IPNs arriving within seconds for the same trxn_id can
+    // both pass the caller's status==1 idempotency check, both run the full
+    // completion flow, and produce duplicate FinancialTrxn rows, duplicate
+    // activities, duplicate mails and receipt id gaps.
+    $ipnLock = NULL;
+    if (!empty($contribution->id)) {
+      $ipnLock = new CRM_Core_Lock('ipn_contrib_' . (int) $contribution->id, 30);
+      if (!$ipnLock->isAcquired()) {
+        CRM_Core_Error::debug_log_message("IPN: could not acquire lock for contrib {$contribution->id} within 30s, abort to avoid concurrent processing.");
+        return;
+      }
+      // Under the lock, re-read the authoritative status from DB. A concurrent
+      // IPN may have already flipped this contribution to Completed while we
+      // were waiting — if so, bail out early and let the caller ack the IPN.
+      $currentStatus = CRM_Core_DAO::singleValueQuery(
+        "SELECT contribution_status_id FROM civicrm_contribution WHERE id = %1",
+        [1 => [$contribution->id, 'Integer']]
+      );
+      if ($currentStatus == 1) {
+        $ipnLock->release();
+        CRM_Core_Error::debug_log_message("IPN: contribution {$contribution->id} already completed by concurrent IPN, skip duplicate processing.");
+        return;
+      }
+    }
+    // a big try block for make sure lock can be realease in finally block
+    try {
+
+    $values = [];
+    CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
 
     if ($input['component'] == 'contribute') {
 
@@ -775,6 +805,16 @@ class CRM_Core_Payment_BaseIPN {
     CRM_Core_Error::debug_log_message("ipn debug pre for {$contribution->id}");
     CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
 
+    // Release the IPN advisory lock as soon as DB writes + ipnPost are done.
+    // Mail/SMS sending can take seconds (SMTP, external SMS API) and must not
+    // block subsequent IPNs for the same contribution from entering the
+    // early-return fast path. The finally block below is a safety net for
+    // exception paths before this point; CRM_Core_Lock::release() is
+    // idempotent so calling it again in finally is safe.
+    if ($ipnLock !== NULL) {
+      $ipnLock->release();
+    }
+
     // #25671, add support for hook change mailing notification trigger
     if (!$sendMail || !empty($input['do_not_email'])) {
       CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and no mail sent.");
@@ -819,6 +859,13 @@ class CRM_Core_Payment_BaseIPN {
         CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS not sent");
       }
     }
+
+    }
+    finally {
+      if ($ipnLock !== NULL) {
+        $ipnLock->release();
+      }
+    }
   }
 
   /**
@@ -847,7 +894,7 @@ class CRM_Core_Payment_BaseIPN {
       if ($config->copyContributionTypeSource == 1) {
         $c->contribution_type_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $c->contribution_page_id, 'contribution_type_id');
       }
-      $transaction = new CRM_Core_Transaction('READ COMMITTED');
+      $transaction = new CRM_Core_Transaction();
       $c->save();
       $transaction->commit();
       CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);

@@ -253,8 +253,6 @@ AND    co.id IN ( $contribIDs )";
 
     $baseIPN = new CRM_Core_Payment_BaseIPN();
 
-    $transaction = new CRM_Core_Transaction();
-
     // get the missing pieces for each contribution
     $contribIDs = CRM_Utils_Array::implode(',', $this->_contributionIds);
     $details = self::getDetails($contribIDs);
@@ -280,6 +278,8 @@ AND    co.id IN ( $contribIDs )";
       }
 
       $contribution = &$objects['contribution'];
+
+      $transaction = new CRM_Core_Transaction();
 
       if ($statusID == 3) {
         $baseIPN->cancelled($objects, $transaction);
