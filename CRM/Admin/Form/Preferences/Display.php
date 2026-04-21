@@ -99,7 +99,7 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     }
     $this->addElement('select', 'wysiwyg_editor', ts('WYSIWYG Editor'), $wysiwyg_options, NULL);
 
-    $this->addElement('checkbox', 'editor_allow_all_content', ts('Allow All Content (including scripts)'));
+    $this->addElement('checkbox', 'editor_allow_all_content', NULL, ts('Disable Security Filter (Allow all content & scripts)'));
 
     $this->addElement('textarea', 'display_name_format', ts('Individual Display Name Format'));
     $this->addElement('textarea', 'sort_name_format', ts('Individual Sort Name Format'));

@@ -104,16 +104,13 @@
 	{/if}
 	{if $form.editor_allow_all_content.html}
             <tr class="crm-preferences-display-form-block-editor_allow_all_content">
-               <td class="label">{$form.editor_allow_all_content.label}</td>
+               <td class="label">{ts}HTML Security Filter{/ts}</td>
                <td>{$form.editor_allow_all_content.html}</td>
             </tr>
             <tr class="crm-preferences-display-form-block-description crm-preferences-display-form-block-editor_allow_all_content-desc">
                <td>&nbsp;</td>
                <td class="description">
-                 <div style="padding: 8px 12px; background-color: #fcf8e3; border: 1px solid #faebcc; border-radius: 4px; color: #8a6d3b;">
-                   <strong>{ts}Security Warning{/ts}</strong>:
-                   {ts}Enabling this option lets the WYSIWYG editor save any HTML, including &lt;script&gt; tags, inline event handlers (onload, onerror, onclick, etc.), iframes, and arbitrary attributes. Content entered by editors is rendered to site visitors as-is, so only enable this if every user with content-editing permission is trusted. When disabled, the editor strips scripts and common XSS attack vectors.{/ts}
-                 </div>
+                 <div class="crm-marker"><strong>WARNING</strong>: {ts}By default, dangerous HTML tags (e.g., scripts, iframes) are stripped to prevent XSS attacks. Enabling this option bypasses these protections. Only use this if you trust all editors and have a specific need for custom scripts.{/ts}</div>
                </td>
             </tr>
 	{/if}
