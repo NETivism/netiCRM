@@ -297,7 +297,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
 
     // refs #22380, trying to solve deadlock
     // Use READ COMMITTED isolation level to prevent race condition of index lock
-    $transaction = new CRM_Core_Transaction('READ COMMITTED');
+    $transaction = new CRM_Core_Transaction();
 
     // add location Block data
     $blocks = CRM_Core_BAO_Location::create($params, $fixAddress);
@@ -312,7 +312,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
     if (CRM_Utils_Array::value('custom', $params) && is_array($params['custom'])) {
       CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_contact', $contact->id);
     }
-    $transaction->commit(TRUE);
+    $transaction->commit();
 
     //get userID from session
     $session = CRM_Core_Session::singleton();

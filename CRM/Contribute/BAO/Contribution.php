@@ -162,7 +162,14 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     CRM_Contact_BAO_GroupContactCache::remove();
 
     // calculate receipt id
-    if ((empty($result->receipt_id) || $result->receipt_id === 'null') && (!empty($result->receipt_date) && $result->receipt_date !== 'null')) {
+    // When called from self::create(), receipt id generation is deferred until
+    // after the outer transaction commits (see create()), so we skip here.
+    // This prevents the sequence from advancing inside an outer transaction
+    // that might still be rolled back by later steps (custom fields, notes,
+    // activities, soft credits, etc.) and causing receipt id jumps.
+    if (empty($params['internal_skip_receipt_id_gen'])
+      && (empty($result->receipt_id) || $result->receipt_id === 'null')
+      && (!empty($result->receipt_date) && $result->receipt_date !== 'null')) {
       $params['receipt_id'] = CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE);
       if (!empty($params['receipt_id'])) {
         $result->receipt_id = $params['receipt_id'];
@@ -230,6 +237,11 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     }
 
     $transaction = new CRM_Core_Transaction();
+
+    // Defer receipt id generation until after the outer transaction commits,
+    // so that sequence advances are not wasted when later steps roll back,
+    // and so that receipt id is assigned at the very last moment.
+    $params['internal_skip_receipt_id_gen'] = TRUE;
 
     $contribution = self::add($params, $ids);
 
@@ -311,6 +323,19 @@ class CRM_Contribute_BAO_Contribution extends CRM_Contribute_DAO_Contribution {
     }
 
     $transaction->commit();
+
+    // refs #46007, generate receipt id after the outer transaction commits.
+    // genReceiptID opens its own (now top-level) transaction, so the sequence
+    // update and the receipt_id save are atomic, and no subsequent step can
+    // advance the sequence without using the number.
+    if ((empty($contribution->receipt_id) || $contribution->receipt_id === 'null')
+      && (!empty($contribution->receipt_date) && $contribution->receipt_date !== 'null')) {
+      $receiptId = self::genReceiptID($contribution, TRUE);
+      if (!empty($receiptId)) {
+        $contribution->receipt_id = $receiptId;
+        $params['receipt_id'] = $receiptId;
+      }
+    }
 
     // do not add to recent items for import, CRM-4399
     if (!CRM_Utils_Array::value('skipRecentView', $params)) {
@@ -2572,12 +2597,21 @@ SELECT source_contact_id
     }
 
     $needs = ['is_test', 'contribution_status_id', 'receipt_date', 'receipt_id', 'contribution_type_id'];
+    $missingFields = [];
     foreach ($needs as $n) {
       if ($contribution->$n === 'null') {
         $contribution->$n = NULL;
+        $missingFields[] = $n;
       }
-      if (empty($contribution->$n) && $contribution->id) {
-        $contribution->$n = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, $n, 'id');
+    }
+    if (!empty($missingFields) && $contribution->id) {
+      $cols = implode(', ', $missingFields);
+      $id = (int) $contribution->id;
+      $dao = CRM_Core_DAO::executeQuery("SELECT {$cols} FROM civicrm_contribution WHERE id = {$id}");
+      if ($dao->fetch()) {
+        foreach ($missingFields as $n) {
+          $contribution->$n = $dao->$n;
+        }
       }
     }
     if ($reset) {
@@ -2621,6 +2655,34 @@ SELECT source_contact_id
         }
         CRM_Utils_Hook::alterReceiptId($prefix, $contribution);
 
+        // Serialize concurrent callers racing to allocate a receipt id for
+        // the same contribution. Use CRM_Core_Lock (MySQL advisory GET_LOCK)
+        // rather than SELECT … FOR UPDATE, because CiviCRM's PEAR DB layer
+        // only starts the underlying MySQL transaction on the first DML
+        // statement; a SELECT runs in autocommit mode, so the row-lock would
+        // be released immediately and would not block concurrent processes.
+        // CRM_Core_Lock is session-level and works without a transaction.
+        $receiptLock = NULL;
+        if ($contribution->id) {
+          $receiptLock = new CRM_Core_Lock('genReceiptID_contrib_' . (int) $contribution->id, 30);
+          if (!$receiptLock->isAcquired()) {
+            CRM_Core_Error::debug_log_message("ReceiptID: could not acquire lock for contrib {$contribution->id} within 30s, abort.");
+            return FALSE;
+          }
+          // Re-read receipt_id under the advisory lock. If a concurrent
+          // process already assigned one, return it without allocating
+          // another sequence number.
+          $currentReceiptId = CRM_Core_DAO::singleValueQuery(
+            "SELECT receipt_id FROM civicrm_contribution WHERE id = %1",
+            [1 => [$contribution->id, 'Integer']]
+          );
+          if (!empty($currentReceiptId)) {
+            $receiptLock->release();
+            $contribution->receipt_id = $currentReceiptId;
+            CRM_Core_Error::debug_log_message("ReceiptID: {$contribution->id} - already assigned {$currentReceiptId} by concurrent process, skip reallocation.");
+            return $currentReceiptId;
+          }
+        }
         $transaction = new CRM_Core_Transaction();
         $receipt_id = self::lastReceiptID($prefix);
         if (empty($receipt_id)) {
@@ -2631,6 +2693,9 @@ SELECT source_contact_id
           $contribution->save();
         }
         $transaction->commit();
+        if ($receiptLock !== NULL) {
+          $receiptLock->release();
+        }
         return $receipt_id;
       }
     }
@@ -2670,6 +2735,13 @@ SELECT source_contact_id
     ]);
 
     if (!empty(getenv('CIVICRM_TEST_DSN')) && $GLOBALS['CiviTest_ContributionTest_sleep'] > 0) {
+      // Signal the test coordinator (main process) that this process now holds
+      // the FOR UPDATE row-lock. The coordinator polls for this file before
+      // calling genReceiptID so it is guaranteed to block rather than win the
+      // race.
+      if (!empty(getenv('BASEIPN_LOCK_ACQUIRED_FLAG'))) {
+        touch(getenv('BASEIPN_LOCK_ACQUIRED_FLAG'));
+      }
       sleep($GLOBALS['CiviTest_ContributionTest_sleep']);
     }
 

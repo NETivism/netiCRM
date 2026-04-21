@@ -41,7 +41,15 @@
  * http://drupal.org/project/pressflow_transaction
  */
 class CRM_Core_Transaction {
-  public const ISOLATION_LEVEL = 'READ UNCOMMITTED,READ COMMITTED,REPEATABLE READ,SERIALIZABLE';
+  /**
+   * Isolation levels which db supported
+   */
+  public const ISOLATION_LEVEL = [
+    'READ UNCOMMITTED',
+    'READ COMMITTED',
+    'REPEATABLE READ',
+    'SERIALIZABLE',
+  ];
 
   /**
    * Keep track of the number of opens and close
@@ -78,17 +86,36 @@ class CRM_Core_Transaction {
   private $_pseudoCommitted = FALSE;
 
   /**
+   * The session isolation level that was active before this instance changed it.
+   * Only set when this instance actually issues SET TRANSACTION ISOLATION LEVEL.
+   *
+   * @var string|null
+   */
+  private $_originalIsolationLevel = NULL;
+
+  /**
    * Class constructor.
    *
    * @param string|null $isolationLevel The transaction isolation level.
    */
-  public function __construct($isolationLevel = NULL) {
+  public function __construct($isolationLevel = 'READ COMMITTED') {
     if (!self::$_dao) {
       self::$_dao = new CRM_Core_DAO();
     }
-    if (!self::$_isolationLevel && !empty($isolationLevel) && in_array($isolationLevel, explode(',', self::ISOLATION_LEVEL)) && self::$_count == 0) {
-      $isolationQuery = "SET TRANSACTION ISOLATION LEVEL ".CRM_Utils_Type::escape($isolationLevel, 'String');
-      self::$_dao->query($isolationQuery);
+    if (!self::$_isolationLevel && !empty($isolationLevel) && in_array($isolationLevel, self::ISOLATION_LEVEL) && self::$_count == 0) {
+      // this is mariadb only variable
+      $dao = CRM_Core_DAO::executeQuery("SELECT @@global.tx_isolation AS level");
+      if ($dao->fetch()) {
+        $originalIsolationLevel = strtoupper(str_replace('-', ' ', $dao->level));
+        if (in_array($originalIsolationLevel, self::ISOLATION_LEVEL)) {
+          $this->_originalIsolationLevel = $originalIsolationLevel;
+        }
+      }
+      if (empty($this->_originalIsolationLevel) || $this->_originalIsolationLevel !== $isolationLevel) {
+        $isolationQuery = "SET TRANSACTION ISOLATION LEVEL ".$isolationLevel;
+        self::$_dao->query($isolationQuery);
+        self::$_isolationLevel = $isolationLevel;
+      }
     }
 
     if (self::$_count == 0) {
@@ -123,9 +150,8 @@ class CRM_Core_Transaction {
           self::$_dao->query('ROLLBACK');
         }
         // this transaction is complete, so reset doCommit flag
-        if ($resetIsolation) {
-          $isolationQuery = "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ";
-          self::$_dao->query($isolationQuery);
+        if ($resetIsolation && $this->_originalIsolationLevel) {
+          self::$_dao->query("SET SESSION TRANSACTION ISOLATION LEVEL {$this->_originalIsolationLevel}");
         }
         self::$_doCommit = TRUE;
       }

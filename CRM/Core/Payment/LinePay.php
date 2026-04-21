@@ -202,6 +202,7 @@ class CRM_Core_Payment_LinePay {
         $this->addResponseMessageToNote($contribution);
         $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);
       }
+      $transaction->commit();
     }
     else {
       $thankyou_url = self::prepareThankYouUrl($thankYouPath, $params['qfKey'], TRUE);

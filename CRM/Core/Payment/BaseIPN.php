@@ -492,331 +492,378 @@ class CRM_Core_Payment_BaseIPN {
    * @return void
    */
   public function completeTransaction(&$input, &$ids, &$objects, &$transaction, $recur = FALSE, $sendMail = TRUE) {
-    $values = [];
-    CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
     $contribution = &$objects['contribution'];
     $membership = &$objects['membership'];
     $participant = &$objects['participant'];
     $event = &$objects['event'];
 
-    if ($input['component'] == 'contribute') {
-
-      CRM_Contribute_BAO_ContributionPage::setValues($contribution->contribution_page_id, $values);
-      $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
-
-      if ($sendMail && empty($input['do_not_email']) && empty($input['do_not_receipt']) &&
-        ($values['is_email_receipt'] || $values['is_send_sms'])) {
-        // only override receipt_date when necessary
-        if (empty($contribution->receipt_date)) {
-          $contribution->receipt_date = self::$_now;
-        }
-        else {
-          if (is_string($contribution->receipt_date) && strtotime($contribution->receipt_date) <= 10000) {
-            $contribution->receipt_date = self::$_now;
-          }
-        }
+    // ref #46007, prevent overwrite receipt id by acquire lock on each IPN
+    // Serialize concurrent IPNs that target the same contribution. Without
+    // this lock, two IPNs arriving within seconds for the same trxn_id can
+    // both pass the caller's status==1 idempotency check, both run the full
+    // completion flow, and produce duplicate FinancialTrxn rows, duplicate
+    // activities, duplicate mails and receipt id gaps.
+    $ipnLock = NULL;
+    if (!empty($contribution->id)) {
+      $ipnLock = new CRM_Core_Lock('ipn_contrib_' . (int) $contribution->id, 30);
+      if (!$ipnLock->isAcquired()) {
+        CRM_Core_Error::debug_log_message("IPN: could not acquire lock for contrib {$contribution->id} within 30s, abort to avoid concurrent processing.");
+        return;
       }
+      // Under the lock, re-read the authoritative status from DB. A concurrent
+      // IPN may have already flipped this contribution to Completed while we
+      // were waiting — if so, bail out early and let the caller ack the IPN.
+      $currentStatus = CRM_Core_DAO::singleValueQuery(
+        "SELECT contribution_status_id FROM civicrm_contribution WHERE id = %1",
+        [1 => [$contribution->id, 'Integer']]
+      );
+      if ($currentStatus == 1) {
+        $ipnLock->release();
+        CRM_Core_Error::debug_log_message("IPN: contribution {$contribution->id} already completed by concurrent IPN, skip duplicate processing.");
+        return;
+      }
+    }
+    // a big try block for make sure lock can be realease in finally block
+    try {
 
-      if ($membership) {
-        $format = '%Y%m%d';
+      $values = [];
+      CRM_Utils_Hook::ipnPre('complete', $objects, $input, $ids, $values);
 
-        $currentMembership = CRM_Member_BAO_Membership::getContactMembership(
-          $membership->contact_id,
-          $membership->membership_type_id,
-          $membership->is_test,
-          $membership->id
-        );
-        if ($currentMembership) {
-          /**
-           * Fixed FOR CRM-4433
-           * In BAO/Membership.php(renewMembership function), we skip the extend membership date and status
-           * when Contribution mode is notify and membership is for renewal )
-           */
+      if ($input['component'] == 'contribute') {
 
-          if (!empty($membership->end_date_as_start_date)) {
-            $useEndDate = $membership->end_date ? $membership->end_date : $currentMembership['end_date'];
-            $changeToday = date('YmdHis', strtotime($useEndDate) + 86400);
-          }
-          if (empty($changeToday)) {
-            $changeToday = CRM_Utils_Array::value('trxn_date', $input, self::$_now);
-          }
-          CRM_Member_BAO_Membership::fixMembershipStatusBeforeRenew($currentMembership, $changeToday);
-          $dates = CRM_Member_BAO_MembershipType::getRenewalDatesForMembershipType($membership->id, $changeToday);
+        CRM_Contribute_BAO_ContributionPage::setValues($contribution->contribution_page_id, $values);
+        $contribution->source = !empty($contribution->source) ? $contribution->source : $values['title'];
 
-          $dates['join_date'] = CRM_Utils_Date::customFormat($currentMembership['join_date'], $format);
-        }
-        else {
-          // see if we can use join date as start date
-          if (!empty($membership->join_date_as_start_date) && !empty($membership->join_date)) {
-            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id, $membership->join_date);
+        if ($sendMail && empty($input['do_not_email']) && empty($input['do_not_receipt']) &&
+          ($values['is_email_receipt'] || $values['is_send_sms'])) {
+          // only override receipt_date when necessary
+          if (empty($contribution->receipt_date)) {
+            $contribution->receipt_date = self::$_now;
           }
           else {
-            $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id);
+            if (is_string($contribution->receipt_date) && strtotime($contribution->receipt_date) <= 10000) {
+              $contribution->receipt_date = self::$_now;
+            }
           }
         }
 
-        //get the status for membership.
+        if ($membership) {
+          $format = '%Y%m%d';
 
-        $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate(
-          $dates['start_date'],
-          $dates['end_date'],
-          $dates['join_date'],
-          'today',
-          TRUE
-        );
+          $currentMembership = CRM_Member_BAO_Membership::getContactMembership(
+            $membership->contact_id,
+            $membership->membership_type_id,
+            $membership->is_test,
+            $membership->id
+          );
+          if ($currentMembership) {
+            /**
+             * Fixed FOR CRM-4433
+             * In BAO/Membership.php(renewMembership function), we skip the extend membership date and status
+             * when Contribution mode is notify and membership is for renewal )
+             */
 
-        $formatedParams = ['status_id' => CRM_Utils_Array::value('id', $calcStatus, 2),
-          'join_date' => CRM_Utils_Date::customFormat($dates['join_date'], $format),
-          'start_date' => CRM_Utils_Date::customFormat($dates['start_date'], $format),
-          'end_date' => CRM_Utils_Date::customFormat($dates['end_date'], $format),
-          'reminder_date' => CRM_Utils_Date::customFormat($dates['reminder_date'], $format),
-        ];
-        // respect human input even we have complete transaction
-        if ($membership->is_override) {
-          if ($membership->end_date > $formatedParams['end_date']) {
-            $formatedParams['end_date'] = $membership->end_date;
-            $formatedParams['reminder_date'] = $membership->reminder_date;
+            if (!empty($membership->end_date_as_start_date)) {
+              $useEndDate = $membership->end_date ? $membership->end_date : $currentMembership['end_date'];
+              $changeToday = date('YmdHis', strtotime($useEndDate) + 86400);
+            }
+            if (empty($changeToday)) {
+              $changeToday = CRM_Utils_Array::value('trxn_date', $input, self::$_now);
+            }
+            CRM_Member_BAO_Membership::fixMembershipStatusBeforeRenew($currentMembership, $changeToday);
+            $dates = CRM_Member_BAO_MembershipType::getRenewalDatesForMembershipType($membership->id, $changeToday);
+
+            $dates['join_date'] = CRM_Utils_Date::customFormat($currentMembership['join_date'], $format);
           }
-          $formatedParams['is_override'] = TRUE;
+          else {
+            // see if we can use join date as start date
+            if (!empty($membership->join_date_as_start_date) && !empty($membership->join_date)) {
+              $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id, $membership->join_date);
+            }
+            else {
+              $dates = CRM_Member_BAO_MembershipType::getDatesForMembershipType($membership->membership_type_id);
+            }
+          }
+
+          //get the status for membership.
+
+          $calcStatus = CRM_Member_BAO_MembershipStatus::getMembershipStatusByDate(
+            $dates['start_date'],
+            $dates['end_date'],
+            $dates['join_date'],
+            'today',
+            TRUE
+          );
+
+          $formatedParams = ['status_id' => CRM_Utils_Array::value('id', $calcStatus, 2),
+            'join_date' => CRM_Utils_Date::customFormat($dates['join_date'], $format),
+            'start_date' => CRM_Utils_Date::customFormat($dates['start_date'], $format),
+            'end_date' => CRM_Utils_Date::customFormat($dates['end_date'], $format),
+            'reminder_date' => CRM_Utils_Date::customFormat($dates['reminder_date'], $format),
+          ];
+          // respect human input even we have complete transaction
+          if ($membership->is_override) {
+            if ($membership->end_date > $formatedParams['end_date']) {
+              $formatedParams['end_date'] = $membership->end_date;
+              $formatedParams['reminder_date'] = $membership->reminder_date;
+            }
+            $formatedParams['is_override'] = TRUE;
+          }
+          //we might be renewing membership,
+          //so make status override false.
+          else {
+            $formatedParams['is_override'] = FALSE;
+          }
+
+          $membership->copyValues($formatedParams);
+          $membership->save();
+
+          //updating the membership log
+          $membershipLog = [];
+          $membershipLog = $formatedParams;
+          $logStartDate = CRM_Utils_Date::customFormat($dates['log_start_date'], $format);
+          $logStartDate = ($logStartDate) ? CRM_Utils_Date::isoToMysql($logStartDate) : $formatedParams['start_date'];
+
+          $membershipLog['start_date'] = $logStartDate;
+          $membershipLog['membership_id'] = $membership->id;
+          $membershipLog['modified_id'] = $membership->contact_id;
+          $membershipLog['modified_date'] = date('Ymd');
+
+          CRM_Member_BAO_MembershipLog::add($membershipLog, CRM_Core_DAO::$_nullArray);
+
+          //update related Memberships.
+          CRM_Member_BAO_Membership::updateRelatedMemberships($membership->id, $formatedParams);
         }
-        //we might be renewing membership,
-        //so make status override false.
-        else {
-          $formatedParams['is_override'] = FALSE;
-        }
-
-        $membership->copyValues($formatedParams);
-        $membership->save();
-
-        //updating the membership log
-        $membershipLog = [];
-        $membershipLog = $formatedParams;
-        $logStartDate = CRM_Utils_Date::customFormat($dates['log_start_date'], $format);
-        $logStartDate = ($logStartDate) ? CRM_Utils_Date::isoToMysql($logStartDate) : $formatedParams['start_date'];
-
-        $membershipLog['start_date'] = $logStartDate;
-        $membershipLog['membership_id'] = $membership->id;
-        $membershipLog['modified_id'] = $membership->contact_id;
-        $membershipLog['modified_date'] = date('Ymd');
-
-        CRM_Member_BAO_MembershipLog::add($membershipLog, CRM_Core_DAO::$_nullArray);
-
-        //update related Memberships.
-        CRM_Member_BAO_Membership::updateRelatedMemberships($membership->id, $formatedParams);
       }
-    }
-    else {
-      // event
-      $eventParams = ['id' => $objects['event']->id];
-      $values['event'] = [];
+      else {
+        // event
+        $eventParams = ['id' => $objects['event']->id];
+        $values['event'] = [];
 
-      CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
+        CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
-      $eventParams = ['id' => $objects['event']->id];
-      $values['event'] = [];
+        $eventParams = ['id' => $objects['event']->id];
+        $values['event'] = [];
 
-      CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
+        CRM_Event_BAO_Event::retrieve($eventParams, $values['event']);
 
-      //get location details
-      $locationParams = ['entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event'];
+        //get location details
+        $locationParams = ['entity_id' => $objects['event']->id, 'entity_table' => 'civicrm_event'];
 
-      $values['location'] = CRM_Core_BAO_Location::getValues($locationParams);
+        $values['location'] = CRM_Core_BAO_Location::getValues($locationParams);
 
-      $ufJoinParams = [
-        'entity_table' => 'civicrm_event',
-        'entity_id' => $ids['event'],
-        'weight' => 1,
-        'module' => 'CiviEvent',
-      ];
-      $values['custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
-      $ufJoinParams['weight'] = 2;
-      $values['custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
-      $ufJoinParams['weight'] = 1;
-      $ufJoinParams['module'] = 'CiviEvent_Additional';
-      $values['additional_custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
-      $ufJoinParams['weight'] = 2;
-      $values['additional_custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+        $ufJoinParams = [
+          'entity_table' => 'civicrm_event',
+          'entity_id' => $ids['event'],
+          'weight' => 1,
+          'module' => 'CiviEvent',
+        ];
+        $values['custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+        $ufJoinParams['weight'] = 2;
+        $values['custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+        $ufJoinParams['weight'] = 1;
+        $ufJoinParams['module'] = 'CiviEvent_Additional';
+        $values['additional_custom_pre_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
+        $ufJoinParams['weight'] = 2;
+        $values['additional_custom_post_id'] = CRM_Core_BAO_UFJoin::findUFGroupId($ufJoinParams);
 
-      $contribution->source = !empty($contribution->source) ? $contribution->source : ts('Online Event Registration') . ':' . $values['event']['title'];
+        $contribution->source = !empty($contribution->source) ? $contribution->source : ts('Online Event Registration') . ':' . $values['event']['title'];
 
-      if ($values['event']['is_email_confirm']) {
-        // only override receipt_date when necessary
-        if (empty($contribution->receipt_date)) {
-          $contribution->receipt_date = self::$_now;
-        }
-        else {
-          if (is_string($contribution->receipt_date) && strtotime($contribution->receipt_date) <= 10000) {
+        if ($values['event']['is_email_confirm']) {
+          // only override receipt_date when necessary
+          if (empty($contribution->receipt_date)) {
             $contribution->receipt_date = self::$_now;
           }
+          else {
+            if (is_string($contribution->receipt_date) && strtotime($contribution->receipt_date) <= 10000) {
+              $contribution->receipt_date = self::$_now;
+            }
+          }
+        }
+
+        $participant->status_id = 1;
+        $participant->save();
+      } // end event
+
+      if ($input['net_amount'] == 0 && $input['fee_amount'] != 0) {
+        $input['net_amount'] = $input['amount'] - $input['fee_amount'];
+      }
+      $contribution->contribution_status_id = 1;
+      $contribution->fee_amount = $input['fee_amount'];
+      $contribution->net_amount = $input['net_amount'];
+      if (!empty($contribution->receive_date)) {
+        $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
+      }
+      else {
+        $contribution->receive_date = self::$_now;
+      }
+      $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
+      $contribution->cancel_date = 'null';
+
+      if (isset($input['trxn_id'])) {
+        $contribution->trxn_id = $input['trxn_id'];
+      }
+      if (isset($input['is_test'])) {
+        $contribution->is_test = $input['is_test'];
+      }
+      if (isset($input['check_number'])) {
+        $contribution->check_number = $input['check_number'];
+      }
+      if (isset($input['payment_instrument_id'])) {
+        $contribution->payment_instrument_id = $input['payment_instrument_id'];
+      }
+
+      if (isset($objects['paymentProcessor'])) {
+        $paymentProcessorType = $objects['paymentProcessor']['payment_processor_type'];
+        if ($paymentProcessorType == 'TaiwanACH') {
+          $contribution->receipt_date = $contribution->receive_date;
         }
       }
 
-      $participant->status_id = 1;
-      $participant->save();
-    } // end event
+      $contribution->save();
 
-    if ($input['net_amount'] == 0 && $input['fee_amount'] != 0) {
-      $input['net_amount'] = $input['amount'] - $input['fee_amount'];
-    }
-    $contribution->contribution_status_id = 1;
-    $contribution->fee_amount = $input['fee_amount'];
-    $contribution->net_amount = $input['net_amount'];
-    if (!empty($contribution->receive_date)) {
-      $contribution->receive_date = CRM_Utils_Date::isoToMysql($contribution->receive_date);
-    }
-    else {
-      $contribution->receive_date = self::$_now;
-    }
-    $contribution->created_date = CRM_Utils_Date::isoToMysql($contribution->created_date);
-    $contribution->cancel_date = 'null';
-
-    if (isset($input['trxn_id'])) {
-      $contribution->trxn_id = $input['trxn_id'];
-    }
-    if (isset($input['is_test'])) {
-      $contribution->is_test = $input['is_test'];
-    }
-    if (isset($input['check_number'])) {
-      $contribution->check_number = $input['check_number'];
-    }
-    if (isset($input['payment_instrument_id'])) {
-      $contribution->payment_instrument_id = $input['payment_instrument_id'];
-    }
-
-    if (isset($objects['paymentProcessor'])) {
-      $paymentProcessorType = $objects['paymentProcessor']['payment_processor_type'];
-      if ($paymentProcessorType == 'TaiwanACH') {
-        $contribution->receipt_date = $contribution->receive_date;
+      // next create the transaction record
+      if (isset($objects['paymentProcessor'])) {
+        $paymentProcessor = $objects['paymentProcessor']['payment_processor_type'];
       }
-    }
-
-    $contribution->save();
-
-    // next create the transaction record
-    if (isset($objects['paymentProcessor'])) {
-      $paymentProcessor = $objects['paymentProcessor']['payment_processor_type'];
-    }
-    else {
-      $paymentProcessor = '';
-    }
-    if ($contribution->trxn_id) {
-
-      $trxnParams = [
-        'contribution_id' => $contribution->id,
-        'trxn_date' => $input['trxn_date'] ?? self::$_now,
-        'trxn_type' => 'Debit',
-        'total_amount' => $input['total_amount'] ? $input['total_amount'] : $input['amount'],
-        'fee_amount' => $contribution->fee_amount,
-        'net_amount' => $contribution->net_amount,
-        'currency' => $contribution->currency,
-        'payment_processor' => $paymentProcessor,
-        'trxn_id' => $contribution->trxn_id,
-      ];
-
-      CRM_Core_BAO_FinancialTrxn::create($trxnParams);
-    }
-
-    //update corresponding pledge payment record
-
-    $returnProperties = ['id', 'pledge_id'];
-    if (CRM_Core_DAO::commonRetrieveAll(
-      'CRM_Pledge_DAO_Payment',
-      'contribution_id',
-      $contribution->id,
-      $paymentDetails,
-      $returnProperties
-    )) {
-      $paymentIDs = [];
-      foreach ($paymentDetails as $key => $value) {
-        $paymentIDs[] = $value['id'];
-        $pledgeId = $value['pledge_id'];
+      else {
+        $paymentProcessor = '';
       }
+      if ($contribution->trxn_id) {
 
-      // update pledge and corresponding payment statuses
-
-      CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($pledgeId, $paymentIDs, $contribution->contribution_status_id);
-    }
-
-    // create an activity record
-
-    if ($input['component'] == 'contribute') {
-      $targetContactID = NULL;
-      // refs #32303 we shouldn't touch original contribution object
-      $contrib = clone $contribution;
-      if (CRM_Utils_Array::value('related_contact', $ids)) {
-        $targetContactID = $contrib->contact_id;
-        $contrib->contact_id = $ids['related_contact'];
-      }
-      CRM_Activity_BAO_Activity::addActivity($contrib, NULL, $targetContactID);
-    }
-    // event
-    else {
-      CRM_Activity_BAO_Activity::addActivity($participant);
-    }
-
-    $transaction->commit();
-
-    // check and generate receipt id here for every online contribution
-    // we have another transaction inside, call this after transaction commit
-    $is_online = TRUE;
-    if ($paymentProcessorType == 'TaiwanACH') {
-      $is_online = FALSE;
-    }
-    // refs #31643, genReceiptID should move after transaction to prevent deadlock
-    if (empty($input['do_not_receipt'])) {
-      $receiptId = CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
-      CRM_Core_Error::debug_log_message("ReceiptID: {$contribution->id} - {$receiptId} generated.");
-    }
-    else {
-      CRM_Core_Error::debug_log_message("ReceiptID: {$contribution->id} - input do_not_receipt set, skip receipt id.");
-    }
-
-    CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated");
-    CRM_Core_Error::debug_log_message("ipn debug pre for {$contribution->id}");
-    CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
-
-    // #25671, add support for hook change mailing notification trigger
-    if (!$sendMail || !empty($input['do_not_email'])) {
-      CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and no mail sent.");
-    }
-    else {
-      self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
-      CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and mail sent");
-    }
-    CRM_Core_Error::debug_log_message("ipn debug post for {$contribution->id}");
-
-    if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
-      $sendSMS = TRUE;
-      if (!empty($contribution->contribution_recur_id)) {
-        $contribution_recur_id = $contribution->contribution_recur_id;
-        $sql = "SELECT count( contribution_recur_id ) FROM civicrm_contribution WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id";
-        $params = [
-          1 => [$contribution_recur_id, 'Positive'],
+        $trxnParams = [
+          'contribution_id' => $contribution->id,
+          'trxn_date' => $input['trxn_date'] ?? self::$_now,
+          'trxn_type' => 'Debit',
+          'total_amount' => $input['total_amount'] ? $input['total_amount'] : $input['amount'],
+          'fee_amount' => $contribution->fee_amount,
+          'net_amount' => $contribution->net_amount,
+          'currency' => $contribution->currency,
+          'payment_processor' => $paymentProcessor,
+          'trxn_id' => $contribution->trxn_id,
         ];
-        $count = CRM_Core_DAO::singleValueQuery($sql, $params);
-        if ($count > 1) {
-          $sendSMS = FALSE;
-        }
+
+        CRM_Core_BAO_FinancialTrxn::create($trxnParams);
       }
-      if ($sendSMS) {
-        $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, ['is_default' => 1]);
-        $provider = reset($defaultProvider);
-        $preparedParams = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
-        $sendResult = CRM_Activity_BAO_Activity::sendSMS(
-          $preparedParams['contactDetails'],
-          $preparedParams['activityParams'],
-          $preparedParams['smsParams'],
-          $preparedParams['contactIds']
-        );
-        if ($sendResult['sent']) {
-          CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS sent");
+
+      //update corresponding pledge payment record
+
+      $returnProperties = ['id', 'pledge_id'];
+      if (CRM_Core_DAO::commonRetrieveAll(
+        'CRM_Pledge_DAO_Payment',
+        'contribution_id',
+        $contribution->id,
+        $paymentDetails,
+        $returnProperties
+      )) {
+        $paymentIDs = [];
+        foreach ($paymentDetails as $key => $value) {
+          $paymentIDs[] = $value['id'];
+          $pledgeId = $value['pledge_id'];
+        }
+
+        // update pledge and corresponding payment statuses
+
+        CRM_Pledge_BAO_Payment::updatePledgePaymentStatus($pledgeId, $paymentIDs, $contribution->contribution_status_id);
+      }
+
+      // create an activity record
+
+      if ($input['component'] == 'contribute') {
+        $targetContactID = NULL;
+        // refs #32303 we shouldn't touch original contribution object
+        $contrib = clone $contribution;
+        if (CRM_Utils_Array::value('related_contact', $ids)) {
+          $targetContactID = $contrib->contact_id;
+          $contrib->contact_id = $ids['related_contact'];
+        }
+        CRM_Activity_BAO_Activity::addActivity($contrib, NULL, $targetContactID);
+      }
+      // event
+      else {
+        CRM_Activity_BAO_Activity::addActivity($participant);
+      }
+
+      $transaction->commit();
+
+      // check and generate receipt id here for every online contribution
+      // we have another transaction inside, call this after transaction commit
+      $is_online = TRUE;
+      if ($paymentProcessorType == 'TaiwanACH') {
+        $is_online = FALSE;
+      }
+      // refs #31643, genReceiptID should move after transaction to prevent deadlock
+      if (empty($input['do_not_receipt'])) {
+        $receiptId = CRM_Contribute_BAO_Contribution::genReceiptID($contribution, TRUE, $is_online);
+        CRM_Core_Error::debug_log_message("ReceiptID: {$contribution->id} - {$receiptId} generated.");
+      }
+      else {
+        CRM_Core_Error::debug_log_message("ReceiptID: {$contribution->id} - input do_not_receipt set, skip receipt id.");
+      }
+
+      CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated");
+      CRM_Core_Error::debug_log_message("ipn debug pre for {$contribution->id}");
+      CRM_Utils_Hook::ipnPost('complete', $objects, $input, $ids, $values);
+
+      // Release the IPN advisory lock as soon as DB writes + ipnPost are done.
+      // Mail/SMS sending can take seconds (SMTP, external SMS API) and must not
+      // block subsequent IPNs for the same contribution from entering the
+      // early-return fast path. The finally block below is a safety net for
+      // exception paths before this point; CRM_Core_Lock::release() is
+      // idempotent so calling it again in finally is safe.
+      if ($ipnLock !== NULL) {
+        $ipnLock->release();
+      }
+
+      // #25671, add support for hook change mailing notification trigger
+      if (!$sendMail || !empty($input['do_not_email'])) {
+        CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and no mail sent.");
+      }
+      else {
+        self::sendMail($input, $ids, $objects, $values, $recur, FALSE);
+        CRM_Core_Error::debug_log_message("Success: {$contribution->id} - Database updated and mail sent");
+      }
+      CRM_Core_Error::debug_log_message("ipn debug post for {$contribution->id}");
+
+      if ($sendMail && $values['is_send_sms'] && CRM_SMS_BAO_Provider::activeProviderCount()) {
+        $sendSMS = TRUE;
+        if (!empty($contribution->contribution_recur_id)) {
+          $contribution_recur_id = $contribution->contribution_recur_id;
+          $sql = "SELECT count( contribution_recur_id ) FROM civicrm_contribution WHERE contribution_recur_id = %1 GROUP BY contribution_recur_id";
+          $params = [
+            1 => [$contribution_recur_id, 'Positive'],
+          ];
+          $count = CRM_Core_DAO::singleValueQuery($sql, $params);
+          if ($count > 1) {
+            $sendSMS = FALSE;
+          }
+        }
+        if ($sendSMS) {
+          $defaultProvider = CRM_SMS_BAO_Provider::getProviders(NULL, ['is_default' => 1]);
+          $provider = reset($defaultProvider);
+          $preparedParams = CRM_Activity_BAO_Activity::prepareSMS($contribution->contact_id, $provider['id'], $values['sms_text'], $objects);
+          $sendResult = CRM_Activity_BAO_Activity::sendSMS(
+            $preparedParams['contactDetails'],
+            $preparedParams['activityParams'],
+            $preparedParams['smsParams'],
+            $preparedParams['contactIds']
+          );
+          if ($sendResult['sent']) {
+            CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS sent");
+          }
+          else {
+            CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS not sent");
+          }
         }
         else {
           CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS not sent");
         }
       }
-      else {
-        CRM_Core_Error::debug_log_message("Success Contribution: {$contribution->id} - SMS not sent");
+
+    }
+    finally {
+      if ($ipnLock !== NULL) {
+        $ipnLock->release();
       }
     }
   }
@@ -847,7 +894,7 @@ class CRM_Core_Payment_BaseIPN {
       if ($config->copyContributionTypeSource == 1) {
         $c->contribution_type_id = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionPage', $c->contribution_page_id, 'contribution_type_id');
       }
-      $transaction = new CRM_Core_Transaction('READ COMMITTED');
+      $transaction = new CRM_Core_Transaction();
       $c->save();
       $transaction->commit();
       CRM_Contribute_BAO_ContributionRecur::syncContribute($rid, $c->id);

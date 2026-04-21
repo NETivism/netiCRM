@@ -1546,6 +1546,7 @@ class CRM_Contribute_BAO_TaiwanACH extends CRM_Contribute_DAO_TaiwanACH {
       else {
         $result['executed'] = FALSE;
       }
+      $transaction->commit();
     }
     return $result;
   }

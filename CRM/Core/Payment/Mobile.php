@@ -424,6 +424,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
           self::addNote($note, $contribution);
           $result = ['is_success' => 0];
         }
+        $transaction->commit();
       }
     }
 

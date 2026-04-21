@@ -556,6 +556,7 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
           // default contribution status is pending
         }
       }
+      $transaction->commit();
     }
   }
 
