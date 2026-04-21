@@ -79,6 +79,11 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     $isFullEditor = CRM_Core_Permission::check('access CiviCRM');
     $configMethod = $isFullEditor ? 'getFullEditorConfig' : 'getBasicEditorConfig';
 
+    // System-wide opt-in: allow arbitrary HTML (incl. <script>) in the editor.
+    // Default 0: sanitized output. Admins enable via Site Preferences > Display.
+    $allowAllContent = (bool) CRM_Core_BAO_Preferences::value('editor_allow_all_content');
+    $overridesJson = json_encode(['allowAllContent' => $allowAllContent]);
+
     // Render textarea element
     $html = parent::toHtml();
 
@@ -129,7 +134,7 @@ cj(function() {
   }
   cj(element).addClass('ckeditor5-processed');
 
-  var config = window.CiviCKEditor5.{$configMethod}();
+  var config = window.CiviCKEditor5.{$configMethod}({$overridesJson});
 
   window.CKEDITOR_5.ClassicEditor
     .create(element, config)

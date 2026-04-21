@@ -29,21 +29,26 @@
   // ==========================================================================
 
   /**
-   * Trusted domains for external script sources.
-   * Only <script src="..."> from these domains will be preserved by the editor.
-   */
-  var TRUSTED_SCRIPT_DOMAINS = [
-    'dev7.neticrm.tw',
-    'neticrm.tw',
-    'cdnjs.cloudflare.com',
-    'cdn.jsdelivr.net',
-  ];
-
-  /**
    * Regex pattern for matching font icon CSS classes.
    * Covers Font Awesome (fa-) and Material Design Icons (zmdi-).
    */
   var FONT_ICON_PATTERN = /(fa-|zmdi-)/;
+
+  /**
+   * Wildcard htmlSupport used when the admin opt-in
+   * (editor_allow_all_content) is enabled. Allows any tag,
+   * attribute, class, and style.
+   */
+  var ALLOW_ALL_HTML_SUPPORT = {
+    allow: [
+      {
+        name: /.*/,
+        attributes: true,
+        classes: true,
+        styles: true,
+      },
+    ],
+  };
 
   // ==========================================================================
   // ExtendSchema Plugin
@@ -63,7 +68,7 @@
    *   extendSchema: {
    *     enableFontIcons: true,
    *     enableIframe: true,
-   *     trustedScriptDomains: ['neticrm.tw', ...]
+   *     enableScripts: false
    *   }
    */
   class ExtendSchema extends Plugin {
@@ -79,7 +84,7 @@
       var config = this.editor.config.get('extendSchema') || {};
       var enableFontIcons = config.enableFontIcons !== false; // default: true
       var enableIframe = config.enableIframe || false;
-      var trustedScriptDomains = config.trustedScriptDomains || [];
+      var enableScripts = config.enableScripts === true;
 
       if (enableFontIcons) {
         this._setupFontIcons();
@@ -87,8 +92,8 @@
       if (enableIframe) {
         this._setupIframe();
       }
-      if (trustedScriptDomains.length > 0) {
-        this._setupScriptWhitelist(trustedScriptDomains);
+      if (enableScripts) {
+        this._setupScriptWhitelist();
       }
       this._setupTableWidthFix();
       this._setupTableFigureRemoval();
@@ -215,21 +220,20 @@
     }
 
     /**
-     * Script tag whitelist.
-     * Only external scripts from trusted domains are preserved.
-     * Inline scripts (no src) are always blocked.
-     *
-     * @param {string[]} trustedDomains - List of trusted domain names
+     * Allow <script> tags through the data filter.
+     * Only invoked when the admin opt-in (editor_allow_all_content)
+     * is enabled. When disabled, scripts are stripped by GHS.
      */
-    _setupScriptWhitelist(trustedDomains) {
+    _setupScriptWhitelist() {
       var editor = this.editor;
       var dataFilter = editor.plugins.get(DataFilter);
 
       // htmlScript is already registered by CKEditor 5's built-in DataSchema.
-      // Only allow script elements through the data filter.
+      // Allow script elements and all attributes through the data filter.
       dataFilter.allowElement('script');
       dataFilter.allowAttributes({
         name: 'script',
+        attributes: true,
       });
     }
 
@@ -624,11 +628,18 @@
   /**
    * Get full editor configuration (CiviCRM preset).
    *
-   * @param {object} [overrides] - Override specific config options
+   * @param {object} [overrides] - Override specific config options.
+   *   Set `allowAllContent: true` to enable wildcard GHS and <script>
+   *   support (controlled by the civicrm_preferences opt-in flag).
    * @returns {object} CKEditor 5 configuration object
    */
   function getFullEditorConfig(overrides) {
     overrides = overrides || {};
+    var allowAll = overrides.allowAllContent === true;
+    // Strip internal flag so it does not leak into CKEditor's config
+    var ckOverrides = Object.assign({}, overrides);
+    delete ckOverrides.allowAllContent;
+
     return Object.assign({
       licenseKey: 'GPL',
       plugins: [
@@ -830,7 +841,7 @@
           { model: 'blueMarker', class: 'marker-blue', title: 'Blue marker', color: 'var(--ck-highlight-marker-blue)', type: 'marker' },
         ],
       },
-      htmlSupport: FULL_HTML_SUPPORT,
+      htmlSupport: allowAll ? ALLOW_ALL_HTML_SUPPORT : FULL_HTML_SUPPORT,
       fullPage: {
         // Bypass default sanitizer so <head> content is preserved
         sanitizer: function(html) { return html; },
@@ -838,19 +849,26 @@
       extendSchema: {
         enableFontIcons: true,
         enableIframe: true,
-        trustedScriptDomains: TRUSTED_SCRIPT_DOMAINS,
+        enableScripts: allowAll,
       },
-    }, overrides);
+    }, ckOverrides);
   }
 
   /**
    * Get basic editor configuration (CiviCRMBasic preset).
    *
-   * @param {object} [overrides] - Override specific config options
+   * @param {object} [overrides] - Override specific config options.
+   *   Set `allowAllContent: true` to enable wildcard GHS and <script>
+   *   support (controlled by the civicrm_preferences opt-in flag).
    * @returns {object} CKEditor 5 configuration object
    */
   function getBasicEditorConfig(overrides) {
     overrides = overrides || {};
+    var allowAll = overrides.allowAllContent === true;
+    // Strip internal flag so it does not leak into CKEditor's config
+    var ckOverrides = Object.assign({}, overrides);
+    delete ckOverrides.allowAllContent;
+
     return Object.assign({
       licenseKey: 'GPL',
       plugins: [
@@ -935,13 +953,13 @@
           },
         },
       },
-      htmlSupport: BASIC_HTML_SUPPORT,
+      htmlSupport: allowAll ? ALLOW_ALL_HTML_SUPPORT : BASIC_HTML_SUPPORT,
       extendSchema: {
         enableFontIcons: true,
-        enableIframe: false,
-        trustedScriptDomains: [],
+        enableIframe: allowAll,
+        enableScripts: allowAll,
       },
-    }, overrides);
+    }, ckOverrides);
   }
 
   // ==========================================================================

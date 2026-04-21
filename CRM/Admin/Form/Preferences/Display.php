@@ -66,6 +66,7 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     if ($this->_config->editor_id) {
       $defaults['wysiwyg_editor'] = $this->_config->editor_id;
     }
+    $defaults['editor_allow_all_content'] = !empty($this->_config->editor_allow_all_content) ? 1 : 0;
     if (empty($this->_config->display_name_format)) {
       $defaults['display_name_format'] = "{contact.individual_prefix}{ }{contact.first_name}{ }{contact.last_name}{ }{contact.individual_suffix}";
     }
@@ -97,6 +98,8 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
       unset($wysiwyg_options[3]);
     }
     $this->addElement('select', 'wysiwyg_editor', ts('WYSIWYG Editor'), $wysiwyg_options, NULL);
+
+    $this->addElement('checkbox', 'editor_allow_all_content', ts('Allow All Content (including scripts)'));
 
     $this->addElement('textarea', 'display_name_format', ts('Individual Display Name Format'));
     $this->addElement('textarea', 'sort_name_format', ts('Individual Sort Name Format'));
@@ -137,6 +140,7 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     }
 
     $this->_config->editor_id = $this->_params['wysiwyg_editor'];
+    $this->_config->editor_allow_all_content = !empty($this->_params['editor_allow_all_content']) ? 1 : 0;
     $this->_config->display_name_format = $this->_params['display_name_format'];
     $this->_config->sort_name_format = $this->_params['sort_name_format'];
 

@@ -3165,7 +3165,8 @@ CREATE TABLE civicrm_preferences (
      `editor_id` int unsigned    COMMENT 'ID of the editor',
      `mailing_backend` text    COMMENT 'Smtp Backend configuration.',
      `navigation` text    COMMENT 'Store navigation for the Contact',
-     `contact_autocomplete_options` varchar(255)    COMMENT 'What Autocomplete has to return' 
+     `contact_autocomplete_options` varchar(255)    COMMENT 'What Autocomplete has to return',
+     `editor_allow_all_content` tinyint   DEFAULT 0 COMMENT 'If set, WYSIWYG editors allow all HTML content including script tags (XSS risk).' 
 ,
     PRIMARY KEY ( id )
  
