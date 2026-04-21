@@ -140,7 +140,10 @@ class CRM_Admin_Form_Preferences_Display extends CRM_Admin_Form_Preferences {
     }
 
     $this->_config->editor_id = $this->_params['wysiwyg_editor'];
-    $this->_config->editor_allow_all_content = !empty($this->_params['editor_allow_all_content']) ? 1 : 0;
+    $this->_config->editor_allow_all_content = (
+      !empty($this->_params['editor_allow_all_content']) &&
+      $this->_params['wysiwyg_editor'] == 4
+    ) ? 1 : 0;
     $this->_config->display_name_format = $this->_params['display_name_format'];
     $this->_config->sort_name_format = $this->_params['sort_name_format'];
 

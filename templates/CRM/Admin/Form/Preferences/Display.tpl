@@ -107,7 +107,7 @@
                <td class="label">{$form.editor_allow_all_content.label}</td>
                <td>{$form.editor_allow_all_content.html}</td>
             </tr>
-            <tr class="crm-preferences-display-form-block-description">
+            <tr class="crm-preferences-display-form-block-description crm-preferences-display-form-block-editor_allow_all_content-desc">
                <td>&nbsp;</td>
                <td class="description">
                  <div style="padding: 8px 12px; background-color: #fcf8e3; border: 1px solid #faebcc; border-radius: 4px; color: #8a6d3b;">
@@ -140,6 +140,28 @@
 	{/if}
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+{if $form.wysiwyg_editor.html}
+{literal}
+<script type="text/javascript">
+  cj(function($) {
+    function toggleAllowAllContent() {
+      var isCKEditor5 = $('#wysiwyg_editor').val() === '4';
+      var $rows = $(
+        'tr.crm-preferences-display-form-block-editor_allow_all_content, ' +
+        'tr.crm-preferences-display-form-block-editor_allow_all_content-desc'
+      );
+      if (isCKEditor5) {
+        $rows.show();
+      } else {
+        $rows.hide();
+      }
+    }
+    toggleAllowAllContent();
+    $('#wysiwyg_editor').on('change', toggleAllowAllContent);
+  });
+</script>
+{/literal}
+{/if}
 {if $form.contact_edit_options.html}
 {literal}
 <script type="text/javascript" >
