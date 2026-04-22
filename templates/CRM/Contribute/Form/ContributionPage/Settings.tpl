@@ -55,6 +55,14 @@
     {/if}
 	  </td>
 	</tr>
+	<tr class="crm-contribution-contributionpage-settings-form-block-redirect_page_id">
+    <td></td>
+    <td>
+      {$form.redirect_page_id.label}<br />
+      {$form.redirect_page_id.html}<br />
+      <span class="description">{ts}If this contribution page is disabled, visitors will be automatically redirected to the selected page. If no page is selected, the default unavailable notice will be shown.{/ts}</span>
+    </td>
+	</tr>
   {if $form.is_internal}
 	<tr class="crm-contribution-contributionpage-settings-form-block-is_internal">
     <td></td>
@@ -100,8 +108,12 @@
         function showSpecial() {
             var checkbox = document.getElementsByName("is_active");
             var checkbox2 = document.getElementsByName("is_special");
+            var redirectRow = document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-redirect_page_id")[0];
             if (checkbox[0].checked) {
                 document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-is_special")[0].style.display = 'table-row';
+                if (redirectRow) {
+                    redirectRow.style.display = 'none';
+                }
                 if(checkbox2[0].checked){
                     document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadBackgroundImage")[0].style.display = 'table-row';
                     document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadMobileBackgroundImage")[0].style.display = 'table-row';
@@ -115,6 +127,9 @@
                 document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-is_special")[0].style.display = 'none';
                 document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadBackgroundImage")[0].style.display = 'none';
                 document.getElementsByClassName("crm-contribution-contributionpage-settings-form-block-uploadMobileBackgroundImage")[0].style.display = 'none';
+                if (redirectRow) {
+                    redirectRow.style.display = 'table-row';
+                }
             }
         }
     </script>
