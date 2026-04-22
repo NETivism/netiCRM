@@ -331,9 +331,17 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       // check if form is active
       if (!$this->_values['is_active']) {
         if ($this->_action != CRM_Core_Action::PREVIEW || !CRM_Core_Permission::check('access CiviContribute')) {
-          // form is inactive, die a fatal death
-          $config = CRM_Core_Config::singleton();
-          $pageId = $config->defaultRenewalPageId;
+          // form is inactive, redirect to per-page redirect target or show notice
+          $pageId = !empty($this->_values['redirect_page_id']) ? $this->_values['redirect_page_id'] : NULL;
+          if ($pageId) {
+            $exists = CRM_Core_DAO::singleValueQuery(
+              "SELECT id FROM civicrm_contribution_page WHERE id = %1",
+              [1 => [$pageId, 'Positive']]
+            );
+            if (!$exists) {
+              $pageId = NULL;
+            }
+          }
           if ($pageId) {
             // Handle utm params
             $utmParams = ['utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign'];

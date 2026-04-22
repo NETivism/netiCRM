@@ -164,6 +164,17 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
 
     // is this page active ?
     $this->addElement('checkbox', 'is_active', ts('Is this Online Contribution Page Active?'), NULL, ['onclick' => "showSpecial()"]);
+
+    $redirectPages = [];
+    CRM_Core_PseudoConstant::populate($redirectPages, 'CRM_Contribute_DAO_ContributionPage', FALSE, 'title', 'is_active', 'is_internal IS NULL');
+    if ($this->_id) {
+      unset($redirectPages[$this->_id]);
+    }
+    foreach ($redirectPages as $id => &$page) {
+      $page .= " ($id)";
+    }
+    $this->addSelect('redirect_page_id', ts('Redirect to contribution page when disabled'), ['' => ts('-- Select --')] + $redirectPages);
+
     // check if table field exists
     $checkQuery = "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'civicrm_contribution_page' AND column_name = 'is_internal'";
     $exists = CRM_Core_DAO::singleValueQuery($checkQuery);
@@ -261,6 +272,7 @@ class CRM_Contribute_Form_ContributionPage_Settings extends CRM_Contribute_Form_
     if ($this->get('internalExists')) {
       $params['is_internal'] = CRM_Utils_Array::value('is_internal', $params, FALSE) ? 1 : 'null';
     }
+    $params['redirect_page_id'] = !empty($params['redirect_page_id']) ? $params['redirect_page_id'] : 'null';
     $params['is_credit_card_only'] = CRM_Utils_Array::value('is_credit_card_only', $params, FALSE);
     $params['honor_block_is_active'] = CRM_Utils_Array::value('honor_block_is_active', $params, FALSE);
     $params['is_for_organization'] = CRM_Utils_Array::value('is_organization', $params) ? CRM_Utils_Array::value('is_for_organization', $params, FALSE) : 0;
