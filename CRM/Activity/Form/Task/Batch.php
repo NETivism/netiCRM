@@ -297,10 +297,13 @@ WHERE  id = %1";
 
         // Get Conatct ID
         $value['source_contact_id'] = $dao->source_contact_id;
-
-        $value['target_contact_id'] = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId($key);
-        $value['assignee_contact_id'] = CRM_Activity_BAO_ActivityAssignment::retrieveAssigneeIdsByActivityId($key);
-
+        // If target contact or assignee contact is empty should not update
+        if (empty($value['target_contact_id']) && empty($value['target_contact_name'])) {
+          $value['deleteActivityTarget'] = FALSE;
+        }
+        if (empty($value['assignee_contact_id']) && empty($value['assignee_contact_name'])) {
+          $value['deleteActivityAssignment'] = FALSE;
+        }
         $activity = CRM_Activity_BAO_Activity::create($value);
 
         // add custom field values
