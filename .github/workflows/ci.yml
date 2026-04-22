@@ -17,7 +17,9 @@ jobs:
           if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
             BRANCH_PREFIX="master"
           else
-            BRANCH_PREFIX="${GITHUB_REF_NAME%%-*}"
+            # PR events: GITHUB_HEAD_REF = source branch; push events: GITHUB_HEAD_REF is empty
+            REF_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+            BRANCH_PREFIX="${REF_NAME%%-*}"
           fi
           cd $GITHUB_WORKSPACE/drupal && git checkout 7.x-$BRANCH_PREFIX && git pull
           cd $GITHUB_WORKSPACE/neticrm && git checkout 7.x-$BRANCH_PREFIX && git pull
@@ -133,7 +135,9 @@ jobs:
           if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
             BRANCH_PREFIX="master"
           else
-            BRANCH_PREFIX="${GITHUB_REF_NAME%%-*}"
+            # PR events: GITHUB_HEAD_REF = source branch; push events: GITHUB_HEAD_REF is empty
+            REF_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+            BRANCH_PREFIX="${REF_NAME%%-*}"
           fi
           cd $GITHUB_WORKSPACE/drupal && git checkout 7.x-$BRANCH_PREFIX && git pull
           cd $GITHUB_WORKSPACE/neticrm && git checkout 7.x-$BRANCH_PREFIX && git pull
@@ -249,7 +253,9 @@ jobs:
           if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
             BRANCH_PREFIX="master"
           else
-            BRANCH_PREFIX="${GITHUB_REF_NAME%%-*}"
+            # PR events: GITHUB_HEAD_REF = source branch; push events: GITHUB_HEAD_REF is empty
+            REF_NAME="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+            BRANCH_PREFIX="${REF_NAME%%-*}"
           fi
           cd $GITHUB_WORKSPACE/drupal && git checkout 10.x-$BRANCH_PREFIX && git pull
           cd $GITHUB_WORKSPACE/neticrm && git checkout 10.x-$BRANCH_PREFIX && git pull
