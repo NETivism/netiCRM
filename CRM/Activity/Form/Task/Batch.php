@@ -298,6 +298,9 @@ WHERE  id = %1";
         // Get Conatct ID
         $value['source_contact_id'] = $dao->source_contact_id;
 
+        $value['target_contact_id'] = CRM_Activity_BAO_ActivityTarget::retrieveTargetIdsByActivityId($key);
+        $value['assignee_contact_id'] = CRM_Activity_BAO_ActivityAssignment::retrieveAssigneeIdsByActivityId($key);
+
         $activity = CRM_Activity_BAO_Activity::create($value);
 
         // add custom field values
