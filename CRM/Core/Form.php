@@ -943,6 +943,11 @@ class CRM_Core_Form extends HTML_QuickForm_Page {
     if (!$editor || $forceTextarea) {
       $editor = 'textarea';
     }
+    // The 'CKEditor4' label (ref #45339) maps to the 'ckeditor' element type
+    // registered in packages/HTML/QuickForm.php; engine remains unchanged.
+    if ($editor == 'ckeditor4') {
+      $editor = 'ckeditor';
+    }
     if ($editor == 'joomla default editor') {
       $editor = 'joomlaeditor';
     }
