@@ -220,13 +220,15 @@ class CRM_Activity_Form_Task_Batch extends CRM_Activity_Form_Task {
     $defaults = [];
     foreach ($this->_activityHolderIds as $activityId) {
       $details[$activityId] = [];
+      if (isset($this->_fields['activity_status'])) {
+        $this->_fields['activity_status_id'] = $this->_fields['activity_status'];
+      }
       CRM_Core_BAO_UFGroup::setProfileDefaults(NULL, $this->_fields, $defaults, FALSE, $activityId, 'Activity');
 
       // The database field name for activity_status is status_id. Since setComponentDefaults cannot map it automatically, the default value needs to be set manually.
       foreach ($this->_fields as $name => $field) {
         if ($field['name'] === 'activity_status') {
-          $statusId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $activityId, 'status_id');
-          $defaults["field[{$activityId}][activity_status]"] = $statusId;
+          $defaults["field[{$activityId}][activity_status]"] = $defaults["field[{$activityId}][activity_status_id]"];
         }
       }
     }
