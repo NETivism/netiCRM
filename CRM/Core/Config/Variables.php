@@ -474,6 +474,13 @@ class CRM_Core_Config_Variables extends CRM_Core_Config_Defaults {
   ];
 
   /**
+   * Use receipt title as default for donor credit name (full/partial options).
+   *
+   * @var bool
+   */
+  public $useReceiptTitleForDonorCredit = 1;
+
+  /**
    * Days for premium inventory restock processing for credit card payments
    *
    * @var int
