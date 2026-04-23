@@ -123,6 +123,7 @@ class CRM_Core_Payment_MyPayIPN extends CRM_Core_Payment_BaseIPN {
         $this->completeTransaction($input, $ids, $objects, $transaction, $isRecur);
         $note .= "\n".ts('Completed').' - '.$input['retmsg']."({$input['prc']}: ".ts(self::$_successMessage[$input['prc']]).")\n";
         $this->addNote($note, $contribution);
+        $transaction->commit();
       }
       else {
         // Record error message.

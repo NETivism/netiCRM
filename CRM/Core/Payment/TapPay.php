@@ -919,6 +919,7 @@ class CRM_Core_Payment_TapPay extends CRM_Core_Payment {
         $ipn->failed($objects, $transaction, $note);
       }
       self::addNoteToLog($note, $objects['contribution']);
+      $transaction->commit();
     }
 
   }

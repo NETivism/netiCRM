@@ -214,6 +214,7 @@ class CRM_Core_Payment_SPGATEWAYIPN extends CRM_Core_Payment_BaseIPN {
         $this->completeTransaction($input, $ids, $objects, $transaction, $recur);
         $note .= ts('Completed')."\n";
         $this->addNote($note, $contribution);
+        $transaction->commit();
         return '1|OK';
       }
       else {

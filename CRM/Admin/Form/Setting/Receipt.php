@@ -38,6 +38,8 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
 
     $this->addElement('text', 'anonymousDonorCreditDefault', ts("Default name when donor doesn't agree to disclose"));
 
+    $this->add('checkbox', 'useReceiptTitleForDonorCredit', ts('Default value for donor credit name'));
+
     // refs #28471, switch to auto send receipt on email
     $haveAttachReceiptOption = CRM_Core_OptionGroup::getValue('activity_type', 'Email Receipt', 'name');
     if (!empty($haveAttachReceiptOption)) {
@@ -218,6 +220,8 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
     if (empty($params['receiptEmailEncryption'])) {
       $params['receiptEmailEncryption'] = FALSE;
     }
+    // Normalize single checkbox to scalar 0/1 to match Variables.php default type
+    $params['useReceiptTitleForDonorCredit'] = empty($params['useReceiptTitleForDonorCredit']) ? 0 : 1;
 
     parent::commonProcess($params);
   }
@@ -233,6 +237,9 @@ class CRM_Admin_Form_Setting_Receipt extends CRM_Admin_Form_Setting {
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
+    if (!empty($fields['receiptPrefix']) && strpos($fields['receiptPrefix'], '-') !== FALSE) {
+      $errors['receiptPrefix'] = ts('Prefix of Receipt ID cannot contain hyphen (-).');
+    }
     if ((!empty($fields['receiptDisplayLegalID']) && $fields['receiptDisplayLegalID'] !== 'complete') && (!empty($fields['receiptEmailEncryption']) && $fields['receiptEmailEncryption'] === '1')) {
       $errors['receiptEmailEncryption'] = ts('When the legal ID display option is not set to complete display, email receipt encryption cannot be enabled.');
     }
