@@ -816,25 +816,25 @@ class CRM_Core_Payment_Backer extends CRM_Core_Payment {
         $params['contribution'][$receiptFieldsMap['choice']] = '0';
         $needReceipt = FALSE;
       }
-      elseif ($receiptType === '稅捐收據' && $choice === '單次寄送紙本收據') {
+      elseif ($receiptType === '稅捐收據' && $choice === '紙本收據（單次寄送）') {
         $params['contribution'][$receiptFieldsMap['receipt_type']] = '1';
         $needReceipt = TRUE;
       }
-      elseif ($receiptType === '稅捐收據' && $choice === '需要收據但不需要寄送') {
+      elseif ($receiptType === '稅捐收據' && $choice === '需要收據（不寄送，資料由團隊上傳國稅局）') {
         $params['contribution'][$receiptFieldsMap['receipt_type']] = '2';
         $needReceipt = TRUE;
       }
-      elseif ($receiptType === '稅捐收據' && $choice === '年度寄送紙本收據') {
+      elseif ($receiptType === '稅捐收據' && $choice === '紙本收據（年度寄送）') {
         // special case
         $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_paper_receipt';
         $needReceipt = TRUE;
       }
-      elseif ($receiptType === '稅捐收據' && $choice === '單次寄送電子收據') {
+      elseif ($receiptType === '稅捐收據' && $choice === '電子收據（單次開立）') {
         // special case
         $params['contribution'][$receiptFieldsMap['receipt_type']] = 'single_e_receipt';
         $needReceipt = TRUE;
       }
-      elseif ($receiptType === '稅捐收據' && $choice === '年度寄送電子收據') {
+      elseif ($receiptType === '稅捐收據' && $choice === '電子收據（年度開立）') {
         // special case
         $params['contribution'][$receiptFieldsMap['receipt_type']] = 'annual_e_receipt';
         $needReceipt = TRUE;
