@@ -854,6 +854,7 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
     $this->assign('donor_partial_name', !empty($donorCreditOptions['partial_name']));
     $this->assign('donor_custom_name', !empty($donorCreditOptions['custom_name']));
     $this->assign('donor_anonymous', !empty($donorCreditOptions['anonymous']));
+    $this->assign('useReceiptTitleForDonorCredit', !empty($config->useReceiptTitleForDonorCredit));
 
     if (!empty($donorCreditOptions['anonymous']) && $config->anonymousDonorCreditDefault) {
       $this->assign('donor_anonymous_default', $config->anonymousDonorCreditDefault);

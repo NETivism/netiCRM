@@ -269,6 +269,12 @@
        <add>4.0</add>
   </field>
   <field>
+       <name>redirect_page_id</name>
+       <type>int unsigned</type>
+       <comment>Target contribution page id to redirect when this page is disabled. NULL means show unavailable notice.</comment>
+       <add>4.0</add>
+  </field>
+  <field>
        <name>footer_text</name>
        <type>text</type>
        <htmlType>textarea</htmlType>

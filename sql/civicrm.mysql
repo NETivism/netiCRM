@@ -3851,6 +3851,7 @@ CREATE TABLE civicrm_contribution_page (
      `recur_fail_notify` varchar(255)    COMMENT 'comma-separated list of email addresses to each time a recurring is failed',
      `is_active` tinyint    COMMENT 'Is this property active?',
      `is_internal` tinyint    COMMENT 'Is this page only for internal usage?',
+     `redirect_page_id` int unsigned    COMMENT 'Target contribution page id to redirect when this page is disabled. NULL means show unavailable notice.',
      `footer_text` text    COMMENT 'Text and html allowed. Displayed at the bottom of the first page of the contribution wizard.',
      `amount_block_is_active` tinyint   DEFAULT 1 COMMENT 'Is this property active?',
      `honor_block_is_active` tinyint    COMMENT 'Should this contribution have the honor  block enabled?',

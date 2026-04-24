@@ -275,6 +275,12 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
    */
   public $is_internal;
   /**
+   * Target contribution page id to redirect when this page is disabled. NULL means show unavailable notice.
+   *
+   * @var int unsigned
+   */
+  public $redirect_page_id;
+  /**
    * Text and html allowed. Displayed at the bottom of the first page of the contribution wizard.
    *
    * @var text
@@ -593,6 +599,10 @@ class CRM_Contribute_DAO_ContributionPage extends CRM_Core_DAO {
         'is_internal' => [
           'name' => 'is_internal',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+        ],
+        'redirect_page_id' => [
+          'name' => 'redirect_page_id',
+          'type' => CRM_Utils_Type::T_INT,
         ],
         'footer_text' => [
           'name' => 'footer_text',
