@@ -97,6 +97,9 @@
       }
       this._setupTableWidthFix();
       this._setupTableFigureRemoval();
+      if (!enableScripts) {
+        this._setupOutputSanitizer();
+      }
       this._setupEmailCustomTags();
       this._setAllowDivInHeading();
     }
@@ -389,6 +392,52 @@
     }
 
     /**
+     * Strip javascript: URLs from href/src/formaction/xlink:href attributes.
+     * Supplements GHS disallow, which does not reliably block this vector
+     * for attributes managed by plugins such as Link (linkHref model attr).
+     * Only runs in default mode; opt-in (enableScripts) skips this.
+     */
+    _setupOutputSanitizer() {
+      var editor = this.editor;
+      var originalGet = editor.data.get.bind(editor.data);
+      var JS_URL = /^\s*javascript:/i;
+      var URL_ATTRS = ['href', 'src', 'formaction', 'xlink:href'];
+
+      editor.data.get = function(options) {
+        var html = originalGet(options);
+
+        var isFullPage = /^\s*(<!doctype|<html[\s>])/i.test(html);
+        var root;
+        var doc;
+        if (isFullPage) {
+          doc = new DOMParser().parseFromString(html, 'text/html');
+          root = doc.body;
+        }
+        else {
+          doc = null;
+          root = document.createElement('div');
+          root.innerHTML = html;
+        }
+
+        root.querySelectorAll('*').forEach(function(el) {
+          URL_ATTRS.forEach(function(attr) {
+            var val = el.getAttribute(attr);
+            if (val && JS_URL.test(val)) {
+              el.removeAttribute(attr);
+            }
+          });
+        });
+
+        if (isFullPage) {
+          var doctype = html.match(/<!doctype[^>]*>/i);
+          var doctypeStr = doctype ? doctype[0] : '';
+          return (doctypeStr ? doctypeStr + '\n' : '') + doc.documentElement.outerHTML;
+        }
+        return root.innerHTML;
+      };
+    }
+
+    /**
      * Allow block elements (e.g. <div>) inside headings.
      * Frameworks like Bootstrap use <h2><div class="accordion-button">...</div></h2>.
      *
@@ -495,11 +544,14 @@
       },
     ],
     disallow: [
-      // Block script tags entirely (opt-in mode lifts this)
-      { name: /^(script|noscript)$/ },
+      // Block <script> tag entirely (opt-in mode lifts this)
+      { name: /^script$/ },
       // Block all HTML event handlers (onclick, onload, onwheel, ondrag, ...)
       { attributes: /^on[a-z]+$/i },
-      // Block javascript: URLs on common link/src attributes
+      // Block javascript: URLs on common link/src attributes.
+      // Note: attributes managed by the Link plugin (linkHref) may bypass
+      // this rule; supplemental DOM sanitizer in _setupOutputSanitizer
+      // covers those paths.
       {
         attributes: {
           href: /^\s*javascript:/i,
@@ -508,10 +560,12 @@
           'xlink:href': /^\s*javascript:/i,
         },
       },
-      // Block CSS injection vectors inside the style attribute
+      // Block CSS injection vectors inside the style attribute.
+      // Note: modern browsers already drop expression()/url(javascript:);
+      // rule kept as an explicit layer for older engines and clarity.
       {
         attributes: {
-          style: /expression\s*\(|javascript\s*:|behavior\s*:|-moz-binding\s*:/i,
+          style: /expression\s*\(|javascript\s*:|behavior\s*:/i,
         },
       },
     ],
