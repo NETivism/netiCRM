@@ -99,11 +99,12 @@
         <i class="zmdi zmdi-alert-circle error-icon"></i>
         <div class="error-body">
           {if $isPreviewMode}
-            <strong>Payment Processor Misconfigured</strong>
-            <p>See <a href="https://neticrm.tw/resources/2433#b" target="_blank">documentation</a> to check the configuration.</p>
+            <strong>{ts}Payment Processor Misconfigured{/ts}</strong>
+            {capture assign=docLink}{docURL page="CiviContribute Payment Processor Configuration" text="View Online Manual"}{/capture}
+            <p>{ts 1=$docLink}See %1 to check the configuration.{/ts}</p>
           {else}
-            <strong>Page Error, Contact Administrator</strong>
-            <p>Donation is currently unavailable. Please contact the website administrator for assistance.</p>
+            <strong>{ts}Page Error, Contact Administrator{/ts}</strong>
+            <p>{ts}Donation is currently unavailable. Please contact the website administrator for assistance.{/ts}</p>
           {/if}
         </div>
       </div>
