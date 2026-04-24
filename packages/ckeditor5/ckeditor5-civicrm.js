@@ -480,112 +480,38 @@
   // ==========================================================================
 
   /**
-   * Full editor htmlSupport config.
-   * Allows most HTML elements with all attributes/classes/styles,
-   * but blocks XSS event handlers.
+   * Full editor htmlSupport config (default mode).
+   * Allows all HTML tags/attributes/classes/styles, with an explicit
+   * deny list for scripts and common XSS vectors.
+   * Follows CKEditor 5's recommended "enable all HTML features" pattern.
    */
   var FULL_HTML_SUPPORT = {
     allow: [
       {
-        // Block elements
-        name: /^(div|section|article|header|footer|nav|aside|main|figure|figcaption|blockquote)$/,
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Inline elements
-        name: /^(span|a|strong|em|i|b|code|pre|cite|small|mark|del|ins|sub|sup|button)$/,
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Headings
-        name: /^h[1-6]$/,
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Lists
-        name: /^(ul|ol|li)$/,
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Tables
-        name: /^(table|thead|tbody|tfoot|tr|th|td|caption|colgroup|col)$/,
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Paragraphs
-        name: 'p',
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // iframe (YouTube, Vimeo, etc.)
-        name: 'iframe',
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Video and audio
-        name: /^(video|audio|source|track)$/,
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Object and embed
-        name: /^(object|embed|param)$/,
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Style tags
-        name: 'style',
-        attributes: true,
-      },
-      {
-        // Images - allow style/class to preserve border-radius, etc.
-        name: 'img',
-        attributes: true,
-        classes: true,
-        styles: true,
-      },
-      {
-        // Full page HTML support (used with FullPage plugin)
-        name: /^(html|head|body|title|meta|link|base)$/,
+        name: /.*/,
         attributes: true,
         classes: true,
         styles: true,
       },
     ],
     disallow: [
+      // Block script tags entirely (opt-in mode lifts this)
+      { name: /^(script|noscript)$/ },
+      // Block all HTML event handlers (onclick, onload, onwheel, ondrag, ...)
+      { attributes: /^on[a-z]+$/i },
+      // Block javascript: URLs on common link/src attributes
       {
-        // XSS event handlers
         attributes: {
-          onload: /.*/,
-          onerror: /.*/,
-          onfocus: /.*/,
-          onblur: /.*/,
-          onsubmit: /.*/,
-          onkeydown: /.*/,
-          onkeyup: /.*/,
-          onkeypress: /.*/,
-          onmousedown: /.*/,
-          onmouseup: /.*/,
-          onchange: /.*/,
-          oninput: /.*/,
-          oncontextmenu: /.*/,
+          href: /^\s*javascript:/i,
+          src: /^\s*javascript:/i,
+          formaction: /^\s*javascript:/i,
+          'xlink:href': /^\s*javascript:/i,
+        },
+      },
+      // Block CSS injection vectors inside the style attribute
+      {
+        attributes: {
+          style: /expression\s*\(|javascript\s*:|behavior\s*:|-moz-binding\s*:/i,
         },
       },
     ],
