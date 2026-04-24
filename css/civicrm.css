@@ -4,6 +4,7 @@
 :root {
   --color-error: #f44336;
   --color-error-dark: #b71c1c;
+  --color-error-light: #fff5f5;
   --color-form-input-border: #999;
   --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
   --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
@@ -6203,6 +6204,31 @@ tbody.scrollContent tr.alternateRow {
 .crm-container .freeze-checked:before {
 }
 
+.crm-container .payment-processor-config-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--color-error-light);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 12px 0;
+}
+.crm-container .payment-processor-config-error .error-icon {
+  font-size: 1.3em;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--color-error-dark);
+}
+.crm-container .payment-processor-config-error .error-body strong {
+  display: block;
+  color: var(--color-error-dark);
+  margin-bottom: 4px;
+}
+.crm-container .payment-processor-config-error .error-body p {
+  margin: 0;
+  color: #555;
+  font-size: .85em;
+}
 
 /* material design form style */
 /* md: crm form elements */

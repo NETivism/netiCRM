@@ -1251,6 +1251,11 @@ class CRM_Contribute_Form_Contribution_Main extends CRM_Contribute_Form_Contribu
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
+
+    if ($self->get('paymentProcessorConfigError')) {
+      return ['_qf_default' => ts('This page is currently unavailable due to a payment processor configuration error. Please contact the site administrator.')];
+    }
+
     $amount = self::computeAmount($fields, $self);
 
     $checked = $self->checkDuplicateAccount($fields, $self);

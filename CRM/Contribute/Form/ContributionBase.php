@@ -392,41 +392,47 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
       if ($isMonetary && (!$isPayLater || CRM_Utils_Array::value('payment_processor', $this->_values))) {
         $ppID = CRM_Utils_Array::value('payment_processor', $this->_values);
         if (!$ppID) {
-          return CRM_Core_Error::statusBounce(ts('A payment processor must be selected for this contribution page or must be configured to give users the option to pay later.'));
+          $this->assign('paymentProcessorConfigError', TRUE);
+          $this->assign('isPreviewMode', $this->_action == CRM_Core_Action::PREVIEW);
+          $this->set('paymentProcessorConfigError', TRUE);
         }
+        else {
+          $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
+          $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments($ppIds, $this->_mode);
 
-        $ppIds = explode(CRM_Core_DAO::VALUE_SEPARATOR, $ppID);
-
-        $this->_paymentProcessors = CRM_Core_BAO_PaymentProcessor::getPayments($ppIds, $this->_mode);
-        $this->set('paymentProcessors', $this->_paymentProcessors);
-
-        //set default payment processor
-        if (!empty($this->_paymentProcessors) && empty($this->_paymentProcessor)) {
-          foreach ($this->_paymentProcessors as $ppId => $values) {
-            if ($values['is_default'] == 1 || (count($this->_paymentProcessors) == 1)) {
-              $defaultProcessorId = $ppId;
-              break;
+          // Validate each processor config and filter out disabled or misconfigured ones
+          foreach ($this->_paymentProcessors as $ppId => $eachPaymentProcessor) {
+            if (empty($eachPaymentProcessor)) {
+              unset($this->_paymentProcessors[$ppId]);
+              continue;
+            }
+            $this->_paymentObject = &CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
+            $paymentError = NULL;
+            if ($paymentError = $this->_paymentObject->checkConfig()) {
+              unset($this->_paymentProcessors[$ppId]);
             }
           }
-        }
+          $this->set('paymentProcessors', $this->_paymentProcessors);
 
-        if (isset($defaultProcessorId)) {
-          $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($defaultProcessorId, $this->_mode);
-          $this->assign_by_ref('paymentProcessor', $this->_paymentProcessor);
-        }
-
-        if (!CRM_Utils_System::isNull($this->_paymentProcessors)) {
-          foreach ($this->_paymentProcessors as $eachPaymentProcessor) {
-            // check selected payment processor is active
-            if (empty($eachPaymentProcessor)) {
-              return CRM_Core_Error::statusBounce(ts('A payment processor configured for this page might be disabled (contact the site administrator for assistance).'));
+          if (empty($this->_paymentProcessors) && !$isPayLater) {
+            $this->assign('paymentProcessorConfigError', TRUE);
+            $this->assign('isPreviewMode', $this->_action == CRM_Core_Action::PREVIEW);
+            $this->set('paymentProcessorConfigError', TRUE);
+          }
+          else {
+            // Set default payment processor from remaining valid ones
+            if (!empty($this->_paymentProcessors) && empty($this->_paymentProcessor)) {
+              foreach ($this->_paymentProcessors as $ppId => $values) {
+                if ($values['is_default'] == 1 || (count($this->_paymentProcessors) == 1)) {
+                  $defaultProcessorId = $ppId;
+                  break;
+                }
+              }
             }
-
-            // ensure that processor has a valid config
-            $this->_paymentObject = &CRM_Core_Payment::singleton($this->_mode, $eachPaymentProcessor, $this);
-            $error = $this->_paymentObject->checkConfig();
-            if (!empty($error)) {
-              return CRM_Core_Error::statusBounce($error);
+            if (isset($defaultProcessorId)) {
+              $this->_paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($defaultProcessorId, $this->_mode);
+              $this->assign_by_ref('paymentProcessor', $this->_paymentProcessor);
+              $this->set('paymentProcessor', $this->_paymentProcessor);
             }
           }
         }
@@ -662,6 +668,7 @@ class CRM_Contribute_Form_ContributionBase extends CRM_Core_Form {
 
     if (!empty($this->_membershipBlock) &&
       CRM_Utils_Array::value('is_separate_payment', $this->_membershipBlock) &&
+      !empty($this->_paymentProcessor) &&
       (!($this->_paymentProcessor['billing_mode'] & CRM_Core_Payment::BILLING_MODE_FORM))
     ) {
       return CRM_Core_Error::statusBounce(ts(
