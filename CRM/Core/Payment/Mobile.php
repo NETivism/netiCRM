@@ -106,20 +106,27 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
    * @return string|null error message if any, else NULL
    */
   public function checkConfig() {
-    $config = CRM_Core_Config::singleton();
-
     $error = [];
 
-    if (empty($this->_paymentProcessor['user_name']) && strlen($this->_paymentProcessor['user_name']) == 0) {
-      $error[] = ts('UserID is not set in the Administer CiviCRM &raquo; Payment Processor.');
+    if (!empty($this->_paymentProcessor['user_name']) && empty($this->_paymentProcessor['password'])) {
+      $error[] = ts('Merchant is not set in the Administer CiviCRM &raquo; Payment Processor.');
+    }
+    // LinePay: if either channelId or channelSecret is set, both are required
+    $hasChannelId = !empty($this->_paymentProcessor['url_site']);
+    $hasChannelSecret = !empty($this->_paymentProcessor['url_api']);
+    if ($hasChannelId xor $hasChannelSecret) {
+      if (!$hasChannelId) {
+        $error[] = ts('LINE Pay Channel ID is not set in the Administer CiviCRM &raquo; Payment Processor.');
+      }
+      else {
+        $error[] = ts('LINE Pay Channel Secret is not set in the Administer CiviCRM &raquo; Payment Processor.');
+      }
     }
 
     if (!empty($error)) {
-      return CRM_Utils_Array::implode('<p>', $error);
+      return CRM_Utils_Array::implode('<br>', $error);
     }
-    else {
-      return NULL;
-    }
+    return NULL;
   }
 
   public function setExpressCheckOut(&$params) {

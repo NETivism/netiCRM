@@ -934,6 +934,11 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
    */
   public static function formRule($fields, $files, $self) {
     $errors = [];
+
+    if ($self->get('paymentProcessorConfigError')) {
+      return ['_qf_default' => ts('This page is currently unavailable due to a payment processor configuration error. Please contact the site administrator.')];
+    }
+
     $self->isEventFull();
 
     //To check if the user is already registered for the event(CRM-2426)

@@ -337,7 +337,7 @@
               event.preventDefault();
             }));  
           }
-          if(obj_name == 'next-step'){
+          if(obj_name == 'next-step'&& !$('.payment-processor-config-error').length){
             $step_block.append(ContribPage.createBlueBtn(ts['Next >>']).addClass(obj_name).click(function(event){
               ContribPage.setFormStep(ContribPage.currentFormStep + 1);
               event.preventDefault();

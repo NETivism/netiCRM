@@ -152,6 +152,9 @@ cj(function($){
 
     $('#last_name,#first_name,#legal_identifier,#organization_name,#sic_code').keyup(doUpdateName);
     $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(doUpdateName);
+    {/literal}{if $useReceiptTitleForDonorCredit}{literal}
+    $('#custom_{/literal}{$receiptTitle}{literal}').on('keyup change', doUpdateName);
+    {/literal}{/if}{literal}
     doUpdateName();
 
     $('.custom_{/literal}{$receiptDonorCredit}{literal}-section input[type=radio]').change(function (){
@@ -385,7 +388,16 @@ cj(function($){
 
     // Full Name
     if($('#r_name_full:checked').val()){
-      if($('#last_name,#first_name').length>1){
+      // Prefer receipt title when setting enabled; fall back to contact name if empty
+      var _fullNameFromReceiptTitle = '';
+      {/literal}{if $useReceiptTitleForDonorCredit}{literal}
+      _fullNameFromReceiptTitle = $('#custom_{/literal}{$receiptTitle}{literal}').val() || '';
+      {/literal}{/if}{literal}
+
+      if (_fullNameFromReceiptTitle) {
+        $('#custom_{/literal}{$receiptDonorCredit}{literal}').val(_fullNameFromReceiptTitle).prop('readonly', true);
+      }
+      else if($('#last_name,#first_name').length>1){
         if (is_for_organization) {
           $('#custom_{/literal}{$receiptDonorCredit}{literal}').val($('#organization_name').val());
         }
@@ -404,45 +416,62 @@ cj(function($){
 
     // Part of Name
     else if($('#r_name_half:checked').val()){
-      if (is_for_organization) {
-        var name = $('#organization_name').val();
-        if (name.length > 2) {
-          name = name.substr(0,1) + "*".repeat(name.length - 2) + name.substr(-1);
+      var name = '';
+      // Prefer receipt title with unified masking when setting enabled
+      {/literal}{if $useReceiptTitleForDonorCredit}{literal}
+      var _halfReceiptTitle = $('#custom_{/literal}{$receiptTitle}{literal}').val() || '';
+      if (_halfReceiptTitle) {
+        if (_halfReceiptTitle.length > 2) {
+          name = _halfReceiptTitle.substr(0,1) + "*".repeat(_halfReceiptTitle.length - 2) + _halfReceiptTitle.substr(-1);
         }
         else {
-          name = "*".repeat(name.length);
+          name = "*".repeat(_halfReceiptTitle.length);
         }
       }
-      else if($('#last_name,#first_name').length>1){
-        var last_name = $('#last_name').val() ? $('#last_name').val() : "";
-        var first_name = $('#first_name').val() ? $('#first_name').val() : "";
-        if(last_name || first_name){
-          var last_name_leng = last_name.length;
-          if(last_name_leng){
-            last_name = last_name[0];
-            for (var i = 1; i < last_name_leng; i++) {
-              last_name += "*";
-            };
+      {/literal}{/if}{literal}
+
+      // Fallback to original per-type masking
+      if (!name) {
+        if (is_for_organization) {
+          name = $('#organization_name').val();
+          if (name.length > 2) {
+            name = name.substr(0,1) + "*".repeat(name.length - 2) + name.substr(-1);
           }
+          else {
+            name = "*".repeat(name.length);
+          }
+        }
+        else if($('#last_name,#first_name').length>1){
+          var last_name = $('#last_name').val() ? $('#last_name').val() : "";
+          var first_name = $('#first_name').val() ? $('#first_name').val() : "";
+          if(last_name || first_name){
+            var last_name_leng = last_name.length;
+            if(last_name_leng){
+              last_name = last_name[0];
+              for (var i = 1; i < last_name_leng; i++) {
+                last_name += "*";
+              };
+            }
 
-          var first_name_leng = first_name.length;
-          if(first_name_leng>1){
+            var first_name_leng = first_name.length;
+            if(first_name_leng>1){
 
-            first_name = first_name[first_name_leng-1];
-            for (var i = 0; i < first_name_leng-1; i++) {
-              first_name = "*"+first_name;
+              first_name = first_name[first_name_leng-1];
+              for (var i = 0; i < first_name_leng-1; i++) {
+                first_name = "*"+first_name;
 
-            };
+              };
+            }
+            else{
+              first_name = "*";
+            }
+            name = last_name+first_name;
           }
           else{
-            first_name = "*";
+            name = "";
           }
-          var name = last_name+first_name;
-        }
-        else{
-          var name = "";
-        }
 
+        }
       }
       if (name) {
         $('#custom_{/literal}{$receiptDonorCredit}{literal}').val(name);

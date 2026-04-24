@@ -93,6 +93,23 @@
 {if $is_monetary}
   <fieldset class="crm-group payment_options-group">
     <legend>{ts}Payment Options{/ts}</legend>
+  {if $paymentProcessorConfigError}
+    <div class="crm-section payment_processor-section">
+      <div class="payment-processor-config-error">
+        <i class="zmdi zmdi-alert-circle error-icon"></i>
+        <div class="error-body">
+          {if $isPreviewMode}
+            <strong>{ts}Payment Processor Misconfigured{/ts}</strong>
+            {capture assign=docLink}{docURL page="CiviContribute Payment Processor Configuration" text="View Online Manual"}{/capture}
+            <p>{ts 1=$docLink}See %1 to check the configuration.{/ts}</p>
+          {else}
+            <strong>{ts}Page Error, Contact Administrator{/ts}</strong>
+            <p>{ts}Donation is currently unavailable. Please contact the website administrator for assistance.{/ts}</p>
+          {/if}
+        </div>
+      </div>
+    </div>
+  {/if}
   {if $form.is_recur}
     <div class="crm-section {$form.is_recur.name}-section">
       <div class="content">
@@ -168,7 +185,7 @@
 {/if}{*priceset*}
 
 {if $is_monetary}
-  {if $form.payment_processor.label}
+  {if $form.payment_processor.label && !$paymentProcessorConfigError}
     <div class="crm-section payment_processor-section">
       <div class="label">{$form.payment_processor.label}</div>
       <div class="content">{$form.payment_processor.html}</div>
@@ -340,7 +357,7 @@
     </div>
   {/if}
   {/if}
-  <div id="crm-submit-buttons" class="crm-submit-buttons">
+  <div id="crm-submit-buttons" class="crm-submit-buttons"{if $paymentProcessorConfigError} style="display:none;"{/if}>
      {include file="CRM/common/formButtons.tpl" location="bottom"}
   </div>
   {if $footer_text}
