@@ -392,9 +392,13 @@
     }
 
     /**
-     * Strip javascript: URLs from href/src/formaction/xlink:href attributes.
-     * Supplements GHS disallow, which does not reliably block this vector
-     * for attributes managed by plugins such as Link (linkHref model attr).
+     * DOM post-processor that supplements GHS disallow with two protections:
+     * 1. Strip javascript: URLs from href/src/formaction/xlink:href
+     *    (Link plugin's linkHref bypasses GHS attribute disallow)
+     * 2. Strip dangerous CSS declarations from style attributes
+     *    (GHS disallow.attributes.style regex is unreliable for unknown
+     *    properties such as -moz-binding; CSS parser only handles
+     *    expression()/url(javascript:))
      * Only runs in default mode; opt-in (enableScripts) skips this.
      */
     _setupOutputSanitizer() {
@@ -402,6 +406,25 @@
       var originalGet = editor.data.get.bind(editor.data);
       var JS_URL = /^\s*javascript:/i;
       var URL_ATTRS = ['href', 'src', 'formaction', 'xlink:href'];
+      var DANGEROUS_PROPS = { '-moz-binding': true, 'behavior': true };
+      var DANGEROUS_VALUE = /expression\s*\(|javascript\s*:/i;
+
+      function sanitizeStyle(styleStr) {
+        var decls = styleStr.split(';');
+        var keep = [];
+        for (var i = 0; i < decls.length; i++) {
+          var d = decls[i].trim();
+          if (!d) continue;
+          var colon = d.indexOf(':');
+          if (colon < 0) continue;
+          var prop = d.slice(0, colon).trim().toLowerCase();
+          var val = d.slice(colon + 1);
+          if (DANGEROUS_PROPS[prop]) continue;
+          if (DANGEROUS_VALUE.test(val)) continue;
+          keep.push(d);
+        }
+        return keep.join('; ');
+      }
 
       editor.data.get = function(options) {
         var html = originalGet(options);
@@ -426,6 +449,18 @@
               el.removeAttribute(attr);
             }
           });
+          var styleVal = el.getAttribute('style');
+          if (styleVal) {
+            var sanitized = sanitizeStyle(styleVal);
+            if (sanitized !== styleVal) {
+              if (sanitized) {
+                el.setAttribute('style', sanitized);
+              }
+              else {
+                el.removeAttribute('style');
+              }
+            }
+          }
         });
 
         if (isFullPage) {
@@ -561,11 +596,11 @@
         },
       },
       // Block CSS injection vectors inside the style attribute.
-      // Note: modern browsers already drop expression()/url(javascript:);
-      // rule kept as an explicit layer for older engines and clarity.
+      // Covers expression()/javascript:/behavior:/-moz-binding for defense in depth,
+      // even though modern browsers already drop most of these.
       {
         attributes: {
-          style: /expression\s*\(|javascript\s*:|behavior\s*:/i,
+          style: /expression\s*\(|javascript\s*:|behavior\s*:|-moz-binding\s*:/i,
         },
       },
     ],
