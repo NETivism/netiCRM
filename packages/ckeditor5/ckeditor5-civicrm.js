@@ -625,45 +625,45 @@
       var imceUrl = editor.config.get('imceUrl');
       var sep = imceUrl.indexOf('?') >= 0 ? '&' : '?';
 
-      // Per-instance callback registry: avoids clobber when multiple
-      // editors open IMCE concurrently.
-      window._civiImceCKE5Callbacks = window._civiImceCKE5Callbacks || {};
-      var token = 'ck5_' + Date.now() + '_' +
+      // Register a unique sendto callback per open call. The editor is
+      // captured via closure, which is more reliable than a shared
+      // window variable (which can return null due to popup reuse,
+      // page reload, or other timing issues).
+      var fnName = 'civiCKE5Send_' + Date.now() + '_' +
         Math.random().toString(36).slice(2, 8);
-      window._civiImceCKE5Callbacks[token] = function(fileUrl) {
-        editor.execute('insertImage', { source: fileUrl });
-        editor.editing.view.focus();
+      window[fnName] = function(file, win) {
+        try {
+          var url = file.getUrl();
+          // Restore editor focus so model selection is valid before
+          // insertion; popup lifecycle can leave the view unfocused.
+          editor.editing.view.focus();
+          var html = '<img src="' + url.replace(/"/g, '&quot;') + '">';
+          var viewFragment = editor.data.processor.toView(html);
+          var modelFragment = editor.data.toModel(viewFragment);
+          editor.model.insertContent(modelFragment);
+        }
+        catch (err) {
+          console.error('[IMCE CKE5] insert error:', err);
+        }
+        delete window[fnName];
+        win.close();
       };
 
-      var fullUrl = imceUrl + sep +
-        'sendto=civicrmImceCkeditSendToCKE5&token=' +
-        encodeURIComponent(token);
+      // type=image makes IMCE check Item.isImageSource() instead of
+      // Item.isFile, matching the "insert image" semantics.
+      var fullUrl = imceUrl + sep + 'sendto=' + fnName + '&type=image';
+      // Use unique window name so the popup is never reused.
       var win = window.open(
         fullUrl,
-        'imceBrowserCKE5',
+        fnName,
         'width=800,height=600,resizable=yes,scrollbars=yes'
       );
       if (!win) {
-        delete window._civiImceCKE5Callbacks[token];
+        delete window[fnName];
         alert(editor.locale.t('Popup blocked. Please allow popups for IMCE.'));
       }
     }
   }
-
-  // Global callback invoked from the IMCE popup window via the
-  // sendto=civicrmImceCkeditSendToCKE5 query parameter. Routes the file URL
-  // to the originating editor instance via the token in the URL.
-  window.civicrmImceCkeditSendToCKE5 = function(file, win) {
-    var match = /[?&]token=([^&]+)/.exec(win.location.href);
-    var token = match ? decodeURIComponent(match[1]) : null;
-    var callbacks = window.opener && window.opener._civiImceCKE5Callbacks;
-    if (token && callbacks && callbacks[token]) {
-      // file.getUrl() targets IMCE 8.x-2.x (Drupal 10).
-      callbacks[token](file.getUrl());
-      delete callbacks[token];
-    }
-    win.close();
-  };
 
   // ==========================================================================
   // htmlSupport Configurations
