@@ -82,7 +82,19 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     // System-wide opt-in: allow arbitrary HTML (incl. <script>) in the editor.
     // Default 0: sanitized output. Admins enable via Site Preferences > Display.
     $allowAllContent = (bool) CRM_Core_BAO_Preferences::value('editor_allow_all_content');
-    $overridesJson = json_encode(['allowAllContent' => $allowAllContent]);
+
+    // IMCE integration (Drupal-only). When the imce module is enabled,
+    // the IMCEBrowse plugin in ckeditor5-civicrm.js adds a "Browse Server"
+    // entry to the Image Insert dropdown.
+    $imceEnabled = CRM_Utils_System::moduleExists('imce');
+    $imceUrl = $imceEnabled ? CRM_Utils_System::url('imce') : '';
+
+    $overrides = ['allowAllContent' => $allowAllContent];
+    if ($imceEnabled && !empty($imceUrl)) {
+      $overrides['imceEnabled'] = TRUE;
+      $overrides['imceUrl'] = $imceUrl;
+    }
+    $overridesJson = json_encode($overrides);
 
     // Render textarea element
     $html = parent::toHtml();

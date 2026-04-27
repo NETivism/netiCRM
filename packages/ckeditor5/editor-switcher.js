@@ -149,7 +149,16 @@
       if (!CK5) throw new Error('CKE5 not loaded');
       
       el.value = content;
-      const preset = config.toolbar === 'CiviCRM' ? window.CiviCKEditor5.getFullEditorConfig() : window.CiviCKEditor5.getBasicEditorConfig();
+
+      // Forward IMCE settings so the IMCEBrowse plugin activates after switching.
+      const presetOverrides = {};
+      if (config.imceEnabled && config.imceUrl) {
+        presetOverrides.imceEnabled = true;
+        presetOverrides.imceUrl = config.imceUrl;
+      }
+      const preset = config.toolbar === 'CiviCRM'
+        ? window.CiviCKEditor5.getFullEditorConfig(presetOverrides)
+        : window.CiviCKEditor5.getBasicEditorConfig(presetOverrides);
 
       const editor = await CK5.ClassicEditor.create(el, preset);
 

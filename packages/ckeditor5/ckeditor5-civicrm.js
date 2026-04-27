@@ -23,6 +23,9 @@
   var GeneralHtmlSupport = CK.GeneralHtmlSupport;
   var DataFilter = CK.DataFilter;
   var DataSchema = CK.DataSchema;
+  var ImageInsertUI = CK.ImageInsertUI;
+  var ButtonView = CK.ButtonView;
+  var IconBrowseFiles = CK.IconBrowseFiles;
 
   // ==========================================================================
   // Constants
@@ -560,6 +563,109 @@
   }
 
   // ==========================================================================
+  // IMCEBrowse Plugin
+  // ==========================================================================
+
+  /**
+   * Adds a "Browse Server" entry to the Image Insert dropdown that opens
+   * IMCE in a popup window. When the user selects a file in IMCE, the URL
+   * is sent back to a per-instance callback which inserts the image via
+   * the insertImage command.
+   *
+   * Activation: only registered when editor.config.imceUrl is set
+   * (passed in by ckeditor5.php / editor-switcher.js based on the
+   * Drupal IMCE module being enabled).
+   */
+  class IMCEBrowse extends Plugin {
+    static get pluginName() {
+      return 'IMCEBrowse';
+    }
+
+    static get requires() {
+      return [ImageInsertUI];
+    }
+
+    init() {
+      var editor = this.editor;
+      var imceUrl = editor.config.get('imceUrl');
+      if (!imceUrl) return;
+
+      var imageInsertUI = editor.plugins.get('ImageInsertUI');
+      var self = this;
+
+      imageInsertUI.registerIntegration({
+        name: 'imce',
+        observable: function() { return editor.commands.get('insertImage'); },
+        buttonViewCreator: function() { return self._createButton(false); },
+        formViewCreator: function() { return self._createButton(true); },
+        requiresForm: false,
+      });
+    }
+
+    _createButton(isFormView) {
+      var editor = this.editor;
+      var t = editor.locale.t;
+      var btn = new ButtonView(editor.locale);
+      var self = this;
+
+      btn.set({
+        label: t('Browse Server'),
+        icon: IconBrowseFiles,
+        tooltip: !isFormView,
+        withText: isFormView,
+        class: 'ck-image-insert__imce-button',
+      });
+
+      btn.on('execute', function() { self._openIMCE(); });
+      return btn;
+    }
+
+    _openIMCE() {
+      var editor = this.editor;
+      var imceUrl = editor.config.get('imceUrl');
+      var sep = imceUrl.indexOf('?') >= 0 ? '&' : '?';
+
+      // Per-instance callback registry: avoids clobber when multiple
+      // editors open IMCE concurrently.
+      window._civiImceCKE5Callbacks = window._civiImceCKE5Callbacks || {};
+      var token = 'ck5_' + Date.now() + '_' +
+        Math.random().toString(36).slice(2, 8);
+      window._civiImceCKE5Callbacks[token] = function(fileUrl) {
+        editor.execute('insertImage', { source: fileUrl });
+        editor.editing.view.focus();
+      };
+
+      var fullUrl = imceUrl + sep +
+        'sendto=civicrmImceCkeditSendToCKE5&token=' +
+        encodeURIComponent(token);
+      var win = window.open(
+        fullUrl,
+        'imceBrowserCKE5',
+        'width=800,height=600,resizable=yes,scrollbars=yes'
+      );
+      if (!win) {
+        delete window._civiImceCKE5Callbacks[token];
+        alert(editor.locale.t('Popup blocked. Please allow popups for IMCE.'));
+      }
+    }
+  }
+
+  // Global callback invoked from the IMCE popup window via the
+  // sendto=civicrmImceCkeditSendToCKE5 query parameter. Routes the file URL
+  // to the originating editor instance via the token in the URL.
+  window.civicrmImceCkeditSendToCKE5 = function(file, win) {
+    var match = /[?&]token=([^&]+)/.exec(win.location.href);
+    var token = match ? decodeURIComponent(match[1]) : null;
+    var callbacks = window.opener && window.opener._civiImceCKE5Callbacks;
+    if (token && callbacks && callbacks[token]) {
+      // file.getUrl() targets IMCE 8.x-2.x (Drupal 10).
+      callbacks[token](file.getUrl());
+      delete callbacks[token];
+    }
+    win.close();
+  };
+
+  // ==========================================================================
   // htmlSupport Configurations
   // ==========================================================================
 
@@ -651,75 +757,87 @@
   function getFullEditorConfig(overrides) {
     overrides = overrides || {};
     var allowAll = overrides.allowAllContent === true;
-    // Strip internal flag so it does not leak into CKEditor's config
+    var imceEnabled = overrides.imceEnabled === true && !!overrides.imceUrl;
+    // Strip internal flags so they do not leak into CKEditor's config.
+    // imceUrl stays in ckOverrides because the IMCEBrowse plugin reads
+    // it via editor.config.get('imceUrl').
     var ckOverrides = Object.assign({}, overrides);
     delete ckOverrides.allowAllContent;
+    delete ckOverrides.imceEnabled;
+    if (!imceEnabled) {
+      delete ckOverrides.imceUrl;
+    }
+
+    var pluginList = [
+      CK.Essentials,
+      CK.Paragraph,
+      CK.Heading,
+      CK.Bold,
+      CK.Italic,
+      CK.Underline,
+      CK.Strikethrough,
+      CK.Code,
+      CK.Subscript,
+      CK.Superscript,
+      CK.Font,
+      CK.FontSize,
+      CK.FontFamily,
+      CK.FontColor,
+      CK.FontBackgroundColor,
+      CK.Alignment,
+      CK.List,
+      CK.ListProperties,
+      CK.TodoList,
+      CK.Indent,
+      CK.IndentBlock,
+      CK.Link,
+      CK.LinkImage,
+      CK.AutoLink,
+      CK.Image,
+      CK.ImageCaption,
+      CK.ImageStyle,
+      CK.ImageToolbar,
+      CK.ImageUpload,
+      CK.ImageResize,
+      CK.ImageInsert,
+      CK.Base64UploadAdapter,
+      CK.Table,
+      CK.TableToolbar,
+      CK.TableProperties,
+      CK.TableCellProperties,
+      CK.TableColumnResize,
+      CK.TableCaption,
+      CK.MediaEmbed,
+      CK.HtmlEmbed,
+      CK.BlockQuote,
+      CK.CodeBlock,
+      CK.HorizontalLine,
+      CK.PageBreak,
+      CK.SpecialCharacters,
+      CK.SpecialCharactersEssentials,
+      CK.FindAndReplace,
+      CK.TextTransformation,
+      CK.Highlight,
+      CK.RemoveFormat,
+      CK.SourceEditing,
+      CK.Autoformat,
+      CK.PasteFromOffice,
+      CK.Clipboard,
+      CK.GeneralHtmlSupport,
+      CK.HtmlComment,
+      CK.ShowBlocks,
+      CK.Fullscreen,
+      CK.FullPage,
+      CK.Undo,
+      ExtendSchema,
+    ];
+    if (imceEnabled) {
+      pluginList.push(IMCEBrowse);
+    }
 
     return Object.assign({
       licenseKey: 'GPL',
-      plugins: [
-        CK.Essentials,
-        CK.Paragraph,
-        CK.Heading,
-        CK.Bold,
-        CK.Italic,
-        CK.Underline,
-        CK.Strikethrough,
-        CK.Code,
-        CK.Subscript,
-        CK.Superscript,
-        CK.Font,
-        CK.FontSize,
-        CK.FontFamily,
-        CK.FontColor,
-        CK.FontBackgroundColor,
-        CK.Alignment,
-        CK.List,
-        CK.ListProperties,
-        CK.TodoList,
-        CK.Indent,
-        CK.IndentBlock,
-        CK.Link,
-        CK.LinkImage,
-        CK.AutoLink,
-        CK.Image,
-        CK.ImageCaption,
-        CK.ImageStyle,
-        CK.ImageToolbar,
-        CK.ImageUpload,
-        CK.ImageResize,
-        CK.ImageInsert,
-        CK.Base64UploadAdapter,
-        CK.Table,
-        CK.TableToolbar,
-        CK.TableProperties,
-        CK.TableCellProperties,
-        CK.TableColumnResize,
-        CK.TableCaption,
-        CK.MediaEmbed,
-        CK.HtmlEmbed,
-        CK.BlockQuote,
-        CK.CodeBlock,
-        CK.HorizontalLine,
-        CK.PageBreak,
-        CK.SpecialCharacters,
-        CK.SpecialCharactersEssentials,
-        CK.FindAndReplace,
-        CK.TextTransformation,
-        CK.Highlight,
-        CK.RemoveFormat,
-        CK.SourceEditing,
-        CK.Autoformat,
-        CK.PasteFromOffice,
-        CK.Clipboard,
-        CK.GeneralHtmlSupport,
-        CK.HtmlComment,
-        CK.ShowBlocks,
-        CK.Fullscreen,
-        CK.FullPage,
-        CK.Undo,
-        ExtendSchema,
-      ],
+      plugins: pluginList,
       toolbar: {
         items: [
           'fullscreen',
@@ -794,6 +912,15 @@
           { name: 'resizeImage:50', label: '50%', value: '50' },
           { name: 'resizeImage:75', label: '75%', value: '75' },
         ],
+        // CKE5 ImageInsertUI requires integrations to be listed here AND
+        // registered via registerIntegration(); list members not registered
+        // are silently dropped. 'imce' is added only when the IMCEBrowse
+        // plugin is active to avoid an "unknown integration" warning.
+        insert: {
+          integrations: imceEnabled
+            ? ['upload', 'url', 'imce']
+            : ['upload', 'url'],
+        },
       },
       table: {
         contentToolbar: [
@@ -880,37 +1007,47 @@
   function getBasicEditorConfig(overrides) {
     overrides = overrides || {};
     var allowAll = overrides.allowAllContent === true;
-    // Strip internal flag so it does not leak into CKEditor's config
+    var imceEnabled = overrides.imceEnabled === true && !!overrides.imceUrl;
+    // Strip internal flags; keep imceUrl when IMCEBrowse is active.
     var ckOverrides = Object.assign({}, overrides);
     delete ckOverrides.allowAllContent;
+    delete ckOverrides.imceEnabled;
+    if (!imceEnabled) {
+      delete ckOverrides.imceUrl;
+    }
+
+    var pluginList = [
+      CK.Essentials,
+      CK.Paragraph,
+      CK.Heading,
+      CK.Bold,
+      CK.Italic,
+      CK.Underline,
+      CK.Strikethrough,
+      CK.FontSize,
+      CK.FontColor,
+      CK.FontBackgroundColor,
+      CK.List,
+      CK.Link,
+      CK.Image,
+      CK.ImageStyle,
+      CK.ImageToolbar,
+      CK.ImageInsert,
+      CK.ImageResize,
+      CK.RemoveFormat,
+      CK.PasteFromOffice,
+      CK.Clipboard,
+      CK.GeneralHtmlSupport,
+      CK.Undo,
+      ExtendSchema,
+    ];
+    if (imceEnabled) {
+      pluginList.push(IMCEBrowse);
+    }
 
     return Object.assign({
       licenseKey: 'GPL',
-      plugins: [
-        CK.Essentials,
-        CK.Paragraph,
-        CK.Heading,
-        CK.Bold,
-        CK.Italic,
-        CK.Underline,
-        CK.Strikethrough,
-        CK.FontSize,
-        CK.FontColor,
-        CK.FontBackgroundColor,
-        CK.List,
-        CK.Link,
-        CK.Image,
-        CK.ImageStyle,
-        CK.ImageToolbar,
-        CK.ImageInsert,
-        CK.ImageResize,
-        CK.RemoveFormat,
-        CK.PasteFromOffice,
-        CK.Clipboard,
-        CK.GeneralHtmlSupport,
-        CK.Undo,
-        ExtendSchema,
-      ],
+      plugins: pluginList,
       toolbar: {
         items: [
           'heading',
@@ -948,7 +1085,7 @@
       image: {
         insert: {
           type: 'auto',
-          integrations: ['url'],
+          integrations: imceEnabled ? ['url', 'imce'] : ['url'],
         },
         toolbar: [
           'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
@@ -983,6 +1120,7 @@
 
   window.CiviCKEditor5 = {
     ExtendSchema: ExtendSchema,
+    IMCEBrowse: IMCEBrowse,
     getFullEditorConfig: getFullEditorConfig,
     getBasicEditorConfig: getBasicEditorConfig,
   };
