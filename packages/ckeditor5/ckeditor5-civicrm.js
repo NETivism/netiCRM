@@ -681,16 +681,22 @@
    */
   var FULL_HTML_SUPPORT = {
     allow: [
+      // styles intentionally NOT listed: GHS no longer preserves
+      // user-pasted inline style attributes. Built-in CKE5 plugins
+      // (FontSize, FontColor, Alignment, ImageResize, TableProperties, ...)
+      // still emit their own style attributes via their own conversion
+      // pipelines, which run independently from GHS allow/disallow.
       {
         name: /.*/,
         attributes: true,
         classes: true,
-        styles: true,
       },
     ],
     disallow: [
-      // Block <script> tag entirely (opt-in mode lifts this)
-      { name: /^script$/ },
+      // Block <script>/<style>/<link> entirely. <style> and <link> are
+      // CSS-injection vectors that bypass the inline style filter.
+      // Opt-in mode (allowAllContent) lifts this whole list.
+      { name: /^(script|style|link)$/ },
       // Block all HTML event handlers (onclick, onload, onwheel, ondrag, ...)
       { attributes: /^on[a-z]+$/i },
       // Block javascript: URLs on common link/src attributes.
@@ -723,8 +729,9 @@
   var BASIC_HTML_SUPPORT = {
     allow: [
       {
+        // styles removed: paste/source no longer carries inline style
+        // on these blocks. classes still allowed for theming.
         name: /^(h[1-3]|p|blockquote)$/,
-        styles: true,
         classes: true,
       },
       {
