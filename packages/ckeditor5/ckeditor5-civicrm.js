@@ -916,10 +916,14 @@
         // registered via registerIntegration(); list members not registered
         // are silently dropped. 'imce' is added only when the IMCEBrowse
         // plugin is active to avoid an "unknown integration" warning.
+        // 'upload' is intentionally omitted: uploads are routed through IMCE
+        // (or URL fallback) so images are stored on the server rather than
+        // inlined as base64. ImageUpload plugin stays loaded so drag-drop
+        // and paste-image still work via the base64 upload adapter.
         insert: {
           integrations: imceEnabled
-            ? ['upload', 'url', 'imce']
-            : ['upload', 'url'],
+            ? ['imce', 'url']
+            : ['url'],
         },
       },
       table: {
@@ -1085,7 +1089,7 @@
       image: {
         insert: {
           type: 'auto',
-          integrations: imceEnabled ? ['url', 'imce'] : ['url'],
+          integrations: imceEnabled ? ['imce', 'url'] : ['url'],
         },
         toolbar: [
           'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
