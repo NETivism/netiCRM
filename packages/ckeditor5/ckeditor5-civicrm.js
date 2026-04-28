@@ -26,6 +26,7 @@
   var ImageInsertUI = CK.ImageInsertUI;
   var ButtonView = CK.ButtonView;
   var IconBrowseFiles = CK.IconBrowseFiles;
+  var IconImage = CK.IconImage;
 
   // ==========================================================================
   // Constants
@@ -610,7 +611,10 @@
 
       btn.set({
         label: t('Browse Server'),
-        icon: IconBrowseFiles,
+        // Toolbar split-button uses the generic image icon so users
+        // recognise it as "insert image"; dropdown form entry keeps
+        // the folder icon to differentiate from "Insert via URL".
+        icon: isFormView ? IconBrowseFiles : IconImage,
         tooltip: !isFormView,
         withText: isFormView,
         class: 'ck-image-insert__imce-button',
