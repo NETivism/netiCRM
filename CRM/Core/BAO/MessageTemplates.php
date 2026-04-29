@@ -495,10 +495,11 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
       }
 
       $params['mailerType'] = array_search('Transaction Notification', CRM_Core_BAO_MailSettings::$_mailerTypes);
+      $failReason = NULL;
       if (!empty($params['activityId']) && $config->enableTransactionalEmail) {
         $activityTypeId = CRM_Core_DAO::getFieldValue('CRM_Activity_DAO_Activity', $params['activityId'], 'activity_type_id');
         if (in_array(CRM_Core_OptionGroup::getName('activity_type', $activityTypeId), explode(',', CRM_Mailing_BAO_Transactional::ALLOWED_ACTIVITY_TYPES))) {
-          $sent = CRM_Mailing_BAO_Transactional::send($params, $callback);
+          $sent = CRM_Mailing_BAO_Transactional::send($params, $callback, $failReason);
         }
       }
       else {
@@ -507,6 +508,27 @@ class CRM_Core_BAO_MessageTemplates extends CRM_Core_DAO_MessageTemplates {
 
       if ($pdf_filename) {
         unlink($pdf_filename);
+      }
+      if (!$sent) {
+        $logData = [
+          'sent'       => $sent,
+          'activityId' => $params['activityId'],
+          'groupName'  => $params['groupName'],
+          'valueName'  => $params['valueName'],
+          'toEmail'    => CRM_Utils_String::maskEmail($params['toEmail']),
+          'source' => __FUNCTION__.":".__LINE__,
+        ];
+        if ($failReason !== NULL) {
+          $logData['reason'] = $failReason;
+        }
+        else {
+          $logData['reason'] = 'send_failed';
+        }
+        CRM_Core_Error::debug_log_message(
+          'sendTemplate result: ' . json_encode($logData),
+          FALSE,
+          'MailError'
+        );
       }
     }
 

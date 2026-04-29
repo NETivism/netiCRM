@@ -1952,11 +1952,28 @@ LEFT JOIN   civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.a
       0 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, TRUE]],
       1 => ['CRM_Activity_BAO_Activity::updateTransactionalStatus' =>  [$activityId, FALSE]],
     ];
+    $failReason = NULL;
     if (CRM_Core_Config::singleton()->enableTransactionalEmail) {
-      $sent = CRM_Mailing_BAO_Transactional::send($params, $callback);
+      $sent = CRM_Mailing_BAO_Transactional::send($params, $callback, $failReason);
     }
     else {
       $sent = CRM_Utils_Mail::send($params, $callback);
+    }
+
+    if (!$sent) {
+      $logData = [
+        'sent'       => $sent,
+        'activityId' => $activityId,
+        'toID'       => $toID,
+        'toEmail'    => CRM_Utils_String::maskEmail($toEmail),
+        'reason' => $failReason ?? 'send_failed',
+        'source' => __FUNCTION__.":".__LINE__,
+      ];
+      CRM_Core_Error::debug_log_message(
+        'sendMessage result: ' . json_encode($logData),
+        FALSE,
+        'MailError'
+      );
     }
 
     if ($sent) {
