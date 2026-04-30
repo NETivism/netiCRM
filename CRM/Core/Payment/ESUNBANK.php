@@ -84,7 +84,7 @@ class CRM_Core_Payment_Esunbank extends CRM_Core_Payment {
     }
 
     if (!empty($error)) {
-      return CRM_Utils_Array::implode('<p>', $error);
+      return CRM_Utils_Array::implode('<br>', $error);
     }
     else {
       return NULL;

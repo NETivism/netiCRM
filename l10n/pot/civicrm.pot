@@ -51079,6 +51079,9 @@ msgstr ""
 msgid "API Key (masked)"
 msgstr ""
 
+msgid "Generate API Key"
+msgstr ""
+
 #: templates/CRM/Connector/Page/Connector.tpl templates/CRM/Connector/Page/Connector.tpl
 msgid "Site Key"
 msgstr ""
@@ -51114,3 +51117,48 @@ msgstr ""
 #: CRM/Admin/Form/Setting/Receipt.php
 msgid "Prefix of Receipt ID cannot contain hyphen (-)."
 msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Confirm Send Email?"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Confirm Send"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php:1257 CRM/Event/Form/Registration/Register.php:939
+msgid "This page is currently unavailable due to a payment processor configuration error. Please contact the site administrator."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:112
+msgid "Merchant is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:119
+msgid "LINE Pay Channel ID is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:122
+msgid "LINE Pay Channel Secret is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:102 templates/CRM/Event/Form/Registration/Register.tpl:121
+msgid "Payment Processor Misconfigured"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:103 templates/CRM/Event/Form/Registration/Register.tpl:122
+msgid "See %1 to check the configuration."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:105 templates/CRM/Event/Form/Registration/Register.tpl:124
+msgid "Page Error, Contact Administrator"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:106
+msgid "Donation is currently unavailable. Please contact the website administrator for assistance."
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Register.tpl:125
+msgid "Registration is currently unavailable. Please contact the website administrator for assistance."
+msgstr ""
+

@@ -107,6 +107,12 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO {
    */
   public $is_active;
   /**
+   * Show remaining capacity on frontend price field options
+   *
+   * @var boolean
+   */
+  public $show_remaining;
+  /**
    * Description and/or help text to display before fields in form.
    *
    * @var text
@@ -203,6 +209,11 @@ class CRM_Price_DAO_Set extends CRM_Core_DAO {
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
           'default' => '',
+        ],
+        'show_remaining' => [
+          'name' => 'show_remaining',
+          'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Show Remaining') ,
         ],
         'help_pre' => [
           'name' => 'help_pre',

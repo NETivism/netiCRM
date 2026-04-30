@@ -184,6 +184,9 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
       $this->getElement('is_active')->freeze();
     }
 
+    // show remaining capacity on frontend
+    $this->addElement('checkbox', 'show_remaining', ts('Show remaining capacity?'));
+
     $js = ['data' => 'click-once'];
     $this->addButtons(
       [
@@ -216,7 +219,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
    * @return array array of default values
    */
   public function setDefaultValues() {
-    $defaults = ['is_active' => TRUE];
+    $defaults = ['is_active' => TRUE, 'show_remaining' => TRUE];
     if ($this->_sid) {
       $params = ['id' => $this->_sid];
       CRM_Price_BAO_Set::retrieve($params, $defaults);
@@ -241,6 +244,7 @@ class CRM_Price_Form_Set extends CRM_Core_Form {
     $nameLength = CRM_Core_DAO::getAttribute('CRM_Price_DAO_Set', 'name');
     $params['name'] = CRM_Utils_String::titleToVar($params['title'], CRM_Utils_Array::value('maxlength', $nameLength));
     $params['is_active'] = CRM_Utils_Array::value('is_active', $params, FALSE);
+    $params['show_remaining'] = CRM_Utils_Array::value('show_remaining', $params, FALSE);
 
     $compIds = [];
     $extends = CRM_Utils_Array::value('extends', $params);

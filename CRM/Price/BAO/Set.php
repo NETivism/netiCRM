@@ -432,13 +432,14 @@ WHERE price_set_id = %1
 
     // also get the pre and post help from this price set
     $sql = "
-SELECT help_pre, help_post
+SELECT help_pre, help_post, show_remaining
 FROM   civicrm_price_set
 WHERE  id = %1";
     $dao = &CRM_Core_DAO::executeQuery($sql, $params);
     if ($dao->fetch()) {
       $setTree[$setID]['help_pre'] = $dao->help_pre;
       $setTree[$setID]['help_post'] = $dao->help_post;
+      $setTree[$setID]['show_remaining'] = (bool) $dao->show_remaining;
     }
 
     return $setTree;

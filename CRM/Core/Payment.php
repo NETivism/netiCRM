@@ -67,7 +67,7 @@ abstract class CRM_Core_Payment {
    * @var object
    * @static
    */
-  private static $_singleton = NULL;
+  private static $_singleton = [];
 
   protected $_paymentProcessor;
 
@@ -85,7 +85,8 @@ abstract class CRM_Core_Payment {
    * @return CRM_Core_Payment The payment object.
    */
   public static function &singleton($mode, &$paymentProcessor, &$paymentForm = NULL) {
-    if (self::$_singleton === NULL) {
+    $processorId = $paymentProcessor['id'];
+    if (!isset(self::$_singleton[$processorId])) {
       $config = CRM_Core_Config::singleton();
 
       $ext = new CRM_Core_Extensions();
@@ -99,13 +100,13 @@ abstract class CRM_Core_Payment {
         require_once(str_replace('_', DIRECTORY_SEPARATOR, $paymentClass) . '.php');
       }
 
-      self::$_singleton = call_user_func_array([$paymentClass, 'singleton'], [$mode, $paymentProcessor]);
+      self::$_singleton[$processorId] = call_user_func_array([$paymentClass, 'singleton'], [$mode, $paymentProcessor]);
 
       if ($paymentForm !== NULL) {
-        self::$_singleton->setForm($paymentForm);
+        self::$_singleton[$processorId]->setForm($paymentForm);
       }
     }
-    return self::$_singleton;
+    return self::$_singleton[$processorId];
   }
 
   /**
