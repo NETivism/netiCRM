@@ -41,14 +41,26 @@
         {if ($element.visibility EQ 'public' || $context eq 'standalone') && $form.$element_name.label}
             <div class="crm-section {$element.name}-section price-field-{$field_id}">
             {if ($element.html_type eq 'CheckBox' || $element.html_type == 'Radio') && $element.options_per_line}
-                <div class="label">{$form.$element_name.label}</div>
+                <div class="label">
+                  {$form.$element_name.label}
+                  {if $priceSet.show_remaining && $element.max_value}
+                    {assign var="fieldRemaining" value=`$element.max_value-$element.db_total_count`}
+                    {if $fieldRemaining >= 0}<span class="price-remaining">{ts 1=$fieldRemaining}%1 remaining{/ts}</span>{/if}
+                  {/if}
+                </div>
                 <div class="content">
                     <div class="price-set-row">
                 {assign var="count" value="1"}
                 {foreach name=outer key=key item=item from=$form.$element_name}
                     {if is_numeric($key) }
                         {capture assign="element_count"}{$element_name}_{$key}_count{/capture}
-                        <span class="price-set-option-content">{$form.$element_name.$key.html}{if $form.$element_count}{$form.$element_count.html}{/if}</span>
+                        <span class="price-set-option-content">
+                          {$form.$element_name.$key.html}{if $form.$element_count}{$form.$element_count.html}{/if}
+                          {if $priceSet.show_remaining && $element.options[$key].max_value && !$element.options[$key].is_full}
+                            {assign var="remaining" value=`$element.options[$key].max_value-$element.options[$key].db_total_count`}
+                            {if $remaining >= 0}<span class="price-remaining">{ts 1=$remaining}%1 remaining{/ts}</span>{/if}
+                          {/if}
+                        </span>
                         {if $count == $element.options_per_line}
                             </div><div class="price-set-row">
                             {assign var="count" value="1"}
@@ -69,9 +81,30 @@
                 {assign var="name" value="$element.name"}
                 {assign var="element_name" value="price_"|cat:$field_id}
 
-                <div class="label">{$form.$element_name.label}</div>
-                <div class="content">{$form.$element_name.html}
-                      {if $element.help_post}<br /><span class="description">{$element.help_post}</span>{/if}
+                <div class="label">
+                  {$form.$element_name.label}
+                  {if $priceSet.show_remaining && $element.max_value}
+                    {assign var="fieldRemaining" value=`$element.max_value-$element.db_total_count`}
+                    {if $fieldRemaining >= 0}<span class="price-remaining">{ts 1=$fieldRemaining}%1 remaining{/ts}</span>{/if}
+                  {/if}
+                </div>
+                <div class="content">
+                  {if $priceSet.show_remaining && ($element.html_type eq 'Radio' || $element.html_type eq 'CheckBox')}
+                    {foreach key=key item=item from=$form.$element_name}
+                      {if is_numeric($key)}
+                        <div class="price-set-option-content">
+                          {$form.$element_name.$key.html}
+                          {if $element.options[$key].max_value && !$element.options[$key].is_full}
+                            {assign var="remaining" value=`$element.options[$key].max_value-$element.options[$key].db_total_count`}
+                            {if $remaining >= 0}<span class="price-remaining">{ts 1=$remaining}%1 remaining{/ts}</span>{/if}
+                          {/if}
+                        </div>
+                      {/if}
+                    {/foreach}
+                  {else}
+                    {$form.$element_name.html}
+                  {/if}
+                  {if $element.help_post}<br /><span class="description">{$element.help_post}</span>{/if}
                 </div>
                 <div class="clear"></div>
 
