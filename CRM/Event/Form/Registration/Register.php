@@ -782,6 +782,26 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
           );
         }
       }
+      // Sync db_total_count from _feeBlock to _priceSet fields for template rendering
+      if (!empty($form->_priceSet['show_remaining'])) {
+        foreach ($form->_feeBlock as $fIdx => $feeField) {
+          if (!is_array($feeField) || !isset($form->_priceSet['fields'][$fIdx])) {
+            continue;
+          }
+          $sumCount = 0;
+          foreach ($feeField['options'] as $oIdx => $opt) {
+            $dbCount = CRM_Utils_Array::value('db_total_count', $opt, 0);
+            if (isset($form->_priceSet['fields'][$fIdx]['options'][$oIdx])) {
+              $form->_priceSet['fields'][$fIdx]['options'][$oIdx]['db_total_count'] = $dbCount;
+            }
+            $sumCount += $dbCount;
+          }
+          // Store field-level sum for field-level max_value case
+          if (!empty($form->_priceSet['fields'][$fIdx]['max_value'])) {
+            $form->_priceSet['fields'][$fIdx]['db_total_count'] = $sumCount;
+          }
+        }
+      }
       $form->assign('priceSet', $form->_priceSet);
     }
     else {
