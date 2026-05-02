@@ -610,7 +610,7 @@
       var self = this;
 
       btn.set({
-        label: t('Browse Server'),
+        label: t('Insert image'),
         // Toolbar split-button uses the generic image icon so users
         // recognise it as "insert image"; dropdown form entry keeps
         // the folder icon to differentiate from "Insert via URL".
