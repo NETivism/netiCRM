@@ -2405,6 +2405,7 @@ CREATE TABLE civicrm_price_set (
      `name` varchar(255) NOT NULL   COMMENT 'Variable name/programmatic handle for this set of price fields.',
      `title` varchar(255) NOT NULL   COMMENT 'Displayed title for the Price Set.',
      `is_active` tinyint   DEFAULT 1 COMMENT 'Is this price set active',
+     `show_remaining` tinyint   DEFAULT 0 COMMENT 'Show remaining capacity on frontend price field options',
      `help_pre` text    COMMENT 'Description and/or help text to display before fields in form.',
      `help_post` text    COMMENT 'Description and/or help text to display after fields in form.',
      `javascript` varchar(64)    COMMENT 'Optional Javascript script function(s) included on the form with this price_set. Can be used for conditional',
