@@ -143,15 +143,23 @@
 
         // Load CiviCRM config (presets and custom plugins)
         await this.loadScript(config.resourceBase + 'packages/ckeditor5/ckeditor5-civicrm.js?' + config.ver);
+
+        // Load UI translation file if provided (registers to window.CKEDITOR_TRANSLATIONS).
+        if (config.langTranslationUrl) {
+          await this.loadScript(config.langTranslationUrl);
+        }
       }
 
       const CK5 = window.CKEDITOR_5;
       if (!CK5) throw new Error('CKE5 not loaded');
-      
+
       el.value = content;
 
-      // Forward IMCE settings so the IMCEBrowse plugin activates after switching.
+      // Forward IMCE settings and UI language to the editor preset.
       const presetOverrides = {};
+      if (config.lang && config.lang !== 'en') {
+        presetOverrides.language = config.lang;
+      }
       if (config.imceEnabled && config.imceUrl) {
         presetOverrides.imceEnabled = true;
         presetOverrides.imceUrl = config.imceUrl;

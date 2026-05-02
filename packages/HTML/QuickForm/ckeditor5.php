@@ -94,6 +94,17 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
       $overrides['imceEnabled'] = TRUE;
       $overrides['imceUrl'] = $imceUrl;
     }
+
+    // Determine CKEditor 5 UI language from CiviCRM locale.
+    // global $civicrm_root is the canonical CiviCRM filesystem root (with trailing slash).
+    // Same pattern used in CRM/Core/Config.php:519 and CRM/Core/I18n.php:64.
+    global $civicrm_root;
+    $cke5Lang = $this->_getCKEditorLang($config->lcMessages);
+    $hasTranslation = ($cke5Lang !== 'en') && file_exists($civicrm_root . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js');
+    if ($hasTranslation) {
+      $overrides['language'] = $cke5Lang;
+    }
+
     $overridesJson = json_encode($overrides);
 
     // Render textarea element
@@ -116,6 +127,11 @@ if (window.CKEDITOR && !window.CKEDITOR_5) {
 
       // Load CiviCRM-specific config (ExtendSchema plugin, presets)
       $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5-civicrm.js?' . $config->ver . '"></script>' . "\n";
+
+      // Load translation file for current UI language (registers to window.CKEDITOR_TRANSLATIONS).
+      if ($hasTranslation) {
+        $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js?' . $config->ver . '"></script>' . "\n";
+      }
 
       $GLOBALS['ckeditor5_script_loaded'] = TRUE;
     }
@@ -196,7 +212,9 @@ cj(function() {
       'allowedContent' => $allowedContent,
       'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
       'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
-      'imceUrl' => CRM_Utils_System::moduleExists('imce') ? CRM_Utils_System::url('imce') : ''
+      'imceUrl' => CRM_Utils_System::moduleExists('imce') ? CRM_Utils_System::url('imce') : '',
+      'lang' => $cke5Lang,
+      'langTranslationUrl' => $hasTranslation ? ($config->resourceBase . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js?' . $config->ver) : '',
     );
 
     if (!$isCke5Default) {
@@ -222,6 +240,31 @@ cj(function() {
     }
 
     return $html;
+  }
+
+  /**
+   * Map CiviCRM locale code to CKEditor 5 language code.
+   *
+   * @param string $lcMessages CiviCRM locale (e.g. 'zh_TW', 'en_US')
+   * @return string CKEditor 5 language code (e.g. 'zh', 'en')
+   */
+  private function _getCKEditorLang($lcMessages) {
+    $map = [
+      'zh_TW'   => 'zh',
+      'zh_CN'   => 'zh-cn',
+      'pt_BR'   => 'pt-br',
+      'de_CH'   => 'de-ch',
+      'en_AU'   => 'en-au',
+      'en_GB'   => 'en-gb',
+      'es_CO'   => 'es-co',
+      'sr_Latn' => 'sr-latn',
+    ];
+    $lcMessages = $lcMessages ?: 'en_US';
+    if (isset($map[$lcMessages])) {
+      return $map[$lcMessages];
+    }
+    $lang = strtolower(substr($lcMessages, 0, 2));
+    return $lang ?: 'en';
   }
 
   /**
