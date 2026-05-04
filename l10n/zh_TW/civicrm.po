@@ -51892,3 +51892,15 @@ msgid ""
 "Registration is currently unavailable. Please contact the website "
 "administrator for assistance."
 msgstr "報名功能目前無法使用，請聯繫網站管理員以取得協助。"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:388
+msgid "Risk Warning"
+msgstr "風險警告"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:389
+msgid "The following payment processors do not have 3D Secure verification enabled."
+msgstr "以下金流服務尚未啟用 3D 驗證。"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:391
+msgid "Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled."
+msgstr "未啟用 3D 驗證的商店若對外收款，容易成為測試刷卡的攻擊目標，建議改用已啟用 3D 驗證的商店。"

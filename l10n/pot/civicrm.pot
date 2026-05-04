@@ -51162,3 +51162,15 @@ msgstr ""
 msgid "Registration is currently unavailable. Please contact the website administrator for assistance."
 msgstr ""
 
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:388
+msgid "Risk Warning"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:389
+msgid "The following payment processors do not have 3D Secure verification enabled."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:391
+msgid "Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled."
+msgstr ""
