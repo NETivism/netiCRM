@@ -384,6 +384,74 @@
 }
 {/if}
 
+{* Risk warning dialog for non-3D TapPay payment processors on external contribution pages *}
+<div id="dialog-tappay-risk" title="{ts}Risk Warning{/ts}" style="display:none;">
+  <p><i class="zmdi zmdi-alert-triangle" style="color: var(--color-error)"></i> {ts}The following payment processors do not have 3D Secure verification enabled.{/ts} </p>
+  <ul id="tappay-risk-processor-list"></ul>
+  <p>{ts}Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled.{/ts}</p>
+  <p>{ts}Do you want to continue?{/ts}</p>
+</div>
+{literal}
+<script type="text/javascript">
+cj(document).ready(function($) {
+  var non3dTapPayProcessors = {};
+{/literal}
+{foreach from=$non3dTapPayProcessors key=ppId item=ppName}
+{literal}  non3dTapPayProcessors[{/literal}{$ppId}{literal}] = '{/literal}{$ppName|escape:'javascript'}{literal}';
+{/literal}
+{/foreach}
+{literal}
+  var isInternalPage = {/literal}{$isInternalPage}{literal};
+  var clickedSaveBtn = null;
+
+  $('#dialog-tappay-risk').dialog({
+    autoOpen: false,
+    resizable: true,
+    width: 500,
+    modal: true,
+    dialogClass: 'tappay-risk-dialog',
+    buttons: {
+      '{/literal}{ts escape='js'}Confirm{/ts}{literal}': function() {
+        $(this).dialog('close');
+        if (clickedSaveBtn) {
+          $(clickedSaveBtn).off('click.tappayRisk');
+          clickedSaveBtn.click();
+        }
+      },
+      '{/literal}{ts escape='js'}Cancel{/ts}{literal}': function() {
+        $(this).dialog('close');
+        clickedSaveBtn = null;
+      }
+    }
+  });
+
+  $('[id^="_qf_Amount_upload"]').on('click.tappayRisk', function(e) {
+    if (isInternalPage) {
+      return true;
+    }
+    var selectedNon3d = [];
+    $.each(non3dTapPayProcessors, function(id, name) {
+      if ($('input[name="payment_processor[' + id + ']"]').is(':checked')) {
+        selectedNon3d.push(name);
+      }
+    });
+    if (selectedNon3d.length === 0) {
+      return true;
+    }
+    e.preventDefault();
+    clickedSaveBtn = this;
+    var listHtml = '';
+    $.each(selectedNon3d, function(i, name) {
+      listHtml += '<li>' + $('<span>').text(name).html() + '</li>';
+    });
+    $('#tappay-risk-processor-list').html(listHtml);
+    $('#dialog-tappay-risk').dialog('open');
+    return false;
+  });
+});
+</script>
+{/literal}
+
 {* include jscript to warn if unsaved form field changes *}
 {include file="CRM/common/formNavigate.tpl"}
 
