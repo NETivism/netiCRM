@@ -172,7 +172,6 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
-          'isDefault' => TRUE,
         ],
       ]
     );
