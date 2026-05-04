@@ -51174,3 +51174,27 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:391
 msgid "Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled."
 msgstr ""
+
+#: CRM/UF/Form/Preview.php:212
+msgid "The actual style and layout should be viewed on the page where this profile is embedded."
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:218
+msgid "Pages %%StatusMessage%%"
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:256
+msgid "(ID: %1)"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:157
+msgid "This profile is embedded in the following pages. Click the title to preview the form on the frontend."
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:165
+msgid "Page Settings"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:179
+msgid "Configure this page's form"
+msgstr ""
