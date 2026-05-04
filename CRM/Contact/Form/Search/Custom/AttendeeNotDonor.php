@@ -130,8 +130,8 @@ $having
    * WHERE clause is an array built from any required JOINS plus conditional filters based on search criteria field values
    */
   public function tempWhere() {
-    $from = !empty($this->_formValues['register_date_from']) ? $this->_formValues['register_date_from'] : NULL;
-    $to = !empty($this->_formValues['register_date_to']) ? $this->_formValues['register_date_to'] : NULL;
+    $from = !empty($this->_formValues['register_date_from']) ? CRM_Utils_Date::processDate($this->_formValues['register_date_from']) : NULL;
+    $to = !empty($this->_formValues['register_date_to']) ? CRM_Utils_Date::processDate($this->_formValues['register_date_to'].' 23:59:59') : NULL;
     $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "c.id IS NULL";
