@@ -51174,3 +51174,55 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:391
 msgid "Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled."
 msgstr ""
+
+#: CRM/UF/Form/Preview.php:212
+msgid "The actual style and layout should be viewed on the page where this profile is embedded."
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:218
+msgid "Pages %%StatusMessage%%"
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:256
+msgid "(ID: %1)"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:157
+msgid "This profile is embedded in the following pages. Click the title to preview the form on the frontend."
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:165
+msgid "Page Settings"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:179
+msgid "Configure this page's form"
+msgstr ""
+
+#: templates/CRM/Mailing/Page/Browse.tpl:71
+msgid "Mailing content is incomplete, please edit before viewing"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php:41
+msgid "Default value for donor credit name"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:89
+msgid "Use receipt title as default for donor credit name"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:90
+msgid "If checked, when donors select \"Full Name\" or \"Partial Name\" for donor credit, the system will fill in the receipt title. If unchecked, the contact name will be used."
+msgstr ""
+
+#: CRM/Contribute/Form/ContributionPage/Settings.php:176
+msgid "Redirect to contribution page when disabled"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl:63
+msgid "If this contribution page is disabled, visitors will be automatically redirected to the selected page. If no page is selected, the default unavailable notice will be shown."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl:119
+msgid "Are you sure you want to send this email? This action cannot be undone."
+msgstr ""
