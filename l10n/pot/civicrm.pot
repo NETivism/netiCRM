@@ -51202,3 +51202,15 @@ msgstr ""
 #: templates/CRM/Mailing/Page/Browse.tpl:71
 msgid "Mailing content is incomplete, please edit before viewing"
 msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php:41
+msgid "Default value for donor credit name"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:89
+msgid "Use receipt title as default for donor credit name"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:90
+msgid "If checked, when donors select \"Full Name\" or \"Partial Name\" for donor credit, the system will fill in the receipt title. If unchecked, the contact name will be used."
+msgstr ""

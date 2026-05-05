@@ -51940,3 +51940,15 @@ msgstr "設定此頁面的表單"
 #: templates/CRM/Mailing/Page/Browse.tpl:71
 msgid "Mailing content is incomplete, please edit before viewing"
 msgstr "電子報內容不完整，請編輯後檢視"
+
+#: CRM/Admin/Form/Setting/Receipt.php:41
+msgid "Default value for donor credit name"
+msgstr "徵信名稱預設值"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:89
+msgid "Use receipt title as default for donor credit name"
+msgstr "以收據抬頭作為徵信名稱的預設值"
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:90
+msgid "If checked, when donors select \"Full Name\" or \"Partial Name\" for donor credit, the system will fill in the receipt title. If unchecked, the contact name will be used."
+msgstr "若勾選，捐款人選擇「全名」或「部分名稱」時，將帶入收據抬頭。若未勾選，則帶入聯絡人名稱。"
