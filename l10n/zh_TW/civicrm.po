@@ -51961,5 +51961,8 @@ msgid "Redirect to contribution page when disabled"
 msgstr "停用後轉址到募款頁"
 
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl:63
-msgid "If this contribution page is disabled, visitors will be automatically redirected to the selected page. If no page is selected, the default unavailable notice will be shown."
+msgid ""
+"If this contribution page is disabled, visitors will be automatically "
+"redirected to the selected page. If no page is selected, the default "
+"unavailable notice will be shown."
 msgstr "當此募款頁停用時，訪客將自動轉址至所選頁面。若未指定頁面，則會看到系統預設的停用通知。"
