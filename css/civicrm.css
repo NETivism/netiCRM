@@ -7259,6 +7259,12 @@ input.crm-form-textfield,
   justify-content: center;
 }
 
+/** Price set remaining count and full status */
+#priceset .price-remaining {
+  font-size: 0.85em;
+  color: var(--color-form-input-border, #999);
+}
+
 /** Coupon */
 #priceset .coupon-description,
 .coupon-result {
