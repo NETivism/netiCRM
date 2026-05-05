@@ -51222,3 +51222,7 @@ msgstr ""
 #: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl:63
 msgid "If this contribution page is disabled, visitors will be automatically redirected to the selected page. If no page is selected, the default unavailable notice will be shown."
 msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl:119
+msgid "Are you sure you want to send this email? This action cannot be undone."
+msgstr ""

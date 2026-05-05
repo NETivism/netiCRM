@@ -51966,3 +51966,7 @@ msgid ""
 "redirected to the selected page. If no page is selected, the default "
 "unavailable notice will be shown."
 msgstr "當此募款頁停用時，訪客將自動轉址至所選頁面。若未指定頁面，則會看到系統預設的停用通知。"
+
+#: templates/CRM/Contact/Form/Task/Email.tpl:119
+msgid "Are you sure you want to send this email? This action cannot be undone."
+msgstr "您確定要寄送這封電子郵件？此操作無法復原。"
