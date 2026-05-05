@@ -400,6 +400,17 @@ class CRM_Export_BAO_Export {
 
     $allRelContactArray = $relationQuery = [];
 
+    // Pre-load symmetry flag (name_a_b = name_b_a) for every relationship type once,
+    // to avoid issuing one detect query per iteration of the loop below.
+    // Keyed by relationship_type_id => bool.
+    $symmetricTypes = [];
+    $symmetricDAO = CRM_Core_DAO::executeQuery(
+      "SELECT id, (name_a_b = name_b_a) AS is_symmetric FROM civicrm_relationship_type"
+    );
+    while ($symmetricDAO->fetch()) {
+      $symmetricTypes[(int) $symmetricDAO->id] = (bool) $symmetricDAO->is_symmetric;
+    }
+
     foreach ($contactRelationshipTypes as $rel => $dnt) {
       if ($relationReturnProperties = CRM_Utils_Array::value($rel, $returnProperties)) {
         $allRelContactArray[$rel] = [];
@@ -416,6 +427,7 @@ class CRM_Export_BAO_Export {
         $relationSelect = str_replace('civicrm_state_province.abbreviation', 'civicrm_state_province.name', $relationSelect);
 
         list($id, $direction) = explode('_', $rel, 2);
+        $id = (int) $id;
         // identify the relationship direction
         $contactA = 'contact_id_a';
         $contactB = 'contact_id_b';
@@ -423,6 +435,12 @@ class CRM_Export_BAO_Export {
           $contactA = 'contact_id_b';
           $contactB = 'contact_id_a';
         }
+        // For symmetric relationship types (name_a_b == name_b_a, e.g. "Sibling of"),
+        // the export form's selector dedupes options sharing the same label and only
+        // keeps the _a_b direction, so this foreach never iterates _b_a. Without the
+        // expanded join below, contacts stored on the opposite side of the
+        // relationship row would be silently dropped from the export.
+        $isSymmetric = !empty($symmetricTypes[$id]);
         if ($exportMode == CRM_Export_Form_Select::CONTACT_EXPORT) {
           $relIDs = $ids;
         }
@@ -465,21 +483,33 @@ class CRM_Export_BAO_Export {
 
         $relationshipJoin = $relationshipClause = '';
         if ($componentTable) {
-          $relationshipJoin = " INNER JOIN $componentTable ctTable ON ctTable.contact_id = {$contactA}";
+          // Symmetric types may store the exported contact on either side of the
+          // relationship row, so allow ctTable.contact_id to match contactA or contactB.
+          $relationshipJoin = ($isSymmetric)
+            ? " INNER JOIN $componentTable ctTable ON (ctTable.contact_id = crel.{$contactA} OR ctTable.contact_id = crel.{$contactB})"
+            : " INNER JOIN $componentTable ctTable ON ctTable.contact_id = {$contactA}";
         }
         else {
           $relID = CRM_Utils_Array::implode(',', $relIDs);
-          $relationshipClause = " AND crel.{$contactA} IN ( {$relID} )";
+          $relationshipClause = ($isSymmetric)
+            ? " AND (crel.{$contactA} IN ( {$relID} ) OR crel.{$contactB} IN ( {$relID} ))"
+            : " AND crel.{$contactA} IN ( {$relID} )";
         }
+        $joinOn = ($isSymmetric)
+          ? "(crel.{$contactA} = contact_a.id OR crel.{$contactB} = contact_a.id)"
+          : "crel.{$contactB} = contact_a.id";
+        $refExpr = ($isSymmetric)
+          ? "IF(crel.{$contactA} = contact_a.id, crel.{$contactB}, crel.{$contactA})"
+          : "crel.{$contactA}";
         $relTempName = CRM_Core_DAO::createTempTableName('civicrm_relationship_temp', FALSE);
         $sqlTempTable = "CREATE TEMPORARY TABLE IF NOT EXISTS $relTempName AS (SELECT * FROM civicrm_relationship ORDER BY is_active DESC, start_date DESC )";
         CRM_Core_DAO::executeQuery($sqlTempTable);
         $relationFrom = " {$relationFrom}
-                INNER JOIN {$relTempName} crel ON crel.{$contactB} = contact_a.id AND crel.relationship_type_id = {$id}
+                INNER JOIN {$relTempName} crel ON {$joinOn} AND crel.relationship_type_id = {$id}
                 {$relationshipJoin} ";
         $relationWhere = " WHERE contact_a.is_deleted = 0 {$relationshipClause}";
-        $relationGroupBy = " GROUP BY crel.{$contactA}";
-        $relationSelect = "{$relationSelect}, {$contactA} as refContact ";
+        $relationGroupBy = " GROUP BY {$refExpr}";
+        $relationSelect = "{$relationSelect}, {$refExpr} as refContact ";
         $relationQueryString = "$relationSelect $relationFrom $relationWhere $relationGroupBy";
 
         $allRelContactDAO = CRM_Core_DAO::executeQuery($relationQueryString);
