@@ -51906,8 +51906,9 @@ msgstr "以下金流服務尚未啟用 3D 驗證。"
 msgid ""
 "Stores without 3D Secure verification are vulnerable to card testing attacks"
 " when accepting public payments. We recommend switching to a store with 3D "
-"Secure enabled."
-msgstr "未啟用 3D 驗證的商店若對外收款，容易成為測試刷卡的攻擊目標，建議改用已啟用 3D 驗證的商店。"
+"Secure enabled; if you must continue using it, please enable Recaptcha on "
+"the profile form."
+msgstr "未啟用 3D 驗證的商店若對外收款，容易成為測試刷卡的攻擊目標。建議改用已啟用 3D 驗證的商店；若仍須使用，請務必在資料表單啟用 Recaptcha。"
 
 #: CRM/UF/Form/Preview.php:212
 msgid ""

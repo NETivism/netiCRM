@@ -51172,7 +51172,7 @@ msgid "The following payment processors do not have 3D Secure verification enabl
 msgstr ""
 
 #: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:391
-msgid "Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled."
+msgid "Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled; if you must continue using it, please enable Recaptcha on the profile form."
 msgstr ""
 
 #: CRM/UF/Form/Preview.php:212

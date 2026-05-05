@@ -388,7 +388,7 @@
 <div id="dialog-tappay-risk" title="{ts}Risk Warning{/ts}" style="display:none;">
   <p><i class="zmdi zmdi-alert-triangle" style="color: var(--color-error)"></i> {ts}The following payment processors do not have 3D Secure verification enabled.{/ts} </p>
   <ul id="tappay-risk-processor-list"></ul>
-  <p>{ts}Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled.{/ts}</p>
+  <p>{ts}Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled; if you must continue using it, please enable Recaptcha on the profile form.{/ts}</p>
   <p>{ts}Do you want to continue?{/ts}</p>
 </div>
 {literal}
