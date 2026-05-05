@@ -51950,5 +51950,16 @@ msgid "Use receipt title as default for donor credit name"
 msgstr "以收據抬頭作為徵信名稱的預設值"
 
 #: templates/CRM/Admin/Form/Setting/Receipt.tpl:90
-msgid "If checked, when donors select \"Full Name\" or \"Partial Name\" for donor credit, the system will fill in the receipt title. If unchecked, the contact name will be used."
+msgid ""
+"If checked, when donors select \"Full Name\" or \"Partial Name\" for donor "
+"credit, the system will fill in the receipt title. If unchecked, the contact"
+" name will be used."
 msgstr "若勾選，捐款人選擇「全名」或「部分名稱」時，將帶入收據抬頭。若未勾選，則帶入聯絡人名稱。"
+
+#: CRM/Contribute/Form/ContributionPage/Settings.php:176
+msgid "Redirect to contribution page when disabled"
+msgstr "停用後轉址到募款頁"
+
+#: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl:63
+msgid "If this contribution page is disabled, visitors will be automatically redirected to the selected page. If no page is selected, the default unavailable notice will be shown."
+msgstr "當此募款頁停用時，訪客將自動轉址至所選頁面。若未指定頁面，則會看到系統預設的停用通知。"
