@@ -51910,7 +51910,9 @@ msgid ""
 msgstr "未啟用 3D 驗證的商店若對外收款，容易成為測試刷卡的攻擊目標，建議改用已啟用 3D 驗證的商店。"
 
 #: CRM/UF/Form/Preview.php:212
-msgid "The actual style and layout should be viewed on the page where this profile is embedded."
+msgid ""
+"The actual style and layout should be viewed on the page where this profile "
+"is embedded."
 msgstr "此處僅供快速預覽，實際樣式與互動效果請至前台頁面瀏覽。"
 
 #: CRM/UF/Form/Preview.php:218
@@ -51922,7 +51924,9 @@ msgid "(ID: %1)"
 msgstr "（ID：%1）"
 
 #: templates/CRM/UF/Form/Preview.tpl:157
-msgid "This profile is embedded in the following pages. Click the title to preview the form on the frontend."
+msgid ""
+"This profile is embedded in the following pages. Click the title to preview "
+"the form on the frontend."
 msgstr "此資料表單嵌入於以下頁面，點擊標題可至前台查看表單實際效果。"
 
 #: templates/CRM/UF/Form/Preview.tpl:165
@@ -51932,3 +51936,7 @@ msgstr "頁面設定後台"
 #: templates/CRM/UF/Form/Preview.tpl:179
 msgid "Configure this page's form"
 msgstr "設定此頁面的表單"
+
+#: templates/CRM/Mailing/Page/Browse.tpl:71
+msgid "Mailing content is incomplete, please edit before viewing"
+msgstr "電子報內容不完整，請編輯後檢視"

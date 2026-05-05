@@ -51198,3 +51198,7 @@ msgstr ""
 #: templates/CRM/UF/Form/Preview.tpl:179
 msgid "Configure this page's form"
 msgstr ""
+
+#: templates/CRM/Mailing/Page/Browse.tpl:71
+msgid "Mailing content is incomplete, please edit before viewing"
+msgstr ""
