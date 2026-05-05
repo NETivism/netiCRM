@@ -51226,3 +51226,19 @@ msgstr ""
 #: templates/CRM/Contact/Form/Task/Email.tpl:119
 msgid "Are you sure you want to send this email? This action cannot be undone."
 msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl:60 templates/CRM/Price/Form/PriceSet.tpl:100
+msgid "(Full)"
+msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl:48 templates/CRM/Price/Form/PriceSet.tpl:63 templates/CRM/Price/Form/PriceSet.tpl:90 templates/CRM/Price/Form/PriceSet.tpl:103
+msgid "%1 remaining"
+msgstr ""
+
+#: CRM/Price/Form/Set.php:188
+msgid "Show remaining capacity?"
+msgstr ""
+
+#: templates/CRM/Price/Form/Set.tpl:84
+msgid "When enabled, remaining capacity will be shown next to each option on the frontend (e.g. \"8 remaining\"). Only applies to options with a maximum quantity set."
+msgstr ""
