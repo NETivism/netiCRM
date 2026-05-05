@@ -216,7 +216,7 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
     $pageID = $this->get(CRM_Utils_Pager::PAGE_ID) ?: 1;
     $pager = new CRM_Utils_Pager([
       'total' => $totalCount,
-      'rowCount' => 2,
+      'rowCount' => 25,
       'status' => ts('Pages %%StatusMessage%%'),
       'buttonBottom' => 'PagerBottomButton',
       'buttonTop' => 'PagerTopButton',
