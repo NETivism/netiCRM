@@ -163,6 +163,22 @@ class CRM_Contribute_Page_ContributionType extends CRM_Core_Page_Basic {
         }
       }
 
+      // Inject usage data (contribution pages + events using this type)
+      $usedPages = CRM_Contribute_BAO_ContributionType::getUsedPagesAndEvents($dao->id);
+      $contributionType[$dao->id]['usedPages'] = $usedPages;
+      $hasActivePages = FALSE;
+      foreach ($usedPages as $page) {
+        if ($page['is_active']) {
+          $hasActivePages = TRUE;
+          break;
+        }
+      }
+
+      // Hide disable link when at least one active page is still using this type
+      if ($hasActivePages && $dao->is_active) {
+        $action -= CRM_Core_Action::DISABLE;
+      }
+
       $contributionType[$dao->id]['action'] = CRM_Core_Action::formLink(
         self::links(),
         $action,

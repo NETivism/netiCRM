@@ -158,6 +158,47 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
   }
 
   /**
+   * Get all contribution pages and events that use the given contribution type.
+   *
+   * @param int $contributionTypeId
+   *
+   * @return array Each entry has: id, title, is_active (bool), type ('contribute'|'event'), url
+   */
+  public static function getUsedPagesAndEvents($contributionTypeId) {
+    $pages = [];
+
+    $dao = CRM_Core_DAO::executeQuery(
+      "SELECT id, title, is_active FROM civicrm_contribution_page WHERE contribution_type_id = %1 ORDER BY title",
+      [1 => [$contributionTypeId, 'Integer']]
+    );
+    while ($dao->fetch()) {
+      $pages[] = [
+        'id' => $dao->id,
+        'title' => $dao->title,
+        'is_active' => (bool) $dao->is_active,
+        'type' => 'contribute',
+        'url' => CRM_Utils_System::url('civicrm/admin/contribute/amount', "reset=1&action=update&id={$dao->id}"),
+      ];
+    }
+
+    $dao = CRM_Core_DAO::executeQuery(
+      "SELECT id, title, is_active FROM civicrm_event WHERE contribution_type_id = %1 AND (is_template IS NULL OR is_template = 0) ORDER BY title",
+      [1 => [$contributionTypeId, 'Integer']]
+    );
+    while ($dao->fetch()) {
+      $pages[] = [
+        'id' => $dao->id,
+        'title' => $dao->title,
+        'is_active' => (bool) $dao->is_active,
+        'type' => 'event',
+        'url' => CRM_Utils_System::url('civicrm/event/manage/fee', "reset=1&action=update&id={$dao->id}"),
+      ];
+    }
+
+    return $pages;
+  }
+
+  /**
    * Function to see if contribution type is deductible
    *
    * @param int $contributionTypeId contribution type id to retrieve
