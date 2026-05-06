@@ -51039,14 +51039,6 @@ msgstr ""
 msgid "%1 is a CRM service for nonprofits provided by NETivism"
 msgstr ""
 
-#: CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.php
-msgid "Failed Donation Date (From)"
-msgstr ""
-
-#: CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.php
-msgid "Failed Donation Date (To)"
-msgstr ""
-
 #: CRM/Connector/Page/AJAX.php
 msgid "Failed to generate API key."
 msgstr ""
