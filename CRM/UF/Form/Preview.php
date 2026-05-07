@@ -172,7 +172,6 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
       [
         ['type' => 'cancel',
           'name' => ts('Done with Preview'),
-          'isDefault' => TRUE,
         ],
       ]
     );
@@ -212,13 +211,16 @@ class CRM_UF_Form_Preview extends CRM_Core_Form {
     $this->assign('usageSubtitle', ts('The actual style and layout should be viewed on the page where this profile is embedded.'));
 
     // AC-6: set up pager
+    // pageID must be non-null so CRM_Utils_Pager::initialize() invokes getPageID(),
+    // which is the only path that reads PagerBottomButton/crmPID_B from $_POST.
+    $pageID = $this->get(CRM_Utils_Pager::PAGE_ID) ?: 1;
     $pager = new CRM_Utils_Pager([
       'total' => $totalCount,
       'rowCount' => 25,
       'status' => ts('Pages %%StatusMessage%%'),
       'buttonBottom' => 'PagerBottomButton',
       'buttonTop' => 'PagerTopButton',
-      'pageID' => $this->get(CRM_Utils_Pager::PAGE_ID),
+      'pageID' => $pageID,
     ]);
     $this->assign_by_ref('usagePager', $pager);
 

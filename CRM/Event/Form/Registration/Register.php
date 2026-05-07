@@ -793,6 +793,7 @@ class CRM_Event_Form_Registration_Register extends CRM_Event_Form_Registration {
             $dbCount = CRM_Utils_Array::value('db_total_count', $opt, 0);
             if (isset($form->_priceSet['fields'][$fIdx]['options'][$oIdx])) {
               $form->_priceSet['fields'][$fIdx]['options'][$oIdx]['db_total_count'] = $dbCount;
+              $form->_priceSet['fields'][$fIdx]['options'][$oIdx]['is_full'] = !empty($opt['is_full']);
             }
             $sumCount += $dbCount;
           }

@@ -268,6 +268,27 @@ class CRM_Event_Form_ManageEvent_Fee extends CRM_Event_Form_ManageEvent {
     $paymentProcessor = &CRM_Core_PseudoConstant::paymentProcessor(FALSE, FALSE, "payment_processor_type != 'TaiwanACH' AND billing_mode != 7");
     $this->assign('paymentProcessor', $paymentProcessor);
 
+    // Identify active non-3D TapPay processors for risk warning dialog
+    $non3dTapPayProcessors = [];
+    if (!empty($paymentProcessor)) {
+      $ppIds = CRM_Utils_Array::implode(',', array_keys($paymentProcessor));
+      $query = "
+SELECT id, name
+  FROM civicrm_payment_processor
+ WHERE id IN ({$ppIds})
+   AND payment_processor_type = 'TapPay'
+   AND (url_site IS NULL OR url_site = '')";
+      $ppDao = CRM_Core_DAO::executeQuery($query);
+      while ($ppDao->fetch()) {
+        $non3dTapPayProcessors[$ppDao->id] = $ppDao->name;
+      }
+    }
+    $this->assign('non3dTapPayProcessors', $non3dTapPayProcessors);
+
+    // Suppress warning for non-public events
+    $isPublic = $this->_id ? CRM_Core_DAO::getFieldValue('CRM_Event_DAO_Event', $this->_id, 'is_public') : 1;
+    $this->assign('isPublicEvent', empty($isPublic) ? 0 : 1);
+
     foreach ($paymentProcessor as $pid => &$pvalue) {
       $pvalue .= "-".ts("ID")."$pid";
     }

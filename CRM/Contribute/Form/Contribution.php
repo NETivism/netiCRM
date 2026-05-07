@@ -918,6 +918,10 @@ WHERE  contribution_id = {$this->_id}
     );
     $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
     $this->assign('deductible_type_ids', CRM_Utils_Array::implode(',', array_keys($deductibleType)));
+    $allContributionTypes = CRM_Contribute_PseudoConstant::contributionType();
+    $taxreceiptTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_taxreceipt');
+    $nonTaxreceiptTypeIds = array_keys(array_diff_key($allContributionTypes, $taxreceiptTypes, $deductibleType));
+    $this->assign('non_taxreceipt_type_ids', CRM_Utils_Array::implode(',', $nonTaxreceiptTypeIds));
     if ($this->_online) {
       // $element->freeze( );
     }
@@ -1804,6 +1808,14 @@ WHERE  contribution_id = {$this->_id}
         $formValues['contribution_id'] = $contribution->id;
         $formValues['contribution_page_id'] = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_Contribution', $contribution->id, 'contribution_page_id');
         $formValues['is_test'] = CRM_Core_DAO::getFieldValue("CRM_Contribute_DAO_Contribution", $contribution->id, 'is_test');
+        if (!empty($formValues['is_attach_receipt'])) {
+          $typeId = $formValues['contribution_type_id'];
+          $taxreceiptTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_taxreceipt');
+          $deductibleTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
+          if (!array_key_exists($typeId, $taxreceiptTypes) && !array_key_exists($typeId, $deductibleTypes)) {
+            $formValues['is_attach_receipt'] = 0;
+          }
+        }
         $sendReceipt = CRM_Contribute_Form_AdditionalInfo::emailReceipt($this, $formValues);
       }
 
