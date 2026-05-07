@@ -129,7 +129,7 @@ $having
     $clauses[] = "contact.is_deleted = 0";
 
     $from = !empty($this->_formValues['receive_date_from']) ? CRM_Utils_Date::processDate($this->_formValues['receive_date_from']) : NULL;
-    $to = !empty($this->_formValues['receive_date_to']) ? CRM_Utils_Date::processDate($this->_formValues['receive_date_to'].' 23:59:59') : NULL;
+    $to = !empty($this->_formValues['receive_date_to']) ? CRM_Utils_Date::processDate($this->_formValues['receive_date_to'], '23:59:59') : NULL;
     if ($from) {
       $clauses[] = "c.receive_date >= '$from'";
     }

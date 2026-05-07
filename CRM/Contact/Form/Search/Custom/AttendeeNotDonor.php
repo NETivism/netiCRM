@@ -131,7 +131,7 @@ $having
    */
   public function tempWhere() {
     $from = !empty($this->_formValues['register_date_from']) ? CRM_Utils_Date::processDate($this->_formValues['register_date_from']) : NULL;
-    $to = !empty($this->_formValues['register_date_to']) ? CRM_Utils_Date::processDate($this->_formValues['register_date_to'].' 23:59:59') : NULL;
+    $to = !empty($this->_formValues['register_date_to']) ? CRM_Utils_Date::processDate($this->_formValues['register_date_to'], '23:59:59') : NULL;
     $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "c.id IS NULL";
