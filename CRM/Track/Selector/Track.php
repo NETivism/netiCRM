@@ -219,9 +219,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         'rnetwork' => ts('Referrer Network'),
         'state' => ts('Visit State'),
         'entity_id' => ts('Referenced Record'),
-        'referrer_url' => ts('Referrer URL'),
-        'landing' => ts('Landing Page'),
-        'page_title' => ts('Page Name'),
         'utm_source' => 'utm_source',
         'utm_medium' => 'utm_medium',
         'utm_campaign' => 'utm_campaign',
@@ -306,25 +303,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return array the column headers that need to be displayed
    */
   public function &getColumnHeaders($action = NULL, $type = NULL) {
-    if ($type == CRM_Core_Selector_Controller::EXPORT) {
-      $exportHeaders = [
-        ts('Page Type'),
-        ts('Page Name'),
-        ts('Visit Date'),
-        ts('Visit State'),
-        ts('Referrer Type'),
-        ts('Referrer Network'),
-        'utm_source',
-        'utm_medium',
-        'utm_campaign',
-        'utm_term',
-        'utm_content',
-        ts('Referrer URL'),
-        ts('Landing Page'),
-        ts('Referenced Record'),
-      ];
-      return $exportHeaders;
-    }
     if (!isset($this->_columnHeaders)) {
       $this->_columnHeaders = [
         [
@@ -406,9 +384,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return array the total number of rows for this action
    */
   public function &getRows($action, $offset, $rowCount, $sort, $output = NULL) {
-    if ($output == CRM_Core_Selector_Controller::EXPORT) {
-      return $this->buildExportRows($offset, $rowCount, $sort);
-    }
     $dao = $this->getQuery('*', NULL, $offset, $rowCount, $sort);
 
     $result = [];
@@ -487,85 +462,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       }
     }
     return $results;
-  }
-
-  /**
-   * Build plain-text rows for spreadsheet export.
-   *
-   * @param int $offset
-   * @param int $rowCount
-   * @param mixed $sort
-   *
-   * @return array
-   */
-  private function buildExportRows($offset, $rowCount, $sort = NULL) {
-    $dao = $this->getQuery('*', NULL, $offset, $rowCount, $sort);
-
-    $rows = [];
-    $pageTables = [];
-    $recordTables = [];
-
-    while ($dao->fetch()) {
-      $rowId = $dao->id;
-      if (empty($dao->referrer_type)) {
-        $dao->referrer_type = 'unknown';
-      }
-      $rows[$rowId] = [
-        'page_type'       => $this->_pageTypes[$dao->page_type] ?? $dao->page_type,
-        'page_title'      => $dao->page_id,
-        'visit_date'      => CRM_Utils_Date::customFormat($dao->visit_date),
-        'state'           => $this->_trackState[$dao->state] ?? '',
-        'referrer_type'   => $this->_referrerTypes[$dao->referrer_type] ?? $dao->referrer_type,
-        'referrer_network' => $dao->referrer_network ?? '',
-        'utm_source'      => $dao->utm_source ?? '',
-        'utm_medium'      => $dao->utm_medium ?? '',
-        'utm_campaign'    => $dao->utm_campaign ?? '',
-        'utm_term'        => $dao->utm_term ?? '',
-        'utm_content'     => $dao->utm_content ?? '',
-        'referrer_url'    => $dao->referrer_url ?? '',
-        'landing'         => $dao->landing ?? '',
-        'entity_id'       => '',
-      ];
-      $pageTables[$dao->page_type][$dao->page_id][$rowId] = $rowId;
-      if (!empty($dao->entity_table) && !empty($dao->entity_id)) {
-        $recordTables[$dao->entity_table][$dao->entity_id][$rowId] = $rowId;
-      }
-    }
-
-    // Batch-fetch page titles to avoid N+1 queries
-    foreach ($pageTables as $table => $pages) {
-      $pageIds = CRM_Utils_Array::implode(',', array_map('intval', array_keys($pages)));
-      if (!$pageIds) {
-        continue;
-      }
-      $pageDAO = CRM_Core_DAO::executeQuery("SELECT id, title FROM $table WHERE id IN($pageIds)");
-      while ($pageDAO->fetch()) {
-        foreach ($pages[$pageDAO->id] as $rowId) {
-          $rows[$rowId]['page_title'] = $pageDAO->title;
-        }
-      }
-    }
-
-    // Batch-fetch contact IDs (no sort_name to avoid PII in plain export)
-    foreach ($recordTables as $table => $records) {
-      $entityIds = CRM_Utils_Array::implode(',', array_map('intval', array_keys($records)));
-      if (!$entityIds) {
-        continue;
-      }
-      if ($table === 'civicrm_contact') {
-        $recordDAO = CRM_Core_DAO::executeQuery("SELECT id, id AS cid FROM $table WHERE id IN($entityIds)");
-      }
-      else {
-        $recordDAO = CRM_Core_DAO::executeQuery("SELECT id, contact_id AS cid FROM $table WHERE id IN($entityIds)");
-      }
-      while ($recordDAO->fetch()) {
-        foreach ($records[$recordDAO->id] as $rowId) {
-          $rows[$rowId]['entity_id'] = $recordDAO->cid;
-        }
-      }
-    }
-
-    return $rows;
   }
 
   /**
@@ -663,51 +559,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       $where[] = "entity_table = %14";
       $args[14] = [$this->_entityTable, 'String'];
     }
-    if ($this->_referrerUrl) {
-      $where[] = "referrer_url LIKE %15";
-      $args[15] = ['%' . $this->_referrerUrl . '%', 'String'];
-    }
-    if ($this->_landing) {
-      $where[] = "landing LIKE %16";
-      $args[16] = ['%' . $this->_landing . '%', 'String'];
-    }
-    if ($this->_pageTitle) {
-      $titleParam = [1 => ['%' . $this->_pageTitle . '%', 'String']];
-      $allPageTables = [
-        'civicrm_contribution_page',
-        'civicrm_event',
-        'civicrm_uf_group',
-      ];
-      // When page_type is already filtered, only search that table
-      $searchTables = ($this->_pageType && in_array($this->_pageType, $allPageTables))
-        ? [$this->_pageType]
-        : $allPageTables;
-
-      $pageConds = [];
-      foreach ($searchTables as $table) {
-        $idDao = CRM_Core_DAO::executeQuery("SELECT id FROM {$table} WHERE title LIKE %1", $titleParam);
-        $ids = [];
-        while ($idDao->fetch()) {
-          $ids[] = (int)$idDao->id;
-        }
-        if (!empty($ids)) {
-          $idList = implode(',', $ids);
-          if (count($searchTables) === 1) {
-            $pageConds[] = "page_id IN ({$idList})";
-          }
-          else {
-            $pageConds[] = "(page_type = '{$table}' AND page_id IN ({$idList}))";
-          }
-        }
-      }
-
-      if (!empty($pageConds)) {
-        $where[] = '(' . implode(' OR ', $pageConds) . ')';
-      }
-      else {
-        $where[] = '1 = 0';
-      }
-    }
 
     $where = CRM_Utils_Array::implode(" AND ", $where);
 
@@ -740,7 +591,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    *   Name of the file.
    */
   public function getExportFileName($output = 'csv') {
-    return date('Ymd_') . 'traffic_source.xlsx';
   }
 
   /**
@@ -819,9 +669,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
             case 'entity_id':
               $filters[$name]['value_display'] = $value;
               // no break
-            case 'referrer_url':
-            case 'landing':
-            case 'page_title':
             case 'utm_source':
             case 'utm_medium':
             case 'utm_campaign':

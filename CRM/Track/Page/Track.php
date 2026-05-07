@@ -27,9 +27,6 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       'utmCampaign' => CRM_Utils_Request::retrieve('utm_campaign', 'String', $null),
       'utmTerm' => CRM_Utils_Request::retrieve('utm_term', 'String', $null),
       'utmContent' => CRM_Utils_Request::retrieve('utm_content', 'String', $null),
-      'referrerUrl' => CRM_Utils_Request::retrieve('referrer_url', 'String', $null),
-      'landing' => CRM_Utils_Request::retrieve('landing', 'String', $null),
-      'pageTitle' => CRM_Utils_Request::retrieve('page_title', 'String', $null),
     ];
 
     // only appear 3 month data by default
@@ -45,13 +42,6 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     if ($end = CRM_Utils_Request::retrieve('end', 'Date', $null)) {
       $params['visitDateEnd'] = $end;
     }
-    // Trigger spreadsheet export when output=csv is requested
-    $output = CRM_Utils_Request::retrieve('output', 'String', $null);
-    if ($output === 'csv') {
-      self::exportTrack($params);
-      return parent::run();
-    }
-
     if ($params['pageType'] == 'civicrm_contribution_page' && $params['pageId']) {
       // breadcrumb starter
       $breadcrumbs = [
@@ -70,10 +60,6 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     $selector = new CRM_Track_Selector_Track($params, $this->_scope);
     $selector->filters($this);
     $selector->breadcrumbs($this);
-    $this->assign('referrerTypes', CRM_Core_PseudoConstant::referrerTypes());
-    $this->assign('trackStates', CRM_Core_PseudoConstant::trackState());
-    $this->assign('pageTypes', $selector->_pageTypes);
-    $this->assign('currentPageType', $params['pageType']);
 
     $controller = new CRM_Core_Selector_Controller(
       $selector,
@@ -152,176 +138,6 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     }
 
     return parent::run();
-  }
-
-  /**
-   * Handle spreadsheet export for traffic source report.
-   * Routes to direct download or batch job based on row count.
-   *
-   * @param array $params
-   *   Filter params from run().
-   */
-  public static function exportTrack($params) {
-    global $civicrm_batch;
-
-    $rowsPerBatch = CRM_Export_BAO_Export::EXPORT_ROW_COUNT;
-    $batchThreshold = CRM_Export_BAO_Export::EXPORT_BATCH_THRESHOLD;
-    $csvThreshold = CRM_Export_BAO_Export::EXPORT_BATCH_CSV_THRESHOLD;
-    $exportMode = CRM_Core_Selector_Controller::EXPORT;
-
-    $selector = new CRM_Track_Selector_Track($params);
-    $fileName = $selector->getExportFileName();
-
-    if (empty($civicrm_batch)) {
-      // Count rows with current filter conditions
-      $countDao = $selector->getQuery('COUNT(id) as total_count');
-      $countDao->fetch();
-      $totalNumRows = (int)($countDao->total_count ?? 0);
-
-      if ($totalNumRows > $batchThreshold) {
-        // Large dataset: schedule batch job
-        $config = CRM_Core_Config::singleton();
-        $isCsv = $totalNumRows > $csvThreshold;
-
-        if ($isCsv) {
-          $fileName = str_replace('.xlsx', '.csv', $fileName);
-        }
-
-        $file = $config->uploadDir . $fileName;
-        $downloadHeader = $isCsv ? [
-          'Content-Type: text/csv',
-          'Content-Disposition: attachment;filename="' . $fileName . '"',
-        ] : [
-          'Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          'Content-Disposition: attachment;filename="' . $fileName . '"',
-        ];
-
-        $batch = new CRM_Batch_BAO_Batch();
-        $batch->start([
-          'label' => ts('Export') . ': ' . $fileName,
-          'description' => NULL,
-          'startCallback' => NULL,
-          'startCallbackArgs' => NULL,
-          'processCallback' => [__CLASS__, 'exportBatch'],
-          'processCallbackArgs' => [$params],
-          'finishCallback' => [__CLASS__, 'exportBatchFinish'],
-          'finishCallbackArgs' => NULL,
-          'exportFile' => $file,
-          'download' => ['header' => $downloadHeader, 'file' => $file],
-          'total' => $totalNumRows,
-          'processed' => 0,
-        ]);
-
-        CRM_Core_Session::setStatus(ts('Because of the large amount of data you are about to perform, we have scheduled this job for the batch process. You will receive an email notification when the work is completed.'));
-        CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/batch', "reset=1&id={$batch->_id}"));
-        return;
-      }
-
-      // Small dataset: direct export to browser
-      $headers = $selector->getColumnHeaders(NULL, $exportMode);
-      $config = CRM_Core_Config::singleton();
-
-      $writer = CRM_Core_Report_Excel::singleton('excel');
-      if ($config->decryptExcelOption == 0) {
-        $writer->openToBrowser($fileName);
-      }
-      else {
-        $filePath = $config->uploadDir . $fileName;
-        $writer->openToFile($filePath);
-      }
-
-      $writer->addRow($headers);
-      $offset = 0;
-      while (TRUE) {
-        $rows = $selector->getRows(CRM_Core_Action::VIEW, $offset, $rowsPerBatch, NULL, $exportMode);
-        if (empty($rows)) {
-          break;
-        }
-        foreach ($rows as $row) {
-          $writer->addRow(array_values($row));
-        }
-        $offset += $rowsPerBatch;
-        if (count($rows) < $rowsPerBatch) {
-          break;
-        }
-      }
-      $writer->close();
-
-      if ($config->decryptExcelOption != 0) {
-        CRM_Utils_File::encryptXlsxFile($filePath);
-        header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename=' . $fileName);
-        header('Pragma: no-cache');
-        echo file_get_contents($filePath);
-      }
-      CRM_Utils_System::civiExit();
-    }
-  }
-
-  /**
-   * Batch processCallback: write one chunk of rows to the export file.
-   *
-   * @param array $params
-   *   Filter params passed via processCallbackArgs.
-   */
-  public static function exportBatch($params) {
-    global $civicrm_batch;
-
-    $rowsPerBatch = CRM_Export_BAO_Export::EXPORT_ROW_COUNT;
-    $exportMode = CRM_Core_Selector_Controller::EXPORT;
-
-    $selector = new CRM_Track_Selector_Track($params);
-    $offset = (int)$civicrm_batch->data['processed'];
-    $exportFile = $civicrm_batch->data['exportFile'];
-    $isCsv = (strpos($exportFile, '.csv') !== FALSE);
-
-    $headers = $selector->getColumnHeaders(NULL, $exportMode);
-    $rows = $selector->getRows(CRM_Core_Action::VIEW, $offset, $rowsPerBatch, NULL, $exportMode);
-
-    if (empty($rows)) {
-      $civicrm_batch->data['isCompleted'] = TRUE;
-      return;
-    }
-
-    $rowValues = array_map('array_values', $rows);
-
-    if ($isCsv) {
-      // Write header row on first chunk, then append subsequent chunks
-      if (!is_file($exportFile)) {
-        $writer = CRM_Core_Report_Excel::singleton('csv');
-        $writer->openToFile($exportFile);
-        $writer->addRow($headers);
-        $writer->close();
-      }
-      $config = CRM_Core_Config::singleton();
-      $handle = fopen($exportFile, 'a');
-      foreach ($rowValues as $row) {
-        fputcsv($handle, $row, $config->fieldSeparator);
-      }
-      fclose($handle);
-    }
-    else {
-      CRM_Core_Report_Excel::appendExcelFile($exportFile, $headers, $rowValues);
-    }
-
-    $civicrm_batch->data['processed'] = $offset + count($rows);
-  }
-
-  /**
-   * Batch finishCallback: encrypt xlsx file if site requires it.
-   */
-  public static function exportBatchFinish() {
-    global $civicrm_batch;
-
-    $fileFullPath = $civicrm_batch->data['download']['file'];
-    $fileType = $civicrm_batch->data['download']['header'][0];
-
-    if (strstr($fileType, 'vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-      $config = CRM_Core_Config::singleton();
-      if ($config->decryptExcelOption != 0) {
-        CRM_Utils_File::encryptXlsxFile($fileFullPath);
-      }
-    }
   }
 
   /**
