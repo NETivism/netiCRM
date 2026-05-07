@@ -41,7 +41,7 @@
     {/if}
     {strip}
     {if $help_pre && $action neq 4}
-        <div class="messages help">{$help_pre}</div>
+        <div class="messages help profile-help-pre">{$help_pre}</div>
     {/if}
 
     {include file="CRM/common/CMSUser.tpl"}
@@ -55,7 +55,7 @@
             {if $field.groupTitle != $fieldset}
                 {if $fieldset != $zeroField}
                    {if $groupHelpPost}
-                      <div class="messages help">{$groupHelpPost}</div>
+                      <div class="messages help profile-group-help-post">{$groupHelpPost}</div>
                    {/if}
                    {if $mode neq 8 && $mode neq 4}
                         </div><!-- end form-layout-compressed-div -->
@@ -71,7 +71,7 @@
                 {assign var=fieldset  value=`$field.groupTitle`}
                 {assign var=groupHelpPost  value=`$field.groupHelpPost`}
                 {if $field.groupHelpPre}
-                    <div class="">{$field.groupHelpPre}</div>
+                    <div class="profile-group-help-pre">{$field.groupHelpPre}</div>
                 {/if}
                 <div class="form-layout-compressed">
             {/if}
@@ -172,7 +172,7 @@
     {/if}
 
     {if $field.groupHelpPost}
-        <div class="messages help">{$field.groupHelpPost}</div>
+        <div class="messages help profile-group-help-post">{$field.groupHelpPost}</div>
     {/if}
 
     {if $mode neq 8 && $mode neq 4}
@@ -186,7 +186,7 @@
         {if $isDuplicate}<span class="crm-button">{$form._qf_Edit_upload_duplicate.html}</span>{/if}
     </div>
     {/if}
-    {if $help_post && $action neq 4}<br /><div class="messages help">{$help_post}</div>{/if}
+    {if $help_post && $action neq 4}<br /><div class="messages help profile-help-post">{$help_post}</div>{/if}
     {if $backWebsiteUrl}
     <div class="crm-profile-cancel">
       <span><a href="{$backWebsiteUrl}" target="_blank"> &lt;&lt; {ts}Back to Website{/ts}</a></span>
