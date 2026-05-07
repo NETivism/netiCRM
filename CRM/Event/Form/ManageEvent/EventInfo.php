@@ -283,8 +283,8 @@ class CRM_Event_Form_ManageEvent_EventInfo extends CRM_Event_Form_ManageEvent {
         $errors['start_date'] = ts('Start Date and Time are required fields');
       }
       else {
-        $start = CRM_Utils_Date::processDate($values['start_date']);
-        $end = CRM_Utils_Date::processDate($values['end_date']);
+        $start = CRM_Utils_Date::processDate($values['start_date'], $values['start_date_time']);
+        $end = CRM_Utils_Date::processDate($values['end_date'], $values['end_date_time']);
         if (($end <= $start) && ($end != 0)) {
           $errors['end_date'] = ts('End date should be after Start date');
         }
