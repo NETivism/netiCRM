@@ -156,7 +156,7 @@
 <div class="crm-block crm-uf-usagepages-block">
   <p><strong>{ts}This profile is embedded in the following pages. Click the title to preview the form on the frontend.{/ts}</strong></p>
 
-  {include file="CRM/common/pager.tpl" location="top" pager=$usagePager noForm=true}
+  {include file="CRM/common/pager.tpl" location="top" pager=$usagePager}
 
   <table class="selector">
     <thead>
@@ -183,6 +183,6 @@
     </tbody>
   </table>
 
-  {include file="CRM/common/pager.tpl" location="bottom" pager=$usagePager noForm=true}
+  {include file="CRM/common/pager.tpl" location="bottom" pager=$usagePager}
 </div>
 {/if}
