@@ -126,7 +126,9 @@ function phpHeaderToTpl($phpHeader) {
 // --- Diff helper (via system diff -uw, writes temp file) ---
 function unifiedDiff($new, $filePath) {
   $hash    = substr(md5($filePath), 0, 8);
-  $tmpFile = sys_get_temp_dir() . '/' . basename($filePath, '.php') . '.' . $hash . '.php';
+  $ext     = pathinfo($filePath, PATHINFO_EXTENSION);
+  $base    = pathinfo($filePath, PATHINFO_FILENAME);
+  $tmpFile = sys_get_temp_dir() . '/' . $base . '.' . $hash . ($ext ? '.' . $ext : '');
   file_put_contents($tmpFile, $new);
   $orig = escapeshellarg($filePath);
   $tmp  = escapeshellarg($tmpFile);
