@@ -33,7 +33,7 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
     ];
 
     // only appear 3 month data by default
-    $last3month = date('Y-m-d', strtotime('-3 month'));
+    $last3month = date('Y-m-01', strtotime('-3 month'));
     $start = CRM_Utils_Request::retrieve('start', 'Date', $null);
     if (empty($start)) {
       $this->assign('defaultStartDate', $last3month);
@@ -164,14 +164,9 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
   public static function exportTrack($params) {
     global $civicrm_batch;
 
-    // Apply 3-month default when no start date is specified
-    if (empty($params['visitDateStart'])) {
-      $params['visitDateStart'] = date('Y-m-d', strtotime('-3 month'));
-    }
-
-    $rowsPerBatch = CRM_Export_BAO_Export::EXPORT_ROW_COUNT; //2000
-    $batchThreshold = CRM_Export_BAO_Export::EXPORT_BATCH_THRESHOLD; //10,000
-    $csvThreshold = CRM_Export_BAO_Export::EXPORT_BATCH_CSV_THRESHOLD; //100,000
+    $rowsPerBatch = CRM_Export_BAO_Export::EXPORT_ROW_COUNT;
+    $batchThreshold = CRM_Export_BAO_Export::EXPORT_BATCH_THRESHOLD;
+    $csvThreshold = CRM_Export_BAO_Export::EXPORT_BATCH_CSV_THRESHOLD;
     $exportMode = CRM_Core_Selector_Controller::EXPORT;
 
     $selector = new CRM_Track_Selector_Track($params);
@@ -183,10 +178,10 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       $countDao->fetch();
       $totalNumRows = (int)($countDao->total_count ?? 0);
 
-      if ($totalNumRows >= $batchThreshold) {
+      if ($totalNumRows > $batchThreshold) {
         // Large dataset: schedule batch job
         $config = CRM_Core_Config::singleton();
-        $isCsv = $totalNumRows >= $csvThreshold;
+        $isCsv = $totalNumRows > $csvThreshold;
 
         if ($isCsv) {
           $fileName = str_replace('.xlsx', '.csv', $fileName);
@@ -225,15 +220,12 @@ class CRM_Track_Page_Track extends CRM_Core_Page {
       // Small dataset: direct export to browser
       $headers = $selector->getColumnHeaders(NULL, $exportMode);
       $config = CRM_Core_Config::singleton();
-      $filePath = NULL;
 
       $writer = CRM_Core_Report_Excel::singleton('excel');
       if ($config->decryptExcelOption == 0) {
-        // AC-9: no password protection, stream directly to browser
         $writer->openToBrowser($fileName);
       }
       else {
-        // AC-8: write to temp file first so we can encrypt before sending
         $filePath = $config->uploadDir . $fileName;
         $writer->openToFile($filePath);
       }
