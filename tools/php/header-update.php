@@ -113,7 +113,7 @@ function buildFileList($singleFile, $civiRoot) {
 }
 
 // --- TPL header converter: replaces PHP /* */ delimiters with Smarty {* *} ---
-function phpHeaderToTpl($phpHeader) {
+function phpHeaderToTpl(string $phpHeader): string {
   if (substr($phpHeader, 0, 2) === '/*') {
     $phpHeader = '{*' . substr($phpHeader, 2);
   }
