@@ -89,10 +89,23 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     $imceEnabled = CRM_Utils_System::moduleExists('imce');
     $imceUrl = $imceEnabled ? CRM_Utils_System::url('imce') : '';
 
+    // Clipboard image plugin (paste / drop image upload). Same
+    // permission gate as the CKE4 plugin loader in ckeditor.php and
+    // the access_arguments on civicrm/ajax/editor/image-upload.
+    $clipboardImageAllowed = CRM_Core_Permission::check('access CiviCRM') ||
+      CRM_Core_Permission::check('paste and upload images');
+    $clipboardImageUrl = $clipboardImageAllowed
+      ? CRM_Utils_System::url('civicrm/ajax/editor/image-upload', NULL, FALSE, NULL, FALSE)
+      : '';
+
     $overrides = ['allowAllContent' => $allowAllContent];
     if ($imceEnabled && !empty($imceUrl)) {
       $overrides['imceEnabled'] = TRUE;
       $overrides['imceUrl'] = $imceUrl;
+    }
+    if ($clipboardImageAllowed && !empty($clipboardImageUrl)) {
+      $overrides['clipboardImageEnabled'] = TRUE;
+      $overrides['clipboardImageUrl'] = $clipboardImageUrl;
     }
 
     // Determine CKEditor 5 UI language from CiviCRM locale.
@@ -213,6 +226,8 @@ cj(function() {
       'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
       'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
       'imceUrl' => CRM_Utils_System::moduleExists('imce') ? CRM_Utils_System::url('imce') : '',
+      'clipboardImageEnabled' => $clipboardImageAllowed,
+      'clipboardImageUrl' => $clipboardImageUrl,
       'lang' => $cke5Lang,
       'langTranslationUrl' => $hasTranslation ? ($config->resourceBase . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js?' . $config->ver) : '',
     );

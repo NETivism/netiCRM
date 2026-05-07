@@ -164,6 +164,10 @@
         presetOverrides.imceEnabled = true;
         presetOverrides.imceUrl = config.imceUrl;
       }
+      if (config.clipboardImageEnabled && config.clipboardImageUrl) {
+        presetOverrides.clipboardImageEnabled = true;
+        presetOverrides.clipboardImageUrl = config.clipboardImageUrl;
+      }
       const preset = config.toolbar === 'CiviCRM'
         ? window.CiviCKEditor5.getFullEditorConfig(presetOverrides)
         : window.CiviCKEditor5.getBasicEditorConfig(presetOverrides);

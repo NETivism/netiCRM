@@ -55,6 +55,27 @@
     ],
   };
 
+  /**
+   * CiviClipboardImage defaults (mirror CKE4 plugin behavior).
+   * Resize: cap at 800x600 with JPEG quality 0.7. Upload to server
+   * by default; UI inserts a blob: URL so downstream
+   * CRM/Utils/Image.php::processBlobImagesInField can move the temp
+   * file to the user's permanent directory at form save time.
+   */
+  var CLIPBOARD_IMAGE_DEFAULTS = {
+    maxWidth: 800,
+    maxHeight: 600,
+    quality: 0.7,
+    uploadToServer: true,
+  };
+  var CLIPBOARD_IMAGE_ALLOWED_TYPES = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+    'image/webp',
+  ];
+
   // ==========================================================================
   // ExtendSchema Plugin
   // ==========================================================================
@@ -671,6 +692,318 @@
   }
 
   // ==========================================================================
+  // CiviClipboardImage Plugin
+  // ==========================================================================
+
+  /**
+   * Intercepts paste and drag-drop of image data, resizes via Canvas,
+   * uploads to /civicrm/ajax/editor/image-upload, then inserts an
+   * <img src="blob:..." title="originalName | tempName"> tag.
+   *
+   * Downstream CRM/Utils/Image.php::processBlobImagesInField scans
+   * saved content for the blob+title pattern and moves the temp file
+   * to the user's permanent directory, replacing the blob URL with a
+   * public URL. The title format is therefore load-bearing — keep
+   * `<originalName> | <tempName>` (pipe-separated) in sync with the
+   * regex in CRM/Utils/Image.php.
+   *
+   * Activation: only registered when editor.config.clipboardImageUrl
+   * is set (passed in by ckeditor5.php / editor-switcher.js based on
+   * the `access CiviCRM` or `paste and upload images` permission).
+   *
+   * Three input strategies, mirroring the CKE4 plugin:
+   *   1. Native files in dataTransfer.files (paste-image / drop)
+   *   2. HTML <img src="data:image/..."> in dataTransfer 'text/html'
+   *   3. (CKE5 unifies paste and drop via clipboardInput, so a
+   *      separate drop listener is not needed here)
+   */
+  class CiviClipboardImage extends Plugin {
+    static get pluginName() {
+      return 'CiviClipboardImage';
+    }
+
+    init() {
+      var editor = this.editor;
+      var uploadUrl = editor.config.get('clipboardImageUrl');
+      // Permission gate is enforced in ckeditor5.php; if the URL is
+      // not provided, the plugin stays inert.
+      if (!uploadUrl) return;
+
+      var self = this;
+      editor.editing.view.document.on('clipboardInput', function(evt, data) {
+        if (!data || !data.dataTransfer) return;
+
+        // Strategy 1: native image files (paste-image or drop).
+        var files = [];
+        try {
+          files = Array.from(data.dataTransfer.files || []);
+        }
+        catch (e) {
+          files = [];
+        }
+        var imageFiles = files.filter(function(f) {
+          return f && f.type && f.type.indexOf('image/') === 0;
+        });
+        if (imageFiles.length > 0) {
+          imageFiles.forEach(function(file) {
+            // file.name present → drag-drop with original filename;
+            // empty → clipboard paste-image (no source filename).
+            var source = file.name ? 'drop' : 'paste';
+            self._processFile(file, source);
+          });
+          evt.stop();
+          return;
+        }
+
+        // Strategy 2: HTML payload with <img src="data:image/...">.
+        // Plain http(s) <img> URLs are intentionally not intercepted
+        // — they go through the normal pipeline (no upload needed).
+        var html = '';
+        try {
+          html = data.dataTransfer.getData('text/html') || '';
+        }
+        catch (e) {
+          html = '';
+        }
+        if (html && html.indexOf('<img') >= 0) {
+          var dataUrls = self._extractDataUrls(html);
+          if (dataUrls.length > 0) {
+            dataUrls.forEach(function(url) {
+              self._processDataUrl(url, 'paste');
+            });
+            evt.stop();
+          }
+        }
+      }, { priority: 'high' });
+    }
+
+    _processFile(file, source) {
+      if (!this._isAllowedType(file.type)) {
+        this._notifyUnsupported(file.type);
+        return;
+      }
+      var self = this;
+      var reader = new FileReader();
+      reader.onerror = function() {
+        console.error('[CiviClipboardImage] FileReader error');
+      };
+      reader.onload = function(e) {
+        if (!e.target || !e.target.result) return;
+        self._loadImage(e.target.result, file.type, source, file);
+      };
+      try {
+        reader.readAsDataURL(file);
+      }
+      catch (err) {
+        console.error('[CiviClipboardImage] readAsDataURL failed', err);
+      }
+    }
+
+    _processDataUrl(dataUrl, source) {
+      var match = dataUrl.match(/^data:([^;]+);/);
+      var mime = match ? match[1] : 'image/jpeg';
+      if (!this._isAllowedType(mime)) {
+        this._notifyUnsupported(mime);
+        return;
+      }
+      this._loadImage(dataUrl, mime, source, null);
+    }
+
+    _loadImage(dataUrl, mime, source, originalFile) {
+      var self = this;
+      var img = new Image();
+      img.onerror = function() {
+        console.error('[CiviClipboardImage] image decode failed');
+      };
+      img.onload = function() {
+        self._resizeAndDispatch(img, mime, source, originalFile);
+      };
+      img.src = dataUrl;
+    }
+
+    _resizeAndDispatch(img, mime, source, originalFile) {
+      var size = this._calcSize(
+        img.width, img.height,
+        CLIPBOARD_IMAGE_DEFAULTS.maxWidth,
+        CLIPBOARD_IMAGE_DEFAULTS.maxHeight
+      );
+      var canvas = document.createElement('canvas');
+      canvas.width = size.width;
+      canvas.height = size.height;
+      var ctx = canvas.getContext('2d');
+      // Clear for PNG transparency; harmless for JPEG.
+      if (mime === 'image/png') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0, size.width, size.height);
+
+      var self = this;
+      canvas.toBlob(function(blob) {
+        if (!blob) {
+          console.error('[CiviClipboardImage] canvas.toBlob returned null');
+          return;
+        }
+        var fileNames = self._generateFileNames(originalFile, source, mime);
+        if (CLIPBOARD_IMAGE_DEFAULTS.uploadToServer) {
+          self._uploadToServer(blob, fileNames);
+        }
+        else {
+          self._insertImage(
+            URL.createObjectURL(blob),
+            self._buildClientTitle(fileNames)
+          );
+        }
+      }, mime, CLIPBOARD_IMAGE_DEFAULTS.quality);
+    }
+
+    _uploadToServer(blob, fileNames) {
+      var editor = this.editor;
+      var url = editor.config.get('clipboardImageUrl');
+      var fd = new FormData();
+      fd.append('image', blob, fileNames.tempName);
+      fd.append('original_filename', fileNames.originalName || '');
+      fd.append('suggested_filename', fileNames.suggestedName);
+      fd.append('timestamp', Date.now());
+
+      var self = this;
+      fetch(url, { method: 'POST', body: fd, credentials: 'same-origin' })
+        .then(function(res) { return res.json(); })
+        .then(function(json) {
+          var titleAttr = (json && json.title_attribute)
+            ? json.title_attribute
+            : self._buildClientTitle(fileNames);
+          // Match CKE4: server endpoint does not return a public URL,
+          // so we fall back to a blob: URL. Downstream Image.php picks
+          // up `src="blob:..."` + title to relocate the temp file.
+          var src = (json && json.url) || URL.createObjectURL(blob);
+          self._insertImage(src, titleAttr);
+        })
+        .catch(function(err) {
+          console.error('[CiviClipboardImage] upload failed', err);
+          self._insertImage(
+            URL.createObjectURL(blob),
+            self._buildClientTitle(fileNames)
+          );
+        });
+    }
+
+    _insertImage(src, titleAttr) {
+      var editor = this.editor;
+      // Restore focus so the model selection is in the editable.
+      editor.editing.view.focus();
+      var safeSrc = (src || '').replace(/"/g, '&quot;');
+      var safeTitle = (titleAttr || '').replace(/"/g, '&quot;');
+      var html = '<img src="' + safeSrc +
+        '" alt="" title="' + safeTitle + '" />';
+      try {
+        var viewFrag = editor.data.processor.toView(html);
+        var modelFrag = editor.data.toModel(viewFrag);
+        editor.model.insertContent(modelFrag);
+      }
+      catch (err) {
+        console.error('[CiviClipboardImage] insert error', err);
+      }
+    }
+
+    _isAllowedType(mime) {
+      if (!mime) return false;
+      return CLIPBOARD_IMAGE_ALLOWED_TYPES.indexOf(mime.toLowerCase()) !== -1;
+    }
+
+    _calcSize(w, h, maxW, maxH) {
+      var width = w;
+      var height = h;
+      if (width > maxW) {
+        height = Math.round(height * (maxW / width));
+        width = maxW;
+      }
+      if (height > maxH) {
+        width = Math.round(width * (maxH / height));
+        height = maxH;
+      }
+      return { width: width, height: height };
+    }
+
+    _generateFileNames(file, source, mime) {
+      var timestamp = Date.now();
+      var originalName = '';
+      if (file && file.name && file.name.trim() !== '') {
+        originalName = file.name.trim();
+      }
+      var ext = 'jpg';
+      var key = (mime || (file && file.type) || '').toLowerCase();
+      switch (key) {
+        case 'image/png':
+          ext = 'png'; break;
+        case 'image/gif':
+          ext = 'gif'; break;
+        case 'image/webp':
+          ext = 'webp'; break;
+        case 'image/jpeg':
+        case 'image/jpg':
+        default:
+          ext = 'jpg'; break;
+      }
+      var suggested = '';
+      if (source === 'drop' && originalName) {
+        suggested = originalName;
+      }
+      else {
+        var d = new Date();
+        var pad = function(n) { return String(n).padStart(2, '0'); };
+        var dateStr = d.getFullYear() + '-' + pad(d.getMonth() + 1) +
+          '-' + pad(d.getDate()) + '_' + pad(d.getHours()) + '-' +
+          pad(d.getMinutes()) + '-' + pad(d.getSeconds());
+        suggested = (source === 'paste' ? 'pasted_image_' : 'dropped_image_') +
+          dateStr + '.' + ext;
+      }
+      return {
+        originalName: originalName,
+        suggestedName: suggested,
+        tempName: 'temp_' + timestamp + '.' + ext,
+      };
+    }
+
+    _buildClientTitle(fileNames) {
+      var orig = fileNames.originalName || fileNames.suggestedName;
+      // Pipe-separated, matching the regex in CRM/Utils/Image.php
+      // (whitespace around `|` is tolerated by [^|]+\s*\|\s*[^"]+).
+      return orig + '|' + fileNames.tempName;
+    }
+
+    _extractDataUrls(html) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      var imgs = tmp.getElementsByTagName('img');
+      var urls = [];
+      for (var i = 0; i < imgs.length; i++) {
+        var src = imgs[i].getAttribute('src') || '';
+        if (src.indexOf('data:image/') === 0) {
+          urls.push(src);
+        }
+      }
+      return urls;
+    }
+
+    _notifyUnsupported(mime) {
+      var editor = this.editor;
+      var t = editor.locale.t;
+      var msg = t('Unsupported image format') + ': ' + (mime || '') +
+        '\n' + t('Supported formats') + ': JPEG, PNG, GIF, WebP';
+      if (editor.plugins.has('Notification')) {
+        editor.plugins.get('Notification').showWarning(msg, {
+          namespace: 'civi-clipboard-image',
+        });
+      }
+      else {
+        // Last-resort fallback (Notification ships with Essentials,
+        // but stay defensive in case a custom preset removes it).
+        try { window.alert(msg); } catch (e) { /* ignore */ }
+      }
+    }
+  }
+
+  // ==========================================================================
   // htmlSupport Configurations
   // ==========================================================================
 
@@ -770,14 +1103,21 @@
     overrides = overrides || {};
     var allowAll = overrides.allowAllContent === true;
     var imceEnabled = overrides.imceEnabled === true && !!overrides.imceUrl;
+    var clipboardImageEnabled = overrides.clipboardImageEnabled === true &&
+      !!overrides.clipboardImageUrl;
     // Strip internal flags so they do not leak into CKEditor's config.
-    // imceUrl stays in ckOverrides because the IMCEBrowse plugin reads
-    // it via editor.config.get('imceUrl').
+    // imceUrl / clipboardImageUrl stay in ckOverrides because the
+    // IMCEBrowse / CiviClipboardImage plugins read them via
+    // editor.config.get(...).
     var ckOverrides = Object.assign({}, overrides);
     delete ckOverrides.allowAllContent;
     delete ckOverrides.imceEnabled;
+    delete ckOverrides.clipboardImageEnabled;
     if (!imceEnabled) {
       delete ckOverrides.imceUrl;
+    }
+    if (!clipboardImageEnabled) {
+      delete ckOverrides.clipboardImageUrl;
     }
 
     var pluginList = [
@@ -845,6 +1185,9 @@
     ];
     if (imceEnabled) {
       pluginList.push(IMCEBrowse);
+    }
+    if (clipboardImageEnabled) {
+      pluginList.push(CiviClipboardImage);
     }
 
     return Object.assign({
@@ -1024,12 +1367,19 @@
     overrides = overrides || {};
     var allowAll = overrides.allowAllContent === true;
     var imceEnabled = overrides.imceEnabled === true && !!overrides.imceUrl;
-    // Strip internal flags; keep imceUrl when IMCEBrowse is active.
+    var clipboardImageEnabled = overrides.clipboardImageEnabled === true &&
+      !!overrides.clipboardImageUrl;
+    // Strip internal flags; keep imceUrl / clipboardImageUrl when
+    // their respective plugins are active.
     var ckOverrides = Object.assign({}, overrides);
     delete ckOverrides.allowAllContent;
     delete ckOverrides.imceEnabled;
+    delete ckOverrides.clipboardImageEnabled;
     if (!imceEnabled) {
       delete ckOverrides.imceUrl;
+    }
+    if (!clipboardImageEnabled) {
+      delete ckOverrides.clipboardImageUrl;
     }
 
     var pluginList = [
@@ -1059,6 +1409,9 @@
     ];
     if (imceEnabled) {
       pluginList.push(IMCEBrowse);
+    }
+    if (clipboardImageEnabled) {
+      pluginList.push(CiviClipboardImage);
     }
 
     return Object.assign({
@@ -1137,6 +1490,7 @@
   window.CiviCKEditor5 = {
     ExtendSchema: ExtendSchema,
     IMCEBrowse: IMCEBrowse,
+    CiviClipboardImage: CiviClipboardImage,
     getFullEditorConfig: getFullEditorConfig,
     getBasicEditorConfig: getBasicEditorConfig,
   };
