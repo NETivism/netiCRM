@@ -1,15 +1,164 @@
+<style>{literal}
+.track-filter-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.track-filter-item  {
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+}
+input[type="text"].form-text{
+  width:190px
+}
+.track-filter-item label {
+  font-weight: bold;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+.track-filter-item input,
+.track-filter-item select {
+  box-sizing: border-box;
+}
+
+.crm-form-block label {
+  font-weight: bold;
+}
+{/literal}</style>
 <div class="crm-block crm-form-block">
-  {if !$filters.start}
-    {ts}Start Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin" value="{$defaultStartDate}">
-    {include file="CRM/common/jcalendar.tpl" elementId=start action=4}
-  {/if}
-  {if !$filters.end}
-    {ts}End Date{/ts}: <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="end" type="text" id="end" class="form-text form-text dateplugin">
-    {include file="CRM/common/jcalendar.tpl" elementId=end action=4}
-  {/if}
-  {if !$filters.start || !$filters.end}
-    <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
-  {/if}
+  <div class="track-filter-grid">
+    {if !$filters.start}
+    <div class="track-filter-item">
+      <label>{ts}Start Date{/ts}</label>
+      <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="start" type="text" id="start" class="form-text dateplugin" value="{$defaultStartDate}">
+      {include file="CRM/common/jcalendar.tpl" elementId=start action=4}
+    </div>
+    {/if}
+    {if !$filters.end}
+    <div class="track-filter-item">
+      <label>{ts}End Date{/ts}</label>
+      <input formattype="activityDate" addtime="1" timeformat="2" startoffset="20" endoffset="0" format="yy-mm-dd" name="end" type="text" id="end" class="form-text dateplugin">
+      {include file="CRM/common/jcalendar.tpl" elementId=end action=4}
+    </div>
+    {/if}
+    
+    <div class="track-filter-item">
+      <label>{ts}Page Type{/ts}</label>
+      <select id="filter-ptype" class="form-select">
+        <option value="">-- {ts}All{/ts} --</option>
+        {foreach from=$pageTypes item=label key=value}
+          <option value="{$value}"{if $currentPageType eq $value} selected="selected"{/if}>{$label}</option>
+        {/foreach}
+      </select>
+    </div>
+    {if !$filters.page_title}
+    <div class="track-filter-item">
+      <label>{ts}Page Name{/ts}</label>
+      <input type="text" id="filter-page-title" class="form-text">
+    </div>
+    {/if}
+    {if !$filters.state}
+    <div class="track-filter-item">
+      <label>{ts}Visit State{/ts}</label>
+      <select id="filter-state" class="form-select">
+        <option value="">-- {ts}Select{/ts} --</option>
+        {foreach from=$trackStates item=label key=value}
+          <option value="{$value}">{$label}</option>
+        {/foreach}
+      </select>
+    </div>
+    {/if}
+     
+  </div>
+  <div class="crm-accordion-wrapper crm-accordion-open">
+    <div class="crm-accordion-header">
+      <div class="zmdi crm-accordion-pointer"></div>
+      {ts}Traffic Source{/ts}
+    </div>
+    <div class="crm-accordion-body">
+      <table class="form-layout">
+        <tbody>
+          <tr>
+            {if !$filters.rtype}
+            <td>
+              <div class="track-filter-item">
+                <label>{ts}Referrer Type{/ts}</label>
+                <select id="filter-rtype" class="form-select">
+                <option value="">-- {ts}Select{/ts} --</option>
+                  {foreach from=$referrerTypes item=label key=value}
+                <option value="{$value}">{$label}</option>
+                  {/foreach}
+              </select>
+              </div>
+            </td>
+            {/if}
+            {if !$filters.rnetwork}
+            <td>
+              <label>{ts}Referrer Network{/ts}</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-rnetwork" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+           
+            {if !$filters.referrer_url}
+            <td>
+              <label>{ts}Referrer URL{/ts}</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-referrer-url" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+            {if !$filters.landing}
+            <td>
+              <label>{ts}Landing Page{/ts}</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-landing" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+            {if !$filters.entity_id}
+            <td>
+              <label>{ts}Entity ID{/ts}</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-entity-id" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+            
+          </tr>
+          <tr>
+            {if !$filters.utm_source}
+            <td>
+              <label>UTM Source</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-source" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+             {if !$filters.utm_medium}
+            <td>
+              <label>UTM Medium</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-medium" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+            {if !$filters.utm_campaign}
+            <td>
+              <label>UTM Campaign</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-campaign" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+            {if !$filters.utm_term}
+            <td>
+              <label>UTM Term</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-term" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+            {if !$filters.utm_content}
+            <td>
+              <label>UTM Content</label><br>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-content" class="form-text"></div>
+            </td>
+            {else}<td></td>{/if}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
+  <a id="export-track" class="button" href="{$drill_down_base}&output=csv">{ts}Export Spreadsheet{/ts}</a>
 </div>
 {if $filters}
 <div class="crm-block crm-form-block">
@@ -105,19 +254,52 @@
 {literal}
 <script type="text/javascript">
 cj(function() {
-  cj('a#submit-filter').click(function(e){
-    var href = cj(this).attr('href');
+  var filterFieldMap = {
+    'ptype': '#filter-ptype',
+    'page_title': '#filter-page-title',
+    'start': '#start',
+    'end': '#end',
+    'rtype': '#filter-rtype',
+    'rnetwork': '#filter-rnetwork',
+    'state': '#filter-state',
+    'entity_id': '#filter-entity-id',
+    'referrer_url': '#filter-referrer-url',
+    'landing': '#filter-landing',
+    'utm_source': '#filter-utm-source',
+    'utm_medium': '#filter-utm-medium',
+    'utm_campaign': '#filter-utm-campaign',
+    'utm_term': '#filter-utm-term',
+    'utm_content': '#filter-utm-content'
+  };
+  function buildFilterUrl(href) {
     var appendQuery = [];
-    if (cj('#start').val()) {
-      appendQuery.push('start='+cj('#start').val());
+    cj.each(filterFieldMap, function(param, selector) {
+      var el = cj(selector);
+      if (!el.length || !el.val()) {
+        return;
+      }
+      // ptype is always in the base URL, replace it instead of appending
+      if (param === 'ptype') {
+        href = href.replace(/ptype=[^&]*/, 'ptype=' + encodeURIComponent(el.val()));
+        href = href.replace(/pid=[^&]*/, 'pid=');
+        return;
+      }
+      if (href.indexOf(param + '=') === -1) {
+        appendQuery.push(param + '=' + encodeURIComponent(el.val()));
+      }
+    });
+    if (appendQuery.length > 0) {
+      href += '&' + appendQuery.join('&');
     }
-    if (cj('#end').val()) {
-      appendQuery.push('end='+cj('#end').val());
-    }
-    if (appendQuery.length > 0){
-      href += '&'+appendQuery.join('&');
-      cj(this).attr('href', href); 
-    }
+    return href;
+  }
+  cj('a#submit-filter').click(function(e){
+    var href = buildFilterUrl(cj(this).attr('href'));
+    cj(this).attr('href', href);
+  });
+  cj('a#export-track').click(function(e){
+    var href = buildFilterUrl(cj(this).attr('href'));
+    cj(this).attr('href', href);
   });
   cj().crmaccordions();
   cj('.crm-accordion-header').click(function() {
