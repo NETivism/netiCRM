@@ -615,7 +615,9 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
       else {
         if ($this->_entityId == '%') {
           $where[] = "entity_id IS NOT NULL";
-          $args[5] = [0, 'Integer'];
+        }
+        elseif ($this->_entityId == 'null') {
+          $where[] = "entity_id IS NULL";
         }
         elseif (is_array($this->_entityId)) {
           $where[] = "entity_id IN (%5)";
@@ -817,8 +819,17 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
               $filters[$name]['value_display'] = $this->_trackState[$value];
               break;
             case 'entity_id':
-              $filters[$name]['value_display'] = $value;
-              // no break
+              if ($value == '%') {
+                $filters[$name]['value_display'] = ts('Has Record');
+              }
+              elseif ($value == 'null') {
+                $filters[$name]['value_display'] = ts('No Record');
+              }
+              else {
+                $filters[$name]['value_display'] = $value;
+              }
+              break;
+            // no break
             case 'referrer_url':
             case 'landing':
             case 'page_title':

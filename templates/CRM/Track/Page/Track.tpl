@@ -1,4 +1,11 @@
 <style>{literal}
+.export-confirm-dialog {
+  position: fixed ;
+  top: 210px;
+  left: 50%;
+  transform: translate(-50%, -50%) ;
+  margin: 0 ;
+}
 .track-filter-grid {
   display: flex;
   flex-wrap: wrap;
@@ -116,7 +123,7 @@ input[type="text"].form-text{
             {if !$filters.entity_id}
             <td>
               <label>{ts}Entity ID{/ts}</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-entity-id" class="form-text"></div>
+              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-entity-id" class="form-text" placeholder="{ts}ID or 'null'{/ts}"></div>
             </td>
             {else}<td></td>{/if}
             
@@ -159,6 +166,9 @@ input[type="text"].form-text{
   </div>
   <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
   <a id="export-track" class="button" href="{$drill_down_base}&output=csv">{ts}Export Spreadsheet{/ts}</a>
+</div>
+<div id="dialog-confirm-export" title="{ts}Confirm Export?{/ts}" style="display:none;">
+  <p>{ts}Are you sure you want to export this data?{/ts}</p>
 </div>
 {if $filters}
 <div class="crm-block crm-form-block">
@@ -297,9 +307,30 @@ cj(function() {
     var href = buildFilterUrl(cj(this).attr('href'));
     cj(this).attr('href', href);
   });
-  cj('a#export-track').click(function(e){
-    var href = buildFilterUrl(cj(this).attr('href'));
-    cj(this).attr('href', href);
+  var exportHref = '';
+  cj('#dialog-confirm-export').dialog({
+    autoOpen: false,
+    resizable: false,
+    width: 450,
+    modal: true,
+    dialogClass: 'export-confirm-dialog',
+    open: function() {
+    cj(this).dialog('widget').removeClass('ui-front');
+    },
+    buttons: {
+      '{/literal}{ts}Confirm Export{/ts}{literal}': function() {
+        cj(this).dialog('close');
+        window.location.href = exportHref;
+      },
+      '{/literal}{ts}Cancel{/ts}{literal}': function() {
+        cj(this).dialog('close');
+      }
+    }
+  });
+  cj('a#export-track').click(function(e) {
+    e.preventDefault();
+    exportHref = buildFilterUrl(cj(this).attr('href'));
+    cj('#dialog-confirm-export').dialog('open');
   });
   cj().crmaccordions();
   cj('.crm-accordion-header').click(function() {
