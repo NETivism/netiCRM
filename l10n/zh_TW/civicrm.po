@@ -45625,7 +45625,7 @@ msgstr "去年有捐款，但今年尚未捐，建議寫封信問候關心一下
 
 #: CRM/Contribute/Page/Booster.php
 msgid "After payment failed but not retry in %1 days"
-msgstr "捐款失敗後 %1 天內無再次捐款者"
+msgstr "最近一次失敗後 %1 天內未成功再捐"
 
 #: CRM/Contribute/Page/Booster.php
 msgid ""
@@ -51979,3 +51979,7 @@ msgstr "顯示剩餘名額？"
 #: templates/CRM/Price/Form/Set.tpl:84
 msgid "When enabled, remaining capacity will be shown next to each option on the frontend (e.g. \"8 remaining\"). Only applies to options with a maximum quantity set."
 msgstr "勾選後，前台頁面的價格表選項旁將顯示各選項的剩餘名額（例如「剩餘 8 名」）。僅對有設定「最多數量」的選項生效；未設定最多數量的選項不受影響。"
+
+#: templates/CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.tpl:5
+msgid "Note: Contacts who made a successful donation after the specified number of days will also be included in the results."
+msgstr "注意：若聯絡人在失敗後超過指定天數才成功再捐，仍會被納入搜尋結果"

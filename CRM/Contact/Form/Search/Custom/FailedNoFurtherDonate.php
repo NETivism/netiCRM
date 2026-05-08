@@ -166,7 +166,10 @@ $having
    * @access public
    */
   public function tempWhere() {
-    $days = $this->_formValues['days'] ? $this->_formValues['days'] : 7;
+    $days = !empty($this->_formValues['days']) ? (int) $this->_formValues['days'] : 7;
+    if ($days < 1 || $days > 180) {
+      $days = 7;
+    }
     $clauses = [];
     $clauses[] = "contact.is_deleted = 0";
     $clauses[] = "(success.created_date IS NULL OR success.created_date > date_add(failed.created_date, INTERVAL $days DAY) OR success.created_date <= failed.created_date)";
@@ -193,10 +196,33 @@ $having
    * @access public
    */
   public function buildForm(&$form) {
-    for ($i = 2; $i <= 15; $i++) {
-      $option[$i] = $i;
+    $form->addNumber('days', ts('days'), [
+      'min' => 1,
+      'max' => 180,
+      'step' => 1,
+      'size' => 5,
+      'maxlength' => 3,
+    ], TRUE);
+    $form->addRule('days', ts('Please enter a positive integer.'), 'positiveInteger');
+    $form->addFormRule(['CRM_Contact_Form_Search_Custom_FailedNoFurtherDonate', 'formRule']);
+  }
+
+  /**
+   * Global validation rule for the days field.
+   *
+   * @param array $fields posted values of the form
+   *
+   * @return array|bool TRUE if valid, otherwise list of errors keyed by element name
+   */
+  public static function formRule($fields) {
+    $errors = [];
+    if (isset($fields['days']) && $fields['days'] !== '') {
+      $days = $fields['days'];
+      if (!CRM_Utils_Rule::positiveInteger($days) || (int) $days < 1 || (int) $days > 180) {
+        $errors['days'] = ts('Please enter a positive integer between %1 and %2.', [1 => 1, 2 => 180]);
+      }
     }
-    $form->addSelect('days', ts('days'), $option);
+    return empty($errors) ? TRUE : $errors;
   }
 
   /**

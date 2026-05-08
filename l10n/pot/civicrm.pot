@@ -51234,3 +51234,7 @@ msgstr ""
 #: templates/CRM/Price/Form/Set.tpl:84
 msgid "When enabled, remaining capacity will be shown next to each option on the frontend (e.g. \"8 remaining\"). Only applies to options with a maximum quantity set."
 msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.tpl:5
+msgid "Note: Contacts who made a successful donation after the specified number of days will also be included in the results."
+msgstr ""
