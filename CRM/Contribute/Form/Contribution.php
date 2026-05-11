@@ -919,9 +919,8 @@ WHERE  contribution_id = {$this->_id}
     $deductibleType = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_deductible');
     $this->assign('deductible_type_ids', CRM_Utils_Array::implode(',', array_keys($deductibleType)));
     $allContributionTypes = CRM_Contribute_PseudoConstant::contributionType();
-    $taxreceiptTypes = CRM_Contribute_PseudoConstant::contributionType(NULL, 'is_taxreceipt');
-    $nonTaxreceiptTypeIds = array_keys(array_diff_key($allContributionTypes, $taxreceiptTypes, $deductibleType));
-    $this->assign('non_taxreceipt_type_ids', CRM_Utils_Array::implode(',', $nonTaxreceiptTypeIds));
+    $nonDeductibleTypeIds = array_keys(array_diff_key($allContributionTypes, $deductibleType));
+    $this->assign('non_deductible_type_ids', CRM_Utils_Array::implode(',', $nonDeductibleTypeIds));
     if ($this->_online) {
       // $element->freeze( );
     }
