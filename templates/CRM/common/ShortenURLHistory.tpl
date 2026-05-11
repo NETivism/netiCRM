@@ -20,6 +20,7 @@
     <span class="shorten-url-history-hint">{ts}(latest 30 records){/ts}</span>
   </div>
   <div class="crm-accordion-body">
+    {if $history}
     <table class="report shorten-url-history-table">
       <thead>
         <tr>
@@ -51,10 +52,29 @@
         {/foreach}
       </tbody>
     </table>
+    {else}
+    <div class="shorten-url-history-empty">{ts}No shortened URL records yet. Click "Shorten URL" to create one.{/ts}</div>
+    {/if}
   </div>
 </div>
 <script type="text/javascript">
 {literal}
+// Thead HTML used by ShortenURL.tpl callback to upgrade an empty-state
+// accordion body into a full table when the user shortens the first URL.
+// Idempotent — assigning the same constant on every partial include is fine.
+window._netiShortenUrlHistoryThead =
+{/literal}
+  '<thead><tr>'
+  + '<th>{ts escape='js'}UTM Source{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Medium{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Term{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Content{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Campaign{/ts}</th>'
+  + '<th>{ts escape='js'}Short URL{/ts}</th>'
+  + '<th>{ts escape='js'}Original Target URL{/ts}</th>'
+  + '</tr></thead>';
+{literal}
+
 cj(function($) {
   // Accordion handler is idempotent (checks crm-accordion-processed class).
   $().crmaccordions();

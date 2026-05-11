@@ -3231,6 +3231,11 @@ div.helpicon:focus::before {
   vertical-align: middle;
   margin-left: 4px;
 }
+.crm-container .shorten-url-history-empty {
+  padding: 10px;
+  color: #757575;
+  font-style: italic;
+}
 
 div.statusicon {
     background  : transparent url(../i/quiz.png) no-repeat;

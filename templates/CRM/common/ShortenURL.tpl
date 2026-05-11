@@ -201,6 +201,16 @@
             // batch-info call is needed for it.
             var $accordion = $('.shorten-url-history[data-page-type="' + pageType + '"][data-page-id="' + pageId + '"]');
             if ($accordion.length) {
+              // Upgrade empty-state body into a real table on first insertion.
+              var $body = $accordion.find('.crm-accordion-body');
+              if (!$body.find('table').length) {
+                $body.empty().append(
+                  $('<table class="report shorten-url-history-table">')
+                    .append(window._netiShortenUrlHistoryThead)
+                    .append($('<tbody>'))
+                );
+              }
+
               var $tr = $('<tr>');
               $tr.append($('<td>').text($('#utm-source').val()));
               $tr.append($('<td>').text($('#utm-medium').val()));
