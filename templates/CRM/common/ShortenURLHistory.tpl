@@ -23,11 +23,11 @@
     <table class="report shorten-url-history-table">
       <thead>
         <tr>
-          <th>{ts}Source{/ts}</th>
-          <th>{ts}Medium{/ts}</th>
-          <th>{ts}Term{/ts}</th>
-          <th>{ts}Content{/ts}</th>
-          <th>{ts}Campaign{/ts}</th>
+          <th>{ts}UTM Source{/ts}</th>
+          <th>{ts}UTM Medium{/ts}</th>
+          <th>{ts}UTM Term{/ts}</th>
+          <th>{ts}UTM Content{/ts}</th>
+          <th>{ts}UTM Campaign{/ts}</th>
           <th>{ts}Short URL{/ts}</th>
           <th>{ts}Original Target URL{/ts}</th>
         </tr>
