@@ -221,13 +221,16 @@
               $tr.append($('<td>').append($link));
               var $icon = $('<div class="helpicon shorten-url-target tooltip-inited">').attr('data-short-url', shortUrl);
               $icon.append(document.createTextNode(' '));
-              $icon.append($('<span style="display:none">').append($('<div class="crm-help">').text(sendUrl)));
-              $icon.append($('<span class="original-target-url">').text(sendUrl));
+              var $longLink = function() {
+                return $('<a>').attr({href: sendUrl, target: '_blank', rel: 'noopener'}).text(sendUrl);
+              };
+              $icon.append($('<span style="display:none">').append($('<div class="crm-help">').append($longLink())));
+              $icon.append($('<span class="original-target-url">').append($longLink()));
               $tr.append($('<td>').append($icon));
 
               $accordion.find('tbody').prepend($tr);
               $accordion.removeClass('crm-accordion-closed').addClass('crm-accordion-open');
-              $icon.toolTip({skipVerticalComparison: true});
+              $icon.toolTip({skipVerticalComparison: true, keepAlive: true});
             }
           },
           error: function() {

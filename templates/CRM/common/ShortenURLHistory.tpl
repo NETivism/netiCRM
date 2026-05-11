@@ -82,7 +82,8 @@ cj(function($) {
   // Init tooltip once per helpicon with the current .crm-help text. The text
   // starts as "Loading..." and is replaced once batch-info responds (or after
   // the dialog inserts a new row with the long URL already known).
-  $('.shorten-url-target:not(.tooltip-inited)').addClass('tooltip-inited').toolTip({skipVerticalComparison: true});
+  // keepAlive lets users move into the tooltip to click the rendered <a>.
+  $('.shorten-url-target:not(.tooltip-inited)').addClass('tooltip-inited').toolTip({skipVerticalComparison: true, keepAlive: true});
 
   // Batch-load target URLs only once per page, even if this partial is
   // included multiple times (e.g. event info + register on the same page).
@@ -101,12 +102,23 @@ cj(function($) {
   var emptyText  = '{ts escape='js'}(no data){/ts}';
 {literal}
 
-  function applyTarget($icon, text) {
-    $icon.find('.crm-help').text(text);
-    $icon.find('.original-target-url').text(text);
+  // Update both the tooltip (.crm-help) and inline preview (.original-target-url).
+  // When the text is a real URL, wrap both in a clickable link.
+  function applyTarget($icon, text, isUrl) {
+    var $help = $icon.find('.crm-help').empty();
+    var $span = $icon.find('.original-target-url').empty();
+    if (isUrl) {
+      $help.append($('<a>').attr({href: text, target: '_blank', rel: 'noopener'}).text(text));
+      $span.append($('<a>').attr({href: text, target: '_blank', rel: 'noopener'}).text(text));
+    }
+    else {
+      $help.text(text);
+      $span.text(text);
+    }
     // TipTip caches the title on init; unbind hover then re-init to pick up
-    // the new .crm-help content.
-    $icon.off('mouseenter mouseleave').toolTip({skipVerticalComparison: true});
+    // the new .crm-help content. keepAlive so the user can move into the
+    // tooltip and click the rendered link.
+    $icon.off('mouseenter mouseleave').toolTip({skipVerticalComparison: true, keepAlive: true});
   }
 
   $.ajax({
@@ -119,16 +131,21 @@ cj(function($) {
       $('.shorten-url-target').each(function() {
         var $icon = $(this);
         if (isFail) {
-          applyTarget($icon, failedText);
+          applyTarget($icon, failedText, false);
           return;
         }
         var t = data.result[$icon.attr('data-short-url')];
-        applyTarget($icon, (typeof t === 'string' && t !== '') ? t : emptyText);
+        if (typeof t === 'string' && t !== '') {
+          applyTarget($icon, t, true);
+        }
+        else {
+          applyTarget($icon, emptyText, false);
+        }
       });
     },
     error: function() {
       $('.shorten-url-target').each(function() {
-        applyTarget($(this), failedText);
+        applyTarget($(this), failedText, false);
       });
     }
   });
