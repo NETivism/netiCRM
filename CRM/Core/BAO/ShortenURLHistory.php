@@ -87,4 +87,55 @@ class CRM_Core_BAO_ShortenURLHistory {
     return $log;
   }
 
+  /**
+   * Get the latest shortened URL history records for a page.
+   *
+   * @param string $pageType
+   *   One of self::ALLOWED_PAGE_TYPES.
+   * @param int $pageId
+   * @param int $limit
+   *   Maximum number of rows to return, ordered newest first.
+   *
+   * @return array
+   *   List of associative arrays. Each row carries: short_url, utm_source,
+   *   utm_medium, utm_term, utm_content, utm_campaign, created_date.
+   *   Rows with unparseable JSON are skipped.
+   */
+  public static function getHistory($pageType, $pageId, $limit = 30) {
+    if (!in_array($pageType, self::ALLOWED_PAGE_TYPES, TRUE)) {
+      return [];
+    }
+    $pageId = (int) $pageId;
+    if ($pageId <= 0) {
+      return [];
+    }
+    $limit = max(1, (int) $limit);
+    $entityTable = $pageType . self::ENTITY_TABLE_SUFFIX;
+
+    $sql = "SELECT data, modified_date
+            FROM civicrm_log
+            WHERE entity_table = %1 AND entity_id = %2
+            ORDER BY id DESC
+            LIMIT {$limit}";
+    $dao = CRM_Core_DAO::executeQuery($sql, [
+      1 => [$entityTable, 'String'],
+      2 => [$pageId, 'Integer'],
+    ]);
+
+    $results = [];
+    while ($dao->fetch()) {
+      $parsed = json_decode($dao->data, TRUE);
+      if (!is_array($parsed)) {
+        continue;
+      }
+      $row = ['short_url' => isset($parsed['short_url']) ? (string) $parsed['short_url'] : ''];
+      foreach (self::UTM_KEYS as $key) {
+        $row[$key] = isset($parsed[$key]) ? (string) $parsed[$key] : '';
+      }
+      $row['created_date'] = $dao->modified_date;
+      $results[] = $row;
+    }
+    return $results;
+  }
+
 }

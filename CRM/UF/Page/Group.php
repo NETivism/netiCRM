@@ -244,6 +244,7 @@ class CRM_UF_Page_Group extends CRM_Core_Page {
       if ($shorten) {
         $this->assign('shorten', $shorten);
       }
+      $this->assign('shorten_history', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_uf_group', $gid));
 
       //get the title of uf group
       $title = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_UFGroup', $gid, 'title');
