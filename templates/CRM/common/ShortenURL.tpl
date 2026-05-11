@@ -212,6 +212,7 @@
               var $icon = $('<div class="helpicon shorten-url-target tooltip-inited">').attr('data-short-url', shortUrl);
               $icon.append(document.createTextNode(' '));
               $icon.append($('<span style="display:none">').append($('<div class="crm-help">').text(sendUrl)));
+              $icon.append($('<span class="original-target-url">').text(sendUrl));
               $tr.append($('<td>').append($icon));
 
               $accordion.find('tbody').prepend($tr);

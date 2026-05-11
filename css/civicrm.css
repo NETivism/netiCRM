@@ -3213,6 +3213,25 @@ div.helpicon:focus::before {
  background: #fafafa;
 }
 
+/* Shorten URL history: helpicon with inline target URL preview. */
+.crm-container .shorten-url-history-table div.shorten-url-target {
+  position: relative;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: center;
+}
+.crm-container .shorten-url-history-table .original-target-url {
+  order: -1;
+  display: inline-block;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
 div.statusicon {
     background  : transparent url(../i/quiz.png) no-repeat;
     display     : inline-block;

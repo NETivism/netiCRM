@@ -44,6 +44,7 @@
           <td>
             <div class="helpicon shorten-url-target" data-short-url="{$row.short_url|escape}">&nbsp;
               <span style="display:none"><div class="crm-help">{ts}Loading...{/ts}</div></span>
+              <span class="original-target-url">{ts}Loading...{/ts}</span>
             </div>
           </td>
         </tr>
@@ -80,8 +81,9 @@ cj(function($) {
   var emptyText  = '{ts escape='js'}(no data){/ts}';
 {literal}
 
-  function rebindTooltip($icon, text) {
+  function applyTarget($icon, text) {
     $icon.find('.crm-help').text(text);
+    $icon.find('.original-target-url').text(text);
     // TipTip caches the title on init; unbind hover then re-init to pick up
     // the new .crm-help content.
     $icon.off('mouseenter mouseleave').toolTip({skipVerticalComparison: true});
@@ -97,16 +99,16 @@ cj(function($) {
       $('.shorten-url-target').each(function() {
         var $icon = $(this);
         if (isFail) {
-          rebindTooltip($icon, failedText);
+          applyTarget($icon, failedText);
           return;
         }
         var t = data.result[$icon.attr('data-short-url')];
-        rebindTooltip($icon, (typeof t === 'string' && t !== '') ? t : emptyText);
+        applyTarget($icon, (typeof t === 'string' && t !== '') ? t : emptyText);
       });
     },
     error: function() {
       $('.shorten-url-target').each(function() {
-        rebindTooltip($(this), failedText);
+        applyTarget($(this), failedText);
       });
     }
   });
