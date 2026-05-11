@@ -58,12 +58,13 @@ cj(function($) {
   // Accordion handler is idempotent (checks crm-accordion-processed class).
   $().crmaccordions();
 
-  // Init tooltip once per helpicon. Initial text is "Loading..." until the
-  // batch-info response comes back and we rebind with the real target URL.
+  // Init tooltip once per helpicon with the current .crm-help text. The text
+  // starts as "Loading..." and is replaced once batch-info responds (or after
+  // the dialog inserts a new row with the long URL already known).
   $('.shorten-url-target:not(.tooltip-inited)').addClass('tooltip-inited').toolTip({skipVerticalComparison: true});
 
   // Batch-load target URLs only once per page, even if this partial is
-  // included multiple times (e.g. event info + register).
+  // included multiple times (e.g. event info + register on the same page).
   if (window._netiShortenUrlBatchInited) return;
   window._netiShortenUrlBatchInited = true;
 
@@ -74,19 +75,16 @@ cj(function($) {
     if (u && !seen[u]) { seen[u] = 1; shortUrls.push(u); }
   });
   if (!shortUrls.length) return;
+{/literal}
+  var failedText = '{ts escape='js'}Unable to load target URL.{/ts}';
+  var emptyText  = '{ts escape='js'}(no data){/ts}';
+{literal}
 
-  var failedText = '{/literal}{ts escape='js'}Unable to load target URL.{/ts}{literal}';
-  var emptyText  = '{/literal}{ts escape='js'}(no data){/ts}{literal}';
-
-  function applyTexts(textResolver) {
-    $('.shorten-url-target').each(function() {
-      var $icon = $(this);
-      $icon.find('.crm-help').text(textResolver($icon.attr('data-short-url')));
-      // TipTip caches org_title at init; unbind hover then re-init to pick up
-      // the new .crm-help content.
-      $icon.off('mouseenter mouseleave');
-      $icon.toolTip({skipVerticalComparison: true});
-    });
+  function rebindTooltip($icon, text) {
+    $icon.find('.crm-help').text(text);
+    // TipTip caches the title on init; unbind hover then re-init to pick up
+    // the new .crm-help content.
+    $icon.off('mouseenter mouseleave').toolTip({skipVerticalComparison: true});
   }
 
   $.ajax({
@@ -95,17 +93,21 @@ cj(function($) {
     dataType: 'json',
     data: {short_urls: JSON.stringify(shortUrls)},
     success: function(data) {
-      if (data.is_error || !data.result) {
-        applyTexts(function() { return failedText; });
-        return;
-      }
-      applyTexts(function(u) {
-        var t = data.result[u];
-        return (typeof t === 'string' && t !== '') ? t : emptyText;
+      var isFail = data.is_error || !data.result;
+      $('.shorten-url-target').each(function() {
+        var $icon = $(this);
+        if (isFail) {
+          rebindTooltip($icon, failedText);
+          return;
+        }
+        var t = data.result[$icon.attr('data-short-url')];
+        rebindTooltip($icon, (typeof t === 'string' && t !== '') ? t : emptyText);
       });
     },
     error: function() {
-      applyTexts(function() { return failedText; });
+      $('.shorten-url-target').each(function() {
+        rebindTooltip($(this), failedText);
+      });
     }
   });
 });
