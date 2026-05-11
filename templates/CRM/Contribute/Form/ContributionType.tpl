@@ -65,9 +65,16 @@
           </table>
         </td>
        </tr>
-       <tr class="crm-contribution-form-block-is_active">	 
+       <tr class="crm-contribution-form-block-is_active">
     	  <td class="label">{$form.is_active.label}</td>
-	  <td class="html-adjust">{$form.is_active.html}</td>
+	  <td class="html-adjust">
+	    {$form.is_active.html}
+	    {if $isActivePageLocked}
+	      {capture assign=ctListUrl}{crmURL p='civicrm/admin/contribute/contributionType' q='reset=1'}{/capture}
+	      <br />
+	      <span class="description">{ts 1=$ctListUrl}This contribution type is currently used by active payment pages. If disabled, the contribution type field will be blank in related records and receipt downloads will stop working. To disable it, please visit the <a href="%1">Contribution Type list</a> and disable or change the contribution type for the related pages first.{/ts}</span>
+	    {/if}
+	  </td>
        </tr>
       </table> 
    {/if}
@@ -104,4 +111,5 @@ cj(document).ready(function($){
   showHideTaxReceipt();
   showHideTaxRate($("input[name=is_taxreceipt][checked=checked]"));
 });
-{/literal}</script>
+{/literal}
+</script>

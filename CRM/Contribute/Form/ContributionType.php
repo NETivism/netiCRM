@@ -67,8 +67,24 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     ];
     $this->addRadio('is_taxreceipt', ts('Tax Receipt Type'), $taxReceiptType);
     $this->add('checkbox', 'is_active', ts('Enabled?'));
-    if ($this->_action == CRM_Core_Action::UPDATE && CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved')) {
-      $this->freeze(['name', 'description', 'is_active']);
+    if ($this->_action == CRM_Core_Action::UPDATE) {
+      if (CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved')) {
+        $this->freeze(['name', 'description', 'is_active']);
+      }
+      else {
+        $usedPages = CRM_Contribute_BAO_ContributionType::getUsedPagesAndEvents($this->_id);
+        $hasActivePages = FALSE;
+        foreach ($usedPages as $page) {
+          if ($page['is_active']) {
+            $hasActivePages = TRUE;
+            break;
+          }
+        }
+        if ($hasActivePages) {
+          $this->freeze(['is_active']);
+          $this->assign('isActivePageLocked', TRUE);
+        }
+      }
     }
   }
 
