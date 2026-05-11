@@ -37,6 +37,7 @@
     <a href="#" class="button url-shorten" data-url-shorten="url_to_copy" data-page-id="{$id}" data-page-type="civicrm_contribution_page"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
   </span>
 </div>
+{include file="CRM/common/ShortenURLHistory.tpl" history=$shorten_history pageType="civicrm_contribution_page" pageId=$id}
 {include file="CRM/common/ShortenURL.tpl"}
 {else}
 <div class="messages">
@@ -107,6 +108,7 @@
         <a href="#" class="button url-shorten" data-url-shorten="url_to_copy_new_personal_campaign" data-page-id="{$id}" data-page-type="civicrm_pcp"><i class="zmdi zmdi-share"></i> {ts}Shorten URL{/ts}</a>
         </span>
       </div>
+      {include file="CRM/common/ShortenURLHistory.tpl" history=$shorten_history_pcp pageType="civicrm_pcp" pageId=$id}
       {/if}
     </td>
 </tr>

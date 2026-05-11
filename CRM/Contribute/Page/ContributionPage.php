@@ -347,6 +347,8 @@ class CRM_Contribute_Page_ContributionPage extends CRM_Core_Page {
       if ($shorten_pcp) {
         $this->assign('shorten_pcp', $shorten_pcp);
       }
+      $this->assign('shorten_history', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_contribution_page', $id));
+      $this->assign('shorten_history_pcp', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_pcp', $id));
 
       $this->assign('pcp_is_active', 0);
       $pcpInfo = new CRM_Contribute_DAO_PCPBlock();

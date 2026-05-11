@@ -25,6 +25,8 @@ class CRM_Event_Page_EventLinks extends CRM_Core_Page {
     if (!empty($shortenRegister)) {
       $this->assign('shorten_register', $shortenRegister);
     }
+    $this->assign('shorten_history_info', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_event.info', $this->_id));
+    $this->assign('shorten_history_register', CRM_Core_BAO_ShortenURLHistory::getHistory('civicrm_event.register', $this->_id));
     parent::run();
   }
 }

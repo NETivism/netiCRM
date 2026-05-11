@@ -15,11 +15,16 @@ class CRM_Core_Page_AJAX_SaveShortenURL {
     $pageType = CRM_Utils_Request::retrieve('page_type', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
     $url = CRM_Utils_Request::retrieve('url', 'String', CRM_Core_DAO::$_nullObject, TRUE, NULL, 'REQUEST');
 
-    if (!in_array($pageType, ['civicrm_contribution_page', 'civicrm_pcp', 'civicrm_event.info', 'civicrm_event.register', 'civicrm_uf_group'])) {
+    if (!in_array($pageType, CRM_Core_BAO_ShortenURLHistory::ALLOWED_PAGE_TYPES, TRUE)) {
       http_response_code(400);
       header('Content-Type: application/json; charset=utf-8');
       echo json_encode(['is_error' => 1, 'error_message' => 'Invalid page type']);
       CRM_Utils_System::civiExit();
+    }
+
+    $utmParams = [];
+    foreach (CRM_Core_BAO_ShortenURLHistory::UTM_KEYS as $utmKey) {
+      $utmParams[$utmKey] = CRM_Utils_Request::retrieve($utmKey, 'String', CRM_Core_DAO::$_nullObject, FALSE, '', 'REQUEST');
     }
 
     $provider = new CRM_Utils_ShortenURLProvider_NetiCC();
@@ -53,6 +58,8 @@ class CRM_Core_Page_AJAX_SaveShortenURL {
       $action = CRM_Core_Action::ADD;
       CRM_Core_OptionValue::addOptionValue($optionParams, $groupParams, $action, $optionId);
     }
+
+    CRM_Core_BAO_ShortenURLHistory::create($pageType, $pageId, $shortUrl, $utmParams);
 
     http_response_code(200);
     header('Content-Type: application/json; charset=utf-8');

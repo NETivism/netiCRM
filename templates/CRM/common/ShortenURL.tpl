@@ -176,6 +176,11 @@
             'url': sendUrl,
             'page_id': pageId,
             'page_type': pageType,
+            'utm_source':   $('#utm-source').val(),
+            'utm_medium':   $('#utm-medium').val(),
+            'utm_term':     $('#utm-term').val(),
+            'utm_content':  $('#utm-content').val(),
+            'utm_campaign': $('#utm-campaign').val(),
           },
           success: function(data) {
             if (data.is_error) {
