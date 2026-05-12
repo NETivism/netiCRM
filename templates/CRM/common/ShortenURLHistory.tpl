@@ -20,14 +20,15 @@
     <span class="shorten-url-history-hint">{ts}(latest 30 records){/ts}</span>
   </div>
   <div class="crm-accordion-body">
+    {if $history}
     <table class="report shorten-url-history-table">
       <thead>
         <tr>
-          <th>{ts}Source{/ts}</th>
-          <th>{ts}Medium{/ts}</th>
-          <th>{ts}Term{/ts}</th>
-          <th>{ts}Content{/ts}</th>
-          <th>{ts}Campaign{/ts}</th>
+          <th>{ts}UTM Source{/ts}</th>
+          <th>{ts}UTM Medium{/ts}</th>
+          <th>{ts}UTM Term{/ts}</th>
+          <th>{ts}UTM Content{/ts}</th>
+          <th>{ts}UTM Campaign{/ts}</th>
           <th>{ts}Short URL{/ts}</th>
           <th>{ts}Original Target URL{/ts}</th>
         </tr>
@@ -44,26 +45,48 @@
           <td>
             <div class="helpicon shorten-url-target" data-short-url="{$row.short_url|escape}">&nbsp;
               <span style="display:none"><div class="crm-help">{ts}Loading...{/ts}</div></span>
+              <span class="original-target-url">{ts}Loading...{/ts}</span>
             </div>
           </td>
         </tr>
         {/foreach}
       </tbody>
     </table>
+    {else}
+    <div class="shorten-url-history-empty">{ts}No shortened URL records yet. Click "Shorten URL" to create one.{/ts}</div>
+    {/if}
   </div>
 </div>
 <script type="text/javascript">
 {literal}
+// Thead HTML used by ShortenURL.tpl callback to upgrade an empty-state
+// accordion body into a full table when the user shortens the first URL.
+// Idempotent — assigning the same constant on every partial include is fine.
+window._netiShortenUrlHistoryThead =
+{/literal}
+  '<thead><tr>'
+  + '<th>{ts escape='js'}UTM Source{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Medium{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Term{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Content{/ts}</th>'
+  + '<th>{ts escape='js'}UTM Campaign{/ts}</th>'
+  + '<th>{ts escape='js'}Short URL{/ts}</th>'
+  + '<th>{ts escape='js'}Original Target URL{/ts}</th>'
+  + '</tr></thead>';
+{literal}
+
 cj(function($) {
   // Accordion handler is idempotent (checks crm-accordion-processed class).
   $().crmaccordions();
 
-  // Init tooltip once per helpicon. Initial text is "Loading..." until the
-  // batch-info response comes back and we rebind with the real target URL.
-  $('.shorten-url-target:not(.tooltip-inited)').addClass('tooltip-inited').toolTip({skipVerticalComparison: true});
+  // Init tooltip once per helpicon with the current .crm-help text. The text
+  // starts as "Loading..." and is replaced once batch-info responds (or after
+  // the dialog inserts a new row with the long URL already known).
+  // keepAlive lets users move into the tooltip to click the rendered <a>.
+  $('.shorten-url-target:not(.tooltip-inited)').addClass('tooltip-inited').toolTip({skipVerticalComparison: true, keepAlive: true});
 
   // Batch-load target URLs only once per page, even if this partial is
-  // included multiple times (e.g. event info + register).
+  // included multiple times (e.g. event info + register on the same page).
   if (window._netiShortenUrlBatchInited) return;
   window._netiShortenUrlBatchInited = true;
 
@@ -74,19 +97,28 @@ cj(function($) {
     if (u && !seen[u]) { seen[u] = 1; shortUrls.push(u); }
   });
   if (!shortUrls.length) return;
+{/literal}
+  var failedText = '{ts escape='js'}Unable to load target URL.{/ts}';
+  var emptyText  = '{ts escape='js'}(no data){/ts}';
+{literal}
 
-  var failedText = '{/literal}{ts escape='js'}Unable to load target URL.{/ts}{literal}';
-  var emptyText  = '{/literal}{ts escape='js'}(no data){/ts}{literal}';
-
-  function applyTexts(textResolver) {
-    $('.shorten-url-target').each(function() {
-      var $icon = $(this);
-      $icon.find('.crm-help').text(textResolver($icon.attr('data-short-url')));
-      // TipTip caches org_title at init; unbind hover then re-init to pick up
-      // the new .crm-help content.
-      $icon.off('mouseenter mouseleave');
-      $icon.toolTip({skipVerticalComparison: true});
-    });
+  // Update both the tooltip (.crm-help) and inline preview (.original-target-url).
+  // When the text is a real URL, wrap both in a clickable link.
+  function applyTarget($icon, text, isUrl) {
+    var $help = $icon.find('.crm-help').empty();
+    var $span = $icon.find('.original-target-url').empty();
+    if (isUrl) {
+      $help.append($('<a>').attr({href: text, target: '_blank', rel: 'noopener'}).text(text));
+      $span.append($('<a>').attr({href: text, target: '_blank', rel: 'noopener'}).text(text));
+    }
+    else {
+      $help.text(text);
+      $span.text(text);
+    }
+    // TipTip caches the title on init; unbind hover then re-init to pick up
+    // the new .crm-help content. keepAlive so the user can move into the
+    // tooltip and click the rendered link.
+    $icon.off('mouseenter mouseleave').toolTip({skipVerticalComparison: true, keepAlive: true});
   }
 
   $.ajax({
@@ -95,17 +127,26 @@ cj(function($) {
     dataType: 'json',
     data: {short_urls: JSON.stringify(shortUrls)},
     success: function(data) {
-      if (data.is_error || !data.result) {
-        applyTexts(function() { return failedText; });
-        return;
-      }
-      applyTexts(function(u) {
-        var t = data.result[u];
-        return (typeof t === 'string' && t !== '') ? t : emptyText;
+      var isFail = data.is_error || !data.result;
+      $('.shorten-url-target').each(function() {
+        var $icon = $(this);
+        if (isFail) {
+          applyTarget($icon, failedText, false);
+          return;
+        }
+        var t = data.result[$icon.attr('data-short-url')];
+        if (typeof t === 'string' && t !== '') {
+          applyTarget($icon, t, true);
+        }
+        else {
+          applyTarget($icon, emptyText, false);
+        }
       });
     },
     error: function() {
-      applyTexts(function() { return failedText; });
+      $('.shorten-url-target').each(function() {
+        applyTarget($(this), failedText, false);
+      });
     }
   });
 });

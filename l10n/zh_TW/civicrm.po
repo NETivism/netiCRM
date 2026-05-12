@@ -51994,8 +51994,12 @@ msgid ""
 "days will also be included in the results."
 msgstr "注意：若聯絡人在失敗後超過指定天數才成功再捐，仍會被納入搜尋結果"
 
+<<<<<<< HEAD
 #: templates/CRM/common/ShortenURL.tpl:188
 #: templates/CRM/common/ShortenURL.tpl:238
+=======
+#: templates/CRM/common/ShortenURL.tpl:188 templates/CRM/common/ShortenURL.tpl:238
+>>>>>>> d2df7a07a4d6b3224fe4bd6662b5f7a0879493fc
 msgid "Failed to shorten URL, please try again."
 msgstr "縮短網址失敗，請再試一次。"
 
