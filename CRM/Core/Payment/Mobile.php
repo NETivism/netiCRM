@@ -108,7 +108,7 @@ class CRM_Core_Payment_Mobile extends CRM_Core_Payment {
   public function checkConfig() {
     $error = [];
 
-    if (!empty($this->_paymentProcessor['user_name']) && empty($this->_paymentProcessor['password'])) {
+    if ($this->_paymentProcessor['user_name'] !== 'none' && empty($this->_paymentProcessor['password'])) {
       $error[] = ts('Merchant is not set in the Administer CiviCRM &raquo; Payment Processor.');
     }
     // LinePay: if either channelId or channelSecret is set, both are required
