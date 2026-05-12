@@ -51994,12 +51994,8 @@ msgid ""
 "days will also be included in the results."
 msgstr "注意：若聯絡人在失敗後超過指定天數才成功再捐，仍會被納入搜尋結果"
 
-<<<<<<< HEAD
 #: templates/CRM/common/ShortenURL.tpl:188
 #: templates/CRM/common/ShortenURL.tpl:238
-=======
-#: templates/CRM/common/ShortenURL.tpl:188 templates/CRM/common/ShortenURL.tpl:238
->>>>>>> d2df7a07a4d6b3224fe4bd6662b5f7a0879493fc
 msgid "Failed to shorten URL, please try again."
 msgstr "縮短網址失敗，請再試一次。"
 
@@ -52031,3 +52027,11 @@ msgstr "無法載入目標網址。"
 #: templates/CRM/common/ShortenURLHistory.tpl:102
 msgid "(no data)"
 msgstr "（無資料）"
+
+#: templates/CRM/Contribute/Page/ContributionType.tpl:74
+msgid "page(s)"
+msgstr "個頁面"
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:75
+msgid "This contribution type is currently used by active payment pages. If disabled, the contribution type field will be blank in related records and receipt downloads will stop working. To disable it, please visit the <a href=\"%1\">Contribution Type list</a> and disable or change the contribution type for the related pages first."
+msgstr "此費用類型目前被啟用中的付款頁使用，停用後相關頁面的捐款紀錄將無法顯示費用類型，收據下載功能亦會失效。若需停用，請先至<a href=\"%1\">費用類型列表</a>，將相關頁面停用或更換費用類型。"

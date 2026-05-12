@@ -51270,3 +51270,11 @@ msgstr ""
 #: templates/CRM/common/ShortenURLHistory.tpl:102
 msgid "(no data)"
 msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionType.tpl:74
+msgid "page(s)"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:75
+msgid "This contribution type is currently used by active payment pages. If disabled, the contribution type field will be blank in related records and receipt downloads will stop working. To disable it, please visit the <a href=\"%1\">Contribution Type list</a> and disable or change the contribution type for the related pages first."
+msgstr ""
