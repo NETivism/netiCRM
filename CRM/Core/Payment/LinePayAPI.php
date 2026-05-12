@@ -22,6 +22,10 @@ class CRM_Core_Payment_LinePayAPI {
     'th_TH' => 'th',
   ];
   public static $_errorMessage = [
+    '0110' => 'Customer has completed LINE Pay authentication; payment confirmation is available.',
+    '0121' => 'Customer canceled payment or exceeded LINE Pay authentication wait time.',
+    '0122' => 'Payment failed.',
+    '0123' => 'Payment completed.',
     '1101' => 'This user is not a LINE Pay user.',
     '1102' => 'The purchasing user suspended for transaction.',
     '1104' => 'Merchant not found.',
@@ -75,6 +79,7 @@ class CRM_Core_Payment_LinePayAPI {
     '1295' => 'Invalid credit card number',
     '1296' => 'Invalid amount',
     '1298' => 'The credit card payment declined.',
+    '2042' => 'EPI refund failed due to insufficient merchant reserve.',
     '2101' => 'Parameter error',
     '2102' => 'JSON data format error',
     '9000' => 'Internal error',
@@ -94,20 +99,22 @@ class CRM_Core_Payment_LinePayAPI {
   public $_curlError;
 
   protected $_apiTypes = [
-    'query' => '/v2/payments?orderId={orderId}&transactionId={transactionId}',
-    'request' => '/v2/payments/request',
-    'confirm' => '/v2/payments/{transactionId}/confirm',
+    'query' => '/v4/payments',
+    'request' => '/v4/payments/request',
+    'confirm' => '/v4/payments/{transactionId}/confirm',
     // not supportted api types
-    #'refund' => '/v2/payments/{transactionId}/refund',
-    #'authorization' => '/v2/payments/authorizations',
-    #'capture' => '/v2/payments/authorizations/{transactionId}/capture',
-    #'void' => '/v2/payments/authorizations/{transactionId}/void',
-    #'recurring/payment' => '/v2/payments/preapprovedPay/{regKey}/payment',
-    #'recurring/check' => '/v2/payments/preapprovedPay/{regKey}/check',
-    #'recurring/expire' => '/v2/payments/preapprovedPay/{regKey}/expire',
+    #'refund' => '/v4/payments/{transactionId}/refund',
+    #'check' => '/v4/payments/requests/{transactionId}/check',
+    #'capture' => '/v4/payments/authorizations/{transactionId}/capture',
+    #'void' => '/v4/payments/authorizations/{transactionId}/void',
+    #'recurring/payment' => '/v4/payments/preapprovedPay/{regKey}/payment',
+    #'recurring/check' => '/v4/payments/preapprovedPay/{regKey}/check',
+    #'recurring/expire' => '/v4/payments/preapprovedPay/{regKey}/expire',
   ];
 
-  protected $_apiGetMethodTypes = ['query', 'authorization', 'recurring/check'];
+  protected $_apiGetMethodTypes = ['query', 'check', 'recurring/check'];
+  protected $_apiPath;
+  protected $_queryString;
   protected $_apiMethod;
 
   /**
@@ -161,14 +168,6 @@ class CRM_Core_Payment_LinePayAPI {
 
     // verify some parameter
     if ($this->_apiType == 'request') {
-      global $tsLocale;
-      if (empty($post['langCd'])) {
-        $post['langCd'] = !empty(self::$_lang[$tsLocale]) ? self::$_lang[$tsLocale] : 'en';
-      }
-      elseif (!in_array($post['langCd'], self::$_lang)) { // if wrong lang
-        $post['langCd'] = !empty(self::$_lang[$tsLocale]) ? self::$_lang[$tsLocale] : 'en';
-      }
-
       if (!in_array($post['currency'], self::$_currencies)) {
         CRM_Core_Error::fatal("Wrong currency specified: {$post['currency']}");
       }
@@ -187,10 +186,10 @@ class CRM_Core_Payment_LinePayAPI {
       $transactionId = $post['transactionId'];
     }
 
-    // change api url base on parameter
+    // change api url base on parameter (path placeholders like {transactionId})
     while (preg_match('/{([a-z0-9]*)}/i', $this->_apiURL, $matches)) {
       $search = $matches[0];
-      $replace = $params[$matches[1]];
+      $replace = $params[$matches[1]] ?? '';
       $newApiURL = str_replace($search, $replace, $this->_apiURL);
       if ($newApiURL == $this->_apiURL) {
         CRM_Core_Error::fatal("Required params '$search' of this API type $this->_apiURL");
@@ -199,6 +198,23 @@ class CRM_Core_Payment_LinePayAPI {
       else {
         $this->_apiURL = $newApiURL;
       }
+    }
+
+    // For GET endpoints (v4), build query string from filtered post fields.
+    // Strip the host so we can split apiPath / queryString for signature.
+    $base = $this->_isTest ? self::LINEPAY_TEST : self::LINEPAY_PROD;
+    $pathWithQuery = substr($this->_apiURL, strlen($base));
+    if ($this->_apiMethod == 'GET') {
+      $queryString = http_build_query($post);
+      $this->_apiPath = $pathWithQuery;
+      $this->_queryString = $queryString;
+      if (!empty($queryString)) {
+        $this->_apiURL = $base . $pathWithQuery . '?' . $queryString;
+      }
+    }
+    else {
+      $this->_apiPath = $pathWithQuery;
+      $this->_queryString = '';
     }
 
     $this->_request = $post;
@@ -292,14 +308,26 @@ class CRM_Core_Payment_LinePayAPI {
    */
   private function _curl() {
     $this->_success = FALSE;
+
+    // Build the exact body bytes that will be both signed and POSTed.
+    // Bytes must match exactly — re-encoding with different flags would break HMAC.
+    $body = '';
+    if ($this->_apiMethod == 'POST') {
+      $body = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    $nonce = self::_generateNonce();
+    $signTarget = $this->_apiMethod == 'GET' ? $this->_queryString : $body;
+    $signature = self::_signature($this->_channelSecret, $this->_apiPath, $signTarget, $nonce);
+
     $ch = curl_init($this->_apiURL);
     $opt = [];
 
     $opt[CURLOPT_HTTPHEADER] = [
       'Content-Type: application/json',
-      'X-LINE-ChannelId: ' . $this->_channelId, // 10 bytes
-      'X-LINE-ChannelSecret: ' . $this->_channelSecret, // 32 bytes
-      #'X-LINE-MerchantDeviceType' => '',
+      'X-LINE-ChannelId: ' . $this->_channelId,
+      'X-LINE-Authorization-Nonce: ' . $nonce,
+      'X-LINE-Authorization: ' . $signature,
     ];
     $opt[CURLOPT_RETURNTRANSFER] = TRUE;
     $opt[CURLOPT_CONNECTTIMEOUT] = 10;
@@ -307,7 +335,7 @@ class CRM_Core_Payment_LinePayAPI {
 
     if ($this->_apiMethod == 'POST') {
       $opt[CURLOPT_POST] = TRUE;
-      $opt[CURLOPT_POSTFIELDS] = json_encode($this->_request, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+      $opt[CURLOPT_POSTFIELDS] = $body;
     }
     curl_setopt_array($ch, $opt);
 
@@ -354,7 +382,7 @@ class CRM_Core_Payment_LinePayAPI {
         $fields = explode(',', 'transactionId,orderId');
         break;
       case 'request':
-        $fields = explode(',', 'productName,productImageUrl,amount,currency,mid,oneTimeKey,confirmUrl,confirmUrlType,checkConfirmUrlBrowser,cancelUrl,packageName,orderId,deliveryPlacePhone,payType,langCd,capture,extras');
+        $fields = explode(',', 'amount,currency,orderId,packages,redirectUrls,options');
         break;
       case 'confirm':
         $fields = explode(',', 'amount,currency');
@@ -377,5 +405,35 @@ class CRM_Core_Payment_LinePayAPI {
       return ts(self::$_errorMessage[$code]);
     }
     return FALSE;
+  }
+
+  /**
+   * Compute the LINE Pay v4 X-LINE-Authorization signature.
+   *
+   * Sign string = channelSecret + apiPath + (body or queryString) + nonce.
+   * HMAC-SHA256 keyed by channelSecret, returned Base64-encoded.
+   *
+   * @param string $channelSecret merchant channel secret used as HMAC key
+   * @param string $apiPath request path without host (e.g. /v4/payments/request)
+   * @param string $payload raw POST body or GET query string (without leading '?')
+   * @param string $nonce request nonce sent in X-LINE-Authorization-Nonce header
+   *
+   * @return string Base64-encoded HMAC-SHA256 signature
+   */
+  public static function _signature($channelSecret, $apiPath, $payload, $nonce) {
+    $signTarget = $channelSecret . $apiPath . $payload . $nonce;
+    return base64_encode(hash_hmac('sha256', $signTarget, $channelSecret, TRUE));
+  }
+
+  /**
+   * Generate a UUID v4 nonce for LINE Pay v4 requests.
+   *
+   * @return string RFC 4122 v4 UUID
+   */
+  public static function _generateNonce() {
+    $bytes = random_bytes(16);
+    $bytes[6] = chr((ord($bytes[6]) & 0x0f) | 0x40);
+    $bytes[8] = chr((ord($bytes[8]) & 0x3f) | 0x80);
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
   }
 }

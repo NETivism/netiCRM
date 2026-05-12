@@ -69,19 +69,42 @@ class CRM_Core_Payment_LinePay {
     }
     $description = !empty($params['amount_level']) ? $page_title . ' - ' . $params['amount_level'] : $page_title;
 
-    // reserve
+    // reserve (v4: nested packages[] / redirectUrls / options)
     $config = CRM_Core_Config::singleton();
-    $requestParams = [];
-    $requestParams['productImageUrl'] = $config->userFrameworkResourceURL.'i/whiteBg.png';
-    $requestParams['orderId'] = $params['contributionID'];
-    $requestParams['productName'] = strip_tags($description);
-    $requestParams['amount'] = (int)$params['amount']; // integer
-    $requestParams['currency'] = $config->defaultCurrency; // please use contribution currency
-    $requestParams['confirmUrlType'] = 'CLIENT';
-    $requestParams['confirmUrl'] = $confirmUrl;
-    $requestParams['checkConfirmUrlBrowser'] = 'true'; // must be string
-    $requestParams['capture'] = 'true'; // must be string
-    $requestParams['cancelUrl'] = $cancelUrl;
+    $amount = (int)$params['amount'];
+    $productName = strip_tags($description);
+    $requestParams = [
+      'amount' => $amount,
+      'currency' => $config->defaultCurrency,
+      'orderId' => (string)$params['contributionID'],
+      'packages' => [
+        [
+          'id' => '1',
+          'amount' => $amount,
+          'products' => [
+            [
+              'name' => $productName,
+              'imageUrl' => $config->userFrameworkResourceURL . 'i/whiteBg.png',
+              'quantity' => 1,
+              'price' => $amount,
+            ],
+          ],
+        ],
+      ],
+      'redirectUrls' => [
+        'confirmUrl' => $confirmUrl,
+        'cancelUrl' => $cancelUrl,
+      ],
+      'options' => [
+        'payment' => [
+          'capture' => TRUE,
+        ],
+        'display' => [
+          'confirmUrlType' => 'CLIENT',
+          'checkConfirmUrlBrowser' => TRUE,
+        ],
+      ],
+    ];
 
     $result = $this->_linePayAPI->request($requestParams);
     if ($this->_linePayAPI->_response->returnMessage == 'Success.' && $this->_linePayAPI->_response->returnCode == '0000') {
