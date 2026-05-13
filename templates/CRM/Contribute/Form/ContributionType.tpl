@@ -36,15 +36,15 @@
      <table class="form-layout-compressed">
       <tr class="crm-contribution-form-block-name">
  	  <td class="label">{$form.name.label}</td>
-	  <td class="html-adjust">{$form.name.html}</td>	
+	  <td class="html-adjust">{$form.name.html}{if $hasReceiptsLocked} <a href="#" class="ct-unlock-field" data-target="name">{ts}Change{/ts}</a>{/if}</td>
        </tr>
-       <tr class="crm-contribution-form-block-description">	 
+       <tr class="crm-contribution-form-block-description">
     	  <td class="label">{$form.description.label}</td>
 	  <td class="html-adjust">{$form.description.html}</td>
        </tr>
        <tr class="crm-contribution-form-block-accounting_code">
     	  <td class="label">{$form.accounting_code.label}</td>
-	  <td class="html-adjust">{$form.accounting_code.html}<br />
+	  <td class="html-adjust">{$form.accounting_code.html}{if $hasReceiptsLocked} <a href="#" class="ct-unlock-field" data-target="accounting_code">{ts}Change{/ts}</a>{/if}<br />
        	      <span class="description">{ts}Use this field to flag contributions of this type with the corresponding code used in your accounting system. This code will be included when you export contribution data to your accounting package.{/ts}</span>
 	  </td>
        </tr>
@@ -82,6 +82,16 @@
 </div>
 <script>{literal}
 cj(document).ready(function($){
+  $('.ct-unlock-field').click(function(e){
+    e.preventDefault();
+    var target = $(this).data('target');
+    var ok = confirm("{/literal}{ts}This contribution type has receipt records. Changing the name or accounting code will affect the consistency of historical receipts. If needed, it is recommended to create a new contribution type instead. Are you sure you want to continue?{/ts}{literal}");
+    if (ok) {
+      $('#' + target).removeAttr('readonly');
+      $(this).remove();
+    }
+  });
+
   var showHideTaxReceipt = function(){
     if($('#is_deductible').attr('checked')) {
       $('tr.crm-contribution-form-block-is_taxreceipt').hide();

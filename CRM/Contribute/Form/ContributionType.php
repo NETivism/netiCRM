@@ -52,11 +52,26 @@ class CRM_Contribute_Form_ContributionType extends CRM_Contribute_Form {
     }
 
     $this->applyFilter('__ALL__', 'trim');
-    $this->add('text', 'name', ts('Name'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'name'), TRUE);
+
+    $nameAttr = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'name') ?: [];
+    $accountingCodeAttr = CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code') ?: [];
+    $hasReceiptsLocked = FALSE;
+
+    if ($this->_action == CRM_Core_Action::UPDATE && $this->_id) {
+      $isReserved = CRM_Core_DAO::getFieldValue('CRM_Contribute_DAO_ContributionType', $this->_id, 'is_reserved');
+      if (!$isReserved && CRM_Contribute_BAO_ContributionType::hasReceiptsIssued($this->_id)) {
+        $hasReceiptsLocked = TRUE;
+        $nameAttr = array_merge($nameAttr, ['readonly' => 'readonly']);
+        $accountingCodeAttr = array_merge($accountingCodeAttr, ['readonly' => 'readonly']);
+      }
+    }
+    $this->assign('hasReceiptsLocked', $hasReceiptsLocked);
+
+    $this->add('text', 'name', ts('Name'), $nameAttr, TRUE);
     $this->addRule('name', ts('A contribution type with this name already exists. Please select another name.'), 'objectExists', ['CRM_Contribute_DAO_ContributionType', $this->_id]);
 
     $this->add('text', 'description', ts('Description'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'description'));
-    $this->add('text', 'accounting_code', ts('Accounting Code'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'accounting_code'));
+    $this->add('text', 'accounting_code', ts('Accounting Code'), $accountingCodeAttr);
     $this->add('text', 'tax_rate', ts('Tax Rate'), CRM_Core_DAO::getAttribute('CRM_Contribute_DAO_ContributionType', 'tax_rate'));
 
     $this->add('checkbox', 'is_deductible', ts('Tax-deductible?'));
