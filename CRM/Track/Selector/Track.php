@@ -463,7 +463,11 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         $recordTables[$dao->entity_table][$dao->entity_id][$id] = $id;
       }
     }
+    $allowedPageTables = array_keys($this->_pageTypes);
     foreach ($pageTables as $table => $pages) {
+      if (!in_array($table, $allowedPageTables, true)) {
+        continue;
+      }
       $pageDAO = CRM_Core_DAO::executeQuery("SELECT id, title FROM $table WHERE id IN(".CRM_Utils_Array::implode(',', array_keys($pages)).")");
       while ($pageDAO->fetch()) {
         foreach ($pages[$pageDAO->id] as $resultId) {
@@ -472,7 +476,11 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
         }
       }
     }
+    $allowedRecordTables = array_keys($this->_referencedRecordType);
     foreach ($recordTables as $table => $records) {
+      if (!in_array($table, $allowedRecordTables, true)) {
+        continue;
+      }
       if ($table === 'civicrm_contact') {
         $recordDAO = CRM_Core_DAO::executeQuery("SELECT c.id, c.id as cid, c.sort_name FROM $table c WHERE c.id IN(".CRM_Utils_Array::implode(',', array_keys($records)).")");
       }
@@ -533,7 +541,11 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     }
 
     // Batch-fetch page titles to avoid N+1 queries
+    $allowedPageTables = array_keys($this->_pageTypes);
     foreach ($pageTables as $table => $pages) {
+      if (!in_array($table, $allowedPageTables, true)) {
+        continue;
+      }
       $pageIds = CRM_Utils_Array::implode(',', array_map('intval', array_keys($pages)));
       if (!$pageIds) {
         continue;
@@ -547,7 +559,11 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     }
 
     // Batch-fetch contact IDs (no sort_name to avoid PII in plain export)
+    $allowedRecordTables = array_keys($this->_referencedRecordType);
     foreach ($recordTables as $table => $records) {
+      if (!in_array($table, $allowedRecordTables, true)) {
+        continue;
+      }
       $entityIds = CRM_Utils_Array::implode(',', array_map('intval', array_keys($records)));
       if (!$entityIds) {
         continue;
@@ -598,10 +614,6 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
     if ($this->_referrerType) {
       $where[] = "referrer_type = %3";
       $args[3] = [$this->_referrerType, 'String'];
-    }
-    if ($this->_referrerNetwork) {
-      $where[] = "referrer_network = %4";
-      $args[4] = [$this->_referrerNetwork, 'String'];
     }
     if ($this->_referrerNetwork) {
       $where[] = "referrer_network = %4";
