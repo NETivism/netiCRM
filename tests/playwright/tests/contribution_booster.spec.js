@@ -176,10 +176,10 @@ test.describe.serial('Contribution Booster', () => {
                 return text.includes('After payment failed but not retry in') && text.includes('days');
             }, element)).toBeTruthy();
 
-            /* select days */
+            /* fill in days */
             element = '#days';
             await utils.findElement(page, element);
-            await utils.selectOption(page.locator(element), '3');
+            await utils.fillInput(page.locator(element), '3');
 
             /* click "Search" button */
             element = '#_qf_Custom_refresh-top';

@@ -36,4 +36,17 @@ abstract class CRM_Utils_ShortenURLProvider {
    */
   abstract public function getCount($shortUrl);
 
+  /**
+   * Look up redirect targets for multiple shortened URLs in a single request.
+   *
+   * @param string[] $shortUrls
+   *   Full shortened URL strings (e.g. https://d.neti.cc/aB3xY).
+   *
+   * @return array<string,string>|false
+   *   Map keyed by the input shortened URL → redirect target (long URL).
+   *   Missing or unknown entries are returned as empty strings. FALSE on
+   *   transport / authentication failure.
+   */
+  abstract public function getBatchInfo(array $shortUrls);
+
 }

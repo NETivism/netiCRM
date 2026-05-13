@@ -51234,3 +51234,47 @@ msgstr ""
 #: templates/CRM/Price/Form/Set.tpl:84
 msgid "When enabled, remaining capacity will be shown next to each option on the frontend (e.g. \"8 remaining\"). Only applies to options with a maximum quantity set."
 msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.tpl:5
+msgid "Note: Contacts who made a successful donation after the specified number of days will also be included in the results."
+msgstr ""
+
+#: templates/CRM/common/ShortenURL.tpl:188 templates/CRM/common/ShortenURL.tpl:238
+msgid "Failed to shorten URL, please try again."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:16
+msgid "Shorten URL History (Personal Campaign)"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:18
+msgid "Shorten URL History"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:20
+msgid "(latest 30 records)"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:33 templates/CRM/common/ShortenURLHistory.tpl:74
+msgid "Original Target URL"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:56
+msgid "No shortened URL records yet. Click \"Shorten URL\" to create one."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:101
+msgid "Unable to load target URL."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:102
+msgid "(no data)"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionType.tpl:74
+msgid "page(s)"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:75
+msgid "This contribution type is currently used by active payment pages. If disabled, the contribution type field will be blank in related records and receipt downloads will stop working. To disable it, please visit the <a href=\"%1\">Contribution Type list</a> and disable or change the contribution type for the related pages first."
+msgstr ""

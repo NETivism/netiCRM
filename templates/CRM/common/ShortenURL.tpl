@@ -176,6 +176,11 @@
             'url': sendUrl,
             'page_id': pageId,
             'page_type': pageType,
+            'utm_source':   $('#utm-source').val(),
+            'utm_medium':   $('#utm-medium').val(),
+            'utm_term':     $('#utm-term').val(),
+            'utm_content':  $('#utm-content').val(),
+            'utm_campaign': $('#utm-campaign').val(),
           },
           success: function(data) {
             if (data.is_error) {
@@ -190,6 +195,43 @@
             $('#shorten_url').after(" <span class='copied'>{/literal}{ts}Copied{/ts}{literal}</span>");
             $('.url_to_copy[name="'+ name +'"]').val(shortUrl);
             $('.url_to_copy[name="'+ name +'"]').attr('data-url-shorten', shortUrl);
+
+            // Prepend a new row into the matching history accordion and auto-expand.
+            // The new row's target tooltip uses sendUrl directly, so no extra
+            // batch-info call is needed for it.
+            var $accordion = $('.shorten-url-history[data-page-type="' + pageType + '"][data-page-id="' + pageId + '"]');
+            if ($accordion.length) {
+              // Upgrade empty-state body into a real table on first insertion.
+              var $body = $accordion.find('.crm-accordion-body');
+              if (!$body.find('table').length) {
+                $body.empty().append(
+                  $('<table class="report shorten-url-history-table">')
+                    .append(window._netiShortenUrlHistoryThead)
+                    .append($('<tbody>'))
+                );
+              }
+
+              var $tr = $('<tr>');
+              $tr.append($('<td>').text($('#utm-source').val()));
+              $tr.append($('<td>').text($('#utm-medium').val()));
+              $tr.append($('<td>').text($('#utm-term').val()));
+              $tr.append($('<td>').text($('#utm-content').val()));
+              $tr.append($('<td>').text($('#utm-campaign').val()));
+              var $link = $('<a>').attr({href: shortUrl, target: '_blank', rel: 'noopener'}).text(shortUrl);
+              $tr.append($('<td>').append($link));
+              var $icon = $('<div class="helpicon shorten-url-target tooltip-inited">').attr('data-short-url', shortUrl);
+              $icon.append(document.createTextNode(' '));
+              var $longLink = function() {
+                return $('<a>').attr({href: sendUrl, target: '_blank', rel: 'noopener'}).text(sendUrl);
+              };
+              $icon.append($('<span style="display:none">').append($('<div class="crm-help">').append($longLink())));
+              $icon.append($('<span class="original-target-url">').append($longLink()));
+              $tr.append($('<td>').append($icon));
+
+              $accordion.find('tbody').prepend($tr);
+              $accordion.removeClass('crm-accordion-closed').addClass('crm-accordion-open');
+              $icon.toolTip({skipVerticalComparison: true, keepAlive: true});
+            }
           },
           error: function() {
             $(".shorten-url-copy").css({"pointer-events":"initial","background": "#333030"});
