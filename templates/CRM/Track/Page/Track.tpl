@@ -165,7 +165,7 @@ input[type="text"].form-text{
     </div>
   </div>
   <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
-  <a id="export-track" class="button" href="{$drill_down_base}&output=csv">{ts}Export Spreadsheet{/ts}</a>
+  <a id="export-track" class="button" href="{$drill_down_base}&output=csv">{ts}Export to CSV{/ts}</a>
 </div>
 <div id="dialog-confirm-export" title="{ts}Confirm Export?{/ts}" style="display:none;">
   <p>{ts}Are you sure you want to export this data?{/ts}</p>
