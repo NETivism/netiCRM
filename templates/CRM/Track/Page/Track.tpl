@@ -50,122 +50,11 @@ input[type="text"].form-text{
       {include file="CRM/common/jcalendar.tpl" elementId=end action=4}
     </div>
     {/if}
-    
-    <div class="track-filter-item">
-      <label>{ts}Page Type{/ts}</label>
-      <select id="filter-ptype" class="form-select">
-        <option value="">-- {ts}All{/ts} --</option>
-        {foreach from=$pageTypes item=label key=value}
-          <option value="{$value}"{if $currentPageType eq $value} selected="selected"{/if}>{$label}</option>
-        {/foreach}
-      </select>
-    </div>
-    {if !$filters.page_title}
-    <div class="track-filter-item">
-      <label>{ts}Page Name{/ts}</label>
-      <input type="text" id="filter-page-title" class="form-text">
-    </div>
-    {/if}
-    {if !$filters.state}
-    <div class="track-filter-item">
-      <label>{ts}Visit State{/ts}</label>
-      <select id="filter-state" class="form-select">
-        <option value="">-- {ts}Select{/ts} --</option>
-        {foreach from=$trackStates item=label key=value}
-          <option value="{$value}">{$label}</option>
-        {/foreach}
-      </select>
-    </div>
-    {/if}
-     
-  </div>
-  <div class="crm-accordion-wrapper crm-accordion-open">
-    <div class="crm-accordion-header">
-      <div class="zmdi crm-accordion-pointer"></div>
-      {ts}Traffic Source{/ts}
-    </div>
-    <div class="crm-accordion-body">
-      <table class="form-layout">
-        <tbody>
-          <tr>
-            {if !$filters.rtype}
-            <td>
-              <div class="track-filter-item">
-                <label>{ts}Referrer Type{/ts}</label>
-                <select id="filter-rtype" class="form-select">
-                <option value="">-- {ts}Select{/ts} --</option>
-                  {foreach from=$referrerTypes item=label key=value}
-                <option value="{$value}">{$label}</option>
-                  {/foreach}
-              </select>
-              </div>
-            </td>
-            {/if}
-            {if !$filters.rnetwork}
-            <td>
-              <label>{ts}Referrer Network{/ts}</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-rnetwork" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-           
-            {if !$filters.referrer_url}
-            <td>
-              <label>{ts}Referrer URL{/ts}</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-referrer-url" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-            {if !$filters.landing}
-            <td>
-              <label>{ts}Landing Page{/ts}</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-landing" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-            {if !$filters.entity_id}
-            <td>
-              <label>{ts}Entity ID{/ts}</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-entity-id" class="form-text" placeholder="{ts}ID or 'null'{/ts}"></div>
-            </td>
-            {else}<td></td>{/if}
-            
-          </tr>
-          <tr>
-            {if !$filters.utm_source}
-            <td>
-              <label>UTM Source</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-source" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-             {if !$filters.utm_medium}
-            <td>
-              <label>UTM Medium</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-medium" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-            {if !$filters.utm_campaign}
-            <td>
-              <label>UTM Campaign</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-campaign" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-            {if !$filters.utm_term}
-            <td>
-              <label>UTM Term</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-term" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-            {if !$filters.utm_content}
-            <td>
-              <label>UTM Content</label><br>
-              <div class="crm-form-elem crm-form-textfield"><input type="text" id="filter-utm-content" class="form-text"></div>
-            </td>
-            {else}<td></td>{/if}
-          </tr>
-        </tbody>
-      </table>
+    <div style="display:flex; gap:8px; align-self:center;">
+      <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
+      <a id="export-track" class="button" href="{$drill_down_base}&output=csv">{ts}Export to CSV{/ts}</a>
     </div>
   </div>
-  <a id="submit-filter" class="button" href="{$drill_down_base}"><i class="zmdi zmdi-search-in-page"></i>{ts}Filter{/ts}</a>
-  <a id="export-track" class="button" href="{$drill_down_base}&output=csv">{ts}Export to CSV{/ts}</a>
 </div>
 <div id="dialog-confirm-export" title="{ts}Confirm Export?{/ts}" style="display:none;">
   <p>{ts}Are you sure you want to export this data?{/ts}</p>
@@ -241,7 +130,7 @@ input[type="text"].form-text{
   {/foreach}
   </tr>
   </thead>
-  {counter start=0 skip=1 print=false} 
+  {counter start=0 skip=1 print=false}
   {foreach from=$rows item=row}
   <tr class="{cycle values="odd-row,even-row"}">
   {foreach from=$row item=value}
@@ -255,8 +144,8 @@ input[type="text"].form-text{
    <div class="messages status">
         &nbsp;
         {ts 1=$title}There are currently no %1.{/ts}
-    </div>    
-{/if}  
+    </div>
+{/if}
 
 {include file="CRM/common/pager.tpl" location="bottom"}
 </div>
@@ -265,33 +154,14 @@ input[type="text"].form-text{
 <script type="text/javascript">
 cj(function() {
   var filterFieldMap = {
-    'ptype': '#filter-ptype',
-    'page_title': '#filter-page-title',
     'start': '#start',
-    'end': '#end',
-    'rtype': '#filter-rtype',
-    'rnetwork': '#filter-rnetwork',
-    'state': '#filter-state',
-    'entity_id': '#filter-entity-id',
-    'referrer_url': '#filter-referrer-url',
-    'landing': '#filter-landing',
-    'utm_source': '#filter-utm-source',
-    'utm_medium': '#filter-utm-medium',
-    'utm_campaign': '#filter-utm-campaign',
-    'utm_term': '#filter-utm-term',
-    'utm_content': '#filter-utm-content'
+    'end': '#end'
   };
   function buildFilterUrl(href) {
     var appendQuery = [];
     cj.each(filterFieldMap, function(param, selector) {
       var el = cj(selector);
       if (!el.length || !el.val()) {
-        return;
-      }
-      // ptype is always in the base URL, replace it instead of appending
-      if (param === 'ptype') {
-        href = href.replace(/ptype=[^&]*/, 'ptype=' + encodeURIComponent(el.val()));
-        href = href.replace(/pid=[^&]*/, 'pid=');
         return;
       }
       if (href.indexOf(param + '=') === -1) {
@@ -355,16 +225,16 @@ cj(function() {
   cj( function ( ) {
     cj("#crm-container .crm-pager input.form-submit").click( function( ) {
       submitPagerData( this );
-    }); 
+    });
   });
   function submitPagerData( el ) {
       var urlParams= '';
       var jumpTo   = cj(el).parent( ).children('input[type=text]').val( );
       if ( parseInt(jumpTo)== "Nan" ) jumpTo = 1;
       if ( jumpTo > totalPages ) jumpTo = totalPages;
-      {/literal} 
+      {/literal}
       {foreach from=$pager->_linkData item=val key=k }
-      {if $k neq 'crmPID' && $k neq 'force' && $k neq 'q' } 
+      {if $k neq 'crmPID' && $k neq 'force' && $k neq 'q' }
       {literal}
         urlParams += '{/literal}{$k}={$val}{literal}&';
       {/literal}
