@@ -8569,7 +8569,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8874,7 +8874,7 @@ msgstr "Email 格式"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php
 msgid "NO BULK EMAILS (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/Form/Edit/Demographics.php
 #: templates/CRM/Contact/Page/View/Demographics.tpl
