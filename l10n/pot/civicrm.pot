@@ -51110,3 +51110,181 @@ msgstr ""
 #: templates/CRM/Connector/Page/Connector.tpl templates/CRM/Connector/Page/Connector.tpl
 msgid "Security notice: This API key is sensitive credentials. Do not share it publicly. Store it only in a trusted backend service or server, and keep it confidential."
 msgstr ""
+
+msgid "Generate API Key"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Prefix of Receipt ID cannot contain hyphen (-)."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Confirm Send Email?"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Confirm Send"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:102
+#: templates/CRM/Event/Form/Registration/Register.tpl:121
+msgid "Payment Processor Misconfigured"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:103
+#: templates/CRM/Event/Form/Registration/Register.tpl:122
+msgid "See %1 to check the configuration."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:105
+#: templates/CRM/Event/Form/Registration/Register.tpl:124
+msgid "Page Error, Contact Administrator"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:388
+msgid "Risk Warning"
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:218
+msgid "Pages %%StatusMessage%%"
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:256
+msgid "(ID: %1)"
+msgstr ""
+
+#: CRM/Contribute/Form/ContributionPage/PCP.php
+msgid "Personal Campaign Page Settings (%1)"
+msgstr ""
+
+#: msgctxt "menu"
+msgid "Personal Campaign Page Settings"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:165
+msgid "Page Settings"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:179
+msgid "Configure this page's form"
+msgstr ""
+
+#: templates/CRM/Mailing/Page/Browse.tpl:71
+msgid "Mailing content is incomplete, please edit before viewing"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php:41
+msgid "Default value for donor credit name"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:89
+msgid "Use receipt title as default for donor credit name"
+msgstr ""
+
+#: CRM/Contribute/Form/ContributionPage/Settings.php:176
+msgid "Redirect to contribution page when disabled"
+msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl:60
+#: templates/CRM/Price/Form/PriceSet.tpl:100
+msgid "(Full)"
+msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl:48
+#: templates/CRM/Price/Form/PriceSet.tpl:63
+#: templates/CRM/Price/Form/PriceSet.tpl:90
+#: templates/CRM/Price/Form/PriceSet.tpl:103
+msgid "%1 remaining"
+msgstr ""
+
+#: CRM/Price/Form/Set.php:188
+msgid "Show remaining capacity?"
+msgstr ""
+
+#: templates/CRM/common/ShortenURL.tpl:188
+#: templates/CRM/common/ShortenURL.tpl:238
+msgid "Failed to shorten URL, please try again."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:16
+msgid "Shorten URL History (Personal Campaign)"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:18
+msgid "Shorten URL History"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:20
+msgid "(latest 30 records)"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:33
+#: templates/CRM/common/ShortenURLHistory.tpl:74
+msgid "Original Target URL"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:101
+msgid "Unable to load target URL."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:102
+msgid "(no data)"
+msgstr ""
+
+#: CRM/Admin/Page/AJAX.php
+msgid ""
+"Are you sure you want to disable this premium? This action will remove the "
+"premium from any contribution pages that currently offer it. However it will "
+"not delete the premium record - so you can re-enable it and add it back to "
+"your contribution page(s) at a later time."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/AddProduct.tpl
+msgid ""
+"This is a preview of this product as it will appear on your Contributions "
+"page(s)."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/DashBoard.hlp
+msgid ""
+"CiviContribute allows you to create customized page(s) for collecting online "
+"contributions. You can also input and track offline contributions. To enter "
+"contributions manually for individual contacts, use <a href='%1'>Find "
+"Contacts</a> to locate the contact. Then click <strong>View</strong> to go "
+"to their summary page and click on the <strong>New Contribution</strong> "
+"link. You can also <a href='%2'>import batches of offline contributions</a> "
+"from other sources."
+msgstr ""
+
+#: templates/CRM/Event/Page/DashBoard.hlp
+msgid ""
+"CiviEvent allows you to create customized page(s) for constituents to learn "
+"about events and optionally register online. You can create <a "
+"href='%1'><strong>new events</strong></a> and <a href='%2'><strong>manage "
+"existing events</strong></a>."
+msgstr ""
+
+#: templates/CRM/Member/Page/DashBoard.hlp
+msgid ""
+"CiviMember allows you to create customized membership types as well as "
+"page(s) for online membership sign-up and renewal. Administrators can create "
+"or modify Membership Types <a href='%2'>here</a>, and configure Online "
+"Contribution Pages which include membership sign-up <a href='%1'>here</a>."
+msgstr ""
+
+#: templates/CRM/UF/Page/Group.hlp
+msgid ""
+"You can control the web page that someone is directed to AFTER completing "
+"the form by modifying the contents of the hidden <strong>postURL</strong> "
+"input field. Replace the default value with any valid complete URL prior to "
+"saving the form code to the desired page(s)."
+msgstr ""
+
+msgid ""
+"This is a preview of this combination as it will appear on your "
+"Contributions page(s)."
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionType.tpl:74
+msgid "page(s)"
+msgstr ""
