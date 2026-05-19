@@ -1221,6 +1221,9 @@
         ],
         shouldNotGroupWhenFull: true,
       },
+      alignment: {
+        options: ['left', 'center', 'right', 'justify'],
+      },
       heading: {
         options: [
           { model: 'paragraph', title: '段落', class: 'ck-heading_paragraph' },
@@ -1393,6 +1396,7 @@
       CK.FontSize,
       CK.FontColor,
       CK.FontBackgroundColor,
+      CK.Alignment,
       CK.List,
       CK.Link,
       CK.Image,
@@ -1425,6 +1429,8 @@
           '|',
           'bold', 'italic', 'underline', 'strikethrough',
           '|',
+          'alignment',
+          '|',
           'fontSize', 'fontColor', 'fontBackgroundColor',
           '|',
           'numberedList', 'bulletedList',
@@ -1436,6 +1442,9 @@
           'undo', 'redo',
         ],
         shouldNotGroupWhenFull: true,
+      },
+      alignment: {
+        options: ['left', 'center', 'right', 'justify'],
       },
       heading: {
         options: [
