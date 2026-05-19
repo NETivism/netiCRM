@@ -1258,7 +1258,7 @@
       },
       image: {
         toolbar: [
-          'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
+          'imageStyle:inline', 'imageStyle:wrapText', 'imageStyle:breakText',
           '|',
           'toggleImageCaption', 'imageTextAlternative',
           '|',
@@ -1466,7 +1466,7 @@
           integrations: imceEnabled ? ['imce', 'url'] : ['url'],
         },
         toolbar: [
-          'imageStyle:inline', 'imageStyle:block', 'imageStyle:side',
+          'imageStyle:inline', 'imageStyle:wrapText', 'imageStyle:breakText',
           '|',
           'imageTextAlternative',
         ],
