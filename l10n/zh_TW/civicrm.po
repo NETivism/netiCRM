@@ -52040,3 +52040,7 @@ msgid ""
 "href=\"%1\">Contribution Type list</a> and disable or change the "
 "contribution type for the related pages first."
 msgstr "此費用類型目前被啟用中的付款頁使用，停用後相關頁面的捐款紀錄將無法顯示費用類型，收據下載功能亦會失效。若需停用，請先至<a href=\"%1\">費用類型列表</a>，將相關頁面停用或更換費用類型。"
+
+#: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php CRM/Core/Payment/TapPay.php
+msgid "【Payment Gateway】"
+msgstr "【金流端】"
