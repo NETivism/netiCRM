@@ -199,6 +199,23 @@ class CRM_Contribute_BAO_ContributionType extends CRM_Contribute_DAO_Contributio
   }
 
   /**
+   * Check whether any contribution of this type has a non-empty receipt_id.
+   *
+   * Includes cancelled contributions because the receipt serial already exists
+   * in financial records once a receipt_id is assigned.
+   *
+   * @param int $contributionTypeId
+   * @return bool
+   */
+  public static function hasReceiptsIssued($contributionTypeId) {
+    $count = CRM_Core_DAO::singleValueQuery(
+      "SELECT COUNT(*) FROM civicrm_contribution WHERE contribution_type_id = %1 AND receipt_id IS NOT NULL AND receipt_id != ''",
+      [1 => [$contributionTypeId, 'Integer']]
+    );
+    return (int) $count > 0;
+  }
+
+  /**
    * Function to see if contribution type is deductible
    *
    * @param int $contributionTypeId contribution type id to retrieve

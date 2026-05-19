@@ -2138,7 +2138,7 @@ class CRM_Core_Payment_SPGATEWAY extends CRM_Core_Payment {
       $recurParams['contribution_status_id'] = $changeStatusId;
       $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
-      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
+      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, ts('【Payment Gateway】').' '.$statusNoteTitle, $statusNote);
     }
 
     CRM_Core_Error::debug_log_message($resultNote);

@@ -17,6 +17,7 @@
     </a>
   </span>
 </div>
+{include file="CRM/common/ShortenURLHistory.tpl" history=$shorten_history_info pageType="civicrm_event.info" pageId=$id}
 
 {if $event.is_online_registration}
 <div class="flex-general">
@@ -34,6 +35,7 @@
     </a>
   </span>
 </div>
+{include file="CRM/common/ShortenURLHistory.tpl" history=$shorten_history_register pageType="civicrm_event.register" pageId=$id}
 
 <div class="flex-general">
   <a class="crm-event-test" href="{crmURL p='civicrm/event/register' q="reset=1&action=preview&id=`$id`"}" target="_blank">

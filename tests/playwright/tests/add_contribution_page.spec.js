@@ -37,6 +37,13 @@ test.describe.serial('Contribution Page Editing', () => {
             await utils.findElement(page, element);
             await utils.fillInput(locator, utils.makeid(10));
 
+            /* select Contribution Type */
+            element = "#contribution_type_id";
+            await utils.findElement(page, element);
+            const firstTypeOption = await page.locator(`${element} option[value]:not([value=""])`).first();
+            const firstTypeValue = await firstTypeOption.getAttribute('value');
+            await page.locator(element).selectOption(firstTypeValue);
+
             /* click Continue >> */
             element = "#_qf_Settings_upload-bottom";
             await utils.findElement(page, element);

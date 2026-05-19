@@ -497,10 +497,10 @@ cj(document).ready(function(){
   });
   isPassChekcedDeductible = false;
 
-  var nonTaxreceiptIds = [{/literal}{$non_taxreceipt_type_ids}{literal}];
+  var nonDeductibleIds = [{/literal}{$non_deductible_type_ids}{literal}];
   function updateAttachReceiptByType() {
     var typeId = parseInt(cj('#contribution_type_id').val());
-    if (nonTaxreceiptIds.includes(typeId)) {
+    if (nonDeductibleIds.includes(typeId)) {
       cj('#is_attach_receipt').hide();
       cj('#is_attach_receipt input[type=checkbox]').prop('checked', false);
     }

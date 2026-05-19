@@ -3213,6 +3213,40 @@ div.helpicon:focus::before {
  background: #fafafa;
 }
 
+/* Shorten URL history: helpicon with inline target URL preview. */
+.crm-container .shorten-url-history-table div.shorten-url-target {
+  position: relative;
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+}
+.crm-container .shorten-url-history-table div.shorten-url-target.helpicon::before {
+  font-family: 'Material-Design-Iconic-Font';
+  content: "\f18e";
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font-size: 24px;
+  width: auto;
+  height: auto;
+}
+.crm-container .shorten-url-history-table .original-target-url {
+  display: none;
+  order: -1;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+.crm-container .shorten-url-history-empty {
+  padding: 10px;
+  color: #757575;
+  font-style: italic;
+}
+
 div.statusicon {
     background  : transparent url(../i/quiz.png) no-repeat;
     display     : inline-block;

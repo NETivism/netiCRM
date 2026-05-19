@@ -8569,7 +8569,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8874,7 +8874,7 @@ msgstr "Email 格式"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php
 msgid "NO BULK EMAILS (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/Form/Edit/Demographics.php
 #: templates/CRM/Contact/Page/View/Demographics.tpl
@@ -45625,7 +45625,7 @@ msgstr "去年有捐款，但今年尚未捐，建議寫封信問候關心一下
 
 #: CRM/Contribute/Page/Booster.php
 msgid "After payment failed but not retry in %1 days"
-msgstr "捐款失敗後 %1 天內無再次捐款者"
+msgstr "最近一次失敗後 %1 天內未成功再捐"
 
 #: CRM/Contribute/Page/Booster.php
 msgid ""
@@ -51961,14 +51961,19 @@ msgid ""
 msgstr "當此募款頁停用時，訪客將自動轉址至所選頁面。若未指定頁面，則會看到系統預設的停用通知。"
 
 #: templates/CRM/Contact/Form/Task/Email.tpl:119
-msgid "Are you sure you want to send this email? This action cannot be undone."
+msgid ""
+"Are you sure you want to send this email? This action cannot be undone."
 msgstr "您確定要寄送這封電子郵件？此操作無法復原。"
 
-#: templates/CRM/Price/Form/PriceSet.tpl:60 templates/CRM/Price/Form/PriceSet.tpl:100
+#: templates/CRM/Price/Form/PriceSet.tpl:60
+#: templates/CRM/Price/Form/PriceSet.tpl:100
 msgid "(Full)"
 msgstr "（額滿）"
 
-#: templates/CRM/Price/Form/PriceSet.tpl:48 templates/CRM/Price/Form/PriceSet.tpl:63 templates/CRM/Price/Form/PriceSet.tpl:90 templates/CRM/Price/Form/PriceSet.tpl:103
+#: templates/CRM/Price/Form/PriceSet.tpl:48
+#: templates/CRM/Price/Form/PriceSet.tpl:63
+#: templates/CRM/Price/Form/PriceSet.tpl:90
+#: templates/CRM/Price/Form/PriceSet.tpl:103
 msgid "%1 remaining"
 msgstr "剩餘 %1 名"
 
@@ -51977,5 +51982,65 @@ msgid "Show remaining capacity?"
 msgstr "顯示剩餘名額？"
 
 #: templates/CRM/Price/Form/Set.tpl:84
-msgid "When enabled, remaining capacity will be shown next to each option on the frontend (e.g. \"8 remaining\"). Only applies to options with a maximum quantity set."
+msgid ""
+"When enabled, remaining capacity will be shown next to each option on the "
+"frontend (e.g. \"8 remaining\"). Only applies to options with a maximum "
+"quantity set."
 msgstr "勾選後，前台頁面的價格表選項旁將顯示各選項的剩餘名額（例如「剩餘 8 名」）。僅對有設定「最多數量」的選項生效；未設定最多數量的選項不受影響。"
+
+#: templates/CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.tpl:5
+msgid ""
+"Note: Contacts who made a successful donation after the specified number of "
+"days will also be included in the results."
+msgstr "注意：若聯絡人在失敗後超過指定天數才成功再捐，仍會被納入搜尋結果"
+
+#: templates/CRM/common/ShortenURL.tpl:188
+#: templates/CRM/common/ShortenURL.tpl:238
+msgid "Failed to shorten URL, please try again."
+msgstr "縮短網址失敗，請再試一次。"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:16
+msgid "Shorten URL History (Personal Campaign)"
+msgstr "短網址紀錄（個人募款）"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:18
+msgid "Shorten URL History"
+msgstr "短網址紀錄"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:20
+msgid "(latest 30 records)"
+msgstr "（最近 30 筆）"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:33
+#: templates/CRM/common/ShortenURLHistory.tpl:74
+msgid "Original Target URL"
+msgstr "原始目標網址"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:56
+msgid "No shortened URL records yet. Click \"Shorten URL\" to create one."
+msgstr "尚無縮網址記錄，請點選「縮短網址」建立第一筆。"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:101
+msgid "Unable to load target URL."
+msgstr "無法載入目標網址。"
+
+#: templates/CRM/common/ShortenURLHistory.tpl:102
+msgid "(no data)"
+msgstr "（無資料）"
+
+#: templates/CRM/Contribute/Page/ContributionType.tpl:74
+msgid "page(s)"
+msgstr "個頁面"
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:75
+msgid ""
+"This contribution type is currently used by active payment pages. If "
+"disabled, the contribution type field will be blank in related records and "
+"receipt downloads will stop working. To disable it, please visit the <a "
+"href=\"%1\">Contribution Type list</a> and disable or change the "
+"contribution type for the related pages first."
+msgstr "此費用類型目前被啟用中的付款頁使用，停用後相關頁面的捐款紀錄將無法顯示費用類型，收據下載功能亦會失效。若需停用，請先至<a href=\"%1\">費用類型列表</a>，將相關頁面停用或更換費用類型。"
+
+#: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php CRM/Core/Payment/TapPay.php
+msgid "【Payment Gateway】"
+msgstr "【金流端】"

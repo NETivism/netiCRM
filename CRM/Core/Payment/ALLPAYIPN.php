@@ -240,6 +240,8 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
             $params['end_date'] = date('YmdHis');
             $params['contribution_status_id'] = 1; // completed
             CRM_Contribute_BAO_ContributionRecur::add($params, $null);
+            $statusNoteTitle = ts('【Payment Gateway】').' '.ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
+            CRM_Contribute_BAO_ContributionRecur::addNote($recur->id, $statusNoteTitle, ts("Installments is full."));
           }
         }
       }
@@ -251,9 +253,13 @@ class CRM_Core_Payment_ALLPAYIPN extends CRM_Core_Payment_BaseIPN {
           $params['contribution_status_id'] = 5; // from pending to processing
           $params['modified_date'] = date('YmdHis');
           CRM_Contribute_BAO_ContributionRecur::add($params, $null);
+          $statusNoteTitle = ts('【Payment Gateway】').' '.ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
+          CRM_Contribute_BAO_ContributionRecur::addNote($recur->id, $statusNoteTitle);
         }
         else {
           CRM_Contribute_BAO_ContributionRecur::cancelRecurContribution($recur->id, CRM_Core_DAO::$_nullObject, 4);
+          $statusNoteTitle = ts('【Payment Gateway】').' '.ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(4)]);
+          CRM_Contribute_BAO_ContributionRecur::addNote($recur->id, $statusNoteTitle);
         }
       }
     }
