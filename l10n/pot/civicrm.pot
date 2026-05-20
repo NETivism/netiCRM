@@ -51039,14 +51039,6 @@ msgstr ""
 msgid "%1 is a CRM service for nonprofits provided by NETivism"
 msgstr ""
 
-#: CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.php
-msgid "Failed Donation Date (From)"
-msgstr ""
-
-#: CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.php
-msgid "Failed Donation Date (To)"
-msgstr ""
-
 #: CRM/Connector/Page/AJAX.php
 msgid "Failed to generate API key."
 msgstr ""
@@ -51079,6 +51071,9 @@ msgstr ""
 msgid "API Key (masked)"
 msgstr ""
 
+msgid "Generate API Key"
+msgstr ""
+
 #: templates/CRM/Connector/Page/Connector.tpl templates/CRM/Connector/Page/Connector.tpl
 msgid "Site Key"
 msgstr ""
@@ -51109,4 +51104,181 @@ msgstr ""
 
 #: templates/CRM/Connector/Page/Connector.tpl templates/CRM/Connector/Page/Connector.tpl
 msgid "Security notice: This API key is sensitive credentials. Do not share it publicly. Store it only in a trusted backend service or server, and keep it confidential."
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php
+msgid "Prefix of Receipt ID cannot contain hyphen (-)."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Confirm Send Email?"
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl
+msgid "Confirm Send"
+msgstr ""
+
+#: CRM/Contribute/Form/Contribution/Main.php:1257 CRM/Event/Form/Registration/Register.php:939
+msgid "This page is currently unavailable due to a payment processor configuration error. Please contact the site administrator."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:112
+msgid "Merchant is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:119
+msgid "LINE Pay Channel ID is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: CRM/Core/Payment/Mobile.php:122
+msgid "LINE Pay Channel Secret is not set in the Administer CiviCRM &raquo; Payment Processor."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:102 templates/CRM/Event/Form/Registration/Register.tpl:121
+msgid "Payment Processor Misconfigured"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:103 templates/CRM/Event/Form/Registration/Register.tpl:122
+msgid "See %1 to check the configuration."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:105 templates/CRM/Event/Form/Registration/Register.tpl:124
+msgid "Page Error, Contact Administrator"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/Contribution/Main.tpl:106
+msgid "Donation is currently unavailable. Please contact the website administrator for assistance."
+msgstr ""
+
+#: templates/CRM/Event/Form/Registration/Register.tpl:125
+msgid "Registration is currently unavailable. Please contact the website administrator for assistance."
+msgstr ""
+
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:388
+msgid "Risk Warning"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:389
+msgid "The following payment processors do not have 3D Secure verification enabled."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Amount.tpl:391
+msgid "Stores without 3D Secure verification are vulnerable to card testing attacks when accepting public payments. We recommend switching to a store with 3D Secure enabled; if you must continue using it, please enable Recaptcha on the profile form."
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:212
+msgid "The actual style and layout should be viewed on the page where this profile is embedded."
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:218
+msgid "Pages %%StatusMessage%%"
+msgstr ""
+
+#: CRM/UF/Form/Preview.php:256
+msgid "(ID: %1)"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:157
+msgid "This profile is embedded in the following pages. Click the title to preview the form on the frontend."
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:165
+msgid "Page Settings"
+msgstr ""
+
+#: templates/CRM/UF/Form/Preview.tpl:179
+msgid "Configure this page's form"
+msgstr ""
+
+#: templates/CRM/Mailing/Page/Browse.tpl:71
+msgid "Mailing content is incomplete, please edit before viewing"
+msgstr ""
+
+#: CRM/Admin/Form/Setting/Receipt.php:41
+msgid "Default value for donor credit name"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:89
+msgid "Use receipt title as default for donor credit name"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Setting/Receipt.tpl:90
+msgid "If checked, when donors select \"Full Name\" or \"Partial Name\" for donor credit, the system will fill in the receipt title. If unchecked, the contact name will be used."
+msgstr ""
+
+#: CRM/Contribute/Form/ContributionPage/Settings.php:176
+msgid "Redirect to contribution page when disabled"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionPage/Settings.tpl:63
+msgid "If this contribution page is disabled, visitors will be automatically redirected to the selected page. If no page is selected, the default unavailable notice will be shown."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Task/Email.tpl:119
+msgid "Are you sure you want to send this email? This action cannot be undone."
+msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl:60 templates/CRM/Price/Form/PriceSet.tpl:100
+msgid "(Full)"
+msgstr ""
+
+#: templates/CRM/Price/Form/PriceSet.tpl:48 templates/CRM/Price/Form/PriceSet.tpl:63 templates/CRM/Price/Form/PriceSet.tpl:90 templates/CRM/Price/Form/PriceSet.tpl:103
+msgid "%1 remaining"
+msgstr ""
+
+#: CRM/Price/Form/Set.php:188
+msgid "Show remaining capacity?"
+msgstr ""
+
+#: templates/CRM/Price/Form/Set.tpl:84
+msgid "When enabled, remaining capacity will be shown next to each option on the frontend (e.g. \"8 remaining\"). Only applies to options with a maximum quantity set."
+msgstr ""
+
+#: templates/CRM/Contact/Form/Search/Custom/FailedNoFurtherDonate.tpl:5
+msgid "Note: Contacts who made a successful donation after the specified number of days will also be included in the results."
+msgstr ""
+
+#: templates/CRM/common/ShortenURL.tpl:188 templates/CRM/common/ShortenURL.tpl:238
+msgid "Failed to shorten URL, please try again."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:16
+msgid "Shorten URL History (Personal Campaign)"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:18
+msgid "Shorten URL History"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:20
+msgid "(latest 30 records)"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:33 templates/CRM/common/ShortenURLHistory.tpl:74
+msgid "Original Target URL"
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:56
+msgid "No shortened URL records yet. Click \"Shorten URL\" to create one."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:101
+msgid "Unable to load target URL."
+msgstr ""
+
+#: templates/CRM/common/ShortenURLHistory.tpl:102
+msgid "(no data)"
+msgstr ""
+
+#: templates/CRM/Contribute/Page/ContributionType.tpl:74
+msgid "page(s)"
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:75
+msgid "This contribution type is currently used by active payment pages. If disabled, the contribution type field will be blank in related records and receipt downloads will stop working. To disable it, please visit the <a href=\"%1\">Contribution Type list</a> and disable or change the contribution type for the related pages first."
+msgstr ""
+
+#: templates/CRM/Contribute/Form/ContributionType.tpl:88
+msgid "This contribution type has receipt records. Changing the name or accounting code will affect the consistency of historical receipts. If needed, it is recommended to create a new contribution type instead. Are you sure you want to continue?"
 msgstr ""
