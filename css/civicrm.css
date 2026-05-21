@@ -2919,7 +2919,8 @@ span.icon {
 .Relationship-icon:before { content: "\f30d"; }
 
 /* media embed */
-.crm-container .media_embed {
+.crm-container .media_embed,
+.crm-container .raw-html-embed {
   position: relative;
   padding-bottom: 56.25%;
   padding-top: 30px;
@@ -2930,7 +2931,11 @@ span.icon {
 .crm-container .media_embed iframe,
 .crm-container .media_embed object,
 .crm-container .media_embed video,
-.crm-container .media_embed embed {
+.crm-container .media_embed embed,
+.crm-container .raw-html-embed iframe,
+.crm-container .raw-html-embed object,
+.crm-container .raw-html-embed video,
+.crm-container .raw-html-embed embed {
   position: absolute;
   top: 0;
   left: 0;
@@ -5946,7 +5951,8 @@ tbody.scrollContent tr.alternateRow {
   padding-top: 0;
 }
 .crm-container .event-map,
-.crm-container .event-map.media_embed {
+.crm-container .event-map.media_embed,
+.crm-container .event-map.raw-html-embed {
   margin: 0 auto;
 }
 .crm-container .event-map-links {
