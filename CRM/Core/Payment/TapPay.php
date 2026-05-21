@@ -1198,7 +1198,7 @@ LIMIT 0, 100
       }
       $recurParams['message'] = $resultNote;
       CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
-      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
+      CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, ts('【Payment Gateway】').' '.$statusNoteTitle, $statusNote);
     }
     elseif ($activeTokenOverride && $donePayment) {
       // Add note when payment succeeded for expired recurring with active token
@@ -1218,7 +1218,7 @@ LIMIT 0, 100
           'contribution_status_id' => 5
         ];
         CRM_Contribute_BAO_ContributionRecur::add($recurParams, CRM_Core_DAO::$_nullObject);
-        CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, $statusNoteTitle, $statusNote);
+        CRM_Contribute_BAO_ContributionRecur::addNote($dao->recur_id, ts('【Payment Gateway】').' '.$statusNoteTitle, $statusNote);
       }
     }
 
@@ -1682,7 +1682,7 @@ LIMIT 0, 100
             if ($canUpdateStatus) {
               $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(5)]);
               $statusNote = ts('Card expiry date has been updated.').' '.ts("Auto renews status");
-              CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, $statusNoteTitle, $statusNote);
+              CRM_Contribute_BAO_ContributionRecur::addNote($dao->contribution_recur_id, ts('【Payment Gateway】').' '.$statusNoteTitle, $statusNote);
             }
             break;
           }

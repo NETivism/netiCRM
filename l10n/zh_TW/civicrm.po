@@ -8569,7 +8569,7 @@ msgstr "不要交易"
 
 #: CRM/Contact/DAO/Contact.php templates/CRM/Contact/Page/View/Summary.tpl
 msgid "No Bulk Emails (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/DAO/Contact.php
 msgid "Sort Name"
@@ -8874,7 +8874,7 @@ msgstr "Email 格式"
 
 #: CRM/Contact/Form/Edit/CommunicationPreferences.php
 msgid "NO BULK EMAILS (User Opt Out)"
-msgstr "不想收到 Email（使用者退出）"
+msgstr "不想收電子報（退訂全站訊息）"
 
 #: CRM/Contact/Form/Edit/Demographics.php
 #: templates/CRM/Contact/Page/View/Demographics.tpl
@@ -52033,9 +52033,14 @@ msgid "page(s)"
 msgstr "個頁面"
 
 #: templates/CRM/Contribute/Form/ContributionType.tpl:75
-msgid "This contribution type is currently used by active payment pages. If disabled, the contribution type field will be blank in related records and receipt downloads will stop working. To disable it, please visit the <a href=\"%1\">Contribution Type list</a> and disable or change the contribution type for the related pages first."
+msgid ""
+"This contribution type is currently used by active payment pages. If "
+"disabled, the contribution type field will be blank in related records and "
+"receipt downloads will stop working. To disable it, please visit the <a "
+"href=\"%1\">Contribution Type list</a> and disable or change the "
+"contribution type for the related pages first."
 msgstr "此費用類型目前被啟用中的付款頁使用，停用後相關頁面的捐款紀錄將無法顯示費用類型，收據下載功能亦會失效。若需停用，請先至<a href=\"%1\">費用類型列表</a>，將相關頁面停用或更換費用類型。"
 
-#: templates/CRM/Contribute/Form/ContributionType.tpl:88
-msgid "This contribution type has receipt records. Changing the name or accounting code will affect the consistency of historical receipts. If needed, it is recommended to create a new contribution type instead. Are you sure you want to continue?"
-msgstr "此費用類型已有收據紀錄，修改名稱或會計代碼會影響歷史收據一致性，若有需要，建議新增費用類型。確定要繼續修改?"
+#: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php CRM/Core/Payment/TapPay.php
+msgid "【Payment Gateway】"
+msgstr "【金流端】"
