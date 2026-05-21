@@ -71,7 +71,7 @@
 	          {if $row.usedPages}
 	            {assign var="pageCount" value=$row.usedPages|@count}
 	            <a href="javascript:void(0)" class="ct-usage-toggle" data-id="{$row.id}">
-	              {$pageCount} {ts}page(s){/ts} <span class="ct-arrow">&#9658;</span>
+	              {$pageCount} {ts}page(s){/ts} <i class="zmdi zmdi-caret-right ct-arrow"></i>
 	            </a>
 	            <div id="ct-usage-{$row.id}" class="ct-usage-list" style="display:none;">
 	              {foreach from=$row.usedPages item=page}
@@ -88,15 +88,16 @@
         </tr>
         {/foreach}
          </table>
-<style>
+<style>{literal}
 .ct-usage-toggle { cursor: pointer; white-space: nowrap; }
+.ct-usage-toggle .ct-arrow { vertical-align: middle; font-size: 24px; }
 .ct-usage-list { margin-top: 4px; }
 .ct-usage-list .ct-usage-disabled a,
 .ct-usage-list .ct-usage-disabled a.disabled {
   color: #c00;
   text-decoration: line-through;
 }
-</style>
+{/literal}</style>
 <script>{literal}
 cj(document).ready(function($) {
   $('.ct-usage-toggle').on('click', function() {
@@ -104,7 +105,7 @@ cj(document).ready(function($) {
     var list = $('#ct-usage-' + id);
     var arrow = $(this).find('.ct-arrow');
     list.toggle();
-    arrow.html(list.is(':visible') ? '&#9660;' : '&#9658;');
+    arrow.toggleClass('zmdi-caret-right zmdi-caret-down');
   });
 });
 {/literal}</script>
