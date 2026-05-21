@@ -1159,7 +1159,6 @@
       CK.TableCellProperties,
       CK.TableColumnResize,
       CK.TableCaption,
-      CK.MediaEmbed,
       CK.HtmlEmbed,
       CK.BlockQuote,
       CK.CodeBlock,
@@ -1207,7 +1206,7 @@
           '|',
           'link', 'unlink',
           '|',
-          'insertImage', 'mediaEmbed',
+          'insertImage', 'htmlEmbed',
           '-',
           'heading', 'fontFamily', 'fontSize',
           '|',
@@ -1223,6 +1222,9 @@
       },
       alignment: {
         options: ['left', 'center', 'right', 'justify'],
+      },
+      htmlEmbed: {
+        showPreviews: true,
       },
       heading: {
         options: [
@@ -1408,6 +1410,7 @@
       CK.PasteFromOffice,
       CK.Clipboard,
       CK.GeneralHtmlSupport,
+      CK.HtmlEmbed,
       CK.Undo,
       ExtendSchema,
     ];
@@ -1437,7 +1440,7 @@
           '|',
           'link', 'unlink',
           '|',
-          'insertImage',
+          'insertImage', 'htmlEmbed',
           '|',
           'undo', 'redo',
         ],
@@ -1445,6 +1448,9 @@
       },
       alignment: {
         options: ['left', 'center', 'right', 'justify'],
+      },
+      htmlEmbed: {
+        showPreviews: true,
       },
       heading: {
         options: [
