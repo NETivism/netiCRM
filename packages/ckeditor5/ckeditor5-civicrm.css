@@ -4,6 +4,10 @@
 .crm-container table.form-layout-compressed:has(.editor-switcher-container) {
   table-layout: fixed;
 }
+.crm-container table.form-layout-compressed:has(.editor-switcher-container) td.label ~ td {
+  max-width: 0;
+  overflow: hidden;
+}
 .crm-container .ck.ck-editor {
   max-width: 100%;
 }
