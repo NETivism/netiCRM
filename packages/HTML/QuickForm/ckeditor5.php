@@ -151,6 +151,7 @@ if (window.CKEDITOR && !window.CKEDITOR_5) {
 
     // Load switcher logic
     if (empty($GLOBALS['editor_switcher_loaded'])) {
+      $html .= '<link rel="stylesheet" href="' . $config->resourceBase . 'packages/ckeditor5/editor-switcher.css?' . $config->ver . '">' . "\n";
       $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/editor-switcher.js?' . $config->ver . '"></script>' . "\n";
       $GLOBALS['editor_switcher_loaded'] = TRUE;
     }
@@ -235,18 +236,18 @@ cj(function() {
     if (!$isCke5Default) {
       $hintMessage = '';
       if ($systemEditorId == 2 || (is_array($systemEditorId) && in_array(2, $systemEditorId))) {
-        $hintMessage = '<span style="font-size: 11px; color: #8a6d3b; background-color: #fcf8e3; padding: 4px 8px; border-radius: 4px; border: 1px solid #faebcc; margin-left: -5px;">' . ts('CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href="%1" target="_blank">Please report any issues</a>.', [1 => 'https://neticrm.tw/support']) . '</span>';
+        $hintMessage = '<span class="editor-switcher-hint">' . ts('CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href="%1" target="_blank">Please report any issues</a>.', [1 => 'https://neticrm.tw/support']) . '</span>';
       }
 
       $switcherHtml = '
-      <div class="crm-section editor-switcher-container" style="margin-top: 5px; margin-bottom: 10px; border-radius: 4px; display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <div style="display: flex; align-items: center;">
-          <span style="font-size: 11px; font-weight: bold; color: #444; margin-right: 10px;">' . ts('Switch Editor:') . '</span>
-          <select class="editor-format-switcher" onchange="CiviEditorSwitcher.switch(this.value, \'' . $name . '\', ' . htmlspecialchars(json_encode($cke4Config)) . ')" style="padding: 2px 4px; font-size: 11px; height: 24px; min-width: 140px;">
+      <div class="crm-section editor-switcher-container">
+        <div class="editor-switcher-row">
+          <span class="editor-switcher-label">' . ts('Switch Editor:') . '</span>
+          <select class="editor-format-switcher" onchange="CiviEditorSwitcher.switch(this.value, \'' . $name . '\', ' . htmlspecialchars(json_encode($cke4Config)) . ')">
             <option value="cke4">' . ts('CKEditor 4 (Legacy)') . '</option>
             <option value="cke5" selected>' . ts('CKEditor 5 (New)') . '</option>
           </select>
-          <span class="editor-switch-status" style="font-size: 11px; color: #666;"></span>
+          <span class="editor-switch-status"></span>
         </div>
         ' . $hintMessage . '
       </div>';
