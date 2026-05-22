@@ -139,6 +139,7 @@ if (window.CKEDITOR && !window.CKEDITOR_5) {
 </script>' . "\n";
 
       // Load CiviCRM-specific config (ExtendSchema plugin, presets)
+      $html .= '<link rel="stylesheet" href="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5-civicrm.css?' . $config->ver . '">' . "\n";
       $html .= '<script type="text/javascript" src="' . $config->resourceBase . 'packages/ckeditor5/ckeditor5-civicrm.js?' . $config->ver . '"></script>' . "\n";
 
       // Load translation file for current UI language (registers to window.CKEDITOR_TRANSLATIONS).

@@ -131,6 +131,11 @@
         link.href = config.resourceBase + 'packages/ckeditor5/ckeditor5.css?' + config.ver;
         document.head.appendChild(link);
 
+        const civicrmLink = document.createElement('link');
+        civicrmLink.rel = 'stylesheet';
+        civicrmLink.href = config.resourceBase + 'packages/ckeditor5/ckeditor5-civicrm.css?' + config.ver;
+        document.head.appendChild(civicrmLink);
+
         // Cache CKE4 and load CKE5 bundle
         const oldCKE4 = window.CKEDITOR;
         await this.loadScript(config.resourceBase + 'packages/ckeditor5/ckeditor5.umd.js?' + config.ver);
