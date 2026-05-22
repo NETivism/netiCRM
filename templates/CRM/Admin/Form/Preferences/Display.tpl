@@ -110,7 +110,7 @@
             <tr class="crm-preferences-display-form-block-description crm-preferences-display-form-block-editor_allow_all_content-desc">
                <td>&nbsp;</td>
                <td class="description">
-                 <div class="crm-marker"><strong>WARNING</strong>: {ts}By default, dangerous HTML tags (e.g., scripts, iframes) are stripped to prevent XSS attacks. Enabling this option bypasses these protections. Only use this if you trust all editors and have a specific need for custom scripts.{/ts}</div>
+                 <div class="crm-marker"><strong>WARNING</strong>: {ts}By default, dangerous HTML is filtered to prevent XSS attacks — including &lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler attributes (e.g., onclick, onload), and javascript: URLs. Enabling this option removes all these protections. Only enable this if you trust all editors and require embedded scripts.{/ts}</div>
                </td>
             </tr>
 	{/if}
