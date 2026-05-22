@@ -51290,3 +51290,31 @@ msgstr ""
 #: CRM/Core/Payment/TapPay.php:1519
 msgid "Recurring has expired and no successful contribution in the past 6 months, system auto changed to failed."
 msgstr ""
+
+#: templates/CRM/Admin/Form/Preferences/Display.tpl:107
+msgid "HTML Security Filter"
+msgstr ""
+
+#: templates/CRM/Admin/Form/Preferences/Display.tpl:113
+msgid "By default, dangerous HTML is filtered to prevent XSS attacks — including &lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler attributes (e.g., onclick, onload), and javascript: URLs. Enabling this option removes all these protections. Only enable this if you trust all editors and require embedded scripts."
+msgstr ""
+
+#: CRM/Admin/Form/Preferences/Display.php:102
+msgid "Disable Security Filter (Allow all content & scripts)"
+msgstr ""
+
+#: packages/HTML/QuickForm/ckeditor.php:161 packages/HTML/QuickForm/ckeditor5.php:244
+msgid "Switch Editor:"
+msgstr ""
+
+#: packages/HTML/QuickForm/ckeditor.php:163 packages/HTML/QuickForm/ckeditor5.php:246
+msgid "CKEditor 4 (Legacy)"
+msgstr ""
+
+#: packages/HTML/QuickForm/ckeditor.php:164 packages/HTML/QuickForm/ckeditor5.php:247
+msgid "CKEditor 5 (New)"
+msgstr ""
+
+#: packages/HTML/QuickForm/ckeditor.php:155 packages/HTML/QuickForm/ckeditor5.php:238
+msgid "CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
+msgstr ""
