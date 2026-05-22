@@ -112,7 +112,7 @@ class HTML_QuickForm_CKEditor5 extends HTML_QuickForm_textarea
     // global $civicrm_root is the canonical CiviCRM filesystem root (with trailing slash).
     // Same pattern used in CRM/Core/Config.php:519 and CRM/Core/I18n.php:64.
     global $civicrm_root;
-    $cke5Lang = $this->_getCKEditorLang($config->lcMessages);
+    $cke5Lang = self::getCKEditorLang($config->lcMessages);
     $hasTranslation = ($cke5Lang !== 'en') && file_exists($civicrm_root . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js');
     if ($hasTranslation) {
       $overrides['language'] = $cke5Lang;
@@ -265,7 +265,7 @@ cj(function() {
    * @param string $lcMessages CiviCRM locale (e.g. 'zh_TW', 'en_US')
    * @return string CKEditor 5 language code (e.g. 'zh', 'en')
    */
-  private function _getCKEditorLang($lcMessages) {
+  public static function getCKEditorLang($lcMessages) {
     $map = [
       'zh_TW'   => 'zh',
       'zh_CN'   => 'zh-cn',

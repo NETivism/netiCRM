@@ -1,6 +1,7 @@
 <?php
 
 require_once('HTML/QuickForm/textarea.php');
+require_once('HTML/QuickForm/ckeditor5.php');
 
 /**
  * HTML Quickform element for CKeditor
@@ -138,6 +139,12 @@ cj( function( ) {
             $isCke5Default = ($systemEditorId == 4 || (is_array($systemEditorId) && in_array(4, $systemEditorId))); // 4 is CKE5 ID from add_ckeditor5_option.sql
             
             if (!$isCke5Default) {
+              // Resolve CKE5 UI language so the switcher can load the matching
+              // translation when switching CKE4 -> CKE5 (mirrors ckeditor5.php).
+              global $civicrm_root;
+              $cke5Lang = HTML_QuickForm_CKEditor5::getCKEditorLang($config->lcMessages);
+              $hasTranslation = ($cke5Lang !== 'en') && file_exists($civicrm_root . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js');
+
               $cke4Config = array(
                 'resourceBase' => $config->resourceBase,
                 'ver' => $config->ver,
@@ -148,7 +155,9 @@ cj( function( ) {
                 'allowedContent' => $allowedContentConfig,
                 'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
                 'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
-                'imceUrl' => CRM_Utils_System::url('imce') ? CRM_Utils_System::url('imce') : ''
+                'imceUrl' => CRM_Utils_System::url('imce') ? CRM_Utils_System::url('imce') : '',
+                'lang' => $cke5Lang,
+                'langTranslationUrl' => $hasTranslation ? ($config->resourceBase . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js?' . $config->ver) : '',
                 );
 
                 $hintMessage = '';

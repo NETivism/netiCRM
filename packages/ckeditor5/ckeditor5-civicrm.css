@@ -30,7 +30,7 @@
   background: #666;
 }
 .ck.ck-button.ck-list-item-button.ck-button.ck-on:hover:not(.ck-disabled),.ck.ck-button.ck-list-item-button.ck-on:hover:not(.ck-disabled),.ck.ck-button.ck-list-item-button.ck-on:not(.ck-list-item-button_toggleable):not(.ck-disabled),.ck.ck-button.ck-list-item-button:hover:not(.ck-disabled):not(.ck-disabled) {
-  background: #666;
+  background: #ccc;
 }
 .crm-container .ck.ck-dropdown .ck-dropdown__panel.ck-dropdown__panel_ne,
 .crm-container .ck.ck-dropdown .ck-dropdown__panel.ck-dropdown__panel_se {
