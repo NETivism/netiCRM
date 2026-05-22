@@ -6,6 +6,7 @@
   --color-error-dark: #b71c1c;
   --color-error-light: #fff5f5;
   --color-form-input-border: #999;
+  --color-civicrm-primary: #333;
   --color-crm-special-contribute-primary: var(--neticrm-color-crm-special-contribute-primary, #3f51b5);
   --color-crm-special-contribute-info-link: var(--neticrm-color-crm-special-contribute-info-link, #c4ccff);
   --font-sans-serif: "PingFang TC", "Heiti TC", "Noto Sans TC", "Noto Sans CJK TC", NotoSansCJKtc-Regular, source-han-sans-traditional, "Microsoft JhengHei Fixed", "Microsoft JhengHei", "微軟正黑體", sans-serif;
@@ -2917,31 +2918,6 @@ span.icon {
 .Participant-icon:before { content: "\f1da"; }
 .Note-icon:before { content: "\f25b"; }
 .Relationship-icon:before { content: "\f30d"; }
-
-/* media embed */
-.crm-container .media_embed,
-.crm-container .raw-html-embed {
-  position: relative;
-  padding-bottom: 56.25%;
-  padding-top: 30px;
-  width: auto !important;
-  height: 0 !important;
-  overflow: hidden;
-}
-.crm-container .media_embed iframe,
-.crm-container .media_embed object,
-.crm-container .media_embed video,
-.crm-container .media_embed embed,
-.crm-container .raw-html-embed iframe,
-.crm-container .raw-html-embed object,
-.crm-container .raw-html-embed video,
-.crm-container .raw-html-embed embed {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
 
 /* accordion styles */
 
