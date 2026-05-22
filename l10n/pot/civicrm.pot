@@ -51286,3 +51286,7 @@ msgstr ""
 #: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php CRM/Core/Payment/TapPay.php
 msgid "【Payment Gateway】"
 msgstr ""
+
+#: CRM/Core/Payment/TapPay.php:1519
+msgid "Recurring has expired and no successful contribution in the past 6 months, system auto changed to failed."
+msgstr ""
