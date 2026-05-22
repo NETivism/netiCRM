@@ -52041,6 +52041,19 @@ msgid ""
 "contribution type for the related pages first."
 msgstr "此費用類型目前被啟用中的付款頁使用，停用後相關頁面的捐款紀錄將無法顯示費用類型，收據下載功能亦會失效。若需停用，請先至<a href=\"%1\">費用類型列表</a>，將相關頁面停用或更換費用類型。"
 
-#: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php CRM/Core/Payment/TapPay.php
+#: templates/CRM/Contribute/Form/ContributionType.tpl:88
+msgid ""
+"This contribution type has receipt records. Changing the name or accounting "
+"code will affect the consistency of historical receipts. If needed, it is "
+"recommended to create a new contribution type instead. Are you sure you want"
+" to continue?"
+msgstr ""
+
+#: CRM/Core/Payment/ALLPAYIPN.php CRM/Core/Payment/SPGATEWAY.php
+#: CRM/Core/Payment/TapPay.php
 msgid "【Payment Gateway】"
 msgstr "【金流端】"
+
+#: CRM/Core/Payment/TapPay.php:1519
+msgid "Recurring has expired and no successful contribution in the past 6 months, system auto changed to failed."
+msgstr "定期定額已過期，且近 6 個月內無成功捐款，系統自動轉為已失敗。"

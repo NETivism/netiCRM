@@ -507,6 +507,10 @@ class CRM_Track_Selector_Track extends CRM_Core_Selector_Base implements CRM_Cor
    * @return array
    */
   private function buildExportRows($offset, $rowCount, $sort = NULL) {
+    // Default to visit_date DESC to match the search UI default order
+    if (empty($sort)) {
+      $sort = 'visit_date DESC';
+    }
     $dao = $this->getQuery('*', NULL, $offset, $rowCount, $sort);
 
     $rows = [];
