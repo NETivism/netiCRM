@@ -176,7 +176,7 @@
             {/if}
         
             {* Recurring contribution / pledge information *}
-            {if $is_recur && $payment_result_type eq 1}
+            {if $is_recur}
                 {if $installments}
     		<p><strong>{ts 1=$frequency_interval 2=$frequency_unit 3=$installments}This recurring contribution will be automatically processed every %1 %2(s) for a total %3 installments (including this initial contribution).{/ts}</strong></p>
                 {else}
