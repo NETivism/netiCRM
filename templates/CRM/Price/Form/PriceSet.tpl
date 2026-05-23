@@ -107,6 +107,16 @@
                         </div>
                       {/if}
                     {/foreach}
+                  {elseif $priceSet.show_remaining && $element.html_type eq 'Text'}
+                    {$form.$element_name.html}
+                    {foreach key=key item=opt from=$element.options}
+                      {if $opt.is_full}
+                        <span class="price-remaining">{ts}(Full){/ts}</span>
+                      {elseif $opt.max_value}
+                        {assign var="remaining" value=`$opt.max_value-$opt.db_total_count`}
+                        {if $remaining >= 0}<span class="price-remaining">{ts 1=$remaining}%1 remaining{/ts}</span>{/if}
+                      {/if}
+                    {/foreach}
                   {else}
                     {$form.$element_name.html}
                   {/if}
