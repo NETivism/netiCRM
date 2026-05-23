@@ -333,8 +333,20 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         $element = $qf->getElement($elementName);
 
         // CRM-6902
+        // When full and the price set opted into show_remaining, disable the
+        // quantity input instead of freeze(): a frozen number element renders
+        // getFrozenHtml(), which is empty when no quantity was entered, so the
+        // box vanishes. disabled keeps the (greyed) box visible, paired with the
+        // "(Full)" text in the template, and the browser excludes it from submit.
+        // Without show_remaining, keep the original freeze() so existing sites
+        // are unchanged.
         if (in_array($optionKey, $freezeOptions)) {
-          $element->freeze();
+          if (!empty($qf->_priceSet['show_remaining'])) {
+            $element->updateAttributes(['disabled' => 'disabled']);
+          }
+          else {
+            $element->freeze();
+          }
         }
 
         // integers will have numeric rule applied to them.
