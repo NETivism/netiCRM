@@ -6146,8 +6146,8 @@ tbody.scrollContent tr.alternateRow {
   color: #929a9c;
 }
 
-/* Report Summary */
-.crm-container form[action*="/civicrm/admin/contribute/settings"] label[for=is_special]:after {
+.crm-container form[action*="/civicrm/admin/contribute/settings"] label[for=is_special]:after,
+.crm-container form[action*="/civicrm/admin/price"] label[for=show_remaining]:after {
   content: "beta";
   vertical-align: top;
   font-size: 10px;
