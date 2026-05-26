@@ -19,6 +19,22 @@
        <autoincrement>true</autoincrement>
   </primaryKey>
   <field>
+      <name>contribution_recur_id</name>
+      <uniqueName>contribution_recur_id</uniqueName>
+      <type>int unsigned</type>
+      <default>NULL</default>
+      <title>Contribution Recur ID</title>
+      <comment>FK to civicrm_contribution_recur. Binds the issued preapproved payment regKey to a recurring contribution.</comment>
+      <add>4.0</add>
+  </field>
+  <foreignKey>
+    <name>contribution_recur_id</name>
+    <table>civicrm_contribution_recur</table>
+    <key>id</key>
+    <add>4.0</add>
+    <onDelete>SET NULL</onDelete>
+  </foreignKey>
+  <field>
       <name>trxn_id</name>
       <uniqueName>contribution_trxn_id</uniqueName>
       <title>Contribution Trxn ID</title>
@@ -95,6 +111,21 @@
       <comment>response of /payments/authorizations/{transactionId}/void</comment>
       <default>NULL</default>
   </field>
+  <field>
+      <name>reg_key</name>
+      <uniqueName>reg_key</uniqueName>
+      <title>Preapproved Payment regKey</title>
+      <type>varchar</type>
+      <length>255</length>
+      <comment>regKey returned from /payments/{transactionId}/confirm when payType is PREAPPROVED. Used by /payments/preapprovedPay/{regKey}/* APIs for recurring charges.</comment>
+      <add>4.0</add>
+      <default>NULL</default>
+  </field>
+  <index>
+      <name>index_reg_key</name>
+      <fieldName>reg_key</fieldName>
+      <add>4.0</add>
+  </index>
   <field>
       <name>recurring_payment</name>
       <type>text</type>
