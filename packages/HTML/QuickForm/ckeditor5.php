@@ -177,6 +177,15 @@ cj(function() {
   }
   cj(element).addClass('ckeditor5-processed');
 
+  // Defensive guard (ref #45339): if the libraries were not emitted on this
+  // page (e.g. a discarded duplicate render consumed the once-only asset
+  // guard), degrade gracefully to a plain textarea instead of throwing a
+  // TypeError that would also abort other scripts on the page.
+  if (typeof window.CiviCKEditor5 === 'undefined' || typeof window.CKEDITOR_5 === 'undefined') {
+    console.error('CKEditor 5 libraries not loaded; leaving plain textarea for: ' + (element.id || element.name));
+    return;
+  }
+
   var config = window.CiviCKEditor5.{$configMethod}({$overridesJson});
 
   window.CKEDITOR_5.ClassicEditor

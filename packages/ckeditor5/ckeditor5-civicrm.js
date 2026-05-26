@@ -1499,6 +1499,73 @@
   }
 
   // ==========================================================================
+  // Public helpers for interacting with an editor instance by element name.
+  // Used by Smarty templates (token insert, template fill) that historically
+  // hard-coded the CKEditor 4 `CKEDITOR.instances[...]` API (ref #45339).
+  // ==========================================================================
+
+  /**
+   * Resolve the CKEditor 5 instance bound to a textarea element.
+   * Mirrors the lookup in ckeditor5.php / editor-switcher.js:
+   * element -> next sibling .ck-editor -> .ck-editor__editable -> instance.
+   *
+   * @param {string|HTMLElement} elOrName element, or its id/name
+   * @return {object|null} the editor instance, or null if not found
+   */
+  function getEditorInstance(elOrName) {
+    var el = typeof elOrName === 'string'
+      ? (document.getElementById(elOrName) || document.getElementsByName(elOrName)[0])
+      : elOrName;
+    if (!el) {
+      return null;
+    }
+    var container = el.nextElementSibling;
+    if (container && container.classList.contains('ck-editor')) {
+      var editable = container.querySelector('.ck-editor__editable');
+      if (editable && editable.ckeditorInstance) {
+        return editable.ckeditorInstance;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Replace the whole content of the editor bound to elementName.
+   * Falls back to the raw textarea value when no instance is found.
+   *
+   * @return {boolean} true if an editor instance handled it
+   */
+  function setData(elementName, html) {
+    var editor = getEditorInstance(elementName);
+    if (editor) {
+      editor.setData(html || '');
+      return true;
+    }
+    var el = document.getElementById(elementName) || document.getElementsByName(elementName)[0];
+    if (el) {
+      el.value = html || '';
+    }
+    return false;
+  }
+
+  /**
+   * Insert HTML at the current selection of the editor bound to elementName.
+   * Uses the CKE5 model API (CKE5 has no CKE4-style insertHtml).
+   *
+   * @return {boolean} true if an editor instance handled it
+   */
+  function insertHtml(elementName, html) {
+    var editor = getEditorInstance(elementName);
+    if (!editor) {
+      return false;
+    }
+    var viewFragment = editor.data.processor.toView(html);
+    var modelFragment = editor.data.toModel(viewFragment);
+    editor.model.insertContent(modelFragment);
+    return true;
+  }
+
+  // ==========================================================================
   // Expose API
   // ==========================================================================
 
@@ -1508,6 +1575,9 @@
     CiviClipboardImage: CiviClipboardImage,
     getFullEditorConfig: getFullEditorConfig,
     getBasicEditorConfig: getBasicEditorConfig,
+    getEditorInstance: getEditorInstance,
+    setData: setData,
+    insertHtml: insertHtml,
   };
 
 })();

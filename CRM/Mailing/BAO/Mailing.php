@@ -2695,26 +2695,12 @@ LEFT JOIN civicrm_mailing_group g ON g.mailing_id   = m.id
       ]
     );
 
-    //insert message Text by selecting "Select Template option"
-    $form->add(
-      'textarea',
-      'text_message',
-      ts('Plain-text format'),
-      [
-        'cols' => '80', 'rows' => '8',
-        'onkeyup' => "return verify(this)",
-      ]
-    );
-    $form->addWysiwyg(
-      'html_message',
-      ts('HTML format'),
-      [
-        'cols' => '80',
-        'rows' => '8',
-        'fullpage' => '1',
-        'onkeyup' => "return verify(this)",
-      ]
-    );
+    // Note (ref #45339): do NOT add text_message / html_message here.
+    // They are added below in the className-aware block (Mail/SMS/PDF).
+    // Adding them here too created duplicate QuickForm elements, which made
+    // the CKEditor5 once-only asset guard get consumed by a discarded render
+    // (the renderer keeps the last element by name), so the editor libraries
+    // were never emitted on the mailing send page.
 
     //get the tokens.
     $tokens = [];
