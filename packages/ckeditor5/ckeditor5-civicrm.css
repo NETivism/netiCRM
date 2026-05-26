@@ -1,9 +1,6 @@
 @charset "UTF-8";
 
-.crm-container table.form-layout-compressed:has(.form-CKEditor5),
-.crm-container table.form-layout-compressed:has(.editor-switcher-container) {
-  table-layout: fixed;
-}
+.crm-container table.form-layout-compressed:has(.form-CKEditor5) td.label ~ td,
 .crm-container table.form-layout-compressed:has(.editor-switcher-container) td.label ~ td {
   max-width: 0;
   overflow: hidden;
