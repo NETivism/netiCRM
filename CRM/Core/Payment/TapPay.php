@@ -1500,12 +1500,13 @@ LIMIT 0, 100
     $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
     $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
+ AND r.start_date < %1
  AND r.id NOT IN (
    SELECT DISTINCT contribution_recur_id
    FROM civicrm_contribution
    WHERE contribution_status_id = 1
    AND receive_date >= %1
-   AND contribution_recur_id IS NOT NULL
+   AND contribution_recur_id IN(SELECT id FROM civicrm_contribution_recur WHERE contribution_status_id = 6)
  )";
     $dao = CRM_Core_DAO::executeQuery($sql, [
       1 => [$sixMonthsAgo, 'String'],
