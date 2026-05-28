@@ -1490,16 +1490,15 @@ LIMIT 0, 100
           'message' => ts("Card expiry date is due."),
         ];
         CRM_Contribute_BAO_ContributionRecur::add($params, CRM_Core_DAO::$_nullObject);
-        $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(1)]);
+        $statusNoteTitle = ts("Change status to %1", [1 => CRM_Contribute_PseudoConstant::contributionStatus(6)]);
         $statusNote = $params['message'] . ts("Auto renews status");
         CRM_Contribute_BAO_ContributionRecur::addNote($dao->id, $statusNoteTitle, $statusNote);
       }
     }
 
     // Convert expired recurring to Failed if no successful contribution in past 6 months
-    $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months', CRM_REQUEST_TIME));
-    $sql = "SELECT r.id, c.payment_processor_id, c.is_test FROM civicrm_contribution_recur r
- INNER JOIN civicrm_contribution c ON c.contribution_recur_id = r.id
+    $sixMonthsAgo = date('Y-m-d H:i:s', strtotime('-6 months'));
+    $sql = "SELECT r.id, r.processor_id, r.is_test FROM civicrm_contribution_recur r
  WHERE r.contribution_status_id = 6
  AND r.id NOT IN (
    SELECT DISTINCT contribution_recur_id
@@ -1507,14 +1506,18 @@ LIMIT 0, 100
    WHERE contribution_status_id = 1
    AND receive_date >= %1
    AND contribution_recur_id IS NOT NULL
- )
- GROUP BY r.id";
+ )";
     $dao = CRM_Core_DAO::executeQuery($sql, [
       1 => [$sixMonthsAgo, 'String'],
     ]);
+    $processorTypeCache = [];
     while ($dao->fetch()) {
-      $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->payment_processor_id, $dao->is_test ? 'test' : 'live');
-      if ($dao->id && strtolower($paymentProcessor['payment_processor_type']) == 'tappay') {
+      $cacheKey = $dao->processor_id . '_' . ($dao->is_test ? 'test' : 'live');
+      if (!array_key_exists($cacheKey, $processorTypeCache)) {
+        $paymentProcessor = CRM_Core_BAO_PaymentProcessor::getPayment($dao->processor_id, $dao->is_test ? 'test' : 'live');
+        $processorTypeCache[$cacheKey] = isset($paymentProcessor['payment_processor_type']) ? strtolower($paymentProcessor['payment_processor_type']) : NULL;
+      }
+      if ($dao->id && $processorTypeCache[$cacheKey] === 'tappay') {
         $noteMessage = ts("Recurring has expired and no successful contribution in the past 6 months, system auto changed to failed.");
         $params = [
           'id' => $dao->id,
