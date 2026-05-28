@@ -30,6 +30,8 @@
   --rfm-track-height: 4px;
   --rfm-icon-size: 1.75rem;
   --rfm-field-gap: 1.5rem;
+  --cke-max-width: 880px;
+  --cke-height: 400px;
 }
 
 /* Visually hidden helper (bootstrap 5) */
@@ -5791,6 +5793,17 @@ tbody.scrollContent tr.alternateRow {
 
 .crm-container th.contriTotalLeft {
     border-left: 1px solid #999999;
+}
+
+
+/* ckeditor 4 & 5 */
+.crm-container textarea + .cke,
+.crm-container .ck.ck-editor {
+  max-width: var(--cke-max-width);
+}
+.crm-container .cke_contents,
+  .crm-container .ck.ck-editor__main .ck-content {
+  height: var(--cke-height);
 }
 
 /* Contribute booster */

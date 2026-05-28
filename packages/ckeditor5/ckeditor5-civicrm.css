@@ -5,11 +5,7 @@
   max-width: 0;
   overflow: hidden;
 }
-.crm-container .ck.ck-editor {
-  max-width: 100%;
-}
 .crm-container .ck.ck-editor__main {
-  max-height: 50dvh;
   overflow: auto;
   border-top: 1px solid var(--ck-color-base-border);
 }
