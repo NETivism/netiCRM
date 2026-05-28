@@ -128,6 +128,9 @@
       }
       this._setupEmailCustomTags();
       this._setAllowDivInHeading();
+      // Installed last so it is the outermost data.get wrapper and can
+      // short-circuit empty content before the other wrappers run.
+      this._setupEmptyContentNormalize();
     }
 
     /**
@@ -314,6 +317,29 @@
           return writer.createContainerElement('unsubscribe', htmlAttrs);
         },
       });
+    }
+
+    /**
+     * Restore CKEditor 4's ignoreEmptyParagraph behavior. This bundle's native
+     * data.get() does not honor trim:'empty' (GHS interferes), so an empty editor
+     * serializes to '<p>&nbsp;</p>' instead of ''. Without this, an untouched
+     * WYSIWYG field persists a phantom value (e.g. a fake email signature).
+     * model.hasContent reliably reports empty (verified false for untouched editor).
+     */
+    _setupEmptyContentNormalize() {
+      var editor = this.editor;
+      var originalGet = editor.data.get.bind(editor.data);
+      editor.data.get = function(options) {
+        var trim = (options && options.trim) || 'empty';
+        if (trim === 'empty') {
+          var rootName = (options && options.rootName) || 'main';
+          var root = editor.model.document.getRoot(rootName);
+          if (root && !editor.model.hasContent(root, { ignoreWhitespaces: true })) {
+            return '';
+          }
+        }
+        return originalGet(options);
+      };
     }
 
     /**
