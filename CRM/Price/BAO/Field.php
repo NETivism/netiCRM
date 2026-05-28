@@ -333,8 +333,20 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
         $element = $qf->getElement($elementName);
 
         // CRM-6902
+        // When full and the price set opted into show_remaining, disable the
+        // quantity input instead of freeze(): a frozen number element renders
+        // getFrozenHtml(), which is empty when no quantity was entered, so the
+        // box vanishes. disabled keeps the (greyed) box visible, paired with the
+        // "(Full)" text in the template, and the browser excludes it from submit.
+        // Without show_remaining, keep the original freeze() so existing sites
+        // are unchanged.
         if (in_array($optionKey, $freezeOptions)) {
-          $element->freeze();
+          if (!empty($qf->_priceSet['show_remaining'])) {
+            $element->updateAttributes(['disabled' => 'disabled']);
+          }
+          else {
+            $element->freeze();
+          }
         }
 
         // integers will have numeric rule applied to them.
@@ -408,6 +420,14 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
       case 'Select':
         $selectOption = $allowedOptions = $priceVal = [];
 
+        // Only show remaining capacity on the event registration frontend, and
+        // only when the price set has opted in via show_remaining. <option> has
+        // no HTML, so the remaining/full text is appended to the label as plain
+        // text here (the template cannot reach individual options).
+        $showRemaining = !empty($qf->_priceSet['show_remaining']) &&
+          ($qf instanceof CRM_Event_Form_Registration);
+        $disabledOptionIds = [];
+
         foreach ($customOption as $opt) {
           $count = CRM_Utils_Array::value('count', $opt, '');
           $max_value = CRM_Utils_Array::value('max_value', $opt, '');
@@ -417,10 +437,31 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
             $opt['label'] .= ' - ';
             $opt['label'] .= CRM_Utils_Money::format($opt[$valueFieldName]);
           }
+
+          // is_full marks genuine capacity-full options (set by
+          // formatFieldsForOptionFull); freezeOptions may also contain
+          // membership-locked options, which we must not relabel.
+          $isFull = !empty($opt['is_full']);
+          if ($showRemaining) {
+            if ($isFull) {
+              $opt['label'] .= ' ' . ts('(Full)');
+            }
+            elseif (!empty($max_value)) {
+              $remaining = max(0, $max_value - CRM_Utils_Array::value('db_total_count', $opt, 0));
+              $opt['label'] .= ' (' . ts('%1 remaining', [1 => $remaining]) . ')';
+            }
+          }
           $selectOption[$opt['id']] = $opt['label'];
 
           if (in_array($opt['id'], $freezeOptions)) {
-            unset($selectOption[$opt['id']]);
+            if ($showRemaining && $isFull) {
+              // Keep the full option visible but disabled (TC-5) instead of
+              // removing it from the dropdown.
+              $disabledOptionIds[] = $opt['id'];
+            }
+            else {
+              unset($selectOption[$opt['id']]);
+            }
           }
           else {
             $allowedOptions[] = $opt['id'];
@@ -434,6 +475,17 @@ class CRM_Price_BAO_Field extends CRM_Price_DAO_Field {
           $useRequired && $field->is_required,
           ['price' => json_encode($priceVal)]
         );
+
+        // Mark full options as disabled <option> (show_remaining only). No public
+        // QuickForm API for per-option disabling, so set the attr directly.
+        if (!empty($disabledOptionIds) && isset($element->_options) && is_array($element->_options)) {
+          foreach ($element->_options as &$optionItem) {
+            if (isset($optionItem['attr']['value']) && in_array($optionItem['attr']['value'], $disabledOptionIds)) {
+              $optionItem['attr']['disabled'] = 'disabled';
+            }
+          }
+          unset($optionItem);
+        }
 
         // CRM-6902
         $button = substr($qf->controller->getButtonName(), -4);

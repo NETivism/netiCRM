@@ -1,0 +1,599 @@
+/**
+ * CiviCRM Content Styles
+ *
+ * General content area styles shared between the CKEditor 5 editing area
+ * and various CiviCRM frontend content containers.
+ *
+ * Using :is() pseudo-class for maximum compatibility with iOS 17 (N-2 policy).
+ */
+
+/* 1. Base Container Styles */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* 2. Blockquote */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) blockquote {
+  font-size: 1rem;
+  font-style: normal;
+  margin: 0 0 1.133em 0;
+  padding: 0 30px;
+  position: relative;
+  color: #383838;
+  border-left: 5px solid var(--color-civicrm-primary);
+  overflow: visible;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(blockquote p, blockquote li) {
+  font-size: 1rem;
+}
+
+/* 3. Paragraphs & Lists */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) p {
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0 0 1.7em 0;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(ul, ol, li) {
+  font-size: 1rem;
+}
+
+/* 4. Headings */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) h1 {
+  margin: 1.695em 0 .565em 0;
+  line-height: 1.13;
+  font-size: 2rem;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) h2 {
+  margin: 1.569em 0 .5em 0;
+  line-height: 1.046;
+  font-size: 1.625rem;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) h3 {
+  margin: 1.89em 0 .64em 0;
+  line-height: 1.181;
+  font-size: 1.375rem;
+}
+
+/* 5. Utility Classes (Alignment) */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .text-align-center {
+  text-align: center;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .text-align-right {
+  text-align: right;
+}
+
+/* 6. Indentation Classes */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .Indent1 { margin-left: 40px; }
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .Indent2 { margin-left: 80px; }
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .Indent3 { margin-left: 120px; }
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .Indent4 { margin-left: 160px; }
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .Indent5 { margin-left: 200px; }
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .Indent6 { margin-left: 240px; }
+
+/* 7. Tables */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) table {
+  margin-bottom: 1.7em;
+  width: attr(width);
+  max-width: 100%;
+  line-height: 1.5;
+  font-size: 1rem;
+  empty-cells: show;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 0;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) thead {
+  background-color: #e0e0e0;
+  color: #000;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(td, th) {
+  margin: 0;
+  padding: .5em 1em;
+  overflow: visible;
+  font-size: 1rem;
+  border: 1px solid #bdbdbd;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(thead th, tbody th) {
+  color: #000;
+  border-color: transparent;
+  border: 1px solid #bdbdbd;
+  background-color: #e0e0e0;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) td {
+ border-bottom: 1px solid #bdbdbd;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) table :is(p, ol, ul) {
+  line-height: 1.5;
+  font-size: 1rem;
+  margin: 0 0 1.5em 0;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) table :is(p, ol, ul):last-of-type {
+  margin-bottom: 0;
+}
+
+/* 8. Borderless Tables */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) table[border="0"],
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) table[border="0"] :is(thead th, tbody td, tr, th, td) {
+  border: none !important;
+}
+
+/* 9. Horizontal Rule */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) hr {
+  margin: 1.7em 0;
+  border-top: 1px solid #bdbdbd;
+}
+
+/* 10. CKEditor Specific Widget Styles */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .ck-widget.table:not(.layout-table) {
+  margin: 0 0 1.7em;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .ck-widget.image {
+  margin: 0;
+}
+
+/* 11. Image Alignment & Wrapping */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(.image-style-align-left, .image-inline.ck-widget[style*="float:left"]) {
+  float: left;
+  margin-right: 1.5em;
+  margin-bottom: 1em;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(.image-style-align-right, .image-inline.ck-widget[style*="float:right"]) {
+  float: right;
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+/* Legacy inline float styles (CKEditor 4 / HTML content compatibility) */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(img[style*="float:left"], .image[style*="float:left"]) {
+  margin-right: 1.5em;
+  margin-bottom: 1em;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(img[style*="float:right"], .image[style*="float:right"]) {
+  margin-left: 1.5em;
+  margin-bottom: 1em;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .image-style-align-block-left {
+  margin-left: 0;
+  margin-right: auto;
+  display: table;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .image-style-align-block-right {
+  margin-left: auto;
+  margin-right: 0;
+  display: table;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) .image-style-block {
+  margin-left: auto;
+  margin-right: auto;
+  display: table;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(.image-inline, .image-style-inline) {
+  display: inline-block;
+  margin: 0;
+  vertical-align: middle;
+}
+
+/* 12. Responsive Media Embed (16:9 aspect ratio) */
+/* Uses :not() guards to apply only on frontend, not inside the CKEditor editor (.ck-widget) */
+:is(
+  .crm-container .media_embed:not(:has(.ck-widget)),
+  .crm-container .raw-html-embed:not(.ck-widget)
+) {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  padding-top: 30px;
+  width: auto !important;
+  height: 0 !important;
+  overflow: hidden;
+}
+
+:is(
+  .crm-container .media_embed:not(:has(.ck-widget)),
+  .crm-container .raw-html-embed:not(.ck-widget)
+) :is(iframe, object, video, embed) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 13. Figure & Figcaption */
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(figure, figure.image) {
+  margin: 0;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(figure img, figure.image img) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+:is(
+  .ck-content,
+  .crm-container .event_description-section,
+  .crm-container .intro_text-section,
+  .crm-container .pcp-page-text,
+  .crm-container .profile-help-pre,
+  .crm-container .profile-help-post,
+  .crm-container .profile-group-help-pre,
+  .crm-container .profile-group-help-post
+) :is(figure figcaption, figure.image figcaption) {
+  contain: inline-size;
+  overflow-wrap: break-word;
+  margin-top: 0.5rem;
+  text-align: left;
+  font-size: .875rem;
+  padding: 0;
+  background: none;
+}

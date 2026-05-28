@@ -83,6 +83,12 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
    */
   public $id;
   /**
+   * FK to civicrm_contribution_recur. Binds the issued preapproved payment regKey to a recurring contribution.
+   *
+   * @var int unsigned
+   */
+  public $contribution_recur_id;
+  /**
    * trxn_id from contribution
    *
    * @var string
@@ -137,6 +143,12 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
    */
   public $void;
   /**
+   * regKey returned from /payments/{transactionId}/confirm when payType is PREAPPROVED. Used by /payments/preapprovedPay/{regKey}/* APIs for recurring charges.
+   *
+   * @var string
+   */
+  public $reg_key;
+  /**
    * response of /payments/preapprovedPay/{regKey}/payment
    *
    * @var text
@@ -164,6 +176,32 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
   }
 
   /**
+   * return foreign links
+   *
+   * @return array
+   */
+  public function &links() {
+    if (!(self::$_links)) {
+      self::$_links = [
+        'contribution_recur_id' => 'civicrm_contribution_recur:id',
+      ];
+    }
+    return self::$_links;
+  }
+  /**
+   * Returns foreign keys and entity references.
+   *
+   * @return array
+   *   [CRM_Core_Reference_Interface]
+   */
+  public static function getReferenceColumns() {
+    if (!isset(Civi::$statics[__CLASS__]['links'])) {
+      Civi::$statics[__CLASS__]['links'] = static::createReferenceColumns(__CLASS__);
+      Civi::$statics[__CLASS__]['links'][] = new CRM_Core_Reference_Basic(self::getTableName(), 'contribution_recur_id', 'civicrm_contribution_recur', 'id');
+    }
+    return Civi::$statics[__CLASS__]['links'];
+  }
+  /**
    * returns all the column names of this table
    *
    * @return array
@@ -176,6 +214,13 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
           'type' => CRM_Utils_Type::T_INT,
           'title' => ts('LinePay ID') ,
           'required' => TRUE,
+        ],
+        'contribution_recur_id' => [
+          'name' => 'contribution_recur_id',
+          'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Contribution Recur ID') ,
+          'default' => 'UL',
+          'FKClassName' => 'CRM_Contribute_DAO_ContributionRecur',
         ],
         'contribution_trxn_id' => [
           'name' => 'trxn_id',
@@ -231,6 +276,14 @@ class CRM_Contribute_DAO_LinePay extends CRM_Core_DAO {
           'name' => 'void',
           'type' => CRM_Utils_Type::T_TEXT,
           'title' => ts('Void') ,
+          'default' => 'UL',
+        ],
+        'reg_key' => [
+          'name' => 'reg_key',
+          'type' => CRM_Utils_Type::T_STRING,
+          'title' => ts('Preapproved Payment regKey') ,
+          'maxlength' => 255,
+          'size' => CRM_Utils_Type::HUGE,
           'default' => 'UL',
         ],
         'recurring_payment' => [

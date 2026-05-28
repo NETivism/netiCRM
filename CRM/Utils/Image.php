@@ -594,11 +594,14 @@ class CRM_Utils_Image {
       return $ckeditorFields;
     }
 
+    // Both 'CKeditor' (CKE4 wrapper) and 'CKEditor5' (CKE5 wrapper)
+    // emit blob+title image markup that this routine must relocate.
+    $ckeditorTypes = ['CKeditor', 'CKEditor5'];
+
     foreach ($formElements as $element) {
-      // Check if element is CKeditor type
       if (is_object($element) &&
           isset($element->_type) &&
-          $element->_type === 'CKeditor') {
+          in_array($element->_type, $ckeditorTypes, TRUE)) {
 
         // Get field name from element attributes
         $fieldName = NULL;

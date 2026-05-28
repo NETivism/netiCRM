@@ -102,6 +102,18 @@
                </td>
             </tr>
 	{/if}
+	{if $form.editor_allow_all_content.html}
+            <tr class="crm-preferences-display-form-block-editor_allow_all_content">
+               <td class="label">{ts}HTML Security Filter{/ts}</td>
+               <td>{$form.editor_allow_all_content.html}</td>
+            </tr>
+            <tr class="crm-preferences-display-form-block-description crm-preferences-display-form-block-editor_allow_all_content-desc">
+               <td>&nbsp;</td>
+               <td class="description">
+                 <div class="crm-marker"><strong>WARNING</strong>: {ts}By default, dangerous HTML is filtered to prevent XSS attacks — including &lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler attributes (e.g., onclick, onload), and javascript: URLs. Enabling this option removes all these protections. Only enable this if you trust all editors and require embedded scripts.{/ts}</div>
+               </td>
+            </tr>
+	{/if}
 	{if $form.display_name_format.html}
             <tr class="crm-preferences-display-form-block-display_name_format" >
                <td class="label">{$form.display_name_format.label}</td>
@@ -125,6 +137,28 @@
 	{/if}
     <div class="crm-submit-buttons">{include file="CRM/common/formButtons.tpl" location="bottom"}</div>
 </div>
+{if $form.wysiwyg_editor.html}
+{literal}
+<script type="text/javascript">
+  cj(function($) {
+    function toggleAllowAllContent() {
+      var isCKEditor5 = $('#wysiwyg_editor').val() === '4';
+      var $rows = $(
+        'tr.crm-preferences-display-form-block-editor_allow_all_content, ' +
+        'tr.crm-preferences-display-form-block-editor_allow_all_content-desc'
+      );
+      if (isCKEditor5) {
+        $rows.show();
+      } else {
+        $rows.hide();
+      }
+    }
+    toggleAllowAllContent();
+    $('#wysiwyg_editor').on('change', toggleAllowAllContent);
+  });
+</script>
+{/literal}
+{/if}
 {if $form.contact_edit_options.html}
 {literal}
 <script type="text/javascript" >

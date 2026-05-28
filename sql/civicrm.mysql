@@ -1497,6 +1497,7 @@ CREATE TABLE civicrm_contribution_linepay (
 
 
      `id` int unsigned NOT NULL AUTO_INCREMENT  COMMENT 'LinePay ID',
+     `contribution_recur_id` int unsigned   DEFAULT NULL COMMENT 'FK to civicrm_contribution_recur. Binds the issued preapproved payment regKey to a recurring contribution.',
      `trxn_id` varchar(255)    COMMENT 'trxn_id from contribution',
      `transaction_id` varchar(255)    COMMENT 'transaction id from linepay',
      `query` text   DEFAULT NULL COMMENT 'response of /payments',
@@ -1506,6 +1507,7 @@ CREATE TABLE civicrm_contribution_linepay (
      `authorization` text   DEFAULT NULL COMMENT 'response of /payments/authorization',
      `capture` text   DEFAULT NULL COMMENT 'response of /payments/authorizations/{transactionId}/capture',
      `void` text   DEFAULT NULL COMMENT 'response of /payments/authorizations/{transactionId}/void',
+     `reg_key` varchar(255)   DEFAULT NULL COMMENT 'regKey returned from /payments/{transactionId}/confirm when payType is PREAPPROVED. Used by /payments/preapprovedPay/{regKey}/* APIs for recurring charges.',
      `recurring_payment` text   DEFAULT NULL COMMENT 'response of /payments/preapprovedPay/{regKey}/payment',
      `recurring_check` text   DEFAULT NULL COMMENT 'response of /payments/preapprovedPay/{regKey}/check',
      `recurring_expire` text   DEFAULT NULL COMMENT 'response of /payments/preapprovedPay/{regKey}/expire' 
@@ -1518,8 +1520,12 @@ CREATE TABLE civicrm_contribution_linepay (
   ,     INDEX UI_transaction_id(
         transaction_id
   )
+  ,     INDEX index_reg_key(
+        reg_key
+  )
   
- 
+,      
+     CONSTRAINT FK_civicrm_contribution_linepay_contribution_recur_id FOREIGN KEY (contribution_recur_id) REFERENCES civicrm_contribution_recur(id) ON DELETE SET NULL  
 )  ENGINE=InnoDB DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC  ;
 
 -- /*******************************************************
@@ -3166,7 +3172,8 @@ CREATE TABLE civicrm_preferences (
      `editor_id` int unsigned    COMMENT 'ID of the editor',
      `mailing_backend` text    COMMENT 'Smtp Backend configuration.',
      `navigation` text    COMMENT 'Store navigation for the Contact',
-     `contact_autocomplete_options` varchar(255)    COMMENT 'What Autocomplete has to return' 
+     `contact_autocomplete_options` varchar(255)    COMMENT 'What Autocomplete has to return',
+     `editor_allow_all_content` tinyint   DEFAULT 0 COMMENT 'If set, WYSIWYG editors allow all HTML content including script tags (XSS risk).' 
 ,
     PRIMARY KEY ( id )
  

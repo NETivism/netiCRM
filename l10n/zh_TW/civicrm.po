@@ -52055,5 +52055,35 @@ msgid "【Payment Gateway】"
 msgstr "【金流端】"
 
 #: CRM/Core/Payment/TapPay.php:1519
-msgid "Recurring has expired and no successful contribution in the past 6 months, system auto changed to failed."
+msgid ""
+"Recurring has expired and no successful contribution in the past 6 months, "
+"system auto changed to failed."
 msgstr "定期定額已過期，且近 6 個月內無成功捐款，系統自動轉為已失敗。"
+
+#: templates/CRM/Admin/Form/Preferences/Display.tpl:107
+msgid "HTML Security Filter"
+msgstr "HTML 安全性過濾"
+
+#: templates/CRM/Admin/Form/Preferences/Display.tpl:113
+msgid "By default, dangerous HTML is filtered to prevent XSS attacks — including &lt;script&gt;, &lt;style&gt; and &lt;link&gt; tags, all event handler attributes (e.g., onclick, onload), and javascript: URLs. Enabling this option removes all these protections. Only enable this if you trust all editors and require embedded scripts."
+msgstr "預設會過濾危險的 HTML 以防範 XSS 攻擊，包含 &lt;script&gt;、&lt;style&gt; 和 &lt;link&gt; 標籤、所有事件處理屬性（如 onclick、onload）及 javascript: 網址。啟用此選項將移除所有上述防護措施，請僅在信任所有編輯人員且確實需要嵌入指令碼時才啟用。"
+
+#: CRM/Admin/Form/Preferences/Display.php:102
+msgid "Disable Security Filter (Allow all content & scripts)"
+msgstr "停用安全性過濾器（允許所有內容與指令碼）"
+
+#: packages/HTML/QuickForm/ckeditor.php:161 packages/HTML/QuickForm/ckeditor5.php:244
+msgid "Switch Editor:"
+msgstr "切換編輯器："
+
+#: packages/HTML/QuickForm/ckeditor.php:163 packages/HTML/QuickForm/ckeditor5.php:246
+msgid "CKEditor 4 (Legacy)"
+msgstr "CKEditor 4（舊版）"
+
+#: packages/HTML/QuickForm/ckeditor.php:164 packages/HTML/QuickForm/ckeditor5.php:247
+msgid "CKEditor 5 (New)"
+msgstr "CKEditor 5（新版）"
+
+#: packages/HTML/QuickForm/ckeditor.php:155 packages/HTML/QuickForm/ckeditor5.php:238
+msgid "CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href=\"%1\" target=\"_blank\">Please report any issues</a>."
+msgstr "CKEditor 5 目前處於測試階段，您可以切換至新版進行試用。<a href=\"%1\" target=\"_blank\">有問題歡迎回報</a>。"
