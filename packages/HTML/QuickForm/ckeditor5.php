@@ -210,61 +210,6 @@ cj(function() {
 });
 </script>";
 
-    // Add Switcher UI
-    $systemEditorId = CRM_Core_BAO_Preferences::value('editor_id');
-    $isCke5Default = ($systemEditorId == 4 || (is_array($systemEditorId) && in_array(4, $systemEditorId)));
-    
-    // CKE4 config needs some logic to match ckeditor.php
-    $plugins = array('widget', 'lineutils', 'mediaembed', 'tableresize', 'image2');
-    if (CRM_Core_Permission::check('access CiviCRM') || CRM_Core_Permission::check('paste and upload images')) {
-      $plugins[] = 'clipboard_image';
-    }
-    $extraPluginsCode = [];
-    foreach($plugins as $pname){
-      $extraPluginsCode[] = "CKEDITOR.plugins.addExternal('{$pname}', '{$config->resourceBase}packages/ckeditor/extraplugins/{$pname}/', 'plugin.js');";
-    }
-    $toolbar = CRM_Core_Permission::check('access CiviCRM') ? 'CiviCRM' : 'CiviCRMBasic';
-    $allowedContent = CRM_Core_Permission::check('access CiviCRM') ? true : 'h1 h2 h3 p blockquote; strong em; a[!href]; img(left,right)[!src,alt,width,height,title]; span{font-size,color,background-color}';
-
-    $cke4Config = array(
-      'resourceBase' => $config->resourceBase,
-      'ver' => $config->ver,
-      'plugins' => $plugins,
-      'extraPluginsCode' => implode("\n", $extraPluginsCode),
-      'extraPluginsList' => implode(',', $plugins),
-      'toolbar' => $toolbar,
-      'allowedContent' => $allowedContent,
-      'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
-      'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
-      'imceUrl' => CRM_Utils_System::moduleExists('imce') ? CRM_Utils_System::url('imce') : '',
-      'clipboardImageEnabled' => $clipboardImageAllowed,
-      'clipboardImageUrl' => $clipboardImageUrl,
-      'lang' => $cke5Lang,
-      'langTranslationUrl' => $hasTranslation ? ($config->resourceBase . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js?' . $config->ver) : '',
-    );
-
-    if (!$isCke5Default) {
-      $hintMessage = '';
-      if ($systemEditorId == 2 || (is_array($systemEditorId) && in_array(2, $systemEditorId))) {
-        $hintMessage = '<span class="editor-switcher-hint">' . ts('CKEditor 5 is currently in testing. You can switch to the new version to try it out. <a href="%1" target="_blank">Please report any issues</a>.', [1 => 'https://neticrm.tw/support']) . '</span>';
-      }
-
-      $switcherHtml = '
-      <div class="crm-section editor-switcher-container">
-        <div class="editor-switcher-row">
-          <span class="editor-switcher-label">' . ts('Switch Editor:') . '</span>
-          <select class="editor-format-switcher" onchange="CiviEditorSwitcher.switch(this.value, \'' . $name . '\', ' . htmlspecialchars(json_encode($cke4Config)) . ')">
-            <option value="cke4">' . ts('CKEditor 4 (Legacy)') . '</option>
-            <option value="cke5" selected>' . ts('CKEditor 5 (New)') . '</option>
-          </select>
-          <span class="editor-switch-status"></span>
-        </div>
-        ' . $hintMessage . '
-      </div>';
-
-      return $switcherHtml . $html;
-    }
-
     return $html;
   }
 
