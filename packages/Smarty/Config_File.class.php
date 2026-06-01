@@ -43,29 +43,29 @@ class Config_File {
     /**
      * Controls whether variables with the same name overwrite each other.
      */
-    var $overwrite        =    true;
+    public $overwrite        =    true;
 
     /**
      * Controls whether config values of on/true/yes and off/false/no get
      * converted to boolean values automatically.
      */
-    var $booleanize        =    true;
+    public $booleanize        =    true;
 
     /**
      * Controls whether hidden config sections/vars are read from the file.
      */
-    var $read_hidden     =    true;
+    public $read_hidden     =    true;
 
     /**
      * Controls whether or not to fix mac or dos formatted newlines.
      * If set to true, \r or \r\n will be changed to \n.
      */
-    var $fix_newlines =    true;
+    public $fix_newlines =    true;
     /**#@-*/
 
     /** @access private */
-    var $_config_path    = "";
-    var $_config_data    = array();
+    protected $_config_path    = "";
+    protected $_config_data    = array();
     /**#@-*/
 
     /**
@@ -131,7 +131,7 @@ class Config_File {
             }
         } else {
             if (empty($section_name)) {
-                return (array)$this->_config_data[$file_name]["vars"];
+                return (array)($this->_config_data[$file_name]["vars"] ?? []);
             } else {
                 if(isset($this->_config_data[$file_name]["sections"][$section_name]["vars"]))
                     return (array)$this->_config_data[$file_name]["sections"][$section_name]["vars"];
@@ -237,7 +237,6 @@ class Config_File {
         else
             $config_file = $file_name;
 
-        ini_set('track_errors', true);
         $fp = @fopen($config_file, "r");
         if (!is_resource($fp)) {
             $this->_trigger_error_msg("Could not open config file '$config_file'");
