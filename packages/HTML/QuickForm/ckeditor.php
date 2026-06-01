@@ -156,6 +156,10 @@ cj( function( ) {
                 'customConfigPath' => $config->resourceBase . 'js/ckeditor.config.js',
                 'imceEnabled' => CRM_Utils_System::moduleExists('imce'),
                 'imceUrl' => CRM_Utils_System::url('imce') ? CRM_Utils_System::url('imce') : '',
+                'clipboardImageEnabled' => in_array('clipboard_image', $plugins),
+                'clipboardImageUrl' => in_array('clipboard_image', $plugins)
+                  ? CRM_Utils_System::url('civicrm/ajax/editor/image-upload', NULL, FALSE, NULL, FALSE)
+                  : '',
                 'lang' => $cke5Lang,
                 'langTranslationUrl' => $hasTranslation ? ($config->resourceBase . 'packages/ckeditor5/translations/' . $cke5Lang . '.umd.js?' . $config->ver) : '',
                 );
